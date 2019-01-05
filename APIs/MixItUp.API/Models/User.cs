@@ -17,5 +17,8 @@ namespace MixItUp.API.Models
 
         [DataMember]
         public List<CurrencyAmount> CurrencyAmounts { get; set; } = new List<CurrencyAmount>();
+
+        [DataMember]
+        public List<InventoryAmount> InventoryAmounts { get; set; } = new List<InventoryAmount>();
     }
 }

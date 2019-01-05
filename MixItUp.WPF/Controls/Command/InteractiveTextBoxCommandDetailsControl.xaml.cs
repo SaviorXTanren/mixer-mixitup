@@ -43,16 +43,25 @@ namespace MixItUp.WPF.Controls.Command
 
         public override Task Initialize()
         {
+            this.Requirements.HideSettingsRequirement();
+
             this.TextValueSpecialIdentifierTextBlock.Text = SpecialIdentifierStringBuilder.InteractiveTextBoxTextEntrySpecialIdentifierHelpText;
 
             if (this.Control != null)
             {
+                this.NameTextBox.Text = this.Control.controlID;
                 this.SparkCostTextBox.IsEnabled = true;
                 this.SparkCostTextBox.Text = this.Control.cost.ToString();
             }
 
+            if (this.Scene != null)
+            {
+                this.SceneTextBox.Text = this.Scene.sceneID;
+            }
+
             if (this.command != null)
             {
+                this.SceneTextBox.Text = this.command.SceneID;
                 this.UseChatModerationCheckBox.IsChecked = this.command.UseChatModeration;
                 this.UnlockedControl.Unlocked = this.command.Unlocked;
                 this.Requirements.SetRequirements(this.command.Requirements);

@@ -47,6 +47,8 @@ namespace MixItUp.WPF.Controls.Command
 
         public override Task Initialize()
         {
+            this.Requirements.HideSettingsRequirement();
+
             this.JoystickSetupComboBox.ItemsSource = EnumHelper.GetEnumNames<InteractiveJoystickSetupType>();
             this.UpKeyComboBox.ItemsSource = this.RightKeyComboBox.ItemsSource = this.DownKeyComboBox.ItemsSource = this.LeftKeyComboBox.ItemsSource = EnumHelper.GetEnumNames<InputKeyEnum>().OrderBy(s => s);
 
@@ -55,8 +57,19 @@ namespace MixItUp.WPF.Controls.Command
 
             this.Requirements.HideCooldownRequirement();
 
+            if (this.Control != null)
+            {
+                this.NameTextBox.Text = this.Control.controlID;
+            }
+
+            if (this.Scene != null)
+            {
+                this.SceneTextBox.Text = this.Scene.sceneID;
+            }
+
             if (this.command != null)
             {
+                this.SceneTextBox.Text = this.command.SceneID;
                 this.JoystickSetupComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.SetupType);
                 this.JoystickDeadZoneTextBox.Text = (this.command.DeadZone * 100).ToString();
                 this.MouseMovementMultiplierTextBox.Text = this.command.MouseMovementMultiplier.ToString();

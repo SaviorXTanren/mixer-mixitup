@@ -139,6 +139,30 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             return AdjustCurrency(user, currencyID, currencyUpdate);
         }
 
+        [Route("{userID:int:min(0)}/inventory/{inventoryID:guid}/adjust")]
+        [HttpPut, HttpPatch]
+        public User AdjustUserInventory(uint userID, Guid inventoryID, [FromBody]AdjustInventory inventoryUpdate)
+        {
+            UserDataViewModel user = ChannelSession.Settings.UserData[userID];
+            if (user == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+            return AdjustInventory(user, inventoryID, inventoryUpdate);
+        }
+
+        [Route("{username}/inventory/{inventoryID:guid}/adjust")]
+        [HttpPut, HttpPatch]
+        public User AdjustUserInventory(string username, Guid inventoryID, [FromBody]AdjustInventory inventoryUpdate)
+        {
+            UserDataViewModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.UserName.Equals(username, StringComparison.InvariantCultureIgnoreCase));
+            if (user == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+            return AdjustInventory(user, inventoryID, inventoryUpdate);
+        }
+
         [Route("top")]
         [HttpGet]
         public IEnumerable<User> Get(int count = 10)
@@ -165,7 +189,6 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
 
         public static User UserFromUserDataViewModel(UserDataViewModel userData)
         {
-
             User user = new User
             {
                 ID = userData.ID,
@@ -173,9 +196,14 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 ViewingMinutes = userData.ViewingMinutes
             };
 
-            foreach (UserCurrencyViewModel currencyData in ChannelSession.Settings.Currencies.Values)
+            foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
             {
-                user.CurrencyAmounts.Add(CurrencyController.CurrencyAmountFromUserCurrencyViewModel(currencyData, userData.GetCurrencyAmount(currencyData)));
+                user.CurrencyAmounts.Add(CurrencyController.CurrencyAmountFromUserCurrencyViewModel(currency, userData.GetCurrencyAmount(currency)));
+            }
+
+            foreach (UserInventoryViewModel inventory in ChannelSession.Settings.Inventories.Values)
+            {
+                user.InventoryAmounts.Add(InventoryController.InventoryAmountFromUserInventoryViewModel(inventory, userData.GetInventory(inventory)));
             }
 
             return user;
@@ -209,6 +237,44 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             else if (currencyUpdate.Amount > 0)
             {
                 user.AddCurrencyAmount(currency, currencyUpdate.Amount);
+            }
+
+            return UserFromUserDataViewModel(user);
+        }
+
+        private User AdjustInventory(UserDataViewModel user, Guid inventoryID, [FromBody]AdjustInventory inventoryUpdate)
+        {
+            if (!ChannelSession.Settings.Inventories.ContainsKey(inventoryID))
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            if (inventoryUpdate == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
+
+            UserInventoryViewModel inventory = ChannelSession.Settings.Inventories[inventoryID];
+
+            if (string.IsNullOrEmpty(inventoryUpdate.Name) || !inventory.Items.ContainsKey(inventoryUpdate.Name))
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
+
+            if (inventoryUpdate.Amount < 0)
+            {
+                int quantityToRemove = inventoryUpdate.Amount * -1;
+                if (!user.HasInventoryAmount(inventory, inventoryUpdate.Name, quantityToRemove))
+                {
+                    // If the request is to remove currency, but user doesn't have enough, fail
+                    throw new HttpResponseException(HttpStatusCode.Forbidden);
+                }
+
+                user.SubtractInventoryAmount(inventory, inventoryUpdate.Name, quantityToRemove);
+            }
+            else if (inventoryUpdate.Amount > 0)
+            {
+                user.AddInventoryAmount(inventory, inventoryUpdate.Name, inventoryUpdate.Amount);
             }
 
             return UserFromUserDataViewModel(user);

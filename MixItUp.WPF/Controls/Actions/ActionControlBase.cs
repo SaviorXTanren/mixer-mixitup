@@ -11,6 +11,8 @@ namespace MixItUp.WPF.Controls.Actions
     {
         protected ActionContainerControl containerControl;
 
+        private bool alreadyLoaded = false;
+
         public ActionControlBase(ActionContainerControl containerControl)
         {
             this.containerControl = containerControl;
@@ -28,6 +30,13 @@ namespace MixItUp.WPF.Controls.Actions
             e.Handled = true;
         }
 
-        private async void ActionControlBase_Loaded(object sender, RoutedEventArgs e) { await this.OnLoaded(); }
+        private async void ActionControlBase_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (!this.alreadyLoaded)
+            {
+                this.alreadyLoaded = true;
+                await this.OnLoaded();
+            }
+        }
     }
 }

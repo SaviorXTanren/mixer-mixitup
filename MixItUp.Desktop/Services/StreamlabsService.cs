@@ -12,13 +12,11 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Desktop.Services
 {
-    [DataContract]
     public class StreamlabsService : OAuthServiceBase, IStreamlabsService, IDisposable
     {
         private const string BaseAddress = "https://streamlabs.com/api/v1.0/";
@@ -40,9 +38,10 @@ namespace MixItUp.Desktop.Services
                 {
                     await this.RefreshOAuthToken();
 
-                    await this.InitializeInternal();
-
-                    return true;
+                    if (await this.InitializeInternal())
+                    {
+                        return true;
+                    }
                 }
                 catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
             }
@@ -62,9 +61,7 @@ namespace MixItUp.Desktop.Services
                 {
                     token.authorizationCode = authorizationCode;
 
-                    await this.InitializeInternal();
-
-                    return true;
+                    return await this.InitializeInternal();
                 }
             }
 
@@ -143,17 +140,15 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        private async Task InitializeInternal()
+        private Task<bool> InitializeInternal()
         {
             this.cancellationTokenSource = new CancellationTokenSource();
-
-            HttpResponseMessage result = await this.GetAsync("socket/token");
-            string resultJson = await result.Content.ReadAsStringAsync();
-            JObject jobj = JObject.Parse(resultJson);
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             Task.Run(this.BackgroundDonationCheck, this.cancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+            return Task.FromResult(true);
         }
 
         private async Task BackgroundDonationCheck()
@@ -175,21 +170,7 @@ namespace MixItUp.Desktop.Services
                         {
                             donationsReceived[slDonation.ID] = slDonation;
                             UserDonationModel donation = slDonation.ToGenericDonation();
-                            GlobalEvents.DonationOccurred(donation);
-
-                            UserViewModel user = new UserViewModel(0, donation.UserName);
-
-                            UserModel userModel = await ChannelSession.Connection.GetUser(user.UserName);
-                            if (userModel != null)
-                            {
-                                user = new UserViewModel(userModel);
-                            }
-
-                            EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.StreamlabsDonation));
-                            if (command != null)
-                            {
-                                await command.Perform(user, arguments: null, extraSpecialIdentifiers: donation.GetSpecialIdentifiers());
-                            }
+                            await EventCommand.ProcessDonationEventCommand(donation, OtherEventTypeEnum.StreamlabsDonation);
                         }
                     }
                 }

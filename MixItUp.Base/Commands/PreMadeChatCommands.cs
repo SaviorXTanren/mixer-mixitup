@@ -357,7 +357,7 @@ namespace MixItUp.Base.Commands
                 if (ChannelSession.Chat != null)
                 {
                     await user.RefreshDetails();
-                    await ChannelSession.Chat.SendMessage(user.UserName + "'s Subscribe Age: " + user.SubscribeAgeString);
+                    await ChannelSession.Chat.SendMessage(user.UserName + "'s Subscribe Age: " + user.MixerSubscribeAgeString);
                 }
             }));
         }

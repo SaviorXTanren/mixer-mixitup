@@ -1,0 +1,87 @@
+﻿using MixItUp.Base;
+using MixItUp.Base.Services;
+using MixItUp.Base.ViewModel.Requirement;
+using MixItUp.WPF.Util;
+using System.Threading.Tasks;
+using System.Windows.Controls;
+
+namespace MixItUp.WPF.Controls.Requirement
+{
+    /// <summary>
+    /// Interaction logic for SettingsRequirementControl.xaml
+    /// </summary>
+    public partial class SettingsRequirementControl : UserControl
+    {
+        public SettingsRequirementControl()
+        {
+            InitializeComponent();
+
+            this.Loaded += SettingsRequirementControl_Loaded;
+        }
+
+        private void SettingsRequirementControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (ChannelSession.Services.Patreon != null)
+            {
+                this.EnableDisablePatreonBenefitToggleSwitch.IsEnabled = true;
+                this.PatreonBenefitComboBox.ItemsSource = ChannelSession.Services.Patreon.Campaign.Benefits.Values;
+            }
+        }
+
+        public SettingsRequirementViewModel GetSettingsRequirement()
+        {
+            if (this.EnableDisablePatreonBenefitToggleSwitch.IsChecked.GetValueOrDefault() && this.PatreonBenefitComboBox.SelectedIndex < 0)
+            {
+                return null;
+            }
+
+            SettingsRequirementViewModel settings = new SettingsRequirementViewModel();
+            settings.DeleteChatCommandWhenRun = this.DeleteChatCommandWhenRunToggleSwitch.IsChecked.GetValueOrDefault();
+            if (this.EnableDisablePatreonBenefitToggleSwitch.IsChecked.GetValueOrDefault())
+            {
+                PatreonBenefit benefit = (PatreonBenefit)this.PatreonBenefitComboBox.SelectedItem;
+                settings.PatreonBenefitIDRequirement = benefit.ID;
+            }
+            return settings;
+        }
+
+        public void SetSettingsRequirement(SettingsRequirementViewModel settings)
+        {
+            this.DeleteChatCommandWhenRunToggleSwitch.IsChecked = settings.DeleteChatCommandWhenRun;
+            if (!string.IsNullOrEmpty(settings.PatreonBenefitIDRequirement) && ChannelSession.Services.Patreon != null)
+            {
+                if (ChannelSession.Services.Patreon.Campaign.Benefits.ContainsKey(settings.PatreonBenefitIDRequirement))
+                {
+                    this.EnableDisablePatreonBenefitToggleSwitch.IsChecked = true;
+                    this.PatreonBenefitComboBox.SelectedItem = ChannelSession.Services.Patreon.Campaign.Benefits[settings.PatreonBenefitIDRequirement];
+                }
+            }
+        }
+
+        public async Task<bool> Validate()
+        {
+            if (this.EnableDisablePatreonBenefitToggleSwitch.IsChecked.GetValueOrDefault())
+            {
+                if (this.PatreonBenefitComboBox.SelectedIndex < 0)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("A Patreon Benefit must be specified when Patreon Benefit requirement is set");
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private void EnableDisablePatreonBenefitToggleSwitch_Checked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (this.EnableDisablePatreonBenefitToggleSwitch.IsChecked.GetValueOrDefault())
+            {
+                this.PatreonBenefitComboBox.IsEnabled = true;
+            }
+            else
+            {
+                this.PatreonBenefitComboBox.IsEnabled = false;
+                this.PatreonBenefitComboBox.SelectedIndex = -1;
+            }
+        }
+    }
+}

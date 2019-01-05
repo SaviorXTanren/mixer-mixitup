@@ -321,7 +321,7 @@ namespace MixItUp.Desktop.Services
 
     public class DiscordService : OAuthServiceBase, IDiscordService, IDisposable
     {
-        public const string ClientBotPermissions = "8";
+        public const string ClientBotPermissions = "14026752";
 
         private const string BaseAddress = "https://discordapp.com/api/";
 
@@ -350,9 +350,10 @@ namespace MixItUp.Desktop.Services
                 {
                     await this.RefreshOAuthToken();
 
-                    await this.InitializeInternal();
-
-                    return true;
+                    if (await this.InitializeInternal())
+                    {
+                        return true;
+                    }
                 }
                 catch (Exception ex) { Logger.Log(ex); }
             }
@@ -372,9 +373,7 @@ namespace MixItUp.Desktop.Services
                 {
                     token.authorizationCode = authorizationCode;
 
-                    await this.InitializeInternal();
-
-                    return true;
+                    return await this.InitializeInternal();
                 }
             }
 
@@ -472,7 +471,7 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        private async Task InitializeInternal()
+        private async Task<bool> InitializeInternal()
         {
             this.botService = new DiscordBotService(this.baseAddress, ChannelSession.SecretManager.GetSecret("DiscordBotToken"));
 
@@ -480,14 +479,9 @@ namespace MixItUp.Desktop.Services
             if (!string.IsNullOrEmpty(ChannelSession.Settings.DiscordServer))
             {
                 this.Server = await this.GetServer(ChannelSession.Settings.DiscordServer);
+                return true;
             }
-
-            //DiscordGateway gateway = await this.GetBotGateway();
-            //if (gateway != null)
-            //{
-            //    DiscordWebSocket webSocket = new DiscordWebSocket();
-            //    await webSocket.Connect(gateway.WebSocketURL, gateway.Shards);
-            //}
+            return false;
         }
 
         #region IDisposable Support

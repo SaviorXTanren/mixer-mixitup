@@ -11,6 +11,7 @@ namespace MixItUp.API
     //  GET:    http://localhost:8911/api/users/top                 Users.GetTopUsersByViewingTimeAsync
     //  POST:   http://localhost:8911/api/users                     Users.GetUsersAsync
     //  PUT:    http://localhost:8911/api/users/{usernameOrID}/currency/{currencyID}/adjust Users.AdjustUserCurrencyAsync
+    //  PUT:    http://localhost:8911/api/users/{usernameOrID}/inventory/{inventoryID}/adjust Users.AdjustUserInventoryAsync
     public static class Users
     {
         public static async Task<User> GetUserAsync(uint userId)
@@ -67,6 +68,28 @@ namespace MixItUp.API
             };
 
             return await RestClient.PutAsync<User>($"users/{userId}/currency/{currencyID}/adjust", adjustCurrency);
+        }
+
+        public static async Task<User> AdjustUserInventoryAsync(string userName, Guid inventoryID, string itemName, int offsetAmount)
+        {
+            AdjustInventory adjustInventory = new AdjustInventory
+            {
+                Name = itemName,
+                Amount = offsetAmount
+            };
+
+            return await RestClient.PutAsync<User>($"users/{userName}/inventory/{inventoryID}/adjust", adjustInventory);
+        }
+
+        public static async Task<User> AdjustUserInventoryAsync(uint userId, Guid inventoryID, string itemName, int offsetAmount)
+        {
+            AdjustInventory adjustInventory = new AdjustInventory
+            {
+                Name = itemName,
+                Amount = offsetAmount
+            };
+
+            return await RestClient.PutAsync<User>($"users/{userId}/inventory/{inventoryID}/adjust", adjustInventory);
         }
     }
 }

@@ -39,6 +39,11 @@ namespace MixItUp.Base.Actions
 
         [Name("Set Custom Metadata")]
         SetCustomMetadata,
+
+        [Name("Move All Users to Scene")]
+        MoveAllUsersToScene,
+        [Name("Move All Users to Group")]
+        MoveAllUsersToGroup,
     }
 
     public enum InteractiveActionUpdateControlTypeEnum
@@ -81,6 +86,25 @@ namespace MixItUp.Base.Actions
             {
                 GroupName = groupName,
                 SceneID = sceneID,
+            };
+        }
+
+        public static InteractiveAction CreateMoveAllUsersToSceneAction(string sceneID, MixerRoleEnum requiredRole)
+        {
+            return new InteractiveAction(InteractiveActionTypeEnum.MoveAllUsersToScene)
+            {
+                GroupName = sceneID,
+                SceneID = sceneID,
+                RoleRequirement = requiredRole,
+            };
+        }
+
+        public static InteractiveAction CreateMoveAllUsersToGroupAction(string groupName, MixerRoleEnum requiredRole)
+        {
+            return new InteractiveAction(InteractiveActionTypeEnum.MoveAllUsersToGroup)
+            {
+                GroupName = groupName,
+                RoleRequirement = requiredRole,
             };
         }
 
@@ -193,7 +217,7 @@ namespace MixItUp.Base.Actions
                 }
                 else if (ChannelSession.Interactive.IsConnected())
                 {
-                    if (!user.MixerRoles.Any(r => r >= this.RoleRequirement))
+                    if (!user.HasPermissionsTo(this.RoleRequirement))
                     {
                         if (ChannelSession.Chat != null)
                         {
@@ -223,6 +247,20 @@ namespace MixItUp.Base.Actions
                         {
                             await ChannelSession.Interactive.AddUserToGroup(user, this.GroupName);
                         }
+                    }
+                    if (this.InteractiveType == InteractiveActionTypeEnum.MoveAllUsersToGroup || this.InteractiveType == InteractiveActionTypeEnum.MoveAllUsersToScene)
+                    {
+                        foreach (UserViewModel chatUser in await ChannelSession.ActiveUsers.GetAllUsers())
+                        {
+                            await ChannelSession.Interactive.AddUserToGroup(chatUser, this.GroupName);
+                        }
+
+                        IEnumerable<InteractiveParticipantModel> participants = ChannelSession.Interactive.Participants.Values;
+                        foreach (InteractiveParticipantModel participant in participants)
+                        {
+                            participant.groupID = this.GroupName;
+                        }
+                        await ChannelSession.Interactive.UpdateParticipants(participants);
                     }
                     else if (this.InteractiveType == InteractiveActionTypeEnum.CooldownButton || this.InteractiveType == InteractiveActionTypeEnum.CooldownGroup ||
                         this.InteractiveType == InteractiveActionTypeEnum.CooldownScene)

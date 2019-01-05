@@ -7,6 +7,7 @@ using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Remote;
 using MixItUp.Base.Model.Serial;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
@@ -15,6 +16,7 @@ using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 
 namespace MixItUp.Base
 {
@@ -39,6 +41,10 @@ namespace MixItUp.Base
         OAuthTokenModel SpotifyOAuthToken { get; set; }
         OAuthTokenModel DiscordOAuthToken { get; set; }
         OAuthTokenModel TiltifyOAuthToken { get; set; }
+        OAuthTokenModel TipeeeStreamOAuthToken { get; set; }
+        OAuthTokenModel TreatStreamOAuthToken { get; set; }
+        OAuthTokenModel StreamJarOAuthToken { get; set; }
+        OAuthTokenModel PatreonOAuthToken { get; set; }
 
         string StreamDeckDeviceName { get; set; }
 
@@ -63,6 +69,9 @@ namespace MixItUp.Base
         uint DefaultInteractiveGame { get; set; }
         bool PreventUnknownInteractiveUsers { get; set; }
         List<InteractiveSharedProjectModel> CustomInteractiveProjectIDs { get; set; }
+
+        int RegularUserMinimumHours { get; set; }
+        List<UserTitleModel> UserTitles { get; set; }
 
         bool GameQueueSubPriority { get; set; }
         RequirementViewModel GameQueueRequirements { get; set; }
@@ -90,15 +99,18 @@ namespace MixItUp.Base
 
         bool ModerationUseCommunityFilteredWords { get; set; }
         MixerRoleEnum ModerationFilteredWordsExcempt { get; set; }
+        bool ModerationFilteredWordsApplyStrikes { get; set; }
 
         int ModerationCapsBlockCount { get; set; }
         bool ModerationCapsBlockIsPercentage { get; set; }
         int ModerationPunctuationBlockCount { get; set; }
         bool ModerationPunctuationBlockIsPercentage { get; set; }
         MixerRoleEnum ModerationChatTextExcempt { get; set; }
+        bool ModerationChatTextApplyStrikes { get; set; }
 
         bool ModerationBlockLinks { get; set; }
         MixerRoleEnum ModerationBlockLinksExcempt { get; set; }
+        bool ModerationBlockLinksApplyStrikes { get; set; }
 
         ModerationChatInteractiveParticipationEnum ModerationChatInteractiveParticipation { get; set; }
 
@@ -128,6 +140,8 @@ namespace MixItUp.Base
         bool ExtraLifeIncludeTeamDonations { get; set; }
 
         string DiscordServer { get; set; }
+
+        string PatreonTierMixerSubscriberEquivalent { get; set; }
 
         bool UnlockAllCommands { get; set; }
 
@@ -175,6 +189,7 @@ namespace MixItUp.Base
         DatabaseDictionary<uint, UserDataViewModel> UserData { get; }
 
         LockedDictionary<Guid, UserCurrencyViewModel> Currencies { get; }
+        LockedDictionary<Guid, UserInventoryViewModel> Inventories { get; }
 
         LockedDictionary<string, int> CooldownGroups { get; }
 
@@ -197,5 +212,21 @@ namespace MixItUp.Base
 
         LockedDictionary<uint, List<InteractiveUserGroupViewModel>> InteractiveUserGroups { get; }
     }
+
+    public static class DbDataReaderExtensions
+    {
+        public static bool ColumnExists(this DbDataReader reader, string columnName)
+        {
+            for (int i = 0; i < reader.FieldCount; i++)
+            {
+                if (reader.GetName(i).Equals(columnName, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
 }
 

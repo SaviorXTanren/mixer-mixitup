@@ -92,6 +92,12 @@ namespace MixItUp.Base.Actions
                                 return;
                             }
 
+                            if (!ChannelSession.Settings.GameQueueRequirements.DoesMeetInventoryRequirement(user))
+                            {
+                                await ChannelSession.Settings.GameQueueRequirements.Inventory.SendNotMetWhisper(user);
+                                return;
+                            }
+
                             if (!ChannelSession.Settings.GameQueueRequirements.DoesMeetCurrencyRequirement(user) || !ChannelSession.Settings.GameQueueRequirements.TrySubtractCurrencyAmount(user))
                             {
                                 await ChannelSession.Settings.GameQueueRequirements.Currency.SendCurrencyNotMetWhisper(user);
@@ -100,9 +106,9 @@ namespace MixItUp.Base.Actions
 
                             if (ChannelSession.Settings.GameQueueSubPriority)
                             {
-                                if (user.GetsSubscriberBenefits)
+                                if (user.HasPermissionsTo(MixerRoleEnum.Subscriber))
                                 {
-                                    int totalSubs = ChannelSession.GameQueue.Count(u => u.GetsSubscriberBenefits);
+                                    int totalSubs = ChannelSession.GameQueue.Count(u => u.HasPermissionsTo(MixerRoleEnum.Subscriber));
                                     ChannelSession.GameQueue.Insert(totalSubs, user);
                                 }
                                 else

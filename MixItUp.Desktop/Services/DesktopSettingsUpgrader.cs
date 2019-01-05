@@ -3,6 +3,7 @@ using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.Desktop.Database;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -53,6 +54,9 @@ namespace MixItUp.Desktop.Services
             await DesktopSettingsUpgrader.Version22Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version23Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version24Upgrade(version, filePath);
+            await DesktopSettingsUpgrader.Version25Upgrade(version, filePath);
+            await DesktopSettingsUpgrader.Version26Upgrade(version, filePath);
+            await DesktopSettingsUpgrader.Version27Upgrade(version, filePath);
 
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
             settings.InitializeDB = false;
@@ -314,17 +318,58 @@ namespace MixItUp.Desktop.Services
                 DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
                 await ChannelSession.Services.Settings.Initialize(settings);
 
-                List<CommandBase> commands = new List<CommandBase>();
-                commands.AddRange(settings.ChatCommands);
-                commands.AddRange(settings.EventCommands);
-                commands.AddRange(settings.InteractiveCommands);
-                commands.AddRange(settings.TimerCommands);
-                commands.AddRange(settings.ActionGroupCommands);
-                commands.AddRange(settings.GameCommands);
-                commands.AddRange(settings.RemoteCommands);
-                foreach (CommandBase command in commands)
+                foreach (CommandBase command in DesktopSettingsUpgrader.GetAllCommands(settings))
                 {
                     StoreCommandUpgrader.RestructureNewOverlayActions(command.Actions);
+                }
+
+                await ChannelSession.Services.Settings.Save(settings);
+            }
+        }
+
+        private static async Task Version25Upgrade(int version, string filePath)
+        {
+            if (version < 25)
+            {
+                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
+                await ChannelSession.Services.Settings.Initialize(settings);
+
+                settings.OverlayWidgetRefreshTime = 5;
+
+                await ChannelSession.Services.Settings.Save(settings);
+            }
+        }
+
+        private static async Task Version26Upgrade(int version, string filePath)
+        {
+            if (version < 26)
+            {
+                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
+                await ChannelSession.Services.Settings.Initialize(settings);
+
+                settings.ModerationFilteredWordsApplyStrikes = true;
+                settings.ModerationChatTextApplyStrikes = true;
+                settings.ModerationBlockLinksApplyStrikes = true;
+
+                await ChannelSession.Services.Settings.Save(settings);
+            }
+        }
+
+        private static async Task Version27Upgrade(int version, string filePath)
+        {
+            if (version < 27)
+            {
+                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
+                await ChannelSession.Services.Settings.Initialize(settings);
+
+                SQLiteDatabaseWrapper databaseWrapper = new SQLiteDatabaseWrapper(((DesktopSettingsService)ChannelSession.Services.Settings).GetDatabaseFilePath(settings));
+
+                await databaseWrapper.RunWriteCommand("ALTER TABLE Users ADD COLUMN InventoryAmounts TEXT");
+                await databaseWrapper.RunWriteCommand("UPDATE Users SET InventoryAmounts = '{ }'");
+
+                foreach (UserCurrencyViewModel currency in settings.Currencies.Values)
+                {
+                    currency.ModeratorBonus = currency.SubscriberBonus;
                 }
 
                 await ChannelSession.Services.Settings.Save(settings);
@@ -342,6 +387,31 @@ namespace MixItUp.Desktop.Services
             {
                 return (MixerRoleEnum)(legacyRoleID * 10);
             }
+        }
+
+        private static IEnumerable<CommandBase> GetAllCommands(IChannelSettings settings)
+        {
+            List<CommandBase> commands = new List<CommandBase>();
+            commands.AddRange(settings.ChatCommands);
+            commands.AddRange(settings.EventCommands);
+            commands.AddRange(settings.InteractiveCommands);
+            commands.AddRange(settings.TimerCommands);
+            commands.AddRange(settings.ActionGroupCommands);
+            commands.AddRange(settings.GameCommands);
+            commands.AddRange(settings.RemoteCommands);
+            foreach (UserDataViewModel userData in settings.UserData.Values)
+            {
+                commands.AddRange(userData.CustomCommands);
+                if (userData.EntranceCommand != null)
+                {
+                    commands.Add(userData.EntranceCommand);
+                }
+            }
+            foreach (GameCommandBase gameCommand in settings.GameCommands)
+            {
+                commands.AddRange(gameCommand.GetAllInnerCommands());
+            }
+            return commands;
         }
     }
 

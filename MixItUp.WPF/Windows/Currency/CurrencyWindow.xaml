@@ -138,9 +138,13 @@
                         <Grid Margin="10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBox x:Name="SubscriberBonusTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Sub/Mod Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
+                            <TextBox x:Name="SubscriberBonusTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Sub Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
+
+                            <TextBox x:Name="ModeratorBonusTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Mod Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
 
                         </Grid>
                     </GroupBox>
@@ -229,7 +233,7 @@
                 </Grid>
 
                 <Grid Grid.Row="8" HorizontalAlignment="Center">
-                    <GroupBox Header="Data" Grid.Column="2">
+                    <GroupBox Header="Settings" Grid.Column="2">
                         <Grid Margin="10">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -240,29 +244,34 @@
                             <Grid Grid.Row="0" HorizontalAlignment="Center">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="60" />
+                                    <ColumnDefinition Width="40" />
                                     <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="60" />
+                                    <ColumnDefinition Width="40" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <ComboBox x:Name="AutomaticResetComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Automatic Reset" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
+                                <TextBox x:Name="MinimumActivityRateTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Minimum Channel Activity (Mins)" Width="160" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                                <Button x:Name="ManualResetButton" Grid.Column="2" Click="ManualResetButton_Click">Manual Reset</Button>
+                                <ComboBox x:Name="AutomaticResetComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Automatic Reset" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
 
-                                <Button x:Name="RetroactivelyGivePointsButton" Grid.Column="4" Click="RetroactivelyGivePointsButton_Click" IsEnabled="False">Retroactively Give Points</Button>
+                                <Button x:Name="ManualResetButton" Grid.Column="4" Click="ManualResetButton_Click">Manual Reset</Button>
+
                             </Grid>
 
                             <Grid Grid.Row="2" HorizontalAlignment="Center">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="60" />
+                                    <ColumnDefinition Width="40" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="40" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <Button x:Name="ImportFromFileButton" Grid.Column="0" Click="ImportFromFileButton_Click" IsEnabled="False">Import From File</Button>
+                                <Button x:Name="RetroactivelyGivePointsButton" Grid.Column="0" Click="RetroactivelyGivePointsButton_Click" IsEnabled="False">Retroactively Give Points</Button>
 
-                                <Button x:Name="ExportToFileButton" Grid.Column="2" Click="ExportToFileButton_Click" IsEnabled="False">Export To File</Button>
+                                <Button x:Name="ImportFromFileButton" Grid.Column="2" Click="ImportFromFileButton_Click" IsEnabled="False">Import From File</Button>
+
+                                <Button x:Name="ExportToFileButton" Grid.Column="4" Click="ExportToFileButton_Click" IsEnabled="False">Export To File</Button>
                             </Grid>
                         </Grid>
                     </GroupBox>

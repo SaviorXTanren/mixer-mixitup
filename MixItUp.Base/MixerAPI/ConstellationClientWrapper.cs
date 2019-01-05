@@ -213,7 +213,7 @@ namespace MixItUp.Base.MixerAPI
                     JToken subscribeStartToken;
                     if (e.payload.TryGetValue("since", out subscribeStartToken))
                     {
-                        user.SubscribeDate = subscribeStartToken.ToObject<DateTimeOffset>();
+                        user.MixerSubscribeDate = subscribeStartToken.ToObject<DateTimeOffset>();
                     }
 
                     if (e.payload.TryGetValue("following", out JToken followedToken))
@@ -225,6 +225,11 @@ namespace MixItUp.Base.MixerAPI
                 {
                     channel = payloadToken.ToObject<ChannelModel>();
                     user = new UserViewModel(channel.userId, channel.token);
+                }
+
+                if (user != null)
+                {
+                    user.UpdateLastActivity();
                 }
 
                 if (e.channel.Equals(ConstellationClientWrapper.ChannelUpdateEvent.ToString()))
@@ -313,7 +318,7 @@ namespace MixItUp.Base.MixerAPI
                     {
                         this.LogUserRunEvent(user, ConstellationClientWrapper.ChannelSubscribedEvent.ToString());
 
-                        user.SubscribeDate = DateTimeOffset.Now;
+                        user.MixerSubscribeDate = DateTimeOffset.Now;
                         foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                         {
                             user.Data.AddCurrencyAmount(currency, currency.OnSubscribeBonus);

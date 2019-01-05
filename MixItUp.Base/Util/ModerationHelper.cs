@@ -59,18 +59,30 @@ namespace MixItUp.Base.Util
             string reason = await ShouldBeFilteredWordModerated(user, text);
             if (!string.IsNullOrEmpty(reason))
             {
+                if (ChannelSession.Settings.ModerationFilteredWordsApplyStrikes)
+                {
+                    await user.AddModerationStrike(reason);
+                }
                 return reason;
             }
 
             reason = ShouldBeTextModerated(user, text);
             if (!string.IsNullOrEmpty(reason))
             {
+                if (ChannelSession.Settings.ModerationChatTextApplyStrikes)
+                {
+                    await user.AddModerationStrike(reason);
+                }
                 return reason;
             }
 
             reason = ShouldBeLinkModerated(user, text, containsLink);
             if (!string.IsNullOrEmpty(reason))
             {
+                if (ChannelSession.Settings.ModerationBlockLinksApplyStrikes)
+                {
+                    await user.AddModerationStrike(reason);
+                }
                 return reason;
             }
 
@@ -81,7 +93,7 @@ namespace MixItUp.Base.Util
         {
             text = PrepareTextForChecking(text);
 
-            if (user.PrimaryRole < ChannelSession.Settings.ModerationFilteredWordsExcempt)
+            if (!user.HasPermissionsTo(ChannelSession.Settings.ModerationFilteredWordsExcempt))
             {
                 if (ChannelSession.Settings.ModerationUseCommunityFilteredWords)
                 {
@@ -119,7 +131,7 @@ namespace MixItUp.Base.Util
         {
             text = PrepareTextForChecking(text);
 
-            if (user.PrimaryRole < ChannelSession.Settings.ModerationChatTextExcempt)
+            if (!user.HasPermissionsTo(ChannelSession.Settings.ModerationChatTextExcempt))
             {
                 if (ChannelSession.Settings.ModerationCapsBlockCount > 0)
                 {
@@ -176,7 +188,7 @@ namespace MixItUp.Base.Util
         {
             text = PrepareTextForChecking(text);
 
-            if (user.PrimaryRole < ChannelSession.Settings.ModerationBlockLinksExcempt)
+            if (!user.HasPermissionsTo(ChannelSession.Settings.ModerationBlockLinksExcempt))
             {
                 if (ChannelSession.Settings.ModerationBlockLinks && (containsLink || LinkRegex.IsMatch(text)))
                 {
@@ -201,12 +213,12 @@ namespace MixItUp.Base.Util
                     return true;
                 }
 
-                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.Subscriber && !user.GetsSubscriberBenefits)
+                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.Subscriber && !user.HasPermissionsTo(MixerRoleEnum.Subscriber))
                 {
                     return false;
                 }
 
-                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.Moderator && user.PrimaryRole < MixerRoleEnum.Mod)
+                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.Moderator && user.HasPermissionsTo(MixerRoleEnum.Mod))
                 {
                     return false;
                 }

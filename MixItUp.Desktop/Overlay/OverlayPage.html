@@ -136,7 +136,11 @@
                             if (typeof callback === 'function') callback(this);
                         });
                     }
-                    else if (typeof callback === 'function') callback(this);
+                    else if (typeof callback === 'function') {
+                        this.each(function () {
+                            callback(this);
+                        })
+                    }
 
                     return this;
                 },
@@ -209,6 +213,9 @@
                         }
                         else if (packet.type === "gamequeue") {
                             gameQueuePacket(packet.data);
+                        }
+                        else if (packet.type === "songrequestsqueue") {
+                            songRequestsQueuePacket(packet.data);
                         }
                         else if (packet.type === "chatmessages") {
                             chatMessagesPacket(packet.data);
@@ -485,6 +492,66 @@
                         }
 
                         for (var i = data.GameQueueUpdates.length; i < data.TotalToShow; i++) {
+                            var itemDiv = document.createElement('div');
+                            itemDiv.style.height = $(newItemDiv).outerHeight(true) + 'px';
+                            mainDiv.appendChild(itemDiv);
+                        }
+                    }
+                }
+            }
+
+            // Song Requests Queue Functions
+
+            function songRequestsQueuePacket(data) {
+
+                if (!widgetData.has(data.ID)) {
+                    var list = {};
+
+                    widgetData.set(data.ID, list);
+
+                    list.MainDiv = document.createElement('div');
+                    list.Items = [];
+
+                    addWaitRemoveElement(data, list.MainDiv);
+                }
+
+                var list = widgetData.get(data.ID);
+                var mainDiv = list.MainDiv;
+
+                data.TotalLeftToRemove = mainDiv.children.length;
+
+                for (var i = 0; i < mainDiv.children.length; i++) {
+                    $(mainDiv.children[i]).animateCss(data.RemoveEventAnimationName, function (animatedDiv) {
+                        animatedDiv.style.visibility = 'hidden';
+                        data.TotalLeftToRemove--;
+                    });
+                }
+
+                songRequestsQueueAddItems(data, mainDiv);
+            }
+
+            function songRequestsQueueAddItems(data, mainDiv) {
+                if (data.TotalLeftToRemove > 0) {
+                    setTimeout(function () {
+                        songRequestsQueueAddItems(data, mainDiv);
+                    }, 200);
+                }
+                else {
+
+                    while (mainDiv.hasChildNodes()) {
+                        mainDiv.removeChild(mainDiv.lastChild);
+                    }
+
+                    if (data.SongRequestUpdates.length > 0) {
+                        var newItemDiv;
+                        for (var i = 0; i < data.SongRequestUpdates.length; i++) {
+                            newItemDiv = document.createElement('div');
+                            newItemDiv.innerHTML = data.SongRequestUpdates[i].HTMLText;
+                            mainDiv.appendChild(newItemDiv);
+                            $(newItemDiv).animateCss(data.AddEventAnimationName, function () { });
+                        }
+
+                        for (var i = data.SongRequestUpdates.length; i < data.TotalToShow; i++) {
                             var itemDiv = document.createElement('div');
                             itemDiv.style.height = $(newItemDiv).outerHeight(true) + 'px';
                             mainDiv.appendChild(itemDiv);

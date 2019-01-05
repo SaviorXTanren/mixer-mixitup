@@ -20,26 +20,31 @@ namespace MixItUp.Base.Commands
     [DataContract]
     internal class GameOutcomeProbability { }
 
-    [DataContract]
-    internal class UserCharityGameCommand : GameCommandBase { }
+    internal class OldGameCommandBase : GameCommandBase
+    {
+        public override IEnumerable<CommandBase> GetAllInnerCommands() { return new List<CommandBase>(); }
+    }
 
     [DataContract]
-    internal class OnlyOneWinnerGameCommand : GameCommandBase { }
+    internal class UserCharityGameCommand : OldGameCommandBase { }
 
     [DataContract]
-    internal class IndividualProbabilityGameCommand : GameCommandBase { }
+    internal class OnlyOneWinnerGameCommand : OldGameCommandBase { }
 
     [DataContract]
-    internal class SinglePlayerGameCommand : GameCommandBase { }
+    internal class IndividualProbabilityGameCommand : OldGameCommandBase { }
 
     [DataContract]
-    internal class SpinWheelGameCommand : GameCommandBase { }
+    internal class SinglePlayerGameCommand : OldGameCommandBase { }
 
     [DataContract]
-    internal class CharityGameCommand : GameCommandBase { }
+    internal class SpinWheelGameCommand : OldGameCommandBase { }
 
     [DataContract]
-    internal class GiveGameCommand : GameCommandBase { }
+    internal class CharityGameCommand : OldGameCommandBase { }
+
+    [DataContract]
+    internal class GiveGameCommand : OldGameCommandBase { }
 
     #endregion OLD GAME CLASSES
 
@@ -84,47 +89,31 @@ namespace MixItUp.Base.Commands
             this.Command = command;
         }
 
-        public int GetRoleProbability(MixerRoleEnum role)
+        public int GetRoleProbability(UserViewModel user)
         {
-            if (this.RoleProbabilities.ContainsKey(role))
+            var roleProbabilities = this.RoleProbabilities.Select(kvp => kvp.Key).OrderByDescending(k => k);
+            if (roleProbabilities.Any(r => user.HasPermissionsTo(r)))
             {
-                return this.RoleProbabilities[role];
+                return this.RoleProbabilities[roleProbabilities.FirstOrDefault(r => user.HasPermissionsTo(r))];
             }
-
-            foreach (MixerRoleEnum checkRole in this.RoleProbabilities.Select(kvp => kvp.Key).OrderByDescending(k => k))
-            {
-                if (role >= checkRole)
-                {
-                    return this.RoleProbabilities[checkRole];
-                }
-            }
-
-            return this.RoleProbabilities.LastOrDefault().Value;
+            return this.RoleProbabilities[roleProbabilities.LastOrDefault()];
         }
 
         public int GetPayout(UserViewModel user, int betAmount)
         {
-            return Convert.ToInt32(Convert.ToDouble(betAmount) * this.GetPayoutAmount(user.PrimaryRole));
+            return Convert.ToInt32(Convert.ToDouble(betAmount) * this.GetPayoutAmount(user));
         }
 
-        private double GetPayoutAmount(MixerRoleEnum role)
+        private double GetPayoutAmount(UserViewModel user)
         {
             if (this.RolePayouts.Count > 0)
             {
-                if (this.RolePayouts.ContainsKey(role))
+                var rolePayouts = this.RolePayouts.Select(kvp => kvp.Key).OrderByDescending(k => k);
+                if (rolePayouts.Any(r => user.HasPermissionsTo(r)))
                 {
-                    return this.RolePayouts[role];
+                    return this.RolePayouts[rolePayouts.FirstOrDefault(r => user.HasPermissionsTo(r))];
                 }
-
-                foreach (MixerRoleEnum checkRole in this.RolePayouts.Select(kvp => kvp.Key).OrderByDescending(k => k))
-                {
-                    if (role >= checkRole)
-                    {
-                        return this.RolePayouts[checkRole];
-                    }
-                }
-
-                return this.RolePayouts.LastOrDefault().Value;
+                return this.RolePayouts[rolePayouts.LastOrDefault()];
             }
             return this.Payout;
         }
@@ -153,6 +142,8 @@ namespace MixItUp.Base.Commands
 
         [JsonIgnore]
         public override IEnumerable<string> CommandTriggers { get { return this.Commands.Select(c => "!" + c); } }
+
+        public abstract IEnumerable<CommandBase> GetAllInnerCommands();
 
         protected override SemaphoreSlim AsyncSemaphore { get { return GameCommandBase.gameCommandPerformSemaphore; } }
 
@@ -283,7 +274,7 @@ namespace MixItUp.Base.Commands
 
         protected async Task<bool> PerformNonCooldownRequirementChecks(UserViewModel user)
         {
-            if (await this.CheckUserRoleRequirement(user) && await this.CheckRankRequirement(user))
+            if (await this.CheckUserRoleRequirement(user) && await this.CheckRankRequirement(user) && await this.CheckSettingsRequirement(user))
             {
                 return true;
             }
@@ -315,11 +306,11 @@ namespace MixItUp.Base.Commands
             int cumulativeOutcomeProbability = 0;
             foreach (GameOutcome outcome in outcomes)
             {
-                if (cumulativeOutcomeProbability < randomNumber && randomNumber <= (cumulativeOutcomeProbability + outcome.GetRoleProbability(user.PrimaryRole)))
+                if (cumulativeOutcomeProbability < randomNumber && randomNumber <= (cumulativeOutcomeProbability + outcome.GetRoleProbability(user)))
                 {
                     return outcome;
                 }
-                cumulativeOutcomeProbability += outcome.GetRoleProbability(user.PrimaryRole);
+                cumulativeOutcomeProbability += outcome.GetRoleProbability(user);
             }
             return outcomes.Last();
         }
@@ -386,6 +377,8 @@ namespace MixItUp.Base.Commands
             this.Outcomes = new List<GameOutcome>(outcomes);
         }
 
+        public override IEnumerable<CommandBase> GetAllInnerCommands() { return this.Outcomes.Select(o => o.Command); }
+
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
         {
             if (await this.PerformUsageChecks(user, arguments))
@@ -421,6 +414,8 @@ namespace MixItUp.Base.Commands
             this.FailedOutcome = failedOutcome;
         }
 
+        public override IEnumerable<CommandBase> GetAllInnerCommands() { return new List<CommandBase>() { this.SuccessfulOutcome.Command, this.FailedOutcome.Command }; }
+
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
         {
             if (await this.PerformUsageChecks(user, arguments))
@@ -440,7 +435,7 @@ namespace MixItUp.Base.Commands
                         if (targetUser != null)
                         {
                             int randomNumber = this.GenerateProbability();
-                            if (randomNumber <= this.SuccessfulOutcome.GetRoleProbability(user.PrimaryRole))
+                            if (randomNumber <= this.SuccessfulOutcome.GetRoleProbability(user))
                             {
                                 user.Data.AddCurrencyAmount(currency, betAmount);
                                 targetUser.Data.SubtractCurrencyAmount(currency, betAmount);
@@ -546,6 +541,8 @@ namespace MixItUp.Base.Commands
             this.UserSuccessOutcome = userSuccessOutcome;
             this.UserFailOutcome = userFailOutcome;
         }
+
+        public override IEnumerable<CommandBase> GetAllInnerCommands() { return new List<CommandBase>() { this.StartedCommand, this.UserJoinCommand, this.UserSuccessOutcome.Command, this.UserFailOutcome.Command }; }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
         {
@@ -664,6 +661,8 @@ namespace MixItUp.Base.Commands
         {
             this.StatusArgument = statusArgument;
         }
+
+        public override IEnumerable<CommandBase> GetAllInnerCommands() { return new List<CommandBase>(); }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
         {
@@ -808,6 +807,13 @@ namespace MixItUp.Base.Commands
             this.FailureOutcomeCommand = failureOutcomeCommand;
         }
 
+        public override IEnumerable<CommandBase> GetAllInnerCommands()
+        {
+            List<CommandBase> commands = new List<CommandBase>(base.GetAllInnerCommands());
+            commands.Add(this.FailureOutcomeCommand);
+            return commands;
+        }
+
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
         {
             if (await this.PerformUsageChecks(user, arguments))
@@ -941,6 +947,13 @@ namespace MixItUp.Base.Commands
             this.TimeLimit = timeLimit;
         }
 
+        public override IEnumerable<CommandBase> GetAllInnerCommands()
+        {
+            List<CommandBase> commands = new List<CommandBase>(base.GetAllInnerCommands());
+            commands.Add(this.StartedCommand);
+            return commands;
+        }
+
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
         {
             bool hasTarget = false;
@@ -972,7 +985,7 @@ namespace MixItUp.Base.Commands
                     }
 
                     int randomNumber = this.GenerateProbability();
-                    if (randomNumber <= this.SuccessfulOutcome.GetRoleProbability(user.PrimaryRole))
+                    if (randomNumber <= this.SuccessfulOutcome.GetRoleProbability(user))
                     {
                         this.winners.Add(this.currentStarterUser);
                         this.currentStarterUser.Data.AddCurrencyAmount(currency, this.currentBetAmount * 2);
@@ -1093,12 +1106,23 @@ namespace MixItUp.Base.Commands
             this.NoneSucceedCommand = noneSucceedCommand;
         }
 
+        public override IEnumerable<CommandBase> GetAllInnerCommands()
+        {
+            List<CommandBase> commands = new List<CommandBase>(base.GetAllInnerCommands());
+            commands.Add(this.AllSucceedCommand);
+            commands.Add(this.TopThirdsSucceedCommand);
+            commands.Add(this.MiddleThirdsSucceedCommand);
+            commands.Add(this.LowThirdsSucceedCommand);
+            commands.Add(this.NoneSucceedCommand);
+            return commands;
+        }
+
         protected override async Task SelectWinners()
         {
             foreach (var enteredUser in this.enteredUsers)
             {
                 int randomNumber = this.GenerateProbability();
-                if (randomNumber <= this.UserSuccessOutcome.GetRoleProbability(enteredUser.Key.PrimaryRole))
+                if (randomNumber <= this.UserSuccessOutcome.GetRoleProbability(enteredUser.Key))
                 {
                     this.winners.Add(enteredUser.Key);
                     await this.PerformOutcome(enteredUser.Key, new List<string>(), this.UserSuccessOutcome, enteredUser.Value);
@@ -1156,6 +1180,13 @@ namespace MixItUp.Base.Commands
         {
             this.MaxWinners = maxWinners;
             this.GameCompleteCommand = gameCompleteCommand;
+        }
+
+        public override IEnumerable<CommandBase> GetAllInnerCommands()
+        {
+            List<CommandBase> commands = new List<CommandBase>(base.GetAllInnerCommands());
+            commands.Add(this.GameCompleteCommand);
+            return commands;
         }
 
         protected override async Task<bool> PerformUsageChecks(UserViewModel user, IEnumerable<string> arguments)
@@ -1245,6 +1276,13 @@ namespace MixItUp.Base.Commands
         {
             this.GameStarterRequirement = gameStarterRequirement;
             this.GameCompleteCommand = gameCompleteCommand;
+        }
+
+        public override IEnumerable<CommandBase> GetAllInnerCommands()
+        {
+            List<CommandBase> commands = new List<CommandBase>(base.GetAllInnerCommands());
+            commands.Add(this.GameCompleteCommand);
+            return commands;
         }
 
         protected override async Task<bool> PerformUsageChecks(UserViewModel user, IEnumerable<string> arguments)
@@ -1359,6 +1397,13 @@ namespace MixItUp.Base.Commands
             this.IsNumberRange = isNumberRange;
             this.ValidBetTypes = validBetTypes;
             this.GameCompleteCommand = gameCompleteCommand;
+        }
+
+        public override IEnumerable<CommandBase> GetAllInnerCommands()
+        {
+            List<CommandBase> commands = new List<CommandBase>(base.GetAllInnerCommands());
+            commands.Add(this.GameCompleteCommand);
+            return commands;
         }
 
         protected override async Task<bool> PerformUsageChecks(UserViewModel user, IEnumerable<string> arguments)
@@ -1506,6 +1551,14 @@ namespace MixItUp.Base.Commands
             this.HitmanTimeLimit = hitmanTimeLimit;
         }
 
+        public override IEnumerable<CommandBase> GetAllInnerCommands()
+        {
+            List<CommandBase> commands = new List<CommandBase>(base.GetAllInnerCommands());
+            commands.Add(this.HitmanApproachingCommand);
+            commands.Add(this.HitmanAppearsCommand);
+            return commands;
+        }
+
         protected override async Task<bool> PerformUsageChecks(UserViewModel user, IEnumerable<string> arguments)
         {
             if (this.timeLimitTask != null)
@@ -1640,6 +1693,15 @@ namespace MixItUp.Base.Commands
             this.PayoutCommand = payoutCommand;
         }
 
+        public override IEnumerable<CommandBase> GetAllInnerCommands()
+        {
+            List<CommandBase> commands = new List<CommandBase>(base.GetAllInnerCommands());
+            commands.Add(this.StatusCommand);
+            commands.Add(this.NoPayoutCommand);
+            commands.Add(this.PayoutCommand);
+            return commands;
+        }
+
         protected override async Task ReportStatus(UserViewModel user, IEnumerable<string> arguments)
         {
             await this.PerformCommand(this.StatusCommand, user, arguments, 0, 0);
@@ -1752,6 +1814,20 @@ namespace MixItUp.Base.Commands
             this.CollectPayoutPercentageMinimum = collectPayoutPercentageMinimum;
             this.CollectPayoutPercentageMaximum = collectPayoutPercentageMaximum;
             this.CollectCommand = collectCommand;
+        }
+
+        public override IEnumerable<CommandBase> GetAllInnerCommands()
+        {
+            List<CommandBase> commands = new List<CommandBase>(base.GetAllInnerCommands());
+            commands.Add(this.Stage1DepositCommand);
+            commands.Add(this.Stage1StatusCommand);
+            commands.Add(this.Stage2DepositCommand);
+            commands.Add(this.Stage2StatusCommand);
+            commands.Add(this.Stage3DepositCommand);
+            commands.Add(this.Stage3StatusCommand);
+            commands.Add(this.PayoutCommand);
+            commands.Add(this.CollectCommand);
+            return commands;
         }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
@@ -1915,6 +1991,16 @@ namespace MixItUp.Base.Commands
             this.InspectionCommand = inspectionCommand;
 
             this.ResetCombination();
+        }
+
+        public override IEnumerable<CommandBase> GetAllInnerCommands()
+        {
+            List<CommandBase> commands = new List<CommandBase>(base.GetAllInnerCommands());
+            commands.Add(this.StatusCommand);
+            commands.Add(this.SuccessfulGuessCommand);
+            commands.Add(this.FailedGuessCommand);
+            commands.Add(this.InspectionCommand);
+            return commands;
         }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)

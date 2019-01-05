@@ -42,7 +42,9 @@
                     <Grid Margin="10">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="20" />
+                            <RowDefinition Height="10" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="10" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
@@ -69,6 +71,11 @@
 
                         <TextBlock Grid.Row="2" Grid.Column="6" VerticalAlignment="Center">Follow Age:</TextBlock>
                         <TextBlock x:Name="FollowAgeTextBlock" VerticalAlignment="Center" Grid.Row="2" Grid.Column="8" Text="{Binding FollowAgeString}" />
+
+                        <TextBox x:Name="CustomTitleTextBox" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="5" Width="200" Text="{Binding Data.CustomTitle}" MaterialDesign:HintAssist.Hint="Custom Title" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+
+                        <TextBlock Grid.Row="4" Grid.Column="6" VerticalAlignment="Center">Sub Age:</TextBlock>
+                        <TextBlock x:Name="SubAgeTextBlock" VerticalAlignment="Center" Grid.Row="4" Grid.Column="8" Text="{Binding MixerSubscribeAgeString}" />
                     </Grid>
                 </GroupBox>
 
@@ -79,32 +86,14 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <GroupBox Header="Currency" Grid.Column="0">
-                        <DataGrid x:Name="CurrencyDataGrid" Style="{StaticResource StandardDataGrid}" HeadersVisibility="None">
-                            <DataGrid.Columns>
-                                <DataGridTemplateColumn Width="*">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <ContentControl Content="{Binding}" />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                            </DataGrid.Columns>
-                        </DataGrid>
+                    <GroupBox Header="Currency / Rank" Grid.Column="0">
+                        <StackPanel x:Name="CurrencyRankStackPanel" />
                     </GroupBox>
 
-                    <GroupBox Header="Rank" Grid.Column="2">
-                        <DataGrid x:Name="RankDataGrid" Style="{StaticResource StandardDataGrid}" HeadersVisibility="None">
-                            <DataGrid.Columns>
-                                <DataGridTemplateColumn Width="*">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <ContentControl Content="{Binding}" />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                            </DataGrid.Columns>
-                        </DataGrid>
+                    <GroupBox Header="Inventory" Grid.Column="2">
+                        <ScrollViewer VerticalScrollBarVisibility="Visible" MaxHeight="200">
+                            <StackPanel x:Name="InventoryStackPanel" />
+                        </ScrollViewer>
                     </GroupBox>
                 </Grid>
 
@@ -136,11 +125,13 @@
                 <GroupBox Header="Options" Grid.Row="6">
                     <Grid Margin="10">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
                             <ColumnDefinition Width="40" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="40" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="40" />
                             <RowDefinition Height="Auto" />
@@ -158,7 +149,7 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0" VerticalAlignment="Center">Currency/Rank Exempt:</TextBlock>
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center">Currency/Rank/Inventory Exempt:</TextBlock>
                             <ToggleButton Grid.Column="2" x:Name="CurrencyRankExemptToggleButton" Checked="CurrencyRankExemptToggleButton_Checked" Unchecked="CurrencyRankExemptToggleButton_Checked" />
                         </Grid>
 
@@ -172,6 +163,8 @@
                             <TextBlock Grid.Column="0" VerticalAlignment="Center">Spark Exempt:</TextBlock>
                             <ToggleButton Grid.Column="2" x:Name="SparkExemptToggleButton" Checked="SparkExemptToggleButton_Checked" Unchecked="SparkExemptToggleButton_Checked" />
                         </Grid>
+
+                        <ComboBox x:Name="PatreonUserComboBox" Grid.Column="0" Grid.Row="4" IsEnabled="False" IsEditable="True" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="Patreon User" SelectionChanged="PatreonUserComboBox_SelectionChanged" DisplayMemberPath="User.LookupName" Width="200" />
 
                     </Grid>
                 </GroupBox>

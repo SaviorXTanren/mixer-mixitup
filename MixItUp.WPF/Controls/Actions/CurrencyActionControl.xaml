@@ -20,13 +20,15 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="CurrencyTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Currency/Rank Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="250" DisplayMemberPath="Name" SelectionChanged="CurrencyTypeComboBox_SelectionChanged" />
+            <ComboBox x:Name="CurrencyTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Currency/Rank/Inventory" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="175" DisplayMemberPath="Name" SelectionChanged="CurrencyTypeComboBox_SelectionChanged" />
 
             <ComboBox x:Name="CurrencyActionTypeComboBox" Grid.Column="2" Width="200" MaterialDesign:HintAssist.Hint="Action To Perform" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEnabled="False" SelectionChanged="CurrencyActionTypeComboBox_SelectionChanged" />
 
-            <TextBox Grid.Column="4" x:Name="CurrencyAmountTextBox" Width="150" MaterialDesign:HintAssist.Hint="Amount" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <ComboBox x:Name="InventoryItemNameComboBox" Grid.Column="4" Width="150" Margin="0,0,20,0" Visibility="Collapsed" MaterialDesign:HintAssist.Hint="Item Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <TextBox Grid.Column="5" x:Name="CurrencyAmountTextBox" Width="100" MaterialDesign:HintAssist.Hint="Amount" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid x:Name="GiveToGrid" Grid.Row="1" Margin="0,20,0,0" Visibility="Collapsed">
@@ -41,7 +43,9 @@
             <TextBlock Grid.Column="0" x:Name="DeductFromUserTextBlock" VerticalAlignment="Center" IsEnabled="False">Deduct From User Running Command:</TextBlock>
             <ToggleButton Grid.Column="2" x:Name="DeductFromUserToggleButton" VerticalAlignment="Center" IsEnabled="False"/>
 
-            <TextBox Grid.Column="4" x:Name="CurrencyUsernameTextBox" Width="200" MaterialDesign:HintAssist.Hint="Target User" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <ComboBox Grid.Column="4" x:Name="CurrencyPermissionsAllowedComboBox" Visibility="Collapsed" MaterialDesign:HintAssist.Hint="Users To Apply To" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200" />
+
+            <TextBox Grid.Column="4" x:Name="CurrencyUsernameTextBox" Visibility="Collapsed" Width="200" MaterialDesign:HintAssist.Hint="Target User" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
     </Grid>
 </local:ActionControlBase>

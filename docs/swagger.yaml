@@ -22,6 +22,8 @@ tags:
     description: Operations related to Mix It Up Chat
   - name: Commands
     description: Operations related to Mix It Up Commands
+  - name: Inventory
+    description: Operations related to Mix It Up Inventory data
   - name: Mixer
     description: Mixer Passthrough APIs
 
@@ -128,6 +130,44 @@ paths:
         '404':
           description: User not found
 
+  '/users/{usernameOrID}/inventory/{inventoryID}/adjust':
+    parameters:
+      - name: usernameOrID
+        in: path
+        description: 'The name or ID that needs to be adjusted'
+        required: true
+        type: string
+      - name: inventoryID
+        in: path
+        description: 'The inventory ID that needs to be adjusted'
+        required: true
+        type: string
+        format: uuid
+    put:
+      summary: This API can be used to add or subtract inventory items from a user.  This API can be used with a PATCH as well.
+      tags:
+        - User
+        - Inventory
+      parameters:
+        - name: adjustUserInventory
+          in: body
+          required: true
+          schema:
+           $ref: '#/definitions/AdjustUserInventory'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/MixItUpUser'
+        '400':
+          description: Bad request was sent in
+        '403':
+          description: User does not have enough of the chosen inventory items to remove
+        '404':
+          description: User not found
+
   '/users/top':
     parameters:
       - name: count
@@ -139,7 +179,7 @@ paths:
     get:
       tags:
         - User
-      summary: Gets a list users ordered by viewing time descending
+      summary: Gets a list users ordered by viewing time descending.
       operationId: topUserByViewingTime
       produces:
         - application/json
@@ -181,7 +221,7 @@ paths:
       tags:
         - User
         - Currency
-      summary: Gets a list users ordered by currency quantity descending
+      summary: Gets a list users ordered by currency quantity descending.  The streamer and anyone marked as currency/rank exempt will not be visible in this list.
       operationId: topUserOfCurrency
       produces:
         - application/json
@@ -310,6 +350,12 @@ paths:
         - Commands
       summary: Used to run the requested command.
       operationId: runCommand
+      parameters:
+        - name: arguments
+          in: body
+          required: false
+          schema:
+            $ref: '#/definitions/ListOfStrings'
       produces:
         - application/json
       responses:
@@ -340,7 +386,21 @@ paths:
           description: Bad request was sent in
         '404':
           description: The command could not be found.
-            
+
+  '/inventory':
+    get:
+      tags:
+        - Inventory
+      summary: Gets a list of all inventories available.
+      operationId: getAllInventories
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ListOfMixItUpInventory'
+
   '/mixer/users/{usernameOrID}':
     get:
       tags:
@@ -382,10 +442,14 @@ definitions:
         description: The number of minutes the user has been in the stream.
         type: integer
         example: 3244
-      CurrrencyAmounts:
+      CurrencyAmounts:
         type: array
         items:
           $ref: '#/definitions/MixItUpCurrencyAmount'
+      InventoryAmounts:
+        type: array
+        items:
+          $ref: '#/definitions/MixItUpInventoryAmount'
 
   UpdateMixItUpUser:
     type: object
@@ -399,27 +463,48 @@ definitions:
         description: The number of minutes the user has been in the stream.
         type: integer
         example: 3244
-      CurrrencyAmounts:
+      CurrencyAmounts:
         type: array
         items:
           $ref: '#/definitions/MixItUpCurrencyAmount'
+      InventoryAmounts:
+        type: array
+        items:
+          $ref: '#/definitions/MixItUpInventoryAmount'
           
   ListOfMixItUpUsernamesOrIDs:
     type: array
     items:
       type: string
-          
+
   ListOfMixItUpUsers:
     type: array
     items:
       $ref: '#/definitions/MixItUpUser'
       
+  ListOfStrings:
+    type: array
+    items:
+      type: string
+
   AdjustUserCurrency:
     type: object
     required: [ Amount ]
     properties:
       Amount:
         description: The amount to adjust the user's currency.  This amount may be positive or negative.
+        type: integer
+    
+  AdjustUserInventory:
+    type: object
+    required: [ Name, Amount ]
+    properties:
+      Name:
+        description: The name of the item to adjust for user's inventory.
+        type: string
+        example: Potions
+      Amount:
+        description: The amount to adjust the user's inventory.  This amount may be positive or negative.
         type: integer
 
   MixItUpCurrencyAmount:
@@ -458,6 +543,56 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/MixItUpCurrency'
+
+  MixItUpInventoryItemAmount:
+    type: object
+    required: [ Name, Items ]
+    properties:
+      Name:
+        description: The Mix It Up inventory item name.
+        type: string
+        example: Influence
+      Amount:
+        description: The amount of this item the user has.
+        type: integer
+        example: 2751
+
+  MixItUpInventoryAmount:
+    type: object
+    required: [ ID, Name, Items ]
+    properties:
+      ID:
+        description: The Mix It Up inventory ID.
+        type: string
+        format: uuid
+        example: 1783e5d9-c2ab-423a-ae64-7dc9a086b194
+      Name:
+        description: The Mix It Up inventory name.
+        type: string
+        example: Equipment
+      Items:
+        type: array
+        items:
+          $ref: '#/definitions/MixItUpInventoryItemAmount'
+
+  MixItUpInventory:
+    type: object
+    required: [ ID, Name ]
+    properties:
+      ID:
+        description: The Mix It Up inventory ID.
+        type: string
+        format: uuid
+        example: 1783e5d9-c2ab-423a-ae64-7dc9a086b194
+      Name:
+        description: The Mix It Up inventory name.
+        type: string
+        example: Equipment
+
+  ListOfMixItUpInventory:
+    type: array
+    items:
+      $ref: '#/definitions/MixItUpInventory'
       
   MixItUpCommand:
     required: [ ID, Name, IsEnabled ]

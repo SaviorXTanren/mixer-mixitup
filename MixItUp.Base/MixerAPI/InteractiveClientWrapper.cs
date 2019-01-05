@@ -414,6 +414,11 @@ namespace MixItUp.Base.MixerAPI
                 else if (control is InteractiveConnectedJoystickControlModel) { updatedControls.Add(SerializerHelper.Clone<InteractiveConnectedJoystickControlModel>(control)); }
                 else if (control is InteractiveConnectedTextBoxControlModel) { updatedControls.Add(SerializerHelper.Clone<InteractiveConnectedTextBoxControlModel>(control)); }
                 else if (control is InteractiveConnectedLabelControlModel) { updatedControls.Add(SerializerHelper.Clone<InteractiveConnectedLabelControlModel>(control)); }
+                else if (control is InteractiveButtonControlModel) { updatedControls.Add(SerializerHelper.Clone<InteractiveButtonControlModel>(control)); }
+                else if (control is InteractiveJoystickControlModel) { updatedControls.Add(SerializerHelper.Clone<InteractiveJoystickControlModel>(control)); }
+                else if (control is InteractiveTextBoxControlModel) { updatedControls.Add(SerializerHelper.Clone<InteractiveTextBoxControlModel>(control)); }
+                else if (control is InteractiveLabelControlModel) { updatedControls.Add(SerializerHelper.Clone<InteractiveLabelControlModel>(control)); }
+                else { updatedControls.Add(SerializerHelper.Clone<InteractiveControlModel>(control)); }
             }
 
             foreach (InteractiveControlModel control in updatedControls)
@@ -665,6 +670,12 @@ namespace MixItUp.Base.MixerAPI
 
                 await ChannelSession.ActiveUsers.AddOrUpdateUsers(participants);
 
+                List<InteractiveUserGroupViewModel> gameGroups = new List<InteractiveUserGroupViewModel>();
+                if (this.Client != null && this.Client.InteractiveGame != null && ChannelSession.Settings.InteractiveUserGroups.ContainsKey(this.Client.InteractiveGame.id))
+                {
+                    gameGroups = new List<InteractiveUserGroupViewModel>(ChannelSession.Settings.InteractiveUserGroups[this.Client.InteractiveGame.id].OrderByDescending(g => g.AssociatedUserRole));
+                }
+
                 foreach (InteractiveParticipantModel participant in participants)
                 {
                     if (participant != null && !string.IsNullOrEmpty(participant.sessionID))
@@ -674,17 +685,14 @@ namespace MixItUp.Base.MixerAPI
                         UserViewModel user = await ChannelSession.ActiveUsers.GetUserByID(participant.userID);
                         if (user != null)
                         {
-                            if (this.Client != null && this.Client.InteractiveGame != null && ChannelSession.Settings.InteractiveUserGroups.ContainsKey(this.Client.InteractiveGame.id))
+                            InteractiveUserGroupViewModel group = gameGroups.FirstOrDefault(g => user.HasPermissionsTo(g.AssociatedUserRole));
+                            if (group != null && !string.IsNullOrEmpty(group.DefaultScene))
                             {
-                                InteractiveUserGroupViewModel group = ChannelSession.Settings.InteractiveUserGroups[this.Client.InteractiveGame.id].FirstOrDefault(g => g.AssociatedUserRole == user.PrimaryRole);
-                                if (group != null && !string.IsNullOrEmpty(group.DefaultScene))
+                                bool updateParticipant = !group.DefaultScene.Equals(user.InteractiveGroupID);
+                                user.InteractiveGroupID = group.GroupName;
+                                if (updateParticipant)
                                 {
-                                    bool updateParticipant = !group.DefaultScene.Equals(user.InteractiveGroupID);
-                                    user.InteractiveGroupID = group.GroupName;
-                                    if (updateParticipant)
-                                    {
-                                        participantsToUpdate.AddRange(user.GetParticipantModels());
-                                    }
+                                    participantsToUpdate.AddRange(user.GetParticipantModels());
                                 }
                             }
                         }
@@ -822,6 +830,7 @@ namespace MixItUp.Base.MixerAPI
                     {
                         await user.RefreshDetails();
                     }
+                    user.UpdateLastActivity();
 
                     if (ChannelSession.Settings.PreventUnknownInteractiveUsers && user.IsAnonymous)
                     {

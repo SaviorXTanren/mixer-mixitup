@@ -11,12 +11,15 @@ namespace MixItUp.Desktop.Util
         protected Socket socket;
 
         private string connectionURL;
+        private string query;
 
         public SocketIOService(string connectionURL) { this.connectionURL = connectionURL; }
 
+        public SocketIOService(string connectionURL, string query) : this(connectionURL) { this.query = query; }
+
         public virtual Task Connect()
         {
-            this.socket = IO.Socket(this.connectionURL);
+            this.socket = !string.IsNullOrEmpty(this.query) ? IO.Socket(this.connectionURL, new IO.Options() { QueryString = this.query }) : IO.Socket(this.connectionURL);
             return Task.FromResult(0);
         }
 

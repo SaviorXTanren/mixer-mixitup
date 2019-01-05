@@ -39,9 +39,10 @@ namespace MixItUp.Desktop.Services
                 {
                     await this.RefreshOAuthToken();
 
-                    await this.InitializeInternal();
-
-                    return true;
+                    if (await this.InitializeInternal())
+                    {
+                        return true;
+                    }
                 }
                 catch (Exception ex) { Logger.Log(ex); }
             }
@@ -61,9 +62,7 @@ namespace MixItUp.Desktop.Services
                 {
                     this.token.authorizationCode = authorizationCode;
 
-                    await this.InitializeInternal();
-
-                    return true;
+                    return await this.InitializeInternal();
                 }
             }
 
@@ -393,10 +392,15 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        private async Task InitializeInternal()
+        private async Task<bool> InitializeInternal()
         {
             this.Profile = await this.GetCurrentProfile();
-            await this.DisableRepeat();
+            if (this.Profile != null)
+            {
+                await this.DisableRepeat();
+                return true;
+            }
+            return false;
         }
 
         private async Task<IEnumerable<JObject>> GetPagedResult(string endpointURL)

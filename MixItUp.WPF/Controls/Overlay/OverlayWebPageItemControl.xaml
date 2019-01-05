@@ -14,15 +14,15 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="20" />
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="15" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <TextBox Grid.Column="0" x:Name="WebPageFilePathTextBox" MaterialDesign:HintAssist.Hint="Web Page (URL or Local File)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        <TextBox Grid.Column="0" x:Name="WebPageFilePathTextBox" MaterialDesign:HintAssist.Hint="Web Page (URL or Local File)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
         <Button Grid.Column="2" x:Name="WebPageFileBrowseButton" Click="WebPageFileBrowseButton_Click">Browse</Button>
 
-        <TextBox Grid.Column="4" x:Name="WebPageWidthTextBox" MaterialDesign:HintAssist.Hint="Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
+        <TextBox Grid.Column="4" x:Name="WebPageWidthTextBox" MaterialDesign:HintAssist.Hint="Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" VerticalAlignment="Center" />
 
-        <TextBox Grid.Column="6" x:Name="WebPageHeightTextBox" MaterialDesign:HintAssist.Hint="Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90"/>
+        <TextBox Grid.Column="6" x:Name="WebPageHeightTextBox" MaterialDesign:HintAssist.Hint="Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="95" VerticalAlignment="Center"/>
     </Grid>
 </local:OverlayItemControl>

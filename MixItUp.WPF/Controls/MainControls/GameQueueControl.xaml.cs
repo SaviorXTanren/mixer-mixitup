@@ -44,6 +44,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
             this.SubPriorityToggleButton.IsChecked = ChannelSession.Settings.GameQueueSubPriority;
 
+            this.Requirement.HideSettingsRequirement();
             this.Requirement.SetRequirements(ChannelSession.Settings.GameQueueRequirements);
 
             GlobalEvents.OnGameQueueUpdated += ChannelSession_OnGameQueueUpdated;

@@ -23,7 +23,7 @@ namespace MixItUp.WPF.Controls.Requirement
 
         public void HideCurrencyRequirement()
         {
-            this.CurrencyPopup.Visibility = Visibility.Collapsed;
+            this.CurrencyRankInventoryRequirement.HideCurrencyRequirement();
         }
 
         public void HideThresholdRequirement()
@@ -31,15 +31,23 @@ namespace MixItUp.WPF.Controls.Requirement
             this.ThresholdPopup.Visibility = Visibility.Collapsed;
         }
 
+        public void HideSettingsRequirement()
+        {
+            this.SettingsPopup.Visibility = Visibility.Collapsed;
+        }
+
         public async Task<bool> Validate()
         {
-            if (this.CurrencyPopup.Visibility == Visibility.Visible)
+            if (this.CurrencyRankInventoryRequirement.CurrencyRequirement.Visibility == Visibility.Visible)
             {
-                return await this.CooldownRequirement.Validate() && await this.CurrencyRequirement.Validate() && await this.RankRequirement.Validate() && await this.ThresholdRequirement.Validate();
+                return await this.CooldownRequirement.Validate() && await this.CurrencyRankInventoryRequirement.CurrencyRequirement.Validate() &&
+                    await this.CurrencyRankInventoryRequirement.RankRequirement.Validate() && await this.CurrencyRankInventoryRequirement.InventoryRequirement.Validate() &&
+                    await this.ThresholdRequirement.Validate() && await this.SettingsRequirement.Validate();
             }
             else
             {
-                return await this.CooldownRequirement.Validate() && await this.RankRequirement.Validate() && await this.ThresholdRequirement.Validate();
+                return await this.CooldownRequirement.Validate() && await this.CurrencyRankInventoryRequirement.RankRequirement.Validate() &&
+                    await this.CurrencyRankInventoryRequirement.InventoryRequirement.Validate() && await this.ThresholdRequirement.Validate() && await this.SettingsRequirement.Validate();
             }
         }
 
@@ -48,12 +56,14 @@ namespace MixItUp.WPF.Controls.Requirement
             RequirementViewModel requirement = new RequirementViewModel();
             requirement.Role = this.RoleRequirement.GetRoleRequirement();
             requirement.Cooldown = this.CooldownRequirement.GetCooldownRequirement();
-            if (this.CurrencyPopup.Visibility == Visibility.Visible)
+            if (this.CurrencyRankInventoryRequirement.CurrencyRequirement.Visibility == Visibility.Visible)
             {
-                requirement.Currency = this.CurrencyRequirement.GetCurrencyRequirement();
+                requirement.Currency = this.CurrencyRankInventoryRequirement.CurrencyRequirement.GetCurrencyRequirement();
             }
-            requirement.Rank = this.RankRequirement.GetCurrencyRequirement();
+            requirement.Rank = this.CurrencyRankInventoryRequirement.RankRequirement.GetCurrencyRequirement();
+            requirement.Inventory = this.CurrencyRankInventoryRequirement.InventoryRequirement.GetInventoryRequirement();
             requirement.Threshold = this.ThresholdRequirement.GetThresholdRequirement();
+            requirement.Settings = this.SettingsRequirement.GetSettingsRequirement();
             return requirement;
         }
 
@@ -61,12 +71,14 @@ namespace MixItUp.WPF.Controls.Requirement
         {
             this.RoleRequirement.SetRoleRequirement(requirement.Role);
             this.CooldownRequirement.SetCooldownRequirement(requirement.Cooldown);
-            if (this.CurrencyPopup.Visibility == Visibility.Visible)
+            if (this.CurrencyRankInventoryRequirement.CurrencyRequirement.Visibility == Visibility.Visible)
             {
-                this.CurrencyRequirement.SetCurrencyRequirement(requirement.Currency);
+                this.CurrencyRankInventoryRequirement.CurrencyRequirement.SetCurrencyRequirement(requirement.Currency);
             }
-            this.RankRequirement.SetCurrencyRequirement(requirement.Rank);
+            this.CurrencyRankInventoryRequirement.RankRequirement.SetCurrencyRequirement(requirement.Rank);
+            this.CurrencyRankInventoryRequirement.InventoryRequirement.SetInventoryRequirement(requirement.Inventory);
             this.ThresholdRequirement.SetThresholdRequirement(requirement.Threshold);
+            this.SettingsRequirement.SetSettingsRequirement(requirement.Settings);
         }
 
         private void UsageRequirementsHelpButton_Click(object sender, RoutedEventArgs e) { Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Usage-Requirements"); }

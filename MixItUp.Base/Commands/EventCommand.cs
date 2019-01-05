@@ -2,9 +2,14 @@
 using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
+using MixItUp.Base.Model.User;
+using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Commands
 {
@@ -21,6 +26,9 @@ namespace MixItUp.Base.Commands
         [Name("GameWisp Resubscribed")]
         GameWispResubscribed = 3,
 
+        [Name("Patreon Subscribed")]
+        PatreonSubscribed = 5,
+
         [Name("Streamlabs Donation")]
         StreamlabsDonation = 10,
         [Name("GawkBox Donation")]
@@ -29,6 +37,15 @@ namespace MixItUp.Base.Commands
         TiltifyDonation = 12,
         [Name("Extra Life Donation")]
         ExtraLifeDonation = 13,
+        [Name("TipeeeStream Donation")]
+        TipeeeStreamDonation = 14,
+        [Name("TreatStream Donation")]
+        TreatStreamDonation = 15,
+        [Name("StreamJar Donation")]
+        StreamJarDonation = 16,
+
+        [Name("Stream Tweet Retweet")]
+        TwitterStreamTweetRetweet = 20,
 
         [Name("User First Joined")]
         MixerUserFirstJoin = 30,
@@ -57,6 +74,33 @@ namespace MixItUp.Base.Commands
 
     public class EventCommand : CommandBase, IEquatable<EventCommand>
     {
+        public static async Task ProcessDonationEventCommand(UserDonationModel donation, OtherEventTypeEnum eventType, Dictionary<string, string> additionalSpecialIdentifiers = null)
+        {
+            GlobalEvents.DonationOccurred(donation);
+
+            UserViewModel user = new UserViewModel(0, donation.UserName);
+
+            UserModel userModel = await ChannelSession.Connection.GetUser(user.UserName);
+            if (userModel != null)
+            {
+                user = new UserViewModel(userModel);
+            }
+
+            EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(eventType));
+            if (command != null)
+            {
+                Dictionary<string, string> specialIdentifiers = donation.GetSpecialIdentifiers();
+                if (additionalSpecialIdentifiers != null)
+                {
+                    foreach (var kvp in additionalSpecialIdentifiers)
+                    {
+                        specialIdentifiers[kvp.Key] = kvp.Value;
+                    }
+                }
+                await command.Perform(user, arguments: null, extraSpecialIdentifiers: specialIdentifiers);
+            }
+        }
+
         private static SemaphoreSlim eventCommandPerformSemaphore = new SemaphoreSlim(1);
 
         [DataMember]

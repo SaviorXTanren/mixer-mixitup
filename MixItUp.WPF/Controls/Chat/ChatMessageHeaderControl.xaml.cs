@@ -42,7 +42,7 @@ namespace MixItUp.WPF.Controls.Chat
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 }
 
-                if (ChatControl.SubscriberBadgeBitmap != null && this.Message.User.IsSubscriber)
+                if (ChatControl.SubscriberBadgeBitmap != null && this.Message.User.IsMixerSubscriber)
                 {
                     this.SubscriberImage.Visibility = Visibility.Visible;
                     this.SubscriberImage.Source = ChatControl.SubscriberBadgeBitmap;

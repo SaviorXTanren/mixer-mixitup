@@ -56,7 +56,7 @@ namespace MixItUp.WPF.Controls.Chat
                         Task.Run(() => this.Dispatcher.Invoke(() => this.UserAvatar.SetUserAvatarUrl(this.User)));
                     }
 
-                    if (ChatControl.SubscriberBadgeBitmap != null && this.User.IsSubscriber)
+                    if (ChatControl.SubscriberBadgeBitmap != null && this.User.IsMixerSubscriber)
                     {
                         this.SubscriberImage.Visibility = Visibility.Visible;
                         this.SubscriberImage.Source = ChatControl.SubscriberBadgeBitmap;

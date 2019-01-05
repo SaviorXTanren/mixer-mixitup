@@ -16,6 +16,9 @@ namespace MixItUp.Base.Model.User
         Tiltify,
         [Name("Extra Life")]
         ExtraLife,
+        TipeeeStream,
+        TreatStream,
+        StreamJar,
     }
 
     [DataContract]
@@ -28,6 +31,8 @@ namespace MixItUp.Base.Model.User
         public string ID { get; set; }
         [DataMember]
         public string UserName { get; set; }
+        [DataMember]
+        public string Type { get; set; }
         [DataMember]
         public string Message { get; set; }
         [DataMember]
@@ -47,7 +52,7 @@ namespace MixItUp.Base.Model.User
         {
             get
             {
-                UserDataViewModel userData = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.UserName.Equals(this.UserName, StringComparison.InvariantCultureIgnoreCase));
+                UserDataViewModel userData = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => !string.IsNullOrEmpty(u.UserName) && u.UserName.Equals(this.UserName, StringComparison.InvariantCultureIgnoreCase));
                 if (userData != null)
                 {
                     return new UserViewModel(userData);
@@ -63,6 +68,7 @@ namespace MixItUp.Base.Model.User
         {
             Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
             specialIdentifiers[SpecialIdentifierStringBuilder.DonationSourceSpecialIdentifier] = EnumHelper.GetEnumName(this.Source);
+            specialIdentifiers[SpecialIdentifierStringBuilder.DonationTypeSpecialIdentifier] = this.Type;
             specialIdentifiers[SpecialIdentifierStringBuilder.DonationAmountNumberDigitsSpecialIdentifier] = (this.Amount * 100).ToString();
             specialIdentifiers[SpecialIdentifierStringBuilder.DonationAmountNumberSpecialIdentifier] = this.Amount.ToString();
             specialIdentifiers[SpecialIdentifierStringBuilder.DonationAmountSpecialIdentifier] = this.AmountText;

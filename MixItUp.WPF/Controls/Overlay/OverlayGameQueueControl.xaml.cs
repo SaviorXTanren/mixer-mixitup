@@ -62,7 +62,6 @@ namespace MixItUp.WPF.Controls.Overlay
 
         public override OverlayItemBase GetItem()
         {
-
             if (string.IsNullOrEmpty(this.TotalToShowTextBox.Text) || !int.TryParse(this.TotalToShowTextBox.Text, out int totalToShow) || totalToShow <= 0)
             {
                 return null;

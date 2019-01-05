@@ -42,7 +42,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
 
         [Route("{commandID:guid}")]
         [HttpPost]
-        public Command Run(Guid commandID)
+        public Command Run(Guid commandID, [FromBody] IEnumerable<string> arguments)
         {
             CommandBase selectedCommand = GetAllCommands().SingleOrDefault(c => c.ID == commandID);
             if (selectedCommand == null)
@@ -51,7 +51,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             }
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            selectedCommand.Perform();
+            selectedCommand.Perform(arguments);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
             return CommandFromCommandBase(selectedCommand);

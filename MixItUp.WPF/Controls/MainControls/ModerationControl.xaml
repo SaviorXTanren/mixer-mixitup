@@ -28,7 +28,25 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <GroupBox Grid.Row="0" Header="Filtered / Banned Words">
+                <GroupBox Grid.Row="0">
+                    <GroupBox.Header>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            
+                            <TextBlock Grid.Column="0" Foreground="{StaticResource WhiteColor}">Filtered / Banned Words</TextBlock>
+
+                            <TextBlock Grid.Column="2" Foreground="{StaticResource WhiteColor}">Apply Strikes:</TextBlock>
+                            <ToggleButton x:Name="FilteredWordsApplyStrikesToggleButton" Grid.Column="4" />
+
+                        </Grid>
+                    </GroupBox.Header>
+                    
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -78,7 +96,24 @@
                     </Grid>
                 </GroupBox>
 
-                <GroupBox Grid.Row="2" Header="Chat Text Moderation">
+                <GroupBox Grid.Row="2">
+                    <GroupBox.Header>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            
+                            <TextBlock Foreground="{StaticResource WhiteColor}">Chat Text Moderation</TextBlock>
+
+                            <TextBlock Grid.Column="2" Foreground="{StaticResource WhiteColor}">Apply Strikes:</TextBlock>
+                            <ToggleButton x:Name="ChatTextApplyStrikesToggleButton" Grid.Column="4" />
+                        </Grid>
+                    </GroupBox.Header>
+
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -144,7 +179,24 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <GroupBox Grid.Column="0" Header="Website Link Blocking">
+                    <GroupBox Grid.Column="0">
+                        <GroupBox.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="10" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Foreground="{StaticResource WhiteColor}">Link Blocking</TextBlock>
+
+                                <TextBlock Grid.Column="2" Foreground="{StaticResource WhiteColor}">Apply Strikes:</TextBlock>
+                                <ToggleButton x:Name="BlockLinksApplyStrikesToggleButton" Grid.Column="4" />
+                            </Grid>
+                        </GroupBox.Header>
+
                         <Grid HorizontalAlignment="Center" Margin="5">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />

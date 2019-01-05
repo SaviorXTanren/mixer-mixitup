@@ -47,6 +47,9 @@ namespace MixItUp.Desktop.Services
 
     public class SongRequestService : ISongRequestService
     {
+        public const string SpotifyDefaultAlbumArt = "https://developer.spotify.com/assets/branding-guidelines/icon1@2x.png";
+        public const string YouTubeDefaultAlbumArt = "https://www.youtube.com/yt/about/media/images/brand-resources/icons/YouTube_icon_full-color.svg";
+
         private const string SpotifyLinkPrefix = "https://open.spotify.com/track/";
         private const string SpotifyTrackPrefix = "spotify:track:";
 
@@ -78,155 +81,170 @@ namespace MixItUp.Desktop.Services
 
         public async Task<bool> Initialize()
         {
-            if (ChannelSession.Settings.SongRequestServiceTypes.Count == 0)
+            return await SongRequestService.songRequestLock.WaitAndRelease(async () =>
             {
-                return false;
-            }
-
-            if (ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.Spotify) && (ChannelSession.Services.Spotify == null || (await ChannelSession.Services.Spotify.GetCurrentlyPlaying()) == null))
-            {
-                return false;
-            }
-
-            if (ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.YouTube) && !ChannelSession.Settings.EnableOverlay)
-            {
-                return false;
-            }
-
-            this.playlistItems.Clear();
-            if (!string.IsNullOrEmpty(ChannelSession.Settings.DefaultPlaylist))
-            {
-                if (Regex.IsMatch(ChannelSession.Settings.DefaultPlaylist, SpotifyPlaylistRegex, RegexOptions.IgnoreCase) ||
-                    Regex.IsMatch(ChannelSession.Settings.DefaultPlaylist, SpotifyPlaylistLinkRegex, RegexOptions.IgnoreCase))
+                if (this.IsEnabled)
                 {
-                    if (ChannelSession.Services.Spotify != null)
-                    {
-                        string uri = ChannelSession.Settings.DefaultPlaylist;
-                        if (Regex.IsMatch(ChannelSession.Settings.DefaultPlaylist, SpotifyPlaylistLinkRegex, RegexOptions.IgnoreCase))
-                        {
-                            string playlistID = ChannelSession.Settings.DefaultPlaylist.Split(new char[] { '/' }).Last();
-                            if (!string.IsNullOrEmpty(playlistID))
-                            {
-                                if (playlistID.Contains("?"))
-                                {
-                                    playlistID = playlistID.Substring(0, playlistID.IndexOf("?"));
-                                }
-                                uri = string.Format(SpotifyPlaylistUriFormat, ChannelSession.Services.Spotify.Profile.ID, playlistID);
-                            }
-                        }
+                    return true;
+                }
 
-                        string id = uri.Split(new string[] { ":playlist:" }, StringSplitOptions.RemoveEmptyEntries).Last();
-                        if (!string.IsNullOrEmpty(id))
+                if (ChannelSession.Settings.SongRequestServiceTypes.Count == 0)
+                {
+                    return false;
+                }
+
+                if (ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.Spotify) && (ChannelSession.Services.Spotify == null || (await ChannelSession.Services.Spotify.GetCurrentlyPlaying()) == null))
+                {
+                    return false;
+                }
+
+                if (ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.YouTube) && !ChannelSession.Settings.EnableOverlay)
+                {
+                    return false;
+                }
+
+                this.playlistItems.Clear();
+                if (!string.IsNullOrEmpty(ChannelSession.Settings.DefaultPlaylist))
+                {
+                    if (Regex.IsMatch(ChannelSession.Settings.DefaultPlaylist, SpotifyPlaylistRegex, RegexOptions.IgnoreCase) ||
+                        Regex.IsMatch(ChannelSession.Settings.DefaultPlaylist, SpotifyPlaylistLinkRegex, RegexOptions.IgnoreCase))
+                    {
+                        if (ChannelSession.Services.Spotify != null)
                         {
-                            IEnumerable<SpotifySong> songs = await ChannelSession.Services.Spotify.GetPlaylistSongs(new SpotifyPlaylist { ID = id });
-                            if (songs != null)
+                            string uri = ChannelSession.Settings.DefaultPlaylist;
+                            if (Regex.IsMatch(ChannelSession.Settings.DefaultPlaylist, SpotifyPlaylistLinkRegex, RegexOptions.IgnoreCase))
                             {
-                                foreach (SpotifySong song in songs)
+                                string playlistID = ChannelSession.Settings.DefaultPlaylist.Split(new char[] { '/' }).Last();
+                                if (!string.IsNullOrEmpty(playlistID))
                                 {
-                                    this.playlistItems.Add(new SongRequestItem()
+                                    if (playlistID.Contains("?"))
                                     {
-                                        Type = SongRequestServiceTypeEnum.Spotify,
-                                        ID = song.ID,
-                                        Name = song.ToString(),
-                                        Length = song.Duration,
-                                        AlbumImage = song.Album?.ImageLink
-                                    });
+                                        playlistID = playlistID.Substring(0, playlistID.IndexOf("?"));
+                                    }
+                                    uri = string.Format(SpotifyPlaylistUriFormat, ChannelSession.Services.Spotify.Profile.ID, playlistID);
+                                }
+                            }
+
+                            string id = uri.Split(new string[] { ":playlist:" }, StringSplitOptions.RemoveEmptyEntries).Last();
+                            if (!string.IsNullOrEmpty(id))
+                            {
+                                IEnumerable<SpotifySong> songs = await ChannelSession.Services.Spotify.GetPlaylistSongs(new SpotifyPlaylist { ID = id });
+                                if (songs != null)
+                                {
+                                    foreach (SpotifySong song in songs)
+                                    {
+                                        this.playlistItems.Add(new SongRequestItem()
+                                        {
+                                            Type = SongRequestServiceTypeEnum.Spotify,
+                                            ID = song.ID,
+                                            Name = song.ToString(),
+                                            Length = song.Duration,
+                                            AlbumImage = this.GetAlbumArt(SongRequestServiceTypeEnum.Spotify, song.Album?.ImageLink)
+                                        });
+                                    }
                                 }
                             }
                         }
                     }
-                }
-                else
-                {
-                    try
+                    else
                     {
-                        Uri uri = new Uri(ChannelSession.Settings.DefaultPlaylist);
-                        if (uri.Host.EndsWith(YouTubeHost, StringComparison.InvariantCultureIgnoreCase))
+                        try
                         {
-                            NameValueCollection queryParameteters = HttpUtility.ParseQueryString(uri.Query);
-                            if (!string.IsNullOrEmpty(queryParameteters["list"]))
+                            Uri uri = new Uri(ChannelSession.Settings.DefaultPlaylist);
+                            if (uri.Host.EndsWith(YouTubeHost, StringComparison.InvariantCultureIgnoreCase))
                             {
-                                using (HttpClientWrapper client = new HttpClientWrapper("https://www.googleapis.com/"))
+                                NameValueCollection queryParameteters = HttpUtility.ParseQueryString(uri.Query);
+                                if (!string.IsNullOrEmpty(queryParameteters["list"]))
                                 {
-                                    string pageToken = null;
-                                    do
+                                    using (HttpClientWrapper client = new HttpClientWrapper("https://www.googleapis.com/"))
                                     {
-                                        string restURL = string.Format("youtube/v3/playlistItems?playlistId={0}&maxResults=50&part=snippet,contentDetails&key={1}", HttpUtility.UrlEncode(queryParameteters["list"]), ChannelSession.SecretManager.GetSecret("YouTubeKey"));
-                                        if (!string.IsNullOrEmpty(pageToken))
+                                        string pageToken = null;
+                                        do
                                         {
-                                            restURL += "&pageToken=" + pageToken;
-                                        }
-                                        HttpResponseMessage response = await client.GetAsync(restURL);
-                                        if (response.StatusCode == HttpStatusCode.OK)
-                                        {
-                                            string content = await response.Content.ReadAsStringAsync();
-                                            JObject jobj = JObject.Parse(content);
-                                            if (jobj["nextPageToken"] != null)
+                                            string restURL = string.Format("youtube/v3/playlistItems?playlistId={0}&maxResults=50&part=snippet,contentDetails&key={1}", HttpUtility.UrlEncode(queryParameteters["list"]), ChannelSession.SecretManager.GetSecret("YouTubeKey"));
+                                            if (!string.IsNullOrEmpty(pageToken))
                                             {
-                                                pageToken = jobj["nextPageToken"].ToString();
+                                                restURL += "&pageToken=" + pageToken;
                                             }
-                                            else
+                                            HttpResponseMessage response = await client.GetAsync(restURL);
+                                            if (response.StatusCode == HttpStatusCode.OK)
                                             {
-                                                pageToken = null;
-                                            }
-
-                                            if (jobj["items"] != null && jobj["items"] is JArray)
-                                            {
-                                                JArray items = (JArray)jobj["items"];
-                                                foreach (JToken item in items)
+                                                string content = await response.Content.ReadAsStringAsync();
+                                                JObject jobj = JObject.Parse(content);
+                                                if (jobj["nextPageToken"] != null)
                                                 {
-                                                    if (item["kind"] != null && item["kind"].ToString().Equals("youtube#playlistItem"))
+                                                    pageToken = jobj["nextPageToken"].ToString();
+                                                }
+                                                else
+                                                {
+                                                    pageToken = null;
+                                                }
+
+                                                if (jobj["items"] != null && jobj["items"] is JArray)
+                                                {
+                                                    JArray items = (JArray)jobj["items"];
+                                                    foreach (JToken item in items)
                                                     {
-                                                        this.playlistItems.Add(new SongRequestItem()
+                                                        if (item["kind"] != null && item["kind"].ToString().Equals("youtube#playlistItem"))
                                                         {
-                                                            ID = item["contentDetails"]["videoId"].ToString(),
-                                                            Name = item["snippet"]["title"].ToString(),
-                                                            Type = SongRequestServiceTypeEnum.YouTube,
-                                                            AlbumImage = item["snippet"]?["thumbnails"]?["high"]?["url"]?.ToString()
-                                                        });
+                                                            this.playlistItems.Add(new SongRequestItem()
+                                                            {
+                                                                ID = item["contentDetails"]["videoId"].ToString(),
+                                                                Name = item["snippet"]["title"].ToString(),
+                                                                Type = SongRequestServiceTypeEnum.YouTube,
+                                                                AlbumImage = this.GetAlbumArt(SongRequestServiceTypeEnum.YouTube, item["snippet"]?["thumbnails"]?["high"]?["url"]?.ToString())
+                                                            });
+                                                        }
                                                     }
                                                 }
                                             }
-                                        }
-                                    } while (!string.IsNullOrEmpty(pageToken));
+                                        } while (!string.IsNullOrEmpty(pageToken));
+                                    }
                                 }
                             }
                         }
+                        catch (Exception ex)
+                        {
+                            Logger.Log(ex);
+                        }
                     }
-                    catch (Exception ex)
+
+                    if (this.playlistItems.Count > 0)
                     {
-                        Logger.Log(ex);
+                        this.playlistItems = this.playlistItems.OrderBy(s => Guid.NewGuid()).ToList();
                     }
                 }
 
-                if (this.playlistItems.Count > 0)
-                {
-                    this.playlistItems = this.playlistItems.OrderBy(s => Guid.NewGuid()).ToList();
-                }
-            }
+                this.allRequests.Clear();
 
-            await this.ClearAllRequests();
-
-            this.backgroundThreadCancellationTokenSource = new CancellationTokenSource();
+                this.backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            Task.Run(async () => { await this.PlayerBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
+                Task.Run(async () => { await this.PlayerBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-            this.IsEnabled = true;
+                this.IsEnabled = true;
 
-            return true;
+                return true;
+            });
         }
 
         public async Task Disable()
         {
-            await this.ClearAllRequests();
-
-            if (this.backgroundThreadCancellationTokenSource != null)
+            await SongRequestService.songRequestLock.WaitAndRelease(() =>
             {
-                this.backgroundThreadCancellationTokenSource.Cancel();
-            }
+                this.allRequests.Clear();
 
-            this.IsEnabled = false;
+                if (this.backgroundThreadCancellationTokenSource != null)
+                {
+                    this.backgroundThreadCancellationTokenSource.Cancel();
+                    this.backgroundThreadCancellationTokenSource = null;
+                }
+
+                this.IsEnabled = false;
+                return Task.FromResult(0);
+            });
+
+            GlobalEvents.SongRequestsChangedOccurred();
         }
 
         #region Request Methods
@@ -524,7 +542,7 @@ namespace MixItUp.Desktop.Services
                 if (changeOccurred)
                 {
                     GlobalEvents.SongRequestsChangedOccurred();
-                    await Task.Delay(2000, tokenSource.Token);
+                    await Task.Delay(3500, tokenSource.Token);
                 }
 
                 await Task.Delay(1000, tokenSource.Token);
@@ -581,7 +599,7 @@ namespace MixItUp.Desktop.Services
                                             Name = item["snippet"]["title"].ToString(),
                                             User = user,
                                             Type = SongRequestServiceTypeEnum.YouTube,
-                                            AlbumImage = item["snippet"]?["thumbnails"]?["high"]?["url"]?.ToString()
+                                            AlbumImage = this.GetAlbumArt(SongRequestServiceTypeEnum.YouTube, item["snippet"]?["thumbnails"]?["high"]?["url"]?.ToString())
                                         }));
                                     }
                                 }
@@ -642,7 +660,7 @@ namespace MixItUp.Desktop.Services
                                         Name = item["snippet"]["title"].ToString(),
                                         Length = (int)timespan.TotalSeconds, User = user,
                                         Type = SongRequestServiceTypeEnum.YouTube,
-                                        AlbumImage = item["snippet"]?["thumbnails"]?["high"]?["url"]?.ToString()
+                                        AlbumImage = this.GetAlbumArt(SongRequestServiceTypeEnum.YouTube, item["snippet"]?["thumbnails"]?["high"]?["url"]?.ToString())
                                     });
                                 }
                             }
@@ -742,7 +760,7 @@ namespace MixItUp.Desktop.Services
                                 Name = song.ToString(),
                                 Length = song.Duration,
                                 User = user, Type = SongRequestServiceTypeEnum.Spotify,
-                                AlbumImage = song.Album?.ImageLink
+                                AlbumImage = this.GetAlbumArt(SongRequestServiceTypeEnum.Spotify, song.Album?.ImageLink)
                             });
                         }
                     }
@@ -904,7 +922,7 @@ namespace MixItUp.Desktop.Services
                         ID = currentlyPlaying.ID,
                         Progress = currentlyPlaying.CurrentProgress,
                         Length = currentlyPlaying.Duration,
-                        AlbumImage = currentlyPlaying.Album?.ImageLink
+                        AlbumImage = this.GetAlbumArt(SongRequestServiceTypeEnum.Spotify, currentlyPlaying.Album?.ImageLink)
                     };
 
                     if (currentlyPlaying.IsPlaying)
@@ -944,5 +962,21 @@ namespace MixItUp.Desktop.Services
         }
 
         #endregion Interaction Internal Methods
+
+        private string GetAlbumArt(SongRequestServiceTypeEnum serviceType, string albumArtLink)
+        {
+            if (string.IsNullOrEmpty(albumArtLink))
+            {
+                if (serviceType == SongRequestServiceTypeEnum.Spotify)
+                {
+                    return SongRequestService.SpotifyDefaultAlbumArt;
+                }
+                else if (serviceType == SongRequestServiceTypeEnum.YouTube)
+                {
+                    return SongRequestService.YouTubeDefaultAlbumArt;
+                }
+            }
+            return albumArtLink;
+        }
     }
 }

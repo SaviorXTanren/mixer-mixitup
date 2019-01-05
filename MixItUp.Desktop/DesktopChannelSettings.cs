@@ -8,6 +8,7 @@ using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Remote;
 using MixItUp.Base.Model.Serial;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
@@ -31,7 +32,7 @@ namespace MixItUp.Desktop
     [DataContract]
     public class DesktopSavableChannelSettings : ISavableChannelSettings
     {
-        public const int LatestVersion = 24;
+        public const int LatestVersion = 27;
 
         [JsonProperty]
         public int Version { get; set; }
@@ -66,6 +67,14 @@ namespace MixItUp.Desktop
         public OAuthTokenModel DiscordOAuthToken { get; set; }
         [JsonProperty]
         public OAuthTokenModel TiltifyOAuthToken { get; set; }
+        [JsonProperty]
+        public OAuthTokenModel TipeeeStreamOAuthToken { get; set; }
+        [JsonProperty]
+        public OAuthTokenModel TreatStreamOAuthToken { get; set; }
+        [JsonProperty]
+        public OAuthTokenModel StreamJarOAuthToken { get; set; }
+        [JsonProperty]
+        public OAuthTokenModel PatreonOAuthToken { get; set; }
 
         [JsonProperty]
         public string StreamDeckDeviceName { get; set; }
@@ -109,6 +118,11 @@ namespace MixItUp.Desktop
         public bool PreventUnknownInteractiveUsers { get; set; }
         [JsonProperty]
         public List<InteractiveSharedProjectModel> CustomInteractiveProjectIDs { get; set; }
+
+        [JsonProperty]
+        public int RegularUserMinimumHours { get; set; }
+        [JsonProperty]
+        public List<UserTitleModel> UserTitles { get; set; }
 
         [JsonProperty]
         public bool GameQueueSubPriority { get; set; }
@@ -163,6 +177,8 @@ namespace MixItUp.Desktop
         public int ModerationFilteredWordsTimeout5MinuteOffenseCount { get; set; }
         [JsonProperty]
         public MixerRoleEnum ModerationFilteredWordsExcempt { get; set; }
+        [JsonProperty]
+        public bool ModerationFilteredWordsApplyStrikes { get; set; }
 
         [JsonProperty]
         public int ModerationCapsBlockCount { get; set; }
@@ -174,11 +190,15 @@ namespace MixItUp.Desktop
         public bool ModerationPunctuationBlockIsPercentage { get; set; }
         [JsonProperty]
         public MixerRoleEnum ModerationChatTextExcempt { get; set; }
+        [JsonProperty]
+        public bool ModerationChatTextApplyStrikes { get; set; }
 
         [JsonProperty]
         public bool ModerationBlockLinks { get; set; }
         [JsonProperty]
         public MixerRoleEnum ModerationBlockLinksExcempt { get; set; }
+        [JsonProperty]
+        public bool ModerationBlockLinksApplyStrikes { get; set; }
 
         [JsonProperty]
         public ModerationChatInteractiveParticipationEnum ModerationChatInteractiveParticipation { get; set; }
@@ -227,6 +247,9 @@ namespace MixItUp.Desktop
 
         [JsonProperty]
         public string DiscordServer { get; set; }
+
+        [JsonProperty]
+        public string PatreonTierMixerSubscriberEquivalent { get; set; }
 
         [JsonProperty]
         public bool UnlockAllCommands { get; set; }
@@ -300,6 +323,8 @@ namespace MixItUp.Desktop
 
         [JsonProperty]
         protected Dictionary<Guid, UserCurrencyViewModel> currenciesInternal { get; set; }
+        [JsonProperty]
+        protected Dictionary<Guid, UserInventoryViewModel> inventoriesInternal { get; set; }
 
         [JsonProperty]
         protected Dictionary<string, int> cooldownGroupsInternal { get; set; }
@@ -342,6 +367,7 @@ namespace MixItUp.Desktop
         {
             this.OverlayCustomNameAndPorts = new Dictionary<string, int>();
             this.CustomInteractiveProjectIDs = new List<InteractiveSharedProjectModel>();
+            this.UserTitles = new List<UserTitleModel>();
             this.SerialDevices = new List<SerialDeviceModel>();
             this.RemoteBoards = new List<RemoteBoardModel>();
             this.RemoteSavedDevices = new List<RemoteDeviceModel>();
@@ -350,6 +376,7 @@ namespace MixItUp.Desktop
             this.CustomInteractiveSettings = new Dictionary<uint, JObject>();
 
             this.currenciesInternal = new Dictionary<Guid, UserCurrencyViewModel>();
+            this.inventoriesInternal = new Dictionary<Guid, UserInventoryViewModel>();
             this.preMadeChatCommandSettingsInternal = new List<PreMadeChatCommandSettings>();
             this.cooldownGroupsInternal = new Dictionary<string, int>();
             this.chatCommandsInternal = new List<ChatCommand>();
@@ -380,6 +407,8 @@ namespace MixItUp.Desktop
 
         [JsonIgnore]
         public LockedDictionary<Guid, UserCurrencyViewModel> Currencies { get; set; }
+        [JsonIgnore]
+        public LockedDictionary<Guid, UserInventoryViewModel> Inventories { get; set; }
 
         [JsonIgnore]
         public LockedDictionary<string, int> CooldownGroups { get; set; }
@@ -457,8 +486,11 @@ namespace MixItUp.Desktop
             this.OverlayWidgetRefreshTime = 5;
 
             this.ModerationFilteredWordsExcempt = MixerRoleEnum.Mod;
+            this.ModerationFilteredWordsApplyStrikes = true;
             this.ModerationChatTextExcempt = MixerRoleEnum.Mod;
+            this.ModerationChatTextApplyStrikes = true;
             this.ModerationBlockLinksExcempt = MixerRoleEnum.Mod;
+            this.ModerationBlockLinksApplyStrikes = true;
             this.ModerationCapsBlockIsPercentage = true;
             this.ModerationPunctuationBlockIsPercentage = true;
             this.ModerationStrike1Command = CustomCommand.BasicChatCommand("Moderation Strike 1", "You have received a moderation strike, you currently have $usermoderationstrikes strike(s)", isWhisper: true);
@@ -471,6 +503,7 @@ namespace MixItUp.Desktop
         {
             this.UserData = new DatabaseDictionary<uint, UserDataViewModel>();
             this.Currencies = new LockedDictionary<Guid, UserCurrencyViewModel>();
+            this.Inventories = new LockedDictionary<Guid, UserInventoryViewModel>();
             this.CooldownGroups = new LockedDictionary<string, int>();
             this.PreMadeChatCommandSettings = new LockedList<PreMadeChatCommandSettings>();
             this.ChatCommands = new LockedList<ChatCommand>();
@@ -491,6 +524,7 @@ namespace MixItUp.Desktop
         public async Task Initialize()
         {
             this.Currencies = new LockedDictionary<Guid, UserCurrencyViewModel>(this.currenciesInternal);
+            this.Inventories = new LockedDictionary<Guid, UserInventoryViewModel>(this.inventoriesInternal);
             this.PreMadeChatCommandSettings = new LockedList<PreMadeChatCommandSettings>(this.preMadeChatCommandSettingsInternal);
             this.CooldownGroups = new LockedDictionary<string, int>(this.cooldownGroupsInternal);
             this.ChatCommands = new LockedList<ChatCommand>(this.chatCommandsInternal);
@@ -580,8 +614,25 @@ namespace MixItUp.Desktop
             {
                 this.TiltifyOAuthToken = ChannelSession.Services.Tiltify.GetOAuthTokenCopy();
             }
+            if (ChannelSession.Services.TipeeeStream != null)
+            {
+                this.TipeeeStreamOAuthToken = ChannelSession.Services.TipeeeStream.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.TreatStream != null)
+            {
+                this.TreatStreamOAuthToken = ChannelSession.Services.TreatStream.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.StreamJar != null)
+            {
+                this.StreamJarOAuthToken = ChannelSession.Services.StreamJar.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.Patreon != null)
+            {
+                this.PatreonOAuthToken = ChannelSession.Services.Patreon.GetOAuthTokenCopy();
+            }
 
             this.currenciesInternal = this.Currencies.ToDictionary();
+            this.inventoriesInternal = this.Inventories.ToDictionary();
             this.preMadeChatCommandSettingsInternal = this.PreMadeChatCommandSettings.ToList();
             this.cooldownGroupsInternal = this.CooldownGroups.ToDictionary();
             this.chatCommandsInternal = this.ChatCommands.ToList();
@@ -604,18 +655,19 @@ namespace MixItUp.Desktop
 
                 IEnumerable<UserDataViewModel> addedUsers = this.UserData.GetAddedValues();
                 addedUsers = addedUsers.Where(u => !string.IsNullOrEmpty(u.UserName));
-                await this.DatabaseWrapper.RunBulkWriteCommand("INSERT INTO Users(ID, UserName, ViewingMinutes, CurrencyAmounts, CustomCommands, Options) VALUES(?,?,?,?,?,?)",
+                await this.DatabaseWrapper.RunBulkWriteCommand("INSERT INTO Users(ID, UserName, ViewingMinutes, CurrencyAmounts, InventoryAmounts, CustomCommands, Options) VALUES(?,?,?,?,?,?,?)",
                     addedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter(DbType.UInt32, u.ID), new SQLiteParameter(DbType.String, value: u.UserName),
                     new SQLiteParameter(DbType.Int32, value: u.ViewingMinutes), new SQLiteParameter(DbType.String, value: u.GetCurrencyAmountsString()),
-                    new SQLiteParameter(DbType.String, value: u.GetCustomCommandsString()), new SQLiteParameter(DbType.String, value: u.GetOptionsString()) }));
+                    new SQLiteParameter(DbType.String, value: u.GetInventoryAmountsString()), new SQLiteParameter(DbType.String, value: u.GetCustomCommandsString()),
+                    new SQLiteParameter(DbType.String, value: u.GetOptionsString()) }));
 
                 IEnumerable<UserDataViewModel> changedUsers = this.UserData.GetChangedValues();
                 changedUsers = changedUsers.Where(u => !string.IsNullOrEmpty(u.UserName));
                 await this.DatabaseWrapper.RunBulkWriteCommand("UPDATE Users SET UserName = @UserName, ViewingMinutes = @ViewingMinutes, CurrencyAmounts = @CurrencyAmounts," +
-                    " CustomCommands = @CustomCommands, Options = @Options WHERE ID = @ID",
+                    " InventoryAmounts = @InventoryAmounts, CustomCommands = @CustomCommands, Options = @Options WHERE ID = @ID",
                     changedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter("@UserName", value: u.UserName), new SQLiteParameter("@ViewingMinutes", value: u.ViewingMinutes),
-                    new SQLiteParameter("@CurrencyAmounts", value: u.GetCurrencyAmountsString()), new SQLiteParameter("@CustomCommands", value: u.GetCustomCommandsString()),
-                        new SQLiteParameter("@Options", value: u.GetOptionsString()), new SQLiteParameter("@ID", value: (int)u.ID) }));
+                    new SQLiteParameter("@CurrencyAmounts", value: u.GetCurrencyAmountsString()), new SQLiteParameter("@InventoryAmounts", value: u.GetInventoryAmountsString()),
+                    new SQLiteParameter("@CustomCommands", value: u.GetCustomCommandsString()), new SQLiteParameter("@Options", value: u.GetOptionsString()), new SQLiteParameter("@ID", value: (int)u.ID) }));
             }
         }
 

@@ -6,11 +6,11 @@
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Currency"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid Margin="5,0">
+    <Grid Margin="10,5">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="*" />
             <ColumnDefinition Width="20" />
-            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="60" />
         </Grid.ColumnDefinitions>
 
         <TextBlock Grid.Column="0" x:Name="NameTextBlock" VerticalAlignment="Center" />

@@ -28,21 +28,29 @@ namespace MixItUp.Base.ViewModel.User
 
         [DataMember]
         public string Name { get; set; }
+
         [DataMember]
         public int AcquireAmount { get; set; }
         [DataMember]
         public int AcquireInterval { get; set; }
         [DataMember]
+        public int MinimumActiveRate { get; set; }
+
+        [DataMember]
         public int OfflineAcquireAmount { get; set; }
         [DataMember]
         public int OfflineAcquireInterval { get; set; }
+
         [DataMember]
         public int MaxAmount { get; set; }
+
         [DataMember]
         public string SpecialIdentifier { get; set; }
 
         [DataMember]
         public int SubscriberBonus { get; set; }
+        [DataMember]
+        public int ModeratorBonus { get; set; }
 
         [DataMember]
         public int OnFollowBonus { get; set; }
@@ -67,6 +75,7 @@ namespace MixItUp.Base.ViewModel.User
         public UserCurrencyViewModel()
         {
             this.ID = Guid.NewGuid();
+            this.MinimumActiveRate = 0;
             this.MaxAmount = int.MaxValue;
             this.SpecialIdentifier = string.Empty;
             this.ResetInterval = CurrencyResetRateEnum.Never;
@@ -96,13 +105,25 @@ namespace MixItUp.Base.ViewModel.User
         public bool IsOfflineIntervalDisabled { get { return this.OfflineAcquireAmount == 0 && this.OfflineAcquireInterval == 0; } }
 
         [JsonIgnore]
+        public bool HasMinimumActiveRate { get { return this.MinimumActiveRate > 0; } }
+
+        [JsonIgnore]
         public string UserAmountSpecialIdentifier { get { return string.Format("{0}{1}", SpecialIdentifierStringBuilder.UserSpecialIdentifierHeader, this.SpecialIdentifier); } }
 
         [JsonIgnore]
-        public string UserRankNameSpecialIdentifier { get { return string.Format("{0}{1}rank", SpecialIdentifierStringBuilder.UserSpecialIdentifierHeader, this.SpecialIdentifier); } }
+        public string UserRankNameSpecialIdentifier { get { return string.Format("{0}rank", this.UserAmountSpecialIdentifier); } }
 
         [JsonIgnore]
-        public string Top10SpecialIdentifier { get { return string.Format("{0}{1}", SpecialIdentifierStringBuilder.Top10SpecialIdentifierHeader, this.SpecialIdentifier); } }
+        public string UserAmountNextSpecialIdentifier { get { return string.Format("{0}next", this.UserAmountSpecialIdentifier); } }
+
+        [JsonIgnore]
+        public string UserRankNextNameSpecialIdentifier { get { return string.Format("{0}nextrank", this.UserAmountSpecialIdentifier); } }
+
+        [JsonIgnore]
+        public string TopRegexSpecialIdentifier { get { return string.Format("{0}\\d+{1}", SpecialIdentifierStringBuilder.TopSpecialIdentifierHeader, this.SpecialIdentifier); } }
+
+        [JsonIgnore]
+        public string Top10SpecialIdentifier { get { return string.Format("{0}10{1}", SpecialIdentifierStringBuilder.TopSpecialIdentifierHeader, this.SpecialIdentifier); } }
 
         public UserRankViewModel GetRankForPoints(int points)
         {
@@ -118,22 +139,48 @@ namespace MixItUp.Base.ViewModel.User
             return rank;
         }
 
+        public UserRankViewModel GetNextRankForPoints(int points)
+        {
+            UserRankViewModel rank = UserCurrencyViewModel.NoRank;
+            if (this.Ranks.Count > 0)
+            {
+                rank = this.Ranks.Where(r => r.MinimumPoints > points).OrderBy(r => r.MinimumPoints).FirstOrDefault();
+                if (rank == null)
+                {
+                    rank = UserCurrencyViewModel.NoRank;
+                }
+            }
+            return rank;
+        }
+
         public async Task UpdateUserData()
         {
             if (this.IsActive)
             {
-                foreach (UserViewModel user in await ChannelSession.ActiveUsers.GetAllWorkableUsers())
+                bool bonusesCanBeApplied = (ChannelSession.Channel.online || this.OfflineAcquireAmount > 0);
+                DateTimeOffset minActiveTime = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(this.MinimumActiveRate));
+                int interval = ChannelSession.Channel.online ? this.AcquireInterval : this.OfflineAcquireInterval;
+                if (interval > 0)
                 {
-                    if (!user.Data.IsCurrencyRankExempt)
+                    foreach (UserViewModel user in await ChannelSession.ActiveUsers.GetAllWorkableUsers())
                     {
-                        int minutes = ChannelSession.Channel.online ? user.Data.ViewingMinutes : user.Data.OfflineViewingMinutes;
-                        int interval = ChannelSession.Channel.online ? this.AcquireInterval : this.OfflineAcquireInterval;
-                        if (interval > 0 && (minutes % interval) == 0)
+                        if (!user.Data.IsCurrencyRankExempt && (!this.HasMinimumActiveRate || user.LastActivity > minActiveTime))
                         {
-                            user.Data.AddCurrencyAmount(this, ChannelSession.Channel.online ? this.AcquireAmount : this.OfflineAcquireAmount);
-                            if (user.GetsSubscriberBenefits && (ChannelSession.Channel.online || (this.OfflineAcquireAmount > 0)))
+                            int minutes = ChannelSession.Channel.online ? user.Data.ViewingMinutes : user.Data.OfflineViewingMinutes;
+                            if (minutes % interval == 0)
                             {
-                                user.Data.AddCurrencyAmount(this, this.SubscriberBonus);
+                                user.Data.AddCurrencyAmount(this, ChannelSession.Channel.online ? this.AcquireAmount : this.OfflineAcquireAmount);
+                                if (bonusesCanBeApplied)
+                                {
+                                    if (user.HasPermissionsTo(MixerRoleEnum.Mod))
+                                    {
+                                        user.Data.AddCurrencyAmount(this, this.ModeratorBonus);
+                                    }
+                                    else if (user.HasPermissionsTo(MixerRoleEnum.Subscriber))
+                                    {
+                                        user.Data.AddCurrencyAmount(this, this.SubscriberBonus);
+                                    }
+                                }
                             }
                         }
                     }

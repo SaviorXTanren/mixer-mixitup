@@ -41,9 +41,10 @@ namespace MixItUp.Desktop.Services
             {
                 try
                 {
-                    await this.InitializeInternal();
-
-                    return true;
+                    if (await this.InitializeInternal())
+                    {
+                        return true;
+                    }
                 }
                 catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
             }
@@ -55,7 +56,7 @@ namespace MixItUp.Desktop.Services
                     JObject payload = new JObject();
                     payload["grant_type"] = "authorization_code";
                     payload["client_id"] = TiltifyService.ClientID;
-                    payload["client_secret"] = "3fd28348789f22af38bc140ea094bad57863cdc28794ed8ffb28ec6c6c3f6598";
+                    payload["client_secret"] = ChannelSession.SecretManager.GetSecret("TiltifySecret");
                     payload["code"] = this.authorizationToken;
                     payload["redirect_uri"] = TiltifyService.ListeningURL;
 
@@ -66,9 +67,7 @@ namespace MixItUp.Desktop.Services
                         token.AcquiredDateTime = DateTimeOffset.Now;
                         token.expiresIn = int.MaxValue;
 
-                        await this.InitializeInternal();
-
-                        return true;
+                        return await this.InitializeInternal();
                     }
                 }
                 catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
@@ -129,15 +128,20 @@ namespace MixItUp.Desktop.Services
             return Task.FromResult(0);
         }
 
-        private async Task InitializeInternal()
+        private async Task<bool> InitializeInternal()
         {
             this.cancellationTokenSource = new CancellationTokenSource();
 
             this.user = await this.GetUser();
-
+            if (this.user != null)
+            {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            Task.Run(this.BackgroundDonationCheck, this.cancellationTokenSource.Token);
+                Task.Run(this.BackgroundDonationCheck, this.cancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+                return true;
+            }
+            return false;
         }
 
         private async Task BackgroundDonationCheck()
@@ -174,21 +178,7 @@ namespace MixItUp.Desktop.Services
                             {
                                 donationsReceived[tDonation.ID] = tDonation;
                                 UserDonationModel donation = tDonation.ToGenericDonation();
-                                GlobalEvents.DonationOccurred(donation);
-
-                                UserViewModel user = new UserViewModel(0, donation.UserName);
-
-                                UserModel userModel = await ChannelSession.Connection.GetUser(user.UserName);
-                                if (userModel != null)
-                                {
-                                    user = new UserViewModel(userModel);
-                                }
-
-                                EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.TiltifyDonation));
-                                if (command != null)
-                                {
-                                    await command.Perform(user, arguments: null, extraSpecialIdentifiers: donation.GetSpecialIdentifiers());
-                                }
+                                await EventCommand.ProcessDonationEventCommand(donation, OtherEventTypeEnum.TiltifyDonation);
                             }
                         }
                     }

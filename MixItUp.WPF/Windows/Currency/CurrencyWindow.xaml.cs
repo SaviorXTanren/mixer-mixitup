@@ -126,11 +126,13 @@ namespace MixItUp.WPF.Windows.Currency
                 this.OfflineTimeRateTextBox.Text = this.currency.OfflineAcquireInterval.ToString();
 
                 this.SubscriberBonusTextBox.Text = this.currency.SubscriberBonus.ToString();
+                this.ModeratorBonusTextBox.Text = this.currency.ModeratorBonus.ToString();
 
                 this.OnFollowBonusTextBox.Text = this.currency.OnFollowBonus.ToString();
                 this.OnHostBonusTextBox.Text = this.currency.OnHostBonus.ToString();
                 this.OnSubscribeBonusTextBox.Text = this.currency.OnSubscribeBonus.ToString();
 
+                this.MinimumActivityRateTextBox.Text = this.currency.MinimumActiveRate.ToString();
                 this.AutomaticResetComboBox.SelectedItem = EnumHelper.GetEnumName(this.currency.ResetInterval);
 
                 if (this.currency.IsRank)
@@ -149,10 +151,12 @@ namespace MixItUp.WPF.Windows.Currency
                 this.OfflineRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Disabled);
 
                 this.SubscriberBonusTextBox.Text = "0";
+                this.ModeratorBonusTextBox.Text = "0";
                 this.OnFollowBonusTextBox.Text = "0";
                 this.OnHostBonusTextBox.Text = "0";
                 this.OnSubscribeBonusTextBox.Text = "0";
 
+                this.MinimumActivityRateTextBox.Text = "0";
                 this.AutomaticResetComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyResetRateEnum.Never);
             }
 
@@ -334,20 +338,26 @@ namespace MixItUp.WPF.Windows.Currency
                         {
                             subscriberIDs.Add(user.id);
                         }
+
+                        HashSet<uint> modIDs = new HashSet<uint>();
                         foreach (UserWithGroupsModel user in await ChannelSession.Connection.GetUsersWithRoles(ChannelSession.Channel, MixerRoleEnum.Mod))
                         {
-                            subscriberIDs.Add(user.id);
+                            modIDs.Add(user.id);
                         }
                         foreach (UserWithGroupsModel user in await ChannelSession.Connection.GetUsersWithRoles(ChannelSession.Channel, MixerRoleEnum.ChannelEditor))
                         {
-                            subscriberIDs.Add(user.id);
+                            modIDs.Add(user.id);
                         }
 
                         foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values)
                         {
                             int intervalsToGive = userData.ViewingMinutes / this.currency.AcquireInterval;
                             userData.AddCurrencyAmount(this.currency, this.currency.AcquireAmount * intervalsToGive);
-                            if (subscriberIDs.Contains(userData.ID))
+                            if (modIDs.Contains(userData.ID))
+                            {
+                                userData.AddCurrencyAmount(this.currency, this.currency.ModeratorBonus * intervalsToGive);
+                            }
+                            else if (subscriberIDs.Contains(userData.ID))
                             {
                                 userData.AddCurrencyAmount(this.currency, this.currency.SubscriberBonus * intervalsToGive);
                             }
@@ -497,6 +507,13 @@ namespace MixItUp.WPF.Windows.Currency
                     return;
                 }
 
+                UserInventoryViewModel dupeInventory = ChannelSession.Settings.Inventories.Values.FirstOrDefault(c => c.Name.Equals(this.NameTextBox.Text));
+                if (dupeInventory != null)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("There already exists an inventory with this name");
+                    return;
+                }
+
                 int maxAmount = int.MaxValue;
                 if (!string.IsNullOrEmpty(this.MaxAmountTextBox.Text))
                 {
@@ -550,6 +567,13 @@ namespace MixItUp.WPF.Windows.Currency
                     return;
                 }
 
+                int modBonus = 0;
+                if (string.IsNullOrEmpty(this.ModeratorBonusTextBox.Text) || !int.TryParse(this.ModeratorBonusTextBox.Text, out modBonus) || modBonus < 0)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("The Moderator bonus must be 0 or greater");
+                    return;
+                }
+
                 int onFollowBonus = 0;
                 if (string.IsNullOrEmpty(this.OnFollowBonusTextBox.Text) || !int.TryParse(this.OnFollowBonusTextBox.Text, out onFollowBonus) || onFollowBonus < 0)
                 {
@@ -580,6 +604,13 @@ namespace MixItUp.WPF.Windows.Currency
                     }
                 }
 
+                int minActivityRate = 0;
+                if (string.IsNullOrEmpty(this.MinimumActivityRateTextBox.Text) || !int.TryParse(this.MinimumActivityRateTextBox.Text, out minActivityRate) || minActivityRate < 0)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("The Minimum Activity Rate must be 0 or greater");
+                    return;
+                }
+
                 bool isNew = false;
                 if (this.currency == null)
                 {
@@ -597,10 +628,12 @@ namespace MixItUp.WPF.Windows.Currency
                 this.currency.OfflineAcquireInterval = offlineTime;
 
                 this.currency.SubscriberBonus = subscriberBonus;
+                this.currency.ModeratorBonus = modBonus;
                 this.currency.OnFollowBonus = onFollowBonus;
                 this.currency.OnHostBonus = onHostBonus;
                 this.currency.OnSubscribeBonus = onSubscribeBonus;
 
+                this.currency.MinimumActiveRate = minActivityRate;
                 this.currency.ResetInterval = EnumHelper.GetEnumValueFromString<CurrencyResetRateEnum>((string)this.AutomaticResetComboBox.SelectedItem);
 
                 this.currency.SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(this.currency.Name);
@@ -636,7 +669,7 @@ namespace MixItUp.WPF.Windows.Currency
                     commandsToAdd.Add(new NewCurrencyRankCommand(string.Format("!{0} - {1}", statusCommand.Commands.First(), "Shows User's Amount"), statusCommand));
 
                     ChatCommand addCommand = new ChatCommand("Add " + this.currency.Name, "add" + this.currency.SpecialIdentifier, new RequirementViewModel(MixerRoleEnum.Mod, 5));
-                    addCommand.Actions.Add(new CurrencyAction(this.currency, CurrencyActionTypeEnum.AddToSpecificUser, "$arg2text", "$targetusername"));
+                    addCommand.Actions.Add(new CurrencyAction(this.currency, CurrencyActionTypeEnum.AddToSpecificUser, "$arg2text", username: "$targetusername"));
                     addCommand.Actions.Add(new ChatAction(string.Format("@$targetusername received $arg2text {0}!", this.currency.Name)));
                     commandsToAdd.Add(new NewCurrencyRankCommand(string.Format("!{0} - {1}", addCommand.Commands.First(), "Adds Amount To Specified User"), addCommand));
 
@@ -648,7 +681,7 @@ namespace MixItUp.WPF.Windows.Currency
                     if (!this.currency.IsRank)
                     {
                         ChatCommand giveCommand = new ChatCommand("Give " + this.currency.Name, "give" + this.currency.SpecialIdentifier, new RequirementViewModel(MixerRoleEnum.User, 5));
-                        giveCommand.Actions.Add(new CurrencyAction(this.currency, CurrencyActionTypeEnum.AddToSpecificUser, "$arg2text", "$targetusername", deductFromUser: true));
+                        giveCommand.Actions.Add(new CurrencyAction(this.currency, CurrencyActionTypeEnum.AddToSpecificUser, "$arg2text", username: "$targetusername", deductFromUser: true));
                         giveCommand.Actions.Add(new ChatAction(string.Format("@$username gave @$targetusername $arg2text {0}!", this.currency.Name)));
                         commandsToAdd.Add(new NewCurrencyRankCommand(string.Format("!{0} - {1}", giveCommand.Commands.First(), "Gives Amount To Specified User"), giveCommand));
                     }

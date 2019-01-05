@@ -1,6 +1,9 @@
 ﻿using LinqToTwitter;
 using Mixer.Base.Model.OAuth;
+using Mixer.Base.Model.User;
+using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,12 +12,13 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
     [DataContract]
-    public class TwitterService : ITwitterService
+    public class TwitterService : ITwitterService, IDisposable
     {
         private const string ClientID = "TUcAbNHvyJuK6rtLK1NnHZSBV";
 
@@ -22,6 +26,8 @@ namespace MixItUp.Base.Services
         private IAuthorizer auth;
 
         private string authPin;
+
+        private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
         public TwitterService() { }
 
@@ -52,9 +58,10 @@ namespace MixItUp.Base.Services
                     };
                     await singleUserAuth.AuthorizeAsync();
 
-                    await this.InitializeInternal(singleUserAuth);
-
-                    return true;
+                    if (await this.InitializeInternal(singleUserAuth))
+                    {
+                        return true;
+                    }
                 }
                 catch (Exception ex) { Logger.Log(ex); }
             }
@@ -82,11 +89,7 @@ namespace MixItUp.Base.Services
                 await pinAuth.AuthorizeAsync();
                 this.authPin = null;
 
-                if (!string.IsNullOrEmpty(pinAuth.CredentialStore.OAuthToken))
-                {
-                    await this.InitializeInternal(pinAuth);
-                    return true;
-                }
+                return await this.InitializeInternal(pinAuth);
             }
             catch (Exception ex) { Logger.Log(ex); }
 
@@ -119,6 +122,7 @@ namespace MixItUp.Base.Services
                         Tweet t = new Tweet()
                         {
                             ID = tweet.StatusID,
+                            UserID = tweet.UserID,
                             UserName = tweet.ScreenName,
                             Text = tweet.FullText,
                             DateTime = new DateTimeOffset(tweet.CreatedAt, DateTimeOffset.UtcNow.Offset),
@@ -130,6 +134,44 @@ namespace MixItUp.Base.Services
                         }
 
                         results.Add(t);
+                    }
+                }
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+            return results;
+        }
+
+        public async Task<IEnumerable<Tweet>> GetRetweets(Tweet tweet)
+        {
+            List<Tweet> results = new List<Tweet>();
+            try
+            {
+                using (var twitterCtx = new TwitterContext(this.auth))
+                {
+                    List<Status> retweets = await (from retweet in twitterCtx.Status where retweet.Type == StatusType.Retweets && retweet.ID == tweet.ID select retweet).ToListAsync();
+
+                    if (retweets != null)
+                    {
+                        foreach (Status retweet in retweets)
+                        {
+                            ulong.TryParse(retweet.User.UserIDResponse, out ulong userID);
+
+                            Tweet t = new Tweet()
+                            {
+                                ID = retweet.StatusID,
+                                UserID = userID,
+                                UserName = retweet.User.ScreenNameResponse,
+                                Text = retweet.Text,
+                                DateTime = new DateTimeOffset(retweet.CreatedAt, DateTimeOffset.UtcNow.Offset),
+                            };
+
+                            foreach (var urlEntry in retweet.Entities.UrlEntities)
+                            {
+                                t.Links.Add((!string.IsNullOrEmpty(urlEntry.ExpandedUrl) ? urlEntry.ExpandedUrl : urlEntry.DisplayUrl));
+                            }
+
+                            results.Add(t);
+                        }
                     }
                 }
             }
@@ -172,6 +214,18 @@ namespace MixItUp.Base.Services
             catch (Exception ex) { Logger.Log(ex); }
         }
 
+        public async Task UpdateName(string name)
+        {
+            try
+            {
+                using (var twitterCtx = new TwitterContext(this.auth))
+                {
+                    await twitterCtx.UpdateAccountProfileAsync(name, null, null, null, true);
+                }
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+        }
+
         public OAuthTokenModel GetOAuthTokenCopy()
         {
             if (this.token != null)
@@ -199,19 +253,109 @@ namespace MixItUp.Base.Services
             return image;
         }
 
-        private Task InitializeInternal(IAuthorizer auth)
+        private Task<bool> InitializeInternal(IAuthorizer auth)
         {
             this.auth = auth;
+            if (!string.IsNullOrEmpty(this.auth.CredentialStore.OAuthToken))
+            {
+                this.token = new OAuthTokenModel();
 
-            this.token = new OAuthTokenModel();
+                this.token.accessToken = this.auth.CredentialStore.OAuthToken;
+                this.token.refreshToken = this.auth.CredentialStore.OAuthTokenSecret;
 
-            this.token.accessToken = this.auth.CredentialStore.OAuthToken;
-            this.token.refreshToken = this.auth.CredentialStore.OAuthTokenSecret;
+                this.token.clientID = this.auth.CredentialStore.UserID.ToString();
+                this.token.authorizationCode = this.auth.CredentialStore.ScreenName;
 
-            this.token.clientID = this.auth.CredentialStore.UserID.ToString();
-            this.token.authorizationCode = this.auth.CredentialStore.ScreenName;
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                Task.Run(this.BackgroundDonationCheck, this.cancellationTokenSource.Token);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-            return Task.FromResult(0);
+                return Task.FromResult(true);
+            }
+            return Task.FromResult(false);
         }
+
+        private async Task BackgroundDonationCheck()
+        {
+            HashSet<ulong> existingRetweets = new HashSet<ulong>();
+
+            while (!this.cancellationTokenSource.Token.IsCancellationRequested)
+            {
+                try
+                {
+                    EventCommand command = ChannelSession.Settings.EventCommands.FirstOrDefault(c => c.OtherEventType.Equals(OtherEventTypeEnum.TwitterStreamTweetRetweet));
+                    if (command != null)
+                    {
+                        IEnumerable<Tweet> tweets = await this.GetLatestTweets();
+                        if (tweets.Count() > 0)
+                        {
+                            Tweet streamTweet = tweets.FirstOrDefault(t => t.IsStreamTweet);
+                            if (streamTweet != null)
+                            {
+                                IEnumerable<Tweet> retweets = await this.GetRetweets(streamTweet);
+                                if (retweets != null)
+                                {
+                                    foreach (Tweet retweet in retweets)
+                                    {
+                                        if (!existingRetweets.Contains(retweet.ID))
+                                        {
+                                            existingRetweets.Add(retweet.ID);
+
+                                            IEnumerable<UserViewModel> users = await ChannelSession.ActiveUsers.GetAllUsers();
+                                            UserViewModel user = users.FirstOrDefault(u => u.TwitterURL != null && u.TwitterURL.Equals(string.Format("https://twitter.com/{0}", retweet.UserName)));
+                                            if (user == null)
+                                            {
+                                                UserModel userModel = await ChannelSession.Connection.GetUser(retweet.UserName);
+                                                if (userModel != null)
+                                                {
+                                                    user = new UserViewModel(userModel);
+                                                }
+                                                else
+                                                {
+                                                    user = new UserViewModel(0, retweet.UserName);
+                                                }
+                                            }
+
+                                            await command.Perform(user);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+
+                await Task.Delay(60000);
+            }
+        }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // Dispose managed state (managed objects).
+                    this.cancellationTokenSource.Dispose();
+                }
+
+                // Free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // Set large fields to null.
+
+                disposedValue = true;
+            }
+        }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+        }
+        #endregion
     }
 }

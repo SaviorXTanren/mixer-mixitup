@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using Mixer.Base.Util;
+using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
@@ -6,6 +7,14 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Actions
 {
+    public enum TwitterActionTypeEnum
+    {
+        [Name("Send Tweet")]
+        SendTweet,
+        [Name("Update Name")]
+        UpdateName,
+    }
+
     [DataContract]
     public class TwitterAction : ActionBase
     {
@@ -14,27 +23,47 @@ namespace MixItUp.Base.Actions
         protected override SemaphoreSlim AsyncSemaphore { get { return TwitterAction.asyncSemaphore; } }
 
         [DataMember]
-        public string TweetText { get; set; }
+        public TwitterActionTypeEnum ActionType { get; set; }
 
+        [DataMember]
+        public string TweetText { get; set; }
         [DataMember]
         public string ImagePath { get; set; }
 
-        public TwitterAction() : base(ActionTypeEnum.Twitter) { }
+        [DataMember]
+        public string NewProfileName { get; set; }
+
+        public TwitterAction() : base(ActionTypeEnum.Twitter) { this.ActionType = TwitterActionTypeEnum.SendTweet; }
 
         public TwitterAction(string tweetText, string imagePath)
             : this()
         {
+            this.ActionType = TwitterActionTypeEnum.SendTweet;
             this.TweetText = tweetText;
             this.ImagePath = imagePath;
+        }
+
+        public TwitterAction(string profileName)
+            : this()
+        {
+            this.ActionType = TwitterActionTypeEnum.UpdateName;
+            this.NewProfileName = profileName;
         }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
             if (ChannelSession.Services.Twitter != null)
             {
-                string tweet = await this.ReplaceStringWithSpecialModifiers(this.TweetText, user, arguments);
-                string imagePath = await this.ReplaceStringWithSpecialModifiers(this.ImagePath, user, arguments);
-                await ChannelSession.Services.Twitter.SendTweet(tweet, imagePath);
+                if (this.ActionType == TwitterActionTypeEnum.SendTweet)
+                {
+                    string tweet = await this.ReplaceStringWithSpecialModifiers(this.TweetText, user, arguments);
+                    string imagePath = await this.ReplaceStringWithSpecialModifiers(this.ImagePath, user, arguments);
+                    await ChannelSession.Services.Twitter.SendTweet(tweet, imagePath);
+                }
+                else if (this.ActionType == TwitterActionTypeEnum.UpdateName)
+                {
+                    await ChannelSession.Services.Twitter.UpdateName(this.NewProfileName);
+                }
             }
         }
     }

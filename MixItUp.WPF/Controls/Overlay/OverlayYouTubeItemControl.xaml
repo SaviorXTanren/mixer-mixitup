@@ -22,13 +22,13 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <TextBox x:Name="YoutubeVideoIDTextBox" Grid.Row="0" MaterialDesign:HintAssist.Hint="Youtube Video URL/ID" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        <TextBox x:Name="YoutubeVideoIDTextBox" Grid.Row="0" MaterialDesign:HintAssist.Hint="Youtube Video URL/ID" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
 
-        <TextBox x:Name="YoutubeStartTimeTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Start Time (Secs)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
+        <TextBox x:Name="YoutubeStartTimeTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Start Time (Secs)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" VerticalAlignment="Center" />
 
-        <TextBox Grid.Column="4" x:Name="YouTubeWidthTextBox" MaterialDesign:HintAssist.Hint="Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="70" />
+        <TextBox Grid.Column="4" x:Name="YouTubeWidthTextBox" MaterialDesign:HintAssist.Hint="Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="70" VerticalAlignment="Center" />
 
-        <TextBox Grid.Column="6" x:Name="YouTubeHeightTextBox" MaterialDesign:HintAssist.Hint="Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="70" />
+        <TextBox Grid.Column="6" x:Name="YouTubeHeightTextBox" MaterialDesign:HintAssist.Hint="Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="70" VerticalAlignment="Center" />
 
         <TextBlock Grid.Column="8" VerticalAlignment="Center" Margin="0,20,0,0">Volume:</TextBlock>
         <Slider x:Name="YouTubeVolumeSlider" VerticalAlignment="Center" Grid.Column="10" Width="120" Minimum="0" Maximum="100" Margin="0,-18,0,0" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="Volume" />

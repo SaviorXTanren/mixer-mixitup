@@ -73,6 +73,26 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     return "Extra Life";
                 }
+                else if (this.OtherEventType == OtherEventTypeEnum.TipeeeStreamDonation)
+                {
+                    return "TipeeeStream";
+                }
+                else if (this.OtherEventType == OtherEventTypeEnum.TreatStreamDonation)
+                {
+                    return "TreatStream";
+                }
+                else if (this.OtherEventType == OtherEventTypeEnum.StreamJarDonation)
+                {
+                    return "StreamJar";
+                }
+                else if (this.OtherEventType == OtherEventTypeEnum.TwitterStreamTweetRetweet)
+                {
+                    return "Twitter";
+                }
+                else if (this.OtherEventType == OtherEventTypeEnum.PatreonSubscribed)
+                {
+                    return "Patreon";
+                }
                 return "Mixer";
             }
         }
@@ -123,6 +143,11 @@ namespace MixItUp.WPF.Controls.MainControls
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.GawkBoxDonation));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TiltifyDonation));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.ExtraLifeDonation));
+            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TipeeeStreamDonation));
+            //this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TreatStreamDonation));
+            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.StreamJarDonation));
+            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TwitterStreamTweetRetweet));
+            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.PatreonSubscribed));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.GameWispSubscribed));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.GameWispResubscribed));
         }

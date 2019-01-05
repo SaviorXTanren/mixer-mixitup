@@ -2,7 +2,6 @@
 using Mixer.Base.Model.Clips;
 using Mixer.Base.Model.Interactive;
 using Mixer.Base.Model.Patronage;
-using Mixer.Base.Model.Skills;
 using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Model.Skill;
 using MixItUp.Base.Model.User;

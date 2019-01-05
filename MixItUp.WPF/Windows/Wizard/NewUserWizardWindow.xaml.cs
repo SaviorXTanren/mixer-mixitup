@@ -574,7 +574,8 @@ namespace MixItUp.WPF.Windows.Wizard
                                 MaxAmount = rankMaxAmount,
                                 OnFollowBonus = rankOnFollowBonus,
                                 OnSubscribeBonus = rankOnSubBonus,
-                                SubscriberBonus = rankSubBonus
+                                SubscriberBonus = rankSubBonus,
+                                ModeratorBonus = rankSubBonus
                             };
 
                             ChannelSession.Settings.Currencies[rankPointsCurrency.ID] = rankPointsCurrency;
@@ -591,7 +592,8 @@ namespace MixItUp.WPF.Windows.Wizard
                             MaxAmount = rankMaxAmount,
                             OnFollowBonus = rankOnFollowBonus,
                             OnSubscribeBonus = rankOnSubBonus,
-                            SubscriberBonus = rankSubBonus
+                            SubscriberBonus = rankSubBonus,
+                            ModeratorBonus = rankSubBonus
                         };
                     }
                 }
@@ -907,7 +909,7 @@ namespace MixItUp.WPF.Windows.Wizard
             ChannelSession.Settings.ChatCommands.Add(statusCommand);
 
             ChatCommand addCommand = new ChatCommand("Add " + currency.Name, "add" + currency.SpecialIdentifier, new RequirementViewModel(MixerRoleEnum.Mod, 5));
-            addCommand.Actions.Add(new CurrencyAction(currency, CurrencyActionTypeEnum.AddToSpecificUser, "$arg2text", "$targetusername"));
+            addCommand.Actions.Add(new CurrencyAction(currency, CurrencyActionTypeEnum.AddToSpecificUser, "$arg2text", username: "$targetusername"));
             addCommand.Actions.Add(new ChatAction(string.Format("@$targetusername received $arg2text {0}!", currency.Name)));
             ChannelSession.Settings.ChatCommands.Add(addCommand);
 
@@ -919,7 +921,7 @@ namespace MixItUp.WPF.Windows.Wizard
             if (!currency.IsRank)
             {
                 ChatCommand giveCommand = new ChatCommand("Give " + currency.Name, "give" + currency.SpecialIdentifier, new RequirementViewModel(MixerRoleEnum.User, 5));
-                giveCommand.Actions.Add(new CurrencyAction(currency, CurrencyActionTypeEnum.AddToSpecificUser, "$arg2text", "$targetusername", deductFromUser: true));
+                giveCommand.Actions.Add(new CurrencyAction(currency, CurrencyActionTypeEnum.AddToSpecificUser, "$arg2text", username: "$targetusername", deductFromUser: true));
                 giveCommand.Actions.Add(new ChatAction(string.Format("@$username gave @$targetusername $arg2text {0}!", currency.Name)));
                 ChannelSession.Settings.ChatCommands.Add(giveCommand);
             }

@@ -386,6 +386,7 @@ namespace MixItUp.Base.MixerAPI
             {
                 await user.RefreshDetails();
             }
+            user.UpdateLastActivity();
 
             ChatMessageViewModel message = ChatMessageViewModel.CreateChatMessageViewModel(messageEvent, user);
 
@@ -441,10 +442,7 @@ namespace MixItUp.Base.MixerAPI
                     Util.Logger.LogDiagnostic(string.Format("Moderation Being Performed - {0}", message.ToString()));
 
                     message.ModerationReason = moderationReason;
-
                     await this.DeleteMessage(message);
-
-                    await user.AddModerationStrike(moderationReason);
 
                     return message;
                 }
@@ -543,7 +541,7 @@ namespace MixItUp.Base.MixerAPI
         {
             await command.Perform(message.User, command.GetArgumentsFromText(message.Message));
 
-            if (ChannelSession.Settings.DeleteChatCommandsWhenRun)
+            if (ChannelSession.Settings.DeleteChatCommandsWhenRun || command.Requirements.Settings.DeleteChatCommandWhenRun)
             {
                 Util.Logger.LogDiagnostic(string.Format("Deleting Message As Chat Command - {0}", message.Message));
                 await this.DeleteMessage(message);
