@@ -144,7 +144,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TiltifyDonation));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.ExtraLifeDonation));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TipeeeStreamDonation));
-            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TreatStreamDonation));
+            //this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TreatStreamDonation));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.StreamJarDonation));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TwitterStreamTweetRetweet));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.PatreonSubscribed));
