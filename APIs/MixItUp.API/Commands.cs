@@ -22,7 +22,12 @@ namespace MixItUp.API
 
         public static async Task RunCommandAsync(Guid commandID)
         {
-            await RestClient.PostAsync($"commands/{commandID}", null);
+            await RunCommandAsync(commandID, null);
+        }
+
+        public static async Task RunCommandAsync(Guid commandID, IEnumerable<string> arguments)
+        {
+            await RestClient.PostAsync($"commands/{commandID}", arguments);
         }
 
         public static async Task<Command> UpdateCommandAsync(Command updatedCommand)

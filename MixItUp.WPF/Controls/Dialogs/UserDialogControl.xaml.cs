@@ -34,6 +34,15 @@ namespace MixItUp.WPF.Controls.Dialogs
                 this.BanButton.Visibility = System.Windows.Visibility.Collapsed;
             }
 
+            if (this.user.IsOnline)
+            {
+                this.StreamStatusTextBlock.Text = $"{this.user.CurrentViewerCount} Viewers";
+            }
+            else
+            {
+                this.StreamStatusTextBlock.Text = "Offline";
+            }
+
             this.DataContext = this.user;
         }
     }

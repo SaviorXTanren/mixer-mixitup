@@ -108,6 +108,12 @@ namespace MixItUp.Base.ViewModel.User
         public int Sparks { get; set; }
 
         [DataMember]
+        public bool IsOnline { get; set; }
+
+        [DataMember]
+        public uint CurrentViewerCount { get; set; }
+
+        [DataMember]
         public bool IsInChat { get; set; }
 
         [DataMember]
@@ -612,6 +618,7 @@ namespace MixItUp.Base.ViewModel.User
             this.MixerAccountDate = user.createdAt;
             this.Sparks = (int)user.sparks;
             this.TwitterURL = user.social?.twitter;
+            this.CurrentViewerCount = user.channel.viewersCurrent;
         }
 
         private void SetMixerRoles(string[] userRoles)
