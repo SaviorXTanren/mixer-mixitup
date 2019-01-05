@@ -105,6 +105,12 @@ namespace MixItUp.Base.ViewModel.User
         public int Sparks { get; set; }
 
         [DataMember]
+        public bool IsOnline { get; set; }
+
+        [DataMember]
+        public uint CurrentViewerCount { get; set; }
+
+        [DataMember]
         public bool IsInChat { get; set; }
 
         [DataMember]
@@ -279,6 +285,8 @@ namespace MixItUp.Base.ViewModel.User
                 {
                     this.MixerAccountDate = user.createdAt;
                     this.Sparks = (int)user.sparks;
+                    this.IsOnline = user.channel.online;
+                    this.CurrentViewerCount = user.channel.viewersCurrent;
 
                     this.FollowDate = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, this.GetModel());
                     if (this.IsSubscriber)
