@@ -618,7 +618,11 @@ namespace MixItUp.Base.ViewModel.User
             this.MixerAccountDate = user.createdAt;
             this.Sparks = (int)user.sparks;
             this.TwitterURL = user.social?.twitter;
-            this.CurrentViewerCount = user.channel.viewersCurrent;
+            if (user is UserWithChannelModel)
+            {
+                UserWithChannelModel userChannel = (UserWithChannelModel)user;
+                this.CurrentViewerCount = userChannel.channel.viewersCurrent;
+            }
         }
 
         private void SetMixerRoles(string[] userRoles)
