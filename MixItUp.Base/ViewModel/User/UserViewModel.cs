@@ -493,6 +493,10 @@ namespace MixItUp.Base.ViewModel.User
                 {
                     this.Data.PatreonUserID = patreonUser.UserID;
                 }
+                else
+                {
+                    this.Data.PatreonUserID = null;
+                }
             }
             return Task.FromResult(0);
         }
