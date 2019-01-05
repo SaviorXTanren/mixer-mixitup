@@ -372,7 +372,7 @@ namespace MixItUp.Base.Util
             if (ChannelSession.Services.Twitter != null && this.ContainsSpecialIdentifier("tweet"))
             {
                 IEnumerable<Tweet> tweets = await ChannelSession.Services.Twitter.GetLatestTweets();
-                if (tweets.Count() > 0)
+                if (tweets != null && tweets.Count() > 0)
                 {
                     Tweet latestTweet = tweets.FirstOrDefault();
                     DateTimeOffset latestTweetLocalTime = latestTweet.DateTime.ToLocalTime();
@@ -532,7 +532,7 @@ namespace MixItUp.Base.Util
             if (this.ContainsSpecialIdentifier(TargetSpecialIdentifierHeader))
             {
                 UserViewModel targetUser = null;
-                if (arguments.Count() > 0)
+                if (arguments != null && arguments.Count() > 0)
                 {
                     targetUser = await this.GetUserFromArgument(arguments.ElementAt(0));
                 }
