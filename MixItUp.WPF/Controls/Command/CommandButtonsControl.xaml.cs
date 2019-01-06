@@ -8,6 +8,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.MainControls;
 using MixItUp.WPF.Util;
+using MixItUp.WPF.Windows.Currency;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -234,6 +235,16 @@ namespace MixItUp.WPF.Controls.Command
 
                     extraSpecialIdentifiers["mixplaycontrolid"] = iCommand.Name;
                     extraSpecialIdentifiers["mixplaycontrolcost"] = "123";
+                }
+                else if (command is CustomCommand)
+                {
+                    if (command.Name.Equals(InventoryWindow.ItemsBoughtCommandName) || command.Name.Equals(InventoryWindow.ItemsSoldCommandName))
+                    {
+                        extraSpecialIdentifiers["itemtotal"] = "5";
+                        extraSpecialIdentifiers["itemname"] = "Chocolate Bars";
+                        extraSpecialIdentifiers["itemcost"] = "500";
+                        extraSpecialIdentifiers["currencyname"] = "CURRENCY_NAME";
+                    }
                 }
 
                 await command.PerformAndWait(currentUser, new List<string>() { "@" + currentUser.UserName }, extraSpecialIdentifiers);
