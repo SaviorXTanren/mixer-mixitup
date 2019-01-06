@@ -1,8 +1,12 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base;
+using MixItUp.Base.Actions;
+using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Util;
+using MixItUp.WPF.Windows.Command;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,6 +23,9 @@ namespace MixItUp.WPF.Windows.Currency
     /// </summary>
     public partial class InventoryWindow : LoadingWindowBase
     {
+        public const string ItemsBoughtCommandName = "Shop Items Bought";
+        public const string ItemsSoldCommandName = "Shop Items Sold";
+
         private UserInventoryViewModel inventory;
 
         private ObservableCollection<UserInventoryItemViewModel> items = new ObservableCollection<UserInventoryItemViewModel>();
@@ -48,6 +55,18 @@ namespace MixItUp.WPF.Windows.Currency
             this.DefaultMaxAmountTextBox.Text = "99";
             this.AutomaticResetComboBox.ItemsSource = EnumHelper.GetEnumNames<CurrencyResetRateEnum>();
 
+            this.ShopCurrencyComboBox.ItemsSource = ChannelSession.Settings.Currencies.Values;
+
+            this.ShopCommandTextBox.Text = "!shop";
+
+            CustomCommand buyCommand = new CustomCommand(InventoryWindow.ItemsBoughtCommandName);
+            buyCommand.Actions.Add(new ChatAction("You bought $itemtotal $itemname for $itemcost $currencyname", sendAsStreamer: false, isWhisper: true));
+            this.ShopItemsBoughtCommandButtonsControl.DataContext = buyCommand;
+
+            CustomCommand sellCommand = new CustomCommand(InventoryWindow.ItemsSoldCommandName);
+            sellCommand.Actions.Add(new ChatAction("You sold $itemtotal $itemname for $itemcost $currencyname", sendAsStreamer: false, isWhisper: true));
+            this.ShopItemsSoldCommandButtonsControl.DataContext = sellCommand;
+
             this.AutomaticResetComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyResetRateEnum.Never);
 
             if (this.inventory != null)
@@ -62,7 +81,17 @@ namespace MixItUp.WPF.Windows.Currency
                 {
                     this.items.Add(item);
                 }
+
+                this.ShopEnableDisableToggleButton.IsChecked = this.inventory.ShopEnabled;
+                this.ShopCommandTextBox.Text = this.inventory.ShopCommand;
+                if (ChannelSession.Settings.Currencies.ContainsKey(this.inventory.ShopCurrencyID))
+                {
+                    this.ShopCurrencyComboBox.SelectedItem = ChannelSession.Settings.Currencies[this.inventory.ShopCurrencyID];
+                }
+                this.ShopItemsBoughtCommandButtonsControl.DataContext = this.inventory.ItemsBoughtCommand;
+                this.ShopItemsSoldCommandButtonsControl.DataContext = this.inventory.ItemsSoldCommand;
             }
+
             await base.OnLoaded();
         }
 
@@ -95,13 +124,27 @@ namespace MixItUp.WPF.Windows.Currency
                     return;
                 }
 
+                int buyAmount = -1;
+                if (!string.IsNullOrEmpty(this.ItemBuyAmountTextBox.Text) && (!int.TryParse(this.ItemBuyAmountTextBox.Text, out buyAmount) || buyAmount < 0))
+                {
+                    await MessageBoxHelper.ShowMessageDialog("The item buy amount must be either blank or a number greater than 0");
+                    return;
+                }
+
+                int sellAmount = -1;
+                if (!string.IsNullOrEmpty(this.ItemSellAmountTextBox.Text) && (!int.TryParse(this.ItemSellAmountTextBox.Text, out sellAmount) || sellAmount < 0))
+                {
+                    await MessageBoxHelper.ShowMessageDialog("The item sell amount must be either blank or a number greater than 0");
+                    return;
+                }
+
                 UserInventoryItemViewModel existingItem = this.items.FirstOrDefault(i => i.Name.Equals(this.ItemNameTextBox.Text, StringComparison.CurrentCultureIgnoreCase));
                 if (existingItem != null)
                 {
                     this.items.Remove(existingItem);
                 }
 
-                UserInventoryItemViewModel item = new UserInventoryItemViewModel(this.ItemNameTextBox.Text, maxAmount);
+                UserInventoryItemViewModel item = new UserInventoryItemViewModel(this.ItemNameTextBox.Text, maxAmount: maxAmount, buyAmount: buyAmount, sellAmount: sellAmount);
                 this.items.Add(item);
 
                 this.ItemNameTextBox.Text = string.Empty;
@@ -159,6 +202,21 @@ namespace MixItUp.WPF.Windows.Currency
                     return;
                 }
 
+                if (this.ShopEnableDisableToggleButton.IsChecked.GetValueOrDefault())
+                {
+                    if (string.IsNullOrEmpty(this.ShopCommandTextBox.Text))
+                    {
+                        await MessageBoxHelper.ShowMessageDialog("A command name must be specified for the shop");
+                        return;
+                    }
+
+                    if (this.ShopCurrencyComboBox.SelectedIndex < 0)
+                    {
+                        await MessageBoxHelper.ShowMessageDialog("A currency must be specified for the shop");
+                        return;
+                    }
+                }
+
                 if (this.inventory == null)
                 {
                     this.inventory = new UserInventoryViewModel();
@@ -170,11 +228,34 @@ namespace MixItUp.WPF.Windows.Currency
                 this.inventory.ResetInterval = EnumHelper.GetEnumValueFromString<CurrencyResetRateEnum>((string)this.AutomaticResetComboBox.SelectedItem);
                 this.inventory.SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(this.inventory.Name);
                 this.inventory.Items = new Dictionary<string, UserInventoryItemViewModel>(this.items.ToDictionary(i => i.Name, i => i));
+                this.inventory.ShopEnabled = this.ShopEnableDisableToggleButton.IsChecked.GetValueOrDefault();
+                this.inventory.ShopCommand = this.ShopCommandTextBox.Text;
+                if (this.ShopCurrencyComboBox.SelectedIndex >= 0)
+                {
+                    UserCurrencyViewModel currency = (UserCurrencyViewModel)this.ShopCurrencyComboBox.SelectedItem;
+                    if (currency != null)
+                    {
+                        this.inventory.ShopCurrencyID = currency.ID;
+                    }
+                }
+                this.inventory.ItemsBoughtCommand = (CustomCommand)this.ShopItemsBoughtCommandButtonsControl.DataContext;
+                this.inventory.ItemsSoldCommand = (CustomCommand)this.ShopItemsSoldCommandButtonsControl.DataContext;
 
                 await ChannelSession.SaveSettings();
 
                 this.Close();
             });
+        }
+
+        protected void ShopItemsCommandButtonsControl_EditClicked(object sender, RoutedEventArgs e)
+        {
+            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
+            CustomCommand command = commandButtonsControl.GetCommandFromCommandButtons<CustomCommand>(sender);
+            if (command != null)
+            {
+                CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(command));
+                window.Show();
+            }
         }
     }
 }

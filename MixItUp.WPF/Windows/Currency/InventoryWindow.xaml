@@ -46,8 +46,6 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="20" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="0" />
-                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="20" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
@@ -78,9 +76,11 @@
                             <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Visible" Height="200">
                                 <DataGrid x:Name="ItemsListView" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Center">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Item Name" Binding="{Binding Name}" IsReadOnly="True" Width="200" />
-                                        <DataGridTextColumn Header="Max Amount" Binding="{Binding MaxAmountString}" IsReadOnly="True" Width="120" />
-                                        <DataGridTextColumn Header="Special Identifier Item Name" Binding="{Binding SpecialIdentifier}" IsReadOnly="True" Width="200" />
+                                        <DataGridTextColumn Header="Item Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                                        <DataGridTextColumn Header="Max Amount" Binding="{Binding MaxAmountString}" IsReadOnly="True" Width="100" />
+                                        <DataGridTextColumn Header="Buy Price" Binding="{Binding BuyAmountString}" IsReadOnly="True" Width="80" />
+                                        <DataGridTextColumn Header="Sell Price" Binding="{Binding SellAmountString}" IsReadOnly="True" Width="80" />
+                                        <DataGridTextColumn Header="Special Identifier Item Name" Binding="{Binding SpecialIdentifier}" IsReadOnly="True" Width="*" />
                                         <DataGridTemplateColumn Width="65">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
@@ -101,19 +101,74 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="20" />
                                     <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
                                 <TextBox Grid.Column="0" x:Name="ItemNameTextBox" MaterialDesign:HintAssist.Hint="Item Name" Width="200" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                                <TextBox Grid.Column="2" x:Name="ItemMaxAmountTextBox" MaterialDesign:HintAssist.Hint="Max Amount (Optional)" Width="155" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                <TextBox Grid.Column="2" x:Name="ItemMaxAmountTextBox" MaterialDesign:HintAssist.Hint="Max Amount" Width="100" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                                <Button x:Name="AddItemButton" Grid.Column="4" Click="AddItemButton_Click" Width="110">Add Item</Button>
+                                <TextBox Grid.Column="4" x:Name="ItemBuyAmountTextBox" MaterialDesign:HintAssist.Hint="Buy Price" Width="100" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                                <TextBox Grid.Column="6" x:Name="ItemSellAmountTextBox" MaterialDesign:HintAssist.Hint="Sell Price" Width="100" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                                <Button x:Name="AddItemButton" Grid.Column="8" Click="AddItemButton_Click" Width="110">Add Item</Button>
                             </Grid>
                         </Grid>
                     </GroupBox>
                 </Grid>
 
                 <Grid Grid.Row="4" HorizontalAlignment="Center">
+                    <GroupBox Header="Shop" Grid.Column="2">
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="20" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0" HorizontalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="5" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" VerticalAlignment="Center">Enable:</TextBlock>
+                                <ToggleButton x:Name="ShopEnableDisableToggleButton" Grid.Column="2" />
+
+                                <TextBox Grid.Column="4" x:Name="ShopCommandTextBox" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Shop Command" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                                <ComboBox x:Name="ShopCurrencyComboBox" Grid.Column="6" MaterialDesign:HintAssist.Hint="Shop Currency" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="Name" Width="200" />
+                            </Grid>
+
+                            <Grid Grid.Row="2" HorizontalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <GroupBox Header="Items Bought" Grid.Column="0">
+                                    <CommandControls:CommandButtonsControl x:Name="ShopItemsBoughtCommandButtonsControl" HorizontalAlignment="Center" EditClicked="ShopItemsCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                                </GroupBox>
+
+                                <GroupBox Header="Items Sold" Grid.Column="2">
+                                    <CommandControls:CommandButtonsControl x:Name="ShopItemsSoldCommandButtonsControl" HorizontalAlignment="Center" EditClicked="ShopItemsCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                                </GroupBox>
+                            </Grid>
+                        </Grid>
+                    </GroupBox>
+                </Grid>
+
+                <Grid Grid.Row="6" HorizontalAlignment="Center">
                     <GroupBox Header="Settings" Grid.Column="2">
                         <Grid Margin="10">
                             <Grid.RowDefinitions>
@@ -135,7 +190,7 @@
                     </GroupBox>
                 </Grid>
 
-                <Button x:Name="SaveButton" Grid.Row="6" HorizontalAlignment="Center" Click="SaveButton_Click" Width="80">Save</Button>
+                <Button x:Name="SaveButton" Grid.Row="8" HorizontalAlignment="Center" Click="SaveButton_Click" Width="80">Save</Button>
             </Grid>
         </ScrollViewer>
 

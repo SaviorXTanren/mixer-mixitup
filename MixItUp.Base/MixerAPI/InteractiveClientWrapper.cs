@@ -43,6 +43,8 @@ namespace MixItUp.Base.MixerAPI
             return this.EventTypeString.Equals(input.input.eventType);
         }
 
+        public virtual async Task<bool> CheckAllRequirements(UserViewModel user) { return await this.Command.CheckAllRequirements(user); }
+
         public virtual async Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
         {
             Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>()
@@ -849,6 +851,11 @@ namespace MixItUp.Base.MixerAPI
                     }
 
                     if (!this.Controls.ContainsKey(e.input.controlID))
+                    {
+                        return;
+                    }
+
+                    if (!await connectedControl.CheckAllRequirements(user))
                     {
                         return;
                     }

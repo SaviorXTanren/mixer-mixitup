@@ -161,12 +161,37 @@ namespace MixItUp.Base.Actions
                                                 JToken currentToken = jobj;
                                                 for (int i = 0; i < splits.Count(); i++)
                                                 {
-                                                    if (currentToken[splits[i]] == null)
+                                                    if (currentToken is JObject)
+                                                    {
+                                                        JObject jobjToken = (JObject)currentToken;
+                                                        if (jobjToken.ContainsKey(splits[i]))
+                                                        {
+                                                            currentToken = jobjToken[splits[i]];
+                                                        }
+                                                        else
+                                                        {
+                                                            currentToken = null;
+                                                            break;
+                                                        }
+                                                    }
+                                                    else if (currentToken is JArray)
+                                                    {
+                                                        JArray jarrayToken = (JArray)currentToken;
+                                                        if (int.TryParse(splits[i], out int index) && index >= 0 && index < jarrayToken.Count)
+                                                        {
+                                                            currentToken = jarrayToken[index];
+                                                        }
+                                                        else
+                                                        {
+                                                            currentToken = null;
+                                                            break;
+                                                        }
+                                                    }
+                                                    else
                                                     {
                                                         currentToken = null;
                                                         break;
                                                     }
-                                                    currentToken = currentToken[splits[i]];
                                                 }
 
                                                 if (currentToken != null)

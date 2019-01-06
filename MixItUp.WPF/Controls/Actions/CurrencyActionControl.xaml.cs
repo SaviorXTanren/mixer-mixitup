@@ -141,6 +141,8 @@ namespace MixItUp.WPF.Controls.Actions
                 this.DeductFromUserTextBlock.IsEnabled = this.DeductFromUserToggleButton.IsEnabled =
                     (actionType == CurrencyActionTypeEnum.AddToSpecificUser || actionType == CurrencyActionTypeEnum.AddToAllChatUsers) ? true : false;
 
+                this.InventoryItemNameComboBox.IsEnabled = (actionType != CurrencyActionTypeEnum.ResetForAllUsers && actionType != CurrencyActionTypeEnum.ResetForUser);
+
                 this.CurrencyAmountTextBox.IsEnabled = (actionType != CurrencyActionTypeEnum.ResetForAllUsers && actionType != CurrencyActionTypeEnum.ResetForUser);
             }
         }

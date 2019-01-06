@@ -1,8 +1,11 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Currency;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Threading.Tasks;
@@ -91,6 +94,8 @@ namespace MixItUp.WPF.Controls.MainControls
             InitializeComponent();
 
             this.MainDataGrid.ItemsSource = this.items;
+
+            GlobalEvents.OnChatCommandMessageReceived += GlobalEvents_OnChatCommandMessageReceived;
         }
 
         public void RefreshList()
@@ -182,6 +187,18 @@ namespace MixItUp.WPF.Controls.MainControls
             InventoryWindow window = new InventoryWindow();
             window.Closed += Window_Closed;
             window.Show();
+        }
+
+        private async void GlobalEvents_OnChatCommandMessageReceived(object sender, ChatMessageViewModel message)
+        {
+            foreach (UserInventoryViewModel inventory in ChannelSession.Settings.Inventories.Values)
+            {
+                if (inventory.ShopEnabled && message.Message.StartsWith(inventory.ShopCommand))
+                {
+                    string args = message.Message.Replace(inventory.ShopCommand, "");
+                    await inventory.PerformShopCommand(message.User, args.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
+                }
+            }
         }
     }
 }

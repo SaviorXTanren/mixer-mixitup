@@ -236,6 +236,12 @@ namespace MixItUp.Base.Services
         [JsonProperty("will_pay_amount_cents")]
         public int AmountToPay { get; set; }
 
+        [JsonProperty("currently_entitled_amount_cents")]
+        public int CurrentAmountPaying { get; set; }
+
+        [JsonProperty("lifetime_support_cents")]
+        public int LifetimeAmountPaid { get; set; }
+
         [DataMember]
         public string UserID { get; set; }
 

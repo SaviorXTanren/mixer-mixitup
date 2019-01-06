@@ -74,15 +74,6 @@ namespace MixItUp.Base.Commands
         [JsonIgnore]
         public virtual string EventTypeString { get { return string.Empty; } }
 
-        public override async Task<bool> CheckCooldownRequirement(UserViewModel user)
-        {
-            if (this.Requirements.Cooldown != null && this.Requirements.Cooldown.Type == CooldownTypeEnum.PerPerson)
-            {
-                return await base.CheckCooldownRequirement(user);
-            }
-            return true;
-        }
-
         public void UpdateWithLatestControl(InteractiveControlModel control) { this.Control = control; }
     }
 
@@ -135,6 +126,15 @@ namespace MixItUp.Base.Commands
 
         [JsonIgnore]
         public override string EventTypeString { get { return this.Trigger.ToString().ToLower(); } }
+
+        public override async Task<bool> CheckCooldownRequirement(UserViewModel user)
+        {
+            if (this.Requirements.Cooldown != null && this.Requirements.Cooldown.Type == CooldownTypeEnum.PerPerson)
+            {
+                return await base.CheckCooldownRequirement(user);
+            }
+            return true;
+        }
 
         public long GetCooldownTimestamp()
         {
