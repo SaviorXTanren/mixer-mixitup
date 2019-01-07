@@ -198,6 +198,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 return null;
             });
 
+            this.GroupsButton.IsEnabled = false;
             if (this.selectedGame.id == InteractiveSharedProjectModel.FortniteDropMap.GameID)
             {
                 this.SetCustomInteractiveGame(new FortniteDropMapInteractiveControl(this.selectedGame, this.selectedGameVersion));
@@ -220,6 +221,8 @@ namespace MixItUp.WPF.Controls.MainControls
             }
             else
             {
+                this.GroupsButton.IsEnabled = true;
+
                 this.CustomInteractiveContentControl.Visibility = Visibility.Collapsed;
                 this.InteractiveControlsGridView.Visibility = Visibility.Visible;
 
