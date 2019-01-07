@@ -67,6 +67,7 @@ namespace MixItUp.Base.Services
 
         Task AddSongRequest(UserViewModel user, SongRequestServiceTypeEnum service, string identifier, bool pickFirst = false);
         Task RemoveSongRequest(SongRequestItem song);
+        Task RemoveLastSongRequested();
         Task RemoveLastSongRequestedByUser(UserViewModel user);
 
         Task PlayPauseCurrentSong();
