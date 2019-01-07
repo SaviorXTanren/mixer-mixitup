@@ -10,6 +10,8 @@ namespace MixItUp.Base.ViewModel.Requirement
     {
         [DataMember]
         public bool DeleteChatCommandWhenRun { get; set; }
+        [DataMember]
+        public bool DontDeleteChatCommandWhenRun { get; set; }
 
         [DataMember]
         public string PatreonBenefitIDRequirement { get; set; }
