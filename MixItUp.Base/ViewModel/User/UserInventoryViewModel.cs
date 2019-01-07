@@ -196,79 +196,49 @@ namespace MixItUp.Base.ViewModel.User
                                 await ChannelSession.Chat.Whisper(user.UserName, "Items Available to Buy/Sell: " + string.Join(", ", items));
                                 return;
                             }
-                            else
+                        }
+                        else if (arguments.Count() >= 2)
+                        {
+                            if (arguments.ElementAt(0).Equals("buy", StringComparison.InvariantCultureIgnoreCase) || arguments.ElementAt(0).Equals("sell", StringComparison.InvariantCultureIgnoreCase))
                             {
-                                foreach (UserInventoryItemViewModel item in this.Items.Values)
+                                bool buying = false;
+                                bool selling = false;
+                                if (arguments.ElementAt(0).Equals("buy", StringComparison.InvariantCultureIgnoreCase))
                                 {
-                                    if (item.Name.Equals(arg1, StringComparison.InvariantCultureIgnoreCase))
-                                    {
-                                        if (item.HasBuyAmount || item.HasSellAmount)
-                                        {
-                                            StringBuilder itemInfo = new StringBuilder();
-                                            itemInfo.Append(item.Name + ": ");
-                                            if (item.HasBuyAmount)
-                                            {
-                                                itemInfo.Append(string.Format("Buy = {0} {1}", item.BuyAmount, currency.Name));
-                                            }
-                                            if (item.HasBuyAmount && item.HasSellAmount)
-                                            {
-                                                itemInfo.Append(string.Format(", "));
-                                            }
-                                            if (item.HasSellAmount)
-                                            {
-                                                itemInfo.Append(string.Format("Sell = {0} {1}", item.SellAmount, currency.Name));
-                                            }
+                                    buying = true;
+                                }
+                                else if (arguments.ElementAt(0).Equals("sell", StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    selling = true;
+                                }
+                                else
+                                {
+                                    await ChannelSession.Chat.Whisper(user.UserName, "You must specify either \"buy\" & \"sell\"");
+                                    return;
+                                }
 
-                                            await ChannelSession.Chat.Whisper(user.UserName, itemInfo.ToString());
-                                            return;
-                                        }
-                                        else
+                                int amount = 1;
+
+                                IEnumerable<string> itemArgs = arguments.Skip(1);
+                                UserInventoryItemViewModel item = this.GetItem(string.Join(" ", itemArgs));
+                                if (item == null && itemArgs.Count() > 1)
+                                {
+                                    itemArgs = itemArgs.Take(itemArgs.Count() - 1);
+                                    item = this.GetItem(string.Join(" ", itemArgs));
+                                    if (item != null)
+                                    {
+                                        if (!int.TryParse(arguments.Last(), out amount) || amount <= 0)
                                         {
-                                            await ChannelSession.Chat.Whisper(user.UserName, "This item is not available to buy/sell");
+                                            await ChannelSession.Chat.Whisper(user.UserName, "A valid amount greater than 0 must be specified");
                                             return;
                                         }
                                     }
                                 }
 
-                                await ChannelSession.Chat.Whisper(user.UserName, "The item you specified does not exist");
-                                return;
-                            }
-                        }
-                        else if (arguments.Count() == 2 || arguments.Count() == 3)
-                        {
-                            bool buying = false;
-                            bool selling = false;
-                            if (arguments.ElementAt(0).Equals("buy", StringComparison.InvariantCultureIgnoreCase))
-                            {
-                                buying = true;
-                            }
-                            else if (arguments.ElementAt(0).Equals("sell", StringComparison.InvariantCultureIgnoreCase))
-                            {
-                                selling = true;
-                            }
-                            else
-                            {
-                                await ChannelSession.Chat.Whisper(user.UserName, "You must specify either \"buy\" & \"sell\"");
-                                return;
-                            }
-
-                            int amount = 1;
-                            if (arguments.Count() == 3)
-                            {
-                                if (!int.TryParse(arguments.ElementAt(2), out amount) || amount <= 0)
+                                if (item != null)
                                 {
-                                    await ChannelSession.Chat.Whisper(user.UserName, "A valid amount greater than 0 must be specified");
-                                    return;
-                                }
-                            }
-
-                            string itemName = arguments.ElementAt(1);
-                            CustomCommand command = null;
-                            int totalcost = 0;
-                            foreach (UserInventoryItemViewModel item in this.Items.Values)
-                            {
-                                if (item.Name.Equals(itemName, StringComparison.InvariantCultureIgnoreCase))
-                                {
+                                    int totalcost = 0;
+                                    CustomCommand command = null;
                                     if (buying)
                                     {
                                         if (item.HasBuyAmount)
@@ -323,10 +293,49 @@ namespace MixItUp.Base.ViewModel.User
                                     }
                                     return;
                                 }
+                                else
+                                {
+                                    await ChannelSession.Chat.Whisper(user.UserName, "The item you specified does not exist");
+                                    return;
+                                }
                             }
+                            else
+                            {
+                                UserInventoryItemViewModel item = this.GetItem(string.Join(" ", arguments));
+                                if (item != null)
+                                {
+                                    if (item.HasBuyAmount || item.HasSellAmount)
+                                    {
+                                        StringBuilder itemInfo = new StringBuilder();
+                                        itemInfo.Append(item.Name + ": ");
+                                        if (item.HasBuyAmount)
+                                        {
+                                            itemInfo.Append(string.Format("Buy = {0} {1}", item.BuyAmount, currency.Name));
+                                        }
+                                        if (item.HasBuyAmount && item.HasSellAmount)
+                                        {
+                                            itemInfo.Append(string.Format(", "));
+                                        }
+                                        if (item.HasSellAmount)
+                                        {
+                                            itemInfo.Append(string.Format("Sell = {0} {1}", item.SellAmount, currency.Name));
+                                        }
 
-                            await ChannelSession.Chat.Whisper(user.UserName, "The item you specified does not exist");
-                            return;
+                                        await ChannelSession.Chat.Whisper(user.UserName, itemInfo.ToString());
+                                        return;
+                                    }
+                                    else
+                                    {
+                                        await ChannelSession.Chat.Whisper(user.UserName, "This item is not available to buy/sell");
+                                        return;
+                                    }
+                                }
+                                else
+                                {
+                                    await ChannelSession.Chat.Whisper(user.UserName, "The item you specified does not exist");
+                                    return;
+                                }
+                            }
                         }
                     }
 
@@ -358,6 +367,18 @@ namespace MixItUp.Base.ViewModel.User
         public override int GetHashCode()
         {
             return this.ID.GetHashCode();
+        }
+
+        private UserInventoryItemViewModel GetItem(string itemName)
+        {
+            foreach (UserInventoryItemViewModel item in this.Items.Values)
+            {
+                if (item.Name.Equals(itemName, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return item;
+                }
+            }
+            return null;
         }
     }
 }
