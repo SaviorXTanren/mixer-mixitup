@@ -140,6 +140,7 @@ namespace MixItUp.Base.Model.Overlay
                 this.CurrentBoss = await ChannelSession.GetCurrentUser();
                 this.CurrentHealth = this.StartingHealth;
             }
+            this.CurrentBossUserID = this.CurrentBoss.ID;
 
             GlobalEvents.OnFollowOccurred -= GlobalEvents_OnFollowOccurred;
             GlobalEvents.OnHostOccurred -= GlobalEvents_OnHostOccurred;

@@ -97,8 +97,8 @@ namespace MixItUp.Desktop.Services
 
         public void End()
         {
-            this.telemetryClient.Flush();
-            Task.Delay(1000); // Allow time to flush
+            Task.Run(() => { this.telemetryClient.Flush(); });
+            Task.Delay(2000); // Allow time to flush
         }
     }
 }

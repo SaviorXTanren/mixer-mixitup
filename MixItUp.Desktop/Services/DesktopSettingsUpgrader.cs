@@ -362,10 +362,14 @@ namespace MixItUp.Desktop.Services
                 DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
                 await ChannelSession.Services.Settings.Initialize(settings);
 
-                SQLiteDatabaseWrapper databaseWrapper = new SQLiteDatabaseWrapper(((DesktopSettingsService)ChannelSession.Services.Settings).GetDatabaseFilePath(settings));
+                try
+                {
+                    SQLiteDatabaseWrapper databaseWrapper = new SQLiteDatabaseWrapper(((DesktopSettingsService)ChannelSession.Services.Settings).GetDatabaseFilePath(settings));
 
-                await databaseWrapper.RunWriteCommand("ALTER TABLE Users ADD COLUMN InventoryAmounts TEXT");
-                await databaseWrapper.RunWriteCommand("UPDATE Users SET InventoryAmounts = '{ }'");
+                    await databaseWrapper.RunWriteCommand("ALTER TABLE Users ADD COLUMN InventoryAmounts TEXT");
+                    await databaseWrapper.RunWriteCommand("UPDATE Users SET InventoryAmounts = '{ }'");
+                }
+                catch (Exception ex) { Logger.Log(ex); }
 
                 foreach (UserCurrencyViewModel currency in settings.Currencies.Values)
                 {

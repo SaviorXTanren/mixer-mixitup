@@ -149,6 +149,8 @@ namespace MixItUp.WPF.Windows.Currency
 
                 this.ItemNameTextBox.Text = string.Empty;
                 this.ItemMaxAmountTextBox.Text = string.Empty;
+                this.ItemBuyAmountTextBox.Text = string.Empty;
+                this.ItemSellAmountTextBox.Text = string.Empty;
             });
         }
 

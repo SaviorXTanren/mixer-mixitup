@@ -541,7 +541,20 @@ namespace MixItUp.Base.MixerAPI
         {
             await command.Perform(message.User, command.GetArgumentsFromText(message.Message));
 
-            if (ChannelSession.Settings.DeleteChatCommandsWhenRun || command.Requirements.Settings.DeleteChatCommandWhenRun)
+            bool delete = false;
+            if (ChannelSession.Settings.DeleteChatCommandsWhenRun)
+            {
+                if (!command.Requirements.Settings.DontDeleteChatCommandWhenRun)
+                {
+                    delete = true;
+                }
+            }
+            else if (command.Requirements.Settings.DeleteChatCommandWhenRun)
+            {
+                delete = true;
+            }
+
+            if (delete)
             {
                 Util.Logger.LogDiagnostic(string.Format("Deleting Message As Chat Command - {0}", message.Message));
                 await this.DeleteMessage(message);

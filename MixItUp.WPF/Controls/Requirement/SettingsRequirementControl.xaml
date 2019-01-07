@@ -27,7 +27,8 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0">Delete Chat Command When Run:</TextBlock>
+            <TextBlock x:Name="DeleteCommandsWhenRunTextBlock" Grid.Column="0" Visibility="Collapsed">Delete Chat Command When Run:</TextBlock>
+            <TextBlock x:Name="DontDeleteCommandsWhenRunTextBlock" Grid.Column="0" Visibility="Collapsed">Don't Delete Chat Command When Run:</TextBlock>
 
             <ToggleButton Grid.Column="2" x:Name="DeleteChatCommandWhenRunToggleSwitch" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" />
         </Grid>

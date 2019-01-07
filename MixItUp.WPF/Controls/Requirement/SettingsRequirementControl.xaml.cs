@@ -3,6 +3,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.WPF.Util;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.Requirement
@@ -21,6 +22,15 @@ namespace MixItUp.WPF.Controls.Requirement
 
         private void SettingsRequirementControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
+            if (ChannelSession.Settings.DeleteChatCommandsWhenRun)
+            {
+                this.DontDeleteCommandsWhenRunTextBlock.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                this.DeleteCommandsWhenRunTextBlock.Visibility = Visibility.Visible;
+            }
+
             if (ChannelSession.Services.Patreon != null)
             {
                 this.EnableDisablePatreonBenefitToggleSwitch.IsEnabled = true;
@@ -36,7 +46,15 @@ namespace MixItUp.WPF.Controls.Requirement
             }
 
             SettingsRequirementViewModel settings = new SettingsRequirementViewModel();
-            settings.DeleteChatCommandWhenRun = this.DeleteChatCommandWhenRunToggleSwitch.IsChecked.GetValueOrDefault();
+            if (ChannelSession.Settings.DeleteChatCommandsWhenRun)
+            {
+                settings.DontDeleteChatCommandWhenRun = this.DeleteChatCommandWhenRunToggleSwitch.IsChecked.GetValueOrDefault();
+            }
+            else
+            {
+                settings.DeleteChatCommandWhenRun = this.DeleteChatCommandWhenRunToggleSwitch.IsChecked.GetValueOrDefault();
+            }
+
             if (this.EnableDisablePatreonBenefitToggleSwitch.IsChecked.GetValueOrDefault())
             {
                 PatreonBenefit benefit = (PatreonBenefit)this.PatreonBenefitComboBox.SelectedItem;
@@ -47,7 +65,15 @@ namespace MixItUp.WPF.Controls.Requirement
 
         public void SetSettingsRequirement(SettingsRequirementViewModel settings)
         {
-            this.DeleteChatCommandWhenRunToggleSwitch.IsChecked = settings.DeleteChatCommandWhenRun;
+            if (ChannelSession.Settings.DeleteChatCommandsWhenRun)
+            {
+                this.DeleteChatCommandWhenRunToggleSwitch.IsChecked = settings.DontDeleteChatCommandWhenRun;
+            }
+            else
+            {
+                this.DeleteChatCommandWhenRunToggleSwitch.IsChecked = settings.DeleteChatCommandWhenRun;
+            }
+
             if (!string.IsNullOrEmpty(settings.PatreonBenefitIDRequirement) && ChannelSession.Services.Patreon != null)
             {
                 if (ChannelSession.Services.Patreon.Campaign.Benefits.ContainsKey(settings.PatreonBenefitIDRequirement))
