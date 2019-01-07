@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -105,6 +106,19 @@ namespace MixItUp.Base.Model.Overlay
             this.TextColor = textColor;
             this.AddEventAnimation = addEventAnimation;
             this.RemoveEventAnimation = removeEventAnimation;
+        }
+
+        [JsonIgnore]
+        public override bool SupportsTestButton { get { return true; } }
+
+        public override async Task LoadTestData()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                this.AddEvent("Joe Smoe", "Followed");
+
+                await Task.Delay(1000);
+            }
         }
 
         public override async Task Initialize()

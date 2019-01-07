@@ -73,6 +73,7 @@ namespace MixItUp.Base.Model.Overlay
         private bool refreshDonations = true;
 
         private DateTimeOffset lastCurrencyRefresh = DateTimeOffset.MinValue;
+        private List<UserDataViewModel> currencyUsersToShow = new List<UserDataViewModel>();
 
         public OverlayLeaderboard() : base(LeaderboardItemType, HTMLTemplate) { }
 
@@ -187,21 +188,20 @@ namespace MixItUp.Base.Model.Overlay
             }
             else if (this.LeaderboardType == LeaderboardTypeEnum.CurrencyRank)
             {
-                if (this.lastCurrencyRefresh < DateTimeOffset.Now)
+                if (ChannelSession.Settings.Currencies.ContainsKey(this.CurrencyID))
                 {
-                    this.lastCurrencyRefresh = DateTimeOffset.Now.AddMinutes(1);
-
-                    if (ChannelSession.Settings.Currencies.ContainsKey(this.CurrencyID))
+                    UserCurrencyViewModel currency = ChannelSession.Settings.Currencies[this.CurrencyID];
+                    if (this.lastCurrencyRefresh < DateTimeOffset.Now)
                     {
-                        UserCurrencyViewModel currency = ChannelSession.Settings.Currencies[this.CurrencyID];
-                        Dictionary<uint, int> currencyAmounts = new Dictionary<uint, int>();
+                        this.lastCurrencyRefresh = DateTimeOffset.Now.AddMinutes(1);
 
+                        Dictionary<uint, int> currencyAmounts = new Dictionary<uint, int>();
                         foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values)
                         {
                             currencyAmounts[userData.ID] = userData.GetCurrencyAmount(currency);
                         }
 
-                        List<UserDataViewModel> usersToShow = new List<UserDataViewModel>();
+                        this.currencyUsersToShow.Clear();
                         for (int i = 0; i < this.TotalToShow && i < currencyAmounts.Count; i++)
                         {
                             try
@@ -209,21 +209,21 @@ namespace MixItUp.Base.Model.Overlay
                                 KeyValuePair<uint, int> top = currencyAmounts.Aggregate((current, highest) => (current.Key <= 0 || current.Value < highest.Value) ? highest : current);
                                 if (!top.Equals(default(KeyValuePair<uint, int>)))
                                 {
-                                    usersToShow.Add(ChannelSession.Settings.UserData[top.Key]);
+                                    this.currencyUsersToShow.Add(ChannelSession.Settings.UserData[top.Key]);
                                     currencyAmounts.Remove(top.Key);
                                 }
                             }
                             catch (Exception ex) { Util.Logger.Log(ex); }
                         }
-
-                        foreach (UserDataViewModel userToShow in usersToShow)
-                        {
-                            extraSpecialIdentifiers["DETAILS"] = userToShow.GetCurrencyAmount(currency).ToString();
-                            OverlayCustomHTMLItem htmlItem = (OverlayCustomHTMLItem)await base.GetProcessedItem(new UserViewModel(userToShow), arguments, extraSpecialIdentifiers);
-                            copy.LeaderboardEntries.Add(htmlItem.HTMLText);
-                        }
-                        return copy;
                     }
+
+                    foreach (UserDataViewModel userToShow in this.currencyUsersToShow)
+                    {
+                        extraSpecialIdentifiers["DETAILS"] = userToShow.GetCurrencyAmount(currency).ToString();
+                        OverlayCustomHTMLItem htmlItem = (OverlayCustomHTMLItem)await base.GetProcessedItem(new UserViewModel(userToShow), arguments, extraSpecialIdentifiers);
+                        copy.LeaderboardEntries.Add(htmlItem.HTMLText);
+                    }
+                    return copy;
                 }
             }
             return null;

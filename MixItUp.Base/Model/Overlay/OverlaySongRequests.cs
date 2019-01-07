@@ -2,6 +2,7 @@
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -62,6 +63,9 @@ namespace MixItUp.Base.Model.Overlay
         [JsonIgnore]
         private List<SongRequestItem> currentSongRequests = new List<SongRequestItem>();
 
+        [JsonIgnore]
+        private List<SongRequestItem> testSongRequestsList = new List<SongRequestItem>();
+
         public OverlaySongRequests() : base(SongRequestsItemType, HTMLTemplate) { }
 
         public OverlaySongRequests(string htmlText, int totalToShow, string textFont, int width, int height, string borderColor, string backgroundColor, string textColor,
@@ -79,9 +83,30 @@ namespace MixItUp.Base.Model.Overlay
             this.RemoveEventAnimation = removeEventAnimation;
         }
 
+        [JsonIgnore]
+        public override bool SupportsTestButton { get { return true; } }
+
+        public override async Task LoadTestData()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                this.testSongRequestsList.Add(new SongRequestItem()
+                {
+                    ID = Guid.NewGuid().ToString(),
+                    Type = SongRequestServiceTypeEnum.YouTube,
+                    Name = "TEST SONG",
+                    AlbumImage = "https://www.youtube.com/yt/about/media/images/brand-resources/icons/YouTube_icon_full-color.svg"
+                });
+                this.songRequestsUpdated = true;
+                await Task.Delay(1500);
+            }
+        }
+
         public override async Task Initialize()
         {
             GlobalEvents.OnSongRequestsChangedOccurred += GlobalEvents_OnSongRequestsChangedOccurred;
+
+            this.testSongRequestsList.Clear();
 
             await base.Initialize();
         }
@@ -100,7 +125,13 @@ namespace MixItUp.Base.Model.Overlay
                     songRequests.Add(currentlyPlaying);
                 }
 
-                foreach (SongRequestItem songRequest in await ChannelSession.Services.SongRequestService.GetAllRequests())
+                IEnumerable<SongRequestItem> allSongRequests = this.testSongRequestsList;
+                if (this.testSongRequestsList.Count == 0)
+                {
+                    allSongRequests = await ChannelSession.Services.SongRequestService.GetAllRequests();
+                }
+
+                foreach (SongRequestItem songRequest in allSongRequests)
                 {
                     if (!songRequests.Any(sr => sr.Equals(songRequest)))
                     {

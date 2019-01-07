@@ -59,6 +59,9 @@ namespace MixItUp.Base.Model.Overlay
         [JsonIgnore]
         private bool gameQueueUpdated = true;
 
+        [JsonIgnore]
+        private List<UserViewModel> testGameQueueList = new List<UserViewModel>();
+
         public OverlayGameQueue() : base(GameQueueItemType, HTMLTemplate) { }
 
         public OverlayGameQueue(string htmlText, int totalToShow, string textFont, int width, int height, string borderColor, string backgroundColor, string textColor,
@@ -76,9 +79,24 @@ namespace MixItUp.Base.Model.Overlay
             this.RemoveEventAnimation = removeEventAnimation;
         }
 
+        [JsonIgnore]
+        public override bool SupportsTestButton { get { return true; } }
+
+        public override async Task LoadTestData()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                this.testGameQueueList.Add(await ChannelSession.GetCurrentUser());
+                this.gameQueueUpdated = true;
+                await Task.Delay(1500);
+            }
+        }
+
         public override async Task Initialize()
         {
             GlobalEvents.OnGameQueueUpdated += GlobalEvents_OnGameQueueUpdated;
+
+            this.testGameQueueList.Clear();
 
             await base.Initialize();
         }
@@ -89,7 +107,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 this.gameQueueUpdated = false;
 
-                List<UserViewModel> users = ChannelSession.GameQueue.ToList();
+                List<UserViewModel> users = new List<UserViewModel>((this.testGameQueueList.Count > 0) ? this.testGameQueueList : ChannelSession.GameQueue.ToList());
 
                 this.GameQueueUpdates.Clear();
                 OverlayGameQueue copy = this.Copy<OverlayGameQueue>();
