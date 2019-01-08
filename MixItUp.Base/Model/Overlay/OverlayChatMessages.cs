@@ -2,6 +2,7 @@
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -97,6 +98,27 @@ namespace MixItUp.Base.Model.Overlay
             this.TextFont = textFont;
             this.TextSize = textSize;
             this.AddEventAnimation = addEventAnimation;
+        }
+
+        [JsonIgnore]
+        public override bool SupportsTestButton { get { return true; } }
+
+        public override async Task LoadTestData()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                ChatMessageEventModel messageEvent = new ChatMessageEventModel()
+                {
+                    id = Guid.NewGuid(),
+                    user_id = ChannelSession.User.id,
+                    user_name = ChannelSession.User.username,
+                    channel = ChannelSession.Channel.id,
+                    message = new ChatMessageContentsModel() { message = new ChatMessageDataModel[] { new ChatMessageDataModel() { type = "text", text = "Test Message" } } }
+                };
+                this.GlobalEvents_OnChatMessageReceived(this, ChatMessageViewModel.CreateChatMessageViewModel(messageEvent));
+
+                await Task.Delay(1000);
+            }
         }
 
         public override async Task Initialize()

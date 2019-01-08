@@ -15,6 +15,10 @@
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
 
              d:DesignHeight="300" d:DesignWidth="300">
+    <local:MainControlBase.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </local:MainControlBase.Resources>
+
     <Grid>
         <Grid x:Name="NoOverlayGrid" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Visible">
             <TextBlock Style="{StaticResource HeaderTextBlock}" TextWrapping="Wrap">The Overlay must be enabled in the Services menu to use Overlay Widgets</TextBlock>
@@ -32,11 +36,13 @@
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
                     <DataGridTextColumn Header="Overlay" Binding="{Binding OverlayName}" IsReadOnly="True" Width="*" />
-                    <DataGridTemplateColumn Header="Actions" Width="180">
+                    <DataGridTemplateColumn Header="Actions" Width="240">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Grid>
+                                <Grid HorizontalAlignment="Right" Margin="0,0,15,0">
                                     <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="15" />
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="15" />
                                         <ColumnDefinition Width="Auto" />
@@ -44,15 +50,19 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
 
-                                    <Button x:Name="EditButton" Grid.Column="0" Click="EditButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Edit Command">
+                                    <Button x:Name="PlayButton" Grid.Column="0" Click="PlayButton_Click" Width="40" HorizontalAlignment="Center" Visibility="{Binding SupportsTestButton, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Hidden}" ToolTip="Test Command">
+                                        <MaterialDesign:PackIcon Kind="Play" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                    </Button>
+
+                                    <Button x:Name="EditButton" Grid.Column="2" Click="EditButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Edit Command">
                                         <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                     </Button>
 
-                                    <Button x:Name="DeleteButton" Grid.Column="2" Click="DeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Delete Command">
+                                    <Button x:Name="DeleteButton" Grid.Column="4" Click="DeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Delete Command">
                                         <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                     </Button>
 
-                                    <ToggleButton x:Name="EnableDisableToggleSwitch" Grid.Column="4" DataContextChanged="EnableDisableToggleSwitch_DataContextChanged" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Enable/Disable Command" Checked="EnableDisableToggleSwitch_Checked" Unchecked="EnableDisableToggleSwitch_Checked" />
+                                    <ToggleButton x:Name="EnableDisableToggleSwitch" Grid.Column="6" DataContextChanged="EnableDisableToggleSwitch_DataContextChanged" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Enable/Disable Command" Checked="EnableDisableToggleSwitch_Checked" Unchecked="EnableDisableToggleSwitch_Checked" />
                                 </Grid>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>

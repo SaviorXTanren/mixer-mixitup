@@ -358,6 +358,28 @@ namespace MixItUp.Desktop.Services
             GlobalEvents.SongRequestsChangedOccurred();
         }
 
+        public async Task RemoveLastSongRequested()
+        {
+            SongRequestItem song = null;
+            await SongRequestService.songRequestLock.WaitAndRelease(() =>
+            {
+                song = this.allRequests.LastOrDefault();
+                if (song != null)
+                {
+                    this.allRequests.Remove(song);
+                }
+                return Task.FromResult(0);
+            });
+
+            GlobalEvents.SongRequestsChangedOccurred();
+
+            if (song != null)
+            {
+                await ChannelSession.Chat.SendMessage(string.Format("{0} was removed from the queue.", song.Name));
+                GlobalEvents.SongRequestsChangedOccurred();
+            }
+        }
+
         public async Task RemoveLastSongRequestedByUser(UserViewModel user)
         {
             SongRequestItem song = null;

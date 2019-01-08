@@ -2,6 +2,7 @@
 using MixItUp.Base.Actions;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,7 +52,27 @@ namespace MixItUp.Base.Model.Overlay
         }
 
         [DataMember]
-        public double VolumeDecimal { get { return ((double)this.Volume / 100.0); } }
+        public double VolumeDecimal { get { return ((double)this.Volume / 100.0); } set { } }
+
+        [JsonIgnore]
+        public override bool SupportsTestButton { get { return true; } }
+
+        public override async Task LoadTestData()
+        {
+            this.lastClip = new ClipModel()
+            {
+                contentLocators = new List<ClipLocatorModel>()
+                {
+                    new ClipLocatorModel()
+                    {
+                        locatorType = MixerClipsAction.VideoFileContentLocatorType,
+                        uri = "https://raw.githubusercontent.com/SaviorXTanren/mixer-mixitup/master/Wiki/MixerTestClip/manifest.m3u8"
+                    }
+                },
+                durationInSeconds = 5
+            };
+            await Task.Delay(5000);
+        }
 
         public override async Task Initialize()
         {

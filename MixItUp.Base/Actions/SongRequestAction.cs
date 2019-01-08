@@ -30,6 +30,8 @@ namespace MixItUp.Base.Actions
         RemoveLastByUser,
         [Name("Search Songs & Pick First Result")]
         SearchSongsAndPickFirstResult,
+        [Name("Remove Last Song Requested")]
+        RemoveLast,
     }
 
     public class SongRequestAction : ActionBase
@@ -92,6 +94,10 @@ namespace MixItUp.Base.Actions
                     else if (this.SongRequestType == SongRequestActionTypeEnum.SearchSongsAndPickFirstResult)
                     {
                         await ChannelSession.Services.SongRequestService.AddSongRequest(user, this.SpecificService, string.Join(" ", arguments), pickFirst: true);
+                    }
+                    else if (this.SongRequestType == SongRequestActionTypeEnum.RemoveLast)
+                    {
+                        await ChannelSession.Services.SongRequestService.RemoveLastSongRequested();
                     }
                     else if (this.SongRequestType == SongRequestActionTypeEnum.RemoveLastByUser)
                     {
