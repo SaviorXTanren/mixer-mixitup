@@ -482,14 +482,12 @@ namespace MixItUp.Base.Commands
             if (targetUser == null || user.Equals(targetUser))
             {
                 await ChannelSession.Chat.Whisper(user.UserName, "The User specified is either not valid or not currently in the channel");
-                user.Data.AddCurrencyAmount(currency, betAmount);
                 return null;
             }
 
             if (!targetUser.Data.HasCurrencyAmount(currency, betAmount))
             {
                 await ChannelSession.Chat.Whisper(user.UserName, string.Format("@{0} does not have {1} {2}", targetUser.UserName, betAmount, currency.Name));
-                user.Data.AddCurrencyAmount(currency, betAmount);
                 return null;
             }
 
@@ -984,6 +982,11 @@ namespace MixItUp.Base.Commands
                         return;
                     }
 
+                    if (this.Requirements.Inventory != null)
+                    {
+                        this.Requirements.Inventory.TrySubtractAmount(user.Data);
+                    }
+
                     int randomNumber = this.GenerateProbability();
                     if (randomNumber <= this.SuccessfulOutcome.GetRoleProbability(user))
                     {
@@ -1010,16 +1013,16 @@ namespace MixItUp.Base.Commands
                 this.currentBetAmount = await this.GetBetAmount(user, this.GetBetAmountArgument(arguments));
                 if (this.currentBetAmount >= 0)
                 {
-                    if (await this.PerformRequirementChecks(user) && await this.PerformCurrencyChecks(user, this.currentBetAmount))
+                    UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
+                    if (currency == null)
                     {
-                        UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
-                        if (currency == null)
-                        {
-                            return;
-                        }
+                        return;
+                    }
 
-                        this.currentTargetUser = await this.GetTargetUser(user, arguments, currency, this.currentBetAmount);
-                        if (currentTargetUser != null)
+                    this.currentTargetUser = await this.GetArgumentsTargetUser(user, arguments, currency, this.currentBetAmount);
+                    if (currentTargetUser != null)
+                    {
+                        if (await this.PerformRequirementChecks(user) && await this.PerformCurrencyChecks(user, this.currentBetAmount))
                         {
                             this.currentStarterUser = user;
 
@@ -1040,6 +1043,10 @@ namespace MixItUp.Base.Commands
                                             {
                                                 await ChannelSession.Chat.SendMessage(string.Format("@{0} did not respond in time...", this.currentTargetUser.UserName));
                                                 this.currentStarterUser.Data.AddCurrencyAmount(currency, this.currentBetAmount);
+                                                if (this.Requirements.Inventory != null)
+                                                {
+                                                    this.currentStarterUser.Data.AddInventoryAmount(this.Requirements.Inventory.GetInventory(), this.Requirements.Inventory.ItemName, this.Requirements.Inventory.Amount)
+                                                }
                                                 this.ResetData(user);
                                             }
                                         });
@@ -1065,9 +1072,15 @@ namespace MixItUp.Base.Commands
             return base.GetBetAmountUserArgument(arguments);
         }
 
-        protected override Task<UserViewModel> GetTargetUser(UserViewModel user, IEnumerable<string> arguments, UserCurrencyViewModel currency, int betAmount)
+        protected override async Task<UserViewModel> GetArgumentsTargetUser(UserViewModel user, IEnumerable<string> arguments, UserCurrencyViewModel currency, int betAmount)
         {
-            return base.GetArgumentsTargetUser(user, arguments, currency, betAmount);
+            UserViewModel targetUser = await base.GetArgumentsTargetUser(user, arguments, currency, betAmount);
+            if (targetUser != null && this.Requirements.Inventory != null && !this.Requirements.Inventory.DoesMeetRequirement(targetUser.Data))
+            {
+                await ChannelSession.Chat.Whisper(user.UserName, string.Format("@{0} does not have {1} {2}", targetUser.UserName, this.Requirements.Inventory.Amount, this.Requirements.Inventory.ItemName));
+                return null;
+            }
+            return targetUser;
         }
 
         protected override void ResetData(UserViewModel user)
