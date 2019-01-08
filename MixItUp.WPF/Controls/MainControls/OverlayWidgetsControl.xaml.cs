@@ -71,6 +71,25 @@ namespace MixItUp.WPF.Controls.MainControls
             });
         }
 
+        private async void PlayButton_Click(object sender, RoutedEventArgs e)
+        {
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                Button button = (Button)sender;
+                OverlayWidget widget = (OverlayWidget)button.DataContext;
+                if (widget != null && widget.SupportsTestButton)
+                {
+                    await this.HideWidget(widget);
+
+                    await widget.LoadTestData();
+
+                    await Task.Delay(3000);
+
+                    await this.HideWidget(widget);
+                }
+            });
+        }
+
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;

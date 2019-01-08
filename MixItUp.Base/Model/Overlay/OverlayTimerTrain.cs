@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -58,6 +59,15 @@ namespace MixItUp.Base.Model.Overlay
             this.SubscriberBonus = subscriberBonus;
             this.DonationBonus = donationBonus;
             this.SparkBonus = sparkBonus;
+        }
+
+        [JsonIgnore]
+        public override bool SupportsTestButton { get { return true; } }
+
+        public override async Task LoadTestData()
+        {
+            this.SecondsToAdd = (double)this.MinimumSecondsToShow * 1.5;
+            await Task.Delay((int)this.SecondsToAdd * 1000);
         }
 
         public override async Task Initialize()

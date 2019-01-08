@@ -32,6 +32,11 @@ namespace MixItUp.Base.Model.Overlay
             this.ItemType = itemType;
         }
 
+        [JsonIgnore]
+        public virtual bool SupportsTestButton { get { return false; } }
+
+        public virtual Task LoadTestData() { return Task.FromResult(0); }
+
         public abstract Task<OverlayItemBase> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers);
 
         public virtual Task Initialize()

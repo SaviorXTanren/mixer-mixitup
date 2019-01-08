@@ -1,4 +1,6 @@
-﻿using System.Runtime.Serialization;
+﻿using Newtonsoft.Json;
+using System.Runtime.Serialization;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
 {
@@ -36,6 +38,17 @@ namespace MixItUp.Base.Model.Overlay
             this.Item = item;
             this.Position = position;
             this.DontRefresh = dontRefresh;
+        }
+
+        [JsonIgnore]
+        public virtual bool SupportsTestButton { get { return (this.Item != null) ? this.Item.SupportsTestButton : false; } }
+
+        public async Task LoadTestData()
+        {
+            if (this.SupportsTestButton)
+            {
+                await this.Item.LoadTestData();
+            }
         }
     }
 }
