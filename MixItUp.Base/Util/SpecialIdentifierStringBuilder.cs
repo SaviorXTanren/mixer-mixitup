@@ -671,7 +671,14 @@ namespace MixItUp.Base.Util
                                 this.ReplaceSpecialIdentifier(itemSpecialIdentifier, amount.ToString());
                             }
 
-                            this.ReplaceSpecialIdentifier(inventory.UserAllAmountSpecialIdentifier, string.Join(", ", allItemsList.OrderBy(i => i)));
+                            if (allItemsList.Count > 0)
+                            {
+                                this.ReplaceSpecialIdentifier(inventory.UserAllAmountSpecialIdentifier, string.Join(", ", allItemsList.OrderBy(i => i)));
+                            }
+                            else
+                            {
+                                this.ReplaceSpecialIdentifier(inventory.UserAllAmountSpecialIdentifier, "Nothing");
+                            }
                         }
                     }
 
