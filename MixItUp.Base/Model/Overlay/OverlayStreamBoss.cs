@@ -228,7 +228,15 @@ namespace MixItUp.Base.Model.Overlay
             await this.HealthSemaphore.WaitAndRelease(() =>
             {
                 this.DamageTaken = true;
-                this.CurrentHealth -= (int)amount;
+                if (this.CurrentBoss.Equals(user))
+                {
+                    this.CurrentHealth = Math.Min(this.CurrentHealth, this.CurrentHealth + (int)amount);
+                }
+                else
+                {
+                    this.CurrentHealth -= (int)amount;
+                }
+
                 if (this.CurrentHealth <= 0)
                 {
                     this.CurrentBoss = user;
