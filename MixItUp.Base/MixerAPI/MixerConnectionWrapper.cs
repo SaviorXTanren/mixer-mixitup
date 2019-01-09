@@ -6,6 +6,7 @@ using Mixer.Base.Model.Clips;
 using Mixer.Base.Model.Costream;
 using Mixer.Base.Model.Game;
 using Mixer.Base.Model.Interactive;
+using Mixer.Base.Model.Leaderboards;
 using Mixer.Base.Model.Patronage;
 using Mixer.Base.Model.Skills;
 using Mixer.Base.Model.Teams;
@@ -121,6 +122,14 @@ namespace MixItUp.Base.MixerAPI
         public async Task<BroadcastModel> GetCurrentBroadcast(ChannelModel channel) { return await this.RunAsync(this.Connection.Channels.GetCurrentBroadcast(channel)); }
 
         public async Task<IEnumerable<StreamSessionsAnalyticModel>> GetStreamSessions(ChannelModel channel, DateTimeOffset startTime) { return await this.RunAsync(this.Connection.Channels.GetStreamSessions(channel, startTime)); }
+
+        public async Task<IEnumerable<SparksLeaderboardModel>> GetWeeklyLeaderboard(ChannelModel channel) { return await this.RunAsync(this.Connection.Leaderboards.GetWeeklyLeaderboard(channel)); }
+
+        public async Task<IEnumerable<SparksLeaderboardModel>> GetMonthlyLeaderboard(ChannelModel channel) { return await this.RunAsync(this.Connection.Leaderboards.GetMonthlyLeaderboard(channel)); }
+
+        public async Task<IEnumerable<SparksLeaderboardModel>> GetYearlyLeaderboard(ChannelModel channel) { return await this.RunAsync(this.Connection.Leaderboards.GetYearlyLeaderboard(channel)); }
+
+        public async Task<IEnumerable<SparksLeaderboardModel>> GetAllTimeLeaderboard(ChannelModel channel) { return await this.RunAsync(this.Connection.Leaderboards.GetAllTimeLeaderboard(channel)); }
 
         public async Task AddUserRoles(ChannelModel channel, UserModel user, IEnumerable<MixerRoleEnum> roles) { await this.RunAsync(this.Connection.Channels.UpdateUserRoles(channel, user, roles.Select(r => EnumHelper.GetEnumName(r)), null)); }
 
