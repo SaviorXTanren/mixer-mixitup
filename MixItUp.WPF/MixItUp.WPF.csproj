@@ -376,6 +376,9 @@
     <Compile Include="Controls\Currency\UserCurrencyIndividualEditorControl.xaml.cs">
       <DependentUpon>UserCurrencyIndividualEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Currency\UserInventoryEditorControl.xaml.cs">
+      <DependentUpon>UserInventoryEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Dialogs\BasicTextEntryDialogControl.xaml.cs">
       <DependentUpon>BasicTextEntryDialogControl.xaml</DependentUpon>
     </Compile>
@@ -453,6 +456,9 @@
     </Compile>
     <Compile Include="Controls\Interactive\RealmRoyaleDropMapInteractiveControl.xaml.cs">
       <DependentUpon>RealmRoyaleDropMapInteractiveControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\CurrencyRankInventoryControl.xaml.cs">
+      <DependentUpon>CurrencyRankInventoryControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\OverlayWidgetsControl.xaml.cs">
       <DependentUpon>OverlayWidgetsControl.xaml</DependentUpon>
@@ -536,6 +542,9 @@
     <Compile Include="Controls\MainControls\RemoteControl.xaml.cs">
       <DependentUpon>RemoteControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Requirement\CurrencyRankInventoryRequirementControl.xaml.cs">
+      <DependentUpon>CurrencyRankInventoryRequirementControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Requirement\CurrencyRequirementControl.xaml.cs">
       <DependentUpon>CurrencyRequirementControl.xaml</DependentUpon>
     </Compile>
@@ -548,9 +557,6 @@
     </Compile>
     <Compile Include="Controls\MainControls\ChannelControl.xaml.cs">
       <DependentUpon>ChannelControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\MainControls\CurrencyAndRankControl.xaml.cs">
-      <DependentUpon>CurrencyAndRankControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\GamesControl.xaml.cs">
       <DependentUpon>GamesControl.xaml</DependentUpon>
@@ -615,6 +621,9 @@
     <Compile Include="Controls\Command\CommandButtonsControl.xaml.cs">
       <DependentUpon>CommandButtonsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Requirement\InventoryRequirementControl.xaml.cs">
+      <DependentUpon>InventoryRequirementControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Requirement\RankSelectorControl.xaml.cs">
       <DependentUpon>RankSelectorControl.xaml</DependentUpon>
     </Compile>
@@ -623,6 +632,9 @@
     </Compile>
     <Compile Include="Controls\Requirement\RoleRequirementControl.xaml.cs">
       <DependentUpon>RoleRequirementControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Requirement\SettingsRequirementControl.xaml.cs">
+      <DependentUpon>SettingsRequirementControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Requirement\ThresholdRequirementControl.xaml.cs">
       <DependentUpon>ThresholdRequirementControl.xaml</DependentUpon>
@@ -651,12 +663,18 @@
     <Compile Include="Controls\Services\OverlayServiceControl.xaml.cs">
       <DependentUpon>OverlayServiceControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Services\PatreonServiceControl.xaml.cs">
+      <DependentUpon>PatreonServiceControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Services\ServicesControlBase.cs" />
     <Compile Include="Controls\Services\ServicesGroupBoxControl.xaml.cs">
       <DependentUpon>ServicesGroupBoxControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Services\SpotifyServiceControl.xaml.cs">
       <DependentUpon>SpotifyServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\StreamJarServiceControl.xaml.cs">
+      <DependentUpon>StreamJarServiceControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Services\StreamlabsOBSServiceControl.xaml.cs">
       <DependentUpon>StreamlabsOBSServiceControl.xaml</DependentUpon>
@@ -666,6 +684,12 @@
     </Compile>
     <Compile Include="Controls\Services\TiltifyServiceControl.xaml.cs">
       <DependentUpon>TiltifyServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\TipeeeStreamServiceControl.xaml.cs">
+      <DependentUpon>TipeeeStreamServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\TreatStreamServiceControl.xaml.cs">
+      <DependentUpon>TreatStreamServiceControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Services\TwitterServiceControl.xaml.cs">
       <DependentUpon>TwitterServiceControl.xaml</DependentUpon>
@@ -703,6 +727,9 @@
     <Compile Include="Controls\Settings\SettingsControlBase.cs" />
     <Compile Include="Controls\Settings\ThemeSettingsControl.xaml.cs">
       <DependentUpon>ThemeSettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\UsersSettingsControl.xaml.cs">
+      <DependentUpon>UsersSettingsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\SliderWithHeaderControl.xaml.cs">
       <DependentUpon>SliderWithHeaderControl.xaml</DependentUpon>
@@ -766,6 +793,9 @@
     </Compile>
     <Compile Include="Windows\Currency\CurrencyWindow.xaml.cs">
       <DependentUpon>CurrencyWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Currency\InventoryWindow.xaml.cs">
+      <DependentUpon>InventoryWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\Favorites\FavoriteGroupWindow.xaml.cs">
       <DependentUpon>FavoriteGroupWindow.xaml</DependentUpon>
@@ -983,6 +1013,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Controls\Currency\UserInventoryEditorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\Dialogs\BasicTextEntryDialogControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1082,6 +1116,10 @@
     <Page Include="Controls\Interactive\RealmRoyaleDropMapInteractiveControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\CurrencyRankInventoryControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\MainControls\OverlayWidgetsControl.xaml">
       <SubType>Designer</SubType>
@@ -1191,6 +1229,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Requirement\CurrencyRankInventoryRequirementControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\Requirement\CurrencyRequirementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1204,10 +1246,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MainControls\ChannelControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\MainControls\CurrencyAndRankControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1299,6 +1337,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Requirement\InventoryRequirementControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\Requirement\RankSelectorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1314,6 +1356,10 @@
     <Page Include="Controls\Requirement\RoleRequirementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirement\SettingsRequirementControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Requirement\ThresholdRequirementControl.xaml">
       <SubType>Designer</SubType>
@@ -1351,6 +1397,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Services\PatreonServiceControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\Services\ServicesGroupBoxControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1358,6 +1408,10 @@
     <Page Include="Controls\Services\SpotifyServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\StreamJarServiceControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Services\StreamlabsOBSServiceControl.xaml">
       <SubType>Designer</SubType>
@@ -1370,6 +1424,14 @@
     <Page Include="Controls\Services\TiltifyServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\TipeeeStreamServiceControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Services\TreatStreamServiceControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Services\TwitterServiceControl.xaml">
       <SubType>Designer</SubType>
@@ -1418,6 +1480,10 @@
     <Page Include="Controls\Settings\ThemeSettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\UsersSettingsControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\SliderWithHeaderControl.xaml">
       <SubType>Designer</SubType>
@@ -1555,6 +1621,10 @@
     <Page Include="Windows\Currency\CurrencyWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Currency\InventoryWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\Favorites\FavoriteGroupWindow.xaml">
       <SubType>Designer</SubType>
