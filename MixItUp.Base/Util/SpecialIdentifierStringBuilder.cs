@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Model.Channel;
+using Mixer.Base.Model.Leaderboards;
 using Mixer.Base.Model.Patronage;
 using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
@@ -30,6 +31,7 @@ namespace MixItUp.Base.Util
 
         public const string TopSpecialIdentifierHeader = "top";
         public const string TopTimeRegexSpecialIdentifier = "top\\d+time";
+        public const string TopSparksUsedRegexSpecialIdentifierHeader = "top\\d+sparksused";
 
         public const string UserSpecialIdentifierHeader = "user";
         public const string ArgSpecialIdentifierHeader = "arg";
@@ -309,6 +311,14 @@ namespace MixItUp.Base.Util
                         }
                         return result;
                     });
+                }
+
+                if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopSparksUsedRegexSpecialIdentifierHeader))
+                {
+                    await this.HandleSparksUsed("weekly", async () => { return await ChannelSession.Connection.GetWeeklyLeaderboard(ChannelSession.Channel); });
+                    await this.HandleSparksUsed("monthly", async () => { return await ChannelSession.Connection.GetMonthlyLeaderboard(ChannelSession.Channel); });
+                    await this.HandleSparksUsed("yearly", async () => { return await ChannelSession.Connection.GetYearlyLeaderboard(ChannelSession.Channel); });
+                    await this.HandleSparksUsed("alltime", async () => { return await ChannelSession.Connection.GetAllTimeLeaderboard(ChannelSession.Channel); });
                 }
             }
 
@@ -628,6 +638,34 @@ namespace MixItUp.Base.Util
         }
 
         public override string ToString() { return this.text; }
+
+        private async Task HandleSparksUsed(string timeFrame, Func<Task<IEnumerable<SparksLeaderboardModel>>> func)
+        {
+            if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopSparksUsedRegexSpecialIdentifierHeader + timeFrame))
+            {
+                IEnumerable<SparksLeaderboardModel> leaderboards = await func();
+                leaderboards = leaderboards.OrderByDescending(l => l.statValue);
+
+                this.ReplaceNumberBasedRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopSparksUsedRegexSpecialIdentifierHeader + timeFrame, (total) =>
+                {
+                    List<string> leaderboardsList = new List<string>();
+                    int position = 1;
+                    for (int i = 0; i < total && i < leaderboards.Count(); i++)
+                    {
+                        SparksLeaderboardModel leaderboard = leaderboards.ElementAt(i);
+                        leaderboardsList.Add($"#{i + 1}) {leaderboard.username} - {leaderboard.statValue}");
+                        position++;
+                    }
+
+                    string result = "No users found.";
+                    if (leaderboardsList.Count > 0)
+                    {
+                        result = string.Join(", ", leaderboardsList);
+                    }
+                    return result;
+                });
+            }
+        }
 
         private async Task HandleUserSpecialIdentifiers(UserViewModel user, string identifierHeader)
         {
