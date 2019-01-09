@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Jace" Version="0.9.2" />
-    <PackageReference Include="mixer-client-csharp" Version="0.8.3.1-beta" />
+    <PackageReference Include="mixer-client-csharp" Version="0.8.4-beta" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
 

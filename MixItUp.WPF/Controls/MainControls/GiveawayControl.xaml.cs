@@ -88,6 +88,8 @@ namespace MixItUp.WPF.Controls.MainControls
             this.AllowPastWinnersCheckBox.IsChecked = ChannelSession.Settings.GiveawayAllowPastWinners;
             this.RequireClaimCheckBox.IsChecked = ChannelSession.Settings.GiveawayRequireClaim;
 
+            this.Requirements.HideThresholdRequirement();
+
             if (!string.IsNullOrEmpty(ChannelSession.Settings.GiveawayCommand))
             {
                 this.EntryMethodTypeComboBox.SelectedItem = EnumHelper.GetEnumName(GiveawayEntryTypeEnum.Command);
