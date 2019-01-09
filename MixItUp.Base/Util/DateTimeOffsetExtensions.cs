@@ -48,11 +48,14 @@ namespace MixItUp.Base.Util
             DateTime tempDateTime = dt.Date;
 
             int subMonths = 0;
-            while (tempDateTime.Year < currentDateTime.Year || tempDateTime.Month < currentDateTime.Month)
+            while (tempDateTime < currentDateTime)
             {
                 tempDateTime = tempDateTime.AddMonths(1);
                 subMonths++;
             }
+
+            subMonths = Math.Max(subMonths - 1, 0);
+
             return subMonths;
         }
 
