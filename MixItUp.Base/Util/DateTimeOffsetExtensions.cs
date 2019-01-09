@@ -48,7 +48,7 @@ namespace MixItUp.Base.Util
             DateTime tempDateTime = dt.Date;
 
             int subMonths = 0;
-            while (tempDateTime < currentDateTime)
+            while (tempDateTime <= currentDateTime)
             {
                 tempDateTime = tempDateTime.AddMonths(1);
                 subMonths++;
