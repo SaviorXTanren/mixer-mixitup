@@ -178,164 +178,143 @@ namespace MixItUp.Base.ViewModel.User
                 {
                     UserCurrencyViewModel currency = ChannelSession.Settings.Currencies[this.ShopCurrencyID];
 
-                    if (arguments != null)
+                    if (arguments != null && arguments.Count() > 0)
                     {
-                        if (arguments.Count() == 1)
+                        string arg1 = arguments.ElementAt(0);
+                        if (arguments.Count() == 1 && arg1.Equals("list", StringComparison.InvariantCultureIgnoreCase))
                         {
-                            string arg1 = arguments.ElementAt(0);
-                            if (arg1.Equals("list"))
+                            List<string> items = new List<string>();
+                            foreach (UserInventoryItemViewModel item in this.Items.Values)
                             {
-                                List<string> items = new List<string>();
-                                foreach (UserInventoryItemViewModel item in this.Items.Values)
+                                if (item.HasBuyAmount || item.HasSellAmount)
                                 {
-                                    if (item.HasBuyAmount || item.HasSellAmount)
-                                    {
-                                        items.Add(item.Name);
-                                    }
+                                    items.Add(item.Name);
                                 }
-                                await ChannelSession.Chat.Whisper(user.UserName, "Items Available to Buy/Sell: " + string.Join(", ", items));
-                                return;
                             }
+                            await ChannelSession.Chat.Whisper(user.UserName, "Items Available to Buy/Sell: " + string.Join(", ", items));
+                            return;
                         }
-                        else if (arguments.Count() >= 2)
+                        else if (arguments.Count() >= 2 &&
+                            (arg1.Equals("buy", StringComparison.InvariantCultureIgnoreCase) || arg1.Equals("sell", StringComparison.InvariantCultureIgnoreCase)))
                         {
-                            if (arguments.ElementAt(0).Equals("buy", StringComparison.InvariantCultureIgnoreCase) || arguments.ElementAt(0).Equals("sell", StringComparison.InvariantCultureIgnoreCase))
+                            int amount = 1;
+
+                            IEnumerable<string> itemArgs = arguments.Skip(1);
+                            UserInventoryItemViewModel item = this.GetItem(string.Join(" ", itemArgs));
+                            if (item == null && itemArgs.Count() > 1)
                             {
-                                bool buying = false;
-                                bool selling = false;
-                                if (arguments.ElementAt(0).Equals("buy", StringComparison.InvariantCultureIgnoreCase))
-                                {
-                                    buying = true;
-                                }
-                                else if (arguments.ElementAt(0).Equals("sell", StringComparison.InvariantCultureIgnoreCase))
-                                {
-                                    selling = true;
-                                }
-                                else
-                                {
-                                    await ChannelSession.Chat.Whisper(user.UserName, "You must specify either \"buy\" & \"sell\"");
-                                    return;
-                                }
-
-                                int amount = 1;
-
-                                IEnumerable<string> itemArgs = arguments.Skip(1);
-                                UserInventoryItemViewModel item = this.GetItem(string.Join(" ", itemArgs));
-                                if (item == null && itemArgs.Count() > 1)
-                                {
-                                    itemArgs = itemArgs.Take(itemArgs.Count() - 1);
-                                    item = this.GetItem(string.Join(" ", itemArgs));
-                                    if (item != null)
-                                    {
-                                        if (!int.TryParse(arguments.Last(), out amount) || amount <= 0)
-                                        {
-                                            await ChannelSession.Chat.Whisper(user.UserName, "A valid amount greater than 0 must be specified");
-                                            return;
-                                        }
-                                    }
-                                }
-
+                                itemArgs = itemArgs.Take(itemArgs.Count() - 1);
+                                item = this.GetItem(string.Join(" ", itemArgs));
                                 if (item != null)
                                 {
-                                    int totalcost = 0;
-                                    CustomCommand command = null;
-                                    if (buying)
+                                    if (!int.TryParse(arguments.Last(), out amount) || amount <= 0)
                                     {
-                                        if (item.HasBuyAmount)
-                                        {
-                                            totalcost = item.BuyAmount * amount;
-                                            if (user.Data.HasCurrencyAmount(currency, totalcost))
-                                            {
-                                                user.Data.SubtractCurrencyAmount(currency, totalcost);
-                                                user.Data.AddInventoryAmount(this, item.Name, amount);
-                                                command = this.ItemsBoughtCommand;
-                                            }
-                                            else
-                                            {
-                                                await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to purchase this item", totalcost, currency.Name));
-                                            }
-                                        }
-                                        else
-                                        {
-                                            await ChannelSession.Chat.Whisper(user.UserName, "This item is not available for buying");
-                                        }
+                                        await ChannelSession.Chat.Whisper(user.UserName, "A valid amount greater than 0 must be specified");
+                                        return;
                                     }
-                                    else if (selling)
-                                    {
-                                        if (item.HasSellAmount)
-                                        {
-                                            totalcost = item.SellAmount * amount;
-                                            if (user.Data.HasInventoryAmount(this, item.Name, amount))
-                                            {
-                                                user.Data.SubtractInventoryAmount(this, item.Name, amount);
-                                                user.Data.AddCurrencyAmount(currency, totalcost);
-                                                command = this.ItemsSoldCommand;
-                                            }
-                                            else
-                                            {
-                                                await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to sell", amount, item.Name));
-                                            }
-                                        }
-                                        else
-                                        {
-                                            await ChannelSession.Chat.Whisper(user.UserName, "This item is not available for selling");
-                                        }
-                                    }
+                                }
+                            }
 
-                                    if (command != null)
+                            if (item == null)
+                            {
+                                await ChannelSession.Chat.Whisper(user.UserName, "The item you specified does not exist");
+                                return;
+                            }
+
+                            int totalcost = 0;
+                            CustomCommand command = null;
+                            if (arg1.Equals("buy", StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                if (item.HasBuyAmount)
+                                {
+                                    totalcost = item.BuyAmount * amount;
+                                    if (user.Data.HasCurrencyAmount(currency, totalcost))
                                     {
-                                        Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
-                                        specialIdentifiers["itemtotal"] = amount.ToString();
-                                        specialIdentifiers["itemname"] = item.Name;
-                                        specialIdentifiers["itemcost"] = totalcost.ToString();
-                                        specialIdentifiers["currencyname"] = currency.Name;
-                                        await command.Perform(user, arguments: arguments, extraSpecialIdentifiers: specialIdentifiers);
+                                        user.Data.SubtractCurrencyAmount(currency, totalcost);
+                                        user.Data.AddInventoryAmount(this, item.Name, amount);
+                                        command = this.ItemsBoughtCommand;
                                     }
-                                    return;
+                                    else
+                                    {
+                                        await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to purchase this item", totalcost, currency.Name));
+                                    }
                                 }
                                 else
                                 {
-                                    await ChannelSession.Chat.Whisper(user.UserName, "The item you specified does not exist");
-                                    return;
+                                    await ChannelSession.Chat.Whisper(user.UserName, "This item is not available for buying");
+                                }
+                            }
+                            else if (arg1.Equals("sell", StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                if (item.HasSellAmount)
+                                {
+                                    totalcost = item.SellAmount * amount;
+                                    if (user.Data.HasInventoryAmount(this, item.Name, amount))
+                                    {
+                                        user.Data.SubtractInventoryAmount(this, item.Name, amount);
+                                        user.Data.AddCurrencyAmount(currency, totalcost);
+                                        command = this.ItemsSoldCommand;
+                                    }
+                                    else
+                                    {
+                                        await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to sell", amount, item.Name));
+                                    }
+                                }
+                                else
+                                {
+                                    await ChannelSession.Chat.Whisper(user.UserName, "This item is not available for selling");
                                 }
                             }
                             else
                             {
-                                UserInventoryItemViewModel item = this.GetItem(string.Join(" ", arguments));
-                                if (item != null)
-                                {
-                                    if (item.HasBuyAmount || item.HasSellAmount)
-                                    {
-                                        StringBuilder itemInfo = new StringBuilder();
-                                        itemInfo.Append(item.Name + ": ");
-                                        if (item.HasBuyAmount)
-                                        {
-                                            itemInfo.Append(string.Format("Buy = {0} {1}", item.BuyAmount, currency.Name));
-                                        }
-                                        if (item.HasBuyAmount && item.HasSellAmount)
-                                        {
-                                            itemInfo.Append(string.Format(", "));
-                                        }
-                                        if (item.HasSellAmount)
-                                        {
-                                            itemInfo.Append(string.Format("Sell = {0} {1}", item.SellAmount, currency.Name));
-                                        }
+                                await ChannelSession.Chat.Whisper(user.UserName, "You must specify either \"buy\" & \"sell\"");
+                            }
 
-                                        await ChannelSession.Chat.Whisper(user.UserName, itemInfo.ToString());
-                                        return;
-                                    }
-                                    else
+                            if (command != null)
+                            {
+                                Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
+                                specialIdentifiers["itemtotal"] = amount.ToString();
+                                specialIdentifiers["itemname"] = item.Name;
+                                specialIdentifiers["itemcost"] = totalcost.ToString();
+                                specialIdentifiers["currencyname"] = currency.Name;
+                                await command.Perform(user, arguments: arguments, extraSpecialIdentifiers: specialIdentifiers);
+                            }
+                            return;
+                        }
+                        else
+                        {
+                            UserInventoryItemViewModel item = this.GetItem(string.Join(" ", arguments));
+                            if (item != null)
+                            {
+                                if (item.HasBuyAmount || item.HasSellAmount)
+                                {
+                                    StringBuilder itemInfo = new StringBuilder();
+                                    itemInfo.Append(item.Name + ": ");
+                                    if (item.HasBuyAmount)
                                     {
-                                        await ChannelSession.Chat.Whisper(user.UserName, "This item is not available to buy/sell");
-                                        return;
+                                        itemInfo.Append(string.Format("Buy = {0} {1}", item.BuyAmount, currency.Name));
                                     }
+                                    if (item.HasBuyAmount && item.HasSellAmount)
+                                    {
+                                        itemInfo.Append(string.Format(", "));
+                                    }
+                                    if (item.HasSellAmount)
+                                    {
+                                        itemInfo.Append(string.Format("Sell = {0} {1}", item.SellAmount, currency.Name));
+                                    }
+
+                                    await ChannelSession.Chat.Whisper(user.UserName, itemInfo.ToString());
                                 }
                                 else
                                 {
-                                    await ChannelSession.Chat.Whisper(user.UserName, "The item you specified does not exist");
-                                    return;
+                                    await ChannelSession.Chat.Whisper(user.UserName, "This item is not available to buy/sell");
                                 }
                             }
+                            else
+                            {
+                                await ChannelSession.Chat.Whisper(user.UserName, "The item you specified does not exist");
+                            }
+                            return;
                         }
                     }
 
