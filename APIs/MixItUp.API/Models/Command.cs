@@ -16,5 +16,8 @@ namespace MixItUp.API.Models
 
         [DataMember]
         public bool IsEnabled { get; set; }
+
+        [DataMember]
+        public string Category { get; set; }
     }
 }

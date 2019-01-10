@@ -16,35 +16,27 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
         [HttpGet]
         public IEnumerable<Command> Get()
         {
-            var allCommands = GetAllCommands();
-
-            List<Command> commands = new List<Command>();
-            foreach (var command in allCommands)
-            {
-                commands.Add(CommandFromCommandBase(command));
-            }
-
-            return commands;
+            return GetAllCommands();
         }
 
         [Route("{commandID:guid}")]
         [HttpGet]
         public Command Get(Guid commandID)
         {
-            CommandBase selectedCommand = GetAllCommands().SingleOrDefault(c => c.ID == commandID);
+            Command selectedCommand = GetAllCommands().SingleOrDefault(c => c.ID == commandID);
             if (selectedCommand == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return CommandFromCommandBase(selectedCommand);
+            return selectedCommand;
         }
 
         [Route("{commandID:guid}")]
         [HttpPost]
         public Command Run(Guid commandID, [FromBody] IEnumerable<string> arguments)
         {
-            CommandBase selectedCommand = GetAllCommands().SingleOrDefault(c => c.ID == commandID);
+            CommandBase selectedCommand = FindCommand(commandID, out string category);
             if (selectedCommand == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -54,42 +46,107 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             selectedCommand.Perform(arguments);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-            return CommandFromCommandBase(selectedCommand);
+            return CommandFromCommandBase(selectedCommand, category);
         }
 
         [Route("{commandID:guid}")]
         [HttpPut, HttpPatch]
         public Command Update(Guid commandID, [FromBody] Command commandData)
         {
-            CommandBase selectedCommand = GetAllCommands().SingleOrDefault(c => c.ID == commandID);
+            CommandBase selectedCommand = FindCommand(commandID, out string category);
             if (selectedCommand == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
             selectedCommand.IsEnabled = commandData.IsEnabled;
-            return CommandFromCommandBase(selectedCommand);
+            return CommandFromCommandBase(selectedCommand, category);
         }
 
-        private List<CommandBase> GetAllCommands()
+        private CommandBase FindCommand(Guid commandId, out string category)
         {
-            List<CommandBase> allCommands = new List<CommandBase>();
-            allCommands.AddRange(ChannelSession.Settings.ChatCommands);
-            allCommands.AddRange(ChannelSession.Settings.InteractiveCommands);
-            allCommands.AddRange(ChannelSession.Settings.EventCommands);
-            allCommands.AddRange(ChannelSession.Settings.TimerCommands);
-            allCommands.AddRange(ChannelSession.Settings.ActionGroupCommands);
-            allCommands.AddRange(ChannelSession.Settings.GameCommands);
+            category = null;
+            CommandBase command = ChannelSession.Settings.ChatCommands.SingleOrDefault(c => c.ID == commandId);
+            if (command !=null)
+            {
+                category = "Chat";
+                return command;
+            }
+
+            command = ChannelSession.Settings.InteractiveCommands.SingleOrDefault(c => c.ID == commandId);
+            if (command != null)
+            {
+                category = "Interactive";
+                return command;
+            }
+
+            command = ChannelSession.Settings.EventCommands.SingleOrDefault(c => c.ID == commandId);
+            if (command != null)
+            {
+                category = "Event";
+                return command;
+            }
+
+            command = ChannelSession.Settings.TimerCommands.SingleOrDefault(c => c.ID == commandId);
+            if (command != null)
+            {
+                category = "Timer";
+                return command;
+            }
+
+            command = ChannelSession.Settings.ActionGroupCommands.SingleOrDefault(c => c.ID == commandId);
+            if (command != null)
+            {
+                category = "ActionGroup";
+                return command;
+            }
+
+            command = ChannelSession.Settings.GameCommands.SingleOrDefault(c => c.ID == commandId);
+            if (command != null)
+            {
+                category = "Game";
+                return command;
+            }
+
+            command = ChannelSession.PreMadeChatCommands.SingleOrDefault(c => c.ID == commandId);
+            if (command != null)
+            {
+                category = "PreMade";
+                return command;
+            }
+
+            return null;
+        }
+
+        private List<Command> GetAllCommands()
+        {
+            List<Command> allCommands = new List<Command>();
+            allCommands.AddRange(CommandsFromCommandBases(ChannelSession.Settings.ChatCommands, "Chat"));
+            allCommands.AddRange(CommandsFromCommandBases(ChannelSession.Settings.InteractiveCommands, "Interactive"));
+            allCommands.AddRange(CommandsFromCommandBases(ChannelSession.Settings.EventCommands, "Event"));
+            allCommands.AddRange(CommandsFromCommandBases(ChannelSession.Settings.TimerCommands, "Timer"));
+            allCommands.AddRange(CommandsFromCommandBases(ChannelSession.Settings.ActionGroupCommands, "ActionGroup"));
+            allCommands.AddRange(CommandsFromCommandBases(ChannelSession.Settings.GameCommands, "Game"));
+            allCommands.AddRange(CommandsFromCommandBases(ChannelSession.PreMadeChatCommands, "Premade"));
             return allCommands;
         }
 
-        private Command CommandFromCommandBase(CommandBase baseCommand)
+        private IEnumerable<Command> CommandsFromCommandBases(IEnumerable<CommandBase> baseCommands, string category)
+        {
+            foreach(CommandBase baseCommand in baseCommands)
+            {
+                yield return CommandFromCommandBase(baseCommand, category);
+            }
+        }
+
+        private Command CommandFromCommandBase(CommandBase baseCommand, string category)
         {
             return new Command
             {
                 ID = baseCommand.ID,
                 Name = baseCommand.Name,
-                IsEnabled = baseCommand.IsEnabled
+                IsEnabled = baseCommand.IsEnabled,
+                Category = category
             };
         }
     }

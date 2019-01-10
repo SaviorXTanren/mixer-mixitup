@@ -27,44 +27,93 @@ function connectSocket(inPort, inUUID, inRegisterEvent, inInfo, inActionInfo) {
     };
 
     websocket.onmessage = function (evt) {
-        console.log('onmessage: ' + evt.data);
-
         // Received message from Stream Deck
         var jsonObj = JSON.parse(evt.data);
 
         if (jsonObj.event === 'sendToPropertyInspector') {
+            var notRunningDiv = document.getElementById('notRunning');
+            var noDevAPIsDiv = document.getElementById('noDevAPIs');
+
+            notRunningDiv.style.display = "none";
+            noDevAPIsDiv.style.display = "none";
+
             var payload = jsonObj.payload;
             if (payload.error) {
                 // Show Error
                 switch (payload.error) {
                     case "mixItUpIsNotRunning":
-                        console.log("Mix It Up is not running!");
+                        notRunningDiv.style.display = "";
                         break;
                     case "developerAPINotEnabled":
-                        console.log("Mix It Up Developer APIs are not enabled!");
+                        noDevAPIsDiv.style.display = "";
                         break;
                     default:
                         console.log("Unknown error: " + jsonObj.error);
                         break;
                 }
+
                 return;
             }
 
-            if (!payload.commands || payload.commands.length === 0) {
-                console.log("There are no custom commands!");
-                // Show no custom commands
-            } else {
-                // Add options!
-                console.log("Commands:");
-                for (var index = 0; index < payload.commands.length; index++) {
-                    console.log("\t" + payload.commands[index].Name);
+            var selectDiv = document.getElementById('selected_command');
+            var select = selectDiv.querySelector('.sdpi-item-value');
+            removeOptions(select);
+
+            var curGroupName;
+            var curGroup;
+            for (var index = 0; index < payload.commands.length; index++) {
+                if (curGroupName !== payload.commands[index].Category) {
+                    curGroupName = payload.commands[index].Category;
+                    curGroup = document.createElement('optgroup');
+                    curGroup.label = curGroupName;
+                    select.appendChild(curGroup);
                 }
+
+                var opt = document.createElement('option');
+                opt.value = payload.commands[index].ID;
+                opt.text = payload.commands[index].Name;
+                curGroup.appendChild(opt);
             }
+
+            select.value = payload.selectedCommandId;
+
+            var argsDiv = document.getElementById('arguments');
+            var args = argsDiv.querySelector('.sdpi-item-value');
+            args.value = payload.arguments;
+
+            select.disabled = false;
+            args.disabled = false;
         }
     };
 }
 
+function updateSettings() {
+    var selectDiv = document.getElementById('selected_command');
+    var select = selectDiv.querySelector('.sdpi-item-value');
+
+    var argsDiv = document.getElementById('arguments');
+    var args = argsDiv.querySelector('.sdpi-item-value');
+
+    var payload = {};
+    payload.property_inspector = 'updateSettings';
+    payload.selectedCommandId = select.value;
+    payload.arguments = args.value;
+    sendPayloadToPlugin(payload);
+}
+
 // our method to pass values to the plugin
+function sendPayloadToPlugin(payload) {
+    if (websocket && (websocket.readyState === 1)) {
+        const json = {
+            'action': actionInfo['action'],
+            'event': 'sendToPlugin',
+            'context': uuid,
+            'payload': payload
+        };
+        websocket.send(JSON.stringify(json));
+    }
+}
+
 function sendValueToPlugin(value, param) {
     if (websocket && (websocket.readyState === 1)) {
         const json = {
@@ -86,8 +135,6 @@ if (!isQT) {
 }
 
 window.addEventListener('beforeunload', function (e) {
-    console.log('here 5');
-
     e.preventDefault();
 
     // Notify the plugin we are about to leave
@@ -95,6 +142,12 @@ window.addEventListener('beforeunload', function (e) {
 
     // Don't set a returnValue to the event, otherwise Chromium with throw an error.
 });
+
+function removeOptions(selectbox) {
+    while (selectbox.firstChild) {
+        selectbox.removeChild(selectbox.firstChild);
+    }
+}
 
 function addDynamicStyles(clrs) {
     const node = document.getElementById('#sdpi-dynamic-styles') || document.createElement('style');

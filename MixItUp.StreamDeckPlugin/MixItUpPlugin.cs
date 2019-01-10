@@ -19,6 +19,7 @@ namespace MixItUp.StreamDeckPlugin
         private ManualResetEvent disconnectEvent = new ManualResetEvent(false);
         private bool isMixItUpRunning = false;
         private readonly Dictionary<string, MixItUpAction> actions = new Dictionary<string, MixItUpAction>();
+        private SemaphoreSlim actionsLock = new SemaphoreSlim(1);
 
         static MixItUpPlugin()
         {
@@ -68,53 +69,67 @@ namespace MixItUp.StreamDeckPlugin
             }
         }
 
-        private void Connection_OnSendToPlugin(object sender, StreamDeckEventReceivedEventArgs<SendToPluginEvent> e)
+        private async void Connection_OnSendToPlugin(object sender, StreamDeckEventReceivedEventArgs<SendToPluginEvent> e)
         {
             if (!isMixItUpRunning)
             {
                 // Send a message explaining this
                 JObject response = new JObject();
                 response["error"] = JValue.CreateString("mixItUpIsNotRunning");
-                _ = this.connection.SendToPropertyInspectorAsync(e.Event.Action, response, e.Event.Context);
+                await this.connection.SendToPropertyInspectorAsync(e.Event.Action, response, e.Event.Context);
+                return;
             }
-            else
-            {
-                lock (actions)
-                {
-                    if (actions.ContainsKey(e.Event.Context.ToLower()))
-                    {
-                        _ = actions[e.Event.Context.ToLower()].ProcessPropertyInspectorAsync(this.connection, e.Event);
-                    }
-                }
-            }
-        }
 
-        private void Connection_OnWillDisappear(object sender, StreamDeckEventReceivedEventArgs<WillDisappearEvent> e)
-        {
-            lock (actions)
+            await this.actionsLock.WaitAsync();
+            try
             {
                 if (actions.ContainsKey(e.Event.Context.ToLower()))
                 {
-                    actions[e.Event.Context.ToLower()].Save();
-                    actions.Remove(e.Event.Context.ToLower());
+                    await actions[e.Event.Context.ToLower()].ProcessPropertyInspectorAsync(e.Event);
                 }
+            }
+            finally
+            {
+                this.actionsLock.Release();
             }
         }
 
-        private void Connection_OnWillAppear(object sender, StreamDeckEventReceivedEventArgs<WillAppearEvent> e)
+        private async void Connection_OnWillDisappear(object sender, StreamDeckEventReceivedEventArgs<WillDisappearEvent> e)
         {
-            lock (this.actions)
+            await this.actionsLock.WaitAsync();
+            try
+            {
+                if (actions.ContainsKey(e.Event.Context.ToLower()))
+                {
+                    await actions[e.Event.Context.ToLower()].SaveAsync();
+                    actions.Remove(e.Event.Context.ToLower());
+                }
+            }
+            finally
+            {
+                this.actionsLock.Release();
+            }
+        }
+
+        private async void Connection_OnWillAppear(object sender, StreamDeckEventReceivedEventArgs<WillAppearEvent> e)
+        {
+            await this.actionsLock.WaitAsync();
+            try
             {
                 if (actionList.ContainsKey(e.Event.Action.ToLower()))
                 {
                     MixItUpAction action = Activator.CreateInstance(actionList[e.Event.Action.ToLower()]) as MixItUpAction;
-                    action.Load(e.Event.Action, e.Event.Context);
+                    await action.LoadAsync(this.connection, e.Event.Action, e.Event.Context, e.Event.Payload.Settings);
                     this.actions[e.Event.Context.ToLower()] = action;
                 }
             }
+            finally
+            {
+                this.actionsLock.Release();
+            }
         }
 
-        private void Connection_OnKeyDown(object sender, StreamDeckEventReceivedEventArgs<KeyDownEvent> e)
+        private async void Connection_OnKeyDown(object sender, StreamDeckEventReceivedEventArgs<KeyDownEvent> e)
         {
             if (!isMixItUpRunning)
             {
@@ -122,12 +137,17 @@ namespace MixItUp.StreamDeckPlugin
                 return;
             }
 
-            lock (actions)
+            await this.actionsLock.WaitAsync();
+            try
             {
                 if (actions.ContainsKey(e.Event.Context.ToLower()))
                 {
-                    _ = actions[e.Event.Context.ToLower()].RunActionAsync(this.connection);
+                    await actions[e.Event.Context.ToLower()].RunActionAsync();
                 }
+            }
+            finally
+            {
+                this.actionsLock.Release();
             }
         }
 

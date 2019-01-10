@@ -10,24 +10,24 @@
 </head>
 <body>
     <div class="sdpi-wrapper">
+        <div class="sdpi-item" id="notRunning" style="display: none;">
+            <p>ERROR: Mix It Up is not running!</p>
+        </div>
+
+        <div class="sdpi-item" id="noDevAPIs" style="display: none;">
+            <p>ERROR: Mix It Up Developer APIs are disabled!</p>
+        </div>
+
         <div class="sdpi-item" id="selected_command">
-            <div class="sdpi-item-label">Select</div>
-            <select class="sdpi-item-value select">
-                <optgroup label="Custom">
-                    <option value="GUID1">Name 1</option>
-                    <option value="GUID2">Name 2</option>
-                    <option value="GUID3">Name 3</option>
-                    <option value="GUID4">Name 4</option>
-                </optgroup>
-                <optgroup label="Pre-made">
-                    <option value="GUID1">Name 1</option>
-                    <option value="GUID2">Name 2</option>
-                    <option value="GUID3">Name 3</option>
-                    <option value="GUID4">Name 4</option>
-                    <option value="GUID5">Name 5</option>
-                    <option value="GUID6">Name 6</option>
-                </optgroup>
+            <div class="sdpi-item-label">Command</div>
+            <select class="sdpi-item-value select" onchange="updateSettings()" disabled>
+                <option>Loading...</option>
             </select>
+        </div>
+
+        <div class="sdpi-item" id="arguments">
+            <div class="sdpi-item-label">Arguments</div>
+            <input class="sdpi-item-value" value="" placeholder="Arguments (optional)" oninput="updateSettings()" disabled>
         </div>
     </div>
 

@@ -6,8 +6,8 @@
       "States": [
         {
           "Image": "Images/runCommand",
-          "TitleAlignment": "bottom",
-          "FontSize": "12"
+          "TitleAlignment": "middle",
+          "FontSize": "8"
         }
       ],
       "SupportedInMultiActions": true,

@@ -1,10 +1,13 @@
 ﻿using MixItUp.API;
 using MixItUp.API.Models;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using streamdeck_client_csharp;
 using streamdeck_client_csharp.Events;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,33 +17,95 @@ namespace MixItUp.StreamDeckPlugin
     [MixItUpAction("com.mixitup.streamdeckplugin.runcommand")]
     public class RunCommandAction : MixItUpAction
     {
+        private StreamDeckConnection connection;
+
+        private class RunCommandSettings
+        {
+            [JsonProperty]
+            public Guid? CommandId { get; set; }
+
+            [JsonProperty]
+            public string Arguments { get; set; }
+        }
+        private RunCommandSettings actionSettings = new RunCommandSettings();
+
         public string Action { get; private set; }
         public string Context { get; private set; }
-        public Guid? CommandId { get; set; }
 
-        public override void Load(string action, string context)
+        public override async Task LoadAsync(StreamDeckConnection connection, string action, string context, JObject settings)
         {
+            this.connection = connection;
             this.Action = action;
             this.Context = context;
-        }
 
-        public override void Save()
-        {
-        }
-
-        public override Task ProcessPropertyInspectorAsync(StreamDeckConnection connection, SendToPluginEvent propertyInspectorEvent)
-        {
-            switch(propertyInspectorEvent.Payload["property_inspector"].ToString().ToLower())
+            if (settings != null)
             {
-                case "propertyinspectorconnected":
-                    _ = ConnectPropertiesAsync(connection);
-                    break;
+                this.actionSettings = settings.ToObject<RunCommandSettings>();
             }
 
-            return Task.FromResult(0);
+            await this.connection.SetTitleAsync("Loading...", this.Context, SDKTarget.HardwareAndSoftware);
+            await this.RefreshTitle();
         }
 
-        private async Task ConnectPropertiesAsync(StreamDeckConnection connection)
+        public override async Task SaveAsync()
+        {
+            await this.connection.SetSettingsAsync(JObject.FromObject(this.actionSettings), this.Context);
+        }
+
+        public override async Task ProcessPropertyInspectorAsync(SendToPluginEvent propertyInspectorEvent)
+        {
+            switch (propertyInspectorEvent.Payload["property_inspector"].ToString().ToLower())
+            {
+                case "propertyinspectorconnected":
+                    await this.ConnectPropertiesAsync();
+                    break;
+                case "propertyinspectorwilldisappear":
+                    await this.SaveAsync();
+                    break;
+                case "updatesettings":
+                    this.actionSettings.CommandId = Guid.Parse(propertyInspectorEvent.Payload["selectedCommandId"].ToString());
+                    this.actionSettings.Arguments = propertyInspectorEvent.Payload["arguments"].ToString();
+                    await this.SaveAsync();
+                    await this.RefreshTitle();
+                    break;
+            }
+        }
+
+        private async Task RefreshTitle()
+        {
+            if (this.actionSettings.CommandId.HasValue)
+            {
+                Command command = null;
+                try
+                {
+                    Task<Command> task = Commands.GetCommandAsync(this.actionSettings.CommandId.Value);
+                    if (await Task.WhenAny(task, Task.Delay(TimeSpan.FromSeconds(5))) == task)
+                    {
+                        if (task.IsCompleted && !task.IsFaulted && !task.IsCanceled)
+                        {
+                            command = task.Result;
+                        }
+                    }
+                }
+                catch { }
+
+                if (command == null)
+                {
+                    await this.connection.SetTitleAsync("Command\nNot\nFound", this.Context, SDKTarget.HardwareAndSoftware);
+                }
+                else
+                {
+                    string title = command.Name.Replace(' ', '\n');
+                    await this.connection.SetTitleAsync(title, this.Context, SDKTarget.HardwareAndSoftware);
+                }
+            }
+            else
+            {
+                await this.connection.SetTitleAsync("Command\nNot\nSelected", this.Context, SDKTarget.HardwareAndSoftware);
+            }
+        }
+
+        private async Task ConnectPropertiesAsync()
         {
             Command[] commands = null;
 
@@ -62,27 +127,30 @@ namespace MixItUp.StreamDeckPlugin
                 // Developer API is not enabled
                 JObject response = new JObject();
                 response["error"] = JValue.CreateString("developerAPINotEnabled");
-                _ = connection.SendToPropertyInspectorAsync(this.Action, response, this.Context);
+                await this.connection.SendToPropertyInspectorAsync(this.Action, response, this.Context);
             }
             else
             {
                 JObject response = new JObject
                 {
-                    ["commands"] = JArray.FromObject(commands.OrderBy(c => c.Name))
+                    ["commands"] = JArray.FromObject(commands.OrderBy(c => c.Category).ThenBy(c => c.Name)),
+                    ["selectedCommandId"] = JValue.CreateString(this.actionSettings.CommandId.ToString()),
+                    ["arguments"] = JValue.CreateString(this.actionSettings.Arguments),
                 };
 
-                _ = connection.SendToPropertyInspectorAsync(this.Action, response, this.Context);
+                await this.connection.SendToPropertyInspectorAsync(this.Action, response, this.Context);
+                await this.RefreshTitle();
             }
         }
 
-        public override Task RunActionAsync(StreamDeckConnection connection)
+        public override async Task RunActionAsync()
         {
-            if (this.CommandId.HasValue)
+            if (this.actionSettings.CommandId.HasValue)
             {
-                _ = Commands.RunCommandAsync(this.CommandId.Value);
+                string arguments = this.actionSettings.Arguments ?? string.Empty;
+                string[] args = arguments.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                await Commands.RunCommandAsync(this.actionSettings.CommandId.Value, args);
             }
-
-            return Task.FromResult(0);
         }
     }
 }
