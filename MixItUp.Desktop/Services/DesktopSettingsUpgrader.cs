@@ -81,7 +81,6 @@ namespace MixItUp.Desktop.Services
                 commands.AddRange(settings.TimerCommands);
                 commands.AddRange(settings.ActionGroupCommands);
                 commands.AddRange(settings.GameCommands);
-                commands.AddRange(settings.RemoteCommands);
                 foreach (CommandBase command in commands)
                 {
                     for (int i = 0; i < command.Actions.Count; i++)
@@ -190,7 +189,6 @@ namespace MixItUp.Desktop.Services
                 commands.AddRange(settings.TimerCommands);
                 commands.AddRange(settings.ActionGroupCommands);
                 commands.AddRange(settings.GameCommands);
-                commands.AddRange(settings.RemoteCommands);
                 foreach (CommandBase command in commands)
                 {
                     StoreCommandUpgrader.SeperateChatFromCurrencyActions(command.Actions);
@@ -220,7 +218,6 @@ namespace MixItUp.Desktop.Services
                 commands.AddRange(settings.TimerCommands);
                 commands.AddRange(settings.ActionGroupCommands);
                 commands.AddRange(settings.GameCommands);
-                commands.AddRange(settings.RemoteCommands);
                 foreach (CommandBase command in commands)
                 {
                     StoreCommandUpgrader.ChangeWaitActionsToUseSpecialIdentifiers(command.Actions);
@@ -243,7 +240,6 @@ namespace MixItUp.Desktop.Services
                 settings.TimerCommands.RemoveAll(c => c == null);
                 settings.ActionGroupCommands.RemoveAll(c => c == null);
                 settings.GameCommands.RemoveAll(c => c == null);
-                settings.RemoteCommands.RemoveAll(c => c == null);
 
                 await ChannelSession.Services.Settings.Save(settings);
             }
@@ -282,7 +278,6 @@ namespace MixItUp.Desktop.Services
                 commands.AddRange(settings.TimerCommands);
                 commands.AddRange(settings.ActionGroupCommands);
                 commands.AddRange(settings.GameCommands);
-                commands.AddRange(settings.RemoteCommands);
                 foreach (CommandBase command in commands)
                 {
                     StoreCommandUpgrader.ChangeCounterActionsToUseSpecialIdentifiers(command.Actions);
@@ -402,7 +397,6 @@ namespace MixItUp.Desktop.Services
             commands.AddRange(settings.TimerCommands);
             commands.AddRange(settings.ActionGroupCommands);
             commands.AddRange(settings.GameCommands);
-            commands.AddRange(settings.RemoteCommands);
             foreach (UserDataViewModel userData in settings.UserData.Values)
             {
                 commands.AddRange(userData.CustomCommands);

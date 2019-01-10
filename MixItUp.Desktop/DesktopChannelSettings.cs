@@ -6,7 +6,6 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Favorites;
 using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Model.Overlay;
-using MixItUp.Base.Model.Remote;
 using MixItUp.Base.Model.Serial;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
@@ -290,11 +289,6 @@ namespace MixItUp.Desktop
         public List<SerialDeviceModel> SerialDevices { get; set; }
 
         [JsonProperty]
-        public List<RemoteBoardModel> RemoteBoards { get; set; }
-        [JsonProperty]
-        public List<RemoteDeviceModel> RemoteSavedDevices { get; set; }
-
-        [JsonProperty]
         public List<FavoriteGroupModel> FavoriteGroups { get; set; }
 
         [JsonProperty]
@@ -343,8 +337,6 @@ namespace MixItUp.Desktop
         protected List<ActionGroupCommand> actionGroupCommandsInternal { get; set; }
         [JsonProperty]
         protected List<GameCommandBase> gameCommandsInternal { get; set; }
-        [JsonProperty]
-        protected List<RemoteCommand> remoteCommandsInternal { get; set; }
 
         [JsonProperty]
         protected List<UserQuoteViewModel> userQuotesInternal { get; set; }
@@ -369,8 +361,6 @@ namespace MixItUp.Desktop
             this.CustomInteractiveProjectIDs = new List<InteractiveSharedProjectModel>();
             this.UserTitles = new List<UserTitleModel>();
             this.SerialDevices = new List<SerialDeviceModel>();
-            this.RemoteBoards = new List<RemoteBoardModel>();
-            this.RemoteSavedDevices = new List<RemoteDeviceModel>();
             this.FavoriteGroups = new List<FavoriteGroupModel>();
             this.SongRequestServiceTypes = new HashSet<SongRequestServiceTypeEnum>();
             this.CustomInteractiveSettings = new Dictionary<uint, JObject>();
@@ -385,7 +375,6 @@ namespace MixItUp.Desktop
             this.timerCommandsInternal = new List<TimerCommand>();
             this.actionGroupCommandsInternal = new List<ActionGroupCommand>();
             this.gameCommandsInternal = new List<GameCommandBase>();
-            this.remoteCommandsInternal = new List<RemoteCommand>();
             this.userQuotesInternal = new List<UserQuoteViewModel>();
             this.overlayWidgetsInternal = new List<OverlayWidget>();
             this.filteredWordsInternal = new List<string>();
@@ -427,8 +416,6 @@ namespace MixItUp.Desktop
         public LockedList<ActionGroupCommand> ActionGroupCommands { get; set; }
         [JsonIgnore]
         public LockedList<GameCommandBase> GameCommands { get; set; }
-        [JsonIgnore]
-        public LockedList<RemoteCommand> RemoteCommands { get; set; }
 
         [JsonIgnore]
         public LockedList<UserQuoteViewModel> UserQuotes { get; set; }
@@ -512,7 +499,6 @@ namespace MixItUp.Desktop
             this.TimerCommands = new LockedList<TimerCommand>();
             this.ActionGroupCommands = new LockedList<ActionGroupCommand>();
             this.GameCommands = new LockedList<GameCommandBase>();
-            this.RemoteCommands = new LockedList<RemoteCommand>();
             this.UserQuotes = new LockedList<UserQuoteViewModel>();
             this.OverlayWidgets = new LockedList<OverlayWidget>();
             this.FilteredWords = new LockedList<string>();
@@ -533,7 +519,6 @@ namespace MixItUp.Desktop
             this.TimerCommands = new LockedList<TimerCommand>(this.timerCommandsInternal);
             this.ActionGroupCommands = new LockedList<ActionGroupCommand>(this.actionGroupCommandsInternal);
             this.GameCommands = new LockedList<GameCommandBase>(this.gameCommandsInternal);
-            this.RemoteCommands = new LockedList<RemoteCommand>(this.remoteCommandsInternal);
             this.UserQuotes = new LockedList<UserQuoteViewModel>(this.userQuotesInternal);
             this.OverlayWidgets = new LockedList<OverlayWidget>(this.overlayWidgetsInternal);
             this.FilteredWords = new LockedList<string>(this.filteredWordsInternal);
@@ -641,7 +626,6 @@ namespace MixItUp.Desktop
             this.timerCommandsInternal = this.TimerCommands.ToList();
             this.actionGroupCommandsInternal = this.ActionGroupCommands.ToList();
             this.gameCommandsInternal = this.GameCommands.ToList();
-            this.remoteCommandsInternal = this.RemoteCommands.ToList();
             this.userQuotesInternal = this.UserQuotes.ToList();
             this.overlayWidgetsInternal = this.OverlayWidgets.ToList();
             this.filteredWordsInternal = this.FilteredWords.ToList();

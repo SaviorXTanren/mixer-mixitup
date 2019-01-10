@@ -173,7 +173,6 @@ namespace MixItUp.Base
                 commands.AddRange(ChannelSession.Settings.InteractiveCommands);
                 commands.AddRange(ChannelSession.Settings.TimerCommands);
                 commands.AddRange(ChannelSession.Settings.ActionGroupCommands);
-                commands.AddRange(ChannelSession.Settings.RemoteCommands);
                 return commands;
             }
         }
