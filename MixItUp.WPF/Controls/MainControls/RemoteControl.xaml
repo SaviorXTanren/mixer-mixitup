@@ -6,7 +6,6 @@
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
-             xmlns:RemoteControls="clr-namespace:MixItUp.WPF.Controls.Remote"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
                           
@@ -16,204 +15,15 @@
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
 
              d:DesignHeight="500" d:DesignWidth="600">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+    <Grid VerticalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-        <Grid Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="20" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="10" />
-            </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" TextWrapping="Wrap" HorizontalAlignment="Center" Width="350">The Mix It Up mobile app is currently in development. The full, public version will be released at a later date on both iOS and <Hyperlink x:Name="SecretBetaAccess" Click="SecretBetaAccess_Click" Foreground="{StaticResource MaterialDesignBody}" FontWeight="Normal" TextDecorations="None">Android</Hyperlink>.</TextBlock>
 
-            <DataGrid x:Name="RemoteCommandsListView" Grid.Row="0" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch" SelectionChanged="RemoteCommandsListView_SelectionChanged">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
-                    <DataGridTemplateColumn Header="Actions" Width="240">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <CommandControls:CommandButtonsControl x:Name="CommandButtons" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
-
-            <Grid Grid.Row="2" HorizontalAlignment="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                
-                <Button x:Name="AddReferenceCommandButton" Grid.Column="0" Click="AddReferenceCommandButton_Click">Reference Command</Button>
-
-                <Button x:Name="AddCommandButton" Grid.Column="2" Click="AddCommandButton_Click">New Command</Button>
-            </Grid>
-        </Grid>
-
-        <Border Grid.Column="1" BorderThickness="1" BorderBrush="{StaticResource PrimaryHueMidBrush}" />
-
-        <Grid x:Name="InBetaGrid" Grid.Column="2" Visibility="Visible" VerticalAlignment="Center">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="20" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <TextBlock Grid.Row="0" TextWrapping="Wrap" HorizontalAlignment="Center" Width="350">The Mix It Up mobile app is currently in closed alpha for Android devices. The full, public version will be released at a later date on both iOS and <Hyperlink x:Name="SecretBetaAccess" Click="SecretBetaAccess_Click" Foreground="{StaticResource MaterialDesignBody}" FontWeight="Normal" TextDecorations="None">Android</Hyperlink>.</TextBlock>
-
-                <TextBlock Grid.Row="2" TextWrapping="Wrap" HorizontalAlignment="Center" Width="350">Keep an eye out on the Mix It Up Discord &amp; Twitter accounts for when we announce the open beta.</TextBlock>
-            </Grid>
-        </Grid>
-
-        <Grid x:Name="BoardSetupGrid" Grid.Column="2" Visibility="Collapsed" VerticalAlignment="Center">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="30" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-
-            <Grid Grid.Row="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                
-                <TextBlock Grid.Row="0" TextWrapping="Wrap" HorizontalAlignment="Center" Width="350">Getting Started: Add a new board, click the row of a Remote Command on the left, then click on the desired board slot to set the command there.</TextBlock>
-            </Grid>
-
-            <Grid Grid.Row="2" HorizontalAlignment="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <ComboBox x:Name="BoardNameComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Board Name" DisplayMemberPath="Name" SelectionChanged="BoardNameComboBox_SelectionChanged" Width="200" />
-
-                <Button x:Name="BoardAddButton" Grid.Column="2" Click="BoardAddButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Add Board">
-                    <MaterialDesign:PackIcon Kind="Plus" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                </Button>
-
-                <Button x:Name="BoardEditButton" Grid.Column="4" Click="BoardEditButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Edit Board">
-                    <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                </Button>
-
-                <Button x:Name="BoardDeleteButton" Grid.Column="6" Click="BoardDeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Delete Board">
-                    <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                </Button>
-            </Grid>
-
-            <Grid Grid.Row="4" HorizontalAlignment="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <ComboBox x:Name="GroupNameComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Group Name" DisplayMemberPath="Name" SelectionChanged="GroupNameComboBox_SelectionChanged" Width="200" />
-
-                <Button x:Name="GroupAddButton" Grid.Column="2" Click="GroupAddButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Add Group">
-                    <MaterialDesign:PackIcon Kind="Plus" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                </Button>
-
-                <Button x:Name="GroupEditButton" Grid.Column="4" Click="GroupEditButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Edit Group">
-                    <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                </Button>
-
-                <Button x:Name="GroupDeleteButton" Grid.Column="6" Click="GroupDeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Delete Group">
-                    <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                </Button>
-            </Grid>
-
-            <Border Grid.Row="6" BorderThickness="1" BorderBrush="{StaticResource PrimaryHueMidBrush}" HorizontalAlignment="Center">
-                <Grid x:Name="BoardGrid" Margin="5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="80" />
-                        <ColumnDefinition Width="5" />
-                        <ColumnDefinition Width="80" />
-                        <ColumnDefinition Width="5" />
-                        <ColumnDefinition Width="80" />
-                        <ColumnDefinition Width="5" />
-                        <ColumnDefinition Width="80" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="80" />
-                        <RowDefinition Height="5" />
-                        <RowDefinition Height="80" />
-                    </Grid.RowDefinitions>
-
-                    <RemoteControls:RemoteButtonControl x:Name="Button00" Grid.Column="0" Grid.Row="0" />
-
-                    <RemoteControls:RemoteButtonControl x:Name="Button10" Grid.Column="2" Grid.Row="0" />
-
-                    <RemoteControls:RemoteButtonControl x:Name="Button20" Grid.Column="4" Grid.Row="0" />
-
-                    <RemoteControls:RemoteButtonControl x:Name="Button30" Grid.Column="6" Grid.Row="0" />
-
-                    <RemoteControls:RemoteButtonControl x:Name="Button01" Grid.Column="0" Grid.Row="2" />
-
-                    <RemoteControls:RemoteButtonControl x:Name="Button11" Grid.Column="2" Grid.Row="2" />
-
-                    <RemoteControls:RemoteButtonControl x:Name="Button21" Grid.Column="4" Grid.Row="2" />
-
-                    <RemoteControls:RemoteButtonControl x:Name="Button31" Grid.Column="6" Grid.Row="2" />
-                </Grid>
-            </Border>
-
-            <Button x:Name="ConnectRemoteButton" Grid.Row="8" Click="ConnectRemoteButton_Click" Width="160">Connect To Device</Button>
-        </Grid>
-
-        <Grid x:Name="ConnectToDeviceGrid" Grid.Column="2" Visibility="Collapsed" Margin="10,20">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="40" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="40" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="40" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-
-            <TextBlock Grid.Row="0" TextWrapping="Wrap" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Launch Mix It Up on your mobile device and enter the access code below to connect. You will then receive a notification here asking you to approve or deny the device.</TextBlock>
-
-            <Grid Grid.Row="2" HorizontalAlignment="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Grid.Column="0" Style="{StaticResource HeaderTextBlock}">Access Code:</TextBlock>
-
-                <TextBlock Grid.Column="2" x:Name="AccessCodeTextBlock" />
-            </Grid>
-
-            <ScrollViewer Grid.Row="4" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible">
-                <TextBlock x:Name="RemoteEventsTextBlock" TextWrapping="Wrap" />
-            </ScrollViewer>
-
-            <Button x:Name="DisconnectRemoteButton" Grid.Row="6" Click="DisconnectRemoteButton_Click" Width="120">Disconnect</Button>
-        </Grid>
+        <TextBlock Grid.Row="2" TextWrapping="Wrap" HorizontalAlignment="Center" Width="350">Keep an eye out on the Mix It Up Discord &amp; Twitter accounts for when we announce the open beta.</TextBlock>
     </Grid>
 </local:MainControlBase>

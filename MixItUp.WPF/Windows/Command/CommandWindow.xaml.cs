@@ -80,8 +80,7 @@ namespace MixItUp.WPF.Windows.Command
                         this.ShowCommandEditor(new AdvancedCommandEditorControl(this, this.commandDetailsControl));
                     }
                 }
-                else if (this.commandDetailsControl is CustomCommandDetailsControl || this.commandDetailsControl is ActionGroupCommandDetailsControl ||
-                    this.commandDetailsControl is RemoteCommandDetailsControl)
+                else if (this.commandDetailsControl is CustomCommandDetailsControl || this.commandDetailsControl is ActionGroupCommandDetailsControl)
                 {
                     this.ShowCommandEditor(new AdvancedCommandEditorControl(this, this.commandDetailsControl));
                 }
