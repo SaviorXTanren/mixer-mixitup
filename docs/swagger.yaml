@@ -471,7 +471,7 @@ definitions:
       $ref: '#/definitions/MixItUpCurrency'
       
   MixItUpCommand:
-    required: [ ID, Name, IsEnabled ]
+    required: [ ID, Name, IsEnabled, Category ]
     type: object
     properties:
       ID:
@@ -485,6 +485,9 @@ definitions:
       IsEnabled:
         description: True if enabled, false otherwise
         type: boolean
+      Category:
+        description: The Mix It Up command category.
+        type: string
 
   ListOfMixItUpCommands:
     type: array

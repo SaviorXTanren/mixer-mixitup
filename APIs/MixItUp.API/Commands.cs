@@ -12,14 +12,14 @@ namespace MixItUp.API
     //  PUT:    http://localhost:8911/api/commands/{commandID}  Commands.UpdateCommandAsync
     public static class Commands
     {
-        public static async Task<Command[]> GetAllCommandsAsync()
+        public static Task<Command[]> GetAllCommandsAsync()
         {
-            return await RestClient.GetAsync<Command[]>($"commands");
+            return RestClient.GetAsync<Command[]>($"commands");
         }
 
-        public static async Task<Command> GetCommandAsync(Guid commandID)
+        public static Task<Command> GetCommandAsync(Guid commandID)
         {
-            return await RestClient.GetAsync<Command>($"commands/{commandID}");
+            return RestClient.GetAsync<Command>($"commands/{commandID}");
         }
 
         public static async Task RunCommandAsync(Guid commandID)
@@ -32,9 +32,9 @@ namespace MixItUp.API
             await RestClient.PostAsync($"commands/{commandID}", arguments);
         }
 
-        public static async Task<Command> UpdateCommandAsync(Command updatedCommand)
+        public static Task<Command> UpdateCommandAsync(Command updatedCommand)
         {
-            return await RestClient.PutAsync<Command>($"commands/{updatedCommand.ID}", updatedCommand);
+            return RestClient.PutAsync<Command>($"commands/{updatedCommand.ID}", updatedCommand);
         }
     }
 }
