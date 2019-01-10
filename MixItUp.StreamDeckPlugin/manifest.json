@@ -1,0 +1,40 @@
+{
+  "Actions": [
+    {
+      "Icon": "Images/runCommandIcon",
+      "Name": "Run Command",
+      "States": [
+        {
+          "Image": "Images/runCommand",
+          "TitleAlignment": "middle",
+          "FontSize": "8"
+        }
+      ],
+      "SupportedInMultiActions": true,
+      "Tooltip": "Runs a Mix It Up command",
+      "PropertyInspectorPath": "PropertyInspectors/RunCommandAction/Index.html",
+      "UUID": "com.mixitup.streamdeckplugin.runcommand"
+    }
+  ],
+  "Author": "Shane DeSeranno",
+  "Description": "This plugin is used to connect to the Mix It Up bot.",
+  "Name": "Mix It Up",
+  "Icon": "Images/categoryIcon",
+  "URL": "https://github.com/TyrenDe/streamdeck-client-csharp",
+  "Version": "0.1",
+  "CodePath": "MixItUp.StreamDeckPlugin.exe",
+  "Category": "Mix It Up",
+  "CategoryIcon": "Images/categoryIcon",
+  "OS": [
+    {
+      "Platform": "windows",
+      "MinimumVersion": "10"
+    }
+  ],
+  "ApplicationsToMonitor": {
+    "windows": [
+      "MixItUp.exe",
+      "notepad.exe"
+    ]
+  }
+}
