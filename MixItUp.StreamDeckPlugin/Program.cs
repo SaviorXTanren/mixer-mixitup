@@ -13,6 +13,8 @@ namespace MixItUp.StreamDeckPlugin
         // -port [number] -pluginUUID [GUID] -registerEvent [string?] -info [json]
         static void Main(string[] args)
         {
+            // This makes debugging the plug-in much easer.
+            // Uncomment this line, launch stream deck, add a button, attach debugger
             // while (!System.Diagnostics.Debugger.IsAttached) { System.Threading.Thread.Sleep(100); }
 
             ParseArgs(args, out int? port, out string uuid, out string registerEvent, out JObject info);

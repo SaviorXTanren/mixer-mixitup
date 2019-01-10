@@ -55,10 +55,10 @@ namespace MixItUp.StreamDeckPlugin
             connection.Run();
 
             // Wait for up to 10 seconds to connect, if it fails, the app will exit
-            if (connectEvent.WaitOne(TimeSpan.FromSeconds(10)))
+            if (this.connectEvent.WaitOne(TimeSpan.FromSeconds(10)))
             {
                 // We connected, loop every second until we disconnect
-                while (!disconnectEvent.WaitOne(TimeSpan.FromMilliseconds(1000)))
+                while (!this.disconnectEvent.WaitOne(TimeSpan.FromMilliseconds(1000)))
                 {
                     RunTick();
                 }
@@ -71,7 +71,7 @@ namespace MixItUp.StreamDeckPlugin
 
         private async void Connection_OnSendToPlugin(object sender, StreamDeckEventReceivedEventArgs<SendToPluginEvent> e)
         {
-            if (!isMixItUpRunning)
+            if (!this.isMixItUpRunning)
             {
                 // Send a message explaining this
                 JObject response = new JObject();
@@ -131,7 +131,7 @@ namespace MixItUp.StreamDeckPlugin
 
         private async void Connection_OnKeyDown(object sender, StreamDeckEventReceivedEventArgs<KeyDownEvent> e)
         {
-            if (!isMixItUpRunning)
+            if (!this.isMixItUpRunning)
             {
                 // If Mix It Up isn't running, just don't try
                 return;
@@ -155,7 +155,7 @@ namespace MixItUp.StreamDeckPlugin
         {
             if (e.Event.Payload.Application.Equals("mixitup.exe", StringComparison.InvariantCultureIgnoreCase))
             {
-                isMixItUpRunning = false;
+                this.isMixItUpRunning = false;
             }
         }
 
@@ -163,13 +163,14 @@ namespace MixItUp.StreamDeckPlugin
         {
             if (e.Event.Payload.Application.Equals("mixitup.exe", StringComparison.InvariantCultureIgnoreCase))
             {
-                isMixItUpRunning = true;
+                this.isMixItUpRunning = true;
             }
         }
 
         private void RunTick()
         {
-
+            // If the plugin needs to do anything, this runs once per second.
+            // It could be used to ping to see if the app has arrived, etc.
         }
 
         private void Connection_OnDisconnected(object sender, EventArgs e)
