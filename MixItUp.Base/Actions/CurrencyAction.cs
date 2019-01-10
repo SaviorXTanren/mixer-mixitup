@@ -84,7 +84,7 @@ namespace MixItUp.Base.Actions
             this.DeductFromUser = deductFromUser;
         }
 
-        public CurrencyAction(UserInventoryViewModel inventory, CurrencyActionTypeEnum currencyActionType, string itemName, string amount, string username = null,
+        public CurrencyAction(UserInventoryViewModel inventory, CurrencyActionTypeEnum currencyActionType, string itemName = null, string amount = null, string username = null,
             MixerRoleEnum roleRequirement = MixerRoleEnum.User, bool deductFromUser = false)
             : this()
         {

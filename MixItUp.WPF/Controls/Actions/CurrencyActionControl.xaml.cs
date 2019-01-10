@@ -46,7 +46,7 @@ namespace MixItUp.WPF.Controls.Actions
                 }
                 this.CurrencyActionTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.CurrencyActionType);
                 this.InventoryItemNameComboBox.SelectedItem = this.action.ItemName;
-                this.CurrencyAmountTextBox.Text = this.action.Amount.ToString();
+                this.CurrencyAmountTextBox.Text = this.action.Amount;
                 this.CurrencyUsernameTextBox.Text = this.action.Username;
                 this.CurrencyPermissionsAllowedComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.RoleRequirement);
                 this.DeductFromUserToggleButton.IsChecked = this.action.DeductFromUser;
@@ -89,7 +89,11 @@ namespace MixItUp.WPF.Controls.Actions
                     }
                     else if (inventory != null)
                     {
-                        if (!string.IsNullOrEmpty((string)this.InventoryItemNameComboBox.SelectedItem))
+                        if (actionType == CurrencyActionTypeEnum.ResetForAllUsers || actionType == CurrencyActionTypeEnum.ResetForUser)
+                        {
+                            return new CurrencyAction(inventory, actionType);
+                        }
+                        else if (!string.IsNullOrEmpty((string)this.InventoryItemNameComboBox.SelectedItem))
                         {
                             string itemName = (string)this.InventoryItemNameComboBox.SelectedItem;
                             if (inventory.Items.ContainsKey(itemName))
