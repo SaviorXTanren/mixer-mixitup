@@ -34,7 +34,7 @@
                 <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="20" />
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
                 <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
@@ -54,7 +54,7 @@
 
             <TextBlock Grid.Row="4" TextWrapping="Wrap" Margin="20,0" HorizontalAlignment="Center">Next, you'll need to specify the column number for each value in your data file or leave it blank if that value is not present. Note that the data file is required to have at least either the username and/or user ID:</TextBlock>
 
-            <ScrollViewer Grid.Row="6" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled" Height="250">
+            <ScrollViewer Grid.Row="6" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
                 <ItemsControl x:Name="DataColumnsItemsControls" HorizontalAlignment="Center">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
