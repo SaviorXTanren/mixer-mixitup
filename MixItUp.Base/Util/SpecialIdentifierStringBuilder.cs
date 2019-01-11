@@ -2,6 +2,7 @@
 using Mixer.Base.Model.Patronage;
 using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -38,6 +39,7 @@ namespace MixItUp.Base.Util
         public const string RandomNumberSpecialIdentifier = RandomSpecialIdentifierHeader + "number";
         public const string FeaturedChannelsSpecialIdentifer = "featuredchannels";
         public const string CostreamUsersSpecialIdentifier = "costreamusers";
+        public const string StreamBossSpecialIdentifierHeader = "streamboss";
 
         public const string StreamSpecialIdentifierHeader = "stream";
         public const string StreamHostCountSpecialIdentifier = StreamSpecialIdentifierHeader + "hostcount";
@@ -548,6 +550,19 @@ namespace MixItUp.Base.Util
             if (this.ContainsSpecialIdentifier(StreamerSpecialIdentifierHeader))
             {
                 await this.HandleUserSpecialIdentifiers(new UserViewModel(ChannelSession.Channel.user), StreamerSpecialIdentifierHeader);
+            }
+
+            if (this.ContainsSpecialIdentifier(StreamBossSpecialIdentifierHeader))
+            {
+                OverlayWidget streamBossWidget = ChannelSession.Settings.OverlayWidgets.FirstOrDefault(w => w.Item is OverlayStreamBoss);
+                if (streamBossWidget != null)
+                {
+                    OverlayStreamBoss streamBossOverlay = (OverlayStreamBoss)streamBossWidget.Item;
+                    if (streamBossOverlay != null && streamBossOverlay.CurrentBoss != null)
+                    {
+                        await this.HandleUserSpecialIdentifiers(streamBossOverlay.CurrentBoss, StreamBossSpecialIdentifierHeader);
+                    }
+                }
             }
 
             if (this.ContainsSpecialIdentifier(RandomSpecialIdentifierHeader))
