@@ -45,7 +45,7 @@ namespace MixItUp.WPF.Controls.Actions
                     this.CurrencyTypeComboBox.SelectedItem = ChannelSession.Settings.Inventories[this.action.InventoryID];
                 }
                 this.CurrencyActionTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.CurrencyActionType);
-                this.InventoryItemNameComboBox.SelectedItem = this.action.ItemName;
+                this.InventoryItemNameComboBox.Text = this.action.ItemName;
                 this.CurrencyAmountTextBox.Text = this.action.Amount;
                 this.CurrencyUsernameTextBox.Text = this.action.Username;
                 this.CurrencyPermissionsAllowedComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.RoleRequirement);
@@ -93,14 +93,10 @@ namespace MixItUp.WPF.Controls.Actions
                         {
                             return new CurrencyAction(inventory, actionType);
                         }
-                        else if (!string.IsNullOrEmpty((string)this.InventoryItemNameComboBox.SelectedItem))
+                        else if (!string.IsNullOrEmpty(this.InventoryItemNameComboBox.Text))
                         {
-                            string itemName = (string)this.InventoryItemNameComboBox.SelectedItem;
-                            if (inventory.Items.ContainsKey(itemName))
-                            {
-                                return new CurrencyAction(inventory, actionType, itemName, this.CurrencyAmountTextBox.Text, username: this.CurrencyUsernameTextBox.Text,
-                                    roleRequirement: roleRequirement, deductFromUser: this.DeductFromUserToggleButton.IsChecked.GetValueOrDefault());
-                            }
+                            return new CurrencyAction(inventory, actionType, this.InventoryItemNameComboBox.Text, this.CurrencyAmountTextBox.Text,
+                                username: this.CurrencyUsernameTextBox.Text, roleRequirement: roleRequirement, deductFromUser: this.DeductFromUserToggleButton.IsChecked.GetValueOrDefault());
                         }
                     }
                 }

@@ -27,7 +27,7 @@
 
             <ComboBox x:Name="CurrencyActionTypeComboBox" Grid.Column="2" Width="200" MaterialDesign:HintAssist.Hint="Action To Perform" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEnabled="False" SelectionChanged="CurrencyActionTypeComboBox_SelectionChanged" />
 
-            <ComboBox x:Name="InventoryItemNameComboBox" Grid.Column="4" Width="150" Margin="0,0,20,0" Visibility="Collapsed" MaterialDesign:HintAssist.Hint="Item Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox x:Name="InventoryItemNameComboBox" Grid.Column="4" Width="150" Margin="0,0,20,0" IsEditable="True" Visibility="Collapsed" MaterialDesign:HintAssist.Hint="Item Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
             <TextBox Grid.Column="5" x:Name="CurrencyAmountTextBox" Width="100" MaterialDesign:HintAssist.Hint="Amount" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
