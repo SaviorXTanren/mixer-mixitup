@@ -113,7 +113,6 @@ namespace MixItUp.Base.Actions
                                 volume = MathHelper.Clamp(volume, 0, 100);
                                 ChannelSession.Settings.SongRequestVolume = volume;
                                 await ChannelSession.Services.SongRequestService.RefreshVolume();
-                                await ChannelSession.Chat.SendMessage("Song request volume set to " + ChannelSession.Settings.SongRequestVolume);
                                 return;
                             }
                         }
