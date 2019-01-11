@@ -100,6 +100,18 @@ namespace MixItUp.WPF.Windows.Currency
             Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Currency-&-Rank");
         }
 
+        private void EditItemButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            UserInventoryItemViewModel item = (UserInventoryItemViewModel)button.DataContext;
+
+            this.ItemNameTextBox.Text = item.Name;
+            this.ItemMaxAmountTextBox.Text = item.MaxAmountString;
+            this.ItemBuyAmountTextBox.Text = item.BuyAmountString;
+            this.ItemSellAmountTextBox.Text = item.SellAmountString;
+            this.AddItemButton.Content = "Update";
+        }
+
         private void DeleteItemButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
@@ -151,6 +163,7 @@ namespace MixItUp.WPF.Windows.Currency
                 this.ItemMaxAmountTextBox.Text = string.Empty;
                 this.ItemBuyAmountTextBox.Text = string.Empty;
                 this.ItemSellAmountTextBox.Text = string.Empty;
+                this.AddItemButton.Content = "Add Item";
             });
         }
 
