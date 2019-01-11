@@ -42,7 +42,7 @@
                             <TextBlock Grid.Column="0" Foreground="{StaticResource WhiteColor}">Filtered / Banned Words</TextBlock>
 
                             <TextBlock Grid.Column="2" Foreground="{StaticResource WhiteColor}">Apply Strikes:</TextBlock>
-                            <ToggleButton x:Name="FilteredWordsApplyStrikesToggleButton" Grid.Column="4" />
+                            <ToggleButton x:Name="FilteredWordsApplyStrikesToggleButton" Grid.Column="4" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" />
 
                         </Grid>
                     </GroupBox.Header>
@@ -110,7 +110,7 @@
                             <TextBlock Foreground="{StaticResource WhiteColor}">Chat Text Moderation</TextBlock>
 
                             <TextBlock Grid.Column="2" Foreground="{StaticResource WhiteColor}">Apply Strikes:</TextBlock>
-                            <ToggleButton x:Name="ChatTextApplyStrikesToggleButton" Grid.Column="4" />
+                            <ToggleButton x:Name="ChatTextApplyStrikesToggleButton" Grid.Column="4" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" />
                         </Grid>
                     </GroupBox.Header>
 
@@ -193,7 +193,7 @@
                                 <TextBlock Foreground="{StaticResource WhiteColor}">Link Blocking</TextBlock>
 
                                 <TextBlock Grid.Column="2" Foreground="{StaticResource WhiteColor}">Apply Strikes:</TextBlock>
-                                <ToggleButton x:Name="BlockLinksApplyStrikesToggleButton" Grid.Column="4" />
+                                <ToggleButton x:Name="BlockLinksApplyStrikesToggleButton" Grid.Column="4" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" />
                             </Grid>
                         </GroupBox.Header>
 
