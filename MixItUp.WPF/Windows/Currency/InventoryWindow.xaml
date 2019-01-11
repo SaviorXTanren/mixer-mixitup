@@ -77,16 +77,28 @@
                                 <DataGrid x:Name="ItemsListView" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Center">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Item Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
-                                        <DataGridTextColumn Header="Max Amount" Binding="{Binding MaxAmountString}" IsReadOnly="True" Width="100" />
-                                        <DataGridTextColumn Header="Buy Price" Binding="{Binding BuyAmountString}" IsReadOnly="True" Width="80" />
-                                        <DataGridTextColumn Header="Sell Price" Binding="{Binding SellAmountString}" IsReadOnly="True" Width="80" />
-                                        <DataGridTextColumn Header="Special Identifier Item Name" Binding="{Binding SpecialIdentifier}" IsReadOnly="True" Width="*" />
-                                        <DataGridTemplateColumn Width="65">
+                                        <DataGridTextColumn Header="Max Amount" Binding="{Binding MaxAmountString}" IsReadOnly="True" Width="95" />
+                                        <DataGridTextColumn Header="Buy Price" Binding="{Binding BuyAmountString}" IsReadOnly="True" Width="75" />
+                                        <DataGridTextColumn Header="Sell Price" Binding="{Binding SellAmountString}" IsReadOnly="True" Width="75" />
+                                        <DataGridTextColumn Header="Special Identifier Name" Binding="{Binding SpecialIdentifier}" IsReadOnly="True" Width="150" />
+                                        <DataGridTemplateColumn Width="110">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <Button x:Name="DeleteItemButton" Grid.Column="2" Click="DeleteItemButton_Click" Width="40" HorizontalAlignment="Center">
-                                                        <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                                    </Button>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="5" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+                                                        
+                                                        <Button x:Name="EditItemButton" Grid.Column="0" Click="EditItemButton_Click" Width="40" HorizontalAlignment="Center">
+                                                            <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                                        </Button>
+
+                                                        <Button x:Name="DeleteItemButton" Grid.Column="2" Click="DeleteItemButton_Click" Width="40" HorizontalAlignment="Center">
+                                                            <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                                        </Button>
+                                                    </Grid>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
