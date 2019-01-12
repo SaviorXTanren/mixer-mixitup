@@ -11,6 +11,9 @@ namespace MixItUp.API.Models
         public string Message { get; set; }
 
         [DataMember]
+        public string Username { get; set; }
+
+        [DataMember]
         public bool SendAsStreamer { get; set; }
     }
 }

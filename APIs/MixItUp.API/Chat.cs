@@ -18,11 +18,23 @@ namespace MixItUp.API
             await RestClient.DeleteAsync("chat/message");
         }
 
-        public static async Task SendMessageAsync(string message, bool sendAsStreamer)
+        public static async Task SendMessageAsync(string message, bool sendAsStreamer = false)
         {
             var model = new SendChatMessage
             {
                 Message = message,
+                SendAsStreamer = sendAsStreamer
+            };
+
+            await RestClient.PostAsync("chat/message", model);
+        }
+
+        public static async Task SendWhisperAsync(string username, string message, bool sendAsStreamer = false)
+        {
+            var model = new SendChatMessage
+            {
+                Message = message,
+                Username = username,
                 SendAsStreamer = sendAsStreamer
             };
 
