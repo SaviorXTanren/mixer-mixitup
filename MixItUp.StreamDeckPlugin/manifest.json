@@ -21,7 +21,7 @@
   "Name": "Mix It Up",
   "Icon": "Images/categoryIcon",
   "URL": "https://github.com/TyrenDe/streamdeck-client-csharp",
-  "Version": "0.1",
+  "Version": "0.2",
   "CodePath": "MixItUp.StreamDeckPlugin.exe",
   "Category": "Mix It Up",
   "CategoryIcon": "Images/categoryIcon",

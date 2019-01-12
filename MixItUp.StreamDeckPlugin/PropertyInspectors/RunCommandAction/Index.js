@@ -3,8 +3,7 @@
     actionInfo = {},
     inInfo = {},
     runningApps = [],
-    isQT = navigator.appVersion.includes('QtWebEngine'),
-    onchangeevt = 'onchange';
+    isQT = navigator.appVersion.includes('QtWebEngine');
 
 function connectSocket(inPort, inUUID, inRegisterEvent, inInfo, inActionInfo) {
     uuid = inUUID;
