@@ -309,6 +309,27 @@ paths:
         '200':
           description: Success
 
+  '/chat/whisper':
+    post:
+      tags:
+        - Chat
+      summary: Sends a whisper to a user in chat
+      operationId: sendChatWhisper
+      parameters:
+        - name: chatWhisper
+          description: 'The chat whisper to send'
+          in: body
+          required: true
+          schema:
+           $ref: '#/definitions/MixItUpChatWhisper'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad request was sent in
+
   '/commands':
     get:
       tags:
@@ -659,6 +680,24 @@ definitions:
         example: This is a test of the emergency broadcast system!
       SendAsStreamer:
         description: True will force the message to send as the streamer. False will try to send as the registered bot, if available.
+        type: boolean
+        example: false
+        default: false
+
+  MixItUpChatWhisper:
+    required: [ UserName, Message ]
+    type: object
+    properties:
+      UserName:
+        description: The user to receive the whisper.
+        type: string
+        example: TyrenDes
+      Message:
+        description: The message to send to chat.
+        type: string
+        example: This is a test of the emergency broadcast system!
+      SendAsStreamer:
+        description: True will force the whisper to send as the streamer. False will try to send as the registered bot, if available.
         type: boolean
         example: false
         default: false

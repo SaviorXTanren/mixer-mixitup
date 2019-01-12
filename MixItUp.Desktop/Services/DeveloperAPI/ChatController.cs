@@ -44,26 +44,19 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
-            if (!string.IsNullOrEmpty(chatMessage.Username))
-            {
-                await ChannelSession.Chat.Whisper(chatMessage.Username, chatMessage.Message, chatMessage.SendAsStreamer);
-            }
-            else
-            {
-                await ChannelSession.Chat.SendMessage(chatMessage.Message, chatMessage.SendAsStreamer);
-            }
+            await ChannelSession.Chat.SendMessage(chatMessage.Message, chatMessage.SendAsStreamer);
         }
 
         [Route("whisper")]
         [HttpPost]
-        public async Task SendWhisper([FromBody]SendChatMessage chatMessage)
+        public async Task SendWhisper([FromBody]SendChatWhisper chatWhisper)
         {
-            if (chatMessage == null)
+            if (chatWhisper == null)
             {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
-            await ChannelSession.Chat.Whisper(chatMessage.Username, chatMessage.Message, chatMessage.SendAsStreamer);
+            await ChannelSession.Chat.Whisper(chatWhisper.UserName, chatWhisper.Message, chatWhisper.SendAsStreamer);
         }
     }
 }
