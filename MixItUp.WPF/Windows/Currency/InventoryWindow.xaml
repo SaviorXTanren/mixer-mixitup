@@ -46,8 +46,6 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="20" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="20" />
-                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <Button x:Name="HelpButton" HorizontalAlignment="Right" VerticalAlignment="Top" Content="{MaterialDesign:PackIcon Help}" Click="HelpButton_Click" ToolTip="Help" />
@@ -134,75 +132,78 @@
                 </Grid>
 
                 <Grid Grid.Row="4" HorizontalAlignment="Center">
-                    <GroupBox Header="Shop" Grid.Column="2">
-                        <Grid Margin="10">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="30" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-                            <Grid Grid.Row="0" HorizontalAlignment="Center">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="5" />
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="20" />
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="20" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0" HorizontalAlignment="Center">
+                        <GroupBox Header="Shop" Grid.Column="2">
+                            <Grid Margin="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="20" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
 
-                                <TextBlock Grid.Column="0" VerticalAlignment="Center">Enable:</TextBlock>
-                                <ToggleButton x:Name="ShopEnableDisableToggleButton" Grid.Column="2" />
+                                <Grid Grid.Row="0" HorizontalAlignment="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="5" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="20" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="20" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
 
-                                <TextBox Grid.Column="4" x:Name="ShopCommandTextBox" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Shop Command" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                    <TextBlock Grid.Column="0" VerticalAlignment="Center">Enable:</TextBlock>
+                                    <ToggleButton x:Name="ShopEnableDisableToggleButton" Grid.Column="2" />
 
-                                <ComboBox x:Name="ShopCurrencyComboBox" Grid.Column="6" MaterialDesign:HintAssist.Hint="Shop Currency" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="Name" Width="200" />
+                                    <TextBox Grid.Column="4" x:Name="ShopCommandTextBox" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Shop Command" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                                    <ComboBox x:Name="ShopCurrencyComboBox" Grid.Column="6" MaterialDesign:HintAssist.Hint="Shop Currency" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="Name" Width="200" />
+                                </Grid>
+
+                                <Grid Grid.Row="2" HorizontalAlignment="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="20" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <GroupBox Header="Items Bought" Grid.Column="0">
+                                        <CommandControls:CommandButtonsControl x:Name="ShopItemsBoughtCommandButtonsControl" HorizontalAlignment="Center" EditClicked="ShopItemsCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                                    </GroupBox>
+
+                                    <GroupBox Header="Items Sold" Grid.Column="2">
+                                        <CommandControls:CommandButtonsControl x:Name="ShopItemsSoldCommandButtonsControl" HorizontalAlignment="Center" EditClicked="ShopItemsCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                                    </GroupBox>
+                                </Grid>
                             </Grid>
+                        </GroupBox>
+                    </Grid>
 
-                            <Grid Grid.Row="2" HorizontalAlignment="Center">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="20" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="2" HorizontalAlignment="Center">
+                        <GroupBox Header="Settings" Grid.Column="2">
+                            <Grid Margin="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="20" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
 
-                                <GroupBox Header="Items Bought" Grid.Column="0">
-                                    <CommandControls:CommandButtonsControl x:Name="ShopItemsBoughtCommandButtonsControl" HorizontalAlignment="Center" EditClicked="ShopItemsCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
-                                </GroupBox>
+                                <ComboBox x:Name="AutomaticResetComboBox" Grid.Row="0" MaterialDesign:HintAssist.Hint="Automatic Reset" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
 
-                                <GroupBox Header="Items Sold" Grid.Column="2">
-                                    <CommandControls:CommandButtonsControl x:Name="ShopItemsSoldCommandButtonsControl" HorizontalAlignment="Center" EditClicked="ShopItemsCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
-                                </GroupBox>
+                                <Button x:Name="ManualResetButton" Grid.Row="2" Click="ManualResetButton_Click">Manual Reset</Button>
                             </Grid>
-                        </Grid>
-                    </GroupBox>
+                        </GroupBox>
+                    </Grid>
+
                 </Grid>
 
-                <Grid Grid.Row="6" HorizontalAlignment="Center">
-                    <GroupBox Header="Settings" Grid.Column="2">
-                        <Grid Margin="10">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-
-                            <Grid Grid.Row="0" HorizontalAlignment="Center">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="40" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-
-                                <ComboBox x:Name="AutomaticResetComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Automatic Reset" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
-
-                                <Button x:Name="ManualResetButton" Grid.Column="2" Click="ManualResetButton_Click">Manual Reset</Button>
-                            </Grid>
-                        </Grid>
-                    </GroupBox>
-                </Grid>
-
-                <Button x:Name="SaveButton" Grid.Row="8" HorizontalAlignment="Center" Click="SaveButton_Click" Width="80">Save</Button>
+                <Button x:Name="SaveButton" Grid.Row="6" HorizontalAlignment="Center" Click="SaveButton_Click" Width="80">Save</Button>
             </Grid>
         </ScrollViewer>
 
