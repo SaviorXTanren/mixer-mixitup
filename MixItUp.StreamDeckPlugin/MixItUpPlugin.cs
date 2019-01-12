@@ -50,6 +50,7 @@ namespace MixItUp.StreamDeckPlugin
             this.connection.OnWillAppear += Connection_OnWillAppear;
             this.connection.OnWillDisappear += Connection_OnWillDisappear;
             this.connection.OnSendToPlugin += Connection_OnSendToPlugin;
+            this.connection.OnTitleParametersDidChange += Connection_OnTitleParametersDidChange;
 
             // Start the connection
             connection.Run();
@@ -66,6 +67,22 @@ namespace MixItUp.StreamDeckPlugin
             else
             {
                 Console.WriteLine("Mix It Up Plugin failed to connect to Stream Deck");
+            }
+        }
+
+        private async void Connection_OnTitleParametersDidChange(object sender, StreamDeckEventReceivedEventArgs<TitleParametersDidChangeEvent> e)
+        {
+            await this.actionsLock.WaitAsync();
+            try
+            {
+                if (actions.ContainsKey(e.Event.Context.ToLower()))
+                {
+                    await actions[e.Event.Context.ToLower()].TitleParametersDidChangeAsync(e.Event);
+                }
+            }
+            finally
+            {
+                this.actionsLock.Release();
             }
         }
 
