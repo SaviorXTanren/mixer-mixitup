@@ -1,16 +1,14 @@
 ﻿using Mixer.Base.Model.OAuth;
-using Mixer.Base.Model.User;
-using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
 using MixItUp.Desktop.Util;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace MixItUp.Desktop.Services
@@ -178,7 +176,10 @@ namespace MixItUp.Desktop.Services
                 payload["client_id"] = TreatStreamService.ClientID;
                 payload["access_token"] = this.token.accessToken;
 
-                JObject jobj = await this.PostAsync<JObject>("https://treatstream.com/Oauth2/Authorize/socketToken", this.CreateContentFromObject(payload));
+                HttpContent content = this.CreateContentFromObject(payload);
+                content.Headers.Clear();
+                content.Headers.Add("Content-Type", "application/json");
+                JObject jobj = await this.PostAsync<JObject>("https://treatstream.com/Oauth2/Authorize/socketToken", content);
                 if (jobj != null && jobj.ContainsKey("socket_token"))
                 {
                     return jobj["socket_token"].ToString();
@@ -195,6 +196,21 @@ namespace MixItUp.Desktop.Services
                 string result = await this.GetStringAsync(string.Format("getMonthTreats/{0}", this.token.accessToken));
             }
             catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+        }
+
+        public void WebSocketConnectedOccurred()
+        {
+            this.OnWebSocketConnectedOccurred(this, new EventArgs());
+        }
+
+        public void WebSocketDisconnectedOccurred()
+        {
+            this.OnWebSocketDisconnectedOccurred(this, new EventArgs());
+        }
+
+        public void DonationOccurred(TreatStreamEvent eventData)
+        {
+            this.OnDonationOccurred(this, eventData);
         }
 
         protected override async Task RefreshOAuthToken()
@@ -221,21 +237,6 @@ namespace MixItUp.Desktop.Services
                 return this.socket.Connected;
             }
             return false;
-        }
-
-        public void WebSocketConnectedOccurred()
-        {
-            this.OnWebSocketConnectedOccurred(this, new EventArgs());
-        }
-
-        public void WebSocketDisconnectedOccurred()
-        {
-            this.OnWebSocketDisconnectedOccurred(this, new EventArgs());
-        }
-
-        public void DonationOccurred(TreatStreamEvent eventData)
-        {
-            this.OnDonationOccurred(this, eventData);
         }
     }
 }
