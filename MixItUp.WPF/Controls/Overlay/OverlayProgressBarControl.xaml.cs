@@ -1,7 +1,10 @@
 ﻿using Mixer.Base.Util;
+using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
+using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Util;
+using MixItUp.WPF.Windows.Command;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,6 +17,8 @@ namespace MixItUp.WPF.Controls.Overlay
     public partial class OverlayProgressBarControl : OverlayItemControl
     {
         private OverlayProgressBar item;
+
+        private CustomCommand command;
 
         public OverlayProgressBarControl()
         {
@@ -29,6 +34,7 @@ namespace MixItUp.WPF.Controls.Overlay
         public override void SetItem(OverlayItemBase item)
         {
             this.item = (OverlayProgressBar)item;
+
             this.GoalTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.item.ProgressBarType);
 
             if (!string.IsNullOrEmpty(this.item.CurrentAmountCustom))
@@ -81,6 +87,9 @@ namespace MixItUp.WPF.Controls.Overlay
             this.HeightTextBox.Text = this.item.Height.ToString();
 
             this.HTMLText.Text = this.item.HTMLText;
+
+            this.command = this.item.GoalReachedCommand;
+            this.UpdateChangedCommand();
         }
 
         public override OverlayItemBase GetItem()
@@ -146,11 +155,11 @@ namespace MixItUp.WPF.Controls.Overlay
 
                 if (double.TryParse(startingAmount, out double startingAmountNumber) && double.TryParse(goalAmount, out double goalAmountNumber))
                 {
-                    return new OverlayProgressBar(this.HTMLText.Text, type, startingAmountNumber, goalAmountNumber, resetAfterDays, progressColor, backgroundColor, textColor, this.TextFontComboBox.Text, width, height);
+                    return new OverlayProgressBar(this.HTMLText.Text, type, startingAmountNumber, goalAmountNumber, resetAfterDays, progressColor, backgroundColor, textColor, this.TextFontComboBox.Text, width, height, this.command);
                 }
                 else
                 {
-                    return new OverlayProgressBar(this.HTMLText.Text, type, startingAmount, goalAmount, resetAfterDays, progressColor, backgroundColor, textColor, this.TextFontComboBox.Text, width, height);
+                    return new OverlayProgressBar(this.HTMLText.Text, type, startingAmount, goalAmount, resetAfterDays, progressColor, backgroundColor, textColor, this.TextFontComboBox.Text, width, height, this.command);
                 }
             }
             return null;
@@ -209,6 +218,62 @@ namespace MixItUp.WPF.Controls.Overlay
             if (this.TotalFollowsCheckBox.IsChecked.GetValueOrDefault())
             {
                 this.StartingAmountTextBox.Text = "0";
+            }
+        }
+
+        private void NewCommandButton_Click(object sender, RoutedEventArgs e)
+        {
+            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(new CustomCommand(OverlayProgressBar.GoalReachedCommandName)));
+            window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
+            window.Closed += Window_Closed;
+            window.Show();
+        }
+
+        private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
+        {
+            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
+            CustomCommand command = commandButtonsControl.GetCommandFromCommandButtons<CustomCommand>(sender);
+            if (command != null)
+            {
+                CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(command));
+                window.Closed += Window_Closed;
+                window.Show();
+            }
+        }
+
+        private void CommandButtons_DeleteClicked(object sender, RoutedEventArgs e)
+        {
+            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
+            CustomCommand command = commandButtonsControl.GetCommandFromCommandButtons<CustomCommand>(sender);
+            if (command != null)
+            {
+                this.command = null;
+                this.UpdateChangedCommand();
+            }
+        }
+
+        private void Window_CommandSaveSuccessfully(object sender, CommandBase e)
+        {
+            this.command = (CustomCommand)e;
+        }
+
+        private void Window_Closed(object sender, System.EventArgs e)
+        {
+            this.UpdateChangedCommand();
+        }
+
+        private void UpdateChangedCommand()
+        {
+            if (this.command != null)
+            {
+                this.NewCommandButton.Visibility = Visibility.Collapsed;
+                this.CommandButtons.Visibility = Visibility.Visible;
+                this.CommandButtons.DataContext = this.command;
+            }
+            else
+            {
+                this.NewCommandButton.Visibility = Visibility.Visible;
+                this.CommandButtons.Visibility = Visibility.Collapsed;
             }
         }
     }

@@ -105,18 +105,19 @@ namespace MixItUp.Base.Actions
                     }
                     else if (this.SongRequestType == SongRequestActionTypeEnum.SetVolume)
                     {
-                        if (arguments != null && arguments.Count() > 0 && int.TryParse(arguments.First(), out int volume))
+                        if (arguments != null && arguments.Count() > 0)
                         {
-                            volume = MathHelper.Clamp(volume, 0, 100);
-                            ChannelSession.Settings.SongRequestVolume = volume;
-                            await ChannelSession.Services.SongRequestService.RefreshVolume();
-                            await ChannelSession.Chat.SendMessage("Song request volume set to " + ChannelSession.Settings.SongRequestVolume);
+                            string volumeAmount = await this.ReplaceStringWithSpecialModifiers(arguments.First(), user, arguments);
+                            if (int.TryParse(volumeAmount, out int volume))
+                            {
+                                volume = MathHelper.Clamp(volume, 0, 100);
+                                ChannelSession.Settings.SongRequestVolume = volume;
+                                await ChannelSession.Services.SongRequestService.RefreshVolume();
+                                return;
+                            }
                         }
-                        else
-                        {
-                            await ChannelSession.Chat.Whisper(user.UserName, "Please specify a volume level [0-100].");
-                            return;
-                        }
+                        await ChannelSession.Chat.Whisper(user.UserName, "Please specify a volume level [0-100].");
+                        return;
                     }
                     else if (this.SongRequestType == SongRequestActionTypeEnum.DisplayCurrentlyPlaying)
                     {
