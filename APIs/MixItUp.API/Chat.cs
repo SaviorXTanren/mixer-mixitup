@@ -38,7 +38,7 @@ namespace MixItUp.API
                 SendAsStreamer = sendAsStreamer
             };
 
-            await RestClient.PostAsync("chat/message", model);
+            await RestClient.PostAsync("chat/whisper", model);
         }
     }
 }
