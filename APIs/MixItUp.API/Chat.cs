@@ -18,7 +18,7 @@ namespace MixItUp.API
             await RestClient.DeleteAsync("chat/message");
         }
 
-        public static async Task SendMessageAsync(string message, bool sendAsStreamer = false)
+        public static async Task SendMessageAsync(string message, bool sendAsStreamer)
         {
             var model = new SendChatMessage
             {
@@ -29,7 +29,7 @@ namespace MixItUp.API
             await RestClient.PostAsync("chat/message", model);
         }
 
-        public static async Task SendWhisperAsync(string userName, string message, bool sendAsStreamer = false)
+        public static async Task SendWhisperAsync(string userName, string message, bool sendAsStreamer)
         {
             var model = new SendChatWhisper
             {
