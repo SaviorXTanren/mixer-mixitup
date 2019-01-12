@@ -125,8 +125,6 @@ namespace MixItUp.WPF.Controls.MainControls
         public SortedUserObservableCollection UserControls = new SortedUserObservableCollection();
         public ObservableCollection<ChatMessageControl> MessageControls = new ObservableCollection<ChatMessageControl>();
 
-        private CancellationTokenSource backgroundThreadCancellationTokenSource = new CancellationTokenSource();
-
         private SemaphoreSlim userUpdateLock = new SemaphoreSlim(1);
         private SemaphoreSlim messageUpdateLock = new SemaphoreSlim(1);
 
@@ -979,7 +977,6 @@ namespace MixItUp.WPF.Controls.MainControls
                 if (disposing)
                 {
                     // Dispose managed state (managed objects).
-                    this.backgroundThreadCancellationTokenSource.Dispose();
                     this.userUpdateLock.Dispose();
                     this.messageUpdateLock.Dispose();
                 }

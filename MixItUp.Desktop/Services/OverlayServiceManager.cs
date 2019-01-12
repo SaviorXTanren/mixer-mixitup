@@ -136,6 +136,10 @@ namespace MixItUp.Desktop.Services
                                         }
                                     }
                                 }
+                                else
+                                {
+                                    await widget.Item.Disable();
+                                }
                             }
                             catch (Exception ex) { Logger.Log(ex); }
                         }
