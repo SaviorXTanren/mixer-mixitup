@@ -1,0 +1,23 @@
+﻿<local:ServicesControlBase x:Class="MixItUp.WPF.Controls.Services.StreamDeckServiceControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Services"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="600">
+    <Grid>
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Width="450">This Stream Deck plug-in allows you to run Mix It Up commands directly from your Stream Deck device.  It requires the Developer API Service to be enabled and you must have <Hyperlink NavigateUri="StreamDeck" RequestNavigate="Hyperlink_RequestNavigate">Stream Deck v4.0</Hyperlink> or higher installed.</TextBlock>
+
+            <Button x:Name="InstallButton" Grid.Column="2" Click="InstallButton_Click" Width="100">Install</Button>
+        </Grid>
+    </Grid>
+</local:ServicesControlBase>
