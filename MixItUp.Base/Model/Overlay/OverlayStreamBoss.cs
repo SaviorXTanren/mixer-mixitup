@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Model.User;
+using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -38,6 +39,8 @@ namespace MixItUp.Base.Model.Overlay
         </table>";
 
         public const string StreamBossItemType = "streamboss";
+
+        public const string NewStreamBossCommandName = "On New Stream Boss";
 
         [DataMember]
         public int StartingHealth { get; set; }
@@ -88,6 +91,9 @@ namespace MixItUp.Base.Model.Overlay
         public bool DamageTaken { get; set; }
 
         [DataMember]
+        public CustomCommand NewStreamBossCommand { get; set; }
+
+        [DataMember]
         public UserViewModel CurrentBoss { get; set; }
 
         private SemaphoreSlim HealthSemaphore = new SemaphoreSlim(1);
@@ -100,7 +106,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayStreamBoss(string htmlText, int startingHealth, int width, int height, string textColor, string textFont, string borderColor, string backgroundColor,
             string progressColor, double followBonus, double hostBonus, double subscriberBonus, double donationBonus, double sparkBonus,
-            OverlayEffectVisibleAnimationTypeEnum damageAnimation, OverlayEffectVisibleAnimationTypeEnum newBossAnimation)
+            OverlayEffectVisibleAnimationTypeEnum damageAnimation, OverlayEffectVisibleAnimationTypeEnum newBossAnimation, CustomCommand newStreamBossCommand)
             : base(StreamBossItemType, htmlText)
         {
             this.StartingHealth = startingHealth;
@@ -118,6 +124,7 @@ namespace MixItUp.Base.Model.Overlay
             this.SparkBonus = sparkBonus;
             this.DamageAnimation = damageAnimation;
             this.NewBossAnimation = newBossAnimation;
+            this.NewStreamBossCommand = newStreamBossCommand;
         }
 
         public override async Task Initialize()
@@ -174,12 +181,22 @@ namespace MixItUp.Base.Model.Overlay
             await base.Initialize();
         }
 
-        public override OverlayCustomHTMLItem GetCopy() { return this.Copy<OverlayStreamBoss>(); }
+        public override OverlayCustomHTMLItem GetCopy()
+        {
+            OverlayStreamBoss copy = this.Copy<OverlayStreamBoss>();
+            copy.NewStreamBossCommand = null;
+            return copy;
+        }
 
         public override async Task<OverlayItemBase> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             if (this.DamageTaken)
             {
+                if (this.NewBoss && this.NewStreamBossCommand != null)
+                {
+                    await this.NewStreamBossCommand.Perform();
+                }
+
                 OverlayItemBase copy = await base.GetProcessedItem(this.CurrentBoss, arguments, extraSpecialIdentifiers);
                 this.DamageTaken = false;
                 this.NewBoss = false;

@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Desktop.Database;
@@ -391,12 +392,14 @@ namespace MixItUp.Desktop.Services
         private static IEnumerable<CommandBase> GetAllCommands(IChannelSettings settings)
         {
             List<CommandBase> commands = new List<CommandBase>();
+
             commands.AddRange(settings.ChatCommands);
             commands.AddRange(settings.EventCommands);
             commands.AddRange(settings.InteractiveCommands);
             commands.AddRange(settings.TimerCommands);
             commands.AddRange(settings.ActionGroupCommands);
             commands.AddRange(settings.GameCommands);
+
             foreach (UserDataViewModel userData in settings.UserData.Values)
             {
                 commands.AddRange(userData.CustomCommands);
@@ -405,10 +408,54 @@ namespace MixItUp.Desktop.Services
                     commands.Add(userData.EntranceCommand);
                 }
             }
+
             foreach (GameCommandBase gameCommand in settings.GameCommands)
             {
                 commands.AddRange(gameCommand.GetAllInnerCommands());
             }
+
+            foreach (UserCurrencyViewModel currency in settings.Currencies.Values)
+            {
+                if (currency.RankChangedCommand != null)
+                {
+                    commands.Add(currency.RankChangedCommand);
+                }
+            }
+
+            foreach (UserInventoryViewModel inventory in settings.Inventories.Values)
+            {
+                commands.Add(inventory.ItemsBoughtCommand);
+                commands.Add(inventory.ItemsSoldCommand);
+            }
+
+            foreach (OverlayWidget widget in settings.OverlayWidgets)
+            {
+                if (widget.Item is OverlayStreamBoss)
+                {
+                    OverlayStreamBoss item = ((OverlayStreamBoss)widget.Item);
+                    if (item.NewStreamBossCommand != null)
+                    {
+                        commands.Add(item.NewStreamBossCommand);
+                    }
+                }
+                else if (widget.Item is OverlayProgressBar)
+                {
+                    OverlayProgressBar item = ((OverlayProgressBar)widget.Item);
+                    if (item.GoalReachedCommand != null)
+                    {
+                        commands.Add(item.GoalReachedCommand);
+                    }
+                }
+                else if (widget.Item is OverlayTimer)
+                {
+                    OverlayTimer item = ((OverlayTimer)widget.Item);
+                    if (item.TimerCompleteCommand != null)
+                    {
+                        commands.Add(item.TimerCompleteCommand);
+                    }
+                }
+            }
+
             return commands;
         }
     }

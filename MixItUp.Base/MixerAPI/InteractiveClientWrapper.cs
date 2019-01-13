@@ -6,6 +6,7 @@ using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -432,6 +433,8 @@ namespace MixItUp.Base.MixerAPI
         }
 
         public async Task CaptureSparkTransaction(string transactionID) { await this.RunAsync(this.Client.CaptureSparkTransaction(transactionID)); }
+
+        public async Task BroadcastEvent(IEnumerable<string> scopes, JObject data) { await this.RunAsync(this.Client.BroadcastEvent(scopes, data)); }
 
         public async Task DisableAllControlsWithoutCommands(InteractiveGameVersionModel version)
         {

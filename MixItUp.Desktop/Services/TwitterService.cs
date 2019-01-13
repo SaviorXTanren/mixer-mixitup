@@ -267,7 +267,7 @@ namespace MixItUp.Base.Services
                 this.token.authorizationCode = this.auth.CredentialStore.ScreenName;
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                Task.Run(this.BackgroundDonationCheck, this.cancellationTokenSource.Token);
+                Task.Run(this.BackgroundRetweetCheck, this.cancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                 return Task.FromResult(true);
@@ -275,9 +275,26 @@ namespace MixItUp.Base.Services
             return Task.FromResult(false);
         }
 
-        private async Task BackgroundDonationCheck()
+        private async Task BackgroundRetweetCheck()
         {
             HashSet<ulong> existingRetweets = new HashSet<ulong>();
+
+            IEnumerable<Tweet> tweets = await this.GetLatestTweets();
+            if (tweets.Count() > 0)
+            {
+                Tweet streamTweet = tweets.FirstOrDefault(t => t.IsStreamTweet);
+                if (streamTweet != null)
+                {
+                    IEnumerable<Tweet> retweets = await this.GetRetweets(streamTweet);
+                    if (retweets != null)
+                    {
+                        foreach (Tweet retweet in retweets)
+                        {
+                            existingRetweets.Add(retweet.ID);
+                        }
+                    }
+                }
+            }
 
             while (!this.cancellationTokenSource.Token.IsCancellationRequested)
             {
@@ -286,7 +303,7 @@ namespace MixItUp.Base.Services
                     EventCommand command = ChannelSession.Settings.EventCommands.FirstOrDefault(c => c.OtherEventType.Equals(OtherEventTypeEnum.TwitterStreamTweetRetweet));
                     if (command != null)
                     {
-                        IEnumerable<Tweet> tweets = await this.GetLatestTweets();
+                        tweets = await this.GetLatestTweets();
                         if (tweets.Count() > 0)
                         {
                             Tweet streamTweet = tweets.FirstOrDefault(t => t.IsStreamTweet);

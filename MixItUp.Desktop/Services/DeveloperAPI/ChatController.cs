@@ -1,6 +1,5 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.ViewModel.User;
-using MixItUp.API.Models;
+﻿using MixItUp.API.Models;
+using MixItUp.Base;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -38,7 +37,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
 
         [Route("message")]
         [HttpPost]
-        public async Task SendChatMessage([FromBody] SendChatMessage chatMessage)
+        public async Task SendChatMessage([FromBody]SendChatMessage chatMessage)
         {
             if (chatMessage == null)
             {
@@ -46,6 +45,18 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             }
 
             await ChannelSession.Chat.SendMessage(chatMessage.Message, chatMessage.SendAsStreamer);
+        }
+
+        [Route("whisper")]
+        [HttpPost]
+        public async Task SendWhisper([FromBody]SendChatWhisper chatWhisper)
+        {
+            if (chatWhisper == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
+
+            await ChannelSession.Chat.Whisper(chatWhisper.UserName, chatWhisper.Message, chatWhisper.SendAsStreamer);
         }
     }
 }

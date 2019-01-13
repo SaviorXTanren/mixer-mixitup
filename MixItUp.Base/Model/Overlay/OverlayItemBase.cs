@@ -45,11 +45,13 @@ namespace MixItUp.Base.Model.Overlay
             return Task.FromResult(0);
         }
 
-        public T Copy<T>()
+        public virtual Task Disable()
         {
-            JObject jobj = JObject.FromObject(this);
-            return jobj.ToObject<T>();
+            this.IsInitialized = false;
+            return Task.FromResult(0);
         }
+
+        public T Copy<T>() { return SerializerHelper.DeserializeFromString<T>(SerializerHelper.SerializeToString(this)); }
 
         protected async Task<string> ReplaceStringWithSpecialModifiers(string str, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, bool encode = false)
         {

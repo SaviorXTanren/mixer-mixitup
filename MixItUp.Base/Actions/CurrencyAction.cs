@@ -125,10 +125,13 @@ namespace MixItUp.Base.Actions
                     inventory = ChannelSession.Settings.Inventories[this.InventoryID];
                     systemName = inventory.Name;
 
-                    itemName = await this.ReplaceStringWithSpecialModifiers(this.ItemName, user, arguments);
-                    if (!inventory.Items.ContainsKey(itemName))
+                    if (!string.IsNullOrEmpty(this.ItemName))
                     {
-                        return;
+                        itemName = await this.ReplaceStringWithSpecialModifiers(this.ItemName, user, arguments);
+                        if (!inventory.Items.ContainsKey(itemName))
+                        {
+                            return;
+                        }
                     }
                 }
 

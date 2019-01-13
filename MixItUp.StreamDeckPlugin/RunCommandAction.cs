@@ -26,6 +26,9 @@ namespace MixItUp.StreamDeckPlugin
 
             [JsonProperty]
             public string Arguments { get; set; }
+
+            [JsonProperty]
+            public string Title { get; set; }
         }
         private RunCommandSettings actionSettings = new RunCommandSettings();
 
@@ -44,7 +47,7 @@ namespace MixItUp.StreamDeckPlugin
             }
 
             await this.connection.SetTitleAsync("Loading...", this.Context, SDKTarget.HardwareAndSoftware);
-            await this.RefreshTitle();
+            await this.RefreshTitleAsync();
         }
 
         public override async Task SaveAsync()
@@ -66,14 +69,18 @@ namespace MixItUp.StreamDeckPlugin
                     this.actionSettings.CommandId = Guid.Parse(propertyInspectorEvent.Payload["selectedCommandId"].ToString());
                     this.actionSettings.Arguments = propertyInspectorEvent.Payload["arguments"].ToString();
                     await this.SaveAsync();
-                    await this.RefreshTitle();
+                    await this.RefreshTitleAsync();
                     break;
             }
         }
 
-        private async Task RefreshTitle()
+        private async Task RefreshTitleAsync()
         {
-            if (this.actionSettings.CommandId.HasValue)
+            if (!string.IsNullOrEmpty(this.actionSettings.Title))
+            {
+                await this.connection.SetTitleAsync(this.actionSettings.Title, this.Context, SDKTarget.HardwareAndSoftware);
+            }
+            else if (this.actionSettings.CommandId.HasValue)
             {
                 Command command = null;
                 try
@@ -139,7 +146,7 @@ namespace MixItUp.StreamDeckPlugin
                 };
 
                 await this.connection.SendToPropertyInspectorAsync(this.Action, response, this.Context);
-                await this.RefreshTitle();
+                await this.RefreshTitleAsync();
             }
         }
 
@@ -151,6 +158,12 @@ namespace MixItUp.StreamDeckPlugin
                 string[] args = arguments.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 await Commands.RunCommandAsync(this.actionSettings.CommandId.Value, args);
             }
+        }
+
+        public override async Task TitleParametersDidChangeAsync(TitleParametersDidChangeEvent titleParametersDidChangeEvent)
+        {
+            this.actionSettings.Title = titleParametersDidChangeEvent.Payload.Title;
+            await this.RefreshTitleAsync();
         }
     }
 }

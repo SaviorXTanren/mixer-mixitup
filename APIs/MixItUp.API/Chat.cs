@@ -28,5 +28,17 @@ namespace MixItUp.API
 
             await RestClient.PostAsync("chat/message", model);
         }
+
+        public static async Task SendWhisperAsync(string userName, string message, bool sendAsStreamer)
+        {
+            var model = new SendChatWhisper
+            {
+                Message = message,
+                UserName = userName,
+                SendAsStreamer = sendAsStreamer
+            };
+
+            await RestClient.PostAsync("chat/whisper", model);
+        }
     }
 }

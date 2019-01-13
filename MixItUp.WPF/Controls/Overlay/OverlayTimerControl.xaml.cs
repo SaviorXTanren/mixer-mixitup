@@ -1,8 +1,12 @@
-﻿using MixItUp.Base.Model.Overlay;
+﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
+using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Util;
+using MixItUp.WPF.Windows.Command;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace MixItUp.WPF.Controls.Overlay
 {
@@ -12,6 +16,8 @@ namespace MixItUp.WPF.Controls.Overlay
     public partial class OverlayTimerControl : OverlayItemControl
     {
         private OverlayTimer item;
+
+        private CustomCommand command;
 
         public OverlayTimerControl()
         {
@@ -41,6 +47,9 @@ namespace MixItUp.WPF.Controls.Overlay
             this.TextSizeComboBox.Text = this.item.TextSize.ToString();
 
             this.HTMLText.Text = this.item.HTMLText;
+
+            this.command = this.item.TimerCompleteCommand;
+            this.UpdateChangedCommand();
         }
 
         public override OverlayItemBase GetItem()
@@ -71,7 +80,7 @@ namespace MixItUp.WPF.Controls.Overlay
                 return null;
             }
 
-            return new OverlayTimer(this.HTMLText.Text, length, textColor, this.TextFontComboBox.Text, size);
+            return new OverlayTimer(this.HTMLText.Text, length, textColor, this.TextFontComboBox.Text, size, this.command);
         }
 
         protected override Task OnLoaded()
@@ -89,6 +98,62 @@ namespace MixItUp.WPF.Controls.Overlay
             }
 
             return Task.FromResult(0);
+        }
+
+        private void NewCommandButton_Click(object sender, RoutedEventArgs e)
+        {
+            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(new CustomCommand(OverlayTimer.TimerCompleteCommandName)));
+            window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
+            window.Closed += Window_Closed;
+            window.Show();
+        }
+
+        private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
+        {
+            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
+            CustomCommand command = commandButtonsControl.GetCommandFromCommandButtons<CustomCommand>(sender);
+            if (command != null)
+            {
+                CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(command));
+                window.Closed += Window_Closed;
+                window.Show();
+            }
+        }
+
+        private void CommandButtons_DeleteClicked(object sender, RoutedEventArgs e)
+        {
+            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
+            CustomCommand command = commandButtonsControl.GetCommandFromCommandButtons<CustomCommand>(sender);
+            if (command != null)
+            {
+                this.command = null;
+                this.UpdateChangedCommand();
+            }
+        }
+
+        private void Window_CommandSaveSuccessfully(object sender, CommandBase e)
+        {
+            this.command = (CustomCommand)e;
+        }
+
+        private void Window_Closed(object sender, System.EventArgs e)
+        {
+            this.UpdateChangedCommand();
+        }
+
+        private void UpdateChangedCommand()
+        {
+            if (this.command != null)
+            {
+                this.NewCommandButton.Visibility = Visibility.Collapsed;
+                this.CommandButtons.Visibility = Visibility.Visible;
+                this.CommandButtons.DataContext = this.command;
+            }
+            else
+            {
+                this.NewCommandButton.Visibility = Visibility.Visible;
+                this.CommandButtons.Visibility = Visibility.Collapsed;
+            }
         }
     }
 }
