@@ -117,6 +117,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MixItUp.API", "APIs\MixItUp.API\MixItUp.API.csproj", "{6EAD4AD5-3606-42B0-A2DA-13848A0D4076}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MixItUp.StreamDeckPlugin", "MixItUp.StreamDeckPlugin\MixItUp.StreamDeckPlugin.csproj", "{111A5C53-2D7A-4B8E-824C-305DE10F413C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{90395135-528E-4F2D-93D1-D822B32B5F80} = {90395135-528E-4F2D-93D1-D822B32B5F80}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
