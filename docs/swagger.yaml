@@ -422,6 +422,29 @@ paths:
           schema:
             $ref: '#/definitions/ListOfMixItUpInventory'
 
+  '/mixplay/broadcast':
+    post:
+      tags:
+        - Mixer
+      summary: Sends a broadcast message to MixPlay
+      description: | 
+        This API can be used post messages directly to you MixPlay web clients.
+      operationId: broadcastEvent
+      parameters:
+        - name: broadcastEvent
+          description: 'The data to broadcast and related scopes.'
+          in: body
+          required: true
+          schema:
+           $ref: '#/definitions/MixPlayBroadcast'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Invalid data submitted
+
   '/mixer/users/{usernameOrID}':
     get:
       tags:
@@ -701,6 +724,19 @@ definitions:
         type: boolean
         example: false
         default: false
+
+  MixPlayBroadcast:
+    type: object
+    required: [ Scopes, Data ]
+    properties:
+      Scopes:
+        description: "The list of scopes. For example: everyone, group:id, scene:id, participant:uuid"
+        type: array
+        items:
+          type: string
+      Data:
+        description: Any JSON data you want to send.
+        type: object
 
   MixerUser:
     type: object
