@@ -202,12 +202,12 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler<Tuple<UserViewModel, ChatSkillModel>> OnChatSkillOccurred;
-        public static void ChatSkillOccurred(Tuple<UserViewModel, ChatSkillModel> skill)
+        public static event EventHandler<Tuple<UserViewModel, int>> OnEmberUseOccurred;
+        public static void EmberUseOccurred(Tuple<UserViewModel, int> ember)
         {
-            if (GlobalEvents.OnChatSkillOccurred != null)
+            if (GlobalEvents.OnEmberUseOccurred != null)
             {
-                GlobalEvents.OnChatSkillOccurred(null, skill);
+                GlobalEvents.OnEmberUseOccurred(null, ember);
             }
         }
 

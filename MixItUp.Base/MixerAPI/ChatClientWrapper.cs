@@ -719,23 +719,25 @@ namespace MixItUp.Base.MixerAPI
             if (message != null)
             {
                 this.OnMessageOccurred(sender, message);
-                if (message.IsChatSkill)
+                if (message.IsChatSkill && message.IsInUsersChannel)
                 {
-                    GlobalEvents.ChatSkillOccurred(new Tuple<UserViewModel, ChatSkillModel>(message.User, message.ChatSkill));
-
-                    if (message.IsInUsersChannel)
+                    if (message.IsEmbersChatSkill)
+                    {
+                        GlobalEvents.EmberUseOccurred(new Tuple<UserViewModel, int>(message.User, (int)message.ChatSkill.cost));
+                    }
+                    else
                     {
                         GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, int>(message.User, (int)message.ChatSkill.cost));
-
-                        Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
-                        {
-                            { "skillname", message.ChatSkill.skill_name },
-                            { "skilltype", EnumHelper.GetEnumName(SkillTypeEnum.Sticker) },
-                            { "skillcost", message.ChatSkill.cost.ToString() },
-                            { "skillimage", message.ChatSkill.icon_url },
-                        };
-                        await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerSkillUsed)), message.User, specialIdentifiers);
                     }
+
+                    Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
+                    {
+                        { "skillname", message.ChatSkill.skill_name },
+                        { "skilltype", EnumHelper.GetEnumName(SkillTypeEnum.Sticker) },
+                        { "skillcost", message.ChatSkill.cost.ToString() },
+                        { "skillimage", message.ChatSkill.icon_url },
+                    };
+                    await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerSkillUsed)), message.User, specialIdentifiers);
                 }
             }
         }

@@ -192,16 +192,13 @@ namespace MixItUp.Base.ViewModel.User
 
         public async Task<IEnumerable<UserViewModel>> GetAllWorkableUsers()
         {
-            return await this.semaphore.WaitAndRelease(() =>
+            List<UserViewModel> users = new List<UserViewModel>(await this.GetAllUsers());
+            users.RemoveAll(u => UserContainerViewModel.SpecialUserAccounts.Contains(u.UserName));
+            if (ChannelSession.BotUser != null)
             {
-                List<UserViewModel> users = this.users.Values.ToList();
-                users.RemoveAll(u => UserContainerViewModel.SpecialUserAccounts.Contains(u.UserName));
-                if (ChannelSession.BotUser != null)
-                {
-                    users.RemoveAll(u => ChannelSession.BotUser.username.Equals(u.UserName));
-                }
-                return Task.FromResult(users.Where(u => u.IsInChat));
-            });
+                users.RemoveAll(u => ChannelSession.BotUser.username.Equals(u.UserName));
+            }
+            return users.Where(u => u.IsInChat);
         }
 
         public async Task Clear()

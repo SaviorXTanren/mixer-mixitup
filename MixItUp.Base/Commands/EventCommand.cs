@@ -49,7 +49,7 @@ namespace MixItUp.Base.Commands
 
         [Name("User First Joined")]
         MixerUserFirstJoin = 30,
-        [Name("User Unfollowed")]
+        [Name("Channel Unfollowed")]
         MixerUserUnfollow = 31,
         [Name("User Purged")]
         MixerUserPurge = 32,
@@ -58,6 +58,8 @@ namespace MixItUp.Base.Commands
         MixerUserTimeout = 33,
         [Name("User Banned")]
         MixerUserBan = 34,
+        [Name("Chat Message Received")]
+        MixerChatMessage = 35,
 
         [Name("Channel Stream Start")]
         MixerChannelStreamStart = 40,
@@ -70,6 +72,8 @@ namespace MixItUp.Base.Commands
         MixerSkillUsed = 51,
         [Name("Channel Sparks Used")]
         MixerSparksUsed = 52,
+        [Name("Channel Embers Used")]
+        MixerEmbersUsed = 53,
     }
 
     public class EventCommand : CommandBase, IEquatable<EventCommand>

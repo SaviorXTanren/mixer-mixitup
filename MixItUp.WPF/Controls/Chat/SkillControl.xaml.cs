@@ -21,16 +21,20 @@ namespace MixItUp.WPF.Controls.Chat
 
         public SkillInstanceModel Skill { get { return this.DataContext as SkillInstanceModel; } }
 
+        public bool IsEmberSkill { get; private set; }
+
         public SkillControl()
         {
             this.DataContextChanged += SkillControl_DataContextChanged;
+
             InitializeComponent();
         }
 
-        public SkillControl(SkillInstanceModel skill) : this()
+        public SkillControl(SkillInstanceModel skill, bool isEmberSkill)
+            : this()
         {
-            InitializeComponent();
             this.DataContext = skill;
+            this.IsEmberSkill = isEmberSkill;
         }
 
         public void UpdateSizing()
@@ -38,7 +42,7 @@ namespace MixItUp.WPF.Controls.Chat
             this.SkillImage.Height = this.SkillImage.Width = ChannelSession.Settings.ChatFontSize * 2;
             this.GifSkillIcon.Height = this.GifSkillIcon.Width = ChannelSession.Settings.ChatFontSize * 2;
             this.SkillNameTextBlock.FontSize = ChannelSession.Settings.ChatFontSize;
-            this.SparkIcon.Height = this.SparkIcon.Width = ChannelSession.Settings.ChatFontSize + 2;
+            this.EmberIcon.Height = this.EmberIcon.Width = this.SparkIcon.Height = this.SparkIcon.Width = ChannelSession.Settings.ChatFontSize + 2;
             this.SkillCostTextBlock.FontSize = ChannelSession.Settings.ChatFontSize;
         }
 
@@ -72,6 +76,17 @@ namespace MixItUp.WPF.Controls.Chat
                         }
 
                         this.SkillImage.Source = SkillControl.skillBitmapImages[this.Skill.Skill.attributionIconUrl];
+                    }
+
+                    if (this.IsEmberSkill)
+                    {
+                        this.EmberIcon.Visibility = Visibility.Visible;
+                        this.SparkIcon.Visibility = Visibility.Collapsed;
+                    }
+                    else
+                    {
+                        this.EmberIcon.Visibility = Visibility.Collapsed;
+                        this.SparkIcon.Visibility = Visibility.Visible;
                     }
 
                     this.UpdateSizing();
