@@ -1,6 +1,7 @@
 ﻿using MixItUp.API.Models;
 using MixItUp.Base;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -21,7 +22,9 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             {
                 if (ChannelSession.Settings.UserData.ContainsKey(chatUser.ID))
                 {
-                    users.Add(UserController.UserFromUserDataViewModel(ChannelSession.Settings.UserData[chatUser.ID]));
+                    User newUser = UserController.UserFromUserDataViewModel(ChannelSession.Settings.UserData[chatUser.ID]);
+                    newUser.ParticipantIDs = chatUser.InteractiveIDs.Keys.ToList();
+                    users.Add(newUser);
                 }
             }
 

@@ -20,5 +20,8 @@ namespace MixItUp.API.Models
 
         [DataMember]
         public List<InventoryAmount> InventoryAmounts { get; set; } = new List<InventoryAmount>();
+
+        [DataMember]
+        public List<string> ParticipantIDs { get; set; } = new List<string>();
     }
 }
