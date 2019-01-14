@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 
 namespace MixItUp.API
 {
-    //  GET:    http://localhost:8911/api/mixplay/user/{sessionID}          MixPlay.GetUserAsync
+    //  GET:    http://localhost:8911/api/mixplay/user/{participantID}      MixPlay.GetUserAsync
     //  GET:    http://localhost:8911/api/mixplay/users                     MixPlay.GetAllUsersAsync
-    //  POST:   http://localhost:8911/api/mixplay/broadcast                 MixPlay.SendBroadcast
+    //  POST:   http://localhost:8911/api/mixplay/broadcast                 MixPlay.SendBroadcastAsync
     public static class MixPlay
     {
-        public static async Task<MixPlayUser> GetUserAsync(string sessionID)
+        public static async Task<MixPlayUser> GetUserAsync(string participantID)
         {
-            return await RestClient.GetAsync<MixPlayUser>($"mixplay/user/{sessionID}");
+            return await RestClient.GetAsync<MixPlayUser>($"mixplay/user/{participantID}");
         }
 
         public static async Task<MixPlayUser[]> GetAllUsersAsync()
