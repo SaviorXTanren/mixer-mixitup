@@ -447,16 +447,16 @@ paths:
         '400':
           description: Invalid data submitted
 
-  '/mixplay/user/{sessionID}':
+  '/mixplay/user/{participantID}':
     get:
       tags:
         - MixPlay
-      summary: Gets the specified MixPlay user by their session ID
+      summary: Gets the specified MixPlay user by their participant ID
       description: | 
         This API can be used to get the MixPlay user information for a participant
       operationId: getMixPlayUserByID
       parameters:
-        - name: sessionID
+        - name: participantID
           in: path
           description: 'The ID that needs to be fetched'
           required: true
