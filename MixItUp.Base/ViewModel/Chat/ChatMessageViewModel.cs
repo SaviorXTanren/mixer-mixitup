@@ -10,6 +10,9 @@ namespace MixItUp.Base.ViewModel.Chat
 {
     public class ChatMessageViewModel : IEquatable<ChatMessageViewModel>
     {
+        public const string SparksCurrencyName = "Sparks";
+        public const string EmbersCurrencyName = "Embers";
+
         public Guid ID { get; private set; }
 
         public UserViewModel User { get; private set; }
@@ -119,6 +122,10 @@ namespace MixItUp.Base.ViewModel.Chat
         public bool ContainsImage { get { return this.Images.Count > 0; } }
 
         public bool IsChatSkill { get { return this.ChatSkill != null; } }
+
+        public bool IsSparksChatSkill { get { return this.IsChatSkill && this.ChatSkill.currency.Equals(ChatMessageViewModel.SparksCurrencyName); } }
+
+        public bool IsEmbersChatSkill { get { return this.IsChatSkill && this.ChatSkill.currency.Equals(ChatMessageViewModel.EmbersCurrencyName); } }
 
         public bool IsSkill { get { return this.Skill != null; } }
 

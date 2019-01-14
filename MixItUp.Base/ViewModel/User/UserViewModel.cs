@@ -220,7 +220,7 @@ namespace MixItUp.Base.ViewModel.User
                     return this.Data.CustomTitle;
                 }
 
-                UserTitleModel title = ChannelSession.Settings.UserTitles.OrderByDescending(t => t.Role).ThenBy(t => t.Months).FirstOrDefault(t => t.MeetsTitle(this));
+                UserTitleModel title = ChannelSession.Settings.UserTitles.OrderByDescending(t => t.Role).ThenByDescending(t => t.Months).FirstOrDefault(t => t.MeetsTitle(this));
                 if (title != null)
                 {
                     return title.Name;

@@ -1,6 +1,7 @@
 ﻿using MixItUp.API.Models;
 using MixItUp.Base;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -20,7 +21,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             foreach (var chatUser in chatUsers)
             {
                 if (ChannelSession.Settings.UserData.ContainsKey(chatUser.ID))
-                {
+                { 
                     users.Add(UserController.UserFromUserDataViewModel(ChannelSession.Settings.UserData[chatUser.ID]));
                 }
             }
