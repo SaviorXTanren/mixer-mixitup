@@ -227,6 +227,9 @@ namespace MixItUp.WPF.Controls.Command
                         case OtherEventTypeEnum.MixerSparksUsed:
                             extraSpecialIdentifiers["sparkamount"] = "10";
                             break;
+                        case OtherEventTypeEnum.MixerEmbersUsed:
+                            extraSpecialIdentifiers["emberamount"] = "10";
+                            break;
                     }
                 }
                 else if (command is InteractiveCommand)

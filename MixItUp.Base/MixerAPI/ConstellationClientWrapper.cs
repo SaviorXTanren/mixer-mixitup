@@ -8,6 +8,7 @@ using Mixer.Base.Util;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Skill;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using System;
@@ -56,6 +57,8 @@ namespace MixItUp.Base.MixerAPI
         public ConstellationClientWrapper()
         {
             GlobalEvents.OnSparkUseOccurred += GlobalEvents_OnSparkUseOccurred;
+            GlobalEvents.OnEmberUseOccurred += GlobalEvents_OnEmberUseOccurred;
+            GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
         }
 
         public async Task<bool> Connect()
@@ -453,6 +456,26 @@ namespace MixItUp.Base.MixerAPI
             };
 
             await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerSparksUsed)), sparkUsage.Item1, specialIdentifiers);
+        }
+
+        private async void GlobalEvents_OnEmberUseOccurred(object sender, Tuple<UserViewModel, int> emberUsage)
+        {
+            Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
+            {
+                { "emberamount", emberUsage.Item2.ToString() },
+            };
+
+            await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerEmbersUsed)), emberUsage.Item1, specialIdentifiers);
+        }
+
+        private async void GlobalEvents_OnChatMessageReceived(object sender, ChatMessageViewModel message)
+        {
+            Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
+            {
+                { "message", message.Message },
+            };
+
+            await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChatMessage)), message.User, specialIdentifiers);
         }
 
         private async void ConstellationClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
