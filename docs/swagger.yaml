@@ -26,6 +26,8 @@ tags:
     description: Operations related to Mix It Up Inventory data
   - name: Mixer
     description: Mixer Passthrough APIs
+  - name: MixPlay
+    description: Operations related to MixPlay users
 
 paths:
   '/users/{usernameOrID}':
@@ -425,7 +427,7 @@ paths:
   '/mixplay/broadcast':
     post:
       tags:
-        - Mixer
+        - MixPlay
       summary: Sends a broadcast message to MixPlay
       description: | 
         This API can be used post messages directly to you MixPlay web clients.
@@ -445,10 +447,34 @@ paths:
         '400':
           description: Invalid data submitted
 
+  '/mixplay/user/{sessionID}':
+    get:
+      tags:
+        - MixPlay
+      summary: Gets the specified MixPlay user by their session ID
+      description: | 
+        This API can be used to get the MixPlay user information for a participant
+      operationId: getMixPlayUserByID
+      parameters:
+        - name: sessionID
+          in: path
+          description: 'The ID that needs to be fetched'
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/MixPlayUser'
+        '404':
+          description: User not found
+
   '/mixplay/users':
     get:
       tags:
-        - Mixer
+        - MixPlay
       summary: Gets All Active MixPlay Users
       description: | 
         This API is used to look up MixPlay participants.
