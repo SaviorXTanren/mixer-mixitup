@@ -445,6 +445,22 @@ paths:
         '400':
           description: Invalid data submitted
 
+  '/mixplay/users':
+    get:
+      tags:
+        - Mixer
+      summary: Gets All Active MixPlay Users
+      description: | 
+        This API is used to look up MixPlay participants.
+      operationId: getAllMixPlayUsers
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ListOfMixPlayUser'
+
   '/mixer/users/{usernameOrID}':
     get:
       tags:
@@ -470,6 +486,28 @@ paths:
           description: User not found
 
 definitions:
+  MixPlayUser:
+    type: object
+    required: [ ID ]
+    properties:
+      ID:
+        description: The Mixer User ID.
+        type: integer
+        example: 7207866
+      UserName:
+        description: The Mixer Username.
+        type: string
+        example: SaviorXTanren
+      ParticipantIDs:
+        type: array
+        items:
+          type: string
+
+  ListOfMixPlayUser:
+    type: array
+    items:
+      $ref: '#/definitions/MixPlayUser'
+
   MixItUpUser:
     type: object
     required: [ ID, ViewingMinutes, CurrencyAmounts ]
