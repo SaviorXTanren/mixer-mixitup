@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace MixItUp.API
 {
     //  GET:    http://localhost:8911/api/mixplay/users        MixPlay.GetAllUsersAsync
-    //  DELETE: http://localhost:8911/api/mixplay/broadcast      MixPlay.SendBroadcast
+    //  POST:   http://localhost:8911/api/mixplay/broadcast    MixPlay.SendBroadcast
     public static class MixPlay
     {
         public static async Task<MixPlayUser[]> GetAllUsersAsync()
@@ -14,7 +14,7 @@ namespace MixItUp.API
             return await RestClient.GetAsync<MixPlayUser[]>("mixplay/users");
         }
 
-        public static async Task SendBroadcast(JObject data, List<string> scopes)
+        public static async Task SendBroadcastAsync(JObject data, List<string> scopes)
         {
             var model = new MixPlayBroadcast()
             {
