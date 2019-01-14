@@ -41,7 +41,7 @@ namespace MixItUp.WPF.Controls.Chat
 
             if (this.Message.IsSkill)
             {
-                SkillControl skillControl = new SkillControl(this.Message.Skill);
+                SkillControl skillControl = new SkillControl(this.Message.Skill, this.Message.IsEmbersChatSkill);
                 this.MessageWrapPanel.Children.Add(skillControl);
             }
 
