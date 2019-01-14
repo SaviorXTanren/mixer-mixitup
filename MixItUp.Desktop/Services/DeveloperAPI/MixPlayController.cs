@@ -1,5 +1,6 @@
 ﻿using MixItUp.API.Models;
 using MixItUp.Base;
+using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -30,7 +31,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
 
         [Route("users")]
         [HttpGet]
-        public async Task<IEnumerable<MixPlayUser>> Users()
+        public async Task<IEnumerable<MixPlayUser>> GetUsers()
         {
             var mixplayUsers = await ChannelSession.ActiveUsers.GetAllWorkableUsers();
             return mixplayUsers.Where(x => x.IsInteractiveParticipant).Select(x => new MixPlayUser()
@@ -39,6 +40,23 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 UserName = x.UserName,
                 ParticipantIDs = x.InteractiveIDs.Keys.ToList(),
             });
+        }
+
+        [Route("user/{sessionID}")]
+        [HttpGet]
+        public async Task<MixPlayUser> GetUser(string sessionID)
+        {
+            UserViewModel user = await ChannelSession.ActiveUsers.GetUserByID(sessionID);
+            if (user != null)
+            {
+                new MixPlayUser()
+                {
+                    ID = user.ID,
+                    UserName = user.UserName,
+                    ParticipantIDs = user.InteractiveIDs.Keys.ToList(),
+                };
+            }
+            return null;
         }
     }
 }
