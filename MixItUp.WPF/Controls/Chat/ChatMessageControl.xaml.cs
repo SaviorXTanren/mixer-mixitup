@@ -41,7 +41,7 @@ namespace MixItUp.WPF.Controls.Chat
 
             if (this.Message.IsSkill)
             {
-                SkillControl skillControl = new SkillControl(this.Message.Skill, this.Message.IsEmbersChatSkill);
+                SkillControl skillControl = new SkillControl(this.Message.Skill);
                 this.MessageWrapPanel.Children.Add(skillControl);
             }
 
@@ -55,7 +55,7 @@ namespace MixItUp.WPF.Controls.Chat
                 }
                 else if (messageData.type.Equals("image"))
                 {
-                    StickerControl stickerControl = new StickerControl(this.Message.ChatSkill);
+                    StickerControl stickerControl = new StickerControl(this.Message.ChatSkill, this.Message.IsEmbersChatSkill);
                     this.MessageWrapPanel.Children.Add(stickerControl);
                 }
                 else

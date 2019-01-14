@@ -30,7 +30,7 @@
 
         <TextBlock x:Name="SkillNameTextBlock" VerticalAlignment="Center" Grid.Column="2" Text="{Binding Skill.name}" />
 
-        <MaterialDesign:PackIcon x:Name="SparkIcon" Kind="WeatherLightning" Grid.Column="4" VerticalAlignment="Center" Style="{StaticResource DefaultPackIcon}" Height="18" Width="18" Margin="0,1,0,0" ToolTip="Sparks" />
+        <MaterialDesign:PackIcon x:Name="SparkIcon" Kind="WeatherLightning" Visibility="Collapsed" Grid.Column="4" VerticalAlignment="Center" Style="{StaticResource DefaultPackIcon}" Height="18" Width="18" Margin="0,1,0,0" ToolTip="Sparks" />
         <MaterialDesign:PackIcon x:Name="EmberIcon" Kind="Diamond" Visibility="Collapsed" Grid.Column="4" VerticalAlignment="Center" Style="{StaticResource DefaultPackIcon}" Height="18" Width="18" Margin="0,1,0,0" ToolTip="Embers" />
         <TextBlock x:Name="SkillCostTextBlock" VerticalAlignment="Center" Grid.Column="6" Text="{Binding Skill.price}" />
     </Grid>
