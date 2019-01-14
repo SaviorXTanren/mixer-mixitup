@@ -47,16 +47,17 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
         public async Task<MixPlayUser> GetUser(string sessionID)
         {
             UserViewModel user = await ChannelSession.ActiveUsers.GetUserByID(sessionID);
-            if (user != null)
+            if (user == null)
             {
-                new MixPlayUser()
-                {
-                    ID = user.ID,
-                    UserName = user.UserName,
-                    ParticipantIDs = user.InteractiveIDs.Keys.ToList(),
-                };
+                throw new HttpResponseException(HttpStatusCode.NotFound);
             }
-            return null;
+
+            return new MixPlayUser()
+            {
+                ID = user.ID,
+                UserName = user.UserName,
+                ParticipantIDs = user.InteractiveIDs.Keys.ToList(),
+            };
         }
     }
 }
