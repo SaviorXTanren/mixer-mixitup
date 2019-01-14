@@ -52,6 +52,17 @@ namespace MixItUp.WPF.Controls.Chat
         {
             try
             {
+                this.SparkIcon.Visibility = Visibility.Collapsed;
+                this.EmberIcon.Visibility = Visibility.Collapsed;
+                if (this.IsEmberSkill)
+                {
+                    this.EmberIcon.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    this.SparkIcon.Visibility = Visibility.Visible;
+                }
+
                 if (this.Skill != null)
                 {
                     string uri = Skill.icon_url;
@@ -71,17 +82,6 @@ namespace MixItUp.WPF.Controls.Chat
                     }
 
                     this.StickerImage.Source = StickerControl.stickerBitmapImages[uri];
-
-                    if (this.IsEmberSkill)
-                    {
-                        this.EmberIcon.Visibility = Visibility.Visible;
-                        this.SparkIcon.Visibility = Visibility.Collapsed;
-                    }
-                    else
-                    {
-                        this.EmberIcon.Visibility = Visibility.Collapsed;
-                        this.SparkIcon.Visibility = Visibility.Visible;
-                    }
 
                     this.UpdateSizing();
                 }
