@@ -21,6 +21,8 @@ namespace MixItUp.WPF.Controls.Chat
 
         public ChatSkillModel Skill { get { return this.DataContext as ChatSkillModel; } }
 
+        public bool IsEmberSkill { get; private set; }
+
         public StickerControl()
         {
             this.DataContextChanged += StickerControl_DataContextChanged;
@@ -33,10 +35,16 @@ namespace MixItUp.WPF.Controls.Chat
             this.DataContext = skill;
         }
 
+        public StickerControl(ChatSkillModel skill, bool isEmberSkill)
+            : this(skill)
+        {
+            this.IsEmberSkill = isEmberSkill;
+        }
+
         public void UpdateSizing()
         {
             this.StickerImage.Height = this.StickerImage.Width = ChannelSession.Settings.ChatFontSize * 3;
-            this.SparkIcon.Height = this.SparkIcon.Width = ChannelSession.Settings.ChatFontSize + 2;
+            this.EmberIcon.Height = this.EmberIcon.Width = this.SparkIcon.Height = this.SparkIcon.Width = ChannelSession.Settings.ChatFontSize + 2;
             this.StickerCostTextBlock.FontSize = ChannelSession.Settings.ChatFontSize;
         }
 
@@ -63,6 +71,17 @@ namespace MixItUp.WPF.Controls.Chat
                     }
 
                     this.StickerImage.Source = StickerControl.stickerBitmapImages[uri];
+
+                    if (this.IsEmberSkill)
+                    {
+                        this.EmberIcon.Visibility = Visibility.Visible;
+                        this.SparkIcon.Visibility = Visibility.Collapsed;
+                    }
+                    else
+                    {
+                        this.EmberIcon.Visibility = Visibility.Collapsed;
+                        this.SparkIcon.Visibility = Visibility.Visible;
+                    }
 
                     this.UpdateSizing();
                 }

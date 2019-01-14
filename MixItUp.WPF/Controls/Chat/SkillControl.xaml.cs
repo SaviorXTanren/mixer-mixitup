@@ -30,10 +30,15 @@ namespace MixItUp.WPF.Controls.Chat
             InitializeComponent();
         }
 
-        public SkillControl(SkillInstanceModel skill, bool isEmberSkill)
+        public SkillControl(SkillInstanceModel skill)
             : this()
         {
             this.DataContext = skill;
+        }
+
+        public SkillControl(SkillInstanceModel skill, bool isEmberSkill)
+            : this(skill)
+        {
             this.IsEmberSkill = isEmberSkill;
         }
 
