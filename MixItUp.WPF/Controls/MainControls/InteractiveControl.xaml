@@ -70,7 +70,7 @@
                 <DataGridTextColumn Binding="{Binding SparkCost}" IsReadOnly="True" Width="70">
                     <DataGridTextColumn.Header>
                         <Grid HorizontalAlignment="Center" Margin="6,0,0,0">
-                            <MaterialDesign:PackIcon Kind="WeatherLightning" Height="24" Width="24" />
+                            <Image x:Name="SparkIcon" Source="/Assets/Images/Sparks.png" Height="24" Width="24" />
                         </Grid>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>

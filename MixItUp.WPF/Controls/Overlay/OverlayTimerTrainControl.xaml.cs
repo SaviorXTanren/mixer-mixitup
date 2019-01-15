@@ -94,12 +94,18 @@ namespace MixItUp.WPF.Controls.Overlay
                 return null;
             }
 
+            if (!double.TryParse(this.EmberBonusTextBox.Text, out double emberBonus) || emberBonus < 0.0)
+            {
+                return null;
+            }
+
             if (string.IsNullOrEmpty(this.HTMLText.Text))
             {
                 return null;
             }
 
-            return new OverlayTimerTrain(this.HTMLText.Text, minSecondsToShow, textColor, this.TextFontComboBox.Text, size, followBonus, hostBonus, subBonus, donationBonus, sparkBonus);
+            return new OverlayTimerTrain(this.HTMLText.Text, minSecondsToShow, textColor, this.TextFontComboBox.Text, size, followBonus, hostBonus,
+                subBonus, donationBonus, sparkBonus, emberBonus);
         }
 
         protected override Task OnLoaded()
@@ -116,6 +122,7 @@ namespace MixItUp.WPF.Controls.Overlay
             this.SubBonusTextBox.Text = "10.0";
             this.DonationBonusTextBox.Text = "1.0";
             this.SparkBonusTextBox.Text = "0.01";
+            this.EmberBonusTextBox.Text = "0.1";
 
             this.HTMLText.Text = OverlayTimer.HTMLTemplate;
 

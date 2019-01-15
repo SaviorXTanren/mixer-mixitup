@@ -103,7 +103,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <MaterialDesign:PackIcon Kind="WeatherLightning" Style="{StaticResource DefaultPackIcon}" Height="18" Width="18" Grid.Column="0" Margin="0,1,0,0" ToolTip="Sparks" />
+            <Image x:Name="SparkIcon" Source="/Assets/Images/Sparks.png" Height="18" Width="18" Grid.Column="0" ToolTip="Sparks" />
             <TextBlock Grid.Column="2" Text="{Binding Sparks}" VerticalAlignment="Center" />
 
             <MaterialDesign:PackIcon Kind="Coin" Style="{StaticResource DefaultPackIcon}" Height="18" Width="18" Grid.Column="4" ToolTip="Primary Currency" />
