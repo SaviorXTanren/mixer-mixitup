@@ -36,6 +36,8 @@ namespace MixItUp.Base.Model.Overlay
         public double DonationBonus { get; set; }
         [DataMember]
         public double SparkBonus { get; set; }
+        [DataMember]
+        public double EmberBonus { get; set; }
 
         [DataMember]
         public double SecondsToAdd { get; set; }
@@ -47,7 +49,7 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayTimerTrain() : base(TimerTrainItemType, HTMLTemplate) { }
 
         public OverlayTimerTrain(string htmlText, int minimumSecondsToShow, string textColor, string textFont, int textSize, double followBonus,
-            double hostBonus, double subscriberBonus, double donationBonus, double sparkBonus)
+            double hostBonus, double subscriberBonus, double donationBonus, double sparkBonus, double emberBonus)
             : base(TimerTrainItemType, htmlText)
         {
             this.MinimumSecondsToShow = minimumSecondsToShow;
@@ -59,6 +61,7 @@ namespace MixItUp.Base.Model.Overlay
             this.SubscriberBonus = subscriberBonus;
             this.DonationBonus = donationBonus;
             this.SparkBonus = sparkBonus;
+            this.EmberBonus = emberBonus;
         }
 
         [JsonIgnore]
@@ -78,6 +81,7 @@ namespace MixItUp.Base.Model.Overlay
             GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
             GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
             GlobalEvents.OnSparkUseOccurred -= GlobalEvents_OnSparkUseOccurred;
+            GlobalEvents.OnEmberUseOccurred -= GlobalEvents_OnEmberUseOccurred;
 
             if (this.FollowBonus > 0.0)
             {
@@ -99,6 +103,10 @@ namespace MixItUp.Base.Model.Overlay
             if (this.SparkBonus > 0.0)
             {
                 GlobalEvents.OnSparkUseOccurred += GlobalEvents_OnSparkUseOccurred;
+            }
+            if (this.EmberBonus > 0.0)
+            {
+                GlobalEvents.OnEmberUseOccurred += GlobalEvents_OnEmberUseOccurred;
             }
 
             await base.Initialize();
@@ -167,5 +175,7 @@ namespace MixItUp.Base.Model.Overlay
         private void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { this.SecondsToAdd += (donation.Amount * this.DonationBonus); }
 
         private void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, int> sparkUsage) { this.SecondsToAdd += (sparkUsage.Item2 * this.SparkBonus); }
+
+        private void GlobalEvents_OnEmberUseOccurred(object sender, UserEmberUsageModel emberUsage) { this.SecondsToAdd += (emberUsage.Amount * this.EmberBonus); }
     }
 }

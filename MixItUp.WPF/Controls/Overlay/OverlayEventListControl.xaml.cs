@@ -34,6 +34,8 @@ namespace MixItUp.WPF.Controls.Overlay
             this.ShowHostsCheckBox.IsChecked = this.item.ItemTypes.Contains(EventListItemTypeEnum.Hosts);
             this.ShowSubsResubsCheckBox.IsChecked = this.item.ItemTypes.Contains(EventListItemTypeEnum.Subscribers);
             this.ShowDonationsCheckBox.IsChecked = this.item.ItemTypes.Contains(EventListItemTypeEnum.Donations);
+            this.ShowSparksCheckBox.IsChecked = this.item.ItemTypes.Contains(EventListItemTypeEnum.Sparks);
+            this.ShowEmbersCheckBox.IsChecked = this.item.ItemTypes.Contains(EventListItemTypeEnum.Embers);
             this.ShowMilestonesCheckBox.IsChecked = this.item.ItemTypes.Contains(EventListItemTypeEnum.Milestones);
 
             this.TotalToShowTextBox.Text = this.item.TotalToShow.ToString();
@@ -75,6 +77,8 @@ namespace MixItUp.WPF.Controls.Overlay
             if (this.ShowHostsCheckBox.IsChecked.GetValueOrDefault()) { eventTypes.Add(EventListItemTypeEnum.Hosts); }
             if (this.ShowSubsResubsCheckBox.IsChecked.GetValueOrDefault()) { eventTypes.Add(EventListItemTypeEnum.Subscribers); }
             if (this.ShowDonationsCheckBox.IsChecked.GetValueOrDefault()) { eventTypes.Add(EventListItemTypeEnum.Donations); }
+            if (this.ShowSparksCheckBox.IsChecked.GetValueOrDefault()) { eventTypes.Add(EventListItemTypeEnum.Sparks); }
+            if (this.ShowEmbersCheckBox.IsChecked.GetValueOrDefault()) { eventTypes.Add(EventListItemTypeEnum.Embers); }
             if (this.ShowMilestonesCheckBox.IsChecked.GetValueOrDefault()) { eventTypes.Add(EventListItemTypeEnum.Milestones); }
 
             if (eventTypes.Count == 0)

@@ -55,7 +55,7 @@ namespace MixItUp.WPF.Controls.Chat
                 }
                 else if (messageData.type.Equals("image"))
                 {
-                    StickerControl stickerControl = new StickerControl(this.Message.ChatSkill, this.Message.IsEmbersChatSkill);
+                    StickerControl stickerControl = new StickerControl(this.Message.ChatSkill);
                     this.MessageWrapPanel.Children.Add(stickerControl);
                 }
                 else

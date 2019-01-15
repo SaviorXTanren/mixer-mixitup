@@ -202,8 +202,8 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler<Tuple<UserViewModel, int>> OnEmberUseOccurred;
-        public static void EmberUseOccurred(Tuple<UserViewModel, int> ember)
+        public static event EventHandler<UserEmberUsageModel> OnEmberUseOccurred;
+        public static void EmberUseOccurred(UserEmberUsageModel ember)
         {
             if (GlobalEvents.OnEmberUseOccurred != null)
             {

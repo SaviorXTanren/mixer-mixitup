@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.Chat;
 using MixItUp.Base;
+using MixItUp.Base.MixerAPI.Models;
 using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -19,26 +20,15 @@ namespace MixItUp.WPF.Controls.Chat
     {
         private static Dictionary<string, BitmapImage> stickerBitmapImages = new Dictionary<string, BitmapImage>();
 
-        public ChatSkillModel Skill { get { return this.DataContext as ChatSkillModel; } }
+        public ChatSkillModelWrapper Skill { get { return this.DataContext as ChatSkillModelWrapper; } }
 
-        public bool IsEmberSkill { get; private set; }
-
-        public StickerControl()
+        public StickerControl(ChatSkillModel skill)
         {
             this.DataContextChanged += StickerControl_DataContextChanged;
-            InitializeComponent();
-        }
 
-        public StickerControl(ChatSkillModel skill) : this()
-        {
             InitializeComponent();
-            this.DataContext = skill;
-        }
 
-        public StickerControl(ChatSkillModel skill, bool isEmberSkill)
-            : this(skill)
-        {
-            this.IsEmberSkill = isEmberSkill;
+            this.DataContext = new ChatSkillModelWrapper(skill);
         }
 
         public void UpdateSizing()
@@ -52,20 +42,9 @@ namespace MixItUp.WPF.Controls.Chat
         {
             try
             {
-                this.SparkIcon.Visibility = Visibility.Collapsed;
-                this.EmberIcon.Visibility = Visibility.Collapsed;
-                if (this.IsEmberSkill)
-                {
-                    this.EmberIcon.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    this.SparkIcon.Visibility = Visibility.Visible;
-                }
-
                 if (this.Skill != null)
                 {
-                    string uri = Skill.icon_url;
+                    string uri = this.Skill.Skill.icon_url;
                     if (!StickerControl.stickerBitmapImages.ContainsKey(uri))
                     {
                         BitmapImage bitmap = new BitmapImage();

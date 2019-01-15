@@ -73,6 +73,7 @@ namespace MixItUp.WPF.Controls.Overlay
             this.SubBonusTextBox.Text = this.item.SubscriberBonus.ToString();
             this.DonationBonusTextBox.Text = this.item.DonationBonus.ToString();
             this.SparkBonusTextBox.Text = this.item.SparkBonus.ToString();
+            this.EmberBonusTextBox.Text = this.item.EmberBonus.ToString();
 
             this.HTMLText.Text = this.item.HTMLText;
 
@@ -147,6 +148,11 @@ namespace MixItUp.WPF.Controls.Overlay
                 return null;
             }
 
+            if (!double.TryParse(this.EmberBonusTextBox.Text, out double emberBonus) || emberBonus < 0.0)
+            {
+                return null;
+            }
+
             if (string.IsNullOrEmpty(this.HTMLText.Text))
             {
                 return null;
@@ -156,7 +162,7 @@ namespace MixItUp.WPF.Controls.Overlay
             OverlayEffectVisibleAnimationTypeEnum newBossAnimation = EnumHelper.GetEnumValueFromString<OverlayEffectVisibleAnimationTypeEnum>((string)this.NewBossAnimationComboBox.SelectedItem);
 
             return new OverlayStreamBoss(this.HTMLText.Text, startingHealth, width, height, textColor, this.TextFontComboBox.Text, borderColor, backgroundColor,
-                progressColor, followBonus, hostBonus, subBonus, donationBonus, sparkBonus, damageAnimation, newBossAnimation, this.command);
+                progressColor, followBonus, hostBonus, subBonus, donationBonus, sparkBonus, emberBonus, damageAnimation, newBossAnimation, this.command);
         }
 
         protected override Task OnLoaded()
@@ -181,6 +187,7 @@ namespace MixItUp.WPF.Controls.Overlay
             this.SubBonusTextBox.Text = "10.0";
             this.DonationBonusTextBox.Text = "1.0";
             this.SparkBonusTextBox.Text = "0.01";
+            this.EmberBonusTextBox.Text = "0.1";
 
             this.HTMLText.Text = OverlayStreamBoss.HTMLTemplate;
 

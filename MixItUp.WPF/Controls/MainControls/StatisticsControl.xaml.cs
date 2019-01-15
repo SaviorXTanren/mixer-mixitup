@@ -104,8 +104,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
                     if (!result)
                     {
-                        await MessageBoxHelper.ShowMessageDialog("We were unable to build the spreadsheet for your statistics." + Environment.NewLine +
-                            "Please send a bug report to help diagnose this issue.");
+                        await MessageBoxHelper.ShowMessageDialog("We were unable to build the spreadsheet for your statistics. Please ensure you have Microsoft Excel installed, otherwise we can not properly export your statistics data.");
                     }
                 }
             });
