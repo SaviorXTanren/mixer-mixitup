@@ -317,10 +317,10 @@ namespace MixItUp.Base.Util
 
                 if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopSparksUsedRegexSpecialIdentifierHeader))
                 {
-                    await this.HandleSparksUsed("weekly", async () => { return await ChannelSession.Connection.GetWeeklyLeaderboard(ChannelSession.Channel); });
-                    await this.HandleSparksUsed("monthly", async () => { return await ChannelSession.Connection.GetMonthlyLeaderboard(ChannelSession.Channel); });
-                    await this.HandleSparksUsed("yearly", async () => { return await ChannelSession.Connection.GetYearlyLeaderboard(ChannelSession.Channel); });
-                    await this.HandleSparksUsed("alltime", async () => { return await ChannelSession.Connection.GetAllTimeLeaderboard(ChannelSession.Channel); });
+                    await this.HandleSparksUsed("weekly", async () => { return await ChannelSession.Connection.GetWeeklySparksLeaderboard(ChannelSession.Channel); });
+                    await this.HandleSparksUsed("monthly", async () => { return await ChannelSession.Connection.GetMonthlySparksLeaderboard(ChannelSession.Channel); });
+                    await this.HandleSparksUsed("yearly", async () => { return await ChannelSession.Connection.GetYearlySparksLeaderboard(ChannelSession.Channel); });
+                    await this.HandleSparksUsed("alltime", async () => { return await ChannelSession.Connection.GetAllTimeSparksLeaderboard(ChannelSession.Channel); });
                 }
             }
 
