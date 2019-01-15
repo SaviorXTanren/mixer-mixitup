@@ -176,9 +176,9 @@ namespace MixItUp.Base.Statistics
             this.sparksTracker.OnStatisticEventOccurred(e.Item1.UserName, e.Item2);
         }
 
-        private void GlobalEvents_OnEmberUseOccurred(object sender, Tuple<UserViewModel, int> e)
+        private void GlobalEvents_OnEmberUseOccurred(object sender, UserEmberUsageModel e)
         {
-            this.embersTracker.OnStatisticEventOccurred(e.Item1.UserName, e.Item2);
+            this.embersTracker.OnStatisticEventOccurred(e.User.UserName, e.Amount);
         }
     }
 }

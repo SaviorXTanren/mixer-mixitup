@@ -229,6 +229,7 @@ namespace MixItUp.WPF.Controls.Command
                             break;
                         case OtherEventTypeEnum.MixerEmbersUsed:
                             extraSpecialIdentifiers["emberamount"] = "10";
+                            extraSpecialIdentifiers["embermessage"] = "Hello World!";
                             break;
                     }
                 }

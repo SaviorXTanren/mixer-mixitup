@@ -5,6 +5,7 @@ using Mixer.Base.Util;
 using MixItUp.Base.Commands;
 using MixItUp.Base.MixerAPI.Models;
 using MixItUp.Base.Model.Skill;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
@@ -724,7 +725,7 @@ namespace MixItUp.Base.MixerAPI
                 {
                     if (ChatSkillModelWrapper.IsEmbersChatSkill(message.ChatSkill))
                     {
-                        GlobalEvents.EmberUseOccurred(new Tuple<UserViewModel, int>(message.User, (int)message.ChatSkill.cost));
+                        GlobalEvents.EmberUseOccurred(new UserEmberUsageModel(message.User, (int)message.ChatSkill.cost, message.Message));
                     }
                     else
                     {
