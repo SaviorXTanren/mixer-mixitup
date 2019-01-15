@@ -345,7 +345,7 @@ namespace MixItUp.Base.Util
                 if (song != null)
                 {
                     this.ReplaceSpecialIdentifier(CurrentSongIdentifierHeader + "title", song.Name);
-                    this.ReplaceSpecialIdentifier(CurrentSongIdentifierHeader + "username", song.User.UserName);
+                    this.ReplaceSpecialIdentifier(CurrentSongIdentifierHeader + "username", (song.User != null) ? song.User.UserName : "Backup");
                     this.ReplaceSpecialIdentifier(CurrentSongIdentifierHeader + "albumimage", song.AlbumImage ?? string.Empty);
                 }
                 else
