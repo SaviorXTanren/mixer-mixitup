@@ -3,7 +3,9 @@ using Mixer.Base.Model.Chat;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.Commands;
+using MixItUp.Base.MixerAPI.Models;
 using MixItUp.Base.Model.Skill;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
@@ -721,13 +723,13 @@ namespace MixItUp.Base.MixerAPI
                 this.OnMessageOccurred(sender, message);
                 if (message.IsChatSkill && message.IsInUsersChannel)
                 {
-                    if (message.IsEmbersChatSkill)
-                    {
-                        GlobalEvents.EmberUseOccurred(new Tuple<UserViewModel, int>(message.User, (int)message.ChatSkill.cost));
-                    }
-                    else
+                    if (ChatSkillModelWrapper.IsSparksChatSkill(message.ChatSkill))
                     {
                         GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, int>(message.User, (int)message.ChatSkill.cost));
+                    }
+                    else if (ChatSkillModelWrapper.IsEmbersChatSkill(message.ChatSkill))
+                    {
+                        GlobalEvents.EmberUseOccurred(new UserEmberUsageModel(message.User, (int)message.ChatSkill.cost, message.Message));
                     }
 
                     Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
@@ -736,6 +738,8 @@ namespace MixItUp.Base.MixerAPI
                         { "skilltype", EnumHelper.GetEnumName(SkillTypeEnum.Sticker) },
                         { "skillcost", message.ChatSkill.cost.ToString() },
                         { "skillimage", message.ChatSkill.icon_url },
+                        { "skillissparks", ChatSkillModelWrapper.IsSparksChatSkill(message.ChatSkill).ToString() },
+                        { "skillisembers", ChatSkillModelWrapper.IsEmbersChatSkill(message.ChatSkill).ToString() },
                     };
                     await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerSkillUsed)), message.User, specialIdentifiers);
                 }

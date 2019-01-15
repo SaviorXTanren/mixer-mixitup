@@ -18,6 +18,8 @@ namespace MixItUp.Base.Model.Overlay
         Subscribers,
         Donations,
         Milestones,
+        Sparks,
+        Embers,
     }
 
     [DataContract]
@@ -128,6 +130,8 @@ namespace MixItUp.Base.Model.Overlay
             GlobalEvents.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
             GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
             GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
+            GlobalEvents.OnSparkUseOccurred -= GlobalEvents_OnSparkUseOccurred;
+            GlobalEvents.OnEmberUseOccurred -= GlobalEvents_OnEmberUseOccurred;
             GlobalEvents.OnPatronageMilestoneReachedOccurred -= GlobalEvents_OnPatronageMilestoneReachedOccurred;
 
             if (this.ResetOnLoad)
@@ -151,6 +155,14 @@ namespace MixItUp.Base.Model.Overlay
             if (this.ItemTypes.Contains(EventListItemTypeEnum.Donations))
             {
                 GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
+            }
+            if (this.ItemTypes.Contains(EventListItemTypeEnum.Sparks))
+            {
+                GlobalEvents.OnSparkUseOccurred += GlobalEvents_OnSparkUseOccurred;
+            }
+            if (this.ItemTypes.Contains(EventListItemTypeEnum.Embers))
+            {
+                GlobalEvents.OnEmberUseOccurred += GlobalEvents_OnEmberUseOccurred;
             }
             if (this.ItemTypes.Contains(EventListItemTypeEnum.Milestones))
             {
@@ -241,6 +253,10 @@ namespace MixItUp.Base.Model.Overlay
         }
 
         private void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { this.AddEvent(donation.UserName, string.Format("Donated {0}", donation.AmountText)); }
+
+        private void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, int> sparkUsage) { this.AddEvent(sparkUsage.Item1.UserName, string.Format("{0} Sparks", sparkUsage.Item2)); }
+
+        private void GlobalEvents_OnEmberUseOccurred(object sender, UserEmberUsageModel emberUsage) { this.AddEvent(emberUsage.User.UserName, string.Format("{0} Embers", emberUsage.Amount)); }
 
         private void GlobalEvents_OnPatronageMilestoneReachedOccurred(object sender, PatronageMilestoneModel patronageMilestone) { this.AddEvent(string.Format("{0} Milestone", patronageMilestone.DollarAmountText()), string.Format("{0} Sparks", patronageMilestone.target)); }
     }

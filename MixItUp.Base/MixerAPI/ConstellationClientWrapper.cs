@@ -7,6 +7,7 @@ using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Skill;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
@@ -405,7 +406,9 @@ namespace MixItUp.Base.MixerAPI
                             { "skillname", skillInstance.Skill.name },
                             { "skilltype", EnumHelper.GetEnumName(skillInstance.Type) },
                             { "skillcost", skillInstance.Skill.price.ToString() },
-                            { "skillimage", skillInstance.ImageUrl }
+                            { "skillimage", skillInstance.ImageUrl },
+                            { "skillissparks", true.ToString() },
+                            { "skillisembers", false.ToString() },
                         };
                         await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerSkillUsed)), user, specialIdentifiers);
                     }
@@ -458,14 +461,15 @@ namespace MixItUp.Base.MixerAPI
             await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerSparksUsed)), sparkUsage.Item1, specialIdentifiers);
         }
 
-        private async void GlobalEvents_OnEmberUseOccurred(object sender, Tuple<UserViewModel, int> emberUsage)
+        private async void GlobalEvents_OnEmberUseOccurred(object sender, UserEmberUsageModel emberUsage)
         {
             Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
             {
-                { "emberamount", emberUsage.Item2.ToString() },
+                { "emberamount", emberUsage.Amount.ToString() },
+                { "embermessage", emberUsage.Message },
             };
 
-            await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerEmbersUsed)), emberUsage.Item1, specialIdentifiers);
+            await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerEmbersUsed)), emberUsage.User, specialIdentifiers);
         }
 
         private async void GlobalEvents_OnChatMessageReceived(object sender, ChatMessageViewModel message)

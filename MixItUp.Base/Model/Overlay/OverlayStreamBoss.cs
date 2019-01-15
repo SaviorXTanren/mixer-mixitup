@@ -71,6 +71,8 @@ namespace MixItUp.Base.Model.Overlay
         public double DonationBonus { get; set; }
         [DataMember]
         public double SparkBonus { get; set; }
+        [DataMember]
+        public double EmberBonus { get; set; }
 
         [DataMember]
         public OverlayEffectVisibleAnimationTypeEnum DamageAnimation { get; set; }
@@ -105,7 +107,7 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayStreamBoss() : base(StreamBossItemType, HTMLTemplate) { }
 
         public OverlayStreamBoss(string htmlText, int startingHealth, int width, int height, string textColor, string textFont, string borderColor, string backgroundColor,
-            string progressColor, double followBonus, double hostBonus, double subscriberBonus, double donationBonus, double sparkBonus,
+            string progressColor, double followBonus, double hostBonus, double subscriberBonus, double donationBonus, double sparkBonus, double emberBonus,
             OverlayEffectVisibleAnimationTypeEnum damageAnimation, OverlayEffectVisibleAnimationTypeEnum newBossAnimation, CustomCommand newStreamBossCommand)
             : base(StreamBossItemType, htmlText)
         {
@@ -122,6 +124,7 @@ namespace MixItUp.Base.Model.Overlay
             this.SubscriberBonus = subscriberBonus;
             this.DonationBonus = donationBonus;
             this.SparkBonus = sparkBonus;
+            this.EmberBonus = emberBonus;
             this.DamageAnimation = damageAnimation;
             this.NewBossAnimation = newBossAnimation;
             this.NewStreamBossCommand = newStreamBossCommand;
@@ -155,6 +158,7 @@ namespace MixItUp.Base.Model.Overlay
             GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
             GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
             GlobalEvents.OnSparkUseOccurred -= GlobalEvents_OnSparkUseOccurred;
+            GlobalEvents.OnEmberUseOccurred -= GlobalEvents_OnEmberUseOccurred;
 
             if (this.FollowBonus > 0.0)
             {
@@ -176,6 +180,10 @@ namespace MixItUp.Base.Model.Overlay
             if (this.SparkBonus > 0.0)
             {
                 GlobalEvents.OnSparkUseOccurred += GlobalEvents_OnSparkUseOccurred;
+            }
+            if (this.EmberBonus > 0.0)
+            {
+                GlobalEvents.OnEmberUseOccurred += GlobalEvents_OnEmberUseOccurred;
             }
 
             await base.Initialize();
@@ -304,5 +312,7 @@ namespace MixItUp.Base.Model.Overlay
         private async void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { await this.ReduceHealth(donation.User, (donation.Amount * this.DonationBonus)); }
 
         private async void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, int> sparkUsage) { await this.ReduceHealth(sparkUsage.Item1, (sparkUsage.Item2 * this.SparkBonus)); }
+
+        private async void GlobalEvents_OnEmberUseOccurred(object sender, UserEmberUsageModel emberUsage) { await this.ReduceHealth(emberUsage.User, (emberUsage.Amount * this.EmberBonus)); }
     }
 }
