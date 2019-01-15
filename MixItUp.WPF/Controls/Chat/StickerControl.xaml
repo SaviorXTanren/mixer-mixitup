@@ -22,8 +22,8 @@
 
         <Image x:Name="StickerImage" Grid.Column="0" ToolTip="{Binding Skill.skill_name}" />
 
-        <MaterialDesign:PackIcon x:Name="SparkIcon" Kind="WeatherLightning" Visibility="{Binding IsSparksSkill, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Column="2" VerticalAlignment="Center" Style="{StaticResource DefaultPackIcon}" Height="18" Width="18" Margin="0,1,0,0" ToolTip="Sparks" />
-        <MaterialDesign:PackIcon x:Name="EmberIcon" Kind="Diamond" Visibility="{Binding IsEmbersSkill, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Column="2" VerticalAlignment="Center" Style="{StaticResource DefaultPackIcon}" Height="18" Width="18" Margin="0,1,0,0" ToolTip="Embers" />
+        <Image x:Name="SparkIcon" Source="/Assets/Images/Sparks.png" Visibility="{Binding IsSparksSkill, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Height="18" Width="18" ToolTip="Sparks" />
+        <Image x:Name="EmberIcon" Source="/Assets/Images/Embers.png" Visibility="{Binding IsEmbersSkill, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Height="18" Width="18" ToolTip="Embers" />
         <TextBlock x:Name="StickerCostTextBlock" VerticalAlignment="Center" Grid.Column="4" Text="{Binding Skill.cost}" />
     </Grid>
 </UserControl>
