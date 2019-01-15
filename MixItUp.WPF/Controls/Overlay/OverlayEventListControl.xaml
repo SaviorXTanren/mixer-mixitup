@@ -22,13 +22,17 @@
         <Grid Grid.Row="0" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="15" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="15" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="15" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="15" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
@@ -77,6 +81,28 @@
             </Grid>
 
             <Grid Grid.Column="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" VerticalAlignment="Center">Sparks:</TextBlock>
+                <CheckBox x:Name="ShowSparksCheckBox" Grid.Column="2" VerticalAlignment="Center" />
+            </Grid>
+
+            <Grid Grid.Column="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" VerticalAlignment="Center">Embers:</TextBlock>
+                <CheckBox x:Name="ShowEmbersCheckBox" Grid.Column="2" VerticalAlignment="Center" />
+            </Grid>
+
+            <Grid Grid.Column="12">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="5" />

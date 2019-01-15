@@ -17,7 +17,8 @@ namespace MixItUp.Base.Model.Overlay
         Donations,
         Sparks,
         Milestones,
-        Custom
+        Custom,
+        Embers,
     }
 
     [DataContract]
@@ -116,6 +117,7 @@ namespace MixItUp.Base.Model.Overlay
             GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
             GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
             GlobalEvents.OnSparkUseOccurred -= GlobalEvents_OnSparkUseOccurred;
+            GlobalEvents.OnEmberUseOccurred -= GlobalEvents_OnEmberUseOccurred;
             GlobalEvents.OnPatronageUpdateOccurred -= GlobalEvents_OnPatronageUpdateOccurred;
             GlobalEvents.OnPatronageMilestoneReachedOccurred -= GlobalEvents_OnPatronageMilestoneReachedOccurred;
 
@@ -138,6 +140,10 @@ namespace MixItUp.Base.Model.Overlay
             else if (this.ProgressBarType == ProgressBarTypeEnum.Sparks)
             {
                 GlobalEvents.OnSparkUseOccurred += GlobalEvents_OnSparkUseOccurred;
+            }
+            else if (this.ProgressBarType == ProgressBarTypeEnum.Embers)
+            {
+                GlobalEvents.OnEmberUseOccurred += GlobalEvents_OnEmberUseOccurred;
             }
             else if (this.ProgressBarType == ProgressBarTypeEnum.Milestones)
             {
@@ -261,6 +267,8 @@ namespace MixItUp.Base.Model.Overlay
         private void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { this.CurrentAmountNumber += donation.Amount; }
 
         private void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, int> user) { this.CurrentAmountNumber += user.Item2; }
+
+        private void GlobalEvents_OnEmberUseOccurred(object sender, UserEmberUsageModel emberUsage) { this.CurrentAmountNumber += emberUsage.Amount; }
 
         private void GlobalEvents_OnPatronageUpdateOccurred(object sender, PatronageStatusModel patronageStatus) { this.CurrentAmountNumber = patronageStatus.patronageEarned; }
 

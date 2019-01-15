@@ -17,7 +17,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
+        <Grid Grid.Row="0" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="15" />
@@ -37,8 +37,10 @@
             <ComboBox Grid.Column="6" x:Name="TextSizeComboBox" MaterialDesign:HintAssist.Hint="Text Size (Pixels)" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" />
         </Grid>
 
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="2" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="15" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="15" />
                 <ColumnDefinition Width="Auto" />
@@ -50,16 +52,17 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" x:Name="FollowBonusTextBox" MaterialDesign:HintAssist.Hint="Follow Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
+            <TextBox Grid.Column="0" x:Name="FollowBonusTextBox" MaterialDesign:HintAssist.Hint="Follow Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
 
-            <TextBox Grid.Column="2" x:Name="HostBonusTextBox" MaterialDesign:HintAssist.Hint="Host Bonus (Per User)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
+            <TextBox Grid.Column="2" x:Name="HostBonusTextBox" MaterialDesign:HintAssist.Hint="Host Bonus (Per User)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="105" />
 
-            <TextBox Grid.Column="4" x:Name="SubBonusTextBox" MaterialDesign:HintAssist.Hint="Sub Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
+            <TextBox Grid.Column="4" x:Name="SubBonusTextBox" MaterialDesign:HintAssist.Hint="Sub Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
 
-            <TextBox Grid.Column="6" x:Name="DonationBonusTextBox" MaterialDesign:HintAssist.Hint="Donation Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
+            <TextBox Grid.Column="6" x:Name="DonationBonusTextBox" MaterialDesign:HintAssist.Hint="Donation Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
 
-            <TextBox Grid.Column="8" x:Name="SparkBonusTextBox" MaterialDesign:HintAssist.Hint="Spark Bonus (Per Spark)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
+            <TextBox Grid.Column="8" x:Name="SparkBonusTextBox" MaterialDesign:HintAssist.Hint="Spark Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
 
+            <TextBox Grid.Column="10" x:Name="EmberBonusTextBox" MaterialDesign:HintAssist.Hint="Ember Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
         </Grid>
 
         <TextBox Grid.Row="4" x:Name="HTMLText" MaterialDesign:HintAssist.Hint="HTML Style" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="700" Height="150" VerticalAlignment="Top" />
