@@ -406,7 +406,9 @@ namespace MixItUp.Base.MixerAPI
                             { "skillname", skillInstance.Skill.name },
                             { "skilltype", EnumHelper.GetEnumName(skillInstance.Type) },
                             { "skillcost", skillInstance.Skill.price.ToString() },
-                            { "skillimage", skillInstance.ImageUrl }
+                            { "skillimage", skillInstance.ImageUrl },
+                            { "skillissparks", true.ToString() },
+                            { "skillisembers", false.ToString() },
                         };
                         await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerSkillUsed)), user, specialIdentifiers);
                     }

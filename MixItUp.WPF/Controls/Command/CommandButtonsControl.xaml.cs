@@ -210,6 +210,8 @@ namespace MixItUp.WPF.Controls.Command
                             extraSpecialIdentifiers["skilltype"] = EnumHelper.GetEnumName(SkillTypeEnum.Sticker);
                             extraSpecialIdentifiers["skillcost"] = "50";
                             extraSpecialIdentifiers["skillimage"] = "https://xforgeassets002.xboxlive.com/xuid-2535473787585366-public/b7a1d715-3a9e-4bdd-a030-32f9e2e0f51e/0013_lots-o-stars_256.png";
+                            extraSpecialIdentifiers["skillissparks"] = false.ToString();
+                            extraSpecialIdentifiers["skillisembers"] = true.ToString();
                             break;
                         case OtherEventTypeEnum.MixerMilestoneReached:
                             extraSpecialIdentifiers["milestoneamount"] = "100";
