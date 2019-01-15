@@ -16,16 +16,18 @@ namespace MixItUp.WPF.Controls.Statistics
 
         public StatisticsOverviewControl(StatisticDataTrackerBase dataTracker)
         {
-            this.dataTracker = dataTracker;
-            this.icon = EnumHelper.GetEnumValueFromString<PackIconKind>(this.dataTracker.IconName);
-
             InitializeComponent();
+
+            this.DataContext = this.dataTracker = dataTracker;
         }
 
         protected override Task OnLoaded()
         {
             this.StatisticNameTextBlock.Text = this.dataTracker.Name;
-            this.StatisticIcon.Kind = this.icon;
+            if (this.dataTracker.IsPackIcon)
+            {
+                this.PackIcon.Kind = this.icon = EnumHelper.GetEnumValueFromString<PackIconKind>(this.dataTracker.IconName);
+            }
 
             Task.Run(async () =>
             {
