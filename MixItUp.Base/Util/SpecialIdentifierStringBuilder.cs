@@ -33,6 +33,7 @@ namespace MixItUp.Base.Util
         public const string TopSpecialIdentifierHeader = "top";
         public const string TopTimeRegexSpecialIdentifier = "top\\d+time";
         public const string TopSparksUsedRegexSpecialIdentifierHeader = "top\\d+sparksused";
+        public const string TopEmbersUsedRegexSpecialIdentifierHeader = "top\\d+embersused";
 
         public const string UserSpecialIdentifierHeader = "user";
         public const string ArgSpecialIdentifierHeader = "arg";
@@ -321,6 +322,14 @@ namespace MixItUp.Base.Util
                     await this.HandleSparksUsed("monthly", async () => { return await ChannelSession.Connection.GetMonthlySparksLeaderboard(ChannelSession.Channel); });
                     await this.HandleSparksUsed("yearly", async () => { return await ChannelSession.Connection.GetYearlySparksLeaderboard(ChannelSession.Channel); });
                     await this.HandleSparksUsed("alltime", async () => { return await ChannelSession.Connection.GetAllTimeSparksLeaderboard(ChannelSession.Channel); });
+                }
+
+                if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopEmbersUsedRegexSpecialIdentifierHeader))
+                {
+                    await this.HandleEmbersUsed("weekly", async () => { return await ChannelSession.Connection.GetWeeklyEmbersLeaderboard(ChannelSession.Channel); });
+                    await this.HandleEmbersUsed("monthly", async () => { return await ChannelSession.Connection.GetMonthlyEmbersLeaderboard(ChannelSession.Channel); });
+                    await this.HandleEmbersUsed("yearly", async () => { return await ChannelSession.Connection.GetYearlyEmbersLeaderboard(ChannelSession.Channel); });
+                    await this.HandleEmbersUsed("alltime", async () => { return await ChannelSession.Connection.GetAllTimeEmbersLeaderboard(ChannelSession.Channel); });
                 }
             }
 
@@ -669,6 +678,34 @@ namespace MixItUp.Base.Util
                     for (int i = 0; i < total && i < leaderboards.Count(); i++)
                     {
                         SparksLeaderboardModel leaderboard = leaderboards.ElementAt(i);
+                        leaderboardsList.Add($"#{i + 1}) {leaderboard.username} - {leaderboard.statValue}");
+                        position++;
+                    }
+
+                    string result = "No users found.";
+                    if (leaderboardsList.Count > 0)
+                    {
+                        result = string.Join(", ", leaderboardsList);
+                    }
+                    return result;
+                });
+            }
+        }
+
+        private async Task HandleEmbersUsed(string timeFrame, Func<Task<IEnumerable<EmbersLeaderboardModel>>> func)
+        {
+            if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopEmbersUsedRegexSpecialIdentifierHeader + timeFrame))
+            {
+                IEnumerable<EmbersLeaderboardModel> leaderboards = await func();
+                leaderboards = leaderboards.OrderByDescending(l => l.statValue);
+
+                this.ReplaceNumberBasedRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopEmbersUsedRegexSpecialIdentifierHeader + timeFrame, (total) =>
+                {
+                    List<string> leaderboardsList = new List<string>();
+                    int position = 1;
+                    for (int i = 0; i < total && i < leaderboards.Count(); i++)
+                    {
+                        EmbersLeaderboardModel leaderboard = leaderboards.ElementAt(i);
                         leaderboardsList.Add($"#{i + 1}) {leaderboard.username} - {leaderboard.statValue}");
                         position++;
                     }

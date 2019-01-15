@@ -131,6 +131,14 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task<IEnumerable<SparksLeaderboardModel>> GetAllTimeSparksLeaderboard(ChannelModel channel) { return await this.RunAsync(this.Connection.Leaderboards.GetAllTimeSparksLeaderboard(channel)); }
 
+        public async Task<IEnumerable<EmbersLeaderboardModel>> GetWeeklyEmbersLeaderboard(ChannelModel channel) { return await this.RunAsync(this.Connection.Leaderboards.GetWeeklyEmbersLeaderboard(channel)); }
+
+        public async Task<IEnumerable<EmbersLeaderboardModel>> GetMonthlyEmbersLeaderboard(ChannelModel channel) { return await this.RunAsync(this.Connection.Leaderboards.GetMonthlyEmbersLeaderboard(channel)); }
+
+        public async Task<IEnumerable<EmbersLeaderboardModel>> GetYearlyEmbersLeaderboard(ChannelModel channel) { return await this.RunAsync(this.Connection.Leaderboards.GetYearlyEmbersLeaderboard(channel)); }
+
+        public async Task<IEnumerable<EmbersLeaderboardModel>> GetAllTimeEmbersLeaderboard(ChannelModel channel) { return await this.RunAsync(this.Connection.Leaderboards.GetAllTimeEmbersLeaderboard(channel)); }
+
         public async Task AddUserRoles(ChannelModel channel, UserModel user, IEnumerable<MixerRoleEnum> roles) { await this.RunAsync(this.Connection.Channels.UpdateUserRoles(channel, user, roles.Select(r => EnumHelper.GetEnumName(r)), null)); }
 
         public async Task RemoveUserRoles(ChannelModel channel, UserModel user, IEnumerable<MixerRoleEnum> roles) { await this.RunAsync(this.Connection.Channels.UpdateUserRoles(channel, user, null, roles.Select(r => EnumHelper.GetEnumName(r)))); } 
