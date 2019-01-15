@@ -1769,6 +1769,8 @@
     <Resource Include="..\MixPlay\black-ops-4-drop-map\src\map.jpg">
       <Link>Assets\Images\BlackOps4DropMap\map.jpg</Link>
     </Resource>
+    <Resource Include="Assets\Images\Embers.png" />
+    <Resource Include="Assets\Images\Sparks.png" />
     <Content Include="Assets\Sounds\Ariel.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

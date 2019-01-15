@@ -7,6 +7,10 @@
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
+    
     <Grid Margin="5,0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -16,10 +20,10 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <Image x:Name="StickerImage" Grid.Column="0" ToolTip="{Binding skill_name}" />
+        <Image x:Name="StickerImage" Grid.Column="0" ToolTip="{Binding Skill.skill_name}" />
 
-        <MaterialDesign:PackIcon x:Name="SparkIcon" Kind="WeatherLightning" Visibility="Collapsed" Grid.Column="2" VerticalAlignment="Center" Style="{StaticResource DefaultPackIcon}" Height="18" Width="18" Margin="0,1,0,0" ToolTip="Sparks" />
-        <MaterialDesign:PackIcon x:Name="EmberIcon" Kind="Diamond" Visibility="Collapsed" Grid.Column="4" VerticalAlignment="Center" Style="{StaticResource DefaultPackIcon}" Height="18" Width="18" Margin="0,1,0,0" ToolTip="Embers" />
-        <TextBlock x:Name="StickerCostTextBlock" VerticalAlignment="Center" Grid.Column="4" Text="{Binding cost}" />
+        <MaterialDesign:PackIcon x:Name="SparkIcon" Kind="WeatherLightning" Visibility="{Binding IsSparksSkill, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Column="2" VerticalAlignment="Center" Style="{StaticResource DefaultPackIcon}" Height="18" Width="18" Margin="0,1,0,0" ToolTip="Sparks" />
+        <MaterialDesign:PackIcon x:Name="EmberIcon" Kind="Diamond" Visibility="{Binding IsEmbersSkill, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Column="2" VerticalAlignment="Center" Style="{StaticResource DefaultPackIcon}" Height="18" Width="18" Margin="0,1,0,0" ToolTip="Embers" />
+        <TextBlock x:Name="StickerCostTextBlock" VerticalAlignment="Center" Grid.Column="4" Text="{Binding Skill.cost}" />
     </Grid>
 </UserControl>
