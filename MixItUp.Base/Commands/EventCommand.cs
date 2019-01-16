@@ -70,9 +70,9 @@ namespace MixItUp.Base.Commands
         MixerMilestoneReached = 50,
         [Name("Channel Skill Used")]
         MixerSkillUsed = 51,
-        [Name("Channel Sparks Used")]
+        [Name("Channel Sparks Spent")]
         MixerSparksUsed = 52,
-        [Name("Channel Embers Used")]
+        [Name("Channel Embers Spent")]
         MixerEmbersUsed = 53,
     }
 
