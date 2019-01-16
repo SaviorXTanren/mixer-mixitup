@@ -15,6 +15,10 @@
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              
              d:DesignHeight="300" d:DesignWidth="300">
+    <Controls:LoadingControlBase.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </Controls:LoadingControlBase.Resources>
+
     <Grid Margin="20,10,10,10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -24,7 +28,8 @@
             <ColumnDefinition Width="5*" />
         </Grid.ColumnDefinitions>
 
-        <MaterialDesign:PackIcon x:Name="StatisticIcon" Style="{StaticResource DefaultPackIcon}" Grid.Column="0" Height="24" Width="24" VerticalAlignment="Center" />
+        <MaterialDesign:PackIcon x:Name="PackIcon" Visibility="{Binding IsPackIcon, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource DefaultPackIcon}" Grid.Column="0" Height="24" Width="24" VerticalAlignment="Center" />
+        <Image x:Name="ImageIcon" Source="{Binding IconName}" Visibility="{Binding IsImageIcon, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Column="0" Height="24" Width="24" VerticalAlignment="Center" />
 
         <TextBlock x:Name="StatisticNameTextBlock" Grid.Column="2" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" />
 

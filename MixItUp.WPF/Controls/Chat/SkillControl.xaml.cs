@@ -21,25 +21,13 @@ namespace MixItUp.WPF.Controls.Chat
 
         public SkillInstanceModel Skill { get { return this.DataContext as SkillInstanceModel; } }
 
-        public bool IsEmberSkill { get; private set; }
-
-        public SkillControl()
+        public SkillControl(SkillInstanceModel skill)
         {
             this.DataContextChanged += SkillControl_DataContextChanged;
 
             InitializeComponent();
-        }
 
-        public SkillControl(SkillInstanceModel skill)
-            : this()
-        {
             this.DataContext = skill;
-        }
-
-        public SkillControl(SkillInstanceModel skill, bool isEmberSkill)
-            : this(skill)
-        {
-            this.IsEmberSkill = isEmberSkill;
         }
 
         public void UpdateSizing()
@@ -47,25 +35,14 @@ namespace MixItUp.WPF.Controls.Chat
             this.SkillImage.Height = this.SkillImage.Width = ChannelSession.Settings.ChatFontSize * 2;
             this.GifSkillIcon.Height = this.GifSkillIcon.Width = ChannelSession.Settings.ChatFontSize * 2;
             this.SkillNameTextBlock.FontSize = ChannelSession.Settings.ChatFontSize;
-            this.EmberIcon.Height = this.EmberIcon.Width = this.SparkIcon.Height = this.SparkIcon.Width = ChannelSession.Settings.ChatFontSize + 2;
+            this.SparkIcon.Height = this.SparkIcon.Width = ChannelSession.Settings.ChatFontSize + 2;
             this.SkillCostTextBlock.FontSize = ChannelSession.Settings.ChatFontSize;
         }
 
         private async void SkillControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             try
-            {
-                this.SparkIcon.Visibility = Visibility.Collapsed;
-                this.EmberIcon.Visibility = Visibility.Collapsed;
-                if (this.IsEmberSkill)
-                {
-                    this.EmberIcon.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    this.SparkIcon.Visibility = Visibility.Visible;
-                }
-
+            {+
                 if (this.Skill != null)
                 {
                     if (this.Skill.IsGif)

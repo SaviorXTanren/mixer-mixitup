@@ -19,26 +19,30 @@ namespace MixItUp.Base.Statistics
 
         public DateTimeOffset StartTime { get; private set; }
 
-        private EventStatisticDataTracker followTracker = new EventStatisticDataTracker("Follows", "AccountPlus", new List<string>() { "Username", "Date & Time" });
-        private EventStatisticDataTracker unfollowTracker = new EventStatisticDataTracker("Unfollows", "AccountMinus", new List<string>() { "Username", "Date & Time" });
-        private EventStatisticDataTracker hostsTracker = new EventStatisticDataTracker("Hosts", "AccountMultiple", new List<string>() { "Username", "Viewers", "Date & Time" }, (EventStatisticDataTracker dataTracker) =>
+        private EventStatisticDataTracker followTracker = new EventStatisticDataTracker("Follows", "AccountPlus", true, new List<string>() { "Username", "Date & Time" });
+        private EventStatisticDataTracker unfollowTracker = new EventStatisticDataTracker("Unfollows", "AccountMinus", true, new List<string>() { "Username", "Date & Time" });
+        private EventStatisticDataTracker hostsTracker = new EventStatisticDataTracker("Hosts", "AccountMultiple", true, new List<string>() { "Username", "Viewers", "Date & Time" }, (EventStatisticDataTracker dataTracker) =>
         {
             return string.Format("Hosts: {0},    Total Host Viewers: {1},    Average Host Viewers: {2}", dataTracker.UniqueIdentifiers, dataTracker.TotalValue, dataTracker.AverageValueString);
         });
-        private EventStatisticDataTracker subscriberTracker = new EventStatisticDataTracker("Subscribes", "AccountStar", new List<string>() { "Username", "Date & Time" });
-        private EventStatisticDataTracker resubscriberTracker = new EventStatisticDataTracker("Resubscribes", "AccountConvert", new List<string>() { "Username", "Date & Time" });
+        private EventStatisticDataTracker subscriberTracker = new EventStatisticDataTracker("Subscribes", "AccountStar", true, new List<string>() { "Username", "Date & Time" });
+        private EventStatisticDataTracker resubscriberTracker = new EventStatisticDataTracker("Resubscribes", "AccountConvert", true, new List<string>() { "Username", "Date & Time" });
 
-        private EventStatisticDataTracker interactiveTracker = new EventStatisticDataTracker("Interactive", "GamepadVariant", new List<string>() { "Control Name", "Username", "Date & Time" }, (EventStatisticDataTracker dataTracker) =>
+        private EventStatisticDataTracker interactiveTracker = new EventStatisticDataTracker("Interactive", "GamepadVariant", true, new List<string>() { "Control Name", "Username", "Date & Time" }, (EventStatisticDataTracker dataTracker) =>
         {
             return string.Format("Total Uses: {0},    Average Uses: {1}", dataTracker.Total, dataTracker.AverageString);
         });
 
-        private EventStatisticDataTracker donationsTracker = new EventStatisticDataTracker("Donations", "CashMultiple", new List<string>() { "Username", "Amount", "Date & Time" }, (EventStatisticDataTracker dataTracker) =>
+        private EventStatisticDataTracker donationsTracker = new EventStatisticDataTracker("Donations", "CashMultiple", true, new List<string>() { "Username", "Amount", "Date & Time" }, (EventStatisticDataTracker dataTracker) =>
         {
             return string.Format("Donaters: {0},    Total: {1:C},    Average: {2:C}", dataTracker.UniqueIdentifiers, dataTracker.TotalValueDecimal, dataTracker.AverageValueString);
         });
 
-        private EventStatisticDataTracker sparksTracker = new EventStatisticDataTracker("Sparks", "WeatherLightning", new List<string>() { "Username", "Amount" }, (EventStatisticDataTracker dataTracker) =>
+        private EventStatisticDataTracker sparksTracker = new EventStatisticDataTracker("Sparks", "/Assets/Images/Sparks.png", false, new List<string>() { "Username", "Amount" }, (EventStatisticDataTracker dataTracker) =>
+        {
+            return string.Format("Users: {0},    Total: {1},    Average: {2}", dataTracker.UniqueIdentifiers, dataTracker.TotalValue, dataTracker.AverageValueString);
+        });
+        private EventStatisticDataTracker embersTracker = new EventStatisticDataTracker("Embers", "/Assets/Images/Embers.png", false, new List<string>() { "Username", "Amount" }, (EventStatisticDataTracker dataTracker) =>
         {
             return string.Format("Users: {0},    Total: {1},    Average: {2}", dataTracker.UniqueIdentifiers, dataTracker.TotalValue, dataTracker.AverageValueString);
         });
@@ -58,10 +62,11 @@ namespace MixItUp.Base.Statistics
             GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
 
             GlobalEvents.OnSparkUseOccurred += GlobalEvents_OnSparkUseOccurred;
+            GlobalEvents.OnEmberUseOccurred += GlobalEvents_OnEmberUseOccurred;
 
             this.Statistics = new List<StatisticDataTrackerBase>();
 
-            this.Statistics.Add(new TrackedNumberStatisticDataTracker("Viewers", "Eye", (StatisticDataTrackerBase stats) =>
+            this.Statistics.Add(new TrackedNumberStatisticDataTracker("Viewers", "Eye", true, (StatisticDataTrackerBase stats) =>
             {
                 TrackedNumberStatisticDataTracker numberStats = (TrackedNumberStatisticDataTracker)stats;
 
@@ -75,7 +80,7 @@ namespace MixItUp.Base.Statistics
                 return Task.FromResult(0);
             }));
 
-            this.Statistics.Add(new TrackedNumberStatisticDataTracker("Chatters", "MessageTextOutline", async (StatisticDataTrackerBase stats) =>
+            this.Statistics.Add(new TrackedNumberStatisticDataTracker("Chatters", "MessageTextOutline", true, async (StatisticDataTrackerBase stats) =>
             {
                 TrackedNumberStatisticDataTracker numberStats = (TrackedNumberStatisticDataTracker)stats;
                 numberStats.AddValue(await ChannelSession.ActiveUsers.Count());
@@ -89,7 +94,7 @@ namespace MixItUp.Base.Statistics
 
             this.Statistics.Add(this.interactiveTracker);
             this.Statistics.Add(this.sparksTracker);
-            this.Statistics.Add(new StaticTextStatisticDataTracker("Milestones", "Diamond", async (StatisticDataTrackerBase stats) =>
+            this.Statistics.Add(new StaticTextStatisticDataTracker("Milestones", "Diamond", true, async (StatisticDataTrackerBase stats) =>
             {
                 StaticTextStatisticDataTracker staticStats = (StaticTextStatisticDataTracker)stats;
                 staticStats.ClearValues();
@@ -123,6 +128,7 @@ namespace MixItUp.Base.Statistics
                 staticStats.AddValue("Total Sparks", "0");
                 staticStats.AddValue("Total Payout", "$0.00");
             }));
+            this.Statistics.Add(this.embersTracker);
 
             this.Statistics.Add(this.donationsTracker);
         }
@@ -168,6 +174,11 @@ namespace MixItUp.Base.Statistics
         private void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, int> e)
         {
             this.sparksTracker.OnStatisticEventOccurred(e.Item1.UserName, e.Item2);
+        }
+
+        private void GlobalEvents_OnEmberUseOccurred(object sender, UserEmberUsageModel e)
+        {
+            this.embersTracker.OnStatisticEventOccurred(e.User.UserName, e.Amount);
         }
     }
 }
