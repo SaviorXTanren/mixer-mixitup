@@ -500,6 +500,12 @@ namespace MixItUp.WPF.Windows.Currency
                     return;
                 }
 
+                if (this.NameTextBox.Text.Any(c => char.IsDigit(c)))
+                {
+                    await MessageBoxHelper.ShowMessageDialog("The name can not contain any number digits in it");
+                    return;
+                }
+
                 UserCurrencyViewModel dupeCurrency = ChannelSession.Settings.Currencies.Values.FirstOrDefault(c => c.Name.Equals(this.NameTextBox.Text));
                 if (dupeCurrency != null && (this.currency == null || !this.currency.ID.Equals(dupeCurrency.ID)))
                 {
