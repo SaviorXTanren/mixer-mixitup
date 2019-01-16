@@ -20,10 +20,10 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <Image x:Name="StickerImage" Grid.Column="0" ToolTip="{Binding Skill.skill_name}" />
+        <Image x:Name="StickerImage" Grid.Column="0" ToolTip="{Binding Name}" />
 
         <Image x:Name="SparkIcon" Source="/Assets/Images/Sparks.png" Visibility="{Binding IsSparksSkill, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Height="18" Width="18" ToolTip="Sparks" />
         <Image x:Name="EmberIcon" Source="/Assets/Images/Embers.png" Visibility="{Binding IsEmbersSkill, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Height="18" Width="18" ToolTip="Embers" />
-        <TextBlock x:Name="StickerCostTextBlock" VerticalAlignment="Center" Grid.Column="4" Text="{Binding Skill.cost}" />
+        <TextBlock x:Name="StickerCostTextBlock" VerticalAlignment="Center" Grid.Column="4" Text="{Binding Cost}" />
     </Grid>
 </UserControl>

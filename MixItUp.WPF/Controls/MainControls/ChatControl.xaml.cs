@@ -149,7 +149,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 this.DisableChatButton.Visibility = Visibility.Collapsed;
             }
 
-            GlobalEvents.OnSkillOccurred += GlobalEvents_OnSkillOccurred;
+            GlobalEvents.OnSkillUseOccurred += GlobalEvents_OnSkillUseOccurred;
         }
 
         protected override async Task InitializeInternal()
@@ -957,12 +957,15 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
-        private async void GlobalEvents_OnSkillOccurred(object sender, Tuple<UserViewModel, SkillInstanceModel> skill)
+        private async void GlobalEvents_OnSkillUseOccurred(object sender, SkillUsageModel skill)
         {
-            await this.Dispatcher.InvokeAsync<Task>(async () =>
+            if (skill.SkillInstance != null)
             {
-                await this.AddMessage(new ChatMessageViewModel(skill.Item2, skill.Item1));
-            });
+                await this.Dispatcher.InvokeAsync<Task>(async () =>
+                {
+                    await this.AddMessage(new ChatMessageViewModel(skill.SkillInstance, skill.User));
+                });
+            }
         }
 
         #endregion Chat Event Handlers

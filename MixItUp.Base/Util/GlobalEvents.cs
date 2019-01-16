@@ -211,12 +211,12 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler<Tuple<UserViewModel, SkillInstanceModel>> OnSkillOccurred;
-        public static void SkillOccurred(Tuple<UserViewModel, SkillInstanceModel> skill)
+        public static event EventHandler<SkillUsageModel> OnSkillUseOccurred;
+        public static void SkillUseOccurred(SkillUsageModel skill)
         {
-            if (GlobalEvents.OnSkillOccurred != null)
+            if (GlobalEvents.OnSkillUseOccurred != null)
             {
-                GlobalEvents.OnSkillOccurred(null, skill);
+                GlobalEvents.OnSkillUseOccurred(null, skill);
             }
         }
 
