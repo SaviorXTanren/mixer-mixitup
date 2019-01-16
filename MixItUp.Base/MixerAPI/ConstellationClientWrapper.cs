@@ -468,12 +468,15 @@ namespace MixItUp.Base.MixerAPI
 
         private async void GlobalEvents_OnChatMessageReceived(object sender, ChatMessageViewModel message)
         {
-            Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
+            if (!message.IsWhisper && !message.IsAlert)
             {
-                { "message", message.Message },
-            };
+                Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
+                {
+                    { "message", message.Message },
+                };
 
-            await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChatMessage)), message.User, specialIdentifiers);
+                await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChatMessage)), message.User, specialIdentifiers);
+            }
         }
 
         private async void ConstellationClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
