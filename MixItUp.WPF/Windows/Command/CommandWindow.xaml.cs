@@ -43,13 +43,14 @@ namespace MixItUp.WPF.Windows.Command
         {
             if (this.commandDetailsControl != null)
             {
+                CommandBase command = this.commandDetailsControl.GetExistingCommand();
+
                 if (this.commandDetailsControl is InteractiveJoystickCommandDetailsControl)
                 {
                     this.ShowCommandEditor(new EmptyCommandEditorControl(this, this.commandDetailsControl));
                 }
-                else if (this.commandDetailsControl.GetExistingCommand() != null)
+                else if (command != null && command.Actions.Count > 0)
                 {
-                    CommandBase command = this.commandDetailsControl.GetExistingCommand();
                     if (command.IsBasic)
                     {
                         if (command is ChatCommand)
@@ -82,7 +83,8 @@ namespace MixItUp.WPF.Windows.Command
                 }
                 else if (this.commandDetailsControl is CustomCommandDetailsControl || this.commandDetailsControl is ActionGroupCommandDetailsControl)
                 {
-                    this.ShowCommandEditor(new AdvancedCommandEditorControl(this, this.commandDetailsControl));
+                    this.BasicChatCommandButton.Visibility = Visibility.Collapsed;
+                    this.BasicSoundCommandButton.Visibility = Visibility.Collapsed;
                 }
             }
 

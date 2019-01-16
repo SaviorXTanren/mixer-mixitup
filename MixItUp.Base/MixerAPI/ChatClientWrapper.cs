@@ -727,21 +727,12 @@ namespace MixItUp.Base.MixerAPI
                     {
                         GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, int>(message.User, (int)message.ChatSkill.cost));
                     }
-                    else if (ChatSkillModelWrapper.IsEmbersChatSkill(message.ChatSkill))
+                    else if (ChatSkillModelWrapper.IsEmbersChatSkill(message.ChatSkill)
                     {
                         GlobalEvents.EmberUseOccurred(new UserEmberUsageModel(message.User, (int)message.ChatSkill.cost, message.Message));
                     }
 
-                    Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
-                    {
-                        { "skillname", message.ChatSkill.skill_name },
-                        { "skilltype", EnumHelper.GetEnumName(SkillTypeEnum.Sticker) },
-                        { "skillcost", message.ChatSkill.cost.ToString() },
-                        { "skillimage", message.ChatSkill.icon_url },
-                        { "skillissparks", ChatSkillModelWrapper.IsSparksChatSkill(message.ChatSkill).ToString() },
-                        { "skillisembers", ChatSkillModelWrapper.IsEmbersChatSkill(message.ChatSkill).ToString() },
-                    };
-                    await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerSkillUsed)), message.User, specialIdentifiers);
+                    GlobalEvents.SkillUseOccurred(new SkillUsageModel(message.User, message.ChatSkill, message.Message));
                 }
             }
         }

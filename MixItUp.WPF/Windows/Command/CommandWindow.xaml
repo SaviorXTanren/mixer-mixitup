@@ -40,25 +40,21 @@
         <Grid x:Name="CommandSelectionGrid" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0" TextWrapping="Wrap" Width="200" TextAlignment="Center">Select the type of command you would like to build:</TextBlock>
 
-            <Button x:Name="BasicChatCommandButton" Grid.Row="2" Click="BasicChatCommandButton_Click">Basic Chat Command</Button>
+            <Button x:Name="BasicChatCommandButton" Grid.Row="1" Margin="0,20,0,0" Click="BasicChatCommandButton_Click">Basic Chat Command</Button>
 
-            <Button x:Name="BasicSoundCommandButton" Grid.Row="4" Click="BasicSoundCommandButton_Click">Basic Sound Command</Button>
+            <Button x:Name="BasicSoundCommandButton" Grid.Row="2" Margin="0,20,0,0" Click="BasicSoundCommandButton_Click">Basic Sound Command</Button>
 
-            <Button x:Name="AdvancedCommandButton" Grid.Row="6" Click="AdvancedCommandButton_Click">Advanced Command</Button>
+            <Button x:Name="AdvancedCommandButton" Grid.Row="3" Margin="0,20,0,0" Click="AdvancedCommandButton_Click">Advanced Command</Button>
 
-            <Button x:Name="DownloadFromStoreButton" Grid.Row="8" Click="DownloadFromStoreButton_Click">
+            <Button x:Name="DownloadFromStoreButton" Grid.Row="4" Margin="0,20,0,0" Click="DownloadFromStoreButton_Click">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />

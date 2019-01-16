@@ -42,7 +42,7 @@ namespace MixItUp.WPF.Controls.Chat
         private async void SkillControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             try
-            {+
+            {
                 if (this.Skill != null)
                 {
                     if (this.Skill.IsGif)

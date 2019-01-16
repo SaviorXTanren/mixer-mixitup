@@ -74,7 +74,6 @@ namespace MixItUp.Base.ViewModel.Chat
                         break;
                     case "image":
                         newChatMessageViewModel.Images[message.text] = message.url;
-                        newChatMessageViewModel.Message += string.Format(" *{0}* ", message.text);
                         break;
                     case "text":
                     case "tag":

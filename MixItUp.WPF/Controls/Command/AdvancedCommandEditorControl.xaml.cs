@@ -150,7 +150,7 @@ namespace MixItUp.WPF.Controls.Command
                 List<ActionBase> actions = new List<ActionBase>();
 
                 CommandBase command = this.commandDetailsControl.GetExistingCommand();
-                if (command != null)
+                if (command != null && command.Actions.Count > 0)
                 {
                     actions.AddRange(command.Actions);
                 }

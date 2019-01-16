@@ -59,6 +59,7 @@ namespace MixItUp.Base.MixerAPI
         {
             GlobalEvents.OnSparkUseOccurred += GlobalEvents_OnSparkUseOccurred;
             GlobalEvents.OnEmberUseOccurred += GlobalEvents_OnEmberUseOccurred;
+            GlobalEvents.OnSkillUseOccurred += GlobalEvents_OnSkillUseOccurred;
             GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
         }
 
@@ -397,20 +398,9 @@ namespace MixItUp.Base.MixerAPI
 
                         SkillInstanceModel skillInstance = new SkillInstanceModel(skill, manifest, parameters);
 
-                        GlobalEvents.SkillOccurred(new Tuple<UserViewModel, SkillInstanceModel>(user, skillInstance));
-
                         GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, int>(user, (int)skillInstance.Skill.price));
 
-                        Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
-                        {
-                            { "skillname", skillInstance.Skill.name },
-                            { "skilltype", EnumHelper.GetEnumName(skillInstance.Type) },
-                            { "skillcost", skillInstance.Skill.price.ToString() },
-                            { "skillimage", skillInstance.ImageUrl },
-                            { "skillissparks", true.ToString() },
-                            { "skillisembers", false.ToString() },
-                        };
-                        await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerSkillUsed)), user, specialIdentifiers);
+                        GlobalEvents.SkillUseOccurred(new SkillUsageModel(user, skillInstance));
                     }
                 }
                 else if (e.channel.Equals(ConstellationClientWrapper.ChannelPatronageUpdateEvent.ToString()))
@@ -466,12 +456,16 @@ namespace MixItUp.Base.MixerAPI
             Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
             {
                 { "emberamount", emberUsage.Amount.ToString() },
-                { "embermessage", emberUsage.Message },
             };
 
             await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerEmbersUsed)), emberUsage.User, specialIdentifiers);
         }
 
+        private async void GlobalEvents_OnSkillUseOccurred(object sender, SkillUsageModel skill)
+        {
+            await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerSkillUsed)), skill.User, skill.GetSpecialIdentifiers());
+        }
+        
         private async void GlobalEvents_OnChatMessageReceived(object sender, ChatMessageViewModel message)
         {
             if (!message.IsWhisper && !message.IsAlert)
