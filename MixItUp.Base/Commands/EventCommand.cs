@@ -47,7 +47,7 @@ namespace MixItUp.Base.Commands
         [Name("Stream Tweet Retweet")]
         TwitterStreamTweetRetweet = 20,
 
-        [Name("User First Joined")]
+        [Name("New User Joined")]
         MixerUserFirstJoin = 30,
         [Name("Channel Unfollowed")]
         MixerUserUnfollow = 31,
