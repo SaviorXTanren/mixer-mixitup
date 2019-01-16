@@ -1,6 +1,6 @@
 ﻿using Mixer.Base.Model.Chat;
 using MixItUp.Base;
-using MixItUp.Base.MixerAPI.Models;
+using MixItUp.Base.Model.Skill;
 using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -20,7 +20,7 @@ namespace MixItUp.WPF.Controls.Chat
     {
         private static Dictionary<string, BitmapImage> stickerBitmapImages = new Dictionary<string, BitmapImage>();
 
-        public ChatSkillModelWrapper Skill { get { return this.DataContext as ChatSkillModelWrapper; } }
+        public SkillUsageModel Skill { get { return this.DataContext as SkillUsageModel; } }
 
         public StickerControl(ChatSkillModel skill)
         {
@@ -28,7 +28,7 @@ namespace MixItUp.WPF.Controls.Chat
 
             InitializeComponent();
 
-            this.DataContext = new ChatSkillModelWrapper(skill);
+            this.DataContext = new SkillUsageModel(null, skill, null);
         }
 
         public void UpdateSizing()
@@ -44,7 +44,7 @@ namespace MixItUp.WPF.Controls.Chat
             {
                 if (this.Skill != null)
                 {
-                    string uri = this.Skill.Skill.icon_url;
+                    string uri = this.Skill.Image;
                     if (!StickerControl.stickerBitmapImages.ContainsKey(uri))
                     {
                         BitmapImage bitmap = new BitmapImage();
