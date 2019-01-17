@@ -540,7 +540,19 @@ namespace MixItUp.Base.Commands
             this.UserFailOutcome = userFailOutcome;
         }
 
-        public override IEnumerable<CommandBase> GetAllInnerCommands() { return new List<CommandBase>() { this.StartedCommand, this.UserJoinCommand, this.UserSuccessOutcome.Command, this.UserFailOutcome.Command }; }
+        public override IEnumerable<CommandBase> GetAllInnerCommands()
+        {
+            List<CommandBase> commands = new List<CommandBase>() { this.StartedCommand, this.UserJoinCommand };
+            if (this.UserSuccessOutcome != null && this.UserSuccessOutcome.Command != null)
+            {
+                commands.Add(this.UserSuccessOutcome.Command);
+            }
+            if (this.UserFailOutcome != null && this.UserFailOutcome.Command != null)
+            {
+                commands.Add(this.UserFailOutcome.Command);
+            }
+            return commands;
+        }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
         {
