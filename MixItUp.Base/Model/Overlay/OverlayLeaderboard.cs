@@ -1,4 +1,5 @@
-﻿using Mixer.Base.Model.User;
+﻿using Mixer.Base.Model.Leaderboards;
+using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
@@ -18,6 +19,17 @@ namespace MixItUp.Base.Model.Overlay
         Donations,
         [Name("Currency/Rank")]
         CurrencyRank,
+        Sparks,
+        Embers,
+    }
+
+    public enum LeaderboardSparksEmbersDateEnum
+    {
+        Weekly,
+        Monthly,
+        Yearly,
+        [Name("All Time")]
+        AllTime,
     }
 
     [DataContract]
@@ -64,6 +76,9 @@ namespace MixItUp.Base.Model.Overlay
         public Guid CurrencyID { get; set; }
 
         [DataMember]
+        public LeaderboardSparksEmbersDateEnum DateRange { get; set; }
+
+        [DataMember]
         public List<string> LeaderboardEntries = new List<string>();
 
         private Dictionary<UserViewModel, DateTimeOffset> userSubDates = new Dictionary<UserViewModel, DateTimeOffset>();
@@ -72,8 +87,10 @@ namespace MixItUp.Base.Model.Overlay
         private Dictionary<string, UserDonationModel> userDonations = new Dictionary<string, UserDonationModel>();
         private bool refreshDonations = true;
 
-        private DateTimeOffset lastCurrencyRefresh = DateTimeOffset.MinValue;
+        private DateTimeOffset lastRefresh = DateTimeOffset.MinValue;
         private List<UserDataViewModel> currencyUsersToShow = new List<UserDataViewModel>();
+        private IEnumerable<SparksLeaderboardModel> sparkLeaders;
+        private IEnumerable<EmbersLeaderboardModel> emberLeaders;
 
         public OverlayLeaderboard() : base(LeaderboardItemType, HTMLTemplate) { }
 
@@ -82,6 +99,13 @@ namespace MixItUp.Base.Model.Overlay
             : this(htmlText, leaderboardType, totalToShow, borderColor, backgroundColor, textColor, textFont, width, height, addEvent, removeEvent)
         {
             this.CurrencyID = currency.ID;
+        }
+
+        public OverlayLeaderboard(string htmlText, LeaderboardTypeEnum leaderboardType, int totalToShow, string borderColor, string backgroundColor, string textColor,
+            string textFont, int width, int height, OverlayEffectEntranceAnimationTypeEnum addEvent, OverlayEffectExitAnimationTypeEnum removeEvent, LeaderboardSparksEmbersDateEnum date)
+            : this(htmlText, leaderboardType, totalToShow, borderColor, backgroundColor, textColor, textFont, width, height, addEvent, removeEvent)
+        {
+            this.DateRange = date;
         }
 
         public OverlayLeaderboard(string htmlText, LeaderboardTypeEnum leaderboardType, int totalToShow, string borderColor, string backgroundColor, string textColor,
@@ -191,9 +215,9 @@ namespace MixItUp.Base.Model.Overlay
                 if (ChannelSession.Settings.Currencies.ContainsKey(this.CurrencyID))
                 {
                     UserCurrencyViewModel currency = ChannelSession.Settings.Currencies[this.CurrencyID];
-                    if (this.lastCurrencyRefresh < DateTimeOffset.Now)
+                    if (this.lastRefresh < DateTimeOffset.Now)
                     {
-                        this.lastCurrencyRefresh = DateTimeOffset.Now.AddMinutes(1);
+                        this.lastRefresh = DateTimeOffset.Now.AddMinutes(1);
 
                         Dictionary<uint, int> currencyAmounts = new Dictionary<uint, int>();
                         foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values)
@@ -221,6 +245,71 @@ namespace MixItUp.Base.Model.Overlay
                     {
                         extraSpecialIdentifiers["DETAILS"] = userToShow.GetCurrencyAmount(currency).ToString();
                         OverlayCustomHTMLItem htmlItem = (OverlayCustomHTMLItem)await base.GetProcessedItem(new UserViewModel(userToShow), arguments, extraSpecialIdentifiers);
+                        copy.LeaderboardEntries.Add(htmlItem.HTMLText);
+                    }
+                    return copy;
+                }
+            }
+            else if (this.LeaderboardType == LeaderboardTypeEnum.Sparks)
+            {
+                if (this.lastRefresh < DateTimeOffset.Now)
+                {
+                    this.lastRefresh = DateTimeOffset.Now.AddMinutes(1);
+                    switch (this.DateRange)
+                    {
+                        case LeaderboardSparksEmbersDateEnum.Weekly:
+                            this.sparkLeaders = await ChannelSession.Connection.GetWeeklySparksLeaderboard(ChannelSession.Channel, this.TotalToShow);
+                            break;
+                        case LeaderboardSparksEmbersDateEnum.Monthly:
+                            this.sparkLeaders = await ChannelSession.Connection.GetMonthlySparksLeaderboard(ChannelSession.Channel, this.TotalToShow);
+                            break;
+                        case LeaderboardSparksEmbersDateEnum.Yearly:
+                            this.sparkLeaders = await ChannelSession.Connection.GetYearlySparksLeaderboard(ChannelSession.Channel, this.TotalToShow);
+                            break;
+                        case LeaderboardSparksEmbersDateEnum.AllTime:
+                            this.sparkLeaders = await ChannelSession.Connection.GetAllTimeSparksLeaderboard(ChannelSession.Channel, this.TotalToShow);
+                            break;
+                    }
+                }
+                if (this.sparkLeaders != null)
+                {
+                    foreach (SparksLeaderboardModel sparkLeader in this.sparkLeaders)
+                    {
+                        extraSpecialIdentifiers["DETAILS"] = sparkLeader.statValue.ToString();
+                        OverlayCustomHTMLItem htmlItem = (OverlayCustomHTMLItem)await base.GetProcessedItem(new UserViewModel(0, sparkLeader.username), arguments, extraSpecialIdentifiers);
+                        copy.LeaderboardEntries.Add(htmlItem.HTMLText);
+                    }
+                    return copy;
+                }
+            }
+            else if (this.LeaderboardType == LeaderboardTypeEnum.Embers)
+            {
+                if (this.lastRefresh < DateTimeOffset.Now)
+                {
+                    this.lastRefresh = DateTimeOffset.Now.AddMinutes(1);
+                    switch (this.DateRange)
+                    {
+                        case LeaderboardSparksEmbersDateEnum.Weekly:
+                            this.emberLeaders = await ChannelSession.Connection.GetWeeklyEmbersLeaderboard(ChannelSession.Channel, this.TotalToShow);
+                            break;
+                        case LeaderboardSparksEmbersDateEnum.Monthly:
+                            this.emberLeaders = await ChannelSession.Connection.GetMonthlyEmbersLeaderboard(ChannelSession.Channel, this.TotalToShow);
+                            break;
+                        case LeaderboardSparksEmbersDateEnum.Yearly:
+                            this.emberLeaders = await ChannelSession.Connection.GetYearlyEmbersLeaderboard(ChannelSession.Channel, this.TotalToShow);
+                            break;
+                        case LeaderboardSparksEmbersDateEnum.AllTime:
+                            this.emberLeaders = await ChannelSession.Connection.GetAllTimeEmbersLeaderboard(ChannelSession.Channel, this.TotalToShow);
+                            break;
+                    }
+                }
+
+                if (this.emberLeaders != null)
+                {
+                    foreach (EmbersLeaderboardModel emberLeader in this.emberLeaders)
+                    {
+                        extraSpecialIdentifiers["DETAILS"] = emberLeader.statValue.ToString();
+                        OverlayCustomHTMLItem htmlItem = (OverlayCustomHTMLItem)await base.GetProcessedItem(new UserViewModel(0, emberLeader.username), arguments, extraSpecialIdentifiers);
                         copy.LeaderboardEntries.Add(htmlItem.HTMLText);
                     }
                     return copy;
