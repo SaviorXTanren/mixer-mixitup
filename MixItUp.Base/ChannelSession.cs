@@ -390,7 +390,7 @@ namespace MixItUp.Base
 
         public static void EnsureEmoticonForMessage(ChatMessageDataModel message)
         {
-            if (!string.IsNullOrEmpty(message.pack) && !string.IsNullOrEmpty(message.text) && message.source.Equals("external") && Uri.IsWellFormedUriString(message.pack, UriKind.Absolute))
+            if (!string.IsNullOrEmpty(message.pack) && !string.IsNullOrEmpty(message.text) && !string.IsNullOrEmpty(message.source) && message.coords != null && message.source.Equals("external") && Uri.IsWellFormedUriString(message.pack, UriKind.Absolute))
             {
                 if (!externalEmoticons.ContainsKey(message.pack))
                 {
