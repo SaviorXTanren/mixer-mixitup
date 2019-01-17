@@ -123,21 +123,21 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task<IEnumerable<StreamSessionsAnalyticModel>> GetStreamSessions(ChannelModel channel, DateTimeOffset startTime) { return await this.RunAsync(this.Connection.Channels.GetStreamSessions(channel, startTime)); }
 
-        public async Task<IEnumerable<SparksLeaderboardModel>> GetWeeklySparksLeaderboard(ChannelModel channel) { return await this.RunAsync(this.Connection.Leaderboards.GetWeeklySparksLeaderboard(channel)); }
+        public async Task<IEnumerable<SparksLeaderboardModel>> GetWeeklySparksLeaderboard(ChannelModel channel, int amount = 10) { return await this.RunAsync(this.Connection.Leaderboards.GetWeeklySparksLeaderboard(channel, amount)); }
 
-        public async Task<IEnumerable<SparksLeaderboardModel>> GetMonthlySparksLeaderboard(ChannelModel channel) { return await this.RunAsync(this.Connection.Leaderboards.GetMonthlySparksLeaderboard(channel)); }
+        public async Task<IEnumerable<SparksLeaderboardModel>> GetMonthlySparksLeaderboard(ChannelModel channel, int amount = 10) { return await this.RunAsync(this.Connection.Leaderboards.GetMonthlySparksLeaderboard(channel, amount)); }
 
-        public async Task<IEnumerable<SparksLeaderboardModel>> GetYearlySparksLeaderboard(ChannelModel channel) { return await this.RunAsync(this.Connection.Leaderboards.GetYearlySparksLeaderboard(channel)); }
+        public async Task<IEnumerable<SparksLeaderboardModel>> GetYearlySparksLeaderboard(ChannelModel channel, int amount = 10) { return await this.RunAsync(this.Connection.Leaderboards.GetYearlySparksLeaderboard(channel, amount)); }
 
-        public async Task<IEnumerable<SparksLeaderboardModel>> GetAllTimeSparksLeaderboard(ChannelModel channel) { return await this.RunAsync(this.Connection.Leaderboards.GetAllTimeSparksLeaderboard(channel)); }
+        public async Task<IEnumerable<SparksLeaderboardModel>> GetAllTimeSparksLeaderboard(ChannelModel channel, int amount = 10) { return await this.RunAsync(this.Connection.Leaderboards.GetAllTimeSparksLeaderboard(channel, amount)); }
 
-        public async Task<IEnumerable<EmbersLeaderboardModel>> GetWeeklyEmbersLeaderboard(ChannelModel channel) { return await this.RunAsync(this.Connection.Leaderboards.GetWeeklyEmbersLeaderboard(channel)); }
+        public async Task<IEnumerable<EmbersLeaderboardModel>> GetWeeklyEmbersLeaderboard(ChannelModel channel, int amount = 10) { return await this.RunAsync(this.Connection.Leaderboards.GetWeeklyEmbersLeaderboard(channel, amount)); }
 
-        public async Task<IEnumerable<EmbersLeaderboardModel>> GetMonthlyEmbersLeaderboard(ChannelModel channel) { return await this.RunAsync(this.Connection.Leaderboards.GetMonthlyEmbersLeaderboard(channel)); }
+        public async Task<IEnumerable<EmbersLeaderboardModel>> GetMonthlyEmbersLeaderboard(ChannelModel channel, int amount = 10) { return await this.RunAsync(this.Connection.Leaderboards.GetMonthlyEmbersLeaderboard(channel, amount)); }
 
-        public async Task<IEnumerable<EmbersLeaderboardModel>> GetYearlyEmbersLeaderboard(ChannelModel channel) { return await this.RunAsync(this.Connection.Leaderboards.GetYearlyEmbersLeaderboard(channel)); }
+        public async Task<IEnumerable<EmbersLeaderboardModel>> GetYearlyEmbersLeaderboard(ChannelModel channel, int amount = 10) { return await this.RunAsync(this.Connection.Leaderboards.GetYearlyEmbersLeaderboard(channel, amount)); }
 
-        public async Task<IEnumerable<EmbersLeaderboardModel>> GetAllTimeEmbersLeaderboard(ChannelModel channel) { return await this.RunAsync(this.Connection.Leaderboards.GetAllTimeEmbersLeaderboard(channel)); }
+        public async Task<IEnumerable<EmbersLeaderboardModel>> GetAllTimeEmbersLeaderboard(ChannelModel channel, int amount = 10) { return await this.RunAsync(this.Connection.Leaderboards.GetAllTimeEmbersLeaderboard(channel, amount)); }
 
         public async Task AddUserRoles(ChannelModel channel, UserModel user, IEnumerable<MixerRoleEnum> roles) { await this.RunAsync(this.Connection.Channels.UpdateUserRoles(channel, user, roles.Select(r => EnumHelper.GetEnumName(r)), null)); }
 

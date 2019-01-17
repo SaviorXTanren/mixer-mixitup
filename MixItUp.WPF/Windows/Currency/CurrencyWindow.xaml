@@ -103,7 +103,7 @@
                         </Grid>
                     </GroupBox>
 
-                    <GroupBox Grid.Column="2" Header="Offline Rate">
+                    <GroupBox x:Name="OfflineRateGroupBox" Grid.Column="2" Header="Offline Rate">
                         <Grid Margin="10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -127,7 +127,7 @@
                     </GroupBox>
                 </Grid>
 
-                <Grid Grid.Row="4" HorizontalAlignment="Center">
+                <Grid x:Name="BonusesGrid" Grid.Row="4" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="40" />
