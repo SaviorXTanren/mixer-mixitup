@@ -45,6 +45,7 @@
                 <ComboBox Grid.Column="0" x:Name="LeaderboardTypeComboBox" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="115" SelectionChanged="LeaderboardTypeComboBox_SelectionChanged" />
 
                 <ComboBox Grid.Column="2" x:Name="CurrencyRankComboBox" Margin="15,0,0,0" Visibility="Collapsed" MaterialDesign:HintAssist.Hint="Currency/Rank" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" DisplayMemberPath="Name" />
+                <ComboBox Grid.Column="2" x:Name="SparkEmberDateComboBox" Margin="15,0,0,0" Visibility="Collapsed" MaterialDesign:HintAssist.Hint="Date Range" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
             </Grid>
 
             <TextBox x:Name="TotalToShowTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Total To Show" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
