@@ -443,6 +443,11 @@ namespace MixItUp.Base.MixerAPI
 
         private async void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, int> sparkUsage)
         {
+            foreach (UserCurrencyViewModel sparkCurrency in ChannelSession.Settings.Currencies.Values.Where(c => c.IsTrackingSparks))
+            {
+                sparkUsage.Item1.Data.AddCurrencyAmount(sparkCurrency, sparkUsage.Item2);
+            }
+
             Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
             {
                 { "sparkamount", sparkUsage.Item2.ToString() },
@@ -453,6 +458,11 @@ namespace MixItUp.Base.MixerAPI
 
         private async void GlobalEvents_OnEmberUseOccurred(object sender, UserEmberUsageModel emberUsage)
         {
+            foreach (UserCurrencyViewModel emberCurrency in ChannelSession.Settings.Currencies.Values.Where(c => c.IsTrackingEmbers))
+            {
+                emberUsage.User.Data.AddCurrencyAmount(emberCurrency, emberUsage.Amount);
+            }
+
             Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
             {
                 { "emberamount", emberUsage.Amount.ToString() },
