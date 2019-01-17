@@ -271,28 +271,20 @@ namespace MixItUp.Base.Util
                 IEnumerable<UserDataViewModel> allUsers = allUsersDictionary.Select(kvp => kvp.Value);
                 allUsers = allUsers.Where(u => !u.IsCurrencyRankExempt);
 
-                foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+                if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopSparksUsedRegexSpecialIdentifierHeader))
                 {
-                    if (this.ContainsRegexSpecialIdentifier(currency.TopRegexSpecialIdentifier))
-                    {
-                        this.ReplaceNumberBasedRegexSpecialIdentifier(currency.TopRegexSpecialIdentifier, (total) =>
-                        {
-                            List<string> currencyUserList = new List<string>();
-                            int userPosition = 1;
-                            foreach (UserDataViewModel currencyUser in allUsers.OrderByDescending(u => u.GetCurrencyAmount(currency)).Take(total))
-                            {
-                                currencyUserList.Add($"#{userPosition}) {currencyUser.UserName} - {currencyUser.GetCurrencyAmount(currency)}");
-                                userPosition++;
-                            }
+                    await this.HandleSparksUsed("weekly", async () => { return await ChannelSession.Connection.GetWeeklySparksLeaderboard(ChannelSession.Channel); });
+                    await this.HandleSparksUsed("monthly", async () => { return await ChannelSession.Connection.GetMonthlySparksLeaderboard(ChannelSession.Channel); });
+                    await this.HandleSparksUsed("yearly", async () => { return await ChannelSession.Connection.GetYearlySparksLeaderboard(ChannelSession.Channel); });
+                    await this.HandleSparksUsed("alltime", async () => { return await ChannelSession.Connection.GetAllTimeSparksLeaderboard(ChannelSession.Channel); });
+                }
 
-                            string result = "No users found.";
-                            if (currencyUserList.Count > 0)
-                            {
-                                result = string.Join(", ", currencyUserList);
-                            }
-                            return result;
-                        });
-                    }
+                if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopEmbersUsedRegexSpecialIdentifierHeader))
+                {
+                    await this.HandleEmbersUsed("weekly", async () => { return await ChannelSession.Connection.GetWeeklyEmbersLeaderboard(ChannelSession.Channel); });
+                    await this.HandleEmbersUsed("monthly", async () => { return await ChannelSession.Connection.GetMonthlyEmbersLeaderboard(ChannelSession.Channel); });
+                    await this.HandleEmbersUsed("yearly", async () => { return await ChannelSession.Connection.GetYearlyEmbersLeaderboard(ChannelSession.Channel); });
+                    await this.HandleEmbersUsed("alltime", async () => { return await ChannelSession.Connection.GetAllTimeEmbersLeaderboard(ChannelSession.Channel); });
                 }
 
                 if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopTimeRegexSpecialIdentifier))
@@ -316,20 +308,28 @@ namespace MixItUp.Base.Util
                     });
                 }
 
-                if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopSparksUsedRegexSpecialIdentifierHeader))
+                foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                 {
-                    await this.HandleSparksUsed("weekly", async () => { return await ChannelSession.Connection.GetWeeklySparksLeaderboard(ChannelSession.Channel); });
-                    await this.HandleSparksUsed("monthly", async () => { return await ChannelSession.Connection.GetMonthlySparksLeaderboard(ChannelSession.Channel); });
-                    await this.HandleSparksUsed("yearly", async () => { return await ChannelSession.Connection.GetYearlySparksLeaderboard(ChannelSession.Channel); });
-                    await this.HandleSparksUsed("alltime", async () => { return await ChannelSession.Connection.GetAllTimeSparksLeaderboard(ChannelSession.Channel); });
-                }
+                    if (this.ContainsRegexSpecialIdentifier(currency.TopRegexSpecialIdentifier))
+                    {
+                        this.ReplaceNumberBasedRegexSpecialIdentifier(currency.TopRegexSpecialIdentifier, (total) =>
+                        {
+                            List<string> currencyUserList = new List<string>();
+                            int userPosition = 1;
+                            foreach (UserDataViewModel currencyUser in allUsers.OrderByDescending(u => u.GetCurrencyAmount(currency)).Take(total))
+                            {
+                                currencyUserList.Add($"#{userPosition}) {currencyUser.UserName} - {currencyUser.GetCurrencyAmount(currency)}");
+                                userPosition++;
+                            }
 
-                if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopEmbersUsedRegexSpecialIdentifierHeader))
-                {
-                    await this.HandleEmbersUsed("weekly", async () => { return await ChannelSession.Connection.GetWeeklyEmbersLeaderboard(ChannelSession.Channel); });
-                    await this.HandleEmbersUsed("monthly", async () => { return await ChannelSession.Connection.GetMonthlyEmbersLeaderboard(ChannelSession.Channel); });
-                    await this.HandleEmbersUsed("yearly", async () => { return await ChannelSession.Connection.GetYearlyEmbersLeaderboard(ChannelSession.Channel); });
-                    await this.HandleEmbersUsed("alltime", async () => { return await ChannelSession.Connection.GetAllTimeEmbersLeaderboard(ChannelSession.Channel); });
+                            string result = "No users found.";
+                            if (currencyUserList.Count > 0)
+                            {
+                                result = string.Join(", ", currencyUserList);
+                            }
+                            return result;
+                        });
+                    }
                 }
             }
 
