@@ -5,7 +5,7 @@
   <SolidColorBrush x:Key="PrimaryHueLightForegroundBrush" Color="Teal" po:Freeze="True" />              <!-- Emphasis Text -->
   <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="Purple" po:Freeze="True" />                        <!-- Main Background -->
   <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="Teal" po:Freeze="True" />                <!-- Main Foreground -->
-  <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="White" po:Freeze="True" />                        <!-- Highlight Background -->
+  <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="Teal" po:Freeze="True" />                         <!-- Highlight Background -->
   <SolidColorBrush x:Key="PrimaryHueDarkForegroundBrush" Color="Teal" po:Freeze="True" />               <!-- Unknown... -->
 
   <SolidColorBrush x:Key="MainApplicationBackground" Color="Black" po:Freeze="True" />                  <!-- Application Background -->

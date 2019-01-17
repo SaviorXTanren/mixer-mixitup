@@ -30,6 +30,11 @@ namespace MixItUp.Base.ViewModel.User
         public string Name { get; set; }
 
         [DataMember]
+        public bool IsTrackingSparks { get; set; }
+        [DataMember]
+        public bool IsTrackingEmbers { get; set; }
+
+        [DataMember]
         public int AcquireAmount { get; set; }
         [DataMember]
         public int AcquireInterval { get; set; }
@@ -155,7 +160,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public async Task UpdateUserData()
         {
-            if (this.IsActive)
+            if (this.IsActive && !this.IsTrackingSparks && !this.IsTrackingEmbers)
             {
                 bool bonusesCanBeApplied = (ChannelSession.Channel.online || this.OfflineAcquireAmount > 0);
                 DateTimeOffset minActiveTime = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(this.MinimumActiveRate));

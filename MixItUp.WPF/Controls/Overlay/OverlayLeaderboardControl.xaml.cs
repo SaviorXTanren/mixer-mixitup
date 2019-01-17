@@ -38,6 +38,11 @@ namespace MixItUp.WPF.Controls.Overlay
                 this.CurrencyRankComboBox.SelectedItem = ChannelSession.Settings.Currencies[this.item.CurrencyID];
             }
 
+            if (this.item.LeaderboardType == LeaderboardTypeEnum.Sparks || this.item.LeaderboardType == LeaderboardTypeEnum.Embers)
+            {
+                this.SparkEmberDateComboBox.SelectedItem = EnumHelper.GetEnumName(this.item.DateRange);
+            }
+
             this.TotalToShowTextBox.Text = this.item.TotalToShow.ToString();
 
             this.WidthTextBox.Text = this.item.Width.ToString();
@@ -128,6 +133,15 @@ namespace MixItUp.WPF.Controls.Overlay
                 return new OverlayLeaderboard(this.HTMLText.Text, leaderboardType, totalToShow, borderColor, backgroundColor, textColor, this.TextFontComboBox.Text, width, height,
                     addEventAnimation, removeEventAnimation, (UserCurrencyViewModel)this.CurrencyRankComboBox.SelectedItem);
             }
+            else if (leaderboardType == LeaderboardTypeEnum.Sparks || leaderboardType == LeaderboardTypeEnum.Embers)
+            {
+                if (this.SparkEmberDateComboBox.SelectedIndex < 0)
+                {
+                    return null;
+                }
+                return new OverlayLeaderboard(this.HTMLText.Text, leaderboardType, totalToShow, borderColor, backgroundColor, textColor, this.TextFontComboBox.Text, width, height,
+                    addEventAnimation, removeEventAnimation, EnumHelper.GetEnumValueFromString<LeaderboardSparksEmbersDateEnum>(this.SparkEmberDateComboBox.SelectedItem as string));
+            }
             else
             {
                 return new OverlayLeaderboard(this.HTMLText.Text, leaderboardType, totalToShow, borderColor, backgroundColor, textColor, this.TextFontComboBox.Text, width, height,
@@ -139,6 +153,7 @@ namespace MixItUp.WPF.Controls.Overlay
         {
             this.LeaderboardTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<LeaderboardTypeEnum>();
             this.CurrencyRankComboBox.ItemsSource = ChannelSession.Settings.Currencies.Values;
+            this.SparkEmberDateComboBox.ItemsSource = EnumHelper.GetEnumNames<LeaderboardSparksEmbersDateEnum>();
 
             this.TotalToShowTextBox.Text = "5";
 
@@ -168,6 +183,7 @@ namespace MixItUp.WPF.Controls.Overlay
         {
             this.DonationLeaderboardInfoTextBlock.Visibility = Visibility.Collapsed;
             this.CurrencyRankComboBox.Visibility = Visibility.Collapsed;
+            this.SparkEmberDateComboBox.Visibility = Visibility.Collapsed;
             if (this.LeaderboardTypeComboBox.SelectedIndex >= 0)
             {
                 LeaderboardTypeEnum leaderboardType = EnumHelper.GetEnumValueFromString<LeaderboardTypeEnum>((string)this.LeaderboardTypeComboBox.SelectedItem);
@@ -178,6 +194,10 @@ namespace MixItUp.WPF.Controls.Overlay
                 if (leaderboardType == LeaderboardTypeEnum.CurrencyRank)
                 {
                     this.CurrencyRankComboBox.Visibility = Visibility.Visible;
+                }
+                if (leaderboardType == LeaderboardTypeEnum.Sparks || leaderboardType == LeaderboardTypeEnum.Embers)
+                {
+                    this.SparkEmberDateComboBox.Visibility = Visibility.Visible;
                 }
             }
         }
