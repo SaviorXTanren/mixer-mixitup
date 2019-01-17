@@ -273,23 +273,23 @@ namespace MixItUp.Base.Util
 
                 if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopSparksUsedRegexSpecialIdentifierHeader))
                 {
-                    await this.HandleSparksUsed("weekly", async () => { return await ChannelSession.Connection.GetWeeklySparksLeaderboard(ChannelSession.Channel); });
-                    await this.HandleSparksUsed("monthly", async () => { return await ChannelSession.Connection.GetMonthlySparksLeaderboard(ChannelSession.Channel); });
-                    await this.HandleSparksUsed("yearly", async () => { return await ChannelSession.Connection.GetYearlySparksLeaderboard(ChannelSession.Channel); });
-                    await this.HandleSparksUsed("alltime", async () => { return await ChannelSession.Connection.GetAllTimeSparksLeaderboard(ChannelSession.Channel); });
+                    await this.HandleSparksUsed("weekly", async (amount) => { return await ChannelSession.Connection.GetWeeklySparksLeaderboard(ChannelSession.Channel, amount); });
+                    await this.HandleSparksUsed("monthly", async (amount) => { return await ChannelSession.Connection.GetMonthlySparksLeaderboard(ChannelSession.Channel, amount); });
+                    await this.HandleSparksUsed("yearly", async (amount) => { return await ChannelSession.Connection.GetYearlySparksLeaderboard(ChannelSession.Channel, amount); });
+                    await this.HandleSparksUsed("alltime", async (amount) => { return await ChannelSession.Connection.GetAllTimeSparksLeaderboard(ChannelSession.Channel, amount); });
                 }
 
                 if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopEmbersUsedRegexSpecialIdentifierHeader))
                 {
-                    await this.HandleEmbersUsed("weekly", async () => { return await ChannelSession.Connection.GetWeeklyEmbersLeaderboard(ChannelSession.Channel); });
-                    await this.HandleEmbersUsed("monthly", async () => { return await ChannelSession.Connection.GetMonthlyEmbersLeaderboard(ChannelSession.Channel); });
-                    await this.HandleEmbersUsed("yearly", async () => { return await ChannelSession.Connection.GetYearlyEmbersLeaderboard(ChannelSession.Channel); });
-                    await this.HandleEmbersUsed("alltime", async () => { return await ChannelSession.Connection.GetAllTimeEmbersLeaderboard(ChannelSession.Channel); });
+                    await this.HandleEmbersUsed("weekly", async (amount) => { return await ChannelSession.Connection.GetWeeklyEmbersLeaderboard(ChannelSession.Channel, amount); });
+                    await this.HandleEmbersUsed("monthly", async (amount) => { return await ChannelSession.Connection.GetMonthlyEmbersLeaderboard(ChannelSession.Channel, amount); });
+                    await this.HandleEmbersUsed("yearly", async (amount) => { return await ChannelSession.Connection.GetYearlyEmbersLeaderboard(ChannelSession.Channel, amount); });
+                    await this.HandleEmbersUsed("alltime", async (amount) => { return await ChannelSession.Connection.GetAllTimeEmbersLeaderboard(ChannelSession.Channel, amount); });
                 }
 
                 if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopTimeRegexSpecialIdentifier))
                 {
-                    this.ReplaceNumberBasedRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopTimeRegexSpecialIdentifier, (total) =>
+                    await this.ReplaceNumberBasedRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopTimeRegexSpecialIdentifier, (total) =>
                     {
                         List<string> timeUserList = new List<string>();
                         int userPosition = 1;
@@ -304,7 +304,7 @@ namespace MixItUp.Base.Util
                         {
                             result = string.Join(", ", timeUserList);
                         }
-                        return result;
+                        return Task.FromResult(result);
                     });
                 }
 
@@ -312,7 +312,7 @@ namespace MixItUp.Base.Util
                 {
                     if (this.ContainsRegexSpecialIdentifier(currency.TopRegexSpecialIdentifier))
                     {
-                        this.ReplaceNumberBasedRegexSpecialIdentifier(currency.TopRegexSpecialIdentifier, (total) =>
+                        await this.ReplaceNumberBasedRegexSpecialIdentifier(currency.TopRegexSpecialIdentifier, (total) =>
                         {
                             List<string> currencyUserList = new List<string>();
                             int userPosition = 1;
@@ -327,7 +327,7 @@ namespace MixItUp.Base.Util
                             {
                                 result = string.Join(", ", currencyUserList);
                             }
-                            return result;
+                            return Task.FromResult(result);
                         });
                     }
                 }
@@ -619,20 +619,20 @@ namespace MixItUp.Base.Util
 
                 if (this.ContainsRegexSpecialIdentifier(RandomNumberRegexSpecialIdentifier))
                 {
-                    this.ReplaceNumberBasedRegexSpecialIdentifier(RandomNumberRegexSpecialIdentifier, (maxNumber) =>
+                    await this.ReplaceNumberBasedRegexSpecialIdentifier(RandomNumberRegexSpecialIdentifier, (maxNumber) =>
                     {
                         int number = RandomHelper.GenerateRandomNumber(maxNumber) + 1;
-                        return number.ToString();
+                        return Task.FromResult(number.ToString());
                     });
                 }
             }
 
             if (this.ContainsRegexSpecialIdentifier(UnicodeRegexSpecialIdentifier))
             {
-                this.ReplaceNumberBasedRegexSpecialIdentifier(UnicodeRegexSpecialIdentifier, (number) =>
+                await this.ReplaceNumberBasedRegexSpecialIdentifier(UnicodeRegexSpecialIdentifier, (number) =>
                 {
                     char uChar = (char)number;
-                    return uChar.ToString();
+                    return Task.FromResult(uChar.ToString());
                 });
             }
         }
@@ -664,15 +664,15 @@ namespace MixItUp.Base.Util
 
         public override string ToString() { return this.text; }
 
-        private async Task HandleSparksUsed(string timeFrame, Func<Task<IEnumerable<SparksLeaderboardModel>>> func)
+        private async Task HandleSparksUsed(string timeFrame, Func<int, Task<IEnumerable<SparksLeaderboardModel>>> func)
         {
             if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopSparksUsedRegexSpecialIdentifierHeader + timeFrame))
             {
-                IEnumerable<SparksLeaderboardModel> leaderboards = await func();
-                leaderboards = leaderboards.OrderByDescending(l => l.statValue);
-
-                this.ReplaceNumberBasedRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopSparksUsedRegexSpecialIdentifierHeader + timeFrame, (total) =>
+                await this.ReplaceNumberBasedRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopSparksUsedRegexSpecialIdentifierHeader + timeFrame, async (total) =>
                 {
+                    IEnumerable<SparksLeaderboardModel> leaderboards = await func(total);
+                    leaderboards = leaderboards.OrderByDescending(l => l.statValue);
+
                     List<string> leaderboardsList = new List<string>();
                     int position = 1;
                     for (int i = 0; i < total && i < leaderboards.Count(); i++)
@@ -692,15 +692,15 @@ namespace MixItUp.Base.Util
             }
         }
 
-        private async Task HandleEmbersUsed(string timeFrame, Func<Task<IEnumerable<EmbersLeaderboardModel>>> func)
+        private async Task HandleEmbersUsed(string timeFrame, Func<int, Task<IEnumerable<EmbersLeaderboardModel>>> func)
         {
             if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopEmbersUsedRegexSpecialIdentifierHeader + timeFrame))
             {
-                IEnumerable<EmbersLeaderboardModel> leaderboards = await func();
-                leaderboards = leaderboards.OrderByDescending(l => l.statValue);
-
-                this.ReplaceNumberBasedRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopEmbersUsedRegexSpecialIdentifierHeader + timeFrame, (total) =>
+                await this.ReplaceNumberBasedRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopEmbersUsedRegexSpecialIdentifierHeader + timeFrame, async (total) =>
                 {
+                    IEnumerable<EmbersLeaderboardModel> leaderboards = await func(total);
+                    leaderboards = leaderboards.OrderByDescending(l => l.statValue);
+
                     List<string> leaderboardsList = new List<string>();
                     int position = 1;
                     for (int i = 0; i < total && i < leaderboards.Count(); i++)
@@ -824,14 +824,14 @@ namespace MixItUp.Base.Util
             return null;
         }
 
-        private void ReplaceNumberBasedRegexSpecialIdentifier(string regex, Func<int, string> replacer)
+        private async Task ReplaceNumberBasedRegexSpecialIdentifier(string regex, Func<int, Task<string>> replacer)
         {
             foreach (Match match in Regex.Matches(this.text, "\\" + SpecialIdentifierHeader + regex))
             {
                 string text = new String(match.Value.Where(c => char.IsDigit(c)).ToArray());
                 if (int.TryParse(text, out int number))
                 {
-                    this.ReplaceSpecialIdentifier(match.Value, replacer(number), includeSpecialIdentifierHeader: false);
+                    this.ReplaceSpecialIdentifier(match.Value, await replacer(number), includeSpecialIdentifierHeader: false);
                 }
             }
         }
