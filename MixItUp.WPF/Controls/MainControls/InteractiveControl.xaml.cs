@@ -150,7 +150,7 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
-        private async Task RefreshAllInteractiveGames()
+        private async Task RefreshAllInteractiveGames(bool forceRefresh = false)
         {
             this.GroupsButton.IsEnabled = false;
             this.ConnectButton.IsEnabled = false;
@@ -159,7 +159,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
             IEnumerable<InteractiveGameModel> games = await this.Window.RunAsyncOperation(async () =>
             {
-                return await ChannelSession.Interactive.GetAllConnectableGames();
+                return await ChannelSession.Interactive.GetAllConnectableGames(forceRefresh);
             });
 
             foreach (InteractiveGameModel game in games)
@@ -371,7 +371,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            await this.RefreshAllInteractiveGames();
+            await this.RefreshAllInteractiveGames(true);
         }
 
         private void NewInteractiveCommandButton_Click(object sender, RoutedEventArgs e)
