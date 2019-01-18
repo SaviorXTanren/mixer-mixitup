@@ -19,10 +19,12 @@ namespace MixItUp.WPF.Controls.Actions
     /// </summary>
     public partial class ActionContainerControl : UserControl
     {
-        private const int MinimizedGroupBoxHeight = 34;
-
         public CommandWindow Window { get; private set; }
         public CommandEditorControlBase EditorControl { get; private set; }
+
+        private TextBlock GroupBoxHeaderTextBlock;
+        private TextBox GroupBoxHeaderTextBox;
+        private ContentControl ActionControlContentControl;
 
         private ActionControlBase actionControl;
 
@@ -44,6 +46,10 @@ namespace MixItUp.WPF.Controls.Actions
 
         private void ActionContainerControl_Loaded(object sender, RoutedEventArgs e)
         {
+            this.GroupBoxHeaderTextBlock = (TextBlock)this.GetByUid("GroupBoxHeaderTextBlock");
+            this.GroupBoxHeaderTextBox = (TextBox)this.GetByUid("GroupBoxHeaderTextBox");
+            this.ActionControlContentControl = (ContentControl)this.GetByUid("ActionControlContentControl");
+
             if (this.actionControl == null)
             {
                 switch (this.type)
@@ -146,6 +152,11 @@ namespace MixItUp.WPF.Controls.Actions
             {
                 this.GroupBoxHeaderTextBox.Text = this.GroupBoxHeaderTextBlock.Text = EnumHelper.GetEnumName(this.type);
             }
+
+            if (this.ActionContainer.IsMinimized)
+            {
+                this.AccordianGroupBoxControl_Minimized(this, new RoutedEventArgs());
+            }
         }
 
         public ActionBase GetAction()
@@ -166,33 +177,30 @@ namespace MixItUp.WPF.Controls.Actions
 
         public void Minimize()
         {
-            this.GroupBoxHeaderTextBlock.Visibility = Visibility.Visible;
-            this.GroupBoxHeaderTextBox.Visibility = Visibility.Collapsed;
-            this.GroupBox.Height = MinimizedGroupBoxHeight;
+            this.ActionContainer.Minimize();
         }
 
-        public void OnWindowSizeChanged(Size size)
+        private void AccordianGroupBoxControl_Maximized(object sender, RoutedEventArgs e)
         {
-            this.GroupBox.MaxWidth = size.Width - 38;
+            if (this.GroupBoxHeaderTextBlock != null && this.GroupBoxHeaderTextBox != null)
+            {
+                this.GroupBoxHeaderTextBlock.Visibility = Visibility.Collapsed;
+                this.GroupBoxHeaderTextBox.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void AccordianGroupBoxControl_Minimized(object sender, RoutedEventArgs e)
+        {
+            if (this.GroupBoxHeaderTextBlock != null && this.GroupBoxHeaderTextBox != null)
+            {
+                this.GroupBoxHeaderTextBlock.Visibility = Visibility.Visible;
+                this.GroupBoxHeaderTextBox.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void GroupBoxHeaderTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             this.GroupBoxHeaderTextBlock.Text = this.GroupBoxHeaderTextBox.Text;
-        }
-
-        public void GroupBoxHeader_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            if (this.GroupBox.Height == MinimizedGroupBoxHeight)
-            {
-                this.GroupBoxHeaderTextBlock.Visibility = Visibility.Collapsed;
-                this.GroupBoxHeaderTextBox.Visibility = Visibility.Visible;
-                this.GroupBox.Height = Double.NaN;
-            }
-            else
-            {
-                this.Minimize();
-            }
         }
 
         private async void PlayActionButton_Click(object sender, RoutedEventArgs e)

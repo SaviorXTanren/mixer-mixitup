@@ -17,6 +17,10 @@
         <Setter Property="AutoGenerateColumns" Value="False" />
     </Style>
 
+    <Style x:Key="NonSortableDataGrid" TargetType="DataGrid" BasedOn="{StaticResource StandardDataGrid}">
+        <Setter Property="CanUserSortColumns" Value="False" />
+    </Style>
+
     <Style x:Key="StandardDataGridCell" TargetType="DataGridCell" BasedOn="{StaticResource MaterialDesignDataGridCell}">
         <Setter Property="Template">
             <Setter.Value>

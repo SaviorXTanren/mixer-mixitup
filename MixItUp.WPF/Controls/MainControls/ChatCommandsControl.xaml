@@ -16,6 +16,10 @@
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
 
              d:DesignHeight="300" d:DesignWidth="300">
+    <local:MainControlBase.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </local:MainControlBase.Resources>
+    
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -84,27 +88,44 @@
                 <RowDefinition Height="10" />
             </Grid.RowDefinitions>
 
-            <Controls:SortedDataGrid x:Name="CustomCommandsListView" Grid.Row="0" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
-                <Controls:SortedDataGrid.Columns>
-                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="2*" />
-                    <DataGridTextColumn Header="Commands" Binding="{Binding CommandsString}" IsReadOnly="True" Width="150" />
-                    <DataGridTextColumn Header="Permission" Binding="{Binding UserRoleRequirementString}" IsReadOnly="True" Width="125" />
-                    <DataGridTextColumn Binding="{Binding Requirements.Cooldown.CooldownAmount}" IsReadOnly="True" Width="75">
-                        <DataGridTextColumn.Header>
-                            <Grid HorizontalAlignment="Center" Margin="0,0,0,0">
-                                <MaterialDesign:PackIcon Kind="Timer" Height="24" Width="24" />
-                            </Grid>
-                        </DataGridTextColumn.Header>
-                    </DataGridTextColumn>
-                    <DataGridTemplateColumn Header="Actions" Width="240">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <CommandControls:CommandButtonsControl x:Name="CommandButtons" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                </Controls:SortedDataGrid.Columns>
-            </Controls:SortedDataGrid>
+            <ItemsControl x:Name="CustomCommandsItemsControl" Grid.Row="0" HorizontalContentAlignment="Stretch">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Controls:AccordianGroupBoxControl>
+                            <Controls:AccordianGroupBoxControl.Header>
+                                <Grid Background="Transparent">
+                                    <TextBlock HorizontalAlignment="Left" Text="{Binding DisplayName}" Foreground="{StaticResource WhiteColor}" Style="{StaticResource HeaderTextBlock}" />
+
+                                    <ToggleButton Visibility="{Binding IsEnableSwitchToggable, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Right" IsChecked="{Binding Path=IsEnabled, Mode=TwoWay}" Checked="GroupCommandsToggleButton_Checked" Unchecked="GroupCommandsToggleButton_Checked" />
+                                </Grid>
+                            </Controls:AccordianGroupBoxControl.Header>
+
+                            <Controls:SortedDataGrid ItemsSource="{Binding Commands}" Style="{StaticResource NonSortableDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
+                                <Controls:SortedDataGrid.Columns>
+                                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                                    <DataGridTextColumn Header="Commands" Binding="{Binding CommandsString}" IsReadOnly="True" Width="150" />
+                                    <DataGridTextColumn Header="Permission" Binding="{Binding UserRoleRequirementString}" IsReadOnly="True" Width="125" />
+                                    <DataGridTextColumn Binding="{Binding Requirements.Cooldown.CooldownAmount}" IsReadOnly="True" Width="75">
+                                        <DataGridTextColumn.Header>
+                                            <Grid HorizontalAlignment="Center" Margin="0,0,0,0">
+                                                <MaterialDesign:PackIcon Kind="Timer" Height="24" Width="24" />
+                                            </Grid>
+                                        </DataGridTextColumn.Header>
+                                    </DataGridTextColumn>
+                                    <DataGridTemplateColumn Header="Actions" Width="240">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <CommandControls:CommandButtonsControl HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </Controls:SortedDataGrid.Columns>
+                            </Controls:SortedDataGrid>
+
+                        </Controls:AccordianGroupBoxControl>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
 
             <Button x:Name="AddCommandButton" Grid.Row="2" Click="AddCommandButton_Click" Width="130">New Command</Button>
         </Grid>
