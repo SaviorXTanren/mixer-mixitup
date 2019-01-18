@@ -203,6 +203,9 @@ namespace MixItUp.Base.MixerAPI
         public Dictionary<string, InteractiveConnectedControlCommand> ControlCommands { get; private set; }
         public LockedDictionary<string, InteractiveParticipantModel> Participants { get; private set; }
 
+        private List<InteractiveGameModel> games = new List<InteractiveGameModel>();
+        private DateTimeOffset lastRefresh = DateTimeOffset.MinValue;
+
         public InteractiveClientWrapper()
         {
             this.Scenes = new List<InteractiveConnectedSceneModel>();
@@ -211,36 +214,40 @@ namespace MixItUp.Base.MixerAPI
             this.Participants = new LockedDictionary<string, InteractiveParticipantModel>();
         }
 
-        public async Task<IEnumerable<InteractiveGameModel>> GetAllConnectableGames()
+        public async Task<IEnumerable<InteractiveGameModel>> GetAllConnectableGames(bool forceRefresh = false)
         {
-            List<InteractiveGameModel> games = new List<InteractiveGameModel>();
-
-            games.AddRange(await ChannelSession.Connection.GetOwnedInteractiveGames(ChannelSession.Channel));
-            games.RemoveAll(g => g.name.Equals("Soundwave Interactive Soundboard"));
-
-            foreach (InteractiveSharedProjectModel project in ChannelSession.Settings.CustomInteractiveProjectIDs)
+            if (forceRefresh || this.lastRefresh < DateTimeOffset.Now)
             {
-                InteractiveGameVersionModel version = await ChannelSession.Connection.GetInteractiveGameVersion(project.VersionID);
-                if (version != null)
+                this.lastRefresh = DateTimeOffset.Now.AddMinutes(1);
+                this.games.Clear();
+
+                this.games.AddRange(await ChannelSession.Connection.GetOwnedInteractiveGames(ChannelSession.Channel));
+                games.RemoveAll(g => g.name.Equals("Soundwave Interactive Soundboard"));
+
+                foreach (InteractiveSharedProjectModel project in ChannelSession.Settings.CustomInteractiveProjectIDs)
                 {
-                    InteractiveGameModel game = await ChannelSession.Connection.GetInteractiveGame(version.gameId);
-                    if (game != null)
+                    InteractiveGameVersionModel version = await ChannelSession.Connection.GetInteractiveGameVersion(project.VersionID);
+                    if (version != null)
                     {
-                        games.Add(game);
+                        InteractiveGameModel game = await ChannelSession.Connection.GetInteractiveGame(version.gameId);
+                        if (game != null)
+                        {
+                            games.Add(game);
+                        }
                     }
                 }
-            }
 
-            foreach (InteractiveSharedProjectModel project in InteractiveSharedProjectModel.AllMixPlayProjects)
-            {
-                InteractiveGameVersionModel version = await ChannelSession.Connection.GetInteractiveGameVersion(project.VersionID);
-                if (version != null)
+                foreach (InteractiveSharedProjectModel project in InteractiveSharedProjectModel.AllMixPlayProjects)
                 {
-                    InteractiveGameModel game = await ChannelSession.Connection.GetInteractiveGame(version.gameId);
-                    if (game != null)
+                    InteractiveGameVersionModel version = await ChannelSession.Connection.GetInteractiveGameVersion(project.VersionID);
+                    if (version != null)
                     {
-                        game.name += " (MixPlay)";
-                        games.Add(game);
+                        InteractiveGameModel game = await ChannelSession.Connection.GetInteractiveGame(version.gameId);
+                        if (game != null)
+                        {
+                            game.name += " (MixPlay)";
+                            games.Add(game);
+                        }
                     }
                 }
             }

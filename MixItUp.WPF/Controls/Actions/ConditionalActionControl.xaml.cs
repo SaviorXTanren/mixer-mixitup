@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Actions;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace MixItUp.WPF.Controls.Actions
 {
@@ -23,7 +24,15 @@ namespace MixItUp.WPF.Controls.Actions
                 this.IgnoreCasingToggleButton.IsChecked = this.action.IgnoreCase;
                 this.Value1TextBox.Text = this.action.Value1;
                 this.ComparisionTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.ComparisionType);
-                this.Value2TextBox.Text = this.action.Value2;
+                if (this.action.ComparisionType == ConditionalComparisionTypeEnum.Between)
+                {
+                    this.Value2TextBox.Text = this.action.Value2;
+                }
+                else
+                {
+                    this.MinValue2TextBox.Text = this.action.Value2;
+                    this.MaxValue3TextBox.Text = this.action.Value3;
+                }
                 this.CommandReference.Command = this.action.GetCommand();
             }
             return Task.FromResult(0);
@@ -31,13 +40,45 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override ActionBase GetAction()
         {
-            if (!string.IsNullOrEmpty(this.Value1TextBox.Text) && this.ComparisionTypeComboBox.SelectedIndex >= 0 && !string.IsNullOrEmpty(this.Value2TextBox.Text) &&
-                this.CommandReference.Command != null)
+            if (!string.IsNullOrEmpty(this.Value1TextBox.Text) && this.ComparisionTypeComboBox.SelectedIndex >= 0 && this.CommandReference.Command != null)
             {
-                return new ConditionalAction(EnumHelper.GetEnumValueFromString<ConditionalComparisionTypeEnum>((string)this.ComparisionTypeComboBox.SelectedItem),
-                    this.IgnoreCasingToggleButton.IsChecked.GetValueOrDefault(), this.Value1TextBox.Text, this.Value2TextBox.Text, this.CommandReference.Command);
+                ConditionalComparisionTypeEnum type = EnumHelper.GetEnumValueFromString<ConditionalComparisionTypeEnum>((string)this.ComparisionTypeComboBox.SelectedItem);
+                if (type == ConditionalComparisionTypeEnum.Between)
+                {
+                    if (!string.IsNullOrEmpty(this.MinValue2TextBox.Text) && !string.IsNullOrEmpty(this.MaxValue3TextBox.Text))
+                    {
+                        return new ConditionalAction(type, this.IgnoreCasingToggleButton.IsChecked.GetValueOrDefault(), this.Value1TextBox.Text, this.MinValue2TextBox.Text,
+                            this.MaxValue3TextBox.Text, this.CommandReference.Command);
+                    }
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(this.Value2TextBox.Text))
+                    {
+                        return new ConditionalAction(type, this.IgnoreCasingToggleButton.IsChecked.GetValueOrDefault(), this.Value1TextBox.Text, this.Value2TextBox.Text,
+                            this.CommandReference.Command);
+                    }
+                }
             }
             return null;
+        }
+
+        private void ComparisionTypeComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (this.ComparisionTypeComboBox.SelectedIndex >= 0)
+            {
+                ConditionalComparisionTypeEnum type = EnumHelper.GetEnumValueFromString<ConditionalComparisionTypeEnum>((string)this.ComparisionTypeComboBox.SelectedItem);
+                if (type == ConditionalComparisionTypeEnum.Between)
+                {
+                    this.BetweenValuesGrid.Visibility = Visibility.Visible;
+                    this.Value2TextBox.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    this.BetweenValuesGrid.Visibility = Visibility.Collapsed;
+                    this.Value2TextBox.Visibility = Visibility.Visible;
+                }
+            }
         }
     }
 }

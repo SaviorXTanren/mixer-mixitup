@@ -55,9 +55,20 @@
 
             <TextBox Grid.Column="0" x:Name="Value1TextBox" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="First Value" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <ComboBox x:Name="ComparisionTypeComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Compare" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="80" />
+            <ComboBox x:Name="ComparisionTypeComboBox" SelectionChanged="ComparisionTypeComboBox_SelectionChanged" Grid.Column="2" MaterialDesign:HintAssist.Hint="Compare" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="80" />
 
             <TextBox Grid.Column="4" x:Name="Value2TextBox" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Second Value" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <Grid x:Name="BetweenValuesGrid" Grid.Column="4" Visibility="Collapsed">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                
+                <TextBox Grid.Column="0" x:Name="MinValue2TextBox" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Min Value" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Grid.Column="2" x:Name="MaxValue3TextBox" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Max Value" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            </Grid>
         </Grid>
 
         <CommandControls:CommandReferenceControl x:Name="CommandReference" Grid.Row="4" />

@@ -561,6 +561,7 @@ namespace MixItUp.Base.Util
                 }
 
                 this.ReplaceSpecialIdentifier("allargs", string.Join(" ", arguments));
+                this.ReplaceSpecialIdentifier("argcount", arguments.Count().ToString());
             }
 
             if (this.ContainsSpecialIdentifier(TargetSpecialIdentifierHeader))

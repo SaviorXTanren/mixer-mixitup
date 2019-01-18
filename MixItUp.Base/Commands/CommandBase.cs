@@ -3,6 +3,7 @@ using MixItUp.Base.Actions;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -86,6 +87,11 @@ namespace MixItUp.Base.Commands
         public bool Unlocked { get; set; }
 
         [DataMember]
+        public string GroupName { get; set; }
+        [DataMember]
+        public JObject GroupSettings { get; set; }
+
+        [DataMember]
         public bool IsRandomized { get; set; }
 
         [JsonIgnore]
@@ -99,6 +105,7 @@ namespace MixItUp.Base.Commands
             this.Commands = new List<string>();
             this.Actions = new List<ActionBase>();
             this.IsEnabled = true;
+            this.GroupSettings = new JObject();
         }
 
         public CommandBase(string name, CommandTypeEnum type, string command) : this(name, type, new List<string>() { command }) { }

@@ -27,7 +27,9 @@ namespace MixItUp.Base.Actions
         [Name("Contains")]
         Contains,
         [Name("<> Contain")]
-        DoesNotContain
+        DoesNotContain,
+        [Name("Between")]
+        Between
     }
 
     [DataContract]
@@ -47,6 +49,8 @@ namespace MixItUp.Base.Actions
         public string Value1 { get; set; }
         [DataMember]
         public string Value2 { get; set; }
+        [DataMember]
+        public string Value3 { get; set; }
 
         [DataMember]
         public Guid CommandID { get; set; }
@@ -63,6 +67,12 @@ namespace MixItUp.Base.Actions
             this.CommandID = command.ID;
         }
 
+        public ConditionalAction(ConditionalComparisionTypeEnum comparisionType, bool ignoreCase, string value1, string value2, string value3, CommandBase command)
+            : this(comparisionType, ignoreCase, value1, value2, command)
+        {
+            this.Value3 = value3;
+        }
+
         public CommandBase GetCommand() { return ChannelSession.AllEnabledCommands.FirstOrDefault(c => c.ID.Equals(this.CommandID)); }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
@@ -76,6 +86,14 @@ namespace MixItUp.Base.Actions
                 bool contains = v1.Contains(v2);
                 result = ((this.ComparisionType == ConditionalComparisionTypeEnum.Contains && contains) ||
                     (this.ComparisionType == ConditionalComparisionTypeEnum.DoesNotContain && !contains));
+            }
+            else if (this.ComparisionType == ConditionalComparisionTypeEnum.Between)
+            {
+                string v3 = await this.ReplaceStringWithSpecialModifiers(this.Value3, user, arguments);
+                if (double.TryParse(v1, out double v1num) && double.TryParse(v2, out double v2num) && double.TryParse(v3, out double v3num))
+                {
+                    result = (v2num <= v1num && v1num <= v3num);
+                }
             }
             else
             {

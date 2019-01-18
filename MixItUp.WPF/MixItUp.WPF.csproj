@@ -233,6 +233,9 @@
       <Link>InstallerHelpers.cs</Link>
     </Compile>
     <Compile Include="ApplicationSettings.cs" />
+    <Compile Include="Controls\AccordianGroupBoxControl.xaml.cs">
+      <DependentUpon>AccordianGroupBoxControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\ActionContainerControl.xaml.cs">
       <DependentUpon>ActionContainerControl.xaml</DependentUpon>
     </Compile>
@@ -780,6 +783,7 @@
     </Compile>
     <Compile Include="Util\InstalledFonts.cs" />
     <Compile Include="Util\LocalizationConverter.cs" />
+    <Compile Include="Util\LogicalTreeHelpers.cs" />
     <Compile Include="Util\MessageBoxHelper.cs" />
     <Compile Include="Util\VisualTreeHelpers.cs" />
     <Compile Include="Windows\Command\CommandWindow.xaml.cs">
@@ -822,6 +826,10 @@
     <Compile Include="Windows\Wizard\NewUserWizardWindow.xaml.cs">
       <DependentUpon>NewUserWizardWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\AccordianGroupBoxControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Actions\ActionContainerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -76,9 +76,8 @@ namespace MixItUp.Base.MixerAPI
                 }
             }
 
-            this.skillCatalog = await ChannelSession.Connection.GetSkillCatalog(ChannelSession.Channel);
-
             // Hacky workaround until auth issue is fixed for Skill Catalog
+            // this.skillCatalog = await ChannelSession.Connection.GetSkillCatalog(ChannelSession.Channel);
             try
             {
                 using (HttpClient httpClient = new HttpClient())
