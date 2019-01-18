@@ -14,7 +14,10 @@ namespace MixItUp.Desktop.Services
 {
     public class DesktopTelemetryService : ITelemetryService
     {
+        private const int MaxTelemetryEventsPerSession = 2000;
+
         private TelemetryClient telemetryClient = new TelemetryClient();
+        private int totalEventsSent = 0;
 
         public DesktopTelemetryService()
         {
@@ -27,58 +30,37 @@ namespace MixItUp.Desktop.Services
 
         public void TrackException(Exception ex)
         {
-            if (!ChannelSession.Settings.OptOutTracking)
-            {
-                this.telemetryClient.TrackException(ex);
-            }
+            this.TrySendEvent(() => this.telemetryClient.TrackException(ex));
         }
 
         public void TrackPageView(string pageName)
         {
-            if (!ChannelSession.Settings.OptOutTracking)
-            {
-                this.telemetryClient.TrackPageView(pageName);
-            }
+            this.TrySendEvent(() => this.telemetryClient.TrackPageView(pageName));
         }
 
         public void TrackLogin()
         {
-            if (!ChannelSession.Settings.OptOutTracking)
-            {
-                this.telemetryClient.TrackEvent("Login");
-            }
+            this.TrySendEvent(() => this.telemetryClient.TrackEvent("Login"));
         }
 
         public void TrackCommand(CommandTypeEnum type)
         {
-            if (!ChannelSession.Settings.OptOutTracking)
-            {
-                this.telemetryClient.TrackEvent("Command", new Dictionary<string, string> { { "Type", EnumHelper.GetEnumName(type) } });
-            }
+            this.TrySendEvent(() => this.telemetryClient.TrackEvent("Command", new Dictionary<string, string> { { "Type", EnumHelper.GetEnumName(type) } }));
         }
 
         public void TrackAction(ActionTypeEnum type)
         {
-            if (!ChannelSession.Settings.OptOutTracking)
-            {
-                this.telemetryClient.TrackEvent("Action", new Dictionary<string, string> { { "Type", EnumHelper.GetEnumName(type) } });
-            }
+            this.TrySendEvent(() => this.telemetryClient.TrackEvent("Action", new Dictionary<string, string> { { "Type", EnumHelper.GetEnumName(type) } }));
         }
 
         public void TrackInteractiveGame(InteractiveGameModel game)
         {
-            if (!ChannelSession.Settings.OptOutTracking)
-            {
-                this.telemetryClient.TrackEvent("InteractiveGame", new Dictionary<string, string> { { "Name", game.name } });
-            }
+            this.TrySendEvent(() => this.telemetryClient.TrackEvent("InteractiveGame", new Dictionary<string, string> { { "Name", game.name } }));
         }
 
         public void TrackSongRequest(SongRequestServiceTypeEnum songService)
         {
-            if (!ChannelSession.Settings.OptOutTracking)
-            {
-                this.telemetryClient.TrackEvent("SongRequest", new Dictionary<string, string> { { "Song Request Service", EnumHelper.GetEnumName(songService) } });
-            }
+            this.TrySendEvent(() => this.telemetryClient.TrackEvent("SongRequest", new Dictionary<string, string> { { "Song Request Service", EnumHelper.GetEnumName(songService) } }));
         }
 
         public void Start()
@@ -99,6 +81,15 @@ namespace MixItUp.Desktop.Services
         {
             Task.Run(() => { this.telemetryClient.Flush(); });
             Task.Delay(2000); // Allow time to flush
+        }
+
+        private void TrySendEvent(Action eventAction)
+        {
+            if (!ChannelSession.Settings.OptOutTracking && this.totalEventsSent < DesktopTelemetryService.MaxTelemetryEventsPerSession)
+            {
+                eventAction();
+                this.totalEventsSent++;
+            }
         }
     }
 }
