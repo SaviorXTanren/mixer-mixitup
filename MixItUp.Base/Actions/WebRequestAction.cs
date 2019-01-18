@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace MixItUp.Base.Actions
 {
@@ -110,11 +111,12 @@ namespace MixItUp.Base.Actions
                         string webRequestResult = await response.Content.ReadAsStringAsync();
                         if (!string.IsNullOrEmpty(webRequestResult))
                         {
+                            string decodedWebRequestResult = HttpUtility.HtmlDecode(webRequestResult);
                             if (this.ResponseAction == WebRequestResponseActionTypeEnum.Chat)
                             {
                                 if (ChannelSession.Chat != null)
                                 {
-                                    await ChannelSession.Chat.SendMessage(await this.ReplaceSpecialIdentifiers(this.ResponseChatText, user, arguments, webRequestResult));
+                                    await ChannelSession.Chat.SendMessage(await this.ReplaceSpecialIdentifiers(this.ResponseChatText, user, arguments, decodedWebRequestResult));
                                 }
                             }
                             else if (this.ResponseAction == WebRequestResponseActionTypeEnum.Command)
@@ -136,14 +138,14 @@ namespace MixItUp.Base.Actions
                                 if (command != null)
                                 {
                                     string argumentsText = (this.ResponseCommandArgumentsText != null) ? this.ResponseCommandArgumentsText : string.Empty;
-                                    string commandArguments = await this.ReplaceSpecialIdentifiers(argumentsText, user, arguments, webRequestResult);
+                                    string commandArguments = await this.ReplaceSpecialIdentifiers(argumentsText, user, arguments, decodedWebRequestResult);
 
                                     await command.Perform(user, commandArguments.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries), this.GetExtraSpecialIdentifiers());
                                 }
                             }
                             else if (this.ResponseAction == WebRequestResponseActionTypeEnum.SpecialIdentifier)
                             {
-                                string replacementText = await this.ReplaceStringWithSpecialModifiers(webRequestResult, user, arguments);
+                                string replacementText = await this.ReplaceStringWithSpecialModifiers(decodedWebRequestResult, user, arguments);
                                 SpecialIdentifierStringBuilder.AddCustomSpecialIdentifier(this.SpecialIdentifierName, replacementText);
                             }
                             else if (this.ResponseAction == WebRequestResponseActionTypeEnum.JSONToSpecialIdentifiers)
@@ -196,7 +198,7 @@ namespace MixItUp.Base.Actions
 
                                                 if (currentToken != null)
                                                 {
-                                                    string replacementText = await this.ReplaceStringWithSpecialModifiers(currentToken.ToString(), user, arguments);
+                                                    string replacementText = await this.ReplaceStringWithSpecialModifiers(HttpUtility.HtmlDecode(currentToken.ToString()), user, arguments);
                                                     SpecialIdentifierStringBuilder.AddCustomSpecialIdentifier(kvp.Value, replacementText);
                                                 }
                                             }
