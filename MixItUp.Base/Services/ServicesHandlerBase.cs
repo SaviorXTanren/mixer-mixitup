@@ -31,7 +31,6 @@ namespace MixItUp.Base.Services
         public ITiltifyService Tiltify { get; protected set; }
         public IExtraLifeService ExtraLife { get; protected set; }
         public ITelemetryService Telemetry { get; protected set; }
-        public IStreamDeckService StreamDeck { get; protected set; }
         public IScoutService Scout { get; protected set; }
         public ITipeeeStreamService TipeeeStream { get; protected set; }
         public ITreatStreamService TreatStream { get; protected set; }
@@ -82,9 +81,6 @@ namespace MixItUp.Base.Services
 
         public abstract Task<bool> InitializeExtraLife();
         public abstract Task DisconnectExtraLife();
-
-        public abstract Task<bool> InitializeStreamDeck();
-        public abstract Task DisconnectStreamDeck();
 
         public abstract Task<bool> InitializeTipeeeStream();
         public abstract Task DisconnectTipeeeStream();
