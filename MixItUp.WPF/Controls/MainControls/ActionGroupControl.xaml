@@ -42,12 +42,13 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="240" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="1" Text="Name" Style="{StaticResource TextBlockSortingHeader}" VerticalAlignment="Center" TextDecorations="Underline" MouseLeftButtonDown="Name_MouseLeftButtonDown" />
+                <MaterialDesign:PackIcon x:Name="NameSortingIcon" Grid.Column="0" Kind="ArrowDown" />
+                <TextBlock Grid.Column="1" Text="Name" VerticalAlignment="Center" TextDecorations="Underline" MouseLeftButtonDown="Name_MouseLeftButtonDown" />
 
-                <TextBlock Grid.Column="2" Text="Actions" VerticalAlignment="Center" Foreground="{DynamicResource MaterialDesignColumnHeader}" TextDecorations="Underline" />
+                <TextBlock Grid.Column="2" Text="Actions" VerticalAlignment="Center" TextDecorations="Underline" />
 
             </Grid>
         </Border>
@@ -97,7 +98,7 @@
             </ItemsControl>
         </ScrollViewer>
 
-        <Grid Grid.Row="4" HorizontalAlignment="Center">
+        <Grid Grid.Row="5" HorizontalAlignment="Center">
             <Button x:Name="AddCommandButton" Grid.Column="0" Click="AddCommandButton_Click">New Action Group</Button>
         </Grid>
 

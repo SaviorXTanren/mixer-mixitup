@@ -105,6 +105,17 @@ namespace MixItUp.WPF.Controls.MainControls
         private void Name_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             nameOrder *= -1;
+            this.NameSortingIcon.Visibility = Visibility.Collapsed;
+            if (nameOrder == 1)
+            {
+                this.NameSortingIcon.Visibility = Visibility.Visible;
+                this.NameSortingIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.ArrowDown;
+            }
+            else if (nameOrder == -1)
+            {
+                this.NameSortingIcon.Visibility = Visibility.Visible;
+                this.NameSortingIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.ArrowUp;
+            }
             this.RefreshList();
         }
     }
