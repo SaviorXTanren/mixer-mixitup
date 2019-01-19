@@ -23,18 +23,37 @@
             <RowDefinition Height="10" />
         </Grid.RowDefinitions>
 
-        <DataGrid x:Name="TimerCommandsListView" Grid.Row="0" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
-                <DataGridTemplateColumn Header="Actions" Width="240">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <CommandControls:CommandButtonsControl x:Name="CommandButtons" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+        <ScrollViewer Margin="10" Grid.Row="0" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
+            <ItemsControl x:Name="TimerCommandsItemsControl" HorizontalContentAlignment="Stretch">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Controls:AccordianGroupBoxControl>
+                            <Controls:AccordianGroupBoxControl.Header>
+                                <Grid Background="Transparent">
+                                    <TextBlock HorizontalAlignment="Left" Text="{Binding DisplayName}" Foreground="{StaticResource WhiteColor}" Style="{StaticResource HeaderTextBlock}" />
+
+                                    <ToggleButton Visibility="{Binding IsEnableSwitchToggable, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Right" IsChecked="{Binding Path=IsEnabled, Mode=TwoWay}" Checked="GroupCommandsToggleButton_Checked" Unchecked="GroupCommandsToggleButton_Checked" />
+                                </Grid>
+                            </Controls:AccordianGroupBoxControl.Header>
+
+                            <Controls:SortedDataGrid ItemsSource="{Binding Commands}" Style="{StaticResource NonSortableDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
+                                <Controls:SortedDataGrid.Columns>
+                                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                                    <DataGridTemplateColumn Header="Actions" Width="240">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <CommandControls:CommandButtonsControl HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </Controls:SortedDataGrid.Columns>
+                            </Controls:SortedDataGrid>
+
+                        </Controls:AccordianGroupBoxControl>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
 
         <Grid Grid.Row="2" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>

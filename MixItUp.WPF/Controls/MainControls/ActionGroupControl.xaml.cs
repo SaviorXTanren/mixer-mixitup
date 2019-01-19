@@ -1,10 +1,10 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.ViewModel.Controls.MainControls;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Windows.Command;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -17,9 +17,7 @@ namespace MixItUp.WPF.Controls.MainControls
     /// </summary>
     public partial class ActionGroupControl : MainControlBase
     {
-        private ObservableCollection<ActionGroupCommand> actionGroupCommands = new ObservableCollection<ActionGroupCommand>();
-
-        private DataGridColumn lastSortedColumn = null;
+        private ObservableCollection<CommandGroupControlViewModel> actionGroupCommands = new ObservableCollection<CommandGroupControlViewModel>();
 
         public ActionGroupControl()
         {
@@ -28,14 +26,14 @@ namespace MixItUp.WPF.Controls.MainControls
 
         protected override Task InitializeInternal()
         {
-            this.ActionGroupCommandsListView.ItemsSource = this.actionGroupCommands;
+            this.ActionGroupCommandsItemsControl.ItemsSource = this.actionGroupCommands;
 
             this.RefreshList();
 
             return base.InitializeInternal();
         }
 
-        private void RefreshList(DataGridColumn sortColumn = null)
+        private void RefreshList()
         {
             string filter = this.ActionGroupNameFilterTextBox.Text;
             if (!string.IsNullOrEmpty(filter))
@@ -43,29 +41,12 @@ namespace MixItUp.WPF.Controls.MainControls
                 filter = filter.ToLower();
             }
 
-            this.ActionGroupCommandsListView.SelectedIndex = -1;
-
             this.actionGroupCommands.Clear();
 
-            IEnumerable<ActionGroupCommand> data = ChannelSession.Settings.ActionGroupCommands.ToList().OrderBy(u => u.Name);
-            if (sortColumn != null)
+            IEnumerable<ActionGroupCommand> commands = ChannelSession.Settings.ActionGroupCommands.ToList();
+            foreach (var group in commands.Where(c => string.IsNullOrEmpty(filter) || c.Name.ToLower().Contains(filter)).GroupBy(c => c.GroupName))
             {
-                int columnIndex = this.ActionGroupCommandsListView.Columns.IndexOf(sortColumn);
-                if (columnIndex == 0) { data = data.OrderBy(u => u.Name); }
-
-                if (sortColumn.SortDirection.GetValueOrDefault() == ListSortDirection.Descending)
-                {
-                    data = data.Reverse();
-                }
-                lastSortedColumn = sortColumn;
-            }
-
-            foreach (var commandData in data)
-            {
-                if (string.IsNullOrEmpty(filter) || commandData.Name.ToLower().Contains(filter))
-                {
-                    this.actionGroupCommands.Add(commandData);
-                }
+                this.actionGroupCommands.Add(new CommandGroupControlViewModel(group.OrderBy(c => c.Name)));
             }
         }
 
@@ -109,6 +90,11 @@ namespace MixItUp.WPF.Controls.MainControls
         }
 
         private void Window_Closed(object sender, System.EventArgs e)
+        {
+            this.RefreshList();
+        }
+
+        private void GroupCommandsToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             this.RefreshList();
         }

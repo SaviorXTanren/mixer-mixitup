@@ -1,8 +1,10 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.ViewModel.Controls.MainControls;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,7 +17,7 @@ namespace MixItUp.WPF.Controls.MainControls
     /// </summary>
     public partial class TimerControl : MainControlBase
     {
-        private ObservableCollection<TimerCommand> timerCommands = new ObservableCollection<TimerCommand>();
+        private ObservableCollection<CommandGroupControlViewModel> timerCommands = new ObservableCollection<CommandGroupControlViewModel>();
 
         public TimerControl()
         {
@@ -24,7 +26,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         protected override Task InitializeInternal()
         {
-            this.TimerCommandsListView.ItemsSource = this.timerCommands;
+            this.TimerCommandsItemsControl.ItemsSource = this.timerCommands;
             this.TimerIntervalTextBox.Text = ChannelSession.Settings.TimerCommandsInterval.ToString();
             this.TimerMinimumMessagesTextBox.Text = ChannelSession.Settings.TimerCommandsMinimumMessages.ToString();
             this.DisableAllTimers.IsChecked = ChannelSession.Settings.DisableAllTimers;
@@ -36,12 +38,11 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void RefreshList()
         {
-            this.TimerCommandsListView.SelectedIndex = -1;
-
             this.timerCommands.Clear();
-            foreach (TimerCommand command in ChannelSession.Settings.TimerCommands.OrderBy(c => c.Name))
+            IEnumerable<TimerCommand> commands = ChannelSession.Settings.TimerCommands.ToList();
+            foreach (var group in commands.GroupBy(c => c.GroupName))
             {
-                this.timerCommands.Add(command);
+                this.timerCommands.Add(new CommandGroupControlViewModel(group.OrderBy(c => c.Name)));
             }
         }
 
@@ -129,6 +130,11 @@ namespace MixItUp.WPF.Controls.MainControls
         private void DisableAllTimers_Click(object sender, RoutedEventArgs e)
         {
             ChannelSession.Settings.DisableAllTimers = this.DisableAllTimers.IsChecked.GetValueOrDefault();
+        }
+
+        private void GroupCommandsToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            this.RefreshList();
         }
     }
 }
