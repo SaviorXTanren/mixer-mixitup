@@ -447,7 +447,7 @@ paths:
         '400':
           description: Invalid data submitted
 
-  '/mixplay/user/{participantID}':
+  '/mixplay/user/{participantIDOrUserNameOrUserId}':
     get:
       tags:
         - MixPlay
@@ -458,7 +458,7 @@ paths:
       parameters:
         - name: participantID
           in: path
-          description: 'The ID that needs to be fetched'
+          description: 'The ID that needs to be fetched. This can be the MixPlay participant ID, the Mixer UserName, or the Mixer User ID.'
           required: true
           type: string
       produces:
