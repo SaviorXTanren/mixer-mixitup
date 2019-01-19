@@ -76,7 +76,7 @@ namespace MixItUp.Desktop
         public OAuthTokenModel PatreonOAuthToken { get; set; }
 
         [JsonProperty]
-        public string StreamDeckDeviceName { get; set; }
+        public Dictionary<string, CommandGroupSettings> CommandGroups { get; set; }
 
         [JsonProperty]
         public ExpandedChannelModel Channel { get; set; }
@@ -357,6 +357,7 @@ namespace MixItUp.Desktop
 
         public DesktopSavableChannelSettings()
         {
+            this.CommandGroups = new Dictionary<string, CommandGroupSettings>();
             this.OverlayCustomNameAndPorts = new Dictionary<string, int>();
             this.CustomInteractiveProjectIDs = new List<InteractiveSharedProjectModel>();
             this.UserTitles = new List<UserTitleModel>();
