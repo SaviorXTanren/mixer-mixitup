@@ -42,11 +42,24 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             });
         }
 
-        [Route("user/{participantID}")]
+        [Route("user/{participantIDOrUserNameOrUserId}")]
         [HttpGet]
-        public async Task<MixPlayUser> GetUser(string participantID)
+        public async Task<MixPlayUser> GetUser(string participantIDOrUserNameOrUserId)
         {
-            UserViewModel user = await ChannelSession.ActiveUsers.GetUserByID(participantID);
+            UserViewModel user = await ChannelSession.ActiveUsers.GetUserByID(participantIDOrUserNameOrUserId);
+            if (user == null)
+            {
+                user = await ChannelSession.ActiveUsers.GetUserByUsername(participantIDOrUserNameOrUserId);
+            }
+
+            if (user == null)
+            {
+                if (uint.TryParse(participantIDOrUserNameOrUserId, out uint userId))
+                {
+                    user = await ChannelSession.ActiveUsers.GetUserByID(userId);
+                }
+            }
+
             if (user == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
