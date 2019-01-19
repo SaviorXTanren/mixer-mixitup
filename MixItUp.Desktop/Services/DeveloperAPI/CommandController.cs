@@ -76,7 +76,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             command = ChannelSession.Settings.InteractiveCommands.SingleOrDefault(c => c.ID == commandId);
             if (command != null)
             {
-                category = "Interactive";
+                category = "MixPlay";
                 return command;
             }
 
