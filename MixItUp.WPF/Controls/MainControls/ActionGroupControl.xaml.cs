@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -18,6 +18,8 @@ namespace MixItUp.WPF.Controls.MainControls
     public partial class ActionGroupControl : MainControlBase
     {
         private ObservableCollection<CommandGroupControlViewModel> actionGroupCommands = new ObservableCollection<CommandGroupControlViewModel>();
+
+        private int nameOrder = 1;
 
         public ActionGroupControl()
         {
@@ -46,7 +48,8 @@ namespace MixItUp.WPF.Controls.MainControls
             IEnumerable<ActionGroupCommand> commands = ChannelSession.Settings.ActionGroupCommands.ToList();
             foreach (var group in commands.Where(c => string.IsNullOrEmpty(filter) || c.Name.ToLower().Contains(filter)).GroupBy(c => c.GroupName))
             {
-                this.actionGroupCommands.Add(new CommandGroupControlViewModel(group.OrderBy(c => c.Name)));
+                IEnumerable<CommandBase> cmds = (nameOrder > 0) ? group.OrderBy(c => c.Name) : group.OrderByDescending(c => c.Name);
+                this.actionGroupCommands.Add(new CommandGroupControlViewModel(cmds));
             }
         }
 
@@ -96,6 +99,12 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void GroupCommandsToggleButton_Checked(object sender, RoutedEventArgs e)
         {
+            this.RefreshList();
+        }
+
+        private void Name_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            nameOrder *= -1;
             this.RefreshList();
         }
     }
