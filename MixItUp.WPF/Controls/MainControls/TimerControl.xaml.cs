@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -18,6 +19,8 @@ namespace MixItUp.WPF.Controls.MainControls
     public partial class TimerControl : MainControlBase
     {
         private ObservableCollection<CommandGroupControlViewModel> timerCommands = new ObservableCollection<CommandGroupControlViewModel>();
+
+        private int nameOrder = 1;
 
         public TimerControl()
         {
@@ -42,7 +45,8 @@ namespace MixItUp.WPF.Controls.MainControls
             IEnumerable<TimerCommand> commands = ChannelSession.Settings.TimerCommands.ToList();
             foreach (var group in commands.GroupBy(c => c.GroupName))
             {
-                this.timerCommands.Add(new CommandGroupControlViewModel(group.OrderBy(c => c.Name)));
+                IEnumerable<CommandBase> cmds = (nameOrder > 0) ? group.OrderBy(c => c.Name) : group.OrderByDescending(c => c.Name);
+                this.timerCommands.Add(new CommandGroupControlViewModel(cmds));
             }
         }
 
@@ -134,6 +138,23 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void GroupCommandsToggleButton_Checked(object sender, RoutedEventArgs e)
         {
+            this.RefreshList();
+        }
+
+        private void Name_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            nameOrder *= -1;
+            this.NameSortingIcon.Visibility = Visibility.Collapsed;
+            if (nameOrder == 1)
+            {
+                this.NameSortingIcon.Visibility = Visibility.Visible;
+                this.NameSortingIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.ArrowDown;
+            }
+            else if (nameOrder == -1)
+            {
+                this.NameSortingIcon.Visibility = Visibility.Visible;
+                this.NameSortingIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.ArrowUp;
+            }
             this.RefreshList();
         }
     }
