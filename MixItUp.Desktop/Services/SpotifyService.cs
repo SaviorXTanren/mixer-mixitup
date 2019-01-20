@@ -148,7 +148,7 @@ namespace MixItUp.Desktop.Services
             {
                 if (playlist != null)
                 {
-                    JObject result = await this.GetJObjectAsync(string.Format("users/{0}/playlists/{1}", this.Profile.ID, playlist.ID));
+                    JObject result = await this.GetJObjectAsync(string.Format("playlists/{0}", playlist.ID));
                     return new SpotifyPlaylist(result);
                 }
             }
@@ -163,7 +163,7 @@ namespace MixItUp.Desktop.Services
             {
                 if (playlist != null)
                 {
-                    foreach (JObject song in await this.GetPagedResult(string.Format("users/{0}/playlists/{1}/tracks", this.Profile.ID, playlist.ID)))
+                    foreach (JObject song in await this.GetPagedResult(string.Format("playlists/{0}/tracks", playlist.ID)))
                     {
                         results.Add(new SpotifySong((JObject)song["track"]));
                     }
@@ -182,7 +182,7 @@ namespace MixItUp.Desktop.Services
                 payload["description"] = description;
                 payload["public"] = "true";
 
-                HttpResponseMessage response = await this.PostAsync(string.Format("users/{0}/playlists", this.Profile.ID), this.CreateContentFromObject(payload));
+                HttpResponseMessage response = await this.PostAsync("playlists", this.CreateContentFromObject(payload));
                 string responseString = await response.Content.ReadAsStringAsync();
                 JObject jobj = JObject.Parse(responseString);
                 return new SpotifyPlaylist(jobj);
@@ -197,7 +197,7 @@ namespace MixItUp.Desktop.Services
             {
                 if (playlist != null && song != null)
                 {
-                    HttpResponseMessage response = await this.PostAsync(string.Format("users/{0}/playlists/{1}/tracks?uris=spotify:track:" + song.ID, this.Profile.ID, playlist.ID), null);
+                    HttpResponseMessage response = await this.PostAsync(string.Format("playlists/{0}/tracks?uris=spotify:track:" + song.ID, playlist.ID), null);
                     return (response.StatusCode == HttpStatusCode.Created);
                 }
             }
@@ -232,7 +232,7 @@ namespace MixItUp.Desktop.Services
                         using (HttpClientWrapper client = await this.GetHttpClient())
                         {
                             HttpMethod method = new HttpMethod("DELETE");
-                            HttpRequestMessage request = new HttpRequestMessage(method, string.Format("users/{0}/playlists/{1}/tracks", this.Profile.ID, playlist.ID))
+                            HttpRequestMessage request = new HttpRequestMessage(method, string.Format("playlists/{0}/tracks", playlist.ID))
                             { Content = this.CreateContentFromObject(payload) };
                             await client.SendAsync(request);
                         }
