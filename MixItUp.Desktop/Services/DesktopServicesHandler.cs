@@ -391,30 +391,6 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        public override async Task<bool> InitializeStreamDeck()
-        {
-            this.StreamDeck = (ChannelSession.Settings.StreamDeckDeviceName != null) ? new StreamDeckService(ChannelSession.Settings.StreamDeckDeviceName) : new StreamDeckService();
-            if (await this.StreamDeck.Connect())
-            {
-                return true;
-            }
-            else
-            {
-                await this.DisconnectStreamDeck();
-            }
-            return false;
-        }
-
-        public override async Task DisconnectStreamDeck()
-        {
-            if (this.StreamDeck != null)
-            {
-                await this.StreamDeck.Disconnect();
-                this.StreamDeck = null;
-                ChannelSession.Settings.StreamDeckDeviceName = null;
-            }
-        }
-
         public override async Task<bool> InitializeTipeeeStream()
         {
             this.TipeeeStream = (ChannelSession.Settings.TipeeeStreamOAuthToken != null) ? new TipeeeStreamService(ChannelSession.Settings.TipeeeStreamOAuthToken) : new TipeeeStreamService();

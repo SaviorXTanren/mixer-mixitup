@@ -54,8 +54,9 @@ namespace MixItUp.Desktop.Services
         private const string SpotifyTrackPrefix = "spotify:track:";
 
         private const string SpotifyPlaylistLinkRegex = @"https://open.spotify.com/user/\w+/playlist/\w+";
-        private const string SpotifyPlaylistRegex = @"spotify:user:\w+:playlist:";
-        private const string SpotifyPlaylistUriFormat = "spotify:user:{0}:playlist:{1}";
+        private const string SpotifyPlaylistRegex = @"spotify:playlist:";
+        private const string SpotifyPlaylistUriFormat = "spotify:playlist:{0}";
+        private const string SpotifyUserPlaylistRegex = @"spotify:user:\w+:playlist:";
 
         private const string YouTubeFullLinkPrefix = "https://www.youtube.com/watch?v=";
         private const string YouTubeFullLinkWithTimePattern = @"https://www.youtube.com/watch\?t=\w+&v=";
@@ -107,6 +108,7 @@ namespace MixItUp.Desktop.Services
                 if (!string.IsNullOrEmpty(ChannelSession.Settings.DefaultPlaylist))
                 {
                     if (Regex.IsMatch(ChannelSession.Settings.DefaultPlaylist, SpotifyPlaylistRegex, RegexOptions.IgnoreCase) ||
+                        Regex.IsMatch(ChannelSession.Settings.DefaultPlaylist, SpotifyUserPlaylistRegex, RegexOptions.IgnoreCase) ||
                         Regex.IsMatch(ChannelSession.Settings.DefaultPlaylist, SpotifyPlaylistLinkRegex, RegexOptions.IgnoreCase))
                     {
                         if (ChannelSession.Services.Spotify != null)
@@ -121,7 +123,7 @@ namespace MixItUp.Desktop.Services
                                     {
                                         playlistID = playlistID.Substring(0, playlistID.IndexOf("?"));
                                     }
-                                    uri = string.Format(SpotifyPlaylistUriFormat, ChannelSession.Services.Spotify.Profile.ID, playlistID);
+                                    uri = string.Format(SpotifyPlaylistUriFormat, playlistID);
                                 }
                             }
 

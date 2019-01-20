@@ -22,13 +22,16 @@ namespace MixItUp.WPF.Controls.Requirement
 
         private void SettingsRequirementControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (ChannelSession.Settings.DeleteChatCommandsWhenRun)
+            if (this.DeleteChatCommandWhenRunToggleSwitch.Visibility == Visibility.Visible)
             {
-                this.DontDeleteCommandsWhenRunTextBlock.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                this.DeleteCommandsWhenRunTextBlock.Visibility = Visibility.Visible;
+                if (ChannelSession.Settings.DeleteChatCommandsWhenRun)
+                {
+                    this.DontDeleteCommandsWhenRunTextBlock.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    this.DeleteCommandsWhenRunTextBlock.Visibility = Visibility.Visible;
+                }
             }
 
             if (ChannelSession.Services.Patreon != null)
@@ -36,6 +39,11 @@ namespace MixItUp.WPF.Controls.Requirement
                 this.EnableDisablePatreonBenefitToggleSwitch.IsEnabled = true;
                 this.PatreonBenefitComboBox.ItemsSource = ChannelSession.Services.Patreon.Campaign.Benefits.Values;
             }
+        }
+
+        public void HideDeleteChatCommandWhenRun()
+        {
+            this.DeleteChatCommandWhenRunToggleSwitch.Visibility = Visibility.Collapsed;
         }
 
         public SettingsRequirementViewModel GetSettingsRequirement()

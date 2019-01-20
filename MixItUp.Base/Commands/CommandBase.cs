@@ -88,8 +88,6 @@ namespace MixItUp.Base.Commands
 
         [DataMember]
         public string GroupName { get; set; }
-        [DataMember]
-        public JObject GroupSettings { get; set; }
 
         [DataMember]
         public bool IsRandomized { get; set; }
@@ -105,7 +103,6 @@ namespace MixItUp.Base.Commands
             this.Commands = new List<string>();
             this.Actions = new List<ActionBase>();
             this.IsEnabled = true;
-            this.GroupSettings = new JObject();
         }
 
         public CommandBase(string name, CommandTypeEnum type, string command) : this(name, type, new List<string>() { command }) { }
@@ -258,6 +255,15 @@ namespace MixItUp.Base.Commands
             {
                 this.currentCancellationTokenSource.Cancel();
             }
+        }
+
+        public CommandGroupSettings GetGroupSettings()
+        {
+            if (!string.IsNullOrEmpty(this.GroupName) && ChannelSession.Settings.CommandGroups.ContainsKey(this.GroupName))
+            {
+                return ChannelSession.Settings.CommandGroups[this.GroupName];
+            }
+            return null;
         }
 
         protected virtual Task<bool> PerformPreChecks(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)

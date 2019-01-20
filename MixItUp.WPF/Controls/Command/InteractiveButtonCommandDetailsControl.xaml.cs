@@ -43,7 +43,7 @@ namespace MixItUp.WPF.Controls.Command
 
         public override Task Initialize()
         {
-            this.Requirements.HideSettingsRequirement();
+            this.Requirements.SettingsRequirement.HideDeleteChatCommandWhenRun();
 
             this.ButtonTriggerComboBox.ItemsSource = EnumHelper.GetEnumNames<InteractiveButtonCommandTriggerType>();
 

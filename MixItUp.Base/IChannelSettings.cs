@@ -45,7 +45,7 @@ namespace MixItUp.Base
         OAuthTokenModel StreamJarOAuthToken { get; set; }
         OAuthTokenModel PatreonOAuthToken { get; set; }
 
-        string StreamDeckDeviceName { get; set; }
+        Dictionary<string, CommandGroupSettings> CommandGroups { get; set; }
 
         ExpandedChannelModel Channel { get; set; }
 
