@@ -24,7 +24,7 @@
         </Grid.RowDefinitions>
 
         <Border Grid.Row="0" BorderBrush="{StaticResource PrimaryHueMidBrush}" BorderThickness="1">
-            <Grid Margin="15">
+            <Grid Margin="15,10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="240" />
@@ -60,9 +60,7 @@
                                                 <RowDefinition Height="Auto" />
                                             </Grid.RowDefinitions>
 
-                                            <Separator Grid.Row="0" />
-
-                                            <Grid Grid.Row="1" Margin="10">
+                                            <Grid Grid.Row="0" Margin="10,5">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="240" />
@@ -73,6 +71,8 @@
                                                 <CommandControls:CommandButtonsControl Grid.Column="1" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
 
                                             </Grid>
+
+                                            <Separator Grid.Row="1" />
                                         </Grid>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
