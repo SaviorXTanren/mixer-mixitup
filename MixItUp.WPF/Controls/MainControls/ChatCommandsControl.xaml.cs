@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -19,6 +20,11 @@ namespace MixItUp.WPF.Controls.MainControls
     public partial class ChatCommandsControl : MainControlBase
     {
         private ObservableCollection<CommandGroupControlViewModel> customChatCommands = new ObservableCollection<CommandGroupControlViewModel>();
+
+        private int nameOrder = 1;
+        private int commandsOrder = 0;
+        private int permissionsOrder = 0;
+        private int cooldownOrder = 0;
 
         public ChatCommandsControl()
         {
@@ -71,10 +77,75 @@ namespace MixItUp.WPF.Controls.MainControls
 
             this.customChatCommands.Clear();
 
+            this.NameSortingIcon.Visibility = Visibility.Collapsed;
+            if (nameOrder == 1)
+            {
+                this.NameSortingIcon.Visibility = Visibility.Visible;
+                this.NameSortingIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.ArrowDown;
+            }
+            else if (nameOrder == -1)
+            {
+                this.NameSortingIcon.Visibility = Visibility.Visible;
+                this.NameSortingIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.ArrowUp;
+            }
+
+            this.CommandsSortingIcon.Visibility = Visibility.Collapsed;
+            if (commandsOrder == 1)
+            {
+                this.CommandsSortingIcon.Visibility = Visibility.Visible;
+                this.CommandsSortingIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.ArrowDown;
+            }
+            else if (commandsOrder == -1)
+            {
+                this.CommandsSortingIcon.Visibility = Visibility.Visible;
+                this.CommandsSortingIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.ArrowUp;
+            }
+
+            this.PermissionsSortingIcon.Visibility = Visibility.Collapsed;
+            if (permissionsOrder == 1)
+            {
+                this.PermissionsSortingIcon.Visibility = Visibility.Visible;
+                this.PermissionsSortingIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.ArrowDown;
+            }
+            else if (permissionsOrder == -1)
+            {
+                this.PermissionsSortingIcon.Visibility = Visibility.Visible;
+                this.PermissionsSortingIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.ArrowUp;
+            }
+
+            this.CooldownSortingIcon.Visibility = Visibility.Collapsed;
+            if (cooldownOrder == 1)
+            {
+                this.CooldownSortingIcon.Visibility = Visibility.Visible;
+                this.CooldownSortingIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.ArrowDown;
+            }
+            else if (cooldownOrder == -1)
+            {
+                this.CooldownSortingIcon.Visibility = Visibility.Visible;
+                this.CooldownSortingIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.ArrowUp;
+            }
+
             IEnumerable<ChatCommand> commands = ChannelSession.Settings.ChatCommands.ToList();
             foreach (var group in commands.Where(c => string.IsNullOrEmpty(filter) || c.Name.ToLower().Contains(filter)).GroupBy(c => c.GroupName))
             {
-                this.customChatCommands.Add(new CommandGroupControlViewModel(group.OrderBy(c => c.Name)));
+                IEnumerable<CommandBase> cmds = group;
+                if (nameOrder != 0)
+                {
+                    cmds = (nameOrder > 0) ? group.OrderBy(c => c.Name) : group.OrderByDescending(c => c.Name);
+                }
+                else if (commandsOrder != 0)
+                {
+                    cmds = (commandsOrder > 0) ? group.OrderBy(c => c.CommandsString) : group.OrderByDescending(c => c.CommandsString);
+                }
+                else if (permissionsOrder != 0)
+                {
+                    cmds = (permissionsOrder > 0) ? group.OrderBy(c => c.Requirements.Role.RoleNameString) : group.OrderByDescending(c => c.Requirements.Role.RoleNameString);
+                }
+                else if (cooldownOrder != 0)
+                {
+                    cmds = (cooldownOrder > 0) ? group.OrderBy(c => c.Requirements.Cooldown.CooldownAmount) : group.OrderByDescending(c => c.Requirements.Cooldown.CooldownAmount);
+                }
+                this.customChatCommands.Add(new CommandGroupControlViewModel(cmds));
             }
         }
 
@@ -142,6 +213,70 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void GroupCommandsToggleButton_Checked(object sender, RoutedEventArgs e)
         {
+            this.RefreshList();
+        }
+
+        private void Name_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            commandsOrder = 0;
+            permissionsOrder = 0;
+            cooldownOrder = 0;
+            if (nameOrder == 0)
+            {
+                nameOrder = 1;
+            }
+            else
+            {
+                nameOrder *= -1;
+            }
+            this.RefreshList();
+        }
+
+        private void Commands_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            nameOrder = 0;
+            permissionsOrder = 0;
+            cooldownOrder = 0;
+            if (commandsOrder == 0)
+            {
+                commandsOrder = 1;
+            }
+            else
+            {
+                commandsOrder *= -1;
+            }
+            this.RefreshList();
+        }
+
+        private void Permissions_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            nameOrder = 0;
+            commandsOrder = 0;
+            cooldownOrder = 0;
+            if (permissionsOrder == 0)
+            {
+                permissionsOrder = 1;
+            }
+            else
+            {
+                permissionsOrder *= -1;
+            }
+            this.RefreshList();
+        }
+
+        private void Cooldown_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            nameOrder = 0;
+            commandsOrder = 0;
+            permissionsOrder = 0;
+            if (cooldownOrder == 0)
+            {
+                cooldownOrder = 1;
+            }
+            else
+            {
+                cooldownOrder *= -1;
+            }
             this.RefreshList();
         }
     }

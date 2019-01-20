@@ -26,15 +26,14 @@
         <Border Grid.Row="0" BorderBrush="{StaticResource PrimaryHueMidBrush}" BorderThickness="1">
             <Grid Margin="15">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="240" />
                 </Grid.ColumnDefinitions>
 
-                <MaterialDesign:PackIcon x:Name="NameSortingIcon" Grid.Column="0" Kind="ArrowDown" />
-                <TextBlock Grid.Column="1" Text="Name" VerticalAlignment="Center" TextDecorations="Underline" MouseLeftButtonDown="Name_MouseLeftButtonDown" />
+                <TextBlock Grid.Column="0" Text="Name" VerticalAlignment="Center" TextDecorations="Underline" MouseLeftButtonDown="Name_MouseLeftButtonDown" />
+                <MaterialDesign:PackIcon x:Name="NameSortingIcon" Grid.Column="0" Margin="40,0,0,0" Kind="ArrowDown" />
 
-                <TextBlock Grid.Column="2" Text="Actions" VerticalAlignment="Center" TextDecorations="Underline" />
+                <TextBlock Grid.Column="1" Text="Actions" VerticalAlignment="Center" TextDecorations="Underline" />
 
             </Grid>
         </Border>

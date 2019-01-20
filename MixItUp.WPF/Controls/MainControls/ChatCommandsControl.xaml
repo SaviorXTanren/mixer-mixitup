@@ -80,54 +80,98 @@
 
         </Grid>
 
-        <Grid x:Name="CustomCommandsGrid" Grid.Row="2" Visibility="Collapsed">
+        <Grid x:Name="CustomCommandsGrid" Grid.Row="2" Visibility="Collapsed" Margin="10">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="10" />
             </Grid.RowDefinitions>
 
-            <ItemsControl x:Name="CustomCommandsItemsControl" Grid.Row="0" HorizontalContentAlignment="Stretch">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Controls:AccordianGroupBoxControl>
-                            <Controls:AccordianGroupBoxControl.Header>
-                                <Grid Background="Transparent">
-                                    <TextBlock HorizontalAlignment="Left" Text="{Binding DisplayName}" Foreground="{StaticResource WhiteColor}" Style="{StaticResource HeaderTextBlock}" />
+            <Border Grid.Row="0" BorderBrush="{StaticResource PrimaryHueMidBrush}" BorderThickness="1">
+                <Grid Margin="15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="95" />
+                        <ColumnDefinition Width="80" />
+                        <ColumnDefinition Width="240" />
+                    </Grid.ColumnDefinitions>
 
-                                    <ToggleButton Visibility="{Binding IsEnableSwitchToggable, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Right" IsChecked="{Binding Path=IsEnabled, Mode=TwoWay}" Checked="GroupCommandsToggleButton_Checked" Unchecked="GroupCommandsToggleButton_Checked" />
-                                </Grid>
-                            </Controls:AccordianGroupBoxControl.Header>
+                    <TextBlock Grid.Column="0" Text="Name" VerticalAlignment="Center" TextDecorations="Underline" MouseLeftButtonDown="Name_MouseLeftButtonDown" />
+                    <MaterialDesign:PackIcon x:Name="NameSortingIcon" Grid.Column="0" Margin="40,0,0,0" Kind="ArrowDown" VerticalAlignment="Center" />
 
-                            <Controls:SortedDataGrid ItemsSource="{Binding Commands}" Style="{StaticResource NonSortableDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
-                                <Controls:SortedDataGrid.Columns>
-                                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
-                                    <DataGridTextColumn Header="Commands" Binding="{Binding CommandsString}" IsReadOnly="True" Width="150" />
-                                    <DataGridTextColumn Header="Permission" Binding="{Binding UserRoleRequirementString}" IsReadOnly="True" Width="125" />
-                                    <DataGridTextColumn Binding="{Binding Requirements.Cooldown.CooldownAmount}" IsReadOnly="True" Width="75">
-                                        <DataGridTextColumn.Header>
-                                            <Grid HorizontalAlignment="Center" Margin="0,0,0,0">
-                                                <MaterialDesign:PackIcon Kind="Timer" Height="24" Width="24" />
+                    <TextBlock Grid.Column="1" Text="Commands" VerticalAlignment="Center" TextDecorations="Underline" MouseLeftButtonDown="Commands_MouseLeftButtonDown" />
+                    <MaterialDesign:PackIcon x:Name="CommandsSortingIcon" Grid.Column="1" Margin="75,0,0,0" Kind="ArrowDown" VerticalAlignment="Center" Visibility="Collapsed" />
+
+                    <TextBlock Grid.Column="2" Text="Permissions" VerticalAlignment="Center" TextDecorations="Underline" MouseLeftButtonDown="Permissions_MouseLeftButtonDown" />
+                    <MaterialDesign:PackIcon x:Name="PermissionsSortingIcon" Grid.Column="2" Margin="80,0,0,0" Kind="ArrowDown" VerticalAlignment="Center" Visibility="Collapsed" />
+
+                    <Grid HorizontalAlignment="Center" Grid.Column="3" Margin="0,0,0,0" Background="Transparent" MouseLeftButtonDown="Cooldown_MouseLeftButtonDown">
+                        <MaterialDesign:PackIcon Kind="Timer" Height="24" Width="24" />
+                    </Grid>
+                    <MaterialDesign:PackIcon x:Name="CooldownSortingIcon" Grid.Column="3" Margin="50,0,0,0" Kind="ArrowDown" VerticalAlignment="Center" Visibility="Collapsed" />
+
+                    <TextBlock Grid.Column="4" Text="Actions" VerticalAlignment="Center" TextDecorations="Underline" />
+
+                </Grid>
+            </Border>
+
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
+                <ItemsControl x:Name="CustomCommandsItemsControl" HorizontalContentAlignment="Stretch">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Controls:AccordianGroupBoxControl>
+                                <Controls:AccordianGroupBoxControl.Header>
+                                    <Grid Background="Transparent">
+                                        <TextBlock HorizontalAlignment="Left" Text="{Binding DisplayName}" Foreground="{StaticResource WhiteColor}" Style="{StaticResource HeaderTextBlock}" />
+
+                                        <ToggleButton Visibility="{Binding IsEnableSwitchToggable, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Right" IsChecked="{Binding Path=IsEnabled, Mode=TwoWay}" Checked="GroupCommandsToggleButton_Checked" Unchecked="GroupCommandsToggleButton_Checked" />
+                                    </Grid>
+                                </Controls:AccordianGroupBoxControl.Header>
+
+                                <ItemsControl ItemsSource="{Binding Commands}" HorizontalContentAlignment="Stretch">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+
+                                                <Separator Grid.Row="0" />
+
+                                                <Grid Grid.Row="1" Margin="10">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="150" />
+                                                        <ColumnDefinition Width="125" />
+                                                        <ColumnDefinition Width="50" />
+                                                        <ColumnDefinition Width="220" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center" />
+
+                                                    <TextBlock Grid.Column="1" Text="{Binding CommandsString}" VerticalAlignment="Center" />
+
+                                                    <TextBlock Grid.Column="2" Text="{Binding UserRoleRequirementString}" VerticalAlignment="Center" />
+
+                                                    <TextBlock Grid.Column="3" Text="{Binding Requirements.Cooldown.CooldownAmount}" VerticalAlignment="Center" />
+
+                                                    <CommandControls:CommandButtonsControl Grid.Column="4" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
+
+                                                </Grid>
                                             </Grid>
-                                        </DataGridTextColumn.Header>
-                                    </DataGridTextColumn>
-                                    <DataGridTemplateColumn Header="Actions" Width="240">
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <CommandControls:CommandButtonsControl HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-                                </Controls:SortedDataGrid.Columns>
-                            </Controls:SortedDataGrid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Controls:AccordianGroupBoxControl>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
 
-                        </Controls:AccordianGroupBoxControl>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-
-            <Button x:Name="AddCommandButton" Grid.Row="2" Click="AddCommandButton_Click" Width="130">New Command</Button>
+            <Button x:Name="AddCommandButton" Grid.Row="3" Click="AddCommandButton_Click" Width="130">New Command</Button>
         </Grid>
     </Grid>
 </local:MainControlBase>
