@@ -865,7 +865,7 @@ namespace MixItUp.Base.MixerAPI
                         return;
                     }
 
-                    if (!await connectedControl.CheckAllRequirements(user))
+                    if (connectedControl != null && !await connectedControl.CheckAllRequirements(user))
                     {
                         return;
                     }
