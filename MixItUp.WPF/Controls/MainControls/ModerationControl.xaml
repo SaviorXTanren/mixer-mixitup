@@ -214,12 +214,20 @@
                         </Grid>
                     </GroupBox>
 
-                    <GroupBox Grid.Column="2" Header="Chat / MixPlay Participation">
+                    <GroupBox Grid.Column="2">
+                        <GroupBox.Header>
+                            <TextBlock Foreground="{StaticResource WhiteColor}">Chat / MixPlay Participation</TextBlock>
+                        </GroupBox.Header>
+                        
                         <ComboBox x:Name="ChatInteractiveParticipationComboBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Minimum Requirement" Width="200" SelectionChanged="ComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
                     </GroupBox>
                 </Grid>
 
-                <GroupBox Grid.Row="6" Header="Strike Commands">
+                <GroupBox Grid.Row="6">
+                    <GroupBox.Header>
+                        <TextBlock Foreground="{StaticResource WhiteColor}">Strike Commands</TextBlock>
+                    </GroupBox.Header>
+
                     <Grid HorizontalAlignment="Center" Margin="5">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
