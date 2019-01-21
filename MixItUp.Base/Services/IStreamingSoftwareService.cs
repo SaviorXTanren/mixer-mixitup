@@ -16,10 +16,10 @@ namespace MixItUp.Base.Services
 
         Task ShowScene(string sceneName);
 
-        Task SetSourceVisibility(string sourceName, bool visibility);
-        Task SetWebBrowserSourceURL(string sourceName, string url);
-        Task SetSourceDimensions(string sourceName, StreamingSourceDimensions dimensions);
-        Task<StreamingSourceDimensions> GetSourceDimensions(string sourceName);
+        Task SetSourceVisibility(string sceneName, string sourceName, bool visibility);
+        Task SetWebBrowserSourceURL(string sceneName, string sourceName, string url);
+        Task SetSourceDimensions(string sceneName, string sourceName, StreamingSourceDimensions dimensions);
+        Task<StreamingSourceDimensions> GetSourceDimensions(string sceneName, string sourceName);
 
         Task StartStopStream();
 

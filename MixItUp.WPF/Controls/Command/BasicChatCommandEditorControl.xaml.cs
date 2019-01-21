@@ -115,7 +115,7 @@ namespace MixItUp.WPF.Controls.Command
                 }
 
                 IEnumerable<string> commandStrings = new List<string>(this.ChatCommandTextBox.Text.Replace("!", "").Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
-                if (commandStrings.Count() > 0)
+                if (commandStrings.Count() == 0)
                 {
                     await MessageBoxHelper.ShowMessageDialog("At least 1 chat trigger must be specified");
                     return;

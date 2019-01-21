@@ -178,17 +178,16 @@ namespace MixItUp.Desktop.Services
 
         public async Task ShowScene(string sceneName)
         {
-            IEnumerable<StreamlabsOBSScene> scenes = await this.GetArrayResult<StreamlabsOBSScene>(new StreamlabsOBSRequest("getScenes", "ScenesService"));
-            StreamlabsOBSScene scene = scenes.FirstOrDefault(s => s.Name.Equals(sceneName));
+            StreamlabsOBSScene scene = await this.GetScene(sceneName);
             if (scene != null)
             {
                 await this.SendAndReceive(new StreamlabsOBSRequest("makeActive", scene.ResourceID));
             }
         }
 
-        public async Task SetSourceVisibility(string sourceName, bool visibility)
+        public async Task SetSourceVisibility(string sceneName, string sourceName, bool visibility)
         {
-            StreamlabsOBSSceneItem sceneItem = await this.GetSceneItem(sourceName);
+            StreamlabsOBSSceneItem sceneItem = await this.GetSceneItem(sceneName, sourceName);
             if (sceneItem != null)
             {
                 StreamlabsOBSRequest request = new StreamlabsOBSRequest("setVisibility", sceneItem.ResourceID);
@@ -197,9 +196,9 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        public async Task SetWebBrowserSourceURL(string sourceName, string url)
+        public async Task SetWebBrowserSourceURL(string sceneName, string sourceName, string url)
         {
-            StreamlabsOBSSceneItem sceneItem = await this.GetSceneItem(sourceName);
+            StreamlabsOBSSceneItem sceneItem = await this.GetSceneItem(sceneName, sourceName);
             if (sceneItem != null)
             {
                 StreamlabsOBSRequest getSourceRequest = new StreamlabsOBSRequest("getSource", sceneItem.ResourceID);
@@ -231,9 +230,9 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        public async Task SetSourceDimensions(string sourceName, StreamingSourceDimensions dimensions)
+        public async Task SetSourceDimensions(string sceneName, string sourceName, StreamingSourceDimensions dimensions)
         {
-            StreamlabsOBSSceneItem sceneItem = await this.GetSceneItem(sourceName);
+            StreamlabsOBSSceneItem sceneItem = await this.GetSceneItem(sceneName, sourceName);
             if (sceneItem != null)
             {
                 StreamlabsOBSRequest request = new StreamlabsOBSRequest("setTransform", sceneItem.ResourceID);
@@ -256,9 +255,9 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        public async Task<StreamingSourceDimensions> GetSourceDimensions(string sourceName)
+        public async Task<StreamingSourceDimensions> GetSourceDimensions(string sceneName, string sourceName)
         {
-            StreamlabsOBSSceneItem sceneItem = await this.GetSceneItem(sourceName);
+            StreamlabsOBSSceneItem sceneItem = await this.GetSceneItem(sceneName, sourceName);
             if (sceneItem != null)
             {
                 return new StreamingSourceDimensions()
@@ -286,9 +285,15 @@ namespace MixItUp.Desktop.Services
             return await this.GetResult<StreamlabsOBSScene>(new StreamlabsOBSRequest("activeScene", "ScenesService"));
         }
 
-        private async Task<StreamlabsOBSSceneItem> GetSceneItem(string sourceName)
+        private async Task<StreamlabsOBSScene> GetScene(string sceneName)
         {
-            StreamlabsOBSScene scene = await this.GetActiveScene();
+            IEnumerable<StreamlabsOBSScene> scenes = await this.GetArrayResult<StreamlabsOBSScene>(new StreamlabsOBSRequest("getScenes", "ScenesService"));
+            return scenes.FirstOrDefault(s => s.Name.Equals(sceneName));
+        }
+
+        private async Task<StreamlabsOBSSceneItem> GetSceneItem(string sceneName, string sourceName)
+        {
+            StreamlabsOBSScene scene = (!string.IsNullOrEmpty(sceneName)) ? await this.GetScene(sceneName) : await this.GetActiveScene();
             if (scene != null)
             {
                 IEnumerable<StreamlabsOBSSceneItem> sceneItems = await this.GetArrayResult<StreamlabsOBSSceneItem>(new StreamlabsOBSRequest("getItems", scene.ResourceID));

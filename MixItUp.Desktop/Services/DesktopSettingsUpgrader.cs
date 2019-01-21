@@ -18,10 +18,6 @@ namespace MixItUp.Desktop.Services
 {
     internal static class DesktopSettingsUpgrader
     {
-        private static string OBSStudioReferenceTextFilesDirectory = "OBS";
-        private static string XSplitReferenceTextFilesDirectory = "XSplit";
-        private static string StreamlabsOBSStudioReferenceTextFilesDirectory = "StreamlabsOBS";
-
         private static string GetDefaultReferenceFilePath(string software, string source)
         {
             return Path.Combine(ChannelSession.Services.FileService.GetApplicationDirectory(), software, StreamingSoftwareAction.SourceTextFilesDirectoryName, source + ".txt");
@@ -46,7 +42,6 @@ namespace MixItUp.Desktop.Services
 
         internal static async Task UpgradeSettingsToLatest(int version, string filePath)
         {
-            await DesktopSettingsUpgrader.Version16Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version17Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version18Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version19Upgrade(version, filePath);
@@ -65,104 +60,6 @@ namespace MixItUp.Desktop.Services
             settings.Version = DesktopChannelSettings.LatestVersion;
 
             await ChannelSession.Services.Settings.Save(settings);
-        }
-
-        private static async Task Version16Upgrade(int version, string filePath)
-        {
-            if (version < 16)
-            {
-                string data = File.ReadAllText(filePath);
-                DesktopChannelSettings settings = SerializerHelper.DeserializeFromString<DesktopChannelSettings>(data);
-                await ChannelSession.Services.Settings.Initialize(settings);
-
-                List<CommandBase> commands = new List<CommandBase>();
-                commands.AddRange(settings.ChatCommands);
-                commands.AddRange(settings.EventCommands);
-                commands.AddRange(settings.InteractiveCommands);
-                commands.AddRange(settings.TimerCommands);
-                commands.AddRange(settings.ActionGroupCommands);
-                commands.AddRange(settings.GameCommands);
-                foreach (CommandBase command in commands)
-                {
-                    for (int i = 0; i < command.Actions.Count; i++)
-                    {
-                        ActionBase action = command.Actions[i];
-#pragma warning disable CS0612 // Type or member is obsolete
-                        if (action is OBSStudioAction || action is XSplitAction || action is StreamlabsOBSAction)
-                        {
-                            StreamingSoftwareTypeEnum type = StreamingSoftwareTypeEnum.OBSStudio;
-                            string scene = null;
-                            string source = null;
-                            bool visible = false;
-                            string text = null;
-                            string textPath = null;
-                            string url = null;
-                            StreamingSourceDimensions dimensions = null;
-
-                            if (action is OBSStudioAction)
-                            {
-                                type = StreamingSoftwareTypeEnum.OBSStudio;
-                                OBSStudioAction obsAction = (OBSStudioAction)action;
-                                scene = obsAction.SceneName;
-                                source = obsAction.SourceName;
-                                visible = obsAction.SourceVisible;
-                                text = obsAction.SourceText;
-                                url = obsAction.SourceURL;
-                                dimensions = obsAction.SourceDimensions;
-                                if (!string.IsNullOrEmpty(source)) { textPath = GetDefaultReferenceFilePath(OBSStudioReferenceTextFilesDirectory, source); }
-                            }
-                            else if (action is XSplitAction)
-                            {
-                                type = StreamingSoftwareTypeEnum.XSplit;
-                                XSplitAction xsplitAction = (XSplitAction)action;
-                                scene = xsplitAction.SceneName;
-                                source = xsplitAction.SourceName;
-                                visible = xsplitAction.SourceVisible;
-                                text = xsplitAction.SourceText;
-                                url = xsplitAction.SourceURL;
-                                if (!string.IsNullOrEmpty(source)) { textPath = GetDefaultReferenceFilePath(XSplitReferenceTextFilesDirectory, source); }
-                            }
-                            else if (action is StreamlabsOBSAction)
-                            {
-                                type = StreamingSoftwareTypeEnum.StreamlabsOBS;
-                                StreamlabsOBSAction slobsAction = (StreamlabsOBSAction)action;
-                                scene = slobsAction.SceneName;
-                                source = slobsAction.SourceName;
-                                visible = slobsAction.SourceVisible;
-                                text = slobsAction.SourceText;
-                                if (!string.IsNullOrEmpty(source)) { textPath = GetDefaultReferenceFilePath(StreamlabsOBSStudioReferenceTextFilesDirectory, source); }
-                            }
-#pragma warning restore CS0612 // Type or member is obsolete
-
-                            StreamingSoftwareAction sAction = null;
-                            if (!string.IsNullOrEmpty(scene))
-                            {
-                                sAction = StreamingSoftwareAction.CreateSceneAction(type, scene);
-                            }
-                            else if (!string.IsNullOrEmpty(text))
-                            {
-                                sAction = StreamingSoftwareAction.CreateTextSourceAction(type, source, visible, text, textPath);
-                            }
-                            else if (!string.IsNullOrEmpty(url))
-                            {
-                                sAction = StreamingSoftwareAction.CreateWebBrowserSourceAction(type, source, visible, url);
-                            }
-                            else if (dimensions != null)
-                            {
-                                sAction = StreamingSoftwareAction.CreateSourceDimensionsAction(type, source, visible, dimensions);
-                            }
-                            else
-                            {
-                                sAction = StreamingSoftwareAction.CreateSourceVisibilityAction(type, source, visible);
-                            }
-
-                            command.Actions[i] = sAction;
-                        }
-                    }
-                }
-
-                await ChannelSession.Services.Settings.Save(settings);
-            }
         }
 
         private static async Task Version17Upgrade(int version, string filePath)

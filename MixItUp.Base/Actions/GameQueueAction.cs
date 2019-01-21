@@ -32,6 +32,8 @@ namespace MixItUp.Base.Actions
         EnableDisableQueue,
         [Name("Clear Queue")]
         ClearQueue,
+        [Name("User Join Front of Queue")]
+        JoinFrontOfQueue,
     }
 
     [DataContract]
@@ -75,7 +77,7 @@ namespace MixItUp.Base.Actions
                         return;
                     }
 
-                    if (this.GameQueueType == GameQueueActionType.JoinQueue)
+                    if (this.GameQueueType == GameQueueActionType.JoinQueue || this.GameQueueType == GameQueueActionType.JoinFrontOfQueue)
                     {
                         int position = ChannelSession.GameQueue.IndexOf(user);
                         if (position == -1)
@@ -104,21 +106,28 @@ namespace MixItUp.Base.Actions
                                 return;
                             }
 
-                            if (ChannelSession.Settings.GameQueueSubPriority)
+                            if (this.GameQueueType == GameQueueActionType.JoinFrontOfQueue)
                             {
-                                if (user.HasPermissionsTo(MixerRoleEnum.Subscriber))
+                                ChannelSession.GameQueue.Insert(0, user);
+                            }
+                            else
+                            {
+                                if (ChannelSession.Settings.GameQueueSubPriority)
                                 {
-                                    int totalSubs = ChannelSession.GameQueue.Count(u => u.HasPermissionsTo(MixerRoleEnum.Subscriber));
-                                    ChannelSession.GameQueue.Insert(totalSubs, user);
+                                    if (user.HasPermissionsTo(MixerRoleEnum.Subscriber))
+                                    {
+                                        int totalSubs = ChannelSession.GameQueue.Count(u => u.HasPermissionsTo(MixerRoleEnum.Subscriber));
+                                        ChannelSession.GameQueue.Insert(totalSubs, user);
+                                    }
+                                    else
+                                    {
+                                        ChannelSession.GameQueue.Add(user);
+                                    }
                                 }
                                 else
                                 {
                                     ChannelSession.GameQueue.Add(user);
                                 }
-                            }
-                            else
-                            {
-                                ChannelSession.GameQueue.Add(user);
                             }
                         }
                         await this.PrintUserPosition(user);

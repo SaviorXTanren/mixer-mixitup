@@ -200,6 +200,12 @@ namespace MixItUp.Base.Actions
             {
                 if (this.InteractiveType == InteractiveActionTypeEnum.Connect)
                 {
+                    if (ChannelSession.Interactive.IsConnected())
+                    {
+                        await ChannelSession.Interactive.Disconnect();
+                        GlobalEvents.InteractiveDisconnected();
+                    }
+
                     IEnumerable<InteractiveGameModel> games = await ChannelSession.Interactive.GetAllConnectableGames();
                     InteractiveGameModel game = games.FirstOrDefault(g => g.id.Equals(this.InteractiveGameID));
                     if (game != null)
@@ -212,8 +218,11 @@ namespace MixItUp.Base.Actions
                 }
                 else if (this.InteractiveType == InteractiveActionTypeEnum.Disconnect)
                 {
-                    await ChannelSession.Interactive.Disconnect();
-                    GlobalEvents.InteractiveDisconnected();
+                    if (ChannelSession.Interactive.IsConnected())
+                    {
+                        await ChannelSession.Interactive.Disconnect();
+                        GlobalEvents.InteractiveDisconnected();
+                    }
                 }
                 else if (ChannelSession.Interactive.IsConnected())
                 {

@@ -3,6 +3,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using OBSWebsocketDotNet;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -80,23 +81,23 @@ namespace MixItUp.OBS
             return Task.FromResult(0);
         }
 
-        public Task SetSourceVisibility(string sourceName, bool visibility)
+        public Task SetSourceVisibility(string sceneName, string sourceName, bool visibility)
         {
             try
             {
-                this.OBSWebsocket.SetSourceRender(sourceName, visibility);
+                this.OBSWebsocket.SetSourceRender(sourceName, visibility, sceneName);
             }
             catch (Exception ex) { Logger.Log(ex); }
             return Task.FromResult(0);
         }
 
-        public Task SetWebBrowserSourceURL(string sourceName, string url)
+        public Task SetWebBrowserSourceURL(string sceneName, string sourceName, string url)
         {
             try
             {
-                this.SetSourceVisibility(sourceName, visibility: false);
+                this.SetSourceVisibility(sceneName, sourceName, visibility: false);
 
-                BrowserSourceProperties properties = this.OBSWebsocket.GetBrowserSourceProperties(sourceName);
+                BrowserSourceProperties properties = this.OBSWebsocket.GetBrowserSourceProperties(sourceName, sceneName);
                 properties.IsLocalFile = false;
                 properties.URL = url;
                 this.OBSWebsocket.SetBrowserSourceProperties(sourceName, properties);
@@ -105,22 +106,27 @@ namespace MixItUp.OBS
             return Task.FromResult(0);
         }
 
-        public Task SetSourceDimensions(string sourceName, StreamingSourceDimensions dimensions)
+        public Task SetSourceDimensions(string sceneName, string sourceName, StreamingSourceDimensions dimensions)
         {
             try
             {
-                this.OBSWebsocket.SetSceneItemPosition(sourceName, dimensions.X, dimensions.Y);
-                this.OBSWebsocket.SetSceneItemTransform(sourceName, dimensions.Rotation, dimensions.XScale, dimensions.YScale);
+                this.OBSWebsocket.SetSceneItemPosition(sourceName, dimensions.X, dimensions.Y, sceneName);
+                this.OBSWebsocket.SetSceneItemTransform(sourceName, dimensions.Rotation, dimensions.XScale, dimensions.YScale, sceneName);
             }
             catch (Exception ex) { Logger.Log(ex); }
             return Task.FromResult(0);
         }
 
-        public Task<StreamingSourceDimensions> GetSourceDimensions(string sourceName)
+        public Task<StreamingSourceDimensions> GetSourceDimensions(string sceneName, string sourceName)
         {
             try
             {
                 OBSScene scene = this.OBSWebsocket.GetCurrentScene();
+                if (!string.IsNullOrEmpty(sceneName))
+                {
+                    scene = this.OBSWebsocket.ListScenes().FirstOrDefault(s => s.Name.Equals(sceneName));
+                }
+
                 foreach (SceneItem item in scene.Items)
                 {
                     if (item.SourceName.Equals(sourceName))
