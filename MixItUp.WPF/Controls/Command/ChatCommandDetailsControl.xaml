@@ -32,7 +32,15 @@
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
                 <TextBox x:Name="NameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Command Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                <ComboBox x:Name="CommandGroupComboBox" Grid.Column="2" IsEditable="True" MaterialDesign:HintAssist.Hint="Command Group" Width="150" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
             </Grid>
 
             <Grid Grid.Row="2">

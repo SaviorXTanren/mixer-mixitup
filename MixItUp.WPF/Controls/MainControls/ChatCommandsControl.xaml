@@ -88,7 +88,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Border Grid.Row="0" BorderBrush="{StaticResource PrimaryHueMidBrush}" BorderThickness="1">
+            <Border Grid.Row="0" BorderBrush="{StaticResource MaterialDesignBody}" BorderThickness="1">
                 <Grid Margin="15,10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -121,51 +121,53 @@
                 <ItemsControl x:Name="CustomCommandsItemsControl" HorizontalContentAlignment="Stretch">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Controls:AccordianGroupBoxControl>
-                                <Controls:AccordianGroupBoxControl.Header>
-                                    <Grid Background="Transparent">
-                                        <TextBlock HorizontalAlignment="Left" Text="{Binding DisplayName}" Foreground="{StaticResource WhiteColor}" Style="{StaticResource HeaderTextBlock}" />
+                            <Border BorderBrush="{StaticResource MaterialDesignBody}" BorderThickness="1">
+                                <Controls:AccordianGroupBoxControl>
+                                    <Controls:AccordianGroupBoxControl.Header>
+                                        <Grid Background="Transparent" Margin="5,0">
+                                            <TextBlock HorizontalAlignment="Left" Text="{Binding DisplayName}" Foreground="{StaticResource WhiteColor}" Style="{StaticResource HeaderTextBlock}" />
 
-                                        <ToggleButton Visibility="{Binding IsEnableSwitchToggable, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Right" IsChecked="{Binding Path=IsEnabled, Mode=TwoWay}" Checked="GroupCommandsToggleButton_Checked" Unchecked="GroupCommandsToggleButton_Checked" />
-                                    </Grid>
-                                </Controls:AccordianGroupBoxControl.Header>
+                                            <ToggleButton Visibility="{Binding IsEnableSwitchToggable, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Right" IsChecked="{Binding Path=IsEnabled, Mode=TwoWay}" Checked="GroupCommandsToggleButton_Checked" Unchecked="GroupCommandsToggleButton_Checked" />
+                                        </Grid>
+                                    </Controls:AccordianGroupBoxControl.Header>
 
-                                <ItemsControl ItemsSource="{Binding Commands}" HorizontalContentAlignment="Stretch">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Grid>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="Auto" />
-                                                    <RowDefinition Height="Auto" />
-                                                </Grid.RowDefinitions>
+                                    <ItemsControl ItemsSource="{Binding Commands}" HorizontalContentAlignment="Stretch">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                    </Grid.RowDefinitions>
 
-                                                <Grid Grid.Row="0" Margin="10,5">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*" />
-                                                        <ColumnDefinition Width="150" />
-                                                        <ColumnDefinition Width="125" />
-                                                        <ColumnDefinition Width="50" />
-                                                        <ColumnDefinition Width="220" />
-                                                    </Grid.ColumnDefinitions>
+                                                    <Grid Grid.Row="0" Margin="10,5">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="150" />
+                                                            <ColumnDefinition Width="125" />
+                                                            <ColumnDefinition Width="50" />
+                                                            <ColumnDefinition Width="220" />
+                                                        </Grid.ColumnDefinitions>
 
-                                                    <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center" />
+                                                        <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center" />
 
-                                                    <TextBlock Grid.Column="1" Text="{Binding CommandsString}" VerticalAlignment="Center" />
+                                                        <TextBlock Grid.Column="1" Text="{Binding CommandsString}" VerticalAlignment="Center" />
 
-                                                    <TextBlock Grid.Column="2" Text="{Binding UserRoleRequirementString}" VerticalAlignment="Center" />
+                                                        <TextBlock Grid.Column="2" Text="{Binding UserRoleRequirementString}" VerticalAlignment="Center" />
 
-                                                    <TextBlock Grid.Column="3" Text="{Binding Requirements.Cooldown.CooldownAmount}" VerticalAlignment="Center" />
+                                                        <TextBlock Grid.Column="3" Text="{Binding Requirements.Cooldown.CooldownAmount}" VerticalAlignment="Center" />
 
-                                                    <CommandControls:CommandButtonsControl Grid.Column="4" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
+                                                        <CommandControls:CommandButtonsControl Grid.Column="4" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
 
+                                                    </Grid>
+
+                                                    <Separator Grid.Row="1" />
                                                 </Grid>
-
-                                                <Separator Grid.Row="1" />
-                                            </Grid>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </Controls:AccordianGroupBoxControl>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </Controls:AccordianGroupBoxControl>
+                            </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

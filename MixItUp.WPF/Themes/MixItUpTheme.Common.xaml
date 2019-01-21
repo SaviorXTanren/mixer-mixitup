@@ -46,7 +46,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListViewItem">
-                    <Border BorderBrush="Black" BorderThickness="1">
+                    <Border BorderBrush="{StaticResource MaterialDesignBody}" BorderThickness="1">
                         <ContentPresenter />
                     </Border>
                 </ControlTemplate>

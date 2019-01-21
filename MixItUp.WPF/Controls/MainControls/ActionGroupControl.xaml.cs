@@ -35,6 +35,12 @@ namespace MixItUp.WPF.Controls.MainControls
             return base.InitializeInternal();
         }
 
+        protected override Task OnVisibilityChanged()
+        {
+            this.RefreshList();
+            return Task.FromResult(0);
+        }
+
         private void RefreshList()
         {
             string filter = this.ActionGroupNameFilterTextBox.Text;

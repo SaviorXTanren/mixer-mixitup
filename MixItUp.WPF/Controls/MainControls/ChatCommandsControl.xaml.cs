@@ -213,6 +213,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void GroupCommandsToggleButton_Checked(object sender, RoutedEventArgs e)
         {
+
             this.RefreshList();
         }
 
