@@ -141,6 +141,8 @@ namespace MixItUp.Base.Commands
                     // Do our best to subtract the required currency
                     this.Requirements.TrySubtractCurrencyAmount(triggeringUser);
 
+                    this.Requirements.TrySubtractInventoryAmount(triggeringUser);
+
                     this.Requirements.UpdateCooldown(triggeringUser);
                 }
 
