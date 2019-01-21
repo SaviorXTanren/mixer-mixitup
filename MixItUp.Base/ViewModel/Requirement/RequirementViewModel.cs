@@ -109,7 +109,7 @@ namespace MixItUp.Base.ViewModel.Requirement
         {
             if (this.Inventory != null)
             {
-                return this.Inventory.TrySubtractAmount(user.Data);
+                return this.Inventory.DoesMeetRequirement(user.Data);
             }
             return true;
         }
@@ -162,6 +162,15 @@ namespace MixItUp.Base.ViewModel.Requirement
             if (this.Currency != null)
             {
                 return this.Currency.TrySubtractAmount(user.Data, amount);
+            }
+            return true;
+        }
+
+        public bool TrySubtractInventoryAmount(UserViewModel user)
+        {
+            if (this.Inventory != null)
+            {
+                return this.Inventory.TrySubtractAmount(user.Data);
             }
             return true;
         }

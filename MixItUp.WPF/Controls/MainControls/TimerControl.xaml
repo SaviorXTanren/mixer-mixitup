@@ -23,8 +23,8 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" BorderBrush="{StaticResource PrimaryHueMidBrush}" BorderThickness="1">
-            <Grid Margin="15">
+        <Border Grid.Row="0" BorderBrush="{StaticResource MaterialDesignBody}" BorderThickness="1">
+            <Grid Margin="15,10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="240" />
@@ -42,42 +42,44 @@
             <ItemsControl x:Name="TimerCommandsItemsControl" HorizontalContentAlignment="Stretch">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Controls:AccordianGroupBoxControl>
-                            <Controls:AccordianGroupBoxControl.Header>
-                                <Grid Background="Transparent">
-                                    <TextBlock HorizontalAlignment="Left" Text="{Binding DisplayName}" Foreground="{StaticResource WhiteColor}" Style="{StaticResource HeaderTextBlock}" />
+                        <Border BorderBrush="{StaticResource MaterialDesignBody}" BorderThickness="1">
+                            <Controls:AccordianGroupBoxControl>
+                                <Controls:AccordianGroupBoxControl.Header>
+                                    <Grid Background="Transparent" Margin="5,0">
+                                        <TextBlock HorizontalAlignment="Left" Text="{Binding DisplayName}" Foreground="{StaticResource WhiteColor}" Style="{StaticResource HeaderTextBlock}" />
 
-                                    <ToggleButton Visibility="{Binding IsEnableSwitchToggable, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Right" IsChecked="{Binding Path=IsEnabled, Mode=TwoWay}" Checked="GroupCommandsToggleButton_Checked" Unchecked="GroupCommandsToggleButton_Checked" />
-                                </Grid>
-                            </Controls:AccordianGroupBoxControl.Header>
+                                        <ToggleButton Visibility="{Binding IsEnableSwitchToggable, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Right" IsChecked="{Binding Path=IsEnabled, Mode=TwoWay}" Checked="GroupCommandsToggleButton_Checked" Unchecked="GroupCommandsToggleButton_Checked" />
+                                    </Grid>
+                                </Controls:AccordianGroupBoxControl.Header>
 
-                            <ItemsControl ItemsSource="{Binding Commands}" HorizontalContentAlignment="Stretch">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                            </Grid.RowDefinitions>
+                                <ItemsControl ItemsSource="{Binding Commands}" HorizontalContentAlignment="Stretch">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
 
-                                            <Separator Grid.Row="0" />
+                                                <Grid Grid.Row="0" Margin="10,5">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="240" />
+                                                    </Grid.ColumnDefinitions>
 
-                                            <Grid Grid.Row="1" Margin="10">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="240" />
-                                                </Grid.ColumnDefinitions>
+                                                    <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center" />
 
-                                                <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center" />
+                                                    <CommandControls:CommandButtonsControl Grid.Column="1" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
 
-                                                <CommandControls:CommandButtonsControl Grid.Column="1" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
+                                                </Grid>
 
+                                                <Separator Grid.Row="1" />
                                             </Grid>
-                                        </Grid>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </Controls:AccordianGroupBoxControl>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Controls:AccordianGroupBoxControl>
+                        </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

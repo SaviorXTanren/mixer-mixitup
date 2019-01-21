@@ -12,18 +12,22 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
         public bool IsEnabled
         {
-            get { return this.isEnabled; }
+            get { return this.Commands.Any(c => c.IsEnabled); }
             set
             {
-                this.isEnabled = value;
-                this.NotifyPropertyChanged();
-                foreach (CommandBase command in this.Commands)
+                bool newIsEnabledState = !this.IsEnabled;
+
+                foreach (CommandBase command in ChannelSession.AllCommands)
                 {
-                    command.IsEnabled = this.IsEnabled;
+                    if (this.GroupName.Equals(command.GroupName))
+                    {
+                        command.IsEnabled = newIsEnabledState;
+                    }
                 }
+
+                this.NotifyPropertyChanged();
             }
         }
-        private bool isEnabled;
 
         public bool IsEnableSwitchToggable { get { return !string.IsNullOrEmpty(this.GroupName); } }
 
@@ -40,14 +44,12 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
         public CommandGroupControlViewModel(IEnumerable<CommandBase> commands)
         {
-            this.GroupName = commands.First().GroupName;
-
-            this.isEnabled = this.Commands.Any(c => c.IsEnabled);
-
             foreach (CommandBase command in commands)
             {
                 this.Commands.Add(command);
             }
+
+            this.GroupName = this.Commands.First().GroupName;
         }
     }
 }

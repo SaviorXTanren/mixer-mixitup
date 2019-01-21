@@ -53,7 +53,7 @@ namespace MixItUp.Desktop.Services
         private const string SpotifyLinkPrefix = "https://open.spotify.com/track/";
         private const string SpotifyTrackPrefix = "spotify:track:";
 
-        private const string SpotifyPlaylistLinkRegex = @"https://open.spotify.com/user/\w+/playlist/\w+";
+        private const string SpotifyPlaylistLinkRegex = @"https://open.spotify.com/user/[\w._-]+/playlist/\w+";
         private const string SpotifyPlaylistRegex = @"spotify:playlist:";
         private const string SpotifyPlaylistUriFormat = "spotify:playlist:{0}";
         private const string SpotifyUserPlaylistRegex = @"spotify:user:\w+:playlist:";

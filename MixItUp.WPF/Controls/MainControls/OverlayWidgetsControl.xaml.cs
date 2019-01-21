@@ -106,15 +106,18 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                Button button = (Button)sender;
-                OverlayWidget widget = (OverlayWidget)button.DataContext;
-                if (widget != null)
+                if (await MessageBoxHelper.ShowConfirmationDialog("Are you sure you want to delete this widget?"))
                 {
-                    ChannelSession.Settings.OverlayWidgets.Remove(widget);
-                    await this.HideWidget(widget);
+                    Button button = (Button)sender;
+                    OverlayWidget widget = (OverlayWidget)button.DataContext;
+                    if (widget != null)
+                    {
+                        ChannelSession.Settings.OverlayWidgets.Remove(widget);
+                        await this.HideWidget(widget);
 
-                    await ChannelSession.SaveSettings();
-                    this.RefreshList();
+                        await ChannelSession.SaveSettings();
+                        this.RefreshList();
+                    }
                 }
             });
         }
