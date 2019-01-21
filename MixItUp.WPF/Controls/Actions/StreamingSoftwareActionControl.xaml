@@ -60,17 +60,21 @@
 
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="600" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBox Grid.Column="0" x:Name="SourceNameTextBox" MaterialDesign:HintAssist.Hint="Source Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Grid.Column="0" x:Name="SourceSceneNameTextBox" MaterialDesign:HintAssist.Hint="Scene Name (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                <TextBlock Grid.Column="2" VerticalAlignment="Center">Visible:</TextBlock>
-                <CheckBox Grid.Column="4" x:Name="SourceVisibleCheckBox" />
+                <TextBox Grid.Column="2" x:Name="SourceNameTextBox" MaterialDesign:HintAssist.Hint="Source Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                <TextBlock Grid.Column="4" VerticalAlignment="Center">Visible:</TextBlock>
+                <CheckBox Grid.Column="6" x:Name="SourceVisibleCheckBox" />
             </Grid>
 
             <Grid x:Name="SourceTextGrid" Grid.Row="2" Visibility="Collapsed">

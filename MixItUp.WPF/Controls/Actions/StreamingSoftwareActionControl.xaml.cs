@@ -48,6 +48,7 @@ namespace MixItUp.WPF.Controls.Actions
                 }
                 else
                 {
+                    this.SourceSceneNameTextBox.Text = this.action.SceneName;
                     this.SourceNameTextBox.Text = this.action.SourceName;
                     this.SourceVisibleCheckBox.IsChecked = this.action.SourceVisible;
                     if (this.action.ActionType == StreamingActionTypeEnum.TextSource)
@@ -98,7 +99,8 @@ namespace MixItUp.WPF.Controls.Actions
                     {
                         if (!string.IsNullOrEmpty(this.SourceTextTextBox.Text) && !string.IsNullOrEmpty(this.SourceLoadTextFromTextBox.Text))
                         {
-                            StreamingSoftwareAction action = StreamingSoftwareAction.CreateTextSourceAction(software, this.SourceNameTextBox.Text, this.SourceVisibleCheckBox.IsChecked.GetValueOrDefault(), this.SourceTextTextBox.Text, this.SourceLoadTextFromTextBox.Text);
+                            StreamingSoftwareAction action = StreamingSoftwareAction.CreateTextSourceAction(software, this.SourceSceneNameTextBox.Text, 
+                                this.SourceNameTextBox.Text, this.SourceVisibleCheckBox.IsChecked.GetValueOrDefault(), this.SourceTextTextBox.Text, this.SourceLoadTextFromTextBox.Text);
                             action.UpdateReferenceTextFile(string.Empty);
                             return action;
                         }
@@ -107,7 +109,8 @@ namespace MixItUp.WPF.Controls.Actions
                     {
                         if (!string.IsNullOrEmpty(this.SourceWebPageTextBox.Text))
                         {
-                            return StreamingSoftwareAction.CreateWebBrowserSourceAction(software, this.SourceNameTextBox.Text, this.SourceVisibleCheckBox.IsChecked.GetValueOrDefault(), this.SourceWebPageTextBox.Text);
+                            return StreamingSoftwareAction.CreateWebBrowserSourceAction(software, this.SourceSceneNameTextBox.Text, this.SourceNameTextBox.Text,
+                                this.SourceVisibleCheckBox.IsChecked.GetValueOrDefault(), this.SourceWebPageTextBox.Text);
                         }
                     }
                     else if (type == StreamingActionTypeEnum.SourceDimensions)
@@ -118,13 +121,15 @@ namespace MixItUp.WPF.Controls.Actions
                             int.TryParse(this.SourceDimensionsRotationTextBox.Text, out rotation) && float.TryParse(this.SourceDimensionsXScaleTextBox.Text, out xScale) &&
                             float.TryParse(this.SourceDimensionsYScaleTextBox.Text, out yScale))
                         {
-                            return StreamingSoftwareAction.CreateSourceDimensionsAction(software, this.SourceNameTextBox.Text, this.SourceVisibleCheckBox.IsChecked.GetValueOrDefault(),
+                            return StreamingSoftwareAction.CreateSourceDimensionsAction(software, this.SourceSceneNameTextBox.Text, this.SourceNameTextBox.Text,
+                                this.SourceVisibleCheckBox.IsChecked.GetValueOrDefault(),
                                 new StreamingSourceDimensions() { X = x, Y = y, Rotation = rotation, XScale = xScale, YScale = yScale });
                         }
                     }
                     else
                     {
-                        return StreamingSoftwareAction.CreateSourceVisibilityAction(software, this.SourceNameTextBox.Text, this.SourceVisibleCheckBox.IsChecked.GetValueOrDefault());
+                        return StreamingSoftwareAction.CreateSourceVisibilityAction(software, this.SourceSceneNameTextBox.Text, this.SourceNameTextBox.Text,
+                            this.SourceVisibleCheckBox.IsChecked.GetValueOrDefault());
                     }
                 }
             }
@@ -268,7 +273,7 @@ namespace MixItUp.WPF.Controls.Actions
                     {
                         if (ChannelSession.Services.OBSWebsocket != null || await ChannelSession.Services.InitializeOBSWebsocket())
                         {
-                            dimensions = await ChannelSession.Services.OBSWebsocket.GetSourceDimensions(this.SourceNameTextBox.Text);
+                            dimensions = await ChannelSession.Services.OBSWebsocket.GetSourceDimensions(this.SourceSceneNameTextBox.Text, this.SourceNameTextBox.Text);
                         }
                         else
                         {
@@ -279,7 +284,7 @@ namespace MixItUp.WPF.Controls.Actions
                     {
                         if (ChannelSession.Services.StreamlabsOBSService != null || await ChannelSession.Services.InitializeStreamlabsOBSService())
                         {
-                            dimensions = await ChannelSession.Services.StreamlabsOBSService.GetSourceDimensions(this.SourceNameTextBox.Text);
+                            dimensions = await ChannelSession.Services.StreamlabsOBSService.GetSourceDimensions(this.SourceSceneNameTextBox.Text, this.SourceNameTextBox.Text);
                         }
                         else
                         {
