@@ -480,9 +480,9 @@ namespace MixItUp.Desktop
             this.ModerationBlockLinksApplyStrikes = true;
             this.ModerationCapsBlockIsPercentage = true;
             this.ModerationPunctuationBlockIsPercentage = true;
-            this.ModerationStrike1Command = CustomCommand.BasicChatCommand("Moderation Strike 1", "You have received a moderation strike, you currently have $usermoderationstrikes strike(s)", isWhisper: true);
-            this.ModerationStrike2Command = CustomCommand.BasicChatCommand("Moderation Strike 2", "You have received a moderation strike, you currently have $usermoderationstrikes strike(s)", isWhisper: true);
-            this.ModerationStrike3Command = CustomCommand.BasicChatCommand("Moderation Strike 3", "You have received a moderation strike, you currently have $usermoderationstrikes strike(s)", isWhisper: true);
+            this.ModerationStrike1Command = CustomCommand.BasicChatCommand("Moderation Strike 1", "$moderationreason. You have received a moderation strike & currently have $usermoderationstrikes strike(s)", isWhisper: true);
+            this.ModerationStrike2Command = CustomCommand.BasicChatCommand("Moderation Strike 2", "$moderationreason. You have received a moderation strike & currently have $usermoderationstrikes strike(s)", isWhisper: true);
+            this.ModerationStrike3Command = CustomCommand.BasicChatCommand("Moderation Strike 3", "$moderationreason. You have received a moderation strike & currently have $usermoderationstrikes strike(s)", isWhisper: true);
         }
 
         public DesktopChannelSettings()
