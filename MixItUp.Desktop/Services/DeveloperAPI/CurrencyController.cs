@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
+using System.Net.Http;
+using System.Net.Http.Formatting;
 
 namespace MixItUp.Desktop.Services.DeveloperAPI
 {
@@ -31,7 +33,12 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
         {
             if (!ChannelSession.Settings.Currencies.ContainsKey(currencyID))
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
+                {
+                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to find currency: {currencyID.ToString()}." }, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "Currency ID not found"
+                };
+                throw new HttpResponseException(resp);
             }
 
             return CurrencyFromUserCurrencyViewModel(ChannelSession.Settings.Currencies[currencyID]);
@@ -43,13 +50,23 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
         {
             if (!ChannelSession.Settings.Currencies.ContainsKey(currencyID))
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
+                {
+                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to find currency: {currencyID.ToString()}." }, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "Currency ID not found"
+                };
+                throw new HttpResponseException(resp);
             }
 
             if (count < 1)
             {
                 // TODO: Consider checking or a max # too? (100?)
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
+                var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new ObjectContent<Error>(new Error { Message = $"Count must be greater than 0." }, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "Count too low"
+                };
+                throw new HttpResponseException(resp);
             }
 
             UserCurrencyViewModel currency = ChannelSession.Settings.Currencies[currencyID];
@@ -74,12 +91,22 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
         {
             if (!ChannelSession.Settings.Currencies.ContainsKey(currencyID))
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
+                {
+                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to find currency: {currencyID.ToString()}." }, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "Currency ID not found"
+                };
+                throw new HttpResponseException(resp);
             }
 
             if (giveDatas == null)
             {
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
+                var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to parse array of give data from POST body." }, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "Invalid POST Body"
+                };
+                throw new HttpResponseException(resp);
             }
 
             UserCurrencyViewModel currency = ChannelSession.Settings.Currencies[currencyID];

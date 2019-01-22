@@ -51,6 +51,8 @@ paths:
             $ref: '#/definitions/MixItUpUser'
         '404':
           description: User not found
+          schema:
+            $ref: '#/definitions/Error'
     put:
       summary: This API can be used to set user's ViewingMinutes or Currency Amount.  This API can be used with a PATCH as well.
       tags:
@@ -70,9 +72,13 @@ paths:
             $ref: '#/definitions/MixItUpUser'
         '400':
           description: Bad request was sent in
+          schema:
+            $ref: '#/definitions/Error'
         '404':
           description: User not found
-          
+          schema:
+            $ref: '#/definitions/Error'
+
   '/users':
     post:
       summary: This API can be used to lookup multiple users at once.
@@ -93,6 +99,8 @@ paths:
             $ref: '#/definitions/ListOfMixItUpUsers'
         '400':
           description: Bad request was sent in
+          schema:
+            $ref: '#/definitions/Error'
 
   '/users/{usernameOrID}/currency/{currencyID}/adjust':
     parameters:
@@ -127,10 +135,16 @@ paths:
             $ref: '#/definitions/MixItUpUser'
         '400':
           description: Bad request was sent in
+          schema:
+            $ref: '#/definitions/Error'
         '403':
           description: User does not have enough of the chosen currency to remove
+          schema:
+            $ref: '#/definitions/Error'
         '404':
-          description: User not found
+          description: User or currency not found
+          schema:
+            $ref: '#/definitions/Error'
 
   '/users/{usernameOrID}/inventory/{inventoryID}/adjust':
     parameters:
@@ -165,10 +179,16 @@ paths:
             $ref: '#/definitions/MixItUpUser'
         '400':
           description: Bad request was sent in
+          schema:
+            $ref: '#/definitions/Error'
         '403':
           description: User does not have enough of the chosen inventory items to remove
+          schema:
+            $ref: '#/definitions/Error'
         '404':
-          description: User not found
+          description: User or inventory not found
+          schema:
+            $ref: '#/definitions/Error'
 
   '/users/top':
     parameters:
@@ -205,6 +225,31 @@ paths:
           schema:
             $ref: '#/definitions/ListOfMixItUpCurrency'
 
+  '/currency/{currencyID}':
+    parameters:
+      - name: currencyID
+        in: path
+        description: 'The currency ID to query'
+        required: true
+        type: string
+        format: uuid
+    get:
+      tags:
+        - Currency
+      summary: Gets a specific currency
+      operationId: getCurrencyById
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/MixItUpCurrency'
+        '404':
+          description: The currency could not be found.
+          schema:
+            $ref: '#/definitions/Error'
+
   '/currency/{currencyID}/top':
     parameters:
       - name: count
@@ -234,6 +279,8 @@ paths:
             $ref: '#/definitions/ListOfMixItUpUsers'
         '404':
           description: The currency could not be found.
+          schema:
+            $ref: '#/definitions/Error'
 
   '/currency/{currencyID}/give':
     parameters:
@@ -264,8 +311,12 @@ paths:
             $ref: '#/definitions/ListOfMixItUpUsers'
         '400':
           description: Bad request was sent in
+          schema:
+            $ref: '#/definitions/Error'
         '404':
           description: The currency could not be found.
+          schema:
+            $ref: '#/definitions/Error'
 
   '/chat/users':
     get:
@@ -302,6 +353,8 @@ paths:
           description: Success
         '400':
           description: Bad request was sent in
+          schema:
+            $ref: '#/definitions/Error'
     delete:
       tags:
         - Chat
@@ -331,6 +384,8 @@ paths:
           description: Success
         '400':
           description: Bad request was sent in
+          schema:
+            $ref: '#/definitions/Error'
 
   '/commands':
     get:
@@ -368,6 +423,8 @@ paths:
             $ref: '#/definitions/MixItUpCommand'
         '404':
           description: The command could not be found.
+          schema:
+            $ref: '#/definitions/Error'
     post:
       tags:
         - Commands
@@ -386,6 +443,8 @@ paths:
           description: Success
         '404':
           description: The command could not be found.
+          schema:
+            $ref: '#/definitions/Error'
     put:
       tags:
         - Commands
@@ -407,8 +466,12 @@ paths:
             $ref: '#/definitions/MixItUpCommand'
         '400':
           description: Bad request was sent in
+          schema:
+            $ref: '#/definitions/Error'
         '404':
           description: The command could not be found.
+          schema:
+            $ref: '#/definitions/Error'
 
   '/inventory':
     get:
@@ -423,6 +486,31 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/ListOfMixItUpInventory'
+
+  '/inventory/{inventoryID}':
+    parameters:
+      - name: inventoryID
+        in: path
+        description: 'The inventory ID to query'
+        required: true
+        type: string
+        format: uuid
+    get:
+      tags:
+        - Inventory
+      summary: Gets a specific inventory
+      operationId: getInventoryById
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/MixItUpInventory'
+        '404':
+          description: The inventory could not be found.
+          schema:
+            $ref: '#/definitions/Error'
 
   '/mixplay/broadcast':
     post:
@@ -446,8 +534,16 @@ paths:
           description: Success
         '400':
           description: Invalid data submitted
+          schema:
+            $ref: '#/definitions/Error'
 
   '/mixplay/user/{participantIDOrUserNameOrUserId}':
+    parameters:
+      - name: participantIDOrUserNameOrUserId
+        in: path
+        description: 'The participant ID, UserName, or UserId ID to query'
+        required: true
+        type: string
     get:
       tags:
         - MixPlay
@@ -470,6 +566,8 @@ paths:
             $ref: '#/definitions/MixPlayUser'
         '404':
           description: User not found
+          schema:
+            $ref: '#/definitions/Error'
 
   '/mixplay/users':
     get:
@@ -510,6 +608,8 @@ paths:
             $ref: '#/definitions/MixerUser'
         '404':
           description: User not found
+          schema:
+            $ref: '#/definitions/Error'
 
 definitions:
   MixPlayUser:
@@ -805,3 +905,11 @@ definitions:
   MixerUser:
     type: object
     description: See Mixer docs
+
+  Error:
+    type: object
+    required: [ Message ]
+    properties:
+      Message:
+        description: "A description of the problem."
+        type: string
