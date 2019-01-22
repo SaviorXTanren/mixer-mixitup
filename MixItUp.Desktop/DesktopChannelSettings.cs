@@ -130,6 +130,8 @@ namespace MixItUp.Desktop
 
         [JsonProperty]
         public bool QuotesEnabled { get; set; }
+        [JsonProperty]
+        public string QuotesFormat { get; set; }
 
         [JsonProperty]
         public int TimerCommandsInterval { get; set; }

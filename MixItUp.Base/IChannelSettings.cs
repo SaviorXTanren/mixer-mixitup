@@ -76,6 +76,7 @@ namespace MixItUp.Base
         RequirementViewModel GameQueueRequirements { get; set; }
 
         bool QuotesEnabled { get; set; }
+        string QuotesFormat { get; set; }
         
         int TimerCommandsInterval { get; set; }
         int TimerCommandsMinimumMessages { get; set; }

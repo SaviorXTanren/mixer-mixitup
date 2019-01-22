@@ -452,7 +452,7 @@ namespace MixItUp.Base.Commands
                             }
 
                             UserQuoteViewModel quote = ChannelSession.Settings.UserQuotes[quoteIndex];
-                            await ChannelSession.Chat.SendMessage("Quote #" + (quoteIndex + 1) + ": " + quote.ToString());
+                            await ChannelSession.Chat.SendMessage(quote.ToString());
                         }
                         else
                         {
@@ -496,7 +496,7 @@ namespace MixItUp.Base.Commands
 
                         if (ChannelSession.Chat != null)
                         {
-                            await ChannelSession.Chat.SendMessage(string.Format("Added Quote #{0}: {1}", (ChannelSession.Settings.UserQuotes.IndexOf(quote) + 1), quote.ToString()));
+                            await ChannelSession.Chat.SendMessage("Added " + quote.ToString());
                         }
                     }
                     else
