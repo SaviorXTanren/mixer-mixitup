@@ -51,7 +51,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             };
         }
 
-        [Route("user/search/{userName}")]
+        [Route("user/search/username/{userName}")]
         [HttpGet]
         public async Task<MixPlayUser> GetUserByUserName(string userName)
         {
@@ -74,6 +74,34 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 ParticipantIDs = user.InteractiveIDs.Keys.ToList(),
             };
         }
+
+        [Route("user/search/participant/{participantID}")]
+        [HttpGet]
+        public async Task<MixPlayUser> GetUserByParticipantID(string participantID)
+        {
+            UserViewModel user = await ChannelSession.ActiveUsers.GetUserByParticipantID(participantID);
+
+            if (user == null)
+            {
+                var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
+                {
+                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to find participant by ID: {participantID}." }, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "Participant not found"
+                };
+                throw new HttpResponseException(resp);
+            }
+
+            return new MixPlayUser()
+            {
+                ID = user.ID,
+                UserName = user.UserName,
+                ParticipantIDs = user.InteractiveIDs.Keys.ToList(),
+            };
+        }
+
+
+
+
 
         [Route("broadcast")]
         [HttpPost]

@@ -7,18 +7,24 @@ namespace MixItUp.API
     //  GET:    http://localhost:8911/api/mixplay/users                     MixPlay.GetAllUsersAsync
     //  GET:    http://localhost:8911/api/mixplay/user/{userID}             MixPlay.GetUserAsync
     //  GET:    http://localhost:8911/api/mixplay/user/search/{userName}    MixPlay.GetUserAsync
+    //  GET:    http://localhost:8911/api/mixplay/user/search/{userName}    MixPlay.GetUserAsync
     //  POST:   http://localhost:8911/api/mixplay/broadcast                 MixPlay.SendBroadcastAsync
     //  POST:   http://localhost:8911/api/mixplay/broadcast/users           MixPlay.SendUsersBroadcastAsync
 
     public static class MixPlay
     {
         // User Methods
-        public static async Task<MixPlayUser> GetUserAsync(string userName)
+        public static async Task<MixPlayUser> GetUserByUsernameAsync(string userName)
         {
-            return await RestClient.GetAsync<MixPlayUser>($"mixplay/user/search/{userName}");
+            return await RestClient.GetAsync<MixPlayUser>($"mixplay/user/search/username/{userName}");
         }
 
-        public static async Task<MixPlayUser> GetUserAsync(uint userID)
+        public static async Task<MixPlayUser> GetUserByParticipantIDAsync(string participantID)
+        {
+            return await RestClient.GetAsync<MixPlayUser>($"mixplay/user/search/participant/{participantID}");
+        }
+
+        public static async Task<MixPlayUser> GetUserByIDAsync(uint userID)
         {
             return await RestClient.GetAsync<MixPlayUser>($"mixplay/user/{userID}");
         }

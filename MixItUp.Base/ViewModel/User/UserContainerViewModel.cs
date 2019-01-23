@@ -58,11 +58,11 @@ namespace MixItUp.Base.ViewModel.User
             });
         }
 
-        public async Task<UserViewModel> GetUserByID(string interactiveParticipantID)
+        public async Task<UserViewModel> GetUserByParticipantID(string participantID)
         {
             return await this.semaphore.WaitAndRelease(() =>
             {
-                return Task.FromResult(this.users.Values.FirstOrDefault(u => u.InteractiveIDs.ContainsKey(interactiveParticipantID)));
+                return Task.FromResult(this.users.Values.FirstOrDefault(u => u.InteractiveIDs.ContainsKey(participantID)));
             });
         }
 
