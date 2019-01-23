@@ -123,6 +123,7 @@ namespace MixItUp.Base
         public static ChatClientWrapper Chat { get; private set; }
         public static InteractiveClientWrapper Interactive { get; private set; }
         public static ConstellationClientWrapper Constellation { get; private set; }
+        public static TimerCommandHelper Timers { get; private set; }
 
         public static StatisticsTracker Statistics { get; private set; }
 
@@ -230,6 +231,8 @@ namespace MixItUp.Base
             ChannelSession.Interactive = new InteractiveClientWrapper();
 
             ChannelSession.Statistics = new StatisticsTracker();
+
+            ChannelSession.Timers = new TimerCommandHelper();
         }
 
         public static async Task<bool> ConnectUser(IEnumerable<OAuthClientScopeEnum> scopes, string channelName = null)
@@ -617,6 +620,8 @@ namespace MixItUp.Base
                             ChannelSession.Settings.UserData.ManualValueChanged(userData.ID);
                         }
                     }
+
+                    ChannelSession.Timers.Initialize();
 
                     await ChannelSession.LoadUserEmoticons();
 

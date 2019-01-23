@@ -320,10 +320,6 @@ namespace MixItUp.Base.MixerAPI
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        Task.Run(async () => { await this.TimerCommandsBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                         Task.Run(async () => { await this.ChatterJoinBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
@@ -595,42 +591,6 @@ namespace MixItUp.Base.MixerAPI
                 await ChannelSession.SaveSettings();
 
                 tokenSource.Token.ThrowIfCancellationRequested();
-            });
-        }
-
-        private async Task TimerCommandsBackground()
-        {
-            int timerCommandIndex = 0;
-            await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
-            {
-                DateTimeOffset startTime = DateTimeOffset.Now;
-                int startMessageCount = this.Messages.Count;
-
-                tokenSource.Token.ThrowIfCancellationRequested();
-
-                await Task.Delay(1000 * 60 * ChannelSession.Settings.TimerCommandsInterval, tokenSource.Token);
-
-                tokenSource.Token.ThrowIfCancellationRequested();
-
-                if (!ChannelSession.Settings.DisableAllTimers)
-                {
-                    IEnumerable<TimerCommand> timers = ChannelSession.Settings.TimerCommands.Where(c => c.IsEnabled);
-                    if (timers.Count() > 0)
-                    {
-                        timerCommandIndex = timerCommandIndex % timers.Count();
-                        TimerCommand command = timers.ElementAt(timerCommandIndex);
-
-                        while ((this.Messages.Count - startMessageCount) < ChannelSession.Settings.TimerCommandsMinimumMessages)
-                        {
-                            tokenSource.Token.ThrowIfCancellationRequested();
-                            await Task.Delay(1000 * 10, tokenSource.Token);
-                        }
-
-                        await command.Perform();
-
-                        timerCommandIndex++;
-                    }
-                }
             });
         }
 

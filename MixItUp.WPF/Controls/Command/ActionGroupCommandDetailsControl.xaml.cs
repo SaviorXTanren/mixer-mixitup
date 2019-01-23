@@ -70,9 +70,13 @@ namespace MixItUp.WPF.Controls.Command
                 this.command.IsRandomized = this.RunOneRandomlyToggleButton.IsChecked.GetValueOrDefault();
 
                 this.command.GroupName = this.CommandGroupComboBox.Text;
-                if (!string.IsNullOrEmpty(this.CommandGroupComboBox.Text) && !ChannelSession.Settings.CommandGroups.ContainsKey(this.CommandGroupComboBox.Text))
+                if (!string.IsNullOrEmpty(this.CommandGroupComboBox.Text))
                 {
-                    ChannelSession.Settings.CommandGroups[this.CommandGroupComboBox.Text] = new CommandGroupSettings();
+                    if (!ChannelSession.Settings.CommandGroups.ContainsKey(this.CommandGroupComboBox.Text))
+                    {
+                        ChannelSession.Settings.CommandGroups[this.CommandGroupComboBox.Text] = new CommandGroupSettings(this.CommandGroupComboBox.Text);
+                    }
+                    ChannelSession.Settings.CommandGroups[this.CommandGroupComboBox.Text].Name = this.CommandGroupComboBox.Text;
                 }
 
                 return this.command;

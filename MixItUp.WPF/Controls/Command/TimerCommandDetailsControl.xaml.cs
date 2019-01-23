@@ -77,9 +77,10 @@ namespace MixItUp.WPF.Controls.Command
                 {
                     if (!ChannelSession.Settings.CommandGroups.ContainsKey(this.CommandGroupComboBox.Text))
                     {
-                        ChannelSession.Settings.CommandGroups[this.CommandGroupComboBox.Text] = new CommandGroupSettings();
+                        ChannelSession.Settings.CommandGroups[this.CommandGroupComboBox.Text] = new CommandGroupSettings(this.CommandGroupComboBox.Text);
                     }
 
+                    ChannelSession.Settings.CommandGroups[this.CommandGroupComboBox.Text].Name = this.CommandGroupComboBox.Text;
                     if (!string.IsNullOrEmpty(this.GroupTimerTextBox.Text) && int.TryParse(this.GroupTimerTextBox.Text, out int timerInterval))
                     {
                         ChannelSession.Settings.CommandGroups[this.CommandGroupComboBox.Text].TimerInterval = timerInterval;

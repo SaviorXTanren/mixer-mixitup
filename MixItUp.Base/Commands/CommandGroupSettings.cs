@@ -8,5 +8,7 @@ namespace MixItUp.Base.Commands
         public string Name { get; set; }
 
         public int TimerInterval { get; set; }
+        
+        public CommandGroupSettings(string name) { this.Name = name; }
     }
 }
