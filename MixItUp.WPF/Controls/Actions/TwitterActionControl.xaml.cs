@@ -40,7 +40,7 @@ namespace MixItUp.WPF.Controls.Actions
                 TwitterActionTypeEnum type = EnumHelper.GetEnumValueFromString<TwitterActionTypeEnum>((string)this.TypeComboBox.SelectedItem);
                 if (type == TwitterActionTypeEnum.SendTweet)
                 {
-                    if (!string.IsNullOrEmpty(this.TweetMessageTextBox.Text))
+                    if (!string.IsNullOrEmpty(this.TweetMessageTextBox.Text) && !TwitterAction.CheckIfTweetContainsTooManyTags(this.TweetMessageTextBox.Text))
                     {
                         return new TwitterAction(this.TweetMessageTextBox.Text, this.TweetImagePathTextBox.Text);
                     }

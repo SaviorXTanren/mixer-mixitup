@@ -144,5 +144,10 @@ namespace MixItUp.WPF.Controls.MainControls
                 }
             });
         }
+
+        private void QuotesFormatTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ChannelSession.Settings.QuotesFormat = this.QuotesFormatTextBox.Text;
+        }
     }
 }

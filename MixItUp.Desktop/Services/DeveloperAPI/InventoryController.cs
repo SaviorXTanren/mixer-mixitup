@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
+using System.Net.Http;
+using System.Net.Http.Formatting;
 
 namespace MixItUp.Desktop.Services.DeveloperAPI
 {
@@ -30,7 +32,12 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
         {
             if (!ChannelSession.Settings.Inventories.ContainsKey(inventoryID))
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
+                {
+                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to find inventory: {inventoryID.ToString()}." }, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "Inventory ID not found"
+                };
+                throw new HttpResponseException(resp);
             }
 
             return InventoryFromUserInventoryViewModel(ChannelSession.Settings.Inventories[inventoryID]);

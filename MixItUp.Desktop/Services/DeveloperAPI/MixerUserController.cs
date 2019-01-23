@@ -1,6 +1,9 @@
 ﻿using Mixer.Base.Model.User;
+using MixItUp.API.Models;
 using MixItUp.Base;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Formatting;
 using System.Web.Http;
 
 namespace MixItUp.Desktop.Services.DeveloperAPI
@@ -14,7 +17,12 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             UserModel user = ChannelSession.Connection.GetUser(userID).Result;
             if (user == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
+                {
+                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to find user: {userID.ToString()}." }, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "User ID not found"
+                };
+                throw new HttpResponseException(resp);
             }
 
             return user;
@@ -27,7 +35,12 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             UserModel user = ChannelSession.Connection.GetUser(username).Result;
             if (user == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
+                {
+                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to find user: {username}." }, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "Username not found"
+                };
+                throw new HttpResponseException(resp);
             }
 
             return user;

@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
+using System.Net.Http;
+using System.Net.Http.Formatting;
 
 namespace MixItUp.Desktop.Services.DeveloperAPI
 {
@@ -26,7 +28,12 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             Command selectedCommand = GetAllCommands().SingleOrDefault(c => c.ID == commandID);
             if (selectedCommand == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
+                {
+                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to find command: {commandID.ToString()}." }, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "Command ID not found"
+                };
+                throw new HttpResponseException(resp);
             }
 
             return selectedCommand;
@@ -39,7 +46,12 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             CommandBase selectedCommand = FindCommand(commandID, out string category);
             if (selectedCommand == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
+                {
+                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to find command: {commandID.ToString()}." }, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "Command ID not found"
+                };
+                throw new HttpResponseException(resp);
             }
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -56,7 +68,12 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             CommandBase selectedCommand = FindCommand(commandID, out string category);
             if (selectedCommand == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
+                {
+                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to find command: {commandID.ToString()}." }, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "Command ID not found"
+                };
+                throw new HttpResponseException(resp);
             }
 
             selectedCommand.IsEnabled = commandData.IsEnabled;

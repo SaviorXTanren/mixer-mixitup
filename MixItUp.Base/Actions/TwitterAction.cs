@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,6 +19,8 @@ namespace MixItUp.Base.Actions
     [DataContract]
     public class TwitterAction : ActionBase
     {
+        public static bool CheckIfTweetContainsTooManyTags(string tweet) { return !string.IsNullOrEmpty(tweet) && tweet.Count(c => c == '@') > 1; }
+
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
         protected override SemaphoreSlim AsyncSemaphore { get { return TwitterAction.asyncSemaphore; } }
@@ -58,6 +61,12 @@ namespace MixItUp.Base.Actions
                 {
                     string tweet = await this.ReplaceStringWithSpecialModifiers(this.TweetText, user, arguments);
                     string imagePath = await this.ReplaceStringWithSpecialModifiers(this.ImagePath, user, arguments);
+
+                    if (TwitterAction.CheckIfTweetContainsTooManyTags(tweet))
+                    {
+                        await ChannelSession.Chat.Whisper(ChannelSession.User.username, "The tweet you specified can not be sent because it tags more than 1 account");
+                    }
+
                     await ChannelSession.Services.Twitter.SendTweet(tweet, imagePath);
                 }
                 else if (this.ActionType == TwitterActionTypeEnum.UpdateName)

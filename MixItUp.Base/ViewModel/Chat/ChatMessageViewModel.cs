@@ -127,6 +127,12 @@ namespace MixItUp.Base.ViewModel.Chat
             {
                 return string.Empty;
             }
+
+            if ((this.IsSkill || this.IsChatSkill) && string.IsNullOrEmpty(this.Message))
+            {
+                return string.Empty;
+            }
+
             return await ModerationHelper.ShouldBeModerated(this.User, this.Message, this.ContainsLink);
         }
 

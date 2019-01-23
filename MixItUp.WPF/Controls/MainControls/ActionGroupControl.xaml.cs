@@ -52,7 +52,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.actionGroupCommands.Clear();
 
             IEnumerable<ActionGroupCommand> commands = ChannelSession.Settings.ActionGroupCommands.ToList();
-            foreach (var group in commands.Where(c => string.IsNullOrEmpty(filter) || c.Name.ToLower().Contains(filter)).GroupBy(c => c.GroupName))
+            foreach (var group in commands.Where(c => string.IsNullOrEmpty(filter) || c.Name.ToLower().Contains(filter)).GroupBy(c => c.GroupName).OrderBy(g => g.Key))
             {
                 IEnumerable<CommandBase> cmds = (nameOrder > 0) ? group.OrderBy(c => c.Name) : group.OrderByDescending(c => c.Name);
                 this.actionGroupCommands.Add(new CommandGroupControlViewModel(cmds));

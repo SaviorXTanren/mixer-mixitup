@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
+using System.Net.Http;
+using System.Net.Http.Formatting;
 
 namespace MixItUp.Desktop.Services.DeveloperAPI
 {
@@ -45,7 +47,12 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             UserDataViewModel user = ChannelSession.Settings.UserData[userID];
             if (user == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
+                {
+                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to find user: {userID.ToString()}." }, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "User ID not found"
+                };
+                throw new HttpResponseException(resp);
             }
 
             return UserFromUserDataViewModel(user);
@@ -58,7 +65,12 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             UserDataViewModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.UserName.Equals(username, StringComparison.InvariantCultureIgnoreCase));
             if (user == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
+                {
+                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to find user: {username}." }, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "Username not found"
+                };
+                throw new HttpResponseException(resp);
             }
 
             return UserFromUserDataViewModel(user);
@@ -71,7 +83,12 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             UserDataViewModel user = ChannelSession.Settings.UserData[userID];
             if (user == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
+                {
+                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to find user: {userID.ToString()}." }, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "User ID not found"
+                };
+                throw new HttpResponseException(resp);
             }
 
             return UpdateUser(user, updatedUserData);
@@ -84,7 +101,12 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             UserDataViewModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.UserName.Equals(username, StringComparison.InvariantCultureIgnoreCase));
             if (user == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
+                {
+                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to find user: {username}." }, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "Username not found"
+                };
+                throw new HttpResponseException(resp);
             }
 
             return UpdateUser(user, updatedUserData);
@@ -94,7 +116,12 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
         {
             if (updatedUserData == null || !updatedUserData.ID.Equals(user.ID))
             {
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
+                var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new ObjectContent<Error>(new Error { Message = "Unable to parse update data from POST body." }, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "Invalid POST Body"
+                };
+                throw new HttpResponseException(resp);
             }
 
             if (updatedUserData.ViewingMinutes.HasValue)
@@ -120,7 +147,12 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             UserDataViewModel user = ChannelSession.Settings.UserData[userID];
             if (user == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
+                {
+                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to find user: {userID.ToString()}." }, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "User ID not found"
+                };
+                throw new HttpResponseException(resp);
             }
 
             return AdjustCurrency(user, currencyID, currencyUpdate);
@@ -133,7 +165,12 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             UserDataViewModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.UserName.Equals(username, StringComparison.InvariantCultureIgnoreCase));
             if (user == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
+                {
+                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to find user: {username}." }, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "Username not found"
+                };
+                throw new HttpResponseException(resp);
             }
 
             return AdjustCurrency(user, currencyID, currencyUpdate);
@@ -146,7 +183,12 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             UserDataViewModel user = ChannelSession.Settings.UserData[userID];
             if (user == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
+                {
+                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to find user: {userID.ToString()}." }, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "User ID not found"
+                };
+                throw new HttpResponseException(resp);
             }
             return AdjustInventory(user, inventoryID, inventoryUpdate);
         }
@@ -158,7 +200,12 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             UserDataViewModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.UserName.Equals(username, StringComparison.InvariantCultureIgnoreCase));
             if (user == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
+                {
+                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to find user: {username}." }, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "Username not found"
+                };
+                throw new HttpResponseException(resp);
             }
             return AdjustInventory(user, inventoryID, inventoryUpdate);
         }
@@ -170,7 +217,12 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             if (count < 1)
             {
                 // TODO: Consider checking or a max # too? (100?)
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
+                var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new ObjectContent<Error>(new Error { Message = $"Count must be greater than 0." }, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "Count too low"
+                };
+                throw new HttpResponseException(resp);
             }
 
             Dictionary<uint, UserDataViewModel> allUsersDictionary = ChannelSession.Settings.UserData.ToDictionary();
@@ -213,12 +265,22 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
         {
             if (!ChannelSession.Settings.Currencies.ContainsKey(currencyID))
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
+                {
+                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to find currency: {currencyID.ToString()}." }, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "Currency ID not found"
+                };
+                throw new HttpResponseException(resp);
             }
 
             if (currencyUpdate == null)
             {
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
+                var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new ObjectContent<Error>(new Error { Message = "Unable to parse currency adjustment from POST body." }, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "Invalid POST Body"
+                };
+                throw new HttpResponseException(resp);
             }
 
             UserCurrencyViewModel currency = ChannelSession.Settings.Currencies[currencyID];
@@ -228,8 +290,12 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 int quantityToRemove = currencyUpdate.Amount * -1;
                 if (!user.HasCurrencyAmount(currency, quantityToRemove))
                 {
-                    // If the request is to remove currency, but user doesn't have enough, fail
-                    throw new HttpResponseException(HttpStatusCode.Forbidden);
+                    var resp = new HttpResponseMessage(HttpStatusCode.Forbidden)
+                    {
+                        Content = new ObjectContent<Error>(new Error { Message = "User does not have enough currency to remove" }, new JsonMediaTypeFormatter(), "application/json"),
+                        ReasonPhrase = "Not Enough Currency"
+                    };
+                    throw new HttpResponseException(resp);
                 }
 
                 user.SubtractCurrencyAmount(currency, quantityToRemove);
@@ -246,19 +312,34 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
         {
             if (!ChannelSession.Settings.Inventories.ContainsKey(inventoryID))
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
+                {
+                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to find inventory: {inventoryID.ToString()}." }, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "Inventory ID not found"
+                };
+                throw new HttpResponseException(resp);
             }
 
             if (inventoryUpdate == null)
             {
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
+                var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new ObjectContent<Error>(new Error { Message = "Unable to parse inventory adjustment from POST body." }, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "Invalid POST Body"
+                };
+                throw new HttpResponseException(resp);
             }
 
             UserInventoryViewModel inventory = ChannelSession.Settings.Inventories[inventoryID];
 
             if (string.IsNullOrEmpty(inventoryUpdate.Name) || !inventory.Items.ContainsKey(inventoryUpdate.Name))
             {
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
+                var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new ObjectContent<Error>(new Error { Message = "Unable to find requested inventory item." }, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "Invalid Inventory Item"
+                };
+                throw new HttpResponseException(resp);
             }
 
             if (inventoryUpdate.Amount < 0)
@@ -266,8 +347,13 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 int quantityToRemove = inventoryUpdate.Amount * -1;
                 if (!user.HasInventoryAmount(inventory, inventoryUpdate.Name, quantityToRemove))
                 {
-                    // If the request is to remove currency, but user doesn't have enough, fail
-                    throw new HttpResponseException(HttpStatusCode.Forbidden);
+                    // If the request is to remove inventory, but user doesn't have enough, fail
+                    var resp = new HttpResponseMessage(HttpStatusCode.Forbidden)
+                    {
+                        Content = new ObjectContent<Error>(new Error { Message = "User does not have enough inventory to remove" }, new JsonMediaTypeFormatter(), "application/json"),
+                        ReasonPhrase = "Not Enough Inventory"
+                    };
+                    throw new HttpResponseException(resp);
                 }
 
                 user.SubtractInventoryAmount(inventory, inventoryUpdate.Name, quantityToRemove);
