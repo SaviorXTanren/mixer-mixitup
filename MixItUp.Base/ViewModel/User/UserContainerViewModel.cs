@@ -49,6 +49,15 @@ namespace MixItUp.Base.ViewModel.User
             });
         }
 
+
+        public async Task<IEnumerable<UserViewModel>> GetUsersByID(uint[] userIDs)
+        {
+            return await this.semaphore.WaitAndRelease(() =>
+            {
+                return Task.FromResult<IEnumerable<UserViewModel>>(this.users.Where(x => userIDs.Contains(x.Key)).Select(x => x.Value).ToList());
+            });
+        }
+
         public async Task<UserViewModel> GetUserByID(string interactiveParticipantID)
         {
             return await this.semaphore.WaitAndRelease(() =>
