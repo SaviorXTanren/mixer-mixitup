@@ -126,7 +126,7 @@ namespace MixItUp.WPF.Controls.MainControls
             }
 
             IEnumerable<ChatCommand> commands = ChannelSession.Settings.ChatCommands.ToList();
-            foreach (var group in commands.Where(c => string.IsNullOrEmpty(filter) || c.Name.ToLower().Contains(filter)).GroupBy(c => c.GroupName))
+            foreach (var group in commands.Where(c => string.IsNullOrEmpty(filter) || c.Name.ToLower().Contains(filter)).GroupBy(c => c.GroupName).OrderBy(g => g.Key))
             {
                 IEnumerable<CommandBase> cmds = group;
                 if (nameOrder != 0)
