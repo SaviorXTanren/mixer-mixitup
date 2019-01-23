@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Util;
+using System;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
@@ -188,8 +189,33 @@ namespace MixItUp.Base.Services
         Left = 0xCB,
     }
 
+    public enum HotKeyModifiersEnum
+    {
+        None = 0x0000,
+        Alt = 0x0001,
+        Control = 0x0002,
+        Shift = 0x0004,
+        Windows = 0x0008
+    }
+
+    public class HotKeyEventArgs
+    {
+        public HotKeyModifiersEnum Modifiers { get; set; }
+        public InputKeyEnum Key { get; set; }
+
+        public HotKeyEventArgs(HotKeyModifiersEnum modifiers, InputKeyEnum key)
+        {
+            this.Modifiers = modifiers;
+            this.Key = key;
+        }
+    }
+
     public interface IInputService
     {
+        event EventHandler<HotKeyEventArgs> HotKeyPressed;
+
+        void Initialize(IntPtr windowHandle);
+
         void KeyDown(InputKeyEnum key);
         void KeyUp(InputKeyEnum key);
         Task KeyClick(InputKeyEnum key);
@@ -202,5 +228,8 @@ namespace MixItUp.Base.Services
         void MoveMouse(int xDelta, int yDelta);
 
         Task WaitForKeyToRegister();
+
+        bool RegisterHotKey(HotKeyModifiersEnum modifiers, InputKeyEnum key);
+        bool UnregisterHotKey(HotKeyModifiersEnum modifiers, InputKeyEnum key);
     }
 }

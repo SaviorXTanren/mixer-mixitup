@@ -11,6 +11,7 @@ using System.IO.Compression;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Interop;
 
 namespace MixItUp.WPF
 {
@@ -61,6 +62,8 @@ namespace MixItUp.WPF
 
         protected override async Task OnLoaded()
         {
+            ChannelSession.Services.InputService.Initialize(new WindowInteropHelper(this).Handle);
+
             if (ChannelSession.Settings.IsStreamer)
             {
                 this.Title += " - Streamer";
