@@ -3,6 +3,8 @@ using MixItUp.Base;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Formatting;
 using System.Threading.Tasks;
 using System.Web.Http;
 
@@ -42,7 +44,12 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
         {
             if (chatMessage == null)
             {
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
+                var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new ObjectContent<Error>(new Error { Message = "Unable to parse chat message from POST body."}, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "Invalid POST Body"
+                };
+                throw new HttpResponseException(resp);
             }
 
             await ChannelSession.Chat.SendMessage(chatMessage.Message, chatMessage.SendAsStreamer);
@@ -54,7 +61,12 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
         {
             if (chatWhisper == null)
             {
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
+                var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new  ObjectContent<Error>(new Error { Message = "Unable to parse chat whisper from POST body." }, new JsonMediaTypeFormatter(), "application/json"),
+                    ReasonPhrase = "Invalid POST Body"
+                };
+                throw new HttpResponseException(resp);
             }
 
             await ChannelSession.Chat.Whisper(chatWhisper.UserName, chatWhisper.Message, chatWhisper.SendAsStreamer);

@@ -98,28 +98,31 @@ namespace MixItUp.Base.Actions
 
                 if (!string.IsNullOrEmpty(translationResult))
                 {
-                    if (this.ResponseAction == TranslationResponseActionTypeEnum.Chat)
+                    if (string.IsNullOrEmpty(await ModerationHelper.ShouldBeModerated(user, translationResult)))
                     {
-                        if (ChannelSession.Chat != null)
+                        if (this.ResponseAction == TranslationResponseActionTypeEnum.Chat)
                         {
-                            await ChannelSession.Chat.SendMessage(await this.ReplaceSpecialIdentifiers(this.ResponseChatText, user, arguments, translationResult));
+                            if (ChannelSession.Chat != null)
+                            {
+                                await ChannelSession.Chat.SendMessage(await this.ReplaceSpecialIdentifiers(this.ResponseChatText, user, arguments, translationResult));
+                            }
                         }
-                    }
-                    else if (this.ResponseAction == TranslationResponseActionTypeEnum.Command)
-                    {
-                        CommandBase command = ChannelSession.AllEnabledCommands.FirstOrDefault(c => c.ID.Equals(this.ResponseCommandID));
-                        if (command != null)
+                        else if (this.ResponseAction == TranslationResponseActionTypeEnum.Command)
                         {
-                            string argumentsText = (this.ResponseCommandArgumentsText != null) ? this.ResponseCommandArgumentsText : string.Empty;
-                            string commandArguments = await this.ReplaceSpecialIdentifiers(this.ResponseChatText, user, arguments, translationResult);
+                            CommandBase command = ChannelSession.AllEnabledCommands.FirstOrDefault(c => c.ID.Equals(this.ResponseCommandID));
+                            if (command != null)
+                            {
+                                string argumentsText = (this.ResponseCommandArgumentsText != null) ? this.ResponseCommandArgumentsText : string.Empty;
+                                string commandArguments = await this.ReplaceSpecialIdentifiers(this.ResponseChatText, user, arguments, translationResult);
 
-                            await command.Perform(user, commandArguments.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries), this.GetExtraSpecialIdentifiers());
+                                await command.Perform(user, commandArguments.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries), this.GetExtraSpecialIdentifiers());
+                            }
                         }
-                    }
-                    else if (this.ResponseAction == TranslationResponseActionTypeEnum.SpecialIdentifier)
-                    {
-                        string replacementText = await this.ReplaceStringWithSpecialModifiers(translationResult, user, arguments);
-                        SpecialIdentifierStringBuilder.AddCustomSpecialIdentifier(this.SpecialIdentifierName, replacementText);
+                        else if (this.ResponseAction == TranslationResponseActionTypeEnum.SpecialIdentifier)
+                        {
+                            string replacementText = await this.ReplaceStringWithSpecialModifiers(translationResult, user, arguments);
+                            SpecialIdentifierStringBuilder.AddCustomSpecialIdentifier(this.SpecialIdentifierName, replacementText);
+                        }
                     }
                 }
             }

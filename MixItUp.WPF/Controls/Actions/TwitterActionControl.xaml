@@ -37,7 +37,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <TextBox Grid.Row="0" x:Name="TweetMessageTextBox" MaterialDesign:HintAssist.Hint="Tweet Message" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Row="0" x:Name="TweetMessageTextBox" MaterialDesign:HintAssist.Hint="Tweet Message (Up to 1 @mention allowed)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <TextBox Grid.Row="2" x:Name="TweetImagePathTextBox" MaterialDesign:HintAssist.Hint="Tweet Image (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>

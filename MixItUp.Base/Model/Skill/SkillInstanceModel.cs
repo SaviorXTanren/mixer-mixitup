@@ -21,9 +21,7 @@ namespace MixItUp.Base.Model.Skill
         private const string ManifestNameKey = "name";
 
         private const string GiphyManifestName = "giphy";
-        private const string GiphyParametersHost = "giphyHost";
-        private const string GiphyParametersID = "giphyId";
-        private const string GiphyFileFormat = "https://{0}/media/{1}/200w.gif";
+        private const string GiphyImageURL = "giphyUrl";
 
         [DataMember]
         public SkillModel Skill { get; set; }
@@ -75,9 +73,7 @@ namespace MixItUp.Base.Model.Skill
                 {
                     try
                     {
-                        string host = this.Parameters[SkillInstanceModel.GiphyParametersHost].ToString();
-                        string id = this.Parameters[SkillInstanceModel.GiphyParametersID].ToString();
-                        return string.Format(SkillInstanceModel.GiphyFileFormat, host, id);
+                        return this.Parameters[SkillInstanceModel.GiphyImageURL].ToString();
                     }
                     catch (Exception ex) { Logger.Log(ex); }
                 }
