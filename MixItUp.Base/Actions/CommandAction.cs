@@ -18,6 +18,10 @@ namespace MixItUp.Base.Actions
         DisableCommand,
         [Name("Enable Command")]
         EnableCommand,
+        [Name("Disable Command Group")]
+        DisableCommandGroup,
+        [Name("Enable Command Group")]
+        EnableCommandGroup,
     }
 
     [DataContract]
@@ -39,6 +43,9 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public string CommandArguments { get; set; }
 
+        [DataMember]
+        public string GroupName { get; set; }
+
         public CommandAction() : base(ActionTypeEnum.Command) { }
 
         public CommandAction(CommandActionTypeEnum commandActionType, CommandBase command, string commandArguments)
@@ -58,6 +65,13 @@ namespace MixItUp.Base.Actions
             this.CommandArguments = commandArguments;
         }
 
+        public CommandAction(CommandActionTypeEnum commandActionType, string groupName)
+            : this()
+        {
+            this.CommandActionType = commandActionType;
+            this.GroupName = groupName;
+        }
+
         public CommandBase Command
         {
             get
@@ -70,6 +84,14 @@ namespace MixItUp.Base.Actions
                 {
                     return ChannelSession.AllCommands.FirstOrDefault(c => c.ID.Equals(this.CommandID));
                 }
+            }
+        }
+
+        public IEnumerable<CommandBase> CommandGroup
+        {
+            get
+            {
+                return ChannelSession.AllCommands.Where(c =>  !string.IsNullOrEmpty(c.GroupName) && c.GroupName.Equals(this.GroupName));
             }
         }
 
@@ -95,6 +117,17 @@ namespace MixItUp.Base.Actions
                 if (command != null)
                 {
                     command.IsEnabled = (this.CommandActionType == CommandActionTypeEnum.EnableCommand) ? true : false;
+                }
+            }
+            else if (this.CommandActionType == CommandActionTypeEnum.DisableCommandGroup || this.CommandActionType == CommandActionTypeEnum.EnableCommandGroup)
+            {
+                IEnumerable<CommandBase> commands = this.CommandGroup;
+                if (commands != null)
+                {
+                    foreach (CommandBase cmd in commands)
+                    {
+                        cmd.IsEnabled = (this.CommandActionType == CommandActionTypeEnum.EnableCommandGroup) ? true : false;
+                    }
                 }
             }
         }
