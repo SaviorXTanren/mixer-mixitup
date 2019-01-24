@@ -4,12 +4,12 @@ using System.Threading.Tasks;
 
 namespace MixItUp.API
 {
-    //  GET:    http://localhost:8911/api/mixplay/users                     MixPlay.GetAllUsersAsync
-    //  GET:    http://localhost:8911/api/mixplay/user/{userID}             MixPlay.GetUserAsync
-    //  GET:    http://localhost:8911/api/mixplay/user/search/{userName}    MixPlay.GetUserAsync
-    //  GET:    http://localhost:8911/api/mixplay/user/search/{userName}    MixPlay.GetUserAsync
-    //  POST:   http://localhost:8911/api/mixplay/broadcast                 MixPlay.SendBroadcastAsync
-    //  POST:   http://localhost:8911/api/mixplay/broadcast/users           MixPlay.SendUsersBroadcastAsync
+    //  GET:    http://localhost:8911/api/mixplay/users                                     MixPlay.GetUsersAsync
+    //  GET:    http://localhost:8911/api/mixplay/user/{userID}                             MixPlay.GetUserByIDAsync
+    //  GET:    http://localhost:8911/api/mixplay/user/search/username/{userName}           MixPlay.GetUserByUsernameAsync
+    //  GET:    http://localhost:8911/api/mixplay/user/search/participant/{participantID}   MixPlay.GetUserByParticipantIDAsync
+    //  POST:   http://localhost:8911/api/mixplay/broadcast                                 MixPlay.SendBroadcastAsync
+    //  POST:   http://localhost:8911/api/mixplay/broadcast/users                           MixPlay.SendUsersBroadcastAsync
 
     public static class MixPlay
     {
