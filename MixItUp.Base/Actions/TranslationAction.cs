@@ -130,7 +130,7 @@ namespace MixItUp.Base.Actions
 
         private async Task<string> ReplaceSpecialIdentifiers(string text, UserViewModel user, IEnumerable<string> arguments, string translationResult)
         {
-            this.extraSpecialIdentifiers[WebRequestAction.ResponseSpecialIdentifier] = translationResult;
+            this.extraSpecialIdentifiers[TranslationAction.ResponseSpecialIdentifier] = translationResult;
             return await this.ReplaceStringWithSpecialModifiers(text, user, arguments);
         }
     }
