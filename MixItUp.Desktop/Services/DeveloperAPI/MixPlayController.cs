@@ -1,7 +1,6 @@
 ﻿using MixItUp.API.Models;
 using MixItUp.Base;
 using MixItUp.Base.ViewModel.User;
-using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -99,15 +98,11 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             };
         }
 
-
-
-
-
         [Route("broadcast")]
         [HttpPost]
-        public async Task Broadcast([FromBody] JObject data, [FromBody] MixPlayBroadcastTargetBase[] targets)
+        public async Task Broadcast([FromBody] MixPlayTargetBroadcast broadcast)
         {
-            if (data == null || targets == null)
+            if (broadcast == null || broadcast.Data == null || broadcast.Targets == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
                 {
@@ -127,14 +122,14 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            await ChannelSession.Interactive.BroadcastEvent(targets.Select(x => x.ScopeString()).ToList(), data);
+            await ChannelSession.Interactive.BroadcastEvent(broadcast.Targets.Select(x => x.ScopeString()).ToList(), broadcast.Data);
         }
 
         [Route("broadcast/users")]
         [HttpPost]
-        public async Task Broadcast([FromBody] JObject data, [FromBody] MixPlayBroadcastUser[] users)
+        public async Task Broadcast([FromBody] MixPlayUserBroadcast broadcast)
         {
-            if (data == null || users == null)
+            if (broadcast == null || broadcast.Data == null || broadcast.Users == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
                 {
@@ -154,9 +149,9 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            MixPlayBroadcastParticipant[] targets;
+            MixPlayBroadcastTargetBase[] targets;
 
-            var mixplayUsers = await ChannelSession.ActiveUsers.GetUsersByID(users.Select(x => x.UserID).ToArray());
+            var mixplayUsers = await ChannelSession.ActiveUsers.GetUsersByID(broadcast.Users.Select(x => x.UserID).ToArray());
 
             targets = mixplayUsers.Where(x => x.IsInteractiveParticipant).SelectMany(x => x.InteractiveIDs.Keys).Select(x => new MixPlayBroadcastParticipant(x)).ToArray();
 
@@ -169,7 +164,8 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 };
                 throw new HttpResponseException(resp);
             }
-            await Broadcast(data, targets);
+
+            await Broadcast(new MixPlayTargetBroadcast() { Data = broadcast.Data, Targets = targets });
         }
     }
 }

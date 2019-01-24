@@ -33,7 +33,7 @@ namespace MixItUp.API
         {
             return await RestClient.GetAsync<MixPlayUser[]>("mixplay/users");
         }
-        
+
         // Broadcast Methods
         public static async Task SendUserBroadcastAsync(JObject data, MixPlayBroadcastUser user)
         {
@@ -57,7 +57,7 @@ namespace MixItUp.API
 
         public static async Task SendUsersBroadcastAsync(JObject data, MixPlayBroadcastUser[] users)
         {
-            await RestClient.PostAsync($"mixplay/broadcast/users", new { data, users });
+            await RestClient.PostAsync($"mixplay/broadcast/users", new MixPlayUserBroadcast() { Data = data, Users = users });
         }
 
         public static async Task SendGroupsBroadcastAsync(JObject data, MixPlayBroadcastGroup[] groups)
@@ -82,7 +82,7 @@ namespace MixItUp.API
 
         public static async Task SendBroadcastAsync(JObject data, MixPlayBroadcastTargetBase[] targets)
         {
-            await RestClient.PostAsync($"mixplay/broadcast", new { data, targets });
+            await RestClient.PostAsync($"mixplay/broadcast", new MixPlayTargetBroadcast() { Data =  data, Targets = targets });
         }
     }
 }
