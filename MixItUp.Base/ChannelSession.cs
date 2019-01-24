@@ -623,6 +623,8 @@ namespace MixItUp.Base
 
                     ChannelSession.Timers.Initialize();
 
+                    ChannelSession.Services.InputService.HotKeyPressed += InputService_HotKeyPressed;
+
                     await ChannelSession.LoadUserEmoticons();
 
                     await ChannelSession.SaveSettings();
@@ -677,6 +679,11 @@ namespace MixItUp.Base
                     await currency.Currency.RankChangedCommand.Perform(user);
                 }
             }
+        }
+
+        private static void InputService_HotKeyPressed(object sender, HotKey hotKey)
+        {
+            //ChannelSession.AllEnabledCommands.FirstOrDefault
         }
 
         private static async Task LoadUserEmoticons()

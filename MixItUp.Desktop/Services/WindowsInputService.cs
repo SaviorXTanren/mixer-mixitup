@@ -98,7 +98,7 @@ namespace MixItUp.Input
         [DllImport("user32.dll")]
         private static extern int MapVirtualKey(uint uCode, uint uMapType);
 
-        public event EventHandler<HotKeyEventArgs> HotKeyPressed;
+        public event EventHandler<HotKey> HotKeyPressed;
 
         private IntPtr windowHandle;
         private HwndSource windowSource;
@@ -237,8 +237,7 @@ namespace MixItUp.Input
                         InputKeyEnum key = this.ConvertVirtualKeyToScanCode(virtualKey);
                         HotKeyModifiersEnum modifiers = (HotKeyModifiersEnum)((int)lParam & 0xFFFF);
 
-                        this.HotKeyPressed?.Invoke(this, new HotKeyEventArgs(modifiers, key));
-                        handled = true;
+                        this.HotKeyPressed?.Invoke(this, new HotKey(modifiers, key));
                     }
                 }
             }

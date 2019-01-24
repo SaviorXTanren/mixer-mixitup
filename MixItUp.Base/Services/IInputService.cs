@@ -198,12 +198,12 @@ namespace MixItUp.Base.Services
         Windows = 0x0008
     }
 
-    public class HotKeyEventArgs
+    public class HotKey
     {
         public HotKeyModifiersEnum Modifiers { get; set; }
         public InputKeyEnum Key { get; set; }
 
-        public HotKeyEventArgs(HotKeyModifiersEnum modifiers, InputKeyEnum key)
+        public HotKey(HotKeyModifiersEnum modifiers, InputKeyEnum key)
         {
             this.Modifiers = modifiers;
             this.Key = key;
@@ -212,7 +212,7 @@ namespace MixItUp.Base.Services
 
     public interface IInputService
     {
-        event EventHandler<HotKeyEventArgs> HotKeyPressed;
+        event EventHandler<HotKey> HotKeyPressed;
 
         void Initialize(IntPtr windowHandle);
 
