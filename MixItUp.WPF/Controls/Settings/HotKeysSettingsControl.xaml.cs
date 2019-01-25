@@ -127,7 +127,7 @@ namespace MixItUp.WPF.Controls.Settings
             HotKeyUI hotKey = (HotKeyUI)button.DataContext;
             if (hotKey != null)
             {
-                ChannelSession.Settings.HotKeys.Remove(hotKey.ToString());
+                ChannelSession.Settings.HotKeys.Remove(hotKey.HotKey.ToString());
                 ChannelSession.Services.InputService.UnregisterHotKey(hotKey.HotKey.Modifiers, hotKey.HotKey.Key);
             }
             this.RefreshList();
