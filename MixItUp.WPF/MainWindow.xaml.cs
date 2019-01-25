@@ -1,5 +1,6 @@
 ﻿using MaterialDesignThemes.Wpf;
 using MixItUp.Base;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.WPF.Controls.MainControls;
 using MixItUp.WPF.Util;
@@ -63,6 +64,10 @@ namespace MixItUp.WPF
         protected override async Task OnLoaded()
         {
             ChannelSession.Services.InputService.Initialize(new WindowInteropHelper(this).Handle);
+            foreach (HotKeyConfiguration hotKeyConfiguration in ChannelSession.Settings.HotKeys.Values)
+            {
+                ChannelSession.Services.InputService.RegisterHotKey(hotKeyConfiguration.Modifiers, hotKeyConfiguration.Key);
+            }
 
             if (ChannelSession.Settings.IsStreamer)
             {

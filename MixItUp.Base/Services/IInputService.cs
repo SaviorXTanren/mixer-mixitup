@@ -1,5 +1,8 @@
 ﻿using Mixer.Base.Util;
 using System;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
@@ -198,16 +201,79 @@ namespace MixItUp.Base.Services
         Windows = 0x0008
     }
 
-    public class HotKey
+    [DataContract]
+    public class HotKey : IEquatable<HotKey>
     {
+        [DataMember]
         public HotKeyModifiersEnum Modifiers { get; set; }
+        [DataMember]
         public InputKeyEnum Key { get; set; }
+
+        public HotKey() { }
 
         public HotKey(HotKeyModifiersEnum modifiers, InputKeyEnum key)
         {
             this.Modifiers = modifiers;
             this.Key = key;
         }
+
+        public override string ToString()
+        {
+            StringBuilder str = new StringBuilder();
+            if (this.Modifiers != HotKeyModifiersEnum.None)
+            {
+                List<string> modifiers = new List<string>();
+                if (this.Modifiers.HasFlag(HotKeyModifiersEnum.Control)) { modifiers.Add(EnumHelper.GetEnumName(HotKeyModifiersEnum.Control)); }
+                if (this.Modifiers.HasFlag(HotKeyModifiersEnum.Alt)) { modifiers.Add(EnumHelper.GetEnumName(HotKeyModifiersEnum.Alt)); }
+                if (this.Modifiers.HasFlag(HotKeyModifiersEnum.Shift)) { modifiers.Add(EnumHelper.GetEnumName(HotKeyModifiersEnum.Shift)); }
+
+                str.Append(string.Join("+", modifiers));
+                str.Append(" ");
+            }
+            str.Append(EnumHelper.GetEnumName(this.Key));
+            return str.ToString();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is HotKey)
+            {
+                return this.Equals((HotKey)obj);
+            }
+            return false;
+        }
+
+        public bool Equals(HotKey other) { return this.Modifiers == other.Modifiers && this.Key == other.Key; }
+
+        public override int GetHashCode() { return this.Modifiers.GetHashCode() + this.Key.GetHashCode(); }
+    }
+
+    [DataContract]
+    public class HotKeyConfiguration : HotKey, IEquatable<HotKeyConfiguration>
+    {
+        [DataMember]
+        public Guid CommandID { get; set; }
+
+        public HotKeyConfiguration() { }
+
+        public HotKeyConfiguration(HotKeyModifiersEnum modifiers, InputKeyEnum key, Guid commandID)
+            : base(modifiers, key)
+        {
+            this.CommandID = commandID;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is HotKeyConfiguration)
+            {
+                return this.Equals((HotKeyConfiguration)obj);
+            }
+            return false;
+        }
+
+        public bool Equals(HotKeyConfiguration other) { return this.Modifiers == other.Modifiers && this.Key == other.Key; }
+
+        public override int GetHashCode() { return base.GetHashCode(); }
     }
 
     public interface IInputService

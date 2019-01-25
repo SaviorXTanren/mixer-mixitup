@@ -681,9 +681,17 @@ namespace MixItUp.Base
             }
         }
 
-        private static void InputService_HotKeyPressed(object sender, HotKey hotKey)
+        private static async void InputService_HotKeyPressed(object sender, HotKey hotKey)
         {
-            //ChannelSession.AllEnabledCommands.FirstOrDefault
+            if (ChannelSession.Settings.HotKeys.ContainsKey(hotKey.ToString()))
+            {
+                HotKeyConfiguration hotKeyConfiguration = ChannelSession.Settings.HotKeys[hotKey.ToString()];
+                CommandBase command = ChannelSession.AllCommands.FirstOrDefault(c => c.ID.Equals(hotKeyConfiguration.CommandID));
+                if (command != null)
+                {
+                    await command.Perform();
+                }
+            }
         }
 
         private static async Task LoadUserEmoticons()
