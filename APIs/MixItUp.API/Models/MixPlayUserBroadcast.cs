@@ -6,11 +6,11 @@ using System.Runtime.Serialization;
 namespace MixItUp.API.Models
 {
     [DataContract]
-    public class MixPlayBroadcast
+    public class MixPlayUserBroadcast
     {
         [Required]
         [DataMember]
-        public List<string> Scopes { get; set; }
+        public MixPlayBroadcastUser[] Users{ get; set; }
 
         [Required]
         [DataMember]

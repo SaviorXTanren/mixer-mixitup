@@ -813,7 +813,7 @@ namespace MixItUp.Base.MixerAPI
                     UserViewModel user = null;
                     if (!string.IsNullOrEmpty(e.participantID))
                     {
-                        user = await ChannelSession.ActiveUsers.GetUserByID(e.participantID);
+                        user = await ChannelSession.ActiveUsers.GetUserByParticipantID(e.participantID);
                         if (user == null)
                         {
                             InteractiveParticipantModel participant = null;
