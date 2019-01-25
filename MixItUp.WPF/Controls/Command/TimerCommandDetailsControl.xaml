@@ -20,12 +20,16 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="10" />
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
         <TextBox x:Name="NameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-        <ComboBox x:Name="CommandGroupComboBox" Grid.Column="2" IsEditable="True" MaterialDesign:HintAssist.Hint="Command Group" Width="150" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+        <ComboBox x:Name="CommandGroupComboBox" Grid.Column="2" SelectionChanged="CommandGroupComboBox_SelectionChanged" TextBoxBase.TextChanged="CommandGroupComboBox_TextChanged" IsEditable="True" MaterialDesign:HintAssist.Hint="Command Group" Width="150" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-        <local:UnlockedCommandControl x:Name="UnlockedControl" Grid.Column="4" HorizontalAlignment="Center" />
+        <TextBox x:Name="GroupTimerTextBox" IsEnabled="False" Grid.Column="4" MaterialDesign:HintAssist.Hint="Group Interval (Min)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+        <local:UnlockedCommandControl x:Name="UnlockedControl" Grid.Column="6" HorizontalAlignment="Center" Margin="0,5,0,0" />
     </Grid>
 </local:CommandDetailsControlBase>

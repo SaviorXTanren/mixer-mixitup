@@ -1,53 +1,88 @@
 ﻿using MixItUp.API.Models;
 using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.API
 {
-    //  GET:    http://localhost:8911/api/mixplay/user/{participantID}      MixPlay.GetUserAsync
-    //  GET:    http://localhost:8911/api/mixplay/users                     MixPlay.GetAllUsersAsync
-    //  POST:   http://localhost:8911/api/mixplay/broadcast                 MixPlay.SendBroadcastAsync
+    //  GET:    http://localhost:8911/api/mixplay/users                                     MixPlay.GetUsersAsync
+    //  GET:    http://localhost:8911/api/mixplay/user/{userID}                             MixPlay.GetUserByIDAsync
+    //  GET:    http://localhost:8911/api/mixplay/user/search/username/{userName}           MixPlay.GetUserByUsernameAsync
+    //  GET:    http://localhost:8911/api/mixplay/user/search/participant/{participantID}   MixPlay.GetUserByParticipantIDAsync
+    //  POST:   http://localhost:8911/api/mixplay/broadcast                                 MixPlay.SendBroadcastAsync
+    //  POST:   http://localhost:8911/api/mixplay/broadcast/users                           MixPlay.SendUsersBroadcastAsync
+
     public static class MixPlay
     {
-        public static async Task<MixPlayUser> GetUserAsync(string participantIDOrUserNameOrUserId)
+        // User Methods
+        public static async Task<MixPlayUser> GetUserByUsernameAsync(string userName)
         {
-            return await RestClient.GetAsync<MixPlayUser>($"mixplay/user/{participantIDOrUserNameOrUserId}");
+            return await RestClient.GetAsync<MixPlayUser>($"mixplay/user/search/username/{userName}");
         }
 
-        public static async Task<MixPlayUser[]> GetAllUsersAsync()
+        public static async Task<MixPlayUser> GetUserByParticipantIDAsync(string participantID)
+        {
+            return await RestClient.GetAsync<MixPlayUser>($"mixplay/user/search/participant/{participantID}");
+        }
+
+        public static async Task<MixPlayUser> GetUserByIDAsync(uint userID)
+        {
+            return await RestClient.GetAsync<MixPlayUser>($"mixplay/user/{userID}");
+        }
+
+        public static async Task<MixPlayUser[]> GetUsersAsync()
         {
             return await RestClient.GetAsync<MixPlayUser[]>("mixplay/users");
         }
 
-        public static async Task SendBroadcastAsync(JObject data, List<string> scopes)
+        // Broadcast Methods
+        public static async Task SendUserBroadcastAsync(JObject data, MixPlayBroadcastUser user)
         {
-            var model = new MixPlayBroadcast()
-            {
-                Scopes = scopes,
-                Data = data,
-            };
-            await RestClient.PostAsync("mixplay/broadcast", model);
+            await SendUsersBroadcastAsync(data, new MixPlayBroadcastUser[] { user });
         }
 
-        public static async Task SendBroadcastToUserAsync(JObject data, string participantIDOrUserName)
+        public static async Task SendGroupBroadcastAsync(JObject data, MixPlayBroadcastGroup group)
         {
-            var user = await GetUserAsync(participantIDOrUserName);
-            if (user != null)
-            {
-                var model = new MixPlayBroadcast()
-                {
-                    Scopes = user.ParticipantIDs.Select(id => $"participant:{id}").ToList(),
-                    Data = data,
-                };
-                await RestClient.PostAsync("mixplay/broadcast", model);
-            }
+            await SendBroadcastAsync(data, new MixPlayBroadcastTargetBase[] { group });
         }
 
-        public static Task SendBroadcastToUserAsync(JObject data, uint userID)
+        public static async Task SendParticipantBroadcastAsync(JObject data, MixPlayBroadcastParticipant participant)
         {
-            return SendBroadcastToUserAsync(data, userID.ToString());
+            await SendBroadcastAsync(data, new MixPlayBroadcastTargetBase[] { participant });
+        }
+
+        public static async Task SendSceneBroadcastAsync(JObject data, MixPlayBroadcastScene scene)
+        {
+            await SendBroadcastAsync(data, new MixPlayBroadcastTargetBase[] { scene });
+        }
+
+        public static async Task SendUsersBroadcastAsync(JObject data, MixPlayBroadcastUser[] users)
+        {
+            await RestClient.PostAsync($"mixplay/broadcast/users", new MixPlayUserBroadcast() { Data = data, Users = users });
+        }
+
+        public static async Task SendGroupsBroadcastAsync(JObject data, MixPlayBroadcastGroup[] groups)
+        {
+            await SendBroadcastAsync(data, groups);
+        }
+
+        public static async Task SendParticipantsBroadcastAsync(JObject data, MixPlayBroadcastParticipant[] participants)
+        {
+            await SendBroadcastAsync(data, participants);
+        }
+
+        public static async Task SendScenesBroadcastAsync(JObject data, MixPlayBroadcastScene[] scenes)
+        {
+            await SendBroadcastAsync(data, scenes);
+        }
+
+        public static async Task SendBroadcastAsync(JObject data)
+        {
+            await SendBroadcastAsync(data, new MixPlayBroadcastTargetBase[] { new MixPlayBroadcastEveryone() });
+        }
+
+        public static async Task SendBroadcastAsync(JObject data, MixPlayBroadcastTargetBase[] targets)
+        {
+            await RestClient.PostAsync($"mixplay/broadcast", new MixPlayTargetBroadcast() { Data =  data, Targets = targets });
         }
     }
 }

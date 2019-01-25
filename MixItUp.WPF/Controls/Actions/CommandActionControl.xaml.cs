@@ -28,11 +28,13 @@ namespace MixItUp.WPF.Controls.Actions
             types.Add(PreMadeCommandType);
             this.CommandTypeComboBox.ItemsSource = types.OrderBy(s => s);
 
+            this.CommandGroupNameComboBox.ItemsSource = ChannelSession.Settings.CommandGroups.Keys;
+
             this.CommandNameComboBox.ItemsSource = ChannelSession.AllCommands.OrderBy(c => c.Name);
             if (this.command != null)
             {
                 CommandBase chosenCommand = this.command.Command;
-                this.TypeComboBox.SelectedValue = EnumHelper.GetEnumName(this.command.CommandActionType);
+                this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.CommandActionType);
                 if (chosenCommand != null)
                 {
                     string type = EnumHelper.GetEnumName(chosenCommand.Type);
@@ -43,6 +45,7 @@ namespace MixItUp.WPF.Controls.Actions
                     this.CommandTypeComboBox.SelectedItem = type;
                     this.CommandNameComboBox.SelectedItem = chosenCommand;
                 }
+                this.CommandGroupNameComboBox.SelectedItem = this.command.GroupName;
                 this.CommandArgumentsTextBox.Text = this.command.CommandArguments;
             }
             return Task.FromResult(0);
@@ -51,27 +54,46 @@ namespace MixItUp.WPF.Controls.Actions
         public override ActionBase GetAction()
         {
             CommandActionTypeEnum type = EnumHelper.GetEnumValueFromString<CommandActionTypeEnum>((string)this.TypeComboBox.SelectedItem);
-            if (this.CommandNameComboBox.SelectedIndex >= 0)
+            if (type == CommandActionTypeEnum.DisableCommandGroup || type == CommandActionTypeEnum.EnableCommandGroup)
             {
-                CommandBase command = (CommandBase)this.CommandNameComboBox.SelectedItem;
-                return new CommandAction(type, command, this.CommandArgumentsTextBox.Text);
+                if (this.CommandGroupNameComboBox.SelectedIndex >= 0)
+                {
+                    return new CommandAction(type, this.CommandGroupNameComboBox.Text);
+                }
+            }
+            else
+            {
+                if (this.CommandNameComboBox.SelectedIndex >= 0)
+                {
+                    CommandBase command = (CommandBase)this.CommandNameComboBox.SelectedItem;
+                    return new CommandAction(type, command, this.CommandArgumentsTextBox.Text);
+                }
             }
             return null;
         }
 
         private void TypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            this.CommandGrid.Visibility = Visibility.Collapsed;
+            this.CommandGroupGrid.Visibility = Visibility.Collapsed;
+            this.CommandArgumentsTextBox.Visibility = Visibility.Collapsed;
+
             if (this.TypeComboBox.SelectedIndex >= 0)
             {
                 CommandActionTypeEnum type = EnumHelper.GetEnumValueFromString<CommandActionTypeEnum>((string)this.TypeComboBox.SelectedItem);
                 switch (type)
                 {
                     case CommandActionTypeEnum.RunCommand:
+                        this.CommandGrid.Visibility = Visibility.Visible;
                         this.CommandArgumentsTextBox.Visibility = Visibility.Visible;
                         break;
                     case CommandActionTypeEnum.DisableCommand:
                     case CommandActionTypeEnum.EnableCommand:
-                        this.CommandArgumentsTextBox.Visibility = Visibility.Collapsed;
+                        this.CommandGrid.Visibility = Visibility.Visible;
+                        break;
+                    case CommandActionTypeEnum.DisableCommandGroup:
+                    case CommandActionTypeEnum.EnableCommandGroup:
+                        this.CommandGroupGrid.Visibility = Visibility.Visible;
                         break;
                 }
             }
