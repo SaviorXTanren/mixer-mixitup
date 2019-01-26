@@ -30,7 +30,7 @@ namespace MixItUp.Base.Services
         public string Url { get; set; }
 
         [JsonProperty("created")]
-        public DateTimeOffset Created { get; set; }
+        public DateTimeOffset? Created { get; set; }
 
         [JsonIgnore]
         public string LookupName
@@ -74,10 +74,10 @@ namespace MixItUp.Base.Services
         public string CreationName { get; set; }
 
         [JsonProperty("created_at")]
-        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset? CreatedAt { get; set; }
 
         [JsonProperty("published_at")]
-        public DateTimeOffset PublishedAt { get; set; }
+        public DateTimeOffset? PublishedAt { get; set; }
 
         [DataMember]
         public Dictionary<string, PatreonTier> Tiers { get; set; }
@@ -151,10 +151,10 @@ namespace MixItUp.Base.Services
         public bool Published { get; set; }
 
         [JsonProperty("created_at")]
-        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset? CreatedAt { get; set; }
 
         [JsonProperty("published_at")]
-        public DateTimeOffset PublishedAt { get; set; }
+        public DateTimeOffset? PublishedAt { get; set; }
 
         [DataMember]
         public HashSet<string> BenefitIDs { get; set; }
@@ -203,7 +203,7 @@ namespace MixItUp.Base.Services
         public bool Deleted { get; set; }
 
         [JsonProperty("created_at")]
-        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset? CreatedAt { get; set; }
 
         public PatreonBenefit() { }
 
