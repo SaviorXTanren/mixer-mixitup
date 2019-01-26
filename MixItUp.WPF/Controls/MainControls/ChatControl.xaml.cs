@@ -206,7 +206,7 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 foreach (ChatMessageEventModel message in oldMessages)
                 {
-                    await AddMessage(ChatMessageViewModel.CreateChatMessageViewModel(message));
+                    await AddMessage(new ChatMessageViewModel(message));
                 }
             }
         }
@@ -695,7 +695,7 @@ namespace MixItUp.WPF.Controls.MainControls
                         ChatMessageEventModel response = await ChannelSession.Chat.WhisperWithResponse(username, message, ShouldSendAsStreamer());
                         if (response != null)
                         {
-                            await this.AddMessage(ChatMessageViewModel.CreateChatMessageViewModel(response));
+                            await this.AddMessage(new ChatMessageViewModel(response));
                         }
                     });
                 }

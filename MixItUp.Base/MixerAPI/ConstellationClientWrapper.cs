@@ -44,7 +44,7 @@ namespace MixItUp.Base.MixerAPI
 
         public ConstellationClient Client { get; private set; }
 
-        public IEnumerable<SkillModel> AvailableSkills { get { return this.availableSkills.Values; } }
+        public IReadOnlyDictionary<Guid, SkillModel> AvailableSkills { get { return this.availableSkills; } }
 
         private LockedDictionary<string, LockedHashSet<uint>> userEventTracking = new LockedDictionary<string, LockedHashSet<uint>>();
 

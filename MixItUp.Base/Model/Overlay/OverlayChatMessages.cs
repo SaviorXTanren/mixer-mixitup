@@ -115,7 +115,7 @@ namespace MixItUp.Base.Model.Overlay
                     channel = ChannelSession.Channel.id,
                     message = new ChatMessageContentsModel() { message = new ChatMessageDataModel[] { new ChatMessageDataModel() { type = "text", text = "Test Message" } } }
                 };
-                this.GlobalEvents_OnChatMessageReceived(this, ChatMessageViewModel.CreateChatMessageViewModel(messageEvent));
+                this.GlobalEvents_OnChatMessageReceived(this, new ChatMessageViewModel(messageEvent));
 
                 await Task.Delay(1000);
             }

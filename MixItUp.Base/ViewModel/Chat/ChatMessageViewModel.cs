@@ -42,53 +42,28 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public List<ChatMessageDataModel> MessageComponents = new List<ChatMessageDataModel>();
 
-        private ChatMessageViewModel(ChatMessageEventModel chatMessageEvent, UserViewModel user = null)
+        public ChatMessageViewModel(ChatMessageEventModel chatMessageEvent, UserViewModel user = null)
+            : this(chatMessageEvent.message, user)
         {
             this.ChatMessageEvent = chatMessageEvent;
             this.ID = this.ChatMessageEvent.id;
 
             this.User = (user != null) ? user : new UserViewModel(this.ChatMessageEvent);
             this.IsInUsersChannel = ChannelSession.Channel.id.Equals(this.ChatMessageEvent.channel);
-
             this.TargetUsername = this.ChatMessageEvent.target;
-            this.Message = string.Empty;
+
+            if (this.ChatMessageEvent.message.ContainsSkill)
+            {
+                this.ChatSkill = this.ChatMessageEvent.message.Skill;
+            }
         }
 
-        public static ChatMessageViewModel CreateChatMessageViewModel(ChatMessageEventModel chatMessageEvent, UserViewModel user = null)
+        public ChatMessageViewModel(ChatMessageContentsModel chatMessageContents, UserViewModel user = null)
         {
-            ChatMessageViewModel newChatMessageViewModel = new ChatMessageViewModel(chatMessageEvent, user);
-            
-            foreach (ChatMessageDataModel message in newChatMessageViewModel.ChatMessageEvent.message.message)
-            {
-                newChatMessageViewModel.MessageComponents.Add(message);
-                switch (message.type)
-                {
-                    case "emoticon":
-                        // Special code here to process emoticons
-                        ChannelSession.EnsureEmoticonForMessage(message);
-                        newChatMessageViewModel.Message += message.text;
-                        break;
-                    case "link":
-                        newChatMessageViewModel.ContainsLink = true;
-                        newChatMessageViewModel.Message += message.text;
-                        break;
-                    case "image":
-                        newChatMessageViewModel.Images[message.text] = message.url;
-                        break;
-                    case "text":
-                    case "tag":
-                    default:
-                        newChatMessageViewModel.Message += message.text;
-                        break;
-                }
-            }
+            this.User = user;
 
-            if (newChatMessageViewModel.ChatMessageEvent.message.ContainsSkill)
-            {
-                newChatMessageViewModel.ChatSkill = newChatMessageViewModel.ChatMessageEvent.message.Skill;
-            }
-
-            return newChatMessageViewModel;
+            this.Message = string.Empty;
+            this.SetMessageContents(chatMessageContents);
         }
 
         public ChatMessageViewModel(string alertText, UserViewModel user = null, string foregroundBrush = null)
@@ -172,6 +147,34 @@ namespace MixItUp.Base.ViewModel.Chat
             else
             {
                 return string.Format("{0}: {1}", this.User, this.Message);
+            }
+        }
+
+        private void SetMessageContents(ChatMessageContentsModel chatMessageContents)
+        {
+            foreach (ChatMessageDataModel message in chatMessageContents.message)
+            {
+                this.MessageComponents.Add(message);
+                switch (message.type)
+                {
+                    case "emoticon":
+                        // Special code here to process emoticons
+                        ChannelSession.EnsureEmoticonForMessage(message);
+                        this.Message += message.text;
+                        break;
+                    case "link":
+                        this.ContainsLink = true;
+                        this.Message += message.text;
+                        break;
+                    case "image":
+                        this.Images[message.text] = message.url;
+                        break;
+                    case "text":
+                    case "tag":
+                    default:
+                        this.Message += message.text;
+                        break;
+                }
             }
         }
     }
