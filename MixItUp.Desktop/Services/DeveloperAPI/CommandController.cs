@@ -163,7 +163,8 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 ID = baseCommand.ID,
                 Name = baseCommand.Name,
                 IsEnabled = baseCommand.IsEnabled,
-                Category = category
+                Category = category,
+                GroupName = baseCommand.GroupName ?? string.Empty,
             };
         }
     }

@@ -18,6 +18,13 @@
             <p>ERROR: Mix It Up Developer APIs are disabled!</p>
         </div>
 
+        <div class="sdpi-item" id="selected_category">
+            <div class="sdpi-item-label">Category</div>
+            <select class="sdpi-item-value select" onchange="updateCategory()" disabled>
+                <option>Loading...</option>
+            </select>
+        </div>
+
         <div class="sdpi-item" id="selected_command">
             <div class="sdpi-item-label">Command</div>
             <select class="sdpi-item-value select" onchange="updateSettings()" disabled>

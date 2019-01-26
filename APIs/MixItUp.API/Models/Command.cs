@@ -19,5 +19,8 @@ namespace MixItUp.API.Models
 
         [DataMember]
         public string Category { get; set; }
+
+        [DataMember]
+        public string GroupName { get; set; }
     }
 }

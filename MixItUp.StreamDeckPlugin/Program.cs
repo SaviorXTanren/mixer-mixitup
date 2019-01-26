@@ -27,7 +27,7 @@ namespace MixItUp.StreamDeckPlugin
             }
 
             MixItUpPlugin plugin = new MixItUpPlugin();
-            plugin.Run(port.Value, uuid, registerEvent);
+            plugin.RunAsync(port.Value, uuid, registerEvent).Wait();
         }
 
         private static void ParseArgs(string[] args, out int? port, out string uuid, out string registerEvent, out JObject info)

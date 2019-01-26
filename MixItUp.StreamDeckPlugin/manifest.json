@@ -14,6 +14,27 @@
       "Tooltip": "Runs a Mix It Up command",
       "PropertyInspectorPath": "PropertyInspectors/RunCommandAction/Index.html",
       "UUID": "com.mixitup.streamdeckplugin.runcommand"
+    },
+    {
+      "Icon": "Images/mixPlayStatusIcon",
+      "Name": "MixPlay Status",
+      "States": [
+        {
+          "Image": "Images/mixPlayStatusDisconnected",
+          "TitleAlignment": "middle",
+          "FontSize": "10",
+          "TitleColor": "#FF0000"
+        },
+        {
+          "Image": "Images/mixPlayStatusConnected",
+          "TitleAlignment": "middle",
+          "FontSize": "10",
+          "TitleColor": "#00FF00"
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Tooltip": "Displays the current connection status of MixPlay",
+      "UUID": "com.mixitup.streamdeckplugin.mixplaystatus"
     }
   ],
   "Author": "Shane DeSeranno",
@@ -21,7 +42,7 @@
   "Name": "Mix It Up",
   "Icon": "Images/categoryIcon",
   "URL": "https://github.com/TyrenDe/streamdeck-client-csharp",
-  "Version": "0.2",
+  "Version": "0.3",
   "CodePath": "MixItUp.StreamDeckPlugin.exe",
   "Category": "Mix It Up",
   "CategoryIcon": "Images/categoryIcon",
@@ -33,8 +54,7 @@
   ],
   "ApplicationsToMonitor": {
     "windows": [
-      "MixItUp.exe",
-      "notepad.exe"
+      "MixItUp.exe"
     ]
   }
 }
