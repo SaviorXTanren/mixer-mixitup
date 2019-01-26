@@ -14,6 +14,7 @@ namespace MixItUp.StreamDeckPlugin
         public abstract Task LoadAsync(StreamDeckConnection connection, string action, string context, JObject settings);
         public abstract Task SaveAsync();
         public abstract Task RunActionAsync();
+        public abstract Task RunTickAsync();
         public abstract Task ProcessPropertyInspectorAsync(SendToPluginEvent propertyInspectorEvent);
         public abstract Task TitleParametersDidChangeAsync(TitleParametersDidChangeEvent titleParametersDidChangeEvent);
     }

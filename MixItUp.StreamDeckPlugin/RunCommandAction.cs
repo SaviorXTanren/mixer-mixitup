@@ -165,5 +165,10 @@ namespace MixItUp.StreamDeckPlugin
             this.actionSettings.Title = titleParametersDidChangeEvent.Payload.Title;
             await this.RefreshTitleAsync();
         }
+
+        public override Task RunTickAsync()
+        {
+            return Task.FromResult(0);
+        }
     }
 }

@@ -38,7 +38,7 @@ namespace MixItUp.StreamDeckPlugin
             }
         }
 
-        public void Run(int port, string uuid, string registerEvent)
+        public async Task RunAsync(int port, string uuid, string registerEvent)
         {
             this.connection = new StreamDeckConnection(port, uuid, registerEvent);
 
@@ -61,7 +61,7 @@ namespace MixItUp.StreamDeckPlugin
                 // We connected, loop every second until we disconnect
                 while (!this.disconnectEvent.WaitOne(TimeSpan.FromMilliseconds(1000)))
                 {
-                    RunTick();
+                    await RunTickAsync();
                 }
             }
             else
@@ -75,9 +75,9 @@ namespace MixItUp.StreamDeckPlugin
             await this.actionsLock.WaitAsync();
             try
             {
-                if (actions.ContainsKey(e.Event.Context.ToLower()))
+                if (this.actions.ContainsKey(e.Event.Context.ToLower()))
                 {
-                    await actions[e.Event.Context.ToLower()].TitleParametersDidChangeAsync(e.Event);
+                    await this.actions[e.Event.Context.ToLower()].TitleParametersDidChangeAsync(e.Event);
                 }
             }
             finally
@@ -100,9 +100,9 @@ namespace MixItUp.StreamDeckPlugin
             await this.actionsLock.WaitAsync();
             try
             {
-                if (actions.ContainsKey(e.Event.Context.ToLower()))
+                if (this.actions.ContainsKey(e.Event.Context.ToLower()))
                 {
-                    await actions[e.Event.Context.ToLower()].ProcessPropertyInspectorAsync(e.Event);
+                    await this.actions[e.Event.Context.ToLower()].ProcessPropertyInspectorAsync(e.Event);
                 }
             }
             finally
@@ -116,10 +116,10 @@ namespace MixItUp.StreamDeckPlugin
             await this.actionsLock.WaitAsync();
             try
             {
-                if (actions.ContainsKey(e.Event.Context.ToLower()))
+                if (this.actions.ContainsKey(e.Event.Context.ToLower()))
                 {
-                    await actions[e.Event.Context.ToLower()].SaveAsync();
-                    actions.Remove(e.Event.Context.ToLower());
+                    await this.actions[e.Event.Context.ToLower()].SaveAsync();
+                    this.actions.Remove(e.Event.Context.ToLower());
                 }
             }
             finally
@@ -157,9 +157,9 @@ namespace MixItUp.StreamDeckPlugin
             await this.actionsLock.WaitAsync();
             try
             {
-                if (actions.ContainsKey(e.Event.Context.ToLower()))
+                if (this.actions.ContainsKey(e.Event.Context.ToLower()))
                 {
-                    await actions[e.Event.Context.ToLower()].RunActionAsync();
+                    await this.actions[e.Event.Context.ToLower()].RunActionAsync();
                 }
             }
             finally
@@ -184,10 +184,22 @@ namespace MixItUp.StreamDeckPlugin
             }
         }
 
-        private void RunTick()
+        private async Task RunTickAsync()
         {
             // If the plugin needs to do anything, this runs once per second.
             // It could be used to ping to see if the app has arrived, etc.
+            await this.actionsLock.WaitAsync();
+            try
+            {
+                foreach (MixItUpAction action in this.actions.Values)
+                {
+                    await action.RunTickAsync();
+                }
+            }
+            finally
+            {
+                this.actionsLock.Release();
+            }
         }
 
         private void Connection_OnDisconnected(object sender, EventArgs e)
