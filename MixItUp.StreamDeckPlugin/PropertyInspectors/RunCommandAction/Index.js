@@ -90,6 +90,12 @@ function connectSocket(inPort, inUUID, inRegisterEvent, inInfo, inActionInfo) {
 }
 
 function sortCommands() {
+    for (var index = 0; index < commands.length; index++) {
+        if (commands[index].GroupName === "") {
+            commands[index].GroupName = "Ungrouped";
+        }
+    }
+
     commands.sort(function (a, b) {
         if (a.Category === b.Category) {
             return a.GroupName > b.GroupName ? 1 : -1;
