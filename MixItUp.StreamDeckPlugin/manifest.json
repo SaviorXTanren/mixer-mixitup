@@ -22,13 +22,13 @@
         {
           "Image": "Images/mixPlayStatusDisconnected",
           "TitleAlignment": "middle",
-          "FontSize": "8",
+          "FontSize": "10",
           "TitleColor": "#FF0000"
         },
         {
           "Image": "Images/mixPlayStatusConnected",
           "TitleAlignment": "middle",
-          "FontSize": "8",
+          "FontSize": "10",
           "TitleColor": "#00FF00"
         }
       ],
