@@ -319,6 +319,11 @@
                                 youtubeVideoPlayer.setLoop(false);
                                 youtubeVideoPlayer.frameBorder = 0;
                                 youtubeVideoPlayer.playVideo();
+                            },
+                            'onStateChange': function (event) {
+                                if (event.data == YT.PlayerState.ENDED) {
+                                    event.target.destroy();
+                                }
                             }
                         }
                     });

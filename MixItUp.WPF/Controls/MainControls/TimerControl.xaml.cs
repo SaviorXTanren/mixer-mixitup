@@ -49,10 +49,15 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             this.timerCommands.Clear();
             IEnumerable<TimerCommand> commands = ChannelSession.Settings.TimerCommands.ToList();
-            foreach (var group in commands.GroupBy(c => c.GroupName).OrderBy(g => g.Key))
+            foreach (var group in commands.GroupBy(c => c.GroupName).OrderByDescending(g => !string.IsNullOrEmpty(g.Key)).ThenBy(g => g.Key))
             {
                 IEnumerable<CommandBase> cmds = (nameOrder > 0) ? group.OrderBy(c => c.Name) : group.OrderByDescending(c => c.Name);
-                this.timerCommands.Add(new CommandGroupControlViewModel(cmds));
+                CommandGroupSettings groupSettings = null;
+                if (!string.IsNullOrEmpty(cmds.First().GroupName) && ChannelSession.Settings.CommandGroups.ContainsKey(cmds.First().GroupName))
+                {
+                    groupSettings = ChannelSession.Settings.CommandGroups[cmds.First().GroupName];
+                }
+                this.timerCommands.Add(new CommandGroupControlViewModel(groupSettings, cmds));
             }
         }
 
@@ -162,6 +167,40 @@ namespace MixItUp.WPF.Controls.MainControls
                 this.NameSortingIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.ArrowUp;
             }
             this.RefreshList();
+        }
+
+        private void AccordianGroupBoxControl_Minimized(object sender, RoutedEventArgs e)
+        {
+            AccordianGroupBoxControl control = (AccordianGroupBoxControl)sender;
+            if (control.Content != null)
+            {
+                FrameworkElement content = (FrameworkElement)control.Content;
+                if (content != null)
+                {
+                    CommandGroupControlViewModel group = (CommandGroupControlViewModel)content.DataContext;
+                    if (group != null)
+                    {
+                        group.IsMinimized = true;
+                    }
+                }
+            }
+        }
+
+        private void AccordianGroupBoxControl_Maximized(object sender, RoutedEventArgs e)
+        {
+            AccordianGroupBoxControl control = (AccordianGroupBoxControl)sender;
+            if (control.Content != null)
+            {
+                FrameworkElement content = (FrameworkElement)control.Content;
+                if (content != null)
+                {
+                    CommandGroupControlViewModel group = (CommandGroupControlViewModel)content.DataContext;
+                    if (group != null)
+                    {
+                        group.IsMinimized = false;
+                    }
+                }
+            }
         }
     }
 }

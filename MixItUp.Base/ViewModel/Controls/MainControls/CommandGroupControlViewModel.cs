@@ -7,8 +7,22 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 {
     public class CommandGroupControlViewModel : ViewModelBase
     {
-        public string GroupName { get; set; }
+        public CommandGroupSettings GroupSettings { get; set; }
+
+        public string GroupName { get { return (this.GroupSettings != null) ? this.GroupSettings.Name : null; } }
         public string DisplayName { get { return (!string.IsNullOrEmpty(this.GroupName)) ? this.GroupName : "Ungrouped"; } }
+
+        public bool IsMinimized
+        {
+            get { return (this.GroupSettings != null) ? this.GroupSettings.IsMinimized : false; }
+            set
+            {
+                if (this.GroupSettings != null)
+                {
+                    this.GroupSettings.IsMinimized = value;
+                }
+            }
+        }
 
         public bool IsEnabled
         {
@@ -42,14 +56,13 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         }
         private ObservableCollection<CommandBase> commands = new ObservableCollection<CommandBase>();
 
-        public CommandGroupControlViewModel(IEnumerable<CommandBase> commands)
+        public CommandGroupControlViewModel(CommandGroupSettings groupSettings, IEnumerable<CommandBase> commands)
         {
+            this.GroupSettings = groupSettings;
             foreach (CommandBase command in commands)
             {
                 this.Commands.Add(command);
             }
-
-            this.GroupName = this.Commands.First().GroupName;
         }
     }
 }

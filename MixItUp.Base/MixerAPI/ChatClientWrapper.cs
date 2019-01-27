@@ -17,19 +17,6 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.MixerAPI
 {
-    public static class ChatEventModelExtensions
-    {
-        public static ChatUserModel GetUser(this ChatUserEventModel chatUserEvent)
-        {
-            return new ChatUserModel() { userId = chatUserEvent.id, userName = chatUserEvent.username, userRoles = chatUserEvent.roles };
-        }
-
-        public static ChatUserModel GetUser(this ChatMessageEventModel chatMessageEvent)
-        {
-            return new ChatUserModel() { userId = chatMessageEvent.user_id, userName = chatMessageEvent.user_name, userRoles = chatMessageEvent.user_roles };
-        }
-    }
-
     public class ChatClientWrapper : MixerWebSocketWrapper
     {
         private SemaphoreSlim whisperNumberLock = new SemaphoreSlim(1);
@@ -104,6 +91,7 @@ namespace MixItUp.Base.MixerAPI
                     this.Client.OnUserJoinOccurred -= ChatClient_OnUserJoinOccurred;
                     this.Client.OnUserLeaveOccurred -= ChatClient_OnUserLeaveOccurred;
                     this.Client.OnUserUpdateOccurred -= ChatClient_OnUserUpdateOccurred;
+                    this.Client.OnSkillAttributionOccurred -= Client_OnSkillAttributionOccurred;
                     this.Client.OnDisconnectOccurred -= StreamerClient_OnDisconnectOccurred;
                     if (ChannelSession.Settings.DiagnosticLogging)
                     {
@@ -281,6 +269,7 @@ namespace MixItUp.Base.MixerAPI
                         this.Client.OnUserJoinOccurred += ChatClient_OnUserJoinOccurred;
                         this.Client.OnUserLeaveOccurred += ChatClient_OnUserLeaveOccurred;
                         this.Client.OnUserUpdateOccurred += ChatClient_OnUserUpdateOccurred;
+                        this.Client.OnSkillAttributionOccurred += Client_OnSkillAttributionOccurred;
                         this.Client.OnDisconnectOccurred += StreamerClient_OnDisconnectOccurred;
                         if (ChannelSession.Settings.DiagnosticLogging)
                         {
@@ -385,7 +374,7 @@ namespace MixItUp.Base.MixerAPI
             }
             user.UpdateLastActivity();
 
-            ChatMessageViewModel message = ChatMessageViewModel.CreateChatMessageViewModel(messageEvent, user);
+            ChatMessageViewModel message = new ChatMessageViewModel(messageEvent, user);
 
             Util.Logger.LogDiagnostic(string.Format("Message Received - {0}", message.ToString()));
 
@@ -698,7 +687,7 @@ namespace MixItUp.Base.MixerAPI
 
         private async void BotChatClient_OnMessageOccurred(object sender, ChatMessageEventModel e)
         {
-            ChatMessageViewModel message = ChatMessageViewModel.CreateChatMessageViewModel(e);
+            ChatMessageViewModel message = new ChatMessageViewModel(e);
             if (message.IsWhisper)
             {
                 message = await this.AddMessage(e);
@@ -772,6 +761,33 @@ namespace MixItUp.Base.MixerAPI
                         await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserBan)), user);
                     }
                 }
+            }
+        }
+
+        private async void Client_OnSkillAttributionOccurred(object sender, ChatSkillAttributionEventModel skillAttribution)
+        {
+            if (!ChannelSession.Constellation.AvailableSkills.ContainsKey(skillAttribution.skill.skill_id))
+            {
+                ChatUserModel chatUser = skillAttribution.GetUser();
+                UserViewModel user = await ChannelSession.ActiveUsers.AddOrUpdateUser(chatUser);
+                if (user == null)
+                {
+                    user = new UserViewModel(chatUser);
+                }
+                else
+                {
+                    await user.RefreshDetails();
+                }
+                user.UpdateLastActivity();
+
+                string message = null;
+                if (skillAttribution.message != null && skillAttribution.message.message != null && skillAttribution.message.message.Length > 0)
+                {
+                    ChatMessageViewModel messageModel = new ChatMessageViewModel(skillAttribution.message, user);
+                    message = messageModel.Message;
+                }
+
+                GlobalEvents.SkillUseOccurred(new SkillUsageModel(user, skillAttribution.skill, message));
             }
         }
 

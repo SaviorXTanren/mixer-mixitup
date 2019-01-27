@@ -57,7 +57,7 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Border BorderBrush="{StaticResource MaterialDesignBody}" BorderThickness="1">
-                            <Controls:AccordianGroupBoxControl>
+                            <Controls:AccordianGroupBoxControl IsMinimized="{Binding IsMinimized}" Minimized="AccordianGroupBoxControl_Minimized" Maximized="AccordianGroupBoxControl_Maximized">
                                 <Controls:AccordianGroupBoxControl.Header>
                                     <Grid Background="Transparent" Margin="5,0">
                                         <TextBlock HorizontalAlignment="Left" Text="{Binding DisplayName}" Foreground="{StaticResource WhiteColor}" Style="{StaticResource HeaderTextBlock}" />

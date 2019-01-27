@@ -2,6 +2,7 @@
 using Mixer.Base.Interactive;
 using Mixer.Base.Model.Broadcast;
 using Mixer.Base.Model.Channel;
+using Mixer.Base.Model.Chat;
 using Mixer.Base.Model.Clips;
 using Mixer.Base.Model.Costream;
 using Mixer.Base.Model.Game;
@@ -22,6 +23,24 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.MixerAPI
 {
+    public static class MixerModelExtensions
+    {
+        public static ChatUserModel GetUser(this ChatUserEventModel chatUserEvent)
+        {
+            return new ChatUserModel() { userId = chatUserEvent.id, userName = chatUserEvent.username, userRoles = chatUserEvent.roles };
+        }
+
+        public static ChatUserModel GetUser(this ChatMessageEventModel chatMessageEvent)
+        {
+            return new ChatUserModel() { userId = chatMessageEvent.user_id, userName = chatMessageEvent.user_name, userRoles = chatMessageEvent.user_roles };
+        }
+
+        public static ChatUserModel GetUser(this ChatSkillAttributionEventModel skillAttributionEvent)
+        {
+            return new ChatUserModel() { userId = skillAttributionEvent.user_id, userName = skillAttributionEvent.user_name, userRoles = skillAttributionEvent.user_roles };
+        }
+    }
+
     public class MixerConnectionWrapper : MixerRequestWrapperBase
     {
         public MixerConnection Connection { get; private set; }
