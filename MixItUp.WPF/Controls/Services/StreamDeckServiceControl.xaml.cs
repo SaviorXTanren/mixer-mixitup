@@ -39,6 +39,12 @@ namespace MixItUp.WPF.Controls.Services
                     return;
                 }
 
+                if (!File.Exists("com.mixitup.streamdeckplugin.streamDeckPlugin"))
+                {
+                    await MessageBoxHelper.ShowMessageDialog("The Stream Deck plug-in is missing from your Mix It Up installation, please contact #support in the Mix It Up Discord at https://discord.gg/taj4Gj4");
+                    return;
+                }
+
                 try
                 {
                     string installDir = GetStreamDeckInstallationDirectory();
