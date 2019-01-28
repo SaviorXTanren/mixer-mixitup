@@ -614,7 +614,7 @@ namespace MixItUp.Base
 
                     if (ChannelSession.Settings.ModerationResetStrikesOnLaunch)
                     {
-                        foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values)
+                        foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values.Where(u => u.ModerationStrikes > 0))
                         {
                             userData.ModerationStrikes = 0;
                             ChannelSession.Settings.UserData.ManualValueChanged(userData.ID);
@@ -633,7 +633,7 @@ namespace MixItUp.Base
 
                     await ChannelSession.Services.Settings.PerformBackupIfApplicable(ChannelSession.Settings);
 
-                    ChannelSession.Services.Telemetry.TrackLogin();
+                    ChannelSession.Services.Telemetry.TrackLogin(ChannelSession.IsStreamer, ChannelSession.Channel.partnered);
                     if (ChannelSession.Settings.IsStreamer)
                     {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
