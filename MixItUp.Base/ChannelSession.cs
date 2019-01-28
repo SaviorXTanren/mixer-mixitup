@@ -611,7 +611,7 @@ namespace MixItUp.Base
 
                     if (ChannelSession.Settings.ModerationResetStrikesOnLaunch)
                     {
-                        foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values)
+                        foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values.Where(u => u.ModerationStrikes > 0))
                         {
                             userData.ModerationStrikes = 0;
                             ChannelSession.Settings.UserData.ManualValueChanged(userData.ID);
