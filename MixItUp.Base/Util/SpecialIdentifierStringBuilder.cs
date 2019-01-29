@@ -196,15 +196,15 @@ namespace MixItUp.Base.Util
             SpecialIdentifierStringBuilder.RandomUserSpecialIdentifierGroups[id] = new RandomUserSpecialIdentiferGroup();
             IEnumerable<UserViewModel> users = await ChannelSession.ActiveUsers.GetAllWorkableUsers();
             users = users.Where(u => !u.ID.Equals(ChannelSession.User.id));
-            if (users.Count() > 0)
+            if (users != null && users.Count() > 0)
             {
                 SpecialIdentifierStringBuilder.RandomUserSpecialIdentifierGroups[id].RandomUser = users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count()));
                 users = users.Where(u => u.IsFollower);
-                if (users.Count() > 0)
+                if (users != null && users.Count() > 0)
                 {
                     SpecialIdentifierStringBuilder.RandomUserSpecialIdentifierGroups[id].RandomFollower = users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count()));
                     users = users.Where(u => u.HasPermissionsTo(MixerRoleEnum.Subscriber));
-                    if (users.Count() > 0)
+                    if (users != null && users.Count() > 0)
                     {
                         SpecialIdentifierStringBuilder.RandomUserSpecialIdentifierGroups[id].RandomSubscriber = users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count()));
                     }
@@ -525,7 +525,7 @@ namespace MixItUp.Base.Util
                         }
 
                         IEnumerable<PatronageMilestoneModel> patronageMilestonesEarned = patronageMilestones.Where(m => m.target <= patronageStatus.patronageEarned);
-                        if (patronageMilestonesEarned.Count() > 0)
+                        if (patronageMilestones != null && patronageMilestonesEarned.Count() > 0)
                         {
                             PatronageMilestoneModel patronageMilestoneHighestEarned = patronageMilestonesEarned.OrderByDescending(m => m.reward).FirstOrDefault();
                             if (patronageMilestoneHighestEarned != null)
@@ -672,23 +672,27 @@ namespace MixItUp.Base.Util
                 await this.ReplaceNumberBasedRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopSparksUsedRegexSpecialIdentifierHeader + timeFrame, async (total) =>
                 {
                     IEnumerable<SparksLeaderboardModel> leaderboards = await func(total);
-                    leaderboards = leaderboards.OrderByDescending(l => l.statValue);
-
-                    List<string> leaderboardsList = new List<string>();
-                    int position = 1;
-                    for (int i = 0; i < total && i < leaderboards.Count(); i++)
+                    if (leaderboards != null && leaderboards.Count() > 0)
                     {
-                        SparksLeaderboardModel leaderboard = leaderboards.ElementAt(i);
-                        leaderboardsList.Add($"#{i + 1}) {leaderboard.username} - {leaderboard.statValue}");
-                        position++;
-                    }
+                        leaderboards = leaderboards.OrderByDescending(l => l.statValue);
 
-                    string result = "No users found.";
-                    if (leaderboardsList.Count > 0)
-                    {
-                        result = string.Join(", ", leaderboardsList);
+                        List<string> leaderboardsList = new List<string>();
+                        int position = 1;
+                        for (int i = 0; i < total && i < leaderboards.Count(); i++)
+                        {
+                            SparksLeaderboardModel leaderboard = leaderboards.ElementAt(i);
+                            leaderboardsList.Add($"#{i + 1}) {leaderboard.username} - {leaderboard.statValue}");
+                            position++;
+                        }
+
+                        string result = "No users found.";
+                        if (leaderboardsList.Count > 0)
+                        {
+                            result = string.Join(", ", leaderboardsList);
+                        }
+                        return result;
                     }
-                    return result;
+                    return null;
                 });
             }
         }
@@ -700,23 +704,27 @@ namespace MixItUp.Base.Util
                 await this.ReplaceNumberBasedRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopEmbersUsedRegexSpecialIdentifierHeader + timeFrame, async (total) =>
                 {
                     IEnumerable<EmbersLeaderboardModel> leaderboards = await func(total);
-                    leaderboards = leaderboards.OrderByDescending(l => l.statValue);
-
-                    List<string> leaderboardsList = new List<string>();
-                    int position = 1;
-                    for (int i = 0; i < total && i < leaderboards.Count(); i++)
+                    if (leaderboards != null && leaderboards.Count() > 0)
                     {
-                        EmbersLeaderboardModel leaderboard = leaderboards.ElementAt(i);
-                        leaderboardsList.Add($"#{i + 1}) {leaderboard.username} - {leaderboard.statValue}");
-                        position++;
-                    }
+                        leaderboards = leaderboards.OrderByDescending(l => l.statValue);
 
-                    string result = "No users found.";
-                    if (leaderboardsList.Count > 0)
-                    {
-                        result = string.Join(", ", leaderboardsList);
+                        List<string> leaderboardsList = new List<string>();
+                        int position = 1;
+                        for (int i = 0; i < total && i < leaderboards.Count(); i++)
+                        {
+                            EmbersLeaderboardModel leaderboard = leaderboards.ElementAt(i);
+                            leaderboardsList.Add($"#{i + 1}) {leaderboard.username} - {leaderboard.statValue}");
+                            position++;
+                        }
+
+                        string result = "No users found.";
+                        if (leaderboardsList.Count > 0)
+                        {
+                            result = string.Join(", ", leaderboardsList);
+                        }
+                        return result;
                     }
-                    return result;
+                    return null;
                 });
             }
         }
