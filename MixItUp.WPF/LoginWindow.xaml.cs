@@ -143,7 +143,7 @@ namespace MixItUp.WPF
                 allSettings.AddRange(this.moderatorSettings);
 
                 IChannelSettings autoLogInSettings = allSettings.FirstOrDefault(s => s.Channel.user.id == App.AppSettings.AutoLogInAccount);
-                if (autoLogInSettings != null)
+                if (autoLogInSettings != null && autoLogInSettings.LicenseAccepted)
                 {
                     await Task.Delay(5000);
 
@@ -185,7 +185,10 @@ namespace MixItUp.WPF
                         IChannelSettings setting = (IChannelSettings)this.ExistingStreamerComboBox.SelectedItem;
                         if (setting.Channel.id == 0)
                         {
-                            result = await this.NewStreamerLogin();
+                            if (await this.ShowLicenseAgreement())
+                            {
+                                result = await this.NewStreamerLogin();
+                            }
                         }
                         else
                         {
@@ -214,7 +217,10 @@ namespace MixItUp.WPF
                 }
                 else
                 {
-                    result = await this.NewStreamerLogin();
+                    if (await this.ShowLicenseAgreement())
+                    {
+                        result = await this.NewStreamerLogin();
+                    }
                 }
             });
         }
@@ -245,7 +251,10 @@ namespace MixItUp.WPF
                 }
                 else
                 {
-                    authenticationSuccessful = await this.EstablishConnection(ChannelSession.ModeratorScopes, this.ModeratorChannelComboBox.Text);
+                    if (await this.ShowLicenseAgreement())
+                    {
+                        authenticationSuccessful = await this.EstablishConnection(ChannelSession.ModeratorScopes, this.ModeratorChannelComboBox.Text);
+                    }
                 }
 
                 if (authenticationSuccessful)
@@ -290,19 +299,23 @@ namespace MixItUp.WPF
 
         private async Task<bool> ExistingSettingLogin(IChannelSettings setting)
         {
-            bool result = await ChannelSession.ConnectUser(setting);
-            if (result)
+            if (setting.LicenseAccepted || await this.ShowLicenseAgreement())
             {
-                if (!await ChannelSession.ConnectBot(setting))
+                bool result = await ChannelSession.ConnectUser(setting);
+                if (result)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("Bot Account failed to authenticate, please re-connect it from the Services section.");
+                    if (!await ChannelSession.ConnectBot(setting))
+                    {
+                        await MessageBoxHelper.ShowMessageDialog("Bot Account failed to authenticate, please re-connect it from the Services section.");
+                    }
                 }
+                else
+                {
+                    await MessageBoxHelper.ShowMessageDialog("Unable to authenticate with Mixer, please try again");
+                }
+                return result;
             }
-            else
-            {
-                await MessageBoxHelper.ShowMessageDialog("Unable to authenticate with Mixer, please try again");
-            }
-            return result;
+            return false;
         }
 
         private async Task<bool> NewStreamerLogin()
@@ -342,6 +355,17 @@ namespace MixItUp.WPF
             {
                 await MessageBoxHelper.ShowMessageDialog(message);
             });
+        }
+
+        private Task<bool> ShowLicenseAgreement()
+        {
+            LicenseAgreementWindow window = new LicenseAgreementWindow();
+            TaskCompletionSource<bool> task = new TaskCompletionSource<bool>();
+            window.Owner = Application.Current.MainWindow;
+            window.Closed += (s, a) => task.SetResult(window.Accepted);
+            window.Show();
+            window.Focus();
+            return task.Task;
         }
     }
 }

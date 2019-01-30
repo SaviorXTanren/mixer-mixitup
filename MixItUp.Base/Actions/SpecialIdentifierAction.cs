@@ -23,15 +23,23 @@ namespace MixItUp.Base.Actions
         public string SpecialIdentifierReplacement { get; set; }
 
         [DataMember]
+        public bool MakeGloballyUsable { get; set; }
+
+        [DataMember]
         public bool SpecialIdentifierShouldProcessMath { get; set; }
 
-        public SpecialIdentifierAction() : base(ActionTypeEnum.SpecialIdentifier) { }
+        public SpecialIdentifierAction()
+            : base(ActionTypeEnum.SpecialIdentifier)
+        {
+            this.MakeGloballyUsable = true;
+        }
 
-        public SpecialIdentifierAction(string specialIdentifierName, string specialIdentifierReplacement, bool specialIdentifierShouldProcessMath)
+        public SpecialIdentifierAction(string specialIdentifierName, string specialIdentifierReplacement, bool makeGloballyUsable, bool specialIdentifierShouldProcessMath)
             : this()
         {
             this.SpecialIdentifierName = specialIdentifierName;
             this.SpecialIdentifierReplacement = specialIdentifierReplacement;
+            this.MakeGloballyUsable = makeGloballyUsable;
             this.SpecialIdentifierShouldProcessMath = specialIdentifierShouldProcessMath;
         }
 
@@ -56,7 +64,14 @@ namespace MixItUp.Base.Actions
                 }
             }
 
-            SpecialIdentifierStringBuilder.AddCustomSpecialIdentifier(this.SpecialIdentifierName, replacementText);
+            if (this.MakeGloballyUsable)
+            {
+                SpecialIdentifierStringBuilder.AddCustomSpecialIdentifier(this.SpecialIdentifierName, replacementText);
+            }
+            else
+            {
+                this.extraSpecialIdentifiers[this.SpecialIdentifierName] = replacementText;
+            }
         }
     }
 }

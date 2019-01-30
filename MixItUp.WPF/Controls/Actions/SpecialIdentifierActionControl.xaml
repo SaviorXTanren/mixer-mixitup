@@ -12,7 +12,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
+            <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
@@ -36,12 +36,19 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="1" VerticalAlignment="Center">Is Math Expression:</TextBlock>
-            <ToggleButton Grid.Column="3" x:Name="SpecialIdentifierShouldProcessMathCheckBox"/>
+            <TextBlock Grid.Column="1" VerticalAlignment="Center">Make Globally Usable:</TextBlock>
+            <ToggleButton Grid.Column="3" x:Name="MakeGloballyUsableCheckBox"/>
+
+            <TextBlock Grid.Column="5" VerticalAlignment="Center">Is Math Expression:</TextBlock>
+            <ToggleButton Grid.Column="7" x:Name="SpecialIdentifierShouldProcessMathCheckBox"/>
         </Grid>
     </Grid>
 </local:ActionControlBase>

@@ -460,6 +460,9 @@
     <Compile Include="Controls\Interactive\RealmRoyaleDropMapInteractiveControl.xaml.cs">
       <DependentUpon>RealmRoyaleDropMapInteractiveControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\LicenseControl.xaml.cs">
+      <DependentUpon>LicenseControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MainControls\CurrencyRankInventoryControl.xaml.cs">
       <DependentUpon>CurrencyRankInventoryControl.xaml</DependentUpon>
     </Compile>
@@ -807,6 +810,9 @@
     <Compile Include="Windows\Interactive\InteractiveBoardDesignerWindow.xaml.cs">
       <DependentUpon>InteractiveBoardDesignerWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\LicenseAgreementWindow.xaml.cs">
+      <DependentUpon>LicenseAgreementWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\LoadingWindowBase.cs" />
     <Compile Include="Windows\OAuth\OAuthWebBrowserWindow.xaml.cs">
       <DependentUpon>OAuthWebBrowserWindow.xaml</DependentUpon>
@@ -1122,6 +1128,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Interactive\RealmRoyaleDropMapInteractiveControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\LicenseControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1639,6 +1649,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\Interactive\InteractiveBoardDesignerWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\LicenseAgreementWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
