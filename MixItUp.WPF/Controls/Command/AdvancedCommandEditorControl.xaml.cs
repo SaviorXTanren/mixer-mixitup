@@ -141,7 +141,7 @@ namespace MixItUp.WPF.Controls.Command
                 }
 
                 this.TypeComboBox.ItemsSource = actionTypes.OrderBy(at => at.Name);
-                this.ActionsListView.ItemsSource = this.actionControls;
+                this.ActionsItemsControl.ItemsSource = this.actionControls;
 
                 this.CommandDetailsGrid.Visibility = Visibility.Visible;
                 this.CommandDetailsGrid.Children.Add(this.commandDetailsControl);

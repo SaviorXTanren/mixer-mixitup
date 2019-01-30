@@ -25,6 +25,10 @@ namespace MixItUp.WPF.Controls.Actions
 
             this.OverlayNotEnabledWarningTextBlock.Visibility = (ChannelSession.Services.OverlayServers == null) ? Visibility.Visible : Visibility.Collapsed;
 
+            this.TextToSpeechVolumeTextBox.Text = "100";
+            this.TextToSpeechPitchTextBox.Text = "100";
+            this.TextToSpeechRateTextBox.Text = "100";
+
             foreach (string voice in TextToSpeechAction.AvailableVoices)
             {
                 this.voices.Add(voice);
