@@ -485,6 +485,8 @@ namespace MixItUp.Base
                     }
                     await ChannelSession.Services.Settings.Initialize(ChannelSession.Settings);
 
+                    ChannelSession.Settings.LicenseAccepted = true;
+
                     if (isStreamer && ChannelSession.Settings.Channel != null && ChannelSession.User.id != ChannelSession.Settings.Channel.userId)
                     {
                         GlobalEvents.ShowMessageBox("The account you are logged in as on Mixer does not match the account for this settings. Please log in as the correct account on Mixer.");

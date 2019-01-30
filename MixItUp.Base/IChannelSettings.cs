@@ -23,6 +23,8 @@ namespace MixItUp.Base
     {
         int Version { get; set; }
 
+        bool LicenseAccepted { get; set; }
+
         bool OptOutTracking { get; set; }
 
         bool ReRunWizard { get; set; }

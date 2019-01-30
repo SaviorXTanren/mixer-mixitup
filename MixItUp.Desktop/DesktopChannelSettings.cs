@@ -37,6 +37,9 @@ namespace MixItUp.Desktop
         public int Version { get; set; }
 
         [JsonProperty]
+        public bool LicenseAccepted { get; set; }
+
+        [JsonProperty]
         public bool OptOutTracking { get; set; }
 
         [JsonProperty]
