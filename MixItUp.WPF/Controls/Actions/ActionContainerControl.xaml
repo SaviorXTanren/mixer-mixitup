@@ -21,7 +21,8 @@
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
-
+    
+<Border Style="{StaticResource DefaultBorder}" BorderBrush="{StaticResource MaterialDesignBody}">
     <Controls:AccordianGroupBoxControl x:Name="ActionContainer" Maximized="AccordianGroupBoxControl_Maximized" Minimized="AccordianGroupBoxControl_Minimized">
         <Controls:AccordianGroupBoxControl.Header>
             <Grid Background="Transparent">
@@ -59,9 +60,8 @@
             </Grid>
         </Controls:AccordianGroupBoxControl.Header>
 
-        <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto">
             <ContentControl x:Uid="ActionControlContentControl" Margin="10" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" />
-        </ScrollViewer>
 
     </Controls:AccordianGroupBoxControl>
+    </Border>
 </UserControl>

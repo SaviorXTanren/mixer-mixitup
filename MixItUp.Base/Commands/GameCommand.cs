@@ -296,6 +296,8 @@ namespace MixItUp.Base.Commands
             }
             user.Data.SubtractCurrencyAmount(currency, betAmount);
 
+            this.Requirements.TrySubtractInventoryAmount(user);
+
             return true;
         }
 
@@ -994,10 +996,7 @@ namespace MixItUp.Base.Commands
                         return;
                     }
 
-                    if (this.Requirements.Inventory != null)
-                    {
-                        this.Requirements.Inventory.TrySubtractAmount(user.Data);
-                    }
+                    this.Requirements.TrySubtractInventoryAmount(user);
 
                     int randomNumber = this.GenerateProbability();
                     if (randomNumber <= this.SuccessfulOutcome.GetRoleProbability(user))

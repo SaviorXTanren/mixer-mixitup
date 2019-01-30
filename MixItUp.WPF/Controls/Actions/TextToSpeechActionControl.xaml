@@ -13,7 +13,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
+            <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
@@ -32,11 +32,11 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="TextToSpeechVoiceComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Voice" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="180" />
+            <ComboBox x:Name="TextToSpeechVoiceComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Voice" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="170" />
 
-            <TextBox x:Name="TextToSpeechVolumeTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Volume (0% - 100%)" Width="115" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="TextToSpeechVolumeTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Volume (0% - 100%)" Width="100" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox x:Name="TextToSpeechPitchTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Pitch (0% - 200%)" Width="105" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="TextToSpeechPitchTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Pitch (0% - 200%)" Width="100" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <TextBox x:Name="TextToSpeechRateTextBox" Grid.Column="6" MaterialDesign:HintAssist.Hint="Rate (0% - 150%)" Width="100" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
@@ -45,7 +45,7 @@
             </TextBlock>
         </Grid>
 
-        <TextBox Grid.Row="3" x:Name="TextToSpeechMessageTextBox" MaterialDesign:HintAssist.Hint="Speech Message" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        <TextBox Grid.Row="3" x:Name="TextToSpeechMessageTextBox" MaterialDesign:HintAssist.Hint="Speech Message" Style="{StaticResource MaterialDesignFloatingHintTextBox}" HorizontalAlignment="Left" Width="700" />
 
         <TextBlock Grid.Row="5" VerticalAlignment="Center" HorizontalAlignment="Center">Text-To-Speech functionality provided by <Hyperlink NavigateUri="https://responsivevoice.org/" RequestNavigate="Hyperlink_RequestNavigate">https://responsivevoice.org/</Hyperlink></TextBlock>
     </Grid>

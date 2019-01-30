@@ -488,6 +488,8 @@ namespace MixItUp.Base
                     }
                     await ChannelSession.Services.Settings.Initialize(ChannelSession.Settings);
 
+                    ChannelSession.Settings.LicenseAccepted = true;
+
                     if (isStreamer && ChannelSession.Settings.Channel != null && ChannelSession.User.id != ChannelSession.Settings.Channel.userId)
                     {
                         GlobalEvents.ShowMessageBox("The account you are logged in as on Mixer does not match the account for this settings. Please log in as the correct account on Mixer.");
@@ -614,7 +616,7 @@ namespace MixItUp.Base
 
                     if (ChannelSession.Settings.ModerationResetStrikesOnLaunch)
                     {
-                        foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values)
+                        foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values.Where(u => u.ModerationStrikes > 0))
                         {
                             userData.ModerationStrikes = 0;
                             ChannelSession.Settings.UserData.ManualValueChanged(userData.ID);
@@ -633,7 +635,7 @@ namespace MixItUp.Base
 
                     await ChannelSession.Services.Settings.PerformBackupIfApplicable(ChannelSession.Settings);
 
-                    ChannelSession.Services.Telemetry.TrackLogin();
+                    ChannelSession.Services.Telemetry.TrackLogin(ChannelSession.IsStreamer, ChannelSession.Channel.partnered);
                     if (ChannelSession.Settings.IsStreamer)
                     {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed

@@ -38,9 +38,9 @@ namespace MixItUp.Desktop.Services
             this.TrySendEvent(() => this.telemetryClient.TrackPageView(pageName));
         }
 
-        public void TrackLogin()
+        public void TrackLogin(bool isStreamer, bool isPartner)
         {
-            this.TrySendEvent(() => this.telemetryClient.TrackEvent("Login"));
+            this.TrySendEvent(() => this.telemetryClient.TrackEvent("Login", new Dictionary<string, string> { { "Is Streamer", isStreamer.ToString() }, { "Is Partner", isPartner.ToString() } }));
         }
 
         public void TrackCommand(CommandTypeEnum type)
