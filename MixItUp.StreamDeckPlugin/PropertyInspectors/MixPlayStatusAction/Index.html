@@ -5,7 +5,7 @@
     <meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,minimal-ui,viewport-fit=cover">
     <meta name=apple-mobile-web-app-capable content=yes>
     <meta name=apple-mobile-web-app-status-bar-style content=black>
-    <title>Mix It Up - Property Inspector For Run Command</title>
+    <title>Mix It Up - Property Inspector For MixPlay Status</title>
     <link rel="stylesheet" href="../sdpi.css">
 </head>
 <body>
@@ -28,27 +28,6 @@
                 <summary>Mix It Up Developer APIs are not enabled</summary>
                 <p><button class="sdpi-item-value" onclick="openUrl('https://github.com/SaviorXTanren/mixer-mixitup/wiki/Developer-API')">Enable Developer APIs</button></p>
             </details>
-        </div>
-
-        <div type="group" class="sdpi-item" id="command_selection" style="display: none;">
-            <div class="sdpi-item" id="selected_category">
-                <div class="sdpi-item-label">Category</div>
-                <select class="sdpi-item-value select" onchange="updateCategory()" disabled required>
-                    <option>Loading...</option>
-                </select>
-            </div>
-
-            <div class="sdpi-item" id="selected_command">
-                <div class="sdpi-item-label">Command</div>
-                <select class="sdpi-item-value select" onchange="updateSettings()" disabled required>
-                    <option>Loading...</option>
-                </select>
-            </div>
-
-            <div class="sdpi-item" id="arguments">
-                <div class="sdpi-item-label">Arguments</div>
-                <input class="sdpi-item-value" value="" placeholder="Arguments (optional)" oninput="updateSettings()" disabled>
-            </div>
         </div>
     </div>
 

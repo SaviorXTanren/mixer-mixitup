@@ -132,8 +132,10 @@ namespace MixItUp.StreamDeckPlugin
             if (commands == null)
             {
                 // Developer API is not enabled
-                JObject response = new JObject();
-                response["error"] = JValue.CreateString("developerAPINotEnabled");
+                JObject response = new JObject
+                {
+                    ["error"] = JValue.CreateString("developerAPINotEnabled")
+                };
                 await this.connection.SendToPropertyInspectorAsync(this.Action, response, this.Context);
             }
             else

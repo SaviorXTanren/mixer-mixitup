@@ -36,9 +36,18 @@ namespace MixItUp.StreamDeckPlugin
             return Task.FromResult(0);
         }
 
-        public override Task ProcessPropertyInspectorAsync(SendToPluginEvent propertyInspectorEvent)
+        public override async Task ProcessPropertyInspectorAsync(SendToPluginEvent propertyInspectorEvent)
         {
-            return Task.FromResult(0);
+            switch (propertyInspectorEvent.Payload["property_inspector"].ToString().ToLower())
+            {
+                case "propertyinspectorconnected":
+                    await this.ConnectPropertiesAsync();
+                    break;
+                case "propertyinspectorwilldisappear":
+                    break;
+                case "updatesettings":
+                    break;
+            }
         }
 
         public override Task RunActionAsync()
@@ -72,6 +81,35 @@ namespace MixItUp.StreamDeckPlugin
             {
                 await this.connection.SetStateAsync(0, this.Context);
                 await this.connection.SetTitleAsync("Not\nConnected", this.Context, SDKTarget.HardwareAndSoftware);
+            }
+        }
+
+        private async Task ConnectPropertiesAsync()
+        {
+            bool isDeveloperAPIEnabled = true;
+            try
+            {
+                MixPlayStatus _ = await MixPlay.GetStatusAsync();
+            }
+            catch
+            {
+                isDeveloperAPIEnabled = false;
+            }
+
+            if (isDeveloperAPIEnabled)
+            {
+                // Blank object to clear the loading
+                JObject response = new JObject();
+                await this.connection.SendToPropertyInspectorAsync(this.Action, response, this.Context);
+            }
+            else
+            {
+                // Developer API is not enabled
+                JObject response = new JObject
+                {
+                    ["error"] = JValue.CreateString("developerAPINotEnabled")
+                };
+                await this.connection.SendToPropertyInspectorAsync(this.Action, response, this.Context);
             }
         }
     }
