@@ -213,7 +213,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values)
             {
-                if (userData.GetCurrencyAmount(this) < 0)
+                if (userData.GetCurrencyAmount(this) > 0)
                 {
                     userData.ResetCurrencyAmount(this);
                     ChannelSession.Settings.UserData.ManualValueChanged(userData.ID);
