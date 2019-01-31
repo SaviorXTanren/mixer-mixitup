@@ -91,8 +91,10 @@ namespace MixItUp.StreamDeckPlugin
             if (!this.isMixItUpRunning)
             {
                 // Send a message explaining this
-                JObject response = new JObject();
-                response["error"] = JValue.CreateString("mixItUpIsNotRunning");
+                JObject response = new JObject
+                {
+                    ["error"] = JValue.CreateString("mixItUpIsNotRunning")
+                };
                 await this.connection.SendToPropertyInspectorAsync(e.Event.Action, response, e.Event.Context);
                 return;
             }
