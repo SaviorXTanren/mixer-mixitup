@@ -19,7 +19,7 @@ namespace MixItUp.Base.Actions
     [DataContract]
     public class TwitterAction : ActionBase
     {
-        public static bool CheckIfTweetContainsTooManyTags(string tweet) { return !string.IsNullOrEmpty(tweet) && tweet.Count(c => c == '@') > 1; }
+        public static bool CheckIfTweetContainsTooManyTags(string tweet) { return !string.IsNullOrEmpty(tweet) && tweet.Count(c => c == '@') > 0; }
 
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
