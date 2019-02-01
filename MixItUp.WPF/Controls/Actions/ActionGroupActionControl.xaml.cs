@@ -22,7 +22,7 @@ namespace MixItUp.WPF.Controls.Actions
             this.ActionGroupNameComboBox.ItemsSource = ChannelSession.Settings.ActionGroupCommands.OrderBy(c => c.Name);
             if (this.action != null)
             {
-                this.ActionGroupNameComboBox.SelectedItem = ChannelSession.Settings.ActionGroupCommands.FirstOrDefault(c => c.Name.Equals(this.action.ActionGroupName));
+                this.ActionGroupNameComboBox.SelectedItem = this.action.GetCommand();
             }
             return Task.FromResult(0);
         }

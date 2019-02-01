@@ -29,10 +29,10 @@
             <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">Overlay Endpoints:</TextBlock>
 
             <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="2" BorderThickness="1" Width="500">
-                <ListView x:Name="OverlayEndpointsListView" HorizontalAlignment="Center">
-                    <ListView.ItemTemplate>
+                <ItemsControl x:Name="OverlayEndpointsItemsControl" HorizontalAlignment="Center">
+                    <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Grid Margin="10">
+                            <Grid Margin="20">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="150" />
                                     <ColumnDefinition Width="15" />
@@ -43,13 +43,13 @@
 
                                 <TextBlock Grid.Column="0" Text="{Binding Name}" />
 
-                                <TextBlock Grid.Column="2" Text="{Binding Address}" />
+                                <TextBlock Grid.Column="2"><Hyperlink NavigateUri="{Binding Address}" RequestNavigate="Hyperlink_RequestNavigate"><TextBlock Text="{Binding Address}"/></Hyperlink></TextBlock>
 
                                 <Button Grid.Column="4" x:Name="DeleteOverlayButton" Margin="-10" IsEnabled="{Binding CanDelete}" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteOverlayButton_Click" ToolTip="Delete" />
                             </Grid>
                         </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </Border>
 
             <Grid Grid.Row="4" HorizontalAlignment="Center">
