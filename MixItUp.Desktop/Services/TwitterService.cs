@@ -20,12 +20,14 @@ namespace MixItUp.Base.Services
     [DataContract]
     public class TwitterService : ITwitterService, IDisposable
     {
-        private const string ClientID = "RUWM2BZO9Mn7Jqz0g8d5nbEHs";
+        private const string ClientID = "3xNVEnW8FVc4iywkW8CCDZQsC";
 
         private OAuthTokenModel token;
         private IAuthorizer auth;
 
         private string authPin;
+
+        private DateTimeOffset lastTweet = DateTimeOffset.MinValue;
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
@@ -183,32 +185,37 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                using (var twitterCtx = new TwitterContext(this.auth))
+                if (this.lastTweet.TotalMinutesFromNow() > 5)
                 {
-                    List<ulong> mediaIds = new List<ulong>();
+                    this.lastTweet = DateTimeOffset.Now;
 
-                    try
+                    using (var twitterCtx = new TwitterContext(this.auth))
                     {
-                        if (!string.IsNullOrEmpty(imagePath))
+                        List<ulong> mediaIds = new List<ulong>();
+
+                        try
                         {
-                            // Download the image and upload to Twitter
-                            using (WebClient client = new WebClient())
+                            if (!string.IsNullOrEmpty(imagePath))
                             {
-                                var bytes = await Task.Run<byte[]>(async () => { return await client.DownloadDataTaskAsync(imagePath); });
-
-                                using (Image img = ByteArrayToImage(bytes))
+                                // Download the image and upload to Twitter
+                                using (WebClient client = new WebClient())
                                 {
-                                    string mediaType = $"image/{new ImageFormatConverter().ConvertToString(img.RawFormat).ToLower()}";
+                                    var bytes = await Task.Run<byte[]>(async () => { return await client.DownloadDataTaskAsync(imagePath); });
 
-                                    Media media = await twitterCtx.UploadMediaAsync(bytes, mediaType, "tweet_image");
-                                    mediaIds.Add(media.MediaID);
+                                    using (Image img = ByteArrayToImage(bytes))
+                                    {
+                                        string mediaType = $"image/{new ImageFormatConverter().ConvertToString(img.RawFormat).ToLower()}";
+
+                                        Media media = await twitterCtx.UploadMediaAsync(bytes, mediaType, "tweet_image");
+                                        mediaIds.Add(media.MediaID);
+                                    }
                                 }
                             }
                         }
-                    }
-                    catch (Exception ex) { Logger.Log(ex); }
+                        catch (Exception ex) { Logger.Log(ex); }
 
-                    await twitterCtx.TweetAsync(tweet, mediaIds);
+                        await twitterCtx.TweetAsync(tweet, mediaIds);
+                    }
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }

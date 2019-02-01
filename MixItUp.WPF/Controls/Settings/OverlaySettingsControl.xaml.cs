@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Overlay;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -37,7 +38,7 @@ namespace MixItUp.WPF.Controls.Settings
 
         protected override async Task InitializeInternal()
         {
-            this.OverlayEndpointsListView.ItemsSource = this.overlays;
+            this.OverlayEndpointsItemsControl.ItemsSource = this.overlays;
             this.overlays.Clear();
             foreach (var kvp in ChannelSession.AllOverlayNameAndPorts.OrderBy(kvp => kvp.Value))
             {
