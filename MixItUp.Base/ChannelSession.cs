@@ -34,11 +34,10 @@ namespace MixItUp.Base
         private const string DefaultEmoticonsManifest = "https://mixer.com/_latest/assets/emoticons/manifest.json";
         private const string DefaultEmoticonsLinkFormat = "https://mixer.com/_latest/assets/emoticons/{0}.png";
 
-        //                                 Source             Text
-        private static readonly Dictionary<string, Dictionary<string, EmoticonImage>> builtinEmoticons = new Dictionary<string, Dictionary<string, EmoticonImage>>();
-        private static readonly Dictionary<string, Dictionary<string, EmoticonImage>> externalEmoticons = new Dictionary<string, Dictionary<string, EmoticonImage>>();
-        private static readonly Dictionary<string, Dictionary<string, EmoticonImage>> userEmoticons = new Dictionary<string, Dictionary<string, EmoticonImage>>();
-        private static readonly Dictionary<string, Dictionary<string, EmoticonImage>> botEmoticons = new Dictionary<string, Dictionary<string, EmoticonImage>>();
+        private static readonly LockedDictionary<string, LockedDictionary<string, EmoticonImage>> builtinEmoticons = new LockedDictionary<string, LockedDictionary<string, EmoticonImage>>();
+        private static readonly LockedDictionary<string, LockedDictionary<string, EmoticonImage>> externalEmoticons = new LockedDictionary<string, LockedDictionary<string, EmoticonImage>>();
+        private static readonly LockedDictionary<string, LockedDictionary<string, EmoticonImage>> userEmoticons = new LockedDictionary<string, LockedDictionary<string, EmoticonImage>>();
+        private static readonly LockedDictionary<string, LockedDictionary<string, EmoticonImage>> botEmoticons = new LockedDictionary<string, LockedDictionary<string, EmoticonImage>>();
 
         public static readonly List<OAuthClientScopeEnum> StreamerScopes = new List<OAuthClientScopeEnum>()
         {
@@ -397,18 +396,21 @@ namespace MixItUp.Base
             {
                 if (!externalEmoticons.ContainsKey(message.pack))
                 {
-                    externalEmoticons[message.pack] = new Dictionary<string, EmoticonImage>();
+                    externalEmoticons[message.pack] = new LockedDictionary<string, EmoticonImage>();
                 }
 
-                externalEmoticons[message.pack][message.text] = new EmoticonImage
+                if (!externalEmoticons[message.pack].ContainsKey(message.text))
                 {
-                    Name = message.text,
-                    Uri = message.pack,
-                    X = message.coords.x,
-                    Y = message.coords.y,
-                    Width = message.coords.width,
-                    Height = message.coords.height,
-                };
+                    externalEmoticons[message.pack][message.text] = new EmoticonImage
+                    {
+                        Name = message.text,
+                        Uri = message.pack,
+                        X = message.coords.x,
+                        Y = message.coords.y,
+                        Width = message.coords.width,
+                        Height = message.coords.height,
+                    };
+                }
             }
         }
 
@@ -416,7 +418,7 @@ namespace MixItUp.Base
         {
             if (message.type.Equals("emoticon", StringComparison.InvariantCultureIgnoreCase))
             {
-                Dictionary<string, Dictionary<string, EmoticonImage>> emoticons = null;
+                LockedDictionary<string, LockedDictionary<string, EmoticonImage>> emoticons = null;
                 switch (message.source.ToLower())
                 {
                     case "external":
@@ -445,7 +447,7 @@ namespace MixItUp.Base
             return FindMatchingEmoticons(text, botEmoticons);
         }
 
-        private static IEnumerable<EmoticonImage> FindMatchingEmoticons(string text, Dictionary<string, Dictionary<string, EmoticonImage>> storage)
+        private static IEnumerable<EmoticonImage> FindMatchingEmoticons(string text, LockedDictionary<string, LockedDictionary<string, EmoticonImage>> storage)
         {
             List<EmoticonImage> matchedImages = new List<EmoticonImage>();
             if (text.Length == 1 && char.IsLetterOrDigit(text[0]))
@@ -457,13 +459,15 @@ namespace MixItUp.Base
             // User specific emoticons
             foreach (var kvp in storage)
             {
-                matchedImages.AddRange(kvp.Value.Where(v => v.Key.StartsWith(text, StringComparison.InvariantCultureIgnoreCase)).Select(v => v.Value));
+                var values = kvp.Value.ToDictionary();
+                matchedImages.AddRange(values.Where(v => v.Key.StartsWith(text, StringComparison.InvariantCultureIgnoreCase)).Select(v => v.Value));
             }
 
             // Builtin emoticons (added last to put them at the end)
             foreach (var kvp in builtinEmoticons)
             {
-                matchedImages.AddRange(kvp.Value.Where(v => v.Key.StartsWith(text, StringComparison.InvariantCultureIgnoreCase)).Select(v => v.Value));
+                var values = kvp.Value.ToDictionary();
+                matchedImages.AddRange(values.Where(v => v.Key.StartsWith(text, StringComparison.InvariantCultureIgnoreCase)).Select(v => v.Value));
             }
 
             return matchedImages.Distinct();
@@ -713,7 +717,7 @@ namespace MixItUp.Base
                         {
                             if (!builtinEmoticons.ContainsKey(pack.Key))
                             {
-                                builtinEmoticons.Add(pack.Key, new Dictionary<string, EmoticonImage>());
+                                builtinEmoticons.Add(pack.Key, new LockedDictionary<string, EmoticonImage>());
                             }
 
                             string imageLink = string.Format(ChannelSession.DefaultEmoticonsLinkFormat, pack.Key);
@@ -751,14 +755,14 @@ namespace MixItUp.Base
             public Dictionary<string, EmoticonGroupModel> emoticons = new Dictionary<string, EmoticonGroupModel>();
         }
 
-        private static async Task LoadEmoticons(UserModel user, Dictionary<string, Dictionary<string, EmoticonImage>> storage)
+        private static async Task LoadEmoticons(UserModel user, LockedDictionary<string, LockedDictionary<string, EmoticonImage>> storage)
         {
             List<EmoticonPackModel> userPacks = (await ChannelSession.Connection.GetEmoticons(ChannelSession.Channel, user)).ToList();
             foreach (EmoticonPackModel userPack in userPacks)
             {
                 if (!storage.ContainsKey(userPack.channelId.ToString()))
                 {
-                    storage.Add(userPack.channelId.ToString(), new Dictionary<string, EmoticonImage>());
+                    storage.Add(userPack.channelId.ToString(), new LockedDictionary<string, EmoticonImage>());
                 }
 
                 foreach (KeyValuePair<string, EmoticonGroupModel> emoticon in userPack.emoticons)
