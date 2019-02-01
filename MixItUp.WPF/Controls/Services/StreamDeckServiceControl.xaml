@@ -8,16 +8,17 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="600">
     <Grid>
-        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="40" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="650">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-            <TextBlock Grid.Column="0" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Width="450">This Stream Deck plug-in allows you to run Mix It Up commands directly from your Stream Deck device.  It requires the Developer API Service to be enabled and you must have <Hyperlink NavigateUri="StreamDeck" RequestNavigate="Hyperlink_RequestNavigate">Stream Deck v4.0</Hyperlink> or higher installed.</TextBlock>
+            <TextBlock Grid.Row="0" TextWrapping="Wrap">This Stream Deck plug-in allows you to run Mix It Up commands directly from your Stream Deck device, as well as other status information about your stream.</TextBlock>
 
-            <Button x:Name="InstallButton" Grid.Column="2" Click="InstallButton_Click" Width="100">Install</Button>
+            <TextBlock Grid.Row="2" TextWrapping="Wrap">To get started, ensure the Stream Deck software is updated to at least version 4.0 &amp; the Developer API service is enabled in Mix It Up. To install the Mix It Up plugin, click on the "More Actions..." button in the bottom-right corner, then search for "Mix It Up" in the window.</TextBlock>
+
         </Grid>
     </Grid>
 </local:ServicesControlBase>

@@ -1863,8 +1863,6 @@
   <PropertyGroup>
     <PostBuildEvent>del $(TargetDir)ApplicationSettings.xml
 
-del $(TargetDir)com.mixitup.streamdeckplugin.streamDeckPlugin
-
 rmdir /Q /S $(TargetDir)Settings\
 rmdir /Q /S $(TargetDir)Logs\
 rmdir /Q /S $(TargetDir)ChatEventLogs\
