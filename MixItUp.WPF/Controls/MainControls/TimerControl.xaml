@@ -15,28 +15,77 @@
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
+    <Grid Margin="10">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
         </Grid.RowDefinitions>
 
-        <DataGrid x:Name="TimerCommandsListView" Grid.Row="0" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
-                <DataGridTemplateColumn Header="Actions" Width="240">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <CommandControls:CommandButtonsControl x:Name="CommandButtons" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+        <Border Grid.Row="0" BorderBrush="{StaticResource MaterialDesignBody}" BorderThickness="1">
+            <Grid Margin="15,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="240" />
+                </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="2" HorizontalAlignment="Center">
+                <TextBlock Grid.Column="0" Text="Name" VerticalAlignment="Center" TextDecorations="Underline" MouseLeftButtonDown="Name_MouseLeftButtonDown" />
+                <MaterialDesign:PackIcon x:Name="NameSortingIcon" Grid.Column="0" Margin="40,0,0,0" Kind="ArrowDown" />
+
+                <TextBlock Grid.Column="1" Text="Actions" VerticalAlignment="Center" TextDecorations="Underline" />
+
+            </Grid>
+        </Border>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
+            <ItemsControl x:Name="TimerCommandsItemsControl" HorizontalContentAlignment="Stretch">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="{StaticResource MaterialDesignBody}" BorderThickness="1">
+                            <Controls:AccordianGroupBoxControl IsMinimized="{Binding IsMinimized}" Minimized="AccordianGroupBoxControl_Minimized" Maximized="AccordianGroupBoxControl_Maximized">
+                                <Controls:AccordianGroupBoxControl.Header>
+                                    <Grid Background="Transparent" Margin="5,0">
+                                        <TextBlock HorizontalAlignment="Left" Text="{Binding DisplayName}" Foreground="{StaticResource WhiteColor}" Style="{StaticResource HeaderTextBlock}" />
+
+                                        <ToggleButton Visibility="{Binding IsEnableSwitchToggable, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Right" IsChecked="{Binding Path=IsEnabled, Mode=TwoWay}" Checked="GroupCommandsToggleButton_Checked" Unchecked="GroupCommandsToggleButton_Checked" />
+                                    </Grid>
+                                </Controls:AccordianGroupBoxControl.Header>
+
+                                <ItemsControl ItemsSource="{Binding Commands}" HorizontalContentAlignment="Stretch">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+
+                                                <Grid Grid.Row="0" Margin="10,5">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="240" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center" />
+
+                                                    <CommandControls:CommandButtonsControl Grid.Column="1" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
+
+                                                </Grid>
+
+                                                <Separator Grid.Row="1" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Controls:AccordianGroupBoxControl>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <Grid Grid.Row="3" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="40" />

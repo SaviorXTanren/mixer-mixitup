@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.API
 {
+    //  GET:    http://localhost:8911/api/mixplay/status                                    MixPlay.GetStatusAsync
     //  GET:    http://localhost:8911/api/mixplay/users                                     MixPlay.GetUsersAsync
     //  GET:    http://localhost:8911/api/mixplay/user/{userID}                             MixPlay.GetUserByIDAsync
     //  GET:    http://localhost:8911/api/mixplay/user/search/username/{userName}           MixPlay.GetUserByUsernameAsync
@@ -13,6 +14,12 @@ namespace MixItUp.API
 
     public static class MixPlay
     {
+        // Status Methods
+        public static async Task<MixPlayStatus> GetStatusAsync()
+        {
+            return await RestClient.GetAsync<MixPlayStatus>($"mixplay/status");
+        }
+
         // User Methods
         public static async Task<MixPlayUser> GetUserByUsernameAsync(string userName)
         {

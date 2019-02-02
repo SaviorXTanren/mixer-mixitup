@@ -209,7 +209,6 @@
     <Compile Include="Services\SpotifyService.cs" />
     <Compile Include="Services\StreamJarService.cs" />
     <Compile Include="Services\StreamlabsOBSService.cs" />
-    <Compile Include="Services\StreamDeckService.cs" />
     <Compile Include="Services\StreamlabsService.cs" />
     <Compile Include="Services\TiltifyService.cs" />
     <Compile Include="Services\TipeeeStreamService.cs" />

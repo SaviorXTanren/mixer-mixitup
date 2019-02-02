@@ -10,27 +10,49 @@
 </head>
 <body>
     <div class="sdpi-wrapper">
+        <div class="sdpi-item" id="loading">
+            <details class="message info">
+                <summary>Loading...</summary>
+            </details>
+        </div>
+
         <div class="sdpi-item" id="notRunning" style="display: none;">
-            <p>ERROR: Mix It Up is not running!</p>
+            <details class="message caution" open>
+                <summary>Mix It Up is not running</summary>
+                <p><button class="sdpi-item-value" onclick="openUrl('https://mixitupapp.com/')">Download Mix It Up</button></p>
+            </details>
         </div>
 
         <div class="sdpi-item" id="noDevAPIs" style="display: none;">
-            <p>ERROR: Mix It Up Developer APIs are disabled!</p>
+            <details class="message caution" open>
+                <summary>Mix It Up Developer APIs are not enabled</summary>
+                <p><button class="sdpi-item-value" onclick="openUrl('https://github.com/SaviorXTanren/mixer-mixitup/wiki/Developer-API')">Enable Developer APIs</button></p>
+            </details>
         </div>
 
-        <div class="sdpi-item" id="selected_command">
-            <div class="sdpi-item-label">Command</div>
-            <select class="sdpi-item-value select" onchange="updateSettings()" disabled>
-                <option>Loading...</option>
-            </select>
-        </div>
+        <div type="group" class="sdpi-item" id="command_selection" style="display: none;">
+            <div class="sdpi-item" id="selected_category">
+                <div class="sdpi-item-label">Category</div>
+                <select class="sdpi-item-value select" onchange="updateCategory()" disabled required>
+                    <option>Loading...</option>
+                </select>
+            </div>
 
-        <div class="sdpi-item" id="arguments">
-            <div class="sdpi-item-label">Arguments</div>
-            <input class="sdpi-item-value" value="" placeholder="Arguments (optional)" oninput="updateSettings()" disabled>
+            <div class="sdpi-item" id="selected_command">
+                <div class="sdpi-item-label">Command</div>
+                <select class="sdpi-item-value select" onchange="updateSettings()" disabled required>
+                    <option>Loading...</option>
+                </select>
+            </div>
+
+            <div class="sdpi-item" id="arguments">
+                <div class="sdpi-item-label">Arguments</div>
+                <input class="sdpi-item-value" value="" placeholder="Arguments (optional)" oninput="updateSettings()" disabled>
+            </div>
         </div>
     </div>
 
+    <script src="../Shared.js"></script>
     <script src="Index.js"></script>
 </body>
 </html>

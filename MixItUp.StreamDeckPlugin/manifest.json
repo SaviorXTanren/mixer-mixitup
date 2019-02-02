@@ -14,14 +14,36 @@
       "Tooltip": "Runs a Mix It Up command",
       "PropertyInspectorPath": "PropertyInspectors/RunCommandAction/Index.html",
       "UUID": "com.mixitup.streamdeckplugin.runcommand"
+    },
+    {
+      "Icon": "Images/mixPlayStatusIcon",
+      "Name": "MixPlay Status",
+      "States": [
+        {
+          "Image": "Images/mixPlayStatusDisconnected",
+          "TitleAlignment": "middle",
+          "FontSize": "10",
+          "TitleColor": "#FF0000"
+        },
+        {
+          "Image": "Images/mixPlayStatusConnected",
+          "TitleAlignment": "middle",
+          "FontSize": "10",
+          "TitleColor": "#00FF00"
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Tooltip": "Displays the current connection status of MixPlay",
+      "PropertyInspectorPath": "PropertyInspectors/MixPlayStatusAction/Index.html",
+      "UUID": "com.mixitup.streamdeckplugin.mixplaystatus"
     }
   ],
-  "Author": "Shane DeSeranno",
-  "Description": "This plugin is used to connect to the Mix It Up bot.",
+  "Author": "Mix It Up",
+  "Description": "Mix It Up is a bot unlike any other with an amazing team of developers working around the clock to bring the absolute best features our community members have requested. We are one of the most feature-packed Mixer bots out there which provides streamers with a wide and versitile set of tools to help make your streams visually and interactively appealing to your audience. This plug-in allows you to run Mix It Up commands at the touch of a button.",
   "Name": "Mix It Up",
   "Icon": "Images/categoryIcon",
-  "URL": "https://github.com/TyrenDe/streamdeck-client-csharp",
-  "Version": "0.2",
+  "URL": "https://mixitupapp.com/",
+  "Version": "1.0",
   "CodePath": "MixItUp.StreamDeckPlugin.exe",
   "Category": "Mix It Up",
   "CategoryIcon": "Images/categoryIcon",
@@ -33,8 +55,7 @@
   ],
   "ApplicationsToMonitor": {
     "windows": [
-      "MixItUp.exe",
-      "notepad.exe"
+      "MixItUp.exe"
     ]
   }
 }

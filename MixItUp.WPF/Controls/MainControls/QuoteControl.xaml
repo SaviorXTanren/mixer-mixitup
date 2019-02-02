@@ -13,6 +13,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" HorizontalAlignment="Center">
@@ -90,6 +92,14 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        
+
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            
+            <TextBox x:Name="QuotesFormatTextBox" MaterialDesign:HintAssist.Hint="Quote Formatting ($quotenumber, $quotetext, $quotegame, $quotedatetime)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" TextChanged="QuotesFormatTextBox_TextChanged" />
+        </Grid>
+
     </Grid>
 </local:MainControlBase>

@@ -77,6 +77,10 @@ function getDataFromJSON(packet)
     return null;
 }
 
+function isStringEmpty(str) {
+    return (!str || 0 === str.length);
+}
+
 function logToSessionStorage(log)
 {
     try

@@ -24,6 +24,8 @@ namespace MixItUp.XSplit
     public class XSplitSource
     {
         [DataMember]
+        public string sceneName;
+        [DataMember]
         public string sourceName;
         [DataMember]
         public bool sourceVisible;
@@ -69,19 +71,19 @@ namespace MixItUp.XSplit
             await this.Send(new XSplitPacket("sceneTransition", JObject.FromObject(new XSplitScene() { sceneName = sceneName })));
         }
 
-        public async Task SetSourceVisibility(string sourceName, bool visibility)
+        public async Task SetSourceVisibility(string sceneName, string sourceName, bool visibility)
         {
-            await this.Send(new XSplitPacket("sourceUpdate", JObject.FromObject(new XSplitSource() { sourceName = sourceName, sourceVisible = visibility })));
+            await this.Send(new XSplitPacket("sourceUpdate", JObject.FromObject(new XSplitSource() { sceneName = sceneName, sourceName = sourceName, sourceVisible = visibility })));
         }
 
-        public async Task SetWebBrowserSourceURL(string sourceName, string url)
+        public async Task SetWebBrowserSourceURL(string sceneName, string sourceName, string url)
         {
-            await this.Send(new XSplitPacket("sourceUpdate", JObject.FromObject(new XSplitWebBrowserSource() { sourceName = sourceName, webBrowserUrl = url })));
+            await this.Send(new XSplitPacket("sourceUpdate", JObject.FromObject(new XSplitWebBrowserSource() { sceneName = sceneName, sourceName = sourceName, webBrowserUrl = url })));
         }
 
-        public Task SetSourceDimensions(string sourceName, StreamingSourceDimensions dimensions) { return Task.FromResult(0); }
+        public Task SetSourceDimensions(string sceneName, string sourceName, StreamingSourceDimensions dimensions) { return Task.FromResult(0); }
 
-        public Task<StreamingSourceDimensions> GetSourceDimensions(string sourceName) { return Task.FromResult(new StreamingSourceDimensions()); }
+        public Task<StreamingSourceDimensions> GetSourceDimensions(string sceneName, string sourceName) { return Task.FromResult(new StreamingSourceDimensions()); }
 
         public Task StartStopStream() { return Task.FromResult(0); }
 
@@ -115,19 +117,19 @@ namespace MixItUp.XSplit
             await this.Send(new XSplitPacket("sceneTransition", JObject.FromObject(new XSplitScene() { sceneName = sceneName })));
         }
 
-        public async Task SetSourceVisibility(string sourceName, bool visibility)
+        public async Task SetSourceVisibility(string sceneName, string sourceName, bool visibility)
         {
-            await this.Send(new XSplitPacket("sourceUpdate", JObject.FromObject(new XSplitSource() { sourceName = sourceName, sourceVisible = visibility })));
+            await this.Send(new XSplitPacket("sourceUpdate", JObject.FromObject(new XSplitSource() { sceneName = sceneName, sourceName = sourceName, sourceVisible = visibility })));
         }
 
-        public async Task SetWebBrowserSourceURL(string sourceName, string url)
+        public async Task SetWebBrowserSourceURL(string sceneName, string sourceName, string url)
         {
-            await this.Send(new XSplitPacket("sourceUpdate", JObject.FromObject(new XSplitWebBrowserSource() { sourceName = sourceName, webBrowserUrl = url })));
+            await this.Send(new XSplitPacket("sourceUpdate", JObject.FromObject(new XSplitWebBrowserSource() { sceneName = sceneName, sourceName = sourceName, webBrowserUrl = url })));
         }
 
-        public Task SetSourceDimensions(string sourceName, StreamingSourceDimensions dimensions) { return Task.FromResult(0); }
+        public Task SetSourceDimensions(string sceneName, string sourceName, StreamingSourceDimensions dimensions) { return Task.FromResult(0); }
 
-        public Task<StreamingSourceDimensions> GetSourceDimensions(string sourceName) { return Task.FromResult(new StreamingSourceDimensions()); }
+        public Task<StreamingSourceDimensions> GetSourceDimensions(string sceneName, string sourceName) { return Task.FromResult(new StreamingSourceDimensions()); }
 
         public Task StartStopStream() { return Task.FromResult(0); }
 

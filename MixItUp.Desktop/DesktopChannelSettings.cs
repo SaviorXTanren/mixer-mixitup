@@ -37,6 +37,9 @@ namespace MixItUp.Desktop
         public int Version { get; set; }
 
         [JsonProperty]
+        public bool LicenseAccepted { get; set; }
+
+        [JsonProperty]
         public bool OptOutTracking { get; set; }
 
         [JsonProperty]
@@ -76,7 +79,9 @@ namespace MixItUp.Desktop
         public OAuthTokenModel PatreonOAuthToken { get; set; }
 
         [JsonProperty]
-        public string StreamDeckDeviceName { get; set; }
+        public Dictionary<string, CommandGroupSettings> CommandGroups { get; set; }
+        [JsonProperty]
+        public Dictionary<string, HotKeyConfiguration> HotKeys { get; set; }
 
         [JsonProperty]
         public ExpandedChannelModel Channel { get; set; }
@@ -130,6 +135,8 @@ namespace MixItUp.Desktop
 
         [JsonProperty]
         public bool QuotesEnabled { get; set; }
+        [JsonProperty]
+        public string QuotesFormat { get; set; }
 
         [JsonProperty]
         public int TimerCommandsInterval { get; set; }
@@ -357,6 +364,8 @@ namespace MixItUp.Desktop
 
         public DesktopSavableChannelSettings()
         {
+            this.CommandGroups = new Dictionary<string, CommandGroupSettings>();
+            this.HotKeys = new Dictionary<string, HotKeyConfiguration>();
             this.OverlayCustomNameAndPorts = new Dictionary<string, int>();
             this.CustomInteractiveProjectIDs = new List<InteractiveSharedProjectModel>();
             this.UserTitles = new List<UserTitleModel>();

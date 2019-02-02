@@ -76,13 +76,22 @@
         }
 
         function sourceUpdate(data) {
-            eventsDiv.innerHTML += 'Source Update: ' + data.sourceName + ' - ' + data.sourceVisible + '<BR>';
+            eventsDiv.innerHTML += 'Source Update: ' + data.sceneName + ' - ' + data.sourceName + ' - ' + data.sourceVisible + '<BR>';
 
             xjs.ready().then(function ()
             {
-                return xjs.Scene.getActiveScene();
+                if (!isStringEmpty(data.sceneName)) {
+                    return xjs.Scene.getByName(data.sceneName);
+                }
+                else {
+                    return xjs.Scene.getActiveScene();
+                }
             }).then(function (scene)
             {
+                if (Array.isArray(scene)) {
+                    scene = scene[0];
+                }
+
                 return scene.getSources();
             }).then(function (sources)
             {

@@ -1,0 +1,48 @@
+﻿<UserControl x:Class="MixItUp.WPF.Controls.LicenseControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" TextWrapping="Wrap">Copyright (c) 2017-2019 Matthew Olivo. All rights reserved.</TextBlock>
+
+        <TextBlock Grid.Row="2" TextWrapping="Wrap">MIT License</TextBlock>
+
+        <TextBlock Grid.Row="4" TextWrapping="Wrap">Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</TextBlock>
+
+        <TextBlock Grid.Row="6" TextWrapping="Wrap">The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</TextBlock>
+
+        <TextBlock Grid.Row="8" TextWrapping="Wrap">THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</TextBlock>
+
+        <TextBlock Grid.Row="10" TextWrapping="Wrap"><Hyperlink NavigateUri="http://materialdesigninxaml.net/" RequestNavigate="Hyperlink_RequestNavigate">Material Design in XAML</Hyperlink>, <Hyperlink NavigateUri="https://github.com/naudio/NAudio" RequestNavigate="Hyperlink_RequestNavigate">NAudio</Hyperlink> used under <Hyperlink NavigateUri="https://opensource.org/licenses/MS-PL" RequestNavigate="Hyperlink_RequestNavigate">Microsoft Public License</Hyperlink></TextBlock>
+
+        <TextBlock Grid.Row="12" TextWrapping="Wrap"><Hyperlink NavigateUri="https://github.com/XamlAnimatedGif/WpfAnimatedGif" RequestNavigate="Hyperlink_RequestNavigate">WpfAnimatedGif</Hyperlink>, <Hyperlink NavigateUri="https://github.com/JoeMayo/LinqToTwitter" RequestNavigate="Hyperlink_RequestNavigate">LinqToTwitter</Hyperlink>, <Hyperlink NavigateUri="https://github.com/kerryjiang/WebSocket4Net" RequestNavigate="Hyperlink_RequestNavigate">WebSocket4Net</Hyperlink>, <Hyperlink NavigateUri="https://github.com/videojs/video.js" RequestNavigate="Hyperlink_RequestNavigate">video.js</Hyperlink> used under <Hyperlink NavigateUri="https://www.apache.org/licenses/LICENSE-2.0.html" RequestNavigate="Hyperlink_RequestNavigate">Apache License 2.0</Hyperlink></TextBlock>
+
+        <TextBlock Grid.Row="14" TextWrapping="Wrap"><Hyperlink NavigateUri="https://responsivevoice.org/" RequestNavigate="Hyperlink_RequestNavigate">ResponsiveVoice</Hyperlink> used under <Hyperlink NavigateUri="https://creativecommons.org/licenses/by-nc-nd/4.0/" RequestNavigate="Hyperlink_RequestNavigate">Creative Commons Non-Commercial License</Hyperlink></TextBlock>
+
+        <TextBlock Grid.Row="16" TextWrapping="Wrap"><Hyperlink NavigateUri="https://github.com/ravibpatel/AutoUpdater.NET/" RequestNavigate="Hyperlink_RequestNavigate">AutoUpdater.NET</Hyperlink>, <Hyperlink NavigateUri="https://github.com/Quobject/EngineIoClientDotNet/" RequestNavigate="Hyperlink_RequestNavigate">EngineIoClientDotNet</Hyperlink>, <Hyperlink NavigateUri="https://github.com/pieterderycke/Jace/" RequestNavigate="Hyperlink_RequestNavigate">Jace.NET</Hyperlink>, <Hyperlink NavigateUri="https://docs.microsoft.com/en-us/azure/application-insights/app-insights-overview" RequestNavigate="Hyperlink_RequestNavigate">Microsoft.ApplicationInsights</Hyperlink>, <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-client-csharp" RequestNavigate="Hyperlink_RequestNavigate">mixer-client-csharp</Hyperlink>, <Hyperlink NavigateUri="https://github.com/NetOffice/NetOffice-NuGet" RequestNavigate="Hyperlink_RequestNavigate">NetOffice.Core and NetOffice.Excel</Hyperlink>, <Hyperlink NavigateUri="https://www.newtonsoft.com/json" RequestNavigate="Hyperlink_RequestNavigate">Newtonsoft.Json</Hyperlink>, <Hyperlink NavigateUri="https://github.com/Quobject/SocketIoClientDotNet/" RequestNavigate="Hyperlink_RequestNavigate">SocketIoClientDotNet</Hyperlink>, <Hyperlink NavigateUri="https://github.com/OpenMacroBoard/StreamDeckSharp/" RequestNavigate="Hyperlink_RequestNavigate">StreamDeckSharp</Hyperlink>, <Hyperlink NavigateUri="http://sta.github.io/websocket-sharp/" RequestNavigate="Hyperlink_RequestNavigate">WebSocketSharp</Hyperlink> used under <Hyperlink NavigateUri="https://opensource.org/licenses/mit-license.php" RequestNavigate="Hyperlink_RequestNavigate">MIT License</Hyperlink></TextBlock>
+    </Grid>
+</UserControl>

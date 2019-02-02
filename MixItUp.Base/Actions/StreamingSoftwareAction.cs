@@ -68,26 +68,27 @@ namespace MixItUp.Base.Actions
             return action;
         }
 
-        public static StreamingSoftwareAction CreateSourceVisibilityAction(StreamingSoftwareTypeEnum softwareType, string sourceName, bool sourceVisible)
+        public static StreamingSoftwareAction CreateSourceVisibilityAction(StreamingSoftwareTypeEnum softwareType, string sceneName, string sourceName, bool sourceVisible)
         {
             StreamingSoftwareAction action = new StreamingSoftwareAction(softwareType, StreamingActionTypeEnum.SourceVisibility);
+            action.SceneName = sceneName;
             action.SourceName = sourceName;
             action.SourceVisible = sourceVisible;
             return action;
         }
 
-        public static StreamingSoftwareAction CreateTextSourceAction(StreamingSoftwareTypeEnum softwareType, string sourceName, bool sourceVisible, string sourceText, string sourceTextFilePath)
+        public static StreamingSoftwareAction CreateTextSourceAction(StreamingSoftwareTypeEnum softwareType, string sceneName, string sourceName, bool sourceVisible, string sourceText, string sourceTextFilePath)
         {
-            StreamingSoftwareAction action = StreamingSoftwareAction.CreateSourceVisibilityAction(softwareType, sourceName, sourceVisible);
+            StreamingSoftwareAction action = StreamingSoftwareAction.CreateSourceVisibilityAction(softwareType, sceneName, sourceName, sourceVisible);
             action.ActionType = StreamingActionTypeEnum.TextSource;
             action.SourceText = sourceText;
             action.SourceTextFilePath = sourceTextFilePath;
             return action;
         }
 
-        public static StreamingSoftwareAction CreateWebBrowserSourceAction(StreamingSoftwareTypeEnum softwareType, string sourceName, bool sourceVisible, string sourceURL)
+        public static StreamingSoftwareAction CreateWebBrowserSourceAction(StreamingSoftwareTypeEnum softwareType, string sceneName, string sourceName, bool sourceVisible, string sourceURL)
         {
-            StreamingSoftwareAction action = StreamingSoftwareAction.CreateSourceVisibilityAction(softwareType, sourceName, sourceVisible);
+            StreamingSoftwareAction action = StreamingSoftwareAction.CreateSourceVisibilityAction(softwareType, sceneName, sourceName, sourceVisible);
             action.ActionType = StreamingActionTypeEnum.WebBrowserSource;
             action.SourceURL = sourceURL;
             if (softwareType == StreamingSoftwareTypeEnum.XSplit)
@@ -100,9 +101,9 @@ namespace MixItUp.Base.Actions
             return action;
         }
 
-        public static StreamingSoftwareAction CreateSourceDimensionsAction(StreamingSoftwareTypeEnum softwareType, string sourceName, bool sourceVisible, StreamingSourceDimensions sourceDimensions)
+        public static StreamingSoftwareAction CreateSourceDimensionsAction(StreamingSoftwareTypeEnum softwareType, string sceneName, string sourceName, bool sourceVisible, StreamingSourceDimensions sourceDimensions)
         {
-            StreamingSoftwareAction action = StreamingSoftwareAction.CreateSourceVisibilityAction(softwareType, sourceName, sourceVisible);
+            StreamingSoftwareAction action = StreamingSoftwareAction.CreateSourceVisibilityAction(softwareType, sceneName, sourceName, sourceVisible);
             action.ActionType = StreamingActionTypeEnum.SourceDimensions;
             action.SourceDimensions = sourceDimensions;
             return action;
@@ -231,13 +232,13 @@ namespace MixItUp.Base.Actions
                 {
                     if (this.ActionType == StreamingActionTypeEnum.WebBrowserSource && !string.IsNullOrEmpty(this.SourceURL))
                     {
-                        await ssService.SetWebBrowserSourceURL(this.SourceName, url);
+                        await ssService.SetWebBrowserSourceURL(this.SceneName, this.SourceName, url);
                     }
                     else if (this.ActionType == StreamingActionTypeEnum.SourceDimensions && this.SourceDimensions != null)
                     {
-                        await ssService.SetSourceDimensions(this.SourceName, this.SourceDimensions);
+                        await ssService.SetSourceDimensions(this.SceneName, this.SourceName, this.SourceDimensions);
                     }
-                    await ssService.SetSourceVisibility(this.SourceName, this.SourceVisible);
+                    await ssService.SetSourceVisibility(this.SceneName, this.SourceName, this.SourceVisible);
                 }
             }
         }

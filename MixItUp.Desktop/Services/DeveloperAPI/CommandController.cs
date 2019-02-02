@@ -93,7 +93,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             command = ChannelSession.Settings.InteractiveCommands.SingleOrDefault(c => c.ID == commandId);
             if (command != null)
             {
-                category = "Interactive";
+                category = "MixPlay";
                 return command;
             }
 
@@ -163,7 +163,8 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 ID = baseCommand.ID,
                 Name = baseCommand.Name,
                 IsEnabled = baseCommand.IsEnabled,
-                Category = category
+                Category = category,
+                GroupName = baseCommand.GroupName ?? string.Empty,
             };
         }
     }

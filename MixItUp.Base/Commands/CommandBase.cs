@@ -3,6 +3,7 @@ using MixItUp.Base.Actions;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -84,6 +85,9 @@ namespace MixItUp.Base.Commands
 
         [DataMember]
         public bool Unlocked { get; set; }
+
+        [DataMember]
+        public string GroupName { get; set; }
 
         [DataMember]
         public bool IsRandomized { get; set; }
@@ -251,6 +255,15 @@ namespace MixItUp.Base.Commands
             {
                 this.currentCancellationTokenSource.Cancel();
             }
+        }
+
+        public CommandGroupSettings GetGroupSettings()
+        {
+            if (!string.IsNullOrEmpty(this.GroupName) && ChannelSession.Settings.CommandGroups.ContainsKey(this.GroupName))
+            {
+                return ChannelSession.Settings.CommandGroups[this.GroupName];
+            }
+            return null;
         }
 
         protected virtual Task<bool> PerformPreChecks(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)

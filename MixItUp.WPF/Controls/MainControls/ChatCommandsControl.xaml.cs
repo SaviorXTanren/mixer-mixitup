@@ -1,16 +1,16 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.ViewModel.Controls.MainControls;
 using MixItUp.WPF.Controls.Chat;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Windows.Command;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -19,9 +19,12 @@ namespace MixItUp.WPF.Controls.MainControls
     /// </summary>
     public partial class ChatCommandsControl : MainControlBase
     {
-        private ObservableCollection<ChatCommand> customChatCommands = new ObservableCollection<ChatCommand>();
+        private ObservableCollection<CommandGroupControlViewModel> customChatCommands = new ObservableCollection<CommandGroupControlViewModel>();
 
-        private DataGridColumn lastSortedColumn = null;
+        private int nameOrder = 1;
+        private int commandsOrder = 0;
+        private int permissionsOrder = 0;
+        private int cooldownOrder = 0;
 
         public ChatCommandsControl()
         {
@@ -38,8 +41,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 this.PreMadeChatCommandsStackPanel.Children.Add(control);
             }
 
-            this.CustomCommandsListView.ItemsSource = this.customChatCommands;
-            this.CustomCommandsListView.Sorted += CustomCommandsListView_Sorted;
+            this.CustomCommandsItemsControl.ItemsSource = this.customChatCommands;
 
             this.RefreshList();
 
@@ -59,18 +61,13 @@ namespace MixItUp.WPF.Controls.MainControls
             return base.InitializeInternal();
         }
 
-        private void CustomCommandsListView_Sorted(object sender, DataGridColumn column)
-        {
-            this.RefreshList(column);
-        }
-
         protected override Task OnVisibilityChanged()
         {
             this.RefreshList();
             return Task.FromResult(0);
         }
 
-        private void RefreshList(DataGridColumn sortColumn = null)
+        private void RefreshList()
         {
             string filter = this.CommandNameFilterTextBox.Text;
             if (!string.IsNullOrEmpty(filter))
@@ -78,33 +75,82 @@ namespace MixItUp.WPF.Controls.MainControls
                 filter = filter.ToLower();
             }
 
-            this.CustomCommandsListView.SelectedIndex = -1;
-
             this.customChatCommands.Clear();
 
-            IEnumerable<ChatCommand> data = ChannelSession.Settings.ChatCommands.ToList();
-            data = data.OrderBy(c => c.Name);
-            if (sortColumn != null)
+            this.NameSortingIcon.Visibility = Visibility.Collapsed;
+            if (nameOrder == 1)
             {
-                int columnIndex = this.CustomCommandsListView.Columns.IndexOf(sortColumn);
-                if (columnIndex == 0) { data = data.OrderBy(u => u.Name); }
-                if (columnIndex == 1) { data = data.OrderBy(u => u.CommandsString); }
-                if (columnIndex == 2) { data = data.OrderBy(u => u.UserRoleRequirementString); }
-                if (columnIndex == 3) { data = data.OrderBy(u => u.Requirements.Cooldown.CooldownAmount); }
-
-                if (sortColumn.SortDirection.GetValueOrDefault() == ListSortDirection.Descending)
-                {
-                    data = data.Reverse();
-                }
-                lastSortedColumn = sortColumn;
+                this.NameSortingIcon.Visibility = Visibility.Visible;
+                this.NameSortingIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.ArrowDown;
+            }
+            else if (nameOrder == -1)
+            {
+                this.NameSortingIcon.Visibility = Visibility.Visible;
+                this.NameSortingIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.ArrowUp;
             }
 
-            foreach (var commandData in data)
+            this.CommandsSortingIcon.Visibility = Visibility.Collapsed;
+            if (commandsOrder == 1)
             {
-                if (string.IsNullOrEmpty(filter) || commandData.Name.ToLower().Contains(filter))
+                this.CommandsSortingIcon.Visibility = Visibility.Visible;
+                this.CommandsSortingIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.ArrowDown;
+            }
+            else if (commandsOrder == -1)
+            {
+                this.CommandsSortingIcon.Visibility = Visibility.Visible;
+                this.CommandsSortingIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.ArrowUp;
+            }
+
+            this.PermissionsSortingIcon.Visibility = Visibility.Collapsed;
+            if (permissionsOrder == 1)
+            {
+                this.PermissionsSortingIcon.Visibility = Visibility.Visible;
+                this.PermissionsSortingIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.ArrowDown;
+            }
+            else if (permissionsOrder == -1)
+            {
+                this.PermissionsSortingIcon.Visibility = Visibility.Visible;
+                this.PermissionsSortingIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.ArrowUp;
+            }
+
+            this.CooldownSortingIcon.Visibility = Visibility.Collapsed;
+            if (cooldownOrder == 1)
+            {
+                this.CooldownSortingIcon.Visibility = Visibility.Visible;
+                this.CooldownSortingIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.ArrowDown;
+            }
+            else if (cooldownOrder == -1)
+            {
+                this.CooldownSortingIcon.Visibility = Visibility.Visible;
+                this.CooldownSortingIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.ArrowUp;
+            }
+
+            IEnumerable<ChatCommand> commands = ChannelSession.Settings.ChatCommands.ToList();
+            foreach (var group in commands.Where(c => string.IsNullOrEmpty(filter) || c.Name.ToLower().Contains(filter)).GroupBy(c => c.GroupName).OrderByDescending(g => !string.IsNullOrEmpty(g.Key)).ThenBy(g => g.Key))
+            {
+                IEnumerable<CommandBase> cmds = group;
+                if (nameOrder != 0)
                 {
-                    this.customChatCommands.Add(commandData);
+                    cmds = (nameOrder > 0) ? group.OrderBy(c => c.Name) : group.OrderByDescending(c => c.Name);
                 }
+                else if (commandsOrder != 0)
+                {
+                    cmds = (commandsOrder > 0) ? group.OrderBy(c => c.CommandsString) : group.OrderByDescending(c => c.CommandsString);
+                }
+                else if (permissionsOrder != 0)
+                {
+                    cmds = (permissionsOrder > 0) ? group.OrderBy(c => c.Requirements.Role.RoleNameString) : group.OrderByDescending(c => c.Requirements.Role.RoleNameString);
+                }
+                else if (cooldownOrder != 0)
+                {
+                    cmds = (cooldownOrder > 0) ? group.OrderBy(c => c.Requirements.Cooldown.CooldownAmount) : group.OrderByDescending(c => c.Requirements.Cooldown.CooldownAmount);
+                }
+                CommandGroupSettings groupSettings = null;
+                if (!string.IsNullOrEmpty(cmds.First().GroupName) && ChannelSession.Settings.CommandGroups.ContainsKey(cmds.First().GroupName))
+                {
+                    groupSettings = ChannelSession.Settings.CommandGroups[cmds.First().GroupName];
+                }
+                this.customChatCommands.Add(new CommandGroupControlViewModel(groupSettings, cmds));
             }
         }
 
@@ -168,6 +214,109 @@ namespace MixItUp.WPF.Controls.MainControls
         private void Window_Closed(object sender, EventArgs e)
         {
             this.RefreshList();
+        }
+
+        private void GroupCommandsToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            this.RefreshList();
+        }
+
+        private void Name_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            commandsOrder = 0;
+            permissionsOrder = 0;
+            cooldownOrder = 0;
+            if (nameOrder == 0)
+            {
+                nameOrder = 1;
+            }
+            else
+            {
+                nameOrder *= -1;
+            }
+            this.RefreshList();
+        }
+
+        private void Commands_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            nameOrder = 0;
+            permissionsOrder = 0;
+            cooldownOrder = 0;
+            if (commandsOrder == 0)
+            {
+                commandsOrder = 1;
+            }
+            else
+            {
+                commandsOrder *= -1;
+            }
+            this.RefreshList();
+        }
+
+        private void Permissions_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            nameOrder = 0;
+            commandsOrder = 0;
+            cooldownOrder = 0;
+            if (permissionsOrder == 0)
+            {
+                permissionsOrder = 1;
+            }
+            else
+            {
+                permissionsOrder *= -1;
+            }
+            this.RefreshList();
+        }
+
+        private void Cooldown_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            nameOrder = 0;
+            commandsOrder = 0;
+            permissionsOrder = 0;
+            if (cooldownOrder == 0)
+            {
+                cooldownOrder = 1;
+            }
+            else
+            {
+                cooldownOrder *= -1;
+            }
+            this.RefreshList();
+        }
+
+        private void AccordianGroupBoxControl_Minimized(object sender, RoutedEventArgs e)
+        {
+            AccordianGroupBoxControl control = (AccordianGroupBoxControl)sender;
+            if (control.Content != null)
+            {
+                FrameworkElement content = (FrameworkElement)control.Content;
+                if (content != null)
+                {
+                    CommandGroupControlViewModel group = (CommandGroupControlViewModel)content.DataContext;
+                    if (group != null)
+                    {
+                        group.IsMinimized = true;
+                    }
+                }
+            }
+        }
+
+        private void AccordianGroupBoxControl_Maximized(object sender, RoutedEventArgs e)
+        {
+            AccordianGroupBoxControl control = (AccordianGroupBoxControl)sender;
+            if (control.Content != null)
+            {
+                FrameworkElement content = (FrameworkElement)control.Content;
+                if (content != null)
+                {
+                    CommandGroupControlViewModel group = (CommandGroupControlViewModel)content.DataContext;
+                    if (group != null)
+                    {
+                        group.IsMinimized = false;
+                    }
+                }
+            }
         }
     }
 }

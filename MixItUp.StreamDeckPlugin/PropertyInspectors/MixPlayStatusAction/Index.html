@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,minimal-ui,viewport-fit=cover">
+    <meta name=apple-mobile-web-app-capable content=yes>
+    <meta name=apple-mobile-web-app-status-bar-style content=black>
+    <title>Mix It Up - Property Inspector For MixPlay Status</title>
+    <link rel="stylesheet" href="../sdpi.css">
+</head>
+<body>
+    <div class="sdpi-wrapper">
+        <div class="sdpi-item" id="loading">
+            <details class="message info">
+                <summary>Loading...</summary>
+            </details>
+        </div>
+
+        <div class="sdpi-item" id="notRunning" style="display: none;">
+            <details class="message caution" open>
+                <summary>Mix It Up is not running</summary>
+                <p><button class="sdpi-item-value" onclick="openUrl('https://mixitupapp.com/')">Download Mix It Up</button></p>
+            </details>
+        </div>
+
+        <div class="sdpi-item" id="noDevAPIs" style="display: none;">
+            <details class="message caution" open>
+                <summary>Mix It Up Developer APIs are not enabled</summary>
+                <p><button class="sdpi-item-value" onclick="openUrl('https://github.com/SaviorXTanren/mixer-mixitup/wiki/Developer-API')">Enable Developer APIs</button></p>
+            </details>
+        </div>
+    </div>
+
+    <script src="../Shared.js"></script>
+    <script src="Index.js"></script>
+</body>
+</html>

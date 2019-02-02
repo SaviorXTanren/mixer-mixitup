@@ -233,6 +233,9 @@
       <Link>InstallerHelpers.cs</Link>
     </Compile>
     <Compile Include="ApplicationSettings.cs" />
+    <Compile Include="Controls\AccordianGroupBoxControl.xaml.cs">
+      <DependentUpon>AccordianGroupBoxControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\ActionContainerControl.xaml.cs">
       <DependentUpon>ActionContainerControl.xaml</DependentUpon>
     </Compile>
@@ -456,6 +459,9 @@
     </Compile>
     <Compile Include="Controls\Interactive\RealmRoyaleDropMapInteractiveControl.xaml.cs">
       <DependentUpon>RealmRoyaleDropMapInteractiveControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\LicenseControl.xaml.cs">
+      <DependentUpon>LicenseControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\CurrencyRankInventoryControl.xaml.cs">
       <DependentUpon>CurrencyRankInventoryControl.xaml</DependentUpon>
@@ -706,6 +712,9 @@
     <Compile Include="Controls\Settings\GeneralSettingsControl.xaml.cs">
       <DependentUpon>GeneralSettingsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Settings\HotKeysSettingsControl.xaml.cs">
+      <DependentUpon>HotKeysSettingsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Settings\InteractiveSettingsControl.xaml.cs">
       <DependentUpon>InteractiveSettingsControl.xaml</DependentUpon>
     </Compile>
@@ -780,6 +789,7 @@
     </Compile>
     <Compile Include="Util\InstalledFonts.cs" />
     <Compile Include="Util\LocalizationConverter.cs" />
+    <Compile Include="Util\LogicalTreeHelpers.cs" />
     <Compile Include="Util\MessageBoxHelper.cs" />
     <Compile Include="Util\VisualTreeHelpers.cs" />
     <Compile Include="Windows\Command\CommandWindow.xaml.cs">
@@ -799,6 +809,9 @@
     </Compile>
     <Compile Include="Windows\Interactive\InteractiveBoardDesignerWindow.xaml.cs">
       <DependentUpon>InteractiveBoardDesignerWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\LicenseAgreementWindow.xaml.cs">
+      <DependentUpon>LicenseAgreementWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\LoadingWindowBase.cs" />
     <Compile Include="Windows\OAuth\OAuthWebBrowserWindow.xaml.cs">
@@ -822,6 +835,10 @@
     <Compile Include="Windows\Wizard\NewUserWizardWindow.xaml.cs">
       <DependentUpon>NewUserWizardWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\AccordianGroupBoxControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Actions\ActionContainerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1111,6 +1128,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Interactive\RealmRoyaleDropMapInteractiveControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\LicenseControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1450,6 +1471,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Settings\HotKeysSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Settings\InteractiveSettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1624,6 +1649,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\Interactive\InteractiveBoardDesignerWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\LicenseAgreementWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1833,8 +1862,6 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>del $(TargetDir)ApplicationSettings.xml
-
-del $(TargetDir)com.mixitup.streamdeckplugin.streamDeckPlugin
 
 rmdir /Q /S $(TargetDir)Settings\
 rmdir /Q /S $(TargetDir)Logs\

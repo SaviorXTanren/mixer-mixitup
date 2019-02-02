@@ -19,7 +19,7 @@
 
         <ComboBox x:Name="TypeComboBox" Grid.Row="0" SelectionChanged="TypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-        <Grid Grid.Row="2">
+        <Grid x:Name="CommandGrid" Grid.Row="2" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="20" />
@@ -29,6 +29,14 @@
             <ComboBox x:Name="CommandTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Command Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="CommandTypeComboBox_SelectionChanged" />
 
             <ComboBox x:Name="CommandNameComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Command" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="Name" />
+        </Grid>
+
+        <Grid x:Name="CommandGroupGrid" Grid.Row="2" Visibility="Collapsed">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox x:Name="CommandGroupNameComboBox" MaterialDesign:HintAssist.Hint="Command Group" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
         </Grid>
 
         <TextBox Grid.Row="4" x:Name="CommandArgumentsTextBox" MaterialDesign:HintAssist.Hint="(Optional) Command Arguments" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Visibility="Collapsed" />

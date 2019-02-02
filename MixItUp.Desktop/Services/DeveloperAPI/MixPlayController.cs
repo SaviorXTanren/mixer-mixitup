@@ -14,6 +14,17 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
     [RoutePrefix("api/mixplay")]
     public class MixPlayController : ApiController
     {
+        [Route("status")]
+        [HttpGet]
+        public MixPlayStatus GetStatus()
+        {
+            return new MixPlayStatus
+            {
+                IsConnected = ChannelSession.Interactive.IsConnected(),
+                GameName = ChannelSession.Interactive.Game?.name ?? string.Empty
+            };
+        }
+
         [Route("users")]
         [HttpGet]
         public async Task<IEnumerable<MixPlayUser>> GetUsers()

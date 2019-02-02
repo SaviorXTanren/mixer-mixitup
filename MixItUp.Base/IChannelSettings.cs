@@ -23,6 +23,8 @@ namespace MixItUp.Base
     {
         int Version { get; set; }
 
+        bool LicenseAccepted { get; set; }
+
         bool OptOutTracking { get; set; }
 
         bool ReRunWizard { get; set; }
@@ -45,7 +47,8 @@ namespace MixItUp.Base
         OAuthTokenModel StreamJarOAuthToken { get; set; }
         OAuthTokenModel PatreonOAuthToken { get; set; }
 
-        string StreamDeckDeviceName { get; set; }
+        Dictionary<string, CommandGroupSettings> CommandGroups { get; set; }
+        Dictionary<string, HotKeyConfiguration> HotKeys { get; set; }
 
         ExpandedChannelModel Channel { get; set; }
 
@@ -76,6 +79,7 @@ namespace MixItUp.Base
         RequirementViewModel GameQueueRequirements { get; set; }
 
         bool QuotesEnabled { get; set; }
+        string QuotesFormat { get; set; }
         
         int TimerCommandsInterval { get; set; }
         int TimerCommandsMinimumMessages { get; set; }

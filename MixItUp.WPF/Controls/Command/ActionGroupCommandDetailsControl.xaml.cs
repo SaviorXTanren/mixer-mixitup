@@ -27,10 +27,12 @@ namespace MixItUp.WPF.Controls.Command
         public override Task Initialize()
         {
             this.RunOneRandomlyTextBlock.ToolTip = this.RunOneRandomlyToggleButton.ToolTip = RunOneRandomlyTooltip;
+            this.CommandGroupComboBox.ItemsSource = ChannelSession.Settings.CommandGroups.Keys;
 
             if (this.command != null)
             {
                 this.NameTextBox.Text = this.command.Name;
+                this.CommandGroupComboBox.Text = this.command.GroupName;
                 this.UnlockedControl.Unlocked = this.command.Unlocked;
                 this.RunOneRandomlyToggleButton.IsChecked = this.command.IsRandomized;
             }
@@ -66,6 +68,17 @@ namespace MixItUp.WPF.Controls.Command
                 }
                 this.command.Unlocked = this.UnlockedControl.Unlocked;
                 this.command.IsRandomized = this.RunOneRandomlyToggleButton.IsChecked.GetValueOrDefault();
+
+                this.command.GroupName = this.CommandGroupComboBox.Text;
+                if (!string.IsNullOrEmpty(this.CommandGroupComboBox.Text))
+                {
+                    if (!ChannelSession.Settings.CommandGroups.ContainsKey(this.CommandGroupComboBox.Text))
+                    {
+                        ChannelSession.Settings.CommandGroups[this.CommandGroupComboBox.Text] = new CommandGroupSettings(this.CommandGroupComboBox.Text);
+                    }
+                    ChannelSession.Settings.CommandGroups[this.CommandGroupComboBox.Text].Name = this.CommandGroupComboBox.Text;
+                }
+
                 return this.command;
             }
             return null;

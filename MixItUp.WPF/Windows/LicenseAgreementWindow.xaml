@@ -1,0 +1,38 @@
+﻿<Window x:Class="MixItUp.WPF.Windows.LicenseAgreementWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+        mc:Ignorable="d"
+
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+
+        Title="License Agreement" Height="450" Width="600">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ScrollViewer Grid.Row="0">
+            <Controls:LicenseControl />
+        </ScrollViewer>
+
+        <Grid Grid.Row="2" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Button x:Name="AcceptButton" Click="AcceptButton_Click" Grid.Column="0">Accept</Button>
+            <Button x:Name="CancelButton" Click="CancelButton_Click" Grid.Column="2">Cancel</Button>
+        </Grid>
+    </Grid>
+</Window>

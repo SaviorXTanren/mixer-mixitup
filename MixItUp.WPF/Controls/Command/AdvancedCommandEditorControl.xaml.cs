@@ -69,14 +69,6 @@ namespace MixItUp.WPF.Controls.Command
             InitializeComponent();
         }
 
-        public override void OnWindowSizeChanged(Size size)
-        {
-            foreach (ActionContainerControl controlContainer in this.actionControls)
-            {
-                controlContainer.OnWindowSizeChanged(size);
-            }
-        }
-
         public override CommandBase GetExistingCommand() { return this.commandDetailsControl.GetExistingCommand(); }
 
         public override void MoveActionUp(ActionContainerControl control)
@@ -164,7 +156,6 @@ namespace MixItUp.WPF.Controls.Command
                     ActionContainerControl actionControl = new ActionContainerControl(this.window, this, action);
                     actionControl.Minimize();
                     this.actionControls.Add(actionControl);
-                    actionControl.OnWindowSizeChanged(this.window.RenderSize);
                 }
             }
 
@@ -273,7 +264,6 @@ namespace MixItUp.WPF.Controls.Command
                 control.Minimize();
             }
             this.actionControls.Add(actionControl);
-            actionControl.OnWindowSizeChanged(this.window.RenderSize);
         }
 
         private async Task<CommandBase> GetNewCommand()

@@ -1,0 +1,87 @@
+﻿<local:SettingsControlBase x:Class="MixItUp.WPF.Controls.Settings.HotKeysSettingsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Settings"
+             xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox x:Name="CommandTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Type" Width="100" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="CommandTypeComboBox_SelectionChanged" />
+            <ComboBox x:Name="CommandNameComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Command" Width="200" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="Name" />
+
+        </Grid>
+
+        <Grid Grid.Row="2" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Margin="0,5,0,0" VerticalAlignment="Center">Shift:</TextBlock>
+                <CheckBox x:Name="ShiftCheckBox" Margin="0,5,0,0" Grid.Column="2" />
+
+                <TextBlock Grid.Column="4" Margin="0,5,0,0" VerticalAlignment="Center">Ctrl:</TextBlock>
+                <CheckBox x:Name="ControlCheckBox" Margin="0,5,0,0" Grid.Column="6" />
+
+                <TextBlock Grid.Column="8" Margin="0,5,0,0" VerticalAlignment="Center">Alt:</TextBlock>
+                <CheckBox x:Name="AltCheckBox" Margin="0,5,0,0" Grid.Column="10" />
+
+                <ComboBox x:Name="KeyComboBox" Grid.Column="12" MaterialDesign:HintAssist.Hint="Keyboard Key" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" Visibility="Visible" />
+            </Grid>
+
+            <Button x:Name="AddHotKeyButton" Grid.Column="2" Width="60" Click="AddHotKeyButton_Click">Add</Button>
+        </Grid>
+
+        <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="4" BorderThickness="1" Width="550">
+            <DataGrid x:Name="HotKeysDataGrid" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Hot Key" Binding="{Binding HotKey}" IsReadOnly="True" Width="*" />
+                    <DataGridTextColumn Header="Command" Binding="{Binding Command.Name}" IsReadOnly="True" Width="200" />
+                    <DataGridTemplateColumn Width="65">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Grid.Column="6" x:Name="DeleteHotKeyButton" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteHotKeyButton_Click" Width="50" ToolTip="Delete" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+    </Grid>
+</local:SettingsControlBase>
