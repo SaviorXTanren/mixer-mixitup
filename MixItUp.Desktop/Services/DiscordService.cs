@@ -276,6 +276,16 @@ namespace MixItUp.Desktop.Services
             return null;
         }
 
+        public async Task<IEnumerable<DiscordEmoji>> GetEmojis(DiscordServer server)
+        {
+            try
+            {
+                return await this.GetAsync<IEnumerable<DiscordEmoji>>(string.Format("guilds/{0}/emojis", server.ID));
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+            return null;
+        }
+
         public async Task<DiscordMessage> CreateMessage(DiscordChannel channel, string message)
         {
             try
@@ -335,6 +345,8 @@ namespace MixItUp.Desktop.Services
 
         public DiscordUser User { get; private set; }
         public DiscordServer Server { get; private set; }
+
+        public IEnumerable<DiscordEmoji> Emojis { get; private set; }
 
         public string BotPermissions { get; private set; }
 
@@ -430,7 +442,33 @@ namespace MixItUp.Desktop.Services
 
         public async Task<DiscordChannel> GetChannel(string channelID) { return await this.botService.GetChannel(channelID); }
 
-        public async Task<DiscordMessage> CreateMessage(DiscordChannel channel, string message) { return await this.botService.CreateMessage(channel, message); }
+        public async Task<IEnumerable<DiscordEmoji>> GetEmojis(DiscordServer server) { return await this.botService.GetEmojis(server); }
+
+        public async Task<DiscordMessage> CreateMessage(DiscordChannel channel, string message)
+        {
+            if (this.Emojis != null)
+            {
+                foreach (DiscordEmoji emoji in this.Emojis)
+                {
+                    string findString = emoji.Name;
+                    if (emoji.RequireColons.GetValueOrDefault())
+                    {
+                        findString = ":" + findString + ":";
+                    }
+
+                    string replacementString = ":" + emoji.Name + ":";
+                    if (emoji.Animated.GetValueOrDefault())
+                    {
+                        replacementString = "a" + replacementString;
+                    }
+                    replacementString = "<" + replacementString + emoji.ID + ">";
+
+                    message = message.Replace(findString, replacementString);
+                }
+            }
+
+            return await this.botService.CreateMessage(channel, message);
+        }
 
         public async Task<DiscordChannelInvite> CreateChannelInvite(DiscordChannel channel, bool isTemporary = false) { return await this.botService.CreateChannelInvite(channel, isTemporary); }
 
@@ -479,7 +517,12 @@ namespace MixItUp.Desktop.Services
             if (!string.IsNullOrEmpty(ChannelSession.Settings.DiscordServer))
             {
                 this.Server = await this.GetServer(ChannelSession.Settings.DiscordServer);
-                return true;
+                if (this.Server != null)
+                {
+                    this.Emojis = await this.GetEmojis(this.Server);
+
+                    return true;
+                }
             }
             return false;
         }
