@@ -43,9 +43,9 @@ namespace MixItUp.Desktop.Services
             this.TrySendEvent(() => this.telemetryClient.TrackEvent("Login", new Dictionary<string, string> { { "Is Streamer", isStreamer.ToString() }, { "Is Partner", isPartner.ToString() } }));
         }
 
-        public void TrackCommand(CommandTypeEnum type)
+        public void TrackCommand(CommandTypeEnum type, bool IsBasic)
         {
-            this.TrySendEvent(() => this.telemetryClient.TrackEvent("Command", new Dictionary<string, string> { { "Type", EnumHelper.GetEnumName(type) } }));
+            this.TrySendEvent(() => this.telemetryClient.TrackEvent("Command", new Dictionary<string, string> { { "Type", EnumHelper.GetEnumName(type) }, { "Is Basic", IsBasic.ToString() } }));
         }
 
         public void TrackAction(ActionTypeEnum type)
