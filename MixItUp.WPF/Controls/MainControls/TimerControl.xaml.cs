@@ -49,7 +49,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             this.timerCommands.Clear();
             IEnumerable<TimerCommand> commands = ChannelSession.Settings.TimerCommands.ToList();
-            foreach (var group in commands.GroupBy(c => c.GroupName).OrderByDescending(g => !string.IsNullOrEmpty(g.Key)).ThenBy(g => g.Key))
+            foreach (var group in commands.GroupBy(c => c.GroupName ?? string.Empty).OrderByDescending(g => !string.IsNullOrEmpty(g.Key)).ThenBy(g => g.Key))
             {
                 IEnumerable<CommandBase> cmds = (nameOrder > 0) ? group.OrderBy(c => c.Name) : group.OrderByDescending(c => c.Name);
                 CommandGroupSettings groupSettings = null;
