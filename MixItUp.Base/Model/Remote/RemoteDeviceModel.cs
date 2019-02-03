@@ -13,14 +13,15 @@ namespace MixItUp.Base.Model.Remote
         public string Name { get; set; }
 
         [DataMember]
-        public string GroupID { get; set; }
+        public bool IsHost { get; set; }
 
         public RemoteDeviceModel() { }
 
-        public RemoteDeviceModel(string name)
+        public RemoteDeviceModel(string name, bool isHost = false)
         {
             this.ID = Guid.NewGuid();
             this.Name = name;
+            this.IsHost = isHost;
         }
     }
 }

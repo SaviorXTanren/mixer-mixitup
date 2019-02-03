@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.Remote.Authentication
@@ -12,13 +13,16 @@ namespace MixItUp.Base.Model.Remote.Authentication
         [DataMember]
         public DateTimeOffset AccessTokenExpiration { get; set; }
 
+        [JsonIgnore]
+        public Guid GroupID { get; set; }
+
         public RemoteDeviceAuthenticationTokenModel() { }
 
-        public RemoteDeviceAuthenticationTokenModel(RemoteDeviceModel device, bool neverExpire = false)
+        public RemoteDeviceAuthenticationTokenModel(RemoteDeviceModel device, Guid groupID, bool neverExpire = false)
         {
             this.ID = device.ID;
             this.Name = device.Name;
-            this.GroupID = device.GroupID;
+            this.GroupID = groupID;
             this.AccessToken = Guid.NewGuid().ToString() + Guid.NewGuid().ToString();
             this.AccessTokenExpiration = (neverExpire) ? DateTimeOffset.MaxValue : DateTimeOffset.Now.AddSeconds(30);
         }
