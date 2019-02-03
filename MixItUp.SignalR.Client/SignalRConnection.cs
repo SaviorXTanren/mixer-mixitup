@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Net;
 using System.Threading.Tasks;
@@ -17,7 +18,12 @@ namespace MixItUp.SignalR.Client
         public SignalRConnection(string address)
         {
             this.Address = address;
-            this.connection = new HubConnectionBuilder().WithUrl(this.Address).Build();
+            this.connection = new HubConnectionBuilder().AddJsonProtocol(options => {
+                options.PayloadSerializerSettings = new Newtonsoft.Json.JsonSerializerSettings()
+                {
+                    TypeNameHandling = Newtonsoft.Json.TypeNameHandling.All, SerializationBinder = new CrossPlatformSerializationBinder()
+                };
+            }).WithUrl(this.Address).Build();
             this.connection.Closed += Connection_Closed;
         }
 

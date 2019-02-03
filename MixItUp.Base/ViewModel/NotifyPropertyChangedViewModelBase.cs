@@ -1,13 +1,13 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace MixItUp.Base.ViewModel
+namespace MixItUp.Base.ViewModels
 {
-    public class ViewModelBase : INotifyPropertyChanged
+    public class NotifyPropertyChangedViewModelBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public void NotifyPropertyChanged([CallerMemberName]string name = "")
+        protected void OnPropertyChanged([CallerMemberName]string name = "")
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
