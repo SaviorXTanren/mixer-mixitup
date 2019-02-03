@@ -32,9 +32,10 @@ namespace MixItUp.Desktop.Services
         private SongRequestItem status = null;
         private SongRequestHttpListenerServer httpListenerServer;
 
-        public const string RegularOverlayHttpListenerServerAddressFormat = "http://localhost:{0}/overlay/";
-        public int Port { get { return 8199; } }
-        public string HttpListenerServerAddress { get { return string.Format(RegularOverlayHttpListenerServerAddressFormat, this.Port); } }
+        public const string RegularOverlayHttpListenerServerAddressFormat = "http://localhost:{0}/youtubesongrequests/";
+        public const int Port = 8199;
+
+        public string HttpListenerServerAddress { get { return string.Format(RegularOverlayHttpListenerServerAddressFormat, Port); } }
 
         public YouTubeSongRequestContext(Dispatcher dispatcher, WebBrowser browser)
         {
@@ -51,10 +52,11 @@ namespace MixItUp.Desktop.Services
                 return;
             }
 
+            this.httpListenerServer = new SongRequestHttpListenerServer(this.HttpListenerServerAddress, Port);
+            this.httpListenerServer.Start();
+
             await this.dispatcher.InvokeAsync(() =>
             {
-                this.httpListenerServer = new SongRequestHttpListenerServer(this.HttpListenerServerAddress, this.Port);
-                this.httpListenerServer.Start();
                 this.browser.Navigate(HttpListenerServerAddress);
             });
         }
@@ -156,7 +158,7 @@ namespace MixItUp.Desktop.Services
             string url = listenerContext.Request.Url.LocalPath;
             url = url.Trim(new char[] { '/' });
 
-            if (url.Equals("overlay"))
+            if (url.Equals("youtubesongrequests"))
             {
                 await this.CloseConnection(listenerContext, HttpStatusCode.OK, this.webPageInstance);
             }
@@ -222,7 +224,6 @@ namespace MixItUp.Desktop.Services
 
         private SongRequestItem currentSong = null;
         private SongRequestItem spotifyStatus = null;
-        private SongRequestItem youTubeStatus = null;
 
         private Dictionary<UserViewModel, List<SpotifySong>> lastUserSpotifySongSearches = new Dictionary<UserViewModel, List<SpotifySong>>();
         private Dictionary<UserViewModel, List<SongRequestItem>> lastUserYouTubeSongSearches = new Dictionary<UserViewModel, List<SongRequestItem>>();
@@ -609,20 +610,6 @@ namespace MixItUp.Desktop.Services
             GlobalEvents.SongRequestsChangedOccurred();
         }
 
-        public Task StatusUpdate(SongRequestItem item)
-        {
-            if (item != null)
-            {
-                if (item.Type == SongRequestServiceTypeEnum.YouTube && !string.IsNullOrEmpty(item.ID))
-                {
-                    this.youTubeStatus = item;
-                    this.youTubeStatus.ID = Regex.Replace(this.youTubeStatus.ID, YouTubeFullLinkWithTimePattern, "");
-                    this.youTubeStatus.ID = this.youTubeStatus.ID.Replace(YouTubeFullLinkPrefix, "");
-                }
-            }
-            return Task.FromResult(0);
-        }
-
         #endregion Interaction Methods
 
         #region Get Methods
@@ -676,7 +663,6 @@ namespace MixItUp.Desktop.Services
                 {
                     Logger.LogDiagnostic("Current Song: " + this.currentSong);
                     Logger.LogDiagnostic("Spotify Status: " + this.spotifyStatus);
-                    Logger.LogDiagnostic("YouTube Status: " + this.youTubeStatus);
 
                     if (this.currentSong == null)
                     {

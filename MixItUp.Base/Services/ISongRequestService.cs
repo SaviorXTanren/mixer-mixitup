@@ -91,7 +91,5 @@ namespace MixItUp.Base.Services
 
         Task<IEnumerable<SongRequestItem>> GetAllRequests();
         Task ClearAllRequests();
-
-        Task StatusUpdate(SongRequestItem item);
     }
 }
