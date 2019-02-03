@@ -12,6 +12,8 @@
 
     <script>
         var player;
+        var isPlaying = false;
+        var isReady = false;
 
         function LoadYouTubeIframeAPI() {
             var tag = document.createElement('script');
@@ -20,24 +22,12 @@
             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
         }
 
-        function onPlayerError(event) {
-            alert("err: " + JSON.stringify(event));
-        }
-
-        function onPlayerReady(event) {
-            alert("rdy: " + JSON.stringify(event));
-        }
-
-        function onPlayerStateChange(event) {
-            alert("ste: " + JSON.stringify(event));
-        }
-
         function onYouTubeIframeAPIReady() {
             var playerParams =
             {
                 height: '390',
                 width: '640',
-                videoId: 'M7lc1UVf-VE',
+                videoId: 'RvCVgu_MQpU',
                 playerVars:
                 {
                     "enablejsapi": 1,
@@ -54,104 +44,94 @@
 
             player = new YT.Player('player', playerParams);
         }
-//function stopVideo() {
-//    alert("c");
-//    player.stopVideo();
-//}
 
-//function getStatus() {
-//    setTimeout(function () {
-//        var data = {};
-//        data.Type = 1;
-//        data.State = 0;
+        function getStatus() {
+            if (!isReady) return;
 
-//        var playerState = youtubeSongRequestPlayer.getPlayerState();
-//        if (playerState == YT.PlayerState.PLAYING || playerState == YT.PlayerState.PAUSED || playerState == YT.PlayerState.ENDED) {
-//            data.ID = youtubeSongRequestPlayer.getVideoUrl();
-//            data.Progress = youtubeSongRequestPlayer.getCurrentTime();
-//            data.Length = youtubeSongRequestPlayer.getDuration();
-//            data.Volume = youtubeSongRequestPlayer.getVolume();
+            setTimeout(function () {
+                var data = {};
+                data.Type = 1;
+                data.State = 0;
 
-//            if (playerState == YT.PlayerState.PLAYING) {
-//                data.State = 1;
-//            }
-//            else if (playerState == YT.PlayerState.PAUSED) {
-//                data.State = 2;
-//            }
-//            else if (playerState == YT.PlayerState.ENDED) {
-//                data.State = 3;
-//            }
-//        }
+                var playerState = player.getPlayerState();
+                if (playerState == YT.PlayerState.PLAYING || playerState == YT.PlayerState.PAUSED || playerState == YT.PlayerState.ENDED) {
+                    var videoData = player.getVideoData();
 
-//        window.external.SetStatus(JSON.stringify(data));
-//    }, 1);
-//}
+                    data.ID = videoData.video_id;
+                    data.Progress = player.getCurrentTime();
+                    data.Length = player.getDuration();
+                    data.Volume = player.getVolume();
 
-//function playPause() {
-//    setTimeout(function () {
-//        if (youtubeSongRequestPlayer.getPlayerState() == YT.PlayerState.PLAYING) {
-//            youtubeSongRequestPlayer.pauseVideo();
-//        }
-//        else if (youtubeSongRequestPlayer.getPlayerState() == YT.PlayerState.PAUSED) {
-//            youtubeSongRequestPlayer.playVideo();
-//        }
-//    }, 1);
-//}
+                    if (playerState == YT.PlayerState.PLAYING) {
+                        data.State = 1;
+                    }
+                    else if (playerState == YT.PlayerState.PAUSED) {
+                        data.State = 2;
+                    }
+                    else if (playerState == YT.PlayerState.ENDED) {
+                        data.State = 3;
+                    }
+                }
 
-//function play(itemId, volume) {
-//    setTimeout(function () {
-//        youtubeSongRequestPlaying = true;
-//        youtubeSongRequestPlayer.setVolume(volume);
-//        youtubeSongRequestPlayer.setLoop(false);
-//        youtubeSongRequestPlayer.loadVideoById(itemId);
-//    }, 1);
-//}
+                window.external.SetStatus(JSON.stringify(data));
+            }, 1);
+        }
 
-//function setVolume(volume) {
-//    setTimeout(function () {
-//        youtubeSongRequestPlayer.setVolume(volume);
-//    }, 1);
-//}
+        function playPause() {
+            if (!isReady) return;
 
-//function stop() {
-//    setTimeout(function () {
-//        youtubeSongRequestPlaying = false;
-//        youtubeSongRequestPlayer.stopVideo();
-//    }, 1);
-//}
+            setTimeout(function () {
+                if (player.getPlayerState() == YT.PlayerState.PLAYING) {
+                    player.pauseVideo();
+                }
+                else if (player.getPlayerState() == YT.PlayerState.PAUSED) {
+                    player.playVideo();
+                }
+            }, 1);
+        }
 
-//function onYouTubeIframeAPIReady() {
-//    youtubeIFrameAPIReady = true;
+        function play(itemId, volume) {
+            if (!isReady) return;
 
-//    youtubeSongRequestPlayer = new YT.Player('youtubeSongRequestPlayerDiv', {
-//        height: '390',
-//        width: '640',
-//        videoId: 'RvCVgu_MQpU',
-//        playerVars: { 'controls': 0 },
-//        events: {
-//            'onReady': onPlayerReady,
-//            'onStateChange': onPlayerStateChange,
-//            'onError': onError
-//        }
-//    });
-//}
+            setTimeout(function () {
+                isPlaying = true;
+                player.setVolume(volume);
+                player.setLoop(false);
+                player.loadVideoById(itemId);
+            }, 1);
+        }
 
-//function onError(err) {
-//    alert("error: " + JSON.stringify(err));
-//}
+        function setVolume(volume) {
+            if (!isReady) return;
 
-//function onPlayerReady(event) {
-//    youtubeSongRequestPlayerReady = true;
-//    alert("ready: " + JSON.stringify(event));
-//}
+            setTimeout(function () {
+                player.setVolume(volume);
+            }, 1);
+        }
 
-//function onPlayerStateChange(event) {
-//    alert("changed: " + JSON.stringify(event));
-//    if (event.data == YT.PlayerState.ENDED && youtubeSongRequestPlaying) {
-//        sendPacket('songRequestComplete', '');
-//        youtubeSongRequestPlaying = false;
-//    }
-//}
+        function stop() {
+            if (!isReady) return;
+
+            setTimeout(function () {
+                isPlaying = false;
+                player.stopVideo();
+            }, 1);
+        }
+
+        function onPlayerError(err) {
+            alert("error: " + JSON.stringify(err));
+        }
+
+        function onPlayerReady(event) {
+            isReady = true;
+        }
+
+        function onPlayerStateChange(event) {
+            if (event.data == YT.PlayerState.ENDED && isPlaying) {
+                window.external.SongRequestComplete();
+                isPlaying = false;
+            }
+        }
     </script>
 </body>
 </html>

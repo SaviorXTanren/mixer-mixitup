@@ -30,6 +30,11 @@ namespace MixItUp.Desktop.Services
         private Dispatcher dispatcher;
         private WebBrowser browser;
         private SongRequestItem status = null;
+        private SongRequestHttpListenerServer httpListenerServer;
+
+        public const string RegularOverlayHttpListenerServerAddressFormat = "http://localhost:{0}/overlay/";
+        public int Port { get { return 8199; } }
+        public string HttpListenerServerAddress { get { return string.Format(RegularOverlayHttpListenerServerAddressFormat, this.Port); } }
 
         public YouTubeSongRequestContext(Dispatcher dispatcher, WebBrowser browser)
         {
@@ -41,13 +46,22 @@ namespace MixItUp.Desktop.Services
 
         public async Task Initialize()
         {
+            if (this.httpListenerServer != null)
+            {
+                return;
+            }
+
             await this.dispatcher.InvokeAsync(() =>
             {
-                var myAssembly = System.Reflection.Assembly.GetEntryAssembly();
-                var myAssemblyLocation = System.IO.Path.GetDirectoryName(myAssembly.Location);
-                string myFile = Path.Combine(myAssemblyLocation, @"Overlay\YouTubePage.html");
-                this.browser.Navigate($"file:///{myFile}");
+                this.httpListenerServer = new SongRequestHttpListenerServer(this.HttpListenerServerAddress, this.Port);
+                this.httpListenerServer.Start();
+                this.browser.Navigate(HttpListenerServerAddress);
             });
+        }
+
+        public void SongRequestComplete()
+        {
+            // Currently unused, but we COULD wire this up if desired
         }
 
         public void SetStatus(string result)
@@ -58,14 +72,18 @@ namespace MixItUp.Desktop.Services
         public async Task<SongRequestItem> GetStatus()
         {
             this.status = null;
-            await this.dispatcher.InvokeAsync(() =>
-            {
-                this.browser.InvokeScript("getStatus");
-            });
 
-            for (int i = 0; i < 10 && this.status == null; i++)
+            if (this.httpListenerServer != null)
             {
-                await Task.Delay(500);
+                await this.dispatcher.InvokeAsync(() =>
+                {
+                    this.browser.InvokeScript("getStatus");
+                });
+
+                for (int i = 0; i < 10 && this.status == null; i++)
+                {
+                    await Task.Delay(500);
+                }
             }
 
             return status;
@@ -73,34 +91,79 @@ namespace MixItUp.Desktop.Services
 
         public async Task PlayPause()
         {
-            await this.dispatcher.InvokeAsync(() =>
+            if (this.httpListenerServer != null)
             {
-                this.browser.InvokeScript("playPause");
-            });
+                await this.dispatcher.InvokeAsync(() =>
+                {
+                    this.browser.InvokeScript("playPause");
+                });
+            }
         }
 
         public async Task PlaySong(string itemId, int volume)
         {
-            await this.dispatcher.InvokeAsync(() =>
+            if (this.httpListenerServer != null)
             {
-                this.browser.InvokeScript("play", new object[] { itemId, volume });
-            });
+                await this.dispatcher.InvokeAsync(() =>
+                {
+                    this.browser.InvokeScript("play", new object[] { itemId, volume });
+                });
+            }
         }
 
         public async Task SetVolume(int volume)
         {
-            await this.dispatcher.InvokeAsync(() =>
+            if (this.httpListenerServer != null)
             {
-                this.browser.InvokeScript("setVolume", new object[] { volume });
-            });
+                await this.dispatcher.InvokeAsync(() =>
+                {
+                    this.browser.InvokeScript("setVolume", new object[] { volume });
+                });
+            }
         }
 
         public async Task Stop()
         {
-            await this.dispatcher.InvokeAsync(() =>
+            if (this.httpListenerServer != null)
             {
-                this.browser.InvokeScript("stop");
-            });
+                await this.dispatcher.InvokeAsync(() =>
+                {
+                    this.browser.InvokeScript("stop");
+                });
+            }
+        }
+    }
+
+    public class SongRequestHttpListenerServer : HttpListenerServerBase
+    {
+        private const string OverlayFolderPath = "Overlay\\";
+        private const string OverlayWebpageFilePath = OverlayFolderPath + "YouTubePage.html";
+
+        private int port;
+        private string webPageInstance;
+
+        private Dictionary<string, string> localFiles = new Dictionary<string, string>();
+
+        public SongRequestHttpListenerServer(string address, int port)
+            : base(address)
+        {
+            this.port = port;
+            this.webPageInstance = File.ReadAllText(OverlayWebpageFilePath);
+        }
+
+        protected override async Task ProcessConnection(HttpListenerContext listenerContext)
+        {
+            string url = listenerContext.Request.Url.LocalPath;
+            url = url.Trim(new char[] { '/' });
+
+            if (url.Equals("overlay"))
+            {
+                await this.CloseConnection(listenerContext, HttpStatusCode.OK, this.webPageInstance);
+            }
+            else
+            {
+                await this.CloseConnection(listenerContext, HttpStatusCode.BadRequest, "");
+            }
         }
     }
 
@@ -909,7 +972,7 @@ namespace MixItUp.Desktop.Services
                 }
                 else if (this.currentSong.Type == SongRequestServiceTypeEnum.YouTube)
                 {
-                    await this.PlayPauseOverlaySong(this.currentSong.Type);
+                    await this.youTubeContext.PlayPause();
                 }
             }
         }
@@ -984,8 +1047,8 @@ namespace MixItUp.Desktop.Services
                 }
                 else if (item.Type == SongRequestServiceTypeEnum.YouTube)
                 {
-                    await this.youTubeContext.PlaySong(item.ID, ChannelSession.Settings.SongRequestVolume);
                     this.currentSong = item;
+                    await this.youTubeContext.PlaySong(item.ID, ChannelSession.Settings.SongRequestVolume);
                 }
             }
         }
@@ -1007,11 +1070,6 @@ namespace MixItUp.Desktop.Services
                     }
                 }
             }
-        }
-
-        private Task PlayPauseOverlaySong(SongRequestServiceTypeEnum type)
-        {
-            return this.youTubeContext.PlayPause();
         }
 
         private async Task<SongRequestItem> GetSpotifyStatus()
@@ -1050,7 +1108,6 @@ namespace MixItUp.Desktop.Services
             }
             return null;
         }
-        #endregion Interaction Internal Methods
 
         private string GetAlbumArt(SongRequestServiceTypeEnum serviceType, string albumArtLink)
         {
@@ -1067,5 +1124,6 @@ namespace MixItUp.Desktop.Services
             }
             return albumArtLink;
         }
+        #endregion Interaction Internal Methods
     }
 }
