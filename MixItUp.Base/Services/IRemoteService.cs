@@ -9,11 +9,9 @@ namespace MixItUp.Base.Services
 {
     public abstract class RemoteServiceBase : IRemoteService
     {
-        public const string ReceiveProfilesMethodName = "ReceiveProfiles";
-        public const string ReceiveProfileBoardMethodName = "ReceiveProfileBoard";
-        public const string ReceiveCommandMethodName = "ReceiveCommand";
-
+        public const string RequestProfilesMethodName = "RequestProfiles";
         public const string SendProfilesMethodName = "SendProfiles";
+        public const string RequestProfileBoardMethodName = "RequestProfileBoard";
         public const string SendProfileBoardMethodName = "SendProfileBoard";
         public const string SendCommandMethodName = "SendCommand";
 
@@ -24,13 +22,23 @@ namespace MixItUp.Base.Services
             this.connection = connection;
         }
 
-        public void ListenForReceiveProfiles(Action<IEnumerable<RemoteProfileModel>> action) { this.connection.Listen(ReceiveProfilesMethodName, action); }
+        public async Task Connect() { await this.connection.Connect(); }
 
-        public void ListenForReceiveProfileBoard(Action<RemoteProfileBoardModel> action) { this.connection.Listen(ReceiveProfileBoardMethodName, action); }
+        public void ListenForRequestProfiles(Action action) { this.connection.Listen(RequestProfilesMethodName, action); }
 
-        public void ListenForReceiveCommand(Action<Guid> action) { this.connection.Listen(ReceiveCommandMethodName, action); }
+        public void ListenForSendProfiles(Action<IEnumerable<RemoteProfileModel>> action) { this.connection.Listen(SendProfilesMethodName, action); }
+
+        public void ListenForRequestProfileBoard(Action<Guid> action) { this.connection.Listen(RequestProfileBoardMethodName, action); }
+
+        public void ListenForSendProfileBoard(Action<RemoteProfileBoardModel> action) { this.connection.Listen(SendProfileBoardMethodName, action); }
+
+        public void ListenForSendCommand(Action<Guid> action) { this.connection.Listen(SendCommandMethodName, action); }
+
+        public async Task RequestProfiles() { await this.AsyncWrapper(this.connection.Send(RequestProfilesMethodName)); }
 
         public async Task SendProfiles(IEnumerable<RemoteProfileModel> profiles) { await this.AsyncWrapper(this.connection.Send(SendProfilesMethodName, profiles)); }
+
+        public async Task RequestProfileBoard(Guid id) { await this.AsyncWrapper(this.connection.Send(RequestProfileBoardMethodName, id)); }
 
         public async Task SendProfileBoard(RemoteProfileBoardModel profileBoard) { await this.AsyncWrapper(this.connection.Send(SendProfileBoardMethodName, profileBoard)); }
 
@@ -48,7 +56,11 @@ namespace MixItUp.Base.Services
 
     public interface IRemoteService
     {
+        Task RequestProfiles();
+
         Task SendProfiles(IEnumerable<RemoteProfileModel> profiles);
+
+        Task RequestProfileBoard(Guid profileID);
 
         Task SendProfileBoard(RemoteProfileBoardModel profileBoard);
 
