@@ -32,7 +32,9 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="0" />
         </Grid.RowDefinitions>
+
 
         <MaterialDesign:DialogHost x:Name="MDDialogHost" Identifier="RootDialog" />
 
@@ -50,9 +52,9 @@
             <TextBlock x:Name="SavingTextBlock" Grid.Row="2" HorizontalAlignment="Center" TextAlignment="Center">Please wait while Mix It Up saves your settings and shuts down...</TextBlock>
 
             <TextBlock x:Name="FailedSaveTextBlock" Visibility="Collapsed" Grid.Row="2" HorizontalAlignment="Center" TextAlignment="Center">Save failed, attempting one more time...</TextBlock>
-
         </Grid>
 
         <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="1" />
+        <WebBrowser x:Name="YouTubeSongRequestHost" IsHitTestVisible="False" Grid.Row="2" Visibility="Hidden"/>
     </Grid>
 </Windows:LoadingWindowBase>
