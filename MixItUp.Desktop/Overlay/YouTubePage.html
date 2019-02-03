@@ -1,0 +1,157 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <!-- Use lastest version of Internet Explorer -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <meta charset="utf-8" />
+    <title>Mix It Up - YouTube</title>
+</head>
+<body onload="LoadYouTubeIframeAPI()">
+    <div id="player"/>
+
+    <script>
+        var player;
+
+        function LoadYouTubeIframeAPI() {
+            var tag = document.createElement('script');
+            tag.src = "https://www.youtube.com/iframe_api";
+            var firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        }
+
+        function onPlayerError(event) {
+            alert("err: " + JSON.stringify(event));
+        }
+
+        function onPlayerReady(event) {
+            alert("rdy: " + JSON.stringify(event));
+        }
+
+        function onPlayerStateChange(event) {
+            alert("ste: " + JSON.stringify(event));
+        }
+
+        function onYouTubeIframeAPIReady() {
+            var playerParams =
+            {
+                height: '390',
+                width: '640',
+                videoId: 'M7lc1UVf-VE',
+                playerVars:
+                {
+                    "enablejsapi": 1,
+                    "origin": document.domain,
+                    "rel": 0
+                },
+                events:
+                {
+                    "onReady": onPlayerReady,
+                    "onError": onPlayerError,
+                    "onStateChange": onPlayerStateChange
+                }
+            };
+
+            player = new YT.Player('player', playerParams);
+        }
+//function stopVideo() {
+//    alert("c");
+//    player.stopVideo();
+//}
+
+//function getStatus() {
+//    setTimeout(function () {
+//        var data = {};
+//        data.Type = 1;
+//        data.State = 0;
+
+//        var playerState = youtubeSongRequestPlayer.getPlayerState();
+//        if (playerState == YT.PlayerState.PLAYING || playerState == YT.PlayerState.PAUSED || playerState == YT.PlayerState.ENDED) {
+//            data.ID = youtubeSongRequestPlayer.getVideoUrl();
+//            data.Progress = youtubeSongRequestPlayer.getCurrentTime();
+//            data.Length = youtubeSongRequestPlayer.getDuration();
+//            data.Volume = youtubeSongRequestPlayer.getVolume();
+
+//            if (playerState == YT.PlayerState.PLAYING) {
+//                data.State = 1;
+//            }
+//            else if (playerState == YT.PlayerState.PAUSED) {
+//                data.State = 2;
+//            }
+//            else if (playerState == YT.PlayerState.ENDED) {
+//                data.State = 3;
+//            }
+//        }
+
+//        window.external.SetStatus(JSON.stringify(data));
+//    }, 1);
+//}
+
+//function playPause() {
+//    setTimeout(function () {
+//        if (youtubeSongRequestPlayer.getPlayerState() == YT.PlayerState.PLAYING) {
+//            youtubeSongRequestPlayer.pauseVideo();
+//        }
+//        else if (youtubeSongRequestPlayer.getPlayerState() == YT.PlayerState.PAUSED) {
+//            youtubeSongRequestPlayer.playVideo();
+//        }
+//    }, 1);
+//}
+
+//function play(itemId, volume) {
+//    setTimeout(function () {
+//        youtubeSongRequestPlaying = true;
+//        youtubeSongRequestPlayer.setVolume(volume);
+//        youtubeSongRequestPlayer.setLoop(false);
+//        youtubeSongRequestPlayer.loadVideoById(itemId);
+//    }, 1);
+//}
+
+//function setVolume(volume) {
+//    setTimeout(function () {
+//        youtubeSongRequestPlayer.setVolume(volume);
+//    }, 1);
+//}
+
+//function stop() {
+//    setTimeout(function () {
+//        youtubeSongRequestPlaying = false;
+//        youtubeSongRequestPlayer.stopVideo();
+//    }, 1);
+//}
+
+//function onYouTubeIframeAPIReady() {
+//    youtubeIFrameAPIReady = true;
+
+//    youtubeSongRequestPlayer = new YT.Player('youtubeSongRequestPlayerDiv', {
+//        height: '390',
+//        width: '640',
+//        videoId: 'RvCVgu_MQpU',
+//        playerVars: { 'controls': 0 },
+//        events: {
+//            'onReady': onPlayerReady,
+//            'onStateChange': onPlayerStateChange,
+//            'onError': onError
+//        }
+//    });
+//}
+
+//function onError(err) {
+//    alert("error: " + JSON.stringify(err));
+//}
+
+//function onPlayerReady(event) {
+//    youtubeSongRequestPlayerReady = true;
+//    alert("ready: " + JSON.stringify(event));
+//}
+
+//function onPlayerStateChange(event) {
+//    alert("changed: " + JSON.stringify(event));
+//    if (event.data == YT.PlayerState.ENDED && youtubeSongRequestPlaying) {
+//        sendPacket('songRequestComplete', '');
+//        youtubeSongRequestPlaying = false;
+//    }
+//}
+    </script>
+</body>
+</html>

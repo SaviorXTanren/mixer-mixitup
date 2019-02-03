@@ -32,7 +32,9 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="100" />
         </Grid.RowDefinitions>
+
 
         <MaterialDesign:DialogHost x:Name="MDDialogHost" Identifier="RootDialog" />
 
@@ -54,5 +56,7 @@
         </Grid>
 
         <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="1" />
+        
+        <WebBrowser x:Name="YouTubeSongRequestHost" IsHitTestVisible="False" Grid.Row="2"/>
     </Grid>
 </Windows:LoadingWindowBase>

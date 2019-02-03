@@ -162,8 +162,6 @@ namespace MixItUp.Overlay
 
         public async Task SendTextToSpeech(OverlayTextToSpeech textToSpeech) { await this.SendPacket("textToSpeech", textToSpeech); }
 
-        public async Task SendSongRequest(OverlaySongRequest songRequest) { await this.SendPacket("songRequest", songRequest); }
-
         public async Task RemoveItem(OverlayItemBase item) { await this.SendPacket("remove", JObject.FromObject(item)); }
 
         private async Task SendEffectPacket(string type, OverlayItemBase item, OverlayItemPosition position, OverlayItemEffects effects)
@@ -294,29 +292,9 @@ namespace MixItUp.Overlay
     {
         public OverlayWebSocketServer(HttpListenerContext listenerContext) : base(listenerContext) { }
 
-        protected override async Task ProcessReceivedPacket(string packetJSON)
+        protected override Task ProcessReceivedPacket(string packetJSON)
         {
-            if (!string.IsNullOrEmpty(packetJSON))
-            {
-                JObject packetObj = JObject.Parse(packetJSON);
-                if (packetObj["type"] != null)
-                {
-                    if (packetObj["type"].ToString().Equals("songRequestStatus"))
-                    {
-                        if (ChannelSession.Services.SongRequestService != null)
-                        {
-                            SongRequestItem item = null;
-                            if (packetObj["data"] != null)
-                            {
-                                item = packetObj["data"].ToObject<SongRequestItem>();
-                            }
-
-                            await ChannelSession.Services.SongRequestService.StatusUpdate(item);
-                        }
-                    }
-                }
-            }
-            await base.ProcessReceivedPacket(packetJSON);
+            return base.ProcessReceivedPacket(packetJSON);
         }
     }
 }

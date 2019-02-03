@@ -2,6 +2,7 @@
 using MixItUp.Base;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using MixItUp.Desktop.Services;
 using MixItUp.WPF.Controls.MainControls;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows;
@@ -63,6 +64,7 @@ namespace MixItUp.WPF
 
         protected override async Task OnLoaded()
         {
+            ChannelSession.Services.SongRequestService.SetYouTubeContext(new YouTubeSongRequestContext(this.Dispatcher, this.YouTubeSongRequestHost));
             ChannelSession.Services.InputService.Initialize(new WindowInteropHelper(this).Handle);
             foreach (HotKeyConfiguration hotKeyConfiguration in ChannelSession.Settings.HotKeys.Values)
             {

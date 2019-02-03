@@ -7,17 +7,103 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Threading;
 using System.Xml;
 
 namespace MixItUp.Desktop.Services
 {
+    [ComVisible(true)]
+    public class YouTubeSongRequestContext : IYouTubeContext
+    {
+        private Dispatcher dispatcher;
+        private WebBrowser browser;
+        private SongRequestItem status = null;
+
+        public YouTubeSongRequestContext(Dispatcher dispatcher, WebBrowser browser)
+        {
+            this.dispatcher = dispatcher;
+            this.browser = browser;
+
+            this.browser.ObjectForScripting = this;
+        }
+
+        public async Task Initialize()
+        {
+            await this.dispatcher.InvokeAsync(() =>
+            {
+                var myAssembly = System.Reflection.Assembly.GetEntryAssembly();
+                var myAssemblyLocation = System.IO.Path.GetDirectoryName(myAssembly.Location);
+                string myFile = Path.Combine(myAssemblyLocation, @"Overlay\YouTubePage.html");
+                this.browser.Navigate($"file:///{myFile}");
+            });
+        }
+
+        public void SetStatus(string result)
+        {
+            this.status = SerializerHelper.DeserializeFromString<SongRequestItem>(result);
+        }
+
+        public async Task<SongRequestItem> GetStatus()
+        {
+            this.status = null;
+            await this.dispatcher.InvokeAsync(() =>
+            {
+                this.browser.InvokeScript("getStatus");
+            });
+
+            for (int i = 0; i < 10 && this.status == null; i++)
+            {
+                await Task.Delay(500);
+            }
+
+            return status;
+        }
+
+        public async Task PlayPause()
+        {
+            await this.dispatcher.InvokeAsync(() =>
+            {
+                this.browser.InvokeScript("playPause");
+            });
+        }
+
+        public async Task PlaySong(string itemId, int volume)
+        {
+            await this.dispatcher.InvokeAsync(() =>
+            {
+                this.browser.InvokeScript("play", new object[] { itemId, volume });
+            });
+        }
+
+        public async Task SetVolume(int volume)
+        {
+            await this.dispatcher.InvokeAsync(() =>
+            {
+                this.browser.InvokeScript("setVolume", new object[] { volume });
+            });
+        }
+
+        public async Task Stop()
+        {
+            await this.dispatcher.InvokeAsync(() =>
+            {
+                this.browser.InvokeScript("stop");
+            });
+        }
+    }
+
     public class SongRequestItemSearch
     {
         public SongRequestItem SongRequest { get; set; }
@@ -78,6 +164,8 @@ namespace MixItUp.Desktop.Services
         private Dictionary<UserViewModel, List<SpotifySong>> lastUserSpotifySongSearches = new Dictionary<UserViewModel, List<SpotifySong>>();
         private Dictionary<UserViewModel, List<SongRequestItem>> lastUserYouTubeSongSearches = new Dictionary<UserViewModel, List<SongRequestItem>>();
 
+        private IYouTubeContext youTubeContext;
+
         public bool IsEnabled { get; private set; }
 
         public async Task<bool> Initialize()
@@ -99,9 +187,14 @@ namespace MixItUp.Desktop.Services
                     return false;
                 }
 
-                if (ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.YouTube) && !ChannelSession.Settings.EnableOverlay)
+                if (ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.YouTube))
                 {
-                    return false;
+                    if (this.youTubeContext == null)
+                    {
+                        return false;
+                    }
+
+                    await this.youTubeContext.Initialize();
                 }
 
                 this.playlistItems.Clear();
@@ -228,6 +321,11 @@ namespace MixItUp.Desktop.Services
 
                 return true;
             });
+        }
+
+        public void SetYouTubeContext(IYouTubeContext context)
+        {
+            this.youTubeContext = context;
         }
 
         public async Task Disable()
@@ -531,7 +629,7 @@ namespace MixItUp.Desktop.Services
                         }
                         else if (this.currentSong.Type == SongRequestServiceTypeEnum.YouTube)
                         {
-                            status = await this.GetYouTubeStatus();
+                            status = await this.youTubeContext.GetStatus();
                         }
 
                         if (status != null)
@@ -836,12 +934,7 @@ namespace MixItUp.Desktop.Services
                 }
                 else if (this.currentSong.Type == SongRequestServiceTypeEnum.YouTube)
                 {
-                    IOverlayService overlay = ChannelSession.Services.OverlayServers.GetOverlay(ChannelSession.Services.OverlayServers.DefaultOverlayName);
-                    if (overlay != null)
-                    {
-                        await overlay.SendSongRequest(new OverlaySongRequest() { Type = SongRequestServiceTypeEnum.YouTube.ToString(), Action = "stop", Volume = ChannelSession.Settings.SongRequestVolume });
-                        this.youTubeStatus = null;
-                    }
+                    await this.youTubeContext.Stop();
                 }
                 this.currentSong.State = SongRequestStateEnum.Ended;
                 this.currentSong = null;
@@ -870,11 +963,7 @@ namespace MixItUp.Desktop.Services
                 await ChannelSession.Services.Spotify.SetVolume(ChannelSession.Settings.SongRequestVolume);
             }
 
-            IOverlayService overlay = ChannelSession.Services.OverlayServers.GetOverlay(ChannelSession.Services.OverlayServers.DefaultOverlayName);
-            if (overlay != null)
-            {
-                await overlay.SendSongRequest(new OverlaySongRequest() { Type = SongRequestServiceTypeEnum.YouTube.ToString(), Action = "volume", Volume = ChannelSession.Settings.SongRequestVolume });
-            }
+            await this.youTubeContext.SetVolume(ChannelSession.Settings.SongRequestVolume);
         }
 
         private async Task PlaySongInternal(SongRequestItem item)
@@ -895,12 +984,8 @@ namespace MixItUp.Desktop.Services
                 }
                 else if (item.Type == SongRequestServiceTypeEnum.YouTube)
                 {
-                    IOverlayService overlay = ChannelSession.Services.OverlayServers.GetOverlay(ChannelSession.Services.OverlayServers.DefaultOverlayName);
-                    if (overlay != null)
-                    {
-                        await overlay.SendSongRequest(new OverlaySongRequest() { Type = SongRequestServiceTypeEnum.YouTube.ToString(), Action = "song", Source = item.ID, Volume = ChannelSession.Settings.SongRequestVolume });
-                        this.currentSong = item;
-                    }
+                    await this.youTubeContext.PlaySong(item.ID, ChannelSession.Settings.SongRequestVolume);
+                    this.currentSong = item;
                 }
             }
         }
@@ -924,13 +1009,9 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        private async Task PlayPauseOverlaySong(SongRequestServiceTypeEnum type)
+        private Task PlayPauseOverlaySong(SongRequestServiceTypeEnum type)
         {
-            IOverlayService overlay = ChannelSession.Services.OverlayServers.GetOverlay(ChannelSession.Services.OverlayServers.DefaultOverlayName);
-            if (overlay != null)
-            {
-                await overlay.SendSongRequest(new OverlaySongRequest() { Type = type.ToString(), Action = "playpause", Volume = ChannelSession.Settings.SongRequestVolume });
-            }
+            return this.youTubeContext.PlayPause();
         }
 
         private async Task<SongRequestItem> GetSpotifyStatus()
@@ -969,22 +1050,6 @@ namespace MixItUp.Desktop.Services
             }
             return null;
         }
-
-        private async Task<SongRequestItem> GetYouTubeStatus()
-        {
-            IOverlayService overlay = ChannelSession.Services.OverlayServers.GetOverlay(ChannelSession.Services.OverlayServers.DefaultOverlayName);
-            if (overlay != null)
-            {
-                this.youTubeStatus = null;
-                await overlay.SendSongRequest(new OverlaySongRequest() { Type = SongRequestServiceTypeEnum.YouTube.ToString(), Action = "status" });
-                for (int i = 0; i < 10 && this.youTubeStatus == null; i++)
-                {
-                    await Task.Delay(500);
-                }
-            }
-            return this.youTubeStatus;
-        }
-
         #endregion Interaction Internal Methods
 
         private string GetAlbumArt(SongRequestServiceTypeEnum serviceType, string albumArtLink)

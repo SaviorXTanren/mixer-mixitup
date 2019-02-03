@@ -21,19 +21,6 @@ namespace MixItUp.Base.Services
         public double Rate { get; set; }
     }
 
-    [DataContract]
-    public class OverlaySongRequest
-    {
-        [DataMember]
-        public string Type { get; set; }
-        [DataMember]
-        public string Action { get; set; }
-        [DataMember]
-        public string Source { get; set; }
-        [DataMember]
-        public int Volume { get; set; }
-    }
-
     public interface IOverlayService
     {
         event EventHandler OnWebSocketConnectedOccurred;
@@ -50,8 +37,6 @@ namespace MixItUp.Base.Services
         Task SendItem(OverlayItemBase item, OverlayItemPosition position, OverlayItemEffects effects);
 
         Task SendTextToSpeech(OverlayTextToSpeech textToSpeech);
-
-        Task SendSongRequest(OverlaySongRequest songRequest);
 
         Task RemoveItem(OverlayItemBase item);
 
