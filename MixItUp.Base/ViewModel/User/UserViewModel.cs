@@ -228,6 +228,10 @@ namespace MixItUp.Base.ViewModel.User
 
                 return "No Title";
             }
+            set
+            {
+                this.Data.CustomTitle = value;
+            }
         }
 
         [JsonIgnore]

@@ -835,6 +835,43 @@ namespace MixItUp.Base.Commands
         }
     }
 
+    public class SetUserTitleChatCommand : PreMadeChatCommand
+    {
+        public SetUserTitleChatCommand()
+            : base("Set User Title", "setusertitle", 5, MixerRoleEnum.Mod)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (ChannelSession.Chat != null)
+                {
+                    if (arguments.Count() > 1)
+                    {
+                        string username = arguments.ElementAt(0);
+                        if (username.StartsWith("@"))
+                        {
+                            username = username.Substring(1);
+                        }
+
+                        UserModel targetUserModel = await ChannelSession.Connection.GetUser(username);
+                        if (targetUserModel != null)
+                        {
+                            UserViewModel targetUser = new UserViewModel(targetUserModel);
+                            targetUser.Title = string.Join(" ", arguments.Skip(1));
+                        }
+                        else
+                        {
+                            await ChannelSession.Chat.Whisper(user.UserName, username + " is not a valid user");
+                        }
+                    }
+                    else
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, "Usage: !settitle <USERNAME> <TITLE NAME>");
+                    }
+                }
+            }));
+        }
+    }
+
     public class AddCommandChatCommand : PreMadeChatCommand
     {
         public AddCommandChatCommand()
