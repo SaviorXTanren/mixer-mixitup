@@ -66,6 +66,11 @@ namespace MixItUp.XSplit
 
         public async Task Disconnect() { await this.End(); }
 
+        public new async Task<bool> TestConnection()
+        {
+            return (await base.TestConnection() > 0);
+        }
+
         public async Task ShowScene(string sceneName)
         {
             await this.Send(new XSplitPacket("sceneTransition", JObject.FromObject(new XSplitScene() { sceneName = sceneName })));
@@ -101,7 +106,7 @@ namespace MixItUp.XSplit
         }
     }
 
-    public class XSplitWebSocketServer : WebSocketServerBase, IStreamingSoftwareService
+    public class XSplitWebSocketServer : WebSocketServerBase
     {
         public XSplitWebSocketServer(HttpListenerContext listenerContext) : base(listenerContext) { this.OnDisconnectOccurred += XSplitWebServer_OnDisconnectOccurred; }
 

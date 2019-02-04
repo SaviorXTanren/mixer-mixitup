@@ -75,10 +75,10 @@ namespace MixItUp.WPF.Controls.Services
             {
                 await this.groupBoxControl.window.RunAsyncOperation(async () =>
                 {
-                    IOverlayService overlay = ChannelSession.Services.OverlayServers.GetOverlay(ChannelSession.Services.OverlayServers.DefaultOverlayName);
-                    if (overlay != null && await overlay.TestConnection())
+                    int total = await ChannelSession.Services.OverlayServers.TestConnections();
+                    if (total > 0)
                     {
-                        await MessageBoxHelper.ShowMessageDialog("Overlay connection test successful!");
+                        await MessageBoxHelper.ShowMessageDialog("Overlay connection test successful!" + Environment.NewLine + Environment.NewLine + total + " overlays connected in total");
                     }
                     else
                     {

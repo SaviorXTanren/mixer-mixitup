@@ -142,7 +142,7 @@ namespace MixItUp.Overlay
             this.batchPackets.Clear();
         }
 
-        public async Task<bool> TestConnection() { return await this.webSocketServer.TestConnection(); }
+        public async Task<int> TestConnection() { return await this.webSocketServer.TestConnection(); }
 
         public async Task SendItem(OverlayItemBase item, OverlayItemPosition position, OverlayItemEffects effects)
         {

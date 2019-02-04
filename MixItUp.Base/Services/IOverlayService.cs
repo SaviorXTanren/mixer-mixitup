@@ -41,7 +41,7 @@ namespace MixItUp.Base.Services
 
         Task<bool> Initialize();
 
-        Task<bool> TestConnection();
+        Task<int> TestConnection();
 
         void StartBatching();
 
