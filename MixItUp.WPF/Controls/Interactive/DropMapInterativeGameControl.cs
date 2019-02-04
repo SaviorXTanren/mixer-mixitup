@@ -63,7 +63,7 @@ namespace MixItUp.WPF.Controls.Interactive
             this.SaveCustomSettings(settings);
         }
 
-        protected override async Task GameConnectedInternal()
+        protected override async Task<bool> GameConnectedInternal()
         {
             this.SaveDropMapSettings();
 
@@ -80,7 +80,8 @@ namespace MixItUp.WPF.Controls.Interactive
 
             if (this.positionButton == null || this.winnerButton == null)
             {
-                throw new InvalidOperationException("Could not get position or winner buttons");
+                Logger.Log("Could not get position or winner buttons");
+                return false;
             }
 
             if (this.sparkCost > 0)
@@ -149,6 +150,8 @@ namespace MixItUp.WPF.Controls.Interactive
                 }
             });
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+            return true;
         }
 
         protected override async Task OnInteractiveControlUsed(UserViewModel user, InteractiveGiveInputModel input, InteractiveConnectedControlCommand command)

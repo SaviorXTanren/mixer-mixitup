@@ -534,7 +534,10 @@ namespace MixItUp.WPF.Controls.MainControls
             if (this.IsCustomInteractiveGame)
             {
                 CustomInteractiveGameControl gameControl = (CustomInteractiveGameControl)this.CustomInteractiveContentControl.Content;
-                await gameControl.GameConnected();
+                if (!await gameControl.GameConnected())
+                {
+                    await this.InteractiveGameDisconnected();
+                }
             }
         }
 

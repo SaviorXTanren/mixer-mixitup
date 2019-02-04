@@ -44,7 +44,7 @@ namespace MixItUp.WPF.Controls.Interactive
             this.WinnerStackPanel.Visibility = Visibility.Visible;
         }
 
-        protected override async Task GameConnectedInternal()
+        protected override async Task<bool> GameConnectedInternal()
         {
             this.Dispatcher.Invoke(() =>
             {
@@ -61,7 +61,7 @@ namespace MixItUp.WPF.Controls.Interactive
                 this.WinnerTextBlock.Text = string.Empty;
             });
 
-            await base.GameConnectedInternal();
+            return await base.GameConnectedInternal();
         }
 
         protected override Task GameDisconnectedInternal()
