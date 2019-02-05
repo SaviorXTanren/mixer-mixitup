@@ -65,6 +65,7 @@ namespace MixItUp.Base.Actions
                     if (TwitterAction.CheckIfTweetContainsTooManyTags(tweet))
                     {
                         await ChannelSession.Chat.Whisper(ChannelSession.User.username, "The tweet you specified can not be sent because it contains an @mention");
+                        return;
                     }
 
                     await ChannelSession.Services.Twitter.SendTweet(tweet, imagePath);
