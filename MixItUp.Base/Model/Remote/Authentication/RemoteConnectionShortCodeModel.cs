@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 namespace MixItUp.Base.Model.Remote.Authentication
 {
     [DataContract]
-    public class RemoteDeviceShortCodeModel : RemoteDeviceModel
+    public class RemoteConnectionShortCodeModel : RemoteConnectionModel
     {
         [DataMember]
         public string ShortCode { get; set; }
@@ -13,10 +13,14 @@ namespace MixItUp.Base.Model.Remote.Authentication
         [DataMember]
         public DateTimeOffset ShortCodeExpiration { get; set; }
 
-        public RemoteDeviceShortCodeModel() { }
+        [DataMember]
+        public bool Approved { get; set; }
 
-        public RemoteDeviceShortCodeModel(string name)
-            : base(name)
+        public RemoteConnectionShortCodeModel() { }
+
+        public RemoteConnectionShortCodeModel(string name) : base(name) { }
+
+        public void GenerateShortCode()
         {
             this.ShortCode = String.Format("{0:000000}", RandomHelper.GenerateRandomNumber(1000, 999999));
             this.ShortCodeExpiration = DateTimeOffset.Now.AddMinutes(1);
