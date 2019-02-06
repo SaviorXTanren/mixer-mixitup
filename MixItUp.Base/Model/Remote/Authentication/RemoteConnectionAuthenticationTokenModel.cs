@@ -16,6 +16,9 @@ namespace MixItUp.Base.Model.Remote.Authentication
         [JsonIgnore]
         public Guid GroupID { get; set; }
 
+        [JsonIgnore]
+        public bool IsHost { get; set; }
+
         public RemoteConnectionAuthenticationTokenModel() { }
 
         public RemoteConnectionAuthenticationTokenModel(RemoteConnectionModel connection)
