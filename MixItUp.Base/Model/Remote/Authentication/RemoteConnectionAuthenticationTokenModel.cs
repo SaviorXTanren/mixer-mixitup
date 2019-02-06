@@ -18,14 +18,14 @@ namespace MixItUp.Base.Model.Remote.Authentication
 
         public RemoteConnectionAuthenticationTokenModel() { }
 
-        public RemoteConnectionAuthenticationTokenModel(RemoteConnectionModel device)
-            : base(device.Name)
+        public RemoteConnectionAuthenticationTokenModel(RemoteConnectionModel connection)
+            : base(connection.Name)
         {
-            this.ID = device.ID;
+            this.ID = connection.ID;
         }
 
-        public RemoteConnectionAuthenticationTokenModel(RemoteConnectionModel device, Guid groupID)
-            : this(device)
+        public RemoteConnectionAuthenticationTokenModel(RemoteConnectionModel connection, Guid groupID)
+            : this(connection)
         {
             this.GroupID = groupID;
         }

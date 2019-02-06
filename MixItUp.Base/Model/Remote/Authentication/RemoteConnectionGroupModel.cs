@@ -18,17 +18,17 @@ namespace MixItUp.Base.Model.Remote.Authentication
         public RemoteConnectionModel Host { get; set; }
 
         [DataMember]
-        public List<RemoteConnectionModel> Devices { get; set; }
+        public List<RemoteConnectionModel> Clients { get; set; }
 
         public RemoteConnectionGroupModel()
         {
-            this.Devices = new List<RemoteConnectionModel>();
+            this.Clients = new List<RemoteConnectionModel>();
         }
 
-        public RemoteConnectionGroupModel(RemoteConnectionModel hostDevice)
+        public RemoteConnectionGroupModel(RemoteConnectionModel host)
             : this()
         {
-            this.Host = hostDevice;
+            this.Host = host;
 
             this.ID = Guid.NewGuid();
             this.LastUse = DateTimeOffset.Now;
