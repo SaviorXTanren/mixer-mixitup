@@ -68,7 +68,10 @@ namespace MixItUp.Base.Actions
                         return;
                     }
 
-                    await ChannelSession.Services.Twitter.SendTweet(tweet, imagePath);
+                    if (!await ChannelSession.Services.Twitter.SendTweet(tweet, imagePath))
+                    {
+                        await ChannelSession.Chat.Whisper(ChannelSession.User.username, "The tweet you specified could not be sent. Please ensure your Twitter account is correctly authenticated and you have not sent a tweet in the last 5 minutes");
+                    }
                 }
                 else if (this.ActionType == TwitterActionTypeEnum.UpdateName)
                 {
