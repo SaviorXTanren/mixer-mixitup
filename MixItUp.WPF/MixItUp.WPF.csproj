@@ -519,6 +519,9 @@
     <Compile Include="Controls\Games\VolcanoGameEditorControl.xaml.cs">
       <DependentUpon>VolcanoGameEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Interactive\ApexLegendsDropMapInteractiveControl.xaml.cs">
+      <DependentUpon>ApexLegendsDropMapInteractiveControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Interactive\BlackOps4DropMapInteractiveControl.xaml.cs">
       <DependentUpon>BlackOps4DropMapInteractiveControl.xaml</DependentUpon>
     </Compile>
@@ -1187,6 +1190,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Games\VolcanoGameEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Interactive\ApexLegendsDropMapInteractiveControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1887,6 +1894,9 @@
     </Resource>
     <Resource Include="Assets\Images\Embers.png" />
     <Resource Include="Assets\Images\Sparks.png" />
+    <Resource Include="..\MixPlay\apex-legends-drop-map\src\map.png">
+      <Link>Assets\Images\ApexLegendsDropMap\map.png</Link>
+    </Resource>
     <Content Include="Assets\Sounds\Ariel.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

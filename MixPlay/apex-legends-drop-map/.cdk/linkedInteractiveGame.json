@@ -1,0 +1,26 @@
+{
+  "coverUrl": null,
+  "createdAt": "2019-02-07T07:39:17.000Z",
+  "deletedAt": null,
+  "description": null,
+  "hasPublishedVersions": false,
+  "id": 320709,
+  "installation": null,
+  "isShared": false,
+  "name": "Apex Legends Drop Map",
+  "ownerId": 7207866,
+  "typeId": 566510,
+  "updatedAt": "2019-02-07T07:39:17.000Z",
+  "versions": [
+    {
+      "changelog": "Initial release",
+      "createdAt": "2019-02-07T07:39:17.000Z",
+      "id": 326616,
+      "installation": null,
+      "state": "draft",
+      "updatedAt": "2019-02-07T07:39:57.000Z",
+      "version": "0.1.0",
+      "versionOrder": 256
+    }
+  ]
+}

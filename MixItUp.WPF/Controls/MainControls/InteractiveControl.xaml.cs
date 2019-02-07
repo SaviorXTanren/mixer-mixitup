@@ -215,6 +215,10 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 this.SetCustomInteractiveGame(new BlackOps4DropMapInteractiveControl(this.selectedGame, this.selectedGameVersion));
             }
+            else if (this.selectedGame.id == InteractiveSharedProjectModel.ApexLegendsDropMap.GameID)
+            {
+                this.SetCustomInteractiveGame(new ApexLegendsDropMapInteractiveControl(this.selectedGame, this.selectedGameVersion));
+            }
             else if (this.selectedGame.id == InteractiveSharedProjectModel.MixerPaint.GameID)
             {
                 this.SetCustomInteractiveGame(new MixerPaintInteractiveControl(this.selectedGame, this.selectedGameVersion));
