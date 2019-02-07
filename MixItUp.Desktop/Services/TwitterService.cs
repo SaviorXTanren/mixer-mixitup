@@ -20,7 +20,7 @@ namespace MixItUp.Base.Services
     [DataContract]
     public class TwitterService : ITwitterService, IDisposable
     {
-        private const string ClientID = "3xNVEnW8FVc4iywkW8CCDZQsC";
+        private const string ClientID = "gV0xMGKNgAaaqQ0XnR4JoX91U";
 
         private OAuthTokenModel token;
         private IAuthorizer auth;
