@@ -10,7 +10,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
+            <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
@@ -164,6 +164,23 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
+        </Grid>
+
+        <Grid Grid.Row="2" x:Name="EnableDisableControlGrid" Visibility="Collapsed">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="80" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox x:Name="EnableDisableControlNameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Control ID" />
+
+            <TextBlock Grid.Column="2" VerticalAlignment="Center">Enable/Disable:</TextBlock>
+            <ToggleButton Grid.Column="4" x:Name="EnableDisableControlToggleButton" VerticalAlignment="Center" />
+
         </Grid>
 
     </Grid>

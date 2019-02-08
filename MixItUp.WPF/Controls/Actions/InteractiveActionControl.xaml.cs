@@ -110,6 +110,11 @@ namespace MixItUp.WPF.Controls.Actions
                         this.customMetadataPairs.Add(new CustomMetadataPair() { Name = kvp.Key, Value = kvp.Value });
                     }
                 }
+                else if (this.action.InteractiveType == InteractiveActionTypeEnum.EnableDisableControl)
+                {
+                    this.EnableDisableControlNameTextBox.Text = this.action.ControlID;
+                    this.EnableDisableControlToggleButton.IsChecked = this.action.EnableDisableControl;
+                }
             }
         }
 
@@ -192,6 +197,13 @@ namespace MixItUp.WPF.Controls.Actions
                         return InteractiveAction.CreateSetCustomMetadataAction(this.CustomMetadataControlIDTextBox.Text, this.customMetadataPairs.ToDictionary(p => p.Name, p => p.Value));
                     }
                 }
+                else if (interactiveType == InteractiveActionTypeEnum.EnableDisableControl)
+                {
+                    if (!string.IsNullOrEmpty(this.EnableDisableControlNameTextBox.Text))
+                    {
+                        return InteractiveAction.CreateEnableDisableControlAction(this.EnableDisableControlNameTextBox.Text, this.EnableDisableControlToggleButton.IsChecked.GetValueOrDefault());
+                    }
+                }
             }
             return null;
         }
@@ -207,6 +219,7 @@ namespace MixItUp.WPF.Controls.Actions
             this.ConnectGrid.Visibility = Visibility.Collapsed;
             this.UpdateControlGrid.Visibility = Visibility.Collapsed;
             this.SetCustomMetadataGrid.Visibility = Visibility.Collapsed;
+            this.EnableDisableControlGrid.Visibility = Visibility.Collapsed;
             if (this.TypeComboBox.SelectedIndex >= 0)
             {
                 InteractiveActionTypeEnum interactiveType = EnumHelper.GetEnumValueFromString<InteractiveActionTypeEnum>((string)this.TypeComboBox.SelectedItem);
@@ -246,6 +259,10 @@ namespace MixItUp.WPF.Controls.Actions
                 else if (interactiveType == InteractiveActionTypeEnum.SetCustomMetadata)
                 {
                     this.SetCustomMetadataGrid.Visibility = Visibility.Visible;
+                }
+                else if (interactiveType == InteractiveActionTypeEnum.EnableDisableControl)
+                {
+                    this.EnableDisableControlGrid.Visibility = Visibility.Visible;
                 }
             }
         }
