@@ -1,4 +1,5 @@
-﻿using Mixer.Base.Model.Chat;
+﻿using Mixer.Base.Model.Channel;
+using Mixer.Base.Model.Chat;
 using Mixer.Base.Model.Skills;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
@@ -10,10 +11,12 @@ using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Chat;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.PopOut;
+using MixItUp.WPF.Windows.Users;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -310,28 +313,60 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 UserDialogResult result = await MessageBoxHelper.ShowUserDialog(user);
 
-                if (result == UserDialogResult.Purge)
+                switch (result)
                 {
-                    await ChannelSession.Chat.PurgeUser(user.UserName);
-                }
-                else if (result == UserDialogResult.Timeout1)
-                {
-                    await ChannelSession.Chat.TimeoutUser(user.UserName, 60);
-                }
-                else if (result == UserDialogResult.Timeout5)
-                {
-                    await ChannelSession.Chat.TimeoutUser(user.UserName, 300);
-                }
-                else if (result == UserDialogResult.Ban)
-                {
-                    if (await MessageBoxHelper.ShowConfirmationDialog(string.Format("This will ban the user {0} from this channel. Are you sure?", user.UserName)))
-                    {
-                        await ChannelSession.Chat.BanUser(user);
-                    }
-                }
-                else if (result == UserDialogResult.Unban)
-                {
-                    await ChannelSession.Chat.UnBanUser(user);
+                    case UserDialogResult.Purge:
+                        await ChannelSession.Chat.PurgeUser(user.UserName);
+                        break;
+                    case UserDialogResult.Timeout1:
+                        await ChannelSession.Chat.TimeoutUser(user.UserName, 60);
+                        break;
+                    case UserDialogResult.Timeout5:
+                        await ChannelSession.Chat.TimeoutUser(user.UserName, 300);
+                        break;
+                    case UserDialogResult.Ban:
+                        if (await MessageBoxHelper.ShowConfirmationDialog(string.Format("This will ban the user {0} from this channel. Are you sure?", user.UserName)))
+                        {
+                            await ChannelSession.Chat.BanUser(user);
+                        }
+                        break;
+                    case UserDialogResult.Unban:
+                        await ChannelSession.Chat.UnBanUser(user);
+                        break;
+                    case UserDialogResult.Follow:
+                        ExpandedChannelModel channelToFollow = await ChannelSession.Connection.GetChannel(user.UserName);
+                        await ChannelSession.Connection.Follow(channelToFollow, ChannelSession.User);
+                        break;
+                    case UserDialogResult.Unfollow:
+                        ExpandedChannelModel channelToUnfollow = await ChannelSession.Connection.GetChannel(user.UserName);
+                        await ChannelSession.Connection.Unfollow(channelToUnfollow, ChannelSession.User);
+                        break;
+                    case UserDialogResult.PromoteToMod:
+                        if (await MessageBoxHelper.ShowConfirmationDialog(string.Format("This will promote the user {0} to a moderator of this channel. Are you sure?", user.UserName)))
+                        {
+                            await ChannelSession.Chat.ModUser(user);
+                        }
+                        break;
+                    case UserDialogResult.DemoteFromMod:
+                        if (await MessageBoxHelper.ShowConfirmationDialog(string.Format("This will demote the user {0} from a moderator of this channel. Are you sure?", user.UserName)))
+                        {
+                            await ChannelSession.Chat.UnModUser(user);
+                        }
+                        break;
+                    case UserDialogResult.MixerPage:
+                        Process.Start($"https://mixer.com/{user.UserName}");
+                        break;
+                    case UserDialogResult.EditUser:
+                        UserDataEditorWindow window = new UserDataEditorWindow(ChannelSession.Settings.UserData[user.ID]);
+                        await Task.Delay(100);
+                        window.Show();
+                        await Task.Delay(100);
+                        window.Focus();
+                        break;
+                    case UserDialogResult.Close:
+                    default:
+                        // Just close
+                        break;
                 }
             }
         }
@@ -769,7 +804,7 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
-        private async void MessageUserInformationMenuItem_Click(object sender, RoutedEventArgs e)
+        private async void UserInformationMenuItem_Click(object sender, RoutedEventArgs e)
         {
             if (this.ChatList.SelectedItem != null)
             {

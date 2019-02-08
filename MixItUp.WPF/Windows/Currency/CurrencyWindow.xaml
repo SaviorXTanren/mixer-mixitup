@@ -57,6 +57,10 @@
                 <Grid Grid.Row="0" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="40" />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="10" />
@@ -65,12 +69,15 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBox x:Name="NameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Currency/Rank Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="250" />
+                    <TextBox x:Name="NameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Currency/Rank Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="210" />
+                    
+                    <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="0,4,0,0">Is Primary:</TextBlock>
+                    <ToggleButton Grid.Column="4" x:Name="IsPrimaryToggleButton" Margin="0,4,0,0" />
 
-                    <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="0,4,0,0">Is Rank System:</TextBlock>
-                    <ToggleButton Grid.Column="4" x:Name="IsRankToggleButton" Margin="0,4,0,0" Checked="IsRankToggleButton_Checked" Unchecked="IsRankToggleButton_Checked" />
+                    <TextBlock Grid.Column="6" VerticalAlignment="Center" Margin="0,4,0,0">Is Rank System:</TextBlock>
+                    <ToggleButton Grid.Column="8" x:Name="IsRankToggleButton" Margin="0,4,0,0" Checked="IsRankToggleButton_Checked" Unchecked="IsRankToggleButton_Checked" />
 
-                    <TextBox x:Name="MaxAmountTextBox" Grid.Column="6" MaterialDesign:HintAssist.Hint="Max Amount" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="140" />
+                    <TextBox x:Name="MaxAmountTextBox" Grid.Column="10" MaterialDesign:HintAssist.Hint="Max Amount" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
                 </Grid>
 
                 <Grid Grid.Row="2" HorizontalAlignment="Center">
