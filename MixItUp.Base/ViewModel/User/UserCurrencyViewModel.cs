@@ -77,6 +77,9 @@ namespace MixItUp.Base.ViewModel.User
         [JsonIgnore]
         public bool IsRank { get { return this.Ranks.Count > 0; } }
 
+        [DataMember]
+        public bool IsPrimary { get; set; }
+
         public UserCurrencyViewModel()
         {
             this.ID = Guid.NewGuid();
