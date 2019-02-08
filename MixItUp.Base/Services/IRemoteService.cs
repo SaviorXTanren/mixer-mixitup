@@ -9,6 +9,7 @@ namespace MixItUp.Base.Services
 {
     public abstract class RemoteServiceBase : IRemoteService
     {
+        public const string AuthenticateMethodName = "Authenticate";
         public const string RequestProfilesMethodName = "RequestProfiles";
         public const string SendProfilesMethodName = "SendProfiles";
         public const string RequestProfileBoardMethodName = "RequestProfileBoard";
@@ -34,6 +35,8 @@ namespace MixItUp.Base.Services
 
         public void ListenForSendCommand(Action<Guid> action) { this.connection.Listen(SendCommandMethodName, action); }
 
+        public async Task Authenticate(Guid clientID, string secret, string accessToken) { await this.AsyncWrapper(this.connection.Send(AuthenticateMethodName, clientID, secret, accessToken)); }
+
         public async Task RequestProfiles() { await this.AsyncWrapper(this.connection.Send(RequestProfilesMethodName)); }
 
         public async Task SendProfiles(IEnumerable<RemoteProfileModel> profiles) { await this.AsyncWrapper(this.connection.Send(SendProfilesMethodName, profiles)); }
@@ -56,6 +59,8 @@ namespace MixItUp.Base.Services
 
     public interface IRemoteService
     {
+        Task Authenticate(Guid clientID, string secret, string accessToken);
+
         Task RequestProfiles();
 
         Task SendProfiles(IEnumerable<RemoteProfileModel> profiles);

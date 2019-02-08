@@ -36,14 +36,17 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public async Task<bool> TestConnection()
+        public async Task<int> TestConnection()
         {
-            List<bool> results = new List<bool>();
+            int count = 0;
             foreach (WebSocketServerBase webSocketServer in this.webSocketServers)
             {
-                results.Add(await webSocketServer.TestConnection());
+                if (await webSocketServer.TestConnection())
+                {
+                    count++;
+                }
             }
-            return results.TrueForAll(r => r);
+            return count;
         }
 
         protected override async Task ProcessConnection(HttpListenerContext listenerContext)

@@ -215,6 +215,10 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 this.SetCustomInteractiveGame(new BlackOps4DropMapInteractiveControl(this.selectedGame, this.selectedGameVersion));
             }
+            else if (this.selectedGame.id == InteractiveSharedProjectModel.ApexLegendsDropMap.GameID)
+            {
+                this.SetCustomInteractiveGame(new ApexLegendsDropMapInteractiveControl(this.selectedGame, this.selectedGameVersion));
+            }
             else if (this.selectedGame.id == InteractiveSharedProjectModel.MixerPaint.GameID)
             {
                 this.SetCustomInteractiveGame(new MixerPaintInteractiveControl(this.selectedGame, this.selectedGameVersion));
@@ -344,11 +348,14 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void GroupsButton_Click(object sender, RoutedEventArgs e)
         {
-            InteractiveSceneUserGroupsDialogControl dialogControl = new InteractiveSceneUserGroupsDialogControl(this.selectedGame, this.selectedScene);
-            await this.Window.RunAsyncOperation(async () =>
+            if (this.selectedGame != null && this.selectedScene != null)
             {
-                await MessageBoxHelper.ShowCustomDialog(dialogControl);
-            });
+                InteractiveSceneUserGroupsDialogControl dialogControl = new InteractiveSceneUserGroupsDialogControl(this.selectedGame, this.selectedScene);
+                await this.Window.RunAsyncOperation(async () =>
+                {
+                    await MessageBoxHelper.ShowCustomDialog(dialogControl);
+                });
+            }
         }
 
         private async void InteractiveGamesComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -534,7 +541,10 @@ namespace MixItUp.WPF.Controls.MainControls
             if (this.IsCustomInteractiveGame)
             {
                 CustomInteractiveGameControl gameControl = (CustomInteractiveGameControl)this.CustomInteractiveContentControl.Content;
-                await gameControl.GameConnected();
+                if (!await gameControl.GameConnected())
+                {
+                    await this.InteractiveGameDisconnected();
+                }
             }
         }
 

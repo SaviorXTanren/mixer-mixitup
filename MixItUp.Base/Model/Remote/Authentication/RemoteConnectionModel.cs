@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace MixItUp.Base.Model.Remote
+namespace MixItUp.Base.Model.Remote.Authentication
 {
     [DataContract]
-    public class RemoteDeviceModel
+    public class RemoteConnectionModel
     {
         [DataMember]
         public Guid ID { get; set; }
@@ -12,12 +12,9 @@ namespace MixItUp.Base.Model.Remote
         [DataMember]
         public string Name { get; set; }
 
-        [DataMember]
-        public string GroupID { get; set; }
+        public RemoteConnectionModel() { }
 
-        public RemoteDeviceModel() { }
-
-        public RemoteDeviceModel(string name)
+        public RemoteConnectionModel(string name)
         {
             this.ID = Guid.NewGuid();
             this.Name = name;

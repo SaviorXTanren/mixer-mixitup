@@ -5,11 +5,11 @@ using System.Windows;
 namespace MixItUp.WPF.Controls.Interactive
 {
     /// <summary>
-    /// Interaction logic for BlackOps4DropMapInteractiveControl.xaml
+    /// Interaction logic for ApexLegendsDropMapInteractiveControl.xaml
     /// </summary>
-    public partial class BlackOps4DropMapInteractiveControl : DropMapInterativeGameControl
+    public partial class ApexLegendsDropMapInteractiveControl : DropMapInterativeGameControl
     {
-        public BlackOps4DropMapInteractiveControl(InteractiveGameModel game, InteractiveGameVersionModel version)
+        public ApexLegendsDropMapInteractiveControl(InteractiveGameModel game, InteractiveGameVersionModel version)
             : base(game, version)
         {
             InitializeComponent();

@@ -268,6 +268,7 @@ namespace MixItUp.Base.ViewModel.User
                 this.GameWispUserID = this.GetOptionValue<uint>(optionsJObj, "GameWispUserID");
                 this.PatreonUserID = this.GetOptionValue<string>(optionsJObj, "PatreonUserID");
                 this.ModerationStrikes = this.GetOptionValue<uint>(optionsJObj, "ModerationStrikes");
+                this.CustomTitle = this.GetOptionValue<string>(optionsJObj, "CustomTitle");
             }
         }
 
@@ -547,6 +548,7 @@ namespace MixItUp.Base.ViewModel.User
             options["GameWispUserID"] = this.GameWispUserID;
             options["PatreonUserID"] = this.PatreonUserID;
             options["ModerationStrikes"] = this.ModerationStrikes;
+            options["CustomTitle"] = this.CustomTitle;
             return options.ToString();
         }
 

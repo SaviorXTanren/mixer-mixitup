@@ -1,0 +1,24 @@
+{
+  "name": "apex-legends-drop-map",
+  "version": "0.1.0",
+  "description": "Apex Legends Drop Map",
+  "scripts": {
+    "fmt:style": "prettier --single-quote --trailing-comma all --print-width 100 --write \"src/**/*.js\""
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@mixer/cdk-webpack-plugin": "^0.1.4",
+    "clean-webpack-plugin": "^0.1.17",
+    "copy-webpack-plugin": "^4.4.0",
+    "prettier": "^1.11.1",
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.9"
+  },
+  "dependencies": {},
+  "author": "SaviorXTanren",
+  "keywords": [
+    "apex legends",
+    "drop map"
+  ]
+}

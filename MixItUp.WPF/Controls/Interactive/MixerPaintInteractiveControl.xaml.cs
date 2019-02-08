@@ -21,7 +21,7 @@ namespace MixItUp.WPF.Controls.Interactive
             InitializeComponent();
         }
 
-        protected override async Task GameConnectedInternal()
+        protected override async Task<bool> GameConnectedInternal()
         {
             InteractiveConnectedSceneGroupCollectionModel sceneGroups = await ChannelSession.Interactive.GetScenes();
             if (sceneGroups != null)
@@ -30,8 +30,13 @@ namespace MixItUp.WPF.Controls.Interactive
                 if (this.scene != null)
                 {
                     this.drawButton = this.scene.buttons.FirstOrDefault(c => c.controlID.Equals("draw"));
+                    if (this.drawButton != null)
+                    {
+                        return true;
+                    }
                 }
             }
+            return false;
         }
 
         protected override Task OnInteractiveControlUsed(UserViewModel user, InteractiveGiveInputModel input, InteractiveConnectedControlCommand command)

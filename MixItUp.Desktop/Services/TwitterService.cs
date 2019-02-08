@@ -20,7 +20,7 @@ namespace MixItUp.Base.Services
     [DataContract]
     public class TwitterService : ITwitterService, IDisposable
     {
-        private const string ClientID = "3xNVEnW8FVc4iywkW8CCDZQsC";
+        private const string ClientID = "gV0xMGKNgAaaqQ0XnR4JoX91U";
 
         private OAuthTokenModel token;
         private IAuthorizer auth;
@@ -181,7 +181,7 @@ namespace MixItUp.Base.Services
             return results;
         }
 
-        public async Task SendTweet(string tweet, string imagePath = null)
+        public async Task<bool> SendTweet(string tweet, string imagePath = null)
         {
             try
             {
@@ -215,22 +215,27 @@ namespace MixItUp.Base.Services
                         catch (Exception ex) { Logger.Log(ex); }
 
                         await twitterCtx.TweetAsync(tweet, mediaIds);
+
+                        return true;
                     }
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
+            return false;
         }
 
-        public async Task UpdateName(string name)
+        public async Task<bool> UpdateName(string name)
         {
             try
             {
                 using (var twitterCtx = new TwitterContext(this.auth))
                 {
                     await twitterCtx.UpdateAccountProfileAsync(name, null, null, null, true);
+                    return true;
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
+            return false;
         }
 
         public OAuthTokenModel GetOAuthTokenCopy()

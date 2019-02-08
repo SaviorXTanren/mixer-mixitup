@@ -76,7 +76,7 @@ namespace MixItUp.WPF.Controls.Interactive
             this.WinnerStackPanel.Visibility = Visibility.Visible;
         }
 
-        protected override async Task GameConnectedInternal()
+        protected override async Task<bool> GameConnectedInternal()
         {
             this.Dispatcher.Invoke(() =>
             {
@@ -98,13 +98,17 @@ namespace MixItUp.WPF.Controls.Interactive
             settings[MapSelectionSettingProperty] = this.MapComboBox.SelectedIndex;
             this.SaveCustomSettings(settings);
 
-            await base.GameConnectedInternal();
+            if (await base.GameConnectedInternal())
+            {
+                PUBGMap map = (PUBGMap)this.MapComboBox.SelectedItem;
 
-            PUBGMap map = (PUBGMap)this.MapComboBox.SelectedItem;
+                InteractiveConnectedButtonControlModel control = new InteractiveConnectedButtonControlModel() { controlID = this.positionButton.controlID };
+                control.meta["map"] = map.Map;
+                await ChannelSession.Interactive.UpdateControls(this.scene, new List<InteractiveControlModel>() { control });
 
-            InteractiveConnectedButtonControlModel control = new InteractiveConnectedButtonControlModel() { controlID = this.positionButton.controlID };
-            control.meta["map"] = map.Map;
-            await ChannelSession.Interactive.UpdateControls(this.scene, new List<InteractiveControlModel>() { control });
+                return true;
+            }
+            return false;
         }
 
         protected override Task GameDisconnectedInternal()
