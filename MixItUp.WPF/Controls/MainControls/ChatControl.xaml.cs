@@ -130,6 +130,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private SemaphoreSlim userUpdateLock = new SemaphoreSlim(1);
         private SemaphoreSlim messageUpdateLock = new SemaphoreSlim(1);
+        private SemaphoreSlim gifSkillPopoutLock = new SemaphoreSlim(1);
 
         private int totalMessages = 0;
         private ScrollViewer chatListScrollViewer;
@@ -993,6 +994,24 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     await this.AddMessage(new ChatMessageViewModel(skill.SkillInstance, skill.User));
                 });
+
+                if (skill.SkillInstance != null && skill.SkillInstance.IsGif)
+                {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    Task.Run(async () =>
+                    {
+                        await this.gifSkillPopoutLock.WaitAndRelease(async () =>
+                        {
+                            await this.Dispatcher.InvokeAsync<Task>(async () =>
+                            {
+                                this.GifSkillPopout.SlideInFromRight();
+                                await Task.Delay(5000);
+                                this.GifSkillPopout.SlideOutToRight();
+                            });
+                        });
+                    });
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                }
             }
         }
 

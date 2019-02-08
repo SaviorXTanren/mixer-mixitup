@@ -108,6 +108,8 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
+                    <ChatControls:GifSkillPopoutControl x:Name="GifSkillPopout" HorizontalAlignment="Right" VerticalAlignment="Top" Visibility="Hidden" />
+
                     <ListView x:Name="ChatList" Grid.Row="0" ContextMenu="{StaticResource ChatListContextMenu}" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch" ScrollViewer.ScrollChanged="ChatList_ScrollChanged">
                         <ListView.Resources>
                             <Style TargetType="ListViewItem">

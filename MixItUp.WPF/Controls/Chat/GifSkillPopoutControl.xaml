@@ -8,6 +8,12 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Image Gif:ImageBehavior.AnimatedSource="{Binding}" Margin="0,-5" />
+        <Border x:Name="ImageBorder" Style="{StaticResource DefaultBorder}">
+            <Border.RenderTransform>
+                <TranslateTransform x:Name="BorderAnimation" />
+            </Border.RenderTransform>
+            
+            <Image x:Name="GifImage" Gif:ImageBehavior.AnimatedSource="{Binding}" Margin="0,-5" />
+        </Border>
     </Grid>
 </UserControl>
