@@ -56,6 +56,16 @@ namespace MixItUp.Base.Actions
         Tooltip,
         [Name("Spark Cost")]
         SparkCost,
+        [Name("Accent Color")]
+        AccentColor,
+        [Name("Focus Color")]
+        FocusColor,
+        [Name("Border Color")]
+        BorderColor,
+        [Name("Background Color")]
+        BackgroundColor,
+        [Name("Background Image")]
+        BackgroundImage,
     }
 
     [DataContract]
@@ -360,6 +370,11 @@ namespace MixItUp.Base.Actions
                                         case InteractiveActionUpdateControlTypeEnum.TextColor: button.textColor = replacementValue; break;
                                         case InteractiveActionUpdateControlTypeEnum.Tooltip: button.tooltip = replacementValue; break;
                                         case InteractiveActionUpdateControlTypeEnum.SparkCost: button.cost = replacementNumberValue; break;
+                                        case InteractiveActionUpdateControlTypeEnum.AccentColor: button.accentColor = replacementValue; break;
+                                        case InteractiveActionUpdateControlTypeEnum.FocusColor: button.focusColor = replacementValue; break;
+                                        case InteractiveActionUpdateControlTypeEnum.BorderColor: button.borderColor = replacementValue; break;
+                                        case InteractiveActionUpdateControlTypeEnum.BackgroundColor: button.backgroundColor = replacementValue; break;
+                                        case InteractiveActionUpdateControlTypeEnum.BackgroundImage: button.backgroundImage = replacementValue; break;
                                     }
                                 }
                                 else if (control is InteractiveLabelControlModel)
