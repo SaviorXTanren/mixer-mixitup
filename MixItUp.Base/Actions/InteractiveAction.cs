@@ -54,6 +54,8 @@ namespace MixItUp.Base.Actions
         [Name("Text Size")]
         TextSize,
         Tooltip,
+        [Name("Spark Cost")]
+        SparkCost,
     }
 
     [DataContract]
@@ -346,6 +348,7 @@ namespace MixItUp.Base.Actions
                             if (this.InteractiveType == InteractiveActionTypeEnum.UpdateControl)
                             {
                                 string replacementValue = await this.ReplaceStringWithSpecialModifiers(this.UpdateValue, user, arguments);
+                                int.TryParse(replacementValue, out int replacementNumberValue);
 
                                 if (control is InteractiveButtonControlModel)
                                 {
@@ -356,6 +359,7 @@ namespace MixItUp.Base.Actions
                                         case InteractiveActionUpdateControlTypeEnum.TextSize: button.textSize = replacementValue; break;
                                         case InteractiveActionUpdateControlTypeEnum.TextColor: button.textColor = replacementValue; break;
                                         case InteractiveActionUpdateControlTypeEnum.Tooltip: button.tooltip = replacementValue; break;
+                                        case InteractiveActionUpdateControlTypeEnum.SparkCost: button.cost = replacementNumberValue; break;
                                     }
                                 }
                                 else if (control is InteractiveLabelControlModel)
@@ -375,6 +379,7 @@ namespace MixItUp.Base.Actions
                                     {
                                         case InteractiveActionUpdateControlTypeEnum.Text: textbox.submitText = replacementValue; break;
                                         case InteractiveActionUpdateControlTypeEnum.Tooltip: textbox.placeholder = replacementValue; break;
+                                        case InteractiveActionUpdateControlTypeEnum.SparkCost: textbox.cost = replacementNumberValue; break;
                                     }
                                 }
                             }

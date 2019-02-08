@@ -87,33 +87,33 @@ namespace MixItUp.Base.MixerAPI
                 if (this.HasCooldown)
                 {
                     this.Button.cooldown = this.CooldownTimestamp;
-                }
 
-                Dictionary<InteractiveConnectedSceneModel, List<InteractiveConnectedButtonCommand>> sceneButtons = new Dictionary<InteractiveConnectedSceneModel, List<InteractiveConnectedButtonCommand>>();
+                    Dictionary<InteractiveConnectedSceneModel, List<InteractiveConnectedButtonCommand>> sceneButtons = new Dictionary<InteractiveConnectedSceneModel, List<InteractiveConnectedButtonCommand>>();
 
-                if (!string.IsNullOrEmpty(this.ButtonCommand.CooldownGroupName))
-                {
-                    var otherButtons = ChannelSession.Interactive.ControlCommands.Values.Where(c => c is InteractiveConnectedButtonCommand).Select(c => (InteractiveConnectedButtonCommand)c);
-                    otherButtons = otherButtons.Where(c => this.ButtonCommand.CooldownGroupName.Equals(c.ButtonCommand.CooldownGroupName));
-                    foreach (var otherItem in otherButtons)
+                    if (!string.IsNullOrEmpty(this.ButtonCommand.CooldownGroupName))
                     {
-                        otherItem.Button.cooldown = this.Button.cooldown;
-                        if (!sceneButtons.ContainsKey(otherItem.Scene))
+                        var otherButtons = ChannelSession.Interactive.ControlCommands.Values.Where(c => c is InteractiveConnectedButtonCommand).Select(c => (InteractiveConnectedButtonCommand)c);
+                        otherButtons = otherButtons.Where(c => this.ButtonCommand.CooldownGroupName.Equals(c.ButtonCommand.CooldownGroupName));
+                        foreach (var otherItem in otherButtons)
                         {
-                            sceneButtons[otherItem.Scene] = new List<InteractiveConnectedButtonCommand>();
+                            otherItem.Button.cooldown = this.Button.cooldown;
+                            if (!sceneButtons.ContainsKey(otherItem.Scene))
+                            {
+                                sceneButtons[otherItem.Scene] = new List<InteractiveConnectedButtonCommand>();
+                            }
+                            sceneButtons[otherItem.Scene].Add(otherItem);
                         }
-                        sceneButtons[otherItem.Scene].Add(otherItem);
                     }
-                }
-                else
-                {
-                    sceneButtons[this.Scene] = new List<InteractiveConnectedButtonCommand>();
-                    sceneButtons[this.Scene].Add(this);
-                }
+                    else
+                    {
+                        sceneButtons[this.Scene] = new List<InteractiveConnectedButtonCommand>();
+                        sceneButtons[this.Scene].Add(this);
+                    }
 
-                foreach (var kvp in sceneButtons)
-                {
-                    await ChannelSession.Interactive.UpdateControls(kvp.Key, kvp.Value.Select(b => b.Button));
+                    foreach (var kvp in sceneButtons)
+                    {
+                        await ChannelSession.Interactive.UpdateControls(kvp.Key, kvp.Value.Select(b => b.Button));
+                    }
                 }
             }
         }
