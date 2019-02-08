@@ -53,9 +53,9 @@ namespace MixItUp.WPF.Controls.Dialogs
                 this.PromoteToModButton.Visibility = System.Windows.Visibility.Collapsed;
             }
 
-            if (this.user.IsOnline)
+            if (channelToCheck.online)
             {
-                this.StreamStatusTextBlock.Text = $"{this.user.CurrentViewerCount} Viewers";
+                this.StreamStatusTextBlock.Text = $"{channelToCheck.viewersCurrent} Viewers";
             }
             else
             {
