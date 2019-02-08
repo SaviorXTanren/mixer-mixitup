@@ -55,7 +55,7 @@ namespace MixItUp.WPF.Controls.Dialogs
 
             if (channelToCheck.online)
             {
-                this.StreamStatusTextBlock.Text = $"{this.user.CurrentViewerCount} Viewers";
+                this.StreamStatusTextBlock.Text = $"{channelToCheck.viewersCurrent} Viewers";
             }
             else
             {
