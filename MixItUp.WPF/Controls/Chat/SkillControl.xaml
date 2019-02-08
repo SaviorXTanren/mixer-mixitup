@@ -22,7 +22,7 @@
         <Image x:Name="SkillImage" Grid.Column="0" Visibility="Collapsed" />
         <MaterialDesign:PopupBox x:Name="GifSkillPopup" Grid.Column="0" Visibility="Collapsed" PopupMode="MouseOver" Margin="0,0" StaysOpen="False" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
             <MaterialDesign:PopupBox.ToggleContent>
-                <Image Gif:ImageBehavior.AnimatedSource="https://xforgeassets002.xboxlive.com/xuid-2535473787585366-public/d091649f-58bd-44a1-951c-d097d893ec2b/giphy_preview_256.gif?width=64&amp;height=64" Width="64" Height="64" />
+                <Image x:Name="GifSkillImage" Gif:ImageBehavior.AnimatedSource="https://xforgeassets002.xboxlive.com/xuid-2535473787585366-public/d091649f-58bd-44a1-951c-d097d893ec2b/giphy_preview_256.gif?width=64&amp;height=64" />
             </MaterialDesign:PopupBox.ToggleContent>
             <Grid Margin="5">
                 <local:GifSkillControl DataContext="{Binding ImageUrl}" />
