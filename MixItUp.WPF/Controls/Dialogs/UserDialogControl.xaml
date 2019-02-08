@@ -33,17 +33,20 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+
+        <Button HorizontalAlignment="Right" VerticalAlignment="Top" IsDefault="True" IsCancel="True" ToolTip="Close" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
+            <Button.CommandParameter>
+                <system:String>Close</system:String>
+            </Button.CommandParameter>
+            <MaterialDesign:PackIcon Kind="Close" Height="24" Width="24" Margin="-13,-10" Style="{StaticResource DefaultPackIcon}" />
+        </Button>
 
         <Grid Grid.Row="0" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             
             <UsersControls:UserProfileAvatarControl x:Name="UserAvatar" Grid.Column="0" />
@@ -85,13 +88,6 @@
                 <TextBlock Grid.Column="0" Grid.Row="10">Stream:</TextBlock>
                 <TextBlock x:Name="StreamStatusTextBlock" Grid.Column="2" Grid.Row="10" />
             </Grid>
-
-            <Button Grid.Column="4" IsDefault="True" IsCancel="True" ToolTip="Close" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}" VerticalAlignment="Top">
-                <Button.CommandParameter>
-                    <system:String>Close</system:String>
-                </Button.CommandParameter>
-                <MaterialDesign:PackIcon Kind="Close" Style="{StaticResource DefaultPackIcon}" />
-            </Button>
         </Grid>
 
         <Grid Grid.Row="2" HorizontalAlignment="Center">
@@ -127,29 +123,38 @@
 
         </Grid>
 
-        <Grid Grid.Row="4" MaxWidth="250">
+        <Grid Grid.Row="4" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <Button x:Name="FollowButton" Grid.Column="0" ToolTip="Follow" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
                 <Button.CommandParameter>
                     <system:String>Follow</system:String>
                 </Button.CommandParameter>
-                <MaterialDesign:PackIcon Kind="AccountPlus" Style="{StaticResource DefaultPackIcon}" />
+                <MaterialDesign:PackIcon Kind="AccountPlus" Height="24" Width="24" Margin="-13,-10" Style="{StaticResource DefaultPackIcon}" />
             </Button>
-
             <Button x:Name="UnfollowButton" Visibility="Collapsed" Grid.Column="0" ToolTip="Unfollow" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
                 <Button.CommandParameter>
                     <system:String>Unfollow</system:String>
                 </Button.CommandParameter>
-                <MaterialDesign:PackIcon Kind="AccountMinus" Style="{StaticResource DefaultPackIcon}" />
+                <MaterialDesign:PackIcon Kind="AccountMinus" Height="24" Width="24" Margin="-13,-10" Style="{StaticResource DefaultPackIcon}" />
             </Button>
 
             <Button x:Name="PromoteToModButton" Grid.Column="2" ToolTip="Promote To Mod" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
@@ -157,16 +162,15 @@
                     <system:String>PromoteToMod</system:String>
                 </Button.CommandParameter>
                 <StackPanel Orientation="Horizontal">
-                    <MaterialDesign:PackIcon Kind="SecurityAccount" Style="{StaticResource DefaultPackIcon}" />
+                    <MaterialDesign:PackIcon Kind="SecurityAccount" Height="24" Width="24" Margin="-13,-10" Style="{StaticResource DefaultPackIcon}" />
                 </StackPanel>
             </Button>
-            
             <Button x:Name="DemoteFromModButton" Visibility="Collapsed" Grid.Column="2" ToolTip="Demote From Mod" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
                 <Button.CommandParameter>
                     <system:String>DemoteFromMod</system:String>
                 </Button.CommandParameter>
                 <StackPanel Orientation="Horizontal">
-                    <MaterialDesign:PackIcon Kind="SecurityClose" Style="{StaticResource DefaultPackIcon}" />
+                    <MaterialDesign:PackIcon Kind="SecurityClose" Height="24" Width="24" Margin="-13,-10" Style="{StaticResource DefaultPackIcon}" />
                 </StackPanel>
             </Button>
 
@@ -175,7 +179,7 @@
                     <system:String>MixerPage</system:String>
                 </Button.CommandParameter>
                 <StackPanel Orientation="Horizontal">
-                    <MaterialDesign:PackIcon Kind="Link" Style="{StaticResource DefaultPackIcon}" />
+                    <MaterialDesign:PackIcon Kind="Link" Height="24" Width="24" Margin="-13,-10" Style="{StaticResource DefaultPackIcon}" />
                 </StackPanel>
             </Button>
 
@@ -184,60 +188,60 @@
                     <system:String>EditUser</system:String>
                 </Button.CommandParameter>
                 <StackPanel Orientation="Horizontal">
-                    <MaterialDesign:PackIcon Kind="AccountEdit" Style="{StaticResource DefaultPackIcon}" />
+                    <MaterialDesign:PackIcon Kind="AccountEdit" Height="24" Width="24" Margin="-13,-10" Style="{StaticResource DefaultPackIcon}" />
                 </StackPanel>
             </Button>
-        </Grid>
 
-        <Grid Grid.Row="6" MaxWidth="250">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+            <Border Grid.Column="8" Style="{StaticResource DefaultBorder}" />
 
-            <Button Grid.Column="0" ToolTip="Purge" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
+            <Button Grid.Column="10" ToolTip="Purge" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
                 <Button.CommandParameter>
                     <system:String>Purge</system:String>
                 </Button.CommandParameter>
-                <MaterialDesign:PackIcon Kind="Broom" Style="{StaticResource DefaultPackIcon}" />
+                <MaterialDesign:PackIcon Kind="Broom" Height="24" Width="24" Margin="-13,-10" Style="{StaticResource DefaultPackIcon}" />
             </Button>
 
-            <Button Grid.Column="2" ToolTip="Timeout 1 Min" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
+            <Button Grid.Column="12" ToolTip="Timeout 1 Min" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
                 <Button.CommandParameter>
                     <system:String>Timeout1</system:String>
                 </Button.CommandParameter>
-                <StackPanel Orientation="Horizontal">
-                    <MaterialDesign:PackIcon Kind="Timer" Style="{StaticResource DefaultPackIcon}" />
-                    <TextBlock Foreground="{StaticResource MaterialDesignBody}">1</TextBlock>
-                </StackPanel>
+                <Grid Margin="-13,-10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <MaterialDesign:PackIcon Grid.Column="0" Kind="Timer" Height="24" Width="24" Style="{StaticResource DefaultPackIcon}" />
+                    <TextBlock Grid.Column="1" Foreground="{StaticResource MaterialDesignBody}">1</TextBlock>
+                </Grid>
             </Button>
 
-            <Button Grid.Column="4" ToolTip="Timeout 5 Min" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
+            <Button Grid.Column="14" ToolTip="Timeout 5 Min" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
                 <Button.CommandParameter>
                     <system:String>Timeout5</system:String>
                 </Button.CommandParameter>
-                <StackPanel Orientation="Horizontal">
-                    <MaterialDesign:PackIcon Kind="Timer" Style="{StaticResource DefaultPackIcon}" />
-                    <TextBlock Foreground="{StaticResource MaterialDesignBody}">5</TextBlock>
-                </StackPanel>
+                <Grid Margin="-13,-10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <MaterialDesign:PackIcon Grid.Column="0" Kind="Timer" Height="24" Width="24" Style="{StaticResource DefaultPackIcon}" />
+                    <TextBlock Grid.Column="5" Foreground="{StaticResource MaterialDesignBody}">5</TextBlock>
+                </Grid>
             </Button>
 
-            <Button x:Name="BanButton" Grid.Column="6" ToolTip="Ban" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
+            <Button x:Name="BanButton" Grid.Column="16" ToolTip="Ban" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
                 <Button.CommandParameter>
                     <system:String>Ban</system:String>
                 </Button.CommandParameter>
-                <MaterialDesign:PackIcon Kind="BlockHelper" Style="{StaticResource DefaultPackIcon}" />
+                <MaterialDesign:PackIcon Kind="BlockHelper" Height="24" Width="24" Margin="-13,-10" Style="{StaticResource DefaultPackIcon}" />
             </Button>
-            <Button x:Name="UnbanButton" Visibility="Collapsed" Grid.Column="6" ToolTip="Unban" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
+            <Button x:Name="UnbanButton" Visibility="Collapsed" Grid.Column="16" ToolTip="Unban" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
                 <Button.CommandParameter>
                     <system:String>Unban</system:String>
                 </Button.CommandParameter>
-                <MaterialDesign:PackIcon Kind="HumanHandsup" Style="{StaticResource DefaultPackIcon}" />
+                <MaterialDesign:PackIcon Kind="HumanHandsup" Height="24" Width="24" Margin="-13,-10" Style="{StaticResource DefaultPackIcon}" />
             </Button>
         </Grid>
     </Grid>
