@@ -46,6 +46,7 @@ namespace MixItUp.WPF.Controls.Command
             this.Requirements.SettingsRequirement.HideDeleteChatCommandWhenRun();
 
             this.ButtonTriggerComboBox.ItemsSource = EnumHelper.GetEnumNames<InteractiveButtonCommandTriggerType>();
+            this.HeldRateTextBox.Text = "1";
 
             if (this.Control != null)
             {
@@ -65,6 +66,7 @@ namespace MixItUp.WPF.Controls.Command
             {
                 this.SceneTextBox.Text = this.command.SceneID;
                 this.ButtonTriggerComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.Trigger);
+                this.HeldRateTextBox.Text = this.command.HeldRate.ToString();
                 this.UnlockedControl.Unlocked = this.command.Unlocked;
                 this.Requirements.SetRequirements(this.command.Requirements);
 
@@ -83,6 +85,16 @@ namespace MixItUp.WPF.Controls.Command
             {
                 await MessageBoxHelper.ShowMessageDialog("An trigger type must be selected");
                 return false;
+            }
+
+            InteractiveButtonCommandTriggerType trigger = EnumHelper.GetEnumValueFromString<InteractiveButtonCommandTriggerType>((string)this.ButtonTriggerComboBox.SelectedItem);
+            if (trigger == InteractiveButtonCommandTriggerType.MouseKeyHeld)
+            {
+                if (string.IsNullOrEmpty(this.HeldRateTextBox.Text) || !int.TryParse(this.HeldRateTextBox.Text, out int heldRate) || heldRate < 1)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("A valid held rate of 1 or greater must be entered");
+                    return false;
+                }
             }
 
             if (!int.TryParse(this.SparkCostTextBox.Text, out int sparkCost) || sparkCost < 0)
@@ -120,10 +132,32 @@ namespace MixItUp.WPF.Controls.Command
                 this.command.Unlocked = this.UnlockedControl.Unlocked;
                 this.command.Requirements = requirements;
 
+                if (this.command.Trigger == InteractiveButtonCommandTriggerType.MouseKeyHeld)
+                {
+                    int.TryParse(this.HeldRateTextBox.Text, out int heldRate);
+                    this.command.HeldRate = heldRate;
+                }
+
                 await ChannelSession.Connection.UpdateInteractiveGameVersion(this.Version);
                 return this.command;
             }
             return null;
+        }
+
+        private void ButtonTriggerComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (this.ButtonTriggerComboBox.SelectedIndex >= 0)
+            {
+                InteractiveButtonCommandTriggerType trigger = EnumHelper.GetEnumValueFromString<InteractiveButtonCommandTriggerType>((string)this.ButtonTriggerComboBox.SelectedItem);
+                if (trigger == InteractiveButtonCommandTriggerType.MouseKeyHeld)
+                {
+                    this.HeldRateTextBox.Visibility = System.Windows.Visibility.Visible;
+                }
+                else
+                {
+                    this.HeldRateTextBox.Visibility = System.Windows.Visibility.Collapsed;
+                }
+            }
         }
     }
 }

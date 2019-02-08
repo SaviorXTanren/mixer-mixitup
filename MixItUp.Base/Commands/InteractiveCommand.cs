@@ -21,6 +21,8 @@ namespace MixItUp.Base.Commands
         MouseKeyDown,
         [Name("Mouse/Key Up")]
         MouseKeyUp,
+        [Name("Mouse/Key Held")]
+        MouseKeyHeld,
     }
 
     public enum InteractiveJoystickSetupType
@@ -80,12 +82,23 @@ namespace MixItUp.Base.Commands
         [JsonProperty]
         public InteractiveButtonCommandTriggerType Trigger { get; set; }
 
+        [JsonProperty]
+        public int HeldRate { get; set; }
+
+        [JsonIgnore]
+        public bool IsBeingHeld { get; set; }
+
         public InteractiveButtonCommand() { }
 
         public InteractiveButtonCommand(InteractiveGameModel game, InteractiveSceneModel scene, InteractiveButtonControlModel control, InteractiveButtonCommandTriggerType eventType, RequirementViewModel requirements)
+            : this(game, scene, control, eventType, 0, requirements)
+        { }
+
+        public InteractiveButtonCommand(InteractiveGameModel game, InteractiveSceneModel scene, InteractiveButtonControlModel control, InteractiveButtonCommandTriggerType eventType, int heldRate, RequirementViewModel requirements)
             : base(game, scene, control, EnumHelper.GetEnumName(eventType), requirements)
         {
             this.Trigger = eventType;
+            this.HeldRate = heldRate;
         }
 
         [JsonIgnore]
@@ -122,6 +135,23 @@ namespace MixItUp.Base.Commands
 
         [JsonIgnore]
         public override string EventTypeString { get { return this.Trigger.ToString().ToLower(); } }
+
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
+        {
+            if (this.Trigger == InteractiveButtonCommandTriggerType.MouseKeyHeld)
+            {
+                do
+                {
+                    await base.PerformInternal(user, arguments, extraSpecialIdentifiers, token);
+
+                    await Task.Delay(this.HeldRate * 1000);
+                } while (this.IsBeingHeld);
+            }
+            else
+            {
+                await base.PerformInternal(user, arguments, extraSpecialIdentifiers, token);
+            }
+        }
 
         public override async Task<bool> CheckCooldownRequirement(UserViewModel user)
         {

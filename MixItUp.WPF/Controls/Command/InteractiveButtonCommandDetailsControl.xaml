@@ -44,17 +44,19 @@
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <ComboBox x:Name="ButtonTriggerComboBox" Grid.Column="0" IsEnabled="False" MaterialDesign:HintAssist.Hint="Button Trigger" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200" />
+                <ComboBox x:Name="ButtonTriggerComboBox" Grid.Column="0" IsEnabled="False" MaterialDesign:HintAssist.Hint="Button Trigger" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="160" SelectionChanged="ButtonTriggerComboBox_SelectionChanged" />
+                <TextBox x:Name="HeldRateTextBox" Grid.Column="1" Visibility="Collapsed" Margin="20,0,0,0" MaterialDesign:HintAssist.Hint="Rate (Secs)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="60" />
 
-                <TextBox x:Name="SparkCostTextBox" Grid.Column="2" IsEnabled="False" MaterialDesign:HintAssist.Hint="Cost" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
+                <TextBox x:Name="SparkCostTextBox" Grid.Column="3" IsEnabled="False" MaterialDesign:HintAssist.Hint="Cost" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="60" />
 
-                <local:UnlockedCommandControl x:Name="UnlockedControl" Grid.Column="4" HorizontalAlignment="Center" />
+                <local:UnlockedCommandControl x:Name="UnlockedControl" Grid.Column="5" HorizontalAlignment="Center" />
             </Grid>
         </Grid>
 

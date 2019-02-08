@@ -88,6 +88,18 @@ namespace MixItUp.Base.MixerAPI
                 {
                     return inputEvent.Equals("mouseup") || inputEvent.Equals("keyup");
                 }
+                else if (this.ButtonCommand.Trigger == InteractiveButtonCommandTriggerType.MouseKeyHeld)
+                {
+                    if (inputEvent.Equals("mousedown") || inputEvent.Equals("keydown"))
+                    {
+                        this.ButtonCommand.IsBeingHeld = true;
+                        return true;
+                    }
+                    else if (inputEvent.Equals("mouseup") || inputEvent.Equals("keyup"))
+                    {
+                        this.ButtonCommand.IsBeingHeld = false;
+                    }
+                }
             }
             return false;
         }
