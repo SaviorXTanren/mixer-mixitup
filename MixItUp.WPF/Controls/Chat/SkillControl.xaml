@@ -5,7 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Chat"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:Gif="http://wpfanimatedgif.codeplex.com"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Margin="5,0">
@@ -22,7 +21,7 @@
         <Image x:Name="SkillImage" Grid.Column="0" Visibility="Collapsed" />
         <MaterialDesign:PopupBox x:Name="GifSkillPopup" Grid.Column="0" Visibility="Collapsed" PopupMode="MouseOver" Margin="0,0" StaysOpen="False" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
             <MaterialDesign:PopupBox.ToggleContent>
-                <Image x:Name="GifSkillImage" Gif:ImageBehavior.AnimatedSource="https://xforgeassets002.xboxlive.com/xuid-2535473787585366-public/d091649f-58bd-44a1-951c-d097d893ec2b/giphy_preview_256.gif?width=64&amp;height=64" />
+                <MaterialDesign:PackIcon x:Name="GifSkillIcon" Kind="Image" Style="{StaticResource DefaultPackIcon}" />
             </MaterialDesign:PopupBox.ToggleContent>
             <Grid Margin="5">
                 <local:GifSkillControl DataContext="{Binding ImageUrl}" />

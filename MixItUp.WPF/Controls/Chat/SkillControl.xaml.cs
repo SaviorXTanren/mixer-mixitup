@@ -33,7 +33,7 @@ namespace MixItUp.WPF.Controls.Chat
         public void UpdateSizing()
         {
             this.SkillImage.Height = this.SkillImage.Width = ChannelSession.Settings.ChatFontSize * 2;
-            this.GifSkillImage.Height = this.GifSkillImage.Width = ChannelSession.Settings.ChatFontSize * 2;
+            this.GifSkillIcon.Height = this.GifSkillIcon.Width = ChannelSession.Settings.ChatFontSize * 2;
             this.SkillNameTextBlock.FontSize = ChannelSession.Settings.ChatFontSize;
             this.SparkIcon.Height = this.SparkIcon.Width = ChannelSession.Settings.ChatFontSize + 2;
             this.SkillCostTextBlock.FontSize = ChannelSession.Settings.ChatFontSize;
