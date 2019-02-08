@@ -179,7 +179,7 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <Image Source="https://mixer.com/api/v1/users/7207866/avatar?w=64&amp;h=64" Grid.Row="0" HorizontalAlignment="Center" />
+                            <Image Source="https://mixer.com/api/v1/users/7207866/avatar" Grid.Row="0" Width="64" Height="64" HorizontalAlignment="Center" />
 
                             <TextBlock Grid.Row="2" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}">SaviorXTanren</TextBlock>
 
@@ -194,7 +194,7 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <Image Source="https://mixer.com/api/v1/users/7834677/avatar?w=64&amp;h=64" Grid.Row="0" HorizontalAlignment="Center" />
+                            <Image Source="https://mixer.com/api/v1/users/7834677/avatar" Grid.Row="0" Width="64" Height="64" HorizontalAlignment="Center" />
 
                             <TextBlock Grid.Row="2" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}">VerbatimT</TextBlock>
 
@@ -209,7 +209,7 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <Image Source="https://mixer.com/api/v1/users/3758644/avatar?w=64&amp;h=64" Grid.Row="0" HorizontalAlignment="Center" />
+                            <Image Source="https://mixer.com/api/v1/users/3758644/avatar" Grid.Row="0" Width="64" Height="64" HorizontalAlignment="Center" />
 
                             <TextBlock Grid.Row="2" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}">TyrenDes</TextBlock>
 
