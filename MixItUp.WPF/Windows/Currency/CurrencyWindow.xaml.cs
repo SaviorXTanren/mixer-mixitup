@@ -86,6 +86,7 @@ namespace MixItUp.WPF.Windows.Currency
             if (this.currency != null)
             {
                 this.NameTextBox.Text = this.currency.Name;
+                this.IsPrimaryToggleButton.IsChecked = this.currency.IsPrimary;
 
                 if (this.currency.MaxAmount != int.MaxValue)
                 {
@@ -706,6 +707,16 @@ namespace MixItUp.WPF.Windows.Currency
                     this.currency.Ranks = new List<UserRankViewModel>();
                     this.currency.RankChangedCommand = null;
                 }
+
+                foreach (var otherCurrencies in ChannelSession.Settings.Currencies)
+                {
+                    if (otherCurrencies.Value.IsRank == this.currency.IsRank)
+                    {
+                        // Turn off primary for all other currencies/ranks of the same kind
+                        otherCurrencies.Value.IsPrimary = false;
+                    }
+                }
+                this.currency.IsPrimary = this.IsPrimaryToggleButton.IsChecked.GetValueOrDefault();
 
                 await ChannelSession.SaveSettings();
 

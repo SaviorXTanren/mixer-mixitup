@@ -19,7 +19,13 @@ namespace MixItUp.WPF.Util
         Timeout5,
         Ban,
         Unban,
-        Close
+        Close,
+        Follow,
+        Unfollow,
+        PromoteToMod,
+        DemoteFromMod,
+        MixerPage,
+        EditUser,
     }
 
     public static class MessageBoxHelper

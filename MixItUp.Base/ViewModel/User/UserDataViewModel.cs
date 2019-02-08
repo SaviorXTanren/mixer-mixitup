@@ -318,7 +318,12 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                UserCurrencyDataViewModel currency = this.CurrencyAmounts.Values.FirstOrDefault(c => !c.Currency.IsRank);
+                UserCurrencyDataViewModel currency = this.CurrencyAmounts.Values.FirstOrDefault(c => !c.Currency.IsRank && c.Currency.IsPrimary);
+                if (currency == null)
+                {
+                    currency = this.CurrencyAmounts.Values.FirstOrDefault(c => !c.Currency.IsRank);
+                }
+
                 if (currency != null)
                 {
                     return currency.Amount;
@@ -333,7 +338,12 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 UserRankViewModel rank = UserCurrencyViewModel.NoRank;
-                UserCurrencyDataViewModel currency = this.CurrencyAmounts.Values.FirstOrDefault(c => c.Currency.IsRank);
+                UserCurrencyDataViewModel currency = this.CurrencyAmounts.Values.FirstOrDefault(c => c.Currency.IsRank && c.Currency.IsPrimary);
+                if (currency == null)
+                {
+                    currency = this.CurrencyAmounts.Values.FirstOrDefault(c => c.Currency.IsRank);
+                }
+
                 if (currency != null)
                 {
                     rank = currency.GetRank();

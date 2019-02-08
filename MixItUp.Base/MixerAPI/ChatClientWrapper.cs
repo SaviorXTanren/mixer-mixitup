@@ -228,6 +228,7 @@ namespace MixItUp.Base.MixerAPI
             if (this.Client != null)
             {
                 await ChannelSession.Connection.AddUserRoles(ChannelSession.Channel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Banned });
+                await user.RefreshDetails(true);
             }
         }
 
@@ -236,6 +237,25 @@ namespace MixItUp.Base.MixerAPI
             if (this.Client != null)
             {
                 await ChannelSession.Connection.RemoveUserRoles(ChannelSession.Channel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Banned });
+                await user.RefreshDetails(true);
+            }
+        }
+
+        public async Task ModUser(UserViewModel user)
+        {
+            if (this.Client != null)
+            {
+                await ChannelSession.Connection.AddUserRoles(ChannelSession.Channel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Mod });
+                await user.RefreshDetails(true);
+            }
+        }
+
+        public async Task UnModUser(UserViewModel user)
+        {
+            if (this.Client != null)
+            {
+                await ChannelSession.Connection.RemoveUserRoles(ChannelSession.Channel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Mod });
+                await user.RefreshDetails(true);
             }
         }
 

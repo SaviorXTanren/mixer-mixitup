@@ -16,7 +16,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
 
-        <MaterialDesign:PackIcon Kind="AccountSettingsVariant" x:Key="UserRolePopupBoxIcon" Style="{StaticResource DefaultPackIcon}" x:Shared="False" Width="24" Height="24" ToolTip="User Role" />
+        <MaterialDesign:PackIcon Kind="AccountKey" x:Key="UserRolePopupBoxIcon" Style="{StaticResource DefaultPackIcon}" x:Shared="False" Width="24" Height="24" ToolTip="User Role" />
 
         <MaterialDesign:PackIcon Kind="Timer" x:Key="CooldownPopupBoxIcon" Style="{StaticResource DefaultPackIcon}" x:Shared="False" Width="24" Height="24" ToolTip="Cooldown" />
 
