@@ -268,6 +268,7 @@ namespace MixItUp.Base.ViewModel.User
                 this.GameWispUserID = this.GetOptionValue<uint>(optionsJObj, "GameWispUserID");
                 this.PatreonUserID = this.GetOptionValue<string>(optionsJObj, "PatreonUserID");
                 this.ModerationStrikes = this.GetOptionValue<uint>(optionsJObj, "ModerationStrikes");
+                this.CustomTitle = this.GetOptionValue<string>(optionsJObj, "CustomTitle");
             }
         }
 
@@ -317,7 +318,12 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                UserCurrencyDataViewModel currency = this.CurrencyAmounts.Values.FirstOrDefault(c => !c.Currency.IsRank);
+                UserCurrencyDataViewModel currency = this.CurrencyAmounts.Values.FirstOrDefault(c => !c.Currency.IsRank && c.Currency.IsPrimary);
+                if (currency == null)
+                {
+                    currency = this.CurrencyAmounts.Values.FirstOrDefault(c => !c.Currency.IsRank);
+                }
+
                 if (currency != null)
                 {
                     return currency.Amount;
@@ -332,7 +338,12 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 UserRankViewModel rank = UserCurrencyViewModel.NoRank;
-                UserCurrencyDataViewModel currency = this.CurrencyAmounts.Values.FirstOrDefault(c => c.Currency.IsRank);
+                UserCurrencyDataViewModel currency = this.CurrencyAmounts.Values.FirstOrDefault(c => c.Currency.IsRank && c.Currency.IsPrimary);
+                if (currency == null)
+                {
+                    currency = this.CurrencyAmounts.Values.FirstOrDefault(c => c.Currency.IsRank);
+                }
+
                 if (currency != null)
                 {
                     rank = currency.GetRank();
@@ -547,6 +558,7 @@ namespace MixItUp.Base.ViewModel.User
             options["GameWispUserID"] = this.GameWispUserID;
             options["PatreonUserID"] = this.PatreonUserID;
             options["ModerationStrikes"] = this.ModerationStrikes;
+            options["CustomTitle"] = this.CustomTitle;
             return options.ToString();
         }
 

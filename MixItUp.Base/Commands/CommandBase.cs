@@ -199,7 +199,7 @@ namespace MixItUp.Base.Commands
                 }
                 catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
 
-                ChannelSession.Services.Telemetry.TrackCommand(this.Type);
+                ChannelSession.Services.Telemetry.TrackCommand(this.Type, this.IsBasic);
 
                 this.OnCommandStart(this, new EventArgs());
 

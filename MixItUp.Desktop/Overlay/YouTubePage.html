@@ -1,0 +1,137 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <!-- Use lastest version of Internet Explorer -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <meta charset="utf-8" />
+    <title>Mix It Up - YouTube</title>
+</head>
+<body onload="LoadYouTubeIframeAPI()">
+    <div id="player"/>
+
+    <script>
+        var player;
+        var isPlaying = false;
+        var isReady = false;
+
+        function LoadYouTubeIframeAPI() {
+            var tag = document.createElement('script');
+            tag.src = "https://www.youtube.com/iframe_api";
+            var firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        }
+
+        function onYouTubeIframeAPIReady() {
+            var playerParams =
+            {
+                height: '390',
+                width: '640',
+                videoId: 'RvCVgu_MQpU',
+                playerVars:
+                {
+                    "enablejsapi": 1,
+                    "origin": document.domain,
+                    "rel": 0
+                },
+                events:
+                {
+                    "onReady": onPlayerReady,
+                    "onError": onPlayerError,
+                    "onStateChange": onPlayerStateChange
+                }
+            };
+
+            player = new YT.Player('player', playerParams);
+        }
+
+        function getStatus() {
+            if (!isReady) return;
+
+            setTimeout(function () {
+                var data = {};
+                data.Type = 1;
+                data.State = 0;
+
+                var playerState = player.getPlayerState();
+                if (playerState == YT.PlayerState.PLAYING || playerState == YT.PlayerState.PAUSED || playerState == YT.PlayerState.ENDED) {
+                    var videoData = player.getVideoData();
+
+                    data.ID = videoData.video_id;
+                    data.Progress = player.getCurrentTime();
+                    data.Length = player.getDuration();
+                    data.Volume = player.getVolume();
+
+                    if (playerState == YT.PlayerState.PLAYING) {
+                        data.State = 1;
+                    }
+                    else if (playerState == YT.PlayerState.PAUSED) {
+                        data.State = 2;
+                    }
+                    else if (playerState == YT.PlayerState.ENDED) {
+                        data.State = 3;
+                    }
+                }
+
+                window.external.SetStatus(JSON.stringify(data));
+            }, 1);
+        }
+
+        function playPause() {
+            if (!isReady) return;
+
+            setTimeout(function () {
+                if (player.getPlayerState() == YT.PlayerState.PLAYING) {
+                    player.pauseVideo();
+                }
+                else if (player.getPlayerState() == YT.PlayerState.PAUSED) {
+                    player.playVideo();
+                }
+            }, 1);
+        }
+
+        function play(itemId, volume) {
+            if (!isReady) return;
+
+            setTimeout(function () {
+                isPlaying = true;
+                player.setVolume(volume);
+                player.setLoop(false);
+                player.loadVideoById(itemId);
+            }, 1);
+        }
+
+        function setVolume(volume) {
+            if (!isReady) return;
+
+            setTimeout(function () {
+                player.setVolume(volume);
+            }, 1);
+        }
+
+        function stop() {
+            if (!isReady) return;
+
+            setTimeout(function () {
+                isPlaying = false;
+                player.stopVideo();
+            }, 1);
+        }
+
+        function onPlayerError(err) {
+            alert("error: " + JSON.stringify(err));
+        }
+
+        function onPlayerReady(event) {
+            isReady = true;
+        }
+
+        function onPlayerStateChange(event) {
+            if (event.data == YT.PlayerState.ENDED && isPlaying) {
+                window.external.SongRequestComplete();
+                isPlaying = false;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,10 +1,12 @@
 ﻿using Mixer.Base.Model.Interactive;
 using MixItUp.Base;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace MixItUp.WPF.Controls.Interactive
 {
@@ -15,9 +17,9 @@ namespace MixItUp.WPF.Controls.Interactive
     }
 
     /// <summary>
-    /// Interaction logic for PUBGDropMapInteractiveControl.xaml
+    /// Interaction logic for DropMapInteractiveControl.xaml
     /// </summary>
-    public partial class PUBGDropMapInteractiveControl : DropMapInterativeGameControl
+    public partial class DropMapInteractiveControl : DropMapInterativeGameControl
     {
         private const string MapSelectionSettingProperty = "MapSelection";
 
@@ -27,15 +29,10 @@ namespace MixItUp.WPF.Controls.Interactive
 
         private ObservableCollection<PUBGMap> maps = new ObservableCollection<PUBGMap>();
 
-        public PUBGDropMapInteractiveControl(InteractiveGameModel game, InteractiveGameVersionModel version)
+        public DropMapInteractiveControl(DropMapTypeEnum dropMapType, InteractiveGameModel game, InteractiveGameVersionModel version)
             : base(game, version)
         {
             InitializeComponent();
-
-            this.Initialize(this.LocationPointsCanvas);
-
-            this.MaxTimeTextBox.Text = this.maxTime.ToString();
-            this.SparkCostTextBox.Text = this.sparkCost.ToString();
 
             this.MapComboBox.ItemsSource = this.maps;
 
@@ -43,12 +40,48 @@ namespace MixItUp.WPF.Controls.Interactive
             this.maps.Add(new PUBGMap() { Name = MiramarMapName, Map = "map2.png" });
             this.maps.Add(new PUBGMap() { Name = SanhokMapName, Map = "map3.png" });
 
-            this.MapComboBox.SelectedIndex = 0;
+            this.Initialize(dropMapType, this.MapImage, this.LocationPointsCanvas);
+
+            string mapImagePath = null;
+            switch (this.dropMapType)
+            {
+                case DropMapTypeEnum.Fortnite:
+                    mapImagePath = "/Assets/Images/FortniteDropMap/map.png";
+                    break;
+                case DropMapTypeEnum.PUBG:
+                    this.MapComboBox.Visibility = Visibility.Visible;
+                    mapImagePath = "/Assets/Images/PUBGDropMap/map1.png";
+                    break;
+                case DropMapTypeEnum.RealmRoyale:
+                    mapImagePath = "/Assets/Images/RealmRoyaleDropMap/map.png";
+                    break;
+                case DropMapTypeEnum.BlackOps4:
+                    mapImagePath = "/Assets/Images/BlackOps4DropMap/map.jpg";
+                    break;
+                case DropMapTypeEnum.ApexLegends:
+                    mapImagePath = "/Assets/Images/ApexLegendsDropMap/map.png";
+                    break;
+            }
+
+            BitmapImage bitmapMapImage = new BitmapImage();
+            bitmapMapImage.BeginInit();
+            bitmapMapImage.UriSource = new Uri("pack://application:,,," + mapImagePath);
+            bitmapMapImage.EndInit();
+            this.MapImage.Source = bitmapMapImage;
+
+            this.MapImage.SizeChanged += MapImage_SizeChanged;
+
+            this.MaxTimeTextBox.Text = this.maxTime.ToString();
+            this.SparkCostTextBox.Text = this.sparkCost.ToString();
 
             JObject settings = this.GetCustomSettings();
             if (settings.ContainsKey(MapSelectionSettingProperty))
             {
                 this.MapComboBox.SelectedIndex = settings[MapSelectionSettingProperty].ToObject<int>();
+            }
+            else
+            {
+                this.MapComboBox.SelectedIndex = 0;
             }
         }
 
@@ -60,12 +93,26 @@ namespace MixItUp.WPF.Controls.Interactive
 
         protected override string ComputeLocation(Point point)
         {
-            return string.Format("{0} {1}", (char)((int)(point.X / 12.5) + 65), (char)((int)(point.Y / 12.5) + 73));
+            double gridSize = 1.0;
+            switch (this.dropMapType)
+            {
+                case DropMapTypeEnum.Fortnite:
+                    gridSize = 10.0;
+                    break;
+                case DropMapTypeEnum.PUBG:
+                case DropMapTypeEnum.RealmRoyale:
+                case DropMapTypeEnum.BlackOps4:
+                case DropMapTypeEnum.ApexLegends:
+                    gridSize = 12.5;
+                    break;
+            }
+
+            return string.Format("{0} {1}", (char)((int)(point.X / gridSize) + 65), (int)(point.Y / gridSize) + 1);
         }
 
         protected override async Task UpdateWinnerUI(uint winner, string username, string location)
         {
-            this.TimerStackPanel.Visibility = Visibility.Collapsed;
+            this.TimerStackPanel.Visibility = Visibility.Hidden;
 
             this.DropLocationTextBlock.Text = location;
             await this.WinnerAvatar.SetUserAvatarUrl(winner);
@@ -76,7 +123,7 @@ namespace MixItUp.WPF.Controls.Interactive
             this.WinnerStackPanel.Visibility = Visibility.Visible;
         }
 
-        protected override async Task GameConnectedInternal()
+        protected override async Task<bool> GameConnectedInternal()
         {
             this.Dispatcher.Invoke(() =>
             {
@@ -84,9 +131,9 @@ namespace MixItUp.WPF.Controls.Interactive
                 this.MaxTimeTextBox.IsEnabled = false;
                 this.SparkCostTextBox.IsEnabled = false;
 
-                this.TimerStackPanel.Visibility = Visibility.Collapsed;
-                this.DropLocationStackPanel.Visibility = Visibility.Collapsed;
-                this.WinnerStackPanel.Visibility = Visibility.Collapsed;
+                this.TimerStackPanel.Visibility = Visibility.Hidden;
+                this.DropLocationStackPanel.Visibility = Visibility.Hidden;
+                this.WinnerStackPanel.Visibility = Visibility.Hidden;
 
                 this.TimerTextBlock.Text = string.Empty;
                 this.DropLocationTextBlock.Text = string.Empty;
@@ -94,17 +141,24 @@ namespace MixItUp.WPF.Controls.Interactive
                 this.WinnerTextBlock.Text = string.Empty;
             });
 
-            JObject settings = this.GetCustomSettings();
-            settings[MapSelectionSettingProperty] = this.MapComboBox.SelectedIndex;
-            this.SaveCustomSettings(settings);
+            if (await base.GameConnectedInternal())
+            {
+                if (this.dropMapType == DropMapTypeEnum.PUBG)
+                {
+                    JObject settings = this.GetCustomSettings();
+                    settings[MapSelectionSettingProperty] = this.MapComboBox.SelectedIndex;
+                    this.SaveCustomSettings(settings);
 
-            await base.GameConnectedInternal();
+                    PUBGMap map = (PUBGMap)this.MapComboBox.SelectedItem;
 
-            PUBGMap map = (PUBGMap)this.MapComboBox.SelectedItem;
+                    InteractiveConnectedButtonControlModel control = new InteractiveConnectedButtonControlModel() { controlID = this.positionButton.controlID };
+                    control.meta["map"] = map.Map;
+                    await ChannelSession.Interactive.UpdateControls(this.scene, new List<InteractiveControlModel>() { control });
+                }
 
-            InteractiveConnectedButtonControlModel control = new InteractiveConnectedButtonControlModel() { controlID = this.positionButton.controlID };
-            control.meta["map"] = map.Map;
-            await ChannelSession.Interactive.UpdateControls(this.scene, new List<InteractiveControlModel>() { control });
+                return true;
+            }
+            return false;
         }
 
         protected override Task GameDisconnectedInternal()
@@ -120,22 +174,19 @@ namespace MixItUp.WPF.Controls.Interactive
         {
             if (this.MapComboBox.SelectedIndex >= 0)
             {
-                this.ErangelMap.Visibility = Visibility.Collapsed;
-                this.MiramarMap.Visibility = Visibility.Collapsed;
-                this.SanhokMap.Visibility = Visibility.Collapsed;
-
+                string mapImagePath = "/Assets/Images/PUBGDropMap/";
                 PUBGMap map = (PUBGMap)this.MapComboBox.SelectedItem;
                 if (map.Name.Equals(ErangelMapName))
                 {
-                    this.ErangelMap.Visibility = Visibility.Visible;
+                    mapImagePath += "map1.png";
                 }
                 else if (map.Name.Equals(MiramarMapName))
                 {
-                    this.MiramarMap.Visibility = Visibility.Visible;
+                    mapImagePath += "map2.png";
                 }
                 else if (map.Name.Equals(SanhokMapName))
                 {
-                    this.SanhokMap.Visibility = Visibility.Visible;
+                    mapImagePath += "map3.png";
                 }
 
                 JObject settings = this.GetCustomSettings();
@@ -168,6 +219,11 @@ namespace MixItUp.WPF.Controls.Interactive
             {
                 this.SparkCostTextBox.Text = "0";
             }
+        }
+
+        private void MapImage_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            this.OnUIResize();
         }
     }
 }

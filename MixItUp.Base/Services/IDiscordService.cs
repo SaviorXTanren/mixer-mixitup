@@ -198,6 +198,20 @@ namespace MixItUp.Base.Services
         public DiscordChannelInvite() { }
     }
 
+    public class DiscordEmoji
+    {
+        [JsonProperty("id")]
+        public string ID { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
+        [JsonProperty("require_colons")]
+        public bool? RequireColons { get; set; }
+        [JsonProperty("managed")]
+        public bool? Managed { get; set; }
+        [JsonProperty("animated")]
+        public bool? Animated { get; set; }
+    }
+
     public class DiscordGateway
     {
         [JsonProperty("url")]
@@ -268,6 +282,8 @@ namespace MixItUp.Base.Services
         Task<IEnumerable<DiscordChannel>> GetServerChannels(DiscordServer server);
 
         Task<DiscordChannel> GetChannel(string channelID);
+
+        Task<IEnumerable<DiscordEmoji>> GetEmojis(DiscordServer server);
 
         Task<DiscordMessage> CreateMessage(DiscordChannel channel, string message);
 

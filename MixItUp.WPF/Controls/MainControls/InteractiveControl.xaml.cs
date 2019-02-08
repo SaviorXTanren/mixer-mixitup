@@ -201,19 +201,23 @@ namespace MixItUp.WPF.Controls.MainControls
             this.GroupsButton.IsEnabled = false;
             if (this.selectedGame.id == InteractiveSharedProjectModel.FortniteDropMap.GameID)
             {
-                this.SetCustomInteractiveGame(new FortniteDropMapInteractiveControl(this.selectedGame, this.selectedGameVersion));
+                this.SetCustomInteractiveGame(new DropMapInteractiveControl(DropMapTypeEnum.Fortnite, this.selectedGame, this.selectedGameVersion));
             }
             else if (this.selectedGame.id == InteractiveSharedProjectModel.PUBGDropMap.GameID)
             {
-                this.SetCustomInteractiveGame(new PUBGDropMapInteractiveControl(this.selectedGame, this.selectedGameVersion));
+                this.SetCustomInteractiveGame(new DropMapInteractiveControl(DropMapTypeEnum.PUBG, this.selectedGame, this.selectedGameVersion));
             }
             else if (this.selectedGame.id == InteractiveSharedProjectModel.RealmRoyaleDropMap.GameID)
             {
-                this.SetCustomInteractiveGame(new RealmRoyaleDropMapInteractiveControl(this.selectedGame, this.selectedGameVersion));
+                this.SetCustomInteractiveGame(new DropMapInteractiveControl(DropMapTypeEnum.RealmRoyale, this.selectedGame, this.selectedGameVersion));
             }
             else if (this.selectedGame.id == InteractiveSharedProjectModel.BlackOps4DropMap.GameID)
             {
-                this.SetCustomInteractiveGame(new BlackOps4DropMapInteractiveControl(this.selectedGame, this.selectedGameVersion));
+                this.SetCustomInteractiveGame(new DropMapInteractiveControl(DropMapTypeEnum.BlackOps4, this.selectedGame, this.selectedGameVersion));
+            }
+            else if (this.selectedGame.id == InteractiveSharedProjectModel.ApexLegendsDropMap.GameID)
+            {
+                this.SetCustomInteractiveGame(new DropMapInteractiveControl(DropMapTypeEnum.ApexLegends, this.selectedGame, this.selectedGameVersion));
             }
             else if (this.selectedGame.id == InteractiveSharedProjectModel.MixerPaint.GameID)
             {
@@ -344,11 +348,14 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void GroupsButton_Click(object sender, RoutedEventArgs e)
         {
-            InteractiveSceneUserGroupsDialogControl dialogControl = new InteractiveSceneUserGroupsDialogControl(this.selectedGame, this.selectedScene);
-            await this.Window.RunAsyncOperation(async () =>
+            if (this.selectedGame != null && this.selectedScene != null)
             {
-                await MessageBoxHelper.ShowCustomDialog(dialogControl);
-            });
+                InteractiveSceneUserGroupsDialogControl dialogControl = new InteractiveSceneUserGroupsDialogControl(this.selectedGame, this.selectedScene);
+                await this.Window.RunAsyncOperation(async () =>
+                {
+                    await MessageBoxHelper.ShowCustomDialog(dialogControl);
+                });
+            }
         }
 
         private async void InteractiveGamesComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -534,7 +541,10 @@ namespace MixItUp.WPF.Controls.MainControls
             if (this.IsCustomInteractiveGame)
             {
                 CustomInteractiveGameControl gameControl = (CustomInteractiveGameControl)this.CustomInteractiveContentControl.Content;
-                await gameControl.GameConnected();
+                if (!await gameControl.GameConnected())
+                {
+                    await this.InteractiveGameDisconnected();
+                }
             }
         }
 

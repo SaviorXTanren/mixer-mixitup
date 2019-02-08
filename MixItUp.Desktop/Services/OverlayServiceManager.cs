@@ -84,6 +84,16 @@ namespace MixItUp.Desktop.Services
             }
         }
 
+        public async Task<int> TestConnections()
+        {
+            int count = 0;
+            foreach (IOverlayService overlay in this.overlays.Values)
+            {
+                count += await overlay.TestConnection();
+            }
+            return count;
+        }
+
         public void StartBatching()
         {
             foreach (IOverlayService overlay in this.overlays.Values)

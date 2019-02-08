@@ -10,7 +10,7 @@ namespace MixItUp.Base.Services
         void TrackException(Exception ex);
         void TrackPageView(string pageName);
         void TrackLogin(bool isStreamer, bool isPartner);
-        void TrackCommand(CommandTypeEnum type);
+        void TrackCommand(CommandTypeEnum type, bool isBasic);
         void TrackAction(ActionTypeEnum type);
         void TrackInteractiveGame(InteractiveGameModel game);
         void TrackSongRequest(SongRequestServiceTypeEnum songService);

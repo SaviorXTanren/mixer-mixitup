@@ -25,6 +25,8 @@ namespace MixItUp.Base.Services
 
         IEnumerable<string> GetOverlayNames();
 
+        Task<int> TestConnections();
+
         void StartBatching();
 
         Task EndBatching();
