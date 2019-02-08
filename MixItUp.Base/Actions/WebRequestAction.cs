@@ -152,7 +152,7 @@ namespace MixItUp.Base.Actions
                             {
                                 try
                                 {
-                                    JObject jobj = JObject.Parse(webRequestResult);
+                                    JToken jToken = JToken.Parse(webRequestResult);
                                     if (this.JSONToSpecialIdentifiers != null)
                                     {
                                         foreach (var kvp in this.JSONToSpecialIdentifiers)
@@ -160,7 +160,7 @@ namespace MixItUp.Base.Actions
                                             string[] splits = kvp.Key.Split(new char[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
                                             if (splits.Count() > 0)
                                             {
-                                                JToken currentToken = jobj;
+                                                JToken currentToken = jToken;
                                                 for (int i = 0; i < splits.Count(); i++)
                                                 {
                                                     if (currentToken is JObject)
