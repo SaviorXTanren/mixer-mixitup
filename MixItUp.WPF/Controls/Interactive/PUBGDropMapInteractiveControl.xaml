@@ -21,6 +21,7 @@
             <Image x:Name="ErangelMap" Visibility="Collapsed" Source="/Assets/Images/PUBGDropMap/map1.png" Width="400" Height="400" HorizontalAlignment="Center" VerticalAlignment="Center" />
             <Image x:Name="MiramarMap" Visibility="Collapsed" Source="/Assets/Images/PUBGDropMap/map2.png" Width="400" Height="400" HorizontalAlignment="Center" VerticalAlignment="Center" />
             <Image x:Name="SanhokMap" Visibility="Collapsed" Source="/Assets/Images/PUBGDropMap/map3.png" Width="400" Height="400" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <Image x:Name="VikendiMap" Visibility="Collapsed" Source="/Assets/Images/PUBGDropMap/map4.png" Width="400" Height="400" HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Grid>
 
         <Canvas x:Name="LocationPointsCanvas" Width="400" Height="400" HorizontalAlignment="Center" VerticalAlignment="Center" />

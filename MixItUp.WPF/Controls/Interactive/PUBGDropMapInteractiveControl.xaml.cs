@@ -24,6 +24,7 @@ namespace MixItUp.WPF.Controls.Interactive
         private const string ErangelMapName = "Erangel";
         private const string MiramarMapName = "Miramar";
         private const string SanhokMapName = "Sanhok";
+        private const string VikendiMapName = "Vikendi";
 
         private ObservableCollection<PUBGMap> maps = new ObservableCollection<PUBGMap>();
 
@@ -42,6 +43,7 @@ namespace MixItUp.WPF.Controls.Interactive
             this.maps.Add(new PUBGMap() { Name = ErangelMapName, Map = "map1.png" });
             this.maps.Add(new PUBGMap() { Name = MiramarMapName, Map = "map2.png" });
             this.maps.Add(new PUBGMap() { Name = SanhokMapName, Map = "map3.png" });
+            this.maps.Add(new PUBGMap() { Name = VikendiMapName, Map = "map4.png" });
 
             this.MapComboBox.SelectedIndex = 0;
 
