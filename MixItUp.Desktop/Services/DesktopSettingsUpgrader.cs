@@ -1,4 +1,5 @@
-﻿using MixItUp.Base;
+﻿using Mixer.Base.Util;
+using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Overlay;
@@ -53,6 +54,7 @@ namespace MixItUp.Desktop.Services
             await DesktopSettingsUpgrader.Version25Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version26Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version27Upgrade(version, filePath);
+            await DesktopSettingsUpgrader.Version28Upgrade(version, filePath);
 
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
             settings.InitializeDB = false;
@@ -262,11 +264,40 @@ namespace MixItUp.Desktop.Services
                     await databaseWrapper.RunWriteCommand("ALTER TABLE Users ADD COLUMN InventoryAmounts TEXT");
                     await databaseWrapper.RunWriteCommand("UPDATE Users SET InventoryAmounts = '{ }'");
                 }
-                catch (Exception ex) { Logger.Log(ex); }
+                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
 
                 foreach (UserCurrencyViewModel currency in settings.Currencies.Values)
                 {
                     currency.ModeratorBonus = currency.SubscriberBonus;
+                }
+
+                await ChannelSession.Services.Settings.Save(settings);
+            }
+        }
+
+        private static async Task Version28Upgrade(int version, string filePath)
+        {
+            if (version < 28)
+            {
+                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
+                await ChannelSession.Services.Settings.Initialize(settings);
+
+                foreach (InteractiveCommand command in settings.InteractiveCommands)
+                {
+                    if (command is InteractiveButtonCommand)
+                    {
+                        InteractiveButtonCommand buttonCommand = (InteractiveButtonCommand)command;
+                        int triggerNumber = (int)buttonCommand.Trigger;
+                        if (triggerNumber == 0 || triggerNumber == 3)
+                        {
+                            buttonCommand.Trigger = InteractiveButtonCommandTriggerType.MouseKeyDown;
+                        }
+                        else
+                        {
+                            buttonCommand.Trigger = InteractiveButtonCommandTriggerType.MouseKeyUp;
+                        }
+                        buttonCommand.Commands = new List<string>() { EnumHelper.GetEnumName(buttonCommand.Trigger) };
+                    }
                 }
 
                 await ChannelSession.Services.Settings.Save(settings);

@@ -181,7 +181,7 @@ namespace MixItUp.WPF.Controls.Command
 
                 if (this.command == null)
                 {
-                    this.command = new InteractiveButtonCommand(this.game, this.scene, this.button, InteractiveButtonCommandTriggerType.MouseDown, requirements);
+                    this.command = new InteractiveButtonCommand(this.game, this.scene, this.button, InteractiveButtonCommandTriggerType.MouseKeyDown, requirements);
                     ChannelSession.Settings.InteractiveCommands.Add(this.command);
                 }
                 else

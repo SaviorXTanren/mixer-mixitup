@@ -39,7 +39,7 @@ namespace MixItUp.Base.MixerAPI
         public abstract bool HasCooldown { get; }
         public abstract long CooldownTimestamp { get; }
 
-        public bool DoesInputMatchCommand(InteractiveGiveInputModel input)
+        public virtual bool DoesInputMatchCommand(InteractiveGiveInputModel input)
         {
             return this.EventTypeString.Equals(input.input.eventType);
         }
@@ -75,9 +75,21 @@ namespace MixItUp.Base.MixerAPI
         public override bool HasCooldown { get { return this.ButtonCommand.HasCooldown; } }
         public override long CooldownTimestamp { get { return this.ButtonCommand.GetCooldownTimestamp(); } }
 
-        public override async Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
+        public override bool DoesInputMatchCommand(InteractiveGiveInputModel input)
         {
-            await base.Perform(user, arguments);
+            string inputEvent = input?.input?.eventType;
+            if (!string.IsNullOrEmpty(inputEvent))
+            {
+                if (this.ButtonCommand.Trigger == InteractiveButtonCommandTriggerType.MouseKeyDown)
+                {
+                    return inputEvent.Equals("mousedown") || inputEvent.Equals("keydown");
+                }
+                else if (this.ButtonCommand.Trigger == InteractiveButtonCommandTriggerType.MouseKeyUp)
+                {
+                    return inputEvent.Equals("mouseup") || inputEvent.Equals("keyup");
+                }
+            }
+            return false;
         }
 
         private async void ButtonCommand_OnCommandStart(object sender, EventArgs e)
@@ -129,11 +141,6 @@ namespace MixItUp.Base.MixerAPI
 
         public override bool HasCooldown { get { return false; } }
         public override long CooldownTimestamp { get { return DateTimeHelper.DateTimeOffsetToUnixTimestamp(DateTimeOffset.Now); } }
-
-        public override async Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
-        {
-            await base.Perform(user, arguments);
-        }
     }
 
     public class InteractiveConnectedTextBoxCommand : InteractiveConnectedControlCommand
@@ -148,11 +155,6 @@ namespace MixItUp.Base.MixerAPI
 
         public override bool HasCooldown { get { return false; } }
         public override long CooldownTimestamp { get { return DateTimeHelper.DateTimeOffsetToUnixTimestamp(DateTimeOffset.Now); } }
-
-        public override async Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
-        {
-            await base.Perform(user, arguments);
-        }
     }
 
     public class InteractiveInputEvent

@@ -51,7 +51,7 @@ namespace MixItUp.WPF.Controls.Command
             {
                 this.NameTextBox.Text = this.Control.controlID;
                 this.ButtonTriggerComboBox.IsEnabled = true;
-                this.ButtonTriggerComboBox.SelectedItem = EnumHelper.GetEnumName(InteractiveButtonCommandTriggerType.MouseDown);
+                this.ButtonTriggerComboBox.SelectedItem = EnumHelper.GetEnumName(InteractiveButtonCommandTriggerType.MouseKeyDown);
                 this.SparkCostTextBox.IsEnabled = true;
                 this.SparkCostTextBox.Text = this.Control.cost.ToString();
             }

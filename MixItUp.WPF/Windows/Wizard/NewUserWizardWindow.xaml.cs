@@ -861,7 +861,7 @@ namespace MixItUp.WPF.Windows.Wizard
                                                     requirements.Cooldown.Type = CooldownTypeEnum.Group;
                                                     requirements.Cooldown.GroupName = SoundwaveInteractiveCooldownGroupName;
                                                 }
-                                                InteractiveButtonCommand command = new InteractiveButtonCommand(profileGame, profileScene, button, InteractiveButtonCommandTriggerType.MouseDown, requirements);
+                                                InteractiveButtonCommand command = new InteractiveButtonCommand(profileGame, profileScene, button, InteractiveButtonCommandTriggerType.MouseKeyDown, requirements);
 
                                                 SoundAction action = new SoundAction(soundwaveButton.path, soundwaveButton.volume);
                                                 command.Actions.Add(action);

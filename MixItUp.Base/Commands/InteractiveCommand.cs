@@ -17,14 +17,10 @@ namespace MixItUp.Base.Commands
 {
     public enum InteractiveButtonCommandTriggerType
     {
-        [Name("Mouse Down")]
-        MouseDown,
-        [Name("Mouse Up")]
-        MouseUp,
-        [Name("Key Up")]
-        KeyUp,
-        [Name("Key Down")]
-        KeyDown,
+        [Name("Mouse/Key Down")]
+        MouseKeyDown,
+        [Name("Mouse/Key Up")]
+        MouseKeyUp,
     }
 
     public enum InteractiveJoystickSetupType
