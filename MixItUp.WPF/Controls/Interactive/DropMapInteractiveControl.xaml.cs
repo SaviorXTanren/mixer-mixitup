@@ -109,7 +109,14 @@ namespace MixItUp.WPF.Controls.Interactive
                     break;
             }
 
-            return string.Format("{0} {1}", (char)((int)(point.X / gridSize) + 65), (int)(point.Y / gridSize) + 1);
+            if (this.dropMapType == DropMapTypeEnum.PUBG)
+            {
+                return string.Format("{0} {1}", (char)((int)(point.X / gridSize) + 65), (char)((int)(point.Y / gridSize) + 73));
+            }
+            else
+            {
+                return string.Format("{0} {1}", (char)((int)(point.X / gridSize) + 65), (int)(point.Y / gridSize) + 1);
+            }
         }
 
         protected override async Task UpdateWinnerUI(uint winner, string username, string location)
