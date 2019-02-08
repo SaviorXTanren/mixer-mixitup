@@ -15,10 +15,21 @@ using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.Interactive
 {
+    public enum DropMapTypeEnum
+    {
+        Fortnite,
+        PUBG,
+        RealmRoyale,
+        BlackOps4,
+        ApexLegends
+    }
+
     public abstract class DropMapInterativeGameControl : CustomInteractiveGameControl
     {
         private const string MaxTimeSettingProperty = "MaxTime";
         private const string SparkCostSettingProperty = "SparkCost";
+
+        protected DropMapTypeEnum dropMapType;
 
         protected int maxTime = 30;
         protected int sparkCost = 0;
@@ -31,11 +42,14 @@ namespace MixItUp.WPF.Controls.Interactive
         private Dictionary<uint, Point> userPoints = new Dictionary<uint, Point>();
 
         private Canvas canvas;
+        private Image image;
 
         public DropMapInterativeGameControl(InteractiveGameModel game, InteractiveGameVersionModel version) : base(game, version) { }
 
-        public void Initialize(Canvas canvas)
+        public void Initialize(DropMapTypeEnum dropMapType, Image image, Canvas canvas)
         {
+            this.dropMapType = dropMapType;
+            this.image = image;
             this.canvas = canvas;
 
             JObject settings = this.GetCustomSettings();
@@ -154,6 +168,15 @@ namespace MixItUp.WPF.Controls.Interactive
             return true;
         }
 
+        protected void OnUIResize()
+        {
+            foreach (var userPoint in this.userPoints)
+            {
+                UserViewModel user = new UserViewModel(userPoint.Key, null);
+                this.PositionUserPointOnCanvas(user, userPoint.Value);
+            }
+        }
+
         protected override async Task OnInteractiveControlUsed(UserViewModel user, InteractiveGiveInputModel input, InteractiveConnectedControlCommand command)
         {
             try
@@ -174,25 +197,17 @@ namespace MixItUp.WPF.Controls.Interactive
 
                         await this.Dispatcher.InvokeAsync(async () =>
                         {
-                            UserProfileAvatarControl avatarControl = null;
-
                             if (!this.userAvatars.ContainsKey(user.ID))
                             {
-                                avatarControl = new UserProfileAvatarControl();
+                                UserProfileAvatarControl avatarControl = new UserProfileAvatarControl();
                                 await avatarControl.SetUserAvatarUrl(user);
                                 avatarControl.SetSize(20);
+                                this.userAvatars[user.ID] = avatarControl;
 
                                 this.canvas.Children.Add(avatarControl);
-                                this.userAvatars[user.ID] = avatarControl;
                             }
 
-                            avatarControl = this.userAvatars[user.ID];
-
-                            double canvasX = ((point.X / 100.0) * this.canvas.Width);
-                            double canvasY = ((point.Y / 100.0) * this.canvas.Height);
-
-                            Canvas.SetLeft(avatarControl, canvasX - 10);
-                            Canvas.SetTop(avatarControl, canvasY - 10);
+                            this.PositionUserPointOnCanvas(user, point);
                         });
                     }
                 }
@@ -201,6 +216,17 @@ namespace MixItUp.WPF.Controls.Interactive
             {
                 Logger.Log(ex);
             }
+        }
+
+        private void PositionUserPointOnCanvas(UserViewModel user, Point point)
+        {
+            UserProfileAvatarControl avatarControl = this.userAvatars[user.ID];
+
+            double canvasX = ((point.X / 100.0) * this.image.ActualWidth);
+            double canvasY = ((point.Y / 100.0) * this.image.ActualHeight);
+
+            Canvas.SetLeft(avatarControl, canvasX - 10);
+            Canvas.SetTop(avatarControl, canvasY - 10);
         }
     }
 }

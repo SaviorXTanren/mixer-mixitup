@@ -201,23 +201,23 @@ namespace MixItUp.WPF.Controls.MainControls
             this.GroupsButton.IsEnabled = false;
             if (this.selectedGame.id == InteractiveSharedProjectModel.FortniteDropMap.GameID)
             {
-                this.SetCustomInteractiveGame(new FortniteDropMapInteractiveControl(this.selectedGame, this.selectedGameVersion));
+                this.SetCustomInteractiveGame(new DropMapInteractiveControl(DropMapTypeEnum.Fortnite, this.selectedGame, this.selectedGameVersion));
             }
             else if (this.selectedGame.id == InteractiveSharedProjectModel.PUBGDropMap.GameID)
             {
-                this.SetCustomInteractiveGame(new PUBGDropMapInteractiveControl(this.selectedGame, this.selectedGameVersion));
+                this.SetCustomInteractiveGame(new DropMapInteractiveControl(DropMapTypeEnum.PUBG, this.selectedGame, this.selectedGameVersion));
             }
             else if (this.selectedGame.id == InteractiveSharedProjectModel.RealmRoyaleDropMap.GameID)
             {
-                this.SetCustomInteractiveGame(new RealmRoyaleDropMapInteractiveControl(this.selectedGame, this.selectedGameVersion));
+                this.SetCustomInteractiveGame(new DropMapInteractiveControl(DropMapTypeEnum.RealmRoyale, this.selectedGame, this.selectedGameVersion));
             }
             else if (this.selectedGame.id == InteractiveSharedProjectModel.BlackOps4DropMap.GameID)
             {
-                this.SetCustomInteractiveGame(new BlackOps4DropMapInteractiveControl(this.selectedGame, this.selectedGameVersion));
+                this.SetCustomInteractiveGame(new DropMapInteractiveControl(DropMapTypeEnum.BlackOps4, this.selectedGame, this.selectedGameVersion));
             }
             else if (this.selectedGame.id == InteractiveSharedProjectModel.ApexLegendsDropMap.GameID)
             {
-                this.SetCustomInteractiveGame(new ApexLegendsDropMapInteractiveControl(this.selectedGame, this.selectedGameVersion));
+                this.SetCustomInteractiveGame(new DropMapInteractiveControl(DropMapTypeEnum.ApexLegends, this.selectedGame, this.selectedGameVersion));
             }
             else if (this.selectedGame.id == InteractiveSharedProjectModel.MixerPaint.GameID)
             {

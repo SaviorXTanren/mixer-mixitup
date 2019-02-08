@@ -519,25 +519,13 @@
     <Compile Include="Controls\Games\VolcanoGameEditorControl.xaml.cs">
       <DependentUpon>VolcanoGameEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Interactive\ApexLegendsDropMapInteractiveControl.xaml.cs">
-      <DependentUpon>ApexLegendsDropMapInteractiveControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Interactive\BlackOps4DropMapInteractiveControl.xaml.cs">
-      <DependentUpon>BlackOps4DropMapInteractiveControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Interactive\CustomInteractiveGameControl.cs" />
-    <Compile Include="Controls\Interactive\DropMapInterativeGameControl.cs" />
-    <Compile Include="Controls\Interactive\FortniteDropMapInteractiveControl.xaml.cs">
-      <DependentUpon>FortniteDropMapInteractiveControl.xaml</DependentUpon>
+    <Compile Include="Controls\Interactive\DropMapInteractiveControl.xaml.cs">
+      <DependentUpon>DropMapInteractiveControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Interactive\DropMapInterativeGameControl.cs" />
     <Compile Include="Controls\Interactive\MixerPaintInteractiveControl.xaml.cs">
       <DependentUpon>MixerPaintInteractiveControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Interactive\PUBGDropMapInteractiveControl.xaml.cs">
-      <DependentUpon>PUBGDropMapInteractiveControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Interactive\RealmRoyaleDropMapInteractiveControl.xaml.cs">
-      <DependentUpon>RealmRoyaleDropMapInteractiveControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\LicenseControl.xaml.cs">
       <DependentUpon>LicenseControl.xaml</DependentUpon>
@@ -1193,27 +1181,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Interactive\ApexLegendsDropMapInteractiveControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Interactive\BlackOps4DropMapInteractiveControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Interactive\FortniteDropMapInteractiveControl.xaml">
+    <Page Include="Controls\Interactive\DropMapInteractiveControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Interactive\MixerPaintInteractiveControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Interactive\PUBGDropMapInteractiveControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Interactive\RealmRoyaleDropMapInteractiveControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
