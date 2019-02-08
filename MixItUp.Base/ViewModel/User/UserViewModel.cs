@@ -108,9 +108,6 @@ namespace MixItUp.Base.ViewModel.User
         public int Sparks { get; set; }
 
         [DataMember]
-        public bool IsOnline { get; set; }
-
-        [DataMember]
         public uint CurrentViewerCount { get; set; }
 
         [DataMember]
