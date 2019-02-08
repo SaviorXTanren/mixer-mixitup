@@ -206,6 +206,8 @@ namespace MixItUp.Base.MixerAPI
         private List<InteractiveGameModel> games = new List<InteractiveGameModel>();
         private DateTimeOffset lastRefresh = DateTimeOffset.MinValue;
 
+        private SemaphoreSlim giveInputLock = new SemaphoreSlim(1);
+
         public InteractiveClientWrapper()
         {
             this.Scenes = new List<InteractiveConnectedSceneModel>();
@@ -865,48 +867,50 @@ namespace MixItUp.Base.MixerAPI
                         return;
                     }
 
-                    if (connectedControl != null && !await connectedControl.CheckAllRequirements(user))
+                    if (connectedControl != null)
                     {
-                        return;
-                    }
-
-                    if (!string.IsNullOrEmpty(e.transactionID) && !user.Data.IsSparkExempt)
-                    {
-                        Util.Logger.LogDiagnostic("Sending Spark Transaction Capture - " + e.transactionID);
-
-                        await this.CaptureSparkTransaction(e.transactionID);
-
                         int sparkCost = 0;
-                        if (control is InteractiveButtonControlModel)
+
+                        await this.giveInputLock.WaitAndRelease(async () =>
                         {
-                            sparkCost = ((InteractiveButtonControlModel)control).cost.GetValueOrDefault();
-                        }
-                        else if (control is InteractiveTextBoxControlModel)
-                        {
-                            sparkCost = ((InteractiveTextBoxControlModel)control).cost.GetValueOrDefault();
-                        }
+                            if (await connectedControl.CheckAllRequirements(user))
+                            {
+                                if (!string.IsNullOrEmpty(e.transactionID) && !user.Data.IsSparkExempt)
+                                {
+                                    Util.Logger.LogDiagnostic("Sending Spark Transaction Capture - " + e.transactionID);
+
+                                    await this.CaptureSparkTransaction(e.transactionID);
+
+                                    if (control is InteractiveButtonControlModel)
+                                    {
+                                        sparkCost = ((InteractiveButtonControlModel)control).cost.GetValueOrDefault();
+                                    }
+                                    else if (control is InteractiveTextBoxControlModel)
+                                    {
+                                        sparkCost = ((InteractiveTextBoxControlModel)control).cost.GetValueOrDefault();
+                                    }
+                                }
+
+                                List<string> arguments = new List<string>();
+
+                                if (connectedControl is InteractiveConnectedJoystickCommand)
+                                {
+                                    arguments.Add(e.input.x.ToString());
+                                    arguments.Add(e.input.y.ToString());
+                                }
+                                else if (connectedControl is InteractiveConnectedTextBoxCommand)
+                                {
+                                    arguments.Add(e.input.value);
+                                }
+
+                                await connectedControl.Perform(user, arguments);
+                            }
+                        });
 
                         if (sparkCost > 0)
                         {
                             GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, int>(user, sparkCost));
                         }
-                    }
-
-                    if (connectedControl != null)
-                    {
-                        List<string> arguments = new List<string>();
-
-                        if (connectedControl is InteractiveConnectedJoystickCommand)
-                        {
-                            arguments.Add(e.input.x.ToString());
-                            arguments.Add(e.input.y.ToString());
-                        }
-                        else if (connectedControl is InteractiveConnectedTextBoxCommand)
-                        {
-                            arguments.Add(e.input.value);
-                        }
-
-                        await connectedControl.Perform(user, arguments);
                     }
 
                     this.OnGiveInput(this, e);
