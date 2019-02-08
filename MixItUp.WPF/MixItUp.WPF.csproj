@@ -1886,9 +1886,6 @@
     <Resource Include="..\MixPlay\pubg-drop-map\src\map3.png">
       <Link>Assets\Images\PUBGDropMap\map3.png</Link>
     </Resource>
-    <Resource Include="..\MixPlay\realm-royale-drop-map\src\map.jpg">
-      <Link>Assets\Images\RealmRoyaleDropMap\map.jpg</Link>
-    </Resource>
     <Resource Include="..\MixPlay\black-ops-4-drop-map\src\map.jpg">
       <Link>Assets\Images\BlackOps4DropMap\map.jpg</Link>
     </Resource>
@@ -1896,6 +1893,9 @@
     <Resource Include="Assets\Images\Sparks.png" />
     <Resource Include="..\MixPlay\apex-legends-drop-map\src\map.png">
       <Link>Assets\Images\ApexLegendsDropMap\map.png</Link>
+    </Resource>
+    <Resource Include="..\MixPlay\realm-royale-drop-map\src\map.png">
+      <Link>Assets\Images\RealmRoyaleDropMap\map.png</Link>
     </Resource>
     <Content Include="Assets\Sounds\Ariel.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
