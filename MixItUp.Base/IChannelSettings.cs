@@ -70,6 +70,7 @@ namespace MixItUp.Base
 
         uint DefaultInteractiveGame { get; set; }
         bool PreventUnknownInteractiveUsers { get; set; }
+        bool PreventSmallerCooldowns { get; set; }
         List<InteractiveSharedProjectModel> CustomInteractiveProjectIDs { get; set; }
 
         int RegularUserMinimumHours { get; set; }
