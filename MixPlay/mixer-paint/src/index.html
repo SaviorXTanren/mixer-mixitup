@@ -16,6 +16,14 @@
         height: 90%;
         z-index: 0;
       }
+	  
+	  canvas {
+		cursor: default;
+	  }
+
+      canvas.dragging {
+	    cursor: crosshair;
+      }
 
       canvas.drawingCanvas {
         position: absolute;
@@ -23,6 +31,14 @@
         height: 100%;
         border: 2px solid;
         z-index: 0;
+      }
+	  
+	  canvas.presentCanvas {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border: 2px solid;
+        z-index: 99;
       }
 
       table.paintSwatchTable {
@@ -44,6 +60,11 @@
 
   <div id="mainDiv" class="mainDiv">
     <canvas id="drawingCanvas" class="drawingCanvas"></canvas>
+	<canvas id="presentCanvas" class="presentCanvas" style="visibility: hidden" ></canvas>
+	
+	<div id="selectorDiv" style="position: absolute; left: 0px; top: 0px; visibility: hidden">
+        <img id="selectorImage" style="position: absolute; transform: translate(-50%, -50%);" src="selector.png" />
+    </div>
 
     <table id="paintSwatchTable" class="paintSwatchTable" cellspacing="0" cellpadding="0">
       <tr>
@@ -63,9 +84,17 @@
         <td><div style="width:25px;height:25px;background:black;" id="black"></div></td>
       </tr>
       <tr>
-        <td colspan="2"><button id="clearButton" class="clearButton">Clear</button></td>
+        <td colspan="2"><button id="clearButton" class="clearButton" style="width:50px;height:25px;">Clear</button></td>
+      </tr>
+      <tr>
+        <td colspan="2"><button id="saveButton" class="saveButton" style="width:50px;height:25px;">Save</button></td>
+      </tr>
+      <tr>
+        <td colspan="2"><button id="sendButton" class="sendButton" style="width:50px;height:25px;">Send</button></td>
       </tr>
     </table>
   </div>
+  
+  <a id="savelink" style="visibility: hidden" />
 </body>
 </html>

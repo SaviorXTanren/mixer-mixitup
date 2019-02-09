@@ -2,6 +2,7 @@
 using MixItUp.Base;
 using MixItUp.Base.MixerAPI;
 using MixItUp.Base.ViewModel.User;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,7 +14,10 @@ namespace MixItUp.WPF.Controls.Interactive
     public partial class MixerPaintInteractiveControl : CustomInteractiveGameControl
     {
         private InteractiveConnectedSceneModel scene;
-        private InteractiveConnectedButtonControlModel drawButton;
+        private InteractiveConnectedButtonControlModel sendButton;
+        private InteractiveConnectedButtonControlModel presentButton;
+
+        private Dictionary<UserViewModel, string> userDrawings = new Dictionary<UserViewModel, string>();
 
         public MixerPaintInteractiveControl(InteractiveGameModel game, InteractiveGameVersionModel version)
             : base(game, version)
@@ -29,8 +33,9 @@ namespace MixItUp.WPF.Controls.Interactive
                 this.scene = sceneGroups.scenes.FirstOrDefault();
                 if (this.scene != null)
                 {
-                    this.drawButton = this.scene.buttons.FirstOrDefault(c => c.controlID.Equals("draw"));
-                    if (this.drawButton != null)
+                    this.sendButton = this.scene.buttons.FirstOrDefault(c => c.controlID.Equals("send"));
+                    this.presentButton = this.scene.buttons.FirstOrDefault(c => c.controlID.Equals("present"));
+                    if (this.sendButton != null && this.presentButton != null)
                     {
                         return true;
                     }
@@ -39,9 +44,16 @@ namespace MixItUp.WPF.Controls.Interactive
             return false;
         }
 
-        protected override Task OnInteractiveControlUsed(UserViewModel user, InteractiveGiveInputModel input, InteractiveConnectedControlCommand command)
+        protected override async Task OnInteractiveControlUsed(UserViewModel user, InteractiveGiveInputModel input, InteractiveConnectedControlCommand command)
         {
-            return Task.FromResult(0);
+            if (user != null && !user.IsAnonymous && input.input.meta.ContainsKey("image"))
+            {
+                this.userDrawings[user] = input.input.meta["image"].ToString();
+
+                InteractiveConnectedButtonControlModel control = new InteractiveConnectedButtonControlModel() { controlID = this.presentButton.controlID };
+                control.meta["map"] = this.userDrawings[user];
+                await ChannelSession.Interactive.UpdateControls(this.scene, new List<InteractiveControlModel>() { control });
+            }
         }
     }
 }
