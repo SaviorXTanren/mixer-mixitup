@@ -1,8 +1,7 @@
-﻿using System;
+﻿using MixItUp.Base.Model.Skill;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
 
 namespace MixItUp.WPF.Controls.Chat
 {
@@ -14,24 +13,33 @@ namespace MixItUp.WPF.Controls.Chat
         public GifSkillPopoutControl()
         {
             InitializeComponent();
+
+            this.GifImage.SizeChanged += GifImage_SizeChanged;
         }
 
-        public void SlideInFromRight()
+        public async Task ShowGif(SkillUsageModel skill)
         {
-            DoubleAnimation db = new DoubleAnimation();
-            db.From = 0;
-            db.To = -this.GifImage.ActualWidth;
-            db.Duration = TimeSpan.FromSeconds(1);
-            BorderAnimation.BeginAnimation(TranslateTransform.YProperty, db);
+            this.DataContext = skill;
+
+            await this.UserAvatar.SetUserAvatarUrl(skill.User);
+            this.UserAvatar.SetSize(16);
+           
+            while (this.DataContext != null)
+            {
+                await Task.Delay(1000);
+            }
         }
 
-        public void SlideOutToRight()
+        private async void GifImage_SizeChanged(object sender, System.Windows.SizeChangedEventArgs e)
         {
-            DoubleAnimation db = new DoubleAnimation();
-            db.From = 0;
-            db.To = this.GifImage.ActualWidth;
-            db.Duration = TimeSpan.FromSeconds(1);
-            BorderAnimation.BeginAnimation(TranslateTransform.YProperty, db);
+            if (this.DataContext != null && this.GifImage.Source.Height > 10)
+            {
+                this.GroupBox.Visibility = Visibility.Visible;
+                await Task.Delay(9000);
+
+                this.GroupBox.Visibility = Visibility.Hidden;
+                this.DataContext = null;
+            }
         }
     }
 }

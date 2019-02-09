@@ -4,16 +4,18 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Chat"
+             xmlns:UserControls="clr-namespace:MixItUp.WPF.Controls.Users"
              xmlns:Gif="http://wpfanimatedgif.codeplex.com"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <Border x:Name="ImageBorder" Style="{StaticResource DefaultBorder}">
-            <Border.RenderTransform>
-                <TranslateTransform x:Name="BorderAnimation" />
-            </Border.RenderTransform>
-            
-            <Image x:Name="GifImage" Gif:ImageBehavior.AnimatedSource="{Binding}" Margin="0,-5" />
-        </Border>
-    </Grid>
+    <GroupBox x:Name="GroupBox" Visibility="Hidden">
+        <GroupBox.Header>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <UserControls:UserProfileAvatarControl x:Name="UserAvatar" VerticalAlignment="Center" />
+                <TextBlock Margin="10,0,0,0" Text="{Binding User.UserName}" Foreground="{StaticResource WhiteColor}" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center" />
+            </StackPanel>
+        </GroupBox.Header>
+        
+        <Image x:Name="GifImage" Gif:ImageBehavior.AnimatedSource="{Binding SkillInstance.ImageUrl}" Margin="-8,-9,-8,-8" MaxWidth="250" Stretch="Uniform" />
+    </GroupBox>
 </UserControl>

@@ -1004,9 +1004,7 @@ namespace MixItUp.WPF.Controls.MainControls
                         {
                             await this.Dispatcher.InvokeAsync<Task>(async () =>
                             {
-                                this.GifSkillPopout.SlideInFromRight();
-                                await Task.Delay(5000);
-                                this.GifSkillPopout.SlideOutToRight();
+                                await this.GifSkillPopout.ShowGif(skill);
                             });
                         });
                     });
