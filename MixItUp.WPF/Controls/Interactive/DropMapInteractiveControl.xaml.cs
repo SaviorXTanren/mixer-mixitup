@@ -65,11 +65,7 @@ namespace MixItUp.WPF.Controls.Interactive
                     break;
             }
 
-            BitmapImage bitmapMapImage = new BitmapImage();
-            bitmapMapImage.BeginInit();
-            bitmapMapImage.UriSource = new Uri("pack://application:,,," + mapImagePath);
-            bitmapMapImage.EndInit();
-            this.MapImage.Source = bitmapMapImage;
+            this.ChangeMapImage(mapImagePath);
 
             this.MapImage.SizeChanged += MapImage_SizeChanged;
 
@@ -197,10 +193,16 @@ namespace MixItUp.WPF.Controls.Interactive
                 {
                     mapImagePath += "map3.png";
                 }
+                else if (map.Name.Equals(VikendiMapName))
+                {
+                    mapImagePath += "map4.png";
+                }
 
                 JObject settings = this.GetCustomSettings();
                 settings[MapSelectionSettingProperty] = this.MapComboBox.SelectedIndex;
                 this.SaveCustomSettings(settings);
+
+                this.ChangeMapImage(mapImagePath);
             }
         }
 
@@ -233,6 +235,15 @@ namespace MixItUp.WPF.Controls.Interactive
         private void MapImage_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             this.OnUIResize();
+        }
+
+        private void ChangeMapImage(string path)
+        {
+            BitmapImage bitmapMapImage = new BitmapImage();
+            bitmapMapImage.BeginInit();
+            bitmapMapImage.UriSource = new Uri("pack://application:,,," + path);
+            bitmapMapImage.EndInit();
+            this.MapImage.Source = bitmapMapImage;
         }
     }
 }

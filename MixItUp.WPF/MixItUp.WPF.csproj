@@ -1876,6 +1876,9 @@
     <Resource Include="..\MixPlay\realm-royale-drop-map\src\map.png">
       <Link>Assets\Images\RealmRoyaleDropMap\map.png</Link>
     </Resource>
+    <Resource Include="..\MixPlay\pubg-drop-map\src\map4.png">
+      <Link>Assets\Images\PUBGDropMap\map4.png</Link>
+    </Resource>
     <Content Include="Assets\Sounds\Ariel.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
