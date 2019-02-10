@@ -8,6 +8,18 @@
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 
   <style>
+  	  div.presenterDiv {
+        position: absolute;
+        top: 87%;
+        left: 50%;
+        z-index: 5;
+		transform: translate(-50%, 0%);
+      }
+  
+	  h1.presenterName {
+		color: white;
+      }
+  
       div.mainDiv {
         position: absolute;
         top: 5%;
@@ -33,12 +45,12 @@
         z-index: 0;
       }
 	  
-	  canvas.presentCanvas {
+	  img.presentImage {
         position: absolute;
         width: 100%;
         height: 100%;
         border: 2px solid;
-        z-index: 99;
+        z-index: 50;
       }
 
       table.paintSwatchTable {
@@ -48,11 +60,30 @@
         z-index: 3;
       }
 
-      button.clearButton {
+      button {
         display: block;
         margin: auto;
         width: 50px;
+		height: 25px;
       }
+	  
+	  div.roundImage {
+		border-radius: 50%;
+		overflow: hidden;
+		width: 24px;
+		height: 24px;
+		transform: translate(0%, 0%);
+	  }
+
+	  img.userAvatarImage {
+		height: 100%;
+		width: 100%;
+		min-width: 100%;
+		min-height: 100%;
+		position: absolute;
+		pointer-events: none;
+		z-index: 50;
+	  }
       </style>
 </head>
 <body>
@@ -60,7 +91,6 @@
 
   <div id="mainDiv" class="mainDiv">
     <canvas id="drawingCanvas" class="drawingCanvas"></canvas>
-	<canvas id="presentCanvas" class="presentCanvas" style="visibility: hidden" ></canvas>
 	
 	<div id="selectorDiv" style="position: absolute; left: 0px; top: 0px; visibility: hidden">
         <img id="selectorImage" style="position: absolute; transform: translate(-50%, -50%);" src="selector.png" />
@@ -84,13 +114,28 @@
         <td><div style="width:25px;height:25px;background:black;" id="black"></div></td>
       </tr>
       <tr>
-        <td colspan="2"><button id="clearButton" class="clearButton" style="width:50px;height:25px;">Clear</button></td>
+        <td colspan="2"><button id="clearButton">Clear</button></td>
       </tr>
       <tr>
-        <td colspan="2"><button id="saveButton" class="saveButton" style="width:50px;height:25px;">Save</button></td>
+        <td colspan="2"><button id="saveButton">Save</button></td>
       </tr>
       <tr>
-        <td colspan="2"><button id="sendButton" class="sendButton" style="width:50px;height:25px;">Send</button></td>
+        <td colspan="2"><button id="sendButton">Send</button></td>
+      </tr>
+    </table>
+	
+	<img id="presentImage" class="presentImage" style="visibility: hidden"></img>
+  </div>
+  
+  <div id="presenterDiv" class="presenterDiv" style="visibility: hidden">
+    <table cellspacing="0" cellpadding="0">
+      <tr>
+        <td>
+		  <div id="presenterImageDiv" class="roundImage">
+	        <img id="presenterImage" class="userAvatarImage"></img>
+		  </div>
+		</td>
+        <td><h1 id="presenterName" class="presenterName" style="margin-left: 15px"><h1></td>
       </tr>
     </table>
   </div>

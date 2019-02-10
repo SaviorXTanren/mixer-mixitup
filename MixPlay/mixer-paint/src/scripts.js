@@ -2,9 +2,7 @@
 
 var canvas;
 var canvasCtx;
-
-var presentCanvas;
-var presentCanvasCtx;
+var paintSwatchTable;
 
 var prevX = 0;
 var prevY = 0;
@@ -15,6 +13,11 @@ var mouseHeld = false;
 var dot_flag = false;
 
 var selectorDiv;
+
+var presentImage;
+var presenterDiv;
+var presenterNameText;
+var presenterImage;
 
 var color = "black";
 var lineWidth = 1;
@@ -41,83 +44,29 @@ var rAF = window.mozRequestAnimationFrame ||
     window.webkitRequestAnimationFrame ||
     window.requestAnimationFrame;
 
-window.addEventListener('load', function initMixer() {
-    mixer.isLoaded();
-	
-	selectorDiv = document.getElementById('selectorDiv');
-    selectorDiv.style.left = xGamepadCoordinate + "px";
-    selectorDiv.style.top = yGamepadCoordinate + "px";
-
-    canvas = document.getElementById('drawingCanvas');
-    canvasCtx = canvas.getContext("2d");
-	
-	presentCanvas = document.getElementById('presentCanvas');
-    presentCanvasCtx = canvas.getContext("2d");
-
-    canvas.addEventListener("mousemove", function (e) {
-		handleDrawing('move', e.clientX, e.clientY);
-    }, false);
-    canvas.addEventListener("mousedown", function (e) {
-		handleDrawing('down', e.clientX, e.clientY);
-    }, false);
-    canvas.addEventListener("mouseup", function (e) {
-		handleDrawing('up', e.clientX, e.clientY);
-    }, false);
-    canvas.addEventListener("mouseout", function (e) {
-		handleDrawing('out', e.clientX, e.clientY);
-    }, false);
-
-    $('#blue').click(function() { color = 'blue'; });
-    $('#red').click(function() { color = 'red'; });
-    $('#green').click(function() { color = 'green'; });
-    $('#yellow').click(function() { color = 'yellow'; });
-    $('#orange').click(function() { color = 'orange'; });
-    $('#purple').click(function() { color = 'purple'; });
-    $('#white').click(function() { color = 'white'; });
-    $('#black').click(function() { color = 'black'; });
-
-    $('#clearButton').click(function() {
-        var canvasRect = canvas.getBoundingClientRect();
-        canvasCtx.clearRect(0, 0, canvasRect.width, canvasRect.height); 
-    });
-	
-	$('#saveButton').click(function() {
-		var link = document.getElementById('savelink');
-		link.setAttribute('download', 'MixerPaint.png');
-		link.setAttribute('href', canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"));
-		link.click();
-    });
-	
-	$('#sendButton').click(function() {
-
-        mixer.socket.call('giveInput', {
-            controlID: 'send',
-            event: 'mousedown',
-            meta: {
-				image: canvas.toDataURL("image/png").replace("image/png", "image/octet-stream")
-            }
-        });
-    });
-});
-
-
 function handleControlUpdate(update) {
     if (update.controls.length > 0) {
         var control = update.controls[0];
         if (control.controlID === 'present' && control.meta.image != null) {
 			
 			canvas.style.visibility = 'hidden';
-			presentCanvas.style.visibility = 'visible';
+			paintSwatchTable.style.visibility = 'hidden';
+			presentImage.style.visibility = 'visible';
+			presenterDiv.style.visibility = 'visible';
 			
-			var img = new Image;
-			img.onload = function(){
-			  ctx.drawImage(img, 0, 0);
-			};
-			img.src = control.meta.image;
+			presenterImage.src = control.meta.useravatar;
+			presenterNameText.innerHTML = control.meta.username;
+			
+			presentImage.src = control.meta.image;
 			
 			setTimeout(function() {
 				canvas.style.visibility = 'visible';
-				presentCanvas.style.visibility = 'hidden';
+				paintSwatchTable.style.visibility = 'visible';
+				presentImage.style.visibility = 'hidden';
+				presenterDiv.style.visibility = 'hidden';
+				
+				presenterImage.src = '';
+				presenterNameText.innerHTML = '';
 			}, 8000);
         }
     }
@@ -137,8 +86,6 @@ function handleDrawing(res, x, y) {
         prevY = currY;
         currX = (x - canvasRect.left) * canvasScaleX;
         currY = (y - canvasRect.top) * canvasScaleY;
-
-        console.log(currX + "," + currY);
 
         mouseHeld = true;
         dot_flag = true;
@@ -262,3 +209,68 @@ function isButtonPressed(controller, index) {
 function clamp(number, min, max) {
     return Math.min(Math.max(number, min), max);
 }
+
+window.addEventListener('load', function initMixer() {
+    mixer.isLoaded();
+	
+	selectorDiv = document.getElementById('selectorDiv');
+    selectorDiv.style.left = xGamepadCoordinate + "px";
+    selectorDiv.style.top = yGamepadCoordinate + "px";
+
+    canvas = document.getElementById('drawingCanvas');
+    canvasCtx = canvas.getContext("2d");
+	
+	presentImage = document.getElementById('presentImage');
+	presenterDiv = document.getElementById('presenterDiv');
+	presenterNameText = document.getElementById('presenterName');
+	presenterImage = document.getElementById('presenterImage');
+	
+	paintSwatchTable = document.getElementById('paintSwatchTable');
+
+    canvas.addEventListener("mousemove", function (e) {
+		handleDrawing('move', e.clientX, e.clientY);
+    }, false);
+    canvas.addEventListener("mousedown", function (e) {
+		handleDrawing('down', e.clientX, e.clientY);
+    }, false);
+    canvas.addEventListener("mouseup", function (e) {
+		handleDrawing('up', e.clientX, e.clientY);
+    }, false);
+    canvas.addEventListener("mouseout", function (e) {
+		handleDrawing('out', e.clientX, e.clientY);
+    }, false);
+
+    $('#blue').click(function() { color = 'blue'; });
+    $('#red').click(function() { color = 'red'; });
+    $('#green').click(function() { color = 'green'; });
+    $('#yellow').click(function() { color = 'yellow'; });
+    $('#orange').click(function() { color = 'orange'; });
+    $('#purple').click(function() { color = 'purple'; });
+    $('#white').click(function() { color = 'white'; });
+    $('#black').click(function() { color = 'black'; });
+
+    $('#clearButton').click(function() {
+        var canvasRect = canvas.getBoundingClientRect();
+        canvasCtx.clearRect(0, 0, canvasRect.width, canvasRect.height); 
+    });
+	
+	$('#saveButton').click(function() {
+		var link = document.getElementById('savelink');
+		link.setAttribute('download', 'MixerPaint.png');
+		link.setAttribute('href', canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"));
+		link.click();
+    });
+	
+	$('#sendButton').click(function() {
+
+        mixer.socket.call('giveInput', {
+            controlID: 'send',
+            event: 'mousedown',
+            meta: {
+				image: canvas.toDataURL("image/png")
+            }
+        });
+    });
+});
+
+mixer.socket.on('onControlUpdate', handleControlUpdate);
