@@ -340,7 +340,7 @@ namespace MixItUp.Base.Actions
                             long timestamp = DateTimeHelper.DateTimeOffsetToUnixTimestamp(DateTimeOffset.Now.AddSeconds(this.CooldownAmount));
                             foreach (InteractiveConnectedButtonControlModel button in buttons)
                             {
-                                button.cooldown = timestamp;
+                                button.SetCooldownTimestamp(timestamp);
                             }
                             await ChannelSession.Interactive.UpdateControls(scene, buttons);
                         }

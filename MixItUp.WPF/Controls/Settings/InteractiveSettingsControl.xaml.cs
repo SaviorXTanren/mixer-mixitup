@@ -66,6 +66,11 @@ namespace MixItUp.WPF.Controls.Settings
             ChannelSession.Settings.PreventUnknownInteractiveUsers = this.PreventUnknownInteractiveUsersToggleButton.IsChecked.GetValueOrDefault();
         }
 
+        private void PreventSmallerCooldownsToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            ChannelSession.Settings.PreventSmallerCooldowns = this.PreventSmallerCooldownsToggleButton.IsChecked.GetValueOrDefault();
+        }
+
         private async void AddCustomInteractiveProjectButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             await this.Window.RunAsyncOperation(() =>

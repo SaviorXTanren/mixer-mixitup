@@ -6,19 +6,27 @@
         {
           "controls": [
             {
-              "controlID": "draw",
+              "controlID": "send",
               "cost": 0,
               "disabled": false,
               "kind": "button",
               "meta": {},
-              "text": "draw"
+              "text": "send"
+            },
+            {
+              "controlID": "present",
+              "cost": 0,
+              "disabled": false,
+              "kind": "button",
+              "meta": {},
+              "text": "present"
             }
           ],
           "sceneID": "default"
         }
       ]
     },
-    "savedAt": 1534269424084
+    "savedAt": 1549754758386
   },
   {
     "name": "Save from 6/06 23:34",

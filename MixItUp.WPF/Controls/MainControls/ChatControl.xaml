@@ -141,6 +141,8 @@
 
                         <Button x:Name="SendChatMessageButton" Grid.Column="4" Width="70" Click="SendChatMessageButton_Click">Send</Button>
                     </Grid>
+
+                    <ChatControls:GifSkillPopoutControl x:Name="GifSkillPopout" HorizontalAlignment="Right" VerticalAlignment="Top" />
                 </Grid>
 
                 <GridSplitter x:Name="ChatSplitter" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="5" />

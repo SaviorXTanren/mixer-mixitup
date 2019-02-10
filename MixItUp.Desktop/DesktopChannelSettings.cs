@@ -121,6 +121,8 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public bool PreventUnknownInteractiveUsers { get; set; }
         [JsonProperty]
+        public bool PreventSmallerCooldowns { get; set; }
+        [JsonProperty]
         public List<InteractiveSharedProjectModel> CustomInteractiveProjectIDs { get; set; }
 
         [JsonProperty]

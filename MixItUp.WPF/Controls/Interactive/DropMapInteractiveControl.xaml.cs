@@ -26,6 +26,7 @@ namespace MixItUp.WPF.Controls.Interactive
         private const string ErangelMapName = "Erangel";
         private const string MiramarMapName = "Miramar";
         private const string SanhokMapName = "Sanhok";
+        private const string VikendiMapName = "Vikendi";
 
         private ObservableCollection<PUBGMap> maps = new ObservableCollection<PUBGMap>();
 
@@ -39,6 +40,7 @@ namespace MixItUp.WPF.Controls.Interactive
             this.maps.Add(new PUBGMap() { Name = ErangelMapName, Map = "map1.png" });
             this.maps.Add(new PUBGMap() { Name = MiramarMapName, Map = "map2.png" });
             this.maps.Add(new PUBGMap() { Name = SanhokMapName, Map = "map3.png" });
+            this.maps.Add(new PUBGMap() { Name = VikendiMapName, Map = "map4.png" });
 
             this.Initialize(dropMapType, this.MapImage, this.LocationPointsCanvas);
 
@@ -63,11 +65,7 @@ namespace MixItUp.WPF.Controls.Interactive
                     break;
             }
 
-            BitmapImage bitmapMapImage = new BitmapImage();
-            bitmapMapImage.BeginInit();
-            bitmapMapImage.UriSource = new Uri("pack://application:,,," + mapImagePath);
-            bitmapMapImage.EndInit();
-            this.MapImage.Source = bitmapMapImage;
+            this.ChangeMapImage(mapImagePath);
 
             this.MapImage.SizeChanged += MapImage_SizeChanged;
 
@@ -107,7 +105,14 @@ namespace MixItUp.WPF.Controls.Interactive
                     break;
             }
 
-            return string.Format("{0} {1}", (char)((int)(point.X / gridSize) + 65), (int)(point.Y / gridSize) + 1);
+            if (this.dropMapType == DropMapTypeEnum.PUBG)
+            {
+                return string.Format("{0} {1}", (char)((int)(point.X / gridSize) + 65), (char)((int)(point.Y / gridSize) + 73));
+            }
+            else
+            {
+                return string.Format("{0} {1}", (char)((int)(point.X / gridSize) + 65), (int)(point.Y / gridSize) + 1);
+            }
         }
 
         protected override async Task UpdateWinnerUI(uint winner, string username, string location)
@@ -188,10 +193,16 @@ namespace MixItUp.WPF.Controls.Interactive
                 {
                     mapImagePath += "map3.png";
                 }
+                else if (map.Name.Equals(VikendiMapName))
+                {
+                    mapImagePath += "map4.png";
+                }
 
                 JObject settings = this.GetCustomSettings();
                 settings[MapSelectionSettingProperty] = this.MapComboBox.SelectedIndex;
                 this.SaveCustomSettings(settings);
+
+                this.ChangeMapImage(mapImagePath);
             }
         }
 
@@ -224,6 +235,15 @@ namespace MixItUp.WPF.Controls.Interactive
         private void MapImage_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             this.OnUIResize();
+        }
+
+        private void ChangeMapImage(string path)
+        {
+            BitmapImage bitmapMapImage = new BitmapImage();
+            bitmapMapImage.BeginInit();
+            bitmapMapImage.UriSource = new Uri("pack://application:,,," + path);
+            bitmapMapImage.EndInit();
+            this.MapImage.Source = bitmapMapImage;
         }
     }
 }

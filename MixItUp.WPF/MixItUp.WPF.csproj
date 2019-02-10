@@ -406,6 +406,9 @@
     <Compile Include="Controls\Chat\GifSkillControl.xaml.cs">
       <DependentUpon>GifSkillControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Chat\GifSkillPopoutControl.xaml.cs">
+      <DependentUpon>GifSkillPopoutControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Chat\SkillControl.xaml.cs">
       <DependentUpon>SkillControl.xaml</DependentUpon>
     </Compile>
@@ -1030,6 +1033,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Chat\GifSkillControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Chat\GifSkillPopoutControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1868,6 +1875,9 @@
     </Resource>
     <Resource Include="..\MixPlay\realm-royale-drop-map\src\map.png">
       <Link>Assets\Images\RealmRoyaleDropMap\map.png</Link>
+    </Resource>
+    <Resource Include="..\MixPlay\pubg-drop-map\src\map4.png">
+      <Link>Assets\Images\PUBGDropMap\map4.png</Link>
     </Resource>
     <Content Include="Assets\Sounds\Ariel.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

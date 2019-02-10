@@ -10,10 +10,12 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid Margin="20">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
@@ -29,9 +31,12 @@
         <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Prevent Unknown MixPlay Users:</TextBlock>
         <ToggleButton Grid.Row="2" Grid.Column="2" x:Name="PreventUnknownInteractiveUsersToggleButton" HorizontalAlignment="Left" Checked="PreventUnknownInteractiveUsersToggleButton_Checked" Unchecked="PreventUnknownInteractiveUsersToggleButton_Checked" />
 
-        <Separator Grid.Row="4" Grid.ColumnSpan="2" Margin="10" />
+        <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Prevent Smaller Cooldowns From Overwriting:</TextBlock>
+        <ToggleButton Grid.Row="4" Grid.Column="2" x:Name="PreventSmallerCooldownsToggleButton" HorizontalAlignment="Left" Checked="PreventSmallerCooldownsToggleButton_Checked" Unchecked="PreventSmallerCooldownsToggleButton_Checked" />
 
-        <Grid Grid.Row="6" Grid.ColumnSpan="2">
+        <Separator Grid.Row="6" Grid.ColumnSpan="2" Margin="10" />
+
+        <Grid Grid.Row="8" Grid.ColumnSpan="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="20" />

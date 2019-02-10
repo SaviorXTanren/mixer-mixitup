@@ -16,6 +16,21 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.MixerAPI
 {
+    public static class InteractiveConnectedButtonControlModelExtensions
+    {
+        public static void SetCooldownTimestamp(this InteractiveConnectedButtonControlModel button, long cooldown)
+        {
+            if (ChannelSession.Settings.PreventSmallerCooldowns)
+            {
+                button.cooldown = Math.Max(button.cooldown, cooldown);
+            }
+            else
+            {
+                button.cooldown = cooldown;
+            }
+        }
+    }
+
     public abstract class InteractiveConnectedControlCommand
     {
         public InteractiveConnectedSceneModel Scene { get; set; }
@@ -110,7 +125,7 @@ namespace MixItUp.Base.MixerAPI
             {
                 if (this.HasCooldown)
                 {
-                    this.Button.cooldown = this.CooldownTimestamp;
+                    this.Button.SetCooldownTimestamp(this.CooldownTimestamp);
 
                     Dictionary<InteractiveConnectedSceneModel, List<InteractiveConnectedButtonCommand>> sceneButtons = new Dictionary<InteractiveConnectedSceneModel, List<InteractiveConnectedButtonCommand>>();
 
@@ -120,7 +135,7 @@ namespace MixItUp.Base.MixerAPI
                         otherButtons = otherButtons.Where(c => this.ButtonCommand.CooldownGroupName.Equals(c.ButtonCommand.CooldownGroupName));
                         foreach (var otherItem in otherButtons)
                         {
-                            otherItem.Button.cooldown = this.Button.cooldown;
+                            otherItem.Button.SetCooldownTimestamp(this.Button.cooldown);
                             if (!sceneButtons.ContainsKey(otherItem.Scene))
                             {
                                 sceneButtons[otherItem.Scene] = new List<InteractiveConnectedButtonCommand>();
