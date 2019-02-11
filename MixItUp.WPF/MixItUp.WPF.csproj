@@ -526,7 +526,6 @@
     <Compile Include="Controls\Interactive\DropMapInteractiveControl.xaml.cs">
       <DependentUpon>DropMapInteractiveControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Interactive\DropMapInterativeGameControl.cs" />
     <Compile Include="Controls\Interactive\FlySwatterInteractiveControl.xaml.cs">
       <DependentUpon>FlySwatterInteractiveControl.xaml</DependentUpon>
     </Compile>
