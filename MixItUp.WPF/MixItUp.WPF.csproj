@@ -527,6 +527,9 @@
       <DependentUpon>DropMapInteractiveControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Interactive\DropMapInterativeGameControl.cs" />
+    <Compile Include="Controls\Interactive\FlySwatterInteractiveControl.xaml.cs">
+      <DependentUpon>FlySwatterInteractiveControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Interactive\MixerPaintInteractiveControl.xaml.cs">
       <DependentUpon>MixerPaintInteractiveControl.xaml</DependentUpon>
     </Compile>
@@ -1189,6 +1192,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Interactive\DropMapInteractiveControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Interactive\FlySwatterInteractiveControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

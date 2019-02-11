@@ -1,0 +1,106 @@
+﻿<local:CustomInteractiveGameControl x:Class="MixItUp.WPF.Controls.Interactive.FlySwatterInteractiveControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Interactive"
+             xmlns:UserControls="clr-namespace:MixItUp.WPF.Controls.Users"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250" />
+            <ColumnDefinition Width="2*" />
+        </Grid.ColumnDefinitions>
+
+        <Border Style="{StaticResource DefaultBorder}" Grid.Column="0">
+            <ItemsControl x:Name="ParticipantsList">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="20,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <UserControls:UserProfileAvatarControl DataContext="{Binding User}" Grid.Column="0" Size="16" />
+
+                            <TextBlock Grid.Column="2" Text="{Binding User.UserName}" />
+
+                            <TextBlock Grid.Column="4" Text="{Binding Total}" />
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Border>
+
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" TextDecorations="Underline">Time Left:</TextBlock>
+
+                    <TextBlock x:Name="TimeLeftTextBlock" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+                </Grid>
+
+                <Grid x:Name="WinnerGrid" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" TextDecorations="Underline">Winner:</TextBlock>
+
+                    <TextBlock Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding User.UserName}" />
+
+                    <TextBlock Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Total}" />
+
+                </Grid>
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBox x:Name="MaxTimeTextBox" Grid.Row="0" MaterialDesign:HintAssist.Hint="Max Time" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" TextChanged="MaxTimeTextBox_TextChanged" />
+                </Grid>
+
+                <Grid Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    
+                </Grid>
+
+            </Grid>
+            
+        </Grid>
+    </Grid>
+</local:CustomInteractiveGameControl>
