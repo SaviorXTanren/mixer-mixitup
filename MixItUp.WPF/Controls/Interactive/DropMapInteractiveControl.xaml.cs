@@ -239,7 +239,10 @@ namespace MixItUp.WPF.Controls.Interactive
 
             this.userAvatars.Clear();
             this.userPoints.Clear();
-            this.canvas.Children.Clear();
+            if (this.canvas != null)
+            {
+                this.canvas.Children.Clear();
+            }
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             Task.Run(async () =>
