@@ -205,6 +205,7 @@ namespace MixItUp.Base.MixerAPI
 
         private List<InteractiveGameModel> games = new List<InteractiveGameModel>();
         private DateTimeOffset lastRefresh = DateTimeOffset.MinValue;
+        private SemaphoreSlim refreshLock = new SemaphoreSlim(1);
 
         public InteractiveClientWrapper()
         {
@@ -216,42 +217,44 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task<IEnumerable<InteractiveGameModel>> GetAllConnectableGames(bool forceRefresh = false)
         {
-            if (forceRefresh || this.lastRefresh < DateTimeOffset.Now)
+            await this.refreshLock.WaitAndRelease(async () =>
             {
-                this.lastRefresh = DateTimeOffset.Now.AddMinutes(1);
-                this.games.Clear();
-
-                this.games.AddRange(await ChannelSession.Connection.GetOwnedInteractiveGames(ChannelSession.Channel));
-                games.RemoveAll(g => g.name.Equals("Soundwave Interactive Soundboard"));
-
-                foreach (InteractiveSharedProjectModel project in ChannelSession.Settings.CustomInteractiveProjectIDs)
+                if (forceRefresh || this.lastRefresh < DateTimeOffset.Now)
                 {
-                    InteractiveGameVersionModel version = await ChannelSession.Connection.GetInteractiveGameVersion(project.VersionID);
-                    if (version != null)
+                    this.lastRefresh = DateTimeOffset.Now.AddMinutes(1);
+                    this.games.Clear();
+
+                    this.games.AddRange(await ChannelSession.Connection.GetOwnedInteractiveGames(ChannelSession.Channel));
+                    games.RemoveAll(g => g.name.Equals("Soundwave Interactive Soundboard"));
+
+                    foreach (InteractiveSharedProjectModel project in ChannelSession.Settings.CustomInteractiveProjectIDs)
                     {
-                        InteractiveGameModel game = await ChannelSession.Connection.GetInteractiveGame(version.gameId);
-                        if (game != null)
+                        InteractiveGameVersionModel version = await ChannelSession.Connection.GetInteractiveGameVersion(project.VersionID);
+                        if (version != null)
                         {
-                            games.Add(game);
+                            InteractiveGameModel game = await ChannelSession.Connection.GetInteractiveGame(version.gameId);
+                            if (game != null)
+                            {
+                                games.Add(game);
+                            }
+                        }
+                    }
+
+                    foreach (InteractiveSharedProjectModel project in InteractiveSharedProjectModel.AllMixPlayProjects)
+                    {
+                        InteractiveGameVersionModel version = await ChannelSession.Connection.GetInteractiveGameVersion(project.VersionID);
+                        if (version != null)
+                        {
+                            InteractiveGameModel game = await ChannelSession.Connection.GetInteractiveGame(version.gameId);
+                            if (game != null)
+                            {
+                                game.name += " (MixPlay)";
+                                games.Add(game);
+                            }
                         }
                     }
                 }
-
-                foreach (InteractiveSharedProjectModel project in InteractiveSharedProjectModel.AllMixPlayProjects)
-                {
-                    InteractiveGameVersionModel version = await ChannelSession.Connection.GetInteractiveGameVersion(project.VersionID);
-                    if (version != null)
-                    {
-                        InteractiveGameModel game = await ChannelSession.Connection.GetInteractiveGame(version.gameId);
-                        if (game != null)
-                        {
-                            game.name += " (MixPlay)";
-                            games.Add(game);
-                        }
-                    }
-                }
-            }
-
+            });
             return games;
         }
 
