@@ -88,14 +88,16 @@ namespace MixItUp.WPF.Controls.Interactive
                 this.sparkCost = settings[SparkCostSettingProperty].ToObject<int>();
             }
 
-            if (settings.ContainsKey(MapSelectionSettingProperty))
-            {
-                this.MapComboBox.SelectedIndex = settings[MapSelectionSettingProperty].ToObject<int>();
-            }
-            else
-            {
-                this.MapComboBox.SelectedIndex = 0;
-            }
+            this.MapImage.SizeChanged += MapImage_SizeChanged;
+        }
+
+        protected override async Task OnLoaded()
+        {
+            this.image = this.MapImage;
+            this.canvas = this.LocationPointsCanvas;
+
+            this.MaxTimeTextBox.Text = this.maxTime.ToString();
+            this.SparkCostTextBox.Text = this.sparkCost.ToString();
 
             string mapImagePath = null;
             switch (this.dropMapType)
@@ -120,16 +122,18 @@ namespace MixItUp.WPF.Controls.Interactive
 
             this.ChangeMapImage(mapImagePath);
 
-            this.MapImage.SizeChanged += MapImage_SizeChanged;
-
-            this.MaxTimeTextBox.Text = this.maxTime.ToString();
-            this.SparkCostTextBox.Text = this.sparkCost.ToString();
-        }
-
-        protected override async Task OnLoaded()
-        {
-            this.image = this.MapImage;
-            this.canvas = this.LocationPointsCanvas;
+            if (this.dropMapType == DropMapTypeEnum.PUBG)
+            {
+                JObject settings = this.GetCustomSettings();
+                if (settings.ContainsKey(MapSelectionSettingProperty))
+                {
+                    this.MapComboBox.SelectedIndex = settings[MapSelectionSettingProperty].ToObject<int>();
+                }
+                else
+                {
+                    this.MapComboBox.SelectedIndex = 0;
+                }
+            }
 
             await base.OnLoaded();
         }
