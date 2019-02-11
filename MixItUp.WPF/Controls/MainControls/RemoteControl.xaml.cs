@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using System.Windows;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -18,7 +17,7 @@ namespace MixItUp.WPF.Controls.MainControls
             return base.InitializeInternal();
         }
 
-        private void SecretBetaAccess_Click(object sender, RoutedEventArgs e)
+        private void ProfilesListView_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
 
         }

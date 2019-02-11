@@ -5,12 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="ViewModel\Remote\**" />
-    <EmbeddedResource Remove="ViewModel\Remote\**" />
-    <None Remove="ViewModel\Remote\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Include="..\..\Mix It Up Web\MixItUpSecrets.cs" Link="MixItUpSecrets.cs" />
   </ItemGroup>
 
@@ -70,6 +64,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MixItUp.SignalR.Client\MixItUp.SignalR.Client.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ViewModel\Remote\" />
   </ItemGroup>
 
 </Project>
