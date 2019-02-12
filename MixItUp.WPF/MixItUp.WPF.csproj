@@ -526,7 +526,9 @@
     <Compile Include="Controls\Interactive\DropMapInteractiveControl.xaml.cs">
       <DependentUpon>DropMapInteractiveControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Interactive\DropMapInterativeGameControl.cs" />
+    <Compile Include="Controls\Interactive\FlySwatterInteractiveControl.xaml.cs">
+      <DependentUpon>FlySwatterInteractiveControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Interactive\MixerPaintInteractiveControl.xaml.cs">
       <DependentUpon>MixerPaintInteractiveControl.xaml</DependentUpon>
     </Compile>
@@ -602,6 +604,15 @@
     </Compile>
     <Compile Include="Controls\Overlay\OverlayYouTubeItemControl.xaml.cs">
       <DependentUpon>OverlayYouTubeItemControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Remote\RemoteCommandItemControl.xaml.cs">
+      <DependentUpon>RemoteCommandItemControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Remote\RemoteFolderItemControl.xaml.cs">
+      <DependentUpon>RemoteFolderItemControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Remote\RemoteItemContainerControl.xaml.cs">
+      <DependentUpon>RemoteItemContainerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Requirement\CooldownRequirementControl.xaml.cs">
       <DependentUpon>CooldownRequirementControl.xaml</DependentUpon>
@@ -865,6 +876,7 @@
     <Compile Include="Util\LogicalTreeHelpers.cs" />
     <Compile Include="Util\MessageBoxHelper.cs" />
     <Compile Include="Util\VisualTreeHelpers.cs" />
+    <Compile Include="Util\WPFDialogShower.cs" />
     <Compile Include="Windows\Command\CommandWindow.xaml.cs">
       <DependentUpon>CommandWindow.xaml</DependentUpon>
     </Compile>
@@ -1192,6 +1204,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Interactive\FlySwatterInteractiveControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Interactive\MixerPaintInteractiveControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1289,6 +1305,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Overlay\OverlayYouTubeItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Remote\RemoteCommandItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Remote\RemoteFolderItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Remote\RemoteItemContainerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace MixItUp.Base.ViewModel.Controls.MainControls
 {
-    public class CommandGroupControlViewModel : NotifyPropertyChangedViewModelBase
+    public class CommandGroupControlViewModel : ViewModelBase
     {
         public CommandGroupSettings GroupSettings { get; set; }
 
@@ -40,7 +40,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                     }
                 }
 
-                this.OnPropertyChanged();
+                this.NotifyPropertyChanged();
             }
         }
 
@@ -52,7 +52,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             set
             {
                 this.commands = value;
-                this.OnPropertyChanged();
+                this.NotifyPropertyChanged();
             }
         }
         private ObservableCollection<CommandBase> commands = new ObservableCollection<CommandBase>();

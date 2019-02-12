@@ -18,6 +18,9 @@ namespace MixItUp.Base.Remote.Models
         public string BackgroundColor { get; set; }
 
         [DataMember]
+        public string ImagePath { get; set; }
+
+        [DataMember]
         public string ImageData { get; set; }
 
         [DataMember]

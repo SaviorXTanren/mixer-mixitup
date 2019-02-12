@@ -12,6 +12,9 @@ namespace MixItUp.Base.Remote.Models.Items
         public string TextColor { get; set; }
 
         [DataMember]
+        public string ImagePath { get; set; }
+
+        [DataMember]
         public string ImageData { get; set; }
 
         public RemoteButtonItemModelBase() { }

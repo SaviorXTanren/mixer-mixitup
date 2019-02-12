@@ -32,7 +32,7 @@ namespace MixItUp.WPF.Controls.Chat
 
         private async void GifImage_SizeChanged(object sender, System.Windows.SizeChangedEventArgs e)
         {
-            if (this.DataContext != null && this.GifImage.Source.Height > 10)
+            if (this.DataContext != null && this.GifImage != null && this.GifImage.Source != null && this.GifImage.Source.Height > 10)
             {
                 this.GroupBox.Visibility = Visibility.Visible;
                 await Task.Delay(9000);

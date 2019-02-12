@@ -8,6 +8,7 @@ using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Serial;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Remote.Models;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
@@ -354,6 +355,9 @@ namespace MixItUp.Desktop
         protected List<OverlayWidget> overlayWidgetsInternal { get; set; }
 
         [JsonProperty]
+        protected Dictionary<RemoteProfileModel, RemoteBoardModel> remoteProfileInternal { get; set; }
+
+        [JsonProperty]
         protected List<string> filteredWordsInternal { get; set; }
         [JsonProperty]
         protected List<string> bannedWordsInternal { get; set; }
@@ -387,6 +391,7 @@ namespace MixItUp.Desktop
             this.actionGroupCommandsInternal = new List<ActionGroupCommand>();
             this.gameCommandsInternal = new List<GameCommandBase>();
             this.userQuotesInternal = new List<UserQuoteViewModel>();
+            this.remoteProfileInternal = new Dictionary<RemoteProfileModel, RemoteBoardModel>();
             this.overlayWidgetsInternal = new List<OverlayWidget>();
             this.filteredWordsInternal = new List<string>();
             this.bannedWordsInternal = new List<string>();
@@ -433,6 +438,9 @@ namespace MixItUp.Desktop
 
         [JsonIgnore]
         public LockedList<OverlayWidget> OverlayWidgets { get; set; }
+
+        [JsonIgnore]
+        public LockedDictionary<RemoteProfileModel, RemoteBoardModel> RemoteProfiles { get; set; }
 
         [JsonIgnore]
         public LockedList<string> FilteredWords { get; set; }
@@ -511,6 +519,7 @@ namespace MixItUp.Desktop
             this.ActionGroupCommands = new LockedList<ActionGroupCommand>();
             this.GameCommands = new LockedList<GameCommandBase>();
             this.UserQuotes = new LockedList<UserQuoteViewModel>();
+            this.RemoteProfiles = new LockedDictionary<RemoteProfileModel, RemoteBoardModel>();
             this.OverlayWidgets = new LockedList<OverlayWidget>();
             this.FilteredWords = new LockedList<string>();
             this.BannedWords = new LockedList<string>();
@@ -531,6 +540,7 @@ namespace MixItUp.Desktop
             this.ActionGroupCommands = new LockedList<ActionGroupCommand>(this.actionGroupCommandsInternal);
             this.GameCommands = new LockedList<GameCommandBase>(this.gameCommandsInternal);
             this.UserQuotes = new LockedList<UserQuoteViewModel>(this.userQuotesInternal);
+            this.RemoteProfiles = new LockedDictionary<RemoteProfileModel, RemoteBoardModel>(this.remoteProfileInternal);
             this.OverlayWidgets = new LockedList<OverlayWidget>(this.overlayWidgetsInternal);
             this.FilteredWords = new LockedList<string>(this.filteredWordsInternal);
             this.BannedWords = new LockedList<string>(this.bannedWordsInternal);
@@ -638,6 +648,7 @@ namespace MixItUp.Desktop
             this.actionGroupCommandsInternal = this.ActionGroupCommands.ToList();
             this.gameCommandsInternal = this.GameCommands.ToList();
             this.userQuotesInternal = this.UserQuotes.ToList();
+            this.remoteProfileInternal = this.RemoteProfiles.ToDictionary();
             this.overlayWidgetsInternal = this.OverlayWidgets.ToList();
             this.filteredWordsInternal = this.FilteredWords.ToList();
             this.bannedWordsInternal = this.BannedWords.ToList();

@@ -126,7 +126,7 @@ namespace MixItUp.WPF.Util
             return MessageBoxHelper.lastCustomResult;
         }
 
-        public static void CloseDialog()
+        public static void CloseCurrent()
         {
             DialogHost dialogHost = MessageBoxHelper.GetActiveWindowDialogHost();
             if (dialogHost != null)

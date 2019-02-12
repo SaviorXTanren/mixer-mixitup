@@ -2,6 +2,7 @@
 using MixItUp.Base.Localization;
 using MixItUp.Base.Util;
 using MixItUp.Desktop.Services;
+using MixItUp.WPF.Util;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -84,6 +85,7 @@ namespace MixItUp.WPF
 
             Logger.Initialize(desktopServicesHandler.FileService);
             SerializerHelper.Initialize(desktopServicesHandler.FileService);
+            DialogHelper.Initialize(new WPFDialogShower());
 
             Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;

@@ -223,6 +223,10 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 this.SetCustomInteractiveGame(new MixerPaintInteractiveControl(this.selectedGame, this.selectedGameVersion));
             }
+            else if (this.selectedGame.id == InteractiveSharedProjectModel.FlySwatter.GameID)
+            {
+                this.SetCustomInteractiveGame(new FlySwatterInteractiveControl(this.selectedGame, this.selectedGameVersion));
+            }
             else
             {
                 this.GroupsButton.IsEnabled = true;
