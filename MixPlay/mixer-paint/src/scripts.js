@@ -118,6 +118,30 @@ function handleDrawing(res, x, y) {
     }
 }
 
+function clearCanvas() {
+	var canvasRect = canvas.getBoundingClientRect();
+	canvasCtx.clearRect(0, 0, canvasRect.width, canvasRect.height); 
+}
+
+function savePicture() {
+	var link = document.getElementById('savelink');
+	link.setAttribute('download', 'MixerPaint.png');
+	link.setAttribute('href', canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"));
+	link.click();
+}
+
+function sendPicture() {
+	mixer.socket.call('giveInput', {
+		controlID: 'send',
+		event: 'mousedown',
+		meta: {
+			image: canvas.toDataURL("image/png")
+		}
+	});
+}
+
+// Gamepad Methods
+
 function connecthandler(e) {
     addgamepad(e.gamepad);
 }
@@ -139,11 +163,12 @@ function removegamepad(gamepad) {
 function updateStatus() {
     scangamepads();
     for (j in controllers) {
-        selectorDiv.style.visibility = 'visible';
-
         var controller = controllers[j];
         if (controller.id == XboxControllerID) {
-
+			selectorDiv.style.visibility = 'visible';
+			
+			var canvasRect = canvas.getBoundingClientRect();
+		
             if (controller.axes.length >= LeftStickYAxis) {
                 xMovement = parseFloat(controller.axes[LeftStickXAxis].toFixed(2));
                 yMovement = parseFloat(controller.axes[LeftStickYAxis].toFixed(2));
@@ -151,9 +176,9 @@ function updateStatus() {
                 if (xMovement != NaN && (xMovement > 0.05 || xMovement < -0.05) && yMovement != NaN && (yMovement > 0.05 || yMovement < -0.05)) {
                     xGamepadCoordinate += xMovement * 5.0;
                     yGamepadCoordinate += yMovement * 5.0;
-
-                    xGamepadCoordinate = clamp(xGamepadCoordinate, mapImage.offsetLeft, mapImage.offsetLeft + mapImage.width);
-                    yGamepadCoordinate = clamp(yGamepadCoordinate, mapImage.offsetTop, mapImage.offsetTop + mapImage.height);
+					
+                    xGamepadCoordinate = clamp(xGamepadCoordinate, 0, canvasRect.width);
+                    yGamepadCoordinate = clamp(yGamepadCoordinate, 0, canvasRect.height);
 
                     if (selectorDiv != null) {
                         selectorDiv.style.left = xGamepadCoordinate + "px";
@@ -161,13 +186,51 @@ function updateStatus() {
                     }
                 }
             }
-
-            if (isButtonPressed(controller, AButtonID) || isButtonPressed(controller, XButtonID) ||
+			
+			var xDrawCoordinate = xGamepadCoordinate + canvasRect.x - 4;
+			var yDrawCoordinate = yGamepadCoordinate + canvasRect.y - 4;
+			
+			if (isButtonPressed(controller, AButtonID) || isButtonPressed(controller, XButtonID) ||
                 isButtonPressed(controller, LeftTriggerID) || isButtonPressed(controller, RightTriggerID)) {
-				handleDrawing('down', e.clientX, e.clientY);
+				
+				if (isGamepadOverLocation('blue', xDrawCoordinate, yDrawCoordinate)) {
+					color = 'blue';
+				}
+				else if (isGamepadOverLocation('red', xDrawCoordinate, yDrawCoordinate)) {
+					color = 'red';
+				}
+				else if (isGamepadOverLocation('green', xDrawCoordinate, yDrawCoordinate)) {
+					color = 'green';
+				}
+				else if (isGamepadOverLocation('yellow', xDrawCoordinate, yDrawCoordinate)) {
+					color = 'yellow';
+				}
+				else if (isGamepadOverLocation('orange', xDrawCoordinate, yDrawCoordinate)) {
+					color = 'orange';
+				}
+				else if (isGamepadOverLocation('purple', xDrawCoordinate, yDrawCoordinate)) {
+					color = 'purple';
+				}
+				else if (isGamepadOverLocation('white', xDrawCoordinate, yDrawCoordinate)) {
+					color = 'white';
+				}
+				else if (isGamepadOverLocation('black', xDrawCoordinate, yDrawCoordinate)) {
+					color = 'black';
+				}
+				else if (isGamepadOverLocation('clearButton', xDrawCoordinate, yDrawCoordinate)) {
+					clearCanvas();
+				}
+				else if (isGamepadOverLocation('sendButton', xDrawCoordinate, yDrawCoordinate)) {
+					sendPicture();
+				}
+			}
+
+            if (isButtonHeld(controller, AButtonID) || isButtonHeld(controller, XButtonID) ||
+                isButtonHeld(controller, LeftTriggerID) || isButtonHeld(controller, RightTriggerID)) {
+				handleDrawing('down', xDrawCoordinate, yDrawCoordinate);
             }
 			else {
-				handleDrawing('up', e.clientX, e.clientY);
+				handleDrawing('up', xDrawCoordinate, yDrawCoordinate);
 			}
 
             break;
@@ -206,6 +269,28 @@ function isButtonPressed(controller, index) {
     return pressed;
 }
 
+function isButtonHeld(controller, index) {
+    var held = false;
+    if (controller.buttons.length >= index) {
+        var value = controller.buttons[index];
+        var held = value == 1.0;
+        if (typeof (value) == "object") {
+            held = value.pressed;
+        }
+    }
+    return held;
+}
+
+function isGamepadOverLocation(itemName, x, y) {
+	var item = document.getElementById(itemName);
+	if (item != null) {
+		var rect = item.getBoundingClientRect();
+		return (rect.left <= x && x <= (rect.left + rect.width) &&
+			rect.top <= y && y <= (rect.top + rect.height));	
+	}
+	return false;
+}
+
 function clamp(number, min, max) {
     return Math.min(Math.max(number, min), max);
 }
@@ -219,6 +304,13 @@ window.addEventListener('load', function initMixer() {
 
     canvas = document.getElementById('drawingCanvas');
     canvasCtx = canvas.getContext("2d");
+	
+	var canvasRect = canvas.getBoundingClientRect();
+	xGamepadCoordinate = canvasRect.left + (canvasRect.width / 2);
+    yGamepadCoordinate = canvasRect.top + (canvasRect.height / 2);
+	
+    selectorDiv.style.left = xGamepadCoordinate + "px";
+    selectorDiv.style.top = yGamepadCoordinate + "px";
 	
 	presentImage = document.getElementById('presentImage');
 	presenterDiv = document.getElementById('presenterDiv');
@@ -249,28 +341,19 @@ window.addEventListener('load', function initMixer() {
     $('#white').click(function() { color = 'white'; });
     $('#black').click(function() { color = 'black'; });
 
-    $('#clearButton').click(function() {
-        var canvasRect = canvas.getBoundingClientRect();
-        canvasCtx.clearRect(0, 0, canvasRect.width, canvasRect.height); 
-    });
-	
-	$('#saveButton').click(function() {
-		var link = document.getElementById('savelink');
-		link.setAttribute('download', 'MixerPaint.png');
-		link.setAttribute('href', canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"));
-		link.click();
-    });
-	
-	$('#sendButton').click(function() {
-
-        mixer.socket.call('giveInput', {
-            controlID: 'send',
-            event: 'mousedown',
-            meta: {
-				image: canvas.toDataURL("image/png")
-            }
-        });
-    });
+    $('#clearButton').click(function() { clearCanvas(); });
+	$('#saveButton').click(function() { savePicture(); });
+	$('#sendButton').click(function() { sendPicture(); });
 });
+
+if (haveGamepadEvents) {
+    window.addEventListener("gamepadconnected", connecthandler);
+    window.addEventListener("gamepaddisconnected", disconnecthandler);
+} else if (haveWebkitEvents) {
+    window.addEventListener("webkitgamepadconnected", connecthandler);
+    window.addEventListener("webkitgamepaddisconnected", disconnecthandler);
+} else {
+    setInterval(scangamepads, 500);
+}
 
 mixer.socket.on('onControlUpdate', handleControlUpdate);
