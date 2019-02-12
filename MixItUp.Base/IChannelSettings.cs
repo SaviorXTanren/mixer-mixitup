@@ -7,6 +7,7 @@ using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Serial;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Remote.Models;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
@@ -203,6 +204,8 @@ namespace MixItUp.Base
         LockedList<GameCommandBase> GameCommands { get; }
 
         LockedList<UserQuoteViewModel> UserQuotes { get; }
+
+        LockedDictionary<RemoteProfileModel, RemoteBoardModel> RemoteProfiles { get; }
 
         LockedList<OverlayWidget> OverlayWidgets { get; set; }
 

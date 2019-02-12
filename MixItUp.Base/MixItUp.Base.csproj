@@ -66,8 +66,4 @@
     <ProjectReference Include="..\MixItUp.SignalR.Client\MixItUp.SignalR.Client.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ViewModel\Remote\" />
-  </ItemGroup>
-
 </Project>

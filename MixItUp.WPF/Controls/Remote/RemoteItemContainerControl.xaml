@@ -10,9 +10,11 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
     
-    <Grid>
-        <local:RemoteCommandItemControl Visibility="{Binding IsCommand, Converter={StaticResource BooleanToVisibilityConverter}}" />
+    <Border Style="{StaticResource DefaultBorder}" MinWidth="70" MinHeight="70">
+        <Grid>
+            <local:RemoteCommandItemControl Visibility="{Binding IsCommand, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
-        <local:RemoteFolderItemControl Visibility="{Binding IsFolder, Converter={StaticResource BooleanToVisibilityConverter}}" />
-    </Grid>
+            <local:RemoteFolderItemControl Visibility="{Binding IsFolder, Converter={StaticResource BooleanToVisibilityConverter}}" />
+        </Grid>
+    </Border>
 </UserControl>
