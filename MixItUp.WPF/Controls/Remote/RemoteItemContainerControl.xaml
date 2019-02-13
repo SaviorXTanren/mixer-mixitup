@@ -12,9 +12,11 @@
     
     <Border Style="{StaticResource DefaultBorder}" MinWidth="70" MinHeight="70">
         <Grid>
-            <local:RemoteCommandItemControl Visibility="{Binding IsCommand, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            <local:RemoteEmptyItemControl Visibility="{Binding IsEmpty, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" />
 
-            <local:RemoteFolderItemControl Visibility="{Binding IsFolder, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            <local:RemoteCommandItemControl Visibility="{Binding IsCommand, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" />
+
+            <local:RemoteFolderItemControl Visibility="{Binding IsFolder, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" />
         </Grid>
     </Border>
 </UserControl>

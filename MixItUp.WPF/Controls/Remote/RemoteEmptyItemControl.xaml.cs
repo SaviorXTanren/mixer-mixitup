@@ -3,11 +3,11 @@
 namespace MixItUp.WPF.Controls.Remote
 {
     /// <summary>
-    /// Interaction logic for RemoteFolderItemControl.xaml
+    /// Interaction logic for RemoteEmptyItemControl.xaml
     /// </summary>
-    public partial class RemoteFolderItemControl : UserControl
+    public partial class RemoteEmptyItemControl : UserControl
     {
-        public RemoteFolderItemControl()
+        public RemoteEmptyItemControl()
         {
             InitializeComponent();
         }

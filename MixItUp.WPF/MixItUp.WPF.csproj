@@ -608,6 +608,9 @@
     <Compile Include="Controls\Remote\RemoteCommandItemControl.xaml.cs">
       <DependentUpon>RemoteCommandItemControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Remote\RemoteEmptyItemControl.xaml.cs">
+      <DependentUpon>RemoteEmptyItemControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Remote\RemoteFolderItemControl.xaml.cs">
       <DependentUpon>RemoteFolderItemControl.xaml</DependentUpon>
     </Compile>
@@ -1309,6 +1312,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Remote\RemoteCommandItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Remote\RemoteEmptyItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

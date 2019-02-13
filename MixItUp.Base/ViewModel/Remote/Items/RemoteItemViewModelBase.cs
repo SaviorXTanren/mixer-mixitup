@@ -7,7 +7,19 @@ namespace MixItUp.Base.ViewModel.Remote.Items
     {
         public RemoteItemViewModelBase(RemoteItemModelBase model) : base(model) { }
 
-        public string Name { get { return this.model.Name; } }
+        public string Name
+        {
+            get { return this.model.Name; }
+            set
+            {
+                this.model.Name = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+
+        public int XPosition { get { return this.model.XPosition; } }
+
+        public int YPosition { get { return this.model.YPosition; } }
 
         public int ItemWidth
         {
@@ -38,6 +50,10 @@ namespace MixItUp.Base.ViewModel.Remote.Items
                 }
             }
         }
+
+        public bool IsSet { get { return true; } }
+
+        public virtual bool IsEmpty { get { return false; } }
 
         public virtual bool IsCommand { get { return false; } }
 

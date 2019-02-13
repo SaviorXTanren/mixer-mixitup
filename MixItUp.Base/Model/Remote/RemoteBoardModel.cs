@@ -38,5 +38,17 @@ namespace MixItUp.Base.Remote.Models
         }
 
         public RemoteItemModelBase GetItem(int xPosition, int yPosition) { return this.Items.FirstOrDefault(i => i.XPosition == xPosition && i.YPosition == yPosition); }
+
+        public void SetItem(RemoteItemModelBase item, int xPosition, int yPosition)
+        {
+            RemoteItemModelBase existingItem = this.GetItem(xPosition, yPosition);
+            if (existingItem != null)
+            {
+                this.Items.Remove(existingItem);
+            }
+            item.XPosition = xPosition;
+            item.YPosition = yPosition;
+            this.Items.Add(item);
+        }
     }
 }

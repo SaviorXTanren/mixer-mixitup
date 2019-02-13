@@ -6,6 +6,12 @@ namespace MixItUp.Base.ViewModel.Remote.Items
     {
         private new RemoteFolderItemModel model;
 
+        public RemoteFolderItemViewModel(string name, int xPosition, int yPosition)
+            : this(new RemoteFolderItemModel(xPosition, yPosition))
+        {
+            this.Name = name;
+        }
+
         public RemoteFolderItemViewModel(RemoteFolderItemModel model) : base(model) { this.model = model; }
 
         public RemoteBoardViewModel Board { get { return new RemoteBoardViewModel(this.model.Board); } }

@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Remote.Models;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Remote;
+using MixItUp.Base.ViewModel.Remote.Items;
 using MixItUp.Base.ViewModels;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -69,6 +70,14 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                     this.ProfileSelected(null);
                 }
                 return Task.FromResult(0);
+            });
+
+            MessageCenter.Register<RemoteFolderItemViewModel>("NewRemoteFolder", (folder) =>
+            {
+                if (this.Board != null)
+                {
+                    this.Board.AddItem(folder);
+                }
             });
         }
 

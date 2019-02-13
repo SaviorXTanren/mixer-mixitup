@@ -12,31 +12,7 @@ namespace MixItUp.Base.ViewModel.Remote
         public RemoteBoardViewModel(RemoteBoardModel model)
             : base(model)
         {
-            for (int x = 0; x < 5; x++)
-            {
-                for (int y = 0; y < 3; y++)
-                {
-                    this.items[x, y] = null;
-
-                    RemoteItemModelBase item = this.model.GetItem(x, y);
-                    if (item != null)
-                    {
-                        if (item is RemoteCommandItemModel)
-                        {
-                            this.items[x, y] = new RemoteCommandItemViewModel((RemoteCommandItemModel)item);
-                        }
-                        else if (item is RemoteFolderItemModel)
-                        {
-                            this.items[x, y] = new RemoteFolderItemViewModel((RemoteFolderItemModel)item);
-                        }
-                    }
-                }
-            }
-
-            if (this.model.IsSubBoard)
-            {
-                this.items[0, 0] = new RemoteBackItemViewModel();
-            }
+            this.BuildBoardItems();
         }
 
         public string BackgroundColor
@@ -71,5 +47,58 @@ namespace MixItUp.Base.ViewModel.Remote
         public RemoteItemViewModelBase Item22 { get { return this.items[2, 2]; } }
         public RemoteItemViewModelBase Item32 { get { return this.items[3, 2]; } }
         public RemoteItemViewModelBase Item42 { get { return this.items[4, 2]; } }
+
+        public void AddItem(RemoteItemViewModelBase item)
+        {
+            this.model.SetItem(item.GetModel(), item.XPosition, item.YPosition);
+            this.BuildBoardItems();
+        }
+
+        public void RemoveItem(int xPosition, int yPosition)
+        {
+            this.model.SetItem(null, xPosition, yPosition);
+            this.BuildBoardItems();
+        }
+
+        private void BuildBoardItems()
+        {
+            for (int x = 0; x < 5; x++)
+            {
+                for (int y = 0; y < 3; y++)
+                {
+                    this.items[x, y] = null;
+
+                    RemoteItemModelBase item = this.model.GetItem(x, y);
+                    if (item != null)
+                    {
+                        if (item is RemoteCommandItemModel)
+                        {
+                            this.items[x, y] = new RemoteCommandItemViewModel((RemoteCommandItemModel)item);
+                        }
+                        else if (item is RemoteFolderItemModel)
+                        {
+                            this.items[x, y] = new RemoteFolderItemViewModel((RemoteFolderItemModel)item);
+                        }
+                    }
+                    else
+                    {
+                        this.items[x, y] = new RemoteEmptyItemViewModel(x, y);
+                    }
+                }
+            }
+
+            if (this.model.IsSubBoard)
+            {
+                this.items[0, 0] = new RemoteBackItemViewModel();
+            }
+
+            for (int x = 0; x < 5; x++)
+            {
+                for (int y = 0; y < 3; y++)
+                {
+                    this.NotifyPropertyChanged("Item" + x + y);
+                }
+            }
+        }
     }
 }
