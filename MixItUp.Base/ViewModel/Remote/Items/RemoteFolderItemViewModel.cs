@@ -4,6 +4,8 @@ namespace MixItUp.Base.ViewModel.Remote.Items
 {
     public class RemoteFolderItemViewModel : RemoteItemViewModelBase
     {
+        public const string NewRemoteFolderEventName = "NewRemoteFolder";
+
         private new RemoteFolderItemModel model;
 
         public RemoteFolderItemViewModel(string name, int xPosition, int yPosition)

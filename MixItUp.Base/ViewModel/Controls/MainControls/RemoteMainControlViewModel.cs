@@ -61,18 +61,28 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 }
             });
 
-            this.DeleteProfileCommand = this.CreateCommand((x) =>
+            this.DeleteProfileCommand = this.CreateCommand(async (x) =>
             {
                 if (this.Profile != null)
                 {
-                    ChannelSession.Settings.RemoteProfiles.Remove(this.Profile.GetModel());
-                    this.RefreshProfiles();
-                    this.ProfileSelected(null);
+                    if (await DialogHelper.ShowConfirmation("Are you sure you want to delete this profile?"))
+                    {
+                        ChannelSession.Settings.RemoteProfiles.Remove(this.Profile.GetModel());
+                        this.RefreshProfiles();
+                        this.ProfileSelected(null);
+                    }
                 }
-                return Task.FromResult(0);
             });
 
-            MessageCenter.Register<RemoteFolderItemViewModel>("NewRemoteFolder", (folder) =>
+            MessageCenter.Register<RemoteCommandItemViewModel>(RemoteCommandItemViewModel.NewRemoteCommandEventName, (command) =>
+            {
+                if (this.Board != null)
+                {
+                    this.Board.AddItem(command);
+                }
+            });
+
+            MessageCenter.Register<RemoteFolderItemViewModel>(RemoteFolderItemViewModel.NewRemoteFolderEventName, (folder) =>
             {
                 if (this.Board != null)
                 {

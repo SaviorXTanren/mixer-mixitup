@@ -17,15 +17,41 @@ namespace MixItUp.Base.ViewModel.Remote.Items
             }
         }
 
-        public int XPosition { get { return this.model.XPosition; } }
+        public int XPosition
+        {
+            get { return this.model.XPosition; }
+            set
+            {
+                this.model.XPosition = value;
+                this.NotifyPropertyChanged();
+            }
+        }
 
-        public int YPosition { get { return this.model.YPosition; } }
+        public int YPosition
+        {
+            get { return this.model.YPosition; }
+            set
+            {
+                this.model.YPosition = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+
+        public RemoteItemSizeEnum Size
+        {
+            get { return this.model.Size; }
+            set
+            {
+                this.model.Size = value;
+                this.NotifyPropertyChanged();
+            }
+        }
 
         public int ItemWidth
         {
             get
             {
-                switch (this.model.Size)
+                switch (this.Size)
                 {
                     case RemoteItemSizeEnum.TwoByOne:
                     case RemoteItemSizeEnum.TwoByTwo:
@@ -40,7 +66,7 @@ namespace MixItUp.Base.ViewModel.Remote.Items
         {
             get
             {
-                switch (this.model.Size)
+                switch (this.Size)
                 {
                     case RemoteItemSizeEnum.OneByTwo:
                     case RemoteItemSizeEnum.TwoByTwo:

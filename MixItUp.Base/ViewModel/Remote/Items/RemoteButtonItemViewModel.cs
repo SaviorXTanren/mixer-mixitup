@@ -16,9 +16,13 @@ namespace MixItUp.Base.ViewModel.Remote.Items
                 {
                     return this.model.BackgroundColor;
                 }
-                return "Black";
+                return "Transparent";
             }
-            set { this.model.BackgroundColor = value; }
+            set
+            {
+                this.model.BackgroundColor = value;
+                this.NotifyPropertyChanged();
+            }
         }
 
         public string TextColor
@@ -29,11 +33,23 @@ namespace MixItUp.Base.ViewModel.Remote.Items
                 {
                     return this.model.TextColor;
                 }
-                return "White";
+                return "Black";
             }
-            set { this.model.TextColor = value; }
+            set
+            {
+                this.model.TextColor = value;
+                this.NotifyPropertyChanged();
+            }
         }
 
-        public string BackgroundImage { get { return this.model.ImagePath; } }
+        public string BackgroundImage
+        {
+            get { return this.model.ImagePath; }
+            set
+            {
+                this.model.ImagePath = value;
+                this.NotifyPropertyChanged();
+            }
+        }
     }
 }

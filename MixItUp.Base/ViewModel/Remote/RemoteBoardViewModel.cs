@@ -25,10 +25,22 @@ namespace MixItUp.Base.ViewModel.Remote
                 }
                 return "White";
             }
-            set { this.model.BackgroundColor = value; }
+            set
+            {
+                this.model.BackgroundColor = value;
+                this.NotifyPropertyChanged();
+            }
         }
 
-        public string BackgroundImage { get { return this.model.ImagePath; } }
+        public string BackgroundImage
+        {
+            get { return this.model.ImagePath; }
+            set
+            {
+                this.model.ImagePath = value;
+                this.NotifyPropertyChanged();
+            }
+        }
 
         public RemoteItemViewModelBase Item00 { get { return this.items[0, 0]; } }
         public RemoteItemViewModelBase Item10 { get { return this.items[1, 0]; } }
