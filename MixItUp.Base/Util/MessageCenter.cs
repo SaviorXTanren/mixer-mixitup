@@ -59,7 +59,7 @@ namespace MixItUp.Base.Util
             {
                 foreach (var listener in registeredListeners[mcKey].Values)
                 {
-                    Task.Run(() => listener(data));
+                    listener(data);
                 }
             }
         }
