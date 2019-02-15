@@ -6,8 +6,12 @@
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Remote"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Background="{Binding BackgroundColor}">
-        <Image Source="{Binding BackgroundImage}" Stretch="Fill" />
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
+
+    <Grid Background="{Binding BackgroundColor}" MouseUp="Grid_MouseUp">
+        <Image Source="{Binding BackgroundImage}" Visibility="{Binding HasBackgroundImage, Converter={StaticResource BooleanToVisibilityConverter}}" Stretch="Fill" />
 
         <TextBlock Text="{Binding Name}" Foreground="{Binding TextColor}" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,10" />
     </Grid>

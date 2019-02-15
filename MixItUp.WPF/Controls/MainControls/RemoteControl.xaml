@@ -16,7 +16,7 @@
 
              d:DesignHeight="500" d:DesignWidth="600">
     <local:MainControlBase.Resources>
-        <NullableBoolConverter x:Key="NullableBoolConverter" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </local:MainControlBase.Resources>
     
     <Grid Margin="10">
@@ -50,6 +50,7 @@
         <Grid Grid.Column="1" Margin="0,20,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
@@ -100,6 +101,32 @@
                     <RemoteControls:RemoteItemContainerControl Grid.Row="2" Grid.Column="3" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item32}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
                     <RemoteControls:RemoteItemContainerControl Grid.Row="2" Grid.Column="4" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item42}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
 
+                </Grid>
+            </Grid>
+
+            <Grid Grid.Row="2" DataContext="{Binding Item}" Margin="40,0" HorizontalAlignment="Left">
+                <Grid Visibility="{Binding IsCommand, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBox Grid.Row="0" Text="{Binding Name}" MaterialDesign:HintAssist.Hint="Button Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="200" />
+                </Grid>
+
+                <Grid Visibility="{Binding IsFolder, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBox Grid.Row="0" Text="{Binding Name}" MaterialDesign:HintAssist.Hint="Folder Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="200" />
                 </Grid>
             </Grid>
         </Grid>

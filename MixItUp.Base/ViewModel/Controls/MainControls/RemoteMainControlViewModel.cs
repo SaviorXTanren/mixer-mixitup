@@ -33,12 +33,24 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             {
                 this.board = value;
                 this.NotifyPropertyChanged();
-                this.NotifyPropertyChanged("IsBoardSelected");
             }
         }
         private RemoteBoardViewModel board;
 
+        public RemoteItemViewModelBase Item
+        {
+            get { return this.item; }
+            private set
+            {
+                this.item = value;
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("IsItemSelected");
+            }
+        }
+        private RemoteItemViewModelBase item;
+
         public bool IsProfileSelected { get { return this.Profile != null; } }
+        public bool IsItemSelected { get { return this.Item != null; } }
 
         public ICommand AddProfileCommand { get; private set; }
         public ICommand DeleteProfileCommand { get; private set; }
@@ -88,6 +100,16 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 {
                     this.Board.AddItem(folder);
                 }
+            });
+
+            MessageCenter.Register<RemoteCommandItemViewModel>(RemoteCommandItemViewModel.RemoteCommandDetailsEventName, (command) =>
+            {
+                this.Item = command;
+            });
+
+            MessageCenter.Register<RemoteFolderItemViewModel>(RemoteFolderItemViewModel.RemoteFolderDetailsEventName, (folder) =>
+            {
+                this.Item = folder;
             });
         }
 

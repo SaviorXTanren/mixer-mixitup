@@ -49,7 +49,10 @@ namespace MixItUp.Base.ViewModel.Remote.Items
             {
                 this.model.ImagePath = value;
                 this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("HasBackgroundImage");
             }
         }
+
+        public bool HasBackgroundImage { get { return !string.IsNullOrEmpty(this.BackgroundImage); } }
     }
 }

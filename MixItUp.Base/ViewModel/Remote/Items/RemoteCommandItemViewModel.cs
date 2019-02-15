@@ -5,6 +5,7 @@ namespace MixItUp.Base.ViewModel.Remote.Items
     public class RemoteCommandItemViewModel : RemoteButtonItemViewModelBase
     {
         public const string NewRemoteCommandEventName = "NewRemoteCommand";
+        public const string RemoteCommandDetailsEventName = "RemoteCommandDetails";
 
         private new RemoteCommandItemModel model;
 
