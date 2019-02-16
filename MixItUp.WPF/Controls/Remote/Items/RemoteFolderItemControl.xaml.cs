@@ -3,7 +3,7 @@ using MixItUp.Base.ViewModel.Remote.Items;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace MixItUp.WPF.Controls.Remote
+namespace MixItUp.WPF.Controls.Remote.Items
 {
     /// <summary>
     /// Interaction logic for RemoteFolderItemControl.xaml
