@@ -1,12 +1,25 @@
 ﻿using MixItUp.Base.Remote.Models.Items;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Remote.Items
 {
     public abstract class RemoteItemViewModelBase : ModelViewModelBase<RemoteItemModelBase>
     {
-        public RemoteItemViewModelBase(RemoteItemModelBase model) : base(model) { }
+        public const string RemoteDeleteItemEventName = "RemoteDeleteItem";
+
+        public RemoteItemViewModelBase(RemoteItemModelBase model)
+            : base(model)
+        {
+            this.DeleteCommand = this.CreateCommand((parameter) =>
+            {
+                MessageCenter.Send<RemoteItemViewModelBase>(RemoteItemViewModelBase.RemoteDeleteItemEventName, this);
+                return Task.FromResult(0);
+            });
+        }
 
         public Guid ID { get { return this.model.ID; } }
 
@@ -89,5 +102,7 @@ namespace MixItUp.Base.ViewModel.Remote.Items
         public virtual bool IsFolder { get { return false; } }
 
         public virtual bool IsBack { get { return false; } }
+
+        public ICommand DeleteCommand { get; private set; }
     }
 }

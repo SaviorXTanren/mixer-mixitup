@@ -8,10 +8,16 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
+            <ContextMenu x:Key="RemoteFolderItemContextMenu">
+                <MenuItem Header="Delete" Command="{Binding DeleteCommand}" />
+            </ContextMenu>
+        </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid Background="{Binding BackgroundColor}">
+    <Grid Background="{Binding BackgroundColor}" ContextMenu="{StaticResource RemoteFolderItemContextMenu}">
         <Grid.InputBindings>
             <MouseBinding MouseAction="LeftClick" Command="{Binding FolderSelectedCommand}" />
             <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding FolderNavigationCommand}" />
@@ -21,6 +27,6 @@
 
         <MaterialDesign:PackIcon Kind="Folder" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-15,0,0" Width="40" Height="40" Visibility="{Binding DoesNotHaveBackgroundImage, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
-        <TextBlock Text="{Binding Name}" Foreground="{Binding TextColor}" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,8" />
+        <TextBlock Text="{Binding Name}" Foreground="{Binding TextColor}" FontWeight="Bold" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,8" />
     </Grid>
 </UserControl>

@@ -150,6 +150,12 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 this.AddRemoveNavigationName(null);
                 this.Item = null;
             });
+
+            MessageCenter.Register<RemoteItemViewModelBase>(RemoteItemViewModelBase.RemoteDeleteItemEventName, (item) =>
+            {
+                this.Board.RemoveItem(item.XPosition, item.YPosition);
+                this.Item = null;
+            });
         }
 
         public void RefreshProfiles()

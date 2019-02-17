@@ -46,9 +46,13 @@ namespace MixItUp.Base.Remote.Models
             {
                 this.Items.Remove(existingItem);
             }
-            item.XPosition = xPosition;
-            item.YPosition = yPosition;
-            this.Items.Add(item);
+
+            if (item != null)
+            {
+                item.XPosition = xPosition;
+                item.YPosition = yPosition;
+                this.Items.Add(item);
+            }
         }
     }
 }
