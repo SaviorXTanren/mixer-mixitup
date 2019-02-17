@@ -112,8 +112,14 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 }
             });
 
-            MessageCenter.Register<RemoteFolderItemViewModel>(RemoteFolderItemViewModel.NewRemoteFolderEventName, (folder) =>
+            MessageCenter.Register<RemoteFolderItemViewModel>(RemoteFolderItemViewModel.NewRemoteFolderEventName, async (folder) =>
             {
+                if (this.NavigationNames.Count() > 2)
+                {
+                    await DialogHelper.ShowMessage("Boards can only be up to 2 layers deep");
+                    return;
+                }
+
                 if (this.Board != null)
                 {
                     this.Board.AddItem(folder);
