@@ -1,11 +1,14 @@
 ﻿using MixItUp.Base.Remote.Models.Items;
 using MixItUp.Base.ViewModels;
+using System;
 
 namespace MixItUp.Base.ViewModel.Remote.Items
 {
     public abstract class RemoteItemViewModelBase : ModelViewModelBase<RemoteItemModelBase>
     {
         public RemoteItemViewModelBase(RemoteItemModelBase model) : base(model) { }
+
+        public Guid ID { get { return this.model.ID; } }
 
         public string Name
         {

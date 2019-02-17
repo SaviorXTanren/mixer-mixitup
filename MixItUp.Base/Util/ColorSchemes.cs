@@ -6,7 +6,7 @@ namespace MixItUp.Base.Util
     {
         public const string DefaultColorScheme = "Default Color";
 
-        public static readonly Dictionary<string, string> ColorSchemeDictionary = new Dictionary<string, string>()
+        public static readonly Dictionary<string, string> HTMLColorSchemeDictionary = new Dictionary<string, string>()
         {
             { "Amber", "#ffb300" },
             { "Black", "#000000" },
@@ -31,11 +31,31 @@ namespace MixItUp.Base.Util
             { "Yellow", "#ffeb3b" },
         };
 
+        public static readonly HashSet<string> WPFColorSchemeDictionary = new HashSet<string>()
+        {
+            "Black",
+            "Blue",
+            "Brown",
+            "Cyan",
+            "Gray",
+            "Green",
+            "Indigo",
+            "Lime",
+            "Orange",
+            "Pink",
+            "Purple",
+            "Red",
+            "Teal",
+            "Transparent",
+            "White",
+            "Yellow",
+        };
+
         public static string GetColorCode(string name)
         {
-            if (ColorSchemes.ColorSchemeDictionary.ContainsKey(name))
+            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(name))
             {
-                return ColorSchemes.ColorSchemeDictionary[name];
+                return ColorSchemes.HTMLColorSchemeDictionary[name];
             }
             return "#000000";
         }

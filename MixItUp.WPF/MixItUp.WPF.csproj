@@ -605,6 +605,15 @@
     <Compile Include="Controls\Overlay\OverlayYouTubeItemControl.xaml.cs">
       <DependentUpon>OverlayYouTubeItemControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Remote\Details\RemoteCommandDetailsControl.xaml.cs">
+      <DependentUpon>RemoteCommandDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Remote\Details\RemoteDetailsContainerControl.xaml.cs">
+      <DependentUpon>RemoteDetailsContainerControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Remote\Details\RemoteFolderDetailsControl.xaml.cs">
+      <DependentUpon>RemoteFolderDetailsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Remote\Items\RemoteCommandItemControl.xaml.cs">
       <DependentUpon>RemoteCommandItemControl.xaml</DependentUpon>
     </Compile>
@@ -1308,6 +1317,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Overlay\OverlayYouTubeItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Remote\Details\RemoteCommandDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Remote\Details\RemoteDetailsContainerControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Remote\Details\RemoteFolderDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

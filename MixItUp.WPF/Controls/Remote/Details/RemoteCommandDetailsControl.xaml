@@ -1,0 +1,59 @@
+﻿<UserControl x:Class="MixItUp.WPF.Controls.Remote.Details.RemoteCommandDetailsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Remote.Details"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="15" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="15" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBox Grid.Row="0" Text="{Binding Name}" MaterialDesign:HintAssist.Hint="Button Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
+
+            <ComboBox Grid.Row="2" ItemsSource="{Binding PreDefinedColors}" SelectedItem="{Binding TextColor}" MaterialDesign:HintAssist.Hint="Text Color" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
+
+            <ComboBox Grid.Row="4" ItemsSource="{Binding CommandTypes}" SelectedItem="{Binding CommandType}" MaterialDesign:HintAssist.Hint="Command Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
+        </Grid>
+
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="15" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="15" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <ComboBox Grid.Row="0" ItemsSource="{Binding PreDefinedColors}" SelectedItem="{Binding BackgroundColor}" MaterialDesign:HintAssist.Hint="Background Color" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="175" />
+
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Row="0" Text="{Binding BackgroundImage}" MaterialDesign:HintAssist.Hint="Image" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="130" />
+
+                <Button Grid.Column="2" Command="{Binding BackgroundImageBrowseCommand}">...</Button>
+            </Grid>
+
+            <ComboBox Grid.Row="4" ItemsSource="{Binding Commands}" SelectedItem="{Binding Command}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="Command Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="175" />
+        </Grid>
+    </Grid>
+</UserControl>

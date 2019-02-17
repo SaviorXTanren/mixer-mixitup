@@ -1,4 +1,8 @@
 ﻿using MixItUp.Base.Remote.Models.Items;
+using MixItUp.Base.Util;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Remote.Items
 {
@@ -6,7 +10,23 @@ namespace MixItUp.Base.ViewModel.Remote.Items
     {
         private new RemoteButtonItemModelBase model;
 
-        public RemoteButtonItemViewModelBase(RemoteButtonItemModelBase model) : base(model) { this.model = model; }
+        public RemoteButtonItemViewModelBase(RemoteButtonItemModelBase model)
+            : base(model)
+        {
+            this.model = model;
+
+            this.BackgroundImageBrowseCommand = this.CreateCommand((parameter) =>
+            {
+                string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(ChannelSession.Services.FileService.ImageFileFilter());
+                if (!string.IsNullOrEmpty(filePath))
+                {
+                    this.BackgroundImage = filePath;
+                }
+                return Task.FromResult(0);
+            });
+        }
+
+        public IEnumerable<string> PreDefinedColors { get { return ColorSchemes.WPFColorSchemeDictionary; } }
 
         public string BackgroundColor
         {
@@ -52,6 +72,8 @@ namespace MixItUp.Base.ViewModel.Remote.Items
                 this.NotifyPropertyChanged("HasBackgroundImage");
             }
         }
+
+        public ICommand BackgroundImageBrowseCommand { get; private set; }
 
         public bool HasBackgroundImage { get { return !string.IsNullOrEmpty(this.BackgroundImage); } }
     }

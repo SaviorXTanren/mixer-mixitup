@@ -205,7 +205,7 @@ namespace MixItUp.Base
 
         LockedList<UserQuoteViewModel> UserQuotes { get; }
 
-        LockedDictionary<RemoteProfileModel, RemoteBoardModel> RemoteProfiles { get; }
+        LockedDictionary<Guid, RemoteProfileBoardModel> RemoteProfiles { get; }
 
         LockedList<OverlayWidget> OverlayWidgets { get; set; }
 

@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:RemoteItemsControls="clr-namespace:MixItUp.WPF.Controls.Remote.Items"
+             xmlns:RemoteDetailsControls="clr-namespace:MixItUp.WPF.Controls.Remote.Details"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
                           
@@ -104,32 +105,7 @@
                 </Grid>
             </Grid>
 
-            <Grid Grid.Row="2" DataContext="{Binding Item}" Margin="40,0" HorizontalAlignment="Left">
-                <Grid Visibility="{Binding IsCommand, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="10" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="10" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-
-                    <TextBox Grid.Row="0" Text="{Binding Name}" MaterialDesign:HintAssist.Hint="Button Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="200" />
-                </Grid>
-
-                <Grid Visibility="{Binding IsFolder, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="10" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="10" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-
-                    <TextBox Grid.Row="0" Text="{Binding Name}" MaterialDesign:HintAssist.Hint="Folder Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="200" />
-                </Grid>
-            </Grid>
+            <RemoteDetailsControls:RemoteDetailsContainerControl Grid.Row="2" DataContext="{Binding Item}" Margin="40,10" HorizontalAlignment="Center" />
         </Grid>
-
     </Grid>
 </local:MainControlBase>

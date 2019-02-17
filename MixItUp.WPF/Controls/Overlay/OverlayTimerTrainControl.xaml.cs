@@ -30,9 +30,9 @@ namespace MixItUp.WPF.Controls.Overlay
 
             this.MinimumSecondsTextBox.Text = this.item.MinimumSecondsToShow.ToString();
             this.TextColorComboBox.Text = this.item.TextColor;
-            if (ColorSchemes.ColorSchemeDictionary.ContainsValue(this.item.TextColor))
+            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsValue(this.item.TextColor))
             {
-                this.TextColorComboBox.Text = ColorSchemes.ColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.item.TextColor)).Key;
+                this.TextColorComboBox.Text = ColorSchemes.HTMLColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.item.TextColor)).Key;
             }
             this.TextFontComboBox.Text = this.item.TextFont;
             this.TextSizeComboBox.Text = this.item.TextSize.ToString();
@@ -54,9 +54,9 @@ namespace MixItUp.WPF.Controls.Overlay
             }
 
             string textColor = this.TextColorComboBox.Text;
-            if (ColorSchemes.ColorSchemeDictionary.ContainsKey(textColor))
+            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(textColor))
             {
-                textColor = ColorSchemes.ColorSchemeDictionary[textColor];
+                textColor = ColorSchemes.HTMLColorSchemeDictionary[textColor];
             }
 
             if (string.IsNullOrEmpty(this.TextFontComboBox.Text))
@@ -110,7 +110,7 @@ namespace MixItUp.WPF.Controls.Overlay
 
         protected override Task OnLoaded()
         {
-            this.TextColorComboBox.ItemsSource = ColorSchemes.ColorSchemeDictionary.Keys;
+            this.TextColorComboBox.ItemsSource = ColorSchemes.HTMLColorSchemeDictionary.Keys;
             this.TextFontComboBox.ItemsSource = InstalledFonts.GetInstalledFonts();
             this.TextSizeComboBox.ItemsSource = OverlayTextItemControl.sampleFontSize.Select(f => f.ToString());
 

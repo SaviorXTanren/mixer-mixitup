@@ -2,6 +2,8 @@
 using MixItUp.Base.Remote.Models.Items;
 using MixItUp.Base.ViewModel.Remote.Items;
 using MixItUp.Base.ViewModels;
+using System;
+using System.Linq;
 
 namespace MixItUp.Base.ViewModel.Remote
 {
@@ -64,6 +66,18 @@ namespace MixItUp.Base.ViewModel.Remote
         {
             this.model.SetItem(item.GetModel(), item.XPosition, item.YPosition);
             this.BuildBoardItems();
+        }
+
+        public RemoteItemViewModelBase GetItem(Guid id)
+        {
+            foreach (RemoteItemViewModelBase item in this.items)
+            {
+                if (item.ID.Equals(id))
+                {
+                    return item;
+                }
+            }
+            return null;
         }
 
         public void RemoveItem(int xPosition, int yPosition)

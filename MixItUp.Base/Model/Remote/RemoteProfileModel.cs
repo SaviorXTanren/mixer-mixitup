@@ -30,5 +30,13 @@ namespace MixItUp.Base.Remote.Models
 
         [DataMember]
         public RemoteBoardModel Board { get; set; }
+
+        public RemoteProfileBoardModel() { }
+
+        public RemoteProfileBoardModel(RemoteProfileModel profile)
+        {
+            this.Profile = profile;
+            this.Board = new RemoteBoardModel();
+        }
     }
 }

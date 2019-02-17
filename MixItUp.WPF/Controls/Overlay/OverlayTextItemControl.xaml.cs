@@ -33,9 +33,9 @@ namespace MixItUp.WPF.Controls.Overlay
             this.TextTextBox.Text = this.item.Text;
             this.TextSizeComboBox.Text = this.item.Size.ToString();
             string color = this.item.Color;
-            if (ColorSchemes.ColorSchemeDictionary.ContainsValue(color))
+            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsValue(color))
             {
-                color = ColorSchemes.ColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(color)).Key;
+                color = ColorSchemes.HTMLColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(color)).Key;
             }
             this.TextFontComboBox.Text = this.item.Font;
             this.TextBoldCheckBox.IsSelected = this.item.Bold;
@@ -43,9 +43,9 @@ namespace MixItUp.WPF.Controls.Overlay
             this.TextUnderlineCheckBox.IsSelected = this.item.Underline;
             this.TextColorComboBox.Text = color;
             string shadowColor = this.item.ShadowColor;
-            if (ColorSchemes.ColorSchemeDictionary.ContainsValue(shadowColor))
+            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsValue(shadowColor))
             {
-                shadowColor = ColorSchemes.ColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(shadowColor)).Key;
+                shadowColor = ColorSchemes.HTMLColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(shadowColor)).Key;
             }
             this.TextShadowColorComboBox.Text = shadowColor;
         }
@@ -55,9 +55,9 @@ namespace MixItUp.WPF.Controls.Overlay
             if (!string.IsNullOrEmpty(this.TextTextBox.Text) && !string.IsNullOrEmpty(this.TextColorComboBox.Text))
             {
                 string color = this.TextColorComboBox.Text;
-                if (ColorSchemes.ColorSchemeDictionary.ContainsKey(color))
+                if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(color))
                 {
-                    color = ColorSchemes.ColorSchemeDictionary[color];
+                    color = ColorSchemes.HTMLColorSchemeDictionary[color];
                 }
 
                 string font = this.TextFontComboBox.Text;
@@ -67,9 +67,9 @@ namespace MixItUp.WPF.Controls.Overlay
                 }
 
                 string shadowColor = this.TextShadowColorComboBox.Text;
-                if (ColorSchemes.ColorSchemeDictionary.ContainsKey(shadowColor))
+                if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(shadowColor))
                 {
-                    shadowColor = ColorSchemes.ColorSchemeDictionary[shadowColor];
+                    shadowColor = ColorSchemes.HTMLColorSchemeDictionary[shadowColor];
                 }
 
                 if (int.TryParse(this.TextSizeComboBox.Text, out int size) && size > 0)
@@ -85,7 +85,7 @@ namespace MixItUp.WPF.Controls.Overlay
         {
             this.TextFontComboBox.ItemsSource = InstalledFonts.GetInstalledFonts();
             this.TextSizeComboBox.ItemsSource = OverlayTextItemControl.sampleFontSize.Select(f => f.ToString());
-            this.TextShadowColorComboBox.ItemsSource = this.TextColorComboBox.ItemsSource = ColorSchemes.ColorSchemeDictionary.Keys;
+            this.TextShadowColorComboBox.ItemsSource = this.TextColorComboBox.ItemsSource = ColorSchemes.HTMLColorSchemeDictionary.Keys;
 
             if (this.item != null)
             {

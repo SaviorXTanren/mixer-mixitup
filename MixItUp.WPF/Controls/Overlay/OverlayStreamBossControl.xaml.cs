@@ -42,27 +42,27 @@ namespace MixItUp.WPF.Controls.Overlay
 
             this.TextFontComboBox.Text = this.item.TextFont;
             this.TextColorComboBox.Text = this.item.TextColor;
-            if (ColorSchemes.ColorSchemeDictionary.ContainsValue(this.item.TextColor))
+            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsValue(this.item.TextColor))
             {
-                this.TextColorComboBox.Text = ColorSchemes.ColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.item.TextColor)).Key;
+                this.TextColorComboBox.Text = ColorSchemes.HTMLColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.item.TextColor)).Key;
             }
 
             this.BorderColorComboBox.Text = this.item.BorderColor;
-            if (ColorSchemes.ColorSchemeDictionary.ContainsValue(this.item.BorderColor))
+            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsValue(this.item.BorderColor))
             {
-                this.BorderColorComboBox.Text = ColorSchemes.ColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.item.BorderColor)).Key;
+                this.BorderColorComboBox.Text = ColorSchemes.HTMLColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.item.BorderColor)).Key;
             }
 
             this.BackgroundColorComboBox.Text = this.item.BackgroundColor;
-            if (ColorSchemes.ColorSchemeDictionary.ContainsValue(this.item.BackgroundColor))
+            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsValue(this.item.BackgroundColor))
             {
-                this.BackgroundColorComboBox.Text = ColorSchemes.ColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.item.BackgroundColor)).Key;
+                this.BackgroundColorComboBox.Text = ColorSchemes.HTMLColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.item.BackgroundColor)).Key;
             }
 
             this.ProgressColorComboBox.Text = this.item.ProgressColor;
-            if (ColorSchemes.ColorSchemeDictionary.ContainsValue(this.item.ProgressColor))
+            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsValue(this.item.ProgressColor))
             {
-                this.ProgressColorComboBox.Text = ColorSchemes.ColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.item.ProgressColor)).Key;
+                this.ProgressColorComboBox.Text = ColorSchemes.HTMLColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.item.ProgressColor)).Key;
             }
 
             this.DamageAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.item.DamageAnimation);
@@ -95,9 +95,9 @@ namespace MixItUp.WPF.Controls.Overlay
             }
 
             string textColor = this.TextColorComboBox.Text;
-            if (ColorSchemes.ColorSchemeDictionary.ContainsKey(textColor))
+            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(textColor))
             {
-                textColor = ColorSchemes.ColorSchemeDictionary[textColor];
+                textColor = ColorSchemes.HTMLColorSchemeDictionary[textColor];
             }
 
             if (string.IsNullOrEmpty(this.TextFontComboBox.Text))
@@ -106,21 +106,21 @@ namespace MixItUp.WPF.Controls.Overlay
             }
 
             string borderColor = this.BorderColorComboBox.Text;
-            if (ColorSchemes.ColorSchemeDictionary.ContainsKey(borderColor))
+            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(borderColor))
             {
-                borderColor = ColorSchemes.ColorSchemeDictionary[borderColor];
+                borderColor = ColorSchemes.HTMLColorSchemeDictionary[borderColor];
             }
 
             string backgroundColor = this.BackgroundColorComboBox.Text;
-            if (ColorSchemes.ColorSchemeDictionary.ContainsKey(backgroundColor))
+            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(backgroundColor))
             {
-                backgroundColor = ColorSchemes.ColorSchemeDictionary[backgroundColor];
+                backgroundColor = ColorSchemes.HTMLColorSchemeDictionary[backgroundColor];
             }
 
             string progressColor = this.ProgressColorComboBox.Text;
-            if (ColorSchemes.ColorSchemeDictionary.ContainsKey(progressColor))
+            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(progressColor))
             {
-                progressColor = ColorSchemes.ColorSchemeDictionary[progressColor];
+                progressColor = ColorSchemes.HTMLColorSchemeDictionary[progressColor];
             }
 
             if (!double.TryParse(this.FollowBonusTextBox.Text, out double followBonus) || followBonus < 0.0)
@@ -171,7 +171,7 @@ namespace MixItUp.WPF.Controls.Overlay
 
             this.TextFontComboBox.ItemsSource = InstalledFonts.GetInstalledFonts();
 
-            this.TextColorComboBox.ItemsSource = this.BorderColorComboBox.ItemsSource = this.BackgroundColorComboBox.ItemsSource = this.ProgressColorComboBox.ItemsSource = ColorSchemes.ColorSchemeDictionary.Keys;
+            this.TextColorComboBox.ItemsSource = this.BorderColorComboBox.ItemsSource = this.BackgroundColorComboBox.ItemsSource = this.ProgressColorComboBox.ItemsSource = ColorSchemes.HTMLColorSchemeDictionary.Keys;
 
             this.DamageAnimationComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayEffectVisibleAnimationTypeEnum>();
             this.DamageAnimationComboBox.SelectedIndex = 0;
