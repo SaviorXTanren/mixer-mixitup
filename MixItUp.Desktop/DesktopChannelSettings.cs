@@ -6,6 +6,7 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Favorites;
 using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Remote.Authentication;
 using MixItUp.Base.Model.Serial;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Remote.Models;
@@ -299,6 +300,11 @@ namespace MixItUp.Desktop
         public List<SerialDeviceModel> SerialDevices { get; set; }
 
         [JsonProperty]
+        public RemoteConnectionAuthenticationTokenModel RemoteHostConnection { get; set; }
+        [JsonProperty]
+        public List<RemoteConnectionModel> RemoteClientConnections { get; set; }
+
+        [JsonProperty]
         public List<FavoriteGroupModel> FavoriteGroups { get; set; }
 
         [JsonProperty]
@@ -376,6 +382,7 @@ namespace MixItUp.Desktop
             this.CustomInteractiveProjectIDs = new List<InteractiveSharedProjectModel>();
             this.UserTitles = new List<UserTitleModel>();
             this.SerialDevices = new List<SerialDeviceModel>();
+            this.RemoteClientConnections = new List<RemoteConnectionModel>();
             this.FavoriteGroups = new List<FavoriteGroupModel>();
             this.SongRequestServiceTypes = new HashSet<SongRequestServiceTypeEnum>();
             this.CustomInteractiveSettings = new Dictionary<uint, JObject>();

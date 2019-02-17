@@ -36,9 +36,11 @@ namespace MixItUp.SignalR.Client
 
         public async Task Connect()
         {
-            await connection.StartAsync();
+            await this.connection.StartAsync();
             this.Connected?.Invoke(this, new EventArgs());
         }
+
+        public bool IsConnected() { return this.connection.State == HubConnectionState.Connected; }
 
         public async Task Send(string methodName) { await this.connection.InvokeAsync(methodName); }
         public async Task Send(string methodName, object item1) { await this.connection.InvokeAsync(methodName, item1); }

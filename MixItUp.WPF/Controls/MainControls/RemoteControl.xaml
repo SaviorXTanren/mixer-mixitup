@@ -31,6 +31,8 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <GroupBox Header="Profiles" Grid.Row="0">
@@ -46,6 +48,8 @@
             </GroupBox>
 
             <Button Grid.Row="2" Width="120" Command="{Binding AddProfileCommand}">Add Profile</Button>
+
+            <Button Grid.Row="4" Width="140" Command="{Binding ConnectDeviceCommand}">Connect Device</Button>
         </Grid>
 
         <Grid Grid.Column="1" Margin="0,20,0,0">

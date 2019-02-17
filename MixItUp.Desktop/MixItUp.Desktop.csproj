@@ -261,6 +261,7 @@
     <Compile Include="Database\SQLiteDatabaseWrapper.cs" />
     <Compile Include="DesktopChannelSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\DesktopRemoteService.cs" />
     <Compile Include="Services\DesktopServicesHandler.cs" />
     <Compile Include="Services\DesktopSettingsUpgrader.cs" />
     <Compile Include="Services\DesktopTelemetryService.cs" />

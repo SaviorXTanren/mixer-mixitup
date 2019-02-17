@@ -5,6 +5,7 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Favorites;
 using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Remote.Authentication;
 using MixItUp.Base.Model.Serial;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Remote.Models;
@@ -169,6 +170,9 @@ namespace MixItUp.Base
         bool AutoExportStatistics { get; set; }
 
         List<SerialDeviceModel> SerialDevices { get; set; }
+
+        RemoteConnectionAuthenticationTokenModel RemoteHostConnection { get; set; }
+        List<RemoteConnectionModel> RemoteClientConnections { get; set; }
 
         List<FavoriteGroupModel> FavoriteGroups { get; set; }
 

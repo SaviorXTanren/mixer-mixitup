@@ -1,8 +1,10 @@
-﻿using MixItUp.Base.Remote.Models;
+﻿using MixItUp.Base.Model.Remote.Authentication;
+using MixItUp.Base.Remote.Models;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Remote;
 using MixItUp.Base.ViewModel.Remote.Items;
 using MixItUp.Base.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -68,6 +70,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
         public ICommand AddProfileCommand { get; private set; }
         public ICommand DeleteProfileCommand { get; private set; }
+        public ICommand ConnectDeviceCommand { get; private set; }
 
         public RemoteMainControlViewModel()
         {
@@ -100,6 +103,48 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                         this.RefreshProfiles();
                         this.ProfileSelected(null);
                     }
+                }
+            });
+
+            this.ConnectDeviceCommand = this.CreateCommand(async (parameter) =>
+            {
+                if (ChannelSession.Settings.RemoteHostConnection == null)
+                {
+                    ChannelSession.Settings.RemoteHostConnection = await ChannelSession.Services.RemoteService.NewHost(ChannelSession.User.username);
+                }
+
+                if (ChannelSession.Settings.RemoteHostConnection != null)
+                {
+                    if (!ChannelSession.Services.RemoteService.IsConnected)
+                    {
+                        await ChannelSession.Services.RemoteService.InitializeConnection(ChannelSession.Settings.RemoteHostConnection);
+                    }
+
+                    string shortCode = await DialogHelper.ShowTextEntry("Device 6-Digit Code:");
+                    if (!string.IsNullOrEmpty(shortCode))
+                    {
+                        if (shortCode.Length != 6)
+                        {
+                            await DialogHelper.ShowMessage("The code entered is not valid");
+                            return;
+                        }
+
+                        RemoteConnectionModel clientConnection = await ChannelSession.Services.RemoteService.ApproveClient(ChannelSession.Settings.RemoteHostConnection, shortCode);
+                        if (clientConnection != null)
+                        {
+                            ChannelSession.Settings.RemoteClientConnections.Add(clientConnection);
+                            await DialogHelper.ShowMessage(string.Format("The client device {0} has been approved", clientConnection.Name));
+                        }
+                        else
+                        {
+                            await DialogHelper.ShowMessage("A client device could not be found with the specified code");
+                            return;
+                        }
+                    }
+                }
+                else
+                {
+                    await DialogHelper.ShowMessage("Could not connect to Remote service, please try again");
                 }
             });
 

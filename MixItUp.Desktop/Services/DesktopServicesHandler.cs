@@ -27,8 +27,9 @@ namespace MixItUp.Desktop.Services
             this.SongRequestService = new SongRequestService();
             this.TranslationService = new TranslationService();
             this.SerialService = new SerialService();
-            this.Scout = new ScoutService();
+            this.RemoteService = new DesktopRemoteService("https://mixitup-remote-server.azurewebsites.net/api/", "https://mixitup-remote-server.azurewebsites.net/RemoteHub");
 
+            this.Scout = new ScoutService();
             this.ExtraLife = new ExtraLifeService();
             this.OverlayServers = new OverlayServiceManager();
         }

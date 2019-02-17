@@ -16,6 +16,7 @@ namespace MixItUp.Base.Services
         public ITranslationService TranslationService { get; protected set; }
         public ISongRequestService SongRequestService { get; protected set; }
         public ISerialService SerialService { get; protected set; }
+        public LocalRemoteServiceBase RemoteService { get; protected set; }
 
         public IOverlayServiceManager OverlayServers { get; protected set; }
         public IStreamingSoftwareService OBSWebsocket { get; protected set; }

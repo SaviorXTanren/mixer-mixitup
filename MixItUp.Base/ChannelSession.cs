@@ -585,6 +585,11 @@ namespace MixItUp.Base
                         await ChannelSession.Services.InitializePatreon();
                     }
 
+                    if (ChannelSession.Settings.RemoteHostConnection != null)
+                    {
+                        await ChannelSession.Services.RemoteService.InitializeConnection(ChannelSession.Settings.RemoteHostConnection);
+                    }
+
                     foreach (CommandBase command in ChannelSession.AllEnabledCommands)
                     {
                         foreach (ActionBase action in command.Actions)

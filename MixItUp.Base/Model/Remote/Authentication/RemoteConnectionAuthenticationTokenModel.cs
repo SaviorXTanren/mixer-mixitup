@@ -13,11 +13,11 @@ namespace MixItUp.Base.Model.Remote.Authentication
         [DataMember]
         public DateTimeOffset AccessTokenExpiration { get; set; }
 
-        [JsonIgnore]
-        public Guid GroupID { get; set; }
+        [DataMember]
+        public bool IsHost { get; set; }
 
         [JsonIgnore]
-        public bool IsHost { get; set; }
+        public Guid GroupID { get; set; }
 
         public RemoteConnectionAuthenticationTokenModel() { }
 
