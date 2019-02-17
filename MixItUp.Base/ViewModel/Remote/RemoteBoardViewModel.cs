@@ -3,7 +3,6 @@ using MixItUp.Base.Remote.Models.Items;
 using MixItUp.Base.ViewModel.Remote.Items;
 using MixItUp.Base.ViewModels;
 using System;
-using System.Linq;
 
 namespace MixItUp.Base.ViewModel.Remote
 {
@@ -11,11 +10,17 @@ namespace MixItUp.Base.ViewModel.Remote
     {
         protected RemoteItemViewModelBase[,] items = new RemoteItemViewModelBase[RemoteBoardModel.BoardWidth, RemoteBoardModel.BoardHeight];
 
-        public RemoteBoardViewModel(RemoteBoardModel model)
+        public RemoteBoardViewModel(RemoteBoardModel model) : this(model, null) { }
+
+        public RemoteBoardViewModel(RemoteBoardModel model, RemoteBoardViewModel parentBoard)
             : base(model)
         {
+            this.ParentBoard = parentBoard;
+
             this.BuildBoardItems();
         }
+
+        public RemoteBoardViewModel ParentBoard { get; private set; }
 
         public string BackgroundColor
         {
@@ -115,7 +120,7 @@ namespace MixItUp.Base.ViewModel.Remote
 
             if (this.model.IsSubBoard)
             {
-                this.items[0, 0] = new RemoteBackItemViewModel();
+                this.items[0, 0] = new RemoteBackItemViewModel(this.ParentBoard);
             }
 
             for (int x = 0; x < 5; x++)

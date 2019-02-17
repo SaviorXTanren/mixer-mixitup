@@ -1,4 +1,7 @@
 ﻿using MixItUp.Base.Remote.Models.Items;
+using MixItUp.Base.Util;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Remote.Items
 {
@@ -6,6 +9,7 @@ namespace MixItUp.Base.ViewModel.Remote.Items
     {
         public const string NewRemoteFolderEventName = "NewRemoteFolder";
         public const string RemoteFolderDetailsEventName = "RemoteFolderDetails";
+        public const string RemoteFolderNavigationEventName = "RemoteFolderNavigation";
 
         private new RemoteFolderItemModel model;
 
@@ -15,10 +19,29 @@ namespace MixItUp.Base.ViewModel.Remote.Items
             this.Name = name;
         }
 
-        public RemoteFolderItemViewModel(RemoteFolderItemModel model) : base(model) { this.model = model; }
+        public RemoteFolderItemViewModel(RemoteFolderItemModel model)
+            : base(model)
+        {
+            this.model = model;
+
+            this.FolderSelectedCommand = this.CreateCommand((parameter) =>
+            {
+                MessageCenter.Send<RemoteFolderItemViewModel>(RemoteFolderItemViewModel.RemoteFolderDetailsEventName, this);
+                return Task.FromResult(0);
+            });
+
+            this.FolderNavigationCommand = this.CreateCommand((parameter) =>
+            {
+                MessageCenter.Send<RemoteFolderItemViewModel>(RemoteFolderItemViewModel.RemoteFolderNavigationEventName, this);
+                return Task.FromResult(0);
+            });
+        }
 
         public RemoteBoardViewModel Board { get { return new RemoteBoardViewModel(this.model.Board); } }
 
         public override bool IsFolder { get { return true; } }
+
+        public ICommand FolderSelectedCommand { get; private set; }
+        public ICommand FolderNavigationCommand { get; private set; }
     }
 }

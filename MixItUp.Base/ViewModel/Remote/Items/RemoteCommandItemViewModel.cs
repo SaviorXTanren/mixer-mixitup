@@ -1,9 +1,12 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Remote.Models.Items;
+using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Remote.Items
 {
@@ -30,6 +33,12 @@ namespace MixItUp.Base.ViewModel.Remote.Items
             {
                 this.CommandType = EnumHelper.GetEnumName(command.Type);
             }
+
+            this.CommandSelectedCommand = this.CreateCommand((parameter) =>
+            {
+                MessageCenter.Send<RemoteCommandItemViewModel>(RemoteCommandItemViewModel.RemoteCommandDetailsEventName, this);
+                return Task.FromResult(0);
+            });
         }
 
         public IEnumerable<string> CommandTypes { get { return EnumHelper.GetEnumNames(ChannelSession.AllEnabledCommands.Select(c => c.Type).Distinct()); } }
@@ -76,5 +85,7 @@ namespace MixItUp.Base.ViewModel.Remote.Items
         }
 
         public override bool IsCommand { get { return true; } }
+
+        public ICommand CommandSelectedCommand { get; private set; }
     }
 }

@@ -3,6 +3,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Remote;
 using MixItUp.Base.ViewModel.Remote.Items;
 using MixItUp.Base.ViewModels;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
@@ -47,6 +48,20 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             }
         }
         private RemoteItemViewModelBase item;
+
+        public List<string> NavigationNames
+        {
+            get { return this.navigationNames; }
+            set
+            {
+                this.navigationNames = value;
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("NavigationName");
+            }
+        }
+        private List<string> navigationNames = new List<string>();
+
+        public string NavigationName { get { return string.Join(" > ", this.NavigationNames); } }
 
         public bool IsProfileSelected { get { return this.Profile != null; } }
         public bool IsItemSelected { get { return this.Item != null; } }
@@ -115,6 +130,20 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             {
                 this.Item = folder;
             });
+
+            MessageCenter.Register<RemoteFolderItemViewModel>(RemoteFolderItemViewModel.RemoteFolderNavigationEventName, (folder) =>
+            {
+                this.Board = new RemoteBoardViewModel(folder.Board.GetModel(), this.Board);
+                this.AddRemoveNavigationName(folder.Name);
+                this.Item = null;
+            });
+
+            MessageCenter.Register<RemoteBoardViewModel>(RemoteBackItemViewModel.RemoteBackNavigationEventName, (board) =>
+            {
+                this.Board = board;
+                this.AddRemoveNavigationName(null);
+                this.Item = null;
+            });
         }
 
         public void RefreshProfiles()
@@ -129,13 +158,28 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         public void ProfileSelected(RemoteProfileViewModel profile)
         {
             this.Profile = null;
-            this.Board = null;
-            if (ChannelSession.Settings.RemoteProfiles.ContainsKey(profile.ID))
+            this.NavigationNames.Clear();
+            if (profile != null && ChannelSession.Settings.RemoteProfiles.ContainsKey(profile.ID))
             {
                 this.Profile = profile;
                 RemoteProfileBoardModel profileBoard = ChannelSession.Settings.RemoteProfiles[profile.ID];
                 this.Board = new RemoteBoardViewModel(profileBoard.Board);
+
+                this.AddRemoveNavigationName(this.Profile.Name);
             }
+        }
+
+        public void AddRemoveNavigationName(string name)
+        {
+            if (!string.IsNullOrEmpty(name))
+            {
+                this.NavigationNames.Add(name);
+            }
+            else
+            {
+                this.NavigationNames.RemoveAt(this.NavigationNames.Count - 1);
+            }
+            this.NotifyPropertyChanged("NavigationName");
         }
     }
 }

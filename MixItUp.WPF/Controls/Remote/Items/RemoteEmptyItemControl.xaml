@@ -15,7 +15,5 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid Background="Transparent" ContextMenu="{StaticResource RemoteEmptyItemContextMenu}">
-        
-    </Grid>
+    <Grid Background="Transparent" ContextMenu="{StaticResource RemoteEmptyItemContextMenu}" />
 </UserControl>

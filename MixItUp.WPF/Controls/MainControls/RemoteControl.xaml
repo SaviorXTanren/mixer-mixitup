@@ -62,7 +62,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" TextDecorations="Underline" Text="{Binding Profile.Name}" />
+                <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" TextDecorations="Underline" Text="{Binding NavigationName}" />
 
                 <Button Grid.Row="0" IsEnabled="{Binding IsProfileSelected}" Command="{Binding DeleteProfileCommand}" Width="40" ToolTip="Delete Command" HorizontalAlignment="Right">
                     <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />

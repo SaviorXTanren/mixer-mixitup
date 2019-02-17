@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base.Remote.Models.Items;
 using MixItUp.Base.Util;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Remote.Items

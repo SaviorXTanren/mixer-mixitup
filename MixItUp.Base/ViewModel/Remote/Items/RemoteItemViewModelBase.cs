@@ -87,5 +87,7 @@ namespace MixItUp.Base.ViewModel.Remote.Items
         public virtual bool IsCommand { get { return false; } }
 
         public virtual bool IsFolder { get { return false; } }
+
+        public virtual bool IsBack { get { return false; } }
     }
 }

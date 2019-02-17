@@ -1,7 +1,4 @@
-﻿using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Remote.Items;
-using System.Windows.Controls;
-using System.Windows.Input;
+﻿using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.Remote.Items
 {
@@ -13,11 +10,6 @@ namespace MixItUp.WPF.Controls.Remote.Items
         public RemoteCommandItemControl()
         {
             InitializeComponent();
-        }
-
-        private void Grid_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            MessageCenter.Send<RemoteCommandItemViewModel>(RemoteCommandItemViewModel.RemoteCommandDetailsEventName, (RemoteCommandItemViewModel)this.DataContext);
         }
     }
 }

@@ -11,7 +11,12 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
 
-    <Grid Background="{Binding BackgroundColor}" MouseUp="Grid_MouseUp">
+    <Grid Background="{Binding BackgroundColor}">
+        <Grid.InputBindings>
+            <MouseBinding MouseAction="LeftClick" Command="{Binding FolderSelectedCommand}" />
+            <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding FolderNavigationCommand}" />
+        </Grid.InputBindings>
+        
         <Image Source="{Binding BackgroundImage}" Visibility="{Binding HasBackgroundImage, Converter={StaticResource BooleanToVisibilityConverter}}" Stretch="Fill" />
 
         <MaterialDesign:PackIcon Kind="Folder" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-15,0,0" Width="40" Height="40" Visibility="{Binding DoesNotHaveBackgroundImage, Converter={StaticResource BooleanToVisibilityConverter}}" />

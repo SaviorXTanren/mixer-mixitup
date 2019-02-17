@@ -17,6 +17,8 @@
             <local:RemoteCommandItemControl Visibility="{Binding IsCommand, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" />
 
             <local:RemoteFolderItemControl Visibility="{Binding IsFolder, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" />
+
+            <local:RemoteBackItemControl Visibility="{Binding IsBack, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" />
         </Grid>
     </Border>
 </UserControl>
