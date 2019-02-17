@@ -13,6 +13,6 @@
     <Grid Background="{Binding BackgroundColor}" MouseUp="Grid_MouseUp">
         <Image Source="{Binding BackgroundImage}" Visibility="{Binding HasBackgroundImage, Converter={StaticResource BooleanToVisibilityConverter}}" Stretch="Fill" />
 
-        <TextBlock Text="{Binding Name}" Foreground="{Binding TextColor}" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,10" />
+        <TextBlock Text="{Binding Name}" Foreground="{Binding TextColor}" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,8" />
     </Grid>
 </UserControl>

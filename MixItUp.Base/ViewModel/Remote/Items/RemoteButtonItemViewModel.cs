@@ -70,11 +70,13 @@ namespace MixItUp.Base.ViewModel.Remote.Items
                 this.model.ImagePath = value;
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged("HasBackgroundImage");
+                this.NotifyPropertyChanged("DoesNotHaveBackgroundImage");
             }
         }
 
         public ICommand BackgroundImageBrowseCommand { get; private set; }
 
-        public bool HasBackgroundImage { get { return !string.IsNullOrEmpty(this.BackgroundImage); } }
+        public bool HasBackgroundImage { get { return !string.IsNullOrEmpty(this.BackgroundImage) && ChannelSession.Services.FileService.FileExists(this.BackgroundImage); } }
+        public bool DoesNotHaveBackgroundImage { get { return !this.HasBackgroundImage; } }
     }
 }

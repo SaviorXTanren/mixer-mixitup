@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Remote.Items"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -13,6 +14,8 @@
     <Grid Background="{Binding BackgroundColor}" MouseUp="Grid_MouseUp">
         <Image Source="{Binding BackgroundImage}" Visibility="{Binding HasBackgroundImage, Converter={StaticResource BooleanToVisibilityConverter}}" Stretch="Fill" />
 
-        <TextBlock Text="{Binding Name}" Foreground="{Binding TextColor}" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,10" />
+        <MaterialDesign:PackIcon Kind="Folder" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-15,0,0" Width="40" Height="40" Visibility="{Binding DoesNotHaveBackgroundImage, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+        <TextBlock Text="{Binding Name}" Foreground="{Binding TextColor}" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,8" />
     </Grid>
 </UserControl>
