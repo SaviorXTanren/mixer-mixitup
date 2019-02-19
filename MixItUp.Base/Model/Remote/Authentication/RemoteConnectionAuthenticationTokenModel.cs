@@ -33,6 +33,9 @@ namespace MixItUp.Base.Model.Remote.Authentication
             this.GroupID = groupID;
         }
 
+        [JsonIgnore]
+        public bool IsAccessTokenExpired { get { return DateTimeOffset.Now > this.AccessTokenExpiration; } }
+
         public void GenerateAccessToken(bool neverExpire)
         {
             this.AccessToken = string.Format("{0}-{1}", Guid.NewGuid(), Guid.NewGuid());

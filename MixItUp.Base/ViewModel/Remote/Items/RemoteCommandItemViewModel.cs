@@ -62,7 +62,7 @@ namespace MixItUp.Base.ViewModel.Remote.Items
                 if (!string.IsNullOrEmpty(this.CommandType))
                 {
                     CommandTypeEnum commandType = EnumHelper.GetEnumValueFromString<CommandTypeEnum>(this.CommandType);
-                    return ChannelSession.AllEnabledCommands.Where(c => c.Type == commandType && !(c is PreMadeChatCommand));
+                    return ChannelSession.AllEnabledCommands.Where(c => c.Type == commandType && !(c is PreMadeChatCommand)).OrderBy(c => c.Name);
                 }
                 return null;
             }
