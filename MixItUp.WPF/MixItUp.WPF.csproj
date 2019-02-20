@@ -163,6 +163,12 @@
       <HintPath>..\packages\NetOffice.Core.1.7.4.4\lib\net45\OfficeApi.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
+    <Reference Include="SixLabors.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SixLabors.Core.1.0.0-beta0007\lib\netstandard2.0\SixLabors.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="SixLabors.ImageSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SixLabors.ImageSharp.1.0.0-beta0006\lib\netstandard2.0\SixLabors.ImageSharp.dll</HintPath>
+    </Reference>
     <Reference Include="SocketIoClientDotNet, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SocketIoClientDotNet.1.0.6\lib\net45\SocketIoClientDotNet.dll</HintPath>
     </Reference>
@@ -227,8 +233,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Numerics.Vectors.4.4.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
     </Reference>
     <Reference Include="System.Reactive, Version=4.0.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reactive.4.0.0-preview00001\lib\net46\System.Reactive.dll</HintPath>

@@ -2,13 +2,14 @@
 using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Remote.Items
 {
     public abstract class RemoteButtonItemViewModelBase : RemoteItemViewModelBase
     {
+        public const int BackgroundImageResizeValue = 120;
+
         private new RemoteButtonItemModelBase model;
 
         public RemoteButtonItemViewModelBase(RemoteButtonItemModelBase model)
@@ -22,7 +23,11 @@ namespace MixItUp.Base.ViewModel.Remote.Items
                 if (!string.IsNullOrEmpty(filePath) && ChannelSession.Services.FileService.FileExists(filePath))
                 {
                     this.BackgroundImage = filePath;
-                    this.BackgroundImageData = Convert.ToBase64String(await ChannelSession.Services.FileService.ReadFileAsBytes(filePath));
+
+                    var imageData = await ChannelSession.Services.FileService.ReadFileAsBytes(filePath);
+                    imageData = await ChannelSession.Services.ImageManipulationService.Resize(imageData, BackgroundImageResizeValue, BackgroundImageResizeValue);
+
+                    this.BackgroundImageData = Convert.ToBase64String(imageData);
                 }
             });
         }
