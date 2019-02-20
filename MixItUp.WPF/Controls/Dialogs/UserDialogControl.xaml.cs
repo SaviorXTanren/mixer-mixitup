@@ -24,45 +24,48 @@ namespace MixItUp.WPF.Controls.Dialogs
 
         private async void UserDialogControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            await this.user.RefreshDetails(force: true);
-
-            this.UserAvatar.SetSize(100);
-            await this.UserAvatar.SetUserAvatarUrl(this.user);
-
-            PromoteToModButton.IsEnabled = ChannelSession.IsStreamer;
-            DemoteFromModButton.IsEnabled = ChannelSession.IsStreamer;
-            EditUserButton.IsEnabled = ChannelSession.IsStreamer;
-
-            ExpandedChannelModel channelToCheck = await ChannelSession.Connection.GetChannel(user.UserName);
-            bool follows = (await ChannelSession.Connection.CheckIfFollows(channelToCheck, ChannelSession.User)).HasValue;
-            if (follows)
+            if (this.user != null)
             {
-                this.UnfollowButton.Visibility = System.Windows.Visibility.Visible;
-                this.FollowButton.Visibility = System.Windows.Visibility.Collapsed;
-            }
+                await this.user.RefreshDetails(force: true);
 
-            if (this.user.MixerRoles.Contains(MixerRoleEnum.Banned))
-            {
-                this.UnbanButton.Visibility = System.Windows.Visibility.Visible;
-                this.BanButton.Visibility = System.Windows.Visibility.Collapsed;
-            }
+                this.UserAvatar.SetSize(100);
+                await this.UserAvatar.SetUserAvatarUrl(this.user);
 
-            if (this.user.MixerRoles.Contains(MixerRoleEnum.Mod))
-            {
-                this.DemoteFromModButton.Visibility = System.Windows.Visibility.Visible;
-                this.PromoteToModButton.Visibility = System.Windows.Visibility.Collapsed;
-            }
+                PromoteToModButton.IsEnabled = ChannelSession.IsStreamer;
+                DemoteFromModButton.IsEnabled = ChannelSession.IsStreamer;
+                EditUserButton.IsEnabled = ChannelSession.IsStreamer;
 
-            if (channelToCheck.online)
-            {
-                this.StreamStatusTextBlock.Text = $"{channelToCheck.viewersCurrent} Viewers";
-            }
-            else
-            {
-                this.StreamStatusTextBlock.Text = "Offline";
-            }
+                ExpandedChannelModel channelToCheck = await ChannelSession.Connection.GetChannel(user.UserName);
+                bool follows = (await ChannelSession.Connection.CheckIfFollows(channelToCheck, ChannelSession.User)).HasValue;
+                if (follows)
+                {
+                    this.UnfollowButton.Visibility = System.Windows.Visibility.Visible;
+                    this.FollowButton.Visibility = System.Windows.Visibility.Collapsed;
+                }
 
-            this.DataContext = this.user;
+                if (this.user.MixerRoles.Contains(MixerRoleEnum.Banned))
+                {
+                    this.UnbanButton.Visibility = System.Windows.Visibility.Visible;
+                    this.BanButton.Visibility = System.Windows.Visibility.Collapsed;
+                }
+
+                if (this.user.MixerRoles.Contains(MixerRoleEnum.Mod))
+                {
+                    this.DemoteFromModButton.Visibility = System.Windows.Visibility.Visible;
+                    this.PromoteToModButton.Visibility = System.Windows.Visibility.Collapsed;
+                }
+
+                if (channelToCheck.online)
+                {
+                    this.StreamStatusTextBlock.Text = $"{channelToCheck.viewersCurrent} Viewers";
+                }
+                else
+                {
+                    this.StreamStatusTextBlock.Text = "Offline";
+                }
+
+                this.DataContext = this.user;
+            }
         }
     }
 }
