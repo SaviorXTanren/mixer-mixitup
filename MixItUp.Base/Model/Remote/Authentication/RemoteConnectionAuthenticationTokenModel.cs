@@ -14,6 +14,9 @@ namespace MixItUp.Base.Model.Remote.Authentication
         public DateTimeOffset AccessTokenExpiration { get; set; }
 
         [DataMember]
+        public string HostName { get; set; }
+
+        [DataMember]
         public bool IsHost { get; set; }
 
         [JsonIgnore]
@@ -25,12 +28,21 @@ namespace MixItUp.Base.Model.Remote.Authentication
             : base(connection.Name)
         {
             this.ID = connection.ID;
+            this.HostName = connection.Name;
         }
 
-        public RemoteConnectionAuthenticationTokenModel(RemoteConnectionModel connection, Guid groupID)
+        public RemoteConnectionAuthenticationTokenModel(RemoteConnectionModel connection, RemoteConnectionAuthenticationTokenModel hostConnection)
             : this(connection)
         {
-            this.GroupID = groupID;
+            if (hostConnection != null)
+            {
+                this.GroupID = hostConnection.GroupID;
+                this.HostName = hostConnection.Name;
+            }
+            else
+            {
+                this.GroupID = Guid.NewGuid();
+            }
         }
 
         [JsonIgnore]
