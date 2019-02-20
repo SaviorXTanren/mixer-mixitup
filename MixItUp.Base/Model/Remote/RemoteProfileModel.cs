@@ -12,6 +12,9 @@ namespace MixItUp.Base.Remote.Models
         [DataMember]
         public string Name { get; set; }
 
+        [DataMember]
+        public string HashValidation { get; set; }
+
         public RemoteProfileModel() { }
 
         public RemoteProfileModel(string name)

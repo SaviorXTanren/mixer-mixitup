@@ -1,8 +1,10 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Remote.Authentication;
+using MixItUp.Base.Remote.Models;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Remote;
 using MixItUp.SignalR.Client;
 using System;
 using System.Linq;
@@ -23,6 +25,11 @@ namespace MixItUp.Desktop.Services
                 {
                     try
                     {
+                        foreach (RemoteProfileBoardModel profileBoard in ChannelSession.Settings.RemoteProfiles.Values)
+                        {
+                            RemoteProfileBoardViewModel profileBoardViewModel = new RemoteProfileBoardViewModel(profileBoard);
+                            profileBoardViewModel.BuildHashValidation();
+                        }
                         await this.SendProfiles(ChannelSession.Settings.RemoteProfiles.Values.Select(p => p.Profile));
                     }
                     catch (Exception ex) { Logger.Log(ex); }
