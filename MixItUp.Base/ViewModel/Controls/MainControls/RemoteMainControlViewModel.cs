@@ -129,10 +129,13 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                             return;
                         }
 
-                        RemoteConnectionModel clientConnection = await ChannelSession.Services.RemoteService.ApproveClient(ChannelSession.Settings.RemoteHostConnection, shortCode);
+                        RemoteConnectionModel clientConnection = await ChannelSession.Services.RemoteService.ApproveClient(ChannelSession.Settings.RemoteHostConnection, shortCode, rememberClient: true);
                         if (clientConnection != null)
                         {
-                            ChannelSession.Settings.RemoteClientConnections.Add(clientConnection);
+                            if (!clientConnection.IsTemporary)
+                            {
+                                ChannelSession.Settings.RemoteClientConnections.Add(clientConnection);
+                            }
                             await DialogHelper.ShowMessage(string.Format("The client device {0} has been approved", clientConnection.Name));
                         }
                         else

@@ -40,7 +40,7 @@ namespace MixItUp.Base.Services
 
         public abstract Task<RemoteConnectionAuthenticationTokenModel> ValidateClient(RemoteConnectionShortCodeModel shortCode);
 
-        public abstract Task<RemoteConnectionModel> ApproveClient(RemoteConnectionModel connection, string clientShortCode);
+        public abstract Task<RemoteConnectionModel> ApproveClient(RemoteConnectionModel connection, string clientShortCode, bool rememberClient = false);
 
         public abstract Task<bool> RemoveClient(RemoteConnectionModel hostConnection, RemoteConnectionModel clientConnection);
 

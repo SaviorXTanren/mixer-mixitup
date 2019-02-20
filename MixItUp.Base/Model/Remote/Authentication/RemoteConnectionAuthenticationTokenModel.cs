@@ -40,6 +40,7 @@ namespace MixItUp.Base.Model.Remote.Authentication
         {
             this.AccessToken = string.Format("{0}-{1}", Guid.NewGuid(), Guid.NewGuid());
             this.AccessTokenExpiration = (neverExpire) ? DateTimeOffset.MaxValue : DateTimeOffset.Now.AddSeconds(30);
+            this.IsTemporary = !neverExpire;
         }
     }
 }

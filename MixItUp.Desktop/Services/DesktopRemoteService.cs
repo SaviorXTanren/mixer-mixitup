@@ -79,13 +79,13 @@ namespace MixItUp.Desktop.Services
 
         public override Task<RemoteConnectionAuthenticationTokenModel> ValidateClient(RemoteConnectionShortCodeModel shortCode) { throw new System.NotImplementedException(); }
 
-        public override async Task<RemoteConnectionModel> ApproveClient(RemoteConnectionModel connection, string clientShortCode)
+        public override async Task<RemoteConnectionModel> ApproveClient(RemoteConnectionModel connection, string clientShortCode, bool rememberClient = false)
         {
             return await this.AsyncWrapper<RemoteConnectionAuthenticationTokenModel>(async () =>
             {
                 using (HttpClient httpClient = this.GetHttpClient())
                 {
-                    HttpResponseMessage response = await httpClient.GetAsync(string.Format("authentication/approveclient?hostID={0}&shortCode={1}", connection.ID, clientShortCode));
+                    HttpResponseMessage response = await httpClient.GetAsync(string.Format("authentication/approveclient?hostID={0}&shortCode={1}&rememberClient={2}", connection.ID, clientShortCode, rememberClient));
                     return SerializerHelper.DeserializeFromString<RemoteConnectionAuthenticationTokenModel>(await response.Content.ReadAsStringAsync());
                 }
             });

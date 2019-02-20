@@ -826,6 +826,9 @@
     <Compile Include="Controls\Settings\OverlaySettingsControl.xaml.cs">
       <DependentUpon>OverlaySettingsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Settings\RemoteSettingsControl.xaml.cs">
+      <DependentUpon>RemoteSettingsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Settings\SerialDevicesSettingsControl.xaml.cs">
       <DependentUpon>SerialDevicesSettingsControl.xaml</DependentUpon>
     </Compile>
@@ -1620,6 +1623,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Settings\OverlaySettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\RemoteSettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
