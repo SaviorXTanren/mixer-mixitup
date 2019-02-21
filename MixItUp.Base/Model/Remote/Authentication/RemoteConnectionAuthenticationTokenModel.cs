@@ -13,11 +13,14 @@ namespace MixItUp.Base.Model.Remote.Authentication
         [DataMember]
         public DateTimeOffset AccessTokenExpiration { get; set; }
 
-        [JsonIgnore]
-        public Guid GroupID { get; set; }
+        [DataMember]
+        public string HostName { get; set; }
+
+        [DataMember]
+        public bool IsHost { get; set; }
 
         [JsonIgnore]
-        public bool IsHost { get; set; }
+        public Guid GroupID { get; set; }
 
         public RemoteConnectionAuthenticationTokenModel() { }
 
@@ -25,18 +28,31 @@ namespace MixItUp.Base.Model.Remote.Authentication
             : base(connection.Name)
         {
             this.ID = connection.ID;
+            this.HostName = connection.Name;
         }
 
-        public RemoteConnectionAuthenticationTokenModel(RemoteConnectionModel connection, Guid groupID)
+        public RemoteConnectionAuthenticationTokenModel(RemoteConnectionModel connection, RemoteConnectionAuthenticationTokenModel hostConnection)
             : this(connection)
         {
-            this.GroupID = groupID;
+            if (hostConnection != null)
+            {
+                this.GroupID = hostConnection.GroupID;
+                this.HostName = hostConnection.Name;
+            }
+            else
+            {
+                this.GroupID = Guid.NewGuid();
+            }
         }
+
+        [JsonIgnore]
+        public bool IsAccessTokenExpired { get { return DateTimeOffset.Now > this.AccessTokenExpiration; } }
 
         public void GenerateAccessToken(bool neverExpire)
         {
             this.AccessToken = string.Format("{0}-{1}", Guid.NewGuid(), Guid.NewGuid());
             this.AccessTokenExpiration = (neverExpire) ? DateTimeOffset.MaxValue : DateTimeOffset.Now.AddSeconds(30);
+            this.IsTemporary = !neverExpire;
         }
     }
 }

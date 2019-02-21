@@ -11,10 +11,8 @@ namespace MixItUp.Base.Remote.Models.Items
 
         public RemoteCommandItemModel() { }
 
-        public RemoteCommandItemModel(Guid commandID, int xPosition, int yPosition)
+        public RemoteCommandItemModel(int xPosition, int yPosition)
             : base(xPosition, yPosition)
-        {
-            this.CommandID = commandID;
-        }
+        { }
     }
 }

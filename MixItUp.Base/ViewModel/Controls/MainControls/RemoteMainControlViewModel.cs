@@ -1,10 +1,13 @@
-﻿using MixItUp.Base.Remote.Models;
+﻿using MixItUp.Base.Model.Remote.Authentication;
+using MixItUp.Base.Remote.Models;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Remote;
+using MixItUp.Base.ViewModel.Remote.Items;
 using MixItUp.Base.ViewModels;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Controls.MainControls
@@ -32,15 +35,42 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             {
                 this.board = value;
                 this.NotifyPropertyChanged();
-                this.NotifyPropertyChanged("IsBoardSelected");
             }
         }
         private RemoteBoardViewModel board;
 
+        public RemoteItemViewModelBase Item
+        {
+            get { return this.item; }
+            private set
+            {
+                this.item = value;
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("IsItemSelected");
+            }
+        }
+        private RemoteItemViewModelBase item;
+
+        public List<string> NavigationNames
+        {
+            get { return this.navigationNames; }
+            set
+            {
+                this.navigationNames = value;
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("NavigationName");
+            }
+        }
+        private List<string> navigationNames = new List<string>();
+
+        public string NavigationName { get { return string.Join(" > ", this.NavigationNames); } }
+
         public bool IsProfileSelected { get { return this.Profile != null; } }
+        public bool IsItemSelected { get { return this.Item != null; } }
 
         public ICommand AddProfileCommand { get; private set; }
         public ICommand DeleteProfileCommand { get; private set; }
+        public ICommand ConnectDeviceCommand { get; private set; }
 
         public RemoteMainControlViewModel()
         {
@@ -49,47 +79,172 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 string name = await DialogHelper.ShowTextEntry("Name of Profile:");
                 if (!string.IsNullOrEmpty(name))
                 {
-                    if (ChannelSession.Settings.RemoteProfiles.Keys.Any(p => p.Name.Equals(name)))
+                    if (ChannelSession.Settings.RemoteProfiles.Values.Any(p => p.Profile.Name.Equals(name)))
                     {
                         await DialogHelper.ShowMessage("A profile with the same name already exists");
                         return;
                     }
 
-                    ChannelSession.Settings.RemoteProfiles[new RemoteProfileModel(name.ToString())] = new RemoteBoardModel();
+                    RemoteProfileModel profile = new RemoteProfileModel(name.ToString());
+                    ChannelSession.Settings.RemoteProfiles[profile.ID] = new RemoteProfileBoardModel(profile);
+
                     this.RefreshProfiles();
+                    this.ProfileSelected(this.Profiles.FirstOrDefault(p => p.ID.Equals(profile.ID)));
                 }
             });
 
-            this.DeleteProfileCommand = this.CreateCommand((x) =>
+            this.DeleteProfileCommand = this.CreateCommand(async (x) =>
             {
                 if (this.Profile != null)
                 {
-                    ChannelSession.Settings.RemoteProfiles.Remove(this.Profile.GetModel());
-                    this.RefreshProfiles();
-                    this.ProfileSelected(null);
+                    if (await DialogHelper.ShowConfirmation("Are you sure you want to delete this profile?"))
+                    {
+                        ChannelSession.Settings.RemoteProfiles.Remove(this.Profile.ID);
+                        this.RefreshProfiles();
+                        this.ProfileSelected(null);
+                    }
                 }
-                return Task.FromResult(0);
+            });
+
+            this.ConnectDeviceCommand = this.CreateCommand(async (parameter) =>
+            {
+                if (ChannelSession.Settings.RemoteHostConnection == null || (!await ChannelSession.Services.RemoteService.ValidateConnection(ChannelSession.Settings.RemoteHostConnection)))
+                {
+                    ChannelSession.Settings.RemoteHostConnection = await ChannelSession.Services.RemoteService.NewHost(ChannelSession.User.username);
+                    ChannelSession.Settings.RemoteClientConnections.Clear();
+                }
+
+                if (ChannelSession.Settings.RemoteHostConnection != null)
+                {
+                    if (!ChannelSession.Services.RemoteService.IsConnected)
+                    {
+                        if (!await ChannelSession.Services.RemoteService.InitializeConnection(ChannelSession.Settings.RemoteHostConnection))
+                        {
+                            await DialogHelper.ShowMessage("Could not connect to Remote service, please try again");
+                            return;
+                        }
+                    }
+
+                    string shortCode = await DialogHelper.ShowTextEntry("Device 6-Digit Code:");
+                    if (!string.IsNullOrEmpty(shortCode))
+                    {
+                        if (shortCode.Length != 6)
+                        {
+                            await DialogHelper.ShowMessage("The code entered is not valid");
+                            return;
+                        }
+
+                        RemoteConnectionModel clientConnection = await ChannelSession.Services.RemoteService.ApproveClient(ChannelSession.Settings.RemoteHostConnection, shortCode, rememberClient: true);
+                        if (clientConnection != null)
+                        {
+                            if (!clientConnection.IsTemporary)
+                            {
+                                ChannelSession.Settings.RemoteClientConnections.Add(clientConnection);
+                            }
+                            await DialogHelper.ShowMessage(string.Format("The client device {0} has been approved", clientConnection.Name));
+                        }
+                        else
+                        {
+                            await DialogHelper.ShowMessage("A client device could not be found with the specified code");
+                            return;
+                        }
+                    }
+                }
+                else
+                {
+                    await DialogHelper.ShowMessage("Could not connect to Remote service, please try again");
+                }
+            });
+
+            MessageCenter.Register<RemoteCommandItemViewModel>(RemoteCommandItemViewModel.NewRemoteCommandEventName, this, (command) =>
+            {
+                if (this.Board != null)
+                {
+                    this.Board.AddItem(command);
+                    this.Item = this.Board.GetItem(command.ID);
+                }
+            });
+
+            MessageCenter.Register<RemoteFolderItemViewModel>(RemoteFolderItemViewModel.NewRemoteFolderEventName, this, async (folder) =>
+            {
+                if (this.NavigationNames.Count() > 2)
+                {
+                    await DialogHelper.ShowMessage("Boards can only be up to 2 layers deep");
+                    return;
+                }
+
+                if (this.Board != null)
+                {
+                    this.Board.AddItem(folder);
+                    this.Item = this.Board.GetItem(folder.ID);
+                }
+            });
+
+            MessageCenter.Register<RemoteCommandItemViewModel>(RemoteCommandItemViewModel.RemoteCommandDetailsEventName, this, (command) =>
+            {
+                this.Item = command;
+            });
+
+            MessageCenter.Register<RemoteFolderItemViewModel>(RemoteFolderItemViewModel.RemoteFolderDetailsEventName, this, (folder) =>
+            {
+                this.Item = folder;
+            });
+
+            MessageCenter.Register<RemoteFolderItemViewModel>(RemoteFolderItemViewModel.RemoteFolderNavigationEventName, this, (folder) =>
+            {
+                this.Board = new RemoteBoardViewModel(folder.Board.GetModel(), this.Board);
+                this.AddRemoveNavigationName(folder.Name);
+                this.Item = null;
+            });
+
+            MessageCenter.Register<RemoteBoardViewModel>(RemoteBackItemViewModel.RemoteBackNavigationEventName, this, (board) =>
+            {
+                this.Board = board;
+                this.AddRemoveNavigationName(null);
+                this.Item = null;
+            });
+
+            MessageCenter.Register<RemoteItemViewModelBase>(RemoteItemViewModelBase.RemoteDeleteItemEventName, this, (item) =>
+            {
+                this.Board.RemoveItem(item.XPosition, item.YPosition);
+                this.Item = null;
             });
         }
 
         public void RefreshProfiles()
         {
             this.Profiles.Clear();
-            foreach (RemoteProfileModel profile in ChannelSession.Settings.RemoteProfiles.Keys)
+            foreach (RemoteProfileBoardModel profileBoard in ChannelSession.Settings.RemoteProfiles.Values)
             {
-                this.Profiles.Add(new RemoteProfileViewModel(profile));
+                this.Profiles.Add(new RemoteProfileViewModel(profileBoard.Profile));
             }
         }
 
         public void ProfileSelected(RemoteProfileViewModel profile)
         {
             this.Profile = null;
-            this.Board = null;
-            if (ChannelSession.Settings.RemoteProfiles.ContainsKey(profile.GetModel()))
+            this.NavigationNames.Clear();
+            if (profile != null && ChannelSession.Settings.RemoteProfiles.ContainsKey(profile.ID))
             {
                 this.Profile = profile;
-                this.Board = new RemoteBoardViewModel(ChannelSession.Settings.RemoteProfiles[profile.GetModel()]);
+                RemoteProfileBoardModel profileBoard = ChannelSession.Settings.RemoteProfiles[profile.ID];
+                this.Board = new RemoteBoardViewModel(profileBoard.Board);
+
+                this.AddRemoveNavigationName(this.Profile.Name);
             }
+        }
+
+        public void AddRemoveNavigationName(string name)
+        {
+            if (!string.IsNullOrEmpty(name))
+            {
+                this.NavigationNames.Add(name);
+            }
+            else
+            {
+                this.NavigationNames.RemoveAt(this.NavigationNames.Count - 1);
+            }
+            this.NotifyPropertyChanged("NavigationName");
         }
     }
 }

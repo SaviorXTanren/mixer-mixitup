@@ -2,6 +2,7 @@
 using MixItUp.Base.Remote.Models.Items;
 using MixItUp.Base.ViewModel.Remote.Items;
 using MixItUp.Base.ViewModels;
+using System;
 
 namespace MixItUp.Base.ViewModel.Remote
 {
@@ -9,8 +10,88 @@ namespace MixItUp.Base.ViewModel.Remote
     {
         protected RemoteItemViewModelBase[,] items = new RemoteItemViewModelBase[RemoteBoardModel.BoardWidth, RemoteBoardModel.BoardHeight];
 
-        public RemoteBoardViewModel(RemoteBoardModel model)
+        public RemoteBoardViewModel(RemoteBoardModel model) : this(model, null) { }
+
+        public RemoteBoardViewModel(RemoteBoardModel model, RemoteBoardViewModel parentBoard)
             : base(model)
+        {
+            this.ParentBoard = parentBoard;
+
+            this.BuildBoardItems();
+        }
+
+        public RemoteBoardViewModel ParentBoard { get; private set; }
+
+        public string BackgroundColor
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(this.model.BackgroundColor))
+                {
+                    return this.model.BackgroundColor;
+                }
+                return "White";
+            }
+            set
+            {
+                this.model.BackgroundColor = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+
+        public string BackgroundImage
+        {
+            get { return this.model.ImagePath; }
+            set
+            {
+                this.model.ImagePath = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+
+        public RemoteItemViewModelBase Item00 { get { return this.items[0, 0]; } }
+        public RemoteItemViewModelBase Item10 { get { return this.items[1, 0]; } }
+        public RemoteItemViewModelBase Item20 { get { return this.items[2, 0]; } }
+        public RemoteItemViewModelBase Item30 { get { return this.items[3, 0]; } }
+        public RemoteItemViewModelBase Item40 { get { return this.items[4, 0]; } }
+
+        public RemoteItemViewModelBase Item01 { get { return this.items[0, 1]; } }
+        public RemoteItemViewModelBase Item11 { get { return this.items[1, 1]; } }
+        public RemoteItemViewModelBase Item21 { get { return this.items[2, 1]; } }
+        public RemoteItemViewModelBase Item31 { get { return this.items[3, 1]; } }
+        public RemoteItemViewModelBase Item41 { get { return this.items[4, 1]; } }
+
+        public RemoteItemViewModelBase Item02 { get { return this.items[0, 2]; } }
+        public RemoteItemViewModelBase Item12 { get { return this.items[1, 2]; } }
+        public RemoteItemViewModelBase Item22 { get { return this.items[2, 2]; } }
+        public RemoteItemViewModelBase Item32 { get { return this.items[3, 2]; } }
+        public RemoteItemViewModelBase Item42 { get { return this.items[4, 2]; } }
+
+        public void AddItem(RemoteItemViewModelBase item)
+        {
+            this.model.SetItem(item.GetModel(), item.XPosition, item.YPosition);
+            this.BuildBoardItems();
+        }
+
+        public RemoteItemViewModelBase GetItem(Guid id)
+        {
+            foreach (RemoteItemViewModelBase item in this.items)
+            {
+                if (item.ID.Equals(id))
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+
+        public void RemoveItem(int xPosition, int yPosition)
+        {
+            this.model.SetItem(null, xPosition, yPosition);
+            this.BuildBoardItems();
+        }
+
+        private void BuildBoardItems()
         {
             for (int x = 0; x < 5; x++)
             {
@@ -30,46 +111,25 @@ namespace MixItUp.Base.ViewModel.Remote
                             this.items[x, y] = new RemoteFolderItemViewModel((RemoteFolderItemModel)item);
                         }
                     }
+                    else
+                    {
+                        this.items[x, y] = new RemoteEmptyItemViewModel(x, y);
+                    }
                 }
             }
 
             if (this.model.IsSubBoard)
             {
-                this.items[0, 0] = new RemoteBackItemViewModel();
+                this.items[0, 0] = new RemoteBackItemViewModel(this.ParentBoard);
             }
-        }
 
-        public string BackgroundColor
-        {
-            get
+            for (int x = 0; x < 5; x++)
             {
-                if (!string.IsNullOrEmpty(this.model.BackgroundColor))
+                for (int y = 0; y < 3; y++)
                 {
-                    return this.model.BackgroundColor;
+                    this.NotifyPropertyChanged("Item" + x + y);
                 }
-                return "White";
             }
-            set { this.model.BackgroundColor = value; }
         }
-
-        public string BackgroundImage { get { return this.model.ImagePath; } }
-
-        public RemoteItemViewModelBase Item00 { get { return this.items[0, 0]; } }
-        public RemoteItemViewModelBase Item10 { get { return this.items[1, 0]; } }
-        public RemoteItemViewModelBase Item20 { get { return this.items[2, 0]; } }
-        public RemoteItemViewModelBase Item30 { get { return this.items[3, 0]; } }
-        public RemoteItemViewModelBase Item40 { get { return this.items[4, 0]; } }
-
-        public RemoteItemViewModelBase Item01 { get { return this.items[0, 1]; } }
-        public RemoteItemViewModelBase Item11 { get { return this.items[1, 1]; } }
-        public RemoteItemViewModelBase Item21 { get { return this.items[2, 1]; } }
-        public RemoteItemViewModelBase Item31 { get { return this.items[3, 1]; } }
-        public RemoteItemViewModelBase Item41 { get { return this.items[4, 1]; } }
-
-        public RemoteItemViewModelBase Item02 { get { return this.items[0, 2]; } }
-        public RemoteItemViewModelBase Item12 { get { return this.items[1, 2]; } }
-        public RemoteItemViewModelBase Item22 { get { return this.items[2, 2]; } }
-        public RemoteItemViewModelBase Item32 { get { return this.items[3, 2]; } }
-        public RemoteItemViewModelBase Item42 { get { return this.items[4, 2]; } }
     }
 }

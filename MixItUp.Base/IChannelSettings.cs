@@ -5,6 +5,7 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Favorites;
 using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Remote.Authentication;
 using MixItUp.Base.Model.Serial;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Remote.Models;
@@ -170,6 +171,9 @@ namespace MixItUp.Base
 
         List<SerialDeviceModel> SerialDevices { get; set; }
 
+        RemoteConnectionAuthenticationTokenModel RemoteHostConnection { get; set; }
+        List<RemoteConnectionModel> RemoteClientConnections { get; set; }
+
         List<FavoriteGroupModel> FavoriteGroups { get; set; }
 
         HashSet<SongRequestServiceTypeEnum> SongRequestServiceTypes { get; set; }
@@ -205,7 +209,7 @@ namespace MixItUp.Base
 
         LockedList<UserQuoteViewModel> UserQuotes { get; }
 
-        LockedDictionary<RemoteProfileModel, RemoteBoardModel> RemoteProfiles { get; }
+        LockedDictionary<Guid, RemoteProfileBoardModel> RemoteProfiles { get; }
 
         LockedList<OverlayWidget> OverlayWidgets { get; set; }
 

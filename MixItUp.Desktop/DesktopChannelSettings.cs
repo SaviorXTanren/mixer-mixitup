@@ -6,6 +6,7 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Favorites;
 using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Remote.Authentication;
 using MixItUp.Base.Model.Serial;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Remote.Models;
@@ -299,6 +300,11 @@ namespace MixItUp.Desktop
         public List<SerialDeviceModel> SerialDevices { get; set; }
 
         [JsonProperty]
+        public RemoteConnectionAuthenticationTokenModel RemoteHostConnection { get; set; }
+        [JsonProperty]
+        public List<RemoteConnectionModel> RemoteClientConnections { get; set; }
+
+        [JsonProperty]
         public List<FavoriteGroupModel> FavoriteGroups { get; set; }
 
         [JsonProperty]
@@ -355,7 +361,7 @@ namespace MixItUp.Desktop
         protected List<OverlayWidget> overlayWidgetsInternal { get; set; }
 
         [JsonProperty]
-        protected Dictionary<RemoteProfileModel, RemoteBoardModel> remoteProfileInternal { get; set; }
+        protected Dictionary<Guid, RemoteProfileBoardModel> remoteProfileInternal { get; set; }
 
         [JsonProperty]
         protected List<string> filteredWordsInternal { get; set; }
@@ -376,6 +382,7 @@ namespace MixItUp.Desktop
             this.CustomInteractiveProjectIDs = new List<InteractiveSharedProjectModel>();
             this.UserTitles = new List<UserTitleModel>();
             this.SerialDevices = new List<SerialDeviceModel>();
+            this.RemoteClientConnections = new List<RemoteConnectionModel>();
             this.FavoriteGroups = new List<FavoriteGroupModel>();
             this.SongRequestServiceTypes = new HashSet<SongRequestServiceTypeEnum>();
             this.CustomInteractiveSettings = new Dictionary<uint, JObject>();
@@ -391,7 +398,7 @@ namespace MixItUp.Desktop
             this.actionGroupCommandsInternal = new List<ActionGroupCommand>();
             this.gameCommandsInternal = new List<GameCommandBase>();
             this.userQuotesInternal = new List<UserQuoteViewModel>();
-            this.remoteProfileInternal = new Dictionary<RemoteProfileModel, RemoteBoardModel>();
+            this.remoteProfileInternal = new Dictionary<Guid, RemoteProfileBoardModel>();
             this.overlayWidgetsInternal = new List<OverlayWidget>();
             this.filteredWordsInternal = new List<string>();
             this.bannedWordsInternal = new List<string>();
@@ -440,7 +447,7 @@ namespace MixItUp.Desktop
         public LockedList<OverlayWidget> OverlayWidgets { get; set; }
 
         [JsonIgnore]
-        public LockedDictionary<RemoteProfileModel, RemoteBoardModel> RemoteProfiles { get; set; }
+        public LockedDictionary<Guid, RemoteProfileBoardModel> RemoteProfiles { get; set; }
 
         [JsonIgnore]
         public LockedList<string> FilteredWords { get; set; }
@@ -519,7 +526,7 @@ namespace MixItUp.Desktop
             this.ActionGroupCommands = new LockedList<ActionGroupCommand>();
             this.GameCommands = new LockedList<GameCommandBase>();
             this.UserQuotes = new LockedList<UserQuoteViewModel>();
-            this.RemoteProfiles = new LockedDictionary<RemoteProfileModel, RemoteBoardModel>();
+            this.RemoteProfiles = new LockedDictionary<Guid, RemoteProfileBoardModel>();
             this.OverlayWidgets = new LockedList<OverlayWidget>();
             this.FilteredWords = new LockedList<string>();
             this.BannedWords = new LockedList<string>();
@@ -540,7 +547,7 @@ namespace MixItUp.Desktop
             this.ActionGroupCommands = new LockedList<ActionGroupCommand>(this.actionGroupCommandsInternal);
             this.GameCommands = new LockedList<GameCommandBase>(this.gameCommandsInternal);
             this.UserQuotes = new LockedList<UserQuoteViewModel>(this.userQuotesInternal);
-            this.RemoteProfiles = new LockedDictionary<RemoteProfileModel, RemoteBoardModel>(this.remoteProfileInternal);
+            this.RemoteProfiles = new LockedDictionary<Guid, RemoteProfileBoardModel>(this.remoteProfileInternal);
             this.OverlayWidgets = new LockedList<OverlayWidget>(this.overlayWidgetsInternal);
             this.FilteredWords = new LockedList<string>(this.filteredWordsInternal);
             this.BannedWords = new LockedList<string>(this.bannedWordsInternal);

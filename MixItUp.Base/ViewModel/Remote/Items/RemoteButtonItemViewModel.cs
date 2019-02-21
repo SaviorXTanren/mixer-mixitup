@@ -1,12 +1,38 @@
 ﻿using MixItUp.Base.Remote.Models.Items;
+using MixItUp.Base.Util;
+using System;
+using System.Collections.Generic;
+using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Remote.Items
 {
     public abstract class RemoteButtonItemViewModelBase : RemoteItemViewModelBase
     {
+        public const int BackgroundImageResizeValue = 120;
+
         private new RemoteButtonItemModelBase model;
 
-        public RemoteButtonItemViewModelBase(RemoteButtonItemModelBase model) : base(model) { this.model = model; }
+        public RemoteButtonItemViewModelBase(RemoteButtonItemModelBase model)
+            : base(model)
+        {
+            this.model = model;
+
+            this.BackgroundImageBrowseCommand = this.CreateCommand(async (parameter) =>
+            {
+                string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(ChannelSession.Services.FileService.ImageFileFilter());
+                if (!string.IsNullOrEmpty(filePath) && ChannelSession.Services.FileService.FileExists(filePath))
+                {
+                    this.BackgroundImage = filePath;
+
+                    var imageData = await ChannelSession.Services.FileService.ReadFileAsBytes(filePath);
+                    imageData = await ChannelSession.Services.ImageManipulationService.Resize(imageData, BackgroundImageResizeValue, BackgroundImageResizeValue);
+
+                    this.BackgroundImageData = Convert.ToBase64String(imageData);
+                }
+            });
+        }
+
+        public IEnumerable<string> PreDefinedColors { get { return ColorSchemes.WPFColorSchemeDictionary; } }
 
         public string BackgroundColor
         {
@@ -16,9 +42,13 @@ namespace MixItUp.Base.ViewModel.Remote.Items
                 {
                     return this.model.BackgroundColor;
                 }
-                return "Black";
+                return "Transparent";
             }
-            set { this.model.BackgroundColor = value; }
+            set
+            {
+                this.model.BackgroundColor = value;
+                this.NotifyPropertyChanged();
+            }
         }
 
         public string TextColor
@@ -29,11 +59,40 @@ namespace MixItUp.Base.ViewModel.Remote.Items
                 {
                     return this.model.TextColor;
                 }
-                return "White";
+                return "Black";
             }
-            set { this.model.TextColor = value; }
+            set
+            {
+                this.model.TextColor = value;
+                this.NotifyPropertyChanged();
+            }
         }
 
-        public string BackgroundImage { get { return this.model.ImagePath; } }
+        public string BackgroundImage
+        {
+            get { return this.model.ImagePath; }
+            set
+            {
+                this.model.ImagePath = value;
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("HasBackgroundImage");
+                this.NotifyPropertyChanged("DoesNotHaveBackgroundImage");
+            }
+        }
+
+        public string BackgroundImageData
+        {
+            get { return this.model.ImageData; }
+            set
+            {
+                this.model.ImageData = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+
+        public ICommand BackgroundImageBrowseCommand { get; private set; }
+
+        public bool HasBackgroundImage { get { return !string.IsNullOrEmpty(this.BackgroundImage) && ChannelSession.Services.FileService.FileExists(this.BackgroundImage); } }
+        public bool DoesNotHaveBackgroundImage { get { return !this.HasBackgroundImage; } }
     }
 }

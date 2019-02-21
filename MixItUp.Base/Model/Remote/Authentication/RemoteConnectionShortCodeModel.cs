@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Util;
+using Newtonsoft.Json;
 using System;
 using System.Runtime.Serialization;
 
@@ -13,12 +14,15 @@ namespace MixItUp.Base.Model.Remote.Authentication
         [DataMember]
         public DateTimeOffset ShortCodeExpiration { get; set; }
 
-        [DataMember]
+        [JsonIgnore]
         public bool Approved { get; set; }
 
         public RemoteConnectionShortCodeModel() { }
 
         public RemoteConnectionShortCodeModel(string name) : base(name) { }
+
+        [JsonIgnore]
+        public bool IsShortCodeExpired { get { return DateTimeOffset.Now > this.ShortCodeExpiration; } }
 
         public void GenerateShortCode()
         {

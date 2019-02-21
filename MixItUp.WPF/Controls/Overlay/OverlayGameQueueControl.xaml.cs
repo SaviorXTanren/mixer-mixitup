@@ -37,21 +37,21 @@ namespace MixItUp.WPF.Controls.Overlay
             this.TextFontComboBox.Text = this.item.TextFont;
 
             this.BorderColorComboBox.Text = this.item.BorderColor;
-            if (ColorSchemes.ColorSchemeDictionary.ContainsValue(this.item.BorderColor))
+            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsValue(this.item.BorderColor))
             {
-                this.BorderColorComboBox.Text = ColorSchemes.ColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.item.BorderColor)).Key;
+                this.BorderColorComboBox.Text = ColorSchemes.HTMLColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.item.BorderColor)).Key;
             }
 
             this.BackgroundColorComboBox.Text = this.item.BackgroundColor;
-            if (ColorSchemes.ColorSchemeDictionary.ContainsValue(this.item.BackgroundColor))
+            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsValue(this.item.BackgroundColor))
             {
-                this.BackgroundColorComboBox.Text = ColorSchemes.ColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.item.BackgroundColor)).Key;
+                this.BackgroundColorComboBox.Text = ColorSchemes.HTMLColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.item.BackgroundColor)).Key;
             }
 
             this.TextColorComboBox.Text = this.item.TextColor;
-            if (ColorSchemes.ColorSchemeDictionary.ContainsValue(this.item.TextColor))
+            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsValue(this.item.TextColor))
             {
-                this.TextColorComboBox.Text = ColorSchemes.ColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.item.TextColor)).Key;
+                this.TextColorComboBox.Text = ColorSchemes.HTMLColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.item.TextColor)).Key;
             }
 
             this.AddEventAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.item.AddEventAnimation);
@@ -68,21 +68,21 @@ namespace MixItUp.WPF.Controls.Overlay
             }
 
             string borderColor = this.BorderColorComboBox.Text;
-            if (ColorSchemes.ColorSchemeDictionary.ContainsKey(borderColor))
+            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(borderColor))
             {
-                borderColor = ColorSchemes.ColorSchemeDictionary[borderColor];
+                borderColor = ColorSchemes.HTMLColorSchemeDictionary[borderColor];
             }
 
             string backgroundColor = this.BackgroundColorComboBox.Text;
-            if (ColorSchemes.ColorSchemeDictionary.ContainsKey(backgroundColor))
+            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(backgroundColor))
             {
-                backgroundColor = ColorSchemes.ColorSchemeDictionary[backgroundColor];
+                backgroundColor = ColorSchemes.HTMLColorSchemeDictionary[backgroundColor];
             }
 
             string textColor = this.TextColorComboBox.Text;
-            if (ColorSchemes.ColorSchemeDictionary.ContainsKey(textColor))
+            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(textColor))
             {
-                textColor = ColorSchemes.ColorSchemeDictionary[textColor];
+                textColor = ColorSchemes.HTMLColorSchemeDictionary[textColor];
             }
 
             if (string.IsNullOrEmpty(this.TextFontComboBox.Text))
@@ -113,7 +113,7 @@ namespace MixItUp.WPF.Controls.Overlay
 
             this.TextFontComboBox.ItemsSource = InstalledFonts.GetInstalledFonts();
 
-            this.BorderColorComboBox.ItemsSource = this.BackgroundColorComboBox.ItemsSource = this.TextColorComboBox.ItemsSource = ColorSchemes.ColorSchemeDictionary.Keys;
+            this.BorderColorComboBox.ItemsSource = this.BackgroundColorComboBox.ItemsSource = this.TextColorComboBox.ItemsSource = ColorSchemes.HTMLColorSchemeDictionary.Keys;
 
             this.AddEventAnimationComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayEffectEntranceAnimationTypeEnum>();
             this.AddEventAnimationComboBox.SelectedIndex = 0;

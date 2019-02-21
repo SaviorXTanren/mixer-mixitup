@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MixItUp.WPF.Controls.Remote
+namespace MixItUp.WPF.Controls.Remote.Details
 {
     /// <summary>
-    /// Interaction logic for RemoteFolderItemControl.xaml
+    /// Interaction logic for RemoteFolderDetailsControl.xaml
     /// </summary>
-    public partial class RemoteFolderItemControl : UserControl
+    public partial class RemoteFolderDetailsControl : UserControl
     {
-        public RemoteFolderItemControl()
+        public RemoteFolderDetailsControl()
         {
             InitializeComponent();
         }

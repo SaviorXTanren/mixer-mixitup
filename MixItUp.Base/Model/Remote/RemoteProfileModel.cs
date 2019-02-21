@@ -12,6 +12,9 @@ namespace MixItUp.Base.Remote.Models
         [DataMember]
         public string Name { get; set; }
 
+        [DataMember]
+        public string HashValidation { get; set; }
+
         public RemoteProfileModel() { }
 
         public RemoteProfileModel(string name)
@@ -30,5 +33,13 @@ namespace MixItUp.Base.Remote.Models
 
         [DataMember]
         public RemoteBoardModel Board { get; set; }
+
+        public RemoteProfileBoardModel() { }
+
+        public RemoteProfileBoardModel(RemoteProfileModel profile)
+        {
+            this.Profile = profile;
+            this.Board = new RemoteBoardModel();
+        }
     }
 }

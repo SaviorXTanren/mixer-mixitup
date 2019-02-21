@@ -91,10 +91,6 @@
 
   <div id="mainDiv" class="mainDiv">
     <canvas id="drawingCanvas" class="drawingCanvas"></canvas>
-	
-	<div id="selectorDiv" style="position: absolute; left: 0px; top: 0px; visibility: hidden">
-        <img id="selectorImage" style="position: absolute; transform: translate(-50%, -50%);" src="selector.png" />
-    </div>
 
     <table id="paintSwatchTable" class="paintSwatchTable" cellspacing="0" cellpadding="0">
       <tr>
@@ -123,6 +119,10 @@
         <td colspan="2"><button id="sendButton">Send</button></td>
       </tr>
     </table>
+	
+	<div id="selectorDiv" style="position: absolute; left: 0px; top: 0px; visibility: hidden">
+        <img id="selectorImage" style="position: absolute; transform: translate(0%, -100%); z-index: 10;" src="selector.png" />
+    </div>
 	
 	<img id="presentImage" class="presentImage" style="visibility: hidden"></img>
   </div>

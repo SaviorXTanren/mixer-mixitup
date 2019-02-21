@@ -65,7 +65,7 @@ namespace MixItUp.WPF.Controls.Settings
             this.ColorComboBox.ItemsSource = this.AvailableColorSchemes;
 
             this.AvailableColorSchemes.Clear();
-            foreach (var kvp in ColorSchemes.ColorSchemeDictionary)
+            foreach (var kvp in ColorSchemes.HTMLColorSchemeDictionary)
             {
                 this.AvailableColorSchemes.Add(new ColorSchemeOption(kvp.Key, kvp.Value));
             }

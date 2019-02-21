@@ -512,6 +512,10 @@ namespace MixItUp.Base.Util
                     {
                         this.ReplaceSpecialIdentifier(StreamHostCountSpecialIdentifier, hosters.Count().ToString());
                     }
+                    else
+                    {
+                        this.ReplaceSpecialIdentifier(StreamHostCountSpecialIdentifier, "0");
+                    }
                 }
             }
 

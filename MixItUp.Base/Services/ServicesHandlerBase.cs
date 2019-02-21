@@ -12,10 +12,12 @@ namespace MixItUp.Base.Services
         public IFileService FileService { get; protected set; }
         public IAudioService AudioService { get; protected set; }
         public IInputService InputService { get; protected set; }
+        public IImageManipulationService ImageManipulationService { get; protected set; }
         public ITextToSpeechService TextToSpeechService { get; protected set; }
         public ITranslationService TranslationService { get; protected set; }
         public ISongRequestService SongRequestService { get; protected set; }
         public ISerialService SerialService { get; protected set; }
+        public LocalRemoteServiceBase RemoteService { get; protected set; }
 
         public IOverlayServiceManager OverlayServers { get; protected set; }
         public IStreamingSoftwareService OBSWebsocket { get; protected set; }

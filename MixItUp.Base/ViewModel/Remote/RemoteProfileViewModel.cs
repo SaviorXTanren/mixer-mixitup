@@ -1,6 +1,9 @@
 ﻿using MixItUp.Base.Remote.Models;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace MixItUp.Base.ViewModel.Remote
 {
@@ -34,6 +37,8 @@ namespace MixItUp.Base.ViewModel.Remote
                 this.NotifyPropertyChanged();
             }
         }
+
+        public string HashValidation { get { return this.model.HashValidation; } set { this.model.HashValidation = value; } }
     }
 
     public class RemoteProfileBoardViewModel : ViewModelBase
@@ -49,6 +54,12 @@ namespace MixItUp.Base.ViewModel.Remote
 
             this.Profile = new RemoteProfileViewModel(this.model.Profile);
             this.Board = new RemoteBoardViewModel(this.model.Board);
+        }
+
+        public void BuildHashValidation()
+        {
+            this.Profile.HashValidation = null;
+            this.Profile.HashValidation = HashHelper.ComputeMD5Hash(SerializerHelper.SerializeToString(this.model));
         }
     }
 }
