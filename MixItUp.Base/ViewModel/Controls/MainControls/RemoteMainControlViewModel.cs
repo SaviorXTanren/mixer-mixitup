@@ -151,7 +151,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 }
             });
 
-            MessageCenter.Register<RemoteCommandItemViewModel>(RemoteCommandItemViewModel.NewRemoteCommandEventName, (command) =>
+            MessageCenter.Register<RemoteCommandItemViewModel>(RemoteCommandItemViewModel.NewRemoteCommandEventName, this, (command) =>
             {
                 if (this.Board != null)
                 {
@@ -160,7 +160,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 }
             });
 
-            MessageCenter.Register<RemoteFolderItemViewModel>(RemoteFolderItemViewModel.NewRemoteFolderEventName, async (folder) =>
+            MessageCenter.Register<RemoteFolderItemViewModel>(RemoteFolderItemViewModel.NewRemoteFolderEventName, this, async (folder) =>
             {
                 if (this.NavigationNames.Count() > 2)
                 {
@@ -175,31 +175,31 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 }
             });
 
-            MessageCenter.Register<RemoteCommandItemViewModel>(RemoteCommandItemViewModel.RemoteCommandDetailsEventName, (command) =>
+            MessageCenter.Register<RemoteCommandItemViewModel>(RemoteCommandItemViewModel.RemoteCommandDetailsEventName, this, (command) =>
             {
                 this.Item = command;
             });
 
-            MessageCenter.Register<RemoteFolderItemViewModel>(RemoteFolderItemViewModel.RemoteFolderDetailsEventName, (folder) =>
+            MessageCenter.Register<RemoteFolderItemViewModel>(RemoteFolderItemViewModel.RemoteFolderDetailsEventName, this, (folder) =>
             {
                 this.Item = folder;
             });
 
-            MessageCenter.Register<RemoteFolderItemViewModel>(RemoteFolderItemViewModel.RemoteFolderNavigationEventName, (folder) =>
+            MessageCenter.Register<RemoteFolderItemViewModel>(RemoteFolderItemViewModel.RemoteFolderNavigationEventName, this, (folder) =>
             {
                 this.Board = new RemoteBoardViewModel(folder.Board.GetModel(), this.Board);
                 this.AddRemoveNavigationName(folder.Name);
                 this.Item = null;
             });
 
-            MessageCenter.Register<RemoteBoardViewModel>(RemoteBackItemViewModel.RemoteBackNavigationEventName, (board) =>
+            MessageCenter.Register<RemoteBoardViewModel>(RemoteBackItemViewModel.RemoteBackNavigationEventName, this, (board) =>
             {
                 this.Board = board;
                 this.AddRemoveNavigationName(null);
                 this.Item = null;
             });
 
-            MessageCenter.Register<RemoteItemViewModelBase>(RemoteItemViewModelBase.RemoteDeleteItemEventName, (item) =>
+            MessageCenter.Register<RemoteItemViewModelBase>(RemoteItemViewModelBase.RemoteDeleteItemEventName, this, (item) =>
             {
                 this.Board.RemoveItem(item.XPosition, item.YPosition);
                 this.Item = null;
