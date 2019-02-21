@@ -5,6 +5,7 @@ using AutoUpdaterDotNET;
 using System;
 using System.Net.Http;
 using MixItUp.Base.Util;
+using System.Reflection;
 
 namespace MixItUp.WPF
 {
@@ -27,6 +28,7 @@ namespace MixItUp.WPF
         protected override async Task OnLoaded()
         {
             this.NewVersionTextBlock.Text = updateArgs.CurrentVersion.ToString();
+            this.CurrentVersionTextBlock.Text = Assembly.GetEntryAssembly().GetName().Version.ToString();
 
             try
             {

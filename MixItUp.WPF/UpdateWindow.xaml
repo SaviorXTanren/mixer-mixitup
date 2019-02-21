@@ -24,8 +24,10 @@
 
         <MaterialDesign:DialogHost x:Name="MDDialogHost" Identifier="RootDialog" />
 
-        <Grid Grid.Row="0" Margin="20">
+        <Grid Grid.Row="0" Margin="10,20,10,10">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="15" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="20" />
                 <RowDefinition Height="*" />
@@ -33,26 +35,30 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" HorizontalAlignment="Center">
+            <TextBlock Grid.Row="0" HorizontalAlignment="Center">A new update is available for Mix It Up!</TextBlock>
+            
+            <Grid Grid.Row="2" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="80" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" VerticalAlignment="Center">A new update is available for Mix It Up!</TextBlock>
+                <TextBlock Grid.Column="0" VerticalAlignment="Center">New Version:</TextBlock>
+                <TextBlock Grid.Column="2" x:Name="NewVersionTextBlock" VerticalAlignment="Center" />
 
-                <TextBlock Grid.Column="2" VerticalAlignment="Center">New Version:</TextBlock>
-
-                <TextBlock Grid.Column="4" x:Name="NewVersionTextBlock" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="4" VerticalAlignment="Center">Current Version:</TextBlock>
+                <TextBlock Grid.Column="6" x:Name="CurrentVersionTextBlock" VerticalAlignment="Center" />
 
             </Grid>
 
-            <WebBrowser Grid.Row="2" x:Name="UpdateChangelogWebBrowser" Margin="20,0" ScrollViewer.VerticalScrollBarVisibility="Visible" />
+            <WebBrowser Grid.Row="4" x:Name="UpdateChangelogWebBrowser" Margin="20,0" ScrollViewer.VerticalScrollBarVisibility="Visible" />
 
-            <Grid Grid.Row="4" HorizontalAlignment="Center">
+            <Grid Grid.Row="6" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="60" />
