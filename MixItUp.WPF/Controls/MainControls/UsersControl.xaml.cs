@@ -2,7 +2,6 @@
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Util;
-using MixItUp.WPF.Windows.Currency;
 using MixItUp.WPF.Windows.Users;
 using System;
 using System.Collections.Generic;
