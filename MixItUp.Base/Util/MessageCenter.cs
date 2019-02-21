@@ -33,22 +33,22 @@ namespace MixItUp.Base.Util
 
         private static Dictionary<MessageCenterKey, Dictionary<object, Action<object>>> registeredListeners = new Dictionary<MessageCenterKey, Dictionary<object, Action<object>>>();
 
-        public static void Register<T>(string key, Action<T> listener)
+        public static void Register<T>(string key, object owner, Action<T> listener)
         {
             MessageCenterKey mcKey = new MessageCenterKey(key, typeof(T));
             if (!registeredListeners.ContainsKey(mcKey))
             {
                 registeredListeners[mcKey] = new Dictionary<object, Action<object>>();
             }
-            registeredListeners[mcKey][listener] = (value) => { listener((T)value); };
+            registeredListeners[mcKey][owner] = (value) => { listener((T)value); };
         }
 
-        public static void Unregister<T>(string key, Action<T> listener)
+        public static void Unregister<T>(string key, object owner)
         {
             MessageCenterKey mcKey = new MessageCenterKey(key, typeof(T));
             if (registeredListeners.ContainsKey(mcKey))
             {
-                registeredListeners[mcKey].Remove(listener);
+                registeredListeners[mcKey].Remove(owner);
             }
         }
 
