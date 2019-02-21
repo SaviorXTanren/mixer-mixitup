@@ -108,16 +108,21 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
             this.ConnectDeviceCommand = this.CreateCommand(async (parameter) =>
             {
-                if (ChannelSession.Settings.RemoteHostConnection == null)
+                if (ChannelSession.Settings.RemoteHostConnection == null || (!await ChannelSession.Services.RemoteService.ValidateConnection(ChannelSession.Settings.RemoteHostConnection)))
                 {
                     ChannelSession.Settings.RemoteHostConnection = await ChannelSession.Services.RemoteService.NewHost(ChannelSession.User.username);
+                    ChannelSession.Settings.RemoteClientConnections.Clear();
                 }
 
                 if (ChannelSession.Settings.RemoteHostConnection != null)
                 {
                     if (!ChannelSession.Services.RemoteService.IsConnected)
                     {
-                        await ChannelSession.Services.RemoteService.InitializeConnection(ChannelSession.Settings.RemoteHostConnection);
+                        if (!await ChannelSession.Services.RemoteService.InitializeConnection(ChannelSession.Settings.RemoteHostConnection))
+                        {
+                            await DialogHelper.ShowMessage("Could not connect to Remote service, please try again");
+                            return;
+                        }
                     }
 
                     string shortCode = await DialogHelper.ShowTextEntry("Device 6-Digit Code:");

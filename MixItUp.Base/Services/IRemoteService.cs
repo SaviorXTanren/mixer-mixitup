@@ -1,4 +1,6 @@
-﻿using MixItUp.Base.Model.Remote.Authentication;
+﻿using Mixer.Base.Model.OAuth;
+using Mixer.Base.Services;
+using MixItUp.Base.Model.Remote.Authentication;
 using MixItUp.Base.Remote.Models;
 using MixItUp.Base.Remote.Models.Items;
 using MixItUp.Base.Util;
@@ -11,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
-    public abstract class LocalRemoteServiceBase : IRemoteService
+    public abstract class LocalRemoteServiceBase : RestServiceBase, IRemoteService
     {
         public const string AuthenticateMethodName = "Authenticate";
         public const string RequestProfilesMethodName = "RequestProfiles";
@@ -32,7 +34,7 @@ namespace MixItUp.Base.Services
             this.signalRConnection = signalRConnection;
         }
 
-        public abstract Task InitializeConnection(RemoteConnectionAuthenticationTokenModel connection);
+        public abstract Task<bool> InitializeConnection(RemoteConnectionAuthenticationTokenModel connection);
 
         public abstract Task<RemoteConnectionAuthenticationTokenModel> NewHost(string name);
 
@@ -41,6 +43,8 @@ namespace MixItUp.Base.Services
         public abstract Task<RemoteConnectionAuthenticationTokenModel> ValidateClient(RemoteConnectionShortCodeModel shortCode);
 
         public abstract Task<RemoteConnectionModel> ApproveClient(RemoteConnectionModel connection, string clientShortCode, bool rememberClient = false);
+
+        public abstract Task<bool> ValidateConnection(RemoteConnectionAuthenticationTokenModel authToken);
 
         public abstract Task<bool> RemoveClient(RemoteConnectionModel hostConnection, RemoteConnectionModel clientConnection);
 
@@ -70,7 +74,9 @@ namespace MixItUp.Base.Services
 
         public async Task SendCommand(Guid commandID) { await this.AsyncWrapper(this.signalRConnection.Send(SendCommandMethodName, commandID)); }
 
-        protected HttpClient GetHttpClient() { return new HttpClient() { BaseAddress = new Uri(this.apiAddress) }; }
+        protected override string GetBaseAddress() { return this.apiAddress; }
+
+        protected override Task<OAuthTokenModel> GetOAuthToken(bool autoRefreshToken = true) { return Task.FromResult<OAuthTokenModel>(new OAuthTokenModel()); }
 
         protected async Task AsyncWrapper(Task task)
         {

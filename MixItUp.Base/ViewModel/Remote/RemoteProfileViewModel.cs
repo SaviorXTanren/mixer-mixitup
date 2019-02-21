@@ -58,7 +58,8 @@ namespace MixItUp.Base.ViewModel.Remote
 
         public void BuildHashValidation()
         {
-            this.Profile.HashValidation = HashHelper.ComputeMD5Hash(SerializerHelper.SerializeToString(this.Profile.GetModel()) + SerializerHelper.SerializeToString(this.Board.GetModel()));
+            this.Profile.HashValidation = null;
+            this.Profile.HashValidation = HashHelper.ComputeMD5Hash(SerializerHelper.SerializeToString(this.model));
         }
     }
 }
