@@ -227,16 +227,23 @@ namespace MixItUp.Base.ViewModel.User
                             {
                                 if (item.HasBuyAmount)
                                 {
-                                    totalcost = item.BuyAmount * amount;
-                                    if (user.Data.HasCurrencyAmount(currency, totalcost))
+                                    if ((user.Data.GetInventoryAmount(this, item.Name) + amount) <= item.MaxAmount)
                                     {
-                                        user.Data.SubtractCurrencyAmount(currency, totalcost);
-                                        user.Data.AddInventoryAmount(this, item.Name, amount);
-                                        command = this.ItemsBoughtCommand;
+                                        totalcost = item.BuyAmount * amount;
+                                        if (user.Data.HasCurrencyAmount(currency, totalcost))
+                                        {
+                                            user.Data.SubtractCurrencyAmount(currency, totalcost);
+                                            user.Data.AddInventoryAmount(this, item.Name, amount);
+                                            command = this.ItemsBoughtCommand;
+                                        }
+                                        else
+                                        {
+                                            await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to purchase this item", totalcost, currency.Name));
+                                        }
                                     }
                                     else
                                     {
-                                        await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to purchase this item", totalcost, currency.Name));
+                                        await ChannelSession.Chat.Whisper(user.UserName, string.Format("You can only have {0} {1} in total", item.MaxAmount, currency.Name));
                                     }
                                 }
                                 else
