@@ -106,7 +106,7 @@ namespace MixItUp.WPF.Windows.Currency
             UserInventoryItemViewModel item = (UserInventoryItemViewModel)button.DataContext;
 
             this.ItemNameTextBox.Text = item.Name;
-            this.ItemMaxAmountTextBox.Text = item.MaxAmountString;
+            this.ItemMaxAmountTextBox.Text = item.HasMaxAmount ? item.MaxAmount.ToString() : string.Empty;
             this.ItemBuyAmountTextBox.Text = item.BuyAmountString;
             this.ItemSellAmountTextBox.Text = item.SellAmountString;
             this.AddItemButton.Content = "Update";
