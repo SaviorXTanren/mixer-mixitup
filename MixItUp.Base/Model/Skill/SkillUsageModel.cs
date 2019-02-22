@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Model.Chat;
+using Mixer.Base.Model.Skills;
 using Mixer.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
@@ -18,7 +19,19 @@ namespace MixItUp.Base.Model.Skill
         public const string SparksCurrencyName = "Sparks";
         public const string EmbersCurrencyName = "Embers";
 
-        public static SkillCostTypeEnum GetChatSkill(ChatSkillModel skill)
+        public static SkillCostTypeEnum GetSkillCostType(SkillModel skill)
+        {
+            switch (skill.currency)
+            {
+                case 2:
+                    return SkillCostTypeEnum.Embers;
+                case 1:
+                default:
+                    return SkillCostTypeEnum.Sparks;
+            }
+        }
+
+        public static SkillCostTypeEnum GetChatSkillCostType(ChatSkillModel skill)
         {
             switch (skill.currency)
             {
@@ -30,9 +43,9 @@ namespace MixItUp.Base.Model.Skill
             }
         }
 
-        public static bool IsSparksChatSkill(ChatSkillModel skill) { return SkillUsageModel.GetChatSkill(skill) == SkillCostTypeEnum.Sparks; }
+        public static bool IsSparksChatSkill(ChatSkillModel skill) { return SkillUsageModel.GetChatSkillCostType(skill) == SkillCostTypeEnum.Sparks; }
 
-        public static bool IsEmbersChatSkill(ChatSkillModel skill) { return SkillUsageModel.GetChatSkill(skill) == SkillCostTypeEnum.Embers; }
+        public static bool IsEmbersChatSkill(ChatSkillModel skill) { return SkillUsageModel.GetChatSkillCostType(skill) == SkillCostTypeEnum.Embers; }
 
         [DataMember]
         public UserViewModel User { get; set; }
@@ -55,13 +68,13 @@ namespace MixItUp.Base.Model.Skill
         public SkillInstanceModel SkillInstance { get; set; }
 
         public SkillUsageModel(UserViewModel user, SkillInstanceModel skill)
-            : this(user, skill.Skill.name, skill.Type, SkillCostTypeEnum.Sparks, skill.Skill.price, skill.ImageUrl, string.Empty)
+            : this(user, skill.Skill.name, skill.Type, SkillUsageModel.GetSkillCostType(skill.Skill), skill.Skill.price, skill.ImageUrl, string.Empty)
         {
             this.SkillInstance = skill;
         }
 
         public SkillUsageModel(UserViewModel user, ChatSkillModel skill, string message)
-            : this(user, skill.skill_name, SkillTypeEnum.Sticker, SkillUsageModel.GetChatSkill(skill), skill.cost, skill.icon_url, message)
+            : this(user, skill.skill_name, SkillTypeEnum.Sticker, SkillUsageModel.GetChatSkillCostType(skill), skill.cost, skill.icon_url, message)
         {
             this.ChatSkill = skill;
         }
