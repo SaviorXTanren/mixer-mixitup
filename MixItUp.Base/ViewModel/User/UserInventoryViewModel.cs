@@ -227,7 +227,7 @@ namespace MixItUp.Base.ViewModel.User
                             {
                                 if (item.HasBuyAmount)
                                 {
-                                    if ((user.Data.GetInventoryAmount(this, item.Name) + amount) <= item.MaxAmount)
+                                    if (item.MaxAmount <= 0 || (user.Data.GetInventoryAmount(this, item.Name) + amount) <= item.MaxAmount)
                                     {
                                         totalcost = item.BuyAmount * amount;
                                         if (user.Data.HasCurrencyAmount(currency, totalcost))
@@ -243,7 +243,7 @@ namespace MixItUp.Base.ViewModel.User
                                     }
                                     else
                                     {
-                                        await ChannelSession.Chat.Whisper(user.UserName, string.Format("You can only have {0} {1} in total", item.MaxAmount, currency.Name));
+                                        await ChannelSession.Chat.Whisper(user.UserName, string.Format("You can only have {0} {1} in total", item.MaxAmount, item.Name));
                                     }
                                 }
                                 else
