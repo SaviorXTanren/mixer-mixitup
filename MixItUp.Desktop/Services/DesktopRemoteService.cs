@@ -26,44 +26,58 @@ namespace MixItUp.Desktop.Services
                     return false;
                 }
 
-                this.ListenForRequestProfiles(async () =>
-                {
-                    try
-                    {
-                        foreach (RemoteProfileBoardModel profileBoard in ChannelSession.Settings.RemoteProfiles.Values)
-                        {
-                            RemoteProfileBoardViewModel profileBoardViewModel = new RemoteProfileBoardViewModel(profileBoard);
-                            profileBoardViewModel.BuildHashValidation();
-                        }
-                        await this.SendProfiles(ChannelSession.Settings.RemoteProfiles.Values.Select(p => p.Profile));
-                    }
-                    catch (Exception ex) { Logger.Log(ex); }
-                });
+                this.AuthenticationToken = connection;
 
-                this.ListenForRequestProfileBoard(async (profileID) =>
+                this.ListenForRequestProfiles(async (clientID) =>
                 {
                     try
                     {
-                        if (ChannelSession.Settings.RemoteProfiles.ContainsKey(profileID))
+                        RemoteConnectionModel clientConnection = ChannelSession.Settings.RemoteClientConnections.FirstOrDefault(c => c.ID.Equals(clientID));
+                        if (clientConnection != null)
                         {
-                            await this.SendProfileBoard(ChannelSession.Settings.RemoteProfiles[profileID]);
-                        }
-                        else
-                        {
-                            await this.SendProfileBoard(null);
+                            foreach (RemoteProfileBoardModel profileBoard in ChannelSession.Settings.RemoteProfiles.Values)
+                            {
+                                RemoteProfileBoardViewModel profileBoardViewModel = new RemoteProfileBoardViewModel(profileBoard);
+                                profileBoardViewModel.BuildHashValidation();
+                            }
+                            await this.SendProfiles(ChannelSession.Settings.RemoteProfiles.Values.Select(p => p.Profile));
                         }
                     }
                     catch (Exception ex) { Logger.Log(ex); }
                 });
 
-                this.ListenForSendCommand(async (commandID) =>
+                this.ListenForRequestProfileBoard(async (clientID, profileID) =>
                 {
                     try
                     {
-                        CommandBase command = ChannelSession.AllEnabledCommands.FirstOrDefault(c => c.ID.Equals(commandID));
-                        if (command != null)
+                        RemoteConnectionModel clientConnection = ChannelSession.Settings.RemoteClientConnections.FirstOrDefault(c => c.ID.Equals(clientID));
+                        if (clientConnection != null)
                         {
-                            await command.Perform();
+                            if (ChannelSession.Settings.RemoteProfiles.ContainsKey(profileID))
+                            {
+                                await this.SendProfileBoard(ChannelSession.Settings.RemoteProfiles[profileID]);
+                            }
+                            else
+                            {
+                                await this.SendProfileBoard(null);
+                            }
+                        }
+                    }
+                    catch (Exception ex) { Logger.Log(ex); }
+                });
+
+                this.ListenForSendCommand(async (clientID, commandID) =>
+                {
+                    try
+                    {
+                        RemoteConnectionModel clientConnection = ChannelSession.Settings.RemoteClientConnections.FirstOrDefault(c => c.ID.Equals(clientID));
+                        if (clientConnection != null)
+                        {
+                            CommandBase command = ChannelSession.AllEnabledCommands.FirstOrDefault(c => c.ID.Equals(commandID));
+                            if (command != null)
+                            {
+                                await command.Perform();
+                            }
                         }
                     }
                     catch (Exception ex) { Logger.Log(ex); }
