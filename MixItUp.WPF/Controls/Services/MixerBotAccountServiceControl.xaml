@@ -21,7 +21,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" VerticalAlignment="Center" TextWrapping="Wrap">The Mixer Bot Acount allows you to connect an existing, seperate Mixer account to Mix It Up. If you do not have an existing Bot Account, you will need to go on to Mixer's website &amp; create a new account.</TextBlock>
+            <TextBlock Grid.Row="0" VerticalAlignment="Center" TextWrapping="Wrap">The Mixer Bot Acount allows you to connect an existing, separate Mixer account to Mix It Up. If you do not have an existing Bot Account, you will need to go on to Mixer's website &amp; create a new account.</TextBlock>
 
             <TextBlock Grid.Row="2" VerticalAlignment="Center" TextWrapping="Wrap">Once you have done this, click the Log In button here, sign in with the Bot Account, and authorize Mix It Up to connect to that account.</TextBlock>
         </Grid>
