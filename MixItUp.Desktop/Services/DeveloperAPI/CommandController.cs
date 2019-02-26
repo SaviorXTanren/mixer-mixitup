@@ -128,7 +128,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             command = ChannelSession.PreMadeChatCommands.SingleOrDefault(c => c.ID == commandId);
             if (command != null)
             {
-                category = "PreMade";
+                category = "Pre-Made";
                 return command;
             }
 
@@ -144,7 +144,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             allCommands.AddRange(CommandsFromCommandBases(ChannelSession.Settings.TimerCommands, "Timer"));
             allCommands.AddRange(CommandsFromCommandBases(ChannelSession.Settings.ActionGroupCommands, "ActionGroup"));
             allCommands.AddRange(CommandsFromCommandBases(ChannelSession.Settings.GameCommands, "Game"));
-            allCommands.AddRange(CommandsFromCommandBases(ChannelSession.PreMadeChatCommands, "Premade"));
+            allCommands.AddRange(CommandsFromCommandBases(ChannelSession.PreMadeChatCommands, "Pre-Made"));
             return allCommands;
         }
 
