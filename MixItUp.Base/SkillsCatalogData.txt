@@ -732,13 +732,13 @@
 			"skillAssetsUrl": "https://static.mixerusercontent.com/skills/firework/manifest.json"
 		},
 		{
-			"id": "5e02587f-adea-43ea-9115-cd9862cc869b",
-			"name": "Ranger Helmet",
-			"description": "Ranger Helmet",
+			"id": "c7145230-8bbf-4c0d-ac4b-b38448c01f0a",
+			"name": "Feathered Mask",
+			"description": "Feathered Mask",
 			"locked": false,
 			"lockReason": 0,
 			"category": "Stickers",
-			"iconUrl": "https://xforgeassets002.xboxlive.com/serviceid-562a2165-bb5d-46f6-828c-2acdc8b22eb9-public/00176e30-40fc-4180-ab1a-35cbe7b54c92/005_anthem-raner-helmet.png",
+			"iconUrl": "https://xforgeassets002.xboxlive.com/serviceid-562a2165-bb5d-46f6-828c-2acdc8b22eb9-public/7aeae151-bffc-46d4-ab69-b63a2608d9dd/Stickers_LadyMask-1.png",
 			"previewUrl": null,
 			"globalLevelUnlock": 1,
 			"price": 5000,
@@ -749,30 +749,13 @@
 			"skillAssetsUrl": "not_used"
 		},
 		{
-			"id": "ab47c0db-e16f-434d-bec6-28e55347c885",
-			"name": "Colossus",
-			"description": "Colossus",
+			"id": "b7c829eb-12b6-4038-a44e-031c9ac550be",
+			"name": "Jester Mask",
+			"description": "Jester Mask",
 			"locked": false,
 			"lockReason": 0,
 			"category": "Stickers",
-			"iconUrl": "https://xforgeassets002.xboxlive.com/serviceid-562a2165-bb5d-46f6-828c-2acdc8b22eb9-public/63a69790-6859-4cf9-80b7-9c4cfe96cf09/002_anthem-colossus-icon.png",
-			"previewUrl": null,
-			"globalLevelUnlock": 1,
-			"price": 5000,
-			"currency": 1,
-			"skillSetupUrl": null,
-			"skillExecutionUrl": null,
-			"attributionIconUrl": null,
-			"skillAssetsUrl": "not_used"
-		},
-		{
-			"id": "d4766bc0-b3bd-4a71-9b76-fe1ddc8b2c56",
-			"name": "Interceptor",
-			"description": "Interceptor",
-			"locked": false,
-			"lockReason": 0,
-			"category": "Stickers",
-			"iconUrl": "https://xforgeassets002.xboxlive.com/serviceid-562a2165-bb5d-46f6-828c-2acdc8b22eb9-public/e78f67e5-2f85-4467-abba-185fa636e8d8/001_anthem-interceptor-icon.png",
+			"iconUrl": "https://xforgeassets002.xboxlive.com/serviceid-562a2165-bb5d-46f6-828c-2acdc8b22eb9-public/87e42498-4b53-48f1-ac77-db5dcdc41c7d/Stickers_JesterMask-1.png",
 			"previewUrl": null,
 			"globalLevelUnlock": 1,
 			"price": 5000,
@@ -800,13 +783,13 @@
 			"skillAssetsUrl": null
 		},
 		{
-			"id": "0e3f414b-1045-43aa-b893-27b885fd8f88",
-			"name": "Storm",
-			"description": "Storm",
+			"id": "097a97a2-d78b-4313-abae-8447a2705dae",
+			"name": "Hype Dance",
+			"description": "Hype Dance",
 			"locked": false,
 			"lockReason": 0,
 			"category": "Stickers",
-			"iconUrl": "https://xforgeassets002.xboxlive.com/serviceid-562a2165-bb5d-46f6-828c-2acdc8b22eb9-public/d7786abd-e89d-4c27-a411-8ef935bcc2bc/004_anthem-storm-icon.png",
+			"iconUrl": "https://xforgeassets001.xboxlive.com/serviceid-562a2165-bb5d-46f6-828c-2acdc8b22eb9-public/390ae515-9bb9-4409-bf31-b13dbcbd4505/Stickers_DancerwithFeathers-1.png",
 			"previewUrl": null,
 			"globalLevelUnlock": 1,
 			"price": 5000,
@@ -817,21 +800,21 @@
 			"skillAssetsUrl": "not_used"
 		},
 		{
-			"id": "36826e88-f504-4998-9e65-c7c1b989b974",
-			"name": "Ranger",
-			"description": "Ranger",
+			"id": "e9e8618b-63d8-4853-94c7-727c48ee18ef",
+			"name": "Party Float",
+			"description": "Don't let the parade pass you by.",
 			"locked": false,
 			"lockReason": 0,
-			"category": "Stickers",
-			"iconUrl": "https://xforgeassets002.xboxlive.com/serviceid-562a2165-bb5d-46f6-828c-2acdc8b22eb9-public/7bc371a4-75d7-482c-ab4c-fce773fd7e26/003_anthem-ranger-icon.png",
-			"previewUrl": null,
+			"category": "Effects",
+			"iconUrl": "https://xforgeassets002.xboxlive.com/xuid-2535473787585366-public/190e58bc-28a2-4d91-b053-51269caafe43/parade-float.gif",
+			"previewUrl": "https://static.mixer.com/img/design/ui/skills-tray-mobile/parade-float_mobile-preview.png",
 			"globalLevelUnlock": 1,
-			"price": 5000,
+			"price": 50000,
 			"currency": 1,
 			"skillSetupUrl": null,
 			"skillExecutionUrl": null,
-			"attributionIconUrl": null,
-			"skillAssetsUrl": "not_used"
+			"attributionIconUrl": "https://static.mixer.com/img/design/ui/skills-chat-attribution/parade-float_chat_24.png",
+			"skillAssetsUrl": "https://mixerskills.blob.core.windows.net/skills/parade_float/manifest.json"
 		},
 		{
 			"id": "507e6b97-1437-420c-88b2-ba180d2681a8",
@@ -1464,5 +1447,5 @@
 		}
 	],
 	"categoryOrder": ["Samsung", "Premium", "Stickers", "Effects", "Rallies", "Test"],
-	"promotedSkills": ["0d022b8d-a117-4b91-b63f-6a4256d0f448", "c0575717-7a45-4e13-b61d-76def7330393", "20d32b7f-6fb5-4a1d-bf28-5569f1498523", "1b23bee6-0c40-4bad-9db8-a0b7a75c40cd", "36826e88-f504-4998-9e65-c7c1b989b974", "5e02587f-adea-43ea-9115-cd9862cc869b", "0e3f414b-1045-43aa-b893-27b885fd8f88", "d4766bc0-b3bd-4a71-9b76-fe1ddc8b2c56", "ab47c0db-e16f-434d-bec6-28e55347c885", "27c60e11-a4dc-4022-a13c-1bca5c0cf354", "f4b943d1-0aed-495a-840a-c128c5fee474", "01b4eee3-40df-48ea-bb40-6ebdab96dd3d", "e034eaf3-429a-4893-804e-f337d49caaf2", "a60cfd33-ff60-4e07-92a0-e895a238f850", "2be56b5f-44bc-4668-896f-260c49642168", "b1daaa8d-aaa8-4914-874d-ae8db2836b18", "0db3568c-01b1-4749-9bff-aee69353f72f", "7f662c90-ae4c-42ef-a788-d5085955f36f", "780d1b81-f2c9-4622-b938-4791f702ddfc"]
+	"promotedSkills": ["097a97a2-d78b-4313-abae-8447a2705dae", "c7145230-8bbf-4c0d-ac4b-b38448c01f0a", "b7c829eb-12b6-4038-a44e-031c9ac550be", "e9e8618b-63d8-4853-94c7-727c48ee18ef", "0d022b8d-a117-4b91-b63f-6a4256d0f448", "c0575717-7a45-4e13-b61d-76def7330393", "20d32b7f-6fb5-4a1d-bf28-5569f1498523", "1b23bee6-0c40-4bad-9db8-a0b7a75c40cd", "36826e88-f504-4998-9e65-c7c1b989b974", "5e02587f-adea-43ea-9115-cd9862cc869b", "0e3f414b-1045-43aa-b893-27b885fd8f88", "d4766bc0-b3bd-4a71-9b76-fe1ddc8b2c56", "ab47c0db-e16f-434d-bec6-28e55347c885"]
 }
