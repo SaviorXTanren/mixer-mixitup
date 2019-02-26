@@ -47,6 +47,7 @@
   "CodePath": "MixItUp.StreamDeckPlugin.exe",
   "Category": "Mix It Up",
   "CategoryIcon": "Images/categoryIcon",
+  "SDKVersion": 2,
   "Software": {
     "MinimumVersion": "4.1"
   },
