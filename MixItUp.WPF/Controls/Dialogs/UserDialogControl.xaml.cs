@@ -24,7 +24,7 @@ namespace MixItUp.WPF.Controls.Dialogs
 
         private async void UserDialogControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (this.user != null)
+            if (this.user != null && !this.user.IsAnonymous && !string.IsNullOrEmpty(this.user.UserName))
             {
                 await this.user.RefreshDetails(force: true);
 
@@ -35,8 +35,13 @@ namespace MixItUp.WPF.Controls.Dialogs
                 DemoteFromModButton.IsEnabled = ChannelSession.IsStreamer;
                 EditUserButton.IsEnabled = ChannelSession.IsStreamer;
 
-                ExpandedChannelModel channelToCheck = await ChannelSession.Connection.GetChannel(user.UserName);
-                bool follows = (await ChannelSession.Connection.CheckIfFollows(channelToCheck, ChannelSession.User)).HasValue;
+                bool follows = false;
+                ExpandedChannelModel channelToCheck = await ChannelSession.Connection.GetChannel(this.user.UserName);
+                if (channelToCheck != null)
+                {
+                    follows = (await ChannelSession.Connection.CheckIfFollows(channelToCheck, ChannelSession.User)).HasValue;
+                }
+
                 if (follows)
                 {
                     this.UnfollowButton.Visibility = System.Windows.Visibility.Visible;
@@ -55,7 +60,7 @@ namespace MixItUp.WPF.Controls.Dialogs
                     this.PromoteToModButton.Visibility = System.Windows.Visibility.Collapsed;
                 }
 
-                if (channelToCheck.online)
+                if (channelToCheck != null && channelToCheck.online)
                 {
                     this.StreamStatusTextBlock.Text = $"{channelToCheck.viewersCurrent} Viewers";
                 }
