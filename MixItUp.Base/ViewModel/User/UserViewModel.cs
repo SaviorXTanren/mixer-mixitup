@@ -32,10 +32,10 @@ namespace MixItUp.Base.ViewModel.User
 
         Subscriber = 40,
 
-        Mod = 50,
-
         [Name("Global Mod")]
-        GlobalMod = 53,
+        GlobalMod = 48,
+
+        Mod = 50,
 
         [Name("Channel Editor")]
         ChannelEditor = 55,
@@ -64,6 +64,7 @@ namespace MixItUp.Base.ViewModel.User
         public static IEnumerable<MixerRoleEnum> SelectableBasicUserRoles()
         {
             List<MixerRoleEnum> roles = new List<MixerRoleEnum>(EnumHelper.GetEnumList<MixerRoleEnum>());
+            roles.Remove(MixerRoleEnum.GlobalMod);
             roles.Remove(MixerRoleEnum.Banned);
             roles.Remove(MixerRoleEnum.Custom);
             return roles;
