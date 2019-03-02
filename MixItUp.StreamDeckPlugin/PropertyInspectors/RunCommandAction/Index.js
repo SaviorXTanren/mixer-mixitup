@@ -59,6 +59,10 @@ function sortCommands() {
 
     commands.sort(function (a, b) {
         if (a.Category === b.Category) {
+            if (a.GroupName === b.GroupName) {
+                return a.Name > b.Name ? 1 : -1;
+            }
+
             return a.GroupName > b.GroupName ? 1 : -1;
         }
 

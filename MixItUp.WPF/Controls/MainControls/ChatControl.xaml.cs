@@ -46,7 +46,7 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 await this.collectionChangeSemaphore.WaitAndRelease(() =>
                 {
-                    if (!this.existingUsers.ContainsKey(user.ID))
+                    if (user != null && !this.existingUsers.ContainsKey(user.ID))
                     {
                         this.cachedUserRoles[user.ID] = user.PrimarySortableRole;
 

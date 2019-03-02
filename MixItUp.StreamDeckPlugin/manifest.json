@@ -43,10 +43,14 @@
   "Name": "Mix It Up",
   "Icon": "Images/categoryIcon",
   "URL": "https://mixitupapp.com/",
-  "Version": "1.1",
+  "Version": "4.1.0",
   "CodePath": "MixItUp.StreamDeckPlugin.exe",
   "Category": "Mix It Up",
   "CategoryIcon": "Images/categoryIcon",
+  "SDKVersion": 2,
+  "Software": {
+    "MinimumVersion": "4.1"
+  },
   "OS": [
     {
       "Platform": "windows",
