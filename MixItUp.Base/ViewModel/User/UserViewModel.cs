@@ -278,8 +278,8 @@ namespace MixItUp.Base.ViewModel.User
                     case MixerRoleEnum.Staff:
                         return "UserStaffRoleColor";
                     case MixerRoleEnum.ChannelEditor:
-                    case MixerRoleEnum.GlobalMod:
                     case MixerRoleEnum.Mod:
+                    case MixerRoleEnum.GlobalMod:
                         return "UserModRoleColor";
                 }
 
@@ -647,8 +647,8 @@ namespace MixItUp.Base.ViewModel.User
                     if (userRoles.Any(r => r.Equals("Owner"))) { this.mixerRoles.Add(MixerRoleEnum.Streamer); }
                     if (userRoles.Any(r => r.Equals("Staff"))) { this.mixerRoles.Add(MixerRoleEnum.Staff); }
                     if (userRoles.Any(r => r.Equals("ChannelEditor"))) { this.mixerRoles.Add(MixerRoleEnum.ChannelEditor); }
-                    if (userRoles.Any(r => r.Equals("GlobalMod"))) { this.mixerRoles.Add(MixerRoleEnum.GlobalMod); }
                     if (userRoles.Any(r => r.Equals("Mod"))) { this.mixerRoles.Add(MixerRoleEnum.Mod); }
+                    if (userRoles.Any(r => r.Equals("GlobalMod"))) { this.mixerRoles.Add(MixerRoleEnum.GlobalMod); }
                     if (userRoles.Any(r => r.Equals("Subscriber"))) { this.mixerRoles.Add(MixerRoleEnum.Subscriber); }
                     if (userRoles.Any(r => r.Equals("Partner"))) { this.mixerRoles.Add(MixerRoleEnum.Partner); }
                     if (userRoles.Any(r => r.Equals("Pro"))) { this.mixerRoles.Add(MixerRoleEnum.Pro); }
