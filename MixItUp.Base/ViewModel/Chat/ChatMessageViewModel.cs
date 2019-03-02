@@ -176,6 +176,7 @@ namespace MixItUp.Base.ViewModel.Chat
                         break;
                 }
             }
+            this.Message = this.Message.Trim();
         }
     }
 }

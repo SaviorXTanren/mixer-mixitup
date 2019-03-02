@@ -140,6 +140,8 @@ namespace MixItUp.StreamDeckPlugin
             }
             else
             {
+                // Remove premade commands
+                commands = commands.Where(c => !c.Category.Equals("Pre-Made", StringComparison.InvariantCultureIgnoreCase)).ToArray();
                 JObject response = new JObject
                 {
                     ["commands"] = JArray.FromObject(commands.OrderBy(c => c.Category).ThenBy(c => c.Name)),
