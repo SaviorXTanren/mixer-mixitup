@@ -279,8 +279,9 @@ namespace MixItUp.Base.ViewModel.User
                         return "UserStaffRoleColor";
                     case MixerRoleEnum.ChannelEditor:
                     case MixerRoleEnum.Mod:
-                    case MixerRoleEnum.GlobalMod:
                         return "UserModRoleColor";
+                    case MixerRoleEnum.GlobalMod:
+                        return "UserGlobalModRoleColor";
                 }
 
                 if (this.MixerRoles.Contains(MixerRoleEnum.Pro))

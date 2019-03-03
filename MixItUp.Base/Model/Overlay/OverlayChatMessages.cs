@@ -46,6 +46,7 @@ namespace MixItUp.Base.Model.Overlay
             { "UserStreamerRoleColor", "#FFFFFF" },
             { "UserStaffRoleColor", "#FFD700" },
             { "UserModRoleColor", "#008000" },
+            { "UserGlobalModRoleColor", "#07FDC6" },
             { "UserProRoleColor", "#800080" },
             { "UserDefaultRoleColor", "#0000FF" },
         };
