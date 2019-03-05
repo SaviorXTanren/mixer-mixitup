@@ -1,8 +1,6 @@
 ﻿using MixItUp.Base.Remote.Models.Items;
 using MixItUp.Base.Util;
-using System;
 using System.Collections.Generic;
-using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Remote.Items
 {
@@ -16,20 +14,6 @@ namespace MixItUp.Base.ViewModel.Remote.Items
             : base(model)
         {
             this.model = model;
-
-            this.BackgroundImageBrowseCommand = this.CreateCommand(async (parameter) =>
-            {
-                string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(ChannelSession.Services.FileService.ImageFileFilter());
-                if (!string.IsNullOrEmpty(filePath) && ChannelSession.Services.FileService.FileExists(filePath))
-                {
-                    this.BackgroundImage = filePath;
-
-                    var imageData = await ChannelSession.Services.FileService.ReadFileAsBytes(filePath);
-                    imageData = await ChannelSession.Services.ImageManipulationService.Resize(imageData, BackgroundImageResizeValue, BackgroundImageResizeValue);
-
-                    this.BackgroundImageData = Convert.ToBase64String(imageData);
-                }
-            });
         }
 
         public IEnumerable<string> PreDefinedColors { get { return ColorSchemes.WPFColorSchemeDictionary; } }
@@ -80,19 +64,7 @@ namespace MixItUp.Base.ViewModel.Remote.Items
             }
         }
 
-        public string BackgroundImageData
-        {
-            get { return this.model.ImageData; }
-            set
-            {
-                this.model.ImageData = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-
-        public ICommand BackgroundImageBrowseCommand { get; private set; }
-
-        public bool HasBackgroundImage { get { return !string.IsNullOrEmpty(this.BackgroundImage) && ChannelSession.Services.FileService.FileExists(this.BackgroundImage); } }
+        public bool HasBackgroundImage { get { return !string.IsNullOrEmpty(this.BackgroundImage); } }
         public bool DoesNotHaveBackgroundImage { get { return !this.HasBackgroundImage; } }
     }
 }

@@ -41,17 +41,7 @@
 
             <ComboBox Grid.Row="0" ItemsSource="{Binding PreDefinedColors}" SelectedItem="{Binding BackgroundColor}" MaterialDesign:HintAssist.Hint="Background Color" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="175" />
 
-            <Grid Grid.Row="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="5" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <TextBox Grid.Row="0" Text="{Binding BackgroundImage}" MaterialDesign:HintAssist.Hint="Image" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="130" />
-
-                <Button Grid.Column="2" Command="{Binding BackgroundImageBrowseCommand}">...</Button>
-            </Grid>
+            <TextBox Grid.Row="2" Text="{Binding BackgroundImage}" MaterialDesign:HintAssist.Hint="Background Image URL" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <ComboBox Grid.Row="4" ItemsSource="{Binding Commands}" SelectedItem="{Binding Command}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="Command Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="175" />
         </Grid>

@@ -21,9 +21,6 @@ namespace MixItUp.Base.Remote.Models
         public string ImagePath { get; set; }
 
         [DataMember]
-        public string ImageData { get; set; }
-
-        [DataMember]
         public List<RemoteItemModelBase> Items { get; set; }
 
         public RemoteBoardModel()
