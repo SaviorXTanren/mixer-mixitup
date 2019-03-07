@@ -50,7 +50,7 @@ namespace MixItUp.WPF.Controls.Services
                 }
                 else
                 {
-                    await MessageBoxHelper.ShowMessageDialog("Streamlabs OBS service failed to start, please try again");
+                    await MessageBoxHelper.ShowMessageDialog("Streamlabs OBS service failed to start, please ensure Streamlabs OBS is currently running. If it continues to fail to connect, try running Mix It Up as Administrator.");
                 }
             });
         }
