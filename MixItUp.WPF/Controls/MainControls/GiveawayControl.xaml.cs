@@ -438,85 +438,95 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void GlobalEvents_OnChatCommandMessageReceived(object sender, ChatMessageViewModel message)
         {
-            if (this.timeLeft > 0 && this.selectedWinner == null && this.giveawayCommand.MatchesOrContainsCommand(message.Message))
+            try
             {
-                int entries = 1;
-
-                if (pastWinners.Contains(message.User.ID))
+                if (this.timeLeft > 0 && this.selectedWinner == null && this.giveawayCommand.MatchesOrContainsCommand(message.Message))
                 {
-                    await ChannelSession.Chat.Whisper(message.User.UserName, "You have already won a giveaway and can not enter this one");
-                    return;
-                }
+                    int entries = 1;
 
-                IEnumerable<string> arguments = this.giveawayCommand.GetArgumentsFromText(message.Message);
-                if (arguments.Count() > 0)
-                {
-                    int.TryParse(arguments.ElementAt(0), out entries);
-                }
-
-                int currentEntries = 0;
-                if (this.enteredUsers.ContainsKey(message.User.ID))
-                {
-                    currentEntries = this.enteredUsers[message.User.ID].Entries;
-                }
-
-                if ((entries + currentEntries) > ChannelSession.Settings.GiveawayMaximumEntries)
-                {
-                    await ChannelSession.Chat.Whisper(message.User.UserName, string.Format("You may only enter {0} time(s), you currently have entered {1} time(s)", ChannelSession.Settings.GiveawayMaximumEntries, currentEntries));
-                    return;
-                }
-
-                if (await ChannelSession.Settings.GiveawayRequirements.DoesMeetUserRoleRequirement(message.User))
-                {
-                    if (ChannelSession.Settings.GiveawayRequirements.Rank != null && ChannelSession.Settings.GiveawayRequirements.Rank.GetCurrency() != null)
+                    if (pastWinners.Contains(message.User.ID))
                     {
-                        if (!ChannelSession.Settings.GiveawayRequirements.DoesMeetRankRequirement(message.User))
+                        await ChannelSession.Chat.Whisper(message.User.UserName, "You have already won a giveaway and can not enter this one");
+                        return;
+                    }
+
+                    IEnumerable<string> arguments = this.giveawayCommand.GetArgumentsFromText(message.Message);
+                    if (arguments.Count() > 0)
+                    {
+                        int.TryParse(arguments.ElementAt(0), out entries);
+                    }
+
+                    int currentEntries = 0;
+                    if (this.enteredUsers.ContainsKey(message.User.ID))
+                    {
+                        currentEntries = this.enteredUsers[message.User.ID].Entries;
+                    }
+
+                    if ((entries + currentEntries) > ChannelSession.Settings.GiveawayMaximumEntries)
+                    {
+                        await ChannelSession.Chat.Whisper(message.User.UserName, string.Format("You may only enter {0} time(s), you currently have entered {1} time(s)", ChannelSession.Settings.GiveawayMaximumEntries, currentEntries));
+                        return;
+                    }
+
+                    if (await ChannelSession.Settings.GiveawayRequirements.DoesMeetUserRoleRequirement(message.User))
+                    {
+                        if (ChannelSession.Settings.GiveawayRequirements.Rank != null && ChannelSession.Settings.GiveawayRequirements.Rank.GetCurrency() != null)
                         {
-                            await ChannelSession.Settings.GiveawayRequirements.Rank.SendRankNotMetWhisper(message.User);
-                            return;
+                            if (!ChannelSession.Settings.GiveawayRequirements.DoesMeetRankRequirement(message.User))
+                            {
+                                await ChannelSession.Settings.GiveawayRequirements.Rank.SendRankNotMetWhisper(message.User);
+                                return;
+                            }
+                        }
+
+                        if (ChannelSession.Settings.GiveawayRequirements.Currency != null && ChannelSession.Settings.GiveawayRequirements.Currency.GetCurrency() != null)
+                        {
+                            int totalAmount = ChannelSession.Settings.GiveawayRequirements.Currency.RequiredAmount * entries;
+                            if (!ChannelSession.Settings.GiveawayRequirements.TrySubtractCurrencyAmount(message.User, totalAmount))
+                            {
+                                await ChannelSession.Chat.Whisper(message.User.UserName, string.Format("You do not have the required {0} {1} to do this", totalAmount, ChannelSession.Settings.GiveawayRequirements.Currency.GetCurrency().Name));
+                                return;
+                            }
+                        }
+
+                        if (ChannelSession.Settings.GiveawayRequirements.Inventory != null)
+                        {
+                            if (!ChannelSession.Settings.GameQueueRequirements.DoesMeetInventoryRequirement(message.User))
+                            {
+                                await ChannelSession.Settings.GameQueueRequirements.Inventory.SendNotMetWhisper(message.User);
+                                return;
+                            }
+                        }
+
+                        if (!this.enteredUsers.ContainsKey(message.User.ID))
+                        {
+                            this.enteredUsers[message.User.ID] = new GiveawayUser() { User = message.User, Entries = 0 };
+                        }
+                        GiveawayUser giveawayUser = this.enteredUsers[message.User.ID];
+
+                        if (giveawayUser != null)
+                        {
+                            giveawayUser.Entries += entries;
+
+                            await this.RefreshUserList();
+
+                            await ChannelSession.Settings.GiveawayUserJoinedCommand.Perform(message.User);
                         }
                     }
-
-                    if (ChannelSession.Settings.GiveawayRequirements.Currency != null && ChannelSession.Settings.GiveawayRequirements.Currency.GetCurrency() != null)
+                    else
                     {
-                        int totalAmount = ChannelSession.Settings.GiveawayRequirements.Currency.RequiredAmount * entries;
-                        if (!ChannelSession.Settings.GiveawayRequirements.TrySubtractCurrencyAmount(message.User, totalAmount))
-                        {
-                            await ChannelSession.Chat.Whisper(message.User.UserName, string.Format("You do not have the required {0} {1} to do this", totalAmount, ChannelSession.Settings.GiveawayRequirements.Currency.GetCurrency().Name));
-                            return;
-                        }
+                        await ChannelSession.Chat.Whisper(message.User.UserName, string.Format("You are not able to enter this giveaway as it is only for {0}s", ChannelSession.Settings.GiveawayRequirements.Role.RoleNameString));
                     }
-
-                    if (ChannelSession.Settings.GiveawayRequirements.Inventory != null)
-                    {
-                        if (!ChannelSession.Settings.GameQueueRequirements.DoesMeetInventoryRequirement(message.User))
-                        {
-                            await ChannelSession.Settings.GameQueueRequirements.Inventory.SendNotMetWhisper(message.User);
-                            return;
-                        }
-                    }
-
-                    if (!this.enteredUsers.ContainsKey(message.User.ID))
-                    {
-                        this.enteredUsers[message.User.ID] = new GiveawayUser() { User = message.User, Entries = 0 };
-                    }
-                    GiveawayUser giveawayUser = this.enteredUsers[message.User.ID];
-
-                    giveawayUser.Entries += entries;
-
-                    await this.RefreshUserList();
-
-                    await ChannelSession.Settings.GiveawayUserJoinedCommand.Perform(message.User);
                 }
-                else
+                else if (this.selectedWinner != null && message.Message.Equals("!claim", StringComparison.InvariantCultureIgnoreCase) && this.selectedWinner.Equals(message.User))
                 {
-                    await ChannelSession.Chat.Whisper(message.User.UserName, string.Format("You are not able to enter this giveaway as it is only for {0}s", ChannelSession.Settings.GiveawayRequirements.Role.RoleNameString));
+                    await ChannelSession.Chat.SendMessage(string.Format("@{0} has claimed their prize! Listen closely to the streamer for instructions on getting your prize.", message.User.UserName));
+                    await this.EndGiveaway();
                 }
             }
-            else if (this.selectedWinner != null && message.Message.Equals("!claim", StringComparison.InvariantCultureIgnoreCase) && this.selectedWinner.Equals(message.User))
+            catch (Exception ex)
             {
-                await ChannelSession.Chat.SendMessage(string.Format("@{0} has claimed their prize! Listen closely to the streamer for instructions on getting your prize.", message.User.UserName));
-                await this.EndGiveaway();
+                Logger.Log(ex);
             }
         }
 
