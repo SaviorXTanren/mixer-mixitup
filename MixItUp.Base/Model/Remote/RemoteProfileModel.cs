@@ -13,6 +13,9 @@ namespace MixItUp.Base.Remote.Models
         public string Name { get; set; }
 
         [DataMember]
+        public bool IsStreamer { get; set; }
+
+        [DataMember]
         public string HashValidation { get; set; }
 
         public RemoteProfileModel() { }

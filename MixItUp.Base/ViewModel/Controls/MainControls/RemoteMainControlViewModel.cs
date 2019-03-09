@@ -4,7 +4,6 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Remote;
 using MixItUp.Base.ViewModel.Remote.Items;
 using MixItUp.Base.ViewModels;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -14,6 +13,9 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 {
     public class RemoteMainControlViewModel : ViewModelBase
     {
+        public const string StreamerProfileType = "Streamer";
+        public const string NormalProfileType = "Normal";
+
         public ObservableCollection<RemoteProfileViewModel> Profiles { get; private set; } = new ObservableCollection<RemoteProfileViewModel>();
 
         public RemoteProfileViewModel Profile
@@ -24,6 +26,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 this.profile = value;
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged("IsProfileSelected");
+                this.NotifyPropertyChanged("ProfileType");
             }
         }
         private RemoteProfileViewModel profile; 
@@ -38,6 +41,35 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             }
         }
         private RemoteBoardViewModel board;
+
+        public IEnumerable<string> ProfileTypes { get { return new List<string>() { NormalProfileType, StreamerProfileType }; } }
+
+        public string ProfileType
+        {
+            get
+            {
+                if (this.Profile != null)
+                {
+                    return (this.Profile.IsStreamer) ? StreamerProfileType : NormalProfileType;
+                }
+                return null;
+            }
+            set
+            {
+                if (this.Profile != null)
+                {
+                    if (!string.IsNullOrEmpty(value) && value.Equals(StreamerProfileType))
+                    {
+                        this.Profile.IsStreamer = true;
+                    }
+                    else
+                    {
+                        this.Profile.IsStreamer = false;
+                    }
+                }
+                this.NotifyPropertyChanged();
+            }
+        }
 
         public RemoteItemViewModelBase Item
         {

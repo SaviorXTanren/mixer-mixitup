@@ -40,7 +40,7 @@ namespace MixItUp.Desktop.Services
                                 RemoteProfileBoardViewModel profileBoardViewModel = new RemoteProfileBoardViewModel(profileBoard);
                                 profileBoardViewModel.BuildHashValidation();
                             }
-                            await this.SendProfiles(ChannelSession.Settings.RemoteProfiles.Values.Select(p => p.Profile));
+                            await this.SendProfiles(ChannelSession.Settings.RemoteProfiles.Values.Where(p => !p.Profile.IsStreamer || clientConnection.IsStreamer).Select(p => p.Profile));
                         }
                     }
                     catch (Exception ex) { Logger.Log(ex); }
@@ -53,7 +53,7 @@ namespace MixItUp.Desktop.Services
                         RemoteConnectionModel clientConnection = ChannelSession.Settings.RemoteClientConnections.FirstOrDefault(c => c.ID.Equals(clientID));
                         if (clientConnection != null)
                         {
-                            if (ChannelSession.Settings.RemoteProfiles.ContainsKey(profileID))
+                            if (ChannelSession.Settings.RemoteProfiles.ContainsKey(profileID) && (!ChannelSession.Settings.RemoteProfiles[profileID].Profile.IsStreamer || clientConnection.IsStreamer))
                             {
                                 await this.SendProfileBoard(ChannelSession.Settings.RemoteProfiles[profileID]);
                             }

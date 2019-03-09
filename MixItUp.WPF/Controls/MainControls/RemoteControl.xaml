@@ -22,8 +22,8 @@
     
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
 
         <Grid Grid.Column="0" Margin="10">
@@ -56,60 +56,58 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid Grid.Row="0" Margin="40,0">
+                <ComboBox ItemsSource="{Binding ProfileTypes}" SelectedItem="{Binding ProfileType}" IsEnabled="{Binding IsProfileSelected}" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="80" HorizontalAlignment="Left" />
+
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" TextDecorations="Underline" Text="{Binding NavigationName}" />
+
+                <Button IsEnabled="{Binding IsProfileSelected}" Command="{Binding DeleteProfileCommand}" Width="40" ToolTip="Delete Command" HorizontalAlignment="Right">
+                    <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                </Button>
+            </Grid>
+
+            <Grid Grid.Row="2" DataContext="{Binding Board}" Background="{Binding BackgroundColor}" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" TextDecorations="Underline" Text="{Binding NavigationName}" />
+                <Image Grid.Row="0" Grid.Column="0" Grid.RowSpan="3" Grid.ColumnSpan="5" Source="{Binding BackgroundImage}" Stretch="Fill" />
 
-                <Button Grid.Row="0" IsEnabled="{Binding IsProfileSelected}" Command="{Binding DeleteProfileCommand}" Width="40" ToolTip="Delete Command" HorizontalAlignment="Right">
-                    <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                </Button>
+                <RemoteItemsControls:RemoteItemContainerControl Grid.Row="0" Grid.Column="0" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item00}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+                <RemoteItemsControls:RemoteItemContainerControl Grid.Row="0" Grid.Column="1" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item10}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+                <RemoteItemsControls:RemoteItemContainerControl Grid.Row="0" Grid.Column="2" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item20}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+                <RemoteItemsControls:RemoteItemContainerControl Grid.Row="0" Grid.Column="3" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item30}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+                <RemoteItemsControls:RemoteItemContainerControl Grid.Row="0" Grid.Column="4" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item40}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
 
-                <Grid Grid.Row="2" DataContext="{Binding Board}" Background="{Binding BackgroundColor}">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
+                <RemoteItemsControls:RemoteItemContainerControl Grid.Row="1" Grid.Column="0" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item01}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+                <RemoteItemsControls:RemoteItemContainerControl Grid.Row="1" Grid.Column="1" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item11}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+                <RemoteItemsControls:RemoteItemContainerControl Grid.Row="1" Grid.Column="2" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item21}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+                <RemoteItemsControls:RemoteItemContainerControl Grid.Row="1" Grid.Column="3" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item31}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+                <RemoteItemsControls:RemoteItemContainerControl Grid.Row="1" Grid.Column="4" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item41}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
 
-                    <Image Grid.Row="0" Grid.Column="0" Grid.RowSpan="3" Grid.ColumnSpan="5" Source="{Binding BackgroundImage}" Stretch="Fill" />
+                <RemoteItemsControls:RemoteItemContainerControl Grid.Row="2" Grid.Column="0" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item02}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+                <RemoteItemsControls:RemoteItemContainerControl Grid.Row="2" Grid.Column="1" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item12}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+                <RemoteItemsControls:RemoteItemContainerControl Grid.Row="2" Grid.Column="2" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item22}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+                <RemoteItemsControls:RemoteItemContainerControl Grid.Row="2" Grid.Column="3" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item32}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+                <RemoteItemsControls:RemoteItemContainerControl Grid.Row="2" Grid.Column="4" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item42}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
 
-                    <RemoteItemsControls:RemoteItemContainerControl Grid.Row="0" Grid.Column="0" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item00}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
-                    <RemoteItemsControls:RemoteItemContainerControl Grid.Row="0" Grid.Column="1" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item10}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
-                    <RemoteItemsControls:RemoteItemContainerControl Grid.Row="0" Grid.Column="2" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item20}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
-                    <RemoteItemsControls:RemoteItemContainerControl Grid.Row="0" Grid.Column="3" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item30}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
-                    <RemoteItemsControls:RemoteItemContainerControl Grid.Row="0" Grid.Column="4" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item40}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
-
-                    <RemoteItemsControls:RemoteItemContainerControl Grid.Row="1" Grid.Column="0" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item01}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
-                    <RemoteItemsControls:RemoteItemContainerControl Grid.Row="1" Grid.Column="1" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item11}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
-                    <RemoteItemsControls:RemoteItemContainerControl Grid.Row="1" Grid.Column="2" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item21}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
-                    <RemoteItemsControls:RemoteItemContainerControl Grid.Row="1" Grid.Column="3" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item31}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
-                    <RemoteItemsControls:RemoteItemContainerControl Grid.Row="1" Grid.Column="4" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item41}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
-
-                    <RemoteItemsControls:RemoteItemContainerControl Grid.Row="2" Grid.Column="0" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item02}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
-                    <RemoteItemsControls:RemoteItemContainerControl Grid.Row="2" Grid.Column="1" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item12}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
-                    <RemoteItemsControls:RemoteItemContainerControl Grid.Row="2" Grid.Column="2" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item22}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
-                    <RemoteItemsControls:RemoteItemContainerControl Grid.Row="2" Grid.Column="3" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item32}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
-                    <RemoteItemsControls:RemoteItemContainerControl Grid.Row="2" Grid.Column="4" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item42}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
-
-                </Grid>
             </Grid>
 
-            <RemoteDetailsControls:RemoteDetailsContainerControl Grid.Row="2" DataContext="{Binding Item}" Margin="40,10" HorizontalAlignment="Center" />
+            <RemoteDetailsControls:RemoteDetailsContainerControl Grid.Row="4" DataContext="{Binding Item}" Margin="40,10" HorizontalAlignment="Center" />
         </Grid>
     </Grid>
 </local:MainControlBase>

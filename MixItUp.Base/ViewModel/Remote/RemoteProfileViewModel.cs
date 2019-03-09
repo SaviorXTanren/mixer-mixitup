@@ -38,6 +38,16 @@ namespace MixItUp.Base.ViewModel.Remote
             }
         }
 
+        public bool IsStreamer
+        {
+            get { return this.model.IsStreamer; }
+            set
+            {
+                this.model.IsStreamer = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+
         public string HashValidation { get { return this.model.HashValidation; } set { this.model.HashValidation = value; } }
     }
 
