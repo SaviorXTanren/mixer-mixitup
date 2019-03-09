@@ -6,7 +6,7 @@ namespace MixItUp.Base.ViewModel.Remote.Items
 {
     public abstract class RemoteButtonItemViewModelBase : RemoteItemViewModelBase
     {
-        public const int BackgroundImageResizeValue = 120;
+        public const int BackgroundImageMaxPathLength = 300;
 
         private new RemoteButtonItemModelBase model;
 
@@ -57,6 +57,10 @@ namespace MixItUp.Base.ViewModel.Remote.Items
             get { return this.model.ImagePath; }
             set
             {
+                if (!string.IsNullOrEmpty(value) && value.Length > BackgroundImageMaxPathLength)
+                {
+                    value = value.Substring(0, BackgroundImageMaxPathLength);
+                }
                 this.model.ImagePath = value;
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged("HasBackgroundImage");

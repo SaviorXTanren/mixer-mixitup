@@ -39,7 +39,7 @@
 
             <ComboBox Grid.Row="6" ItemsSource="{Binding Board.PreDefinedColors}" SelectedItem="{Binding Board.BackgroundColor}" MaterialDesign:HintAssist.Hint="Background Color" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" HorizontalAlignment="Left" />
 
-            <TextBox Grid.Row="8" Text="{Binding Board.BackgroundImage}" MaterialDesign:HintAssist.Hint="Background Image URL" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="250" />
+            <TextBox Grid.Row="8" Text="{Binding Board.BackgroundImage}" MaterialDesign:HintAssist.Hint="Background Image URL (300 Characters Max)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="250" />
         </Grid>
     </Grid>
 </UserControl>

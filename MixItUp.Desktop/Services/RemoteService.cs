@@ -13,9 +13,9 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Desktop.Services
 {
-    public class DesktopRemoteService : LocalRemoteServiceBase
+    public class RemoteService : LocalRemoteServiceBase
     {
-        public DesktopRemoteService(string apiAddress, string signalRAddress) : base(apiAddress, new SignalRConnection(signalRAddress)) { }
+        public RemoteService(string apiAddress, string signalRAddress) : base(apiAddress, new SignalRConnection(signalRAddress)) { }
 
         public override async Task<bool> InitializeConnection(RemoteConnectionAuthenticationTokenModel connection)
         {

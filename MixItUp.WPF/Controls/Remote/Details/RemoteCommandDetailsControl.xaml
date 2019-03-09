@@ -8,51 +8,43 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="20" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="20" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="15" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="15" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-        <Grid Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="15" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+        <Grid Grid.Row="0" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Row="0" Text="{Binding Name}" MaterialDesign:HintAssist.Hint="Button Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
+            <TextBox Grid.Column="0" Text="{Binding Name}" MaterialDesign:HintAssist.Hint="Button Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
 
-            <ComboBox Grid.Row="2" ItemsSource="{Binding PreDefinedColors}" SelectedItem="{Binding TextColor}" MaterialDesign:HintAssist.Hint="Text Color" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
+            <ComboBox Grid.Column="2" ItemsSource="{Binding PreDefinedColors}" SelectedItem="{Binding TextColor}" MaterialDesign:HintAssist.Hint="Text Color" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
 
-            
-        </Grid>
-
-        <Grid Grid.Column="2">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="15" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-
-            <ComboBox Grid.Row="0" ItemsSource="{Binding CommandTypes}" SelectedItem="{Binding CommandType}" MaterialDesign:HintAssist.Hint="Command Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
-
-            <ComboBox Grid.Row="2" ItemsSource="{Binding PreDefinedColors}" SelectedItem="{Binding BackgroundColor}" MaterialDesign:HintAssist.Hint="Background Color" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
+            <ComboBox Grid.Column="4" ItemsSource="{Binding PreDefinedColors}" SelectedItem="{Binding BackgroundColor}" MaterialDesign:HintAssist.Hint="Background Color" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
 
         </Grid>
 
-        <Grid Grid.Column="4">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="15" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+        <TextBox Grid.Row="2" Text="{Binding BackgroundImage}" MaterialDesign:HintAssist.Hint="Background Image URL (300 Characters Max)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="400" HorizontalAlignment="Center" />
 
-            <ComboBox Grid.Row="0" ItemsSource="{Binding Commands}" SelectedItem="{Binding Command}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="Command Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200" />
+        <Grid Grid.Row="4" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Row="2" Text="{Binding BackgroundImage}" MaterialDesign:HintAssist.Hint="Background Image URL" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="200" />
+            <ComboBox Grid.Column="0" ItemsSource="{Binding CommandTypes}" SelectedItem="{Binding CommandType}" MaterialDesign:HintAssist.Hint="Command Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
+
+            <ComboBox Grid.Column="2" ItemsSource="{Binding Commands}" SelectedItem="{Binding Command}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="Command Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="250" />
 
         </Grid>
     </Grid>
