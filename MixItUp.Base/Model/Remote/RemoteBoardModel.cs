@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Remote.Models.Items;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -10,6 +11,9 @@ namespace MixItUp.Base.Remote.Models
     {
         public const int BoardWidth = 5;
         public const int BoardHeight = 3;
+
+        [DataMember]
+        public Guid ID { get; set; }
 
         [DataMember]
         public bool IsSubBoard { get; set; }
@@ -25,6 +29,7 @@ namespace MixItUp.Base.Remote.Models
 
         public RemoteBoardModel()
         {
+            this.ID = Guid.NewGuid();
             this.Items = new List<RemoteItemModelBase>();
         }
 

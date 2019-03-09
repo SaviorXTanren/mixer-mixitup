@@ -4,6 +4,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Remote;
 using MixItUp.Base.ViewModel.Remote.Items;
 using MixItUp.Base.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -111,14 +112,15 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 string name = await DialogHelper.ShowTextEntry("Name of Profile:");
                 if (!string.IsNullOrEmpty(name))
                 {
-                    if (ChannelSession.Settings.RemoteProfiles.Values.Any(p => p.Profile.Name.Equals(name)))
+                    if (ChannelSession.Settings.RemoteProfiles.Any(p => p.Name.Equals(name)))
                     {
                         await DialogHelper.ShowMessage("A profile with the same name already exists");
                         return;
                     }
 
                     RemoteProfileModel profile = new RemoteProfileModel(name.ToString());
-                    ChannelSession.Settings.RemoteProfiles[profile.ID] = new RemoteProfileBoardModel(profile);
+                    ChannelSession.Settings.RemoteProfiles.Add(profile);
+                    ChannelSession.Settings.RemoteProfileBoards[profile.ID] = new RemoteProfileBoardsModel(profile.ID);
 
                     this.RefreshProfiles();
                     this.ProfileSelected(this.Profiles.FirstOrDefault(p => p.ID.Equals(profile.ID)));
@@ -131,7 +133,8 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 {
                     if (await DialogHelper.ShowConfirmation("Are you sure you want to delete this profile?"))
                     {
-                        ChannelSession.Settings.RemoteProfiles.Remove(this.Profile.ID);
+                        ChannelSession.Settings.RemoteProfiles.Remove(this.Profile.GetModel());
+                        ChannelSession.Settings.RemoteProfileBoards.Remove(this.profile.ID);
                         this.RefreshProfiles();
                         this.ProfileSelected(null);
                     }
@@ -207,6 +210,9 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
                 if (this.Board != null)
                 {
+                    folder.BoardID = Guid.NewGuid();
+                    ChannelSession.Settings.RemoteProfileBoards[this.Profile.ID].Boards[folder.BoardID] = new RemoteBoardModel(isSubBoard: true);
+
                     this.Board.AddItem(folder);
                     this.Item = this.Board.GetItem(folder.ID);
                 }
@@ -224,9 +230,12 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
             MessageCenter.Register<RemoteFolderItemViewModel>(RemoteFolderItemViewModel.RemoteFolderNavigationEventName, this, (folder) =>
             {
-                this.Board = new RemoteBoardViewModel(folder.Board.GetModel(), this.Board);
-                this.AddRemoveNavigationName(folder.Name);
-                this.Item = null;
+                if (ChannelSession.Settings.RemoteProfileBoards[this.Profile.ID].Boards.ContainsKey(folder.BoardID))
+                {
+                    this.Board = new RemoteBoardViewModel(ChannelSession.Settings.RemoteProfileBoards[this.Profile.ID].Boards[folder.BoardID], this.Board);
+                    this.AddRemoveNavigationName(folder.Name);
+                    this.Item = null;
+                }
             });
 
             MessageCenter.Register<RemoteBoardViewModel>(RemoteBackItemViewModel.RemoteBackNavigationEventName, this, (board) =>
@@ -246,9 +255,9 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         public void RefreshProfiles()
         {
             this.Profiles.Clear();
-            foreach (RemoteProfileBoardModel profileBoard in ChannelSession.Settings.RemoteProfiles.Values)
+            foreach (RemoteProfileModel profile in ChannelSession.Settings.RemoteProfiles)
             {
-                this.Profiles.Add(new RemoteProfileViewModel(profileBoard.Profile));
+                this.Profiles.Add(new RemoteProfileViewModel(profile));
             }
         }
 
@@ -256,11 +265,11 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         {
             this.Profile = null;
             this.NavigationNames.Clear();
-            if (profile != null && ChannelSession.Settings.RemoteProfiles.ContainsKey(profile.ID))
+            if (profile != null && ChannelSession.Settings.RemoteProfileBoards.ContainsKey(profile.ID))
             {
                 this.Profile = profile;
-                RemoteProfileBoardModel profileBoard = ChannelSession.Settings.RemoteProfiles[profile.ID];
-                this.Board = new RemoteBoardViewModel(profileBoard.Board);
+                RemoteProfileBoardsModel profileBoards = ChannelSession.Settings.RemoteProfileBoards[profile.ID];
+                this.Board = new RemoteBoardViewModel(profileBoards.Boards[Guid.Empty]);
 
                 this.AddRemoveNavigationName(this.Profile.Name);
             }

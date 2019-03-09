@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Remote.Models.Items;
 using MixItUp.Base.Util;
+using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -37,7 +38,7 @@ namespace MixItUp.Base.ViewModel.Remote.Items
             });
         }
 
-        public RemoteBoardViewModel Board { get { return new RemoteBoardViewModel(this.model.Board); } }
+        public Guid BoardID { get { return this.model.BoardID; } set { this.model.BoardID = value; } }
 
         public override bool IsFolder { get { return true; } }
 
