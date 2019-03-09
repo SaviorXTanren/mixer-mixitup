@@ -1,5 +1,7 @@
-﻿using MixItUp.Base.ViewModel.Controls.MainControls;
+﻿using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Controls.MainControls;
 using MixItUp.Base.ViewModel.Remote;
+using MixItUp.WPF.Controls.Remote;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
@@ -32,6 +34,14 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 this.viewModel.ProfileSelected((RemoteProfileViewModel)e.AddedItems[0]);
             }
+        }
+
+        private async void ProfileBoardSettingsButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                await DialogHelper.ShowCustom(new RemoteBoardSettingsControl(this.viewModel.Profile, this.viewModel.Board));
+            });
         }
     }
 }

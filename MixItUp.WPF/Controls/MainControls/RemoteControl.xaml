@@ -62,11 +62,13 @@
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0" Margin="40,0">
-                <ComboBox ItemsSource="{Binding ProfileTypes}" SelectedItem="{Binding ProfileType}" IsEnabled="{Binding IsProfileSelected}" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="80" HorizontalAlignment="Left" />
+                <Button x:Name="ProfileBoardSettingsButton" IsEnabled="{Binding IsProfileSelected}" Click="ProfileBoardSettingsButton_Click" Width="40" ToolTip="Profile/Board Settings" HorizontalAlignment="Left">
+                    <MaterialDesign:PackIcon Kind="Settings" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                </Button>
 
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" TextDecorations="Underline" Text="{Binding NavigationName}" />
 
-                <Button IsEnabled="{Binding IsProfileSelected}" Command="{Binding DeleteProfileCommand}" Width="40" ToolTip="Delete Command" HorizontalAlignment="Right">
+                <Button IsEnabled="{Binding IsProfileSelected}" Command="{Binding DeleteProfileCommand}" Width="40" ToolTip="Delete Profile" HorizontalAlignment="Right">
                     <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                 </Button>
             </Grid>
@@ -85,7 +87,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Image Grid.Row="0" Grid.Column="0" Grid.RowSpan="3" Grid.ColumnSpan="5" Source="{Binding BackgroundImage}" Stretch="Fill" />
+                <Image Grid.Row="0" Grid.Column="0" Grid.RowSpan="3" Grid.ColumnSpan="5" Source="{Binding BackgroundImage}" MinWidth="350" MinHeight="210" MaxWidth="350" MaxHeight="210" Stretch="Fill" />
 
                 <RemoteItemsControls:RemoteItemContainerControl Grid.Row="0" Grid.Column="0" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item00}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
                 <RemoteItemsControls:RemoteItemContainerControl Grid.Row="0" Grid.Column="1" Grid.RowSpan="{Binding ItemHeight}" Grid.ColumnSpan="{Binding ItemWidth}" DataContext="{Binding Item10}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />

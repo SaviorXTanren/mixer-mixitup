@@ -35,7 +35,7 @@
 
             <ComboBox Grid.Row="0" ItemsSource="{Binding PreDefinedColors}" SelectedItem="{Binding BackgroundColor}" MaterialDesign:HintAssist.Hint="Background Color" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="175" />
 
-            <TextBox Grid.Row="2" Text="{Binding BackgroundImage}" MaterialDesign:HintAssist.Hint="Background Image URL" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Row="2" Text="{Binding BackgroundImage}" MaterialDesign:HintAssist.Hint="Background Image URL" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="175" />
         </Grid>
     </Grid>
 </UserControl>
