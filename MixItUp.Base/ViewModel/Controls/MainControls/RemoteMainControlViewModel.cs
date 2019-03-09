@@ -210,8 +210,9 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
                 if (this.Board != null)
                 {
-                    folder.BoardID = Guid.NewGuid();
-                    ChannelSession.Settings.RemoteProfileBoards[this.Profile.ID].Boards[folder.BoardID] = new RemoteBoardModel(isSubBoard: true);
+                    RemoteBoardModel newBoard = new RemoteBoardModel(isSubBoard: true);
+                    folder.BoardID = newBoard.ID;
+                    ChannelSession.Settings.RemoteProfileBoards[this.Profile.ID].Boards[folder.BoardID] = newBoard;
 
                     this.Board.AddItem(folder);
                     this.Item = this.Board.GetItem(folder.ID);
