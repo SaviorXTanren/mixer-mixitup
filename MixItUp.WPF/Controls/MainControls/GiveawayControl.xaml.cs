@@ -526,7 +526,7 @@ namespace MixItUp.WPF.Controls.MainControls
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                MixItUp.Base.Util.Logger.Log(ex);
             }
         }
 
