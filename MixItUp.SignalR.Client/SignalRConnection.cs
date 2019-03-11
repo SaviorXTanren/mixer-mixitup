@@ -47,7 +47,7 @@ namespace MixItUp.SignalR.Client
         public async Task Send(string methodName, object item1, object item2) { await this.connection.InvokeAsync(methodName, item1, item2); }
         public async Task Send(string methodName, object item1, object item2, object item3) { await this.connection.InvokeAsync(methodName, item1, item2, item3); }
 
-        public async Task Close()
+        public async Task Disconnect()
         {
             this.connection.Closed -= Connection_Closed;
             await this.connection.StopAsync();

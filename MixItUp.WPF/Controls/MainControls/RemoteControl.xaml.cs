@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Controls.MainControls;
 using MixItUp.Base.ViewModel.Remote;
+using MixItUp.Base.ViewModel.Window;
 using MixItUp.WPF.Controls.Remote;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -21,7 +22,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         protected override async Task InitializeInternal()
         {
-            this.DataContext = this.viewModel = new RemoteMainControlViewModel();
+            this.DataContext = this.viewModel = new RemoteMainControlViewModel((MainWindowViewModel)this.Window.ViewModel);
 
             this.viewModel.RefreshProfiles();
 

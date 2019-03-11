@@ -51,6 +51,8 @@ namespace MixItUp.Base.Services
 
         public async Task Connect() { await this.signalRConnection.Connect(); }
 
+        public async Task Disconnect() { await this.signalRConnection.Disconnect(); }
+
         public void ListenForRequestProfiles(Action<Guid> action) { this.signalRConnection.Listen(RequestProfilesMethodName, action); }
 
         public void ListenForSendProfiles(Action<IEnumerable<RemoteProfileModel>> action) { this.signalRConnection.Listen(SendProfilesMethodName, action); }

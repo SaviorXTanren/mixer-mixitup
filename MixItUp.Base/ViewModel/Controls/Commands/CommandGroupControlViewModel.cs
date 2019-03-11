@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace MixItUp.Base.ViewModel.Controls.MainControls
+namespace MixItUp.Base.ViewModel.Controls.Commands
 {
     public class CommandGroupControlViewModel : ControlViewModelBase
     {

@@ -4,6 +4,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Controls.Remote.Items;
 using MixItUp.Base.ViewModel.Remote;
 using MixItUp.Base.ViewModel.Remote.Items;
+using MixItUp.Base.ViewModel.Window;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,7 +13,7 @@ using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Controls.MainControls
 {
-    public class RemoteMainControlViewModel : ControlViewModelBase
+    public class RemoteMainControlViewModel : MainControlViewModelBase
     {
         public const string StreamerProfileType = "Streamer";
         public const string NormalProfileType = "Normal";
@@ -125,7 +126,8 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         public ICommand DeleteProfileCommand { get; private set; }
         public ICommand ConnectDeviceCommand { get; private set; }
 
-        public RemoteMainControlViewModel()
+        public RemoteMainControlViewModel(MainWindowViewModel windowViewModel)
+            : base(windowViewModel)
         {
             this.AddProfileCommand = this.CreateCommand(async (x) =>
             {

@@ -1,12 +1,10 @@
-﻿using MaterialDesignThemes.Wpf;
-using MixItUp.Base;
+﻿using MixItUp.Base;
 using MixItUp.Base.Services;
-using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Window;
 using MixItUp.Desktop.Services;
 using MixItUp.WPF.Controls.MainControls;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows;
-using System;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
@@ -29,11 +27,25 @@ namespace MixItUp.WPF
         private bool shutdownStarted = false;
         private bool shutdownComplete = false;
 
+        private MainWindowViewModel viewModel;
+
         public MainWindow()
+            : base(new MainWindowViewModel())
         {
             InitializeComponent();
+
             this.Closing += MainWindow_Closing;
             this.Initialize(this.StatusBar);
+
+            this.viewModel = (MainWindowViewModel)this.ViewModel;
+            this.viewModel.StartLoadingOperationOccurred += (sender, args) =>
+            {
+                this.StartAsyncOperation();
+            };
+            this.viewModel.EndLoadingOperationOccurred += (sender, args) =>
+            {
+                this.EndAsyncOperation();
+            };
 
             if (App.AppSettings.Width > 0)
             {
