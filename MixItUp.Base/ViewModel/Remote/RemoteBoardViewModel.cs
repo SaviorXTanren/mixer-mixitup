@@ -100,6 +100,8 @@ namespace MixItUp.Base.ViewModel.Remote
             return null;
         }
 
+        public RemoteItemViewModelBase GetItem(int xPosition, int yPosition) { return this.items[xPosition, yPosition]; }
+
         public void RemoveItem(int xPosition, int yPosition)
         {
             this.model.SetItem(null, xPosition, yPosition);
@@ -135,7 +137,7 @@ namespace MixItUp.Base.ViewModel.Remote
 
             if (this.model.IsSubBoard)
             {
-                this.items[0, 0] = new RemoteBackItemViewModel(this.ParentBoard);
+                this.items[0, 0] = new RemoteBackItemViewModel();
             }
 
             for (int x = 0; x < 5; x++)

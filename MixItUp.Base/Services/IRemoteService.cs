@@ -71,8 +71,6 @@ namespace MixItUp.Base.Services
 
         public async Task SendBoard(RemoteBoardModel profileBoard) { await this.AsyncWrapper(this.signalRConnection.Send(SendBoardMethodName, profileBoard)); }
 
-        public async Task SendCommand(Guid clientID, RemoteCommandItemModel command) { await this.SendCommand(clientID, command.CommandID); }
-
         public async Task SendCommand(Guid clientID, Guid commandID) { await this.AsyncWrapper(this.signalRConnection.Send(SendCommandMethodName, clientID, commandID)); }
 
         protected override string GetBaseAddress() { return this.apiAddress; }

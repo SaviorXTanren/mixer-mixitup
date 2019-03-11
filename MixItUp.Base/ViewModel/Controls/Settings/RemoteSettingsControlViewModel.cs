@@ -1,12 +1,11 @@
 ﻿using MixItUp.Base.Model.Remote.Authentication;
-using MixItUp.Base.ViewModels;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Controls.Settings
 {
-    public class RemoteConnectionUIViewModel : ViewModelBase
+    public class RemoteConnectionUIViewModel : ControlViewModelBase
     {
         public const string StreamerDeviceType = "Streamer";
         public const string NormalDeviceType = "Normal";
@@ -54,7 +53,7 @@ namespace MixItUp.Base.ViewModel.Controls.Settings
         }
     }
 
-    public class RemoteSettingsControlViewModel : ViewModelBase
+    public class RemoteSettingsControlViewModel : ControlViewModelBase
     {
         public ObservableCollection<RemoteConnectionUIViewModel> Connections { get; set; } = new ObservableCollection<RemoteConnectionUIViewModel>();
 

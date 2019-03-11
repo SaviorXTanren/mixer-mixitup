@@ -1,12 +1,11 @@
 ﻿using MixItUp.Base.Commands;
-using MixItUp.Base.ViewModels;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace MixItUp.Base.ViewModel.Controls.MainControls
 {
-    public class CommandGroupControlViewModel : ViewModelBase
+    public class CommandGroupControlViewModel : ControlViewModelBase
     {
         public CommandGroupSettings GroupSettings { get; set; }
 

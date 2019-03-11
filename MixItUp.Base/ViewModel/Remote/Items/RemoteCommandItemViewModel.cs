@@ -1,20 +1,14 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Remote.Models.Items;
-using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Remote.Items
 {
     public class RemoteCommandItemViewModel : RemoteButtonItemViewModelBase
     {
-        public const string NewRemoteCommandEventName = "NewRemoteCommand";
-        public const string RemoteCommandDetailsEventName = "RemoteCommandDetails";
-
         private new RemoteCommandItemModel model;
 
         public RemoteCommandItemViewModel(string name, int xPosition, int yPosition)
@@ -33,12 +27,6 @@ namespace MixItUp.Base.ViewModel.Remote.Items
             {
                 this.CommandType = EnumHelper.GetEnumName(command.Type);
             }
-
-            this.CommandSelectedCommand = this.CreateCommand((parameter) =>
-            {
-                MessageCenter.Send<RemoteCommandItemViewModel>(RemoteCommandItemViewModel.RemoteCommandDetailsEventName, this);
-                return Task.FromResult(0);
-            });
         }
 
         public IEnumerable<string> CommandTypes { get { return EnumHelper.GetEnumNames(ChannelSession.AllEnabledCommands.Select(c => c.Type).Distinct()); } }
@@ -67,25 +55,26 @@ namespace MixItUp.Base.ViewModel.Remote.Items
                 return null;
             }
         }
+
+        public Guid CommandID { get { return this.model.CommandID; } set { this.model.CommandID = value; } }
+
         public CommandBase Command
         {
-            get { return ChannelSession.AllEnabledCommands.FirstOrDefault(c => c.ID.Equals(this.model.CommandID)); }
+            get { return ChannelSession.AllEnabledCommands.FirstOrDefault(c => c.ID.Equals(this.CommandID)); }
             set
             {
                 if (value != null)
                 {
-                    this.model.CommandID = value.ID;
+                    this.CommandID = value.ID;
                 }
                 else
                 {
-                    this.model.CommandID = Guid.Empty;
+                    this.CommandID = Guid.Empty;
                 }
                 this.NotifyPropertyChanged();
             }
         }
 
         public override bool IsCommand { get { return true; } }
-
-        public ICommand CommandSelectedCommand { get; private set; }
     }
 }

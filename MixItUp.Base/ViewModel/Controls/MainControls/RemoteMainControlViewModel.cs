@@ -1,9 +1,9 @@
 ﻿using MixItUp.Base.Model.Remote.Authentication;
 using MixItUp.Base.Remote.Models;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Controls.Remote.Items;
 using MixItUp.Base.ViewModel.Remote;
 using MixItUp.Base.ViewModel.Remote.Items;
-using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,10 +12,12 @@ using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Controls.MainControls
 {
-    public class RemoteMainControlViewModel : ViewModelBase
+    public class RemoteMainControlViewModel : ControlViewModelBase
     {
         public const string StreamerProfileType = "Streamer";
         public const string NormalProfileType = "Normal";
+
+        private RemoteItemControlViewModelBase[,] items = new RemoteItemControlViewModelBase[RemoteBoardModel.BoardWidth, RemoteBoardModel.BoardHeight];
 
         public ObservableCollection<RemoteProfileViewModel> Profiles { get; private set; } = new ObservableCollection<RemoteProfileViewModel>();
 
@@ -42,6 +44,24 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             }
         }
         private RemoteBoardViewModel board;
+
+        public RemoteItemControlViewModelBase Item00 { get { return this.items[0, 0]; } }
+        public RemoteItemControlViewModelBase Item10 { get { return this.items[1, 0]; } }
+        public RemoteItemControlViewModelBase Item20 { get { return this.items[2, 0]; } }
+        public RemoteItemControlViewModelBase Item30 { get { return this.items[3, 0]; } }
+        public RemoteItemControlViewModelBase Item40 { get { return this.items[4, 0]; } }
+
+        public RemoteItemControlViewModelBase Item01 { get { return this.items[0, 1]; } }
+        public RemoteItemControlViewModelBase Item11 { get { return this.items[1, 1]; } }
+        public RemoteItemControlViewModelBase Item21 { get { return this.items[2, 1]; } }
+        public RemoteItemControlViewModelBase Item31 { get { return this.items[3, 1]; } }
+        public RemoteItemControlViewModelBase Item41 { get { return this.items[4, 1]; } }
+
+        public RemoteItemControlViewModelBase Item02 { get { return this.items[0, 2]; } }
+        public RemoteItemControlViewModelBase Item12 { get { return this.items[1, 2]; } }
+        public RemoteItemControlViewModelBase Item22 { get { return this.items[2, 2]; } }
+        public RemoteItemControlViewModelBase Item32 { get { return this.items[3, 2]; } }
+        public RemoteItemControlViewModelBase Item42 { get { return this.items[4, 2]; } }
 
         public IEnumerable<string> ProfileTypes { get { return new List<string>() { NormalProfileType, StreamerProfileType }; } }
 
@@ -191,16 +211,17 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 }
             });
 
-            MessageCenter.Register<RemoteCommandItemViewModel>(RemoteCommandItemViewModel.NewRemoteCommandEventName, this, (command) =>
+            MessageCenter.Register<RemoteCommandItemViewModel>(RemoteEmptyItemControlViewModel.NewRemoteCommandEventName, this, (command) =>
             {
                 if (this.Board != null)
                 {
                     this.Board.AddItem(command);
+                    this.RefreshBoardItem(command.XPosition, command.YPosition);
                     this.Item = this.Board.GetItem(command.ID);
                 }
             });
 
-            MessageCenter.Register<RemoteFolderItemViewModel>(RemoteFolderItemViewModel.NewRemoteFolderEventName, this, async (folder) =>
+            MessageCenter.Register<RemoteFolderItemViewModel>(RemoteEmptyItemControlViewModel.NewRemoteFolderEventName, this, async (folder) =>
             {
                 if (this.NavigationNames.Count() > 2)
                 {
@@ -215,40 +236,44 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                     ChannelSession.Settings.RemoteProfileBoards[this.Profile.ID].Boards[folder.BoardID] = newBoard;
 
                     this.Board.AddItem(folder);
+                    this.RefreshBoardItem(folder.XPosition, folder.YPosition);
                     this.Item = this.Board.GetItem(folder.ID);
                 }
             });
 
-            MessageCenter.Register<RemoteCommandItemViewModel>(RemoteCommandItemViewModel.RemoteCommandDetailsEventName, this, (command) =>
+            MessageCenter.Register<RemoteCommandItemViewModel>(RemoteCommandItemControlViewModel.RemoteCommandDetailsEventName, this, (command) =>
             {
                 this.Item = command;
             });
 
-            MessageCenter.Register<RemoteFolderItemViewModel>(RemoteFolderItemViewModel.RemoteFolderDetailsEventName, this, (folder) =>
+            MessageCenter.Register<RemoteFolderItemViewModel>(RemoteFolderItemControlViewModel.RemoteFolderDetailsEventName, this, (folder) =>
             {
                 this.Item = folder;
             });
 
-            MessageCenter.Register<RemoteFolderItemViewModel>(RemoteFolderItemViewModel.RemoteFolderNavigationEventName, this, (folder) =>
+            MessageCenter.Register<RemoteFolderItemViewModel>(RemoteFolderItemControlViewModel.RemoteFolderNavigationEventName, this, (folder) =>
             {
                 if (ChannelSession.Settings.RemoteProfileBoards[this.Profile.ID].Boards.ContainsKey(folder.BoardID))
                 {
                     this.Board = new RemoteBoardViewModel(ChannelSession.Settings.RemoteProfileBoards[this.Profile.ID].Boards[folder.BoardID], this.Board);
+                    this.RefreshBoard();
                     this.AddRemoveNavigationName(folder.Name);
                     this.Item = null;
                 }
             });
 
-            MessageCenter.Register<RemoteBoardViewModel>(RemoteBackItemViewModel.RemoteBackNavigationEventName, this, (board) =>
+            MessageCenter.Register<RemoteBoardViewModel>(RemoteBackItemControlViewModel.RemoteBackNavigationEventName, this, (board) =>
             {
                 this.Board = board;
+                this.RefreshBoard();
                 this.AddRemoveNavigationName(null);
                 this.Item = null;
             });
 
-            MessageCenter.Register<RemoteItemViewModelBase>(RemoteItemViewModelBase.RemoteDeleteItemEventName, this, (item) =>
+            MessageCenter.Register<RemoteItemViewModelBase>(RemoteItemControlViewModelBase.RemoteDeleteItemEventName, this, (item) =>
             {
                 this.Board.RemoveItem(item.XPosition, item.YPosition);
+                this.RefreshBoardItem(item.XPosition, item.YPosition);
                 this.Item = null;
             });
         }
@@ -271,9 +296,51 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 this.Profile = profile;
                 RemoteProfileBoardsModel profileBoards = ChannelSession.Settings.RemoteProfileBoards[profile.ID];
                 this.Board = new RemoteBoardViewModel(profileBoards.Boards[Guid.Empty]);
-
                 this.AddRemoveNavigationName(this.Profile.Name);
             }
+            this.RefreshBoard();
+        }
+
+        public void RefreshBoard()
+        {
+            for (int x = 0; x < RemoteBoardModel.BoardWidth; x++)
+            {
+                for (int y = 0; y < RemoteBoardModel.BoardHeight; y++)
+                {
+                    this.RefreshBoardItem(x, y);
+                }
+            }
+        }
+
+        public void RefreshBoardItem(int x, int y)
+        {
+            this.items[x, y] = null;
+
+            if (this.Board != null)
+            {
+                RemoteItemViewModelBase item = this.Board.GetItem(x, y);
+                if (item != null)
+                {
+                    if (item is RemoteCommandItemViewModel)
+                    {
+                        this.items[x, y] = new RemoteCommandItemControlViewModel((RemoteCommandItemViewModel)item);
+                    }
+                    else if (item is RemoteFolderItemViewModel)
+                    {
+                        this.items[x, y] = new RemoteFolderItemControlViewModel((RemoteFolderItemViewModel)item);
+                    }
+                    else if (item is RemoteBackItemViewModel)
+                    {
+                        this.items[x, y] = new RemoteBackItemControlViewModel((RemoteBackItemViewModel)item, this.Board.ParentBoard);
+                    }
+                    else if (item is RemoteEmptyItemViewModel)
+                    {
+                        this.items[x, y] = new RemoteEmptyItemControlViewModel((RemoteEmptyItemViewModel)item);
+                    }
+                }
+            }
+
+            this.NotifyPropertyChanged("Item" + x + y);
         }
 
         public void AddRemoveNavigationName(string name)

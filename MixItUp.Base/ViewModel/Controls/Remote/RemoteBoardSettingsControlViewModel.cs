@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace MixItUp.Base.ViewModel.Controls.Remote
 {
-    public class RemoteBoardSettingsControlViewModel : ViewModelBase
+    public class RemoteBoardSettingsControlViewModel : ControlViewModelBase
     {
         public const string StreamerProfileType = "Streamer";
         public const string NormalProfileType = "Normal";

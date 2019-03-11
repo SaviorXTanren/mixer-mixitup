@@ -16,9 +16,9 @@
             <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding BackNavigationCommand}" />
         </Grid.InputBindings>
 
-        <MaterialDesign:PackIcon Kind="ArrowLeftThick" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-15,0,0" Width="40" Height="40" Visibility="{Binding DoesNotHaveBackgroundImage, Converter={StaticResource BooleanToVisibilityConverter}}" />
-        <Image Source="{Binding BackgroundImage}" Visibility="{Binding HasBackgroundImage, Converter={StaticResource BooleanToVisibilityConverter}}" Stretch="Fill" />
+        <MaterialDesign:PackIcon Kind="ArrowLeftThick" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-15,0,0" Width="40" Height="40" Visibility="{Binding Item.DoesNotHaveBackgroundImage, Converter={StaticResource BooleanToVisibilityConverter}}" />
+        <Image Source="{Binding Item.BackgroundImage}" Visibility="{Binding Item.HasBackgroundImage, Converter={StaticResource BooleanToVisibilityConverter}}" Stretch="Fill" />
 
-        <TextBlock Text="Back" Foreground="{Binding TextColor}" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,8" />
+        <TextBlock Text="Back" Foreground="{Binding Item.TextColor}" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,8" />
     </Grid>
 </UserControl>
