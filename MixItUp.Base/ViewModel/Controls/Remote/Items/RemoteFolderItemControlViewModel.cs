@@ -15,7 +15,7 @@ namespace MixItUp.Base.ViewModel.Controls.Remote.Items
         {
             this.FolderSelectedCommand = this.CreateCommand((parameter) =>
             {
-                MessageCenter.Send<RemoteFolderItemViewModel>(RemoteFolderItemControlViewModel.RemoteFolderDetailsEventName, this.GetTypedItem<RemoteFolderItemViewModel>());
+                MessageCenter.Send<RemoteFolderItemControlViewModel>(RemoteFolderItemControlViewModel.RemoteFolderDetailsEventName, this);
                 return Task.FromResult(0);
             });
 

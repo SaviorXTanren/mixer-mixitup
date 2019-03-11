@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Remote.Items;
 using MixItUp.Base.ViewModels;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -33,6 +34,8 @@ namespace MixItUp.Base.ViewModel.Controls.Remote.Items
             }
         }
         private RemoteItemViewModelBase item;
+
+        public IEnumerable<string> PreDefinedColors { get { return ColorSchemes.WPFColorSchemeDictionary; } }
 
         public T GetTypedItem<T>() where T : RemoteItemViewModelBase { return (T)this.Item; }
     }

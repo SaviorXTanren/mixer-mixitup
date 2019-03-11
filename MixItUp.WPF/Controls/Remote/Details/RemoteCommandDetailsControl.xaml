@@ -25,15 +25,15 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" Text="{Binding Name}" MaterialDesign:HintAssist.Hint="Button Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
+            <TextBox Grid.Column="0" Text="{Binding Item.Name}" MaterialDesign:HintAssist.Hint="Button Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
 
-            <ComboBox Grid.Column="2" ItemsSource="{Binding PreDefinedColors}" SelectedItem="{Binding TextColor}" MaterialDesign:HintAssist.Hint="Text Color" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
+            <ComboBox Grid.Column="2" ItemsSource="{Binding PreDefinedColors}" SelectedItem="{Binding Item.TextColor}" MaterialDesign:HintAssist.Hint="Text Color" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
 
-            <ComboBox Grid.Column="4" ItemsSource="{Binding PreDefinedColors}" SelectedItem="{Binding BackgroundColor}" MaterialDesign:HintAssist.Hint="Background Color" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
+            <ComboBox Grid.Column="4" ItemsSource="{Binding PreDefinedColors}" SelectedItem="{Binding Item.BackgroundColor}" MaterialDesign:HintAssist.Hint="Background Color" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
 
         </Grid>
 
-        <TextBox Grid.Row="2" Text="{Binding BackgroundImage}" MaterialDesign:HintAssist.Hint="Background Image URL (300 Characters Max)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="400" HorizontalAlignment="Center" />
+        <TextBox Grid.Row="2" Text="{Binding Item.BackgroundImage}" MaterialDesign:HintAssist.Hint="Background Image URL (300 Characters Max)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="400" HorizontalAlignment="Center" />
 
         <Grid Grid.Row="4" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>

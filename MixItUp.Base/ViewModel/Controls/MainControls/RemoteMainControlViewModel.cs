@@ -92,7 +92,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             }
         }
 
-        public RemoteItemViewModelBase Item
+        public RemoteItemControlViewModelBase Item
         {
             get { return this.item; }
             private set
@@ -102,7 +102,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 this.NotifyPropertyChanged("IsItemSelected");
             }
         }
-        private RemoteItemViewModelBase item;
+        private RemoteItemControlViewModelBase item;
 
         public List<string> NavigationNames
         {
@@ -217,7 +217,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 {
                     this.Board.AddItem(command);
                     this.RefreshBoardItem(command.XPosition, command.YPosition);
-                    this.Item = this.Board.GetItem(command.ID);
+                    this.Item = this.GetItem(command.XPosition, command.YPosition);
                 }
             });
 
@@ -237,16 +237,16 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
                     this.Board.AddItem(folder);
                     this.RefreshBoardItem(folder.XPosition, folder.YPosition);
-                    this.Item = this.Board.GetItem(folder.ID);
+                    this.Item = this.GetItem(folder.XPosition, folder.YPosition);
                 }
             });
 
-            MessageCenter.Register<RemoteCommandItemViewModel>(RemoteCommandItemControlViewModel.RemoteCommandDetailsEventName, this, (command) =>
+            MessageCenter.Register<RemoteCommandItemControlViewModel>(RemoteCommandItemControlViewModel.RemoteCommandDetailsEventName, this, (command) =>
             {
                 this.Item = command;
             });
 
-            MessageCenter.Register<RemoteFolderItemViewModel>(RemoteFolderItemControlViewModel.RemoteFolderDetailsEventName, this, (folder) =>
+            MessageCenter.Register<RemoteFolderItemControlViewModel>(RemoteFolderItemControlViewModel.RemoteFolderDetailsEventName, this, (folder) =>
             {
                 this.Item = folder;
             });
@@ -342,6 +342,8 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
             this.NotifyPropertyChanged("Item" + x + y);
         }
+
+        public RemoteItemControlViewModelBase GetItem(int xPosition, int yPosition) { return this.items[xPosition, yPosition]; }
 
         public void AddRemoveNavigationName(string name)
         {

@@ -1,6 +1,4 @@
 ﻿using MixItUp.Base.Remote.Models.Items;
-using MixItUp.Base.Util;
-using System.Collections.Generic;
 
 namespace MixItUp.Base.ViewModel.Remote.Items
 {
@@ -15,8 +13,6 @@ namespace MixItUp.Base.ViewModel.Remote.Items
         {
             this.model = model;
         }
-
-        public IEnumerable<string> PreDefinedColors { get { return ColorSchemes.WPFColorSchemeDictionary; } }
 
         public string BackgroundColor
         {
