@@ -59,7 +59,7 @@ namespace MixItUp.Base.ViewModel.Requirement
 
             if (sendChatIfNotMet)
             {
-                await ChannelSession.Chat.SendMessage(string.Format("{0} command requires {1} more user(s) to trigger!", commandName, remaining));
+                await ChannelSession.Chat.SendMessage(string.Format("The {0} command requires {1} more user(s) to trigger!", commandName, remaining));
             }
 
             return null;

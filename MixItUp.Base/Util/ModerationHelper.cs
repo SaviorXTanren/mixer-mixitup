@@ -30,10 +30,12 @@ namespace MixItUp.Base.Util
         ViewingTwoHours = 13,
         [Name("Watched For 10 Hours")]
         ViewingTenHours = 14,
+        [Name("Follower Only")]
+        FollowerOnly = 19,
         [Name("Subscriber Only")]
-        Subscriber = 20,
+        SubscriberOnly = 20,
         [Name("Moderator Only")]
-        Moderator = 30,
+        ModeratorOnly = 30,
     }
 
     public static class ModerationHelper
@@ -213,12 +215,17 @@ namespace MixItUp.Base.Util
                     return true;
                 }
 
-                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.Subscriber && !user.HasPermissionsTo(MixerRoleEnum.Subscriber))
+                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.FollowerOnly && !user.HasPermissionsTo(MixerRoleEnum.Follower))
                 {
                     return false;
                 }
 
-                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.Moderator && user.HasPermissionsTo(MixerRoleEnum.Mod))
+                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.SubscriberOnly && !user.HasPermissionsTo(MixerRoleEnum.Subscriber))
+                {
+                    return false;
+                }
+
+                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.ModeratorOnly && user.HasPermissionsTo(MixerRoleEnum.Mod))
                 {
                     return false;
                 }
@@ -278,11 +285,15 @@ namespace MixItUp.Base.Util
             if (user != null)
             {
                 string reason = string.Empty;
-                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.Subscriber)
+                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.FollowerOnly)
+                {
+                    reason = "Followers";
+                }
+                else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.SubscriberOnly)
                 {
                     reason = "Subscribers";
                 }
-                else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.Moderator)
+                else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.ModeratorOnly)
                 {
                     reason = "Moderators";
                 }

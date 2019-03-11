@@ -71,7 +71,7 @@
             <local:ColorSchemeComboBox x:Name="EventAlertsColorSchemeComboBox" Grid.Column="2" Width="120" IsEnabled="False" />
         </Grid>
 
-        <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Show interactive alerts:</TextBlock>
+        <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Show MixPlay alerts:</TextBlock>
         <Grid Grid.Row="6" Grid.Column="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />

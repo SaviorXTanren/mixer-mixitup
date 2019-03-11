@@ -40,33 +40,40 @@ namespace MixItUp.StreamDeckPlugin
 
         public async Task RunAsync(int port, string uuid, string registerEvent)
         {
-            this.connection = new StreamDeckConnection(port, uuid, registerEvent);
-
-            this.connection.OnConnected += Connection_OnConnected;
-            this.connection.OnDisconnected += Connection_OnDisconnected;
-            this.connection.OnApplicationDidLaunch += Connection_OnApplicationDidLaunch;
-            this.connection.OnApplicationDidTerminate += Connection_OnApplicationDidTerminate;
-            this.connection.OnKeyDown += Connection_OnKeyDown;
-            this.connection.OnWillAppear += Connection_OnWillAppear;
-            this.connection.OnWillDisappear += Connection_OnWillDisappear;
-            this.connection.OnSendToPlugin += Connection_OnSendToPlugin;
-            this.connection.OnTitleParametersDidChange += Connection_OnTitleParametersDidChange;
-
-            // Start the connection
-            connection.Run();
-
-            // Wait for up to 10 seconds to connect, if it fails, the app will exit
-            if (this.connectEvent.WaitOne(TimeSpan.FromSeconds(10)))
+            try
             {
-                // We connected, loop every second until we disconnect
-                while (!this.disconnectEvent.WaitOne(TimeSpan.FromMilliseconds(1000)))
+                this.connection = new StreamDeckConnection(port, uuid, registerEvent);
+
+                this.connection.OnConnected += Connection_OnConnected;
+                this.connection.OnDisconnected += Connection_OnDisconnected;
+                this.connection.OnApplicationDidLaunch += Connection_OnApplicationDidLaunch;
+                this.connection.OnApplicationDidTerminate += Connection_OnApplicationDidTerminate;
+                this.connection.OnKeyDown += Connection_OnKeyDown;
+                this.connection.OnWillAppear += Connection_OnWillAppear;
+                this.connection.OnWillDisappear += Connection_OnWillDisappear;
+                this.connection.OnSendToPlugin += Connection_OnSendToPlugin;
+                this.connection.OnTitleParametersDidChange += Connection_OnTitleParametersDidChange;
+
+                // Start the connection
+                connection.Run();
+
+                // Wait for up to 10 seconds to connect, if it fails, the app will exit
+                if (this.connectEvent.WaitOne(TimeSpan.FromSeconds(10)))
                 {
-                    await RunTickAsync();
+                    // We connected, loop every second until we disconnect
+                    while (!this.disconnectEvent.WaitOne(TimeSpan.FromMilliseconds(1000)))
+                    {
+                        await RunTickAsync();
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Mix It Up Plugin failed to connect to Stream Deck");
                 }
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine("Mix It Up Plugin failed to connect to Stream Deck");
+                Console.WriteLine($"Mix It Up Plugin crashed: {ex.ToString()}");
             }
         }
 
