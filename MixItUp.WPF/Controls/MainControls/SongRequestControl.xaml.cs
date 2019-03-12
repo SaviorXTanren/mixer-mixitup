@@ -162,10 +162,14 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void GlobalEvents_OnSongRequestsChangedOccurred(object sender, EventArgs e)
         {
-            await this.Dispatcher.InvokeAsync(async () =>
+            try
             {
-                await this.RefreshRequestsList();
-            });
+                await this.Dispatcher.InvokeAsync(async () =>
+                {
+                    await this.RefreshRequestsList();
+                });
+            }
+            catch (Exception ex) { Logger.Log(ex); }
         }
 
         private async Task RefreshRequestsList()
