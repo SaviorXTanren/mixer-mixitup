@@ -410,17 +410,35 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
-        private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
+        private async void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
             CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
             InteractiveCommand command = commandButtonsControl.GetCommandFromCommandButtons<InteractiveCommand>(sender);
             if (command != null)
             {
+                if (!this.ValidateCommandMatchesControl(command))
+                {
+                    string oldControlType = string.Empty;
+                    if (command is InteractiveButtonCommand) { oldControlType = "Button"; }
+                    if (command is InteractiveJoystickCommand) { oldControlType = "Joystick"; }
+                    if (command is InteractiveTextBoxCommand) { oldControlType = "Text Box"; }
+
+                    string newControlType = string.Empty;
+                    if (command.Control is InteractiveButtonControlModel) { newControlType = "Button"; }
+                    if (command.Control is InteractiveJoystickControlModel) { newControlType = "Joystick"; }
+                    if (command.Control is InteractiveTextBoxControlModel) { newControlType = "Text Box"; }
+
+                    await this.Window.RunAsyncOperation(async () =>
+                    {
+                        await MessageBoxHelper.ShowMessageDialog(string.Format("The control you are trying to edit has been changed from a {0} to a {1} and can not be edited. You must either change this control back to its previous type, change the control ID to something different, or delete the command to start fresh.", oldControlType, newControlType));
+                    });
+                    return;
+                }
+
                 CommandWindow window = null;
                 if (command is InteractiveButtonCommand)
                 {
                     window = new CommandWindow(new InteractiveButtonCommandDetailsControl(this.selectedGame, this.selectedGameVersion, (InteractiveButtonCommand)command));
-
                 }
                 else if (command is InteractiveJoystickCommand)
                 {
@@ -566,6 +584,13 @@ namespace MixItUp.WPF.Controls.MainControls
                 CustomInteractiveGameControl gameControl = (CustomInteractiveGameControl)this.CustomInteractiveContentControl.Content;
                 await gameControl.GameDisconnected();
             }
+        }
+
+        private bool ValidateCommandMatchesControl(InteractiveCommand command)
+        {
+            return (command is InteractiveButtonCommand && command.Control is InteractiveButtonControlModel) ||
+                (command is InteractiveJoystickCommand && command.Control is InteractiveJoystickControlModel) ||
+                (command is InteractiveTextBoxCommand && command.Control is InteractiveTextBoxControlModel);
         }
     }
 }
