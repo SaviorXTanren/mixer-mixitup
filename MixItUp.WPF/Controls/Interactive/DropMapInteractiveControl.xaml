@@ -42,7 +42,7 @@
                 <TextBlock HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" FontSize="18">LEFT</TextBlock>
             </StackPanel>
 
-            <StackPanel x:Name="WinnerStackPanel" Margin="0,100,30,0" HorizontalAlignment="Right" Visibility="Hidden">
+            <StackPanel x:Name="WinnerStackPanel" Margin="0,130,45,0" HorizontalAlignment="Right" Visibility="Hidden">
                 <TextBlock HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" FontSize="18">WINNER</TextBlock>
                 <UserControls:UserProfileAvatarControl x:Name="WinnerAvatar" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10,0,0" />
                 <TextBlock x:Name="WinnerTextBlock" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Margin="0,10,0,0" FontSize="18" />

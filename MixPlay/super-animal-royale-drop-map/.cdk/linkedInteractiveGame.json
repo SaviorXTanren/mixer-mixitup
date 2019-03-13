@@ -1,0 +1,26 @@
+{
+  "coverUrl": null,
+  "createdAt": "2019-03-13T03:58:52.000Z",
+  "deletedAt": null,
+  "description": null,
+  "hasPublishedVersions": false,
+  "id": 332619,
+  "installation": null,
+  "isShared": false,
+  "name": "Super Animal Royale Drop Map",
+  "ownerId": 7207866,
+  "typeId": 565110,
+  "updatedAt": "2019-03-13T03:58:52.000Z",
+  "versions": [
+    {
+      "changelog": "Initial release",
+      "createdAt": "2019-03-13T03:58:52.000Z",
+      "id": 338526,
+      "installation": null,
+      "state": "draft",
+      "updatedAt": "2019-03-13T03:59:01.000Z",
+      "version": "0.1.0",
+      "versionOrder": 256
+    }
+  ]
+}

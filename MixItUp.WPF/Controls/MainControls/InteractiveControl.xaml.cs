@@ -219,6 +219,10 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 this.SetCustomInteractiveGame(new DropMapInteractiveControl(DropMapTypeEnum.ApexLegends, this.selectedGame, this.selectedGameVersion));
             }
+            else if (this.selectedGame.id == InteractiveSharedProjectModel.SuperAnimalRoyaleDropMap.GameID)
+            {
+                this.SetCustomInteractiveGame(new DropMapInteractiveControl(DropMapTypeEnum.SuperAnimalRoyale, this.selectedGame, this.selectedGameVersion));
+            }
             else if (this.selectedGame.id == InteractiveSharedProjectModel.MixerPaint.GameID)
             {
                 this.SetCustomInteractiveGame(new MixerPaintInteractiveControl(this.selectedGame, this.selectedGameVersion));
