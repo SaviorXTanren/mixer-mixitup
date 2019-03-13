@@ -23,7 +23,8 @@ namespace MixItUp.WPF.Controls.Interactive
         PUBG,
         RealmRoyale,
         BlackOps4,
-        ApexLegends
+        ApexLegends,
+        SuperAnimalRoyale
     }
 
     public class PUBGMap
@@ -118,6 +119,9 @@ namespace MixItUp.WPF.Controls.Interactive
                 case DropMapTypeEnum.ApexLegends:
                     mapImagePath = "/Assets/Images/ApexLegendsDropMap/map.png";
                     break;
+                case DropMapTypeEnum.SuperAnimalRoyale:
+                    mapImagePath = "/Assets/Images/SuperAnimalRoyaleDropMap/map.png";
+                    break;
             }
 
             this.ChangeMapImage(mapImagePath);
@@ -156,6 +160,7 @@ namespace MixItUp.WPF.Controls.Interactive
                 case DropMapTypeEnum.RealmRoyale:
                 case DropMapTypeEnum.BlackOps4:
                 case DropMapTypeEnum.ApexLegends:
+                case DropMapTypeEnum.SuperAnimalRoyale:
                     gridSize = 12.5;
                     break;
             }

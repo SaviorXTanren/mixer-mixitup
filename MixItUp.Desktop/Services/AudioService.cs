@@ -26,10 +26,10 @@ namespace MixItUp.Desktop.Audio
 
                     using (AudioFileReader audioFileReader = new AudioFileReader(filePath))
                     {
+                        audioFileReader.Volume = floatVolume;
                         using (WaveOutEvent outputDevice = (deviceNumber < 0) ? new WaveOutEvent() : new WaveOutEvent() { DeviceNumber = deviceNumber })
                         {
                             outputDevice.Init(audioFileReader);
-                            outputDevice.Volume = floatVolume;
                             outputDevice.Play();
 
                             while (outputDevice.PlaybackState == PlaybackState.Playing)

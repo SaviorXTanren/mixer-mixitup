@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Remote.Models.Items
 {
@@ -6,14 +7,10 @@ namespace MixItUp.Base.Remote.Models.Items
     public class RemoteFolderItemModel : RemoteButtonItemModelBase
     {
         [DataMember]
-        public RemoteBoardModel Board { get; set; }
+        public Guid BoardID { get; set; }
 
         public RemoteFolderItemModel() { }
 
-        public RemoteFolderItemModel(int xPosition, int yPosition)
-            : base(xPosition, yPosition)
-        {
-            this.Board = new RemoteBoardModel(isSubBoard: true);
-        }
+        public RemoteFolderItemModel(int xPosition, int yPosition) : base(xPosition, yPosition) { }
     }
 }

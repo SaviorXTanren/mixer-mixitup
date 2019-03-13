@@ -336,49 +336,12 @@ namespace MixItUp.Base.Util
                 }
             }
 
-            if (this.ContainsSpecialIdentifier(CurrentSongIdentifierHeader))
+            if (this.ContainsSpecialIdentifier(CurrentSongIdentifierHeader) || this.ContainsSpecialIdentifier(NextSongIdentifierHeader))
             {
-                SongRequestItem song = null;
-
                 if (ChannelSession.Services.SongRequestService != null && ChannelSession.Services.SongRequestService.IsEnabled)
                 {
-                    song = await ChannelSession.Services.SongRequestService.GetCurrentlyPlaying();
-                }
-
-                if (song != null)
-                {
-                    this.ReplaceSpecialIdentifier(CurrentSongIdentifierHeader + "title", song.Name);
-                    this.ReplaceSpecialIdentifier(CurrentSongIdentifierHeader + "username", (song.User != null) ? song.User.UserName : "Backup");
-                    this.ReplaceSpecialIdentifier(CurrentSongIdentifierHeader + "albumimage", song.AlbumImage ?? string.Empty);
-                }
-                else
-                {
-                    this.ReplaceSpecialIdentifier(CurrentSongIdentifierHeader + "title", "No Song");
-                    this.ReplaceSpecialIdentifier(CurrentSongIdentifierHeader + "username", "Nobody");
-                    this.ReplaceSpecialIdentifier(CurrentSongIdentifierHeader + "albumimage", string.Empty);
-                }
-            }
-
-            if (this.ContainsSpecialIdentifier(NextSongIdentifierHeader))
-            {
-                SongRequestItem song = null;
-
-                if (ChannelSession.Services.SongRequestService != null && ChannelSession.Services.SongRequestService.IsEnabled)
-                {
-                    song = await ChannelSession.Services.SongRequestService.GetNextTrack();
-                }
-
-                if (song != null)
-                {
-                    this.ReplaceSpecialIdentifier(NextSongIdentifierHeader + "title", song.Name);
-                    this.ReplaceSpecialIdentifier(NextSongIdentifierHeader + "username", song.User.UserName);
-                    this.ReplaceSpecialIdentifier(NextSongIdentifierHeader + "albumimage", song.AlbumImage ?? string.Empty);
-                }
-                else
-                {
-                    this.ReplaceSpecialIdentifier(NextSongIdentifierHeader + "title", "No Song");
-                    this.ReplaceSpecialIdentifier(NextSongIdentifierHeader + "username", "Nobody");
-                    this.ReplaceSpecialIdentifier(NextSongIdentifierHeader + "albumimage", string.Empty);
+                    this.ReplaceSongRequestSpecialIdentifiers(CurrentSongIdentifierHeader, await ChannelSession.Services.SongRequestService.GetCurrentlyPlaying());
+                    this.ReplaceSongRequestSpecialIdentifiers(NextSongIdentifierHeader, await ChannelSession.Services.SongRequestService.GetNextTrack());
                 }
             }
 
@@ -849,6 +812,22 @@ namespace MixItUp.Base.Util
                     this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channellive", channel.online.ToString());
                     this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channelfeatured", channel.featured.ToString());
                 }
+            }
+        }
+
+        private void ReplaceSongRequestSpecialIdentifiers(string header, SongRequestItem song)
+        {
+            if (song != null)
+            {
+                this.ReplaceSpecialIdentifier(header + "title", song.Name);
+                this.ReplaceSpecialIdentifier(header + "username", (song.User != null && !string.IsNullOrEmpty(song.User.UserName)) ? song.User.UserName : "Backup");
+                this.ReplaceSpecialIdentifier(header + "albumimage", (song.AlbumImage != null) ? song.AlbumImage : string.Empty);
+            }
+            else
+            {
+                this.ReplaceSpecialIdentifier(header + "title", "No Song");
+                this.ReplaceSpecialIdentifier(header + "username", "Nobody");
+                this.ReplaceSpecialIdentifier(header + "albumimage", string.Empty);
             }
         }
 

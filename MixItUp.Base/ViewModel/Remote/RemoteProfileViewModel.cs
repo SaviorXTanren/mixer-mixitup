@@ -1,9 +1,6 @@
 ﻿using MixItUp.Base.Remote.Models;
-using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using System;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace MixItUp.Base.ViewModel.Remote
 {
@@ -38,28 +35,38 @@ namespace MixItUp.Base.ViewModel.Remote
             }
         }
 
-        public string HashValidation { get { return this.model.HashValidation; } set { this.model.HashValidation = value; } }
+        public bool IsStreamer
+        {
+            get { return this.model.IsStreamer; }
+            set
+            {
+                this.model.IsStreamer = value;
+                this.NotifyPropertyChanged();
+            }
+        }
     }
 
-    public class RemoteProfileBoardViewModel : ViewModelBase
+    public class RemoteProfileBoardsViewModel : ModelViewModelBase<RemoteProfileBoardsModel>
     {
-        public RemoteProfileViewModel Profile { get; private set; }
-        public RemoteBoardViewModel Board { get; private set; }
-
-        private RemoteProfileBoardModel model;
-
-        public RemoteProfileBoardViewModel(RemoteProfileBoardModel model)
+        public Guid ProfileID
         {
-            this.model = model;
-
-            this.Profile = new RemoteProfileViewModel(this.model.Profile);
-            this.Board = new RemoteBoardViewModel(this.model.Board);
+            get { return this.model.ProfileID; }
+            set
+            {
+                this.model.ProfileID = value;
+                this.NotifyPropertyChanged();
+            }
         }
 
-        public void BuildHashValidation()
+        public RemoteProfileBoardsViewModel(RemoteProfileBoardsModel model) : base(model) { }
+
+        public RemoteBoardViewModel GetBoard(Guid boardID)
         {
-            this.Profile.HashValidation = null;
-            this.Profile.HashValidation = HashHelper.ComputeMD5Hash(SerializerHelper.SerializeToString(this.model));
+            if (this.model.Boards.ContainsKey(boardID))
+            {
+                return new RemoteBoardViewModel(this.model.Boards[boardID]);
+            }
+            return null;
         }
     }
 }

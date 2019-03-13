@@ -1,10 +1,8 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Remote.Authentication;
-using MixItUp.Base.Remote.Models;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Remote;
 using MixItUp.SignalR.Client;
 using System;
 using System.Linq;
@@ -13,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Desktop.Services
 {
-    public class DesktopRemoteService : LocalRemoteServiceBase
+    public class RemoteService : LocalRemoteServiceBase
     {
-        public DesktopRemoteService(string apiAddress, string signalRAddress) : base(apiAddress, new SignalRConnection(signalRAddress)) { }
+        public RemoteService(string apiAddress, string signalRAddress) : base(apiAddress, new SignalRConnection(signalRAddress)) { }
 
         public override async Task<bool> InitializeConnection(RemoteConnectionAuthenticationTokenModel connection)
         {
@@ -35,31 +33,26 @@ namespace MixItUp.Desktop.Services
                         RemoteConnectionModel clientConnection = ChannelSession.Settings.RemoteClientConnections.FirstOrDefault(c => c.ID.Equals(clientID));
                         if (clientConnection != null)
                         {
-                            foreach (RemoteProfileBoardModel profileBoard in ChannelSession.Settings.RemoteProfiles.Values)
-                            {
-                                RemoteProfileBoardViewModel profileBoardViewModel = new RemoteProfileBoardViewModel(profileBoard);
-                                profileBoardViewModel.BuildHashValidation();
-                            }
-                            await this.SendProfiles(ChannelSession.Settings.RemoteProfiles.Values.Select(p => p.Profile));
+                            await this.SendProfiles(ChannelSession.Settings.RemoteProfiles.Where(p => !p.IsStreamer || clientConnection.IsStreamer));
                         }
                     }
                     catch (Exception ex) { Logger.Log(ex); }
                 });
 
-                this.ListenForRequestProfileBoard(async (clientID, profileID) =>
+                this.ListenForRequestBoard(async (clientID, profileID, boardID) =>
                 {
                     try
                     {
                         RemoteConnectionModel clientConnection = ChannelSession.Settings.RemoteClientConnections.FirstOrDefault(c => c.ID.Equals(clientID));
                         if (clientConnection != null)
                         {
-                            if (ChannelSession.Settings.RemoteProfiles.ContainsKey(profileID))
+                            if (ChannelSession.Settings.RemoteProfileBoards.ContainsKey(profileID) && ChannelSession.Settings.RemoteProfileBoards[profileID].Boards.ContainsKey(boardID))
                             {
-                                await this.SendProfileBoard(ChannelSession.Settings.RemoteProfiles[profileID]);
+                                await this.SendBoard(ChannelSession.Settings.RemoteProfileBoards[profileID].Boards[boardID]);
                             }
                             else
                             {
-                                await this.SendProfileBoard(null);
+                                await this.SendBoard(null);
                             }
                         }
                     }

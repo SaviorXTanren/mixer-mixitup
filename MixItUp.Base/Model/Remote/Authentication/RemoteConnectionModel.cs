@@ -13,6 +13,9 @@ namespace MixItUp.Base.Model.Remote.Authentication
         public string Name { get; set; }
 
         [DataMember]
+        public bool IsStreamer { get; set; }
+
+        [DataMember]
         public bool IsTemporary { get; set; }
 
         public RemoteConnectionModel() { }

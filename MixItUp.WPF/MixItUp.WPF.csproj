@@ -635,6 +635,9 @@
     <Compile Include="Controls\Remote\Items\RemoteItemContainerControl.xaml.cs">
       <DependentUpon>RemoteItemContainerControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Remote\RemoteBoardSettingsControl.xaml.cs">
+      <DependentUpon>RemoteBoardSettingsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Requirement\CooldownRequirementControl.xaml.cs">
       <DependentUpon>CooldownRequirementControl.xaml</DependentUpon>
     </Compile>
@@ -1364,6 +1367,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Remote\RemoteBoardSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Requirement\CooldownRequirementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1954,6 +1961,9 @@
     </Resource>
     <Resource Include="..\MixPlay\pubg-drop-map\src\map4.png">
       <Link>Assets\Images\PUBGDropMap\map4.png</Link>
+    </Resource>
+    <Resource Include="..\MixPlay\super-animal-royale-drop-map\src\map.png">
+      <Link>Assets\Images\SuperAnimalRoyaleDropMap\map.png</Link>
     </Resource>
     <Content Include="Assets\Sounds\Ariel.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

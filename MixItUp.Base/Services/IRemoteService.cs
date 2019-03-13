@@ -17,8 +17,8 @@ namespace MixItUp.Base.Services
         public const string AuthenticateMethodName = "Authenticate";
         public const string RequestProfilesMethodName = "RequestProfiles";
         public const string SendProfilesMethodName = "SendProfiles";
-        public const string RequestProfileBoardMethodName = "RequestProfileBoard";
-        public const string SendProfileBoardMethodName = "SendProfileBoard";
+        public const string RequestBoardMethodName = "RequestBoard";
+        public const string SendBoardMethodName = "SendBoard";
         public const string SendCommandMethodName = "SendCommand";
 
         public bool IsConnected { get { return this.signalRConnection.IsConnected(); } }
@@ -51,13 +51,15 @@ namespace MixItUp.Base.Services
 
         public async Task Connect() { await this.signalRConnection.Connect(); }
 
+        public async Task Disconnect() { await this.signalRConnection.Disconnect(); }
+
         public void ListenForRequestProfiles(Action<Guid> action) { this.signalRConnection.Listen(RequestProfilesMethodName, action); }
 
         public void ListenForSendProfiles(Action<IEnumerable<RemoteProfileModel>> action) { this.signalRConnection.Listen(SendProfilesMethodName, action); }
 
-        public void ListenForRequestProfileBoard(Action<Guid, Guid> action) { this.signalRConnection.Listen(RequestProfileBoardMethodName, action); }
+        public void ListenForRequestBoard(Action<Guid, Guid, Guid> action) { this.signalRConnection.Listen(RequestBoardMethodName, action); }
 
-        public void ListenForSendProfileBoard(Action<RemoteProfileBoardModel> action) { this.signalRConnection.Listen(SendProfileBoardMethodName, action); }
+        public void ListenForSendBoard(Action<RemoteBoardModel> action) { this.signalRConnection.Listen(SendBoardMethodName, action); }
 
         public void ListenForSendCommand(Action<Guid, Guid> action) { this.signalRConnection.Listen(SendCommandMethodName, action); }
 
@@ -67,11 +69,9 @@ namespace MixItUp.Base.Services
 
         public async Task SendProfiles(IEnumerable<RemoteProfileModel> profiles) { await this.AsyncWrapper(this.signalRConnection.Send(SendProfilesMethodName, profiles.ToList())); }
 
-        public async Task RequestProfileBoard(Guid clientID, Guid id) { await this.AsyncWrapper(this.signalRConnection.Send(RequestProfileBoardMethodName, clientID, id)); }
+        public async Task RequestBoard(Guid clientID, Guid profileID, Guid boardID) { await this.AsyncWrapper(this.signalRConnection.Send(RequestBoardMethodName, clientID, profileID, boardID)); }
 
-        public async Task SendProfileBoard(RemoteProfileBoardModel profileBoard) { await this.AsyncWrapper(this.signalRConnection.Send(SendProfileBoardMethodName, profileBoard)); }
-
-        public async Task SendCommand(Guid clientID, RemoteCommandItemModel command) { await this.SendCommand(clientID, command.CommandID); }
+        public async Task SendBoard(RemoteBoardModel profileBoard) { await this.AsyncWrapper(this.signalRConnection.Send(SendBoardMethodName, profileBoard)); }
 
         public async Task SendCommand(Guid clientID, Guid commandID) { await this.AsyncWrapper(this.signalRConnection.Send(SendCommandMethodName, clientID, commandID)); }
 
@@ -107,9 +107,9 @@ namespace MixItUp.Base.Services
 
         Task SendProfiles(IEnumerable<RemoteProfileModel> profiles);
 
-        Task RequestProfileBoard(Guid clientID, Guid profileID);
+        Task RequestBoard(Guid clientID, Guid profileID, Guid boardID);
 
-        Task SendProfileBoard(RemoteProfileBoardModel profileBoard);
+        Task SendBoard(RemoteBoardModel board);
 
         Task SendCommand(Guid clientID, Guid commandID);
     }

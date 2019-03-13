@@ -127,10 +127,5 @@ namespace MixItUp.WPF.Controls.Interactive
                 this.ShowButton.IsEnabled = false;
             }
         }
-
-        private void SparkCostTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
-        {
-
-        }
     }
 }

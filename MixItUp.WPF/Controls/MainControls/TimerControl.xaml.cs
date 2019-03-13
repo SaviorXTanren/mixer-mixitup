@@ -1,6 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
-using MixItUp.Base.ViewModel.Controls.MainControls;
+using MixItUp.Base.ViewModel.Controls.Commands;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
