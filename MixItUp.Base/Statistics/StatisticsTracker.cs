@@ -35,7 +35,7 @@ namespace MixItUp.Base.Statistics
 
         private EventStatisticDataTracker donationsTracker = new EventStatisticDataTracker("Donations", "CashMultiple", true, new List<string>() { "Username", "Amount", "Date & Time" }, (EventStatisticDataTracker dataTracker) =>
         {
-            return string.Format("Donaters: {0},    Total: {1:C},    Average: {2:C}", dataTracker.UniqueIdentifiers, dataTracker.TotalValueDecimal, dataTracker.AverageValueString);
+            return string.Format("Donators: {0},    Total: {1:C},    Average: {2:C}", dataTracker.UniqueIdentifiers, dataTracker.TotalValueDecimal, dataTracker.AverageValueString);
         });
 
         private EventStatisticDataTracker sparksTracker = new EventStatisticDataTracker("Sparks", "/Assets/Images/Sparks.png", false, new List<string>() { "Username", "Amount" }, (EventStatisticDataTracker dataTracker) =>
