@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.Remote.Authentication
@@ -43,6 +44,17 @@ namespace MixItUp.Base.Model.Remote.Authentication
             {
                 this.GroupID = Guid.NewGuid();
             }
+        }
+
+        public RemoteConnectionAuthenticationTokenModel(Dictionary<string, object> databaseValues)
+        {
+            this.ID = (Guid)databaseValues["ID"];
+            this.Name = (string)databaseValues["Name"];
+            this.IsHost = (bool)databaseValues["IsHost"];
+            this.IsStreamer = (bool)databaseValues["IsStreamer"];
+            this.GroupID = (Guid)databaseValues["GroupID"];
+            this.AccessToken = (string)databaseValues["AccessToken"];
+            this.AccessTokenExpiration = (DateTimeOffset)databaseValues["AccessTokenExpiration"];
         }
 
         [JsonIgnore]
