@@ -35,7 +35,23 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <GroupBox Header="Profiles" Grid.Row="0">
+            <GroupBox Grid.Row="0">
+                <GroupBox.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Margin="5,2,0,0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Foreground="{StaticResource WhiteColor}">Profiles</TextBlock>
+
+                        <Button Grid.Column="2" Command="{Binding AddProfileCommand}">
+                            <MaterialDesign:PackIcon Kind="Plus" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                        </Button>
+                    </Grid>
+                </GroupBox.Header>
+
                 <ListView x:Name="ProfilesListView" ItemsSource="{Binding Profiles}" SelectionChanged="ProfilesListView_SelectionChanged" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                     <ListView.ItemTemplate>
                         <DataTemplate>
@@ -47,9 +63,23 @@
                 </ListView>
             </GroupBox>
 
-            <Button Grid.Row="2" Width="120" Command="{Binding AddProfileCommand}">Add Profile</Button>
+            <Button Grid.Row="2" Width="140" Command="{Binding ConnectDeviceCommand}">Connect Device</Button>
 
-            <Button Grid.Row="4" Width="140" Command="{Binding ConnectDeviceCommand}">Connect Device</Button>
+            <Grid Grid.Row="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0" Command="{Binding DownloadAppleCommand}" IsEnabled="False" Background="Transparent" BorderBrush="Transparent" Width="105" VerticalAlignment="Center">
+                    <Image Source="/Assets/Images/AppleAppStoreDownloadBadge.png" Margin="-16,-5" />
+                </Button>
+
+                <Button Grid.Column="2" Command="{Binding DownloadAndroidCommand}" Background="Transparent" BorderBrush="Transparent" Width="110" VerticalAlignment="Center" Margin="0,0,0,2">
+                    <Image Source="https://play.google.com/intl/en_us/badges/images/badge_new.png" Margin="-16,-10" />
+                </Button>
+            </Grid>
         </Grid>
 
         <Grid Grid.Column="1" Margin="0,20,0,0">

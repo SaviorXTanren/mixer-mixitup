@@ -1988,6 +1988,7 @@
     <Resource Include="..\MixPlay\super-animal-royale-drop-map\src\map.png">
       <Link>Assets\Images\SuperAnimalRoyaleDropMap\map.png</Link>
     </Resource>
+    <Resource Include="Assets\Images\AppleAppStoreDownloadBadge.png" />
     <Content Include="Assets\Sounds\Ariel.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
