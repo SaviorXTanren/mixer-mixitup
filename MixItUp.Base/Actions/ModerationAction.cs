@@ -24,6 +24,8 @@ namespace MixItUp.Base.Actions
         AddModerationStrike,
         [Name("Remove Moderation Strike")]
         RemoveModerationStrike,
+        [Name("Unban User")]
+        UnbanUser,
     }
 
     [DataContract]
@@ -83,6 +85,10 @@ namespace MixItUp.Base.Actions
                     else if (this.ModerationType == ModerationActionTypeEnum.BanUser)
                     {
                         await ChannelSession.Chat.BanUser(targetUser);
+                    }
+                    else if (this.ModerationType == ModerationActionTypeEnum.UnbanUser)
+                    {
+                        await ChannelSession.Chat.UnBanUser(targetUser);
                     }
                     else if (this.ModerationType == ModerationActionTypeEnum.AddModerationStrike)
                     {
