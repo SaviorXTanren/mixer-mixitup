@@ -5,6 +5,8 @@ using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Services;
+using PlayFab;
+using PlayFab.ClientModels;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -26,41 +28,50 @@ namespace MixItUp.Desktop.Services
             this.telemetryClient.Context.Session.Id = Guid.NewGuid().ToString();
             this.telemetryClient.Context.Device.OperatingSystem = Environment.OSVersion.ToString();
             this.telemetryClient.Context.Component.Version = Assembly.GetEntryAssembly().GetName().Version.ToString();
+
+            PlayFabSettings.staticSettings.TitleId = ChannelSession.SecretManager.GetSecret("PlayFabTitleID");
         }
 
         public void TrackException(Exception ex)
         {
             this.TrySendEvent(() => this.telemetryClient.TrackException(ex));
+            this.SendPlayFabEvent("Exception", "Details", ex.ToString());
         }
 
         public void TrackPageView(string pageName)
         {
             this.TrySendEvent(() => this.telemetryClient.TrackPageView(pageName));
+            this.SendPlayFabEvent("PageView", "Name", pageName);
         }
 
         public void TrackLogin(bool isStreamer, bool isPartner)
         {
             this.TrySendEvent(() => this.telemetryClient.TrackEvent("Login", new Dictionary<string, string> { { "Is Streamer", isStreamer.ToString() }, { "Is Partner", isPartner.ToString() } }));
+            this.SendPlayFabEvent("Login", new Dictionary<string, object>() { { "Is Streamer", isStreamer.ToString() }, { "Is Partner", isPartner.ToString() } });
         }
 
         public void TrackCommand(CommandTypeEnum type, bool IsBasic)
         {
             this.TrySendEvent(() => this.telemetryClient.TrackEvent("Command", new Dictionary<string, string> { { "Type", EnumHelper.GetEnumName(type) }, { "Is Basic", IsBasic.ToString() } }));
+            this.SendPlayFabEvent("Command", new Dictionary<string, object>() { { "Type", EnumHelper.GetEnumName(type) }, { "Is Basic", IsBasic.ToString() } });
         }
 
         public void TrackAction(ActionTypeEnum type)
         {
             this.TrySendEvent(() => this.telemetryClient.TrackEvent("Action", new Dictionary<string, string> { { "Type", EnumHelper.GetEnumName(type) } }));
+            this.SendPlayFabEvent("Action", "Type", EnumHelper.GetEnumName(type));
         }
 
         public void TrackInteractiveGame(InteractiveGameModel game)
         {
             this.TrySendEvent(() => this.telemetryClient.TrackEvent("InteractiveGame", new Dictionary<string, string> { { "Name", game.name } }));
+            this.SendPlayFabEvent("InteractiveGame", "Name", game.name);
         }
 
         public void TrackSongRequest(SongRequestServiceTypeEnum songService)
         {
             this.TrySendEvent(() => this.telemetryClient.TrackEvent("SongRequest", new Dictionary<string, string> { { "Song Request Service", EnumHelper.GetEnumName(songService) } }));
+            this.SendPlayFabEvent("SongRequest", "Song Request Service", EnumHelper.GetEnumName(songService));
         }
 
         public void Start()
@@ -75,6 +86,7 @@ namespace MixItUp.Desktop.Services
         public void SetUserId(string userId)
         {
             this.telemetryClient.Context.User.Id = userId;
+            this.TrySendPlayFabTelemetry(PlayFabClientAPI.LoginWithCustomIDAsync(new LoginWithCustomIDRequest { CustomId = userId, CreateAccount = true }));
         }
 
         public void End()
@@ -90,6 +102,25 @@ namespace MixItUp.Desktop.Services
                 eventAction();
                 this.totalEventsSent++;
             }
+        }
+
+        private void SendPlayFabEvent(string eventName, string key, object value) { this.SendPlayFabEvent(eventName, new Dictionary<string, object>() { { key, value } }); }
+
+        private void SendPlayFabEvent(string eventName, Dictionary<string, object> body) { PlayFabClientAPI.WritePlayerEventAsync(new WriteClientPlayerEventRequest { EventName = eventName, Body = body }); }
+
+        private void TrySendPlayFabTelemetry<T>(Task<T> eventTask)
+        {
+            Task.Run(async () =>
+            {
+                try
+                {
+                    T result = await eventTask;
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+            });
         }
     }
 }
