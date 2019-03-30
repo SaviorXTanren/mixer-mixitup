@@ -15,6 +15,10 @@ namespace MixItUp.Base.Services
         void TrackInteractiveGame(InteractiveGameModel game);
         void TrackSongRequest(SongRequestServiceTypeEnum songService);
 
+        void TrackRemoteAuthentication(Guid clientID);
+        void TrackRemoteSendProfiles(Guid clientID);
+        void TrackRemoteSendBoard(Guid clientID, Guid profileID, Guid boardID);
+
         void Start();
         void SetUserId(string userId);
         void End();

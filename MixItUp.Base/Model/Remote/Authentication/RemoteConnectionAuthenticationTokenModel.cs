@@ -43,6 +43,7 @@ namespace MixItUp.Base.Model.Remote.Authentication
             else
             {
                 this.GroupID = Guid.NewGuid();
+                this.IsHost = true;
             }
         }
 
