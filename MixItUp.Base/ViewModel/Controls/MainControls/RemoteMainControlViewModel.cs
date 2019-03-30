@@ -8,7 +8,9 @@ using MixItUp.Base.ViewModel.Window;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Controls.MainControls
@@ -125,6 +127,8 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         public ICommand AddProfileCommand { get; private set; }
         public ICommand DeleteProfileCommand { get; private set; }
         public ICommand ConnectDeviceCommand { get; private set; }
+        public ICommand DownloadAppleCommand { get; private set; }
+        public ICommand DownloadAndroidCommand { get; private set; }
 
         public RemoteMainControlViewModel(MainWindowViewModel windowViewModel)
             : base(windowViewModel)
@@ -211,6 +215,18 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 {
                     await DialogHelper.ShowMessage("Could not connect to Remote service, please try again");
                 }
+            });
+
+            this.DownloadAppleCommand = this.CreateCommand((x) =>
+            {
+                //Process.Start("");
+                return Task.FromResult(0);
+            });
+
+            this.DownloadAndroidCommand = this.CreateCommand((x) =>
+            {
+                Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/releases/tag/remote-0.2");
+                return Task.FromResult(0);
             });
 
             MessageCenter.Register<RemoteCommandItemViewModel>(RemoteEmptyItemControlViewModel.NewRemoteCommandEventName, this, (command) =>

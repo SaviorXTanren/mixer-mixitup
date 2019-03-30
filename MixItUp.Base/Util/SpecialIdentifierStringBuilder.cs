@@ -516,15 +516,22 @@ namespace MixItUp.Base.Util
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "finalreward", patronageFinalMilestone.DollarAmountText());
                         }
 
+                        PatronageMilestoneModel patronageMilestoneHighestEarned = null;
                         IEnumerable<PatronageMilestoneModel> patronageMilestonesEarned = patronageMilestones.Where(m => m.target <= patronageStatus.patronageEarned);
                         if (patronageMilestonesEarned != null && patronageMilestonesEarned.Count() > 0)
                         {
-                            PatronageMilestoneModel patronageMilestoneHighestEarned = patronageMilestonesEarned.OrderByDescending(m => m.reward).FirstOrDefault();
-                            if (patronageMilestoneHighestEarned != null)
-                            {
-                                this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedamount", patronageStatus.patronageEarned.ToString());
-                                this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedreward", patronageMilestoneHighestEarned.DollarAmountText());
-                            }
+                            patronageMilestoneHighestEarned = patronageMilestonesEarned.OrderByDescending(m => m.reward).FirstOrDefault();
+                        }
+
+                        if (patronageMilestoneHighestEarned != null)
+                        {
+                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedamount", patronageStatus.patronageEarned.ToString());
+                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedreward", patronageMilestoneHighestEarned.DollarAmountText());
+                        }
+                        else
+                        {
+                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedamount", "0");
+                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedreward", "0");
                         }
                     }
                 }

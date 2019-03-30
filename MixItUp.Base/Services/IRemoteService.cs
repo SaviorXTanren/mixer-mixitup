@@ -2,7 +2,6 @@
 using Mixer.Base.Services;
 using MixItUp.Base.Model.Remote.Authentication;
 using MixItUp.Base.Remote.Models;
-using MixItUp.Base.Remote.Models.Items;
 using MixItUp.Base.Util;
 using MixItUp.SignalR.Client;
 using System;

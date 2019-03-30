@@ -120,7 +120,7 @@ namespace MixItUp.WPF.Controls.Interactive
 
                                 await Task.Delay(2000);
 
-                                winner = userTotals.Values.OrderBy(user => user.Total).FirstOrDefault();
+                                winner = userTotals.Values.OrderByDescending(user => user.Total).FirstOrDefault();
                                 if (winner != null && winner.User.GetParticipantModels().Count() > 0)
                                 {
                                     this.resultsButton.meta["winner"] = JObject.FromObject(winner.User.GetParticipantModels().FirstOrDefault());
