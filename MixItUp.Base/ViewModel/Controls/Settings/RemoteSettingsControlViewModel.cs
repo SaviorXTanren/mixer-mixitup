@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.Remote.Authentication;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Controls.Settings
@@ -60,6 +61,12 @@ namespace MixItUp.Base.ViewModel.Controls.Settings
         public RemoteSettingsControlViewModel()
         {
             this.RefreshList();
+        }
+
+        protected override Task OnVisibleInternal()
+        {
+            this.RefreshList();
+            return Task.FromResult(0);
         }
 
         public void RefreshList()

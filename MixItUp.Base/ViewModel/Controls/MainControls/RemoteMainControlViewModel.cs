@@ -202,7 +202,8 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                             {
                                 ChannelSession.Settings.RemoteClientConnections.Add(clientConnection);
                             }
-                            await DialogHelper.ShowMessage(string.Format("The client device {0} has been approved", clientConnection.Name));
+                            await DialogHelper.ShowMessage(string.Format("The device {0} has been approved." + Environment.NewLine + Environment.NewLine +
+                                "To configure it, head to Settings -> Remote.", clientConnection.Name));
                         }
                         else
                         {
