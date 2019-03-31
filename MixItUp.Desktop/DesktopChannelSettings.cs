@@ -212,6 +212,8 @@ namespace MixItUp.Desktop
 
         [JsonProperty]
         public ModerationChatInteractiveParticipationEnum ModerationChatInteractiveParticipation { get; set; }
+        [JsonProperty]
+        public MixerRoleEnum ModerationChatInteractiveParticipationExcempt { get; set; }
 
         [JsonProperty]
         public bool ModerationResetStrikesOnLaunch { get; set; }
@@ -478,7 +480,11 @@ namespace MixItUp.Desktop
         {
             this.Channel = channel;
             this.IsStreamer = isStreamer;
+        }
 
+        public DesktopChannelSettings()
+            : base()
+        {
             this.Version = DesktopChannelSettings.LatestVersion;
 
             this.DefaultStreamingSoftware = StreamingSoftwareTypeEnum.OBSStudio;
@@ -511,14 +517,11 @@ namespace MixItUp.Desktop
             this.ModerationBlockLinksApplyStrikes = true;
             this.ModerationCapsBlockIsPercentage = true;
             this.ModerationPunctuationBlockIsPercentage = true;
+            this.ModerationChatInteractiveParticipationExcempt = MixerRoleEnum.Mod;
             this.ModerationStrike1Command = CustomCommand.BasicChatCommand("Moderation Strike 1", "$moderationreason. You have received a moderation strike & currently have $usermoderationstrikes strike(s)", isWhisper: true);
             this.ModerationStrike2Command = CustomCommand.BasicChatCommand("Moderation Strike 2", "$moderationreason. You have received a moderation strike & currently have $usermoderationstrikes strike(s)", isWhisper: true);
             this.ModerationStrike3Command = CustomCommand.BasicChatCommand("Moderation Strike 3", "$moderationreason. You have received a moderation strike & currently have $usermoderationstrikes strike(s)", isWhisper: true);
-        }
 
-        public DesktopChannelSettings()
-            : base()
-        {
             this.UserData = new DatabaseDictionary<uint, UserDataViewModel>();
             this.Currencies = new LockedDictionary<Guid, UserCurrencyViewModel>();
             this.Inventories = new LockedDictionary<Guid, UserInventoryViewModel>();

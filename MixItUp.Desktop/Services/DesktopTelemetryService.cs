@@ -59,11 +59,11 @@ namespace MixItUp.Desktop.Services
             this.SendPlayFabEvent("PageView", "Name", pageName);
         }
 
-        public void TrackLogin(bool isStreamer, bool isPartner)
+        public void TrackLogin(string userID, bool isStreamer, bool isPartner)
         {
             this.TrySendEvent(() => this.telemetryClient.TrackEvent("Login", new Dictionary<string, string> { { "Is Streamer", isStreamer.ToString() }, { "Is Partner", isPartner.ToString() } }));
             this.SendPlayFabEvent("Login", new Dictionary<string, object>() { { "IsStreamer", isStreamer.ToString() }, { "IsPartner", isPartner.ToString() } });
-            this.TrySendPlayFabTelemetry(PlayFabClientAPI.UpdateUserDataAsync(new UpdateUserDataRequest() { Data = new Dictionary<string, string>() { { "Platform", "Windows" }, { "IsStreamer", isStreamer.ToString() }, { "IsPartner", isPartner.ToString() } } }));
+            this.TrySendPlayFabTelemetry(PlayFabClientAPI.UpdateUserDataAsync(new UpdateUserDataRequest() { Data = new Dictionary<string, string>() { { "UserID", userID }, { "Platform", "Windows" }, { "IsStreamer", isStreamer.ToString() }, { "IsPartner", isPartner.ToString() } } }));
         }
 
         public void TrackCommand(CommandTypeEnum type, bool IsBasic)

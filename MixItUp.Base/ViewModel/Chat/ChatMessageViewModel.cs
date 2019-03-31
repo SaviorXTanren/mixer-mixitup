@@ -4,6 +4,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Chat
@@ -79,6 +80,7 @@ namespace MixItUp.Base.ViewModel.Chat
         public ChatMessageViewModel(SkillInstanceModel skill, UserViewModel user)
         {
             this.User = user;
+            this.IsAlert = true;
             this.IsInUsersChannel = true;
             this.Message = "---  \"" + skill.Skill.name + "\" Skill Used  ---";
             this.Skill = skill;
@@ -119,6 +121,15 @@ namespace MixItUp.Base.ViewModel.Chat
         public void AddToMessage(string text)
         {
             this.Message += text;
+        }
+
+        public bool ContainsOnlyEmotes()
+        {
+            if (this.MessageComponents.Count > 0)
+            {
+                return this.MessageComponents.All(m => m.type.Equals("emoticon") || (m.type.Equals("text") && string.IsNullOrWhiteSpace(m.text)));
+            }
+            return true;
         }
 
         public override bool Equals(object obj)

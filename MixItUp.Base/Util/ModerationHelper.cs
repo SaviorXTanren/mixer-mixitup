@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Actions;
+using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
@@ -36,6 +37,8 @@ namespace MixItUp.Base.Util
         SubscriberOnly = 20,
         [Name("Moderator Only")]
         ModeratorOnly = 30,
+        [Name("Emotes & Skills Only")]
+        EmotesSkillsOnly = 40,
     }
 
     public static class ModerationHelper
@@ -215,6 +218,11 @@ namespace MixItUp.Base.Util
                     return true;
                 }
 
+                if (user.HasPermissionsTo(ChannelSession.Settings.ModerationChatInteractiveParticipationExcempt))
+                {
+                    return true;
+                }
+
                 if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.FollowerOnly && !user.HasPermissionsTo(MixerRoleEnum.Follower))
                 {
                     return false;
@@ -280,6 +288,19 @@ namespace MixItUp.Base.Util
             return true;
         }
 
+        public static bool MeetsChatEmoteSkillsOnlyParticipationRequirement(UserViewModel user, ChatMessageViewModel message)
+        {
+            if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.EmotesSkillsOnly)
+            {
+                if (user.HasPermissionsTo(ChannelSession.Settings.ModerationChatInteractiveParticipationExcempt))
+                {
+                    return true;
+                }
+                return message.IsAlert || message.ContainsOnlyEmotes();
+            }
+            return true;
+        }
+
         public static async Task SendChatInteractiveParticipationWhisper(UserViewModel user, bool isChat = false, bool isInteractive = false)
         {
             if (user != null)
@@ -296,6 +317,10 @@ namespace MixItUp.Base.Util
                 else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.ModeratorOnly)
                 {
                     reason = "Moderators";
+                }
+                else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.EmotesSkillsOnly)
+                {
+                    reason = "Emotes & Skills";
                 }
                 else if(ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountHour)
                 {
