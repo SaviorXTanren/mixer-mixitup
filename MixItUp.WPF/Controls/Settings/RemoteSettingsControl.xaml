@@ -25,20 +25,20 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="150" />
                                 <ColumnDefinition Width="15" />
-                                <ColumnDefinition Width="250" />
-                                <ColumnDefinition Width="15" />
                                 <ColumnDefinition Width="100" />
                                 <ColumnDefinition Width="15" />
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="20" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0" Text="{Binding Name}" />
+                            <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center" />
 
-                            <TextBlock Grid.Column="2" Text="{Binding Status}" />
+                            <TextBlock Grid.Column="2" Text="{Binding Status}" VerticalAlignment="Center" />
 
                             <ComboBox Grid.Column="4" ItemsSource="{Binding DeviceTypes}" SelectedItem="{Binding DeviceType}" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="100" />
 
-                            <Button Grid.Column="6" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Command="{Binding DeleteCommand}" ToolTip="Delete" />
+                            <Button Grid.Column="6" Content="{MaterialDesign:PackIcon Delete}" Command="{Binding DeleteCommand}" ToolTip="Delete" />
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

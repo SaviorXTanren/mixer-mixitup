@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.Controls.Settings;
+﻿using System.Threading.Tasks;
+using MixItUp.Base.ViewModel.Controls.Settings;
 
 namespace MixItUp.WPF.Controls.Settings
 {
@@ -7,11 +8,19 @@ namespace MixItUp.WPF.Controls.Settings
     /// </summary>
     public partial class RemoteSettingsControl : SettingsControlBase
     {
+        private RemoteSettingsControlViewModel viewModel;
+
         public RemoteSettingsControl()
         {
             InitializeComponent();
 
-            this.DataContext = new RemoteSettingsControlViewModel();
+            this.DataContext = this.viewModel = new RemoteSettingsControlViewModel();
+        }
+
+        protected override async Task OnVisibilityChanged()
+        {
+            await this.viewModel.OnVisible();
+            await base.OnVisibilityChanged();
         }
     }
 }
