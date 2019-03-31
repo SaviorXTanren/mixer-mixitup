@@ -420,7 +420,7 @@ namespace MixItUp.Base.MixerAPI
                 return message;
             }
 
-            if (!ModerationHelper.MeetsChatInteractiveParticipationRequirement(user))
+            if (!ModerationHelper.MeetsChatInteractiveParticipationRequirement(user) || !ModerationHelper.MeetsChatEmoteSkillsOnlyParticipationRequirement(user, message))
             {
                 Util.Logger.LogDiagnostic(string.Format("Deleting Message As User does not meet requirement - {0} - {1}", ChannelSession.Settings.ModerationChatInteractiveParticipation, message.Message));
 

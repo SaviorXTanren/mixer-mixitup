@@ -218,8 +218,18 @@
                         <GroupBox.Header>
                             <TextBlock Foreground="{StaticResource WhiteColor}">Chat / MixPlay Participation</TextBlock>
                         </GroupBox.Header>
-                        
-                        <ComboBox x:Name="ChatInteractiveParticipationComboBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Minimum Requirement" Width="200" SelectionChanged="ComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+
+                        <Grid HorizontalAlignment="Center" Margin="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <ComboBox x:Name="ChatInteractiveParticipationComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Minimum Requirement" Width="200" SelectionChanged="ComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+
+                            <ComboBox x:Name="ChatInteractiveParticipationExemptComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Exempt From Rule" Width="110" SelectionChanged="ComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+                        </Grid>
                     </GroupBox>
                 </Grid>
 

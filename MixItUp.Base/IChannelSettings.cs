@@ -119,6 +119,7 @@ namespace MixItUp.Base
         bool ModerationBlockLinksApplyStrikes { get; set; }
 
         ModerationChatInteractiveParticipationEnum ModerationChatInteractiveParticipation { get; set; }
+        MixerRoleEnum ModerationChatInteractiveParticipationExcempt { get; set; }
 
         bool ModerationResetStrikesOnLaunch { get; set; }
         CustomCommand ModerationStrike1Command { get; set; }
