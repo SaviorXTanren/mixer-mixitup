@@ -188,6 +188,8 @@ namespace MixItUp.Base.Actions
                 url = await this.ReplaceStringWithSpecialModifiers(this.SourceURL, user, arguments);
             }
 
+            string sceneName = !string.IsNullOrEmpty(this.SceneName) ? this.SceneName : null;
+
             IStreamingSoftwareService ssService = null;
             if (this.SelectedStreamingSoftware == StreamingSoftwareTypeEnum.OBSStudio)
             {
@@ -224,21 +226,21 @@ namespace MixItUp.Base.Actions
                 {
                     await ssService.SaveReplayBuffer();
                 }
-                else if (this.ActionType == StreamingActionTypeEnum.Scene && !string.IsNullOrEmpty(this.SceneName))
+                else if (this.ActionType == StreamingActionTypeEnum.Scene && !string.IsNullOrEmpty(sceneName))
                 {
-                    await ssService.ShowScene(this.SceneName);
+                    await ssService.ShowScene(sceneName);
                 }
                 else if (!string.IsNullOrEmpty(this.SourceName))
                 {
                     if (this.ActionType == StreamingActionTypeEnum.WebBrowserSource && !string.IsNullOrEmpty(this.SourceURL))
                     {
-                        await ssService.SetWebBrowserSourceURL(this.SceneName, this.SourceName, url);
+                        await ssService.SetWebBrowserSourceURL(sceneName, this.SourceName, url);
                     }
                     else if (this.ActionType == StreamingActionTypeEnum.SourceDimensions && this.SourceDimensions != null)
                     {
-                        await ssService.SetSourceDimensions(this.SceneName, this.SourceName, this.SourceDimensions);
+                        await ssService.SetSourceDimensions(sceneName, this.SourceName, this.SourceDimensions);
                     }
-                    await ssService.SetSourceVisibility(this.SceneName, this.SourceName, this.SourceVisible);
+                    await ssService.SetSourceVisibility(sceneName, this.SourceName, this.SourceVisible);
                 }
             }
         }
