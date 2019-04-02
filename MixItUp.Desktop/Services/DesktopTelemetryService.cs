@@ -5,6 +5,7 @@ using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using PlayFab;
 using PlayFab.ClientModels;
 using System;
@@ -114,7 +115,9 @@ namespace MixItUp.Desktop.Services
         public void SetUserId(string userId)
         {
             this.telemetryClient.Context.User.Id = userId;
-            this.TrySendPlayFabTelemetry(PlayFabClientAPI.LoginWithCustomIDAsync(new LoginWithCustomIDRequest { CustomId = userId, CreateAccount = true }));
+
+            string playFabUserID = HashHelper.ComputeMD5Hash("Mixer-" + (ChannelSession.IsStreamer ? "Streamer" : "Moderator") + ChannelSession.User.id);
+            this.TrySendPlayFabTelemetry(PlayFabClientAPI.LoginWithCustomIDAsync(new LoginWithCustomIDRequest { CustomId = playFabUserID, CreateAccount = true }));
         }
 
         private void TrySendEvent(Action eventAction)
