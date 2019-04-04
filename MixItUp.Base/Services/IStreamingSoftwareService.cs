@@ -25,5 +25,7 @@ namespace MixItUp.Base.Services
 
         Task SaveReplayBuffer();
         Task<bool> StartReplayBuffer();
+
+        Task SetSceneCollection(string sceneCollectionName);
     }
 }

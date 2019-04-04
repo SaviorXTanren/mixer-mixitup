@@ -46,6 +46,10 @@ namespace MixItUp.WPF.Controls.Actions
                 {
                     // Do nothing...
                 }
+                else if (this.action.ActionType == StreamingActionTypeEnum.SceneCollection)
+                {
+                    this.SceneCollectionNameTextBox.Text = this.action.SceneCollectionName;
+                }
                 else
                 {
                     this.SourceSceneNameTextBox.Text = this.action.SceneName;
@@ -92,6 +96,10 @@ namespace MixItUp.WPF.Controls.Actions
                 else if (type == StreamingActionTypeEnum.SaveReplayBuffer)
                 {
                     return StreamingSoftwareAction.CreateSaveReplayBufferAction(software);
+                }
+                else if (type == StreamingActionTypeEnum.SceneCollection && !string.IsNullOrEmpty(this.SceneCollectionNameTextBox.Text))
+                {
+                    return StreamingSoftwareAction.CreateSceneCollectionAction(software, this.SceneCollectionNameTextBox.Text);
                 }
                 else if (!string.IsNullOrEmpty(this.SourceNameTextBox.Text))
                 {
@@ -165,6 +173,7 @@ namespace MixItUp.WPF.Controls.Actions
         {
             this.FeatureNotSupportedGrid.Visibility = Visibility.Collapsed;
             this.SceneGrid.Visibility = Visibility.Collapsed;
+            this.SceneCollectionGrid.Visibility = Visibility.Collapsed;
             this.SourceGrid.Visibility = Visibility.Collapsed;
             this.SourceTextGrid.Visibility = Visibility.Collapsed;
             this.SourceWebBrowserGrid.Visibility = Visibility.Collapsed;
@@ -208,6 +217,18 @@ namespace MixItUp.WPF.Controls.Actions
                                 return;
                             }
                         }
+                    }
+                }
+                else if (type == StreamingActionTypeEnum.SceneCollection)
+                {
+                    if (software != StreamingSoftwareTypeEnum.OBSStudio)
+                    {
+                        this.FeatureNotSupportedGrid.Visibility = Visibility.Visible;
+                        return;
+                    }
+                    else
+                    {
+                        this.SceneCollectionGrid.Visibility = Visibility.Visible;
                     }
                 }
                 else

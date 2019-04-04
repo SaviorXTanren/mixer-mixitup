@@ -95,6 +95,8 @@ namespace MixItUp.XSplit
         public Task SaveReplayBuffer() { return Task.FromResult(0); }
         public Task<bool> StartReplayBuffer() { return Task.FromResult(false); }
 
+        public Task SetSceneCollection(string sceneCollectionName) { return Task.FromResult(0); }
+
         protected override WebSocketServerBase CreateWebSocketServer(HttpListenerContext listenerContext)
         {
             return new XSplitWebSocketServer(listenerContext);
