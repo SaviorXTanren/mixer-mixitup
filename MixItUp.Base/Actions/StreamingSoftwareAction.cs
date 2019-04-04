@@ -41,6 +41,9 @@ namespace MixItUp.Base.Actions
 
         [Name("Save Replay Buffer")]
         SaveReplayBuffer,
+
+        [Name("Set Scene Collection")]
+        SceneCollection,
     }
 
     public class StreamingSourceDimensions
@@ -119,6 +122,14 @@ namespace MixItUp.Base.Actions
             return new StreamingSoftwareAction(softwareType, StreamingActionTypeEnum.SaveReplayBuffer);
         }
 
+        public static StreamingSoftwareAction CreateSceneCollectionAction(StreamingSoftwareTypeEnum softwareType, string sceneCollectionName)
+        {
+            return new StreamingSoftwareAction(softwareType, StreamingActionTypeEnum.SceneCollection)
+            {
+                SceneCollectionName = sceneCollectionName
+            };
+        }
+
         [DataMember]
         public StreamingSoftwareTypeEnum SoftwareType { get; set; }
         [DataMember]
@@ -142,6 +153,9 @@ namespace MixItUp.Base.Actions
 
         [DataMember]
         public StreamingSourceDimensions SourceDimensions { get; set; }
+
+        [DataMember]
+        public string SceneCollectionName { get; set; }
 
         public StreamingSoftwareAction() : base(ActionTypeEnum.StreamingSoftware) { }
 
@@ -241,6 +255,10 @@ namespace MixItUp.Base.Actions
                         await ssService.SetSourceDimensions(sceneName, this.SourceName, this.SourceDimensions);
                     }
                     await ssService.SetSourceVisibility(sceneName, this.SourceName, this.SourceVisible);
+                }
+                else if (this.ActionType == StreamingActionTypeEnum.SceneCollection && !string.IsNullOrEmpty(this.SceneCollectionName))
+                {
+                    await ssService.SetSceneCollection(this.SceneCollectionName);
                 }
             }
         }
