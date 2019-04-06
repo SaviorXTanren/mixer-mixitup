@@ -119,18 +119,14 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="10" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="10" />
-                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.Row="0" Grid.Column="0">
-                        <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/issues" RequestNavigate="Hyperlink_RequestNavigate">Known Issues</Hyperlink>
+                        <Hyperlink NavigateUri="https://status.mixer.com/" RequestNavigate="Hyperlink_RequestNavigate">Mixer Status</Hyperlink>
                     </TextBlock>
 
                     <TextBlock Grid.Row="0" Grid.Column="2">
-                        <Hyperlink NavigateUri="https://status.mixer.com/" RequestNavigate="Hyperlink_RequestNavigate">Mixer Status</Hyperlink>
+                        <Hyperlink NavigateUri="https://watchbeam.zendesk.com/hc/en-us" RequestNavigate="Hyperlink_RequestNavigate">Mixer Support</Hyperlink>
                     </TextBlock>
 
                     <TextBlock Grid.Row="2" Grid.Column="0">
@@ -139,10 +135,6 @@
 
                     <TextBlock Grid.Row="2" Grid.Column="2">
                         <Hyperlink NavigateUri="https://www.xsplit.com/" RequestNavigate="Hyperlink_RequestNavigate">XSplit</Hyperlink>
-                    </TextBlock>
-
-                    <TextBlock Grid.Row="4" Grid.Column="0">
-                        <Hyperlink NavigateUri="https://watchbeam.zendesk.com/hc/en-us" RequestNavigate="Hyperlink_RequestNavigate">Mixer Support</Hyperlink>
                     </TextBlock>
                 </Grid>
             </GroupBox>
@@ -194,7 +186,7 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <Image Source="https://mixer.com/api/v1/users/7834677/avatar" Grid.Row="0" Width="64" Height="64" HorizontalAlignment="Center" />
+                            <Image Source="https://mixer.com/api/v1/users/34871051/avatar" Grid.Row="0" Width="64" Height="64" HorizontalAlignment="Center" />
 
                             <TextBlock Grid.Row="2" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}">VerbatimT</TextBlock>
 
