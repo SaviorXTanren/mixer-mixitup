@@ -43,6 +43,15 @@
 
         </Grid>
 
+        <Grid x:Name="SceneCollectionGrid" Grid.Row="2" Visibility="Collapsed">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox x:Name="SceneCollectionNameTextBox" MaterialDesign:HintAssist.Hint="Scene Collection Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+        </Grid>
+
         <Grid x:Name="FeatureNotSupportedGrid" Grid.Row="2" Visibility="Collapsed">
             <TextBlock Foreground="Red" HorizontalAlignment="Center">This feature is not currently supported for this Streaming Software</TextBlock>
         </Grid>
