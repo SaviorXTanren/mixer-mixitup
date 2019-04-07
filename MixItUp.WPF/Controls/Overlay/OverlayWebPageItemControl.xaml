@@ -18,7 +18,7 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <TextBox Grid.Column="0" x:Name="WebPageFilePathTextBox" MaterialDesign:HintAssist.Hint="Web Page (URL or Local File)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+        <TextBox Grid.Column="0" x:Name="WebPageFilePathTextBox" MaterialDesign:HintAssist.Hint="Web Page URL" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
         <Button Grid.Column="2" x:Name="WebPageFileBrowseButton" Click="WebPageFileBrowseButton_Click">Browse</Button>
 
         <TextBox Grid.Column="4" x:Name="WebPageWidthTextBox" MaterialDesign:HintAssist.Hint="Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" VerticalAlignment="Center" />

@@ -113,8 +113,8 @@ namespace MixItUp.WPF.Controls.Games
 
                 this.CombinationLengthTextBox.Text = "3";
                 this.InitialAmountTextBox.Text = "500";
-                this.failedGuessCommand = this.CreateBasicChatCommand("@$username drops their coins into and try their combo...but the box doesn't unlock. Their guess was too $gamelockboxhint.");
-                this.successfulGuessCommand = this.CreateBasicChatCommand("@$username drops their coins into and try their combo...and unlocks the box! They quickly run off with the $gamepayout " + currency.Name + " inside it!");
+                this.failedGuessCommand = this.CreateBasicChatCommand("@$username drops their coins into and try their combo $arg1text...but the box doesn't unlock. Their guess was too $gamelockboxhint.");
+                this.successfulGuessCommand = this.CreateBasicChatCommand("@$username drops their coins into and try their combo $arg1text...and unlocks the box! They quickly run off with the $gamepayout " + currency.Name + " inside it!");
 
                 this.StatusArgumentTextBox.Text = "status";
                 this.statusCommand = this.CreateBasicChatCommand("After shaking the box for a bit, you guess there's about $gametotalamount " + currency.Name + " inside it.");

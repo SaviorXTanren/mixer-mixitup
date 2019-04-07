@@ -192,6 +192,16 @@ namespace MixItUp.OBS
             }
         }
 
+        public Task SetSceneCollection(string sceneCollectionName)
+        {
+            try
+            {
+                this.OBSWebsocket.SetCurrentSceneCollection(sceneCollectionName);
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+            return Task.FromResult(0);
+        }
+
         private async void OBSWebsocket_Disconnected(object sender, EventArgs e)
         {
             await this.Disconnect();

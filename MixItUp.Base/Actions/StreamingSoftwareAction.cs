@@ -41,6 +41,9 @@ namespace MixItUp.Base.Actions
 
         [Name("Save Replay Buffer")]
         SaveReplayBuffer,
+
+        [Name("Set Scene Collection")]
+        SceneCollection,
     }
 
     public class StreamingSourceDimensions
@@ -119,6 +122,14 @@ namespace MixItUp.Base.Actions
             return new StreamingSoftwareAction(softwareType, StreamingActionTypeEnum.SaveReplayBuffer);
         }
 
+        public static StreamingSoftwareAction CreateSceneCollectionAction(StreamingSoftwareTypeEnum softwareType, string sceneCollectionName)
+        {
+            return new StreamingSoftwareAction(softwareType, StreamingActionTypeEnum.SceneCollection)
+            {
+                SceneCollectionName = sceneCollectionName
+            };
+        }
+
         [DataMember]
         public StreamingSoftwareTypeEnum SoftwareType { get; set; }
         [DataMember]
@@ -142,6 +153,9 @@ namespace MixItUp.Base.Actions
 
         [DataMember]
         public StreamingSourceDimensions SourceDimensions { get; set; }
+
+        [DataMember]
+        public string SceneCollectionName { get; set; }
 
         public StreamingSoftwareAction() : base(ActionTypeEnum.StreamingSoftware) { }
 
@@ -188,6 +202,8 @@ namespace MixItUp.Base.Actions
                 url = await this.ReplaceStringWithSpecialModifiers(this.SourceURL, user, arguments);
             }
 
+            string sceneName = !string.IsNullOrEmpty(this.SceneName) ? this.SceneName : null;
+
             IStreamingSoftwareService ssService = null;
             if (this.SelectedStreamingSoftware == StreamingSoftwareTypeEnum.OBSStudio)
             {
@@ -224,21 +240,25 @@ namespace MixItUp.Base.Actions
                 {
                     await ssService.SaveReplayBuffer();
                 }
-                else if (this.ActionType == StreamingActionTypeEnum.Scene && !string.IsNullOrEmpty(this.SceneName))
+                else if (this.ActionType == StreamingActionTypeEnum.Scene && !string.IsNullOrEmpty(sceneName))
                 {
-                    await ssService.ShowScene(this.SceneName);
+                    await ssService.ShowScene(sceneName);
                 }
                 else if (!string.IsNullOrEmpty(this.SourceName))
                 {
                     if (this.ActionType == StreamingActionTypeEnum.WebBrowserSource && !string.IsNullOrEmpty(this.SourceURL))
                     {
-                        await ssService.SetWebBrowserSourceURL(this.SceneName, this.SourceName, url);
+                        await ssService.SetWebBrowserSourceURL(sceneName, this.SourceName, url);
                     }
                     else if (this.ActionType == StreamingActionTypeEnum.SourceDimensions && this.SourceDimensions != null)
                     {
-                        await ssService.SetSourceDimensions(this.SceneName, this.SourceName, this.SourceDimensions);
+                        await ssService.SetSourceDimensions(sceneName, this.SourceName, this.SourceDimensions);
                     }
-                    await ssService.SetSourceVisibility(this.SceneName, this.SourceName, this.SourceVisible);
+                    await ssService.SetSourceVisibility(sceneName, this.SourceName, this.SourceVisible);
+                }
+                else if (this.ActionType == StreamingActionTypeEnum.SceneCollection && !string.IsNullOrEmpty(this.SceneCollectionName))
+                {
+                    await ssService.SetSceneCollection(this.SceneCollectionName);
                 }
             }
         }
