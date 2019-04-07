@@ -143,7 +143,7 @@ namespace MixItUp.Desktop.Services
                 }
                 catch (Exception ex)
                 {
-                    Logger.Log(ex);
+                    Mixer.Base.Util.Logger.Log(ex);
                 }
             });
         }
