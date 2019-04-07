@@ -8,7 +8,7 @@ Mix It Up is striving to be the "one stop shop" for all of your administrative n
 Go to http://mixitupapp.com for the latest release and check out https://github.com/SaviorXTanren/mixer-mixitup/wiki for getting started information and detailed tutorials.
 
 ## I found a bug / have a feature request!
-Just head over to the https://github.com/SaviorXTanren/mixer-mixitup/issues page and create a new issue.
+Please head to our Discord server for support & feature requests; the link can be found at the bottom of our website http://mixitupapp.com or in the About section of the app.
 
 ## Current functionality
 The app is currently in heavy development at this point with an ETA of an initial release sometime before the end of 2017
