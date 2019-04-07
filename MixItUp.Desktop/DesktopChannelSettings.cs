@@ -36,7 +36,7 @@ namespace MixItUp.Desktop
         public const int LatestVersion = 28;
 
         [JsonProperty]
-        public int Version { get; set; }
+        public int Version { get; set; } = DesktopChannelSettings.LatestVersion;
 
         [JsonProperty]
         public bool LicenseAccepted { get; set; }
@@ -91,7 +91,7 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public bool FeatureMe { get; set; }
         [JsonProperty]
-        public StreamingSoftwareTypeEnum DefaultStreamingSoftware { get; set; }
+        public StreamingSoftwareTypeEnum DefaultStreamingSoftware { get; set; } = StreamingSoftwareTypeEnum.OBSStudio;
         [JsonProperty]
         public string DefaultAudioOutput { get; set; }
         [JsonProperty]
@@ -135,7 +135,7 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public bool GameQueueSubPriority { get; set; }
         [JsonProperty]
-        public RequirementViewModel GameQueueRequirements { get; set; }
+        public RequirementViewModel GameQueueRequirements { get; set; } = new RequirementViewModel();
 
         [JsonProperty]
         public bool QuotesEnabled { get; set; }
@@ -143,14 +143,14 @@ namespace MixItUp.Desktop
         public string QuotesFormat { get; set; }
 
         [JsonProperty]
-        public int TimerCommandsInterval { get; set; }
+        public int TimerCommandsInterval { get; set; } = 10;
         [JsonProperty]
-        public int TimerCommandsMinimumMessages { get; set; }
+        public int TimerCommandsMinimumMessages { get; set; } = 10;
         [JsonProperty]
         public bool DisableAllTimers { get; set; }
 
         [JsonProperty]
-        public string GiveawayCommand { get; set; }
+        public string GiveawayCommand { get; set; } = "giveaway";
         [JsonProperty]
         public bool GiveawayGawkBoxTrigger { get; set; }
         [JsonProperty]
@@ -162,15 +162,15 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public double GiveawayDonationAmount { get; set; }
         [JsonProperty]
-        public int GiveawayTimer { get; set; }
+        public int GiveawayTimer { get; set; } = 1;
         [JsonProperty]
-        public int GiveawayMaximumEntries { get; set; }
+        public int GiveawayMaximumEntries { get; set; } = 1;
         [JsonProperty]
-        public RequirementViewModel GiveawayRequirements { get; set; }
+        public RequirementViewModel GiveawayRequirements { get; set; } = new RequirementViewModel();
         [JsonProperty]
-        public int GiveawayReminderInterval { get; set; }
+        public int GiveawayReminderInterval { get; set; } = 5;
         [JsonProperty]
-        public bool GiveawayRequireClaim { get; set; }
+        public bool GiveawayRequireClaim { get; set; } = true;
         [JsonProperty]
         public bool GiveawayAllowPastWinners { get; set; }
         [JsonProperty]
@@ -186,34 +186,34 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public int ModerationFilteredWordsTimeout5MinuteOffenseCount { get; set; }
         [JsonProperty]
-        public MixerRoleEnum ModerationFilteredWordsExcempt { get; set; }
+        public MixerRoleEnum ModerationFilteredWordsExcempt { get; set; } = MixerRoleEnum.Mod;
         [JsonProperty]
-        public bool ModerationFilteredWordsApplyStrikes { get; set; }
+        public bool ModerationFilteredWordsApplyStrikes { get; set; } = true;
 
         [JsonProperty]
         public int ModerationCapsBlockCount { get; set; }
         [JsonProperty]
-        public bool ModerationCapsBlockIsPercentage { get; set; }
+        public bool ModerationCapsBlockIsPercentage { get; set; } = true;
         [JsonProperty]
         public int ModerationPunctuationBlockCount { get; set; }
         [JsonProperty]
-        public bool ModerationPunctuationBlockIsPercentage { get; set; }
+        public bool ModerationPunctuationBlockIsPercentage { get; set; } = true;
         [JsonProperty]
-        public MixerRoleEnum ModerationChatTextExcempt { get; set; }
+        public MixerRoleEnum ModerationChatTextExcempt { get; set; } = MixerRoleEnum.Mod;
         [JsonProperty]
-        public bool ModerationChatTextApplyStrikes { get; set; }
+        public bool ModerationChatTextApplyStrikes { get; set; } = true;
 
         [JsonProperty]
         public bool ModerationBlockLinks { get; set; }
         [JsonProperty]
-        public MixerRoleEnum ModerationBlockLinksExcempt { get; set; }
+        public MixerRoleEnum ModerationBlockLinksExcempt { get; set; } = MixerRoleEnum.Mod;
         [JsonProperty]
-        public bool ModerationBlockLinksApplyStrikes { get; set; }
+        public bool ModerationBlockLinksApplyStrikes { get; set; } = true;
 
         [JsonProperty]
-        public ModerationChatInteractiveParticipationEnum ModerationChatInteractiveParticipation { get; set; }
+        public ModerationChatInteractiveParticipationEnum ModerationChatInteractiveParticipation { get; set; } = ModerationChatInteractiveParticipationEnum.None;
         [JsonProperty]
-        public MixerRoleEnum ModerationChatInteractiveParticipationExcempt { get; set; }
+        public MixerRoleEnum ModerationChatInteractiveParticipationExcempt { get; set; } = MixerRoleEnum.Mod;
 
         [JsonProperty]
         public bool ModerationResetStrikesOnLaunch { get; set; }
@@ -231,7 +231,7 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public string OverlaySourceName { get; set; }
         [JsonProperty]
-        public int OverlayWidgetRefreshTime { get; set; }
+        public int OverlayWidgetRefreshTime { get; set; } = 5;
 
         [JsonProperty]
         public string OBSStudioServerIP { get; set; }
@@ -267,19 +267,19 @@ namespace MixItUp.Desktop
         public bool UnlockAllCommands { get; set; }
 
         [JsonProperty]
-        public int ChatFontSize { get; set; }
+        public int ChatFontSize { get; set; } = 13;
         [JsonProperty]
         public bool ChatShowUserJoinLeave { get; set; }
         [JsonProperty]
-        public string ChatUserJoinLeaveColorScheme { get; set; }
+        public string ChatUserJoinLeaveColorScheme { get; set; } = ColorSchemes.DefaultColorScheme;
         [JsonProperty]
         public bool ChatShowEventAlerts { get; set; }
         [JsonProperty]
-        public string ChatEventAlertsColorScheme { get; set; }
+        public string ChatEventAlertsColorScheme { get; set; } = ColorSchemes.DefaultColorScheme;
         [JsonProperty]
         public bool ChatShowInteractiveAlerts { get; set; }
         [JsonProperty]
-        public string ChatInteractiveAlertsColorScheme { get; set; }
+        public string ChatInteractiveAlertsColorScheme { get; set; } = ColorSchemes.DefaultColorScheme;
 
         [JsonProperty]
         public string NotificationChatMessageSoundFilePath { get; set; }
@@ -293,7 +293,7 @@ namespace MixItUp.Desktop
         public string NotificationServiceDisconnectSoundFilePath { get; set; }
 
         [JsonProperty]
-        public int MaxMessagesInChat { get; set; }
+        public int MaxMessagesInChat { get; set; } = 100;
 
         [JsonProperty]
         public bool AutoExportStatistics { get; set; }
@@ -481,39 +481,9 @@ namespace MixItUp.Desktop
             this.Channel = channel;
             this.IsStreamer = isStreamer;
 
-            this.Version = DesktopChannelSettings.LatestVersion;
-
-            this.DefaultStreamingSoftware = StreamingSoftwareTypeEnum.OBSStudio;
-
-            this.TimerCommandsInterval = 10;
-            this.TimerCommandsMinimumMessages = 10;
-
-            this.GameQueueRequirements = new RequirementViewModel();
-
-            this.GiveawayCommand = "giveaway";
-            this.GiveawayTimer = 1;
-            this.GiveawayMaximumEntries = 1;
-            this.GiveawayRequirements = new RequirementViewModel();
-            this.GiveawayReminderInterval = 5;
-            this.GiveawayRequireClaim = true;
             this.GiveawayUserJoinedCommand = CustomCommand.BasicChatCommand("Giveaway User Joined", "You have been entered into the giveaway, stay tuned to see who wins!", isWhisper: true);
             this.GiveawayWinnerSelectedCommand = CustomCommand.BasicChatCommand("Giveaway Winner Selected", "Congratulations @$username, you won! Type \"!claim\" in chat in the next 60 seconds to claim your prize!", isWhisper: true);
 
-            this.MaxMessagesInChat = 100;
-            this.ChatFontSize = 13;
-            this.ChatUserJoinLeaveColorScheme = this.ChatEventAlertsColorScheme = this.ChatInteractiveAlertsColorScheme = ColorSchemes.DefaultColorScheme;
-
-            this.OverlayWidgetRefreshTime = 5;
-
-            this.ModerationFilteredWordsExcempt = MixerRoleEnum.Mod;
-            this.ModerationFilteredWordsApplyStrikes = true;
-            this.ModerationChatTextExcempt = MixerRoleEnum.Mod;
-            this.ModerationChatTextApplyStrikes = true;
-            this.ModerationBlockLinksExcempt = MixerRoleEnum.Mod;
-            this.ModerationBlockLinksApplyStrikes = true;
-            this.ModerationCapsBlockIsPercentage = true;
-            this.ModerationPunctuationBlockIsPercentage = true;
-            this.ModerationChatInteractiveParticipationExcempt = MixerRoleEnum.Mod;
             this.ModerationStrike1Command = CustomCommand.BasicChatCommand("Moderation Strike 1", "$moderationreason. You have received a moderation strike & currently have $usermoderationstrikes strike(s)", isWhisper: true);
             this.ModerationStrike2Command = CustomCommand.BasicChatCommand("Moderation Strike 2", "$moderationreason. You have received a moderation strike & currently have $usermoderationstrikes strike(s)", isWhisper: true);
             this.ModerationStrike3Command = CustomCommand.BasicChatCommand("Moderation Strike 3", "$moderationreason. You have received a moderation strike & currently have $usermoderationstrikes strike(s)", isWhisper: true);
