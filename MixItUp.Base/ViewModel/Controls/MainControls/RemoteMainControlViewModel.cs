@@ -227,7 +227,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
             this.DownloadAndroidCommand = this.CreateCommand((x) =>
             {
-                Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/releases/tag/remote-0.2");
+                Process.Start("https://play.google.com/store/apps/details?id=com.MixItUpApp.Remote.Beta");
                 return Task.FromResult(0);
             });
 
