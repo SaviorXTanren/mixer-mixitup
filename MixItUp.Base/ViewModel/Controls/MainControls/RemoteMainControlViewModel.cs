@@ -163,6 +163,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                         ChannelSession.Settings.RemoteProfileBoards.Remove(this.profile.ID);
                         this.RefreshProfiles();
                         this.ProfileSelected(null);
+                        this.Item = null;
                     }
                 }
             });
@@ -309,7 +310,11 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         public void ProfileSelected(RemoteProfileViewModel profile)
         {
             this.Profile = null;
+            this.Board = null;
+
             this.NavigationNames.Clear();
+            this.NotifyPropertyChanged("NavigationName");
+
             if (profile != null && ChannelSession.Settings.RemoteProfileBoards.ContainsKey(profile.ID))
             {
                 this.Profile = profile;
