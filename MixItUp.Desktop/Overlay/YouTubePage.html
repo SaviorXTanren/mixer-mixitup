@@ -14,6 +14,7 @@
         var player;
         var isPlaying = false;
         var isReady = false;
+        var hasError = false;
 
         function LoadYouTubeIframeAPI() {
             var tag = document.createElement('script');
@@ -54,22 +55,28 @@
                 data.State = 0;
 
                 var playerState = player.getPlayerState();
-                if (playerState == YT.PlayerState.PLAYING || playerState == YT.PlayerState.PAUSED || playerState == YT.PlayerState.ENDED) {
-                    var videoData = player.getVideoData();
+                var videoData = player.getVideoData();
 
+                if (hasError) {
                     data.ID = videoData.video_id;
-                    data.Progress = player.getCurrentTime();
-                    data.Length = player.getDuration();
+                    data.State = 3;
                     data.Volume = player.getVolume();
+                } else {
+                    if (playerState == YT.PlayerState.PLAYING || playerState == YT.PlayerState.PAUSED || playerState == YT.PlayerState.ENDED) {
+                        data.ID = videoData.video_id;
+                        data.Progress = player.getCurrentTime();
+                        data.Length = player.getDuration();
+                        data.Volume = player.getVolume();
 
-                    if (playerState == YT.PlayerState.PLAYING) {
-                        data.State = 1;
-                    }
-                    else if (playerState == YT.PlayerState.PAUSED) {
-                        data.State = 2;
-                    }
-                    else if (playerState == YT.PlayerState.ENDED) {
-                        data.State = 3;
+                        if (playerState == YT.PlayerState.PLAYING) {
+                            data.State = 1;
+                        }
+                        else if (playerState == YT.PlayerState.PAUSED) {
+                            data.State = 2;
+                        }
+                        else if (playerState == YT.PlayerState.ENDED) {
+                            data.State = 3;
+                        }
                     }
                 }
 
@@ -92,6 +99,8 @@
 
         function play(itemId, volume) {
             if (!isReady) return;
+
+            hasError = false;
 
             setTimeout(function () {
                 isPlaying = true;
@@ -119,14 +128,11 @@
         }
 
         function onPlayerError(err) {
-            var data = {};
-            data.Type = 1;
-            data.State = 0;
-            data.Error = err;
-            window.external.SetStatus(JSON.stringify(data));
+            hasError = true;
         }
 
-        function onPlayerReady(event) {
+    function onPlayerReady(event) {
+            hasError = false;
             isReady = true;
         }
 
@@ -134,6 +140,7 @@
             if (event.data == YT.PlayerState.ENDED && isPlaying) {
                 window.external.SongRequestComplete();
                 isPlaying = false;
+                hasError = false;
             }
         }
     </script>
