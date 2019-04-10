@@ -26,6 +26,7 @@ namespace MixItUp.WPF.Controls.Actions
                 this.ModerationActionTypeComboBox.Text = EnumHelper.GetEnumName(this.action.ModerationType);
                 this.UserNameTextBox.Text = this.action.UserName;
                 this.TimeAmountTextBox.Text = this.action.TimeAmount;
+                this.ModerationReasonTextBox.Text = this.action.ModerationReason;
             }
             return Task.FromResult(0);
         }
@@ -44,7 +45,7 @@ namespace MixItUp.WPF.Controls.Actions
                     }
                 }
 
-                return new ModerationAction(moderationType, this.UserNameTextBox.Text, this.TimeAmountTextBox.Text);
+                return new ModerationAction(moderationType, this.UserNameTextBox.Text, this.TimeAmountTextBox.Text, this.ModerationReasonTextBox.Text);
             }
             return null;
         }
@@ -53,6 +54,7 @@ namespace MixItUp.WPF.Controls.Actions
         {
             this.UserNameTextBox.Visibility = Visibility.Collapsed;
             this.TimeAmountTextBox.Visibility = Visibility.Collapsed;
+            this.ModerationReasonTextBox.Visibility = Visibility.Collapsed;
 
             if (this.ModerationActionTypeComboBox.SelectedIndex >= 0)
             {
@@ -68,6 +70,11 @@ namespace MixItUp.WPF.Controls.Actions
                 if (moderationType == ModerationActionTypeEnum.ChatTimeout || moderationType == ModerationActionTypeEnum.InteractiveTimeout)
                 {
                     this.TimeAmountTextBox.Visibility = Visibility.Visible;
+                }
+
+                if (moderationType == ModerationActionTypeEnum.AddModerationStrike)
+                {
+                    this.ModerationReasonTextBox.Visibility = Visibility.Visible;
                 }
             }
         }
