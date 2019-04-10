@@ -170,7 +170,10 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (this.ResetAfterDays > 0 && this.LastReset.TotalDaysFromNow() > this.ResetAfterDays)
             {
-                this.CurrentAmountNumber = 0;
+                if (this.CurrentAmountNumber > 0)
+                {
+                    this.CurrentAmountNumber = 0;
+                }
                 this.LastReset = DateTimeOffset.Now;
             }
             return await base.GetProcessedItem(user, arguments, extraSpecialIdentifiers);

@@ -51,6 +51,10 @@ namespace MixItUp.WPF.Controls.Overlay
                 this.TotalFollowsCheckBox.IsChecked = true;
                 this.StartingAmountTextBox.Text = "0";
             }
+            else
+            {
+                this.TotalFollowsCheckBox.IsChecked = false;
+            }
 
             if (!string.IsNullOrEmpty(this.item.GoalAmountCustom))
             {
@@ -103,7 +107,11 @@ namespace MixItUp.WPF.Controls.Overlay
                 int resetAfterDays = 0;
                 if (type != ProgressBarTypeEnum.Milestones)
                 {
-                    if (!(type == ProgressBarTypeEnum.Followers && this.TotalFollowsCheckBox.IsChecked.GetValueOrDefault()))
+                    if (type == ProgressBarTypeEnum.Followers && this.TotalFollowsCheckBox.IsChecked.GetValueOrDefault())
+                    {
+                        startingAmount = "-1";
+                    }
+                    else
                     {
                         startingAmount = this.StartingAmountTextBox.Text;
                     }
