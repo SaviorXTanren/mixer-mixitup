@@ -716,7 +716,7 @@ namespace MixItUp.Desktop.Services
                     await Task.Delay(2500, tokenSource.Token);
                 }
 
-                await Task.Delay(1000, tokenSource.Token);
+                await Task.Delay(2000, tokenSource.Token);
             });
         }
 
@@ -1087,7 +1087,7 @@ namespace MixItUp.Desktop.Services
                         result.State = SongRequestStateEnum.Ended;
                     }
 
-                    result.Volume = await ChannelSession.Services.Spotify.GetVolume();
+                    result.Volume = currentlyPlaying.Volume;
 
                     return result;
                 }

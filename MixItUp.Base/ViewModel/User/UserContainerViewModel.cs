@@ -227,7 +227,7 @@ namespace MixItUp.Base.ViewModel.User
             {
                 foreach (UserViewModel user in users)
                 {
-                    if (!ChannelSession.Settings.UserData.ContainsKey(user.ID))
+                    if (user.Data.ViewingMinutes == 0)
                     {
                         if (ChannelSession.Constellation.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserFirstJoin)))
                         {
