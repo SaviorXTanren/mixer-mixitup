@@ -147,6 +147,7 @@ namespace MixItUp.Base.Services
         public bool IsPlaying { get; set; }
         public long CurrentProgress { get; set; }
         public string ContextUri { get; set; }
+        public int Volume { get; set; }
 
         public SpotifyCurrentlyPlaying() { }
 
@@ -166,6 +167,15 @@ namespace MixItUp.Base.Services
             if (data["context"] != null && data["context"] is JObject && data["context"]["uri"] != null)
             {
                 this.ContextUri = data["context"]["uri"].ToString();
+            }
+
+            if (data.ContainsKey("device"))
+            {
+                var device = (JObject)data["device"];
+                if (device.ContainsKey("volume_percent"))
+                {
+                    this.Volume = (int)device["volume_percent"];
+                }
             }
         }
     }
@@ -232,8 +242,6 @@ namespace MixItUp.Base.Services
         Task<bool> PlayPlaylist(SpotifyPlaylist playlist, bool random = false);
 
         Task SetVolume(int volume);
-
-        Task<int> GetVolume();
 
         OAuthTokenModel GetOAuthTokenCopy();
     }
