@@ -26,6 +26,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace MixItUp.WPF.Controls.MainControls
@@ -455,6 +456,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.lockChatList = !this.lockChatList;
             this.chatListScrollViewer.VerticalScrollBarVisibility = (this.lockChatList) ? ScrollBarVisibility.Hidden : ScrollBarVisibility.Visible;
             this.ChatLockButtonIcon.Kind = (this.lockChatList) ? MaterialDesignThemes.Wpf.PackIconKind.LockOutline : MaterialDesignThemes.Wpf.PackIconKind.LockOpenOutline;
+            this.ChatLockButtonIcon.Foreground = (this.lockChatList) ? Brushes.Green : Brushes.Red;
             if (this.lockChatList)
             {
                 if (ChannelSession.Settings.LatestChatAtTop)
