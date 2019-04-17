@@ -26,6 +26,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace MixItUp.WPF.Controls.MainControls
@@ -181,15 +182,19 @@ namespace MixItUp.WPF.Controls.MainControls
 
             if (ChannelSession.Channel.badge != null && ChannelSession.Channel.badge != null && !string.IsNullOrEmpty(ChannelSession.Channel.badge.url))
             {
-                using (WebClient client = new WebClient())
+                try
                 {
-                    var bytes = await client.DownloadDataTaskAsync(new Uri(ChannelSession.Channel.badge.url, UriKind.Absolute));
-                    ChatControl.SubscriberBadgeBitmap = new BitmapImage();
-                    ChatControl.SubscriberBadgeBitmap.BeginInit();
-                    ChatControl.SubscriberBadgeBitmap.CacheOption = BitmapCacheOption.OnLoad;
-                    ChatControl.SubscriberBadgeBitmap.StreamSource = new MemoryStream(bytes);
-                    ChatControl.SubscriberBadgeBitmap.EndInit();
+                    using (WebClient client = new WebClient())
+                    {
+                        var bytes = await client.DownloadDataTaskAsync(new Uri(ChannelSession.Channel.badge.url, UriKind.Absolute));
+                        ChatControl.SubscriberBadgeBitmap = new BitmapImage();
+                        ChatControl.SubscriberBadgeBitmap.BeginInit();
+                        ChatControl.SubscriberBadgeBitmap.CacheOption = BitmapCacheOption.OnLoad;
+                        ChatControl.SubscriberBadgeBitmap.StreamSource = new MemoryStream(bytes);
+                        ChatControl.SubscriberBadgeBitmap.EndInit();
+                    }
                 }
+                catch (Exception ex) { Logger.Log(ex); }
             }
 
             if (!ChannelSession.Settings.HideChatUserList)
@@ -451,6 +456,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.lockChatList = !this.lockChatList;
             this.chatListScrollViewer.VerticalScrollBarVisibility = (this.lockChatList) ? ScrollBarVisibility.Hidden : ScrollBarVisibility.Visible;
             this.ChatLockButtonIcon.Kind = (this.lockChatList) ? MaterialDesignThemes.Wpf.PackIconKind.LockOutline : MaterialDesignThemes.Wpf.PackIconKind.LockOpenOutline;
+            this.ChatLockButtonIcon.Foreground = (this.lockChatList) ? Brushes.Green : Brushes.Red;
             if (this.lockChatList)
             {
                 if (ChannelSession.Settings.LatestChatAtTop)

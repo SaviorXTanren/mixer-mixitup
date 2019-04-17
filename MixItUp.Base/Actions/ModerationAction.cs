@@ -43,14 +43,18 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public string TimeAmount { get; set; }
 
+        [DataMember]
+        public string ModerationReason { get; set; }
+
         public ModerationAction() : base(ActionTypeEnum.Moderation) { }
 
-        public ModerationAction(ModerationActionTypeEnum moderationType, string username, string timeAmount)
+        public ModerationAction(ModerationActionTypeEnum moderationType, string username, string timeAmount, string moderationReason)
             : this()
         {
             this.ModerationType = moderationType;
             this.UserName = username;
             this.TimeAmount = timeAmount;
+            this.ModerationReason = moderationReason;
         }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
@@ -92,7 +96,12 @@ namespace MixItUp.Base.Actions
                     }
                     else if (this.ModerationType == ModerationActionTypeEnum.AddModerationStrike)
                     {
-                        await targetUser.AddModerationStrike("Manual Moderation Strike");
+                        string moderationReason = "Manual Moderation Strike";
+                        if (!string.IsNullOrEmpty(this.ModerationReason))
+                        {
+                            moderationReason = await this.ReplaceStringWithSpecialModifiers(this.ModerationReason, user, arguments);
+                        }
+                        await targetUser.AddModerationStrike(moderationReason);
                     }
                     else if (this.ModerationType == ModerationActionTypeEnum.RemoveModerationStrike)
                     {

@@ -246,7 +246,7 @@ namespace MixItUp.Desktop.Services
         {
             try
             {
-                HttpResponseMessage response = await this.GetAsync("me/player/currently-playing");
+                HttpResponseMessage response = await this.GetAsync("me/player");
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
                     string responseString = await response.Content.ReadAsStringAsync();
@@ -357,24 +357,6 @@ namespace MixItUp.Desktop.Services
                 await this.PutAsync("me/player/volume?volume_percent=" + volume, null);
             }
             catch (Exception ex) { Logger.Log(ex); }
-        }
-
-        public async Task<int> GetVolume()
-        {
-            try
-            {
-                JObject jobj = await this.GetJObjectAsync("me/player");
-                if (jobj != null && jobj.ContainsKey("device"))
-                {
-                    jobj = (JObject)jobj["device"];
-                    if (jobj.ContainsKey("volume_percent"))
-                    {
-                        return (int)jobj["volume_percent"];
-                    }
-                }
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-            return -1;
         }
 
         protected override async Task RefreshOAuthToken()

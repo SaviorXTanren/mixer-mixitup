@@ -252,6 +252,10 @@ namespace MixItUp.WPF.Controls.Command
                         extraSpecialIdentifiers["itemcost"] = "500";
                         extraSpecialIdentifiers["currencyname"] = "CURRENCY_NAME";
                     }
+                    else if (command.Name.Contains("Moderation Strike"))
+                    {
+                        extraSpecialIdentifiers[ModerationHelper.ModerationReasonSpecialIdentifier] = "Bad Stuff";
+                    }
                 }
 
                 await command.PerformAndWait(currentUser, new List<string>() { "@" + currentUser.UserName }, extraSpecialIdentifiers);

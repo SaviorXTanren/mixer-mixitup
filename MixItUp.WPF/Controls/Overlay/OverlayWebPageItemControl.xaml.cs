@@ -1,8 +1,6 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Model.Overlay;
+﻿using MixItUp.Base.Model.Overlay;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace MixItUp.WPF.Controls.Overlay
 {
@@ -56,15 +54,6 @@ namespace MixItUp.WPF.Controls.Overlay
                 this.SetItem(this.item);
             }
             return Task.FromResult(0);
-        }
-
-        private void WebPageFileBrowseButton_Click(object sender, RoutedEventArgs e)
-        {
-            string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(ChannelSession.Services.FileService.HTMLFileFilter());
-            if (!string.IsNullOrEmpty(filePath))
-            {
-                this.WebPageFilePathTextBox.Text = filePath;
-            }
         }
     }
 }

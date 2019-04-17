@@ -51,7 +51,6 @@ namespace MixItUp.Desktop.Services
         public void TrackException(Exception ex)
         {
             this.TrySendEvent(() => this.telemetryClient.TrackException(ex));
-            this.SendPlayFabEvent("Exception", "Details", ex.ToString());
         }
 
         public void TrackPageView(string pageName)

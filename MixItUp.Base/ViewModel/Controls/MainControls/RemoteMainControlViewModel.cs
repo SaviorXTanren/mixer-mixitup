@@ -163,6 +163,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                         ChannelSession.Settings.RemoteProfileBoards.Remove(this.profile.ID);
                         this.RefreshProfiles();
                         this.ProfileSelected(null);
+                        this.Item = null;
                     }
                 }
             });
@@ -226,7 +227,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
             this.DownloadAndroidCommand = this.CreateCommand((x) =>
             {
-                Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/releases/tag/remote-0.2");
+                Process.Start("https://play.google.com/store/apps/details?id=com.MixItUpApp.Remote.Beta");
                 return Task.FromResult(0);
             });
 
@@ -309,7 +310,11 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         public void ProfileSelected(RemoteProfileViewModel profile)
         {
             this.Profile = null;
+            this.Board = null;
+
             this.NavigationNames.Clear();
+            this.NotifyPropertyChanged("NavigationName");
+
             if (profile != null && ChannelSession.Settings.RemoteProfileBoards.ContainsKey(profile.ID))
             {
                 this.Profile = profile;
