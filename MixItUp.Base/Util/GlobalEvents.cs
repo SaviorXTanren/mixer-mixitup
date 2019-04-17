@@ -166,6 +166,15 @@ namespace MixItUp.Base.Util
             }
         }
 
+        public static event EventHandler<Tuple<UserViewModel, UserViewModel>> OnSubscriptionGiftedOccurred;
+        public static void SubscriptionGiftedOccurred(UserViewModel gifter, UserViewModel receiver)
+        {
+            if (GlobalEvents.OnSubscriptionGiftedOccurred != null)
+            {
+                GlobalEvents.OnSubscriptionGiftedOccurred(null, new Tuple<UserViewModel, UserViewModel>(gifter, receiver));
+            }
+        }
+
         public static event EventHandler<Tuple<UserViewModel, int>> OnHostOccurred;
         public static void HostOccurred(Tuple<UserViewModel, int> user)
         {
