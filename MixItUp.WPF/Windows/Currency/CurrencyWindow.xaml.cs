@@ -556,6 +556,14 @@ namespace MixItUp.WPF.Windows.Currency
                     return;
                 }
 
+                string siName = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(this.NameTextBox.Text);
+
+                if (siName.Equals("time") || siName.Equals("hours") || siName.Equals("mins") || siName.Equals("sparks") || siName.Equals("embers"))
+                {
+                    await MessageBoxHelper.ShowMessageDialog("This name is reserved and can not be used");
+                    return;
+                }
+
                 int maxAmount = int.MaxValue;
                 if (!string.IsNullOrEmpty(this.MaxAmountTextBox.Text))
                 {
