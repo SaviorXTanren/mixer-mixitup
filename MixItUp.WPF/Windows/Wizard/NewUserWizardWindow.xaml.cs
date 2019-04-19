@@ -575,7 +575,8 @@ namespace MixItUp.WPF.Windows.Wizard
                                 OnFollowBonus = rankOnFollowBonus,
                                 OnSubscribeBonus = rankOnSubBonus,
                                 SubscriberBonus = rankSubBonus,
-                                ModeratorBonus = rankSubBonus
+                                ModeratorBonus = rankSubBonus,
+                                IsPrimary = true
                             };
 
                             ChannelSession.Settings.Currencies[rankPointsCurrency.ID] = rankPointsCurrency;
@@ -593,7 +594,8 @@ namespace MixItUp.WPF.Windows.Wizard
                             OnFollowBonus = rankOnFollowBonus,
                             OnSubscribeBonus = rankOnSubBonus,
                             SubscriberBonus = rankSubBonus,
-                            ModeratorBonus = rankSubBonus
+                            ModeratorBonus = rankSubBonus,
+                            IsPrimary = true
                         };
                     }
                 }
@@ -619,8 +621,14 @@ namespace MixItUp.WPF.Windows.Wizard
                 {
                     currency = new UserCurrencyViewModel()
                     {
-                        Name = currencyName, SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(currencyName), AcquireInterval = currencyInterval,
-                        AcquireAmount = currencyAmount, MaxAmount = currencyMaxAmount, OnFollowBonus = currencyOnFollowBonus, OnSubscribeBonus = currencyOnSubBonus,
+                        Name = currencyName,
+                        SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(currencyName),
+                        AcquireInterval = currencyInterval,
+                        AcquireAmount = currencyAmount,
+                        MaxAmount = currencyMaxAmount,
+                        OnFollowBonus = currencyOnFollowBonus,
+                        OnSubscribeBonus = currencyOnSubBonus,
+                        IsPrimary = true
                     };
                     ChannelSession.Settings.Currencies[currency.ID] = currency;
 
@@ -752,7 +760,8 @@ namespace MixItUp.WPF.Windows.Wizard
                     Name = "Rank",
                     SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier("rank"),
                     AcquireInterval = 60,
-                    AcquireAmount = 1
+                    AcquireAmount = 1,
+                    IsPrimary = true
                 };
                 
                 foreach (StreamlabsChatBotRank slrank in this.streamlabsChatBotData.Ranks)
@@ -765,7 +774,8 @@ namespace MixItUp.WPF.Windows.Wizard
                     Name = "Points",
                     SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier("points"),
                     AcquireInterval = 1,
-                    AcquireAmount = 1
+                    AcquireAmount = 1,
+                    IsPrimary = true
                 };
 
                 ChannelSession.Settings.Currencies[rank.ID] = rank;

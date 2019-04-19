@@ -83,6 +83,12 @@ namespace MixItUp.WPF.Windows.Currency
 
             this.AutomaticResetComboBox.ItemsSource = EnumHelper.GetEnumNames<CurrencyResetRateEnum>();
 
+            this.IsPrimaryToggleButton.IsChecked = true;
+            if (ChannelSession.Settings.Currencies.Values.Any(c => !c.IsRank && c.IsPrimary) && ChannelSession.Settings.Currencies.Values.Any(c => c.IsRank && c.IsPrimary))
+            {
+                this.IsPrimaryToggleButton.IsChecked = false;
+            }
+
             if (this.currency != null)
             {
                 this.NameTextBox.Text = this.currency.Name;
