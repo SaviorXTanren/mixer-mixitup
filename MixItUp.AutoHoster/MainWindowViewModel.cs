@@ -6,6 +6,7 @@ using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,7 +16,7 @@ namespace MixItUp.AutoHoster
     {
         private const string ClientID = "dd6e3bc4e4f5adbef25698bf705079c53dae75a2e2bc2851";
 
-        private const string SettingsFileName = "AutoHosterSettings.json";
+        private const string SettingsFileName = "Settings/AutoHosterSettings.json";
 
         public ObservableCollection<ChannelHostModel> Channels { get; set; } = new ObservableCollection<ChannelHostModel>();
 
@@ -52,6 +53,11 @@ namespace MixItUp.AutoHoster
 
         public async Task<bool> Initialize()
         {
+            if (!Directory.Exists("Settings"))
+            {
+                Directory.CreateDirectory("Settings");
+            }
+
             this.settings = await SerializerHelper.DeserializeFromFile<AutoHosterSettingsModel>(SettingsFileName);
             if (this.settings != null)
             {
