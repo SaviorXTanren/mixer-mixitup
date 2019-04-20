@@ -1,0 +1,125 @@
+﻿<Window x:Class="MixItUp.AutoHoster.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MixItUp.AutoHoster"
+        xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
+
+        Icon="./Logo.ico"
+        Title="Mix It Up - Auto Hoster" Height="450" Width="450">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Shadows.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ToggleButton.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <MaterialDesign:DialogHost x:Name="MDDialogHost" Identifier="RootDialog" />
+
+        <Grid Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0">Currently Hosting:</TextBlock>
+
+                <TextBlock Grid.Column="2" Text="{Binding CurrentlyHostingName}" />
+            </Grid>
+
+            <Border Grid.Row="2" BorderThickness="1" BorderBrush="DarkBlue">
+                <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
+                    <DataGrid x:Name="HostsDataGrid" ItemsSource="{Binding Channels}" Style="{StaticResource NonSortableDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                            <DataGridTemplateColumn Header="Enabled" Width="75">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ToggleButton x:Name="EnableDisableToggleButton" IsChecked="{Binding IsEnabled, Mode=OneWay}" Checked="EnableDisableToggleButton_Checked" Unchecked="EnableDisableToggleButton_Checked" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Actions" Width="160">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Grid HorizontalAlignment="Center">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="5" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="5" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Button x:Name="UpButton" Click="UpButton_Click" Grid.Column="0" Margin="0,0,0,0" Width="40" HorizontalAlignment="Center" ToolTip="Delete">
+                                                <MaterialDesign:PackIcon Kind="ArrowUp" Height="24" Width="24" Margin="-13,-10" Foreground="White" />
+                                            </Button>
+
+                                            <Button x:Name="DownButton" Click="DownButton_Click" Grid.Column="2" Margin="0,0,0,0" Width="40" HorizontalAlignment="Center" ToolTip="Delete">
+                                                <MaterialDesign:PackIcon Kind="ArrowDown" Height="24" Width="24" Margin="-13,-10" Foreground="White" />
+                                            </Button>
+
+                                            <Button x:Name="DeleteButton" Click="DeleteButton_Click" Grid.Column="4" Margin="0,0,0,0" Width="40" HorizontalAlignment="Center" ToolTip="Delete">
+                                                <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="White" />
+                                            </Button>
+                                        </Grid>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </ScrollViewer>
+            </Border>
+
+            <Grid Grid.Row="4" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="90" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="50" />
+                </Grid.ColumnDefinitions>
+
+                <Button x:Name="AddHostButton" Click="AddHostButton_Click">Add Host</Button>
+
+                <TextBlock Grid.Column="2" VerticalAlignment="Center">Auto-Hosting:</TextBlock>
+
+                <ToggleButton Grid.Column="4" IsChecked="{Binding IsAutoHostingEnabled}" Margin="0,-1,0,0" />
+
+                <TextBlock Grid.Column="6" VerticalAlignment="Center" Text="{Binding AutoHostingState}" Foreground="{Binding AutoHostingStateColor}" />
+            </Grid>
+
+        </Grid>
+
+        <ProgressBar x:Name="StatusBar" Grid.Row="1" IsIndeterminate="True" Visibility="Hidden" />
+    </Grid>
+</Window>
