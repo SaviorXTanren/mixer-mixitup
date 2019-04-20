@@ -399,7 +399,7 @@ namespace MixItUp.Base.MixerAPI
                             skill = this.availableSkills[skillID];
                         }
                     }
-                    
+
                     if (skill == null)
                     {
                         if (e.payload["manifest"] != null && e.payload["manifest"]["name"] != null)
@@ -412,16 +412,22 @@ namespace MixItUp.Base.MixerAPI
                         }
                     }
 
-                    if (user != null && skill != null)
+                    uint price = e.payload["price"].ToObject<uint>();
+                    if (user != null)
                     {
-                        JObject manifest = (JObject)e.payload["manifest"];
-                        JObject parameters = (JObject)e.payload["parameters"];
+                        if (price > 0)
+                        {
+                            GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, int>(user, (int)price));
+                        }
 
-                        SkillInstanceModel skillInstance = new SkillInstanceModel(skill, manifest, parameters);
+                        if (skill != null)
+                        {
+                            JObject manifest = (JObject)e.payload["manifest"];
+                            JObject parameters = (JObject)e.payload["parameters"];
+                            SkillInstanceModel skillInstance = new SkillInstanceModel(skill, manifest, parameters);
 
-                        GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, int>(user, (int)skillInstance.Skill.price));
-
-                        GlobalEvents.SkillUseOccurred(new SkillUsageModel(user, skillInstance));
+                            GlobalEvents.SkillUseOccurred(new SkillUsageModel(user, skillInstance));
+                        }
                     }
                 }
                 else if (e.channel.Equals(ConstellationClientWrapper.ChannelPatronageUpdateEvent.ToString()))
