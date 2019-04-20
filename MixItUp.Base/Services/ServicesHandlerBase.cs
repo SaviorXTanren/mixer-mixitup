@@ -25,7 +25,6 @@ namespace MixItUp.Base.Services
         public IStreamingSoftwareService XSplitServer { get; protected set; }
         public IDeveloperAPIService DeveloperAPI { get; protected set; }
         public IStreamlabsService Streamlabs { get; protected set; }
-        public IGameWispService GameWisp { get; protected set; }
         public IGawkBoxService GawkBox { get; protected set; }
         public ITwitterService Twitter { get; protected set; }
         public ISpotifyService Spotify { get; protected set; }
@@ -62,9 +61,6 @@ namespace MixItUp.Base.Services
 
         public abstract Task<bool> InitializeStreamlabs();
         public abstract Task DisconnectStreamlabs();
-
-        public abstract Task<bool> InitializeGameWisp();
-        public abstract Task DisconnectGameWisp();
 
         public abstract Task<bool> InitializeGawkBox(string gawkBoxID = "");
         public abstract Task DisconnectGawkBox();

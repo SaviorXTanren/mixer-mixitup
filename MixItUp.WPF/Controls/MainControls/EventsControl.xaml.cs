@@ -151,8 +151,6 @@ namespace MixItUp.WPF.Controls.MainControls
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.StreamJarDonation));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TwitterStreamTweetRetweet));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.PatreonSubscribed));
-            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.GameWispSubscribed));
-            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.GameWispResubscribed));
         }
 
         private EventCommandItem GetEventCommand(ConstellationEventTypeEnum eventType)

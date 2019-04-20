@@ -8,8 +8,6 @@ namespace MixItUp.WPF.Controls.MainControls
     /// </summary>
     public partial class AutoHosterControl : MainControlBase
     {
-        private RemoteMainControlViewModel viewModel;
-
         public AutoHosterControl()
         {
             InitializeComponent();

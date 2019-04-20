@@ -73,17 +73,6 @@ namespace MixItUp.Base.ViewModel.User
         public static IEnumerable<string> SelectableAdvancedUserRoles()
         {
             List<string> roles = new List<string>(UserViewModel.SelectableBasicUserRoles().Select(r => EnumHelper.GetEnumName(r)));
-            if (ChannelSession.Services != null && ChannelSession.Services.GameWisp != null && ChannelSession.Services.GameWisp.ChannelInfo != null)
-            {
-                try
-                {
-                    foreach (GameWispTier tier in ChannelSession.Services.GameWisp.ChannelInfo.GetActiveTiers())
-                    {
-                        roles.Add(tier.MIURoleName);
-                    }
-                }
-                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
-            }
             return roles;
         }
 
@@ -128,9 +117,6 @@ namespace MixItUp.Base.ViewModel.User
 
         [DataMember]
         public string TwitterURL { get; set; }
-
-        [DataMember]
-        public GameWispSubscriber GameWispUser { get; set; }
 
         [DataMember]
         public PatreonCampaignMember PatreonUser { get; set; }
@@ -299,19 +285,6 @@ namespace MixItUp.Base.ViewModel.User
         public bool IsInteractiveParticipant { get { return this.InteractiveIDs.Count > 0; } }
 
         [JsonIgnore]
-        public GameWispTier GameWispTier
-        {
-            get
-            {
-                if (ChannelSession.Services.GameWisp != null && this.GameWispUser != null)
-                {
-                    return ChannelSession.Services.GameWisp.ChannelInfo.GetActiveTiers().FirstOrDefault(t => t.ID.ToString().Equals(this.GameWispUser.TierID));
-                }
-                return null;
-            }
-        }
-
-        [JsonIgnore]
         public PatreonTier PatreonTier
         {
             get
@@ -400,19 +373,6 @@ namespace MixItUp.Base.ViewModel.User
             {
                 this.CustomRoles.Clear();
 
-                if (ChannelSession.Services.GameWisp != null)
-                {
-                    if (this.GameWispUser == null)
-                    {
-                        await this.SetGameWispSubscriber();
-                    }
-
-                    if (this.GameWispTier != null)
-                    {
-                        this.CustomRoles.Add(this.GameWispTier.MIURoleName);
-                    }
-                }
-
                 if (ChannelSession.Services.Patreon != null)
                 {
                     if (this.PatreonUser == null)
@@ -452,30 +412,6 @@ namespace MixItUp.Base.ViewModel.User
             if (this.InteractiveIDs.Count == 0)
             {
                 this.InteractiveGroupID = InteractiveUserGroupViewModel.DefaultName;
-            }
-        }
-
-        public async Task SetGameWispSubscriber()
-        {
-            if (ChannelSession.Services.GameWisp != null)
-            {
-                IEnumerable<GameWispSubscriber> subscribers = await ChannelSession.Services.GameWisp.GetCachedSubscribers();
-
-                GameWispSubscriber subscriber = null;
-                if (this.Data.GameWispUserID > 0)
-                {
-                    subscriber = await ChannelSession.Services.GameWisp.GetSubscriber(this.Data.GameWispUserID);
-                }
-                else
-                {
-                    subscriber = subscribers.FirstOrDefault(s => s.UserName.Equals(this.UserName, StringComparison.CurrentCultureIgnoreCase));
-                }
-
-                this.GameWispUser = subscriber;
-                if (subscriber != null)
-                {
-                    this.Data.GameWispUserID = subscriber.UserID;
-                }
             }
         }
 

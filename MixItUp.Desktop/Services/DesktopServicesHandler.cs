@@ -220,34 +220,6 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        public override async Task<bool> InitializeGameWisp()
-        {
-            this.GameWisp = (ChannelSession.Settings.GameWispOAuthToken != null) ? new GameWispService(ChannelSession.Settings.GameWispOAuthToken) : new GameWispService();
-            if (await this.GameWisp.Connect() && this.GameWisp.ChannelInfo != null)
-            {
-                this.GameWisp.OnWebSocketConnectedOccurred += GameWisp_OnWebSocketConnectedOccurred;
-                this.GameWisp.OnWebSocketDisconnectedOccurred += GameWisp_OnWebSocketDisconnectedOccurred;
-                return true;
-            }
-            else
-            {
-                await this.DisconnectGameWisp();
-            }
-            return false;
-        }
-
-        public override async Task DisconnectGameWisp()
-        {
-            if (this.GameWisp != null)
-            {
-                this.GameWisp.OnWebSocketConnectedOccurred -= GameWisp_OnWebSocketConnectedOccurred;
-                this.GameWisp.OnWebSocketDisconnectedOccurred -= GameWisp_OnWebSocketDisconnectedOccurred;
-                await this.GameWisp.Disconnect();
-                this.GameWisp = null;
-                ChannelSession.Settings.GameWispOAuthToken = null;
-            }
-        }
-
         public override async Task<bool> InitializeGawkBox(string gawkBoxID = "")
         {
             this.GawkBox = (ChannelSession.Settings.GawkBoxOAuthToken != null) ? new GawkBoxService(ChannelSession.Settings.GawkBoxOAuthToken) : new GawkBoxService(gawkBoxID);

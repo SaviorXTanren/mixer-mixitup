@@ -544,10 +544,6 @@ namespace MixItUp.Base
                     {
                         await ChannelSession.Services.InitializeStreamlabs();
                     }
-                    if (ChannelSession.Settings.GameWispOAuthToken != null)
-                    {
-                        await ChannelSession.Services.InitializeGameWisp();
-                    }
                     if (ChannelSession.Settings.GawkBoxOAuthToken != null)
                     {
                         await ChannelSession.Services.InitializeGawkBox();
