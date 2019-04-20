@@ -14,7 +14,7 @@
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
 
         Icon="./Logo.ico"
-        Title="Mix It Up - Auto Hoster" Height="450" Width="450">
+        Title="Mix It Up - Auto-Hoster" Height="450" Width="450">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

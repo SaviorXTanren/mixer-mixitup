@@ -564,6 +564,9 @@
     <Compile Include="Controls\LicenseControl.xaml.cs">
       <DependentUpon>LicenseControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\MainControls\AutoHosterControl.xaml.cs">
+      <DependentUpon>AutoHosterControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MainControls\CurrencyRankInventoryControl.xaml.cs">
       <DependentUpon>CurrencyRankInventoryControl.xaml</DependentUpon>
     </Compile>
@@ -1266,6 +1269,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\MainControls\AutoHosterControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\MainControls\CurrencyRankInventoryControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1930,6 +1937,10 @@
     <Resource Include="Logo.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MixItUp.AutoHoster\MixItUp.AutoHoster.csproj">
+      <Project>{f4ed5346-1cc5-4606-90a4-c5d22eed4e54}</Project>
+      <Name>MixItUp.AutoHoster</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MixItUp.Base\MixItUp.Base.csproj">
       <Project>{0e494acc-c46a-4ded-922b-ff378556be8a}</Project>
       <Name>MixItUp.Base</Name>

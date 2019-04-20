@@ -1,0 +1,30 @@
+﻿<local:MainControlBase x:Class="MixItUp.WPF.Controls.MainControls.AutoHosterControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
+             mc:Ignorable="d"
+                          
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
+
+             d:DesignHeight="500" d:DesignWidth="600">
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Width="450" TextWrapping="Wrap">The Mix It Up Auto-Hoster is a stand-alone application that handles the automatic hosting of other channels when you are offline; you do not have to have Mix It Up running to use it.</TextBlock>
+
+        <TextBlock Grid.Row="2">The Auto-Hoster can be launched by clicking the button below:</TextBlock>
+
+        <Button Grid.Row="4" Width="170" Click="Button_Click">Launch Auto-Hoster</Button>
+    </Grid>
+</local:MainControlBase>
