@@ -91,7 +91,7 @@ namespace MixItUp.AutoHoster
             });
         }
 
-        private async void AddHostButton_Click(object sender, RoutedEventArgs e)
+        private async void AddChannelButton_Click(object sender, RoutedEventArgs e)
         {
             await this.RunAsyncOperation(async () =>
             {

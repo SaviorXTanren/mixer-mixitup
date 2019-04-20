@@ -100,7 +100,7 @@
 
             <Grid Grid.Row="4" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="115" />
                     <ColumnDefinition Width="50" />
                     <ColumnDefinition Width="90" />
                     <ColumnDefinition Width="10" />
@@ -109,7 +109,7 @@
                     <ColumnDefinition Width="50" />
                 </Grid.ColumnDefinitions>
 
-                <Button x:Name="AddHostButton" Click="AddHostButton_Click">Add Host</Button>
+                <Button x:Name="AddChannelButton" Click="AddChannelButton_Click">Add Channel</Button>
 
                 <TextBlock Grid.Column="2" VerticalAlignment="Center">Auto-Hosting:</TextBlock>
 
