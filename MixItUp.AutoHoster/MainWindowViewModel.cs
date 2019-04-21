@@ -139,6 +139,7 @@ namespace MixItUp.AutoHoster
                                 if (updatedChannel.hosteeId.GetValueOrDefault() == channelModel.id)
                                 {
                                     this.CurrentlyHosting = channel;
+                                    break;
                                 }
                             }
                         }
