@@ -20,14 +20,6 @@ using System.Windows.Input;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
-    public enum AgeRatingEnum
-    {
-        Family,
-        Teen,
-        [Name("18+")]
-        Adult,
-    }
-
     public enum RaidSearchCriteriaEnum
     {
         [Name("Same Game")]

@@ -1,7 +1,9 @@
 ﻿using Mixer.Base;
 using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.User;
+using Mixer.Base.Util;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -12,6 +14,13 @@ using System.Threading.Tasks;
 
 namespace MixItUp.AutoHoster
 {
+    public enum HostingOrderEnum
+    {
+        [Name("In Order")]
+        InOrder,
+        Random
+    }
+
     public class MainWindowViewModel : UIViewModelBase
     {
         private const string ClientID = "dd6e3bc4e4f5adbef25698bf705079c53dae75a2e2bc2851";
@@ -33,6 +42,30 @@ namespace MixItUp.AutoHoster
         private ChannelHostModel currentlyHosting;
         public string CurrentlyHostingName { get { return (this.currentlyHosting != null) ? this.currentlyHosting.Name : "NONE"; } }
 
+        public List<string> HostingOrderItems { get; set; } = new List<string>(EnumHelper.GetEnumNames<HostingOrderEnum>());
+        public string HostingOrder
+        {
+            get { return this.hostingOrder; }
+            set
+            {
+                this.hostingOrder = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string hostingOrder;
+
+        public List<string> AgeRatingItems { get; set; } = new List<string>(EnumHelper.GetEnumNames<AgeRatingEnum>());
+        public string AgeRating
+        {
+            get { return this.ageRating; }
+            set
+            {
+                this.ageRating = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string ageRating;
+
         public bool IsAutoHostingEnabled
         {
             get { return this.isAutoHostingEnabled; }
@@ -51,6 +84,8 @@ namespace MixItUp.AutoHoster
         private AutoHosterSettingsModel settings;
         private MixerConnection connection;
 
+        public MainWindowViewModel() { }
+
         public async Task<bool> Initialize()
         {
             if (!Directory.Exists("Settings"))
@@ -65,7 +100,7 @@ namespace MixItUp.AutoHoster
                 {
                     this.connection = await MixerConnection.ConnectViaOAuthToken(this.settings.OAuthToken);
                 }
-                catch (Exception ex) { Logger.Log(ex); }
+                catch (Exception ex) { Base.Util.Logger.Log(ex); }
             }
             else
             {
@@ -78,7 +113,7 @@ namespace MixItUp.AutoHoster
                 {
                     this.connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ClientID, new List<OAuthClientScopeEnum>() { OAuthClientScopeEnum.channel__details__self, OAuthClientScopeEnum.channel__update__self }, loginSuccessHtmlPageFilePath: "LoginRedirectPage.html");
                 }
-                catch (Exception ex) { Logger.Log(ex); }
+                catch (Exception ex) { Base.Util.Logger.Log(ex); }
                 if (this.connection == null)
                 {
                     return false;
@@ -89,6 +124,8 @@ namespace MixItUp.AutoHoster
             {
                 this.Channels.Add(host);
             }
+            this.HostingOrder = EnumHelper.GetEnumName(this.settings.HostingOrder);
+            this.AgeRating = EnumHelper.GetEnumName(this.settings.AgeRating);
 
             return true;
         }
@@ -96,27 +133,32 @@ namespace MixItUp.AutoHoster
         public async Task Run()
         {
             IEnumerable<ChannelHostModel> channels = this.Channels.ToList();
+            HostingOrderEnum hostOrder = EnumHelper.GetEnumValueFromString<HostingOrderEnum>(this.HostingOrder);
+            AgeRatingEnum ageRating = EnumHelper.GetEnumValueFromString<AgeRatingEnum>(this.AgeRating);
 
             PrivatePopulatedUserModel currentUser = await this.connection.Users.GetCurrentUser();
             if (currentUser != null && !currentUser.channel.online)
             {
+                bool keepCurrentHost = false;
                 if (currentUser.channel.hosteeId != null)
                 {
                     ExpandedChannelModel channel = await this.connection.Channels.GetChannel(currentUser.channel.hosteeId.GetValueOrDefault());
                     if (channel != null)
                     {
-                        this.CurrentlyHosting = new ChannelHostModel()
+                        AgeRatingEnum channelAgeRating = EnumHelper.GetEnumValueFromString<AgeRatingEnum>(channel.audience);
+                        if (channelAgeRating <= ageRating)
                         {
-                            ID = channel.userId,
-                            Name = channel.user.username,
-                        };
-                    }
-                    else
-                    {
-                        this.CurrentlyHosting = null;
+                            keepCurrentHost = true;
+                            this.CurrentlyHosting = new ChannelHostModel()
+                            {
+                                ID = channel.userId,
+                                Name = channel.user.username,
+                            };
+                        }
                     }
                 }
-                else
+
+                if (!keepCurrentHost)
                 {
                     this.CurrentlyHosting = null;
                 }
@@ -128,12 +170,18 @@ namespace MixItUp.AutoHoster
 
                 if (this.IsAutoHostingEnabled && (this.CurrentlyHosting == null || !this.CurrentlyHosting.IsOnline))
                 {
+                    if (hostOrder == HostingOrderEnum.Random)
+                    {
+                        channels = channels.OrderBy(c => Guid.NewGuid());
+                    }
+
                     foreach (ChannelHostModel channel in channels)
                     {
                         if (channel.IsEnabled)
                         {
                             ChannelModel channelModel = await this.UpdateChannel(channel);
-                            if (channelModel != null && channel.IsOnline)
+                            AgeRatingEnum channelAgeRating = EnumHelper.GetEnumValueFromString<AgeRatingEnum>(channelModel.audience);
+                            if (channelModel != null && channel.IsOnline && channelAgeRating <= ageRating)
                             {
                                 ChannelModel updatedChannel = await this.connection.Channels.SetHostChannel(currentUser.channel, channelModel);
                                 if (updatedChannel.hosteeId.GetValueOrDefault() == channelModel.id)
@@ -209,7 +257,7 @@ namespace MixItUp.AutoHoster
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                Base.Util.Logger.Log(ex);
             }
         }
 

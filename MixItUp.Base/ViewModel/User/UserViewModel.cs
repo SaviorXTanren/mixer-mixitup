@@ -47,6 +47,14 @@ namespace MixItUp.Base.ViewModel.User
         Custom = 99,
     }
 
+    public enum AgeRatingEnum
+    {
+        Family,
+        Teen,
+        [Name("18+")]
+        Adult,
+    }
+
     public static class UserWithGroupsModelExtensions
     {
         public static DateTimeOffset? GetSubscriberDate(this UserWithGroupsModel userGroups)

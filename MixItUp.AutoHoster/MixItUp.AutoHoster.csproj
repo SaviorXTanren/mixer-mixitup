@@ -160,4 +160,8 @@
     <Folder Include="Themes\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>rmdir /Q /S $(TargetDir)Settings\
+rmdir /Q /S $(TargetDir)Logs\</PostBuildEvent>
+  </PropertyGroup>
 </Project>
