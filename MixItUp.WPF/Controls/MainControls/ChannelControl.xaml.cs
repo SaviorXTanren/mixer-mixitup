@@ -7,6 +7,7 @@ using MixItUp.Base;
 using MixItUp.Base.Model.Favorites;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Favorites;
+using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Favorites;
 using System;
