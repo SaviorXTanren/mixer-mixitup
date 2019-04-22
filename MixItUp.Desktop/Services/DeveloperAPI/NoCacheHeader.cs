@@ -20,6 +20,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
 
             HttpResponseMessage response = await base.SendAsync(request, cancellationToken);
             response.Headers.Add("Cache-Control", "no-cache");
+            response.Headers.Add("Access-Control-Allow-Origin", "*");
             return response;
         }
     }
