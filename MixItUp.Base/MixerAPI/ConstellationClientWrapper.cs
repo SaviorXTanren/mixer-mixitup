@@ -33,6 +33,7 @@ namespace MixItUp.Base.MixerAPI
         public static ConstellationEventType ChannelSubscriptionGiftedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__subscriptionGifted, ChannelSession.Channel.id); } }
         public static ConstellationEventType ChannelSkillEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__skill, ChannelSession.Channel.id); } }
         public static ConstellationEventType ChannelPatronageUpdateEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__patronageUpdate, ChannelSession.Channel.id); } }
+        public static ConstellationEventType ProgressionLevelupEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.progression__id__levelup, ChannelSession.Channel.id); } }
 
         private static readonly List<ConstellationEventTypeEnum> subscribedEvents = new List<ConstellationEventTypeEnum>()
         {
@@ -375,6 +376,51 @@ namespace MixItUp.Base.MixerAPI
                             }
 
                             GlobalEvents.SubscriptionGiftedOccurred(gifterUser, receiverUser);
+                        }
+                    }
+                }
+                else if (e.channel.Equals(ConstellationClientWrapper.ProgressionLevelupEvent.ToString()))
+                {
+                    if (e.payload.TryGetValue("userId", out JToken userID))
+                    {
+                        UserModel userModel = await ChannelSession.Connection.GetUser(userID.ToObject<uint>());
+                        if (userModel != null)
+                        {
+                            UserViewModel userViewModel = new UserViewModel(userModel);
+
+                            uint level = 0, nextLevelXP = 0, currentXP = 0, minXP = 0;
+                            string rankName = string.Empty;
+                            string assetsUrl = string.Empty;
+
+                            uint total = e.payload["total"].ToObject<uint>();
+                            if (e.payload.TryGetValue("level", out JToken levelToken))
+                            {
+                                level = levelToken["level"].ToObject<uint>();
+                                nextLevelXP = levelToken["nextLevelXp"].ToObject<uint>();
+                                currentXP = levelToken["currentXp"].ToObject<uint>();
+                                minXP = levelToken["minXp"].ToObject<uint>();
+
+                                rankName = levelToken["name"].ToObject<string>();
+                                assetsUrl = levelToken["assetsUrl"].ToObject<string>();
+                            }
+
+                            EventCommand command = this.FindMatchingEventCommand(e.channel);
+                            if (command != null)
+                            {
+                                Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
+                                {
+                                    { "progressionlevel", level.ToString() },
+                                    { "progressionnextlevelxp", nextLevelXP.ToString() },
+                                    { "progressioncurrentxp", currentXP.ToString() },
+                                    { "progressionminxp", minXP.ToString() },
+                                    { "progressionrankname", rankName.ToString() },
+                                    { "progressionassetsurl", assetsUrl.ToString() },
+                                    { "progressionltotal", total.ToString() },
+                                };
+                                await this.RunEventCommand(command, userViewModel, extraSpecialIdentifiers: specialIdentifiers);
+                            }
+
+                            GlobalEvents.ProgressionLevelupOccurred(userViewModel);
                         }
                     }
                 }

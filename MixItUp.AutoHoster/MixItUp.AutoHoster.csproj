@@ -44,8 +44,8 @@
     <Reference Include="MaterialDesignThemes.Wpf, Version=2.5.1.1345, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignThemes.2.5.1\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
-    <Reference Include="Mixer.Base, Version=0.8.4.6, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\mixer-client-csharp.0.8.4.6-beta\lib\netstandard2.0\Mixer.Base.dll</HintPath>
+    <Reference Include="Mixer.Base, Version=0.8.4.7, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\mixer-client-csharp.0.8.4.7-beta\lib\netstandard2.0\Mixer.Base.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -130,9 +130,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="LICENSE.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="..\MixItUp.WPF\Logo.ico">
       <Link>Logo.ico</Link>
     </Resource>
@@ -158,6 +155,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Themes\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="LICENSE.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

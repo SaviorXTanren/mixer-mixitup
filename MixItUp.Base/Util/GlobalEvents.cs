@@ -175,6 +175,15 @@ namespace MixItUp.Base.Util
             }
         }
 
+        public static event EventHandler<Tuple<UserViewModel>> OnProgressionLevelupOccurred;
+        public static void ProgressionLevelupOccurred(UserViewModel user)
+        {
+            if (GlobalEvents.OnProgressionLevelupOccurred != null)
+            {
+                GlobalEvents.OnProgressionLevelupOccurred(null, new Tuple<UserViewModel>(user));
+            }
+        }
+
         public static event EventHandler<Tuple<UserViewModel, int>> OnHostOccurred;
         public static void HostOccurred(Tuple<UserViewModel, int> user)
         {
