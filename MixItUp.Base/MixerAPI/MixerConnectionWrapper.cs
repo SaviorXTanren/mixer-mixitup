@@ -94,6 +94,8 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task<UserWithChannelModel> GetUser(UserModel user) { return await this.RunAsync(this.Connection.Users.GetUser(user), logNotFoundException: false); }
 
+        public async Task<UserFanProgressionModel> GetUserFanProgression(ChannelModel channel, UserModel user) { return await this.RunAsync(this.Connection.Channels.GetUserFanProgression(channel, user), logNotFoundException: false); }
+
         public async Task<IEnumerable<TeamMembershipExpandedModel>> GetUserTeams(UserModel user) { return await this.RunAsync(this.Connection.Users.GetTeams(user)); }
 
         public async Task<UserWithGroupsModel> GetUserInChannel(ChannelModel channel, uint userID) { return await this.RunAsync(this.Connection.Channels.GetUser(channel, userID), logNotFoundException: false); }

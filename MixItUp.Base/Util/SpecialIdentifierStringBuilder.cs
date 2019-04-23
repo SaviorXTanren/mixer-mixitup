@@ -820,6 +820,19 @@ namespace MixItUp.Base.Util
                     this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channellive", channel.online.ToString());
                     this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channelfeatured", channel.featured.ToString());
                 }
+
+                if (this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "fanprogression"))
+                {
+                    UserFanProgressionModel fanProgression = await ChannelSession.Connection.GetUserFanProgression(ChannelSession.Channel, user.GetModel());
+                    if (fanProgression != null && fanProgression.level != null)
+                    {
+                        this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "fanprogressionnext", fanProgression.level.nextLevelXp.ToString());
+                        this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "fanprogressionrank", fanProgression.level.level.ToString());
+                        this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "fanprogressioncolor", fanProgression.level.color.ToString());
+                        this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "fanprogressionimage", fanProgression.level.LargeGIFAssetURL.ToString());
+                        this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "fanprogression", fanProgression.level.currentXp.ToString());
+                    }
+                }
             }
         }
 

@@ -39,7 +39,8 @@ namespace MixItUp.Base.MixerAPI
         {
             ConstellationEventTypeEnum.channel__id__followed, ConstellationEventTypeEnum.channel__id__hosted, ConstellationEventTypeEnum.channel__id__subscribed,
             ConstellationEventTypeEnum.channel__id__resubscribed, ConstellationEventTypeEnum.channel__id__resubShared, ConstellationEventTypeEnum.channel__id__subscriptionGifted,
-            ConstellationEventTypeEnum.channel__id__update, ConstellationEventTypeEnum.channel__id__skill, ConstellationEventTypeEnum.channel__id__patronageUpdate
+            ConstellationEventTypeEnum.channel__id__update, ConstellationEventTypeEnum.channel__id__skill, ConstellationEventTypeEnum.channel__id__patronageUpdate,
+            ConstellationEventTypeEnum.progression__id__levelup,
         };
 
         public event EventHandler<ConstellationLiveEventModel> OnEventOccurred;
@@ -387,40 +388,25 @@ namespace MixItUp.Base.MixerAPI
                         if (userModel != null)
                         {
                             UserViewModel userViewModel = new UserViewModel(userModel);
-
-                            uint level = 0, nextLevelXP = 0, currentXP = 0, minXP = 0;
-                            string rankName = string.Empty;
-                            string assetsUrl = string.Empty;
-
-                            uint total = e.payload["total"].ToObject<uint>();
-                            if (e.payload.TryGetValue("level", out JToken levelToken))
+                            UserFanProgressionModel fanProgression = e.payload.ToObject<UserFanProgressionModel>();
+                            if (fanProgression != null)
                             {
-                                level = levelToken["level"].ToObject<uint>();
-                                nextLevelXP = levelToken["nextLevelXp"].ToObject<uint>();
-                                currentXP = levelToken["currentXp"].ToObject<uint>();
-                                minXP = levelToken["minXp"].ToObject<uint>();
-
-                                rankName = levelToken["name"].ToObject<string>();
-                                assetsUrl = levelToken["assetsUrl"].ToObject<string>();
-                            }
-
-                            EventCommand command = this.FindMatchingEventCommand(e.channel);
-                            if (command != null)
-                            {
-                                Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
+                                EventCommand command = this.FindMatchingEventCommand(e.channel);
+                                if (command != null)
                                 {
-                                    { "progressionlevel", level.ToString() },
-                                    { "progressionnextlevelxp", nextLevelXP.ToString() },
-                                    { "progressioncurrentxp", currentXP.ToString() },
-                                    { "progressionminxp", minXP.ToString() },
-                                    { "progressionrankname", rankName.ToString() },
-                                    { "progressionassetsurl", assetsUrl.ToString() },
-                                    { "progressionltotal", total.ToString() },
-                                };
-                                await this.RunEventCommand(command, userViewModel, extraSpecialIdentifiers: specialIdentifiers);
-                            }
+                                    Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
+                                    {
+                                        { "userfanprogressionnext", fanProgression.level.nextLevelXp.ToString() },
+                                        { "userfanprogressionrank", fanProgression.level.level.ToString() },
+                                        { "userfanprogressioncolor", fanProgression.level.color.ToString() },
+                                        { "userfanprogressionimage", fanProgression.level.LargeGIFAssetURL.ToString() },
+                                        { "userfanprogression", fanProgression.level.currentXp.ToString() },
+                                    };
+                                    await this.RunEventCommand(command, userViewModel, extraSpecialIdentifiers: specialIdentifiers);
+                                }
 
-                            GlobalEvents.ProgressionLevelupOccurred(userViewModel);
+                                GlobalEvents.ProgressionLevelUpOccurred(userViewModel);
+                            }
                         }
                     }
                 }
