@@ -63,6 +63,15 @@ namespace MixItUp.WPF.Controls.Services
             {
                 await MessageBoxHelper.ShowMessageDialog("Unable to authenticate Bot with Mixer. Please ensure you approved access for the application in a timely manner.");
             }
+            else if (ChannelSession.BotUser.id.Equals(ChannelSession.User.id))
+            {
+                await this.groupBoxControl.window.RunAsyncOperation(async () =>
+                {
+                    await ChannelSession.DisconnectBot();
+                });
+                ChannelSession.Settings.BotOAuthToken = null;
+                await MessageBoxHelper.ShowMessageDialog("You must sign in to a different account than your Streamer account.");
+            }
             else
             {
                 this.NewBotLoginGrid.Visibility = Visibility.Collapsed;
