@@ -134,6 +134,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.eventCommands.Add(this.GetEventCommand(ConstellationEventTypeEnum.channel__id__subscribed));
             this.eventCommands.Add(this.GetEventCommand(ConstellationEventTypeEnum.channel__id__resubscribed));
             this.eventCommands.Add(this.GetEventCommand(ConstellationEventTypeEnum.channel__id__subscriptionGifted));
+            this.eventCommands.Add(this.GetEventCommand(ConstellationEventTypeEnum.progression__id__levelup));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.MixerSparksUsed));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.MixerEmbersUsed));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.MixerSkillUsed));
