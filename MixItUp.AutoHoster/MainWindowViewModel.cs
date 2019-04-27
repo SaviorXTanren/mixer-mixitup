@@ -43,28 +43,32 @@ namespace MixItUp.AutoHoster
         public string CurrentlyHostingName { get { return (this.currentlyHosting != null) ? this.currentlyHosting.Name : "NONE"; } }
 
         public List<string> HostingOrderItems { get; set; } = new List<string>(EnumHelper.GetEnumNames<HostingOrderEnum>());
-        public string HostingOrder
+        public string HostingOrderName
         {
-            get { return this.hostingOrder; }
+            get { return (this.settings != null) ? EnumHelper.GetEnumName(this.settings.HostingOrder) : string.Empty; }
             set
             {
-                this.hostingOrder = value;
-                this.NotifyPropertyChanged();
+                if (this.settings != null)
+                {
+                    this.settings.HostingOrder = EnumHelper.GetEnumValueFromString<HostingOrderEnum>(value);
+                    this.NotifyPropertyChanged();
+                }
             }
         }
-        private string hostingOrder;
 
         public List<string> AgeRatingItems { get; set; } = new List<string>(EnumHelper.GetEnumNames<AgeRatingEnum>());
-        public string AgeRating
+        public string AgeRatingName
         {
-            get { return this.ageRating; }
+            get { return (this.settings != null) ? EnumHelper.GetEnumName(this.settings.AgeRating) : string.Empty; }
             set
             {
-                this.ageRating = value;
-                this.NotifyPropertyChanged();
+                if (this.settings != null)
+                {
+                    this.settings.AgeRating = EnumHelper.GetEnumValueFromString<AgeRatingEnum>(value);
+                    this.NotifyPropertyChanged();
+                }
             }
         }
-        private string ageRating;
 
         public bool IsAutoHostingEnabled
         {
@@ -124,8 +128,8 @@ namespace MixItUp.AutoHoster
             {
                 this.Channels.Add(host);
             }
-            this.HostingOrder = EnumHelper.GetEnumName(this.settings.HostingOrder);
-            this.AgeRating = EnumHelper.GetEnumName(this.settings.AgeRating);
+            this.NotifyPropertyChanged("HostingOrderName");
+            this.NotifyPropertyChanged("AgeRatingName");
 
             return true;
         }
@@ -133,8 +137,8 @@ namespace MixItUp.AutoHoster
         public async Task Run()
         {
             IEnumerable<ChannelHostModel> channels = this.Channels.ToList();
-            HostingOrderEnum hostOrder = EnumHelper.GetEnumValueFromString<HostingOrderEnum>(this.HostingOrder);
-            AgeRatingEnum ageRating = EnumHelper.GetEnumValueFromString<AgeRatingEnum>(this.AgeRating);
+            HostingOrderEnum hostOrder = this.settings.HostingOrder;
+            AgeRatingEnum ageRating = this.settings.AgeRating;
 
             PrivatePopulatedUserModel currentUser = await this.connection.Users.GetCurrentUser();
             if (currentUser != null && !currentUser.channel.online)

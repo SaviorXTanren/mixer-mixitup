@@ -107,9 +107,9 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <ComboBox Grid.Column="0" x:Name="HostOrderComboBox" ItemsSource="{Binding HostingOrderItems}" SelectedItem="{Binding HostingOrder}" Width="75" MaterialDesign:HintAssist.Hint="Host Order" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+                <ComboBox Grid.Column="0" x:Name="HostOrderComboBox" ItemsSource="{Binding HostingOrderItems}" SelectedItem="{Binding HostingOrderName}" Width="75" MaterialDesign:HintAssist.Hint="Host Order" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-                <ComboBox Grid.Column="2" x:Name="AgeRatingComboBox" ItemsSource="{Binding AgeRatingItems}" SelectedItem="{Binding AgeRating}" Width="75" MaterialDesign:HintAssist.Hint="Age Rating" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+                <ComboBox Grid.Column="2" x:Name="AgeRatingComboBox" ItemsSource="{Binding AgeRatingItems}" SelectedItem="{Binding AgeRatingName}" Width="75" MaterialDesign:HintAssist.Hint="Age Rating" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
             </Grid>
 
             <Grid Grid.Row="6" HorizontalAlignment="Center">
