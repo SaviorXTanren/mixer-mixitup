@@ -76,7 +76,7 @@ namespace MixItUp.WPF
 
         protected override async Task OnLoaded()
         {
-            ChannelSession.Services.SongRequestService.SetYouTubeContext(new YouTubeSongRequestContext(this.Dispatcher, this.YouTubeSongRequestHost));
+            ChannelSession.Services.SongRequestService.SetYouTubeContext(new YouTubeSongRequestService(this.Dispatcher, this.YouTubeSongRequestHost));
             ChannelSession.Services.InputService.Initialize(new WindowInteropHelper(this).Handle);
             foreach (HotKeyConfiguration hotKeyConfiguration in ChannelSession.Settings.HotKeys.Values)
             {

@@ -8,168 +8,17 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Threading;
 using System.Xml;
 
 namespace MixItUp.Desktop.Services
 {
-    [ComVisible(true)]
-    public class YouTubeSongRequestContext : IYouTubeContext
-    {
-        private Dispatcher dispatcher;
-        private WebBrowser browser;
-        private SongRequestItem status = null;
-        private SongRequestHttpListenerServer httpListenerServer;
-
-        public const string RegularOverlayHttpListenerServerAddressFormat = "http://localhost:{0}/youtubesongrequests/";
-        public const int Port = 8199;
-
-        public string HttpListenerServerAddress { get { return string.Format(RegularOverlayHttpListenerServerAddressFormat, Port); } }
-
-        public YouTubeSongRequestContext(Dispatcher dispatcher, WebBrowser browser)
-        {
-            this.dispatcher = dispatcher;
-            this.browser = browser;
-
-            this.browser.ObjectForScripting = this;
-        }
-
-        public async Task Initialize()
-        {
-            if (this.httpListenerServer != null)
-            {
-                return;
-            }
-
-            this.httpListenerServer = new SongRequestHttpListenerServer(this.HttpListenerServerAddress, Port);
-            this.httpListenerServer.Start();
-
-            await this.dispatcher.InvokeAsync(() =>
-            {
-                this.browser.Navigate(HttpListenerServerAddress);
-            });
-        }
-
-        public void SongRequestComplete()
-        {
-            // Currently unused, but we COULD wire this up if desired
-        }
-
-        public void SetStatus(string result)
-        {
-            this.status = SerializerHelper.DeserializeFromString<SongRequestItem>(result);
-        }
-
-        public async Task<SongRequestItem> GetStatus()
-        {
-            this.status = null;
-
-            if (this.httpListenerServer != null)
-            {
-                await this.dispatcher.InvokeAsync(() =>
-                {
-                    this.browser.InvokeScript("getStatus");
-                });
-
-                for (int i = 0; i < 10 && this.status == null; i++)
-                {
-                    await Task.Delay(500);
-                }
-            }
-
-            return status;
-        }
-
-        public async Task PlayPause()
-        {
-            if (this.httpListenerServer != null)
-            {
-                await this.dispatcher.InvokeAsync(() =>
-                {
-                    this.browser.InvokeScript("playPause");
-                });
-            }
-        }
-
-        public async Task PlaySong(string itemId, int volume)
-        {
-            if (this.httpListenerServer != null)
-            {
-                await this.dispatcher.InvokeAsync(() =>
-                {
-                    this.browser.InvokeScript("play", new object[] { itemId, volume });
-                });
-            }
-        }
-
-        public async Task SetVolume(int volume)
-        {
-            if (this.httpListenerServer != null)
-            {
-                await this.dispatcher.InvokeAsync(() =>
-                {
-                    this.browser.InvokeScript("setVolume", new object[] { volume });
-                });
-            }
-        }
-
-        public async Task Stop()
-        {
-            if (this.httpListenerServer != null)
-            {
-                await this.dispatcher.InvokeAsync(() =>
-                {
-                    this.browser.InvokeScript("stop");
-                });
-            }
-        }
-    }
-
-    public class SongRequestHttpListenerServer : HttpListenerServerBase
-    {
-        private const string OverlayFolderPath = "Overlay\\";
-        private const string OverlayWebpageFilePath = OverlayFolderPath + "YouTubePage.html";
-
-        private int port;
-        private string webPageInstance;
-
-        private Dictionary<string, string> localFiles = new Dictionary<string, string>();
-
-        public SongRequestHttpListenerServer(string address, int port)
-            : base(address)
-        {
-            this.port = port;
-            this.webPageInstance = File.ReadAllText(OverlayWebpageFilePath);
-        }
-
-        protected override async Task ProcessConnection(HttpListenerContext listenerContext)
-        {
-            string url = listenerContext.Request.Url.LocalPath;
-            url = url.Trim(new char[] { '/' });
-
-            if (url.Equals("youtubesongrequests"))
-            {
-                await this.CloseConnection(listenerContext, HttpStatusCode.OK, this.webPageInstance);
-            }
-            else
-            {
-                await this.CloseConnection(listenerContext, HttpStatusCode.BadRequest, "");
-            }
-        }
-    }
-
     public class SongRequestItemSearch
     {
         public SongRequestItem SongRequest { get; set; }
@@ -229,7 +78,7 @@ namespace MixItUp.Desktop.Services
         private Dictionary<UserViewModel, List<SpotifySongModel>> lastUserSpotifySongSearches = new Dictionary<UserViewModel, List<SpotifySongModel>>();
         private Dictionary<UserViewModel, List<SongRequestItem>> lastUserYouTubeSongSearches = new Dictionary<UserViewModel, List<SongRequestItem>>();
 
-        private IYouTubeContext youTubeContext;
+        private IYouTubeSongRequestService youTubeContext;
 
         public bool IsEnabled { get; private set; }
 
@@ -388,7 +237,7 @@ namespace MixItUp.Desktop.Services
             });
         }
 
-        public void SetYouTubeContext(IYouTubeContext context)
+        public void SetYouTubeContext(IYouTubeSongRequestService context)
         {
             this.youTubeContext = context;
         }

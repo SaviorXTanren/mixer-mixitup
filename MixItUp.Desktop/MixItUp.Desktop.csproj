@@ -318,6 +318,7 @@
     <Compile Include="Services\DesktopSettingsService.cs" />
     <Compile Include="Services\WindowsTextToSpeechService.cs" />
     <Compile Include="Services\XSplitWebSocketServer.cs" />
+    <Compile Include="Services\YouTubeSongRequestService.cs" />
     <Compile Include="Util\SocketIOService.cs" />
   </ItemGroup>
   <ItemGroup>

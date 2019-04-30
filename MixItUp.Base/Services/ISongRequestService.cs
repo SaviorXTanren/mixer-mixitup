@@ -57,7 +57,7 @@ namespace MixItUp.Base.Services
         public override int GetHashCode() { return this.ID.GetHashCode(); }
     }
 
-    public interface IYouTubeContext
+    public interface IYouTubeSongRequestService
     {
         Task Initialize();
         Task<SongRequestItem> GetStatus();
@@ -73,7 +73,7 @@ namespace MixItUp.Base.Services
 
         Task<bool> Initialize();
 
-        void SetYouTubeContext(IYouTubeContext context);
+        void SetYouTubeContext(IYouTubeSongRequestService context);
 
         Task Disable();
 
