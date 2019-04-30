@@ -76,7 +76,9 @@ namespace MixItUp.WPF
 
         protected override async Task OnLoaded()
         {
+            ChannelSession.Services.SongRequestService.AddProvider(new SpotifySongRequestProviderService());
             ChannelSession.Services.SongRequestService.AddProvider(new YouTubeSongRequestProviderService(this.Dispatcher, this.YouTubeSongRequestHost));
+
             ChannelSession.Services.InputService.Initialize(new WindowInteropHelper(this).Handle);
             foreach (HotKeyConfiguration hotKeyConfiguration in ChannelSession.Settings.HotKeys.Values)
             {
