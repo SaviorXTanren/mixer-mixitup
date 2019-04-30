@@ -84,19 +84,6 @@
             }, 1);
         }
 
-        function playPause() {
-            if (!isReady) return;
-
-            setTimeout(function () {
-                if (player.getPlayerState() == YT.PlayerState.PLAYING) {
-                    player.pauseVideo();
-                }
-                else if (player.getPlayerState() == YT.PlayerState.PAUSED) {
-                    player.playVideo();
-                }
-            }, 1);
-        }
-
         function play(itemId, volume) {
             if (!isReady) return;
 
@@ -110,11 +97,32 @@
             }, 1);
         }
 
-        function setVolume(volume) {
+        function pause() {
             if (!isReady) return;
 
             setTimeout(function () {
-                player.setVolume(volume);
+                player.pauseVideo();
+            }, 1);
+        }
+
+        function resume() {
+            if (!isReady) return;
+
+            setTimeout(function () {
+                player.playVideo();
+            }, 1);
+        }
+
+        function pauseResume() {
+            if (!isReady) return;
+
+            setTimeout(function () {
+                if (player.getPlayerState() == YT.PlayerState.PLAYING) {
+                    player.pauseVideo();
+                }
+                else if (player.getPlayerState() == YT.PlayerState.PAUSED) {
+                    player.playVideo();
+                }
             }, 1);
         }
 
@@ -127,18 +135,36 @@
             }, 1);
         }
 
+        function setVolume(volume) {
+            if (!isReady) return;
+
+            setTimeout(function () {
+                player.setVolume(volume);
+            }, 1);
+        }
+
         function onPlayerError(err) {
             hasError = true;
         }
 
-    function onPlayerReady(event) {
+        function onPlayerReady(event) {
             hasError = false;
             isReady = true;
         }
 
         function onPlayerStateChange(event) {
             if (event.data == YT.PlayerState.ENDED && isPlaying) {
-                window.external.SongRequestComplete();
+
+                var data = {};
+
+                var videoData = player.getVideoData();
+                data.ID = videoData.video_id;
+
+                data.Type = 1;
+                data.State = 3;
+                data.Volume = player.getVolume();
+
+                window.external.SongRequestComplete(JSON.stringify(data));
                 isPlaying = false;
                 hasError = false;
             }

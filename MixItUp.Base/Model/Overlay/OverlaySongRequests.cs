@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Services;
+﻿using MixItUp.Base.Model.SongRequests;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -61,10 +62,10 @@ namespace MixItUp.Base.Model.Overlay
         [JsonIgnore]
         private bool songRequestsUpdated = true;
         [JsonIgnore]
-        private List<SongRequestItem> currentSongRequests = new List<SongRequestItem>();
+        private List<SongRequestModel> currentSongRequests = new List<SongRequestModel>();
 
         [JsonIgnore]
-        private List<SongRequestItem> testSongRequestsList = new List<SongRequestItem>();
+        private List<SongRequestModel> testSongRequestsList = new List<SongRequestModel>();
 
         public OverlaySongRequests() : base(SongRequestsItemType, HTMLTemplate) { }
 
@@ -90,7 +91,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             for (int i = 0; i < 5; i++)
             {
-                this.testSongRequestsList.Add(new SongRequestItem()
+                this.testSongRequestsList.Add(new SongRequestModel()
                 {
                     ID = Guid.NewGuid().ToString(),
                     Type = SongRequestServiceTypeEnum.YouTube,
@@ -117,21 +118,21 @@ namespace MixItUp.Base.Model.Overlay
             {
                 this.songRequestsUpdated = false;
 
-                List<SongRequestItem> songRequests = new List<SongRequestItem>();
+                List<SongRequestModel> songRequests = new List<SongRequestModel>();
 
-                SongRequestItem currentlyPlaying = await ChannelSession.Services.SongRequestService.GetCurrentlyPlaying();
+                SongRequestModel currentlyPlaying = await ChannelSession.Services.SongRequestService.GetCurrentlyPlaying();
                 if (currentlyPlaying != null)
                 {
                     songRequests.Add(currentlyPlaying);
                 }
 
-                IEnumerable<SongRequestItem> allSongRequests = this.testSongRequestsList;
+                IEnumerable<SongRequestModel> allSongRequests = this.testSongRequestsList;
                 if (this.testSongRequestsList.Count == 0)
                 {
-                    allSongRequests = await ChannelSession.Services.SongRequestService.GetAllRequests();
+                    allSongRequests = ChannelSession.Services.SongRequestService.RequestSongs.ToList();
                 }
 
-                foreach (SongRequestItem songRequest in allSongRequests)
+                foreach (SongRequestModel songRequest in allSongRequests)
                 {
                     if (!songRequests.Any(sr => sr.Equals(songRequest)))
                     {
@@ -164,7 +165,7 @@ namespace MixItUp.Base.Model.Overlay
 
         protected override Task<Dictionary<string, string>> GetReplacementSets(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
-            SongRequestItem songRequest = this.currentSongRequests.ElementAt(0);
+            SongRequestModel songRequest = this.currentSongRequests.ElementAt(0);
 
             Dictionary<string, string> replacementSets = new Dictionary<string, string>();
 

@@ -4,6 +4,7 @@ using Mixer.Base.Model.Patronage;
 using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.SongRequests;
 using MixItUp.Base.Model.Spotify;
 using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
@@ -837,7 +838,7 @@ namespace MixItUp.Base.Util
             }
         }
 
-        private void ReplaceSongRequestSpecialIdentifiers(string header, SongRequestItem song)
+        private void ReplaceSongRequestSpecialIdentifiers(string header, SongRequestModel song)
         {
             if (song != null)
             {

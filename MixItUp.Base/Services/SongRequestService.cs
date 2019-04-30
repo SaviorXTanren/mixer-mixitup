@@ -1,6 +1,4 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Model.SongRequests;
-using MixItUp.Base.Services;
+﻿using MixItUp.Base.Model.SongRequests;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -10,8 +8,62 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MixItUp.Desktop.Services
+namespace MixItUp.Base.Services
 {
+    public interface ISongRequestProviderService
+    {
+        SongRequestServiceTypeEnum Type { get; }
+
+        Task<bool> Initialize();
+
+        Task<IEnumerable<SongRequestModel>> GetPlaylist(string identifier);
+        Task<IEnumerable<SongRequestModel>> Search(string identifier);
+
+        Task<SongRequestModel> GetStatus();
+
+        Task Play(SongRequestModel song);
+        Task Pause();
+        Task Resume();
+        Task PauseResume();
+        Task Stop();
+
+        Task SetVolume(int volume);
+    }
+
+    public interface ISongRequestService
+    {
+        ObservableCollection<SongRequestModel> RequestSongs { get; }
+        ObservableCollection<SongRequestModel> PlaylistSongs { get; }
+
+        SongRequestModel CurrentSong { get; }
+
+        bool IsEnabled { get; }
+
+        void AddProvider(ISongRequestProviderService provider);
+
+        Task<bool> Initialize();
+
+        Task Disable();
+
+        Task SearchAndPickFirst(UserViewModel user, SongRequestServiceTypeEnum service, string identifier);
+        Task SearchAndSelect(UserViewModel user, SongRequestServiceTypeEnum service, string identifier);
+
+        Task Pause();
+        Task Resume();
+        Task PauseResume();
+        Task Skip();
+
+        Task RefreshVolume();
+
+        Task<SongRequestModel> GetCurrentlyPlaying();
+        Task<SongRequestModel> GetNextTrack();
+
+        Task RemoveSongRequest(SongRequestModel song);
+        Task RemoveLastSongRequested();
+        Task RemoveLastSongRequestedByUser(UserViewModel user);
+        Task ClearAllRequests();
+    }
+
     public class SongRequestService : NotifyPropertyChangedBase, ISongRequestService
     {
         private static SemaphoreSlim songRequestLock = new SemaphoreSlim(1);

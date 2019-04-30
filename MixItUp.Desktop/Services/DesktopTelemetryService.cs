@@ -4,6 +4,7 @@ using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.SongRequests;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using PlayFab;

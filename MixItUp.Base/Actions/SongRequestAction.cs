@@ -1,5 +1,5 @@
 ﻿using Mixer.Base.Util;
-using MixItUp.Base.Services;
+using MixItUp.Base.Model.SongRequests;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
@@ -12,14 +12,14 @@ namespace MixItUp.Base.Actions
 {
     public enum SongRequestActionTypeEnum
     {
-        [Name("Search Songs & Use Artist Lookup")]
-        SearchSongsAndUseArtistSelect,
+        [Name("Search Songs & Select Result")]
+        SearchSongsAndSelectResult,
         [Name("Display Currently Playing")]
         DisplayCurrentlyPlaying,
         [Name("Display Next Song")]
         DisplayNextSong,
-        [Name("Play/Pause Current Song")]
-        PlayPauseCurrentSong,
+        [Name("Pause/Resume Current Song")]
+        PauseResume,
         [Name("Skip To Next Song")]
         SkipToNextSong,
         [Name("Enable/Disable Song Requests")]
@@ -32,6 +32,10 @@ namespace MixItUp.Base.Actions
         SearchSongsAndPickFirstResult,
         [Name("Remove Last Song Requested")]
         RemoveLast,
+        [Name("Pause Current Song")]
+        Pause,
+        [Name("Resume Current Song")]
+        Resume,
     }
 
     public class SongRequestAction : ActionBase
@@ -87,13 +91,13 @@ namespace MixItUp.Base.Actions
                         return;
                     }
 
-                    if (this.SongRequestType == SongRequestActionTypeEnum.SearchSongsAndUseArtistSelect)
+                    if (this.SongRequestType == SongRequestActionTypeEnum.SearchSongsAndSelectResult)
                     {
-                        await ChannelSession.Services.SongRequestService.AddSongRequest(user, this.SpecificService, string.Join(" ", arguments));
+                        await ChannelSession.Services.SongRequestService.SearchAndSelect(user, this.SpecificService, string.Join(" ", arguments));
                     }
                     else if (this.SongRequestType == SongRequestActionTypeEnum.SearchSongsAndPickFirstResult)
                     {
-                        await ChannelSession.Services.SongRequestService.AddSongRequest(user, this.SpecificService, string.Join(" ", arguments), pickFirst: true);
+                        await ChannelSession.Services.SongRequestService.SearchAndPickFirst(user, this.SpecificService, string.Join(" ", arguments));
                     }
                     else if (this.SongRequestType == SongRequestActionTypeEnum.RemoveLast)
                     {
@@ -121,7 +125,7 @@ namespace MixItUp.Base.Actions
                     }
                     else if (this.SongRequestType == SongRequestActionTypeEnum.DisplayCurrentlyPlaying)
                     {
-                        SongRequestItem currentlyPlaying = await ChannelSession.Services.SongRequestService.GetCurrentlyPlaying();
+                        SongRequestModel currentlyPlaying = await ChannelSession.Services.SongRequestService.GetCurrentlyPlaying();
                         if (currentlyPlaying != null)
                         {
                             await ChannelSession.Chat.SendMessage("Currently Playing: " + currentlyPlaying.Name);
@@ -133,7 +137,7 @@ namespace MixItUp.Base.Actions
                     }
                     else if (this.SongRequestType == SongRequestActionTypeEnum.DisplayNextSong)
                     {
-                        SongRequestItem nextTrack = await ChannelSession.Services.SongRequestService.GetNextTrack();
+                        SongRequestModel nextTrack = await ChannelSession.Services.SongRequestService.GetNextTrack();
                         if (nextTrack != null)
                         {
                             await ChannelSession.Chat.SendMessage("Coming Up Next: " + nextTrack.Name);
@@ -143,13 +147,21 @@ namespace MixItUp.Base.Actions
                             await ChannelSession.Chat.SendMessage("There are currently no Song Requests left in the queue");
                         }
                     }
-                    else if (this.SongRequestType == SongRequestActionTypeEnum.PlayPauseCurrentSong)
+                    else if (this.SongRequestType == SongRequestActionTypeEnum.Pause)
                     {
-                        await ChannelSession.Services.SongRequestService.PlayPauseCurrentSong();
+                        await ChannelSession.Services.SongRequestService.Pause();
+                    }
+                    else if (this.SongRequestType == SongRequestActionTypeEnum.Resume)
+                    {
+                        await ChannelSession.Services.SongRequestService.Resume();
+                    }
+                    else if (this.SongRequestType == SongRequestActionTypeEnum.PauseResume)
+                    {
+                        await ChannelSession.Services.SongRequestService.PauseResume();
                     }
                     else if (this.SongRequestType == SongRequestActionTypeEnum.SkipToNextSong)
                     {
-                        await ChannelSession.Services.SongRequestService.SkipToNextSong();
+                        await ChannelSession.Services.SongRequestService.Skip();
                     }
                 }
             }

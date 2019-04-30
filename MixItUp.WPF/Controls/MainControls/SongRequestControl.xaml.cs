@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Model.SongRequests;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.WPF.Util;
@@ -25,7 +26,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private static SemaphoreSlim songListLock = new SemaphoreSlim(1);
 
-        private ObservableCollection<SongRequestItem> requestPlaylist = new ObservableCollection<SongRequestItem>();
+        private ObservableCollection<SongRequestModel> requestPlaylist = new ObservableCollection<SongRequestModel>();
 
         private CancellationTokenSource backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 
@@ -121,7 +122,7 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 if (ChannelSession.Services.SongRequestService != null)
                 {
-                    await ChannelSession.Services.SongRequestService.PlayPauseCurrentSong();
+                    await ChannelSession.Services.SongRequestService.PauseResume();
                 }
             });
         }
@@ -132,7 +133,7 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 if (ChannelSession.Services.SongRequestService != null)
                 {
-                    await ChannelSession.Services.SongRequestService.SkipToNextSong();
+                    await ChannelSession.Services.SongRequestService.Skip();
                 }
             });
         }
@@ -154,7 +155,7 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.Window.RunAsyncOperation(async () =>
             {
                 Button button = (Button)sender;
-                SongRequestItem songRequest = (SongRequestItem)button.DataContext;
+                SongRequestModel songRequest = (SongRequestModel)button.DataContext;
                 await ChannelSession.Services.SongRequestService.RemoveSongRequest(songRequest);
                 await this.RefreshRequestsList();
             });
@@ -182,7 +183,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 this.CurrentlyPlayingAndSongQueueGrid.IsEnabled = ChannelSession.Services.SongRequestService.IsEnabled;
                 this.ClearQueueButton.IsEnabled = ChannelSession.Services.SongRequestService.IsEnabled;
 
-                SongRequestItem currentSong = await ChannelSession.Services.SongRequestService.GetCurrentlyPlaying();
+                SongRequestModel currentSong = await ChannelSession.Services.SongRequestService.GetCurrentlyPlaying();
                 if (currentSong != null)
                 {
                     CurrentSongName.Text = currentSong.Name;
@@ -193,7 +194,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 }
 
                 this.requestPlaylist.Clear();
-                IEnumerable<SongRequestItem> requests = await ChannelSession.Services.SongRequestService.GetAllRequests();
+                IEnumerable<SongRequestModel> requests = ChannelSession.Services.SongRequestService.RequestSongs.ToList();
                 if (requests.Count() > 0)
                 {
                     if (!requests.First().Equals(currentSong))
@@ -201,7 +202,7 @@ namespace MixItUp.WPF.Controls.MainControls
                         this.requestPlaylist.Add(requests.First());
                     }
 
-                    foreach (SongRequestItem item in requests.Skip(1))
+                    foreach (SongRequestModel item in requests.Skip(1))
                     {
                         this.requestPlaylist.Add(item);
                     }
