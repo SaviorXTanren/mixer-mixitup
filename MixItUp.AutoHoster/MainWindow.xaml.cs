@@ -1,4 +1,5 @@
 ﻿using MaterialDesignThemes.Wpf;
+using Mixer.Base.Model.User;
 using MixItUp.Base.Util;
 using System;
 using System.Threading.Tasks;
@@ -32,6 +33,12 @@ namespace MixItUp.AutoHoster
                 {
                     this.Close();
                     return;
+                }
+
+                PrivatePopulatedUserModel currentUser = await this.viewModel.GetCurrentUser();
+                if (currentUser != null)
+                {
+                    this.Title += " - " + currentUser.username;
                 }
 
                 Task.Run(async () =>

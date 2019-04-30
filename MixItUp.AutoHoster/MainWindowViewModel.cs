@@ -202,6 +202,8 @@ namespace MixItUp.AutoHoster
             await this.SaveData();
         }
 
+        public async Task<PrivatePopulatedUserModel> GetCurrentUser() { return await this.connection.Users.GetCurrentUser(); }
+
         public async Task<bool> AddChannel(string channelName)
         {
             if (!string.IsNullOrEmpty(channelName))
