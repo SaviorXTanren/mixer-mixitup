@@ -4,6 +4,7 @@ using Mixer.Base.Model.Patronage;
 using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Spotify;
 using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -420,13 +421,13 @@ namespace MixItUp.Base.Util
 
             if (ChannelSession.Services.Spotify != null && this.ContainsSpecialIdentifier("spotify"))
             {
-                SpotifyUserProfile profile = await ChannelSession.Services.Spotify.GetCurrentProfile();
+                SpotifyUserProfileModel profile = await ChannelSession.Services.Spotify.GetCurrentProfile();
                 if (profile != null)
                 {
                     this.ReplaceSpecialIdentifier("spotifyprofileurl", profile.Link);
                 }
 
-                SpotifyCurrentlyPlaying currentlyPlaying = await ChannelSession.Services.Spotify.GetCurrentlyPlaying();
+                SpotifyCurrentlyPlayingModel currentlyPlaying = await ChannelSession.Services.Spotify.GetCurrentlyPlaying();
                 if (currentlyPlaying != null)
                 {
                     this.ReplaceSpecialIdentifier("spotifycurrentlyplaying", currentlyPlaying.ToString());

@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Web;
 using MixItUp.Base;
+using MixItUp.Base.Model.Spotify;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -225,7 +226,7 @@ namespace MixItUp.Desktop.Services
         private SongRequestItem currentSong = null;
         private SongRequestItem spotifyStatus = null;
 
-        private Dictionary<UserViewModel, List<SpotifySong>> lastUserSpotifySongSearches = new Dictionary<UserViewModel, List<SpotifySong>>();
+        private Dictionary<UserViewModel, List<SpotifySongModel>> lastUserSpotifySongSearches = new Dictionary<UserViewModel, List<SpotifySongModel>>();
         private Dictionary<UserViewModel, List<SongRequestItem>> lastUserYouTubeSongSearches = new Dictionary<UserViewModel, List<SongRequestItem>>();
 
         private IYouTubeContext youTubeContext;
@@ -287,10 +288,10 @@ namespace MixItUp.Desktop.Services
                             string id = uri.Split(new string[] { ":playlist:" }, StringSplitOptions.RemoveEmptyEntries).Last();
                             if (!string.IsNullOrEmpty(id))
                             {
-                                IEnumerable<SpotifySong> songs = await ChannelSession.Services.Spotify.GetPlaylistSongs(new SpotifyPlaylist { ID = id });
+                                IEnumerable<SpotifySongModel> songs = await ChannelSession.Services.Spotify.GetPlaylistSongs(new SpotifyPlaylistModel { ID = id });
                                 if (songs != null)
                                 {
-                                    foreach (SpotifySong song in songs)
+                                    foreach (SpotifySongModel song in songs)
                                     {
                                         this.playlistItems.Add(new SongRequestItem()
                                         {
@@ -862,7 +863,7 @@ namespace MixItUp.Desktop.Services
                 }
                 else if (user != null)
                 {
-                    Dictionary<string, SpotifySong> artistToSong = new Dictionary<string, SpotifySong>();
+                    Dictionary<string, SpotifySongModel> artistToSong = new Dictionary<string, SpotifySongModel>();
 
                     if (this.lastUserSpotifySongSearches.ContainsKey(user) && int.TryParse(identifier, out int artistIndex))
                     {
@@ -877,7 +878,7 @@ namespace MixItUp.Desktop.Services
                     }
                     else
                     {
-                        foreach (SpotifySong song in await ChannelSession.Services.Spotify.SearchSongs(identifier))
+                        foreach (SpotifySongModel song in await ChannelSession.Services.Spotify.SearchSongs(identifier))
                         {
                             if (!artistToSong.ContainsKey(song.Artist.Name))
                             {
@@ -885,7 +886,7 @@ namespace MixItUp.Desktop.Services
                             }
                         }
 
-                        this.lastUserSpotifySongSearches[user] = new List<SpotifySong>();
+                        this.lastUserSpotifySongSearches[user] = new List<SpotifySongModel>();
                         foreach (var kvp in artistToSong)
                         {
                             this.lastUserSpotifySongSearches[user].Add(kvp.Value);
@@ -916,7 +917,7 @@ namespace MixItUp.Desktop.Services
 
                 if (!string.IsNullOrEmpty(songID))
                 {
-                    SpotifySong song = await ChannelSession.Services.Spotify.GetSong(songID);
+                    SpotifySongModel song = await ChannelSession.Services.Spotify.GetSong(songID);
                     if (song != null)
                     {
                         if (song.Explicit && !ChannelSession.Settings.SpotifyAllowExplicit)
@@ -1023,7 +1024,7 @@ namespace MixItUp.Desktop.Services
                 {
                     if (ChannelSession.Services.Spotify != null)
                     {
-                        SpotifySong song = await ChannelSession.Services.Spotify.GetSong(item.ID);
+                        SpotifySongModel song = await ChannelSession.Services.Spotify.GetSong(item.ID);
                         if (song != null)
                         {
                             await ChannelSession.Services.Spotify.PlaySong(song);
@@ -1043,7 +1044,7 @@ namespace MixItUp.Desktop.Services
         {
             if (ChannelSession.Services.Spotify != null)
             {
-                SpotifyCurrentlyPlaying currentlyPlaying = await ChannelSession.Services.Spotify.GetCurrentlyPlaying();
+                SpotifyCurrentlyPlayingModel currentlyPlaying = await ChannelSession.Services.Spotify.GetCurrentlyPlaying();
                 if (currentlyPlaying != null && currentlyPlaying.ID != null)
                 {
                     if (currentlyPlaying.IsPlaying)
@@ -1062,7 +1063,7 @@ namespace MixItUp.Desktop.Services
         {
             if (ChannelSession.Services.Spotify != null)
             {
-                SpotifyCurrentlyPlaying currentlyPlaying = await ChannelSession.Services.Spotify.GetCurrentlyPlaying();
+                SpotifyCurrentlyPlayingModel currentlyPlaying = await ChannelSession.Services.Spotify.GetCurrentlyPlaying();
                 if (currentlyPlaying != null && currentlyPlaying.ID != null)
                 {
                     SongRequestItem result = new SongRequestItem()

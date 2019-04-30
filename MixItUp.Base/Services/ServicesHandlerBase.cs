@@ -27,7 +27,7 @@ namespace MixItUp.Base.Services
         public IStreamlabsService Streamlabs { get; protected set; }
         public IGawkBoxService GawkBox { get; protected set; }
         public ITwitterService Twitter { get; protected set; }
-        public ISpotifyService Spotify { get; protected set; }
+        public SpotifyService Spotify { get; protected set; }
         public IDiscordService Discord { get; protected set; }
         public ITiltifyService Tiltify { get; protected set; }
         public IExtraLifeService ExtraLife { get; protected set; }

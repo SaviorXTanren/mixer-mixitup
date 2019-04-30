@@ -1,8 +1,7 @@
 ﻿using Mixer.Base;
 using Mixer.Base.Model.OAuth;
 using Mixer.Base.Web;
-using MixItUp.Base;
-using MixItUp.Base.Services;
+using MixItUp.Base.Model.Spotify;
 using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
 using System;
@@ -13,8 +12,59 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MixItUp.Desktop.Services
+namespace MixItUp.Base.Services
 {
+    public interface ISpotifyService
+    {
+        SpotifyUserProfileModel Profile { get; }
+
+        Task<bool> Connect();
+
+        Task Disconnect();
+
+        Task<SpotifyUserProfileModel> GetCurrentProfile();
+
+        Task<SpotifyUserProfileModel> GetProfile(string username);
+
+        Task<IEnumerable<SpotifySongModel>> SearchSongs(string songName);
+
+        Task<SpotifySongModel> GetSong(string songID);
+
+        Task<IEnumerable<SpotifyPlaylistModel>> GetCurrentPlaylists();
+
+        Task<SpotifyPlaylistModel> GetPlaylist(SpotifyPlaylistModel playlist);
+
+        Task<IEnumerable<SpotifySongModel>> GetPlaylistSongs(SpotifyPlaylistModel playlist);
+
+        Task<SpotifyPlaylistModel> CreatePlaylist(string name, string description);
+
+        Task<bool> AddSongToPlaylist(SpotifyPlaylistModel playlist, SpotifySongModel song);
+
+        Task RemoveSongFromPlaylist(SpotifyPlaylistModel playlist, SpotifySongModel song);
+
+        Task RemoveSongsFromPlaylist(SpotifyPlaylistModel playlist, IEnumerable<SpotifySongModel> song);
+
+        Task<SpotifyCurrentlyPlayingModel> GetCurrentlyPlaying();
+
+        Task PlayCurrentlyPlaying();
+
+        Task PauseCurrentlyPlaying();
+
+        Task NextCurrentlyPlaying();
+
+        Task PreviousCurrentlyPlaying();
+
+        Task<bool> PlaySong(SpotifySongModel song);
+
+        Task<bool> PlaySong(string uri);
+
+        Task<bool> PlayPlaylist(SpotifyPlaylistModel playlist, bool random = false);
+
+        Task SetVolume(int volume);
+
+        OAuthTokenModel GetOAuthTokenCopy();
+    }
+
     public class SpotifyService : OAuthServiceBase, ISpotifyService, IDisposable
     {
         private const string BaseAddress = "https://api.spotify.com/v1/";
@@ -23,7 +73,7 @@ namespace MixItUp.Desktop.Services
         private const string StateKey = "V21C2J2RWE51CYSM";
         private const string AuthorizationUrl = "https://accounts.spotify.com/authorize?client_id={0}&redirect_uri=http://localhost:8919/&response_type=code&scope=playlist-read-private+playlist-modify-public+playlist-read-collaborative+user-top-read+user-read-recently-played+user-library-read+user-read-currently-playing+user-modify-playback-state+user-read-playback-state+streaming+user-read-private&state={1}";
 
-        public SpotifyUserProfile Profile { get; private set; }
+        public SpotifyUserProfileModel Profile { get; private set; }
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
@@ -76,31 +126,31 @@ namespace MixItUp.Desktop.Services
             return Task.FromResult(0);
         }
 
-        public async Task<SpotifyUserProfile> GetCurrentProfile()
+        public async Task<SpotifyUserProfileModel> GetCurrentProfile()
         {
             try
             {
                 JObject result = await this.GetJObjectAsync("me");
-                return new SpotifyUserProfile(result);
+                return new SpotifyUserProfileModel(result);
             }
             catch (Exception ex) { Logger.Log(ex); }
             return null;
         }
 
-        public async Task<SpotifyUserProfile> GetProfile(string username)
+        public async Task<SpotifyUserProfileModel> GetProfile(string username)
         {
             try
             {
                 JObject result = await this.GetJObjectAsync("users/" + username);
-                return new SpotifyUserProfile(result);
+                return new SpotifyUserProfileModel(result);
             }
             catch (Exception ex) { Logger.Log(ex); }
             return null;
         }
 
-        public async Task<IEnumerable<SpotifySong>> SearchSongs(string songName)
+        public async Task<IEnumerable<SpotifySongModel>> SearchSongs(string songName)
         {
-            List<SpotifySong> songs = new List<SpotifySong>();
+            List<SpotifySongModel> songs = new List<SpotifySongModel>();
             try
             {
                 JObject result = await this.GetJObjectAsync(string.Format("search?q={0}&type=track", this.EncodeString(songName)));
@@ -109,7 +159,7 @@ namespace MixItUp.Desktop.Services
                     JArray results = (JArray)result["tracks"]["items"];
                     foreach (JToken songResult in results)
                     {
-                        songs.Add(new SpotifySong((JObject)songResult));
+                        songs.Add(new SpotifySongModel((JObject)songResult));
                     }
                 }
             }
@@ -117,55 +167,55 @@ namespace MixItUp.Desktop.Services
             return songs;
         }
 
-        public async Task<SpotifySong> GetSong(string songID)
+        public async Task<SpotifySongModel> GetSong(string songID)
         {
             try
             {
                 JObject result = await this.GetJObjectAsync(string.Format("tracks/" + songID));
-                return new SpotifySong(result);
+                return new SpotifySongModel(result);
             }
             catch (Exception ex) { Logger.Log(ex); }
             return null;
         }
 
-        public async Task<IEnumerable<SpotifyPlaylist>> GetCurrentPlaylists()
+        public async Task<IEnumerable<SpotifyPlaylistModel>> GetCurrentPlaylists()
         {
-            List<SpotifyPlaylist> playlists = new List<SpotifyPlaylist>();
+            List<SpotifyPlaylistModel> playlists = new List<SpotifyPlaylistModel>();
             try
             {
                 foreach (JObject playlist in await this.GetPagedResult("me/playlists"))
                 {
-                    playlists.Add(new SpotifyPlaylist(playlist));
+                    playlists.Add(new SpotifyPlaylistModel(playlist));
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
             return playlists;
         }
 
-        public async Task<SpotifyPlaylist> GetPlaylist(SpotifyPlaylist playlist)
+        public async Task<SpotifyPlaylistModel> GetPlaylist(SpotifyPlaylistModel playlist)
         {
             try
             {
                 if (playlist != null)
                 {
                     JObject result = await this.GetJObjectAsync(string.Format("playlists/{0}", playlist.ID));
-                    return new SpotifyPlaylist(result);
+                    return new SpotifyPlaylistModel(result);
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
             return null;
         }
 
-        public async Task<IEnumerable<SpotifySong>> GetPlaylistSongs(SpotifyPlaylist playlist)
+        public async Task<IEnumerable<SpotifySongModel>> GetPlaylistSongs(SpotifyPlaylistModel playlist)
         {
-            List<SpotifySong> results = new List<SpotifySong>();
+            List<SpotifySongModel> results = new List<SpotifySongModel>();
             try
             {
                 if (playlist != null)
                 {
                     foreach (JObject song in await this.GetPagedResult(string.Format("playlists/{0}/tracks", playlist.ID)))
                     {
-                        results.Add(new SpotifySong((JObject)song["track"]));
+                        results.Add(new SpotifySongModel((JObject)song["track"]));
                     }
                 }
             }
@@ -173,7 +223,7 @@ namespace MixItUp.Desktop.Services
             return results;
         }
 
-        public async Task<SpotifyPlaylist> CreatePlaylist(string name, string description)
+        public async Task<SpotifyPlaylistModel> CreatePlaylist(string name, string description)
         {
             try
             {
@@ -185,13 +235,13 @@ namespace MixItUp.Desktop.Services
                 HttpResponseMessage response = await this.PostAsync("playlists", this.CreateContentFromObject(payload));
                 string responseString = await response.Content.ReadAsStringAsync();
                 JObject jobj = JObject.Parse(responseString);
-                return new SpotifyPlaylist(jobj);
+                return new SpotifyPlaylistModel(jobj);
             }
             catch (Exception ex) { Logger.Log(ex); }
             return null;
         }
 
-        public async Task<bool> AddSongToPlaylist(SpotifyPlaylist playlist, SpotifySong song)
+        public async Task<bool> AddSongToPlaylist(SpotifyPlaylistModel playlist, SpotifySongModel song)
         {
             try
             {
@@ -205,12 +255,12 @@ namespace MixItUp.Desktop.Services
             return false;
         }
 
-        public async Task RemoveSongFromPlaylist(SpotifyPlaylist playlist, SpotifySong song)
+        public async Task RemoveSongFromPlaylist(SpotifyPlaylistModel playlist, SpotifySongModel song)
         {
-            await this.RemoveSongsFromPlaylist(playlist, new List<SpotifySong>() { song });
+            await this.RemoveSongsFromPlaylist(playlist, new List<SpotifySongModel>() { song });
         }
 
-        public async Task RemoveSongsFromPlaylist(SpotifyPlaylist playlist, IEnumerable<SpotifySong> songs)
+        public async Task RemoveSongsFromPlaylist(SpotifyPlaylistModel playlist, IEnumerable<SpotifySongModel> songs)
         {
             try
             {
@@ -219,7 +269,7 @@ namespace MixItUp.Desktop.Services
                     for (int i = 0; i < songs.Count(); i += 50)
                     {
                         JArray songsToDeleteArray = new JArray();
-                        foreach (SpotifySong songToDelete in songs.Skip(i).Take(50))
+                        foreach (SpotifySongModel songToDelete in songs.Skip(i).Take(50))
                         {
                             JObject songPayload = new JObject();
                             songPayload["uri"] = "spotify:track:" + songToDelete.ID;
@@ -233,7 +283,9 @@ namespace MixItUp.Desktop.Services
                         {
                             HttpMethod method = new HttpMethod("DELETE");
                             HttpRequestMessage request = new HttpRequestMessage(method, string.Format("playlists/{0}/tracks", playlist.ID))
-                            { Content = this.CreateContentFromObject(payload) };
+                            {
+                                Content = this.CreateContentFromObject(payload)
+                            };
                             await client.SendAsync(request);
                         }
                     }
@@ -242,7 +294,7 @@ namespace MixItUp.Desktop.Services
             catch (Exception ex) { Logger.Log(ex); }
         }
 
-        public async Task<SpotifyCurrentlyPlaying> GetCurrentlyPlaying()
+        public async Task<SpotifyCurrentlyPlayingModel> GetCurrentlyPlaying()
         {
             try
             {
@@ -251,7 +303,7 @@ namespace MixItUp.Desktop.Services
                 {
                     string responseString = await response.Content.ReadAsStringAsync();
                     JObject jobj = JObject.Parse(responseString);
-                    return new SpotifyCurrentlyPlaying(jobj);
+                    return new SpotifyCurrentlyPlayingModel(jobj);
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
@@ -294,9 +346,9 @@ namespace MixItUp.Desktop.Services
             catch (Exception ex) { Logger.Log(ex); }
         }
 
-        public async Task<bool> PlaySong(SpotifySong song) { return await this.PlaySong(song.Uri); }
+        public async Task<bool> PlaySong(SpotifySongModel song) { return await this.PlaySong(song.Uri); }
 
-        public async Task<bool> PlayPlaylist(SpotifyPlaylist playlist, bool random = false)
+        public async Task<bool> PlayPlaylist(SpotifyPlaylistModel playlist, bool random = false)
         {
             try
             {
@@ -309,7 +361,7 @@ namespace MixItUp.Desktop.Services
 
                 if (random)
                 {
-                    IEnumerable<SpotifySong> playlistSongs = await this.GetPlaylistSongs(playlist);
+                    IEnumerable<SpotifySongModel> playlistSongs = await this.GetPlaylistSongs(playlist);
                     if (playlistSongs != null && playlistSongs.Count() > 0)
                     {
                         position["position"] = RandomHelper.GenerateRandomNumber(playlistSongs.Count());
