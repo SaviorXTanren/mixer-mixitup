@@ -21,7 +21,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Width="450" TextWrapping="Wrap">The Mix It Up Auto-Hoster is a stand-alone application that handles the automatic hosting of other channels when you are offline; you do not have to have Mix It Up running to use it.</TextBlock>
+        <TextBlock Grid.Row="0" Width="450" TextWrapping="Wrap">The Mix It Up Auto-Hoster is a stand-alone application that handles the hosting of other channels when you are not streaming. The Auto-Hoster must be running, but you do not have to have Mix It Up running to use it.</TextBlock>
 
         <TextBlock Grid.Row="2">The Auto-Hoster can be launched by clicking the button below:</TextBlock>
 
