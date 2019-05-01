@@ -33,7 +33,7 @@ namespace MixItUp.Desktop.Services
 
         private Dispatcher dispatcher;
         private WebBrowser browser;
-        private SongRequestModel status = null;
+        private SongRequestCurrentlyPlayingModel status = null;
         private YouTubeSongRequestHttpListenerServer httpListenerServer;
 
         public string HttpListenerServerAddress { get { return string.Format(RegularOverlayHttpListenerServerAddressFormat, Port); } }
@@ -69,12 +69,12 @@ namespace MixItUp.Desktop.Services
 
         public void SongRequestComplete(string result)
         {
-            this.status = SerializerHelper.DeserializeFromString<SongRequestModel>(result);
+            this.status = SerializerHelper.DeserializeFromString<SongRequestCurrentlyPlayingModel>(result);
         }
 
         public void SetStatus(string result)
         {
-            this.status = SerializerHelper.DeserializeFromString<SongRequestModel>(result);
+            this.status = SerializerHelper.DeserializeFromString<SongRequestCurrentlyPlayingModel>(result);
         }
 
         public async Task<IEnumerable<SongRequestModel>> GetPlaylist(string identifier)
@@ -123,7 +123,7 @@ namespace MixItUp.Desktop.Services
                                                 results.Add(new SongRequestModel()
                                                 {
                                                     ID = item["contentDetails"]["videoId"].ToString(),
-                                                    URI = item["id"]["videoId"].ToString(),
+                                                    URI = item["contentDetails"]["videoId"].ToString(),
                                                     Name = item["snippet"]["title"].ToString(),
                                                     Type = SongRequestServiceTypeEnum.YouTube,
                                                     AlbumImage = (!string.IsNullOrEmpty(albumArt)) ? albumArt : YouTubeDefaultAlbumArt
@@ -178,7 +178,7 @@ namespace MixItUp.Desktop.Services
                                         results.Add(new SongRequestModel()
                                         {
                                             ID = item["id"].ToString(),
-                                            URI = item["id"]["videoId"].ToString(),
+                                            URI = item["id"].ToString(),
                                             Name = item["snippet"]["title"].ToString(),
                                             Type = SongRequestServiceTypeEnum.YouTube,
                                             AlbumImage = (!string.IsNullOrEmpty(albumArt)) ? albumArt : YouTubeDefaultAlbumArt
@@ -228,7 +228,7 @@ namespace MixItUp.Desktop.Services
             return results;
         }
 
-        public async Task<SongRequestModel> GetStatus()
+        public async Task<SongRequestCurrentlyPlayingModel> GetStatus()
         {
             this.status = null;
             if (this.httpListenerServer != null)

@@ -143,14 +143,14 @@ namespace MixItUp.Base.Services
             return results;
         }
 
-        public async Task<SongRequestModel> GetStatus()
+        public async Task<SongRequestCurrentlyPlayingModel> GetStatus()
         {
             try
             {
                 SpotifyCurrentlyPlayingModel currentlyPlaying = await ChannelSession.Services.Spotify.GetCurrentlyPlaying();
                 if (currentlyPlaying != null && currentlyPlaying.ID != null)
                 {
-                    SongRequestModel result = new SongRequestModel()
+                    SongRequestCurrentlyPlayingModel result = new SongRequestCurrentlyPlayingModel()
                     {
                         Type = SongRequestServiceTypeEnum.Spotify,
                         ID = currentlyPlaying.ID,

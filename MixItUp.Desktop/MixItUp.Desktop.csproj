@@ -302,7 +302,6 @@
     <Compile Include="Services\OBSService.cs" />
     <Compile Include="Services\OverlayService.cs" />
     <Compile Include="Services\SerialService.cs" />
-    <Compile Include="Services\SongRequestService.cs" />
     <Compile Include="Services\StreamJarService.cs" />
     <Compile Include="Services\StreamlabsOBSService.cs" />
     <Compile Include="Services\StreamlabsService.cs" />

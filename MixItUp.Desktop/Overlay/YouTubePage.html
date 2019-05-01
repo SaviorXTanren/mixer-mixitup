@@ -84,14 +84,13 @@
             }, 1);
         }
 
-        function play(itemId, volume) {
+        function play(itemId) {
             if (!isReady) return;
 
             hasError = false;
 
             setTimeout(function () {
                 isPlaying = true;
-                player.setVolume(volume);
                 player.setLoop(false);
                 player.loadVideoById(itemId);
             }, 1);
