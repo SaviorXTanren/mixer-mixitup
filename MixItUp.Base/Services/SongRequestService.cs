@@ -68,6 +68,8 @@ namespace MixItUp.Base.Services
     {
         private static SemaphoreSlim songRequestLock = new SemaphoreSlim(1);
 
+        private const int backgroundInterval = 2500;
+
         public ObservableCollection<SongRequestModel> RequestSongs { get; private set; } = new ObservableCollection<SongRequestModel>();
         public ObservableCollection<SongRequestModel> PlaylistSongs { get; private set; } = new ObservableCollection<SongRequestModel>();
 
@@ -431,47 +433,58 @@ namespace MixItUp.Base.Services
                     }
                     else
                     {
-                        if (this.changeOccurred)
+                        if (this.changeOccurred || this.Status.Length == 0)
                         {
                             this.changeOccurred = false;
-                        }
 
-                        foreach (ISongRequestProviderService provider in this.enabledProviders)
-                        {
-                            if (this.Status.Type == provider.Type)
+                            SongRequestCurrentlyPlayingModel newStatus = await this.GetStatus();
+                            if (newStatus != null)
                             {
-                                this.Status = await provider.GetStatus();
+                                this.Status = newStatus;
+                                if (this.Status.Volume != ChannelSession.Settings.SongRequestVolume)
+                                {
+                                    await this.RefreshVolumeInternal();
+                                }
+
+                                if (this.Status.Type == status.Type && this.Status.ID.Equals(status.ID))
+                                {
+                                    this.Status.Progress = status.Progress;
+                                    this.Status.State = status.State;
+                                }
+
+                                if (this.Status.State == SongRequestStateEnum.NotStarted)
+                                {
+                                    await this.RefreshVolumeInternal();
+                                    await this.PlaySongInternal(this.Status);
+                                }
+                                else if (this.Status.State == SongRequestStateEnum.Ended)
+                                {
+                                    await this.RefreshVolumeInternal();
+                                    await this.SkipInternal();
+                                }
                             }
                         }
-
-                        if (this.Status != null)
+                        else
                         {
-                            if (this.Status.Volume != ChannelSession.Settings.SongRequestVolume)
+                            this.Status.Progress += backgroundInterval;
+                            if (this.Status.Progress >= this.Status.Length)
                             {
-                                await this.RefreshVolumeInternal();
-                            }
-
-                            if (this.Status.Type == status.Type && this.Status.ID.Equals(status.ID))
-                            {
-                                this.Status.Progress = status.Progress;
-                                this.Status.State = status.State;
-                            }
-
-                            if (this.Status.State == SongRequestStateEnum.NotStarted)
-                            {
-                                await this.RefreshVolumeInternal();
-                                await this.PlaySongInternal(this.Status);
-                            }
-                            else if (this.Status.State == SongRequestStateEnum.Ended)
-                            {
-                                await this.RefreshVolumeInternal();
-                                await this.SkipInternal();
+                                SongRequestCurrentlyPlayingModel newStatus = await this.GetStatus();
+                                if (newStatus != null)
+                                {
+                                    this.Status = newStatus;
+                                    if (this.Status.State == SongRequestStateEnum.Ended)
+                                    {
+                                        await this.RefreshVolumeInternal();
+                                        await this.SkipInternal();
+                                    }
+                                }
                             }
                         }
                     }
                 });
 
-                await Task.Delay(2500, tokenSource.Token);
+                await Task.Delay(backgroundInterval, tokenSource.Token);
             });
         }
 
@@ -524,7 +537,7 @@ namespace MixItUp.Base.Services
                             Type = song.Type,
                             IsFromBackupPlaylist = song.IsFromBackupPlaylist,
                             User = song.User,
-                            State = SongRequestStateEnum.Playing,
+                            State = SongRequestStateEnum.NotStarted,
                         };
                     }
                 }
@@ -572,6 +585,18 @@ namespace MixItUp.Base.Services
                 await provider.SetVolume(ChannelSession.Settings.SongRequestVolume);
             }
             GlobalEvents.SongRequestsChangedOccurred();
+        }
+
+        private async Task<SongRequestCurrentlyPlayingModel> GetStatus()
+        {
+            foreach (ISongRequestProviderService provider in this.enabledProviders)
+            {
+                if (this.Status.Type == provider.Type)
+                {
+                    return await provider.GetStatus();
+                }
+            }
+            return null;
         }
 
         private void GlobalEvents_OnSongRequestsChangedOccurred(object sender, EventArgs e)

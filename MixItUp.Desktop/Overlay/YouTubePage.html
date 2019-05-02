@@ -64,8 +64,8 @@
                 } else {
                     if (playerState == YT.PlayerState.PLAYING || playerState == YT.PlayerState.PAUSED || playerState == YT.PlayerState.ENDED) {
                         data.ID = videoData.video_id;
-                        data.Progress = player.getCurrentTime();
-                        data.Length = player.getDuration();
+                        data.Progress = player.getCurrentTime() * 1000;
+                        data.Length = player.getDuration() * 1000;
                         data.Volume = player.getVolume();
 
                         if (playerState == YT.PlayerState.PLAYING) {
@@ -162,6 +162,8 @@
 
                 data.Type = 1;
                 data.State = 3;
+                data.Progress = 0;
+                data.Length = 0;
                 data.Volume = player.getVolume();
 
                 window.external.SongRequestComplete(JSON.stringify(data));
