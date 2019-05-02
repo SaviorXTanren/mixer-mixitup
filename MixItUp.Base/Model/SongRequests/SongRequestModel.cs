@@ -30,10 +30,6 @@ namespace MixItUp.Base.Model.SongRequests
 
         public SongRequestServiceTypeEnum Type { get; set; }
 
-        public SongRequestStateEnum State { get; set; }
-        public long Progress { get; set; }
-        public long Length { get; set; }
-
         public bool IsFromBackupPlaylist { get; set; }
 
         public UserViewModel User { get; set; }
@@ -51,7 +47,7 @@ namespace MixItUp.Base.Model.SongRequests
 
         public override string ToString()
         {
-            return string.Format("{0} - {1} - {2} - {3} - {4} / {5}", this.ID, this.Name, this.Type, this.State, this.Progress, this.Length);
+            return string.Format("{0} - {1} - {2}", this.ID, this.Name, this.Type);
         }
 
         public override int GetHashCode() { return this.ID.GetHashCode(); }
@@ -59,6 +55,10 @@ namespace MixItUp.Base.Model.SongRequests
 
     public class SongRequestCurrentlyPlayingModel : SongRequestModel, IEquatable<SongRequestCurrentlyPlayingModel>
     {
+        public SongRequestStateEnum State { get; set; }
+        public long Progress { get; set; }
+        public long Length { get; set; }
+
         public int Volume { get; set; }
 
         public override bool Equals(object obj)
@@ -73,5 +73,10 @@ namespace MixItUp.Base.Model.SongRequests
         public bool Equals(SongRequestCurrentlyPlayingModel other) { return other != null && this.Type == other.Type && this.ID.Equals(other.ID); }
 
         public override int GetHashCode() { return this.ID.GetHashCode(); }
+
+        public override string ToString()
+        {
+            return string.Format("{0} - {1} - {2} - {3} - {4} / {5}", this.ID, this.Name, this.Type, this.State, this.Progress, this.Length);
+        }
     }
 }

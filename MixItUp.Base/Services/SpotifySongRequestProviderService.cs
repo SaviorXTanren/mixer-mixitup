@@ -70,7 +70,6 @@ namespace MixItUp.Base.Services
                                         ID = song.ID,
                                         URI = song.Uri,
                                         Name = song.ToString(),
-                                        Length = song.Duration,
                                         AlbumImage = (!string.IsNullOrEmpty(song.Album?.ImageLink)) ? song.Album?.ImageLink : SpotifyDefaultAlbumArt
                                     });
                                 }
@@ -110,9 +109,8 @@ namespace MixItUp.Base.Services
                                 ID = song.ID,
                                 URI = song.Uri,
                                 Name = song.ToString(),
-                                Length = song.Duration,
+                                AlbumImage = (!string.IsNullOrEmpty(song.Album?.ImageLink)) ? song.Album?.ImageLink : SpotifyDefaultAlbumArt,
                                 Type = SongRequestServiceTypeEnum.Spotify,
-                                AlbumImage = (!string.IsNullOrEmpty(song.Album?.ImageLink)) ? song.Album?.ImageLink : SpotifyDefaultAlbumArt
                             });
                         }
                     }
@@ -128,9 +126,8 @@ namespace MixItUp.Base.Services
                                 ID = song.ID,
                                 URI = song.Uri,
                                 Name = song.ToString(),
-                                Length = song.Duration,
+                                AlbumImage = (!string.IsNullOrEmpty(song.Album?.ImageLink)) ? song.Album?.ImageLink : SpotifyDefaultAlbumArt,
                                 Type = SongRequestServiceTypeEnum.Spotify,
-                                AlbumImage = (!string.IsNullOrEmpty(song.Album?.ImageLink)) ? song.Album?.ImageLink : SpotifyDefaultAlbumArt
                             });
                         }
                     }
@@ -152,11 +149,14 @@ namespace MixItUp.Base.Services
                 {
                     SongRequestCurrentlyPlayingModel result = new SongRequestCurrentlyPlayingModel()
                     {
-                        Type = SongRequestServiceTypeEnum.Spotify,
                         ID = currentlyPlaying.ID,
+                        URI = currentlyPlaying.Uri,
+                        Name = currentlyPlaying.ToString(),
+                        AlbumImage = (!string.IsNullOrEmpty(currentlyPlaying.Album?.ImageLink)) ? currentlyPlaying.Album?.ImageLink : SpotifyDefaultAlbumArt,
+                        Type = SongRequestServiceTypeEnum.Spotify,
                         Progress = currentlyPlaying.CurrentProgress,
                         Length = currentlyPlaying.Duration,
-                        AlbumImage = (!string.IsNullOrEmpty(currentlyPlaying.Album?.ImageLink)) ? currentlyPlaying.Album?.ImageLink : SpotifyDefaultAlbumArt
+                        Volume = currentlyPlaying.Volume,
                     };
 
                     if (currentlyPlaying.IsPlaying)
@@ -171,8 +171,6 @@ namespace MixItUp.Base.Services
                     {
                         result.State = SongRequestStateEnum.Ended;
                     }
-
-                    result.Volume = currentlyPlaying.Volume;
 
                     return result;
                 }
