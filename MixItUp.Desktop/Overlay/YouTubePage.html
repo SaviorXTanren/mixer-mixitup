@@ -144,6 +144,7 @@
 
         function onPlayerError(err) {
             hasError = true;
+            window.external.Error(JSON.stringify(err));
         }
 
         function onPlayerReady(event) {
@@ -168,6 +169,11 @@
                 hasError = false;
             }
         }
+
+        function windowError(message, url, line) {
+            window.external.Error(message + " - " + url + ":" + line);
+        }
+        window.onerror = windowError;
     </script>
 </body>
 </html>
