@@ -71,6 +71,11 @@ namespace MixItUp.Desktop.Services
             this.status = SerializerHelper.DeserializeFromString<SongRequestItem>(result);
         }
 
+        public void Error(string error)
+        {
+            Logger.Log("YouTube Song Requests Error: " + error);
+        }
+
         public async Task<SongRequestItem> GetStatus()
         {
             this.status = null;
