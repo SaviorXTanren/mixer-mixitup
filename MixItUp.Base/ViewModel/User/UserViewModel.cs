@@ -109,6 +109,9 @@ namespace MixItUp.Base.ViewModel.User
         public int Sparks { get; set; }
 
         [DataMember]
+        public UserFanProgressionModel FanProgression { get; set; }
+
+        [DataMember]
         public uint CurrentViewerCount { get; set; }
 
         [DataMember]
@@ -350,6 +353,8 @@ namespace MixItUp.Base.ViewModel.User
                             this.MixerSubscribeDate = userGroups.GetSubscriberDate();
                         }
                     }
+
+                    this.FanProgression = await ChannelSession.Connection.GetUserFanProgression(ChannelSession.Channel, user);
                 }
 
                 if (!this.IsInChat)

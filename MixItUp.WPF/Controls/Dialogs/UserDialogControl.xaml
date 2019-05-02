@@ -71,7 +71,20 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBlock x:Name="UserNameTextBlock" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" Text="{Binding UserName}" />
+                <Grid Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="2" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="15" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Image Grid.Column="0" Source="{Binding FanProgression.level.SmallAssetURL}" MaxHeight="20" MaxWidth="20" />
+                    <TextBlock Grid.Column="2" Text="{Binding FanProgression.level.level}" VerticalAlignment="Center" />
+
+                    <TextBlock x:Name="UserNameTextBlock" Grid.Column="4" Text="{Binding UserName}" VerticalAlignment="Center" />
+                </Grid>
 
                 <TextBlock Grid.Column="0" Grid.Row="2">Roles:</TextBlock>
                 <TextBlock x:Name="RolesTextBlock" Grid.Column="2" Grid.Row="2" Text="{Binding RolesDisplayString}" TextWrapping="Wrap" />

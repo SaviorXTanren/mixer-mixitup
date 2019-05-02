@@ -122,7 +122,7 @@ namespace MixItUp.WPF.Controls.Command
                         ChannelAdvancedModel channel = null;
                         UserModel user = null;
 
-                        if (eventType.ToString().Contains("channel"))
+                        if (eventType.ToString().Contains("channel") || eventType.ToString().Contains("progression"))
                         {
                             channel = await ChannelSession.Connection.GetChannel(this.EventIDTextBox.Text);
                             if (channel == null)
