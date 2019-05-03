@@ -134,7 +134,7 @@ namespace MixItUp.Base.Services
                                             user = new UserViewModel(userModel);
                                         }
 
-                                        EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.StreamlootsCardUsed));
+                                        EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.StreamlootsCardRedeemed));
                                         if (command != null)
                                         {
                                             Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
