@@ -1,0 +1,47 @@
+﻿<local:ServicesControlBase x:Class="MixItUp.WPF.Controls.Services.StreamlootsServiceControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Services"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid Margin="10" HorizontalAlignment="Center">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="350" />
+            <ColumnDefinition Width="40" />
+            <ColumnDefinition Width="250" />
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" TextWrapping="Wrap" VerticalAlignment="Center">Streamloots service connectivity allows you to trigger events from when a card is used on your channel.</TextBlock>
+
+            <TextBlock Grid.Row="2" TextWrapping="Wrap">NOTE: For Streamloots connectivity to work, you will NOT be able to use the Streamloots Stream Overlay in your streaming overlay. Streamloots only allows one thing to be connected to you account at a time.</TextBlock>
+        </Grid>
+
+        <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid x:Name="ExistingAccountGrid" Grid.Row="0" Visibility="Collapsed">
+                <Button x:Name="LogOutButton" Click="LogOutButton_Click" HorizontalAlignment="Center" Width="90">Log Out</Button>
+            </Grid>
+
+            <Grid x:Name="NewLoginGrid" Grid.Row="0" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBox Grid.Row="0" x:Name="StreamlootsURLTextBox" MaterialDesign:HintAssist.Hint="Streamloots Alerts Overlay URL" Width="250" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                <Button x:Name="LogInButton" Grid.Row="2" Click="LogInButton_Click" HorizontalAlignment="Center" Width="90">Log In</Button>
+            </Grid>
+        </Grid>
+    </Grid>
+</local:ServicesControlBase>

@@ -580,6 +580,10 @@ namespace MixItUp.Base
                     {
                         await ChannelSession.Services.InitializePatreon();
                     }
+                    if (ChannelSession.Settings.StreamlootsOAuthToken != null)
+                    {
+                        await ChannelSession.Services.InitializeStreamloots();
+                    }
 
                     if (ChannelSession.Settings.RemoteHostConnection != null)
                     {

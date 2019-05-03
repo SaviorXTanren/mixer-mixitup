@@ -471,6 +471,30 @@ namespace MixItUp.Desktop.Services
             }
         }
 
+        public override async Task<bool> InitializeStreamloots(string streamlootsID = null)
+        {
+            this.Streamloots = (ChannelSession.Settings.StreamlootsOAuthToken != null) ? new StreamlootsService(ChannelSession.Settings.StreamlootsOAuthToken) : new StreamlootsService(streamlootsID);
+            if (await this.Streamloots.Connect())
+            {
+                return true;
+            }
+            else
+            {
+                await this.DisconnectStreamloots();
+            }
+            return false;
+        }
+
+        public override async Task DisconnectStreamloots()
+        {
+            if (this.Streamloots != null)
+            {
+                await this.Streamloots.Disconnect();
+                this.Streamloots = null;
+                ChannelSession.Settings.StreamlootsOAuthToken = null;
+            }
+        }
+
         private void OverlayServer_OnWebSocketConnectedOccurred(object sender, System.EventArgs e)
         {
             ChannelSession.ReconnectionOccurred("Overlay");

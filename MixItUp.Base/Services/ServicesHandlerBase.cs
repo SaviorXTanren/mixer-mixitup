@@ -37,6 +37,7 @@ namespace MixItUp.Base.Services
         public ITreatStreamService TreatStream { get; protected set; }
         public IStreamJarService StreamJar { get; protected set; }
         public IPatreonService Patreon { get; protected set; }
+        public IStreamlootsService Streamloots { get; protected set; }
 
         public abstract Task Close();
 
@@ -91,5 +92,8 @@ namespace MixItUp.Base.Services
 
         public abstract Task<bool> InitializePatreon();
         public abstract Task DisconnectPatreon();
+
+        public abstract Task<bool> InitializeStreamloots(string streamlootsID = null);
+        public abstract Task DisconnectStreamloots();
     }
 }

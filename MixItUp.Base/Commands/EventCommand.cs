@@ -74,6 +74,9 @@ namespace MixItUp.Base.Commands
         MixerSparksUsed = 52,
         [Name("Channel Embers Spent")]
         MixerEmbersUsed = 53,
+
+        [Name("Streamloots Card Used")]
+        StreamlootsCardUsed = 60,
     }
 
     public class EventCommand : CommandBase, IEquatable<EventCommand>
