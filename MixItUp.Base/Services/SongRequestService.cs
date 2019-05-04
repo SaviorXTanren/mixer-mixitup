@@ -201,32 +201,40 @@ namespace MixItUp.Base.Services
                 return;
             }
 
-            IEnumerable<SongRequestModel> results = await this.Search(service, identifier);
-            if (results != null && results.Count() > 0)
+            if (this.lastUserSongSearches.ContainsKey(user) && int.TryParse(identifier, out int songIndex) && songIndex >= 0 && songIndex < this.lastUserSongSearches[user].Count)
             {
-                if (results.Count() == 1)
-                {
-                    await this.AddSongRequest(user, results.First());
-                }
-                else
-                {
-                    this.lastUserSongSearches[user] = new List<SongRequestModel>();
-                    foreach (SongRequestModel song in results.Take(5))
-                    {
-                        this.lastUserSongSearches[user].Add(song);
-                    }
-
-                    List<string> resultsStrings = new List<string>();
-                    for (int i = 0; i < this.lastUserSongSearches[user].Count; i++)
-                    {
-                        resultsStrings.Add((i + 1) + ". " + this.lastUserSongSearches[user][i].Name);
-                    }
-                    await ChannelSession.Chat.Whisper(user.UserName, "Multiple results found, please re-run this command with a space & the number of the song: " + string.Join(",  ", resultsStrings));
-                }
+                await this.AddSongRequest(user, this.lastUserSongSearches[user][songIndex]);
+                this.lastUserSongSearches.Remove(user);
             }
             else
             {
-                await ChannelSession.Chat.Whisper(user.UserName, "We were unable to find a song that matched you request. For details on how to request songs, check out: https://github.com/SaviorXTanren/mixer-mixitup/wiki/Song-Requests#requesting-songs");
+                IEnumerable<SongRequestModel> results = await this.Search(service, identifier);
+                if (results != null && results.Count() > 0)
+                {
+                    if (results.Count() == 1)
+                    {
+                        await this.AddSongRequest(user, results.First());
+                    }
+                    else
+                    {
+                        this.lastUserSongSearches[user] = new List<SongRequestModel>();
+                        foreach (SongRequestModel song in results.Take(5))
+                        {
+                            this.lastUserSongSearches[user].Add(song);
+                        }
+
+                        List<string> resultsStrings = new List<string>();
+                        for (int i = 0; i < this.lastUserSongSearches[user].Count; i++)
+                        {
+                            resultsStrings.Add((i + 1) + ". " + this.lastUserSongSearches[user][i].Name);
+                        }
+                        await ChannelSession.Chat.Whisper(user.UserName, "Multiple results found, please re-run this command with a space & the number of the song: " + string.Join(",  ", resultsStrings));
+                    }
+                }
+                else
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, "We were unable to find a song that matched you request. For details on how to request songs, check out: https://github.com/SaviorXTanren/mixer-mixitup/wiki/Song-Requests#requesting-songs");
+                }
             }
         }
 
