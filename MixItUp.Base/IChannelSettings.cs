@@ -178,6 +178,7 @@ namespace MixItUp.Base
         List<FavoriteGroupModel> FavoriteGroups { get; set; }
 
         HashSet<SongRequestServiceTypeEnum> SongRequestServiceTypes { get; set; }
+        bool SongRequestSubPriority { get; set; }
         bool SpotifyAllowExplicit { get; set; }
         string DefaultPlaylist { get; set; }
         int SongRequestVolume { get; set; }

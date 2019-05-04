@@ -311,6 +311,8 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public HashSet<SongRequestServiceTypeEnum> SongRequestServiceTypes { get; set; }
         [JsonProperty]
+        public bool SongRequestSubPriority { get; set; }
+        [JsonProperty]
         public bool SpotifyAllowExplicit { get; set; }
 
         [JsonProperty]

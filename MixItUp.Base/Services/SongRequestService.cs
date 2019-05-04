@@ -419,6 +419,17 @@ namespace MixItUp.Base.Services
 
             await SongRequestService.songRequestLock.WaitAndRelease(() =>
             {
+                if (ChannelSession.Settings.SongRequestSubPriority && user.IsMixerSubscriber)
+                {
+                    for (int i = 0; i < this.RequestSongs.Count; i++)
+                    {
+                        if (!this.RequestSongs[i].User.IsMixerSubscriber)
+                        {
+                            this.RequestSongs.Insert(i, song);
+                            return Task.FromResult(0);
+                        }
+                    }
+                }
                 this.RequestSongs.Add(song);
                 return Task.FromResult(0);
             });

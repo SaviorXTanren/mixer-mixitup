@@ -16,6 +16,16 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
         public string EnableDisableButtonText { get { return (this.IsEnabled) ? "Disable" : "Enable"; } }
 
+        public bool SubPriority
+        {
+            get { return ChannelSession.Settings.SongRequestSubPriority; }
+            set
+            {
+                ChannelSession.Settings.SongRequestSubPriority = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+
         public bool SpotifyProvider
         {
             get { return ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.Spotify); }
@@ -32,6 +42,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 this.NotifyPropertyChanged();
             }
         }
+
         public bool YouTubeProvider
         {
             get { return ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.YouTube); }

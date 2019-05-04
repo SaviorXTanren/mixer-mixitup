@@ -41,12 +41,25 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Button Grid.Row="0" Content="{Binding EnableDisableButtonText}" Command="{Binding EnableDisableCommand}" Width="90" />
+                <Grid Grid.Row="0" HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="30" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" Content="{Binding EnableDisableButtonText}" Command="{Binding EnableDisableCommand}" Width="90" />
+
+                    <TextBlock Grid.Column="2" Grid.Row="2" VerticalAlignment="Center">Sub Priority:</TextBlock>
+                    <ToggleButton x:Name="SubPriorityToggleButton" Grid.Column="4" Grid.Row="2" IsChecked="{Binding SubPriority}" IsEnabled="{Binding IsEnabled, Converter={StaticResource InverseBooleanConverter}}" />
+                </Grid>
 
                 <TextBlock Grid.Row="2" TextWrapping="Wrap" Width="250">To use the Song Requests, create a command with a <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Actions#song-request" RequestNavigate="Hyperlink_RequestNavigate">Song Request action</Hyperlink>.</TextBlock>
             </Grid>
 
-            <Grid x:Name="SongRequestServicesGrid" Grid.Column="2">
+            <Grid x:Name="SongRequestServicesGrid" Grid.Column="2" IsEnabled="{Binding IsEnabled, Converter={StaticResource InverseBooleanConverter}}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="10" />
