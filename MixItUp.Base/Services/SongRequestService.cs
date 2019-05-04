@@ -450,8 +450,11 @@ namespace MixItUp.Base.Services
         {
             song.User = user;
 
+            bool isSongCurrentlyPlaying = false;
             await SongRequestService.songRequestLock.WaitAndRelease(() =>
             {
+                isSongCurrentlyPlaying = (this.Status != null);
+
                 if (ChannelSession.Settings.SongRequestSubPriority && user.IsMixerSubscriber)
                 {
                     for (int i = 0; i < this.RequestSongs.Count; i++)
@@ -466,6 +469,11 @@ namespace MixItUp.Base.Services
                 this.RequestSongs.Add(song);
                 return Task.FromResult(0);
             });
+
+            if (!isSongCurrentlyPlaying)
+            {
+                await this.Skip();
+            }
 
             ChannelSession.Services.Telemetry.TrackSongRequest(song.Type);
 
@@ -617,8 +625,7 @@ namespace MixItUp.Base.Services
                             {
                                 await this.SkipInternal();
                             }
-
-                            if (this.Status.Volume != ChannelSession.Settings.SongRequestVolume)
+                            else if (this.Status.Volume != ChannelSession.Settings.SongRequestVolume)
                             {
                                 await this.RefreshVolumeInternal();
                             }
