@@ -101,11 +101,11 @@ namespace MixItUp.Base.Actions
                     }
                     else if (this.SongRequestType == SongRequestActionTypeEnum.RemoveLast)
                     {
-                        await ChannelSession.Services.SongRequestService.RemoveLastSongRequested();
+                        await ChannelSession.Services.SongRequestService.RemoveLastRequested();
                     }
                     else if (this.SongRequestType == SongRequestActionTypeEnum.RemoveLastByUser)
                     {
-                        await ChannelSession.Services.SongRequestService.RemoveLastSongRequestedByUser(user);
+                        await ChannelSession.Services.SongRequestService.RemoveLastRequested(user);
                     }
                     else if (this.SongRequestType == SongRequestActionTypeEnum.SetVolume)
                     {
@@ -125,7 +125,7 @@ namespace MixItUp.Base.Actions
                     }
                     else if (this.SongRequestType == SongRequestActionTypeEnum.DisplayCurrentlyPlaying)
                     {
-                        SongRequestModel currentlyPlaying = await ChannelSession.Services.SongRequestService.GetCurrentlyPlaying();
+                        SongRequestModel currentlyPlaying = await ChannelSession.Services.SongRequestService.GetCurrent();
                         if (currentlyPlaying != null)
                         {
                             await ChannelSession.Chat.SendMessage("Currently Playing: " + currentlyPlaying.Name);
@@ -137,7 +137,7 @@ namespace MixItUp.Base.Actions
                     }
                     else if (this.SongRequestType == SongRequestActionTypeEnum.DisplayNextSong)
                     {
-                        SongRequestModel nextTrack = await ChannelSession.Services.SongRequestService.GetNextTrack();
+                        SongRequestModel nextTrack = await ChannelSession.Services.SongRequestService.GetNext();
                         if (nextTrack != null)
                         {
                             await ChannelSession.Chat.SendMessage("Coming Up Next: " + nextTrack.Name);

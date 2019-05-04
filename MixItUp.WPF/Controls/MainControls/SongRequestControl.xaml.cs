@@ -47,6 +47,28 @@ namespace MixItUp.WPF.Controls.MainControls
             });
         }
 
+        private async void MoveUpButton_Click(object sender, RoutedEventArgs e)
+        {
+            await this.Window.RunAsyncOperation(() =>
+            {
+                Button button = (Button)sender;
+                SongRequestModel songRequest = (SongRequestModel)button.DataContext;
+                this.viewModel.MoveUpCommand.Execute(songRequest);
+                return Task.FromResult(0);
+            });
+        }
+
+        private async void MoveDownButton_Click(object sender, RoutedEventArgs e)
+        {
+            await this.Window.RunAsyncOperation(() =>
+            {
+                Button button = (Button)sender;
+                SongRequestModel songRequest = (SongRequestModel)button.DataContext;
+                this.viewModel.MoveDownCommand.Execute(songRequest);
+                return Task.FromResult(0);
+            });
+        }
+
         private async void DeleteQueueButton_Click(object sender, RoutedEventArgs e)
         {
             await this.Window.RunAsyncOperation(() =>

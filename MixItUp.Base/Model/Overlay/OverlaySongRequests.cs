@@ -120,7 +120,7 @@ namespace MixItUp.Base.Model.Overlay
 
                 List<SongRequestModel> songRequests = new List<SongRequestModel>();
 
-                SongRequestModel currentlyPlaying = await ChannelSession.Services.SongRequestService.GetCurrentlyPlaying();
+                SongRequestModel currentlyPlaying = await ChannelSession.Services.SongRequestService.GetCurrent();
                 if (currentlyPlaying != null)
                 {
                     songRequests.Add(currentlyPlaying);

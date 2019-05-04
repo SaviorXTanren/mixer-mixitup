@@ -343,8 +343,8 @@ namespace MixItUp.Base.Util
             {
                 if (ChannelSession.Services.SongRequestService != null && ChannelSession.Services.SongRequestService.IsEnabled)
                 {
-                    this.ReplaceSongRequestSpecialIdentifiers(CurrentSongIdentifierHeader, await ChannelSession.Services.SongRequestService.GetCurrentlyPlaying());
-                    this.ReplaceSongRequestSpecialIdentifiers(NextSongIdentifierHeader, await ChannelSession.Services.SongRequestService.GetNextTrack());
+                    this.ReplaceSongRequestSpecialIdentifiers(CurrentSongIdentifierHeader, await ChannelSession.Services.SongRequestService.GetCurrent());
+                    this.ReplaceSongRequestSpecialIdentifiers(NextSongIdentifierHeader, await ChannelSession.Services.SongRequestService.GetNext());
                 }
             }
 

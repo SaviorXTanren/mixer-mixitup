@@ -53,13 +53,16 @@ namespace MixItUp.Base.Services
 
         Task RefreshVolume();
 
-        Task<SongRequestModel> GetCurrentlyPlaying();
-        Task<SongRequestModel> GetNextTrack();
+        Task<SongRequestModel> GetCurrent();
+        Task<SongRequestModel> GetNext();
 
-        Task RemoveSongRequest(SongRequestModel song);
-        Task RemoveLastSongRequested();
-        Task RemoveLastSongRequestedByUser(UserViewModel user);
-        Task ClearAllRequests();
+        Task MoveUp(SongRequestModel song);
+        Task MoveDown(SongRequestModel song);
+
+        Task Remove(SongRequestModel song);
+        Task RemoveLastRequested();
+        Task RemoveLastRequested(UserViewModel user);
+        Task ClearAll();
     }
 
     public class SongRequestService : NotifyPropertyChangedBase, ISongRequestService
@@ -303,7 +306,7 @@ namespace MixItUp.Base.Services
             GlobalEvents.SongRequestsChangedOccurred();
         }
 
-        public async Task<SongRequestModel> GetCurrentlyPlaying()
+        public async Task<SongRequestModel> GetCurrent()
         {
             return await SongRequestService.songRequestLock.WaitAndRelease(() =>
             {
@@ -311,7 +314,7 @@ namespace MixItUp.Base.Services
             });
         }
 
-        public async Task<SongRequestModel> GetNextTrack()
+        public async Task<SongRequestModel> GetNext()
         {
             return await SongRequestService.songRequestLock.WaitAndRelease(() =>
             {
@@ -330,7 +333,37 @@ namespace MixItUp.Base.Services
             });
         }
 
-        public async Task RemoveSongRequest(SongRequestModel song)
+        public async Task MoveUp(SongRequestModel song)
+        {
+            await SongRequestService.songRequestLock.WaitAndRelease(() =>
+            {
+                int index = this.RequestSongs.IndexOf(song) - 1;
+                if (index >= 0)
+                {
+                    this.RequestSongs.Remove(song);
+                    this.RequestSongs.Insert(index, song);
+                }
+                return Task.FromResult(0);
+            });
+            GlobalEvents.SongRequestsChangedOccurred();
+        }
+
+        public async Task MoveDown(SongRequestModel song)
+        {
+            await SongRequestService.songRequestLock.WaitAndRelease(() =>
+            {
+                int index = this.RequestSongs.IndexOf(song) + 1;
+                if (index < this.RequestSongs.Count)
+                {
+                    this.RequestSongs.Remove(song);
+                    this.RequestSongs.Insert(index, song);
+                }
+                return Task.FromResult(0);
+            });
+            GlobalEvents.SongRequestsChangedOccurred();
+        }
+
+        public async Task Remove(SongRequestModel song)
         {
             await SongRequestService.songRequestLock.WaitAndRelease(() =>
             {
@@ -340,7 +373,7 @@ namespace MixItUp.Base.Services
             GlobalEvents.SongRequestsChangedOccurred();
         }
 
-        public async Task RemoveLastSongRequested()
+        public async Task RemoveLastRequested()
         {
             SongRequestModel song = null;
             await SongRequestService.songRequestLock.WaitAndRelease(() =>
@@ -351,7 +384,7 @@ namespace MixItUp.Base.Services
 
             if (song != null)
             {
-                await this.RemoveSongRequest(song);
+                await this.Remove(song);
             }
 
             if (song != null)
@@ -362,7 +395,7 @@ namespace MixItUp.Base.Services
             GlobalEvents.SongRequestsChangedOccurred();
         }
 
-        public async Task RemoveLastSongRequestedByUser(UserViewModel user)
+        public async Task RemoveLastRequested(UserViewModel user)
         {
             SongRequestModel song = null;
             await SongRequestService.songRequestLock.WaitAndRelease(() =>
@@ -373,7 +406,7 @@ namespace MixItUp.Base.Services
 
             if (song != null)
             {
-                await this.RemoveSongRequest(song);
+                await this.Remove(song);
             }
 
             if (song != null)
@@ -388,7 +421,7 @@ namespace MixItUp.Base.Services
             GlobalEvents.SongRequestsChangedOccurred();
         }
 
-        public async Task ClearAllRequests()
+        public async Task ClearAll()
         {
             await SongRequestService.songRequestLock.WaitAndRelease(() =>
             {

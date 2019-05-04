@@ -80,15 +80,15 @@
                                                 <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
 
-                                            <Button x:Name="UpButton" Click="UpButton_Click" Grid.Column="0" Margin="0,0,0,0" Width="40" HorizontalAlignment="Center" ToolTip="Move Up">
+                                            <Button x:Name="UpButton" Click="UpButton_Click" Grid.Column="0" Width="40" HorizontalAlignment="Center" ToolTip="Move Up">
                                                 <MaterialDesign:PackIcon Kind="ArrowUp" Height="24" Width="24" Margin="-13,-10" Foreground="White" />
                                             </Button>
 
-                                            <Button x:Name="DownButton" Click="DownButton_Click" Grid.Column="2" Margin="0,0,0,0" Width="40" HorizontalAlignment="Center" ToolTip="Move Down">
+                                            <Button x:Name="DownButton" Click="DownButton_Click" Grid.Column="2" Width="40" HorizontalAlignment="Center" ToolTip="Move Down">
                                                 <MaterialDesign:PackIcon Kind="ArrowDown" Height="24" Width="24" Margin="-13,-10" Foreground="White" />
                                             </Button>
 
-                                            <Button x:Name="DeleteButton" Click="DeleteButton_Click" Grid.Column="4" Margin="0,0,0,0" Width="40" HorizontalAlignment="Center" ToolTip="Delete">
+                                            <Button x:Name="DeleteButton" Click="DeleteButton_Click" Grid.Column="4" Width="40" HorizontalAlignment="Center" ToolTip="Delete">
                                                 <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="White" />
                                             </Button>
                                         </Grid>

@@ -142,14 +142,32 @@
             <DataGrid Grid.Row="2" ItemsSource="{Binding RequestSongs}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
-                    <DataGridTextColumn Header="User" Binding="{Binding User.UserName}" IsReadOnly="True" Width="150" />
-                    <DataGridTextColumn Header="Source" Binding="{Binding Type}" IsReadOnly="True" Width="150" />
-                    <DataGridTemplateColumn Width="65">
+                    <DataGridTextColumn Header="User" Binding="{Binding User.UserName}" IsReadOnly="True" Width="125" />
+                    <DataGridTextColumn Header="Source" Binding="{Binding Type}" IsReadOnly="True" Width="100" />
+                    <DataGridTemplateColumn Width="160">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button x:Name="DeleteQueueButton" Click="DeleteQueueButton_Click" Width="40" HorizontalAlignment="Center">
-                                    <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                </Button>
+                                <Grid HorizontalAlignment="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="5" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="5" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Button x:Name="MoveUpButton" Grid.Column="0" Click="MoveUpButton_Click" Width="40" HorizontalAlignment="Center">
+                                        <MaterialDesign:PackIcon Kind="ArrowUp" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                    </Button>
+
+                                    <Button x:Name="MoveDownButton" Grid.Column="2" Click="MoveDownButton_Click" Width="40" HorizontalAlignment="Center">
+                                        <MaterialDesign:PackIcon Kind="ArrowDown" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                    </Button>
+
+                                    <Button x:Name="DeleteQueueButton" Grid.Column="4" Click="DeleteQueueButton_Click" Width="40" HorizontalAlignment="Center">
+                                        <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                    </Button>
+                                </Grid>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
