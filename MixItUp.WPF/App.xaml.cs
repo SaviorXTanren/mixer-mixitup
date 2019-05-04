@@ -84,6 +84,13 @@ namespace MixItUp.WPF
             desktopServicesHandler.Initialize();
 
             Logger.Initialize(desktopServicesHandler.FileService);
+            DispatcherHelper.RegisterDispatcher(async (func) =>
+            {
+                await this.Dispatcher.Invoke(async () =>
+                {
+                    await func();
+                });
+            });
             SerializerHelper.Initialize(desktopServicesHandler.FileService);
             DialogHelper.Initialize(new WPFDialogShower());
 

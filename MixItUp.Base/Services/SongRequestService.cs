@@ -3,7 +3,6 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,8 +31,7 @@ namespace MixItUp.Base.Services
 
     public interface ISongRequestService
     {
-        ObservableCollection<SongRequestModel> RequestSongs { get; }
-        ObservableCollection<SongRequestModel> PlaylistSongs { get; }
+        List<SongRequestModel> RequestSongs { get; }
 
         SongRequestCurrentlyPlayingModel Status { get; }
 
@@ -68,10 +66,10 @@ namespace MixItUp.Base.Services
     {
         private static SemaphoreSlim songRequestLock = new SemaphoreSlim(1);
 
-        private const int backgroundInterval = 2500;
+        private const int backgroundInterval = 2000;
 
-        public ObservableCollection<SongRequestModel> RequestSongs { get; private set; } = new ObservableCollection<SongRequestModel>();
-        public ObservableCollection<SongRequestModel> PlaylistSongs { get; private set; } = new ObservableCollection<SongRequestModel>();
+        public List<SongRequestModel> RequestSongs { get; private set; } = new List<SongRequestModel>();
+        private List<SongRequestModel> playlistSongs = new List<SongRequestModel>();
 
         public SongRequestCurrentlyPlayingModel Status
         {
@@ -84,7 +82,8 @@ namespace MixItUp.Base.Services
         }
         private SongRequestCurrentlyPlayingModel status;
 
-        private CancellationTokenSource backgroundThreadCancellationTokenSource;
+        private Task backgroundSongThread = null;
+        private CancellationTokenSource backgroundSongThreadCancellationTokenSource;
 
         private Dictionary<UserViewModel, List<SongRequestModel>> lastUserSongSearches = new Dictionary<UserViewModel, List<SongRequestModel>>();
 
@@ -93,12 +92,9 @@ namespace MixItUp.Base.Services
 
         public bool IsEnabled { get; private set; }
 
-        private bool changeOccurred = false;
+        private bool forceStateQuery = false;
 
-        public SongRequestService()
-        {
-            GlobalEvents.OnSongRequestsChangedOccurred += GlobalEvents_OnSongRequestsChangedOccurred;
-        }
+        public SongRequestService() { }
 
         public void AddProvider(ISongRequestProviderService provider)
         {
@@ -145,34 +141,11 @@ namespace MixItUp.Base.Services
                 await ChannelSession.SaveSettings();
 
                 this.RequestSongs.Clear();
-                this.PlaylistSongs.Clear();
-
-                if (!string.IsNullOrEmpty(ChannelSession.Settings.DefaultPlaylist))
-                {
-                    List<Task<IEnumerable<SongRequestModel>>> playlistTasks = new List<Task<IEnumerable<SongRequestModel>>>();
-                    foreach (ISongRequestProviderService provider in this.enabledProviders)
-                    {
-                        playlistTasks.Add(provider.GetPlaylist(ChannelSession.Settings.DefaultPlaylist));
-                    }
-
-                    IEnumerable<SongRequestModel>[] taskResults = await Task.WhenAll(playlistTasks);
-                    IEnumerable<SongRequestModel> results = taskResults.SelectMany(r => r);
-                    if (results != null)
-                    {
-                        foreach (SongRequestModel song in results.OrderBy(s => Guid.NewGuid()))
-                        {
-                            song.IsFromBackupPlaylist = true;
-                            this.PlaylistSongs.Add(song);
-                        }
-                    }
-                }
+                this.playlistSongs.Clear();
 
                 await this.RefreshVolumeInternal();
 
-                this.backgroundThreadCancellationTokenSource = new CancellationTokenSource();
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                Task.Run(async () => { await this.PlayerBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                await this.SkipInternal();
 
                 this.IsEnabled = true;
 
@@ -186,10 +159,10 @@ namespace MixItUp.Base.Services
             {
                 this.RequestSongs.Clear();
 
-                if (this.backgroundThreadCancellationTokenSource != null)
+                if (this.backgroundSongThreadCancellationTokenSource != null)
                 {
-                    this.backgroundThreadCancellationTokenSource.Cancel();
-                    this.backgroundThreadCancellationTokenSource = null;
+                    this.backgroundSongThreadCancellationTokenSource.Cancel();
+                    this.backgroundSongThreadCancellationTokenSource = null;
                 }
 
                 this.IsEnabled = false;
@@ -265,6 +238,7 @@ namespace MixItUp.Base.Services
                         if (this.Status.Type == provider.Type)
                         {
                             await provider.Pause();
+                            this.forceStateQuery = true;
                         }
                     }
                 }
@@ -283,6 +257,7 @@ namespace MixItUp.Base.Services
                         if (this.Status.Type == provider.Type)
                         {
                             await provider.Resume();
+                            this.forceStateQuery = true;
                         }
                     }
                 }
@@ -301,6 +276,7 @@ namespace MixItUp.Base.Services
                         if (this.Status.Type == provider.Type)
                         {
                             await provider.PauseResume();
+                            this.forceStateQuery = true;
                         }
                     }
                 }
@@ -322,6 +298,7 @@ namespace MixItUp.Base.Services
             await SongRequestService.songRequestLock.WaitAndRelease(async () =>
             {
                 await this.RefreshVolumeInternal();
+                this.forceStateQuery = true;
             });
             GlobalEvents.SongRequestsChangedOccurred();
         }
@@ -342,9 +319,9 @@ namespace MixItUp.Base.Services
                 {
                     return Task.FromResult(this.RequestSongs.FirstOrDefault());
                 }
-                else if (this.PlaylistSongs.Count > 0)
+                else if (this.playlistSongs.Count > 0)
                 {
-                    return Task.FromResult(this.PlaylistSongs.FirstOrDefault());
+                    return Task.FromResult(this.playlistSongs.FirstOrDefault());
                 }
                 else
                 {
@@ -369,12 +346,13 @@ namespace MixItUp.Base.Services
             await SongRequestService.songRequestLock.WaitAndRelease(() =>
             {
                 song = this.RequestSongs.LastOrDefault();
-                if (song != null)
-                {
-                    this.RequestSongs.Remove(song);
-                }
                 return Task.FromResult(0);
             });
+
+            if (song != null)
+            {
+                await this.RemoveSongRequest(song);
+            }
 
             if (song != null)
             {
@@ -390,12 +368,13 @@ namespace MixItUp.Base.Services
             await SongRequestService.songRequestLock.WaitAndRelease(() =>
             {
                 song = this.RequestSongs.LastOrDefault(s => s.User.ID == user.ID);
-                if (song != null)
-                {
-                    this.RequestSongs.Remove(song);
-                }
                 return Task.FromResult(0);
             });
+
+            if (song != null)
+            {
+                await this.RemoveSongRequest(song);
+            }
 
             if (song != null)
             {
@@ -417,75 +396,6 @@ namespace MixItUp.Base.Services
                 return Task.FromResult(0);
             });
             GlobalEvents.SongRequestsChangedOccurred();
-        }
-
-        private async Task PlayerBackground()
-        {
-            await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
-            {
-                tokenSource.Token.ThrowIfCancellationRequested();
-
-                await SongRequestService.songRequestLock.WaitAndRelease(async () =>
-                {
-                    if (this.Status == null)
-                    {
-                        await this.SkipInternal();
-                    }
-                    else
-                    {
-                        if (this.changeOccurred || this.Status.Length == 0)
-                        {
-                            this.changeOccurred = false;
-
-                            SongRequestCurrentlyPlayingModel newStatus = await this.GetStatus();
-                            if (newStatus != null)
-                            {
-                                this.Status = newStatus;
-                                if (this.Status.Volume != ChannelSession.Settings.SongRequestVolume)
-                                {
-                                    await this.RefreshVolumeInternal();
-                                }
-
-                                if (this.Status.Type == status.Type && this.Status.ID.Equals(status.ID))
-                                {
-                                    this.Status.Progress = status.Progress;
-                                    this.Status.State = status.State;
-                                }
-
-                                if (this.Status.State == SongRequestStateEnum.NotStarted)
-                                {
-                                    await this.RefreshVolumeInternal();
-                                    await this.PlaySongInternal(this.Status);
-                                }
-                                else if (this.Status.State == SongRequestStateEnum.Ended)
-                                {
-                                    await this.RefreshVolumeInternal();
-                                    await this.SkipInternal();
-                                }
-                            }
-                        }
-                        else
-                        {
-                            this.Status.Progress += backgroundInterval;
-                            if (this.Status.Progress >= this.Status.Length)
-                            {
-                                SongRequestCurrentlyPlayingModel newStatus = await this.GetStatus();
-                                if (newStatus != null)
-                                {
-                                    this.Status = newStatus;
-                                    if (this.Status.State == SongRequestStateEnum.Ended)
-                                    {
-                                        await this.RefreshVolumeInternal();
-                                        await this.SkipInternal();
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-
-                await Task.Delay(backgroundInterval, tokenSource.Token);
-            });
         }
 
         private async Task<IEnumerable<SongRequestModel>> Search(SongRequestServiceTypeEnum service, string identifier)
@@ -519,32 +429,6 @@ namespace MixItUp.Base.Services
             GlobalEvents.SongRequestsChangedOccurred();
         }
 
-        private async Task PlaySongInternal(SongRequestModel song)
-        {
-            if (song != null)
-            {
-                foreach (ISongRequestProviderService provider in this.enabledProviders)
-                {
-                    if (song.Type == provider.Type)
-                    {
-                        await provider.Play(song);
-                        this.Status = new SongRequestCurrentlyPlayingModel()
-                        {
-                            ID = song.ID,
-                            URI = song.URI,
-                            Name = song.Name,
-                            AlbumImage = song.AlbumImage,
-                            Type = song.Type,
-                            IsFromBackupPlaylist = song.IsFromBackupPlaylist,
-                            User = song.User,
-                            State = SongRequestStateEnum.NotStarted,
-                        };
-                    }
-                }
-            }
-            GlobalEvents.SongRequestsChangedOccurred();
-        }
-
         private async Task SkipInternal()
         {
             if (this.Status != null)
@@ -559,21 +443,59 @@ namespace MixItUp.Base.Services
             }
             this.Status = null;
 
+            if (this.backgroundSongThread != null)
+            {
+                this.backgroundSongThreadCancellationTokenSource.Cancel();
+                this.backgroundSongThreadCancellationTokenSource = null;
+                this.backgroundSongThread = null;
+            }
+
             SongRequestModel newSong = null;
             if (this.RequestSongs.Count > 0)
             {
                 newSong = this.RequestSongs.First();
-                this.RequestSongs.Remove(newSong);
+                this.RequestSongs.RemoveAt(0);
             }
-            else if (this.PlaylistSongs.Count > 0)
+            else
             {
-                newSong = this.PlaylistSongs.First();
-                this.PlaylistSongs.Remove(newSong);
+                if (this.playlistSongs.Count == 0)
+                {
+                    await this.LoadBackupPlaylistSongs();
+                }
+
+                if (this.playlistSongs.Count > 0)
+                {
+                    newSong = this.playlistSongs.First();
+                    this.playlistSongs.Remove(newSong);
+                }
             }
 
             if (newSong != null)
             {
-                await this.PlaySongInternal(newSong);
+                foreach (ISongRequestProviderService provider in this.enabledProviders)
+                {
+                    if (newSong.Type == provider.Type)
+                    {
+                        await provider.Play(newSong);
+                        this.Status = new SongRequestCurrentlyPlayingModel()
+                        {
+                            ID = newSong.ID,
+                            URI = newSong.URI,
+                            Name = newSong.Name,
+                            AlbumImage = newSong.AlbumImage,
+                            Type = newSong.Type,
+                            IsFromBackupPlaylist = newSong.IsFromBackupPlaylist,
+                            User = newSong.User,
+                            State = SongRequestStateEnum.NotStarted,
+                        };
+                        this.forceStateQuery = true;
+
+                        this.backgroundSongThreadCancellationTokenSource = new CancellationTokenSource();
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        this.backgroundSongThread = Task.Run(async () => { await this.BackgroundSongMaintainer(this.backgroundSongThreadCancellationTokenSource); }, this.backgroundSongThreadCancellationTokenSource.Token);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    }
+                }
             }
             GlobalEvents.SongRequestsChangedOccurred();
         }
@@ -599,9 +521,67 @@ namespace MixItUp.Base.Services
             return null;
         }
 
-        private void GlobalEvents_OnSongRequestsChangedOccurred(object sender, EventArgs e)
+        private async Task LoadBackupPlaylistSongs()
         {
-            this.changeOccurred = true;
+            this.playlistSongs.Clear();
+            if (!string.IsNullOrEmpty(ChannelSession.Settings.DefaultPlaylist))
+            {
+                List<Task<IEnumerable<SongRequestModel>>> playlistTasks = new List<Task<IEnumerable<SongRequestModel>>>();
+                foreach (ISongRequestProviderService provider in this.enabledProviders)
+                {
+                    playlistTasks.Add(provider.GetPlaylist(ChannelSession.Settings.DefaultPlaylist));
+                }
+
+                IEnumerable<SongRequestModel>[] taskResults = await Task.WhenAll(playlistTasks);
+                IEnumerable<SongRequestModel> results = taskResults.SelectMany(r => r);
+                if (results != null)
+                {
+                    foreach (SongRequestModel song in results.OrderBy(s => Guid.NewGuid()))
+                    {
+                        song.IsFromBackupPlaylist = true;
+                        this.playlistSongs.Add(song);
+                    }
+                }
+            }
+        }
+
+        private async Task BackgroundSongMaintainer(CancellationTokenSource cancellationTokenSource)
+        {
+            await BackgroundTaskWrapper.RunBackgroundTask(cancellationTokenSource, async (tokenSource) =>
+            {
+                await Task.Delay(backgroundInterval, tokenSource.Token);
+
+                await SongRequestService.songRequestLock.WaitAndRelease(async () =>
+                {
+                    if (this.Status != null && this.Status.State == SongRequestStateEnum.Playing)
+                    {
+                        this.Status.Progress += backgroundInterval;
+                    }
+
+                    if (this.forceStateQuery || this.Status == null || (this.Status.Length > 0 && this.Status.Progress >= this.Status.Length))
+                    {
+                        this.forceStateQuery = false;
+                        SongRequestCurrentlyPlayingModel newStatus = await this.GetStatus();
+                        if (newStatus != null)
+                        {
+                            this.Status.State = newStatus.State;
+                            this.Status.Progress = newStatus.Progress;
+                            this.Status.Length = newStatus.Length;
+                            this.Status.Volume = newStatus.Volume;
+
+                            if (this.Status.State == SongRequestStateEnum.Ended)
+                            {
+                                await this.SkipInternal();
+                            }
+
+                            if (this.Status.Volume != ChannelSession.Settings.SongRequestVolume)
+                            {
+                                await this.RefreshVolumeInternal();
+                            }
+                        }
+                    }
+                });
+            });
         }
     }
 }

@@ -2,7 +2,10 @@
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Window;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Controls.MainControls
@@ -70,7 +73,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             }
         }
 
-        public ObservableCollection<SongRequestModel> RequestSongs { get { return ChannelSession.Services.SongRequestService.RequestSongs; } }
+        public ObservableCollection<SongRequestModel> RequestSongs { get; private set; } = new ObservableCollection<SongRequestModel>();
 
         public string DefaultPlaylist
         {
@@ -141,6 +144,17 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         private async void GlobalEvents_OnSongRequestsChangedOccurred(object sender, EventArgs e)
         {
             this.currentlyPlaying = await ChannelSession.Services.SongRequestService.GetCurrentlyPlaying();
+
+            await DispatcherHelper.InvokeDispatcher(() =>
+            {
+                this.RequestSongs.Clear();
+                foreach (SongRequestModel songRequest in ChannelSession.Services.SongRequestService.RequestSongs.ToList())
+                {
+                    this.RequestSongs.Add(songRequest);
+                }
+                return Task.FromResult(0);
+            });
+
             this.NotifyPropertyChanges();
         }
 
@@ -151,7 +165,6 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             this.NotifyPropertyChanged("SongListType");
             this.NotifyPropertyChanged("SongName");
             this.NotifyPropertyChanged("Volume");
-            this.NotifyPropertyChanged("RequestSongs");
         }
     }
 }

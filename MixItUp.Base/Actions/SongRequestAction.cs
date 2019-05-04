@@ -12,7 +12,7 @@ namespace MixItUp.Base.Actions
 {
     public enum SongRequestActionTypeEnum
     {
-        [Name("Search Songs & Select Result")]
+        [Name("Search Songs & Manually Select Result")]
         SearchSongsAndSelectResult,
         [Name("Display Currently Playing")]
         DisplayCurrentlyPlaying,
