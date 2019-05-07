@@ -351,11 +351,12 @@ namespace MixItUp.Base.Actions
                         InteractiveConnectedSceneModel scene = null;
                         InteractiveControlModel control = null;
 
+                        string processedControlId = await this.ReplaceStringWithSpecialModifiers(this.ControlID, user, arguments);
                         foreach (InteractiveConnectedSceneModel s in ChannelSession.Interactive.Scenes)
                         {
                             foreach (InteractiveControlModel c in s.allControls)
                             {
-                                if (c.controlID.Equals(this.ControlID))
+                                if (c.controlID.Equals(processedControlId))
                                 {
                                     scene = s;
                                     control = c;
