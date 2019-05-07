@@ -5,12 +5,15 @@ using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Chat
 {
     public class ChatMessageViewModel : IEquatable<ChatMessageViewModel>
     {
+        private const string TaggingRegexFormat = "(^|\\s+)@{0}(\\s+|$)";
+
         public Guid ID { get; private set; }
 
         public UserViewModel User { get; private set; }
@@ -90,7 +93,7 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public bool IsWhisper { get { return !string.IsNullOrEmpty(this.TargetUsername); } }
 
-        public bool IsUserTagged { get { return this.Message.Contains("@" + ChannelSession.User.username + " "); } }
+        public bool IsUserTagged { get { return Regex.IsMatch(this.Message, string.Format(TaggingRegexFormat, ChannelSession.User.username)); } }
 
         public bool ContainsImage { get { return this.Images.Count > 0; } }
 
