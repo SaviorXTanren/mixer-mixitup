@@ -5,6 +5,7 @@ using MixItUp.Desktop.Files;
 using MixItUp.Desktop.Services.DeveloperAPI;
 using MixItUp.Input;
 using MixItUp.OBS;
+using MixItUp.OvrStream;
 using MixItUp.XSplit;
 using System;
 using System.Net.WebSockets;
@@ -38,6 +39,7 @@ namespace MixItUp.Desktop.Services
         public override async Task Close()
         {
             await this.DisconnectOverlayServer();
+            await this.DisconnectOvrStream();
             await this.DisconnectOBSStudio();
             await this.DisconnectStreamlabsOBSService();
             await this.DisconnectXSplitServer();
@@ -89,6 +91,32 @@ namespace MixItUp.Desktop.Services
                 this.OBSWebsocket.Disconnected -= OBSWebsocket_Disconnected;
                 await this.OBSWebsocket.Disconnect();
                 this.OBSWebsocket = null;
+            }
+        }
+
+        public override async Task<bool> InitializeOvrStream()
+        {
+            if (this.OvrStreamWebsocket == null)
+            {
+                this.OvrStreamWebsocket = new OvrStreamService(ChannelSession.Settings.OvrStreamServerIP);
+                if (await this.OvrStreamWebsocket.Connect())
+                {
+                    return true;
+                }
+                else
+                {
+                    await this.DisconnectOvrStream();
+                }
+            }
+            return false;
+        }
+
+        public override async Task DisconnectOvrStream()
+        {
+            if (this.OvrStreamWebsocket != null)
+            {
+                await this.OvrStreamWebsocket.Disconnect();
+                this.OvrStreamWebsocket = null;
             }
         }
 
@@ -489,6 +517,16 @@ namespace MixItUp.Desktop.Services
         private void OBSWebsocket_Disconnected(object sender, EventArgs e)
         {
             ChannelSession.DisconnectionOccurred("OBS");
+        }
+
+        private void OvrStreamWebsocket_Connected(object sender, EventArgs e)
+        {
+            ChannelSession.ReconnectionOccurred("OvrStream");
+        }
+
+        private void OvrStreamWebsocket_Disconnected(object sender, EventArgs e)
+        {
+            ChannelSession.DisconnectionOccurred("OvrStream");
         }
 
         private void XSplitServer_Connected(object sender, EventArgs e)
