@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
              xmlns:Util="clr-namespace:MixItUp.WPF.Util"
+             xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
 
@@ -37,11 +38,53 @@
             <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="30" />
+                    <RowDefinition Height="10" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" HorizontalAlignment="Center">
+                <Grid x:Name="SongRequestServicesGrid" Grid.Row="0" IsEnabled="{Binding IsEnabled, Converter={StaticResource InverseBooleanConverter}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock HorizontalAlignment="Center" Grid.Row="0" Style="{StaticResource HeaderTextBlock}">Song Services</TextBlock>
+
+                    <Grid HorizontalAlignment="Center" Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="10" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock x:Name="SpotifyTextBlock" Grid.Column="0" Grid.Row="0">Spotify:</TextBlock>
+                        <ToggleButton x:Name="SpotifyToggleButton" Grid.Column="2" Grid.Row="0" IsChecked="{Binding SpotifyProvider}" />
+                        <Grid x:Name="SpotifyOptionsGrid" Grid.Column="3" Grid.Row="0" Margin="10,0,0,0" IsEnabled="{Binding SpotifyProvider}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center">Allow Explicit:</TextBlock>
+                            <ToggleButton Grid.Column="2" x:Name="SpotifyAllowExplicitSongToggleButton" IsChecked="{Binding SpotifyAllowExplicit}" />
+                        </Grid>
+
+                        <TextBlock Grid.Column="0" Grid.Row="2">YouTube:</TextBlock>
+                        <ToggleButton x:Name="YouTubeToggleButton" Grid.Column="2" Grid.Row="2" IsChecked="{Binding YouTubeProvider}" />
+                    </Grid>
+                </Grid>
+
+                <Grid Grid.Row="2" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="30" />
@@ -55,51 +98,22 @@
                     <TextBlock Grid.Column="2" Grid.Row="2" VerticalAlignment="Center">Sub Priority:</TextBlock>
                     <ToggleButton x:Name="SubPriorityToggleButton" Grid.Column="4" Grid.Row="2" IsChecked="{Binding SubPriority}" IsEnabled="{Binding IsEnabled, Converter={StaticResource InverseBooleanConverter}}" />
                 </Grid>
-
-                <TextBlock Grid.Row="2" TextWrapping="Wrap" Width="250">To use the Song Requests, create a command with a <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Actions#song-request" RequestNavigate="Hyperlink_RequestNavigate">Song Request action</Hyperlink>.</TextBlock>
             </Grid>
 
-            <Grid x:Name="SongRequestServicesGrid" Grid.Column="2" IsEnabled="{Binding IsEnabled, Converter={StaticResource InverseBooleanConverter}}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="10" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="10" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+            <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-                <TextBlock HorizontalAlignment="Center" Grid.Row="0" Style="{StaticResource HeaderTextBlock}">Song Services</TextBlock>
+                <GroupBox Header="Song Added" Grid.Column="0" Width="125">
+                    <CommandControls:CommandButtonsControl x:Name="SongAddedCommand" HorizontalAlignment="Center" EditClicked="SongCommand_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+                </GroupBox>
 
-                <Grid HorizontalAlignment="Center" Grid.Row="2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="10" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="10" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-
-                    <TextBlock x:Name="SpotifyTextBlock" Grid.Column="0" Grid.Row="0">Spotify:</TextBlock>
-                    <ToggleButton x:Name="SpotifyToggleButton" Grid.Column="2" Grid.Row="0" IsChecked="{Binding SpotifyProvider}" />
-                    <Grid x:Name="SpotifyOptionsGrid" Grid.Column="3" Grid.Row="0" Margin="10,0,0,0" IsEnabled="{Binding SpotifyProvider}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="10" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-
-                        <TextBlock Grid.Column="0" VerticalAlignment="Center">Allow Explicit:</TextBlock>
-                        <ToggleButton Grid.Column="2" x:Name="SpotifyAllowExplicitSongToggleButton" IsChecked="{Binding SpotifyAllowExplicit}" />
-                    </Grid>
-
-                    <TextBlock Grid.Column="0" Grid.Row="2">YouTube:</TextBlock>
-                    <ToggleButton x:Name="YouTubeToggleButton" Grid.Column="2" Grid.Row="2" IsChecked="{Binding YouTubeProvider}" />
-                </Grid>
-
+                <GroupBox Header="Song Played" Grid.Column="2" Width="125">
+                    <CommandControls:CommandButtonsControl x:Name="SongPlayedCommand" HorizontalAlignment="Center" EditClicked="SongCommand_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+                </GroupBox>
             </Grid>
 
         </Grid>

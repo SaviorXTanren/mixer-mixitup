@@ -34,7 +34,7 @@ namespace MixItUp.Desktop
     [DataContract]
     public class DesktopSavableChannelSettings : ISavableChannelSettings
     {
-        public const int LatestVersion = 28;
+        public const int LatestVersion = 29;
 
         [JsonProperty]
         public int Version { get; set; } = DesktopChannelSettings.LatestVersion;
@@ -314,12 +314,14 @@ namespace MixItUp.Desktop
         public bool SongRequestSubPriority { get; set; }
         [JsonProperty]
         public bool SpotifyAllowExplicit { get; set; }
-
         [JsonProperty]
         public string DefaultPlaylist { get; set; }
-
         [JsonProperty]
         public int SongRequestVolume { get; set; } = 100;
+        [JsonProperty]
+        public CustomCommand SongAddedCommand { get; set; }
+        [JsonProperty]
+        public CustomCommand SongPlayedCommand { get; set; }
 
         [JsonProperty]
         public Dictionary<uint, JObject> CustomInteractiveSettings { get; set; }
@@ -484,6 +486,9 @@ namespace MixItUp.Desktop
 
             this.GiveawayUserJoinedCommand = CustomCommand.BasicChatCommand("Giveaway User Joined", "You have been entered into the giveaway, stay tuned to see who wins!", isWhisper: true);
             this.GiveawayWinnerSelectedCommand = CustomCommand.BasicChatCommand("Giveaway Winner Selected", "Congratulations @$username, you won! Type \"!claim\" in chat in the next 60 seconds to claim your prize!", isWhisper: true);
+
+            this.SongAddedCommand = CustomCommand.BasicChatCommand("Song Request Added", "$songtitle has been added to the queue", isWhisper: true);
+            this.SongPlayedCommand = CustomCommand.BasicChatCommand("Song Request Played", "Now Playing: $songtitle");
 
             this.ModerationStrike1Command = CustomCommand.BasicChatCommand("Moderation Strike 1", "$moderationreason. You have received a moderation strike & currently have $usermoderationstrikes strike(s)", isWhisper: true);
             this.ModerationStrike2Command = CustomCommand.BasicChatCommand("Moderation Strike 2", "$moderationreason. You have received a moderation strike & currently have $usermoderationstrikes strike(s)", isWhisper: true);

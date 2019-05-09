@@ -182,6 +182,8 @@ namespace MixItUp.Base
         bool SpotifyAllowExplicit { get; set; }
         string DefaultPlaylist { get; set; }
         int SongRequestVolume { get; set; }
+        CustomCommand SongAddedCommand { get; set; }
+        CustomCommand SongPlayedCommand { get; set; }
 
         Dictionary<uint, JObject> CustomInteractiveSettings { get; set; }
 

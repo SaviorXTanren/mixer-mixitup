@@ -378,6 +378,7 @@ namespace MixItUp.Base.Services
                 this.RequestSongs.Remove(song);
                 return Task.FromResult(0);
             });
+            await ChannelSession.Chat.SendMessage(string.Format("{0} removed from the queue.", song.Name));
             GlobalEvents.SongRequestsChangedOccurred();
         }
 
@@ -395,11 +396,6 @@ namespace MixItUp.Base.Services
                 await this.Remove(song);
             }
 
-            if (song != null)
-            {
-                await ChannelSession.Chat.SendMessage(string.Format("{0} was removed from the queue.", song.Name));
-            }
-
             GlobalEvents.SongRequestsChangedOccurred();
         }
 
@@ -415,11 +411,6 @@ namespace MixItUp.Base.Services
             if (song != null)
             {
                 await this.Remove(song);
-            }
-
-            if (song != null)
-            {
-                await ChannelSession.Chat.SendMessage(string.Format("{0} was removed from the queue.", song.Name));
             }
             else
             {
@@ -482,10 +473,21 @@ namespace MixItUp.Base.Services
             {
                 await this.Skip();
             }
+            else
+            {
+                if (ChannelSession.Settings.SongAddedCommand != null)
+                {
+                    Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
+                    {
+                        { "songtitle", song.Name },
+                        { "songalbumimage", song.AlbumImage }
+                    };
+                    await ChannelSession.Settings.SongAddedCommand.Perform(song.User, arguments: null, extraSpecialIdentifiers: specialIdentifiers);
+                }
+            }
 
             ChannelSession.Services.Telemetry.TrackSongRequest(song.Type);
 
-            await ChannelSession.Chat.SendMessage(string.Format("{0} was added to the queue.", song.Name));
             GlobalEvents.SongRequestsChangedOccurred();
         }
 
@@ -549,6 +551,16 @@ namespace MixItUp.Base.Services
                             State = SongRequestStateEnum.NotStarted,
                         };
                         this.forceStateQuery = true;
+
+                        if (ChannelSession.Settings.SongPlayedCommand != null)
+                        {
+                            Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
+                            {
+                                { "songtitle", this.Status.Name },
+                                { "songalbumimage", this.Status.AlbumImage }
+                            };
+                            await ChannelSession.Settings.SongPlayedCommand.Perform(newSong.User, arguments: null, extraSpecialIdentifiers: specialIdentifiers);
+                        }
 
                         this.backgroundSongThreadCancellationTokenSource = new CancellationTokenSource();
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
