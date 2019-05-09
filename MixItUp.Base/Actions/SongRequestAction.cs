@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.SongRequests;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -14,8 +15,10 @@ namespace MixItUp.Base.Actions
     {
         [Name("Search Songs & Manually Select Result")]
         SearchSongsAndSelectResult,
+        [Obsolete]
         [Name("Display Currently Playing")]
         DisplayCurrentlyPlaying,
+        [Obsolete]
         [Name("Display Next Song")]
         DisplayNextSong,
         [Name("Pause/Resume Current Song")]
@@ -24,7 +27,7 @@ namespace MixItUp.Base.Actions
         SkipToNextSong,
         [Name("Enable/Disable Song Requests")]
         EnableDisableSongRequests,
-        [Name("Set Song Request Volume")]
+        [Name("Set Volume")]
         SetVolume,
         [Name("Remove Last Song Requested By User")]
         RemoveLastByUser,
@@ -123,7 +126,9 @@ namespace MixItUp.Base.Actions
                         await ChannelSession.Chat.Whisper(user.UserName, "Please specify a volume level [0-100].");
                         return;
                     }
+#pragma warning disable CS0612 // Type or member is obsolete
                     else if (this.SongRequestType == SongRequestActionTypeEnum.DisplayCurrentlyPlaying)
+#pragma warning restore CS0612 // Type or member is obsolete
                     {
                         SongRequestModel currentlyPlaying = await ChannelSession.Services.SongRequestService.GetCurrent();
                         if (currentlyPlaying != null)
@@ -135,7 +140,9 @@ namespace MixItUp.Base.Actions
                             await ChannelSession.Chat.SendMessage("There is currently no song playing for the Song Request queue");
                         }
                     }
+#pragma warning disable CS0612 // Type or member is obsolete
                     else if (this.SongRequestType == SongRequestActionTypeEnum.DisplayNextSong)
+#pragma warning restore CS0612 // Type or member is obsolete
                     {
                         SongRequestModel nextTrack = await ChannelSession.Services.SongRequestService.GetNext();
                         if (nextTrack != null)
