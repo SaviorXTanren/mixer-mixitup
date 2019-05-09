@@ -131,6 +131,8 @@ namespace MixItUp.Base
         string OverlaySourceName { get; set; }
         int OverlayWidgetRefreshTime { get; set; }
 
+        string OvrStreamServerIP { get; set; }
+
         string OBSStudioServerIP { get; set; }
         string OBSStudioServerPassword { get; set; }
 
