@@ -40,6 +40,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.services.Add(new ServicesGroupBoxControl(this.Window, new SpotifyServiceControl()));
             this.services.Add(new ServicesGroupBoxControl(this.Window, new StreamAvatarsServiceControl()));
             this.services.Add(new ServicesGroupBoxControl(this.Window, new StreamDeckServiceControl()));
+            this.services.Add(new ServicesGroupBoxControl(this.Window, new OvrStreamServiceControl()));
             this.services.Add(new ServicesGroupBoxControl(this.Window, new DeveloperAPIServiceControl()));
 
             await base.InitializeInternal();

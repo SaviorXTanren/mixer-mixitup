@@ -135,6 +135,9 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.Moderation:
                         this.actionControl = (this.action != null) ? new ModerationActionControl(this, (ModerationAction)this.action) : new ModerationActionControl(this);
                         break;
+                    case ActionTypeEnum.OvrStream:
+                        this.actionControl = (this.action != null) ? new OvrStreamActionControl(this, (OvrStreamAction)this.action) : new OvrStreamActionControl(this);
+                        break;
                 }
             }
 

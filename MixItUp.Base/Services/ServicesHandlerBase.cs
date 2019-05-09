@@ -37,6 +37,7 @@ namespace MixItUp.Base.Services
         public ITreatStreamService TreatStream { get; protected set; }
         public IStreamJarService StreamJar { get; protected set; }
         public IPatreonService Patreon { get; protected set; }
+        public IOvrStreamService OvrStreamWebsocket { get; protected set; }
 
         public abstract Task Close();
 
@@ -91,5 +92,8 @@ namespace MixItUp.Base.Services
 
         public abstract Task<bool> InitializePatreon();
         public abstract Task DisconnectPatreon();
+
+        public abstract Task<bool> InitializeOvrStream();
+        public abstract Task DisconnectOvrStream();
     }
 }

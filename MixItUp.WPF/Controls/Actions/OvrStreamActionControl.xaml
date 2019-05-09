@@ -1,0 +1,71 @@
+﻿<local:ActionControlBase x:Class="MixItUp.WPF.Controls.Actions.OvrStreamActionControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock x:Name="OvrStreamNotEnabledWarningTextBlock" Grid.Column="2" Foreground="Red" HorizontalAlignment="Center" Visibility="Hidden">Please enable OvrStream in the Services Section!</TextBlock>
+            <ComboBox x:Name="TypeComboBox" Grid.Column="0" SelectionChanged="TypeComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="Type" />
+        </Grid>
+
+        <Grid x:Name="SetVariableGrid" Grid.Row="2" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="15" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" HorizontalAlignment="Center" Margin="0,10,0,-10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="150" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="0" x:Name="TitleNameTextBox" Width="200" MaterialDesign:HintAssist.Hint="OvrStream Title Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                <Button x:Name="AddVariableButton" Grid.Column="2" Width="150" Click="AddVariableButton_Click">Add New Variable</Button>
+            </Grid>
+
+            <ItemsControl x:Name="VariableItemsControl" Grid.Row="2">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="0,5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="30" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox Grid.Column="0" x:Name="VariableNameTextBox" Width="300" Text="{Binding Name}" MaterialDesign:HintAssist.Hint="Variable Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                            <TextBox Grid.Column="2" x:Name="VariableValueTextBox" Width="320" Text="{Binding Value}" MaterialDesign:HintAssist.Hint="Variable Value" Style="{StaticResource MaterialDesignFloatingHintTextBox}"  />
+
+                            <Button Grid.Column="4" x:Name="DeleteVariableButton" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteVariableButton_Click" ToolTip="Delete" />
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+
+    </Grid>
+</local:ActionControlBase>

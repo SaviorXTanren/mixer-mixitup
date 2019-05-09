@@ -282,6 +282,7 @@
     <Compile Include="DesktopChannelSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DesktopImageManipulationService.cs" />
+    <Compile Include="Services\OvrStreamService.cs" />
     <Compile Include="Services\RemoteService.cs" />
     <Compile Include="Services\DesktopServicesHandler.cs" />
     <Compile Include="Services\DesktopSettingsUpgrader.cs" />

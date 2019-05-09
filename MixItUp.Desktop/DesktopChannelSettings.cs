@@ -233,6 +233,9 @@ namespace MixItUp.Desktop
         public int OverlayWidgetRefreshTime { get; set; } = 5;
 
         [JsonProperty]
+        public string OvrStreamServerIP { get; set; }
+
+        [JsonProperty]
         public string OBSStudioServerIP { get; set; }
         [JsonProperty]
         public string OBSStudioServerPassword { get; set; }
