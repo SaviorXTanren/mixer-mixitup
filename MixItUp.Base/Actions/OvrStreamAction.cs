@@ -9,11 +9,11 @@ namespace MixItUp.Base.Actions
 {
     public enum OvrStreamActionTypeEnum
     {
-        [Name("Show")]
+        [Name("Show Title")]
         ShowTitle,
-        [Name("Hide")]
+        [Name("Hide Title")]
         HideTitle,
-        [Name("Play")]
+        [Name("Play Title")]
         PlayTitle,
     }
 
