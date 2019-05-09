@@ -1,16 +1,10 @@
 ﻿using Mixer.Base.Clients;
-using MixItUp.Base.Actions;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using OBSWebsocketDotNet;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.WebSockets;
-using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
@@ -271,11 +265,10 @@ namespace MixItUp.OvrStream
             return response;
         }
 
-        protected override async Task ProcessReceivedPacket(string packetJSON)
+        protected override Task ProcessReceivedPacket(string packetJSON)
         {
             if (!string.IsNullOrEmpty(packetJSON))
             {
-                await Task.Delay(0);
                 OvrStreamResponse response = JsonConvert.DeserializeObject<OvrStreamResponse>(packetJSON);
                 if (response != null)
                 {
@@ -291,6 +284,8 @@ namespace MixItUp.OvrStream
                     }
                 }
             }
+
+            return Task.FromResult(0);
         }
     }
 }
