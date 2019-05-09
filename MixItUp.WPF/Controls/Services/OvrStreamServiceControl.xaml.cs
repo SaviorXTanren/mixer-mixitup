@@ -38,11 +38,6 @@ namespace MixItUp.WPF.Controls.Services
             await base.OnLoaded();
         }
 
-        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
-        {
-            // Process.Start("OBS");
-        }
-
         private async void OvrStreamEnableConnectionButton_Click(object sender, RoutedEventArgs e)
         {
             ChannelSession.Settings.OvrStreamServerIP = this.OvrStreamIPAddressTextBox.Text;

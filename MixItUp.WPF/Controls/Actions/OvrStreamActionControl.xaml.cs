@@ -70,12 +70,13 @@ namespace MixItUp.WPF.Controls.Actions
                     actionType == OvrStreamActionTypeEnum.HideTitle ||
                     actionType == OvrStreamActionTypeEnum.PlayTitle)
                 {
-                    // Must have a title name and cannot have duplicate variables
+                    // Must have a title name and cannot have duplicate variables names
                     if (!string.IsNullOrEmpty(this.TitleNameTextBox.Text) && this.variablePairs.Select(v => v.Name).Distinct().Count() == this.variablePairs.Count)
                     {
                         foreach (VariablePair pair in this.variablePairs)
                         {
-                            if (string.IsNullOrEmpty(pair.Name) || string.IsNullOrEmpty(pair.Value))
+                            // Don't allow empty variable names either
+                            if (string.IsNullOrEmpty(pair.Name))
                             {
                                 return null;
                             }
