@@ -93,6 +93,8 @@ namespace MixItUp.Base
             OAuthClientScopeEnum.channel__follow__self,
 
             OAuthClientScopeEnum.user__details__self,
+
+            OAuthClientScopeEnum.user__act_as,
         };
 
         public static readonly List<OAuthClientScopeEnum> BotScopes = new List<OAuthClientScopeEnum>()
@@ -108,6 +110,8 @@ namespace MixItUp.Base
             OAuthClientScopeEnum.chat__whisper,
 
             OAuthClientScopeEnum.user__details__self,
+
+            OAuthClientScopeEnum.user__act_as,
         };
 
         public static SecretManagerService SecretManager { get; internal set; }
