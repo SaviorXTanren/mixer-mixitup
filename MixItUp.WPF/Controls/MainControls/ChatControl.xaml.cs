@@ -133,6 +133,7 @@ namespace MixItUp.WPF.Controls.MainControls
         private SemaphoreSlim messageUpdateLock = new SemaphoreSlim(1);
         private SemaphoreSlim gifSkillPopoutLock = new SemaphoreSlim(1);
 
+        private bool isPopOut;
         private int totalMessages = 0;
         private ScrollViewer chatListScrollViewer;
         private bool lockChatList = true;
@@ -144,7 +145,8 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             InitializeComponent();
 
-            if (isPopOut)
+            this.isPopOut = isPopOut;
+            if (this.isPopOut)
             {
                 this.PopOutChatButton.Visibility = Visibility.Collapsed;
             }
@@ -307,7 +309,10 @@ namespace MixItUp.WPF.Controls.MainControls
                     }
                 }
 
-                Logger.LogChatEvent(message.ToString());
+                if (!this.isPopOut)
+                {
+                    Logger.LogChatEvent(message.ToString());
+                }
 
                 return Task.FromResult(0);
             });
