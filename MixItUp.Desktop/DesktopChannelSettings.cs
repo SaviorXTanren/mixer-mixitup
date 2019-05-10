@@ -314,11 +314,13 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public HashSet<SongRequestServiceTypeEnum> SongRequestServiceTypes { get; set; }
         [JsonProperty]
-        public bool SongRequestSubPriority { get; set; }
-        [JsonProperty]
         public bool SpotifyAllowExplicit { get; set; }
         [JsonProperty]
         public string DefaultPlaylist { get; set; }
+        [JsonProperty]
+        public bool SongRequestSubPriority { get; set; }
+        [JsonProperty]
+        public int SongRequestsMaxRequests { get; set; }
         [JsonProperty]
         public int SongRequestVolume { get; set; } = 100;
         [JsonProperty]

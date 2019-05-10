@@ -871,6 +871,9 @@
       <DependentUpon>SerialDevicesSettingsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Settings\SettingsControlBase.cs" />
+    <Compile Include="Controls\Settings\SongRequestsSettingsControl.xaml.cs">
+      <DependentUpon>SongRequestsSettingsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Settings\ThemeSettingsControl.xaml.cs">
       <DependentUpon>ThemeSettingsControl.xaml</DependentUpon>
     </Compile>
@@ -1682,6 +1685,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Settings\SerialDevicesSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\SongRequestsSettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

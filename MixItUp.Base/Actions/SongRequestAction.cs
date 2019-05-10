@@ -94,13 +94,27 @@ namespace MixItUp.Base.Actions
                         return;
                     }
 
-                    if (this.SongRequestType == SongRequestActionTypeEnum.SearchSongsAndSelectResult)
+                    if (this.SongRequestType == SongRequestActionTypeEnum.SearchSongsAndSelectResult ||
+                        this.SongRequestType == SongRequestActionTypeEnum.SearchSongsAndPickFirstResult)
                     {
-                        await ChannelSession.Services.SongRequestService.SearchAndSelect(user, this.SpecificService, string.Join(" ", arguments));
-                    }
-                    else if (this.SongRequestType == SongRequestActionTypeEnum.SearchSongsAndPickFirstResult)
-                    {
-                        await ChannelSession.Services.SongRequestService.SearchAndPickFirst(user, this.SpecificService, string.Join(" ", arguments));
+                        if (ChannelSession.Settings.SongRequestsMaxRequests > 0)
+                        {
+                            IEnumerable<SongRequestModel> requestedSongs = ChannelSession.Services.SongRequestService.RequestSongs.ToList().Where(s => s.User.Equals(user));
+                            if (requestedSongs.Count() >= ChannelSession.Settings.SongRequestsMaxRequests)
+                            {
+                                await ChannelSession.Chat.Whisper(user.UserName, string.Format("You already have {0} song requests active, which is the max amount allowed", ChannelSession.Settings.SongRequestsMaxRequests));
+                                return;
+                            }
+                        }
+
+                        if (this.SongRequestType == SongRequestActionTypeEnum.SearchSongsAndSelectResult)
+                        {
+                            await ChannelSession.Services.SongRequestService.SearchAndSelect(user, this.SpecificService, string.Join(" ", arguments));
+                        }
+                        else if (this.SongRequestType == SongRequestActionTypeEnum.SearchSongsAndPickFirstResult)
+                        {
+                            await ChannelSession.Services.SongRequestService.SearchAndPickFirst(user, this.SpecificService, string.Join(" ", arguments));
+                        }
                     }
                     else if (this.SongRequestType == SongRequestActionTypeEnum.RemoveLast)
                     {

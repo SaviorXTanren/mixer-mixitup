@@ -17,11 +17,6 @@ namespace MixItUp.WPF.Controls.MainControls
     /// </summary>
     public partial class SongRequestControl : MainControlBase
     {
-        private static readonly string SpotifySetupTooltip = "To use Spotify with Song Requests, you must ensure Spotify is" + Environment.NewLine +
-            "running on your computer and you have played at least one" + Environment.NewLine +
-            "song in the Spotify app. This is required to be done everytime" + Environment.NewLine +
-            "to let Spotify know that where to send our song requests to.";
-
         private SongRequestsMainControlViewModel viewModel;
 
         public SongRequestControl()
@@ -32,9 +27,6 @@ namespace MixItUp.WPF.Controls.MainControls
         protected override async Task InitializeInternal()
         {
             this.DataContext = this.viewModel = new SongRequestsMainControlViewModel((MainWindowViewModel)this.Window.ViewModel);
-
-            this.SpotifyTextBlock.ToolTip = SpotifySetupTooltip;
-            this.SpotifyToggleButton.ToolTip = SpotifySetupTooltip;
 
             this.SongAddedCommand.DataContext = ChannelSession.Settings.SongAddedCommand;
             this.SongPlayedCommand.DataContext = ChannelSession.Settings.SongPlayedCommand;

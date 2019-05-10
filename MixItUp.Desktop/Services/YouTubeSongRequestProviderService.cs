@@ -52,7 +52,7 @@ namespace MixItUp.Desktop.Services
         {
             if (this.httpListenerServer != null)
             {
-                return false;
+                return true;
             }
 
             this.httpListenerServer = new YouTubeSongRequestHttpListenerServer(this.HttpListenerServerAddress, Port);

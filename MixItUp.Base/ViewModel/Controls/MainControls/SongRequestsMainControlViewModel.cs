@@ -15,60 +15,6 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
         public string EnableDisableButtonText { get { return (this.IsEnabled) ? "Disable" : "Enable"; } }
 
-        public bool SubPriority
-        {
-            get { return ChannelSession.Settings.SongRequestSubPriority; }
-            set
-            {
-                ChannelSession.Settings.SongRequestSubPriority = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-
-        public bool SpotifyProvider
-        {
-            get { return ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.Spotify); }
-            set
-            {
-                if (value)
-                {
-                    ChannelSession.Settings.SongRequestServiceTypes.Add(SongRequestServiceTypeEnum.Spotify);
-                }
-                else
-                {
-                    ChannelSession.Settings.SongRequestServiceTypes.Remove(SongRequestServiceTypeEnum.Spotify);
-                }
-                this.NotifyPropertyChanged();
-            }
-        }
-
-        public bool YouTubeProvider
-        {
-            get { return ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.YouTube); }
-            set
-            {
-                if (value)
-                {
-                    ChannelSession.Settings.SongRequestServiceTypes.Add(SongRequestServiceTypeEnum.YouTube);
-                }
-                else
-                {
-                    ChannelSession.Settings.SongRequestServiceTypes.Remove(SongRequestServiceTypeEnum.YouTube);
-                }
-                this.NotifyPropertyChanged();
-            }
-        }
-
-        public bool SpotifyAllowExplicit
-        {
-            get { return ChannelSession.Settings.SpotifyAllowExplicit; }
-            set
-            {
-                ChannelSession.Settings.SpotifyAllowExplicit = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-
         public string SongListType { get { return (this.currentlyPlaying != null && this.currentlyPlaying.IsFromBackupPlaylist) ? "Playlist Song:" : "Request Song:"; } }
         public string SongName { get { return (this.currentlyPlaying != null) ? this.currentlyPlaying.Name : "None"; } }
         private SongRequestModel currentlyPlaying;
@@ -84,16 +30,6 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         }
 
         public ObservableCollection<SongRequestModel> RequestSongs { get; private set; } = new ObservableCollection<SongRequestModel>();
-
-        public string DefaultPlaylist
-        {
-            get { return ChannelSession.Settings.DefaultPlaylist; }
-            set
-            {
-                ChannelSession.Settings.DefaultPlaylist = value;
-                this.NotifyPropertyChanged();
-            }
-        }
 
         public ICommand EnableDisableCommand { get; private set; }
         public ICommand PauseResumeCommand { get; private set; }

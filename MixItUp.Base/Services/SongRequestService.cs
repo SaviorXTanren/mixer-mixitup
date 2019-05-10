@@ -123,7 +123,7 @@ namespace MixItUp.Base.Services
                             if (provider.Type == SongRequestServiceTypeEnum.Spotify)
                             {
                                 await DialogHelper.ShowMessage("You must connect to your Spotify account in the Services area. You must also have Spotify running on your computer and you have played at least one song in the Spotify app."
-                                    + Environment.NewLine + Environment.NewLine + "This is required to be done everytime to let Spotify know that where to send our song requests to.");
+                                    + Environment.NewLine + Environment.NewLine + "This is required to be done every time to let Spotify know that where to send our song requests to.");
                             }
                             else
                             {
@@ -137,7 +137,7 @@ namespace MixItUp.Base.Services
 
                 if (enabledProviders.Count() == 0)
                 {
-                    await DialogHelper.ShowMessage("At least 1 song request service must be set");
+                    await DialogHelper.ShowMessage("At least 1 song request service must be enabled in the Settings menu");
                     return false;
                 }
 
@@ -158,15 +158,21 @@ namespace MixItUp.Base.Services
 
         public async Task Disable()
         {
-            await SongRequestService.songRequestLock.WaitAndRelease(() =>
+            await SongRequestService.songRequestLock.WaitAndRelease(async () =>
             {
                 this.RequestSongs.Clear();
+
+                foreach (ISongRequestProviderService provider in this.enabledProviders)
+                {
+                    await provider.Stop();
+                }
 
                 if (this.backgroundSongThreadCancellationTokenSource != null)
                 {
                     this.backgroundSongThreadCancellationTokenSource.Cancel();
-                    this.backgroundSongThreadCancellationTokenSource = null;
                 }
+                this.backgroundSongThreadCancellationTokenSource = null;
+                this.backgroundSongThread = null;
 
                 this.IsEnabled = false;
                 return Task.FromResult(0);
