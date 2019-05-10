@@ -351,7 +351,7 @@ namespace MixItUp.Base.Services
                 }
                 else
                 {
-                    return null;
+                    return Task.FromResult<SongRequestModel>(null);
                 }
             });
         }

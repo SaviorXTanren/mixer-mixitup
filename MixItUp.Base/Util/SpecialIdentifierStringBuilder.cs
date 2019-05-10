@@ -343,8 +343,8 @@ namespace MixItUp.Base.Util
             {
                 if (ChannelSession.Services.SongRequestService != null && ChannelSession.Services.SongRequestService.IsEnabled)
                 {
-                    this.ReplaceSongRequestSpecialIdentifiers(CurrentSongIdentifierHeader, await ChannelSession.Services.SongRequestService.GetCurrent());
-                    this.ReplaceSongRequestSpecialIdentifiers(NextSongIdentifierHeader, await ChannelSession.Services.SongRequestService.GetNext());
+                    await this.ReplaceSongRequestSpecialIdentifiers(CurrentSongIdentifierHeader, await ChannelSession.Services.SongRequestService.GetCurrent());
+                    await this.ReplaceSongRequestSpecialIdentifiers(NextSongIdentifierHeader, await ChannelSession.Services.SongRequestService.GetNext());
                 }
             }
 
@@ -831,19 +831,19 @@ namespace MixItUp.Base.Util
             }
         }
 
-        private void ReplaceSongRequestSpecialIdentifiers(string header, SongRequestModel song)
+        private async Task ReplaceSongRequestSpecialIdentifiers(string header, SongRequestModel song)
         {
             if (song != null)
             {
                 this.ReplaceSpecialIdentifier(header + "title", song.Name);
-                this.ReplaceSpecialIdentifier(header + "username", (song.User != null && !string.IsNullOrEmpty(song.User.UserName)) ? song.User.UserName : "Backup");
                 this.ReplaceSpecialIdentifier(header + "albumimage", (song.AlbumImage != null) ? song.AlbumImage : string.Empty);
+                await this.HandleUserSpecialIdentifiers((song.User != null) ? song.User : new UserViewModel(0, "Backup"), header);
             }
             else
             {
                 this.ReplaceSpecialIdentifier(header + "title", "No Song");
-                this.ReplaceSpecialIdentifier(header + "username", "Nobody");
                 this.ReplaceSpecialIdentifier(header + "albumimage", string.Empty);
+                this.ReplaceSpecialIdentifier(header + "username", "Nobody");
             }
         }
 
