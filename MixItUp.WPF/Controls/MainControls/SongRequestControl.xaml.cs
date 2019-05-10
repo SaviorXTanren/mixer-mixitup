@@ -27,6 +27,7 @@ namespace MixItUp.WPF.Controls.MainControls
         protected override async Task InitializeInternal()
         {
             this.DataContext = this.viewModel = new SongRequestsMainControlViewModel((MainWindowViewModel)this.Window.ViewModel);
+            await this.viewModel.OnLoaded();
 
             this.SongAddedCommand.DataContext = ChannelSession.Settings.SongAddedCommand;
             this.SongPlayedCommand.DataContext = ChannelSession.Settings.SongPlayedCommand;

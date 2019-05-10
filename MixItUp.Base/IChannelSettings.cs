@@ -184,6 +184,8 @@ namespace MixItUp.Base
         string DefaultPlaylist { get; set; }
         bool SongRequestSubPriority { get; set; }
         int SongRequestsMaxRequests { get; set; }
+        bool SongRequestsSaveRequestQueue { get; set; }
+        List<SongRequestModel> SongRequestsSavedRequestQueue { get; set; }
         int SongRequestVolume { get; set; }
         CustomCommand SongAddedCommand { get; set; }
         CustomCommand SongPlayedCommand { get; set; }

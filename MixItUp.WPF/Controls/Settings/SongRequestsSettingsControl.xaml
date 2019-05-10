@@ -73,11 +73,14 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Subscriber Request Priority:</TextBlock>
-            <ToggleButton Grid.Row="0" Grid.Column="2" IsChecked="{Binding SubPriority}" HorizontalAlignment="Left" />
+            <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Subscriber Request Priority:</TextBlock>
+            <ToggleButton Grid.Column="2" Grid.Row="0" IsChecked="{Binding SubPriority}" HorizontalAlignment="Left" />
 
-            <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Max Requests Per Person:</TextBlock>
-            <TextBox Grid.Column="2" Grid.Row="2" Text="{Binding MaxRequests}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Max Requests" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="95" />
+            <TextBlock Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Max Requests Per Person:</TextBlock>
+            <TextBox Grid.Column="2" Grid.Row="2" Text="{Binding MaxRequests}" Margin="0,-5,0,5" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Max Requests" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="95" />
+
+            <TextBlock Grid.Column="0" Grid.Row="4" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Save Request Queue On Exit:</TextBlock>
+            <ToggleButton Grid.Column="2" Grid.Row="4" IsChecked="{Binding SaveRequestQueue}" HorizontalAlignment="Left" />
         </Grid>
     </Grid>
 </local:SettingsControlBase>

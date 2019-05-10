@@ -39,8 +39,9 @@ namespace MixItUp.Base.Services
 
         void AddProvider(ISongRequestProviderService provider);
 
-        Task<bool> Initialize();
+        Task Initialize();
 
+        Task<bool> Enable();
         Task Disable();
 
         Task SearchAndPickFirst(UserViewModel user, SongRequestServiceTypeEnum service, string identifier);
@@ -97,14 +98,23 @@ namespace MixItUp.Base.Services
 
         private bool forceStateQuery = false;
 
-        public SongRequestService() { }
-
         public void AddProvider(ISongRequestProviderService provider)
         {
             this.allProviders.Add(provider);
         }
 
-        public async Task<bool> Initialize()
+        public Task Initialize()
+        {
+            this.RequestSongs.Clear();
+            if (ChannelSession.Settings.SongRequestsSaveRequestQueue)
+            {
+                this.RequestSongs.AddRange(ChannelSession.Settings.SongRequestsSavedRequestQueue);
+            }
+            GlobalEvents.SongRequestsChangedOccurred();
+            return Task.FromResult(0);
+        }
+
+        public async Task<bool> Enable()
         {
             return await SongRequestService.songRequestLock.WaitAndRelease(async () =>
             {
@@ -143,7 +153,6 @@ namespace MixItUp.Base.Services
 
                 await ChannelSession.SaveSettings();
 
-                this.RequestSongs.Clear();
                 this.playlistSongs.Clear();
 
                 await this.RefreshVolumeInternal();
@@ -472,6 +481,12 @@ namespace MixItUp.Base.Services
                     }
                 }
                 this.RequestSongs.Add(song);
+
+                if (ChannelSession.Settings.SongRequestsSaveRequestQueue)
+                {
+                    ChannelSession.Settings.SongRequestsSavedRequestQueue = this.RequestSongs.ToList();
+                }
+
                 return Task.FromResult(0);
             });
 
@@ -523,6 +538,11 @@ namespace MixItUp.Base.Services
             {
                 newSong = this.RequestSongs.First();
                 this.RequestSongs.RemoveAt(0);
+
+                if (ChannelSession.Settings.SongRequestsSaveRequestQueue)
+                {
+                    ChannelSession.Settings.SongRequestsSavedRequestQueue = this.RequestSongs.ToList();
+                }
             }
             else
             {

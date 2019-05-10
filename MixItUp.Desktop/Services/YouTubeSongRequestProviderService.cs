@@ -64,6 +64,9 @@ namespace MixItUp.Desktop.Services
                 this.browser.Navigate(HttpListenerServerAddress);
             });
 
+            // Add buffering in to ensure page fully loads
+            await Task.Delay(3000);
+
             return true;
         }
 

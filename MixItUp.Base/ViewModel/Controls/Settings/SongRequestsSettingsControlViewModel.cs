@@ -85,6 +85,16 @@ namespace MixItUp.Base.ViewModel.Controls.Settings
             }
         }
 
+        public bool SaveRequestQueue
+        {
+            get { return ChannelSession.Settings.SongRequestsSaveRequestQueue; }
+            set
+            {
+                ChannelSession.Settings.SongRequestsSaveRequestQueue = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+
         public SongRequestsSettingsControlViewModel() { }
     }
 }

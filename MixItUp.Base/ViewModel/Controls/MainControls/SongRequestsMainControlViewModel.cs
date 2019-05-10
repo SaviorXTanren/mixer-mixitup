@@ -53,7 +53,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 }
                 else
                 {
-                    if (await ChannelSession.Services.SongRequestService.Initialize())
+                    if (await ChannelSession.Services.SongRequestService.Enable())
                     {
                         this.IsEnabled = true;
                     }
@@ -99,6 +99,11 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                     this.NotifyPropertyChanges();
                 }
             });
+        }
+
+        protected override async Task OnLoadedInternal()
+        {
+            await ChannelSession.Services.SongRequestService.Initialize();
         }
 
         private async void GlobalEvents_OnSongRequestsChangedOccurred(object sender, EventArgs e)

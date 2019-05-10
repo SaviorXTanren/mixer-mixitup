@@ -74,7 +74,7 @@ namespace MixItUp.Base.Actions
                 {
                     if (!ChannelSession.Services.SongRequestService.IsEnabled)
                     {
-                        if (!await ChannelSession.Services.SongRequestService.Initialize())
+                        if (!await ChannelSession.Services.SongRequestService.Enable())
                         {
                             await ChannelSession.Services.SongRequestService.Disable();
                             await ChannelSession.Chat.Whisper(user.UserName, "Song Requests were not able to enabled, please try manually enabling it.");

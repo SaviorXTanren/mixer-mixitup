@@ -322,6 +322,10 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public int SongRequestsMaxRequests { get; set; }
         [JsonProperty]
+        public bool SongRequestsSaveRequestQueue { get; set; }
+        [JsonProperty]
+        public List<SongRequestModel> SongRequestsSavedRequestQueue { get; set; } = new List<SongRequestModel>();
+        [JsonProperty]
         public int SongRequestVolume { get; set; } = 100;
         [JsonProperty]
         public CustomCommand SongAddedCommand { get; set; }
