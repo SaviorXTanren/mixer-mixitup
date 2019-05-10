@@ -49,7 +49,7 @@
 
             <TextBox x:Name="IssueDescriptionTextBox" Grid.Row="2" AcceptsReturn="True" Width="320" Height="120" MaterialDesign:HintAssist.Hint="Issue Description (What Happened?)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox x:Name="ReplyEmailTextBox" Grid.Row="4" Width="320" MaterialDesign:HintAssist.Hint="Your E-Mail for Follow-Up Questions (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="ReplyEmailTextBox" Grid.Row="4" Width="320" MaterialDesign:HintAssist.Hint="Your E-Mail for Follow-Up" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
             
             <Grid Grid.Row="6" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
