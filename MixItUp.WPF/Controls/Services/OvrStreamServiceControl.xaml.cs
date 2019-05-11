@@ -70,5 +70,10 @@ namespace MixItUp.WPF.Controls.Services
 
             this.SetCompletedIcon(visible: false);
         }
+
+        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            Process.Start(e.Uri.AbsoluteUri);
+        }
     }
 }
