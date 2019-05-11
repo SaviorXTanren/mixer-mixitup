@@ -8,6 +8,7 @@ using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Remote.Authentication;
 using MixItUp.Base.Model.Serial;
+using MixItUp.Base.Model.SongRequests;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Remote.Models;
 using MixItUp.Base.Services;
@@ -33,7 +34,7 @@ namespace MixItUp.Desktop
     [DataContract]
     public class DesktopSavableChannelSettings : ISavableChannelSettings
     {
-        public const int LatestVersion = 28;
+        public const int LatestVersion = 29;
 
         [JsonProperty]
         public int Version { get; set; } = DesktopChannelSettings.LatestVersion;
@@ -59,8 +60,6 @@ namespace MixItUp.Desktop
 
         [JsonProperty]
         public OAuthTokenModel StreamlabsOAuthToken { get; set; }
-        [JsonProperty]
-        public OAuthTokenModel GameWispOAuthToken { get; set; }
         [JsonProperty]
         public OAuthTokenModel GawkBoxOAuthToken { get; set; }
         [JsonProperty]
@@ -234,6 +233,9 @@ namespace MixItUp.Desktop
         public int OverlayWidgetRefreshTime { get; set; } = 5;
 
         [JsonProperty]
+        public string OvrStreamServerIP { get; set; }
+
+        [JsonProperty]
         public string OBSStudioServerIP { get; set; }
         [JsonProperty]
         public string OBSStudioServerPassword { get; set; }
@@ -313,12 +315,22 @@ namespace MixItUp.Desktop
         public HashSet<SongRequestServiceTypeEnum> SongRequestServiceTypes { get; set; }
         [JsonProperty]
         public bool SpotifyAllowExplicit { get; set; }
-
         [JsonProperty]
         public string DefaultPlaylist { get; set; }
-
+        [JsonProperty]
+        public bool SongRequestSubPriority { get; set; }
+        [JsonProperty]
+        public int SongRequestsMaxRequests { get; set; }
+        [JsonProperty]
+        public bool SongRequestsSaveRequestQueue { get; set; }
+        [JsonProperty]
+        public List<SongRequestModel> SongRequestsSavedRequestQueue { get; set; } = new List<SongRequestModel>();
         [JsonProperty]
         public int SongRequestVolume { get; set; } = 100;
+        [JsonProperty]
+        public CustomCommand SongAddedCommand { get; set; }
+        [JsonProperty]
+        public CustomCommand SongPlayedCommand { get; set; }
 
         [JsonProperty]
         public Dictionary<uint, JObject> CustomInteractiveSettings { get; set; }
@@ -484,6 +496,9 @@ namespace MixItUp.Desktop
             this.GiveawayUserJoinedCommand = CustomCommand.BasicChatCommand("Giveaway User Joined", "You have been entered into the giveaway, stay tuned to see who wins!", isWhisper: true);
             this.GiveawayWinnerSelectedCommand = CustomCommand.BasicChatCommand("Giveaway Winner Selected", "Congratulations @$username, you won! Type \"!claim\" in chat in the next 60 seconds to claim your prize!", isWhisper: true);
 
+            this.SongAddedCommand = CustomCommand.BasicChatCommand("Song Request Added", "$songtitle has been added to the queue", isWhisper: true);
+            this.SongPlayedCommand = CustomCommand.BasicChatCommand("Song Request Played", "Now Playing: $songtitle");
+
             this.ModerationStrike1Command = CustomCommand.BasicChatCommand("Moderation Strike 1", "$moderationreason. You have received a moderation strike & currently have $usermoderationstrikes strike(s)", isWhisper: true);
             this.ModerationStrike2Command = CustomCommand.BasicChatCommand("Moderation Strike 2", "$moderationreason. You have received a moderation strike & currently have $usermoderationstrikes strike(s)", isWhisper: true);
             this.ModerationStrike3Command = CustomCommand.BasicChatCommand("Moderation Strike 3", "$moderationreason. You have received a moderation strike & currently have $usermoderationstrikes strike(s)", isWhisper: true);
@@ -581,10 +596,6 @@ namespace MixItUp.Desktop
             if (ChannelSession.Services.Streamlabs != null)
             {
                 this.StreamlabsOAuthToken = ChannelSession.Services.Streamlabs.GetOAuthTokenCopy();
-            }
-            if (ChannelSession.Services.GameWisp != null)
-            {
-                this.GameWispOAuthToken = ChannelSession.Services.GameWisp.GetOAuthTokenCopy();
             }
             if (ChannelSession.Services.GawkBox != null)
             {

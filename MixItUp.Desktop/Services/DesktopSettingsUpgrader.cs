@@ -55,6 +55,7 @@ namespace MixItUp.Desktop.Services
             await DesktopSettingsUpgrader.Version26Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version27Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version28Upgrade(version, filePath);
+            await DesktopSettingsUpgrader.Version29Upgrade(version, filePath);
 
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
             settings.InitializeDB = false;
@@ -299,6 +300,20 @@ namespace MixItUp.Desktop.Services
                         buttonCommand.Commands = new List<string>() { EnumHelper.GetEnumName(buttonCommand.Trigger) };
                     }
                 }
+
+                await ChannelSession.Services.Settings.Save(settings);
+            }
+        }
+
+        private static async Task Version29Upgrade(int version, string filePath)
+        {
+            if (version < 29)
+            {
+                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
+                await ChannelSession.Services.Settings.Initialize(settings);
+
+                settings.SongAddedCommand = CustomCommand.BasicChatCommand("Song Request Added", "$songtitle has been added to the queue", isWhisper: true);
+                settings.SongPlayedCommand = CustomCommand.BasicChatCommand("Song Request Played", "Now Playing: $songtitle");
 
                 await ChannelSession.Services.Settings.Save(settings);
             }

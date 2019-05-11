@@ -15,7 +15,7 @@
         TextElement.FontSize="14"
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"      
 
-        Title="Mix It Up - Update Available" Height="450" Width="600">
+        Title="Mix It Up - Update Available" Height="550" Width="600">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -31,6 +31,8 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="20" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
@@ -58,7 +60,9 @@
 
             <WebBrowser Grid.Row="4" x:Name="UpdateChangelogWebBrowser" Margin="20,0" ScrollViewer.VerticalScrollBarVisibility="Visible" />
 
-            <Grid Grid.Row="6" HorizontalAlignment="Center">
+            <TextBlock Grid.Row="6" HorizontalAlignment="Center" TextWrapping="Wrap" Width="500">If you are running the Mix It Up Auto-Hoster, please close it before updating. If the update does not complete successfully and you are prompted to update again, restart your computer first &amp; then try again.</TextBlock>
+            
+            <Grid Grid.Row="8" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="60" />

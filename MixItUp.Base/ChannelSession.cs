@@ -30,6 +30,7 @@ namespace MixItUp.Base
         public const string ClientID = "5e3140d0719f5842a09dd2700befbfc100b5a246e35f2690";
 
         public const string DefaultOBSStudioConnection = "ws://127.0.0.1:4444";
+        public const string DefaultOvrStreamConnection = "ws://127.0.0.1:8023";
 
         private const string DefaultEmoticonsManifest = "https://mixer.com/_latest/assets/emoticons/manifest.json";
         private const string DefaultEmoticonsLinkFormat = "https://mixer.com/_latest/assets/emoticons/{0}.png";
@@ -92,6 +93,8 @@ namespace MixItUp.Base
             OAuthClientScopeEnum.channel__follow__self,
 
             OAuthClientScopeEnum.user__details__self,
+
+            OAuthClientScopeEnum.user__act_as,
         };
 
         public static readonly List<OAuthClientScopeEnum> BotScopes = new List<OAuthClientScopeEnum>()
@@ -107,6 +110,8 @@ namespace MixItUp.Base
             OAuthClientScopeEnum.chat__whisper,
 
             OAuthClientScopeEnum.user__details__self,
+
+            OAuthClientScopeEnum.user__act_as,
         };
 
         public static SecretManagerService SecretManager { get; internal set; }
@@ -544,10 +549,6 @@ namespace MixItUp.Base
                     {
                         await ChannelSession.Services.InitializeStreamlabs();
                     }
-                    if (ChannelSession.Settings.GameWispOAuthToken != null)
-                    {
-                        await ChannelSession.Services.InitializeGameWisp();
-                    }
                     if (ChannelSession.Settings.GawkBoxOAuthToken != null)
                     {
                         await ChannelSession.Services.InitializeGawkBox();
@@ -583,6 +584,10 @@ namespace MixItUp.Base
                     if (ChannelSession.Settings.PatreonOAuthToken != null)
                     {
                         await ChannelSession.Services.InitializePatreon();
+                    }
+                    if (!string.IsNullOrEmpty(ChannelSession.Settings.OvrStreamServerIP))
+                    {
+                        await ChannelSession.Services.InitializeOvrStream();
                     }
 
                     if (ChannelSession.Settings.RemoteHostConnection != null)

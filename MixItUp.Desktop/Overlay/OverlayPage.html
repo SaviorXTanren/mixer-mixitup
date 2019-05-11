@@ -627,6 +627,7 @@
 
                 videojs(addedElement, options, function onPlayerReady() {
                     var player = document.getElementById(data.ID).getElementsByTagName('video')[0];
+                    player.volume = data.VolumeDecimal;
                     player.width = data.Width;
                     player.height = data.Height;
                 });

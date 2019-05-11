@@ -110,8 +110,8 @@
     <Reference Include="Microsoft.Owin.Hosting, Version=2.0.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Hosting.2.0.2\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
     </Reference>
-    <Reference Include="Mixer.Base, Version=0.8.4.6, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\mixer-client-csharp.0.8.4.6-beta\lib\netstandard2.0\Mixer.Base.dll</HintPath>
+    <Reference Include="Mixer.Base, Version=0.8.4.11, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\mixer-client-csharp.0.8.4.11-beta\lib\netstandard2.0\Mixer.Base.dll</HintPath>
     </Reference>
     <Reference Include="NAudio, Version=1.8.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NAudio.1.8.4\lib\net35\NAudio.dll</HintPath>
@@ -282,6 +282,7 @@
     <Compile Include="DesktopChannelSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DesktopImageManipulationService.cs" />
+    <Compile Include="Services\OvrStreamService.cs" />
     <Compile Include="Services\RemoteService.cs" />
     <Compile Include="Services\DesktopServicesHandler.cs" />
     <Compile Include="Services\DesktopSettingsUpgrader.cs" />
@@ -295,7 +296,6 @@
     <Compile Include="Services\DeveloperAPI\MixPlayController.cs" />
     <Compile Include="Services\DeveloperAPI\UserController.cs" />
     <Compile Include="Services\DiscordService.cs" />
-    <Compile Include="Services\GameWispService.cs" />
     <Compile Include="Services\GawkBoxService.cs" />
     <Compile Include="Services\PatreonService.cs" />
     <Compile Include="Services\ScoutService.cs" />
@@ -303,8 +303,6 @@
     <Compile Include="Services\OBSService.cs" />
     <Compile Include="Services\OverlayService.cs" />
     <Compile Include="Services\SerialService.cs" />
-    <Compile Include="Services\SongRequestService.cs" />
-    <Compile Include="Services\SpotifyService.cs" />
     <Compile Include="Services\StreamJarService.cs" />
     <Compile Include="Services\StreamlabsOBSService.cs" />
     <Compile Include="Services\StreamlabsService.cs" />
@@ -320,6 +318,7 @@
     <Compile Include="Services\DesktopSettingsService.cs" />
     <Compile Include="Services\WindowsTextToSpeechService.cs" />
     <Compile Include="Services\XSplitWebSocketServer.cs" />
+    <Compile Include="Services\YouTubeSongRequestProviderService.cs" />
     <Compile Include="Util\SocketIOService.cs" />
   </ItemGroup>
   <ItemGroup>

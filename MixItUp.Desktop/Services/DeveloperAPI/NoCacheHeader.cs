@@ -18,8 +18,20 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 request.Method = new HttpMethod(request.Headers.GetValues(MethodOverrideHeader).FirstOrDefault());
             }
 
-            HttpResponseMessage response = await base.SendAsync(request, cancellationToken);
+            HttpResponseMessage response = null;
+            if (!request.Method.Method.Equals("OPTIONS", StringComparison.InvariantCultureIgnoreCase))
+            {
+                response = await base.SendAsync(request, cancellationToken);
+            }
+            else
+            {
+                response = new HttpResponseMessage(System.Net.HttpStatusCode.OK);
+            }
+
             response.Headers.Add("Cache-Control", "no-cache");
+            response.Headers.Add("Access-Control-Allow-Origin", "*");
+            response.Headers.Add("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Access-Control-Allow-Origin");
+            response.Headers.Add("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE");
             return response;
         }
     }

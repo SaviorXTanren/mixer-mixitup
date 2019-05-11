@@ -157,6 +157,13 @@ namespace MixItUp.WPF.Controls.Command
                         case Mixer.Base.Clients.ConstellationEventTypeEnum.channel__id__resubscribed:
                             extraSpecialIdentifiers["usersubmonths"] = "5";
                             break;
+                        case Mixer.Base.Clients.ConstellationEventTypeEnum.progression__id__levelup:
+                            extraSpecialIdentifiers["userfanprogressionnext"] = "200";
+                            extraSpecialIdentifiers["userfanprogressionrank"] = "10";
+                            extraSpecialIdentifiers["userfanprogressioncolor"] = "#c642ea";
+                            extraSpecialIdentifiers["userfanprogressionimage"] = "https://static.mixer.com/img/design/ui/fan-progression/v1_badges/purple/large.gif";
+                            extraSpecialIdentifiers["userfanprogression"] = "100";
+                            break;
                     }
 
                     switch (eventCommand.OtherEventType)

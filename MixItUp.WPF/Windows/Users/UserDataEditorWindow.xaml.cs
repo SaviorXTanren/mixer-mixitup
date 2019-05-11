@@ -44,6 +44,8 @@ namespace MixItUp.WPF.Windows.Users
 
         private async Task RefreshData()
         {
+            this.DataContext = null;
+
             await this.user.RefreshDetails(force: true);
 
             this.CurrencyRankStackPanel.Children.Clear();
@@ -90,7 +92,6 @@ namespace MixItUp.WPF.Windows.Users
                 this.PatreonUserComboBox.SelectedItem = this.user.PatreonUser;
             }
 
-            this.DataContext = null;
             this.DataContext = this.user;
         }
 

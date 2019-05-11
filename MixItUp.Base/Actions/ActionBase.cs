@@ -61,6 +61,7 @@ namespace MixItUp.Base.Actions
         Command,
         Serial,
         Moderation,
+        OvrStream,
 
         Custom = 99,
     }

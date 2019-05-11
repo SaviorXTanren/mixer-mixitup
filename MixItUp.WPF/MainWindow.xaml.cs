@@ -76,7 +76,9 @@ namespace MixItUp.WPF
 
         protected override async Task OnLoaded()
         {
-            ChannelSession.Services.SongRequestService.SetYouTubeContext(new YouTubeSongRequestContext(this.Dispatcher, this.YouTubeSongRequestHost));
+            ChannelSession.Services.SongRequestService.AddProvider(new SpotifySongRequestProviderService());
+            ChannelSession.Services.SongRequestService.AddProvider(new YouTubeSongRequestProviderService(this.Dispatcher, this.YouTubeSongRequestHost));
+
             ChannelSession.Services.InputService.Initialize(new WindowInteropHelper(this).Handle);
             foreach (HotKeyConfiguration hotKeyConfiguration in ChannelSession.Settings.HotKeys.Values)
             {
@@ -124,6 +126,7 @@ namespace MixItUp.WPF
             if (ChannelSession.Settings.IsStreamer)
             {
                 await this.MainMenu.AddMenuItem("Moderation", new ModerationControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Moderation");
+                await this.MainMenu.AddMenuItem("Auto-Hoster", new AutoHosterControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Auto-Hoster");
                 await this.MainMenu.AddMenuItem("Services", new ServicesControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Services");
             }
             await this.MainMenu.AddMenuItem("About", new AboutControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki");

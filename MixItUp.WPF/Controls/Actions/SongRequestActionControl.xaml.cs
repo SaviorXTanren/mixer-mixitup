@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Actions;
+using MixItUp.Base.Model.SongRequests;
 using MixItUp.Base.Services;
 using System.Linq;
 using System.Threading.Tasks;
@@ -39,7 +40,7 @@ namespace MixItUp.WPF.Controls.Actions
             {
                 SongRequestActionTypeEnum actionType = EnumHelper.GetEnumValueFromString<SongRequestActionTypeEnum>((string)this.SongRequestActionTypeComboBox.SelectedItem);
                 SongRequestServiceTypeEnum serviceType = SongRequestServiceTypeEnum.All;
-                if (actionType == SongRequestActionTypeEnum.SearchSongsAndPickFirstResult || actionType == SongRequestActionTypeEnum.SearchSongsAndUseArtistSelect)
+                if (actionType == SongRequestActionTypeEnum.SearchSongsAndPickFirstResult || actionType == SongRequestActionTypeEnum.SearchSongsAndSelectResult)
                 {
                     serviceType = EnumHelper.GetEnumValueFromString<SongRequestServiceTypeEnum>((string)this.SongRequestServiceComboBox.SelectedItem);
                 }
@@ -53,7 +54,7 @@ namespace MixItUp.WPF.Controls.Actions
             if (this.SongRequestActionTypeComboBox.SelectedIndex >= 0)
             {
                 SongRequestActionTypeEnum actionType = EnumHelper.GetEnumValueFromString<SongRequestActionTypeEnum>((string)this.SongRequestActionTypeComboBox.SelectedItem);
-                this.SongRequestServiceComboBox.Visibility = (actionType == SongRequestActionTypeEnum.SearchSongsAndPickFirstResult || actionType == SongRequestActionTypeEnum.SearchSongsAndUseArtistSelect)
+                this.SongRequestServiceComboBox.Visibility = (actionType == SongRequestActionTypeEnum.SearchSongsAndPickFirstResult || actionType == SongRequestActionTypeEnum.SearchSongsAndSelectResult)
                     ? Visibility.Visible : Visibility.Collapsed;
             }
         }

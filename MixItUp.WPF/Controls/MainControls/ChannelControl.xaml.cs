@@ -7,6 +7,7 @@ using MixItUp.Base;
 using MixItUp.Base.Model.Favorites;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Favorites;
+using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Favorites;
 using System;
@@ -20,14 +21,6 @@ using System.Windows.Input;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
-    public enum AgeRatingEnum
-    {
-        Family,
-        Teen,
-        [Name("18+")]
-        Adult,
-    }
-
     public enum RaidSearchCriteriaEnum
     {
         [Name("Same Game")]

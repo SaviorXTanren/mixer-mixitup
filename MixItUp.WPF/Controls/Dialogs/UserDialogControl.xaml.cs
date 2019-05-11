@@ -1,7 +1,6 @@
 ﻿using Mixer.Base.Model.Channel;
 using MixItUp.Base;
 using MixItUp.Base.ViewModel.User;
-using System.Linq;
 using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.Dialogs

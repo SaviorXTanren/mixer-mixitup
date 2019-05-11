@@ -83,7 +83,7 @@ namespace MixItUp.Base.Actions
             bool result = false;
             if (this.ComparisionType == ConditionalComparisionTypeEnum.Contains || this.ComparisionType == ConditionalComparisionTypeEnum.DoesNotContain)
             {
-                bool contains = v1.Contains(v2);
+                bool contains = v1.IndexOf(v2, this.IgnoreCase ? StringComparison.InvariantCultureIgnoreCase : StringComparison.InvariantCulture) >= 0;
                 result = ((this.ComparisionType == ConditionalComparisionTypeEnum.Contains && contains) ||
                     (this.ComparisionType == ConditionalComparisionTypeEnum.DoesNotContain && !contains));
             }

@@ -122,7 +122,7 @@
                         </ListView.ItemContainerStyle>
                     </ListView>
 
-                    <Button x:Name="ChatLockButton" Margin="0,0,20,0" Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}" HorizontalAlignment="Right" Grid.Row="0" VerticalAlignment="Bottom" Opacity="0.3" Click="ChatLockButton_Click" MouseEnter="ChatLockButton_MouseEnter" MouseLeave="ChatLockButton_MouseLeave">
+                    <Button x:Name="ChatLockButton" ToolTip="Lock/Unlock Chat Scrolling" Margin="0,0,20,0" Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}" HorizontalAlignment="Right" Grid.Row="0" VerticalAlignment="Bottom" Opacity="0.3" Click="ChatLockButton_Click" MouseEnter="ChatLockButton_MouseEnter" MouseLeave="ChatLockButton_MouseLeave">
                         <MaterialDesign:PackIcon x:Name="ChatLockButtonIcon" Kind="LockOutline" Height="24" Width="24" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Green" />
                     </Button>
 
@@ -147,7 +147,7 @@
 
                 <GridSplitter x:Name="ChatSplitter" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="5" />
 
-                <ListView x:Name="UserList" Grid.Column="2" VirtualizingPanel.VirtualizationMode="Recycling" ScrollViewer.IsDeferredScrollingEnabled="True" ScrollViewer.VerticalScrollBarVisibility="Visible" HorizontalContentAlignment="Stretch" SelectionChanged="UserList_SelectionChanged" Width="200" />
+                <ListView x:Name="UserList" Grid.Column="2" VirtualizingPanel.VirtualizationMode="Recycling" ScrollViewer.IsDeferredScrollingEnabled="True" ScrollViewer.VerticalScrollBarVisibility="Visible" HorizontalContentAlignment="Stretch" SelectionChanged="UserList_SelectionChanged" MinWidth="200" />
             </Grid>
 
         </GroupBox>

@@ -7,6 +7,7 @@ using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Remote.Authentication;
 using MixItUp.Base.Model.Serial;
+using MixItUp.Base.Model.SongRequests;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Remote.Models;
 using MixItUp.Base.Services;
@@ -38,7 +39,6 @@ namespace MixItUp.Base
         OAuthTokenModel BotOAuthToken { get; set; }
 
         OAuthTokenModel StreamlabsOAuthToken { get; set; }
-        OAuthTokenModel GameWispOAuthToken { get; set; }
         OAuthTokenModel GawkBoxOAuthToken { get; set; }
         OAuthTokenModel TwitterOAuthToken { get; set; }
         OAuthTokenModel SpotifyOAuthToken { get; set; }
@@ -131,6 +131,8 @@ namespace MixItUp.Base
         string OverlaySourceName { get; set; }
         int OverlayWidgetRefreshTime { get; set; }
 
+        string OvrStreamServerIP { get; set; }
+
         string OBSStudioServerIP { get; set; }
         string OBSStudioServerPassword { get; set; }
 
@@ -180,7 +182,13 @@ namespace MixItUp.Base
         HashSet<SongRequestServiceTypeEnum> SongRequestServiceTypes { get; set; }
         bool SpotifyAllowExplicit { get; set; }
         string DefaultPlaylist { get; set; }
+        bool SongRequestSubPriority { get; set; }
+        int SongRequestsMaxRequests { get; set; }
+        bool SongRequestsSaveRequestQueue { get; set; }
+        List<SongRequestModel> SongRequestsSavedRequestQueue { get; set; }
         int SongRequestVolume { get; set; }
+        CustomCommand SongAddedCommand { get; set; }
+        CustomCommand SongPlayedCommand { get; set; }
 
         Dictionary<uint, JObject> CustomInteractiveSettings { get; set; }
 

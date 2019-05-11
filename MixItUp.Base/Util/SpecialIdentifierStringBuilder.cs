@@ -4,6 +4,8 @@ using Mixer.Base.Model.Patronage;
 using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.SongRequests;
+using MixItUp.Base.Model.Spotify;
 using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -341,8 +343,8 @@ namespace MixItUp.Base.Util
             {
                 if (ChannelSession.Services.SongRequestService != null && ChannelSession.Services.SongRequestService.IsEnabled)
                 {
-                    this.ReplaceSongRequestSpecialIdentifiers(CurrentSongIdentifierHeader, await ChannelSession.Services.SongRequestService.GetCurrentlyPlaying());
-                    this.ReplaceSongRequestSpecialIdentifiers(NextSongIdentifierHeader, await ChannelSession.Services.SongRequestService.GetNextTrack());
+                    await this.ReplaceSongRequestSpecialIdentifiers(CurrentSongIdentifierHeader, await ChannelSession.Services.SongRequestService.GetCurrent());
+                    await this.ReplaceSongRequestSpecialIdentifiers(NextSongIdentifierHeader, await ChannelSession.Services.SongRequestService.GetNext());
                 }
             }
 
@@ -420,13 +422,13 @@ namespace MixItUp.Base.Util
 
             if (ChannelSession.Services.Spotify != null && this.ContainsSpecialIdentifier("spotify"))
             {
-                SpotifyUserProfile profile = await ChannelSession.Services.Spotify.GetCurrentProfile();
+                SpotifyUserProfileModel profile = await ChannelSession.Services.Spotify.GetCurrentProfile();
                 if (profile != null)
                 {
                     this.ReplaceSpecialIdentifier("spotifyprofileurl", profile.Link);
                 }
 
-                SpotifyCurrentlyPlaying currentlyPlaying = await ChannelSession.Services.Spotify.GetCurrentlyPlaying();
+                SpotifyCurrentlyPlayingModel currentlyPlaying = await ChannelSession.Services.Spotify.GetCurrentlyPlaying();
                 if (currentlyPlaying != null)
                 {
                     this.ReplaceSpecialIdentifier("spotifycurrentlyplaying", currentlyPlaying.ToString());
@@ -803,6 +805,12 @@ namespace MixItUp.Base.Util
 
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "title", user.Title);
 
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "fanprogressionnext", user.FanProgression?.level?.nextLevelXp.ToString());
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "fanprogressionrank", user.FanProgression?.level?.level.ToString());
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "fanprogressioncolor", user.FanProgression?.level?.color?.ToString());
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "fanprogressionimage", user.FanProgression?.level?.LargeGIFAssetURL?.ToString());
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "fanprogression", user.FanProgression?.level?.currentXp.ToString());
+
                 if (this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "followers") || this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "game") ||
                     this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channel"))
                 {
@@ -823,19 +831,19 @@ namespace MixItUp.Base.Util
             }
         }
 
-        private void ReplaceSongRequestSpecialIdentifiers(string header, SongRequestItem song)
+        private async Task ReplaceSongRequestSpecialIdentifiers(string header, SongRequestModel song)
         {
             if (song != null)
             {
                 this.ReplaceSpecialIdentifier(header + "title", song.Name);
-                this.ReplaceSpecialIdentifier(header + "username", (song.User != null && !string.IsNullOrEmpty(song.User.UserName)) ? song.User.UserName : "Backup");
                 this.ReplaceSpecialIdentifier(header + "albumimage", (song.AlbumImage != null) ? song.AlbumImage : string.Empty);
+                await this.HandleUserSpecialIdentifiers((song.User != null) ? song.User : new UserViewModel(0, "Backup"), header);
             }
             else
             {
                 this.ReplaceSpecialIdentifier(header + "title", "No Song");
-                this.ReplaceSpecialIdentifier(header + "username", "Nobody");
                 this.ReplaceSpecialIdentifier(header + "albumimage", string.Empty);
+                this.ReplaceSpecialIdentifier(header + "username", "Nobody");
             }
         }
 

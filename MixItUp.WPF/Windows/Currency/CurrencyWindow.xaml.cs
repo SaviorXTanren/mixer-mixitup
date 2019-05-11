@@ -83,6 +83,12 @@ namespace MixItUp.WPF.Windows.Currency
 
             this.AutomaticResetComboBox.ItemsSource = EnumHelper.GetEnumNames<CurrencyResetRateEnum>();
 
+            this.IsPrimaryToggleButton.IsChecked = true;
+            if (ChannelSession.Settings.Currencies.Values.Any(c => !c.IsRank && c.IsPrimary) && ChannelSession.Settings.Currencies.Values.Any(c => c.IsRank && c.IsPrimary))
+            {
+                this.IsPrimaryToggleButton.IsChecked = false;
+            }
+
             if (this.currency != null)
             {
                 this.NameTextBox.Text = this.currency.Name;
@@ -553,6 +559,14 @@ namespace MixItUp.WPF.Windows.Currency
                 if (dupeInventory != null)
                 {
                     await MessageBoxHelper.ShowMessageDialog("There already exists an inventory with this name");
+                    return;
+                }
+
+                string siName = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(this.NameTextBox.Text);
+
+                if (siName.Equals("time") || siName.Equals("hours") || siName.Equals("mins") || siName.Equals("sparks") || siName.Equals("embers"))
+                {
+                    await MessageBoxHelper.ShowMessageDialog("This name is reserved and can not be used");
                     return;
                 }
 

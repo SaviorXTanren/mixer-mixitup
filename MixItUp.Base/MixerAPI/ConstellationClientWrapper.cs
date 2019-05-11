@@ -33,12 +33,14 @@ namespace MixItUp.Base.MixerAPI
         public static ConstellationEventType ChannelSubscriptionGiftedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__subscriptionGifted, ChannelSession.Channel.id); } }
         public static ConstellationEventType ChannelSkillEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__skill, ChannelSession.Channel.id); } }
         public static ConstellationEventType ChannelPatronageUpdateEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__patronageUpdate, ChannelSession.Channel.id); } }
+        public static ConstellationEventType ProgressionLevelupEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.progression__id__levelup, ChannelSession.Channel.id); } }
 
         private static readonly List<ConstellationEventTypeEnum> subscribedEvents = new List<ConstellationEventTypeEnum>()
         {
             ConstellationEventTypeEnum.channel__id__followed, ConstellationEventTypeEnum.channel__id__hosted, ConstellationEventTypeEnum.channel__id__subscribed,
             ConstellationEventTypeEnum.channel__id__resubscribed, ConstellationEventTypeEnum.channel__id__resubShared, ConstellationEventTypeEnum.channel__id__subscriptionGifted,
-            ConstellationEventTypeEnum.channel__id__update, ConstellationEventTypeEnum.channel__id__skill, ConstellationEventTypeEnum.channel__id__patronageUpdate
+            ConstellationEventTypeEnum.channel__id__update, ConstellationEventTypeEnum.channel__id__skill, ConstellationEventTypeEnum.channel__id__patronageUpdate,
+            ConstellationEventTypeEnum.progression__id__levelup,
         };
 
         public event EventHandler<ConstellationLiveEventModel> OnEventOccurred;
@@ -378,6 +380,36 @@ namespace MixItUp.Base.MixerAPI
                         }
                     }
                 }
+                else if (e.channel.Equals(ConstellationClientWrapper.ProgressionLevelupEvent.ToString()))
+                {
+                    if (e.payload.TryGetValue("userId", out JToken userID))
+                    {
+                        UserModel userModel = await ChannelSession.Connection.GetUser(userID.ToObject<uint>());
+                        if (userModel != null)
+                        {
+                            UserViewModel userViewModel = new UserViewModel(userModel);
+                            UserFanProgressionModel fanProgression = e.payload.ToObject<UserFanProgressionModel>();
+                            if (fanProgression != null)
+                            {
+                                EventCommand command = this.FindMatchingEventCommand(e.channel);
+                                if (command != null)
+                                {
+                                    Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
+                                    {
+                                        { "userfanprogressionnext", fanProgression.level.nextLevelXp.ToString() },
+                                        { "userfanprogressionrank", fanProgression.level.level.ToString() },
+                                        { "userfanprogressioncolor", fanProgression.level.color.ToString() },
+                                        { "userfanprogressionimage", fanProgression.level.LargeGIFAssetURL.ToString() },
+                                        { "userfanprogression", fanProgression.level.currentXp.ToString() },
+                                    };
+                                    await this.RunEventCommand(command, userViewModel, extraSpecialIdentifiers: specialIdentifiers);
+                                }
+
+                                GlobalEvents.ProgressionLevelUpOccurred(userViewModel);
+                            }
+                        }
+                    }
+                }
                 else if (e.channel.Equals(ConstellationClientWrapper.ChannelSkillEvent.ToString()))
                 {
                     if (e.payload["triggeringUserId"] != null)
@@ -399,7 +431,7 @@ namespace MixItUp.Base.MixerAPI
                             skill = this.availableSkills[skillID];
                         }
                     }
-                    
+
                     if (skill == null)
                     {
                         if (e.payload["manifest"] != null && e.payload["manifest"]["name"] != null)
@@ -412,16 +444,22 @@ namespace MixItUp.Base.MixerAPI
                         }
                     }
 
-                    if (user != null && skill != null)
+                    uint price = e.payload["price"].ToObject<uint>();
+                    if (user != null)
                     {
-                        JObject manifest = (JObject)e.payload["manifest"];
-                        JObject parameters = (JObject)e.payload["parameters"];
+                        if (price > 0)
+                        {
+                            GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, int>(user, (int)price));
+                        }
 
-                        SkillInstanceModel skillInstance = new SkillInstanceModel(skill, manifest, parameters);
+                        if (skill != null)
+                        {
+                            JObject manifest = (JObject)e.payload["manifest"];
+                            JObject parameters = (JObject)e.payload["parameters"];
+                            SkillInstanceModel skillInstance = new SkillInstanceModel(skill, manifest, parameters);
 
-                        GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, int>(user, (int)skillInstance.Skill.price));
-
-                        GlobalEvents.SkillUseOccurred(new SkillUsageModel(user, skillInstance));
+                            GlobalEvents.SkillUseOccurred(new SkillUsageModel(user, skillInstance));
+                        }
                     }
                 }
                 else if (e.channel.Equals(ConstellationClientWrapper.ChannelPatronageUpdateEvent.ToString()))

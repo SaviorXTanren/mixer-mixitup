@@ -459,7 +459,7 @@ namespace MixItUp.Base.Commands
             List<UserViewModel> users = new List<UserViewModel>();
             foreach (UserViewModel activeUser in await ChannelSession.ActiveUsers.GetAllWorkableUsers())
             {
-                if (!user.Equals(activeUser) && (activeUser.Data.IsCurrencyRankExempt || activeUser.Data.HasCurrencyAmount(currency, betAmount)))
+                if (!user.Equals(activeUser) && !activeUser.Data.IsCurrencyRankExempt && activeUser.Data.HasCurrencyAmount(currency, betAmount))
                 {
                     users.Add(activeUser);
                 }

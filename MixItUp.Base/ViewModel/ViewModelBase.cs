@@ -171,13 +171,5 @@ namespace MixItUp.Base.ViewModels
         public override int GetHashCode() { return this.model.GetHashCode(); }
     }
 
-    public class ViewModelBase : INotifyPropertyChanged
-    {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void NotifyPropertyChanged([CallerMemberName]string name = "")
-        {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-    }
+    public class ViewModelBase : NotifyPropertyChangedBase { }
 }

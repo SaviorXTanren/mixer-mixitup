@@ -72,7 +72,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0" Command="{Binding DownloadAppleCommand}" IsEnabled="False" Background="Transparent" BorderBrush="Transparent" Width="105" VerticalAlignment="Center">
+                <Button Grid.Column="0" Command="{Binding DownloadAppleCommand}" Background="Transparent" BorderBrush="Transparent" Width="105" VerticalAlignment="Center">
                     <Image Source="/Assets/Images/AppleAppStoreDownloadBadge.png" Margin="-16,-5" />
                 </Button>
 

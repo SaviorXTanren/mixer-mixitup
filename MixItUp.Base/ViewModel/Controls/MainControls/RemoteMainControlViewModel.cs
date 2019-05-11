@@ -221,7 +221,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
             this.DownloadAppleCommand = this.CreateCommand((x) =>
             {
-                //Process.Start("");
+                Process.Start("https://itunes.apple.com/us/app/mix-it-up-remote/id1459364145");
                 return Task.FromResult(0);
             });
 

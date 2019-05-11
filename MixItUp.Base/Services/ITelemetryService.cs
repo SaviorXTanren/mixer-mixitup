@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Model.Interactive;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.SongRequests;
 using System;
 
 namespace MixItUp.Base.Services
