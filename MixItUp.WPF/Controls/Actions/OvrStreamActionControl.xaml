@@ -16,13 +16,14 @@
 
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="300" />
                 <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock x:Name="OvrStreamNotEnabledWarningTextBlock" Grid.Column="2" Foreground="Red" HorizontalAlignment="Center" Visibility="Hidden">Please enable OvrStream in the Services Section!</TextBlock>
             <ComboBox x:Name="TypeComboBox" Grid.Column="0" SelectionChanged="TypeComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="Type" />
+
+            <TextBlock x:Name="OvrStreamNotEnabledWarningTextBlock" VerticalAlignment="Center" Grid.Column="2" Foreground="Red" HorizontalAlignment="Center" Visibility="Hidden">Please enable OvrStream in the Services Section!</TextBlock>
         </Grid>
 
         <Grid x:Name="SetVariableGrid" Grid.Row="2" Visibility="Collapsed">

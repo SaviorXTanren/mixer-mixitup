@@ -11,16 +11,32 @@
         <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="80" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Grid Grid.Column="0" VerticalAlignment="Center">
+            <Grid Grid.Column="0" Width="360">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0">
+                <TextBlock Grid.Row="0" TextWrapping="Wrap">
+                    OvrStream is a powerful, motion graphics editor for alerts &amp; overlays. Mix It Up allows you to trigger your visualizations and set variables values for them in OvrStream.
+                </TextBlock>
+
+                <TextBlock Grid.Row="2" TextWrapping="Wrap">For information on OvrStream, please see the following link: <Hyperlink NavigateUri="https://mixitup.ovrstream.com/" RequestNavigate="Hyperlink_RequestNavigate">https://mixitup.ovrstream.com/</Hyperlink></TextBlock>
+            </Grid>
+
+            <Grid Grid.Column="2" VerticalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="-5,0,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="10" />
@@ -30,10 +46,10 @@
                     <MaterialDesign:PackIcon Kind="AccessPoint" Style="{StaticResource DefaultPackIcon}" Grid.Column="0" VerticalAlignment="Center" />
                     <TextBox x:Name="OvrStreamIPAddressTextBox" Grid.Column="2" Width="130" VerticalAlignment="Center" />
                 </Grid>
-            </Grid>
 
-            <Button x:Name="OvrStreamEnableConnectionButton" Grid.Column="2" Click="OvrStreamEnableConnectionButton_Click" Width="150   ">Enable OvrStream</Button>
-            <Button x:Name="OvrStreamDisableConnectionButton" Grid.Column="2" Click="OvrStreamDisableConnectionButton_Click" Width="150" Visibility="Collapsed">Disable OvrStream</Button>
+                <Button x:Name="OvrStreamEnableConnectionButton" HorizontalAlignment="Center" Grid.Row="2" Click="OvrStreamEnableConnectionButton_Click" Width="150">Enable OvrStream</Button>
+                <Button x:Name="OvrStreamDisableConnectionButton" HorizontalAlignment="Center" Grid.Row="2" Click="OvrStreamDisableConnectionButton_Click" Width="150" Visibility="Collapsed">Disable OvrStream</Button>
+            </Grid>
         </Grid>
     </Grid>
 </local:ServicesControlBase>
