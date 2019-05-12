@@ -168,6 +168,7 @@ namespace MixItUp.WPF.Controls.MainControls
             GlobalEvents.OnHostOccurred += Constellation_OnHostedOccurred;
             GlobalEvents.OnSubscribeOccurred += Constellation_OnSubscribedOccurred;
             GlobalEvents.OnResubscribeOccurred += Constellation_OnResubscribedOccurred;
+            GlobalEvents.OnSubscriptionGiftedOccurred += GlobalEvents_OnSubscriptionGiftedOccurred;
 
             ChannelSession.Interactive.OnInteractiveControlUsed += Interactive_OnInteractiveControlUsed;
 
@@ -973,6 +974,14 @@ namespace MixItUp.WPF.Controls.MainControls
             if (ChannelSession.Settings.ChatShowEventAlerts)
             {
                 await this.AddAlertMessage(string.Format("{0} Re-Subscribed For {1} Months", e.Item1.UserName, e.Item2), e.Item1, ChannelSession.Settings.ChatEventAlertsColorScheme);
+            }
+        }
+
+        private async void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserViewModel, UserViewModel> e)
+        {
+            if (ChannelSession.Settings.ChatShowEventAlerts)
+            {
+                await this.AddAlertMessage(string.Format("{0} Gifted A Subscription To {1}", e.Item1.UserName, e.Item2.UserName), e.Item1, ChannelSession.Settings.ChatEventAlertsColorScheme);
             }
         }
 
