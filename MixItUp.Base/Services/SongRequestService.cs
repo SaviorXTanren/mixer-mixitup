@@ -216,8 +216,9 @@ namespace MixItUp.Base.Services
                 return;
             }
 
-            if (this.lastUserSongSearches.ContainsKey(user) && int.TryParse(identifier, out int songIndex) && songIndex >= 0 && songIndex < this.lastUserSongSearches[user].Count)
+            if (this.lastUserSongSearches.ContainsKey(user) && int.TryParse(identifier, out int songIndex) && songIndex > 0 && songIndex <= this.lastUserSongSearches[user].Count)
             {
+                songIndex = songIndex - 1;
                 await this.AddSongRequest(user, this.lastUserSongSearches[user][songIndex]);
                 this.lastUserSongSearches.Remove(user);
             }
