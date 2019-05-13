@@ -17,5 +17,6 @@ namespace MixItUp.Base.Services
         Task UpdateVariables(string titleName, Dictionary<string, string> variables);
         Task HideTitle(string titleName);
         Task PlayTitle(string titleName, Dictionary<string, string> variables);
+        Task<string> DownloadImage(string uri);
     }
 }

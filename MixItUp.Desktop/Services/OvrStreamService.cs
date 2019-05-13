@@ -119,6 +119,17 @@ namespace MixItUp.OvrStream
         }
     }
 
+    internal class DownloadImageCommand : NewBlueCommand
+    {
+        public string Url { get; set; }
+
+        protected override void WriteXml(XmlElement parent)
+        {
+            parent.SetAttribute("command", "downloadImage");
+            parent.SetAttribute("url", Url);
+        }
+    }
+
     internal class ScheduleCommand : NewBlueCommand
     {
         public string Action { get; set; }
@@ -210,6 +221,11 @@ namespace MixItUp.OvrStream
             return this.webSocket.PlayTitle(titleName, variables);
         }
 
+        public Task<string> DownloadImage(string uri)
+        {
+            return this.webSocket.DownloadImage(uri);
+        }
+
         private async void WebSocket_OnDisconnectOccurred(object sender, System.Net.WebSockets.WebSocketCloseStatus e)
         {
             GlobalEvents.ServiceDisconnect("OvrStream");
@@ -289,6 +305,26 @@ namespace MixItUp.OvrStream
             };
 
             await InvokeMethodAsync("scheduleCommandXml", new object[] { command.ToString() });
+        }
+
+        public async Task<string> DownloadImage(string uri)
+        {
+            DownloadImageCommand command = new DownloadImageCommand
+            {
+                Url = uri,
+            };
+
+            OvrStreamResponse response = await InvokeMethodAsync("scheduleCommandXml", new object[] { command.ToString() });
+
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(response.Data.Value<string>());
+            XmlElement root = doc.SelectSingleNode("//newblue_ext") as XmlElement;
+            if (root != null && root.HasAttribute("path"))
+            {
+                return root.GetAttribute("path");
+            }
+
+            return null;
         }
 
         private Task<OvrStreamResponse> InvokeMethodAsync(string method, object[] arguments)
