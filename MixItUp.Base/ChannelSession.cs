@@ -138,9 +138,6 @@ namespace MixItUp.Base
 
         public static List<PreMadeChatCommand> PreMadeChatCommands { get; private set; }
 
-        public static bool GameQueueEnabled { get; set; }
-        public static LockedList<UserViewModel> GameQueue { get; private set; }
-
         public static LockedDictionary<string, double> Counters { get; private set; }
 
         public static IEnumerable<PermissionsCommandBase> AllEnabledChatCommands
@@ -227,7 +224,6 @@ namespace MixItUp.Base
             ChannelSession.ActiveUsers = new UserContainerViewModel();
 
             ChannelSession.PreMadeChatCommands = new List<PreMadeChatCommand>();
-            ChannelSession.GameQueue = new LockedList<UserViewModel>();
 
             ChannelSession.Counters = new LockedDictionary<string, double>();
 

@@ -107,7 +107,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 this.gameQueueUpdated = false;
 
-                List<UserViewModel> users = new List<UserViewModel>((this.testGameQueueList.Count > 0) ? this.testGameQueueList : ChannelSession.GameQueue.ToList());
+                List<UserViewModel> users = new List<UserViewModel>((this.testGameQueueList.Count > 0) ? this.testGameQueueList : ChannelSession.Services.GameQueueService.Queue);
 
                 this.GameQueueUpdates.Clear();
                 OverlayGameQueue copy = this.Copy<OverlayGameQueue>();

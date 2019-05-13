@@ -66,7 +66,7 @@ namespace MixItUp.Base.Services
         Task ClearAll();
     }
 
-    public class SongRequestService : NotifyPropertyChangedBase, ISongRequestService
+    public class SongRequestService : ISongRequestService
     {
         private static SemaphoreSlim songRequestLock = new SemaphoreSlim(1);
 
@@ -75,16 +75,7 @@ namespace MixItUp.Base.Services
         public List<SongRequestModel> RequestSongs { get; private set; } = new List<SongRequestModel>();
         private List<SongRequestModel> playlistSongs = new List<SongRequestModel>();
 
-        public SongRequestCurrentlyPlayingModel Status
-        {
-            get { return this.status; }
-            private set
-            {
-                this.status = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private SongRequestCurrentlyPlayingModel status;
+        public SongRequestCurrentlyPlayingModel Status { get; private set; }
 
         private Task backgroundSongThread = null;
         private CancellationTokenSource backgroundSongThreadCancellationTokenSource;
@@ -361,12 +352,7 @@ namespace MixItUp.Base.Services
         {
             await SongRequestService.songRequestLock.WaitAndRelease(() =>
             {
-                int index = this.RequestSongs.IndexOf(song) - 1;
-                if (index >= 0)
-                {
-                    this.RequestSongs.Remove(song);
-                    this.RequestSongs.Insert(index, song);
-                }
+                this.RequestSongs.MoveUp(song);
                 return Task.FromResult(0);
             });
             GlobalEvents.SongRequestsChangedOccurred();
@@ -376,12 +362,7 @@ namespace MixItUp.Base.Services
         {
             await SongRequestService.songRequestLock.WaitAndRelease(() =>
             {
-                int index = this.RequestSongs.IndexOf(song) + 1;
-                if (index < this.RequestSongs.Count)
-                {
-                    this.RequestSongs.Remove(song);
-                    this.RequestSongs.Insert(index, song);
-                }
+                this.RequestSongs.MoveDown(song);
                 return Task.FromResult(0);
             });
             GlobalEvents.SongRequestsChangedOccurred();

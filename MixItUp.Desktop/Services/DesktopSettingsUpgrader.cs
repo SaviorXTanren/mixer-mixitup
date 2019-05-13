@@ -56,6 +56,7 @@ namespace MixItUp.Desktop.Services
             await DesktopSettingsUpgrader.Version27Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version28Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version29Upgrade(version, filePath);
+            await DesktopSettingsUpgrader.Version30Upgrade(version, filePath);
 
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
             settings.InitializeDB = false;
@@ -314,6 +315,20 @@ namespace MixItUp.Desktop.Services
 
                 settings.SongAddedCommand = CustomCommand.BasicChatCommand("Song Request Added", "$songtitle has been added to the queue", isWhisper: true);
                 settings.SongPlayedCommand = CustomCommand.BasicChatCommand("Song Request Played", "Now Playing: $songtitle");
+
+                await ChannelSession.Services.Settings.Save(settings);
+            }
+        }
+
+        private static async Task Version30Upgrade(int version, string filePath)
+        {
+            if (version < 30)
+            {
+                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
+                await ChannelSession.Services.Settings.Initialize(settings);
+
+                settings.GameQueueUserJoinedCommand = CustomCommand.BasicChatCommand("Game Queue Used Joined", "You are #$queueposition in the queue to play.", isWhisper: true);
+                settings.GameQueueUserSelectedCommand = CustomCommand.BasicChatCommand("Game Queue Used Selected", "It's time to play @$username! Listen carefully for instructions on how to join...");
 
                 await ChannelSession.Services.Settings.Save(settings);
             }

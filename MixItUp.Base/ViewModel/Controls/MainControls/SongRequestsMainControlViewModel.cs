@@ -11,7 +11,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 {
     public class SongRequestsMainControlViewModel : MainControlViewModelBase
     {
-        public bool IsEnabled { get; private set; }
+        public bool IsEnabled { get { return ChannelSession.Services.SongRequestService.IsEnabled; } }
 
         public string EnableDisableButtonText { get { return (this.IsEnabled) ? "Disable" : "Enable"; } }
 
@@ -49,14 +49,10 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 if (this.IsEnabled)
                 {
                     await ChannelSession.Services.SongRequestService.Disable();
-                    this.IsEnabled = false;
                 }
                 else
                 {
-                    if (await ChannelSession.Services.SongRequestService.Enable())
-                    {
-                        this.IsEnabled = true;
-                    }
+                    await ChannelSession.Services.SongRequestService.Enable();
                 }
                 this.NotifyPropertyChanges();
             });
