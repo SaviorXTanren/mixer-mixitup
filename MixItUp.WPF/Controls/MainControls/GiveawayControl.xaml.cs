@@ -491,9 +491,9 @@ namespace MixItUp.WPF.Controls.MainControls
 
                         if (ChannelSession.Settings.GiveawayRequirements.Inventory != null)
                         {
-                            if (!ChannelSession.Settings.GameQueueRequirements.TrySubtractInventoryAmount(message.User))
+                            if (!ChannelSession.Settings.GiveawayRequirements.TrySubtractInventoryAmount(message.User))
                             {
-                                await ChannelSession.Settings.GameQueueRequirements.Inventory.SendNotMetWhisper(message.User);
+                                await ChannelSession.Settings.GiveawayRequirements.Inventory.SendNotMetWhisper(message.User);
                                 return;
                             }
                         }
