@@ -33,6 +33,8 @@ namespace MixItUp.Base.ViewModel.User
         public bool IsTrackingSparks { get; set; }
         [DataMember]
         public bool IsTrackingEmbers { get; set; }
+        [DataMember]
+        public bool IsTrackingFanProgression { get; set; }
 
         [DataMember]
         public int AcquireAmount { get; set; }
@@ -163,30 +165,46 @@ namespace MixItUp.Base.ViewModel.User
 
         public async Task UpdateUserData()
         {
-            if (this.IsActive && !this.IsTrackingSparks && !this.IsTrackingEmbers)
+            if (this.IsActive)
             {
-                bool bonusesCanBeApplied = (ChannelSession.Channel.online || this.OfflineAcquireAmount > 0);
-                DateTimeOffset minActiveTime = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(this.MinimumActiveRate));
-                int interval = ChannelSession.Channel.online ? this.AcquireInterval : this.OfflineAcquireInterval;
-                if (interval > 0)
+                if (this.IsTrackingFanProgression)
                 {
                     foreach (UserViewModel user in await ChannelSession.ActiveUsers.GetAllWorkableUsers())
                     {
-                        if (!user.Data.IsCurrencyRankExempt && (!this.HasMinimumActiveRate || user.LastActivity > minActiveTime))
+                        if (!user.Data.IsCurrencyRankExempt)
                         {
-                            int minutes = ChannelSession.Channel.online ? user.Data.ViewingMinutes : user.Data.OfflineViewingMinutes;
-                            if (minutes % interval == 0)
+                            if (user.FanProgression != null && user.FanProgression.level != null && user.FanProgression.level.level > user.Data.GetCurrencyAmount(this))
                             {
-                                user.Data.AddCurrencyAmount(this, ChannelSession.Channel.online ? this.AcquireAmount : this.OfflineAcquireAmount);
-                                if (bonusesCanBeApplied)
+                                user.Data.SetCurrencyAmount(this, (int)user.FanProgression.level.level);
+                            }
+                        }
+                    }
+                }
+                else if (!this.IsTrackingSparks && !this.IsTrackingEmbers)
+                {
+                    int interval = ChannelSession.Channel.online ? this.AcquireInterval : this.OfflineAcquireInterval;
+                    if (interval > 0)
+                    {
+                        DateTimeOffset minActiveTime = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(this.MinimumActiveRate));
+                        bool bonusesCanBeApplied = (ChannelSession.Channel.online || this.OfflineAcquireAmount > 0);
+                        foreach (UserViewModel user in await ChannelSession.ActiveUsers.GetAllWorkableUsers())
+                        {
+                            if (!user.Data.IsCurrencyRankExempt && (!this.HasMinimumActiveRate || user.LastActivity > minActiveTime))
+                            {
+                                int minutes = ChannelSession.Channel.online ? user.Data.ViewingMinutes : user.Data.OfflineViewingMinutes;
+                                if (minutes % interval == 0)
                                 {
-                                    if (user.HasPermissionsTo(MixerRoleEnum.Mod) && this.ModeratorBonus > 0)
+                                    user.Data.AddCurrencyAmount(this, ChannelSession.Channel.online ? this.AcquireAmount : this.OfflineAcquireAmount);
+                                    if (bonusesCanBeApplied)
                                     {
-                                        user.Data.AddCurrencyAmount(this, this.ModeratorBonus);
-                                    }
-                                    else if (user.HasPermissionsTo(MixerRoleEnum.Subscriber) && this.SubscriberBonus > 0)
-                                    {
-                                        user.Data.AddCurrencyAmount(this, this.SubscriberBonus);
+                                        if (user.HasPermissionsTo(MixerRoleEnum.Mod) && this.ModeratorBonus > 0)
+                                        {
+                                            user.Data.AddCurrencyAmount(this, this.ModeratorBonus);
+                                        }
+                                        else if (user.HasPermissionsTo(MixerRoleEnum.Subscriber) && this.SubscriberBonus > 0)
+                                        {
+                                            user.Data.AddCurrencyAmount(this, this.SubscriberBonus);
+                                        }
                                     }
                                 }
                             }

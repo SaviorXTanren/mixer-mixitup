@@ -45,8 +45,7 @@ namespace MixItUp.WPF.Controls.Actions
             if (this.action != null)
             {
                 this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.OvrStreamActionType);
-                if (this.action.OvrStreamActionType == OvrStreamActionTypeEnum.ShowTitle ||
-                    this.action.OvrStreamActionType == OvrStreamActionTypeEnum.HideTitle ||
+                if (this.action.OvrStreamActionType == OvrStreamActionTypeEnum.UpdateVariables ||
                     this.action.OvrStreamActionType == OvrStreamActionTypeEnum.PlayTitle)
                 {
                     this.TitleNameTextBox.Text = this.action.TitleName;
@@ -55,6 +54,10 @@ namespace MixItUp.WPF.Controls.Actions
                     {
                         this.variablePairs.Add(new VariablePair() { Name = kvp.Key, Value = kvp.Value });
                     }
+                }
+                else if (this.action.OvrStreamActionType == OvrStreamActionTypeEnum.HideTitle)
+                {
+                    this.TitleNameTextBox.Text = this.action.TitleName;
                 }
             }
             return Task.FromResult(0);
@@ -66,8 +69,7 @@ namespace MixItUp.WPF.Controls.Actions
             {
                 OvrStreamActionTypeEnum actionType = EnumHelper.GetEnumValueFromString<OvrStreamActionTypeEnum>((string)this.TypeComboBox.SelectedItem);
 
-                if (actionType == OvrStreamActionTypeEnum.ShowTitle ||
-                    actionType == OvrStreamActionTypeEnum.HideTitle ||
+                if (actionType == OvrStreamActionTypeEnum.UpdateVariables ||
                     actionType == OvrStreamActionTypeEnum.PlayTitle)
                 {
                     // Must have a title name and cannot have duplicate variables names
@@ -81,7 +83,14 @@ namespace MixItUp.WPF.Controls.Actions
                                 return null;
                             }
                         }
-                        return OvrStreamAction.CreateTriggerTitleAction(actionType, this.TitleNameTextBox.Text, this.variablePairs.ToDictionary(p => p.Name, p => p.Value));
+                        return OvrStreamAction.CreateVariableTitleAction(actionType, this.TitleNameTextBox.Text, this.variablePairs.ToDictionary(p => p.Name, p => p.Value));
+                    }
+                }
+                else if (actionType == OvrStreamActionTypeEnum.HideTitle)
+                {
+                    if (!string.IsNullOrEmpty(this.TitleNameTextBox.Text))
+                    {
+                        return OvrStreamAction.CreateHideTitleAction(actionType, this.TitleNameTextBox.Text);
                     }
                 }
             }
@@ -94,8 +103,7 @@ namespace MixItUp.WPF.Controls.Actions
             if (this.TypeComboBox.SelectedIndex >= 0)
             {
                 OvrStreamActionTypeEnum actionType = EnumHelper.GetEnumValueFromString<OvrStreamActionTypeEnum>((string)this.TypeComboBox.SelectedItem);
-                if (actionType == OvrStreamActionTypeEnum.ShowTitle ||
-                    actionType == OvrStreamActionTypeEnum.HideTitle ||
+                if (actionType == OvrStreamActionTypeEnum.UpdateVariables ||
                     actionType == OvrStreamActionTypeEnum.PlayTitle)
                 {
                     this.SetVariableGrid.Visibility = Visibility.Visible;

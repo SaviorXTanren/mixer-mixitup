@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
@@ -33,6 +34,18 @@ namespace MixItUp.OvrStream
     }
 
     [JsonObject]
+    public class IdleMessage : OvrStreamPacket
+    {
+        [JsonProperty("type")]
+        public override MessageTypes MessageType { get { return MessageTypes.Idle; } }
+
+        public IdleMessage()
+        {
+            Id = null;
+        }
+    }
+
+    [JsonObject]
     public class InvokeMethodMessage : OvrStreamPacket
     {
         [JsonProperty("type")]
@@ -50,15 +63,15 @@ namespace MixItUp.OvrStream
 
     public abstract class OvrStreamPacket
     {
-        private static int idCounter = 0;
+        private static long idCounter = 0;
 
         [JsonProperty("type")]
         public abstract MessageTypes MessageType { get; }
 
         [JsonProperty("id")]
-        public int Id { get; set; } = GetNextId();
+        public long? Id { get; set; } = GetNextId();
 
-        public static int GetNextId()
+        public static long GetNextId()
         {
             return Interlocked.Increment(ref idCounter);
         }
@@ -75,6 +88,73 @@ namespace MixItUp.OvrStream
 
         [JsonProperty("id")]
         public int Id { get; set; }
+    }
+
+    internal abstract class NewBlueCommand
+    {
+        public override string ToString()
+        {
+            XmlDocument doc = new XmlDocument();
+            var rootElement = doc.CreateElement("newblue_ext");
+
+            WriteXml(rootElement);
+
+            return rootElement.OuterXml;
+        }
+
+        protected abstract void WriteXml(XmlElement parent);
+    }
+
+    internal class ReadTitleCommand : NewBlueCommand
+    {
+        public int Channel { get; set; }
+
+        public string Title { get; set; }
+
+        protected override void WriteXml(XmlElement parent)
+        {
+            parent.SetAttribute("command", "readTitle");
+            parent.SetAttribute("channel", Channel.ToString());
+            parent.SetAttribute("title", Title);
+        }
+    }
+
+    internal class ScheduleCommand : NewBlueCommand
+    {
+        public string Action { get; set; }
+
+        public string Id { get; set; }
+
+        public string Queue { get; set; }
+
+        public Variable[] Data { get; set; } = new Variable[0];
+
+        protected override void WriteXml(XmlElement parent)
+        {
+            parent.SetAttribute("command", "schedule");
+            parent.SetAttribute("action", Action);
+            parent.SetAttribute("id", Id);
+            parent.SetAttribute("queue", Queue);
+
+            var data = parent.OwnerDocument.CreateElement("data");
+            parent.AppendChild(data);
+
+            foreach (var variable in Data)
+            {
+                var variableElement = parent.OwnerDocument.CreateElement("variable");
+                data.AppendChild(variableElement);
+
+                variableElement.SetAttribute("name", variable.Name);
+                variableElement.SetAttribute("value", variable.Value);
+            }
+        }
+    }
+
+    internal class Variable
+    {
+        public string Name { get; set; }
+
+        public string Value { get; set; }
     }
 
     public class OvrStreamService : IOvrStreamService
@@ -115,14 +195,14 @@ namespace MixItUp.OvrStream
             }
         }
 
-        public Task ShowTitle(string titleName, Dictionary<string, string> variables)
+        public Task UpdateVariables(string titleName, Dictionary<string, string> variables)
         {
-            return this.webSocket.ShowTitle(titleName, variables);
+            return this.webSocket.UpdateVariablesAsync(titleName, variables);
         }
 
-        public Task HideTitle(string titleName, Dictionary<string, string> variables)
+        public Task HideTitle(string titleName)
         {
-            return this.webSocket.HideTitle(titleName, variables);
+            return this.webSocket.HideTitle(titleName);
         }
 
         public Task PlayTitle(string titleName, Dictionary<string, string> variables)
@@ -147,7 +227,7 @@ namespace MixItUp.OvrStream
     public class OvrStreamWebSocketClient : WebSocketClientBase
     {
         private IOvrStreamService service;
-        private Dictionary<int, OvrStreamResponse> responses = new Dictionary<int, OvrStreamResponse>();
+        private Dictionary<long, OvrStreamResponse> responses = new Dictionary<long, OvrStreamResponse>();
 
         private const string SchedulerName = "scheduler";
         private Dictionary<string, int> schedulerMethods = new Dictionary<string, int>();
@@ -159,7 +239,7 @@ namespace MixItUp.OvrStream
 
         public async Task Initialize()
         {
-            OvrStreamResponse response = await this.Send(new InitMessage(), true);
+            OvrStreamResponse response = await this.Send(new InitMessage());
 
             foreach (var method in response.Data[SchedulerName]["methods"])
             {
@@ -168,101 +248,84 @@ namespace MixItUp.OvrStream
                 int key = methodArray[1].Value<int>();
                 this.schedulerMethods[methodName] = key;
             }
+
+            await this.Send(new IdleMessage());
         }
 
-        public Task ShowTitle(string titleName, Dictionary<string, string> variables)
+        public async Task PlayTitle(string titleName, IReadOnlyDictionary<string, string> variables)
         {
-            return UpdateAndRun("animatein", titleName, variables);
+            await UpdateVariablesAsync(titleName, variables);
+
+            ScheduleCommand command = new ScheduleCommand
+            {
+                Action = "animatein+override+duration",
+                Id = titleName,
+                Queue = titleName,
+            };
+
+            await InvokeMethodAsync("scheduleCommandXml", new object[] { command.ToString() });
         }
 
-        public Task HideTitle(string titleName, Dictionary<string, string> variables)
+        public async Task HideTitle(string titleName)
         {
-            return UpdateAndRun("animateout", titleName, variables);
+            ScheduleCommand command = new ScheduleCommand
+            {
+                Action = "animateout+override",
+                Id = titleName,
+                Queue = titleName,
+            };
+
+            await InvokeMethodAsync("scheduleCommandXml", new object[] { command.ToString() });
         }
 
-        public Task PlayTitle(string titleName, Dictionary<string, string> variables)
+        public async Task UpdateVariablesAsync(string id, IReadOnlyDictionary<string, string> variables)
         {
-            return UpdateAndRun("alert", titleName, variables);
+            ScheduleCommand command = new ScheduleCommand
+            {
+                Action = "update",
+                Id = id,
+                Queue = "Alert",
+                Data = variables.Select(kvp => new Variable { Name = kvp.Key, Value = kvp.Value }).ToArray(),
+            };
+
+            await InvokeMethodAsync("scheduleCommandXml", new object[] { command.ToString() });
         }
 
-        private async Task<string> GetTitleId(string titleName)
+        private Task<OvrStreamResponse> InvokeMethodAsync(string method, object[] arguments)
         {
-            XmlDocument commandXml = new XmlDocument();
-            commandXml.LoadXml("<newblue_ext command='readTitle' channel='-1' title='' />");
-            commandXml.DocumentElement.SetAttribute("title", titleName);
+            if (!this.schedulerMethods.ContainsKey(method))
+            {
+                throw new InvalidOperationException($"Unknown method on scheduler object: {method}");
+            }
+
             var message = new InvokeMethodMessage
             {
                 Object = SchedulerName,
-                Method = schedulerMethods["scheduleCommandXml"],
-                Arguments = new object[]
-                {
-                    commandXml.OuterXml,
-                }
+                Method = this.schedulerMethods[method],
+                Arguments = arguments,
             };
 
-            var resp = await this.Send(message, true);
-
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml(resp.Data.Value<string>());
-            var node = doc.SelectSingleNode("//title");
-            return node?.Attributes["id"].Value;
+            return this.Send(message);
         }
 
-        private async Task UpdateAndRun(string action, string titleName, Dictionary<string, string> variables)
+        private async Task<OvrStreamResponse> Send(OvrStreamPacket packet)
         {
-            string titleId = await GetTitleId(titleName);
-
-            XmlDocument commandXml = new XmlDocument();
-            commandXml.LoadXml("<newblue_ext action='' command='schedule' id='' queue=''><data></data></newblue_ext>");
-            commandXml.DocumentElement.SetAttribute("action", $"update+{action}");
-            commandXml.DocumentElement.SetAttribute("id", titleId);
-            commandXml.DocumentElement.SetAttribute("queue", titleId);
-
-            XmlElement dataNode = commandXml.SelectSingleNode("//data") as XmlElement;
-            foreach (var kvp in variables)
-            {
-                XmlElement variable = commandXml.CreateElement("variable");
-                variable.SetAttribute("name", kvp.Key);
-                variable.SetAttribute("value", kvp.Value);
-                dataNode.AppendChild(variable);
-            }
-            var message = new InvokeMethodMessage
-            {
-                Object = SchedulerName,
-                Method = schedulerMethods["scheduleCommandXml"],
-                Arguments = new object[]
-                {
-                    commandXml.OuterXml,
-                }
-            };
-
-            await this.Send(message, false);
-        }
-
-        private async Task<OvrStreamResponse> Send(OvrStreamPacket packet, bool waitForResponse)
-        {
-            if (waitForResponse)
-            {
-                responses[packet.Id] = null;
-            }
-
             string json = JsonConvert.SerializeObject(packet);
             await base.Send(json);
 
-            do
+            if (packet.Id.HasValue)
             {
-                await Task.Delay(250);
-            }
-            while (responses.ContainsKey(packet.Id) && responses[packet.Id] == null);
+                while (!this.responses.ContainsKey(packet.Id.Value))
+                {
+                    await Task.Delay(50);
+                }
 
-            OvrStreamResponse response = null;
-            if (responses.ContainsKey(packet.Id))
-            {
-                response = responses[packet.Id];
-                responses.Remove(packet.Id);
+                OvrStreamResponse response = this.responses[packet.Id.Value];
+                this.responses.Remove(packet.Id.Value);
+                return response;
             }
 
-            return response;
+            return null;
         }
 
         protected override Task ProcessReceivedPacket(string packetJSON)
@@ -275,10 +338,7 @@ namespace MixItUp.OvrStream
                     switch (response.MessageType)
                     {
                         case MessageTypes.Response:
-                            if (this.responses.ContainsKey(response.Id))
-                            {
-                                this.responses[response.Id] = response;
-                            }
+                            this.responses[response.Id] = response;
                             break;
 
                     }

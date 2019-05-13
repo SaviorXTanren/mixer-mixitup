@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
@@ -9,24 +10,35 @@ namespace MixItUp.Base.Actions
 {
     public enum OvrStreamActionTypeEnum
     {
+        [Obsolete]
         [Name("Show Title")]
         ShowTitle,
         [Name("Hide Title")]
         HideTitle,
         [Name("Play Title")]
         PlayTitle,
+        [Name("Update Variables")]
+        UpdateVariables,
     }
 
 
     [DataContract]
     public class OvrStreamAction : ActionBase
     {
-        public static OvrStreamAction CreateTriggerTitleAction(OvrStreamActionTypeEnum actionType, string titleName, Dictionary<string, string> variables)
+        public static OvrStreamAction CreateVariableTitleAction(OvrStreamActionTypeEnum actionType, string titleName, Dictionary<string, string> variables)
         {
             return new OvrStreamAction(actionType)
             {
                 TitleName = titleName,
                 Variables = variables,
+            };
+        }
+
+        public static OvrStreamAction CreateHideTitleAction(OvrStreamActionTypeEnum actionType, string titleName)
+        {
+            return new OvrStreamAction(actionType)
+            {
+                TitleName = titleName,
             };
         }
 
@@ -58,8 +70,7 @@ namespace MixItUp.Base.Actions
         {
             if (ChannelSession.Services.OvrStreamWebsocket != null)
             {
-                if (this.OvrStreamActionType == OvrStreamActionTypeEnum.ShowTitle ||
-                    this.OvrStreamActionType == OvrStreamActionTypeEnum.HideTitle ||
+                if (this.OvrStreamActionType == OvrStreamActionTypeEnum.UpdateVariables ||
                     this.OvrStreamActionType == OvrStreamActionTypeEnum.PlayTitle)
                 {
                     Dictionary<string, string> processedVariables = new Dictionary<string, string>();
@@ -70,16 +81,17 @@ namespace MixItUp.Base.Actions
 
                     switch (this.OvrStreamActionType)
                     {
-                        case OvrStreamActionTypeEnum.ShowTitle:
-                            await ChannelSession.Services.OvrStreamWebsocket.ShowTitle(this.TitleName, processedVariables);
-                            break;
-                        case OvrStreamActionTypeEnum.HideTitle:
-                            await ChannelSession.Services.OvrStreamWebsocket.HideTitle(this.TitleName, processedVariables);
+                        case OvrStreamActionTypeEnum.UpdateVariables:
+                            await ChannelSession.Services.OvrStreamWebsocket.UpdateVariables(this.TitleName, processedVariables);
                             break;
                         case OvrStreamActionTypeEnum.PlayTitle:
                             await ChannelSession.Services.OvrStreamWebsocket.PlayTitle(this.TitleName, processedVariables);
                             break;
                     }
+                }
+                else if (this.OvrStreamActionType == OvrStreamActionTypeEnum.HideTitle)
+                {
+                    await ChannelSession.Services.OvrStreamWebsocket.HideTitle(this.TitleName);
                 }
             }
         }
