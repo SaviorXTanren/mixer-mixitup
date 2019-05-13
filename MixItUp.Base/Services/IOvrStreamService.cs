@@ -14,8 +14,8 @@ namespace MixItUp.Base.Services
 
         Task Disconnect();
 
-        Task ShowTitle(string titleName, Dictionary<string, string> variables);
-        Task HideTitle(string titleName, Dictionary<string, string> variables);
+        Task UpdateVariables(string titleName, Dictionary<string, string> variables);
+        Task HideTitle(string titleName);
         Task PlayTitle(string titleName, Dictionary<string, string> variables);
     }
 }

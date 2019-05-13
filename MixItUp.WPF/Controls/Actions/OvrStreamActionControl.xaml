@@ -12,6 +12,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
@@ -26,24 +28,16 @@
             <TextBlock x:Name="OvrStreamNotEnabledWarningTextBlock" VerticalAlignment="Center" Grid.Column="2" Foreground="Red" HorizontalAlignment="Center" Visibility="Hidden">Please enable OvrStream in the Services Section!</TextBlock>
         </Grid>
 
-        <Grid x:Name="SetVariableGrid" Grid.Row="2" Visibility="Collapsed">
+        <TextBox Grid.Row="2" x:Name="TitleNameTextBox" Width="200" MaterialDesign:HintAssist.Hint="OvrStream Title Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+        <Grid x:Name="SetVariableGrid" Grid.Row="4" Visibility="Collapsed">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="15" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" HorizontalAlignment="Center" Margin="0,10,0,-10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="200" />
-                    <ColumnDefinition Width="100" />
-                    <ColumnDefinition Width="150" />
-                </Grid.ColumnDefinitions>
-
-                <TextBox Grid.Column="0" x:Name="TitleNameTextBox" Width="200" MaterialDesign:HintAssist.Hint="OvrStream Title Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-                <Button x:Name="AddVariableButton" Grid.Column="2" Width="150" Click="AddVariableButton_Click">Add New Variable</Button>
-            </Grid>
+            <Button x:Name="AddVariableButton" Grid.Row="0" Width="150" Click="AddVariableButton_Click">Add New Variable</Button>
 
             <ItemsControl x:Name="VariableItemsControl" Grid.Row="2">
                 <ItemsControl.ItemTemplate>
@@ -67,6 +61,5 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </Grid>
-
     </Grid>
 </local:ActionControlBase>
