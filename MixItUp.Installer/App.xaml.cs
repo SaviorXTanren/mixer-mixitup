@@ -12,11 +12,19 @@ namespace MixItUp.Installer
     /// </summary>
     public partial class App : Application
     {
+        public bool IsUpdate { get; private set; }
+
         public App()
         {
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls12;
+
+            string[] args = Environment.GetCommandLineArgs();
+            if (args != null && args.Length == 2 && args[1].Equals("/update"))
+            {
+                this.IsUpdate = true;
+            }
         }
 
         private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)

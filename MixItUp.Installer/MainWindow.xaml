@@ -51,6 +51,8 @@
             <TextBlock Grid.Row="6" x:Name="InstallingTextBlock2" HorizontalAlignment="Center" TextAlignment="Center" Foreground="White" TextWrapping="Wrap" Width="350">Once this is done, we will automatically launch Mix It Up and a shortcut will be placed on the Start Menu.</TextBlock>
 
             
+            <TextBlock Grid.Row="6" x:Name="UpdatingTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" Foreground="White" Visibility="Collapsed">Mix It Up is now updating..</TextBlock>
+
             
             <TextBlock Grid.Row="4" x:Name="ErrorTextBlock" Width="325" HorizontalAlignment="Center" TextAlignment="Center" Foreground="White" TextWrapping="Wrap" />
 

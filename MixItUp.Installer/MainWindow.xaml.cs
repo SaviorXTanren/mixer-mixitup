@@ -15,9 +15,13 @@ namespace MixItUp.Installer
 
         private static bool? response = null;
 
+        private bool isUpdate = false;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            this.isUpdate = ((App)App.Current).IsUpdate;
 
             this.Loaded += MainWindow_Loaded;
         }
@@ -31,29 +35,45 @@ namespace MixItUp.Installer
                 return;
             }
 
+            if (this.isUpdate)
+            {
+                this.InstallingTextBlock1.Visibility = Visibility.Collapsed;
+                this.InstallingTextBlock2.Visibility = Visibility.Collapsed;
+                this.UpdatingTextBlock.Visibility = Visibility.Visible;
+            }
+
             await Task.Run(async () =>
             {
                 try
                 {
                     if (InstallerHelpers.DownloadMixItUp())
                     {
-                        if (InstallerHelpers.IsMixItUpAlreadyInstalled())
+                        if (!this.isUpdate)
                         {
-                            this.ShowMessage("We've detected that Mix It Up is already installed. Would you like us to keep your existing settings?");
-
-                            do
+                            if (InstallerHelpers.IsMixItUpAlreadyInstalled())
                             {
-                                await Task.Delay(1000);
-                            } while (response == null);
+                                this.ShowMessage("We've detected that Mix It Up is already installed. Would you like us to keep your existing settings?");
 
-                            this.ShowRegularView();
+                                do
+                                {
+                                    await Task.Delay(1000);
+                                } while (response == null);
 
-                            InstallerHelpers.DeleteExistingInstallation(response.GetValueOrDefault());
+                                this.ShowRegularView();
+
+                                InstallerHelpers.DeleteExistingInstallation(response.GetValueOrDefault());
+                            }
                         }
 
                         InstallerHelpers.InstallMixItUp();
 
-                        if (InstallerHelpers.CreateMixItUpShortcut())
+                        bool launch = true;
+                        if (!this.isUpdate)
+                        {
+                            launch = InstallerHelpers.CreateMixItUpShortcut();
+                        }
+
+                        if (launch)
                         {
                             Process.Start(Path.Combine(InstallerHelpers.StartMenuDirectory, InstallerHelpers.ShortcutFileName));
                             this.Dispatcher.Invoke(() =>
@@ -77,6 +97,7 @@ namespace MixItUp.Installer
                 this.InstallProgressBar.Visibility = Visibility.Collapsed;
                 this.InstallingTextBlock1.Visibility = Visibility.Collapsed;
                 this.InstallingTextBlock2.Visibility = Visibility.Collapsed;
+                this.UpdatingTextBlock.Visibility = Visibility.Collapsed;
 
                 this.MessageTextBlock.Visibility = Visibility.Visible;
                 this.MessageTextBlock.Text = message;
@@ -91,6 +112,7 @@ namespace MixItUp.Installer
                 this.InstallProgressBar.Visibility = Visibility.Collapsed;
                 this.InstallingTextBlock1.Visibility = Visibility.Collapsed;
                 this.InstallingTextBlock2.Visibility = Visibility.Collapsed;
+                this.UpdatingTextBlock.Visibility = Visibility.Collapsed;
 
                 this.ErrorTextBlock.Visibility = Visibility.Visible;
                 this.ErrorTextBlock.Text = message;

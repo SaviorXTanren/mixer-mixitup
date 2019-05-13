@@ -75,7 +75,17 @@ namespace MixItUp.Installer
                 Directory.CreateDirectory(InstallDirectory);
                 if (Directory.Exists(InstallDirectory))
                 {
-                    ZipFile.ExtractToDirectory(ZipDownloadFilePath, InstallDirectory);
+                    ZipArchive archive = ZipFile.Open(ZipDownloadFilePath, ZipArchiveMode.Read);
+                    foreach (ZipArchiveEntry entry in archive.Entries)
+                    {
+                        string filePath = Path.Combine(InstallDirectory, entry.FullName);
+                        string directoryPath = Path.GetDirectoryName(filePath);
+                        if (!Directory.Exists(directoryPath))
+                        {
+                            Directory.CreateDirectory(directoryPath);
+                        }
+                        entry.ExtractToFile(filePath, overwrite: true);
+                    }
                     return true;
                 }
             }
