@@ -12,6 +12,8 @@ namespace MixItUp.AutoHoster
 
         public HostingOrderEnum HostingOrder { get; set; } = HostingOrderEnum.InOrder;
 
+        public int MaxHostLength { get; set; } = 0;
+
         public AgeRatingEnum AgeRating { get; set; } = AgeRatingEnum.Adult;
     }
 }

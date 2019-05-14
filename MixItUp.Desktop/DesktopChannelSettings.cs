@@ -34,7 +34,7 @@ namespace MixItUp.Desktop
     [DataContract]
     public class DesktopSavableChannelSettings : ISavableChannelSettings
     {
-        public const int LatestVersion = 29;
+        public const int LatestVersion = 30;
 
         [JsonProperty]
         public int Version { get; set; } = DesktopChannelSettings.LatestVersion;
@@ -135,6 +135,10 @@ namespace MixItUp.Desktop
         public bool GameQueueSubPriority { get; set; }
         [JsonProperty]
         public RequirementViewModel GameQueueRequirements { get; set; } = new RequirementViewModel();
+        [JsonProperty]
+        public CustomCommand GameQueueUserJoinedCommand { get; set; }
+        [JsonProperty]
+        public CustomCommand GameQueueUserSelectedCommand { get; set; }
 
         [JsonProperty]
         public bool QuotesEnabled { get; set; }
@@ -492,6 +496,9 @@ namespace MixItUp.Desktop
         {
             this.Channel = channel;
             this.IsStreamer = isStreamer;
+
+            this.GameQueueUserJoinedCommand = CustomCommand.BasicChatCommand("Game Queue Used Joined", "You are #$queueposition in the queue to play.", isWhisper: true);
+            this.GameQueueUserSelectedCommand = CustomCommand.BasicChatCommand("Game Queue Used Selected", "It's time to play @$username! Listen carefully for instructions on how to join...");
 
             this.GiveawayUserJoinedCommand = CustomCommand.BasicChatCommand("Giveaway User Joined", "You have been entered into the giveaway, stay tuned to see who wins!", isWhisper: true);
             this.GiveawayWinnerSelectedCommand = CustomCommand.BasicChatCommand("Giveaway Winner Selected", "Congratulations @$username, you won! Type \"!claim\" in chat in the next 60 seconds to claim your prize!", isWhisper: true);

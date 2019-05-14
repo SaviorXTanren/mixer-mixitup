@@ -24,6 +24,7 @@ namespace MixItUp.WPF.Controls.Actions
             {
                 this.GameQueueActionTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.GameQueueType);
                 this.RoleRequirement.SetRoleRequirement(this.action.RoleRequirement);
+                this.TargetUsernameTextBox.Text = this.action.TargetUsername;
             }
             return Task.FromResult(0);
         }
@@ -33,7 +34,7 @@ namespace MixItUp.WPF.Controls.Actions
             if (this.GameQueueActionTypeComboBox.SelectedIndex >= 0)
             {
                 GameQueueActionType gameQueueType = EnumHelper.GetEnumValueFromString<GameQueueActionType>((string)this.GameQueueActionTypeComboBox.SelectedItem);
-                if (gameQueueType == GameQueueActionType.RemoveFirstType)
+                if (gameQueueType == GameQueueActionType.SelectFirstType)
                 {
                     if (this.RoleRequirement.GetRoleRequirement() == null)
                     {
@@ -41,7 +42,7 @@ namespace MixItUp.WPF.Controls.Actions
                     }
                     return new GameQueueAction(gameQueueType, this.RoleRequirement.GetRoleRequirement());
                 }
-                return new GameQueueAction(gameQueueType);
+                return new GameQueueAction(gameQueueType, targetUsername: this.TargetUsernameTextBox.Text);
             }
             return null;
         }
@@ -51,7 +52,25 @@ namespace MixItUp.WPF.Controls.Actions
             if (this.GameQueueActionTypeComboBox.SelectedIndex >= 0)
             {
                 GameQueueActionType gameQueueType = EnumHelper.GetEnumValueFromString<GameQueueActionType>((string)this.GameQueueActionTypeComboBox.SelectedItem);
-                this.RoleRequirement.Visibility = (gameQueueType == GameQueueActionType.RemoveFirstType) ? Visibility.Visible : Visibility.Collapsed;
+                if (gameQueueType == GameQueueActionType.SelectFirstType)
+                {
+                    this.RoleRequirement.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    this.RoleRequirement.Visibility = Visibility.Collapsed;
+                }
+
+                if (gameQueueType == GameQueueActionType.JoinFrontOfQueue || gameQueueType == GameQueueActionType.JoinQueue ||
+                    gameQueueType == GameQueueActionType.LeaveQueue || gameQueueType == GameQueueActionType.QueuePosition)
+                {
+                    this.TargetUsernameTextBox.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    this.TargetUsernameTextBox.Visibility = Visibility.Collapsed;
+                    this.TargetUsernameTextBox.Text = string.Empty;
+                }
             }
         }
     }

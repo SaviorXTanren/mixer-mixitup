@@ -3,6 +3,7 @@ using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Services;
 using MixItUp.WPF.Util;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -12,7 +13,7 @@ using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.Settings
 {
-    public class HotKeyUI
+    public class HotKeyUI : IComparable, IComparable<HotKeyUI>
     {
         public HotKeyConfiguration HotKey { get; set; }
 
@@ -23,6 +24,17 @@ namespace MixItUp.WPF.Controls.Settings
             this.HotKey = hotKey;
             this.Command = command;
         }
+
+        public int CompareTo(object obj)
+        {
+            if (obj is HotKeyUI)
+            {
+                return this.CompareTo((HotKeyUI)obj);
+            }
+            return -1;
+        }
+
+        public int CompareTo(HotKeyUI other) { return this.HotKey.Key.CompareTo(other.HotKey.Key); }
     }
 
     /// <summary>

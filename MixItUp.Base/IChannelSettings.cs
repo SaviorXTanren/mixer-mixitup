@@ -79,7 +79,8 @@ namespace MixItUp.Base
         List<UserTitleModel> UserTitles { get; set; }
 
         bool GameQueueSubPriority { get; set; }
-        RequirementViewModel GameQueueRequirements { get; set; }
+        CustomCommand GameQueueUserJoinedCommand { get; set; }
+        CustomCommand GameQueueUserSelectedCommand { get; set; }
 
         bool QuotesEnabled { get; set; }
         string QuotesFormat { get; set; }
