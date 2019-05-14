@@ -77,6 +77,16 @@ namespace MixItUp.Base.Actions
                     foreach (var kvp in this.Variables)
                     {
                         processedVariables[kvp.Key] = await this.ReplaceStringWithSpecialModifiers(kvp.Value, user, arguments);
+
+                        // Since OvrStream doesn't support URI based images, we need to trigger a download and get the path to those files
+                        if (processedVariables[kvp.Key].StartsWith("http", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            string path = await ChannelSession.Services.OvrStreamWebsocket.DownloadImage(processedVariables[kvp.Key]);
+                            if (path != null)
+                            {
+                                processedVariables[kvp.Key] = path;
+                            }
+                        }
                     }
 
                     switch (this.OvrStreamActionType)
