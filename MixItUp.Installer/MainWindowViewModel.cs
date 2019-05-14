@@ -156,16 +156,19 @@ namespace MixItUp.Installer
             {
                 try
                 {
-                    MixItUpUpdateModel update = await this.GetUpdateData();
-                    if (update != null)
+                    if (!this.IsUpdate || await this.WaitForMixItUpToClose())
                     {
-                        if (await this.DownloadZipArchive(update))
+                        MixItUpUpdateModel update = await this.GetUpdateData();
+                        if (update != null)
                         {
-                            if (this.InstallMixItUp())
+                            if (await this.DownloadZipArchive(update))
                             {
-                                if (this.IsUpdate || this.CreateMixItUpShortcut())
+                                if (this.InstallMixItUp())
                                 {
-                                    result = true;
+                                    if (this.IsUpdate || this.CreateMixItUpShortcut())
+                                    {
+                                        result = true;
+                                    }
                                 }
                             }
                         }
@@ -187,6 +190,33 @@ namespace MixItUp.Installer
         public void Launch()
         {
             Process.Start(Path.Combine(MainWindowViewModel.StartMenuDirectory, MainWindowViewModel.ShortcutFileName));
+        }
+
+        private async Task<bool> WaitForMixItUpToClose()
+        {
+            this.DisplayText1 = "Waiting for Mix It Up to close...";
+            this.IsOperationIndeterminate = true;
+            this.OperationProgress = 0;
+
+            for (int i = 0; i < 10; i++)
+            {
+                bool isRunning = false;
+                foreach (Process clsProcess in Process.GetProcesses())
+                {
+                    if (clsProcess.ProcessName.Equals("MixItUp"))
+                    {
+                        isRunning = true;
+                        break;
+                    }
+                }
+
+                if (!isRunning)
+                {
+                    return true;
+                }
+                await Task.Delay(1000);
+            }
+            return false;
         }
 
         private async Task<MixItUpUpdateModel> GetUpdateData()
