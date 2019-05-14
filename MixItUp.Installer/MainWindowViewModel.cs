@@ -17,6 +17,9 @@ namespace MixItUp.Installer
         public const string InstallerLogFileName = "MixItUp-Installer-Log.txt";
         public const string ShortcutFileName = "Mix It Up.lnk";
 
+        public const string MixItUpProcessName = "MixItUp";
+        public const string AutoHosterProcessName = "MixItUp.AutoHoster";
+
         private static readonly Version minimumOSVersion = new Version(6, 2, 0, 0);
 
         public static readonly string InstallDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MixItUp");
@@ -203,10 +206,13 @@ namespace MixItUp.Installer
                 bool isRunning = false;
                 foreach (Process clsProcess in Process.GetProcesses())
                 {
-                    if (clsProcess.ProcessName.Equals("MixItUp"))
+                    if (clsProcess.ProcessName.Equals(MixItUpProcessName) || clsProcess.ProcessName.Equals(AutoHosterProcessName))
                     {
                         isRunning = true;
-                        break;
+                        if (i == 5)
+                        {
+                            clsProcess.CloseMainWindow();
+                        }
                     }
                 }
 
