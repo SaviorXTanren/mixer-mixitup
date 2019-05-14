@@ -1,11 +1,14 @@
-﻿using MixItUp.WPF.Windows;
-using System.Windows;
-using System.Threading.Tasks;
-using AutoUpdaterDotNET;
-using System;
-using System.Net.Http;
+﻿using MixItUp.Base.Model.API;
 using MixItUp.Base.Util;
+using MixItUp.WPF.Windows;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Net;
+using System.Net.Http;
 using System.Reflection;
+using System.Threading.Tasks;
+using System.Windows;
 
 namespace MixItUp.WPF
 {
@@ -14,11 +17,11 @@ namespace MixItUp.WPF
     /// </summary>
     public partial class UpdateWindow : LoadingWindowBase
     {
-        private UpdateInfoEventArgs updateArgs;
+        private MixItUpUpdateModel update;
 
-        public UpdateWindow(UpdateInfoEventArgs updateArgs)
+        public UpdateWindow(MixItUpUpdateModel update)
         {
-            this.updateArgs = updateArgs;
+            this.update = update;
 
             InitializeComponent();
 
@@ -27,14 +30,14 @@ namespace MixItUp.WPF
 
         protected override async Task OnLoaded()
         {
-            this.NewVersionTextBlock.Text = updateArgs.CurrentVersion.ToString();
+            this.NewVersionTextBlock.Text = this.update.Version.ToString();
             this.CurrentVersionTextBlock.Text = Assembly.GetEntryAssembly().GetName().Version.ToString();
 
             try
             {
                 using (HttpClient client = new HttpClient())
                 {
-                    string changelogHTML = await client.GetStringAsync(updateArgs.ChangelogURL);
+                    string changelogHTML = await client.GetStringAsync(this.update.ChangelogLink);
                     this.UpdateChangelogWebBrowser.NavigateToString(changelogHTML);
                 }
             }
@@ -43,12 +46,34 @@ namespace MixItUp.WPF
             await base.OnLoaded();
         }
 
-        private void DownloadUpdateButton_Click(object sender, RoutedEventArgs e)
+        private async void DownloadUpdateButton_Click(object sender, RoutedEventArgs e)
         {
-            if (AutoUpdater.DownloadUpdate())
+            await this.RunAsyncOperation(async () =>
             {
-                Application.Current.Shutdown();
-            }
+                string setupFilePath = Path.Combine(Path.GetTempPath(), "MixItUp-Setup.exe");
+
+                bool downloadComplete = false;
+
+                WebClient client = new WebClient();
+                client.DownloadFileCompleted += (s, ce) =>
+                {
+                    downloadComplete = true;
+                };
+
+                client.DownloadFileAsync(new Uri("https://github.com/SaviorXTanren/mixer-mixitup/releases/download/Installer-0.3.0/MixItUp-Setup.exe"), setupFilePath);
+
+                while (!downloadComplete)
+                {
+                    await Task.Delay(1000);
+                }
+                client.Dispose();
+
+                if (File.Exists(setupFilePath))
+                {
+                    Process.Start(setupFilePath);
+                    Application.Current.Shutdown();
+                }
+            });
         }
 
         private void SkipUpdateButton_Click(object sender, RoutedEventArgs e)

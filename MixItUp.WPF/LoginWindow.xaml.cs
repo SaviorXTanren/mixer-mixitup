@@ -1,5 +1,4 @@
-﻿using AutoUpdaterDotNET;
-using Mixer.Base;
+﻿using Mixer.Base;
 using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.User;
 using MixItUp.Base;
@@ -10,7 +9,6 @@ using MixItUp.Desktop;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows;
 using MixItUp.WPF.Windows.Wizard;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -232,8 +230,12 @@ namespace MixItUp.WPF
                     }
                 }
 
-                AutoUpdater.CheckForUpdateEvent += AutoUpdater_CheckForUpdateEvent;
-                AutoUpdater.Start(this.currentUpdate.AutoUpdaterLink);
+                if (this.currentUpdate.SystemVersion > Assembly.GetEntryAssembly().GetName().Version)
+                {
+                    updateFound = true;
+                    UpdateWindow window = new UpdateWindow(this.currentUpdate);
+                    window.Show();
+                }
             }
         }
 
@@ -277,16 +279,6 @@ namespace MixItUp.WPF
         private async Task<bool> EstablishConnection(IEnumerable<OAuthClientScopeEnum> scopes, string channelName = null)
         {
             return await ChannelSession.ConnectUser(scopes, channelName);
-        }
-
-        private void AutoUpdater_CheckForUpdateEvent(UpdateInfoEventArgs args)
-        {
-            if (args != null && args.IsUpdateAvailable)
-            {
-                updateFound = true;
-                UpdateWindow window = new UpdateWindow(args);
-                window.Show();
-            }
         }
 
         private async void GlobalEvents_OnShowMessageBox(object sender, string message)
