@@ -249,6 +249,7 @@ namespace MixItUp.WPF.Controls.Command
 
                     extraSpecialIdentifiers["mixplaycontrolid"] = iCommand.Name;
                     extraSpecialIdentifiers["mixplaycontrolcost"] = "123";
+                    extraSpecialIdentifiers["mixplaycontroltext"] = "Button Name";
                 }
                 else if (command is CustomCommand)
                 {

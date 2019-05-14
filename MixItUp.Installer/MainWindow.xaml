@@ -14,7 +14,7 @@
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
 
         Icon="./Logo.ico"
-        Title="Mix It Up - Installer" Height="400" Width="500">
+        Title="Mix It Up - Installer" Height="150" Width="400">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -22,53 +22,23 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Shadows.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ToggleButton.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         </ResourceDictionary>
     </Window.Resources>
 
-    <Grid Background="{StaticResource PrimaryHueDarkBrush}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-
-        <Grid Grid.Row="0" Margin="16" VerticalAlignment="Center">
+    <Grid>
+        <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="15" />
+                <RowDefinition Height="25" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Image Source="Logo.png" Width="120" Height="120" />
+            <TextBlock Text="{Binding DisplayText1}" Grid.Row="0" TextWrapping="Wrap" HorizontalAlignment="Center" />
 
-            <ProgressBar Grid.Row="2" x:Name="InstallProgressBar" Style="{StaticResource MaterialDesignCircularProgressBar}" Foreground="White" Value="0" IsIndeterminate="True" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="12 12 12 12"/>
-
-            <TextBlock Grid.Row="4" x:Name="InstallingTextBlock1" HorizontalAlignment="Center" TextAlignment="Center" Foreground="White">Mix It Up is now installing to your Local App Data folder.</TextBlock>
-
-            <TextBlock Grid.Row="6" x:Name="InstallingTextBlock2" HorizontalAlignment="Center" TextAlignment="Center" Foreground="White" TextWrapping="Wrap" Width="350">Once this is done, we will automatically launch Mix It Up and a shortcut will be placed on the Start Menu.</TextBlock>
-
-            
-            
-            <TextBlock Grid.Row="4" x:Name="ErrorTextBlock" Width="325" HorizontalAlignment="Center" TextAlignment="Center" Foreground="White" TextWrapping="Wrap" />
-
-
-            <TextBlock Grid.Row="4" x:Name="MessageTextBlock" Width="350" HorizontalAlignment="Center" Text="Center" Foreground="White" TextWrapping="Wrap" Visibility="Collapsed" />
-
-            <Grid x:Name="MessageYesNoGrid" Grid.Row="6" HorizontalAlignment="Center" Visibility="Collapsed">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="40" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <Button Grid.Column="0" x:Name="YesButton" Click="YesButton_Click" Background="DarkBlue">Yes</Button>
-
-                <Button Grid.Column="2" x:Name="NoButton" Click="NoButton_Click" Background="DarkBlue">No</Button>
-            </Grid>
-
+            <ProgressBar Visibility="{Binding IsOperationBeingPerformed, Converter={StaticResource BooleanToVisibilityConverter}}" IsIndeterminate="{Binding IsOperationIndeterminate, FallbackValue=True}" Value="{Binding OperationProgress, Mode=OneWay, FallbackValue=0}" Grid.Row="2" HorizontalAlignment="Center" Height="20" Width="250" />
+            <TextBlock Text="{Binding DisplayText2}" Visibility="{Binding ErrorOccurred, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Row="2" TextWrapping="Wrap" HorizontalAlignment="Center" />
         </Grid>
     </Grid>
 </Window>

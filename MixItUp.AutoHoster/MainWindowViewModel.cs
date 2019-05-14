@@ -56,6 +56,33 @@ namespace MixItUp.AutoHoster
             }
         }
 
+        public string MaxHostLength
+        {
+            get
+            {
+                if (this.settings != null && this.settings.MaxHostLength > 0)
+                {
+                    return this.settings.MaxHostLength.ToString();
+                }
+                return string.Empty;
+            }
+            set
+            {
+                if (this.settings != null)
+                {
+                    if (int.TryParse(value, out int maxHostLength) && maxHostLength > 0)
+                    {
+                        this.settings.MaxHostLength = maxHostLength;
+                    }
+                    else
+                    {
+                        this.settings.MaxHostLength = 0;
+                    }
+                    this.NotifyPropertyChanged();
+                }
+            }
+        }
+
         public List<string> AgeRatingItems { get; set; } = new List<string>(EnumHelper.GetEnumNames<AgeRatingEnum>());
         public string AgeRatingName
         {
@@ -87,6 +114,8 @@ namespace MixItUp.AutoHoster
 
         private AutoHosterSettingsModel settings;
         private MixerConnection connection;
+
+        private int totalMinutesHosted = 0;
 
         public MainWindowViewModel() { }
 
@@ -170,9 +199,10 @@ namespace MixItUp.AutoHoster
                 if (this.CurrentlyHosting != null)
                 {
                     await this.UpdateChannel(this.CurrentlyHosting);
+                    this.totalMinutesHosted++;
                 }
 
-                if (this.IsAutoHostingEnabled && (this.CurrentlyHosting == null || !this.CurrentlyHosting.IsOnline))
+                if (this.IsAutoHostingEnabled && (this.CurrentlyHosting == null || !this.CurrentlyHosting.IsOnline || (this.settings.MaxHostLength > 0 && this.totalMinutesHosted >= this.settings.MaxHostLength)))
                 {
                     if (hostOrder == HostingOrderEnum.Random)
                     {
@@ -191,6 +221,7 @@ namespace MixItUp.AutoHoster
                                 if (updatedChannel.hosteeId.GetValueOrDefault() == channelModel.id)
                                 {
                                     this.CurrentlyHosting = channel;
+                                    this.totalMinutesHosted = 0;
                                     break;
                                 }
                             }

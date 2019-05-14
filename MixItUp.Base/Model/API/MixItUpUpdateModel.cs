@@ -13,6 +13,8 @@ namespace MixItUp.Base.Model.API
         public string AutoUpdaterLink { get; set; }
         [JsonProperty]
         public string ChangelogLink { get; set; }
+        [JsonProperty]
+        public string ZipArchiveLink { get; set; }
 
         [JsonIgnore]
         public Version SystemVersion { get { return new Version(this.Version); } }
