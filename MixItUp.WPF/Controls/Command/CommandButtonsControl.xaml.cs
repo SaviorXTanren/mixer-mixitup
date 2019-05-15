@@ -4,6 +4,7 @@ using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Skill;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.MainControls;
@@ -263,6 +264,15 @@ namespace MixItUp.WPF.Controls.Command
                     else if (command.Name.Contains("Moderation Strike"))
                     {
                         extraSpecialIdentifiers[ModerationHelper.ModerationReasonSpecialIdentifier] = "Bad Stuff";
+                    }
+                    else
+                    {
+                        extraSpecialIdentifiers["songtitle"] = "Test Song";
+                        extraSpecialIdentifiers["songalbumart"] = SpotifySongRequestProviderService.SpotifyDefaultAlbumArt;
+                        extraSpecialIdentifiers["songusername"] = currentUser.UserName;
+                        extraSpecialIdentifiers["spotifysongtitle"] = "Test Song";
+                        extraSpecialIdentifiers["spotifysongalbumart"] = SpotifySongRequestProviderService.SpotifyDefaultAlbumArt;
+                        extraSpecialIdentifiers["queueposition"] = "1";
                     }
                 }
 
