@@ -14,23 +14,6 @@ using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
-    public class QueueUser
-    {
-        public UserViewModel user { get; set; }
-
-        public int QueuePosition { get; set; }
-
-        public string UserName { get { return this.user.UserName; } }
-
-        public string PrimaryRole { get { return EnumHelper.GetEnumName(this.user.PrimaryRole); } }
-
-        public QueueUser(UserViewModel user, int queuePosition)
-        {
-            this.user = user;
-            this.QueuePosition = queuePosition;
-        }
-    }
-
     /// <summary>
     /// Interaction logic for GameQueueControl.xaml
     /// </summary>

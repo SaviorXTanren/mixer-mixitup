@@ -17,6 +17,8 @@ namespace MixItUp.Installer
         public const string InstallerLogFileName = "MixItUp-Installer-Log.txt";
         public const string ShortcutFileName = "Mix It Up.lnk";
 
+        public const string ApplicationSettingsFileName = "ApplicationSettings.xml";
+
         public const string MixItUpProcessName = "MixItUp";
         public const string AutoHosterProcessName = "MixItUp.AutoHoster";
 
@@ -126,13 +128,20 @@ namespace MixItUp.Installer
 
         public MainWindowViewModel()
         {
-            string[] args = Environment.GetCommandLineArgs();
-            if (args != null && args.Length >= 2 && args[1].Equals("/update"))
+            if (Directory.Exists(InstallDirectory))
             {
                 this.IsUpdate = true;
-                if (args.Length >= 3 && args[2].Equals("/preview"))
+                string applicationSettingsFilePath = Path.Combine(InstallDirectory, ApplicationSettingsFileName);
+                if (File.Exists(applicationSettingsFilePath))
                 {
-                    this.IsPreview = true;
+                    using (StreamReader reader = new StreamReader(File.OpenRead(applicationSettingsFilePath)))
+                    {
+                        JObject jobj = JObject.Parse(reader.ReadToEnd());
+                        if (jobj != null && jobj.ContainsKey("PreviewProgram"))
+                        {
+                            this.IsPreview = jobj["PreviewProgram"].ToObject<bool>();
+                        }
+                    }
                 }
             }
 

@@ -59,6 +59,7 @@ namespace MixItUp.Base.Util
         public const string QuoteSpecialIdentifierHeader = "quote";
         public const string QuoteNumberRegexSpecialIdentifier = QuoteSpecialIdentifierHeader + "\\d+";
 
+        public const string SongIdentifierHeader = "song";
         public const string CurrentSongIdentifierHeader = "currentsong";
         public const string NextSongIdentifierHeader = "nextsong";
 
@@ -339,10 +340,11 @@ namespace MixItUp.Base.Util
                 }
             }
 
-            if (this.ContainsSpecialIdentifier(CurrentSongIdentifierHeader) || this.ContainsSpecialIdentifier(NextSongIdentifierHeader))
+            if (this.ContainsSpecialIdentifier(SongIdentifierHeader) || this.ContainsSpecialIdentifier(CurrentSongIdentifierHeader) || this.ContainsSpecialIdentifier(NextSongIdentifierHeader))
             {
                 if (ChannelSession.Services.SongRequestService != null && ChannelSession.Services.SongRequestService.IsEnabled)
                 {
+                    await this.ReplaceSongRequestSpecialIdentifiers(SongIdentifierHeader, await ChannelSession.Services.SongRequestService.GetCurrent());
                     await this.ReplaceSongRequestSpecialIdentifiers(CurrentSongIdentifierHeader, await ChannelSession.Services.SongRequestService.GetCurrent());
                     await this.ReplaceSongRequestSpecialIdentifiers(NextSongIdentifierHeader, await ChannelSession.Services.SongRequestService.GetNext());
                 }
@@ -431,6 +433,8 @@ namespace MixItUp.Base.Util
                 SpotifyCurrentlyPlayingModel currentlyPlaying = await ChannelSession.Services.Spotify.GetCurrentlyPlaying();
                 if (currentlyPlaying != null)
                 {
+                    this.ReplaceSpecialIdentifier("spotifysongalbumimage", (!string.IsNullOrEmpty(currentlyPlaying.Album?.ImageLink)) ? currentlyPlaying.Album?.ImageLink : SpotifySongRequestProviderService.SpotifyDefaultAlbumArt);
+                    this.ReplaceSpecialIdentifier("spotifysongtitle", currentlyPlaying.ToString());
                     this.ReplaceSpecialIdentifier("spotifycurrentlyplaying", currentlyPlaying.ToString());
                 }
             }
