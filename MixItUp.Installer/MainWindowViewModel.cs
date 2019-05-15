@@ -182,19 +182,23 @@ namespace MixItUp.Installer
                                         result = true;
                                     }
                                 }
+                                else
+                                {
+                                    this.ShowError("Failed to install, please reboot your machine & try again.", "If this occurs again, contact support@mixitupapp.com");
+                                }
                             }
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    File.WriteAllText(InstallerLogFileName, ex.ToString());
+                    this.WriteToLogFile(ex.ToString());
                 }
             });
 
-            if (!result)
+            if (!result && !this.ErrorOccurred)
             {
-                this.ShowError(string.Format("{0} File Created", InstallerLogFileName), "Please contact support@mixitupapp.com & include the above file to help diagnose the installation failure.");
+                this.ShowError(string.Format("{0} File Created", InstallerLogFileName), "Contact support@mixitupapp.com with the file to help diagnose this issue.");
             }
             return result;
         }
@@ -202,6 +206,11 @@ namespace MixItUp.Installer
         public void Launch()
         {
             Process.Start(Path.Combine(MainWindowViewModel.StartMenuDirectory, MainWindowViewModel.ShortcutFileName));
+        }
+
+        protected void NotifyPropertyChanged([CallerMemberName]string name = "")
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
         private async Task<bool> WaitForMixItUpToClose()
@@ -292,30 +301,36 @@ namespace MixItUp.Installer
             this.IsOperationIndeterminate = false;
             this.OperationProgress = 0;
 
-            if (File.Exists(ZipDownloadFilePath))
+            try
             {
-                Directory.CreateDirectory(InstallDirectory);
-                if (Directory.Exists(InstallDirectory))
+                if (File.Exists(ZipDownloadFilePath))
                 {
-                    ZipArchive archive = ZipFile.Open(ZipDownloadFilePath, ZipArchiveMode.Read);
-                    double current = 0;
-                    double total = archive.Entries.Count;
-                    foreach (ZipArchiveEntry entry in archive.Entries)
+                    Directory.CreateDirectory(InstallDirectory);
+                    if (Directory.Exists(InstallDirectory))
                     {
-                        string filePath = Path.Combine(InstallDirectory, entry.FullName);
-                        string directoryPath = Path.GetDirectoryName(filePath);
-                        if (!Directory.Exists(directoryPath))
+                        ZipArchive archive = ZipFile.Open(ZipDownloadFilePath, ZipArchiveMode.Read);
+                        double current = 0;
+                        double total = archive.Entries.Count;
+                        foreach (ZipArchiveEntry entry in archive.Entries)
                         {
-                            Directory.CreateDirectory(directoryPath);
+                            string filePath = Path.Combine(InstallDirectory, entry.FullName);
+                            string directoryPath = Path.GetDirectoryName(filePath);
+                            if (!Directory.Exists(directoryPath))
+                            {
+                                Directory.CreateDirectory(directoryPath);
+                            }
+                            entry.ExtractToFile(filePath, overwrite: true);
+
+                            current++;
+                            this.OperationProgress = (int)((current / total) * 100);
                         }
-                        entry.ExtractToFile(filePath, overwrite: true);
-
-                        current++;
-                        this.OperationProgress = (int)((current / total) * 100);
-
+                        return true;
                     }
-                    return true;
                 }
+            }
+            catch (Exception ex)
+            {
+                this.WriteToLogFile(ex.ToString());
             }
             return false;
         }
@@ -354,9 +369,9 @@ namespace MixItUp.Installer
             this.DisplayText2 = message2;
         }
 
-        protected void NotifyPropertyChanged([CallerMemberName]string name = "")
+        private void WriteToLogFile(string text)
         {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            File.WriteAllText(InstallerLogFileName, text);
         }
     }
 }
