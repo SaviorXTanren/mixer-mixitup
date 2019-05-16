@@ -171,17 +171,26 @@ namespace MixItUp.WPF.Controls.Actions
 
                     if (title != null)
                     {
-                        VariableNameIntellisenseListBox.ItemsSource = title.Variables;
-                        VariableNameIntellisenseListBox.DataContext = variableNameTextBox;
+                        var variables = title.Variables
+                            .OrderBy(v => v.Name)
+                            .Where(v => v.Name.IndexOf(variableNameTextBox.Text, StringComparison.InvariantCultureIgnoreCase) >= 0)
+                            .Take(5)
+                            .ToList();
 
-                        // Select the first variable
-                        VariableNameIntellisenseListBox.SelectedIndex = 0;
-
-                        Rect positionOfCarat = variableNameTextBox.GetRectFromCharacterIndex(variableNameTextBox.CaretIndex, true);
-                        if (!positionOfCarat.IsEmpty)
+                        if (variables.Count > 0)
                         {
-                            Point topLeftOffset = variableNameTextBox.TransformToAncestor(MainGrid).Transform(new Point(positionOfCarat.Left, positionOfCarat.Top));
-                            ShowVariableNameIntellisense(topLeftOffset.X, topLeftOffset.Y);
+                            VariableNameIntellisenseListBox.ItemsSource = variables;
+                            VariableNameIntellisenseListBox.DataContext = variableNameTextBox;
+
+                            // Select the first variable
+                            VariableNameIntellisenseListBox.SelectedIndex = 0;
+
+                            Rect positionOfCarat = variableNameTextBox.GetRectFromCharacterIndex(variableNameTextBox.CaretIndex, true);
+                            if (!positionOfCarat.IsEmpty)
+                            {
+                                Point topLeftOffset = variableNameTextBox.TransformToAncestor(MainGrid).Transform(new Point(positionOfCarat.Left, positionOfCarat.Top));
+                                ShowVariableNameIntellisense(topLeftOffset.X, topLeftOffset.Y);
+                            }
                         }
                     }
                 }
