@@ -72,6 +72,37 @@ namespace MixItUp.OvrStream
             return this.connection.DownloadImageAsync(new Uri(uri), CancellationToken.None);
         }
 
+        public async Task<OvrStreamTitle[]> GetTitles()
+        {
+            Title[] titles = await this.connection.GetTitlesAsync(CancellationToken.None);
+
+            List<OvrStreamTitle> results = new List<OvrStreamTitle>();
+            foreach (Title title in titles)
+            {
+                OvrStreamTitle newTitle = new OvrStreamTitle
+                {
+                    Name = title.Name,
+                };
+
+                List<OvrStreamVariable> variables = new List<OvrStreamVariable>();
+                foreach (Variable variable in title.Variables)
+                {
+                    OvrStreamVariable newVariable = new OvrStreamVariable
+                    {
+                        Name = variable.Name,
+                        Value = variable.Value,
+                    };
+
+                    variables.Add(newVariable);
+                }
+
+                newTitle.Variables = variables.ToArray();
+                results.Add(newTitle);
+            }
+
+            return results.ToArray();
+        }
+
         private async void Connection_OnDisconnected(object sender, EventArgs e)
         {
             GlobalEvents.ServiceDisconnect("OvrStream");
