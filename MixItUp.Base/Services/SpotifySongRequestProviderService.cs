@@ -227,11 +227,11 @@ namespace MixItUp.Base.Services
                 {
                     if (currentlyPlaying.IsPlaying)
                     {
-                        await ChannelSession.Services.Spotify.PlayCurrentlyPlaying();
+                        await this.Pause();
                     }
                     else
                     {
-                        await ChannelSession.Services.Spotify.PlayCurrentlyPlaying();
+                        await this.Resume();
                     }
                 }
             }
