@@ -3,6 +3,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ovrstream_client_csharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,186 +13,30 @@ using System.Xml;
 
 namespace MixItUp.OvrStream
 {
-    public enum MessageTypes : int
-    {
-        Signal = 1,
-        PropertyUpdate = 2,
-        Init = 3,
-        Idle = 4,
-        Debug = 5,
-        InvokeMethod = 6,
-        ConnectToSignal = 7,
-        DisconnectFromSignal = 8,
-        SetProperty = 9,
-        Response = 10,
-    }
-
-    [JsonObject]
-    public class InitMessage : OvrStreamPacket
-    {
-        [JsonProperty("type")]
-        public override MessageTypes MessageType { get { return MessageTypes.Init; } }
-    }
-
-    [JsonObject]
-    public class IdleMessage : OvrStreamPacket
-    {
-        [JsonProperty("type")]
-        public override MessageTypes MessageType { get { return MessageTypes.Idle; } }
-
-        public IdleMessage()
-        {
-            Id = null;
-        }
-    }
-
-    [JsonObject]
-    public class InvokeMethodMessage : OvrStreamPacket
-    {
-        [JsonProperty("type")]
-        public override MessageTypes MessageType { get { return MessageTypes.InvokeMethod; } }
-
-        [JsonProperty("method")]
-        public int Method { get; set; }
-
-        [JsonProperty("args")]
-        public object[] Arguments { get; set; }
-
-        [JsonProperty("object")]
-        public string Object { get; set; }
-    }
-
-    public abstract class OvrStreamPacket
-    {
-        private static long idCounter = 0;
-
-        [JsonProperty("type")]
-        public abstract MessageTypes MessageType { get; }
-
-        [JsonProperty("id")]
-        public long? Id { get; set; } = GetNextId();
-
-        public static long GetNextId()
-        {
-            return Interlocked.Increment(ref idCounter);
-        }
-    }
-
-    [JsonObject]
-    public class OvrStreamResponse
-    {
-        [JsonProperty("type")]
-        public MessageTypes MessageType { get; set; }
-
-        [JsonProperty("data")]
-        public JToken Data { get; set; }
-
-        [JsonProperty("id")]
-        public int Id { get; set; }
-    }
-
-    internal abstract class NewBlueCommand
-    {
-        public override string ToString()
-        {
-            XmlDocument doc = new XmlDocument();
-            var rootElement = doc.CreateElement("newblue_ext");
-
-            WriteXml(rootElement);
-
-            return rootElement.OuterXml;
-        }
-
-        protected abstract void WriteXml(XmlElement parent);
-    }
-
-    internal class ReadTitleCommand : NewBlueCommand
-    {
-        public int Channel { get; set; }
-
-        public string Title { get; set; }
-
-        protected override void WriteXml(XmlElement parent)
-        {
-            parent.SetAttribute("command", "readTitle");
-            parent.SetAttribute("channel", Channel.ToString());
-            parent.SetAttribute("title", Title);
-        }
-    }
-
-    internal class DownloadImageCommand : NewBlueCommand
-    {
-        public string Url { get; set; }
-
-        protected override void WriteXml(XmlElement parent)
-        {
-            parent.SetAttribute("command", "downloadImage");
-            parent.SetAttribute("url", Url);
-        }
-    }
-
-    internal class ScheduleCommand : NewBlueCommand
-    {
-        public string Action { get; set; }
-
-        public string Id { get; set; }
-
-        public string Queue { get; set; }
-
-        public Variable[] Data { get; set; } = new Variable[0];
-
-        protected override void WriteXml(XmlElement parent)
-        {
-            parent.SetAttribute("command", "schedule");
-            parent.SetAttribute("action", Action);
-            parent.SetAttribute("id", Id);
-            parent.SetAttribute("queue", Queue);
-
-            var data = parent.OwnerDocument.CreateElement("data");
-            parent.AppendChild(data);
-
-            foreach (var variable in Data)
-            {
-                var variableElement = parent.OwnerDocument.CreateElement("variable");
-                data.AppendChild(variableElement);
-
-                variableElement.SetAttribute("name", variable.Name);
-                variableElement.SetAttribute("value", variable.Value);
-            }
-        }
-    }
-
-    internal class Variable
-    {
-        public string Name { get; set; }
-
-        public string Value { get; set; }
-    }
-
     public class OvrStreamService : IOvrStreamService
     {
-        private OvrStreamWebSocketClient webSocket;
-        private string address;
+        OvrStreamConnection connection;
+        private Uri address;
 
         public OvrStreamService(string address)
         {
-            this.address = address;
+            if (Uri.TryCreate(address, UriKind.Absolute, out Uri uri))
+            {
+                this.address = uri;
+            }
         }
 
         public async Task<bool> Connect()
         {
             try
             {
-                this.webSocket = new OvrStreamWebSocketClient(this);
-                if (await this.webSocket.Connect(this.address))
-                {
-                    GlobalEvents.ServiceReconnect("OvrStream");
+                this.connection = new OvrStreamConnection(this.address);
+                await this.connection.ConnectAsync(CancellationToken.None);
 
-                    this.webSocket.OnDisconnectOccurred += WebSocket_OnDisconnectOccurred;
+                this.connection.OnDisconnected += Connection_OnDisconnected;
+                GlobalEvents.ServiceReconnect("OvrStream");
 
-                    await this.webSocket.Initialize();
-                    return true;
-                }
+                return true;
             }
             catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
             return false;
@@ -199,34 +44,66 @@ namespace MixItUp.OvrStream
 
         public async Task Disconnect()
         {
-            if (this.webSocket != null)
+            if (this.connection != null)
             {
-                this.webSocket.OnDisconnectOccurred -= WebSocket_OnDisconnectOccurred;
-                await this.webSocket.Disconnect();
+                this.connection.OnDisconnected -= Connection_OnDisconnected;
+                await this.connection.DisconnectAsync(CancellationToken.None);
             }
         }
 
         public Task UpdateVariables(string titleName, Dictionary<string, string> variables)
         {
-            return this.webSocket.UpdateVariablesAsync(titleName, variables);
+            return this.connection.UpdateVariablesAsync(titleName, variables, CancellationToken.None);
         }
 
         public Task HideTitle(string titleName)
         {
-            return this.webSocket.HideTitle(titleName);
+            return this.connection.HideTitleAsync(titleName, CancellationToken.None);
         }
 
-        public Task PlayTitle(string titleName, Dictionary<string, string> variables)
+        public async Task PlayTitle(string titleName, Dictionary<string, string> variables)
         {
-            return this.webSocket.PlayTitle(titleName, variables);
+            await this.connection.UpdateVariablesAsync(titleName, variables, CancellationToken.None);
+            await this.connection.ShowTitleAsync(titleName, CancellationToken.None);
         }
 
         public Task<string> DownloadImage(string uri)
         {
-            return this.webSocket.DownloadImage(uri);
+            return this.connection.DownloadImageAsync(new Uri(uri), CancellationToken.None);
         }
 
-        private async void WebSocket_OnDisconnectOccurred(object sender, System.Net.WebSockets.WebSocketCloseStatus e)
+        public async Task<OvrStreamTitle[]> GetTitles()
+        {
+            Title[] titles = await this.connection.GetTitlesAsync(CancellationToken.None);
+
+            List<OvrStreamTitle> results = new List<OvrStreamTitle>();
+            foreach (Title title in titles)
+            {
+                OvrStreamTitle newTitle = new OvrStreamTitle
+                {
+                    Name = title.Name,
+                };
+
+                List<OvrStreamVariable> variables = new List<OvrStreamVariable>();
+                foreach (Variable variable in title.Variables)
+                {
+                    OvrStreamVariable newVariable = new OvrStreamVariable
+                    {
+                        Name = variable.Name,
+                        Value = variable.Value,
+                    };
+
+                    variables.Add(newVariable);
+                }
+
+                newTitle.Variables = variables.ToArray();
+                results.Add(newTitle);
+            }
+
+            return results.ToArray();
+        }
+
+        private async void Connection_OnDisconnected(object sender, EventArgs e)
         {
             GlobalEvents.ServiceDisconnect("OvrStream");
 
@@ -237,151 +114,6 @@ namespace MixItUp.OvrStream
             while (!await this.Connect());
 
             GlobalEvents.ServiceReconnect("OvrStream");
-        }
-    }
-
-    public class OvrStreamWebSocketClient : WebSocketClientBase
-    {
-        private IOvrStreamService service;
-        private Dictionary<long, OvrStreamResponse> responses = new Dictionary<long, OvrStreamResponse>();
-
-        private const string SchedulerName = "scheduler";
-        private Dictionary<string, int> schedulerMethods = new Dictionary<string, int>();
-
-        public OvrStreamWebSocketClient(IOvrStreamService service)
-        {
-            this.service = service;
-        }
-
-        public async Task Initialize()
-        {
-            OvrStreamResponse response = await this.Send(new InitMessage());
-
-            foreach (var method in response.Data[SchedulerName]["methods"])
-            {
-                JArray methodArray = method as JArray;
-                string methodName = methodArray[0].Value<string>();
-                int key = methodArray[1].Value<int>();
-                this.schedulerMethods[methodName] = key;
-            }
-
-            await this.Send(new IdleMessage());
-        }
-
-        public async Task PlayTitle(string titleName, IReadOnlyDictionary<string, string> variables)
-        {
-            await UpdateVariablesAsync(titleName, variables);
-
-            ScheduleCommand command = new ScheduleCommand
-            {
-                Action = "animatein+override+duration",
-                Id = titleName,
-                Queue = titleName,
-            };
-
-            await InvokeMethodAsync("scheduleCommandXml", new object[] { command.ToString() });
-        }
-
-        public async Task HideTitle(string titleName)
-        {
-            ScheduleCommand command = new ScheduleCommand
-            {
-                Action = "animateout+override",
-                Id = titleName,
-                Queue = titleName,
-            };
-
-            await InvokeMethodAsync("scheduleCommandXml", new object[] { command.ToString() });
-        }
-
-        public async Task UpdateVariablesAsync(string id, IReadOnlyDictionary<string, string> variables)
-        {
-            ScheduleCommand command = new ScheduleCommand
-            {
-                Action = "update",
-                Id = id,
-                Queue = "Alert",
-                Data = variables.Select(kvp => new Variable { Name = kvp.Key, Value = kvp.Value }).ToArray(),
-            };
-
-            await InvokeMethodAsync("scheduleCommandXml", new object[] { command.ToString() });
-        }
-
-        public async Task<string> DownloadImage(string uri)
-        {
-            DownloadImageCommand command = new DownloadImageCommand
-            {
-                Url = uri,
-            };
-
-            OvrStreamResponse response = await InvokeMethodAsync("scheduleCommandXml", new object[] { command.ToString() });
-
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml(response.Data.Value<string>());
-            XmlElement root = doc.SelectSingleNode("//newblue_ext") as XmlElement;
-            if (root != null && root.HasAttribute("path"))
-            {
-                return root.GetAttribute("path");
-            }
-
-            return null;
-        }
-
-        private Task<OvrStreamResponse> InvokeMethodAsync(string method, object[] arguments)
-        {
-            if (!this.schedulerMethods.ContainsKey(method))
-            {
-                throw new InvalidOperationException($"Unknown method on scheduler object: {method}");
-            }
-
-            var message = new InvokeMethodMessage
-            {
-                Object = SchedulerName,
-                Method = this.schedulerMethods[method],
-                Arguments = arguments,
-            };
-
-            return this.Send(message);
-        }
-
-        private async Task<OvrStreamResponse> Send(OvrStreamPacket packet)
-        {
-            string json = JsonConvert.SerializeObject(packet);
-            await base.Send(json);
-
-            if (packet.Id.HasValue)
-            {
-                while (!this.responses.ContainsKey(packet.Id.Value))
-                {
-                    await Task.Delay(50);
-                }
-
-                OvrStreamResponse response = this.responses[packet.Id.Value];
-                this.responses.Remove(packet.Id.Value);
-                return response;
-            }
-
-            return null;
-        }
-
-        protected override Task ProcessReceivedPacket(string packetJSON)
-        {
-            if (!string.IsNullOrEmpty(packetJSON))
-            {
-                OvrStreamResponse response = JsonConvert.DeserializeObject<OvrStreamResponse>(packetJSON);
-                if (response != null)
-                {
-                    switch (response.MessageType)
-                    {
-                        case MessageTypes.Response:
-                            this.responses[response.Id] = response;
-                            break;
-
-                    }
-                }
-            }
-
-            return Task.FromResult(0);
         }
     }
 }

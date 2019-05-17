@@ -8,6 +8,19 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
+    public class OvrStreamTitle
+    {
+        public string Name { get; set; }
+
+        public OvrStreamVariable[] Variables { get; set; }
+    }
+
+    public class OvrStreamVariable
+    {
+        public string Name { get; set; }
+        public string Value { get; set; }
+    }
+
     public interface IOvrStreamService
     {
         Task<bool> Connect();
@@ -18,5 +31,6 @@ namespace MixItUp.Base.Services
         Task HideTitle(string titleName);
         Task PlayTitle(string titleName, Dictionary<string, string> variables);
         Task<string> DownloadImage(string uri);
+        Task<OvrStreamTitle[]> GetTitles();
     }
 }
