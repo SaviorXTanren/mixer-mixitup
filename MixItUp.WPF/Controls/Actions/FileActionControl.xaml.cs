@@ -23,7 +23,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override Task OnLoaded()
         {
-            this.FileActionTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<FileActionTypeEnum>();
+            this.FileActionTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<FileActionTypeEnum>().OrderBy(s => s);
             if (this.action != null)
             {
                 this.FileActionTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.FileActionType);
@@ -32,10 +32,11 @@ namespace MixItUp.WPF.Controls.Actions
                     this.SaveToFileTextTextBox.Text = this.action.TransferText;
                 }
                 else if (this.action.FileActionType == FileActionTypeEnum.ReadFromFile || this.action.FileActionType == FileActionTypeEnum.ReadSpecificLineFromFile ||
-                    this.action.FileActionType == FileActionTypeEnum.ReadRandomLineFromFile)
+                    this.action.FileActionType == FileActionTypeEnum.ReadRandomLineFromFile || this.action.FileActionType == FileActionTypeEnum.RemoveSpecificLineFromFile ||
+                    this.action.FileActionType == FileActionTypeEnum.RemoveRandomLineFromFile)
                 {
                     this.SpecialIdentifierNameTextBox.Text = this.action.TransferText;
-                    if (this.action.FileActionType == FileActionTypeEnum.ReadSpecificLineFromFile)
+                    if (this.action.FileActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.action.FileActionType == FileActionTypeEnum.RemoveSpecificLineFromFile)
                     {
                         this.SpecificLineTextBox.Text = this.action.LineIndexToRead;
                     }
@@ -59,12 +60,13 @@ namespace MixItUp.WPF.Controls.Actions
                     }
                     return new FileAction(fileType, transferText: this.SaveToFileTextTextBox.Text, filePath: this.FilePathTextBox.Text);
                 }
-                else if (fileType == FileActionTypeEnum.ReadFromFile || fileType == FileActionTypeEnum.ReadSpecificLineFromFile || fileType == FileActionTypeEnum.ReadRandomLineFromFile)
+                else if (fileType == FileActionTypeEnum.ReadFromFile || fileType == FileActionTypeEnum.ReadSpecificLineFromFile || fileType == FileActionTypeEnum.ReadRandomLineFromFile ||
+                    fileType == FileActionTypeEnum.RemoveSpecificLineFromFile || fileType == FileActionTypeEnum.RemoveRandomLineFromFile)
                 {
                     if (SpecialIdentifierStringBuilder.IsValidSpecialIdentifier(this.SpecialIdentifierNameTextBox.Text))
                     {
                         FileAction action = new FileAction(fileType, transferText: this.SpecialIdentifierNameTextBox.Text, filePath: this.FilePathTextBox.Text);
-                        if (fileType == FileActionTypeEnum.ReadSpecificLineFromFile)
+                        if (fileType == FileActionTypeEnum.ReadSpecificLineFromFile || fileType == FileActionTypeEnum.RemoveSpecificLineFromFile)
                         {
                             if (string.IsNullOrEmpty(this.SpecificLineTextBox.Text))
                             {
@@ -93,10 +95,11 @@ namespace MixItUp.WPF.Controls.Actions
                 {
                     this.SaveToFileGrid.Visibility = Visibility.Visible;
                 }
-                else if (fileType == FileActionTypeEnum.ReadFromFile || fileType == FileActionTypeEnum.ReadSpecificLineFromFile || fileType == FileActionTypeEnum.ReadRandomLineFromFile)
+                else if (fileType == FileActionTypeEnum.ReadFromFile || fileType == FileActionTypeEnum.ReadSpecificLineFromFile || fileType == FileActionTypeEnum.ReadRandomLineFromFile ||
+                    fileType == FileActionTypeEnum.RemoveSpecificLineFromFile || fileType == FileActionTypeEnum.RemoveRandomLineFromFile)
                 {
                     this.ReadFromFileGrid.Visibility = Visibility.Visible;
-                    if (fileType == FileActionTypeEnum.ReadSpecificLineFromFile)
+                    if (fileType == FileActionTypeEnum.ReadSpecificLineFromFile || fileType == FileActionTypeEnum.RemoveSpecificLineFromFile)
                     {
                         this.SpecificLineTextBox.Visibility = Visibility.Visible;
                     }

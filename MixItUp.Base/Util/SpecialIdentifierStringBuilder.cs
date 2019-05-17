@@ -91,6 +91,11 @@ namespace MixItUp.Base.Util
             SpecialIdentifierStringBuilder.CustomSpecialIdentifiers[specialIdentifier] = replacement;
         }
 
+        public static void RemoveCustomSpecialIdentifier(string specialIdentifier)
+        {
+            SpecialIdentifierStringBuilder.CustomSpecialIdentifiers.Remove(specialIdentifier);
+        }
+
         public static string ConvertScorpBotText(string text)
         {
             text = text.Replace("$user", "@$username");
