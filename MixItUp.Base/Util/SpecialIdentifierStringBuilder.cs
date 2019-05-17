@@ -29,6 +29,9 @@ namespace MixItUp.Base.Util
     {
         public const string SpecialIdentifierHeader = "$";
 
+        public const string SpecialIdentifierNumberRegexPattern = "\\d+";
+        public const string SpecialIdentifierNumberRangeRegexPattern = "\\d+:\\d+";
+
         public const string UptimeSpecialIdentifierHeader = "uptime";
         public const string StartSpecialIdentifierHeader = "start";
 
@@ -45,7 +48,7 @@ namespace MixItUp.Base.Util
         public const string RandomSpecialIdentifierHeader = "random";
         public const string RandomFollowerSpecialIdentifierHeader = RandomSpecialIdentifierHeader + "follower";
         public const string RandomSubscriberSpecialIdentifierHeader = RandomSpecialIdentifierHeader + "sub";
-        public const string RandomNumberRegexSpecialIdentifier = RandomSpecialIdentifierHeader + "number\\d+";
+        public const string RandomNumberRegexSpecialIdentifier = RandomSpecialIdentifierHeader + "number";
 
         public const string FeaturedChannelsSpecialIdentifer = "featuredchannels";
         public const string CostreamUsersSpecialIdentifier = "costreamusers";
@@ -57,7 +60,6 @@ namespace MixItUp.Base.Util
         public const string MilestoneSpecialIdentifierHeader = "milestone";
 
         public const string QuoteSpecialIdentifierHeader = "quote";
-        public const string QuoteNumberRegexSpecialIdentifier = QuoteSpecialIdentifierHeader + "\\d+";
 
         public const string SongIdentifierHeader = "song";
         public const string CurrentSongIdentifierHeader = "currentsong";
@@ -77,7 +79,7 @@ namespace MixItUp.Base.Util
 
         public const string ExtraLifeSpecialIdentifierHeader = "extralife";
 
-        public const string UnicodeRegexSpecialIdentifier = "unicode\\d+";
+        public const string UnicodeRegexSpecialIdentifier = "unicode";
 
         public const string InteractiveTextBoxTextEntrySpecialIdentifierHelpText = "User Text Entered = " + SpecialIdentifierStringBuilder.SpecialIdentifierHeader +
             SpecialIdentifierStringBuilder.ArgSpecialIdentifierHeader + "1text";
@@ -89,6 +91,11 @@ namespace MixItUp.Base.Util
         public static void AddCustomSpecialIdentifier(string specialIdentifier, string replacement)
         {
             SpecialIdentifierStringBuilder.CustomSpecialIdentifiers[specialIdentifier] = replacement;
+        }
+
+        public static void RemoveCustomSpecialIdentifier(string specialIdentifier)
+        {
+            SpecialIdentifierStringBuilder.CustomSpecialIdentifiers.Remove(specialIdentifier);
         }
 
         public static string ConvertScorpBotText(string text)
@@ -376,9 +383,9 @@ namespace MixItUp.Base.Util
                     this.ReplaceSpecialIdentifier(QuoteSpecialIdentifierHeader + "random", quote.ToString());
                 }
 
-                if (this.ContainsRegexSpecialIdentifier(QuoteNumberRegexSpecialIdentifier))
+                if (this.ContainsRegexSpecialIdentifier(QuoteSpecialIdentifierHeader + SpecialIdentifierNumberRegexPattern))
                 {
-                    await this.ReplaceNumberBasedRegexSpecialIdentifier(QuoteNumberRegexSpecialIdentifier, (index) =>
+                    await this.ReplaceNumberBasedRegexSpecialIdentifier(QuoteSpecialIdentifierHeader + SpecialIdentifierNumberRegexPattern, (index) =>
                     {
                         if (index > 0 && index <= ChannelSession.Settings.UserQuotes.Count)
                         {
@@ -568,6 +575,22 @@ namespace MixItUp.Base.Util
 
                 this.ReplaceSpecialIdentifier("allargs", string.Join(" ", arguments));
                 this.ReplaceSpecialIdentifier("argcount", arguments.Count().ToString());
+
+                await this.ReplaceNumberRangeBasedRegexSpecialIdentifier(ArgSpecialIdentifierHeader + SpecialIdentifierNumberRangeRegexPattern + "text", (min, max) =>
+                {
+                    string result = "";
+
+                    min = min - 1;
+                    max = Math.Min(max, arguments.Count());
+                    int total = max - min;
+
+                    if (total > 0 && min <= arguments.Count())
+                    {
+                        result = string.Join(" ", arguments.Skip(min).Take(total));
+                    }
+
+                    return Task.FromResult(result);
+                });
             }
 
             if (this.ContainsSpecialIdentifier(TargetSpecialIdentifierHeader))
@@ -624,9 +647,15 @@ namespace MixItUp.Base.Util
                     }
                 }
 
-                if (this.ContainsRegexSpecialIdentifier(RandomNumberRegexSpecialIdentifier))
+                if (this.ContainsSpecialIdentifier(RandomNumberRegexSpecialIdentifier))
                 {
-                    await this.ReplaceNumberBasedRegexSpecialIdentifier(RandomNumberRegexSpecialIdentifier, (maxNumber) =>
+                    await this.ReplaceNumberRangeBasedRegexSpecialIdentifier(RandomNumberRegexSpecialIdentifier + SpecialIdentifierNumberRangeRegexPattern, (min, max) =>
+                    {
+                        int number = RandomHelper.GenerateRandomNumber(min, max);
+                        return Task.FromResult(number.ToString());
+                    });
+
+                    await this.ReplaceNumberBasedRegexSpecialIdentifier(RandomNumberRegexSpecialIdentifier + SpecialIdentifierNumberRegexPattern, (maxNumber) =>
                     {
                         int number = RandomHelper.GenerateRandomNumber(maxNumber) + 1;
                         return Task.FromResult(number.ToString());
@@ -634,9 +663,9 @@ namespace MixItUp.Base.Util
                 }
             }
 
-            if (this.ContainsRegexSpecialIdentifier(UnicodeRegexSpecialIdentifier))
+            if (this.ContainsSpecialIdentifier(UnicodeRegexSpecialIdentifier))
             {
-                await this.ReplaceNumberBasedRegexSpecialIdentifier(UnicodeRegexSpecialIdentifier, (number) =>
+                await this.ReplaceNumberBasedRegexSpecialIdentifier(UnicodeRegexSpecialIdentifier + SpecialIdentifierNumberRegexPattern, (number) =>
                 {
                     char uChar = (char)number;
                     return Task.FromResult(uChar.ToString());
@@ -870,6 +899,23 @@ namespace MixItUp.Base.Util
                 if (int.TryParse(text, out int number))
                 {
                     string replacement = await replacer(number);
+                    if (replacement != null)
+                    {
+                        this.ReplaceSpecialIdentifier(match.Value, replacement, includeSpecialIdentifierHeader: false);
+                    }
+                }
+            }
+        }
+
+        private async Task ReplaceNumberRangeBasedRegexSpecialIdentifier(string regex, Func<int, int, Task<string>> replacer)
+        {
+            foreach (Match match in Regex.Matches(this.text, "\\" + SpecialIdentifierHeader + regex))
+            {
+                string text = new String(match.Value.Where(c => char.IsDigit(c) || c == ':').ToArray());
+                string[] splits = text.Split(':');
+                if (splits.Length == 2 && int.TryParse(splits[0], out int min) && int.TryParse(splits[1], out int max) && max >= min)
+                {
+                    string replacement = await replacer(min, max);
                     if (replacement != null)
                     {
                         this.ReplaceSpecialIdentifier(match.Value, replacement, includeSpecialIdentifierHeader: false);

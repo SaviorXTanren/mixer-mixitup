@@ -21,6 +21,10 @@ namespace MixItUp.Base.Actions
         ReadSpecificLineFromFile,
         [Name("Read Random Line From File")]
         ReadRandomLineFromFile,
+        [Name("Remove Specific Line From File")]
+        RemoveSpecificLineFromFile,
+        [Name("Remove Random Line From File")]
+        RemoveRandomLineFromFile,
     }
 
     [DataContract]
@@ -81,20 +85,24 @@ namespace MixItUp.Base.Actions
             }
             else
             {
+                SpecialIdentifierStringBuilder.RemoveCustomSpecialIdentifier(this.TransferText);
+
                 string data = await ChannelSession.Services.FileService.ReadFile(filePath);
                 if (!string.IsNullOrEmpty(data))
                 {
-                    if (this.FileActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.FileActionType == FileActionTypeEnum.ReadRandomLineFromFile)
+                    if (this.FileActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.FileActionType == FileActionTypeEnum.ReadRandomLineFromFile ||
+                        this.FileActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.FileActionType == FileActionTypeEnum.RemoveRandomLineFromFile)
                     {
                         List<string> lines = new List<string>(data.Split(new string[] { Environment.NewLine, "\n" }, StringSplitOptions.RemoveEmptyEntries));
                         if (lines.Count > 0)
                         {
-                            if (this.FileActionType == FileActionTypeEnum.ReadSpecificLineFromFile)
+                            int lineIndex = -1;
+                            if (this.FileActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.FileActionType == FileActionTypeEnum.RemoveSpecificLineFromFile)
                             {
                                 if (!string.IsNullOrEmpty(this.LineIndexToRead))
                                 {
                                     string lineToRead = await this.ReplaceStringWithSpecialModifiers(this.LineIndexToRead, user, arguments);
-                                    if (int.TryParse(lineToRead, out int lineIndex))
+                                    if (int.TryParse(lineToRead, out lineIndex))
                                     {
                                         lineIndex = lineIndex - 1;
                                         if (lineIndex >= 0 && lineIndex < lines.Count)
@@ -110,8 +118,17 @@ namespace MixItUp.Base.Actions
                             }
                             else
                             {
-                                int lineIndex = RandomHelper.GenerateRandomNumber(lines.Count);
+                                lineIndex = RandomHelper.GenerateRandomNumber(lines.Count);
                                 data = lines[lineIndex];
+                            }
+
+                            if (this.FileActionType == FileActionTypeEnum.RemoveSpecificLineFromFile || this.FileActionType == FileActionTypeEnum.RemoveRandomLineFromFile)
+                            {
+                                if (lineIndex >= 0)
+                                {
+                                    lines.RemoveAt(lineIndex);
+                                    await ChannelSession.Services.FileService.SaveFile(filePath, string.Join(Environment.NewLine, lines));
+                                }
                             }
                         }
                         else

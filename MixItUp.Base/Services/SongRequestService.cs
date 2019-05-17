@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.SongRequests;
+﻿using Mixer.Base.Util;
+using MixItUp.Base.Model.SongRequests;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -51,6 +52,8 @@ namespace MixItUp.Base.Services
         Task Resume();
         Task PauseResume();
         Task Skip();
+        Task Ban();
+        Task Ban(SongRequestModel song);
 
         Task RefreshVolume();
 
@@ -85,6 +88,8 @@ namespace MixItUp.Base.Services
         private List<ISongRequestProviderService> allProviders = new List<ISongRequestProviderService>();
         private List<ISongRequestProviderService> enabledProviders = new List<ISongRequestProviderService>();
 
+        private Dictionary<SongRequestServiceTypeEnum, List<string>> bannedSongsCache = new Dictionary<SongRequestServiceTypeEnum, List<string>>();
+
         public bool IsEnabled { get; private set; }
 
         private bool forceStateQuery = false;
@@ -101,6 +106,18 @@ namespace MixItUp.Base.Services
             {
                 this.RequestSongs.AddRange(ChannelSession.Settings.SongRequestsSavedRequestQueue);
             }
+
+            bannedSongsCache.Clear();
+            foreach (SongRequestServiceTypeEnum type in EnumHelper.GetEnumList<SongRequestServiceTypeEnum>())
+            {
+                bannedSongsCache[type] = new List<string>();
+            }
+
+            foreach (SongRequestModel bannedSong in ChannelSession.Settings.SongRequestsBannedSongs)
+            {
+                bannedSongsCache[bannedSong.Type].Add(bannedSong.ID);
+            }
+
             GlobalEvents.SongRequestsChangedOccurred();
             return Task.FromResult(0);
         }
@@ -311,6 +328,30 @@ namespace MixItUp.Base.Services
             GlobalEvents.SongRequestsChangedOccurred();
         }
 
+        public async Task Ban()
+        {
+            await SongRequestService.songRequestLock.WaitAndRelease(async () =>
+            {
+                if (this.Status != null)
+                {
+                    ChannelSession.Settings.SongRequestsBannedSongs.Add(this.Status);
+                    bannedSongsCache[this.Status.Type].Add(this.Status.ID);
+                    await this.SkipInternal();
+                }
+            });
+        }
+
+        public async Task Ban(SongRequestModel song)
+        {
+            await SongRequestService.songRequestLock.WaitAndRelease(() =>
+            {
+                ChannelSession.Settings.SongRequestsBannedSongs.Add(song);
+                bannedSongsCache[this.Status.Type].Add(song.ID);
+                return Task.FromResult(0);
+            });
+            await this.Remove(song);
+        }
+
         public async Task RefreshVolume()
         {
             await SongRequestService.songRequestLock.WaitAndRelease(async () =>
@@ -445,6 +486,12 @@ namespace MixItUp.Base.Services
         private async Task AddSongRequest(UserViewModel user, SongRequestModel song)
         {
             song.User = user;
+
+            if (bannedSongsCache[song.Type].Contains(song.ID))
+            {
+                await ChannelSession.Chat.Whisper(user.UserName, "This song is banned from being requested.");
+                return;
+            }
 
             bool isSongCurrentlyPlaying = false;
             await SongRequestService.songRequestLock.WaitAndRelease(() =>

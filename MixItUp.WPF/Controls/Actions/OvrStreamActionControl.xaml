@@ -7,7 +7,7 @@
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
+    <Grid x:Name="MainGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
@@ -28,7 +28,7 @@
             <TextBlock x:Name="OvrStreamNotEnabledWarningTextBlock" VerticalAlignment="Center" Grid.Column="2" Foreground="Red" HorizontalAlignment="Center" Visibility="Hidden">Please enable OvrStream in the Services Section!</TextBlock>
         </Grid>
 
-        <TextBox Grid.Row="2" x:Name="TitleNameTextBox" Width="200" MaterialDesign:HintAssist.Hint="OvrStream Title Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        <TextBox Grid.Row="2" x:Name="TitleNameTextBox" Width="200" MaterialDesign:HintAssist.Hint="OvrStream Title Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" TextChanged="TitleNameTextBox_TextChanged" PreviewKeyDown="TitleNameTextBox_PreviewKeyDown"/>
 
         <Grid x:Name="SetVariableGrid" Grid.Row="4" Visibility="Collapsed">
             <Grid.RowDefinitions>
@@ -51,7 +51,7 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBox Grid.Column="0" x:Name="VariableNameTextBox" Width="300" Text="{Binding Name}" MaterialDesign:HintAssist.Hint="Variable Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                            <TextBox Grid.Column="0" x:Name="VariableNameTextBox" Width="300" Text="{Binding Name}" MaterialDesign:HintAssist.Hint="Variable Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}"  TextChanged="VariableNameTextBox_TextChanged" PreviewKeyDown="VariableNameTextBox_PreviewKeyDown"/>
 
                             <TextBox Grid.Column="2" x:Name="VariableValueTextBox" Width="320" Text="{Binding Value}" MaterialDesign:HintAssist.Hint="Variable Value" Style="{StaticResource MaterialDesignFloatingHintTextBox}"  />
 
@@ -61,5 +61,33 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </Grid>
+
+        <Canvas>
+            <MaterialDesign:PopupBox ToggleContent="" x:Name="TitleNameIntellisense" StaysOpen="False">
+                <Grid Margin="2,0,2,0" x:Name="TitleNameIntellisenseContent">
+                    <ListBox x:Name="TitleNameIntellisenseListBox" ItemContainerStyle="{StaticResource BorderedListBoxItem}" SelectionMode="Single" PreviewMouseUp="TitleNameIntellisenseListBox_PreviewMouseUp">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}"></TextBlock>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </MaterialDesign:PopupBox>
+        </Canvas>
+
+        <Canvas>
+            <MaterialDesign:PopupBox ToggleContent="" x:Name="VariableNameIntellisense" StaysOpen="False">
+                <Grid Margin="2,0,2,0" x:Name="VariableNameIntellisenseContent">
+                    <ListBox x:Name="VariableNameIntellisenseListBox" ItemContainerStyle="{StaticResource BorderedListBoxItem}" SelectionMode="Single" PreviewMouseUp="VariableNameIntellisenseListBox_PreviewMouseUp">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}"></TextBlock>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </MaterialDesign:PopupBox>
+        </Canvas>
     </Grid>
 </local:ActionControlBase>

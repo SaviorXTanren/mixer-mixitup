@@ -345,7 +345,7 @@ namespace MixItUp.Base.ViewModel.User
                     this.SetMixerUserDetails(user);
 
                     this.FollowDate = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, this.GetModel());
-                    if (this.IsMixerSubscriber)
+                    if (this.IsMixerSubscriber || force)
                     {
                         UserWithGroupsModel userGroups = await ChannelSession.Connection.GetUserInChannel(ChannelSession.Channel, this.ID);
                         if (userGroups != null)
