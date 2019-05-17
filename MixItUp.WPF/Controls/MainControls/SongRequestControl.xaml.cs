@@ -35,6 +35,17 @@ namespace MixItUp.WPF.Controls.MainControls
             await base.InitializeInternal();
         }
 
+        private void SongCommand_EditClicked(object sender, RoutedEventArgs e)
+        {
+            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
+            CustomCommand command = commandButtonsControl.GetCommandFromCommandButtons<CustomCommand>(sender);
+            if (command != null)
+            {
+                CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(command));
+                window.Show();
+            }
+        }
+
         private async void VolumeSlider_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             await this.Window.RunAsyncOperation(async () =>
@@ -79,15 +90,15 @@ namespace MixItUp.WPF.Controls.MainControls
             });
         }
 
-        private void SongCommand_EditClicked(object sender, RoutedEventArgs e)
+        private async void BanQueueButton_Click(object sender, RoutedEventArgs e)
         {
-            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-            CustomCommand command = commandButtonsControl.GetCommandFromCommandButtons<CustomCommand>(sender);
-            if (command != null)
+            await this.Window.RunAsyncOperation(() =>
             {
-                CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(command));
-                window.Show();
-            }
+                Button button = (Button)sender;
+                SongRequestModel songRequest = (SongRequestModel)button.DataContext;
+                this.viewModel.BanCommand.Execute(songRequest);
+                return Task.FromResult(0);
+            });
         }
     }
 }

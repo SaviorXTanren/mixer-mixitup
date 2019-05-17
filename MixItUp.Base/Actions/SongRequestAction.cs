@@ -22,7 +22,7 @@ namespace MixItUp.Base.Actions
         [Name("Display Next Song")]
         DisplayNextSong,
         [Name("Pause/Resume Current Song")]
-        PauseResume,
+        PauseResumeCurrentSong,
         [Name("Skip To Next Song")]
         SkipToNextSong,
         [Name("Enable/Disable Song Requests")]
@@ -36,9 +36,11 @@ namespace MixItUp.Base.Actions
         [Name("Remove Last Song Requested")]
         RemoveLast,
         [Name("Pause Current Song")]
-        Pause,
+        PauseCurrentSong,
         [Name("Resume Current Song")]
-        Resume,
+        ResumeCurrentSong,
+        [Name("Ban Current Song")]
+        BanCurrentSong
     }
 
     public class SongRequestAction : ActionBase
@@ -168,21 +170,25 @@ namespace MixItUp.Base.Actions
                             await ChannelSession.Chat.SendMessage("There are currently no Song Requests left in the queue");
                         }
                     }
-                    else if (this.SongRequestType == SongRequestActionTypeEnum.Pause)
+                    else if (this.SongRequestType == SongRequestActionTypeEnum.PauseCurrentSong)
                     {
                         await ChannelSession.Services.SongRequestService.Pause();
                     }
-                    else if (this.SongRequestType == SongRequestActionTypeEnum.Resume)
+                    else if (this.SongRequestType == SongRequestActionTypeEnum.ResumeCurrentSong)
                     {
                         await ChannelSession.Services.SongRequestService.Resume();
                     }
-                    else if (this.SongRequestType == SongRequestActionTypeEnum.PauseResume)
+                    else if (this.SongRequestType == SongRequestActionTypeEnum.PauseResumeCurrentSong)
                     {
                         await ChannelSession.Services.SongRequestService.PauseResume();
                     }
                     else if (this.SongRequestType == SongRequestActionTypeEnum.SkipToNextSong)
                     {
                         await ChannelSession.Services.SongRequestService.Skip();
+                    }
+                    else if (this.SongRequestType == SongRequestActionTypeEnum.BanCurrentSong)
+                    {
+                        await ChannelSession.Services.SongRequestService.Ban();
                     }
                 }
             }

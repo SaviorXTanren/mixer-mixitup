@@ -188,6 +188,7 @@ namespace MixItUp.Base
         bool SongRequestsSaveRequestQueue { get; set; }
         List<SongRequestModel> SongRequestsSavedRequestQueue { get; set; }
         int SongRequestVolume { get; set; }
+        List<SongRequestModel> SongRequestsBannedSongs { get; set; }
         CustomCommand SongAddedCommand { get; set; }
         CustomCommand SongPlayedCommand { get; set; }
 
