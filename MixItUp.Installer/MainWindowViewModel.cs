@@ -24,14 +24,12 @@ namespace MixItUp.Installer
 
         private static readonly Version minimumOSVersion = new Version(6, 2, 0, 0);
 
-        public static readonly string InstallDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MixItUp");
+        public static readonly string DefaultInstallDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MixItUp");
         public static readonly string StartMenuDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.StartMenu), "Mix It Up");
 
         public static string InstallSettingsDirectory { get { return Path.Combine(MainWindowViewModel.InstallSettingsDirectory, "Settings"); } }
 
         public static string ZipDownloadFilePath { get { return Path.Combine(Path.GetTempPath(), "MixItUp.zip"); } }
-
-        public static bool IsMixItUpAlreadyInstalled() { return Directory.Exists(InstallDirectory); }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -126,12 +124,22 @@ namespace MixItUp.Installer
         }
         private string displayText2;
 
+        private string installDirectory;
+
         public MainWindowViewModel()
         {
-            if (Directory.Exists(InstallDirectory))
+            this.installDirectory = DefaultInstallDirectory;
+
+            string[] args = Environment.GetCommandLineArgs();
+            if (args.Length == 2)
+            {
+                this.installDirectory = args[1];
+            }
+
+            if (Directory.Exists(this.installDirectory))
             {
                 this.IsUpdate = true;
-                string applicationSettingsFilePath = Path.Combine(InstallDirectory, ApplicationSettingsFileName);
+                string applicationSettingsFilePath = Path.Combine(this.installDirectory, ApplicationSettingsFileName);
                 if (File.Exists(applicationSettingsFilePath))
                 {
                     using (StreamReader reader = new StreamReader(File.OpenRead(applicationSettingsFilePath)))
@@ -305,15 +313,15 @@ namespace MixItUp.Installer
             {
                 if (File.Exists(ZipDownloadFilePath))
                 {
-                    Directory.CreateDirectory(InstallDirectory);
-                    if (Directory.Exists(InstallDirectory))
+                    Directory.CreateDirectory(this.installDirectory);
+                    if (Directory.Exists(this.installDirectory))
                     {
                         ZipArchive archive = ZipFile.Open(ZipDownloadFilePath, ZipArchiveMode.Read);
                         double current = 0;
                         double total = archive.Entries.Count;
                         foreach (ZipArchiveEntry entry in archive.Entries)
                         {
-                            string filePath = Path.Combine(InstallDirectory, entry.FullName);
+                            string filePath = Path.Combine(this.installDirectory, entry.FullName);
                             string directoryPath = Path.GetDirectoryName(filePath);
                             if (!Directory.Exists(directoryPath))
                             {
@@ -349,7 +357,7 @@ namespace MixItUp.Installer
             Directory.CreateDirectory(StartMenuDirectory);
             if (Directory.Exists(StartMenuDirectory))
             {
-                string tempLinkFilePath = Path.Combine(InstallDirectory, "Mix It Up.link");
+                string tempLinkFilePath = Path.Combine(DefaultInstallDirectory, "Mix It Up.link");
                 if (File.Exists(tempLinkFilePath))
                 {
                     string shortcutLinkFilePath = Path.Combine(StartMenuDirectory, ShortcutFileName);

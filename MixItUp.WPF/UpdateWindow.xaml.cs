@@ -70,7 +70,8 @@ namespace MixItUp.WPF
 
                 if (File.Exists(setupFilePath))
                 {
-                    Process.Start(setupFilePath);
+                    string applicationDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                    Process.Start(setupFilePath, applicationDirectory);
                     Application.Current.Shutdown();
                 }
             });
