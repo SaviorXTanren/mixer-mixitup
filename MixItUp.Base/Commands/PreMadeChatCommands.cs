@@ -760,8 +760,6 @@ namespace MixItUp.Base.Commands
 
     public class SetGameChatCommand : PreMadeChatCommand
     {
-        private Dictionary<string, int> steamGameList = new Dictionary<string, int>();
-
         public SetGameChatCommand()
             : base("Set Game", "setgame", 5, MixerRoleEnum.Mod)
         {
