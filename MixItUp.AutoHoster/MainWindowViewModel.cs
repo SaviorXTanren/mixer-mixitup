@@ -229,6 +229,10 @@ namespace MixItUp.AutoHoster
                     }
                 }
             }
+            else
+            {
+                this.totalMinutesHosted = 0;
+            }
 
             await this.SaveData();
         }
