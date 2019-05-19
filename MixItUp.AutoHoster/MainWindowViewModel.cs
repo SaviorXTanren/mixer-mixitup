@@ -206,6 +206,10 @@ namespace MixItUp.AutoHoster
                 {
                     if (hostOrder == HostingOrderEnum.Random)
                     {
+                        if (this.CurrentlyHosting != null)
+                        {
+                            channels = channels.Where(c => !c.ID.Equals(this.CurrentlyHosting.ID));
+                        }
                         channels = channels.OrderBy(c => Guid.NewGuid());
                     }
 
@@ -217,17 +221,29 @@ namespace MixItUp.AutoHoster
                             AgeRatingEnum channelAgeRating = EnumHelper.GetEnumValueFromString<AgeRatingEnum>(channelModel.audience);
                             if (channelModel != null && channel.IsOnline && channelAgeRating <= ageRating)
                             {
-                                ChannelModel updatedChannel = await this.connection.Channels.SetHostChannel(currentUser.channel, channelModel);
-                                if (updatedChannel.hosteeId.GetValueOrDefault() == channelModel.id)
+                                if (channelModel.id.Equals(this.CurrentlyHosting.ID))
                                 {
-                                    this.CurrentlyHosting = channel;
                                     this.totalMinutesHosted = 0;
                                     break;
+                                }
+                                else
+                                {
+                                    ChannelModel updatedChannel = await this.connection.Channels.SetHostChannel(currentUser.channel, channelModel);
+                                    if (updatedChannel.hosteeId.GetValueOrDefault() == channelModel.id)
+                                    {
+                                        this.CurrentlyHosting = channel;
+                                        this.totalMinutesHosted = 0;
+                                        break;
+                                    }
                                 }
                             }
                         }
                     }
                 }
+            }
+            else
+            {
+                this.totalMinutesHosted = 0;
             }
 
             await this.SaveData();
