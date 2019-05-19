@@ -346,11 +346,11 @@ namespace MixItUp.WPF.Controls.MainControls
                         await ChannelSession.Chat.UnBanUser(user);
                         break;
                     case UserDialogResult.Follow:
-                        ExpandedChannelModel channelToFollow = await ChannelSession.Connection.GetChannel(user.UserName);
+                        ExpandedChannelModel channelToFollow = await ChannelSession.Connection.GetChannel(user.ChannelID);
                         await ChannelSession.Connection.Follow(channelToFollow, ChannelSession.User);
                         break;
                     case UserDialogResult.Unfollow:
-                        ExpandedChannelModel channelToUnfollow = await ChannelSession.Connection.GetChannel(user.UserName);
+                        ExpandedChannelModel channelToUnfollow = await ChannelSession.Connection.GetChannel(user.ChannelID);
                         await ChannelSession.Connection.Unfollow(channelToUnfollow, ChannelSession.User);
                         break;
                     case UserDialogResult.PromoteToMod:

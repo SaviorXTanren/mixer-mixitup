@@ -91,6 +91,9 @@ namespace MixItUp.Base.ViewModel.User
         public string UserName { get; set; }
 
         [DataMember]
+        public uint ChannelID { get; set; }
+
+        [DataMember]
         public DateTimeOffset? MixerAccountDate { get; set; }
 
         [DataMember]
@@ -581,6 +584,7 @@ namespace MixItUp.Base.ViewModel.User
             if (user is UserWithChannelModel)
             {
                 UserWithChannelModel userChannel = (UserWithChannelModel)user;
+                this.ChannelID = userChannel.channel.id;
                 this.CurrentViewerCount = userChannel.channel.viewersCurrent;
             }
         }

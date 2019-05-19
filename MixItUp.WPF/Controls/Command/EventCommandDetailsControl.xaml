@@ -25,7 +25,7 @@
         <ComboBox x:Name="EventTypeComboBox" Grid.Column="0" SelectionChanged="EventTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Event Type" IsEnabled="False" Visibility="Collapsed" />
         <TextBox x:Name="OtherEventTypeTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Event Type" IsEnabled="False" Visibility="Collapsed" />
 
-        <TextBox x:Name="EventIDTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Username" Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsEnabled="False" />
+        <TextBox x:Name="EventIDTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Account" Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsEnabled="False" />
 
         <local:UnlockedCommandControl x:Name="UnlockedControl" Grid.Column="4" HorizontalAlignment="Center" />
     </Grid>

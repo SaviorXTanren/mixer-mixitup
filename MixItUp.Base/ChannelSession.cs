@@ -364,7 +364,7 @@ namespace MixItUp.Base
         {
             if (ChannelSession.Channel != null)
             {
-                ExpandedChannelModel channel = await ChannelSession.Connection.GetChannel(ChannelSession.Channel.user.username);
+                ExpandedChannelModel channel = await ChannelSession.Connection.GetChannel(ChannelSession.Channel.id);
                 if (channel != null)
                 {
                     ChannelSession.Channel = channel;
@@ -484,7 +484,16 @@ namespace MixItUp.Base
             PrivatePopulatedUserModel user = await ChannelSession.Connection.GetCurrentUser();
             if (user != null)
             {
-                ExpandedChannelModel channel = await ChannelSession.Connection.GetChannel((channelName == null) ? user.username : channelName);
+                ExpandedChannelModel channel = null;
+                if (channelName == null)
+                {
+                    channel = await ChannelSession.Connection.GetChannel(user.channel.id);
+                }
+                else
+                {
+                    channel = await ChannelSession.Connection.GetChannel(channelName);
+                }
+                
                 if (channel != null)
                 {
                     ChannelSession.User = user;
