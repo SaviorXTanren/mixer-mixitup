@@ -674,7 +674,7 @@ namespace MixItUp.Base.Services
 
         private async Task BackgroundSongMaintainer(CancellationTokenSource cancellationTokenSource)
         {
-            bool failedToPlay = false;
+            int failedStatusAttempts = 0;
             await BackgroundTaskWrapper.RunBackgroundTask(cancellationTokenSource, async (tokenSource) =>
             {
                 await Task.Delay(backgroundInterval, tokenSource.Token);
@@ -692,18 +692,17 @@ namespace MixItUp.Base.Services
                         SongRequestCurrentlyPlayingModel newStatus = await this.GetStatus();
                         if (newStatus == null || newStatus.State == SongRequestStateEnum.NotStarted)
                         {
-                            if (failedToPlay)
+                            this.forceStateQuery = true;
+                            failedStatusAttempts++;
+                            if (failedStatusAttempts >= 3)
                             {
                                 await this.SkipInternal();
-                            }
-                            else
-                            {
-                                failedToPlay = true;
-                                this.forceStateQuery = true;
                             }
                         }
                         else
                         {
+                            failedStatusAttempts = 0;
+
                             this.Status.State = newStatus.State;
                             this.Status.Progress = newStatus.Progress;
                             this.Status.Length = newStatus.Length;
