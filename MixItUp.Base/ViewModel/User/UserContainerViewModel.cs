@@ -179,23 +179,34 @@ namespace MixItUp.Base.ViewModel.User
 
         public async Task<UserViewModel> RemoveUser(uint userID)
         {
-            return await this.semaphore.WaitAndRelease(() =>
+            IEnumerable<UserViewModel> results = await this.RemoveUsers(new List<uint>() { userID });
+            return (results.Count() > 0) ? results.First() : null;
+        }
+
+        public async Task<IEnumerable<UserViewModel>> RemoveUsers(IEnumerable<uint> userIDs)
+        {
+            List<UserViewModel> results = new List<UserViewModel>();
+            await this.semaphore.WaitAndRelease(() =>
             {
-                UserViewModel user = null;
-                if (this.users.ContainsKey(userID))
+                foreach (uint userID in userIDs)
                 {
-                    user = this.users[userID];
-                    this.users.Remove(userID);
+                    if (this.users.ContainsKey(userID))
+                    {
+                        UserViewModel user = this.users[userID];
+                        this.users.Remove(userID);
+                        results.Add(user);
+                    }
                 }
-                return Task.FromResult(user);
+                return Task.FromResult(0);
             });
+            return results;
         }
 
         public async Task<IEnumerable<UserViewModel>> GetAllUsers()
         {
             return await this.semaphore.WaitAndRelease(() =>
             {
-                return Task.FromResult(this.users.Values.Where(u => u.IsInChat));
+                return Task.FromResult(this.users.Values.Where(u => u.IsInChat).ToList());
             });
         }
 
