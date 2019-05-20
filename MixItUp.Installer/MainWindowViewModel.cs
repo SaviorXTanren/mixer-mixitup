@@ -343,7 +343,11 @@ namespace MixItUp.Installer
                             {
                                 Directory.CreateDirectory(directoryPath);
                             }
-                            entry.ExtractToFile(filePath, overwrite: true);
+
+                            if (Path.HasExtension(filePath))
+                            {
+                                entry.ExtractToFile(filePath, overwrite: true);
+                            }
 
                             current++;
                             this.OperationProgress = (int)((current / total) * 100);
