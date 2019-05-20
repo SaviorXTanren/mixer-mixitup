@@ -163,8 +163,8 @@
       <HintPath>..\packages\NetOffice.Core.1.7.4.4\lib\net45\OfficeApi.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
-    <Reference Include="ovrstream-client-csharp, Version=0.0.1.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ovrstream-client-csharp.0.0.1.1\lib\netstandard2.0\ovrstream-client-csharp.dll</HintPath>
+    <Reference Include="ovrstream-client-csharp, Version=0.0.1.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ovrstream-client-csharp.0.0.1.2\lib\netstandard2.0\ovrstream-client-csharp.dll</HintPath>
     </Reference>
     <Reference Include="PlayFabAllSDK, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\PlayFabAllSDK.1.50.190509\lib\net45\PlayFabAllSDK.dll</HintPath>
