@@ -52,34 +52,35 @@
             setTimeout(function () {
                 var playerState = player.getPlayerState();
                 var videoData = player.getVideoData();
+                if (playerState != null && videoData != null) {
+                    var data = {};
 
-                var data = {};
+                    data.ID = data.URI = data.Name = videoData.video_id;
+                    data.Type = 1;
+                    data.State = 0;
+                    data.Volume = player.getVolume();
 
-                data.ID = data.URI = data.Name = videoData.video_id;
-                data.Type = 1;
-                data.State = 0;
-                data.Volume = player.getVolume();
+                    if (hasError) {
+                        data.State = 3;
+                    } else {
+                        if (playerState == YT.PlayerState.PLAYING || playerState == YT.PlayerState.PAUSED || playerState == YT.PlayerState.ENDED) {
+                            data.Progress = player.getCurrentTime() * 1000;
+                            data.Length = player.getDuration() * 1000;
 
-                if (hasError) {
-                    data.State = 3;
-                } else {
-                    if (playerState == YT.PlayerState.PLAYING || playerState == YT.PlayerState.PAUSED || playerState == YT.PlayerState.ENDED) {
-                        data.Progress = player.getCurrentTime() * 1000;
-                        data.Length = player.getDuration() * 1000;
-
-                        if (playerState == YT.PlayerState.PLAYING) {
-                            data.State = 1;
-                        }
-                        else if (playerState == YT.PlayerState.PAUSED) {
-                            data.State = 2;
-                        }
-                        else if (playerState == YT.PlayerState.ENDED) {
-                            data.State = 3;
+                            if (playerState == YT.PlayerState.PLAYING) {
+                                data.State = 1;
+                            }
+                            else if (playerState == YT.PlayerState.PAUSED) {
+                                data.State = 2;
+                            }
+                            else if (playerState == YT.PlayerState.ENDED) {
+                                data.State = 3;
+                            }
                         }
                     }
-                }
 
-                window.external.SetStatus(JSON.stringify(data));
+                    window.external.SetStatus(JSON.stringify(data));
+                }
             }, 1);
         }
 
