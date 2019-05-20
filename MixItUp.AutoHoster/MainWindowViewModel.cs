@@ -221,7 +221,7 @@ namespace MixItUp.AutoHoster
                             AgeRatingEnum channelAgeRating = EnumHelper.GetEnumValueFromString<AgeRatingEnum>(channelModel.audience);
                             if (channelModel != null && channel.IsOnline && channelAgeRating <= ageRating)
                             {
-                                if (channelModel.id.Equals(this.CurrentlyHosting.ID))
+                                if (this.CurrentlyHosting != null && channelModel.id.Equals(this.CurrentlyHosting.ID))
                                 {
                                     this.totalMinutesHosted = 0;
                                     break;
