@@ -138,6 +138,9 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.OvrStream:
                         this.actionControl = (this.action != null) ? new OvrStreamActionControl(this, (OvrStreamAction)this.action) : new OvrStreamActionControl(this);
                         break;
+                    case ActionTypeEnum.StreamingPlatform:
+                        this.actionControl = (this.action != null) ? new StreamingPlatformActionControl(this, (StreamingPlatformAction)this.action) : new StreamingPlatformActionControl(this);
+                        break;
                 }
             }
 

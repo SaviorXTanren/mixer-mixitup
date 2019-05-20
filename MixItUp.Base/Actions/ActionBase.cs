@@ -62,6 +62,8 @@ namespace MixItUp.Base.Actions
         Serial,
         Moderation,
         OvrStream,
+        [Name("Streaming Platform")]
+        StreamingPlatform,
 
         Custom = 99,
     }

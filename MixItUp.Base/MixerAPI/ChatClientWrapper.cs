@@ -31,6 +31,8 @@ namespace MixItUp.Base.MixerAPI
         public event EventHandler<IEnumerable<UserViewModel>> OnUsersLeaveOccurred = delegate { };
         public event EventHandler<Tuple<UserViewModel, string>> OnUserPurgeOccurred = delegate { };
 
+        public event EventHandler<ChatPollEventModel> OnPollEndOccurred { add { this.Client.OnPollEndOccurred += value; } remove { this.Client.OnPollEndOccurred -= value; } }
+
         public LockedDictionary<Guid, ChatMessageViewModel> Messages { get; private set; } = new LockedDictionary<Guid, ChatMessageViewModel>();
 
         public bool DisableChat { get; set; }
@@ -258,6 +260,14 @@ namespace MixItUp.Base.MixerAPI
             {
                 await ChannelSession.Connection.RemoveUserRoles(ChannelSession.Channel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Mod });
                 await user.RefreshDetails(true);
+            }
+        }
+
+        public async Task StartPoll(string question, IEnumerable<string> answers, uint lengthInSeconds)
+        {
+            if (this.Client != null)
+            {
+                await this.Client.StartVote(question, answers, lengthInSeconds);
             }
         }
 

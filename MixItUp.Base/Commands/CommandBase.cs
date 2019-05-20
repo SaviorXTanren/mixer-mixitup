@@ -165,7 +165,12 @@ namespace MixItUp.Base.Commands
 
         public async Task Perform() { await this.Perform(null); }
 
-        public async Task Perform(IEnumerable<string> arguments) { await this.Perform(await ChannelSession.GetCurrentUser(), arguments); }
+        public async Task Perform(IEnumerable<string> arguments) { await this.Perform(arguments, extraSpecialIdentifiers: null); }
+
+        public async Task Perform(IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers = null)
+        {
+            await this.Perform(await ChannelSession.GetCurrentUser(), arguments, extraSpecialIdentifiers: extraSpecialIdentifiers);
+        }
 
         public async Task Perform(UserViewModel user, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
         {
