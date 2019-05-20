@@ -213,7 +213,14 @@ namespace MixItUp.Installer
 
         public void Launch()
         {
-            Process.Start(Path.Combine(MainWindowViewModel.StartMenuDirectory, MainWindowViewModel.ShortcutFileName));
+            if (Path.Equals(this.installDirectory, DefaultInstallDirectory))
+            {
+                Process.Start(Path.Combine(MainWindowViewModel.StartMenuDirectory, MainWindowViewModel.ShortcutFileName));
+            }
+            else
+            {
+                Process.Start(Path.Combine(this.installDirectory, "MixItUp.exe"));
+            }
         }
 
         protected void NotifyPropertyChanged([CallerMemberName]string name = "")
