@@ -179,6 +179,15 @@ namespace MixItUp.Installer
                     if (!this.IsUpdate || await this.WaitForMixItUpToClose())
                     {
                         MixItUpUpdateModel update = await this.GetUpdateData();
+                        if (this.IsPreview)
+                        {
+                            MixItUpUpdateModel preview = await this.GetUpdateData(preview: true);
+                            if (preview != null && preview.SystemVersion > update.SystemVersion)
+                            {
+                                update = preview;
+                            }
+                        }
+
                         if (update != null)
                         {
                             if (await this.DownloadZipArchive(update))
@@ -258,7 +267,7 @@ namespace MixItUp.Installer
             return false;
         }
 
-        private async Task<MixItUpUpdateModel> GetUpdateData()
+        private async Task<MixItUpUpdateModel> GetUpdateData(bool preview = false)
         {
             this.DisplayText1 = "Finding latest version...";
             this.IsOperationIndeterminate = true;
@@ -266,7 +275,7 @@ namespace MixItUp.Installer
 
             using (HttpClient client = new HttpClient())
             {
-                HttpResponseMessage response = await client.GetAsync((this.IsPreview) ? "https://mixitupapi.azurewebsites.net/api/updates/preview"
+                HttpResponseMessage response = await client.GetAsync((preview) ? "https://mixitupapi.azurewebsites.net/api/updates/preview"
                     : "https://mixitupapi.azurewebsites.net/api/updates");
                 if (response.IsSuccessStatusCode)
                 {
