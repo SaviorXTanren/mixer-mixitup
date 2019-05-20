@@ -268,7 +268,7 @@ namespace MixItUp.Base
                 if (connection != null)
                 {
                     ChannelSession.Connection = new MixerConnectionWrapper(connection);
-                    result = await ChannelSession.InitializeInternal(ChannelSession.Settings.IsStreamer, ChannelSession.Settings.Channel.user.username);
+                    result = await ChannelSession.InitializeInternal(ChannelSession.Settings.IsStreamer);
                 }
             }
             catch (RestServiceRequestException ex)
@@ -485,7 +485,7 @@ namespace MixItUp.Base
             if (user != null)
             {
                 ExpandedChannelModel channel = null;
-                if (channelName == null)
+                if (channelName == null || isStreamer)
                 {
                     channel = await ChannelSession.Connection.GetChannel(user.channel.id);
                 }
