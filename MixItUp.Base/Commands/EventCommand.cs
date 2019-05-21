@@ -122,9 +122,9 @@ namespace MixItUp.Base.Commands
 
         public EventCommand(ConstellationEventTypeEnum type) : this(type, 0, string.Empty) { }
 
-        public EventCommand(ConstellationEventTypeEnum type, ChannelAdvancedModel channel) : this(type, channel.id, channel.user.username) { }
+        public EventCommand(ConstellationEventTypeEnum type, ChannelAdvancedModel channel) : this(type, channel.id, channel.user.id.ToString()) { }
 
-        public EventCommand(ConstellationEventTypeEnum type, UserModel user) : this(type, user.id, user.username) { }
+        public EventCommand(ConstellationEventTypeEnum type, UserModel user) : this(type, user.id, user.id.ToString()) { }
 
         public EventCommand(ConstellationEventTypeEnum type, uint id, string name)
             : base(EnumHelper.GetEnumName(type), CommandTypeEnum.Event, name)

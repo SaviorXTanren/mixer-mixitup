@@ -609,7 +609,7 @@ namespace MixItUp.Base.ViewModel.User
                     if (userRoles.Any(r => r.Equals("Banned"))) { this.mixerRoles.Add(MixerRoleEnum.Banned); }
                 }
 
-                if (ChannelSession.Channel != null && ChannelSession.Channel.user.username.Equals(this.UserName))
+                if (ChannelSession.Channel != null && ChannelSession.Channel.user.id.Equals(this.ID))
                 {
                     this.mixerRoles.Add(MixerRoleEnum.Streamer);
                 }
