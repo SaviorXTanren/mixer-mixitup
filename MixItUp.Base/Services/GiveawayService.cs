@@ -133,6 +133,7 @@ namespace MixItUp.Base.Services
             this.IsRunning = true;
 
             this.giveawayCommand = new ChatCommand("Giveaway Command", ChannelSession.Settings.GiveawayCommand, new RequirementViewModel());
+            this.giveawayCommand.Requirements = ChannelSession.Settings.GiveawayRequirements;
             if (ChannelSession.Settings.GiveawayAllowPastWinners)
             {
                 this.pastWinners.Clear();
@@ -304,36 +305,8 @@ namespace MixItUp.Base.Services
                         return;
                     }
 
-                    if (await ChannelSession.Settings.GiveawayRequirements.DoesMeetUserRoleRequirement(message.User))
+                    if (await this.giveawayCommand.CheckAllRequirements(message.User))
                     {
-                        if (ChannelSession.Settings.GiveawayRequirements.Rank != null && ChannelSession.Settings.GiveawayRequirements.Rank.GetCurrency() != null)
-                        {
-                            if (!ChannelSession.Settings.GiveawayRequirements.DoesMeetRankRequirement(message.User))
-                            {
-                                await ChannelSession.Settings.GiveawayRequirements.Rank.SendRankNotMetWhisper(message.User);
-                                return;
-                            }
-                        }
-
-                        if (ChannelSession.Settings.GiveawayRequirements.Currency != null && ChannelSession.Settings.GiveawayRequirements.Currency.GetCurrency() != null)
-                        {
-                            int totalAmount = ChannelSession.Settings.GiveawayRequirements.Currency.RequiredAmount * entries;
-                            if (!ChannelSession.Settings.GiveawayRequirements.TrySubtractCurrencyAmount(message.User, totalAmount))
-                            {
-                                await ChannelSession.Chat.Whisper(message.User.UserName, string.Format("You do not have the required {0} {1} to do this", totalAmount, ChannelSession.Settings.GiveawayRequirements.Currency.GetCurrency().Name));
-                                return;
-                            }
-                        }
-
-                        if (ChannelSession.Settings.GiveawayRequirements.Inventory != null)
-                        {
-                            if (!ChannelSession.Settings.GiveawayRequirements.TrySubtractInventoryAmount(message.User))
-                            {
-                                await ChannelSession.Settings.GiveawayRequirements.Inventory.SendNotMetWhisper(message.User);
-                                return;
-                            }
-                        }
-
                         if (!this.enteredUsers.ContainsKey(message.User.ID))
                         {
                             this.enteredUsers[message.User.ID] = new GiveawayUser() { User = message.User, Entries = 0 };
@@ -348,10 +321,6 @@ namespace MixItUp.Base.Services
 
                             GlobalEvents.GiveawaysChangedOccurred(usersUpdated: true);
                         }
-                    }
-                    else
-                    {
-                        await ChannelSession.Chat.Whisper(message.User.UserName, string.Format("You are not able to enter this giveaway as it is only for {0}s", ChannelSession.Settings.GiveawayRequirements.Role.RoleNameString));
                     }
                 }
                 else if (this.Winner != null && this.Winner.Equals(message.User) && message.Message.Equals("!claim", StringComparison.InvariantCultureIgnoreCase))

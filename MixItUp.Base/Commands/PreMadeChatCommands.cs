@@ -4,6 +4,7 @@ using Mixer.Base.Model.Game;
 using Mixer.Base.Model.User;
 using Mixer.Base.Web;
 using MixItUp.Base.Actions;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
@@ -1014,6 +1015,32 @@ namespace MixItUp.Base.Commands
                 else
                 {
                     await ChannelSession.Chat.Whisper(user.UserName, "Usage: !disablecommand <COMMAND TRIGGER, NO !>");
+                }
+            }));
+        }
+    }
+
+    public class StartGiveawayChatCommand : PreMadeChatCommand
+    {
+        public StartGiveawayChatCommand()
+            : base("Start Giveaway", "startgiveaway", 5, MixerRoleEnum.Streamer)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (ChannelSession.Chat != null)
+                {
+                    if (arguments.Count() > 0)
+                    {
+                        string result = await ChannelSession.Services.GiveawayService.Start(string.Join(" ", arguments), GiveawayEntryTypeEnum.Command, GiveawayDonationEntryQualificationTypeEnum.OneEntryPerUser);
+                        if (!string.IsNullOrEmpty(result))
+                        {
+                            await ChannelSession.Chat.Whisper(user.UserName, "ERROR: " + result);
+                        }
+                    }
+                    else
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, "Usage: !startgiveaway <GIVEAWAY ITEM>");
+                    }
                 }
             }));
         }
