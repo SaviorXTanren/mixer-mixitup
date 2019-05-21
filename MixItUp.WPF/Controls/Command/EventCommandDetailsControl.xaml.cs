@@ -117,7 +117,7 @@ namespace MixItUp.WPF.Controls.Command
                 {
                     if (this.OtherEventTypeTextBox.Visibility == Visibility.Visible)
                     {
-                        this.command = new EventCommand(EnumHelper.GetEnumValueFromString<OtherEventTypeEnum>(this.OtherEventTypeTextBox.Text), ChannelSession.Channel.user.username);
+                        this.command = new EventCommand(EnumHelper.GetEnumValueFromString<OtherEventTypeEnum>(this.OtherEventTypeTextBox.Text), ChannelSession.Channel.id.ToString());
                     }
                     else if (this.EventTypeComboBox.Visibility == Visibility.Visible)
                     {
