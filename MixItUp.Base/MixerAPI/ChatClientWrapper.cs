@@ -639,7 +639,7 @@ namespace MixItUp.Base.MixerAPI
 
                 if (leavesToProcess.Count > 0)
                 {
-                    IEnumerable<UserViewModel> processedUsers = await ChannelSession.ActiveUsers.RemoveUsers(joinsToProcess.Select(u => u.id));
+                    IEnumerable<UserViewModel> processedUsers = await ChannelSession.ActiveUsers.RemoveUsers(leavesToProcess.Select(u => u.id));
                     this.OnUsersLeaveOccurred(this, processedUsers);
                 }
 
