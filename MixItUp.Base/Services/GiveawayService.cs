@@ -125,7 +125,6 @@ namespace MixItUp.Base.Services
                     }
                 }
 
-                ChannelSession.Settings.GiveawayCommand = null;
                 ChannelSession.Settings.GiveawayDonationRequiredAmount = (entryQualificationType == GiveawayDonationEntryQualificationTypeEnum.MinimumAmountRequired);
             }
 
@@ -142,7 +141,7 @@ namespace MixItUp.Base.Services
             this.TimeLeft = ChannelSession.Settings.GiveawayTimer * 60;
             this.enteredUsers.Clear();
 
-            GlobalEvents.GiveawaysChangedOccurred();
+            GlobalEvents.GiveawaysChangedOccurred(usersUpdated: true);
 
             this.backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -171,7 +170,7 @@ namespace MixItUp.Base.Services
 
             this.IsRunning = false;
 
-            GlobalEvents.GiveawaysChangedOccurred();
+            GlobalEvents.GiveawaysChangedOccurred(usersUpdated: true);
 
             GlobalEvents.OnChatCommandMessageReceived -= GlobalEvents_OnChatCommandMessageReceived;
             GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
@@ -184,13 +183,17 @@ namespace MixItUp.Base.Services
             GlobalEvents.OnChatCommandMessageReceived += GlobalEvents_OnChatCommandMessageReceived;
             GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
 
+            int totalTime = ChannelSession.Settings.GiveawayTimer * 60;
+            int reminderTime = ChannelSession.Settings.GiveawayReminderInterval * 60;
+
             try
             {
                 while (this.TimeLeft > 0)
                 {
                     await Task.Delay(1000);
                     this.TimeLeft--;
-                    if ((ChannelSession.Settings.GiveawayTimer - this.TimeLeft) % ChannelSession.Settings.GiveawayReminderInterval == 0)
+
+                    if (this.TimeLeft > 0 && (totalTime - this.TimeLeft) % reminderTime == 0)
                     {
                         await ChannelSession.Settings.GiveawayStartedReminderCommand.Perform(extraSpecialIdentifiers: this.GetSpecialIdentifiers());
                     }
@@ -227,6 +230,8 @@ namespace MixItUp.Base.Services
 
                     if (this.Winner != null)
                     {
+                        GlobalEvents.GiveawaysChangedOccurred(usersUpdated: true);
+
                         if (!ChannelSession.Settings.GiveawayRequireClaim)
                         {
                             await ChannelSession.Settings.GiveawayWinnerSelectedCommand.Perform(this.Winner, extraSpecialIdentifiers: this.GetSpecialIdentifiers());
@@ -341,7 +346,7 @@ namespace MixItUp.Base.Services
 
                             await ChannelSession.Settings.GiveawayUserJoinedCommand.Perform(message.User, extraSpecialIdentifiers: this.GetSpecialIdentifiers());
 
-                            GlobalEvents.GiveawaysChangedOccurred();
+                            GlobalEvents.GiveawaysChangedOccurred(usersUpdated: true);
                         }
                     }
                     else
@@ -399,7 +404,7 @@ namespace MixItUp.Base.Services
                     if (newEntries > 0)
                     {
                         await ChannelSession.Chat.Whisper(user.UserName, string.Format("You've gotten {0} entr(ies) into the giveaway, stay tuned to see who wins!", newEntries));
-                        GlobalEvents.GiveawaysChangedOccurred();
+                        GlobalEvents.GiveawaysChangedOccurred(usersUpdated: true);
                     }
                 }
             }
@@ -410,7 +415,7 @@ namespace MixItUp.Base.Services
             return new Dictionary<string, string>()
             {
                 { "giveawayitem", this.Item },
-                { "giveawaycommand", ChannelSession.Settings.GiveawayCommand },
+                { "giveawaycommand", "!" + ChannelSession.Settings.GiveawayCommand },
                 { "giveawaytimelimit", (this.TimeLeft / 60).ToString() }
             };
         }

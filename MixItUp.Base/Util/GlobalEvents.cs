@@ -211,12 +211,12 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler OnGiveawaysChangedOccurred;
-        public static void GiveawaysChangedOccurred()
+        public static event EventHandler<bool> OnGiveawaysChangedOccurred;
+        public static void GiveawaysChangedOccurred(bool usersUpdated = false)
         {
             if (GlobalEvents.OnGiveawaysChangedOccurred != null)
             {
-                GlobalEvents.OnGiveawaysChangedOccurred(null, new EventArgs());
+                GlobalEvents.OnGiveawaysChangedOccurred(null, usersUpdated);
             }
         }
 

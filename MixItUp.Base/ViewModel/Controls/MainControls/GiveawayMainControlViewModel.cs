@@ -108,7 +108,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             get { return ChannelSession.Settings.GiveawayCommand; }
             set
             {
-                ChannelSession.Settings.GiveawayCommand = value;
+                ChannelSession.Settings.GiveawayCommand = (!string.IsNullOrEmpty(value)) ? value : string.Empty;
                 this.NotifyPropertyChanged();
             }
         }
@@ -167,7 +167,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
         public string WinnerUsername { get { return (ChannelSession.Services.GiveawayService.Winner != null) ? ChannelSession.Services.GiveawayService.Winner.UserName : string.Empty; } }
 
-        public ObservableCollection<GiveawayUser> EnteredUsers = new ObservableCollection<GiveawayUser>();
+        public ObservableCollection<GiveawayUser> EnteredUsers { get; private set; } = new ObservableCollection<GiveawayUser>();
 
         public ICommand StartGiveawayCommand { get; set; }
         public ICommand EndGiveawayCommand { get; set; }
@@ -194,17 +194,20 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             });
         }
 
-        private async void GlobalEvents_OnGiveawaysChangedOccurred(object sender, System.EventArgs e)
+        private async void GlobalEvents_OnGiveawaysChangedOccurred(object sender, bool usersUpdated)
         {
-            await DispatcherHelper.InvokeDispatcher(() =>
+            if (usersUpdated)
             {
-                this.EnteredUsers.Clear();
-                foreach (GiveawayUser user in ChannelSession.Services.GiveawayService.Users)
+                await DispatcherHelper.InvokeDispatcher(() =>
                 {
-                    this.EnteredUsers.Add(user);
-                }
-                return Task.FromResult(0);
-            });
+                    this.EnteredUsers.Clear();
+                    foreach (GiveawayUser user in ChannelSession.Services.GiveawayService.Users)
+                    {
+                        this.EnteredUsers.Add(user);
+                    }
+                    return Task.FromResult(0);
+                });
+            }
             this.NotifyPropertyChanges();
         }
 
