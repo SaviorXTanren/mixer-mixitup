@@ -28,6 +28,7 @@ namespace MixItUp.Desktop.Services
             this.AudioService = new AudioService();
             this.TextToSpeechService = new WindowsTextToSpeechService();
             this.SongRequestService = new SongRequestService();
+            this.GiveawayService = new GiveawayService();
             this.TranslationService = new TranslationService();
             this.SerialService = new SerialService();
             this.RemoteService = new RemoteService("https://mixitup-remote-server.azurewebsites.net/api/", "https://mixitup-remote-server.azurewebsites.net/RemoteHub");

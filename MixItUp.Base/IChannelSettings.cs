@@ -90,9 +90,6 @@ namespace MixItUp.Base
         bool DisableAllTimers { get; set; }
 
         string GiveawayCommand { get; set; }
-        bool GiveawayGawkBoxTrigger { get; set; }
-        bool GiveawayStreamlabsTrigger { get; set; }
-        bool GiveawayTiltifyTrigger { get; set; }
         bool GiveawayDonationRequiredAmount { get; set; }
         double GiveawayDonationAmount { get; set; }
         int GiveawayTimer { get; set; }
@@ -101,6 +98,7 @@ namespace MixItUp.Base
         int GiveawayReminderInterval { get; set; }
         bool GiveawayRequireClaim { get; set; }
         bool GiveawayAllowPastWinners { get; set; }
+        CustomCommand GiveawayStartedReminderCommand { get; set; }
         CustomCommand GiveawayUserJoinedCommand { get; set; }
         CustomCommand GiveawayWinnerSelectedCommand { get; set; }
 

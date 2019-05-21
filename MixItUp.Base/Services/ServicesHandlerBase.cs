@@ -17,6 +17,7 @@ namespace MixItUp.Base.Services
         public ITextToSpeechService TextToSpeechService { get; protected set; }
         public ITranslationService TranslationService { get; protected set; }
         public ISongRequestService SongRequestService { get; protected set; }
+        public IGiveawayService GiveawayService { get; protected set; }
         public ISerialService SerialService { get; protected set; }
         public LocalRemoteServiceBase RemoteService { get; protected set; }
 

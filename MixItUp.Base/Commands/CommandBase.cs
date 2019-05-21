@@ -163,11 +163,7 @@ namespace MixItUp.Base.Commands
             return messageText.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        public async Task Perform() { await this.Perform(null); }
-
-        public async Task Perform(IEnumerable<string> arguments) { await this.Perform(arguments, extraSpecialIdentifiers: null); }
-
-        public async Task Perform(IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers = null)
+        public async Task Perform(IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
         {
             await this.Perform(await ChannelSession.GetCurrentUser(), arguments, extraSpecialIdentifiers: extraSpecialIdentifiers);
         }

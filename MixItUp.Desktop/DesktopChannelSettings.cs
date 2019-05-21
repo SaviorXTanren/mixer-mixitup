@@ -34,7 +34,7 @@ namespace MixItUp.Desktop
     [DataContract]
     public class DesktopSavableChannelSettings : ISavableChannelSettings
     {
-        public const int LatestVersion = 30;
+        public const int LatestVersion = 31;
 
         [JsonProperty]
         public int Version { get; set; } = DesktopChannelSettings.LatestVersion;
@@ -155,12 +155,6 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public string GiveawayCommand { get; set; } = "giveaway";
         [JsonProperty]
-        public bool GiveawayGawkBoxTrigger { get; set; }
-        [JsonProperty]
-        public bool GiveawayStreamlabsTrigger { get; set; }
-        [JsonProperty]
-        public bool GiveawayTiltifyTrigger { get; set; }
-        [JsonProperty]
         public bool GiveawayDonationRequiredAmount { get; set; }
         [JsonProperty]
         public double GiveawayDonationAmount { get; set; }
@@ -176,6 +170,8 @@ namespace MixItUp.Desktop
         public bool GiveawayRequireClaim { get; set; } = true;
         [JsonProperty]
         public bool GiveawayAllowPastWinners { get; set; }
+        [JsonProperty]
+        public CustomCommand GiveawayStartedReminderCommand { get; set; }
         [JsonProperty]
         public CustomCommand GiveawayUserJoinedCommand { get; set; }
         [JsonProperty]
@@ -502,8 +498,9 @@ namespace MixItUp.Desktop
             this.GameQueueUserJoinedCommand = CustomCommand.BasicChatCommand("Game Queue Used Joined", "You are #$queueposition in the queue to play.", isWhisper: true);
             this.GameQueueUserSelectedCommand = CustomCommand.BasicChatCommand("Game Queue Used Selected", "It's time to play @$username! Listen carefully for instructions on how to join...");
 
+            this.GiveawayStartedReminderCommand = CustomCommand.BasicChatCommand("Giveaway Started/Reminder", "A giveaway has started for $giveawayitem! Type $giveawaycommand in chat in the next $giveawaytimelimit minutes to enter!");
             this.GiveawayUserJoinedCommand = CustomCommand.BasicChatCommand("Giveaway User Joined", "You have been entered into the giveaway, stay tuned to see who wins!", isWhisper: true);
-            this.GiveawayWinnerSelectedCommand = CustomCommand.BasicChatCommand("Giveaway Winner Selected", "Congratulations @$username, you won! Type \"!claim\" in chat in the next 60 seconds to claim your prize!", isWhisper: true);
+            this.GiveawayWinnerSelectedCommand = CustomCommand.BasicChatCommand("Giveaway Winner Selected", "Congratulations @$username, you won $giveawayitem!");
 
             this.SongAddedCommand = CustomCommand.BasicChatCommand("Song Request Added", "$songtitle has been added to the queue", isWhisper: true);
             this.SongPlayedCommand = CustomCommand.BasicChatCommand("Song Request Played", "Now Playing: $songtitle");
