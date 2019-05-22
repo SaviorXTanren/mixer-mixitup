@@ -47,19 +47,23 @@ namespace MixItUp.Base.Commands
         [Name("Stream Tweet Retweet")]
         TwitterStreamTweetRetweet = 20,
 
-        [Name("New User Joined")]
+        [Name("Chat New User Joined")]
         MixerUserFirstJoin = 30,
         [Name("Channel Unfollowed")]
         MixerUserUnfollow = 31,
-        [Name("User Purged")]
+        [Name("Chat User Purged")]
         MixerUserPurge = 32,
-        [Name("User Timed Out")]
+        [Name("Chat User Timed Out")]
         [Obsolete]
         MixerUserTimeout = 33,
-        [Name("User Banned")]
+        [Name("Chat User Banned")]
         MixerUserBan = 34,
         [Name("Chat Message Received")]
         MixerChatMessage = 35,
+        [Name("Chat User Joined")]
+        MixerUserJoined = 36,
+        [Name("Chat User Left")]
+        MixerUserLeft = 37,
 
         [Name("Channel Stream Start")]
         MixerChannelStreamStart = 40,

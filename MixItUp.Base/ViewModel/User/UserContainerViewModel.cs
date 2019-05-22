@@ -118,7 +118,25 @@ namespace MixItUp.Base.ViewModel.User
 
                 return Task.FromResult(0);
             });
+
             await this.PerformUserFirstJoins(newUsers);
+
+            EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserJoined));
+            if (command != null)
+            {
+                foreach (UserViewModel user in allProcessedUsers.Values)
+                {
+                    if (user.IsInChat)
+                    {
+                        if (ChannelSession.Constellation.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserJoined)))
+                        {
+                            ChannelSession.Constellation.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserJoined));
+                            await ChannelSession.Constellation.RunEventCommand(command, user);
+                        }
+                    }
+                }
+            }
+
             return allProcessedUsers.Values;
         }
 
@@ -199,6 +217,23 @@ namespace MixItUp.Base.ViewModel.User
                 }
                 return Task.FromResult(0);
             });
+
+            EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserLeft));
+            if (command != null)
+            {
+                foreach (UserViewModel user in results)
+                {
+                    if (user.IsInChat)
+                    {
+                        if (ChannelSession.Constellation.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserLeft)))
+                        {
+                            ChannelSession.Constellation.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserLeft));
+                            await ChannelSession.Constellation.RunEventCommand(command, user);
+                        }
+                    }
+                }
+            }
+
             return results;
         }
 
@@ -236,14 +271,18 @@ namespace MixItUp.Base.ViewModel.User
         {
             try
             {
-                foreach (UserViewModel user in users)
+                EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserFirstJoin));
+                if (command != null)
                 {
-                    if (user.Data.ViewingMinutes == 0)
+                    foreach (UserViewModel user in users)
                     {
-                        if (ChannelSession.Constellation.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserFirstJoin)))
+                        if (user.Data.ViewingMinutes == 0)
                         {
-                            ChannelSession.Constellation.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserFirstJoin));
-                            await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserFirstJoin)), user);
+                            if (ChannelSession.Constellation.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserFirstJoin)))
+                            {
+                                ChannelSession.Constellation.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserFirstJoin));
+                                await ChannelSession.Constellation.RunEventCommand(command, user);
+                            }
                         }
                     }
                 }
