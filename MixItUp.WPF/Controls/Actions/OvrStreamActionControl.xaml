@@ -25,7 +25,7 @@
 
             <ComboBox x:Name="TypeComboBox" Grid.Column="0" SelectionChanged="TypeComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="Type" />
 
-            <TextBlock x:Name="OvrStreamNotEnabledWarningTextBlock" VerticalAlignment="Center" Grid.Column="2" Foreground="Red" HorizontalAlignment="Center" Visibility="Hidden">Please enable OvrStream in the Services Section!</TextBlock>
+            <TextBlock x:Name="OvrStreamNotEnabledWarningTextBlock" VerticalAlignment="Center" Grid.Column="2" Foreground="Red" HorizontalAlignment="Center" Visibility="Hidden">Please enable OvrStream on the Services page!</TextBlock>
         </Grid>
 
         <TextBox Grid.Row="2" x:Name="TitleNameTextBox" Width="200" MaterialDesign:HintAssist.Hint="OvrStream Title Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" TextChanged="TitleNameTextBox_TextChanged" PreviewKeyDown="TitleNameTextBox_PreviewKeyDown"/>

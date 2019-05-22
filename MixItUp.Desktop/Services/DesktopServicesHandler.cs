@@ -501,6 +501,22 @@ namespace MixItUp.Desktop.Services
             }
         }
 
+        public override Task<bool> InitializeIFITT(string key = null)
+        {
+            this.IFITT = (ChannelSession.Settings.IFITTOAuthToken != null) ? new IFITTService(ChannelSession.Settings.IFITTOAuthToken) : new IFITTService(key);
+            return Task.FromResult(true);
+        }
+
+        public override Task DisconnectIFITT()
+        {
+            if (this.IFITT != null)
+            {
+                this.IFITT = null;
+                ChannelSession.Settings.IFITTOAuthToken = null;
+            }
+            return Task.FromResult(0);
+        }
+
         private void OverlayServer_OnWebSocketConnectedOccurred(object sender, System.EventArgs e)
         {
             ChannelSession.ReconnectionOccurred("Overlay");
