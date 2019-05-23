@@ -288,13 +288,23 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public string NotificationChatMessageSoundFilePath { get; set; }
         [JsonProperty]
+        public int NotificationChatMessageSoundVolume { get; set; } = 100;
+        [JsonProperty]
         public string NotificationChatTaggedSoundFilePath { get; set; }
+        [JsonProperty]
+        public int NotificationChatTaggedSoundVolume { get; set; } = 100;
         [JsonProperty]
         public string NotificationChatWhisperSoundFilePath { get; set; }
         [JsonProperty]
+        public int NotificationChatWhisperSoundVolume { get; set; } = 100;
+        [JsonProperty]
         public string NotificationServiceConnectSoundFilePath { get; set; }
         [JsonProperty]
+        public int NotificationServiceConnectSoundVolume { get; set; } = 100;
+        [JsonProperty]
         public string NotificationServiceDisconnectSoundFilePath { get; set; }
+        [JsonProperty]
+        public int NotificationServiceDisconnectSoundVolume { get; set; } = 100;
 
         [JsonProperty]
         public int MaxMessagesInChat { get; set; } = 100;

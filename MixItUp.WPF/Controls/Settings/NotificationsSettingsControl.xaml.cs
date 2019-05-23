@@ -35,6 +35,12 @@ namespace MixItUp.WPF.Controls.Settings
             this.AssignSelectedItem(this.ChatWhisperComboBox, ChannelSession.Settings.NotificationChatWhisperSoundFilePath);
             this.AssignSelectedItem(this.ServiceConnectComboBox, ChannelSession.Settings.NotificationServiceConnectSoundFilePath);
             this.AssignSelectedItem(this.ServiceDisconnectComboBox, ChannelSession.Settings.NotificationServiceDisconnectSoundFilePath);
+
+            this.ChatMessageVolumeSlider.Value = ChannelSession.Settings.NotificationChatMessageSoundVolume;
+            this.ChatTaggedVolumeSlider.Value = ChannelSession.Settings.NotificationChatTaggedSoundVolume;
+            this.ChatWhisperVolumeSlider.Value = ChannelSession.Settings.NotificationChatWhisperSoundVolume;
+            this.ServiceConnectVolumeSlider.Value = ChannelSession.Settings.NotificationServiceConnectSoundVolume;
+            this.ServiceDisconnectVolumeSlider.Value = ChannelSession.Settings.NotificationServiceDisconnectSoundVolume;
         }
 
         protected override async Task InitializeInternal()
@@ -101,7 +107,7 @@ namespace MixItUp.WPF.Controls.Settings
         {
             if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatMessageSoundFilePath))
             {
-                ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatMessageSoundFilePath, 100);
+                ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatMessageSoundFilePath, ChannelSession.Settings.NotificationChatMessageSoundVolume);
             }
         }
 
@@ -117,7 +123,7 @@ namespace MixItUp.WPF.Controls.Settings
         {
             if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatTaggedSoundFilePath))
             {
-                ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatTaggedSoundFilePath, 100);
+                ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatTaggedSoundFilePath, ChannelSession.Settings.NotificationChatTaggedSoundVolume);
             }
         }
 
@@ -133,7 +139,7 @@ namespace MixItUp.WPF.Controls.Settings
         {
             if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatWhisperSoundFilePath))
             {
-                ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatWhisperSoundFilePath, 100);
+                ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatWhisperSoundFilePath, ChannelSession.Settings.NotificationChatWhisperSoundVolume);
             }
         }
 
@@ -149,7 +155,7 @@ namespace MixItUp.WPF.Controls.Settings
         {
             if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationServiceConnectSoundFilePath))
             {
-                ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationServiceConnectSoundFilePath, 100);
+                ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationServiceConnectSoundFilePath, ChannelSession.Settings.NotificationServiceConnectSoundVolume);
             }
         }
 
@@ -165,7 +171,7 @@ namespace MixItUp.WPF.Controls.Settings
         {
             if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationServiceDisconnectSoundFilePath))
             {
-                ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationServiceDisconnectSoundFilePath, 100);
+                ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationServiceDisconnectSoundFilePath, ChannelSession.Settings.NotificationServiceDisconnectSoundVolume);
             }
         }
 
@@ -175,6 +181,31 @@ namespace MixItUp.WPF.Controls.Settings
             {
                 ChannelSession.Settings.NotificationServiceDisconnectSoundFilePath = this.GetSoundFilePath(this.ServiceDisconnectComboBox, ChannelSession.Settings.NotificationServiceDisconnectSoundFilePath);
             }
+        }
+
+        private void ChatMessageVolumeSlider_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            ChannelSession.Settings.NotificationChatMessageSoundVolume = (int)this.ChatMessageVolumeSlider.Value;
+        }
+
+        private void ChatTaggedVolumeSlider_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            ChannelSession.Settings.NotificationChatTaggedSoundVolume = (int)this.ChatTaggedVolumeSlider.Value;
+        }
+
+        private void ChatWhisperVolumeSlider_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            ChannelSession.Settings.NotificationChatWhisperSoundVolume = (int)this.ChatWhisperVolumeSlider.Value;
+        }
+
+        private void ServiceConnectVolumeSlider_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            ChannelSession.Settings.NotificationServiceConnectSoundVolume = (int)this.ServiceConnectVolumeSlider.Value;
+        }
+
+        private void ServiceDisconnectVolumeSlider_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            ChannelSession.Settings.NotificationServiceDisconnectSoundVolume = (int)this.ServiceDisconnectVolumeSlider.Value;
         }
     }
 }
