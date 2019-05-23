@@ -185,7 +185,7 @@ namespace MixItUp.AutoHoster
                             this.CurrentlyHosting = new ChannelHostModel()
                             {
                                 ID = channel.userId,
-                                Name = channel.user.username,
+                                Name = channel.token,
                             };
                         }
                     }
