@@ -79,7 +79,7 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public OAuthTokenModel PatreonOAuthToken { get; set; }
         [JsonProperty]
-        public OAuthTokenModel IFITTOAuthToken { get; set; }
+        public OAuthTokenModel IFTTTOAuthToken { get; set; }
 
         [JsonProperty]
         public Dictionary<string, CommandGroupSettings> CommandGroups { get; set; }
@@ -641,9 +641,9 @@ namespace MixItUp.Desktop
             {
                 this.PatreonOAuthToken = ChannelSession.Services.Patreon.GetOAuthTokenCopy();
             }
-            if (ChannelSession.Services.IFITT != null)
+            if (ChannelSession.Services.IFTTT != null)
             {
-                this.IFITTOAuthToken = ChannelSession.Services.IFITT.Token;
+                this.IFTTTOAuthToken = ChannelSession.Services.IFTTT.Token;
             }
 
             this.currenciesInternal = this.Currencies.ToDictionary();

@@ -141,8 +141,8 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.StreamingPlatform:
                         this.actionControl = (this.action != null) ? new StreamingPlatformActionControl(this, (StreamingPlatformAction)this.action) : new StreamingPlatformActionControl(this);
                         break;
-                    case ActionTypeEnum.IFITT:
-                        this.actionControl = (this.action != null) ? new IFITTActionControl(this, (IFITTAction)this.action) : new IFITTActionControl(this);
+                    case ActionTypeEnum.IFTTT:
+                        this.actionControl = (this.action != null) ? new IFTTTActionControl(this, (IFTTTAction)this.action) : new IFTTTActionControl(this);
                         break;
                 }
             }

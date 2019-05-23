@@ -5,14 +5,14 @@ using System.Windows;
 
 namespace MixItUp.WPF.Controls.Actions
 {
-    public class IFITTEventValue
+    public class IFTTTEventValue
     {
         public string Name { get; set; }
         public string Value { get; set; }
 
-        public IFITTEventValue() { }
+        public IFTTTEventValue() { }
 
-        public IFITTEventValue(string name, string value)
+        public IFTTTEventValue(string name, string value)
         {
             this.Name = name;
             this.Value = value;
@@ -20,21 +20,21 @@ namespace MixItUp.WPF.Controls.Actions
     }
 
     /// <summary>
-    /// Interaction logic for IFITTActionControl.xaml
+    /// Interaction logic for IFTTTActionControl.xaml
     /// </summary>
-    public partial class IFITTActionControl : ActionControlBase
+    public partial class IFTTTActionControl : ActionControlBase
     {
-        private IFITTAction action;
+        private IFTTTAction action;
 
-        public IFITTActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
+        public IFTTTActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
 
-        public IFITTActionControl(ActionContainerControl containerControl, IFITTAction action) : this(containerControl) { this.action = action; }
+        public IFTTTActionControl(ActionContainerControl containerControl, IFTTTAction action) : this(containerControl) { this.action = action; }
 
         public override Task OnLoaded()
         {
-            if (ChannelSession.Services.IFITT == null)
+            if (ChannelSession.Services.IFTTT == null)
             {
-                this.IFITTNotEnabledWarningTextBlock.Visibility = Visibility.Visible;
+                this.IFTTTNotEnabledWarningTextBlock.Visibility = Visibility.Visible;
             }
 
             if (this.action != null)
@@ -51,7 +51,7 @@ namespace MixItUp.WPF.Controls.Actions
         {
             if (!string.IsNullOrEmpty(this.EventNameTextBox.Text))
             {
-                return new IFITTAction(this.EventNameTextBox.Text, this.EventValue1TextBox.Text, this.EventValue2TextBox.Text, this.EventValue3TextBox.Text);
+                return new IFTTTAction(this.EventNameTextBox.Text, this.EventValue1TextBox.Text, this.EventValue2TextBox.Text, this.EventValue3TextBox.Text);
             }
             return null;
         }

@@ -501,18 +501,18 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        public override Task<bool> InitializeIFITT(string key = null)
+        public override Task<bool> InitializeIFTTT(string key = null)
         {
-            this.IFITT = (ChannelSession.Settings.IFITTOAuthToken != null) ? new IFITTService(ChannelSession.Settings.IFITTOAuthToken) : new IFITTService(key);
+            this.IFTTT = (ChannelSession.Settings.IFTTTOAuthToken != null) ? new IFTTTService(ChannelSession.Settings.IFTTTOAuthToken) : new IFTTTService(key);
             return Task.FromResult(true);
         }
 
-        public override Task DisconnectIFITT()
+        public override Task DisconnectIFTTT()
         {
-            if (this.IFITT != null)
+            if (this.IFTTT != null)
             {
-                this.IFITT = null;
-                ChannelSession.Settings.IFITTOAuthToken = null;
+                this.IFTTT = null;
+                ChannelSession.Settings.IFTTTOAuthToken = null;
             }
             return Task.FromResult(0);
         }

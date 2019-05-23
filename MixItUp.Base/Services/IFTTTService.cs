@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
-    public interface IIFITTService
+    public interface IIFTTTService
     {
         OAuthTokenModel Token { get; }
 
         Task SendTrigger(string eventName, Dictionary<string, string> values);
     }
 
-    public class IFITTService : IIFITTService
+    public class IFTTTService : IIFTTTService
     {
         private const string WebHookURLFormat = "https://maker.ifttt.com/trigger/{0}/with/key/{1}";
 
@@ -24,9 +24,9 @@ namespace MixItUp.Base.Services
 
         public OAuthTokenModel Token { get { return new OAuthTokenModel() { accessToken = this.key }; } }
 
-        public IFITTService(OAuthTokenModel token) : this(token.accessToken) { }
+        public IFTTTService(OAuthTokenModel token) : this(token.accessToken) { }
 
-        public IFITTService(string key)
+        public IFTTTService(string key)
         {
             this.key = key;
         }

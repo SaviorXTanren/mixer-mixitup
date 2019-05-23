@@ -358,8 +358,8 @@
     <Compile Include="Controls\Actions\CurrencyActionControl.xaml.cs">
       <DependentUpon>CurrencyActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\IFITTActionControl.xaml.cs">
-      <DependentUpon>IFITTActionControl.xaml</DependentUpon>
+    <Compile Include="Controls\Actions\IFTTTActionControl.xaml.cs">
+      <DependentUpon>IFTTTActionControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Actions\OvrStreamActionControl.xaml.cs">
       <DependentUpon>OvrStreamActionControl.xaml</DependentUpon>
@@ -1015,7 +1015,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\IFITTActionControl.xaml">
+    <Page Include="Controls\Actions\IFTTTActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -64,7 +64,7 @@ namespace MixItUp.Base.Actions
         OvrStream,
         [Name("Streaming Platform")]
         StreamingPlatform,
-        IFITT,
+        IFTTT,
 
         Custom = 99,
     }

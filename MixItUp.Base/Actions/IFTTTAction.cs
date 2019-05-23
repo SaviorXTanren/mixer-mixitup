@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 namespace MixItUp.Base.Actions
 {
     [DataContract]
-    public class IFITTAction : ActionBase
+    public class IFTTTAction : ActionBase
     {
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
-        protected override SemaphoreSlim AsyncSemaphore { get { return IFITTAction.asyncSemaphore; } }
+        protected override SemaphoreSlim AsyncSemaphore { get { return IFTTTAction.asyncSemaphore; } }
 
         [DataMember]
         public string EventName { get; set; }
@@ -23,9 +23,9 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public string EventValue3 { get; set; }
 
-        public IFITTAction() : base(ActionTypeEnum.IFITT) { }
+        public IFTTTAction() : base(ActionTypeEnum.IFTTT) { }
 
-        public IFITTAction(string eventName, string eventValue1, string eventValue2, string eventValue3)
+        public IFTTTAction(string eventName, string eventValue1, string eventValue2, string eventValue3)
             : this()
         {
             this.EventName = eventName;
@@ -36,7 +36,7 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.Services.IFITT != null)
+            if (ChannelSession.Services.IFTTT != null)
             {
                 Dictionary<string, string> values = new Dictionary<string, string>();
                 if (!string.IsNullOrEmpty(this.EventValue1))
@@ -51,7 +51,7 @@ namespace MixItUp.Base.Actions
                 {
                     values["value3"] = await this.ReplaceStringWithSpecialModifiers(this.EventValue3, user, arguments);
                 }
-                await ChannelSession.Services.IFITT.SendTrigger(this.EventName, values);
+                await ChannelSession.Services.IFTTT.SendTrigger(this.EventName, values);
             }
         }
     }

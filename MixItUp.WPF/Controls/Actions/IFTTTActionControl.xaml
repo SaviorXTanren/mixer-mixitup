@@ -1,4 +1,4 @@
-﻿<local:ActionControlBase x:Class="MixItUp.WPF.Controls.Actions.IFITTActionControl"
+﻿<local:ActionControlBase x:Class="MixItUp.WPF.Controls.Actions.IFTTTActionControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -23,7 +23,7 @@
 
             <TextBox x:Name="EventNameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Web Hook Event Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="250" />
 
-            <TextBlock x:Name="IFITTNotEnabledWarningTextBlock" Grid.Column="2" Foreground="Red" HorizontalAlignment="Center" Margin="0,10,0,0" Visibility="Collapsed">Please enable IFITT connection on the Services page!</TextBlock>
+            <TextBlock x:Name="IFTTTNotEnabledWarningTextBlock" Grid.Column="2" Foreground="Red" HorizontalAlignment="Center" Margin="0,10,0,0" Visibility="Collapsed">Please enable IFTTT connection on the Services page!</TextBlock>
         </Grid>
 
         <Grid Grid.Row="2">
