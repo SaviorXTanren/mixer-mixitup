@@ -35,7 +35,11 @@ namespace MixItUp.Base.ViewModel.Requirement
             return null;
         }
 
-        public bool TrySubtractAmount(UserDataViewModel userData)
+        public bool TrySubtractAmount(UserDataViewModel userData) { return this.TrySubtractAmount(userData, this.Amount); }
+
+        public bool TrySubtractMultiplierAmount(UserDataViewModel userData, int multiplier) { return this.TrySubtractAmount(userData, multiplier * this.Amount); }
+
+        public bool TrySubtractAmount(UserDataViewModel userData, int amount)
         {
             if (this.DoesMeetRequirement(userData))
             {
@@ -45,11 +49,11 @@ namespace MixItUp.Base.ViewModel.Requirement
                     return false;
                 }
 
-                if (!userData.HasInventoryAmount(inventory, this.ItemName, this.Amount))
+                if (!userData.HasInventoryAmount(inventory, this.ItemName, amount))
                 {
                     return false;
                 }
-                userData.SubtractInventoryAmount(inventory, this.ItemName, this.Amount);
+                userData.SubtractInventoryAmount(inventory, this.ItemName, amount);
                 return true;
             }
             return false;

@@ -96,6 +96,8 @@ namespace MixItUp.Base.ViewModel.Requirement
 
         public bool TrySubtractAmount(UserDataViewModel userData) { return this.TrySubtractAmount(userData, this.RequiredAmount); }
 
+        public bool TrySubtractMultiplierAmount(UserDataViewModel userData, int multiplier) { return this.TrySubtractAmount(userData, multiplier * this.RequiredAmount); }
+
         public bool TrySubtractAmount(UserDataViewModel userData, int amount)
         {
             if (this.DoesMeetCurrencyRequirement(amount))

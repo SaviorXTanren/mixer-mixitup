@@ -491,9 +491,10 @@ namespace MixItUp.WPF.Controls.MainControls
 
                         if (ChannelSession.Settings.GiveawayRequirements.Inventory != null)
                         {
-                            if (!ChannelSession.Settings.GiveawayRequirements.TrySubtractInventoryAmount(message.User))
+                            int totalAmount = ChannelSession.Settings.GiveawayRequirements.Inventory.Amount * entries;
+                            if (!ChannelSession.Settings.GiveawayRequirements.TrySubtractInventoryAmount(message.User, totalAmount))
                             {
-                                await ChannelSession.Settings.GiveawayRequirements.Inventory.SendNotMetWhisper(message.User);
+                                await ChannelSession.Chat.Whisper(message.User.UserName, string.Format("You do not have the required {0} {1} to do this", totalAmount, ChannelSession.Settings.GiveawayRequirements.Inventory.GetInventory().Name));
                                 return;
                             }
                         }
