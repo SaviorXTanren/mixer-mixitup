@@ -65,7 +65,7 @@ namespace MixItUp.WPF.Controls.Settings
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                string filePath = ChannelSession.Services.FileService.ShowSaveFileDialog(ChannelSession.Settings.Channel.user.username + ".mixitup");
+                string filePath = ChannelSession.Services.FileService.ShowSaveFileDialog(ChannelSession.Settings.Channel.token + ".mixitup");
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     await ChannelSession.Services.Settings.SavePackagedBackup(ChannelSession.Settings, filePath);

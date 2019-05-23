@@ -94,9 +94,9 @@ namespace MixItUp.WPF
                 this.Title += " - Moderator";
             }
 
-            if (!string.IsNullOrEmpty(ChannelSession.Channel?.user?.username))
+            if (!string.IsNullOrEmpty(ChannelSession.Channel?.token))
             {
-                this.Title += " - " + ChannelSession.Channel.user.username;
+                this.Title += " - " + ChannelSession.Channel.token;
             }
 
             this.Title += " - v" + Assembly.GetEntryAssembly().GetName().Version.ToString();
