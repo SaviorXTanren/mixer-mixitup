@@ -15,12 +15,16 @@
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
 
              d:DesignHeight="300" d:DesignWidth="300">
+    <local:MainControlBase.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </local:MainControlBase.Resources>
+    
     <Grid>
-        <Grid x:Name="NoCurrenciesGrid" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Visible">
+        <Grid Visibility="{Binding NoCurrenciesMade, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center">
             <TextBlock Style="{StaticResource HeaderTextBlock}">At least 1 currency must be created before Games can be used</TextBlock>
         </Grid>
 
-        <Grid x:Name="GamesGrid" Visibility="Collapsed">
+        <Grid Visibility="{Binding CurrenciesExist, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="20" />
@@ -28,7 +32,7 @@
                 <RowDefinition Height="10" />
             </Grid.RowDefinitions>
 
-            <DataGrid x:Name="GameCommandsListView" Grid.Row="0" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
+            <DataGrid ItemsSource="{Binding GameCommands}" Grid.Row="0" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Header="Name" Width="*">
                         <DataGridTemplateColumn.CellTemplate>
@@ -55,7 +59,7 @@
             </DataGrid>
 
             <Grid Grid.Row="2" HorizontalAlignment="Center">
-                <Button x:Name="AddGameButton" Click="AddGameButton_Click" Width="100">New Game</Button>
+                <Button Click="AddGameButton_Click" Width="100">New Game</Button>
             </Grid>
 
         </Grid>
