@@ -302,6 +302,9 @@ namespace MixItUp.Base.Services
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
                     string responseString = await response.Content.ReadAsStringAsync();
+
+                    Logger.LogDiagnostic(string.Format("Spotify Log: {0} - {1}", response.RequestMessage.ToString(), responseString));
+
                     JObject jobj = JObject.Parse(responseString);
                     return new SpotifyCurrentlyPlayingModel(jobj);
                 }
@@ -314,7 +317,12 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                await this.PutAsync("me/player/play", null);
+                HttpResponseMessage response = await this.PutAsync("me/player/play", null);
+                if (ChannelSession.Settings.DiagnosticLogging)
+                {
+                    string responseString = await response.Content.ReadAsStringAsync();
+                    Logger.LogDiagnostic(string.Format("Spotify Log: {0} - {1}", response.RequestMessage.ToString(), responseString));
+                }
             }
             catch (Exception ex) { Logger.Log(ex); }
         }
@@ -323,7 +331,12 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                await this.PutAsync("me/player/pause", null);
+                HttpResponseMessage response = await this.PutAsync("me/player/pause", null);
+                if (ChannelSession.Settings.DiagnosticLogging)
+                {
+                    string responseString = await response.Content.ReadAsStringAsync();
+                    Logger.LogDiagnostic(string.Format("Spotify Log: {0} - {1}", response.RequestMessage.ToString(), responseString));
+                }
             }
             catch (Exception ex) { Logger.Log(ex); }
         }
@@ -332,7 +345,12 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                await this.PostAsync("me/player/next", null);
+                HttpResponseMessage response = await this.PostAsync("me/player/next", null);
+                if (ChannelSession.Settings.DiagnosticLogging)
+                {
+                    string responseString = await response.Content.ReadAsStringAsync();
+                    Logger.LogDiagnostic(string.Format("Spotify Log: {0} - {1}", response.RequestMessage.ToString(), responseString));
+                }
             }
             catch (Exception ex) { Logger.Log(ex); }
         }
@@ -393,6 +411,12 @@ namespace MixItUp.Base.Services
 
                 HttpResponseMessage response = await this.PutAsync("me/player/play", this.CreateContentFromObject(payload));
                 await Task.Delay(250);
+
+                if (ChannelSession.Settings.DiagnosticLogging)
+                {
+                    string responseString = await response.Content.ReadAsStringAsync();
+                    Logger.LogDiagnostic(string.Format("Spotify Log: {0} - {1}", response.RequestMessage.ToString(), responseString));
+                }
 
                 await this.DisableRepeat();
 
