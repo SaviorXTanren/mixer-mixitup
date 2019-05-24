@@ -344,6 +344,16 @@ namespace MixItUp.Desktop.Services
 
                 settings.GiveawayStartedReminderCommand = CustomCommand.BasicChatCommand("Giveaway Started/Reminder", "A giveaway has started for $giveawayitem! Type $giveawaycommand in chat in the next $giveawaytimelimit minute(s) to enter!");
 
+                foreach (GameCommandBase command in settings.GameCommands)
+                {
+                    if (command is CoinPusherGameCommand)
+                    {
+                        CoinPusherGameCommand coinPusherCommand = (CoinPusherGameCommand)command;
+                        coinPusherCommand.PayoutPercentageMinimum *= 100.0;
+                        coinPusherCommand.PayoutPercentageMaximum *= 100.0;
+                    }
+                }
+
                 await ChannelSession.Services.Settings.Save(settings);
             }
         }
