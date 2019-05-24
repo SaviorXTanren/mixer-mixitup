@@ -37,20 +37,20 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="MinimumParticipantsTextBox" Grid.Column="0" Width="70" MaterialDesign:HintAssist.Hint="Min Users" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding MinimumParticipantsString}" Grid.Column="0" Width="70" MaterialDesign:HintAssist.Hint="Min Users" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox x:Name="TimeLimitTextBox" Grid.Column="2" Width="70" MaterialDesign:HintAssist.Hint="Time Limit" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding TimeLimitString}" Grid.Column="2" Width="70" MaterialDesign:HintAssist.Hint="Time Limit" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <GroupBox Grid.Column="6" Header="Game Start">
-                <CommandControls:CommandButtonsControl x:Name="GameStartCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl DataContext="{Binding StartedCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
             </GroupBox>
 
             <GroupBox Grid.Column="8" Header="User Joined">
-                <CommandControls:CommandButtonsControl x:Name="UserJoinedCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl DataContext="{Binding UserJoinCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
 
             <GroupBox Grid.Column="10" Header="Hitman Approaching">
-                <CommandControls:CommandButtonsControl x:Name="HitmanApproachingCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl DataContext="{Binding HitmanApproachingCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
         </Grid>
 
@@ -65,18 +65,18 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="HitmanTimeLimitTextBox" Grid.Column="0" Width="100" MaterialDesign:HintAssist.Hint="Hitman Time Limit" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding HitmanTimeLimitString}" Grid.Column="0" Width="100" MaterialDesign:HintAssist.Hint="Hitman Time Limit" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <GroupBox Grid.Column="2" Header="Hitman Appears">
-                <CommandControls:CommandButtonsControl x:Name="HitmanAppearsCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl DataContext="{Binding HitmanAppearsCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
 
             <GroupBox Grid.Column="4" Header="User Wins">
-                <CommandControls:CommandButtonsControl x:Name="SuccessOutcomeCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl DataContext="{Binding UserSuccessCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
 
             <GroupBox Grid.Column="6" Header="All Fail">
-                <CommandControls:CommandButtonsControl x:Name="FailOutcomeCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl DataContext="{Binding UserFailCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
         </Grid>
 
@@ -87,8 +87,8 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" Grid.Row="0" x:Name="CustomHitmanNamesFilePathTextBox" MaterialDesign:HintAssist.Hint="Custom Hitman Names File (One Name Per Line)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="400" />
-            <Button Grid.Column="2" Grid.Row="0" x:Name="CustomHitmanNamesFileBrowseButton" VerticalAlignment="Bottom" Click="CustomHitmanNamesFileBrowseButton_Click">Browse</Button>
+            <TextBox Grid.Column="0" Grid.Row="0" Text="{Binding CustomHitmanNamesFilePath}" MaterialDesign:HintAssist.Hint="Custom Hitman Names File (One Name Per Line)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="400" />
+            <Button Grid.Column="2" Grid.Row="0" Command="{Binding BrowseCustomHitmanNamesFilePathCommand}" VerticalAlignment="Bottom">Browse</Button>
         </Grid>
     </Grid>
 </local:GameEditorControlBase>
