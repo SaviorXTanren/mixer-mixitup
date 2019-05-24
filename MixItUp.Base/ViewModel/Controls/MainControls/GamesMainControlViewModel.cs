@@ -1,14 +1,15 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.ViewModel.Window;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Controls.MainControls
 {
     public class GamesMainControlViewModel : MainControlViewModelBase
     {
-        public bool NoCurrenciesMade { get { return ChannelSession.Settings.Currencies.Count == 0; } }
-        public bool CurrenciesExist { get { return !this.NoCurrenciesMade; } }
+        public bool CurrenciesExist { get { return ChannelSession.Settings.Currencies.Values.Any(c => !c.IsRank); } }
+        public bool NoCurrenciesMade { get { return !this.CurrenciesExist; } }
 
         public ObservableCollection<GameCommandBase> GameCommands { get; private set; } = new ObservableCollection<GameCommandBase>();
 

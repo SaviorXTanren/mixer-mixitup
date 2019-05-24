@@ -1,6 +1,8 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -23,6 +25,8 @@ namespace MixItUp.Base.ViewModel.Window.Command
         public event EventHandler<GameTypeListing> GameTypeSelected;
 
         public GameCommandBase GameCommand { get; private set; }
+
+        public UserCurrencyViewModel DefaultCurrency { get; private set; }
 
         public ObservableCollection<GameTypeListing> GameListings { get; private set; } = new ObservableCollection<GameTypeListing>();
         public GameTypeListing SelectedGameType
@@ -50,6 +54,12 @@ namespace MixItUp.Base.ViewModel.Window.Command
 
         public GameCommandWindowViewModel()
         {
+            this.DefaultCurrency = ChannelSession.Settings.Currencies.Values.FirstOrDefault(c => !c.IsRank && c.IsPrimary);
+            if (this.DefaultCurrency == null)
+            {
+                this.DefaultCurrency = ChannelSession.Settings.Currencies.Values.FirstOrDefault(c => !c.IsRank);
+            }
+
             this.GameListings.Add(new GameTypeListing("Spin", "The Spin game picks a random number and selects an outcome based on that number. Besides selecting a payout for each outcome, you can also run a customized command for each outcome."
                 + Environment.NewLine + Environment.NewLine + "\tEX: !spin 100"));
             this.GameListings.Add(new GameTypeListing("Slot Machine", "The Slot Machine game picks a random set of 3 symbols from a pre-defined list and selects any outcome that matches those symbols. Besides selecting a payout for each outcome, you can also run a customized command for each outcome."
