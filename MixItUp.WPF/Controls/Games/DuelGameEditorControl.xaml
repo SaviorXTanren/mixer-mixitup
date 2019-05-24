@@ -30,10 +30,10 @@
             </Grid.ColumnDefinitions>
 
             <GroupBox Grid.Column="0" Header="Duel Started">
-                <CommandControls:CommandButtonsControl x:Name="DuelStartedCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl DataContext="{Binding StartedCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
 
-            <TextBox x:Name="TimeLimitTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Time Limit (Seconds)" Width="120" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding TimeLimit}" Grid.Column="2" MaterialDesign:HintAssist.Hint="Time Limit (Seconds)" Width="120" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid Grid.Row="4" HorizontalAlignment="Center">
@@ -45,11 +45,11 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="UserPercentageTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="User Chance %" Width="85" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding UserPercentageString}" Grid.Column="0" MaterialDesign:HintAssist.Hint="User Chance %" Width="85" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox x:Name="SubscriberPercentageTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Sub Chance %" Width="85" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding SubscriberPercentageString}" Grid.Column="2" MaterialDesign:HintAssist.Hint="Sub Chance %" Width="85" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox x:Name="ModPercentageTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Mod Chance %" Width="85" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding ModPercentageString}" Grid.Column="4" MaterialDesign:HintAssist.Hint="Mod Chance %" Width="85" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid Grid.Row="6" HorizontalAlignment="Center">
@@ -60,11 +60,11 @@
             </Grid.ColumnDefinitions>
 
             <GroupBox Grid.Column="0" Header="Challenger Wins">
-                <CommandControls:CommandButtonsControl x:Name="SuccessOutcomeCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl DataContext="{Binding SuccessOutcomeCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
 
             <GroupBox Grid.Column="2" Header="Challenger Loses">
-                <CommandControls:CommandButtonsControl x:Name="FailOutcomeCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl DataContext="{Binding FailOutcomeCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
         </Grid>
     </Grid>
