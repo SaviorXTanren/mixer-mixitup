@@ -35,16 +35,16 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="MinimumParticipantsTextBox" Grid.Column="0" Width="70" MaterialDesign:HintAssist.Hint="Min Users" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding MinimumParticipantsString}" Grid.Column="0" Width="70" MaterialDesign:HintAssist.Hint="Min Users" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox x:Name="TimeLimitTextBox" Grid.Column="2" Width="70" MaterialDesign:HintAssist.Hint="Time Limit" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding TimeLimitString}" Grid.Column="2" Width="70" MaterialDesign:HintAssist.Hint="Time Limit" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <GroupBox Grid.Column="4" Header="Game Start">
-                <CommandControls:CommandButtonsControl x:Name="GameStartCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl DataContext="{Binding StartedCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
 
             <GroupBox Grid.Column="6" Header="User Joined">
-                <CommandControls:CommandButtonsControl x:Name="UserJoinedCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl DataContext="{Binding UserJoinCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
         </Grid>
 
@@ -71,25 +71,25 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBox x:Name="UserPayoutTextBox" Grid.Column="0" Grid.Row="0" Width="85" MaterialDesign:HintAssist.Hint="User Payout %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Text="{Binding UserPayoutString}" Grid.Column="0" Grid.Row="0" Width="85" MaterialDesign:HintAssist.Hint="User Payout %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                <TextBox x:Name="SubscriberPayoutTextBox" Grid.Column="2" Grid.Row="0" Width="85" MaterialDesign:HintAssist.Hint="Sub Payout %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Text="{Binding SubscriberPayoutString}" Grid.Column="2" Grid.Row="0" Width="85" MaterialDesign:HintAssist.Hint="Sub Payout %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                <TextBox x:Name="ModPayoutTextBox" Grid.Column="4" Grid.Row="0" Width="85" MaterialDesign:HintAssist.Hint="Mod Payout %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Text="{Binding ModPayoutString}" Grid.Column="4" Grid.Row="0" Width="85" MaterialDesign:HintAssist.Hint="Mod Payout %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                <TextBox x:Name="UserPercentageTextBox" Grid.Column="0" Grid.Row="2" Width="85" MaterialDesign:HintAssist.Hint="User Chance %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Text="{Binding UserProbabilityString}" Grid.Column="0" Grid.Row="2" Width="85" MaterialDesign:HintAssist.Hint="User Chance %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                <TextBox x:Name="SubscriberPercentageTextBox" Grid.Column="2" Grid.Row="2" Width="85" MaterialDesign:HintAssist.Hint="Sub Chance %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Text="{Binding SubscriberProbabilityString}" Grid.Column="2" Grid.Row="2" Width="85" MaterialDesign:HintAssist.Hint="Sub Chance %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                <TextBox x:Name="ModPercentageTextBox" Grid.Column="4" Grid.Row="2" Width="85" MaterialDesign:HintAssist.Hint="Mod Chance %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Text="{Binding ModProbabilityString}" Grid.Column="4" Grid.Row="2" Width="85" MaterialDesign:HintAssist.Hint="Mod Chance %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
             </Grid>
 
             <GroupBox Grid.Column="2" Header="User Success">
-                <CommandControls:CommandButtonsControl x:Name="SuccessOutcomeCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl DataContext="{Binding UserSuccessCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
 
             <GroupBox Grid.Column="4" Header="User Failure">
-                <CommandControls:CommandButtonsControl x:Name="FailOutcomeCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl DataContext="{Binding UserFailCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
         </Grid>
 
@@ -107,23 +107,23 @@
             </Grid.ColumnDefinitions>
 
             <GroupBox Grid.Column="0" Header="All Succeed">
-                <CommandControls:CommandButtonsControl x:Name="AllSucceedCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl DataContext="{Binding AllSucceedCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
 
             <GroupBox Grid.Column="2" Header="99% - 66% Succeed">
-                <CommandControls:CommandButtonsControl x:Name="TopThirdsSucceedCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl DataContext="{Binding TopThirdsSucceedCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
 
             <GroupBox Grid.Column="4" Header="65% - 33% Succeed">
-                <CommandControls:CommandButtonsControl x:Name="MiddleThirdsSucceedCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl DataContext="{Binding MiddleThirdsSucceedCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
 
             <GroupBox Grid.Column="6" Header="33% - 1% Succeed">
-                <CommandControls:CommandButtonsControl x:Name="BottomThirdsSucceedCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl DataContext="{Binding LowThirdsSucceedCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
 
             <GroupBox Grid.Column="8" Header="All Failed">
-                <CommandControls:CommandButtonsControl x:Name="NoneSucceedCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl DataContext="{Binding NoneSucceedCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
         </Grid>
     </Grid>

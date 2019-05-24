@@ -63,7 +63,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         public CustomCommand UserJoinedCommand { get; private set; }
         public CustomCommand GameCompleteCommand { get; private set; }
 
-        private BidGameCommand command;
+        private BidGameCommand existingCommand;
 
         public BidGameControlViewModel(UserCurrencyViewModel currency)
         {
@@ -74,15 +74,15 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         public BidGameControlViewModel(BidGameCommand command)
         {
-            this.command = command;
+            this.existingCommand = command;
 
-            this.WhoCanStart = this.command.GameStarterRequirement.MixerRole;
-            this.MinUsers = this.command.MinimumParticipants;
-            this.TimeLimit = this.command.TimeLimit;
+            this.WhoCanStart = this.existingCommand.GameStarterRequirement.MixerRole;
+            this.MinUsers = this.existingCommand.MinimumParticipants;
+            this.TimeLimit = this.existingCommand.TimeLimit;
 
-            this.StartedCommand = this.command.StartedCommand;
-            this.UserJoinedCommand = this.command.UserJoinCommand;
-            this.GameCompleteCommand = this.command.GameCompleteCommand;
+            this.StartedCommand = this.existingCommand.StartedCommand;
+            this.UserJoinedCommand = this.existingCommand.UserJoinCommand;
+            this.GameCompleteCommand = this.existingCommand.GameCompleteCommand;
         }
 
         public override void SaveGameCommand(string name, IEnumerable<string> triggers, RequirementViewModel requirements)
@@ -90,10 +90,10 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             RoleRequirementViewModel starterRequirement = new RoleRequirementViewModel(this.WhoCanStart);
             GameCommandBase newCommand = new BidGameCommand(name, triggers, requirements, this.MinUsers, this.TimeLimit, starterRequirement,
                 this.StartedCommand, this.UserJoinedCommand, this.GameCompleteCommand);
-            if (this.command != null)
+            if (this.existingCommand != null)
             {
-                ChannelSession.Settings.GameCommands.Remove(this.command);
-                newCommand.ID = this.command.ID;
+                ChannelSession.Settings.GameCommands.Remove(this.existingCommand);
+                newCommand.ID = this.existingCommand.ID;
             }
             ChannelSession.Settings.GameCommands.Add(newCommand);
         }
