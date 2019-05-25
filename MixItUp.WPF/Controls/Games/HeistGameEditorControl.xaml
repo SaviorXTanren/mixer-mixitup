@@ -46,6 +46,10 @@
             <GroupBox Grid.Column="6" Header="User Joined">
                 <CommandControls:CommandButtonsControl DataContext="{Binding UserJoinCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
+
+            <GroupBox Grid.Column="8" Header="Not Enough Players">
+                <CommandControls:CommandButtonsControl DataContext="{Binding NotEnoughPlayersCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+            </GroupBox>
         </Grid>
 
         <Grid Grid.Row="4" HorizontalAlignment="Center">

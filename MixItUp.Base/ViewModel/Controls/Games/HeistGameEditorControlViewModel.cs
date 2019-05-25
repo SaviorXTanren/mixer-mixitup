@@ -100,6 +100,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         public CustomCommand StartedCommand { get; set; }
 
         public CustomCommand UserJoinCommand { get; set; }
+        public CustomCommand NotEnoughPlayersCommand { get; set; }
 
         public CustomCommand UserSuccessCommand { get; set; }
         public CustomCommand UserFailCommand { get; set; }
@@ -117,6 +118,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             this.StartedCommand = this.CreateBasicChatCommand("@$username has started a game of Heist! Type !heist <AMOUNT> to join in!");
 
             this.UserJoinCommand = this.CreateBasicChatCommand("You've joined in the heist! Let's see how it turns out...", whisper: true);
+            this.NotEnoughPlayersCommand = this.CreateBasicChatCommand("@$username couldn't get enough users to join in...");
 
             this.UserSuccessCommand = this.CreateBasicChatCommand("Congrats, you made out with $gamepayout " + currency.Name + "!", whisper: true);
             this.UserFailCommand = this.CreateBasicChatCommand("The cops caught you before you could make it out! Better luck next time...", whisper: true);
@@ -167,7 +169,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
             GameCommandBase newCommand = new HeistGameCommand(name, triggers, requirements, this.MinimumParticipants, this.TimeLimit, this.StartedCommand, this.UserJoinCommand,
                 new GameOutcome("Success", successRolePayouts, successRoleProbabilities, this.UserSuccessCommand), new GameOutcome("Failure", 0, failRoleProbabilities, this.UserFailCommand),
-                this.AllSucceedCommand, this.TopThirdsSucceedCommand, this.MiddleThirdsSucceedCommand, this.LowThirdsSucceedCommand, this.NoneSucceedCommand);
+                this.AllSucceedCommand, this.TopThirdsSucceedCommand, this.MiddleThirdsSucceedCommand, this.LowThirdsSucceedCommand, this.NoneSucceedCommand, this.NotEnoughPlayersCommand);
             if (this.existingCommand != null)
             {
                 ChannelSession.Settings.GameCommands.Remove(this.existingCommand);

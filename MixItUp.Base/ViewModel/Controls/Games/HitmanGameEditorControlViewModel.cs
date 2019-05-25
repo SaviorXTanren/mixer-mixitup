@@ -57,6 +57,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         public CustomCommand StartedCommand { get; set; }
 
         public CustomCommand UserJoinCommand { get; set; }
+        public CustomCommand NotEnoughPlayersCommand { get; set; }
 
         public CustomCommand HitmanApproachingCommand { get; set; }
         public CustomCommand HitmanAppearsCommand { get; set; }
@@ -74,6 +75,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             this.StartedCommand = this.CreateBasicChatCommand("@$username has started a game of hitman! Type !hitman in chat to play!");
 
             this.UserJoinCommand = this.CreateBasicChatCommand("You assemble with everyone else, patiently waiting for the hitman to appear...", whisper: true);
+            this.NotEnoughPlayersCommand = this.CreateBasicChatCommand("@$username couldn't get enough users to join in...");
 
             this.HitmanApproachingCommand = this.CreateBasicChatCommand("You can feel the presence of the hitman approaching. Get ready...");
             this.HitmanAppearsCommand = this.CreateBasicChatCommand("It's hitman $gamehitmanname! Quick, type $gamehitmanname in chat!");
@@ -122,7 +124,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
             GameCommandBase newCommand = new HitmanGameCommand(name, triggers, requirements, this.MinimumParticipants, this.TimeLimit, this.CustomHitmanNamesFilePath, this.HitmanTimeLimit,
                 this.StartedCommand, this.UserJoinCommand, this.HitmanApproachingCommand, this.HitmanAppearsCommand, new GameOutcome("Success", 0, roleProbabilities, this.UserSuccessCommand),
-                new GameOutcome("Failure", 0, roleProbabilities, this.UserFailCommand));
+                new GameOutcome("Failure", 0, roleProbabilities, this.UserFailCommand), this.NotEnoughPlayersCommand);
             if (this.existingCommand != null)
             {
                 ChannelSession.Settings.GameCommands.Remove(this.existingCommand);

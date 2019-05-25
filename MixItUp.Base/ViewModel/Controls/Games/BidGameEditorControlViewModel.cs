@@ -47,6 +47,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         public CustomCommand StartedCommand { get; set; }
         public CustomCommand UserJoinedCommand { get; set; }
+        public CustomCommand NotEnoughPlayersCommand { get; set; }
         public CustomCommand GameCompleteCommand { get; set; }
 
         private BidGameCommand existingCommand;
@@ -55,6 +56,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         {
             this.StartedCommand = this.CreateBasicChatCommand("@$username has started a bidding war starting at $gamebet " + currency.Name + " for...SOMETHING! Type !bid <AMOUNT> in chat to outbid them!");
             this.UserJoinedCommand = this.CreateBasicChatCommand("@$username has become the top bidder with $gamebet " + currency.Name + "! Type !bid <AMOUNT> in chat to outbid them!");
+            this.NotEnoughPlayersCommand = this.CreateBasicChatCommand("@$username couldn't get enough users to join in...");
             this.GameCompleteCommand = this.CreateBasicChatCommand("$gamewinners won the bidding war with a bid of $gamebet " + currency.Name + "! Listen closely for how to claim your prize...");
         }
 
@@ -75,7 +77,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         {
             RoleRequirementViewModel starterRequirement = new RoleRequirementViewModel(this.WhoCanStart);
             GameCommandBase newCommand = new BidGameCommand(name, triggers, requirements, this.MinimumParticipants, this.TimeLimit, starterRequirement,
-                this.StartedCommand, this.UserJoinedCommand, this.GameCompleteCommand);
+                this.StartedCommand, this.UserJoinedCommand, this.GameCompleteCommand, this.NotEnoughPlayersCommand);
             if (this.existingCommand != null)
             {
                 ChannelSession.Settings.GameCommands.Remove(this.existingCommand);

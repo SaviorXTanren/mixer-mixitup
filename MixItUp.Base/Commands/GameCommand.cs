@@ -484,6 +484,9 @@ namespace MixItUp.Base.Commands
         [DataMember]
         public GameOutcome UserFailOutcome { get; set; }
 
+        [DataMember]
+        public CustomCommand NotEnoughPlayersCommand { get; set; }
+
         [JsonIgnore]
         protected UserViewModel starterUser;
         [JsonIgnore]
@@ -494,7 +497,7 @@ namespace MixItUp.Base.Commands
         public GroupGameCommand() { }
 
         public GroupGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int minimumParticipants, int timeLimit, CustomCommand startedCommand,
-            CustomCommand userJoinCommand, GameOutcome userSuccessOutcome, GameOutcome userFailOutcome)
+            CustomCommand userJoinCommand, GameOutcome userSuccessOutcome, GameOutcome userFailOutcome, CustomCommand notEnoughPlayersCommand)
             : base(name, commands, requirements)
         {
             this.MinimumParticipants = minimumParticipants;
@@ -503,6 +506,7 @@ namespace MixItUp.Base.Commands
             this.UserJoinCommand = userJoinCommand;
             this.UserSuccessOutcome = userSuccessOutcome;
             this.UserFailOutcome = userFailOutcome;
+            this.NotEnoughPlayersCommand = notEnoughPlayersCommand;
         }
 
         public override IEnumerable<CommandBase> GetAllInnerCommands()
@@ -602,7 +606,11 @@ namespace MixItUp.Base.Commands
             {
                 enteredUser.Key.Data.AddCurrencyAmount(currency, enteredUser.Value);
             }
-            await ChannelSession.Chat.SendMessage(string.Format("@{0} couldn't get enough users to join in...", this.starterUser.UserName));
+            
+            if (this.NotEnoughPlayersCommand != null)
+            {
+                await this.NotEnoughPlayersCommand.Perform(this.starterUser);
+            }
         }
 
         protected virtual Task SelectWinners() { return Task.FromResult(0); }
@@ -1083,8 +1091,8 @@ namespace MixItUp.Base.Commands
 
         public HeistGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int minimumParticipants, int timeLimit, CustomCommand startedCommand,
             CustomCommand userJoinCommand, GameOutcome userSuccessOutcome, GameOutcome userFailOutcome, CustomCommand allSucceedCommand, CustomCommand topThirdsSucceedCommand,
-            CustomCommand middleThirdsSucceedCommand, CustomCommand lowThirdsSucceedCommand, CustomCommand noneSucceedCommand)
-            : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, userSuccessOutcome, userFailOutcome)
+            CustomCommand middleThirdsSucceedCommand, CustomCommand lowThirdsSucceedCommand, CustomCommand noneSucceedCommand, CustomCommand notEnoughPlayersCommand)
+            : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, userSuccessOutcome, userFailOutcome, notEnoughPlayersCommand)
         {
             this.AllSucceedCommand = allSucceedCommand;
             this.TopThirdsSucceedCommand = topThirdsSucceedCommand;
@@ -1162,8 +1170,8 @@ namespace MixItUp.Base.Commands
         public RussianRouletteGameCommand() { }
 
         public RussianRouletteGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int minimumParticipants, int timeLimit, CustomCommand startedCommand,
-            CustomCommand userJoinCommand, GameOutcome userSuccessOutcome, GameOutcome userFailOutcome, int maxWinners, CustomCommand gameCompleteCommand)
-            : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, userSuccessOutcome, userFailOutcome)
+            CustomCommand userJoinCommand, GameOutcome userSuccessOutcome, GameOutcome userFailOutcome, int maxWinners, CustomCommand gameCompleteCommand, CustomCommand notEnoughPlayersCommand)
+            : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, userSuccessOutcome, userFailOutcome, notEnoughPlayersCommand)
         {
             this.MaxWinners = maxWinners;
             this.GameCompleteCommand = gameCompleteCommand;
@@ -1258,8 +1266,8 @@ namespace MixItUp.Base.Commands
         public BidGameCommand() { }
 
         public BidGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int minimumParticipants, int timeLimit, RoleRequirementViewModel gameStarterRequirement,
-            CustomCommand startedCommand, CustomCommand userJoinCommand, CustomCommand gameCompleteCommand)
-            : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, null, null)
+            CustomCommand startedCommand, CustomCommand userJoinCommand, CustomCommand gameCompleteCommand, CustomCommand notEnoughPlayersCommand)
+            : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, null, null, notEnoughPlayersCommand)
         {
             this.GameStarterRequirement = gameStarterRequirement;
             this.GameCompleteCommand = gameCompleteCommand;
@@ -1378,8 +1386,8 @@ namespace MixItUp.Base.Commands
         public RouletteGameCommand() { }
 
         public RouletteGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int minimumParticipants, int timeLimit, bool isNumberRange, HashSet<string> validBetTypes,
-            CustomCommand startedCommand, CustomCommand userJoinCommand, GameOutcome userSuccessOutcome, GameOutcome userFailOutcome, CustomCommand gameCompleteCommand)
-            : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, userSuccessOutcome, userFailOutcome)
+            CustomCommand startedCommand, CustomCommand userJoinCommand, GameOutcome userSuccessOutcome, GameOutcome userFailOutcome, CustomCommand gameCompleteCommand, CustomCommand notEnoughPlayersCommand)
+            : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, userSuccessOutcome, userFailOutcome, notEnoughPlayersCommand)
         {
             this.IsNumberRange = isNumberRange;
             this.ValidBetTypes = validBetTypes;
@@ -1529,8 +1537,8 @@ namespace MixItUp.Base.Commands
 
         public HitmanGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int minimumParticipants, int timeLimit, string customWordsFilePath,
             int hitmanTimeLimit, CustomCommand startedCommand, CustomCommand userJoinCommand, CustomCommand hitmanApproachingCommand, CustomCommand hitmanAppearsCommand,
-            GameOutcome userSuccessOutcome, GameOutcome userFailOutcome)
-            : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, userSuccessOutcome, userFailOutcome)
+            GameOutcome userSuccessOutcome, GameOutcome userFailOutcome, CustomCommand notEnoughPlayersCommand)
+            : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, userSuccessOutcome, userFailOutcome, notEnoughPlayersCommand)
         {
             this.CustomWordsFilePath = customWordsFilePath;
             this.HitmanApproachingCommand = hitmanApproachingCommand;

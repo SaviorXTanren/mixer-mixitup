@@ -12,11 +12,13 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="40" />
+            <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="40" />
+            <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="40" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
@@ -33,31 +35,27 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <TextBox Text="{Binding MinimumParticipantsString}" Grid.Column="0" Width="70" MaterialDesign:HintAssist.Hint="Min Users" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <TextBox Text="{Binding TimeLimitString}" Grid.Column="2" Width="70" MaterialDesign:HintAssist.Hint="Time Limit" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <GroupBox Grid.Column="6" Header="Game Start">
+            <GroupBox Grid.Column="4" Header="Game Start">
                 <CommandControls:CommandButtonsControl DataContext="{Binding StartedCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
             </GroupBox>
 
-            <GroupBox Grid.Column="8" Header="User Joined">
+            <GroupBox Grid.Column="6" Header="User Joined">
                 <CommandControls:CommandButtonsControl DataContext="{Binding UserJoinCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
 
-            <GroupBox Grid.Column="10" Header="Hitman Approaching">
-                <CommandControls:CommandButtonsControl DataContext="{Binding HitmanApproachingCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+            <GroupBox Grid.Column="8" Header="Not Enough Players">
+                <CommandControls:CommandButtonsControl DataContext="{Binding NotEnoughPlayersCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
         </Grid>
 
         <Grid Grid.Row="4" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
@@ -71,16 +69,28 @@
                 <CommandControls:CommandButtonsControl DataContext="{Binding HitmanAppearsCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
 
-            <GroupBox Grid.Column="4" Header="User Wins">
-                <CommandControls:CommandButtonsControl DataContext="{Binding UserSuccessCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
-            </GroupBox>
-
-            <GroupBox Grid.Column="6" Header="All Fail">
-                <CommandControls:CommandButtonsControl DataContext="{Binding UserFailCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+            <GroupBox Grid.Column="4" Header="Hitman Approaching">
+                <CommandControls:CommandButtonsControl DataContext="{Binding HitmanApproachingCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
         </Grid>
 
         <Grid Grid.Row="6" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <GroupBox Grid.Column="0" Header="User Wins">
+                <CommandControls:CommandButtonsControl DataContext="{Binding UserSuccessCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+            </GroupBox>
+
+            <GroupBox Grid.Column="2" Header="All Fail">
+                <CommandControls:CommandButtonsControl DataContext="{Binding UserFailCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+            </GroupBox>
+        </Grid>
+
+        <Grid Grid.Row="8" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />

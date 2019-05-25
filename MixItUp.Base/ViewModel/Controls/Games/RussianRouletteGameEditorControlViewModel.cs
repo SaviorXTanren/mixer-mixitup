@@ -43,7 +43,10 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         public int MaxWinners { get; set; } = 1;
 
         public CustomCommand StartedCommand { get; set; }
+
         public CustomCommand UserJoinCommand { get; set; }
+        public CustomCommand NotEnoughPlayersCommand { get; set; }
+
         public CustomCommand UserSuccessCommand { get; set; }
         public CustomCommand UserFailCommand { get; set; }
         public CustomCommand GameCompleteCommand { get; set; }
@@ -54,6 +57,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         {
             this.StartedCommand = this.CreateBasicChatCommand("@$username has started a game of Russian Roulette with a $gamebet " + currency.Name + " entry fee! Type !rr to join in!");
             this.UserJoinCommand = this.CreateBasicChatCommand("You've joined in the russian roulette match! Let's see who walks away the winner...", whisper: true);
+            this.NotEnoughPlayersCommand = this.CreateBasicChatCommand("@$username couldn't get enough users to join in...");
             this.UserSuccessCommand = this.CreateBasicChatCommand("You survived and walked away with $gamepayout " + currency.Name + "!", whisper: true);
             this.UserFailCommand = this.CreateBasicChatCommand("Looks like luck was not on your side. Better luck next time...", whisper: true);
             this.GameCompleteCommand = this.CreateBasicChatCommand("The dust settles after a grueling match-up and...It's $gamewinners! Total Amount Per Winner: $gameallpayout " + currency.Name + "!");
@@ -79,7 +83,8 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             Dictionary<MixerRoleEnum, int> roleProbabilities = new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, 0 }, { MixerRoleEnum.Subscriber, 0 }, { MixerRoleEnum.Mod, 0 } };
 
             GameCommandBase newCommand = new RussianRouletteGameCommand(name, triggers, requirements, this.MinimumParticipants, this.TimeLimit, this.StartedCommand, this.UserJoinCommand,
-                new GameOutcome("Success", 0, roleProbabilities, this.UserSuccessCommand), new GameOutcome("Failure", 0, roleProbabilities, this.UserFailCommand), this.MaxWinners, this.GameCompleteCommand);
+                new GameOutcome("Success", 0, roleProbabilities, this.UserSuccessCommand), new GameOutcome("Failure", 0, roleProbabilities, this.UserFailCommand), this.MaxWinners,
+                this.GameCompleteCommand, this.NotEnoughPlayersCommand);
             if (this.existingCommand != null)
             {
                 ChannelSession.Settings.GameCommands.Remove(this.existingCommand);

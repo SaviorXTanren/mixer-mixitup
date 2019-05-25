@@ -344,6 +344,15 @@ namespace MixItUp.Desktop.Services
 
                 settings.GiveawayStartedReminderCommand = CustomCommand.BasicChatCommand("Giveaway Started/Reminder", "A giveaway has started for $giveawayitem! Type $giveawaycommand in chat in the next $giveawaytimelimit minute(s) to enter!");
 
+                foreach (GameCommandBase command in settings.GameCommands)
+                {
+                    if (command is GroupGameCommand)
+                    {
+                        GroupGameCommand groupCommand = (GroupGameCommand)command;
+                        groupCommand.NotEnoughPlayersCommand = CustomCommand.BasicChatCommand("Not Enough Players", "@$username couldn't get enough users to join in...");
+                    }
+                }
+
                 await ChannelSession.Services.Settings.Save(settings);
             }
         }

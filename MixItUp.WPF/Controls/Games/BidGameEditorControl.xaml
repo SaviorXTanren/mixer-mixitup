@@ -38,7 +38,7 @@
             <TextBox Text="{Binding TimeLimitString}" Grid.Column="4" Width="70" MaterialDesign:HintAssist.Hint="Time Limit" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <GroupBox Grid.Column="6" Header="Game Start">
-                <CommandControls:CommandButtonsControl x:Name="GameStartCommandButtonsControl" DataContext="{Binding StartedCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl DataContext="{Binding StartedCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
             </GroupBox>
         </Grid>
 
@@ -47,14 +47,20 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <GroupBox Grid.Column="0" Header="New Top Bidder">
-                <CommandControls:CommandButtonsControl x:Name="UserJoinedCommandButtonsControl" DataContext="{Binding UserJoinedCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl DataContext="{Binding UserJoinedCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
             </GroupBox>
 
-            <GroupBox Grid.Column="2" Header="Game Complete">
-                <CommandControls:CommandButtonsControl x:Name="GameCompleteCommandButtonsControl" DataContext="{Binding GameCompleteCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+            <GroupBox Grid.Column="2" Header="Not Enough Players">
+                <CommandControls:CommandButtonsControl DataContext="{Binding NotEnoughPlayersCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+            </GroupBox>
+
+            <GroupBox Grid.Column="4" Header="Game Complete">
+                <CommandControls:CommandButtonsControl DataContext="{Binding GameCompleteCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
         </Grid>
     </Grid>
