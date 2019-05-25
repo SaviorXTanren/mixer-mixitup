@@ -15,16 +15,19 @@
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
 
              d:DesignHeight="300" d:DesignWidth="300">
+    <local:MainControlBase.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </local:MainControlBase.Resources>
+    
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        
+
         <Grid Grid.Row="0" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -34,64 +37,35 @@
 
             <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="Filter By Name:" />
 
-            <TextBox Grid.Column="2" x:Name="ActionGroupNameFilterTextBox" Width="150" TextChanged="ActionGroupNameFilterTextBox_TextChanged" />
+            <TextBox Grid.Column="2" x:Name="NameFilterTextBox" Width="150" TextChanged="NameFilterTextBox_TextChanged" />
         </Grid>
 
-        <Border Grid.Row="2" BorderBrush="{StaticResource MaterialDesignBody}" BorderThickness="1">
-            <Grid Margin="15,10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="240" />
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Grid.Column="0" Text="Name" VerticalAlignment="Center" TextDecorations="Underline" MouseLeftButtonDown="Name_MouseLeftButtonDown" />
-                <MaterialDesign:PackIcon x:Name="NameSortingIcon" Grid.Column="0" Margin="40,0,0,0" Kind="ArrowDown" />
-
-                <TextBlock Grid.Column="1" Text="Actions" VerticalAlignment="Center" TextDecorations="Underline" />
-
-            </Grid>
-        </Border>
-
-        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
-            <ItemsControl x:Name="ActionGroupCommandsItemsControl" HorizontalContentAlignment="Stretch">
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
+            <ItemsControl ItemsSource="{Binding ActionGroupCommands}" HorizontalContentAlignment="Stretch">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border BorderBrush="{StaticResource MaterialDesignBody}" BorderThickness="1">
+                        <Border BorderBrush="{StaticResource MaterialDesignBody}" BorderThickness="1" Visibility="{Binding HasCommands, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <Controls:AccordianGroupBoxControl IsMinimized="{Binding IsMinimized}" Minimized="AccordianGroupBoxControl_Minimized" Maximized="AccordianGroupBoxControl_Maximized">
                                 <Controls:AccordianGroupBoxControl.Header>
                                     <Grid Background="Transparent" Margin="5,0">
                                         <TextBlock HorizontalAlignment="Left" Text="{Binding DisplayName}" Foreground="{StaticResource WhiteColor}" Style="{StaticResource HeaderTextBlock}" />
 
-                                        <ToggleButton Visibility="{Binding IsEnableSwitchToggable, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Right" IsChecked="{Binding Path=IsEnabled, Mode=TwoWay}" Checked="GroupCommandsToggleButton_Checked" Unchecked="GroupCommandsToggleButton_Checked" />
+                                        <ToggleButton Visibility="{Binding IsEnableSwitchToggable, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Right" IsChecked="{Binding Path=IsEnabled}" />
                                     </Grid>
                                 </Controls:AccordianGroupBoxControl.Header>
 
-                                <ItemsControl ItemsSource="{Binding Commands}" HorizontalContentAlignment="Stretch">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Grid>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="Auto" />
-                                                    <RowDefinition Height="Auto" />
-                                                </Grid.RowDefinitions>
-
-                                                <Grid Grid.Row="0" Margin="10,5">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*" />
-                                                        <ColumnDefinition Width="240" />
-                                                    </Grid.ColumnDefinitions>
-
-                                                    <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center" />
-
-                                                    <CommandControls:CommandButtonsControl Grid.Column="1" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
-
-                                                </Grid>
-
-                                                <Separator Grid.Row="1" />
-                                            </Grid>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
+                                <DataGrid ItemsSource="{Binding Commands}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                                        <DataGridTemplateColumn Header="Actions" Width="240">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <CommandControls:CommandButtonsControl HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
                             </Controls:AccordianGroupBoxControl>
                         </Border>
                     </DataTemplate>
@@ -99,7 +73,7 @@
             </ItemsControl>
         </ScrollViewer>
 
-        <Grid Grid.Row="5" HorizontalAlignment="Center">
+        <Grid Grid.Row="4" HorizontalAlignment="Center">
             <Button x:Name="AddCommandButton" Grid.Column="0" Click="AddCommandButton_Click">New Action Group</Button>
         </Grid>
 

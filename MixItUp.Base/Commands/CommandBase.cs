@@ -27,7 +27,7 @@ namespace MixItUp.Base.Commands
     }
 
     [DataContract]
-    public abstract class CommandBase
+    public abstract class CommandBase : IComparable, IComparable<CommandBase>
     {
         private static Dictionary<Guid, long> commandUses = new Dictionary<Guid, long>();
 
@@ -140,6 +140,9 @@ namespace MixItUp.Base.Commands
 
         [JsonIgnore]
         public virtual IEnumerable<string> CommandTriggers { get { return this.Commands; } }
+
+        [JsonIgnore]
+        protected abstract SemaphoreSlim AsyncSemaphore { get; }
 
         public override string ToString() { return string.Format("{0} - {1}", this.ID, this.Name); }
 
@@ -305,6 +308,18 @@ namespace MixItUp.Base.Commands
             }
         }
 
-        protected abstract SemaphoreSlim AsyncSemaphore { get; }
+        public int CompareTo(object obj)
+        {
+            if (obj is CommandBase)
+            {
+                return this.CompareTo((CommandBase)obj);
+            }
+            return 0;
+        }
+
+        public int CompareTo(CommandBase other)
+        {
+            return this.Name.CompareTo(other.Name);
+        }
     }
 }
