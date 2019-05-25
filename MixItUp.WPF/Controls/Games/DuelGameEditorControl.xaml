@@ -55,15 +55,21 @@
         <Grid Grid.Row="6" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="60" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <GroupBox Grid.Column="0" Header="Challenger Wins">
+            <GroupBox Grid.Column="0" Header="Not Accepted">
+                <CommandControls:CommandButtonsControl DataContext="{Binding NotAcceptedCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+            </GroupBox>
+
+            <GroupBox Grid.Column="2" Header="Challenger Wins">
                 <CommandControls:CommandButtonsControl DataContext="{Binding SuccessOutcomeCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
 
-            <GroupBox Grid.Column="2" Header="Challenger Loses">
+            <GroupBox Grid.Column="4" Header="Challenger Loses">
                 <CommandControls:CommandButtonsControl DataContext="{Binding FailOutcomeCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
         </Grid>

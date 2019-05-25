@@ -54,6 +54,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         public int ModPercentage { get; set; } = 50;
 
         public CustomCommand StartedCommand { get; set; }
+        public CustomCommand NotAcceptedCommand { get; set; }
         public CustomCommand SuccessOutcomeCommand { get; set; }
         public CustomCommand FailOutcomeCommand { get; set; }
 
@@ -62,6 +63,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         public DuelGameEditorControlViewModel(UserCurrencyViewModel currency)
         {
             this.StartedCommand = this.CreateBasicChatCommand("@$username has challenged @$targetusername to a duel for $gamebet " + currency.Name + "! Type !duel in chat to accept!");
+            this.NotAcceptedCommand = this.CreateBasicChatCommand("@$targetusername did not respond in time...");
             this.SuccessOutcomeCommand = this.CreateBasicChatCommand("@$username won the duel against @$targetusername, winning $gamepayout " + currency.Name + "!");
             this.FailOutcomeCommand = this.CreateBasicChatCommand("@$targetusername defeated @$username at his own game, winning $gamepayout " + currency.Name + "!");
         }
@@ -76,6 +78,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             this.ModPercentage = this.existingCommand.SuccessfulOutcome.RoleProbabilities[MixerRoleEnum.Mod];
 
             this.StartedCommand = this.existingCommand.StartedCommand;
+            this.NotAcceptedCommand = this.existingCommand.NotAcceptedCommand;
             this.SuccessOutcomeCommand = this.existingCommand.SuccessfulOutcome.Command;
             this.FailOutcomeCommand = this.existingCommand.FailedOutcome.Command;
         }
@@ -86,7 +89,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             Dictionary<MixerRoleEnum, int> failRoleProbabilities = new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, 100 - this.UserPercentage }, { MixerRoleEnum.Subscriber, 100 - this.SubscriberPercentage }, { MixerRoleEnum.Mod, 100 - this.ModPercentage } };
 
             GameCommandBase newCommand = new DuelGameCommand(name, triggers, requirements, new GameOutcome("Success", 1, successRoleProbabilities, this.SuccessOutcomeCommand),
-                new GameOutcome("Failure", 0, failRoleProbabilities, this.FailOutcomeCommand), this.StartedCommand, this.TimeLimit);
+                new GameOutcome("Failure", 0, failRoleProbabilities, this.FailOutcomeCommand), this.StartedCommand, this.TimeLimit, this.NotAcceptedCommand);
             if (this.existingCommand != null)
             {
                 ChannelSession.Settings.GameCommands.Remove(this.existingCommand);

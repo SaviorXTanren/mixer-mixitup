@@ -903,6 +903,8 @@ namespace MixItUp.Base.Commands
     {
         [DataMember]
         public CustomCommand StartedCommand { get; set; }
+        [DataMember]
+        public CustomCommand NotAcceptedCommand { get; set; }
 
         [DataMember]
         public int TimeLimit { get; set; }
@@ -923,11 +925,13 @@ namespace MixItUp.Base.Commands
 
         public DuelGameCommand() { }
 
-        public DuelGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, GameOutcome successfulOutcome, GameOutcome failedOutcome, CustomCommand startedCommand, int timeLimit)
+        public DuelGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, GameOutcome successfulOutcome, GameOutcome failedOutcome,
+            CustomCommand startedCommand, int timeLimit, CustomCommand notAcceptedCommand)
             : base(name, commands, requirements, successfulOutcome, failedOutcome)
         {
             this.StartedCommand = startedCommand;
             this.TimeLimit = timeLimit;
+            this.NotAcceptedCommand = notAcceptedCommand;
         }
 
         public override IEnumerable<CommandBase> GetAllInnerCommands()
@@ -1023,13 +1027,17 @@ namespace MixItUp.Base.Commands
                                         {
                                             if (this.currentTargetUser != null)
                                             {
-                                                await ChannelSession.Chat.SendMessage(string.Format("@{0} did not respond in time...", this.currentTargetUser.UserName));
                                                 this.currentStarterUser.Data.AddCurrencyAmount(currency, this.currentBetAmount);
                                                 if (this.Requirements.Inventory != null)
                                                 {
                                                     this.currentStarterUser.Data.AddInventoryAmount(this.Requirements.Inventory.GetInventory(), this.Requirements.Inventory.ItemName, this.Requirements.Inventory.Amount);
                                                 }
                                                 this.ResetData(user);
+
+                                                if (this.NotAcceptedCommand != null)
+                                                {
+                                                    await this.NotAcceptedCommand.Perform(this.currentStarterUser, arguments: new List<string>() { this.currentTargetUser.UserName });
+                                                }
                                             }
                                         });
                                     }
