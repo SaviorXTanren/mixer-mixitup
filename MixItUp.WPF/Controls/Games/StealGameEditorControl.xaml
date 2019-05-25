@@ -31,18 +31,18 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="UserPercentageTextBox" Grid.Column="0" Width="85" MaterialDesign:HintAssist.Hint="User Chance %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding UserPercentageString}" Grid.Column="0" Width="85" MaterialDesign:HintAssist.Hint="User Chance %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox x:Name="SubscriberPercentageTextBox" Grid.Column="2" Width="85" MaterialDesign:HintAssist.Hint="Sub Chance %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding SubscriberPercentageString}" Grid.Column="2" Width="85" MaterialDesign:HintAssist.Hint="Sub Chance %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox x:Name="ModPercentageTextBox" Grid.Column="4" Width="85" MaterialDesign:HintAssist.Hint="Mod Chance %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding ModPercentageString}" Grid.Column="4" Width="85" MaterialDesign:HintAssist.Hint="Mod Chance %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <GroupBox Grid.Column="6" Header="Success">
-                <CommandControls:CommandButtonsControl x:Name="SuccessOutcomeCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl DataContext="{Binding SuccessOutcomeCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
 
             <GroupBox Grid.Column="8" Header="Failure">
-                <CommandControls:CommandButtonsControl x:Name="FailOutcomeCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl DataContext="{Binding FailOutcomeCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
         </Grid>
     </Grid>
