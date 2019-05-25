@@ -59,7 +59,7 @@ namespace MixItUp.WPF.Windows.Command
             {
                 this.gameEditors.Add("Spin", new SpinGameEditorControl(this.viewModel.DefaultCurrency));
                 this.gameEditors.Add("Slot Machine",  new SlotMachineGameEditorControl(this.viewModel.DefaultCurrency));
-                this.gameEditors.Add("Vending Machine", new VendingMachineGameEditorControl());
+                this.gameEditors.Add("Vending Machine", new VendingMachineGameEditorControl(this.viewModel.DefaultCurrency));
                 this.gameEditors.Add("Steal", new StealGameEditorControl(this.viewModel.DefaultCurrency));
                 this.gameEditors.Add("Pickpocket", new PickpocketGameEditorControl(this.viewModel.DefaultCurrency));
                 this.gameEditors.Add("Duel", new DuelGameEditorControl(this.viewModel.DefaultCurrency));
