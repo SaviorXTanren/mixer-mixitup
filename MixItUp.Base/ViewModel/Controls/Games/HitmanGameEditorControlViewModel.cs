@@ -97,6 +97,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             this.StartedCommand = this.existingCommand.StartedCommand;
 
             this.UserJoinCommand = this.existingCommand.UserJoinCommand;
+            this.NotEnoughPlayersCommand = this.existingCommand.NotEnoughPlayersCommand;
 
             this.HitmanApproachingCommand = this.existingCommand.HitmanApproachingCommand;
             this.HitmanAppearsCommand = this.existingCommand.HitmanAppearsCommand;

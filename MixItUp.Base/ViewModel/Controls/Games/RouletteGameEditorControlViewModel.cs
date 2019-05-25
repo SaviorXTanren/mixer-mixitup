@@ -128,8 +128,10 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         public RouletteGameEditorControlViewModel(UserCurrencyViewModel currency)
         {
             this.StartedCommand = this.CreateBasic2ChatCommand("@$username has started a game of roulette! Type !roulette <BET TYPE> <AMOUNT> in chat to play!", "Valid Bet Types: $gamevalidbettypes");
+
             this.UserJoinCommand = this.CreateBasicChatCommand("You slap your chips on the number $gamebettype as the ball starts to spin around the roulette wheel!", whisper: true);
             this.NotEnoughPlayersCommand = this.CreateBasicChatCommand("@$username couldn't get enough users to join in...");
+
             this.UserSuccessCommand = this.CreateBasicChatCommand("Congrats, you made out with $gamepayout " + currency.Name + "!", whisper: true);
             this.UserFailCommand = this.CreateBasicChatCommand("Lady luck wasn't with you today, better luck next time...", whisper: true);
             this.GameCompleteCommand = this.CreateBasicChatCommand("The wheel slows down, revealing $gamewinningbettype as the winning bet! Total Payout: $gameallpayout");
@@ -157,7 +159,10 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             }
 
             this.StartedCommand = this.existingCommand.StartedCommand;
+
             this.UserJoinCommand = this.existingCommand.UserJoinCommand;
+            this.NotEnoughPlayersCommand = this.existingCommand.NotEnoughPlayersCommand;
+
             this.UserSuccessCommand = this.existingCommand.UserSuccessOutcome.Command;
             this.UserFailCommand = this.existingCommand.UserFailOutcome.Command;
             this.GameCompleteCommand = this.existingCommand.GameCompleteCommand;
