@@ -59,9 +59,9 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         }
         public int TimeLimit { get; set; } = 60;
 
-        public CustomCommand StartedCommand { get; private set; }
-        public CustomCommand UserJoinedCommand { get; private set; }
-        public CustomCommand GameCompleteCommand { get; private set; }
+        public CustomCommand StartedCommand { get; set; }
+        public CustomCommand UserJoinedCommand { get; set; }
+        public CustomCommand GameCompleteCommand { get; set; }
 
         private BidGameCommand existingCommand;
 
