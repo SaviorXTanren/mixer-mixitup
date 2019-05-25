@@ -41,20 +41,21 @@ namespace MixItUp.WPF.Windows.Command
             if (this.viewModel.GameCommand != null)
             {
                 if (this.viewModel.GameCommand is SpinGameCommand) { this.SetGameEditorControl(new SpinGameEditorControl((SpinGameCommand)this.viewModel.GameCommand)); }
-                if (this.viewModel.GameCommand is SlotMachineGameCommand) { this.SetGameEditorControl(new SlotMachineGameEditorControl((SlotMachineGameCommand)this.viewModel.GameCommand)); }
-                if (this.viewModel.GameCommand is VendingMachineGameCommand) { this.SetGameEditorControl(new VendingMachineGameEditorControl((VendingMachineGameCommand)this.viewModel.GameCommand)); }
-                if (this.viewModel.GameCommand is StealGameCommand) { this.SetGameEditorControl(new StealGameEditorControl((StealGameCommand)this.viewModel.GameCommand)); }
-                if (this.viewModel.GameCommand is PickpocketGameCommand) { this.SetGameEditorControl(new PickpocketGameEditorControl((PickpocketGameCommand)this.viewModel.GameCommand)); }
-                if (this.viewModel.GameCommand is DuelGameCommand) { this.SetGameEditorControl(new DuelGameEditorControl((DuelGameCommand)this.viewModel.GameCommand)); }
-                if (this.viewModel.GameCommand is HeistGameCommand) { this.SetGameEditorControl(new HeistGameEditorControl((HeistGameCommand)this.viewModel.GameCommand)); }
-                if (this.viewModel.GameCommand is RussianRouletteGameCommand) { this.SetGameEditorControl(new RussianRouletteGameEditorControl((RussianRouletteGameCommand)this.viewModel.GameCommand)); }
-                if (this.viewModel.GameCommand is BidGameCommand) { this.SetGameEditorControl(new BidGameEditorControl((BidGameCommand)this.viewModel.GameCommand)); }
-                if (this.viewModel.GameCommand is RouletteGameCommand) { this.SetGameEditorControl(new RouletteGameEditorControl((RouletteGameCommand)this.viewModel.GameCommand)); }
-                if (this.viewModel.GameCommand is HitmanGameCommand) { this.SetGameEditorControl(new HitmanGameEditorControl((HitmanGameCommand)this.viewModel.GameCommand)); }
-                if (this.viewModel.GameCommand is CoinPusherGameCommand) { this.SetGameEditorControl(new CoinPusherGameEditorControl((CoinPusherGameCommand)this.viewModel.GameCommand)); }
-                if (this.viewModel.GameCommand is VolcanoGameCommand) { this.SetGameEditorControl(new VolcanoGameEditorControl((VolcanoGameCommand)this.viewModel.GameCommand)); }
-                if (this.viewModel.GameCommand is LockBoxGameCommand) { this.SetGameEditorControl(new LockBoxGameEditorControl((LockBoxGameCommand)this.viewModel.GameCommand)); }
-                if (this.viewModel.GameCommand is WordScrambleGameCommand) { this.SetGameEditorControl(new WordScrambleGameEditorControl((WordScrambleGameCommand)this.viewModel.GameCommand)); }
+                else if (this.viewModel.GameCommand is SlotMachineGameCommand) { this.SetGameEditorControl(new SlotMachineGameEditorControl((SlotMachineGameCommand)this.viewModel.GameCommand)); }
+                else if (this.viewModel.GameCommand is VendingMachineGameCommand) { this.SetGameEditorControl(new VendingMachineGameEditorControl((VendingMachineGameCommand)this.viewModel.GameCommand)); }
+                else if (this.viewModel.GameCommand is StealGameCommand) { this.SetGameEditorControl(new StealGameEditorControl((StealGameCommand)this.viewModel.GameCommand)); }
+                else if (this.viewModel.GameCommand is PickpocketGameCommand) { this.SetGameEditorControl(new PickpocketGameEditorControl((PickpocketGameCommand)this.viewModel.GameCommand)); }
+                else if (this.viewModel.GameCommand is DuelGameCommand) { this.SetGameEditorControl(new DuelGameEditorControl((DuelGameCommand)this.viewModel.GameCommand)); }
+                else if (this.viewModel.GameCommand is HeistGameCommand) { this.SetGameEditorControl(new HeistGameEditorControl((HeistGameCommand)this.viewModel.GameCommand)); }
+                else if (this.viewModel.GameCommand is RussianRouletteGameCommand) { this.SetGameEditorControl(new RussianRouletteGameEditorControl((RussianRouletteGameCommand)this.viewModel.GameCommand)); }
+                else if (this.viewModel.GameCommand is BidGameCommand) { this.SetGameEditorControl(new BidGameEditorControl((BidGameCommand)this.viewModel.GameCommand)); }
+                else if (this.viewModel.GameCommand is RouletteGameCommand) { this.SetGameEditorControl(new RouletteGameEditorControl((RouletteGameCommand)this.viewModel.GameCommand)); }
+                else if (this.viewModel.GameCommand is HitmanGameCommand) { this.SetGameEditorControl(new HitmanGameEditorControl((HitmanGameCommand)this.viewModel.GameCommand)); }
+                else if (this.viewModel.GameCommand is CoinPusherGameCommand) { this.SetGameEditorControl(new CoinPusherGameEditorControl((CoinPusherGameCommand)this.viewModel.GameCommand)); }
+                else if (this.viewModel.GameCommand is VolcanoGameCommand) { this.SetGameEditorControl(new VolcanoGameEditorControl((VolcanoGameCommand)this.viewModel.GameCommand)); }
+                else if (this.viewModel.GameCommand is LockBoxGameCommand) { this.SetGameEditorControl(new LockBoxGameEditorControl((LockBoxGameCommand)this.viewModel.GameCommand)); }
+                else if (this.viewModel.GameCommand is WordScrambleGameCommand) { this.SetGameEditorControl(new WordScrambleGameEditorControl((WordScrambleGameCommand)this.viewModel.GameCommand)); }
+                else if (this.viewModel.GameCommand is BetGameCommand) { this.SetGameEditorControl(new BetGameEditorControl((BetGameCommand)this.viewModel.GameCommand)); }
             }
             else
             {
@@ -73,6 +74,7 @@ namespace MixItUp.WPF.Windows.Command
                 this.gameEditors.Add("Volcano", new VolcanoGameEditorControl(this.viewModel.DefaultCurrency));
                 this.gameEditors.Add("Lock Box", new LockBoxGameEditorControl(this.viewModel.DefaultCurrency));
                 this.gameEditors.Add("Word Scramble", new WordScrambleGameEditorControl(this.viewModel.DefaultCurrency));
+                this.gameEditors.Add("Bet", new BetGameEditorControl(this.viewModel.DefaultCurrency));
             }
         }
 

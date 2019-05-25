@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -301,9 +302,13 @@ namespace MixItUp.Base.Commands
                 {
                     specialIdentifiers[GameCommandBase.GameWinnersSpecialIdentifier] = string.Join(", ", this.winners.Select(w => "@" + w.UserName));
                 }
-                else
+                else if (user != null)
                 {
                     specialIdentifiers[GameCommandBase.GameWinnersSpecialIdentifier] = "@" + user.UserName;
+                }
+                else
+                {
+                    specialIdentifiers[GameCommandBase.GameWinnersSpecialIdentifier] = "None";
                 }
                 await command.Perform(user, arguments, specialIdentifiers);
             }
@@ -546,6 +551,8 @@ namespace MixItUp.Base.Commands
                             {
                                 await Task.Delay(this.TimeLimit * 1000);
 
+                                await this.TimeComplete();
+
                                 this.Requirements.UpdateCooldown(user);
 
                                 UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
@@ -612,6 +619,8 @@ namespace MixItUp.Base.Commands
                 await this.NotEnoughPlayersCommand.Perform(this.starterUser);
             }
         }
+
+        protected virtual Task TimeComplete() { return Task.FromResult(0); }
 
         protected virtual Task SelectWinners() { return Task.FromResult(0); }
 
@@ -1366,6 +1375,208 @@ namespace MixItUp.Base.Commands
             this.highestUser = null;
             this.highestBid = 0;
             base.ResetData(user);
+        }
+    }
+
+    [DataContract]
+    public class BetGameCommand : GroupGameCommand
+    {
+        public const string GameBetOptionsSpecialIdentifier = "gamebetoptions";
+        public const string GameBetWinningOptionSpecialIdentifier = "gamebetwinningoption";
+
+        [DataMember]
+        public RoleRequirementViewModel GameStarterRequirement { get; set; }
+
+        [DataMember]
+        public List<string> Options { get; set; }
+
+        [DataMember]
+        public CustomCommand BetsClosedCommand { get; set; }
+
+        [DataMember]
+        public CustomCommand GameCompleteCommand { get; set; }
+
+        [JsonIgnore]
+        private Dictionary<UserViewModel, int> userOptionSelection = new Dictionary<UserViewModel, int>();
+        [JsonIgnore]
+        private bool timeComplete = false;
+        [JsonIgnore]
+        private int winningOption = 0;
+
+        public BetGameCommand() { }
+
+        public BetGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int minimumParticipants, int timeLimit, RoleRequirementViewModel gameStarterRequirement,
+            CustomCommand startedCommand, IEnumerable<string> options, CustomCommand userJoinCommand, CustomCommand betsClosedCommand, GameOutcome userSuccessOutcome, GameOutcome userFailOutcome,
+            CustomCommand gameCompleteCommand, CustomCommand notEnoughPlayersCommand)
+            : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, userSuccessOutcome, userFailOutcome, notEnoughPlayersCommand)
+        {
+            this.GameStarterRequirement = gameStarterRequirement;
+            this.Options = new List<string>(options);
+            this.BetsClosedCommand = betsClosedCommand;
+            this.GameCompleteCommand = gameCompleteCommand;
+        }
+
+        public override IEnumerable<CommandBase> GetAllInnerCommands()
+        {
+            List<CommandBase> commands = new List<CommandBase>(base.GetAllInnerCommands());
+            commands.Add(this.GameCompleteCommand);
+            return commands;
+        }
+
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
+        {
+            if (this.timeComplete)
+            {
+                if (arguments.Count() == 2 && arguments.ElementAt(0).Equals("answer") && int.TryParse(arguments.ElementAt(1), out int option) && option > 0 && option <= this.Options.Count)
+                {
+                    if (!this.GameStarterRequirement.DoesMeetRequirement(user))
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, string.Format("You must be a {0} to pick the answer", this.GameStarterRequirement.RoleNameString));
+                        return;
+                    }
+                    this.winningOption = option;
+                    return;
+                }
+                await ChannelSession.Chat.Whisper(user.UserName, "All betting is currently closed");
+            }
+            else
+            {
+                if (this.timeLimitTask == null && !this.GameStarterRequirement.DoesMeetRequirement(user))
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("You must be a {0} to start this game", this.GameStarterRequirement.RoleNameString));
+                    return;
+                }
+
+                await base.PerformInternal(user, arguments, extraSpecialIdentifiers, token);
+            }
+        }
+
+        protected override async Task<bool> PerformUsageChecks(UserViewModel user, IEnumerable<string> arguments)
+        {
+            if (this.timeLimitTask == null && !this.timeComplete)
+            {
+                return true;
+            }
+            if (this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.NoCurrencyCost || this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
+            {
+                if (arguments.Count() != 1)
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("USAGE: !{0} <OPTION #>", this.Commands.First()));
+                    return false;
+                }
+            }
+            else if (arguments.Count() != 2)
+            {
+                string betAmountUsageText = this.Requirements.Currency.RequiredAmount.ToString();
+                if (this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum)
+                {
+                    betAmountUsageText += "-" + this.Requirements.Currency.MaximumAmount.ToString();
+                }
+                else if (this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.MinimumOnly)
+                {
+                    betAmountUsageText += "+";
+                }
+                await ChannelSession.Chat.Whisper(user.UserName, string.Format("USAGE: !{0} <OPTION #> {1}", this.Commands.First(), betAmountUsageText));
+                return false;
+            }
+            return true;
+        }
+
+        protected override string GetBetAmountArgument(IEnumerable<string> arguments)
+        {
+            if (this.timeLimitTask == null && !this.timeComplete)
+            {
+                return "0";
+            }
+            return base.GetBetAmountUserArgument(arguments);
+        }
+
+        protected override async Task<bool> CanUserEnter(UserViewModel user, IEnumerable<string> arguments, int betAmount)
+        {
+            if (this.timeLimitTask == null && !this.timeComplete)
+            {
+                return true;
+            }
+
+            if (!int.TryParse(arguments.First(), out int option) || option <= 0 || option > this.Options.Count)
+            {
+                await ChannelSession.Chat.Whisper(user.UserName, "The option number you selected is not a valid number");
+                return false;
+            }
+
+            return true;
+        }
+
+        protected override async Task GameStarted(UserViewModel user, IEnumerable<string> arguments, int betAmount)
+        {
+            this.userOptionSelection.Clear();
+            await base.GameStarted(user, arguments, betAmount);
+        }
+
+        protected override async Task UserJoined(UserViewModel user, IEnumerable<string> arguments, int betAmount)
+        {
+            this.userOptionSelection[user] = int.Parse(arguments.First());
+            await base.UserJoined(user, arguments, betAmount);
+        }
+
+        protected override async Task NotEnoughUsers()
+        {
+            await ChannelSession.Chat.SendMessage(string.Format("@{0} couldn't get enough users to join in...", this.starterUser.UserName));
+        }
+
+        protected override async Task TimeComplete()
+        {
+            this.timeComplete = true;
+
+            await this.PerformCommand(this.BetsClosedCommand, null, null, 0, 0);
+
+            do
+            {
+                await Task.Delay(1000);
+            } while (this.winningOption <= 0);
+        }
+
+        protected override async Task SelectWinners()
+        {
+            foreach (var kvp in this.userOptionSelection)
+            {
+                if (kvp.Value == this.winningOption)
+                {
+                    this.winners.Add(kvp.Key);
+                    await this.PerformOutcome(kvp.Key, new List<string>(), this.UserSuccessOutcome, this.enteredUsers[kvp.Key]);
+                }
+                else
+                {
+                    await this.PerformOutcome(kvp.Key, new List<string>(), this.UserFailOutcome, this.enteredUsers[kvp.Key]);
+                }
+            }
+        }
+
+        protected override async Task GameCompleted()
+        {
+            await this.PerformCommand(this.GameCompleteCommand, null, new List<string>(), 0, 0);
+        }
+
+        protected override void ResetData(UserViewModel user)
+        {
+            this.timeComplete = false;
+            this.winningOption = 0;
+            base.ResetData(user);
+        }
+
+        protected override void AddAdditionalSpecialIdentifiers(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        {
+            List<string> optionStrings = new List<string>();
+            for (int i = 0; i < this.Options.Count; i++)
+            {
+                optionStrings.Add(string.Format("{0}) {1}", (i + 1), this.Options[i]));
+            }
+
+            specialIdentifiers[GameBetOptionsSpecialIdentifier] = string.Join(" ", optionStrings);
+            if (this.winningOption > 0)
+            {
+                specialIdentifiers[GameBetWinningOptionSpecialIdentifier] = this.Options[this.winningOption - 1];
+            }
         }
     }
 
