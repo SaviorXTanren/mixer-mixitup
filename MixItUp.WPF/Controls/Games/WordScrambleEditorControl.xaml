@@ -97,7 +97,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" Grid.Row="0" Text="{Binding CustomWordScrambleWordsFilePath}" MaterialDesign:HintAssist.Hint="Custom Hitman Names File (One Name Per Line)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="400" />
+            <TextBox Grid.Column="0" Grid.Row="0" Text="{Binding CustomWordsFilePath}" MaterialDesign:HintAssist.Hint="Custom Words File (One Name Per Line)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="400" />
             <Button Grid.Column="2" Grid.Row="0" Command="{Binding BrowseCustomWordsFilePathCommand}" VerticalAlignment="Bottom">Browse</Button>
         </Grid>
     </Grid>

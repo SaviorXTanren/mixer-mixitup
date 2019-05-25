@@ -349,12 +349,12 @@ namespace MixItUp.Desktop.Services
                     if (command is GroupGameCommand)
                     {
                         GroupGameCommand groupCommand = (GroupGameCommand)command;
-                        groupCommand.NotEnoughPlayersCommand = CustomCommand.BasicChatCommand("Not Enough Players", "@$username couldn't get enough users to join in...");
+                        groupCommand.NotEnoughPlayersCommand = CustomCommand.BasicChatCommand("Game Sub-Command", "@$username couldn't get enough users to join in...");
                     }
                     else if (command is DuelGameCommand)
                     {
                         DuelGameCommand duelCommand = (DuelGameCommand)command;
-                        duelCommand.NotAcceptedCommand = CustomCommand.BasicChatCommand("Not Accepted", "@$targetusername did not respond in time...");
+                        duelCommand.NotAcceptedCommand = CustomCommand.BasicChatCommand("Game Sub-Command", "@$targetusername did not respond in time...");
                     }
                 }
 

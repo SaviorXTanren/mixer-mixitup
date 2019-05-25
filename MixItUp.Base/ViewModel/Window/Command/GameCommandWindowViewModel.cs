@@ -68,6 +68,9 @@ namespace MixItUp.Base.ViewModel.Window.Command
                 + Environment.NewLine + Environment.NewLine + "\tEX: !pusher 100"));
             this.GameListings.Add(new GameTypeListing("Duel", "The Duel game challenges the specified user to a winner-takes-all for the bet amount. If successful, the user takes the bet amount from the specified user. If failed, the specified user takes the bet amount from the user."
                 + Environment.NewLine + Environment.NewLine + "\tEX: !duel <USERNAME> 100"));
+            this.GameListings.Add(new GameTypeListing("Hangman", "The Hangman game allows users to guess the letter combination of a random word to win an accumulated pot of currency. Every failed guess puts the required currency amount into the pot and adds a failure, while a correct guess adds the letter. The person to guess the last missing letter gets the whole pot.." + Environment.NewLine + Environment.NewLine +
+                "Users have the ability to see the status of the game to see how much the pot is and what has been guessed already."
+                + Environment.NewLine + Environment.NewLine + "\tEX: !hangman <LETTER>"));
             this.GameListings.Add(new GameTypeListing("Heist", "The Heist game allows a user to start a group activity for users to individually bet when they participate. Each user has their own individual chance to succeed and win back more or fail and lose their bet."
                 + Environment.NewLine + Environment.NewLine + "\tEX: !heist 100"));
             this.GameListings.Add(new GameTypeListing("Hitman", "The Hitman game allows a user to start a winner-takes-all bet amongst all entered users. After the initial time limit, a hitman with a specific name will appear in chat. If a user types the hitman's name in chat within the time limit, they win the entire pot. Otherwise, everyone loses their money."

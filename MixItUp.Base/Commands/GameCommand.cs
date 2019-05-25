@@ -1419,6 +1419,7 @@ namespace MixItUp.Base.Commands
         public override IEnumerable<CommandBase> GetAllInnerCommands()
         {
             List<CommandBase> commands = new List<CommandBase>(base.GetAllInnerCommands());
+            commands.Add(this.BetsClosedCommand);
             commands.Add(this.GameCompleteCommand);
             return commands;
         }
@@ -2494,6 +2495,205 @@ namespace MixItUp.Base.Commands
             {
                 this.CurrentCombination += this.GenerateRandomNumber(10).ToString();
             }
+        }
+    }
+
+    [DataContract]
+    public class HangmanGameCommand : LongRunningGameCommand
+    {
+        public const string GameHangmanCurrentSpecialIdentifier = "gamehangmancurrent";
+        public const string GameHangmanFailedGuessesSpecialIdentifier = "gamehangmanfailedguesses";
+        public const string GameHangmanAnswerSpecialIdentifier = "gamehangmananswer";
+
+        [DataMember]
+        public CustomCommand StatusCommand { get; set; }
+
+        [DataMember]
+        public int MaxFailures { get; set; }
+        [DataMember]
+        public int InitialAmount { get; set; }
+
+        [DataMember]
+        public CustomCommand SuccessfulGuessCommand { get; set; }
+        [DataMember]
+        public CustomCommand FailedGuessCommand { get; set; }
+
+        [DataMember]
+        public CustomCommand GameWonCommand { get; set; }
+        [DataMember]
+        public CustomCommand GameLostCommand { get; set; }
+
+        [DataMember]
+        public string CustomWordsFilePath { get; set; }
+
+        [DataMember]
+        public string CurrentWord { get; set; }
+        [DataMember]
+        public HashSet<char> SuccessfulGuesses { get; set; } = new HashSet<char>();
+        [DataMember]
+        public HashSet<char> FailedGuesses { get; set; } = new HashSet<char>();
+
+        public HangmanGameCommand() { }
+
+        public HangmanGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, string statusArgument, CustomCommand statusCommand, int maxFailures,
+            int initialAmount, CustomCommand successfulGuessCommand, CustomCommand failedGuessCommand, CustomCommand gameWonCommand, CustomCommand gameLostCommand, string customWordsFilePath)
+            : base(name, commands, requirements, statusArgument)
+        {
+            this.StatusCommand = statusCommand;
+            this.MaxFailures = maxFailures;
+            this.InitialAmount = initialAmount;
+            this.SuccessfulGuessCommand = successfulGuessCommand;
+            this.FailedGuessCommand = failedGuessCommand;
+            this.GameWonCommand = gameWonCommand;
+            this.GameLostCommand = gameLostCommand;
+            this.CustomWordsFilePath = customWordsFilePath;
+        }
+
+        public override IEnumerable<CommandBase> GetAllInnerCommands()
+        {
+            List<CommandBase> commands = new List<CommandBase>(base.GetAllInnerCommands());
+            commands.Add(this.StatusCommand);
+            commands.Add(this.SuccessfulGuessCommand);
+            commands.Add(this.FailedGuessCommand);
+            commands.Add(this.GameWonCommand);
+            commands.Add(this.GameLostCommand);
+            return commands;
+        }
+
+        protected override async Task<bool> PerformUsageChecks(UserViewModel user, IEnumerable<string> arguments)
+        {
+            if (arguments.Count() != 1)
+            {
+                await ChannelSession.Chat.Whisper(user.UserName, string.Format("USAGE: !{0} <GUESS> -or- !{0} {1}", this.Commands.First(), this.StatusArgument));
+                return false;
+            }
+
+            if (arguments.ElementAt(0).Length != 1 || arguments.ElementAt(0).Any(c => !char.IsLetter(c)))
+            {
+                await ChannelSession.Chat.Whisper(user.UserName, "The guess must be a single letter A-Z");
+                return false;
+            }
+
+            char letter = arguments.ElementAt(0).ToUpper().First();
+            if (this.SuccessfulGuesses.Contains(letter) || this.FailedGuesses.Contains(letter))
+            {
+                await ChannelSession.Chat.Whisper(user.UserName, "This letter has already been guessed");
+                return false;
+            }
+
+            return true;
+        }
+
+        protected override async Task ReportStatus(UserViewModel user, IEnumerable<string> arguments)
+        {
+            if (string.IsNullOrEmpty(this.CurrentWord) || this.FailedGuesses.Count >= this.MaxFailures)
+            {
+                await this.ResetWord();
+            }
+
+            await this.PerformCommand(this.StatusCommand, user, arguments, 0, 0);
+        }
+
+        protected override async Task<bool> ShouldPerformPayout(UserViewModel user, IEnumerable<string> arguments, int betAmount)
+        {
+            char letter = arguments.ElementAt(0).ToUpper().First();
+
+            if (string.IsNullOrEmpty(this.CurrentWord) || this.FailedGuesses.Count >= this.MaxFailures)
+            {
+                await this.ResetWord();
+            }
+
+            if (this.CurrentWord.Contains(letter))
+            {
+                this.SuccessfulGuesses.Add(letter);
+                await this.PerformCommand(this.SuccessfulGuessCommand, user, arguments, betAmount, this.TotalAmount);
+
+                if (this.CurrentWord.All(c => this.SuccessfulGuesses.Contains(c)))
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                this.FailedGuesses.Add(letter);
+                if (this.FailedGuesses.Count >= this.MaxFailures)
+                {
+                    await this.PerformCommand(this.GameLostCommand, user, arguments, betAmount, this.TotalAmount);
+                    await this.ResetWord();
+                }
+                else
+                {
+                    await this.PerformCommand(this.FailedGuessCommand, user, arguments, betAmount, this.TotalAmount);
+                }
+            }
+            return false;
+        }
+
+        protected override async Task PerformPayout(UserViewModel user, IEnumerable<string> arguments, int betAmount)
+        {
+            this.totalPayout = this.TotalAmount;
+
+            UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
+            if (currency == null)
+            {
+                return;
+            }
+            user.Data.AddCurrencyAmount(currency, this.totalPayout);
+
+            await this.PerformCommand(this.GameWonCommand, user, arguments, betAmount, this.TotalAmount);
+
+            await this.ResetWord();
+            this.ResetData(user);
+        }
+
+        protected override void AddAdditionalSpecialIdentifiers(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        {
+            if (!string.IsNullOrEmpty(this.CurrentWord))
+            {
+                specialIdentifiers[GameHangmanAnswerSpecialIdentifier] = this.CurrentWord;
+            }
+            specialIdentifiers[GameHangmanFailedGuessesSpecialIdentifier] = string.Join(", ", this.FailedGuesses);
+
+            List<string> currentLetters = new List<string>();
+            foreach (char c in this.CurrentWord)
+            {
+                if (this.SuccessfulGuesses.Contains(c))
+                {
+                    currentLetters.Add(c.ToString());
+                }
+                else
+                {
+                    currentLetters.Add("_");
+                }
+            }
+            specialIdentifiers[GameHangmanCurrentSpecialIdentifier] = string.Join(" ", currentLetters);
+
+            base.AddAdditionalSpecialIdentifiers(user, arguments, specialIdentifiers);
+        }
+
+        private async Task ResetWord()
+        {
+            HashSet<string> wordsToUse = new HashSet<string>(HitmanGameCommand.DefaultWords.Where(s => s.Length > 4));
+            if (!string.IsNullOrEmpty(this.CustomWordsFilePath) && ChannelSession.Services.FileService.FileExists(this.CustomWordsFilePath))
+            {
+                string fileData = await ChannelSession.Services.FileService.ReadFile(this.CustomWordsFilePath);
+                if (!string.IsNullOrEmpty(fileData))
+                {
+                    wordsToUse = new HashSet<string>();
+                    foreach (string split in fileData.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        wordsToUse.Add(split);
+                    }
+                }
+            }
+
+            int randomNumber = this.GenerateRandomNumber(wordsToUse.Count);
+            this.CurrentWord = wordsToUse.ElementAt(randomNumber).ToUpper();
+            this.SuccessfulGuesses.Clear();
+            this.FailedGuesses.Clear();
+            this.TotalAmount = this.InitialAmount;
+
+            this.ResetData(await ChannelSession.GetCurrentUser());
         }
     }
 }
