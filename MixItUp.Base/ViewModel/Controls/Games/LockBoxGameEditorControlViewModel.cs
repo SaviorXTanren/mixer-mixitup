@@ -15,14 +15,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             get { return this.CombinationLength.ToString(); }
             set
             {
-                if (!string.IsNullOrEmpty(value) && int.TryParse(value, out int intValue) && intValue > 0)
-                {
-                    this.CombinationLength = intValue;
-                }
-                else
-                {
-                    this.CombinationLength = 0;
-                }
+                this.CombinationLength = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }
@@ -33,14 +26,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             get { return this.InitialAmount.ToString(); }
             set
             {
-                if (!string.IsNullOrEmpty(value) && int.TryParse(value, out int intValue) && intValue > 0)
-                {
-                    this.InitialAmount = intValue;
-                }
-                else
-                {
-                    this.InitialAmount = 0;
-                }
+                this.InitialAmount = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }
@@ -55,14 +41,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             get { return this.InspectionCost.ToString(); }
             set
             {
-                if (!string.IsNullOrEmpty(value) && int.TryParse(value, out int intValue) && intValue > 0)
-                {
-                    this.InspectionCost = intValue;
-                }
-                else
-                {
-                    this.InspectionCost = 0;
-                }
+                this.InspectionCost = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }

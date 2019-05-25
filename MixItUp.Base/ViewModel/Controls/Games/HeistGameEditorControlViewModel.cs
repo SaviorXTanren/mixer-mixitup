@@ -14,14 +14,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             get { return this.MinimumParticipants.ToString(); }
             set
             {
-                if (!string.IsNullOrEmpty(value) && int.TryParse(value, out int intValue) && intValue > 0)
-                {
-                    this.MinimumParticipants = intValue;
-                }
-                else
-                {
-                    this.MinimumParticipants = 0;
-                }
+                this.MinimumParticipants = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }
@@ -32,14 +25,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             get { return this.TimeLimit.ToString(); }
             set
             {
-                if (!string.IsNullOrEmpty(value) && int.TryParse(value, out int intValue) && intValue > 0)
-                {
-                    this.TimeLimit = intValue;
-                }
-                else
-                {
-                    this.TimeLimit = 0;
-                }
+                this.TimeLimit = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }
@@ -50,14 +36,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             get { return this.UserPayout.ToString(); }
             set
             {
-                if (!string.IsNullOrEmpty(value) && double.TryParse(value, out double intValue) && intValue > 0)
-                {
-                    this.UserPayout = intValue;
-                }
-                else
-                {
-                    this.UserPayout = 0;
-                }
+                this.UserPayout = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }
@@ -68,14 +47,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             get { return this.SubscriberPayout.ToString(); }
             set
             {
-                if (!string.IsNullOrEmpty(value) && double.TryParse(value, out double intValue) && intValue > 0)
-                {
-                    this.SubscriberPayout = intValue;
-                }
-                else
-                {
-                    this.SubscriberPayout = 0;
-                }
+                this.SubscriberPayout = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }
@@ -86,14 +58,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             get { return this.ModPayout.ToString(); }
             set
             {
-                if (!string.IsNullOrEmpty(value) && double.TryParse(value, out double intValue) && intValue > 0)
-                {
-                    this.ModPayout = intValue;
-                }
-                else
-                {
-                    this.ModPayout = 0;
-                }
+                this.ModPayout = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }
@@ -104,14 +69,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             get { return this.UserProbability.ToString(); }
             set
             {
-                if (!string.IsNullOrEmpty(value) && int.TryParse(value, out int intValue) && intValue > 0)
-                {
-                    this.UserProbability = intValue;
-                }
-                else
-                {
-                    this.UserProbability = 0;
-                }
+                this.UserProbability = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }
@@ -122,14 +80,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             get { return this.SubscriberProbability.ToString(); }
             set
             {
-                if (!string.IsNullOrEmpty(value) && int.TryParse(value, out int intValue) && intValue > 0)
-                {
-                    this.SubscriberProbability = intValue;
-                }
-                else
-                {
-                    this.SubscriberProbability = 0;
-                }
+                this.SubscriberProbability = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }
@@ -140,14 +91,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             get { return this.ModProbability.ToString(); }
             set
             {
-                if (!string.IsNullOrEmpty(value) && int.TryParse(value, out int intValue) && intValue > 0)
-                {
-                    this.ModProbability = intValue;
-                }
-                else
-                {
-                    this.ModProbability = 0;
-                }
+                this.ModProbability = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }

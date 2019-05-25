@@ -14,14 +14,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             get { return this.UserPercentage.ToString(); }
             set
             {
-                if (!string.IsNullOrEmpty(value) && int.TryParse(value, out int intValue) && intValue > 0)
-                {
-                    this.UserPercentage = intValue;
-                }
-                else
-                {
-                    this.UserPercentage = 0;
-                }
+                this.UserPercentage = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }
@@ -32,14 +25,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             get { return this.SubscriberPercentage.ToString(); }
             set
             {
-                if (!string.IsNullOrEmpty(value) && int.TryParse(value, out int intValue) && intValue > 0)
-                {
-                    this.SubscriberPercentage = intValue;
-                }
-                else
-                {
-                    this.SubscriberPercentage = 0;
-                }
+                this.SubscriberPercentage = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }
@@ -50,14 +36,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             get { return this.ModPercentage.ToString(); }
             set
             {
-                if (!string.IsNullOrEmpty(value) && int.TryParse(value, out int intValue) && intValue > 0)
-                {
-                    this.ModPercentage = intValue;
-                }
-                else
-                {
-                    this.ModPercentage = 0;
-                }
+                this.ModPercentage = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }

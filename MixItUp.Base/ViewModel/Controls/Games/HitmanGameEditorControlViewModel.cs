@@ -15,14 +15,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             get { return this.MinimumParticipants.ToString(); }
             set
             {
-                if (!string.IsNullOrEmpty(value) && int.TryParse(value, out int intValue) && intValue > 0)
-                {
-                    this.MinimumParticipants = intValue;
-                }
-                else
-                {
-                    this.MinimumParticipants = 0;
-                }
+                this.MinimumParticipants = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }
@@ -33,14 +26,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             get { return this.TimeLimit.ToString(); }
             set
             {
-                if (!string.IsNullOrEmpty(value) && int.TryParse(value, out int intValue) && intValue > 0)
-                {
-                    this.TimeLimit = intValue;
-                }
-                else
-                {
-                    this.TimeLimit = 0;
-                }
+                this.TimeLimit = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }
@@ -51,14 +37,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             get { return this.HitmanTimeLimit.ToString(); }
             set
             {
-                if (!string.IsNullOrEmpty(value) && int.TryParse(value, out int intValue) && intValue > 0)
-                {
-                    this.HitmanTimeLimit = intValue;
-                }
-                else
-                {
-                    this.HitmanTimeLimit = 0;
-                }
+                this.HitmanTimeLimit = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }

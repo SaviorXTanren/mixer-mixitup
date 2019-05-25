@@ -23,37 +23,23 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         }
         public MixerRoleEnum WhoCanStart { get; set; } = MixerRoleEnum.Mod;
 
-        public string MinUsersString
+        public string MinimumParticipantsString
         {
-            get { return this.MinUsers.ToString(); }
+            get { return this.MinimumParticipants.ToString(); }
             set
             {
-                if (!string.IsNullOrEmpty(value) && int.TryParse(value, out int intValue) && intValue > 0)
-                {
-                    this.MinUsers = intValue;
-                }
-                else
-                {
-                    this.MinUsers = 0;
-                }
+                this.MinimumParticipants = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }
-        public int MinUsers { get; set; } = 1;
+        public int MinimumParticipants { get; set; } = 1;
 
         public string TimeLimitString
         {
             get { return this.TimeLimit.ToString(); }
             set
             {
-                if (!string.IsNullOrEmpty(value) && int.TryParse(value, out int intValue) && intValue > 0)
-                {
-                    this.TimeLimit = intValue;
-                }
-                else
-                {
-                    this.TimeLimit = 0;
-                }
+                this.TimeLimit = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }
@@ -77,7 +63,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             this.existingCommand = command;
 
             this.WhoCanStart = this.existingCommand.GameStarterRequirement.MixerRole;
-            this.MinUsers = this.existingCommand.MinimumParticipants;
+            this.MinimumParticipants = this.existingCommand.MinimumParticipants;
             this.TimeLimit = this.existingCommand.TimeLimit;
 
             this.StartedCommand = this.existingCommand.StartedCommand;
@@ -88,7 +74,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         public override void SaveGameCommand(string name, IEnumerable<string> triggers, RequirementViewModel requirements)
         {
             RoleRequirementViewModel starterRequirement = new RoleRequirementViewModel(this.WhoCanStart);
-            GameCommandBase newCommand = new BidGameCommand(name, triggers, requirements, this.MinUsers, this.TimeLimit, starterRequirement,
+            GameCommandBase newCommand = new BidGameCommand(name, triggers, requirements, this.MinimumParticipants, this.TimeLimit, starterRequirement,
                 this.StartedCommand, this.UserJoinedCommand, this.GameCompleteCommand);
             if (this.existingCommand != null)
             {
@@ -106,7 +92,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
                 return false;
             }
 
-            if (this.MinUsers <= 0)
+            if (this.MinimumParticipants <= 0)
             {
                 await DialogHelper.ShowMessage("The Minimum Users is not a valid number greater than 0");
                 return false;

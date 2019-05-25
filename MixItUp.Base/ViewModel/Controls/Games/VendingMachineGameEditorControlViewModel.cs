@@ -4,6 +4,7 @@ using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.Base.ViewModels;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -12,7 +13,7 @@ using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Controls.Games
 {
-    public class VendingMachineOutcome
+    public class VendingMachineOutcome : UIViewModelBase
     {
         public string Name { get; set; }
 
@@ -41,28 +42,19 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         public string UserChanceString
         {
             get { return this.UserChance.ToString(); }
-            set { this.UserChance = this.GetPercentageFromString(value); }
+            set { this.UserChance = this.GetPositiveIntFromString(value); }
         }
 
         public string SubscriberChanceString
         {
             get { return this.SubscriberChance.ToString(); }
-            set { this.SubscriberChance = this.GetPercentageFromString(value); }
+            set { this.SubscriberChance = this.GetPositiveIntFromString(value); }
         }
 
         public string ModChanceString
         {
             get { return this.ModChance.ToString(); }
-            set { this.ModChance = this.GetPercentageFromString(value); }
-        }
-
-        private int GetPercentageFromString(string value)
-        {
-            if (int.TryParse(value, out int percentage) && percentage >= 0)
-            {
-                return percentage;
-            }
-            return 0;
+            set { this.ModChance = this.GetPositiveIntFromString(value); }
         }
 
         public GameOutcome GetGameOutcome()

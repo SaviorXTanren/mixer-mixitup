@@ -15,14 +15,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             get { return this.MinimumAmountForPayout.ToString(); }
             set
             {
-                if (!string.IsNullOrEmpty(value) && int.TryParse(value, out int intValue) && intValue > 0)
-                {
-                    this.MinimumAmountForPayout = intValue;
-                }
-                else
-                {
-                    this.MinimumAmountForPayout = 0;
-                }
+                this.MinimumAmountForPayout = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }
@@ -33,14 +26,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             get { return this.PayoutProbability.ToString(); }
             set
             {
-                if (!string.IsNullOrEmpty(value) && int.TryParse(value, out int intValue) && intValue > 0)
-                {
-                    this.PayoutProbability = intValue;
-                }
-                else
-                {
-                    this.PayoutProbability = 0;
-                }
+                this.PayoutProbability = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }
@@ -51,14 +37,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             get { return this.PayoutPercentageMinimum.ToString(); }
             set
             {
-                if (!string.IsNullOrEmpty(value) && double.TryParse(value, out double intValue) && intValue > 0)
-                {
-                    this.PayoutPercentageMinimum = intValue;
-                }
-                else
-                {
-                    this.PayoutPercentageMinimum = 0;
-                }
+                this.PayoutPercentageMinimum = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }
@@ -69,14 +48,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             get { return this.PayoutPercentageMaximum.ToString(); }
             set
             {
-                if (!string.IsNullOrEmpty(value) && double.TryParse(value, out double intValue) && intValue > 0)
-                {
-                    this.PayoutPercentageMaximum = intValue;
-                }
-                else
-                {
-                    this.PayoutPercentageMaximum = 0;
-                }
+                this.PayoutPercentageMaximum = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }

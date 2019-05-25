@@ -2,6 +2,7 @@
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,7 +12,7 @@ using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Controls.Games
 {
-    public class SlotMachineOutcome
+    public class SlotMachineOutcome : UIViewModelBase
     {
         public string Symbol1 { get; set; }
         public string Symbol2 { get; set; }
@@ -52,28 +53,19 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         public string UserPayoutString
         {
             get { return this.UserPayout.ToString(); }
-            set { this.UserPayout = this.GetPercentageFromString(value); }
+            set { this.UserPayout = this.GetPositiveIntFromString(value); }
         }
 
         public string SubscriberPayoutString
         {
             get { return this.SubscriberPayout.ToString(); }
-            set { this.SubscriberPayout = this.GetPercentageFromString(value); }
+            set { this.SubscriberPayout = this.GetPositiveIntFromString(value); }
         }
 
         public string ModPayoutString
         {
             get { return this.ModPayout.ToString(); }
-            set { this.ModPayout = this.GetPercentageFromString(value); }
-        }
-
-        private int GetPercentageFromString(string value)
-        {
-            if (int.TryParse(value, out int percentage) && percentage >= 0)
-            {
-                return percentage;
-            }
-            return 0;
+            set { this.ModPayout = this.GetPositiveIntFromString(value); }
         }
 
         public SlotsGameOutcome GetGameOutcome()

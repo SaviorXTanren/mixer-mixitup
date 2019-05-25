@@ -16,14 +16,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             get { return this.MinimumParticipants.ToString(); }
             set
             {
-                if (!string.IsNullOrEmpty(value) && int.TryParse(value, out int intValue) && intValue > 0)
-                {
-                    this.MinimumParticipants = intValue;
-                }
-                else
-                {
-                    this.MinimumParticipants = 0;
-                }
+                this.MinimumParticipants = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }
@@ -34,14 +27,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             get { return this.TimeLimit.ToString(); }
             set
             {
-                if (!string.IsNullOrEmpty(value) && int.TryParse(value, out int intValue) && intValue > 0)
-                {
-                    this.TimeLimit = intValue;
-                }
-                else
-                {
-                    this.TimeLimit = 0;
-                }
+                this.TimeLimit = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }
@@ -52,14 +38,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             get { return this.UserPayout.ToString(); }
             set
             {
-                if (!string.IsNullOrEmpty(value) && double.TryParse(value, out double intValue) && intValue > 0)
-                {
-                    this.UserPayout = intValue;
-                }
-                else
-                {
-                    this.UserPayout = 0;
-                }
+                this.UserPayout = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }
@@ -70,14 +49,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             get { return this.SubscriberPayout.ToString(); }
             set
             {
-                if (!string.IsNullOrEmpty(value) && double.TryParse(value, out double intValue) && intValue > 0)
-                {
-                    this.SubscriberPayout = intValue;
-                }
-                else
-                {
-                    this.SubscriberPayout = 0;
-                }
+                this.SubscriberPayout = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }
@@ -88,14 +60,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             get { return this.ModPayout.ToString(); }
             set
             {
-                if (!string.IsNullOrEmpty(value) && double.TryParse(value, out double intValue) && intValue > 0)
-                {
-                    this.ModPayout = intValue;
-                }
-                else
-                {
-                    this.ModPayout = 0;
-                }
+                this.ModPayout = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }
@@ -118,14 +83,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             get { return this.NumberRangeMinimum.ToString(); }
             set
             {
-                if (!string.IsNullOrEmpty(value) && int.TryParse(value, out int intValue) && intValue > 0)
-                {
-                    this.NumberRangeMinimum = intValue;
-                }
-                else
-                {
-                    this.NumberRangeMinimum = 0;
-                }
+                this.NumberRangeMinimum = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }
@@ -136,14 +94,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             get { return this.NumberRangeMaximum.ToString(); }
             set
             {
-                if (!string.IsNullOrEmpty(value) && int.TryParse(value, out int intValue) && intValue > 0)
-                {
-                    this.NumberRangeMaximum = intValue;
-                }
-                else
-                {
-                    this.NumberRangeMaximum = 0;
-                }
+                this.NumberRangeMaximum = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }
