@@ -558,6 +558,9 @@
     <Compile Include="Controls\Games\VolcanoGameEditorControl.xaml.cs">
       <DependentUpon>VolcanoGameEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Games\WordScrambleEditorControl.xaml.cs">
+      <DependentUpon>WordScrambleEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Interactive\CustomInteractiveGameControl.cs" />
     <Compile Include="Controls\Interactive\DropMapInteractiveControl.xaml.cs">
       <DependentUpon>DropMapInteractiveControl.xaml</DependentUpon>
@@ -1276,6 +1279,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Games\VolcanoGameEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Games\WordScrambleEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

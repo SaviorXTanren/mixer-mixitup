@@ -54,6 +54,7 @@ namespace MixItUp.WPF.Windows.Command
                 if (this.viewModel.GameCommand is CoinPusherGameCommand) { this.SetGameEditorControl(new CoinPusherGameEditorControl((CoinPusherGameCommand)this.viewModel.GameCommand)); }
                 if (this.viewModel.GameCommand is VolcanoGameCommand) { this.SetGameEditorControl(new VolcanoGameEditorControl((VolcanoGameCommand)this.viewModel.GameCommand)); }
                 if (this.viewModel.GameCommand is LockBoxGameCommand) { this.SetGameEditorControl(new LockBoxGameEditorControl((LockBoxGameCommand)this.viewModel.GameCommand)); }
+                if (this.viewModel.GameCommand is WordScrambleGameCommand) { this.SetGameEditorControl(new WordScrambleGameEditorControl((WordScrambleGameCommand)this.viewModel.GameCommand)); }
             }
             else
             {
@@ -71,6 +72,7 @@ namespace MixItUp.WPF.Windows.Command
                 this.gameEditors.Add("Coin Pusher", new CoinPusherGameEditorControl(this.viewModel.DefaultCurrency));
                 this.gameEditors.Add("Volcano", new VolcanoGameEditorControl(this.viewModel.DefaultCurrency));
                 this.gameEditors.Add("Lock Box", new LockBoxGameEditorControl(this.viewModel.DefaultCurrency));
+                this.gameEditors.Add("Word Scramble", new WordScrambleGameEditorControl(this.viewModel.DefaultCurrency));
             }
         }
 

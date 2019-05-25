@@ -90,6 +90,8 @@ namespace MixItUp.Base.ViewModel.Window.Command
             this.GameListings.Add(new GameTypeListing("Volcano", "The Volcano game allows a user to deposit a specific amount of currency into a volcano with the chance for a personal payout and a payout for all users in chat. The volcano goes through 3 stages as more and more currency is deposited into it and a different set of Deposit & Status commands are used depending on what stage the Volcano is at." + Environment.NewLine + Environment.NewLine +
                 "Once the volcano reaches stage 3, each subsequent deposit has a chance to trigger an eruption. When an eruption occurs, the user who triggered it gets a specialized payout for them. After the eruption, all users have a chance to collect erupted currency during the collection time limit. After the collection is done, the volcano contents resets back to 0."
                 + Environment.NewLine + Environment.NewLine + "\tEX: !volcano 100" + Environment.NewLine + Environment.NewLine + "Game Designed By: https://mixer.com/InsertCoinTheater"));
+            this.GameListings.Add(new GameTypeListing("Word Scramble", "The Word Scramble game allows a user to start a winner-takes-all bet amongst all entered users. After the initial time limit, a scrambled word will appear in chat. If a user types the unscrambled word in chat within the time limit, they win the entire pot. Otherwise, everyone loses their money."
+                + Environment.NewLine + Environment.NewLine + "\tEX: !scramble 100"));
 
 
             this.GameTypeSelectedCommand = this.CreateCommand((parameter) =>
