@@ -74,8 +74,8 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
             this.MinimumAmountForPayout = this.existingCommand.MinimumAmountForPayout;
             this.PayoutProbability = this.existingCommand.PayoutProbability;
-            this.PayoutPercentageMinimum = this.existingCommand.PayoutPercentageMinimum;
-            this.PayoutPercentageMaximum = this.existingCommand.PayoutPercentageMaximum;
+            this.PayoutPercentageMinimum = (this.existingCommand.PayoutPercentageMinimum * 100.0);
+            this.PayoutPercentageMaximum = (this.existingCommand.PayoutPercentageMaximum * 100.0);
 
             this.StatusArgument = this.existingCommand.StatusArgument;
             this.StatusCommand = this.existingCommand.StatusCommand;
@@ -85,6 +85,9 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         public override void SaveGameCommand(string name, IEnumerable<string> triggers, RequirementViewModel requirements)
         {
+            this.PayoutPercentageMinimum = (this.PayoutPercentageMinimum / 100.0);
+            this.PayoutPercentageMaximum = (this.PayoutPercentageMaximum / 100.0);
+
             GameCommandBase newCommand = new CoinPusherGameCommand(name, triggers, requirements, this.StatusArgument.ToLower(), this.MinimumAmountForPayout,
                 this.PayoutProbability, this.PayoutPercentageMinimum, this.PayoutPercentageMaximum, this.StatusCommand, this.NoPayoutCommand, this.PayoutCommand);
             if (this.existingCommand != null)

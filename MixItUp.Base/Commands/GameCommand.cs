@@ -1749,8 +1749,8 @@ namespace MixItUp.Base.Commands
         protected override async Task PerformPayout(UserViewModel user, IEnumerable<string> arguments, int betAmount)
         {
             double amount = Convert.ToDouble(this.TotalAmount);
-            int minimum = Convert.ToInt32(amount * (this.PayoutPercentageMinimum / 100.0));
-            int maximum = Convert.ToInt32(amount * (this.PayoutPercentageMaximum / 100.0));
+            int minimum = Convert.ToInt32(amount * this.PayoutPercentageMinimum);
+            int maximum = Convert.ToInt32(amount * this.PayoutPercentageMaximum);
 
             this.totalPayout = this.GenerateRandomNumber(minimum, maximum + 1);
 
