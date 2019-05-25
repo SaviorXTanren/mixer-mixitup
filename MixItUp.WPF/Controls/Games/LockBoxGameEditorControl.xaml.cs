@@ -11,14 +11,14 @@ namespace MixItUp.WPF.Controls.Games
     /// </summary>
     public partial class LockBoxGameEditorControl : GameEditorControlBase
     {
-        private LockBoxGameControlViewModel viewModel;
+        private LockBoxGameEditorControlViewModel viewModel;
         private LockBoxGameCommand existingCommand;
 
         public LockBoxGameEditorControl(UserCurrencyViewModel currency)
         {
             InitializeComponent();
 
-            this.viewModel = new LockBoxGameControlViewModel(currency);
+            this.viewModel = new LockBoxGameEditorControlViewModel(currency);
         }
 
         public LockBoxGameEditorControl(LockBoxGameCommand command)
@@ -26,7 +26,7 @@ namespace MixItUp.WPF.Controls.Games
             InitializeComponent();
 
             this.existingCommand = command;
-            this.viewModel = new LockBoxGameControlViewModel(command);
+            this.viewModel = new LockBoxGameEditorControlViewModel(command);
         }
 
         public override async Task<bool> Validate()

@@ -12,14 +12,14 @@ namespace MixItUp.WPF.Controls.Games
     /// </summary>
     public partial class VendingMachineGameEditorControl : GameEditorControlBase
     {
-        private VendingMachineGameControlViewModel viewModel;
+        private VendingMachineGameEditorControlViewModel viewModel;
         private VendingMachineGameCommand existingCommand;
 
         public VendingMachineGameEditorControl(UserCurrencyViewModel currency)
         {
             InitializeComponent();
 
-            this.viewModel = new VendingMachineGameControlViewModel(currency);
+            this.viewModel = new VendingMachineGameEditorControlViewModel(currency);
         }
 
         public VendingMachineGameEditorControl(VendingMachineGameCommand command)
@@ -27,7 +27,7 @@ namespace MixItUp.WPF.Controls.Games
             InitializeComponent();
 
             this.existingCommand = command;
-            this.viewModel = new VendingMachineGameControlViewModel(command);
+            this.viewModel = new VendingMachineGameEditorControlViewModel(command);
         }
 
         public override async Task<bool> Validate()

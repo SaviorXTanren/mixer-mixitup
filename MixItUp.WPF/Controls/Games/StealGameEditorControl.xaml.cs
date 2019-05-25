@@ -11,14 +11,14 @@ namespace MixItUp.WPF.Controls.Games
     /// </summary>
     public partial class StealGameEditorControl : GameEditorControlBase
     {
-        private StealGameControlViewModel viewModel;
+        private StealGameEditorControlViewModel viewModel;
         private StealGameCommand existingCommand;
 
         public StealGameEditorControl(UserCurrencyViewModel currency)
         {
             InitializeComponent();
 
-            this.viewModel = new StealGameControlViewModel(currency);
+            this.viewModel = new StealGameEditorControlViewModel(currency);
         }
 
         public StealGameEditorControl(StealGameCommand command)
@@ -26,7 +26,7 @@ namespace MixItUp.WPF.Controls.Games
             InitializeComponent();
 
             this.existingCommand = command;
-            this.viewModel = new StealGameControlViewModel(command);
+            this.viewModel = new StealGameEditorControlViewModel(command);
         }
 
         public override async Task<bool> Validate()

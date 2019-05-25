@@ -11,14 +11,14 @@ namespace MixItUp.WPF.Controls.Games
     /// </summary>
     public partial class BidGameEditorControl : GameEditorControlBase
     {
-        private BidGameControlViewModel viewModel;
+        private BidGameEditorControlViewModel viewModel;
         private BidGameCommand existingCommand;
 
         public BidGameEditorControl(UserCurrencyViewModel currency)
         {
             InitializeComponent();
 
-            this.viewModel = new BidGameControlViewModel(currency);
+            this.viewModel = new BidGameEditorControlViewModel(currency);
         }
 
         public BidGameEditorControl(BidGameCommand command)
@@ -26,7 +26,7 @@ namespace MixItUp.WPF.Controls.Games
             InitializeComponent();
 
             this.existingCommand = command;
-            this.viewModel = new BidGameControlViewModel(this.existingCommand);
+            this.viewModel = new BidGameEditorControlViewModel(this.existingCommand);
         }
 
         public override async Task<bool> Validate()

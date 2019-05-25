@@ -11,14 +11,14 @@ namespace MixItUp.WPF.Controls.Games
     /// </summary>
     public partial class VolcanoGameEditorControl : GameEditorControlBase
     {
-        private VolcanoGameControlViewModel viewModel;
+        private VolcanoGameEditorControlViewModel viewModel;
         private VolcanoGameCommand existingCommand;
 
         public VolcanoGameEditorControl(UserCurrencyViewModel currency)
         {
             InitializeComponent();
 
-            this.viewModel = new VolcanoGameControlViewModel(currency);
+            this.viewModel = new VolcanoGameEditorControlViewModel(currency);
         }
 
         public VolcanoGameEditorControl(VolcanoGameCommand command)
@@ -26,7 +26,7 @@ namespace MixItUp.WPF.Controls.Games
             InitializeComponent();
 
             this.existingCommand = command;
-            this.viewModel = new VolcanoGameControlViewModel(command);
+            this.viewModel = new VolcanoGameEditorControlViewModel(command);
         }
 
         public override async Task<bool> Validate()

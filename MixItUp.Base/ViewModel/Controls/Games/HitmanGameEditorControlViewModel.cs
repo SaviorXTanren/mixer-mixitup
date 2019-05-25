@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Controls.Games
 {
-    public class HitmanGameControlViewModel : GamesControlViewModelBase
+    public class HitmanGameEditorControlViewModel : GameEditorControlViewModelBase
     {
         public string MinimumParticipantsString
         {
@@ -89,7 +89,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         public HitmanGameCommand existingCommand;
 
-        public HitmanGameControlViewModel(UserCurrencyViewModel currency)
+        public HitmanGameEditorControlViewModel(UserCurrencyViewModel currency)
             : this()
         {
             this.StartedCommand = this.CreateBasicChatCommand("@$username has started a game of hitman! Type !hitman in chat to play!");
@@ -103,7 +103,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             this.UserFailCommand = this.CreateBasicChatCommand("No one was quick enough to get hitman $gamehitmanname! Better luck next time...");
         }
 
-        public HitmanGameControlViewModel(HitmanGameCommand command)
+        public HitmanGameEditorControlViewModel(HitmanGameCommand command)
             : this()
         {
             this.existingCommand = command;
@@ -124,7 +124,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             this.UserFailCommand = this.existingCommand.UserFailOutcome.Command;
         }
 
-        private HitmanGameControlViewModel()
+        private HitmanGameEditorControlViewModel()
         {
             this.BrowseCustomHitmanNamesFilePathCommand = this.CreateCommand((parameter) =>
             {

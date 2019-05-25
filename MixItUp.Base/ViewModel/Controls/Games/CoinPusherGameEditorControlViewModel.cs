@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Controls.Games
 {
-    public class CoinPusherGameControlViewModel : GamesControlViewModelBase
+    public class CoinPusherGameEditorControlViewModel : GameEditorControlViewModelBase
     {
         public string MinimumAmountForPayoutString
         {
@@ -89,14 +89,14 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         private CoinPusherGameCommand existingCommand;
 
-        public CoinPusherGameControlViewModel(UserCurrencyViewModel currency)
+        public CoinPusherGameEditorControlViewModel(UserCurrencyViewModel currency)
         {
             this.StatusCommand = this.CreateBasicChatCommand("After spending a few minutes, you count $gametotalamount " + currency.Name + " inside the machine.");
             this.NoPayoutCommand = this.CreateBasicChatCommand("@$username drops their coins into the machine...and nothing happens. All $gametotalamount " + currency.Name + " stares back at you.");
             this.PayoutCommand = this.CreateBasicChatCommand("@$username drops their coins into the machine...and hits the jackpot, walking away with $gamepayout " + currency.Name + "!");
         }
 
-        public CoinPusherGameControlViewModel(CoinPusherGameCommand command)
+        public CoinPusherGameEditorControlViewModel(CoinPusherGameCommand command)
         {
             this.existingCommand = command;
 

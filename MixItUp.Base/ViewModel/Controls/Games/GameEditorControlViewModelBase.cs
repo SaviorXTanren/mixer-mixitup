@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Controls.Games
 {
-    public abstract class GamesControlViewModelBase : ControlViewModelBase
+    public abstract class GameEditorControlViewModelBase : ControlViewModelBase
     {
         public abstract Task<bool> Validate();
 

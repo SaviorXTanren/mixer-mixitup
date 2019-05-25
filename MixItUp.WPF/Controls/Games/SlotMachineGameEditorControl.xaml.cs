@@ -13,14 +13,14 @@ namespace MixItUp.WPF.Controls.Games
     /// </summary>
     public partial class SlotMachineGameEditorControl : GameEditorControlBase
     {
-        private SlotMachineGameControlViewModel viewModel;
+        private SlotMachineGameEditorControlViewModel viewModel;
         private SlotMachineGameCommand existingCommand;
 
         public SlotMachineGameEditorControl(UserCurrencyViewModel currency)
         {
             InitializeComponent();
 
-            this.viewModel = new SlotMachineGameControlViewModel(currency);
+            this.viewModel = new SlotMachineGameEditorControlViewModel(currency);
         }
 
         public SlotMachineGameEditorControl(SlotMachineGameCommand command)
@@ -28,7 +28,7 @@ namespace MixItUp.WPF.Controls.Games
             InitializeComponent();
 
             this.existingCommand = command;
-            this.viewModel = new SlotMachineGameControlViewModel(command);
+            this.viewModel = new SlotMachineGameEditorControlViewModel(command);
         }
 
         public override async Task<bool> Validate()

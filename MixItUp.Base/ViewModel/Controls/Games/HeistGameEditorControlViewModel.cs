@@ -2,14 +2,12 @@
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Controls.Games
 {
-    public class RouletteGameControlViewModel : GamesControlViewModelBase
+    public class HeistGameEditorControlViewModel : GameEditorControlViewModelBase
     {
         public string MinimumParticipantsString
         {
@@ -101,66 +99,59 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         }
         public double ModPayout { get; set; } = 200;
 
-        public bool IsNumberRange
+        public string UserProbabilityString
         {
-            get { return this.isNumberRange; }
-            set
-            {
-                this.isNumberRange = value;
-                this.NotifyPropertyChanged();
-                this.NotifyPropertyChanged("IsTextOptions");
-            }
-        }
-        private bool isNumberRange { get; set; } = true;
-
-        public string NumberRangeMinimumString
-        {
-            get { return this.NumberRangeMinimum.ToString(); }
+            get { return this.UserProbability.ToString(); }
             set
             {
                 if (!string.IsNullOrEmpty(value) && int.TryParse(value, out int intValue) && intValue > 0)
                 {
-                    this.NumberRangeMinimum = intValue;
+                    this.UserProbability = intValue;
                 }
                 else
                 {
-                    this.NumberRangeMinimum = 0;
+                    this.UserProbability = 0;
                 }
                 this.NotifyPropertyChanged();
             }
         }
-        public int NumberRangeMinimum { get; set; } = 1;
+        public int UserProbability { get; set; } = 60;
 
-        public string NumberRangeMaximumString
+        public string SubscriberProbabilityString
         {
-            get { return this.NumberRangeMaximum.ToString(); }
+            get { return this.SubscriberProbability.ToString(); }
             set
             {
                 if (!string.IsNullOrEmpty(value) && int.TryParse(value, out int intValue) && intValue > 0)
                 {
-                    this.NumberRangeMaximum = intValue;
+                    this.SubscriberProbability = intValue;
                 }
                 else
                 {
-                    this.NumberRangeMaximum = 0;
+                    this.SubscriberProbability = 0;
                 }
                 this.NotifyPropertyChanged();
             }
         }
-        public int NumberRangeMaximum { get; set; } = 30;
+        public int SubscriberProbability { get; set; } = 60;
 
-        public bool IsTextOptions { get { return !this.IsNumberRange; } }
-
-        public string SelectableBetTypes
+        public string ModProbabilityString
         {
-            get { return this.selectableBetTypes; }
+            get { return this.ModProbability.ToString(); }
             set
             {
-                this.selectableBetTypes = value;
+                if (!string.IsNullOrEmpty(value) && int.TryParse(value, out int intValue) && intValue > 0)
+                {
+                    this.ModProbability = intValue;
+                }
+                else
+                {
+                    this.ModProbability = 0;
+                }
                 this.NotifyPropertyChanged();
             }
         }
-        private string selectableBetTypes { get; set; }
+        public int ModProbability { get; set; } = 60;
 
         public CustomCommand StartedCommand { get; set; }
 
@@ -169,20 +160,31 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         public CustomCommand UserSuccessCommand { get; set; }
         public CustomCommand UserFailCommand { get; set; }
 
-        public CustomCommand GameCompleteCommand { get; set; }
+        public CustomCommand AllSucceedCommand { get; set; }
+        public CustomCommand TopThirdsSucceedCommand { get; set; }
+        public CustomCommand MiddleThirdsSucceedCommand { get; set; }
+        public CustomCommand LowThirdsSucceedCommand { get; set; }
+        public CustomCommand NoneSucceedCommand { get; set; }
 
-        private RouletteGameCommand existingCommand;
+        private HeistGameCommand existingCommand;
 
-        public RouletteGameControlViewModel(UserCurrencyViewModel currency)
+        public HeistGameEditorControlViewModel(UserCurrencyViewModel currency)
         {
-            this.StartedCommand = this.CreateBasic2ChatCommand("@$username has started a game of roulette! Type !roulette <BET TYPE> <AMOUNT> in chat to play!", "Valid Bet Types: $gamevalidbettypes");
-            this.UserJoinCommand = this.CreateBasicChatCommand("You slap your chips on the number $gamebettype as the ball starts to spin around the roulette wheel!", whisper: true);
+            this.StartedCommand = this.CreateBasicChatCommand("@$username has started a game of Heist! Type !heist <AMOUNT> to join in!");
+
+            this.UserJoinCommand = this.CreateBasicChatCommand("You've joined in the heist! Let's see how it turns out...", whisper: true);
+
             this.UserSuccessCommand = this.CreateBasicChatCommand("Congrats, you made out with $gamepayout " + currency.Name + "!", whisper: true);
-            this.UserFailCommand = this.CreateBasicChatCommand("Lady luck wasn't with you today, better luck next time...", whisper: true);
-            this.GameCompleteCommand = this.CreateBasicChatCommand("The wheel slows down, revealing $gamewinningbettype as the winning bet! Total Payout: $gameallpayout");
+            this.UserFailCommand = this.CreateBasicChatCommand("The cops caught you before you could make it out! Better luck next time...", whisper: true);
+
+            this.AllSucceedCommand = this.CreateBasic2ChatCommand("What a steal! Everyone made it out and cleaned the bank out dry! Total Amount: $gameallpayout " + currency.Name + "!", "Winners: $gamewinners");
+            this.TopThirdsSucceedCommand = this.CreateBasic2ChatCommand("The cops showed up at the last second and snagged a few of you, but most made it out with the good! Total Amount: $gameallpayout " + currency.Name + "!", "Winners: $gamewinners");
+            this.MiddleThirdsSucceedCommand = this.CreateBasic2ChatCommand("As you started to leave the bank, the cops were ready for you and got almost half of you! Total Amount: $gameallpayout " + currency.Name + "!", "Winners: $gamewinners");
+            this.LowThirdsSucceedCommand = this.CreateBasic2ChatCommand("A heated battle took place inside the bank and almost everyone got caught by the cops! Total Amount: $gameallpayout " + currency.Name + "!", "Winners: $gamewinners");
+            this.NoneSucceedCommand = this.CreateBasicChatCommand("Someone was a spy! The cops were waiting for you as soon as you showed up and got everyone!");
         }
 
-        public RouletteGameControlViewModel(RouletteGameCommand command)
+        public HeistGameEditorControlViewModel(HeistGameCommand command)
         {
             this.existingCommand = command;
 
@@ -191,53 +193,37 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             this.UserPayout = (this.existingCommand.UserSuccessOutcome.RolePayouts[MixerRoleEnum.User] * 100);
             this.SubscriberPayout = (this.existingCommand.UserSuccessOutcome.RolePayouts[MixerRoleEnum.Subscriber] * 100);
             this.ModPayout = (this.existingCommand.UserSuccessOutcome.RolePayouts[MixerRoleEnum.Mod] * 100);
-            this.IsNumberRange = this.existingCommand.IsNumberRange;
-            if (this.existingCommand.IsNumberRange)
-            {
-                IEnumerable<int> numberBetTypes = this.existingCommand.ValidBetTypes.Select(b => int.Parse(b));
-                this.NumberRangeMinimum = numberBetTypes.Min();
-                this.NumberRangeMaximum = numberBetTypes.Max();
-            }
-            else
-            {
-                this.SelectableBetTypes = string.Join(Environment.NewLine, this.existingCommand.ValidBetTypes);
-            }
+            this.UserProbability = this.existingCommand.UserSuccessOutcome.RoleProbabilities[MixerRoleEnum.User];
+            this.SubscriberProbability = this.existingCommand.UserSuccessOutcome.RoleProbabilities[MixerRoleEnum.Subscriber];
+            this.ModProbability = this.existingCommand.UserSuccessOutcome.RoleProbabilities[MixerRoleEnum.Mod];
 
             this.StartedCommand = this.existingCommand.StartedCommand;
+
             this.UserJoinCommand = this.existingCommand.UserJoinCommand;
+
             this.UserSuccessCommand = this.existingCommand.UserSuccessOutcome.Command;
             this.UserFailCommand = this.existingCommand.UserFailOutcome.Command;
-            this.GameCompleteCommand = this.existingCommand.GameCompleteCommand;
+
+            this.AllSucceedCommand = this.existingCommand.AllSucceedCommand;
+            this.TopThirdsSucceedCommand = this.existingCommand.TopThirdsSucceedCommand;
+            this.MiddleThirdsSucceedCommand = this.existingCommand.MiddleThirdsSucceedCommand;
+            this.LowThirdsSucceedCommand = this.existingCommand.LowThirdsSucceedCommand;
+            this.NoneSucceedCommand = this.existingCommand.NoneSucceedCommand;
         }
 
         public override void SaveGameCommand(string name, IEnumerable<string> triggers, RequirementViewModel requirements)
         {
-            HashSet<string> validBetTypes = new HashSet<string>();
-            if (this.IsNumberRange)
-            {
-                for (int i = this.NumberRangeMinimum; i <= this.NumberRangeMaximum; i++)
-                {
-                    validBetTypes.Add(i.ToString());
-                }
-            }
-            else
-            {
-                foreach (string betType in this.SelectableBetTypes.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
-                {
-                    validBetTypes.Add(betType.ToLower());
-                }
-            }
-
             this.UserPayout = this.UserPayout / 100.0;
             this.SubscriberPayout = this.SubscriberPayout / 100.0;
             this.ModPayout = this.ModPayout / 100.0;
 
-            Dictionary<MixerRoleEnum, double> successRolePayouts = new Dictionary<MixerRoleEnum, double>() { { MixerRoleEnum.User, this.UserPayout }, { MixerRoleEnum.Subscriber, this.SubscriberPayout }, { MixerRoleEnum.Mod, this.ModPayout = this.ModPayout } };
-            Dictionary<MixerRoleEnum, int> roleProbabilities = new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, 0 }, { MixerRoleEnum.Subscriber, 0 }, { MixerRoleEnum.Mod, 0 } };
+            Dictionary<MixerRoleEnum, double> successRolePayouts = new Dictionary<MixerRoleEnum, double>() { { MixerRoleEnum.User, this.UserPayout }, { MixerRoleEnum.Subscriber, this.SubscriberPayout }, { MixerRoleEnum.Mod, this.ModPayout } };
+            Dictionary<MixerRoleEnum, int> successRoleProbabilities = new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, this.UserProbability }, { MixerRoleEnum.Subscriber, this.SubscriberProbability }, { MixerRoleEnum.Mod, this.ModProbability } };
+            Dictionary<MixerRoleEnum, int> failRoleProbabilities = new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, 100 - this.UserProbability }, { MixerRoleEnum.Subscriber, 100 - this.SubscriberProbability }, { MixerRoleEnum.Mod, 100 - this.ModProbability } };
 
-            GameCommandBase newCommand = new RouletteGameCommand(name, triggers, requirements, this.MinimumParticipants, this.TimeLimit, this.IsNumberRange, validBetTypes,
-                this.StartedCommand, this.UserJoinCommand, new GameOutcome("Success", successRolePayouts, roleProbabilities, this.UserSuccessCommand),
-                new GameOutcome("Failure", 0, roleProbabilities, this.UserFailCommand), this.GameCompleteCommand);
+            GameCommandBase newCommand = new HeistGameCommand(name, triggers, requirements, this.MinimumParticipants, this.TimeLimit, this.StartedCommand, this.UserJoinCommand,
+                new GameOutcome("Success", successRolePayouts, successRoleProbabilities, this.UserSuccessCommand), new GameOutcome("Failure", 0, failRoleProbabilities, this.UserFailCommand),
+                this.AllSucceedCommand, this.TopThirdsSucceedCommand, this.MiddleThirdsSucceedCommand, this.LowThirdsSucceedCommand, this.NoneSucceedCommand);
             if (this.existingCommand != null)
             {
                 ChannelSession.Settings.GameCommands.Remove(this.existingCommand);
@@ -278,45 +264,22 @@ namespace MixItUp.Base.ViewModel.Controls.Games
                 return false;
             }
 
-            if (this.IsNumberRange)
+            if (this.UserProbability < 0 || this.UserProbability > 100)
             {
-                if (this.NumberRangeMinimum <= 0)
-                {
-                    await DialogHelper.ShowMessage("The Min Number is not a valid number greater than 0");
-                    return false;
-                }
-
-                if (this.NumberRangeMaximum <= 0)
-                {
-                    await DialogHelper.ShowMessage("The Max Number is not a valid number greater than 0");
-                    return false;
-                }
-
-                if (this.NumberRangeMaximum < this.NumberRangeMinimum)
-                {
-                    await DialogHelper.ShowMessage("The Max Number can not be less than the Min Number");
-                    return false;
-                }
+                await DialogHelper.ShowMessage("The User Chance %'s is not a valid number between 0 - 100");
+                return false;
             }
-            else
+
+            if (this.SubscriberProbability < 0 || this.SubscriberProbability > 100)
             {
-                if (string.IsNullOrEmpty(this.SelectableBetTypes))
-                {
-                    await DialogHelper.ShowMessage("The Valid Bet Types does not have a value");
-                    return false;
-                }
+                await DialogHelper.ShowMessage("The Sub Chance %'s is not a valid number between 0 - 100");
+                return false;
+            }
 
-                HashSet<string> validBetTypes = new HashSet<string>();
-                foreach (string betType in this.SelectableBetTypes.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
-                {
-                    validBetTypes.Add(betType.ToLower());
-                }
-
-                if (validBetTypes.Count() < 2)
-                {
-                    await DialogHelper.ShowMessage("You must specify at least 2 different bet types");
-                    return false;
-                }
+            if (this.ModProbability < 0 || this.ModProbability > 100)
+            {
+                await DialogHelper.ShowMessage("The Mod Chance %'s is not a valid number between 0 - 100");
+                return false;
             }
 
             return true;

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Controls.Games
 {
-    public class RussianRouletteGameControlViewModel : GamesControlViewModelBase
+    public class RussianRouletteGameEditorControlViewModel : GameEditorControlViewModelBase
     {
         public string MinimumParticipantsString
         {
@@ -71,7 +71,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         private RussianRouletteGameCommand existingCommand;
 
-        public RussianRouletteGameControlViewModel(UserCurrencyViewModel currency)
+        public RussianRouletteGameEditorControlViewModel(UserCurrencyViewModel currency)
         {
             this.StartedCommand = this.CreateBasicChatCommand("@$username has started a game of Russian Roulette with a $gamebet " + currency.Name + " entry fee! Type !rr to join in!");
             this.UserJoinCommand = this.CreateBasicChatCommand("You've joined in the russian roulette match! Let's see who walks away the winner...", whisper: true);
@@ -80,7 +80,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             this.GameCompleteCommand = this.CreateBasicChatCommand("The dust settles after a grueling match-up and...It's $gamewinners! Total Amount Per Winner: $gameallpayout " + currency.Name + "!");
         }
 
-        public RussianRouletteGameControlViewModel(RussianRouletteGameCommand command)
+        public RussianRouletteGameEditorControlViewModel(RussianRouletteGameCommand command)
         {
             this.existingCommand = command;
 

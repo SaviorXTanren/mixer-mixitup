@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Controls.Games
 {
-    public class PickpocketGameControlViewModel : GamesControlViewModelBase
+    public class PickpocketGameEditorControlViewModel : GameEditorControlViewModelBase
     {
         public string UserPercentageString
         {
@@ -68,13 +68,13 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         private PickpocketGameCommand existingCommand;
 
-        public PickpocketGameControlViewModel(UserCurrencyViewModel currency)
+        public PickpocketGameEditorControlViewModel(UserCurrencyViewModel currency)
         {
             this.SuccessOutcomeCommand = this.CreateBasicChatCommand("@$username stole $gamepayout " + currency.Name + " from @$targetusername!");
             this.FailOutcomeCommand = this.CreateBasicChatCommand("@$username was unable to steal from @$targetusername...");
         }
 
-        public PickpocketGameControlViewModel(PickpocketGameCommand command)
+        public PickpocketGameEditorControlViewModel(PickpocketGameCommand command)
         {
             this.existingCommand = command;
 

@@ -11,14 +11,14 @@ namespace MixItUp.WPF.Controls.Games
     /// </summary>
     public partial class CoinPusherGameEditorControl : GameEditorControlBase
     {
-        private CoinPusherGameControlViewModel viewModel;
+        private CoinPusherGameEditorControlViewModel viewModel;
         private CoinPusherGameCommand existingCommand;
 
         public CoinPusherGameEditorControl(UserCurrencyViewModel currency)
         {
             InitializeComponent();
 
-            this.viewModel = new CoinPusherGameControlViewModel(currency);
+            this.viewModel = new CoinPusherGameEditorControlViewModel(currency);
         }
 
         public CoinPusherGameEditorControl(CoinPusherGameCommand command)
@@ -26,7 +26,7 @@ namespace MixItUp.WPF.Controls.Games
             InitializeComponent();
 
             this.existingCommand = command;
-            this.viewModel = new CoinPusherGameControlViewModel(this.existingCommand);
+            this.viewModel = new CoinPusherGameEditorControlViewModel(this.existingCommand);
         }
 
         public override async Task<bool> Validate()
