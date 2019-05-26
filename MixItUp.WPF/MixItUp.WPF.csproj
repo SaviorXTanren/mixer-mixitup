@@ -586,6 +586,7 @@
     <Compile Include="Controls\MainControls\CurrencyRankInventoryControl.xaml.cs">
       <DependentUpon>CurrencyRankInventoryControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\MainControls\GroupedCommandsMainControlBase.cs" />
     <Compile Include="Controls\MainControls\OverlayWidgetsControl.xaml.cs">
       <DependentUpon>OverlayWidgetsControl.xaml</DependentUpon>
     </Compile>

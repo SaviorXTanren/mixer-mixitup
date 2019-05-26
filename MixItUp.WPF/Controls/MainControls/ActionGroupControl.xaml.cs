@@ -1,20 +1,18 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
-using MixItUp.Base.ViewModel.Controls.Commands;
 using MixItUp.Base.ViewModel.Controls.MainControls;
 using MixItUp.Base.ViewModel.Window;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Windows.Command;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
     /// <summary>
     /// Interaction logic for ActionGroupControl.xaml
     /// </summary>
-    public partial class ActionGroupControl : MainControlBase
+    public partial class ActionGroupControl : GroupedCommandsMainControlBase
     {
         private ActionGroupMainControlViewModel viewModel;
 
@@ -26,6 +24,7 @@ namespace MixItUp.WPF.Controls.MainControls
         protected override async Task InitializeInternal()
         {
             this.DataContext = this.viewModel = new ActionGroupMainControlViewModel((MainWindowViewModel)this.Window.ViewModel);
+            this.SetViewModel(this.viewModel);
             await this.viewModel.OnLoaded();
 
             await base.InitializeInternal();
@@ -68,46 +67,6 @@ namespace MixItUp.WPF.Controls.MainControls
             CommandWindow window = new CommandWindow(new ActionGroupCommandDetailsControl());
             window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
             window.Show();
-        }
-
-        private void Window_CommandSaveSuccessfully(object sender, CommandBase e)
-        {
-            this.viewModel.RemoveCommand((ActionGroupCommand)e);
-            this.viewModel.AddCommand((ActionGroupCommand)e);
-        }
-
-        private void AccordianGroupBoxControl_Minimized(object sender, RoutedEventArgs e)
-        {
-            AccordianGroupBoxControl control = (AccordianGroupBoxControl)sender;
-            if (control.Content != null)
-            {
-                FrameworkElement content = (FrameworkElement)control.Content;
-                if (content != null)
-                {
-                    CommandGroupControlViewModel group = (CommandGroupControlViewModel)content.DataContext;
-                    if (group != null)
-                    {
-                        group.IsMinimized = true;
-                    }
-                }
-            }
-        }
-
-        private void AccordianGroupBoxControl_Maximized(object sender, RoutedEventArgs e)
-        {
-            AccordianGroupBoxControl control = (AccordianGroupBoxControl)sender;
-            if (control.Content != null)
-            {
-                FrameworkElement content = (FrameworkElement)control.Content;
-                if (content != null)
-                {
-                    CommandGroupControlViewModel group = (CommandGroupControlViewModel)content.DataContext;
-                    if (group != null)
-                    {
-                        group.IsMinimized = false;
-                    }
-                }
-            }
         }
     }
 }
