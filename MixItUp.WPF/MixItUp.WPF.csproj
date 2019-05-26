@@ -712,9 +712,6 @@
     <Compile Include="Controls\MainControls\ModerationControl.xaml.cs">
       <DependentUpon>ModerationControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Chat\PreMadeChatCommandControl.xaml.cs">
-      <DependentUpon>PreMadeChatCommandControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Dialogs\InteractiveSceneUserGroupsDialogControl.xaml.cs">
       <DependentUpon>InteractiveSceneUserGroupsDialogControl.xaml</DependentUpon>
     </Compile>
@@ -1486,10 +1483,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MainControls\ModerationControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Chat\PreMadeChatCommandControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

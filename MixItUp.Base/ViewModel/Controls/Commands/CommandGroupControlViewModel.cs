@@ -86,7 +86,8 @@ namespace MixItUp.Base.ViewModel.Controls.Commands
         public void RefreshCommands(string filter = null)
         {
             this.Commands.Clear();
-            foreach (CommandBase command in this.allCommands.Where(c => string.IsNullOrEmpty(filter) || c.Name.ToLower().Contains(filter)))
+
+            foreach (CommandBase command in ((string.IsNullOrEmpty(filter)) ? this.allCommands : this.allCommands.Where(c => c.Name.ToLower().Contains(filter))))
             {
                 this.Commands.SortedInsert(command);
             }

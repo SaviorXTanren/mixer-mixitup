@@ -19,11 +19,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             {
                 this.nameFilter = value;
                 this.NotifyPropertyChanged();
-
-                foreach (CommandGroupControlViewModel group in this.CommandGroups)
-                {
-                    group.RefreshCommands(this.NameFilter.ToLower());
-                }
+                this.FilterCommands();
             }
         }
         private string nameFilter;
@@ -58,6 +54,14 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         }
 
         protected abstract IEnumerable<CommandBase> GetCommands();
+
+        protected virtual void FilterCommands()
+        {
+            foreach (CommandGroupControlViewModel group in this.CommandGroups)
+            {
+                group.RefreshCommands(this.NameFilter.ToLower());
+            }
+        }
 
         protected override Task OnLoadedInternal()
         {
