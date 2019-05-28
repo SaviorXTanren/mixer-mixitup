@@ -300,7 +300,7 @@ namespace MixItUp.Base.Commands
                     return string.Join(", ", costreamUsers.Select(u => "@" + u.username));
                 }
             }
-            return "@" + ChannelSession.User.username;
+            return "@" + ChannelSession.Channel.token;
         }
 
         public CostreamChatCommand()
