@@ -1,4 +1,5 @@
 ﻿using Mixer.Base;
+using Mixer.Base.Clients;
 using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
@@ -97,6 +98,19 @@ namespace MixItUp.AutoHoster
             }
         }
 
+        public string WhisperMessage
+        {
+            get { return (this.settings != null) ? this.settings.WhisperMessage : string.Empty; }
+            set
+            {
+                if (this.settings != null)
+                {
+                    this.settings.WhisperMessage = value;
+                    this.NotifyPropertyChanged();
+                }
+            }
+        }
+
         public bool IsAutoHostingEnabled
         {
             get { return this.isAutoHostingEnabled; }
@@ -144,7 +158,9 @@ namespace MixItUp.AutoHoster
             {
                 try
                 {
-                    this.connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ClientID, new List<OAuthClientScopeEnum>() { OAuthClientScopeEnum.channel__details__self, OAuthClientScopeEnum.channel__update__self }, loginSuccessHtmlPageFilePath: "LoginRedirectPage.html");
+                    this.connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ClientID,
+                        new List<OAuthClientScopeEnum>() { OAuthClientScopeEnum.channel__details__self, OAuthClientScopeEnum.channel__update__self, OAuthClientScopeEnum.chat__connect, OAuthClientScopeEnum.chat__chat, OAuthClientScopeEnum.chat__whisper },
+                        loginSuccessHtmlPageFilePath: "LoginRedirectPage.html");
                 }
                 catch (Exception ex) { Base.Util.Logger.Log(ex); }
                 if (this.connection == null)
@@ -185,7 +201,7 @@ namespace MixItUp.AutoHoster
                             this.CurrentlyHosting = new ChannelHostModel()
                             {
                                 ID = channel.userId,
-                                Name = channel.user.username,
+                                Name = channel.token,
                             };
                         }
                     }
@@ -221,7 +237,7 @@ namespace MixItUp.AutoHoster
                             AgeRatingEnum channelAgeRating = EnumHelper.GetEnumValueFromString<AgeRatingEnum>(channelModel.audience);
                             if (channelModel != null && channel.IsOnline && channelAgeRating <= ageRating)
                             {
-                                if (channelModel.id.Equals(this.CurrentlyHosting.ID))
+                                if (this.CurrentlyHosting != null && channelModel.id.Equals(this.CurrentlyHosting.ID))
                                 {
                                     this.totalMinutesHosted = 0;
                                     break;
@@ -233,6 +249,16 @@ namespace MixItUp.AutoHoster
                                     {
                                         this.CurrentlyHosting = channel;
                                         this.totalMinutesHosted = 0;
+
+                                        if (!string.IsNullOrEmpty(this.WhisperMessage))
+                                        {
+                                            ChatClient chatClient = ChatClient.CreateFromChannel(connection, channelModel).Result;
+                                            if (chatClient.Connect().Result && chatClient.Authenticate().Result)
+                                            {
+                                                await chatClient.Whisper(channelModel.token, this.WhisperMessage);
+                                            }
+                                            await chatClient.Disconnect();
+                                        }
                                         break;
                                     }
                                 }

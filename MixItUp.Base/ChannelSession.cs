@@ -264,17 +264,17 @@ namespace MixItUp.Base
 
             try
             {
-                MixerConnection connection = await MixerConnection.ConnectViaOAuthToken(settings.OAuthToken);
+                MixerConnection connection = await MixerConnection.ConnectViaOAuthToken(ChannelSession.Settings.OAuthToken);
                 if (connection != null)
                 {
                     ChannelSession.Connection = new MixerConnectionWrapper(connection);
-                    result = await ChannelSession.InitializeInternal(ChannelSession.Settings.IsStreamer, ChannelSession.Settings.Channel.user.username);
+                    result = await ChannelSession.InitializeInternal(ChannelSession.Settings.IsStreamer, ChannelSession.Settings.IsStreamer ? null : ChannelSession.Settings.Channel.token);
                 }
             }
             catch (RestServiceRequestException ex)
             {
                 Util.Logger.Log(ex);
-                result = await ChannelSession.ConnectUser(ChannelSession.StreamerScopes, settings.IsStreamer ? null : settings.Channel.user.username);
+                result = await ChannelSession.ConnectUser(ChannelSession.StreamerScopes, ChannelSession.Settings.IsStreamer ? null : ChannelSession.Settings.Channel.token);
             }
             catch (Exception ex)
             {
@@ -485,7 +485,7 @@ namespace MixItUp.Base
             if (user != null)
             {
                 ExpandedChannelModel channel = null;
-                if (channelName == null)
+                if (channelName == null || isStreamer)
                 {
                     channel = await ChannelSession.Connection.GetChannel(user.channel.id);
                 }
@@ -593,6 +593,10 @@ namespace MixItUp.Base
                     if (!string.IsNullOrEmpty(ChannelSession.Settings.OvrStreamServerIP))
                     {
                         await ChannelSession.Services.InitializeOvrStream();
+                    }
+                    if (ChannelSession.Settings.IFTTTOAuthToken != null)
+                    {
+                        await ChannelSession.Services.InitializeIFTTT();
                     }
 
                     if (ChannelSession.Settings.RemoteHostConnection != null)

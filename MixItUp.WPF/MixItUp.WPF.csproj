@@ -163,8 +163,8 @@
       <HintPath>..\packages\NetOffice.Core.1.7.4.4\lib\net45\OfficeApi.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
-    <Reference Include="ovrstream-client-csharp, Version=0.0.1.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ovrstream-client-csharp.0.0.1.1\lib\netstandard2.0\ovrstream-client-csharp.dll</HintPath>
+    <Reference Include="ovrstream-client-csharp, Version=0.0.1.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ovrstream-client-csharp.0.0.1.2\lib\netstandard2.0\ovrstream-client-csharp.dll</HintPath>
     </Reference>
     <Reference Include="PlayFabAllSDK, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\PlayFabAllSDK.1.50.190509\lib\net45\PlayFabAllSDK.dll</HintPath>
@@ -358,6 +358,9 @@
     <Compile Include="Controls\Actions\CurrencyActionControl.xaml.cs">
       <DependentUpon>CurrencyActionControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\IFTTTActionControl.xaml.cs">
+      <DependentUpon>IFTTTActionControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\OvrStreamActionControl.xaml.cs">
       <DependentUpon>OvrStreamActionControl.xaml</DependentUpon>
     </Compile>
@@ -372,6 +375,9 @@
     </Compile>
     <Compile Include="Controls\Actions\SerialActionControl.xaml.cs">
       <DependentUpon>SerialActionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\StreamingPlatformActionControl.xaml.cs">
+      <DependentUpon>StreamingPlatformActionControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Actions\StreamlabsActionControl.xaml.cs">
       <DependentUpon>StreamlabsActionControl.xaml</DependentUpon>
@@ -506,6 +512,9 @@
     <Compile Include="Controls\Dialogs\NewCurrencyRankCommandsDialogControl.xaml.cs">
       <DependentUpon>NewCurrencyRankCommandsDialogControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Games\BetGameEditorControl.xaml.cs">
+      <DependentUpon>BetGameEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Games\BidGameEditorControl.xaml.cs">
       <DependentUpon>BidGameEditorControl.xaml</DependentUpon>
     </Compile>
@@ -519,6 +528,9 @@
       <DependentUpon>GameCommandDetailsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Games\GameEditorControlBase.cs" />
+    <Compile Include="Controls\Games\HangmanGameEditorControl.xaml.cs">
+      <DependentUpon>HangmanGameEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Games\HeistGameEditorControl.xaml.cs">
       <DependentUpon>HeistGameEditorControl.xaml</DependentUpon>
     </Compile>
@@ -552,6 +564,9 @@
     <Compile Include="Controls\Games\VolcanoGameEditorControl.xaml.cs">
       <DependentUpon>VolcanoGameEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Games\WordScrambleEditorControl.xaml.cs">
+      <DependentUpon>WordScrambleEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Interactive\CustomInteractiveGameControl.cs" />
     <Compile Include="Controls\Interactive\DropMapInteractiveControl.xaml.cs">
       <DependentUpon>DropMapInteractiveControl.xaml</DependentUpon>
@@ -571,6 +586,7 @@
     <Compile Include="Controls\MainControls\CurrencyRankInventoryControl.xaml.cs">
       <DependentUpon>CurrencyRankInventoryControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\MainControls\GroupedCommandsMainControlBase.cs" />
     <Compile Include="Controls\MainControls\OverlayWidgetsControl.xaml.cs">
       <DependentUpon>OverlayWidgetsControl.xaml</DependentUpon>
     </Compile>
@@ -696,9 +712,6 @@
     <Compile Include="Controls\MainControls\ModerationControl.xaml.cs">
       <DependentUpon>ModerationControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Chat\PreMadeChatCommandControl.xaml.cs">
-      <DependentUpon>PreMadeChatCommandControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Dialogs\InteractiveSceneUserGroupsDialogControl.xaml.cs">
       <DependentUpon>InteractiveSceneUserGroupsDialogControl.xaml</DependentUpon>
     </Compile>
@@ -770,6 +783,9 @@
     </Compile>
     <Compile Include="Controls\Requirement\ThresholdRequirementControl.xaml.cs">
       <DependentUpon>ThresholdRequirementControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\IFITTServiceControl.xaml.cs">
+      <DependentUpon>IFITTServiceControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Services\OvrStreamServiceControl.xaml.cs">
       <DependentUpon>OvrStreamServiceControl.xaml</DependentUpon>
@@ -1006,6 +1022,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Actions\IFTTTActionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Actions\OvrStreamActionControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1023,6 +1043,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\SerialActionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\StreamingPlatformActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1202,6 +1226,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Games\BetGameEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Games\BidGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1215,6 +1243,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Games\GameCommandDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Games\HangmanGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1259,6 +1291,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Games\VolcanoGameEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Games\WordScrambleEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1450,10 +1486,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Chat\PreMadeChatCommandControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\Dialogs\InteractiveSceneUserGroupsDialogControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1555,6 +1587,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Requirement\ThresholdRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\IFITTServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

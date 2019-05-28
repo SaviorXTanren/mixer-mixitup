@@ -140,6 +140,8 @@ namespace MixItUp.WPF.Controls.MainControls
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.MixerSkillUsed));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.MixerMilestoneReached));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.MixerUserFirstJoin));
+            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.MixerUserJoined));
+            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.MixerUserLeft));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.MixerUserPurge));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.MixerUserBan));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.MixerChatMessage));

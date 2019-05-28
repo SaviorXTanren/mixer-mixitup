@@ -144,6 +144,24 @@ namespace MixItUp.Base.ViewModels
         protected ICommand CreateCommand(Func<object, Task> execute) { return new UIViewModelCommand(execute, this); }
 
         protected ICommand CreateCommand(Func<object, bool> canExecute, Func<object, Task> execute) { return new UIViewModelCommand(canExecute, execute, this); }
+
+        protected int GetPositiveIntFromString(string value)
+        {
+            if (!string.IsNullOrEmpty(value) && int.TryParse(value, out int intValue) && intValue > 0)
+            {
+                return intValue;
+            }
+            return 0;
+        }
+
+        protected double GetPositiveDoubleFromString(string value)
+        {
+            if (!string.IsNullOrEmpty(value) && double.TryParse(value, out double doubleValue) && doubleValue > 0)
+            {
+                return doubleValue;
+            }
+            return 0;
+        }
     }
 
     public class ModelViewModelBase<T> : ViewModelBase, IEquatable<ModelViewModelBase<T>>

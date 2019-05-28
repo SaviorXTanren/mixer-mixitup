@@ -34,5 +34,16 @@ namespace MixItUp.Base.Util
 
             return filename;
         }
+
+        public static string Shuffle(this string str)
+        {
+            Random random = new Random();
+            var list = new SortedList<int, char>();
+            foreach (var c in str)
+            {
+                list.Add(random.Next(), c);
+            }
+            return new string(list.Values.ToArray());
+        }
     }
 }

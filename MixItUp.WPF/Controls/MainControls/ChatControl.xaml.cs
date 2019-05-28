@@ -1,6 +1,5 @@
 ﻿using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.Chat;
-using Mixer.Base.Model.Skills;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.MixerAPI;
@@ -12,7 +11,6 @@ using MixItUp.WPF.Controls.Chat;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.PopOut;
 using MixItUp.WPF.Windows.Users;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -105,14 +103,19 @@ namespace MixItUp.WPF.Controls.MainControls
             });
         }
 
-        public async Task Remove(UserViewModel user)
+        public async Task Remove(UserViewModel user) { await this.Remove(new List<UserViewModel>() { user }); }
+
+        public async Task Remove(IEnumerable<UserViewModel> users)
         {
             await this.collectionChangeSemaphore.WaitAndRelease(() =>
             {
-                if (this.existingUsers.ContainsKey(user.ID))
+                foreach (UserViewModel user in users)
                 {
-                    this.collection.Remove(this.existingUsers[user.ID]);
-                    this.existingUsers.Remove(user.ID);
+                    if (this.existingUsers.ContainsKey(user.ID))
+                    {
+                        this.collection.Remove(this.existingUsers[user.ID]);
+                        this.existingUsers.Remove(user.ID);
+                    }
                 }
                 return Task.FromResult(0);
             });
@@ -178,8 +181,8 @@ namespace MixItUp.WPF.Controls.MainControls
             ChannelSession.Chat.OnMessageOccurred += ChatClient_OnMessageOccurred;
             ChannelSession.Chat.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
             ChannelSession.Chat.OnClearMessagesOccurred += Chat_OnClearMessagesOccurred;
-            ChannelSession.Chat.OnUserJoinOccurred += ChatClient_OnUserJoinOccurred;
-            ChannelSession.Chat.OnUserLeaveOccurred += ChatClient_OnUserLeaveOccurred;
+            ChannelSession.Chat.OnUsersJoinOccurred += ChatClient_OnUsersJoinOccurred;
+            ChannelSession.Chat.OnUsersLeaveOccurred += ChatClient_OnUsersLeaveOccurred;
             ChannelSession.Chat.OnUserUpdateOccurred += ChatClient_OnUserUpdateOccurred;
             ChannelSession.Chat.OnUserPurgeOccurred += ChatClient_OnUserPurgeOccurred;
 
@@ -204,7 +207,7 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 await userUpdateLock.WaitAndRelease(async () =>
                 {
-                    foreach (UserViewModel user in await ChannelSession.ActiveUsers.GetAllUsers())
+                    foreach (UserViewModel user in (await ChannelSession.ActiveUsers.GetAllUsers()).ToList())
                     {
                         await this.UserControls.Add(user);
                     }
@@ -247,15 +250,16 @@ namespace MixItUp.WPF.Controls.MainControls
 
         #region Chat Update Methods
 
-        private async Task RefreshSpecificUserInList(UserViewModel user)
+        private async Task RefreshUsersInList(IEnumerable<UserViewModel> users)
         {
             if (!ChannelSession.Settings.HideChatUserList)
             {
                 await userUpdateLock.WaitAndRelease(async () =>
                 {
-                    if (user.IsInChat)
+                    await this.UserControls.Remove(users);
+
+                    foreach (UserViewModel user in users.Where(u => u.IsInChat))
                     {
-                        await this.UserControls.Remove(user);
                         await this.UserControls.Add(user);
                     }
 
@@ -264,13 +268,13 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
-        private async Task RemoveSpecificUserInList(UserViewModel user)
+        private async Task RemoveUsersInList(IEnumerable<UserViewModel> users)
         {
             if (!ChannelSession.Settings.HideChatUserList)
             {
                 await userUpdateLock.WaitAndRelease(async () =>
                 {
-                    await this.UserControls.Remove(user);
+                    await this.UserControls.Remove(users);
 
                     await this.RefreshViewerChatterCounts();
                 });
@@ -903,16 +907,19 @@ namespace MixItUp.WPF.Controls.MainControls
             });
         }
 
-        private async void ChatClient_OnUserJoinOccurred(object sender, UserViewModel user)
+        private async void ChatClient_OnUsersJoinOccurred(object sender, IEnumerable<UserViewModel> users)
         {
             await this.Dispatcher.InvokeAsync<Task>(async () =>
             {
-                await this.RefreshSpecificUserInList(user);
+                await this.RefreshUsersInList(users);
             });
 
-            if (ChannelSession.Settings.ChatShowUserJoinLeave)
+            if (ChannelSession.Settings.ChatShowUserJoinLeave && users.Count() < 5)
             {
-                await this.AddAlertMessage(string.Format("{0} Joined Chat", user.UserName), user, ChannelSession.Settings.ChatUserJoinLeaveColorScheme);
+                foreach (UserViewModel user in users)
+                {
+                    await this.AddAlertMessage(string.Format("{0} Joined Chat", user.UserName), user, ChannelSession.Settings.ChatUserJoinLeaveColorScheme);
+                }
             }
         }
 
@@ -920,20 +927,23 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Dispatcher.InvokeAsync<Task>(async () =>
             {
-                await this.RefreshSpecificUserInList(user);
+                await this.RefreshUsersInList(new List<UserViewModel>() { user });
             });
         }
 
-        private async void ChatClient_OnUserLeaveOccurred(object sender, UserViewModel user)
+        private async void ChatClient_OnUsersLeaveOccurred(object sender, IEnumerable<UserViewModel> users)
         {
             await this.Dispatcher.InvokeAsync<Task>(async () =>
             {
-                await this.RemoveSpecificUserInList(user);
+                await this.RemoveUsersInList(users);
             });
 
-            if (ChannelSession.Settings.ChatShowUserJoinLeave)
+            if (ChannelSession.Settings.ChatShowUserJoinLeave && users.Count() < 5)
             {
-                await this.AddAlertMessage(string.Format("{0} Left Chat", user.UserName), user, ChannelSession.Settings.ChatUserJoinLeaveColorScheme);
+                foreach (UserViewModel user in users)
+                {
+                    await this.AddAlertMessage(string.Format("{0} Left Chat", user.UserName), user, ChannelSession.Settings.ChatUserJoinLeaveColorScheme);
+                }
             }
         }
 

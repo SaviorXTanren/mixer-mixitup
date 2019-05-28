@@ -21,7 +21,7 @@
 
             <ComboBox x:Name="SpotifyActionTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="300" />
 
-            <TextBlock x:Name="SpotifyNotEnabledWarningTextBlock" Grid.Column="2" Foreground="Red" Visibility="Hidden" VerticalAlignment="Center" HorizontalAlignment="Right">Please enable Spotify connection in the Services Section!</TextBlock>
+            <TextBlock x:Name="SpotifyNotEnabledWarningTextBlock" Grid.Column="2" Foreground="Red" Visibility="Hidden" VerticalAlignment="Center" HorizontalAlignment="Right">Please enable Spotify connection on the Services page!</TextBlock>
         </Grid>
     </Grid>
 </local:ActionControlBase>

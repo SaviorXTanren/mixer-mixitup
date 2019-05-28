@@ -29,9 +29,9 @@
 
             <ComboBox x:Name="StreamingActionTypeComboBox" Grid.Column="2" Grid.Row="0" SelectionChanged="StreamingActionTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Action To Peform" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-            <TextBlock x:Name="OBSStudioNotEnabledWarningTextBlock" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Foreground="Red" HorizontalAlignment="Center" Margin="0,20,0,0" Visibility="Collapsed">Please enable OBS Studio connection in the Services Section!</TextBlock>
-            <TextBlock x:Name="XSplitNotEnabledWarningTextBlock" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Foreground="Red" HorizontalAlignment="Center" Margin="0,20,0,0" Visibility="Collapsed">Please enable XSplit connection in the Services Section!</TextBlock>
-            <TextBlock x:Name="StreamlabsOBSNotEnabledWarningTextBlock" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Foreground="Red" HorizontalAlignment="Center" Margin="0,20,0,0" Visibility="Collapsed">Please enable Streamlabs OBS connection in the Services Section!</TextBlock>
+            <TextBlock x:Name="OBSStudioNotEnabledWarningTextBlock" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Foreground="Red" HorizontalAlignment="Center" Margin="0,20,0,0" Visibility="Collapsed">Please enable OBS Studio connection on the Services page!</TextBlock>
+            <TextBlock x:Name="XSplitNotEnabledWarningTextBlock" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Foreground="Red" HorizontalAlignment="Center" Margin="0,20,0,0" Visibility="Collapsed">Please enable XSplit connection on the Services page!</TextBlock>
+            <TextBlock x:Name="StreamlabsOBSNotEnabledWarningTextBlock" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Foreground="Red" HorizontalAlignment="Center" Margin="0,20,0,0" Visibility="Collapsed">Please enable Streamlabs OBS connection on the Services page!</TextBlock>
         </Grid>
 
         <Grid x:Name="SceneGrid" Grid.Row="2" Visibility="Collapsed">

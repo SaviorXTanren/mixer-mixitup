@@ -28,6 +28,7 @@ namespace MixItUp.Desktop.Services
             this.AudioService = new AudioService();
             this.TextToSpeechService = new WindowsTextToSpeechService();
             this.SongRequestService = new SongRequestService();
+            this.GiveawayService = new GiveawayService();
             this.TranslationService = new TranslationService();
             this.SerialService = new SerialService();
             this.RemoteService = new RemoteService("https://mixitup-remote-server.azurewebsites.net/api/", "https://mixitup-remote-server.azurewebsites.net/RemoteHub");
@@ -498,6 +499,22 @@ namespace MixItUp.Desktop.Services
                 this.Patreon = null;
                 ChannelSession.Settings.PatreonOAuthToken = null;
             }
+        }
+
+        public override Task<bool> InitializeIFTTT(string key = null)
+        {
+            this.IFTTT = (ChannelSession.Settings.IFTTTOAuthToken != null) ? new IFTTTService(ChannelSession.Settings.IFTTTOAuthToken) : new IFTTTService(key);
+            return Task.FromResult(true);
+        }
+
+        public override Task DisconnectIFTTT()
+        {
+            if (this.IFTTT != null)
+            {
+                this.IFTTT = null;
+                ChannelSession.Settings.IFTTTOAuthToken = null;
+            }
+            return Task.FromResult(0);
         }
 
         private void OverlayServer_OnWebSocketConnectedOccurred(object sender, System.EventArgs e)

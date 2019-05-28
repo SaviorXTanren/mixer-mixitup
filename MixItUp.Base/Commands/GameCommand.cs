@@ -7,48 +7,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Commands
 {
-    #region OLD GAME CLASSES
-
-    [DataContract]
-    internal class GameOutcomeGroup { }
-
-    [DataContract]
-    internal class GameOutcomeProbability { }
-
-    internal class OldGameCommandBase : GameCommandBase
-    {
-        public override IEnumerable<CommandBase> GetAllInnerCommands() { return new List<CommandBase>(); }
-    }
-
-    [DataContract]
-    internal class UserCharityGameCommand : OldGameCommandBase { }
-
-    [DataContract]
-    internal class OnlyOneWinnerGameCommand : OldGameCommandBase { }
-
-    [DataContract]
-    internal class IndividualProbabilityGameCommand : OldGameCommandBase { }
-
-    [DataContract]
-    internal class SinglePlayerGameCommand : OldGameCommandBase { }
-
-    [DataContract]
-    internal class SpinWheelGameCommand : OldGameCommandBase { }
-
-    [DataContract]
-    internal class CharityGameCommand : OldGameCommandBase { }
-
-    [DataContract]
-    internal class GiveGameCommand : OldGameCommandBase { }
-
-    #endregion OLD GAME CLASSES
-
-
     #region Base Game Classes
 
     [DataContract]
@@ -338,9 +302,13 @@ namespace MixItUp.Base.Commands
                 {
                     specialIdentifiers[GameCommandBase.GameWinnersSpecialIdentifier] = string.Join(", ", this.winners.Select(w => "@" + w.UserName));
                 }
-                else
+                else if (user != null)
                 {
                     specialIdentifiers[GameCommandBase.GameWinnersSpecialIdentifier] = "@" + user.UserName;
+                }
+                else
+                {
+                    specialIdentifiers[GameCommandBase.GameWinnersSpecialIdentifier] = "None";
                 }
                 await command.Perform(user, arguments, specialIdentifiers);
             }
@@ -521,6 +489,9 @@ namespace MixItUp.Base.Commands
         [DataMember]
         public GameOutcome UserFailOutcome { get; set; }
 
+        [DataMember]
+        public CustomCommand NotEnoughPlayersCommand { get; set; }
+
         [JsonIgnore]
         protected UserViewModel starterUser;
         [JsonIgnore]
@@ -531,7 +502,7 @@ namespace MixItUp.Base.Commands
         public GroupGameCommand() { }
 
         public GroupGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int minimumParticipants, int timeLimit, CustomCommand startedCommand,
-            CustomCommand userJoinCommand, GameOutcome userSuccessOutcome, GameOutcome userFailOutcome)
+            CustomCommand userJoinCommand, GameOutcome userSuccessOutcome, GameOutcome userFailOutcome, CustomCommand notEnoughPlayersCommand)
             : base(name, commands, requirements)
         {
             this.MinimumParticipants = minimumParticipants;
@@ -540,6 +511,7 @@ namespace MixItUp.Base.Commands
             this.UserJoinCommand = userJoinCommand;
             this.UserSuccessOutcome = userSuccessOutcome;
             this.UserFailOutcome = userFailOutcome;
+            this.NotEnoughPlayersCommand = notEnoughPlayersCommand;
         }
 
         public override IEnumerable<CommandBase> GetAllInnerCommands()
@@ -578,6 +550,8 @@ namespace MixItUp.Base.Commands
                             this.timeLimitTask = Task.Run(async () =>
                             {
                                 await Task.Delay(this.TimeLimit * 1000);
+
+                                await this.TimeComplete();
 
                                 this.Requirements.UpdateCooldown(user);
 
@@ -639,8 +613,14 @@ namespace MixItUp.Base.Commands
             {
                 enteredUser.Key.Data.AddCurrencyAmount(currency, enteredUser.Value);
             }
-            await ChannelSession.Chat.SendMessage(string.Format("@{0} couldn't get enough users to join in...", this.starterUser.UserName));
+            
+            if (this.NotEnoughPlayersCommand != null)
+            {
+                await this.NotEnoughPlayersCommand.Perform(this.starterUser);
+            }
         }
+
+        protected virtual Task TimeComplete() { return Task.FromResult(0); }
 
         protected virtual Task SelectWinners() { return Task.FromResult(0); }
 
@@ -932,6 +912,8 @@ namespace MixItUp.Base.Commands
     {
         [DataMember]
         public CustomCommand StartedCommand { get; set; }
+        [DataMember]
+        public CustomCommand NotAcceptedCommand { get; set; }
 
         [DataMember]
         public int TimeLimit { get; set; }
@@ -952,11 +934,13 @@ namespace MixItUp.Base.Commands
 
         public DuelGameCommand() { }
 
-        public DuelGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, GameOutcome successfulOutcome, GameOutcome failedOutcome, CustomCommand startedCommand, int timeLimit)
+        public DuelGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, GameOutcome successfulOutcome, GameOutcome failedOutcome,
+            CustomCommand startedCommand, int timeLimit, CustomCommand notAcceptedCommand)
             : base(name, commands, requirements, successfulOutcome, failedOutcome)
         {
             this.StartedCommand = startedCommand;
             this.TimeLimit = timeLimit;
+            this.NotAcceptedCommand = notAcceptedCommand;
         }
 
         public override IEnumerable<CommandBase> GetAllInnerCommands()
@@ -1052,13 +1036,17 @@ namespace MixItUp.Base.Commands
                                         {
                                             if (this.currentTargetUser != null)
                                             {
-                                                await ChannelSession.Chat.SendMessage(string.Format("@{0} did not respond in time...", this.currentTargetUser.UserName));
                                                 this.currentStarterUser.Data.AddCurrencyAmount(currency, this.currentBetAmount);
                                                 if (this.Requirements.Inventory != null)
                                                 {
                                                     this.currentStarterUser.Data.AddInventoryAmount(this.Requirements.Inventory.GetInventory(), this.Requirements.Inventory.ItemName, this.Requirements.Inventory.Amount);
                                                 }
                                                 this.ResetData(user);
+
+                                                if (this.NotAcceptedCommand != null)
+                                                {
+                                                    await this.NotAcceptedCommand.Perform(this.currentStarterUser, arguments: new List<string>() { this.currentTargetUser.UserName });
+                                                }
                                             }
                                         });
                                     }
@@ -1120,8 +1108,8 @@ namespace MixItUp.Base.Commands
 
         public HeistGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int minimumParticipants, int timeLimit, CustomCommand startedCommand,
             CustomCommand userJoinCommand, GameOutcome userSuccessOutcome, GameOutcome userFailOutcome, CustomCommand allSucceedCommand, CustomCommand topThirdsSucceedCommand,
-            CustomCommand middleThirdsSucceedCommand, CustomCommand lowThirdsSucceedCommand, CustomCommand noneSucceedCommand)
-            : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, userSuccessOutcome, userFailOutcome)
+            CustomCommand middleThirdsSucceedCommand, CustomCommand lowThirdsSucceedCommand, CustomCommand noneSucceedCommand, CustomCommand notEnoughPlayersCommand)
+            : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, userSuccessOutcome, userFailOutcome, notEnoughPlayersCommand)
         {
             this.AllSucceedCommand = allSucceedCommand;
             this.TopThirdsSucceedCommand = topThirdsSucceedCommand;
@@ -1199,8 +1187,8 @@ namespace MixItUp.Base.Commands
         public RussianRouletteGameCommand() { }
 
         public RussianRouletteGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int minimumParticipants, int timeLimit, CustomCommand startedCommand,
-            CustomCommand userJoinCommand, GameOutcome userSuccessOutcome, GameOutcome userFailOutcome, int maxWinners, CustomCommand gameCompleteCommand)
-            : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, userSuccessOutcome, userFailOutcome)
+            CustomCommand userJoinCommand, GameOutcome userSuccessOutcome, GameOutcome userFailOutcome, int maxWinners, CustomCommand gameCompleteCommand, CustomCommand notEnoughPlayersCommand)
+            : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, userSuccessOutcome, userFailOutcome, notEnoughPlayersCommand)
         {
             this.MaxWinners = maxWinners;
             this.GameCompleteCommand = gameCompleteCommand;
@@ -1295,8 +1283,8 @@ namespace MixItUp.Base.Commands
         public BidGameCommand() { }
 
         public BidGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int minimumParticipants, int timeLimit, RoleRequirementViewModel gameStarterRequirement,
-            CustomCommand startedCommand, CustomCommand userJoinCommand, CustomCommand gameCompleteCommand)
-            : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, null, null)
+            CustomCommand startedCommand, CustomCommand userJoinCommand, CustomCommand gameCompleteCommand, CustomCommand notEnoughPlayersCommand)
+            : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, null, null, notEnoughPlayersCommand)
         {
             this.GameStarterRequirement = gameStarterRequirement;
             this.GameCompleteCommand = gameCompleteCommand;
@@ -1391,6 +1379,209 @@ namespace MixItUp.Base.Commands
     }
 
     [DataContract]
+    public class BetGameCommand : GroupGameCommand
+    {
+        public const string GameBetOptionsSpecialIdentifier = "gamebetoptions";
+        public const string GameBetWinningOptionSpecialIdentifier = "gamebetwinningoption";
+
+        [DataMember]
+        public RoleRequirementViewModel GameStarterRequirement { get; set; }
+
+        [DataMember]
+        public List<string> Options { get; set; }
+
+        [DataMember]
+        public CustomCommand BetsClosedCommand { get; set; }
+
+        [DataMember]
+        public CustomCommand GameCompleteCommand { get; set; }
+
+        [JsonIgnore]
+        private Dictionary<UserViewModel, int> userOptionSelection = new Dictionary<UserViewModel, int>();
+        [JsonIgnore]
+        private bool timeComplete = false;
+        [JsonIgnore]
+        private int winningOption = 0;
+
+        public BetGameCommand() { }
+
+        public BetGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int minimumParticipants, int timeLimit, RoleRequirementViewModel gameStarterRequirement,
+            CustomCommand startedCommand, IEnumerable<string> options, CustomCommand userJoinCommand, CustomCommand betsClosedCommand, GameOutcome userSuccessOutcome, GameOutcome userFailOutcome,
+            CustomCommand gameCompleteCommand, CustomCommand notEnoughPlayersCommand)
+            : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, userSuccessOutcome, userFailOutcome, notEnoughPlayersCommand)
+        {
+            this.GameStarterRequirement = gameStarterRequirement;
+            this.Options = new List<string>(options);
+            this.BetsClosedCommand = betsClosedCommand;
+            this.GameCompleteCommand = gameCompleteCommand;
+        }
+
+        public override IEnumerable<CommandBase> GetAllInnerCommands()
+        {
+            List<CommandBase> commands = new List<CommandBase>(base.GetAllInnerCommands());
+            commands.Add(this.BetsClosedCommand);
+            commands.Add(this.GameCompleteCommand);
+            return commands;
+        }
+
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
+        {
+            if (this.timeComplete)
+            {
+                if (arguments.Count() == 2 && arguments.ElementAt(0).Equals("answer") && int.TryParse(arguments.ElementAt(1), out int option) && option > 0 && option <= this.Options.Count)
+                {
+                    if (!this.GameStarterRequirement.DoesMeetRequirement(user))
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, string.Format("You must be a {0} to pick the answer", this.GameStarterRequirement.RoleNameString));
+                        return;
+                    }
+                    this.winningOption = option;
+                    return;
+                }
+                await ChannelSession.Chat.Whisper(user.UserName, "All betting is currently closed");
+            }
+            else
+            {
+                if (this.timeLimitTask == null && !this.GameStarterRequirement.DoesMeetRequirement(user))
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("You must be a {0} to start this game", this.GameStarterRequirement.RoleNameString));
+                    return;
+                }
+
+                await base.PerformInternal(user, arguments, extraSpecialIdentifiers, token);
+            }
+        }
+
+        protected override async Task<bool> PerformUsageChecks(UserViewModel user, IEnumerable<string> arguments)
+        {
+            if (this.timeLimitTask == null && !this.timeComplete)
+            {
+                return true;
+            }
+            if (this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.NoCurrencyCost || this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
+            {
+                if (arguments.Count() != 1)
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("USAGE: !{0} <OPTION #>", this.Commands.First()));
+                    return false;
+                }
+            }
+            else if (arguments.Count() != 2)
+            {
+                string betAmountUsageText = this.Requirements.Currency.RequiredAmount.ToString();
+                if (this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum)
+                {
+                    betAmountUsageText += "-" + this.Requirements.Currency.MaximumAmount.ToString();
+                }
+                else if (this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.MinimumOnly)
+                {
+                    betAmountUsageText += "+";
+                }
+                await ChannelSession.Chat.Whisper(user.UserName, string.Format("USAGE: !{0} <OPTION #> {1}", this.Commands.First(), betAmountUsageText));
+                return false;
+            }
+            return true;
+        }
+
+        protected override string GetBetAmountArgument(IEnumerable<string> arguments)
+        {
+            if (this.timeLimitTask == null && !this.timeComplete)
+            {
+                return "0";
+            }
+            return base.GetBetAmountUserArgument(arguments);
+        }
+
+        protected override async Task<bool> CanUserEnter(UserViewModel user, IEnumerable<string> arguments, int betAmount)
+        {
+            if (this.timeLimitTask == null && !this.timeComplete)
+            {
+                return true;
+            }
+
+            if (!int.TryParse(arguments.First(), out int option) || option <= 0 || option > this.Options.Count)
+            {
+                await ChannelSession.Chat.Whisper(user.UserName, "The option number you selected is not a valid number");
+                return false;
+            }
+
+            return true;
+        }
+
+        protected override async Task GameStarted(UserViewModel user, IEnumerable<string> arguments, int betAmount)
+        {
+            this.userOptionSelection.Clear();
+            await base.GameStarted(user, arguments, betAmount);
+        }
+
+        protected override async Task UserJoined(UserViewModel user, IEnumerable<string> arguments, int betAmount)
+        {
+            this.userOptionSelection[user] = int.Parse(arguments.First());
+            await base.UserJoined(user, arguments, betAmount);
+        }
+
+        protected override async Task NotEnoughUsers()
+        {
+            await ChannelSession.Chat.SendMessage(string.Format("@{0} couldn't get enough users to join in...", this.starterUser.UserName));
+        }
+
+        protected override async Task TimeComplete()
+        {
+            this.timeComplete = true;
+
+            await this.PerformCommand(this.BetsClosedCommand, null, null, 0, 0);
+
+            do
+            {
+                await Task.Delay(1000);
+            } while (this.winningOption <= 0);
+        }
+
+        protected override async Task SelectWinners()
+        {
+            foreach (var kvp in this.userOptionSelection)
+            {
+                if (kvp.Value == this.winningOption)
+                {
+                    this.winners.Add(kvp.Key);
+                    await this.PerformOutcome(kvp.Key, new List<string>(), this.UserSuccessOutcome, this.enteredUsers[kvp.Key]);
+                }
+                else
+                {
+                    await this.PerformOutcome(kvp.Key, new List<string>(), this.UserFailOutcome, this.enteredUsers[kvp.Key]);
+                }
+            }
+        }
+
+        protected override async Task GameCompleted()
+        {
+            await this.PerformCommand(this.GameCompleteCommand, null, new List<string>(), 0, 0);
+        }
+
+        protected override void ResetData(UserViewModel user)
+        {
+            this.timeComplete = false;
+            this.winningOption = 0;
+            base.ResetData(user);
+        }
+
+        protected override void AddAdditionalSpecialIdentifiers(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        {
+            List<string> optionStrings = new List<string>();
+            for (int i = 0; i < this.Options.Count; i++)
+            {
+                optionStrings.Add(string.Format("{0}) {1}", (i + 1), this.Options[i]));
+            }
+
+            specialIdentifiers[GameBetOptionsSpecialIdentifier] = string.Join(" ", optionStrings);
+            if (this.winningOption > 0)
+            {
+                specialIdentifiers[GameBetWinningOptionSpecialIdentifier] = this.Options[this.winningOption - 1];
+            }
+        }
+    }
+
+    [DataContract]
     public class RouletteGameCommand : GroupGameCommand
     {
         public const string GameBetTypeSpecialIdentifier = "gamebettype";
@@ -1415,8 +1606,8 @@ namespace MixItUp.Base.Commands
         public RouletteGameCommand() { }
 
         public RouletteGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int minimumParticipants, int timeLimit, bool isNumberRange, HashSet<string> validBetTypes,
-            CustomCommand startedCommand, CustomCommand userJoinCommand, GameOutcome userSuccessOutcome, GameOutcome userFailOutcome, CustomCommand gameCompleteCommand)
-            : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, userSuccessOutcome, userFailOutcome)
+            CustomCommand startedCommand, CustomCommand userJoinCommand, GameOutcome userSuccessOutcome, GameOutcome userFailOutcome, CustomCommand gameCompleteCommand, CustomCommand notEnoughPlayersCommand)
+            : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, userSuccessOutcome, userFailOutcome, notEnoughPlayersCommand)
         {
             this.IsNumberRange = isNumberRange;
             this.ValidBetTypes = validBetTypes;
@@ -1544,7 +1735,7 @@ namespace MixItUp.Base.Commands
     {
         public const string GameHitmanNameSpecialIdentifier = "gamehitmanname";
 
-        private static readonly HashSet<string> DefaultWords = new HashSet<string>() { "ABLE", "ACCEPTABLE", "ACCORDING", "ACCURATE", "ACTION", "ACTIVE", "ACTUAL", "ADDITIONAL", "ADMINISTRATIVE", "ADULT", "AFRAID", "AFTER", "AFTERNOON", "AGENT", "AGGRESSIVE", "AGO", "AIRLINE", "ALIVE", "ALL", "ALONE", "ALTERNATIVE", "AMAZING", "ANGRY", "ANIMAL", "ANNUAL", "ANOTHER", "ANXIOUS", "ANY", "APART", "APPROPRIATE", "ASLEEP", "AUTOMATIC", "AVAILABLE", "AWARE", "AWAY", "BACKGROUND", "BASIC", "BEAUTIFUL", "BEGINNING", "BEST", "BETTER", "BIG", "BITTER", "BORING", "BORN", "BOTH", "BRAVE", "BRIEF", "BRIGHT", "BRILLIANT", "BROAD", "BROWN", "BUDGET", "BUSINESS", "BUSY", "CALM", "CAPABLE", "CAPITAL", "CAR", "CAREFUL", "CERTAIN", "CHANCE", "CHARACTER", "CHEAP", "CHEMICAL", "CHICKEN", "CHOICE", "CIVIL", "CLASSIC", "CLEAN", "CLEAR", "CLOSE", "COLD", "COMFORTABLE", "COMMERCIAL", "COMMON", "COMPETITIVE", "COMPLETE", "COMPLEX", "COMPREHENSIVE", "CONFIDENT", "CONNECT", "CONSCIOUS", "CONSISTENT", "CONSTANT", "CONTENT", "COOL", "CORNER", "CORRECT", "CRAZY", "CREATIVE", "CRITICAL", "CULTURAL", "CURIOUS", "CURRENT", "CUTE", "DANGEROUS", "DARK", "DAUGHTER", "DAY", "DEAD", "DEAR", "DECENT", "DEEP", "DEPENDENT", "DESIGNER", "DESPERATE", "DIFFERENT", "DIFFICULT", "DIRECT", "DIRTY", "DISTINCT", "DOUBLE", "DOWNTOWN", "DRAMATIC", "DRESS", "DRUNK", "DRY", "DUE", "EACH", "EAST", "EASTERN", "EASY", "ECONOMY", "EDUCATIONAL", "EFFECTIVE", "EFFICIENT", "EITHER", "ELECTRICAL", "ELECTRONIC", "EMBARRASSED", "EMERGENCY", "EMOTIONAL", "EMPTY", "ENOUGH", "ENTIRE", "ENVIRONMENTAL", "EQUAL", "EQUIVALENT", "EVEN", "EVENING", "EVERY", "EXACT", "EXCELLENT", "EXCITING", "EXISTING", "EXPENSIVE", "EXPERT", "EXPRESS", "EXTENSION", "EXTERNAL", "EXTRA", "EXTREME", "FAIR", "FAMILIAR", "FAMOUS", "FAR", "FAST", "FAT", "FEDERAL", "FEELING", "FEMALE", "FEW", "FINAL", "FINANCIAL", "FINE", "FIRM", "FIRST", "FIT", "FLAT", "FOREIGN", "FORMAL", "FORMER", "FORWARD", "FREE", "FREQUENT", "FRESH", "FRIENDLY", "FRONT", "FULL", "FUN", "FUNNY", "FUTURE", "GAME", "GENERAL", "GLAD", "GLASS", "GLOBAL", "GOLD", "GOOD", "GRAND", "GREAT", "GREEN", "GROSS", "GUILTY", "HAPPY", "HARD", "HEAD", "HEALTHY", "HEAVY", "HELPFUL", "HIGH", "HIS", "HISTORICAL", "HOLIDAY", "HOME", "HONEST", "HORROR", "HOT", "HOUR", "HOUSE", "HUGE", "HUMAN", "HUNGRY", "IDEAL", "ILL", "ILLEGAL", "IMMEDIATE", "IMPORTANT", "IMPOSSIBLE", "IMPRESSIVE", "INCIDENT", "INDEPENDENT", "INDIVIDUAL", "INEVITABLE", "INFORMAL", "INITIAL", "INNER", "INSIDE", "INTELLIGENT", "INTERESTING", "INTERNAL", "INTERNATIONAL", "JOINT", "JUNIOR", "JUST", "KEY", "KIND", "KITCHEN", "KNOWN", "LARGE", "LAST", "LATE", "LATTER", "LEADING", "LEAST", "LEATHER", "LEFT", "LEGAL", "LESS", "LEVEL", "LIFE", "LITTLE", "LIVE", "LIVING", "LOCAL", "LOGICAL", "LONELY", "LONG", "LOOSE", "LOST", "LOUD", "LOW", "LOWER", "LUCKY", "MAD", "MAIN", "MAJOR", "MALE", "MANY", "MASSIVE", "MASTER", "MATERIAL", "MAXIMUM", "MEAN", "MEDICAL", "MEDIUM", "MENTAL", "MIDDLE", "MINIMUM", "MINOR", "MINUTE", "MISSION", "MOBILE", "MONEY", "MORE", "MOST", "MOTHER", "MOTOR", "MOUNTAIN", "MUCH", "NARROW", "NASTY", "NATIONAL", "NATIVE", "NATURAL", "NEARBY", "NEAT", "NECESSARY", "NEGATIVE", "NEITHER", "NERVOUS", "NEW", "NEXT", "NICE", "NO", "NORMAL", "NORTH", "NOVEL", "NUMEROUS", "OBJECTIVE", "OBVIOUS", "ODD", "OFFICIAL", "OK", "OLD", "ONE", "ONLY", "OPEN", "OPENING", "OPPOSITE", "ORDINARY", "ORIGINAL", "OTHER", "OTHERWISE", "OUTSIDE", "OVER", "OVERALL", "OWN", "PARKING", "PARTICULAR", "PARTY", "PAST", "PATIENT", "PERFECT", "PERIOD", "PERSONAL", "PHYSICAL", "PLANE", "PLASTIC", "PLEASANT", "PLENTY", "PLUS", "POLITICAL", "POOR", "POPULAR", "POSITIVE", "POSSIBLE", "POTENTIAL", "POWERFUL", "PRACTICAL", "PREGNANT", "PRESENT", "PRETEND", "PRETTY", "PREVIOUS", "PRIMARY", "PRIOR", "PRIVATE", "PRIZE", "PROFESSIONAL", "PROOF", "PROPER", "PROUD", "PSYCHOLOGICAL", "PUBLIC", "PURE", "PURPLE", "QUICK", "QUIET", "RARE", "RAW", "READY", "REAL", "REALISTIC", "REASONABLE", "RECENT", "RED", "REGULAR", "RELATIVE", "RELEVANT", "REMARKABLE", "REMOTE", "REPRESENTATIVE", "RESIDENT", "RESPONSIBLE", "RICH", "RIGHT", "ROUGH", "ROUND", "ROUTINE", "ROYAL", "SAD", "SAFE", "SALT", "SAME", "SAVINGS", "SCARED", "SEA", "SECRET", "SECURE", "SELECT", "SENIOR", "SENSITIVE", "SEPARATE", "SERIOUS", "SEVERAL", "SEVERE", "SEXUAL", "SHARP", "SHORT", "SHOT", "SICK", "SIGNAL", "SIGNIFICANT", "SILLY", "SILVER", "SIMILAR", "SIMPLE", "SINGLE", "SLIGHT", "SLOW", "SMALL", "SMART", "SMOOTH", "SOFT", "SOLID", "SOME", "SORRY", "SOUTH", "SOUTHERN", "SPARE", "SPECIAL", "SPECIALIST", "SPECIFIC", "SPIRITUAL", "SQUARE", "STANDARD", "STATUS", "STILL", "STOCK", "STRAIGHT", "STRANGE", "STREET", "STRICT", "STRONG", "STUPID", "SUBJECT", "SUBSTANTIAL", "SUCCESSFUL", "SUCH", "SUDDEN", "SUFFICIENT", "SUITABLE", "SUPER", "SURE", "SUSPICIOUS", "SWEET", "SWIMMING", "TALL", "TECHNICAL", "TEMPORARY", "TERRIBLE", "THAT", "THEN", "THESE", "THICK", "THIN", "THINK", "THIS", "TIGHT", "TIME", "TINY", "TOP", "TOTAL", "TOUGH", "TRADITIONAL", "TRAINING", "TRICK", "TYPICAL", "UGLY", "UNABLE", "UNFAIR", "UNHAPPY", "UNIQUE", "UNITED", "UNLIKELY", "UNUSUAL", "UPPER", "UPSET", "UPSTAIRS", "USED", "USEFUL", "USUAL", "VALUABLE", "VARIOUS", "VAST", "VEGETABLE", "VISIBLE", "VISUAL", "WARM", "WASTE", "WEAK", "WEEKLY", "WEIRD", "WEST", "WESTERN", "WHAT", "WHICH", "WHITE", "WHOLE", "WIDE", "WILD", "WILLING", "WINE", "WINTER", "WISE", "WONDERFUL", "WOODEN", "WORK", "WORKING", "WORTH", "WRONG", "YELLOW", "YOUNG" };
+        public static readonly HashSet<string> DefaultWords = new HashSet<string>() { "ABLE", "ACCEPTABLE", "ACCORDING", "ACCURATE", "ACTION", "ACTIVE", "ACTUAL", "ADDITIONAL", "ADMINISTRATIVE", "ADULT", "AFRAID", "AFTER", "AFTERNOON", "AGENT", "AGGRESSIVE", "AGO", "AIRLINE", "ALIVE", "ALL", "ALONE", "ALTERNATIVE", "AMAZING", "ANGRY", "ANIMAL", "ANNUAL", "ANOTHER", "ANXIOUS", "ANY", "APART", "APPROPRIATE", "ASLEEP", "AUTOMATIC", "AVAILABLE", "AWARE", "AWAY", "BACKGROUND", "BASIC", "BEAUTIFUL", "BEGINNING", "BEST", "BETTER", "BIG", "BITTER", "BORING", "BORN", "BOTH", "BRAVE", "BRIEF", "BRIGHT", "BRILLIANT", "BROAD", "BROWN", "BUDGET", "BUSINESS", "BUSY", "CALM", "CAPABLE", "CAPITAL", "CAR", "CAREFUL", "CERTAIN", "CHANCE", "CHARACTER", "CHEAP", "CHEMICAL", "CHICKEN", "CHOICE", "CIVIL", "CLASSIC", "CLEAN", "CLEAR", "CLOSE", "COLD", "COMFORTABLE", "COMMERCIAL", "COMMON", "COMPETITIVE", "COMPLETE", "COMPLEX", "COMPREHENSIVE", "CONFIDENT", "CONNECT", "CONSCIOUS", "CONSISTENT", "CONSTANT", "CONTENT", "COOL", "CORNER", "CORRECT", "CRAZY", "CREATIVE", "CRITICAL", "CULTURAL", "CURIOUS", "CURRENT", "CUTE", "DANGEROUS", "DARK", "DAUGHTER", "DAY", "DEAD", "DEAR", "DECENT", "DEEP", "DEPENDENT", "DESIGNER", "DESPERATE", "DIFFERENT", "DIFFICULT", "DIRECT", "DIRTY", "DISTINCT", "DOUBLE", "DOWNTOWN", "DRAMATIC", "DRESS", "DRUNK", "DRY", "DUE", "EACH", "EAST", "EASTERN", "EASY", "ECONOMY", "EDUCATIONAL", "EFFECTIVE", "EFFICIENT", "EITHER", "ELECTRICAL", "ELECTRONIC", "EMBARRASSED", "EMERGENCY", "EMOTIONAL", "EMPTY", "ENOUGH", "ENTIRE", "ENVIRONMENTAL", "EQUAL", "EQUIVALENT", "EVEN", "EVENING", "EVERY", "EXACT", "EXCELLENT", "EXCITING", "EXISTING", "EXPENSIVE", "EXPERT", "EXPRESS", "EXTENSION", "EXTERNAL", "EXTRA", "EXTREME", "FAIR", "FAMILIAR", "FAMOUS", "FAR", "FAST", "FAT", "FEDERAL", "FEELING", "FEMALE", "FEW", "FINAL", "FINANCIAL", "FINE", "FIRM", "FIRST", "FIT", "FLAT", "FOREIGN", "FORMAL", "FORMER", "FORWARD", "FREE", "FREQUENT", "FRESH", "FRIENDLY", "FRONT", "FULL", "FUN", "FUNNY", "FUTURE", "GAME", "GENERAL", "GLAD", "GLASS", "GLOBAL", "GOLD", "GOOD", "GRAND", "GREAT", "GREEN", "GROSS", "GUILTY", "HAPPY", "HARD", "HEAD", "HEALTHY", "HEAVY", "HELPFUL", "HIGH", "HIS", "HISTORICAL", "HOLIDAY", "HOME", "HONEST", "HORROR", "HOT", "HOUR", "HOUSE", "HUGE", "HUMAN", "HUNGRY", "IDEAL", "ILL", "ILLEGAL", "IMMEDIATE", "IMPORTANT", "IMPOSSIBLE", "IMPRESSIVE", "INCIDENT", "INDEPENDENT", "INDIVIDUAL", "INEVITABLE", "INFORMAL", "INITIAL", "INNER", "INSIDE", "INTELLIGENT", "INTERESTING", "INTERNAL", "INTERNATIONAL", "JOINT", "JUNIOR", "JUST", "KEY", "KIND", "KITCHEN", "KNOWN", "LARGE", "LAST", "LATE", "LATTER", "LEADING", "LEAST", "LEATHER", "LEFT", "LEGAL", "LESS", "LEVEL", "LIFE", "LITTLE", "LIVE", "LIVING", "LOCAL", "LOGICAL", "LONELY", "LONG", "LOOSE", "LOST", "LOUD", "LOW", "LOWER", "LUCKY", "MAD", "MAIN", "MAJOR", "MALE", "MANY", "MASSIVE", "MASTER", "MATERIAL", "MAXIMUM", "MEAN", "MEDICAL", "MEDIUM", "MENTAL", "MIDDLE", "MINIMUM", "MINOR", "MINUTE", "MISSION", "MOBILE", "MONEY", "MORE", "MOST", "MOTHER", "MOTOR", "MOUNTAIN", "MUCH", "NARROW", "NASTY", "NATIONAL", "NATIVE", "NATURAL", "NEARBY", "NEAT", "NECESSARY", "NEGATIVE", "NEITHER", "NERVOUS", "NEW", "NEXT", "NICE", "NO", "NORMAL", "NORTH", "NOVEL", "NUMEROUS", "OBJECTIVE", "OBVIOUS", "ODD", "OFFICIAL", "OK", "OLD", "ONE", "ONLY", "OPEN", "OPENING", "OPPOSITE", "ORDINARY", "ORIGINAL", "OTHER", "OTHERWISE", "OUTSIDE", "OVER", "OVERALL", "OWN", "PARKING", "PARTICULAR", "PARTY", "PAST", "PATIENT", "PERFECT", "PERIOD", "PERSONAL", "PHYSICAL", "PLANE", "PLASTIC", "PLEASANT", "PLENTY", "PLUS", "POLITICAL", "POOR", "POPULAR", "POSITIVE", "POSSIBLE", "POTENTIAL", "POWERFUL", "PRACTICAL", "PREGNANT", "PRESENT", "PRETEND", "PRETTY", "PREVIOUS", "PRIMARY", "PRIOR", "PRIVATE", "PRIZE", "PROFESSIONAL", "PROOF", "PROPER", "PROUD", "PSYCHOLOGICAL", "PUBLIC", "PURE", "PURPLE", "QUICK", "QUIET", "RARE", "RAW", "READY", "REAL", "REALISTIC", "REASONABLE", "RECENT", "RED", "REGULAR", "RELATIVE", "RELEVANT", "REMARKABLE", "REMOTE", "REPRESENTATIVE", "RESIDENT", "RESPONSIBLE", "RICH", "RIGHT", "ROUGH", "ROUND", "ROUTINE", "ROYAL", "SAD", "SAFE", "SALT", "SAME", "SAVINGS", "SCARED", "SEA", "SECRET", "SECURE", "SELECT", "SENIOR", "SENSITIVE", "SEPARATE", "SERIOUS", "SEVERAL", "SEVERE", "SEXUAL", "SHARP", "SHORT", "SHOT", "SICK", "SIGNAL", "SIGNIFICANT", "SILLY", "SILVER", "SIMILAR", "SIMPLE", "SINGLE", "SLIGHT", "SLOW", "SMALL", "SMART", "SMOOTH", "SOFT", "SOLID", "SOME", "SORRY", "SOUTH", "SOUTHERN", "SPARE", "SPECIAL", "SPECIALIST", "SPECIFIC", "SPIRITUAL", "SQUARE", "STANDARD", "STATUS", "STILL", "STOCK", "STRAIGHT", "STRANGE", "STREET", "STRICT", "STRONG", "STUPID", "SUBJECT", "SUBSTANTIAL", "SUCCESSFUL", "SUCH", "SUDDEN", "SUFFICIENT", "SUITABLE", "SUPER", "SURE", "SUSPICIOUS", "SWEET", "SWIMMING", "TALL", "TECHNICAL", "TEMPORARY", "TERRIBLE", "THAT", "THEN", "THESE", "THICK", "THIN", "THINK", "THIS", "TIGHT", "TIME", "TINY", "TOP", "TOTAL", "TOUGH", "TRADITIONAL", "TRAINING", "TRICK", "TYPICAL", "UGLY", "UNABLE", "UNFAIR", "UNHAPPY", "UNIQUE", "UNITED", "UNLIKELY", "UNUSUAL", "UPPER", "UPSET", "UPSTAIRS", "USED", "USEFUL", "USUAL", "VALUABLE", "VARIOUS", "VAST", "VEGETABLE", "VISIBLE", "VISUAL", "WARM", "WASTE", "WEAK", "WEEKLY", "WEIRD", "WEST", "WESTERN", "WHAT", "WHICH", "WHITE", "WHOLE", "WIDE", "WILD", "WILLING", "WINE", "WINTER", "WISE", "WONDERFUL", "WOODEN", "WORK", "WORKING", "WORTH", "WRONG", "YELLOW", "YOUNG" };
 
         [DataMember]
         public string CustomWordsFilePath { get; set; }
@@ -1566,8 +1757,8 @@ namespace MixItUp.Base.Commands
 
         public HitmanGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int minimumParticipants, int timeLimit, string customWordsFilePath,
             int hitmanTimeLimit, CustomCommand startedCommand, CustomCommand userJoinCommand, CustomCommand hitmanApproachingCommand, CustomCommand hitmanAppearsCommand,
-            GameOutcome userSuccessOutcome, GameOutcome userFailOutcome)
-            : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, userSuccessOutcome, userFailOutcome)
+            GameOutcome userSuccessOutcome, GameOutcome userFailOutcome, CustomCommand notEnoughPlayersCommand)
+            : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, userSuccessOutcome, userFailOutcome, notEnoughPlayersCommand)
         {
             this.CustomWordsFilePath = customWordsFilePath;
             this.HitmanApproachingCommand = hitmanApproachingCommand;
@@ -1675,6 +1866,152 @@ namespace MixItUp.Base.Commands
             if (!string.IsNullOrEmpty(this.hitmanName) && this.winners.Count == 0 && this.enteredUsers.ContainsKey(message.User))
             {
                 if (!string.IsNullOrEmpty(message.Message) && message.Message.Equals(this.hitmanName, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    this.winners.Add(message.User);
+                }
+            }
+        }
+    }
+
+    [DataContract]
+    public class WordScrambleGameCommand : GroupGameCommand
+    {
+        public const string GameWordScrambleWordSpecialIdentifier = "gamewordscrambleword";
+        public const string GameWordScrambleAnswerSpecialIdentifier = "gamewordscrambleanswer";
+
+        [DataMember]
+        public string CustomWordsFilePath { get; set; }
+
+        [DataMember]
+        public CustomCommand WordScramblePrepareCommand { get; set; }
+        [DataMember]
+        public CustomCommand WordScrambleBeginCommand { get; set; }
+
+        [DataMember]
+        public int WordScrambleTimeLimit { get; set; }
+
+        [JsonIgnore]
+        private int betAmount = 0;
+        [JsonIgnore]
+        private string selectedWord = null;
+        [JsonIgnore]
+        private string selectedWordScrambled = null;
+
+        public WordScrambleGameCommand() { }
+
+        public WordScrambleGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int minimumParticipants, int timeLimit, string customWordsFilePath,
+            int wordScrambleTimeLimit, CustomCommand startedCommand, CustomCommand userJoinCommand, CustomCommand wordScramblePrepareCommand, CustomCommand wordScrambleBeginCommand,
+            GameOutcome userSuccessOutcome, GameOutcome userFailOutcome, CustomCommand notEnoughPlayersCommand)
+            : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, userSuccessOutcome, userFailOutcome, notEnoughPlayersCommand)
+        {
+            this.CustomWordsFilePath = customWordsFilePath;
+            this.WordScramblePrepareCommand = wordScramblePrepareCommand;
+            this.WordScrambleBeginCommand = wordScrambleBeginCommand;
+            this.WordScrambleTimeLimit = wordScrambleTimeLimit;
+        }
+
+        public override IEnumerable<CommandBase> GetAllInnerCommands()
+        {
+            List<CommandBase> commands = new List<CommandBase>(base.GetAllInnerCommands());
+            commands.Add(this.WordScramblePrepareCommand);
+            commands.Add(this.WordScrambleBeginCommand);
+            return commands;
+        }
+
+        protected override async Task<bool> PerformUsageChecks(UserViewModel user, IEnumerable<string> arguments)
+        {
+            if (this.timeLimitTask != null)
+            {
+                if (arguments.Count() != 0)
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("The game is already underway, type !{0} in chat to join!", this.Commands.First()));
+                    return false;
+                }
+                return true;
+            }
+            return await base.PerformUsageChecks(user, arguments);
+        }
+
+        protected override async Task<int> GetBetAmount(UserViewModel user, string betAmountText)
+        {
+            if (this.timeLimitTask != null)
+            {
+                return this.betAmount;
+            }
+            return await base.GetBetAmount(user, betAmountText);
+        }
+
+        protected override async Task GameStarted(UserViewModel user, IEnumerable<string> arguments, int betAmount)
+        {
+            this.betAmount = betAmount;
+            await base.GameStarted(user, arguments, betAmount);
+        }
+
+        protected override async Task SelectWinners()
+        {
+            await this.PerformCommand(this.WordScramblePrepareCommand, this.starterUser, new List<string>(), this.betAmount, 0);
+
+            HashSet<string> wordsToUse = new HashSet<string>(HitmanGameCommand.DefaultWords.Where(s => s.Length > 4));
+            if (!string.IsNullOrEmpty(this.CustomWordsFilePath) && ChannelSession.Services.FileService.FileExists(this.CustomWordsFilePath))
+            {
+                string fileData = await ChannelSession.Services.FileService.ReadFile(this.CustomWordsFilePath);
+                if (!string.IsNullOrEmpty(fileData))
+                {
+                    wordsToUse = new HashSet<string>();
+                    foreach (string split in fileData.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        wordsToUse.Add(split);
+                    }
+                }
+            }
+
+            await Task.Delay(5000);
+
+            int randomNumber = this.GenerateRandomNumber(wordsToUse.Count);
+            this.selectedWord = wordsToUse.ElementAt(randomNumber);
+            this.selectedWordScrambled = this.selectedWord.Shuffle();
+
+            ChannelSession.Chat.OnMessageOccurred += Chat_OnMessageOccurred;
+
+            await this.PerformCommand(this.WordScrambleBeginCommand, this.starterUser, new List<string>(), this.betAmount, 0);
+
+            for (int i = 0; i < this.WordScrambleTimeLimit * 2; i++)
+            {
+                await Task.Delay(500);
+                if (this.winners.Count > 0)
+                {
+                    break;
+                }
+            }
+
+            ChannelSession.Chat.OnMessageOccurred -= Chat_OnMessageOccurred;
+
+            if (this.winners.Count > 0)
+            {
+                this.totalPayout = this.enteredUsers.Values.Sum();
+                this.winners.First().Data.AddCurrencyAmount(this.Requirements.Currency.GetCurrency(), this.totalPayout);
+                await this.PerformCommand(this.UserSuccessOutcome.Command, this.winners.First(), new List<string>(), this.betAmount, this.totalPayout);
+            }
+            else
+            {
+                await this.PerformCommand(this.UserFailOutcome.Command, await ChannelSession.GetCurrentUser(), new List<string>(), this.betAmount, this.totalPayout);
+            }
+        }
+
+        protected override void AddAdditionalSpecialIdentifiers(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        {
+            if (!string.IsNullOrEmpty(this.selectedWord))
+            {
+                specialIdentifiers[GameWordScrambleWordSpecialIdentifier] = this.selectedWordScrambled;
+                specialIdentifiers[GameWordScrambleAnswerSpecialIdentifier] = this.selectedWord;
+            }
+        }
+
+        private void Chat_OnMessageOccurred(object sender, ChatMessageViewModel message)
+        {
+            if (!string.IsNullOrEmpty(this.selectedWord) && this.winners.Count == 0 && this.enteredUsers.ContainsKey(message.User))
+            {
+                if (!string.IsNullOrEmpty(message.Message) && message.Message.Equals(this.selectedWord, StringComparison.CurrentCultureIgnoreCase))
                 {
                     this.winners.Add(message.User);
                 }
@@ -2158,6 +2495,205 @@ namespace MixItUp.Base.Commands
             {
                 this.CurrentCombination += this.GenerateRandomNumber(10).ToString();
             }
+        }
+    }
+
+    [DataContract]
+    public class HangmanGameCommand : LongRunningGameCommand
+    {
+        public const string GameHangmanCurrentSpecialIdentifier = "gamehangmancurrent";
+        public const string GameHangmanFailedGuessesSpecialIdentifier = "gamehangmanfailedguesses";
+        public const string GameHangmanAnswerSpecialIdentifier = "gamehangmananswer";
+
+        [DataMember]
+        public CustomCommand StatusCommand { get; set; }
+
+        [DataMember]
+        public int MaxFailures { get; set; }
+        [DataMember]
+        public int InitialAmount { get; set; }
+
+        [DataMember]
+        public CustomCommand SuccessfulGuessCommand { get; set; }
+        [DataMember]
+        public CustomCommand FailedGuessCommand { get; set; }
+
+        [DataMember]
+        public CustomCommand GameWonCommand { get; set; }
+        [DataMember]
+        public CustomCommand GameLostCommand { get; set; }
+
+        [DataMember]
+        public string CustomWordsFilePath { get; set; }
+
+        [DataMember]
+        public string CurrentWord { get; set; }
+        [DataMember]
+        public HashSet<char> SuccessfulGuesses { get; set; } = new HashSet<char>();
+        [DataMember]
+        public HashSet<char> FailedGuesses { get; set; } = new HashSet<char>();
+
+        public HangmanGameCommand() { }
+
+        public HangmanGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, string statusArgument, CustomCommand statusCommand, int maxFailures,
+            int initialAmount, CustomCommand successfulGuessCommand, CustomCommand failedGuessCommand, CustomCommand gameWonCommand, CustomCommand gameLostCommand, string customWordsFilePath)
+            : base(name, commands, requirements, statusArgument)
+        {
+            this.StatusCommand = statusCommand;
+            this.MaxFailures = maxFailures;
+            this.InitialAmount = initialAmount;
+            this.SuccessfulGuessCommand = successfulGuessCommand;
+            this.FailedGuessCommand = failedGuessCommand;
+            this.GameWonCommand = gameWonCommand;
+            this.GameLostCommand = gameLostCommand;
+            this.CustomWordsFilePath = customWordsFilePath;
+        }
+
+        public override IEnumerable<CommandBase> GetAllInnerCommands()
+        {
+            List<CommandBase> commands = new List<CommandBase>(base.GetAllInnerCommands());
+            commands.Add(this.StatusCommand);
+            commands.Add(this.SuccessfulGuessCommand);
+            commands.Add(this.FailedGuessCommand);
+            commands.Add(this.GameWonCommand);
+            commands.Add(this.GameLostCommand);
+            return commands;
+        }
+
+        protected override async Task<bool> PerformUsageChecks(UserViewModel user, IEnumerable<string> arguments)
+        {
+            if (arguments.Count() != 1)
+            {
+                await ChannelSession.Chat.Whisper(user.UserName, string.Format("USAGE: !{0} <GUESS> -or- !{0} {1}", this.Commands.First(), this.StatusArgument));
+                return false;
+            }
+
+            if (arguments.ElementAt(0).Length != 1 || arguments.ElementAt(0).Any(c => !char.IsLetter(c)))
+            {
+                await ChannelSession.Chat.Whisper(user.UserName, "The guess must be a single letter A-Z");
+                return false;
+            }
+
+            char letter = arguments.ElementAt(0).ToUpper().First();
+            if (this.SuccessfulGuesses.Contains(letter) || this.FailedGuesses.Contains(letter))
+            {
+                await ChannelSession.Chat.Whisper(user.UserName, "This letter has already been guessed");
+                return false;
+            }
+
+            return true;
+        }
+
+        protected override async Task ReportStatus(UserViewModel user, IEnumerable<string> arguments)
+        {
+            if (string.IsNullOrEmpty(this.CurrentWord) || this.FailedGuesses.Count >= this.MaxFailures)
+            {
+                await this.ResetWord();
+            }
+
+            await this.PerformCommand(this.StatusCommand, user, arguments, 0, 0);
+        }
+
+        protected override async Task<bool> ShouldPerformPayout(UserViewModel user, IEnumerable<string> arguments, int betAmount)
+        {
+            char letter = arguments.ElementAt(0).ToUpper().First();
+
+            if (string.IsNullOrEmpty(this.CurrentWord) || this.FailedGuesses.Count >= this.MaxFailures)
+            {
+                await this.ResetWord();
+            }
+
+            if (this.CurrentWord.Contains(letter))
+            {
+                this.SuccessfulGuesses.Add(letter);
+                await this.PerformCommand(this.SuccessfulGuessCommand, user, arguments, betAmount, this.TotalAmount);
+
+                if (this.CurrentWord.All(c => this.SuccessfulGuesses.Contains(c)))
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                this.FailedGuesses.Add(letter);
+                if (this.FailedGuesses.Count >= this.MaxFailures)
+                {
+                    await this.PerformCommand(this.GameLostCommand, user, arguments, betAmount, this.TotalAmount);
+                    await this.ResetWord();
+                }
+                else
+                {
+                    await this.PerformCommand(this.FailedGuessCommand, user, arguments, betAmount, this.TotalAmount);
+                }
+            }
+            return false;
+        }
+
+        protected override async Task PerformPayout(UserViewModel user, IEnumerable<string> arguments, int betAmount)
+        {
+            this.totalPayout = this.TotalAmount;
+
+            UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
+            if (currency == null)
+            {
+                return;
+            }
+            user.Data.AddCurrencyAmount(currency, this.totalPayout);
+
+            await this.PerformCommand(this.GameWonCommand, user, arguments, betAmount, this.TotalAmount);
+
+            await this.ResetWord();
+            this.ResetData(user);
+        }
+
+        protected override void AddAdditionalSpecialIdentifiers(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        {
+            if (!string.IsNullOrEmpty(this.CurrentWord))
+            {
+                specialIdentifiers[GameHangmanAnswerSpecialIdentifier] = this.CurrentWord;
+            }
+            specialIdentifiers[GameHangmanFailedGuessesSpecialIdentifier] = string.Join(", ", this.FailedGuesses);
+
+            List<string> currentLetters = new List<string>();
+            foreach (char c in this.CurrentWord)
+            {
+                if (this.SuccessfulGuesses.Contains(c))
+                {
+                    currentLetters.Add(c.ToString());
+                }
+                else
+                {
+                    currentLetters.Add("_");
+                }
+            }
+            specialIdentifiers[GameHangmanCurrentSpecialIdentifier] = string.Join(" ", currentLetters);
+
+            base.AddAdditionalSpecialIdentifiers(user, arguments, specialIdentifiers);
+        }
+
+        private async Task ResetWord()
+        {
+            HashSet<string> wordsToUse = new HashSet<string>(HitmanGameCommand.DefaultWords.Where(s => s.Length > 4));
+            if (!string.IsNullOrEmpty(this.CustomWordsFilePath) && ChannelSession.Services.FileService.FileExists(this.CustomWordsFilePath))
+            {
+                string fileData = await ChannelSession.Services.FileService.ReadFile(this.CustomWordsFilePath);
+                if (!string.IsNullOrEmpty(fileData))
+                {
+                    wordsToUse = new HashSet<string>();
+                    foreach (string split in fileData.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        wordsToUse.Add(split);
+                    }
+                }
+            }
+
+            int randomNumber = this.GenerateRandomNumber(wordsToUse.Count);
+            this.CurrentWord = wordsToUse.ElementAt(randomNumber).ToUpper();
+            this.SuccessfulGuesses.Clear();
+            this.FailedGuesses.Clear();
+            this.TotalAmount = this.InitialAmount;
+
+            this.ResetData(await ChannelSession.GetCurrentUser());
         }
     }
 }

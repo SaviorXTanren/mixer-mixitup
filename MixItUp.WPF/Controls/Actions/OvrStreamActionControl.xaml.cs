@@ -27,6 +27,8 @@ namespace MixItUp.WPF.Controls.Actions
         private OvrStreamAction action;
         private bool shouldShowIntellisense = false;
         private ObservableCollection<VariablePair> variablePairs = new ObservableCollection<VariablePair>();
+        private VariablePair activeVariablePair = null;
+        private TextBox activeVariableNameTextBox = null;
 
         public OvrStreamActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
 
@@ -180,7 +182,8 @@ namespace MixItUp.WPF.Controls.Actions
                         if (variables.Count > 0)
                         {
                             VariableNameIntellisenseListBox.ItemsSource = variables;
-                            VariableNameIntellisenseListBox.DataContext = variableNameTextBox;
+                            this.activeVariablePair = variableNameTextBox.DataContext as VariablePair;
+                            this.activeVariableNameTextBox = variableNameTextBox;
 
                             // Select the first variable
                             VariableNameIntellisenseListBox.SelectedIndex = 0;
@@ -320,14 +323,14 @@ namespace MixItUp.WPF.Controls.Actions
         private void SelectIntellisenseVariableName()
         {
             this.shouldShowIntellisense = false;
-            TextBox variableNameTextBox = VariableNameIntellisenseListBox.DataContext as TextBox;
-            if (variableNameTextBox != null)
+            if (this.activeVariablePair != null && this.activeVariableNameTextBox != null)
             {
                 OvrStreamVariable variable = VariableNameIntellisenseListBox.SelectedItem as OvrStreamVariable;
                 if (variable != null)
                 {
-                    variableNameTextBox.Text = variable.Name;
-                    variableNameTextBox.CaretIndex = variableNameTextBox.Text.Length;
+                    this.activeVariablePair.Name = variable.Name;
+                    this.activeVariableNameTextBox.Text = variable.Name;
+                    this.activeVariableNameTextBox.CaretIndex = this.activeVariableNameTextBox.Text.Length;
                 }
             }
             this.shouldShowIntellisense = true;

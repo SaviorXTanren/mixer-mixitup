@@ -174,5 +174,14 @@ namespace MixItUp.Base.ViewModel.Requirement
             }
             return true;
         }
+
+        public bool TrySubtractInventoryAmount(UserViewModel user, int amount)
+        {
+            if (this.Inventory != null)
+            {
+                return this.Inventory.TrySubtractAmount(user.Data, amount);
+            }
+            return true;
+        }
     }
 }

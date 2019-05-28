@@ -211,6 +211,15 @@ namespace MixItUp.Base.Util
             }
         }
 
+        public static event EventHandler<bool> OnGiveawaysChangedOccurred;
+        public static void GiveawaysChangedOccurred(bool usersUpdated = false)
+        {
+            if (GlobalEvents.OnGiveawaysChangedOccurred != null)
+            {
+                GlobalEvents.OnGiveawaysChangedOccurred(null, usersUpdated);
+            }
+        }
+
         public static event EventHandler<Tuple<UserViewModel, int>> OnSparkUseOccurred;
         public static void SparkUseOccurred(Tuple<UserViewModel, int> spark)
         {

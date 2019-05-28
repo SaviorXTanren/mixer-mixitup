@@ -179,6 +179,15 @@ namespace MixItUp.Installer
                     if (!this.IsUpdate || await this.WaitForMixItUpToClose())
                     {
                         MixItUpUpdateModel update = await this.GetUpdateData();
+                        if (this.IsPreview)
+                        {
+                            MixItUpUpdateModel preview = await this.GetUpdateData(preview: true);
+                            if (preview != null && preview.SystemVersion > update.SystemVersion)
+                            {
+                                update = preview;
+                            }
+                        }
+
                         if (update != null)
                         {
                             if (await this.DownloadZipArchive(update))
@@ -213,7 +222,14 @@ namespace MixItUp.Installer
 
         public void Launch()
         {
-            Process.Start(Path.Combine(MainWindowViewModel.StartMenuDirectory, MainWindowViewModel.ShortcutFileName));
+            if (Path.Equals(this.installDirectory, DefaultInstallDirectory))
+            {
+                Process.Start(Path.Combine(MainWindowViewModel.StartMenuDirectory, MainWindowViewModel.ShortcutFileName));
+            }
+            else
+            {
+                Process.Start(Path.Combine(this.installDirectory, "MixItUp.exe"));
+            }
         }
 
         protected void NotifyPropertyChanged([CallerMemberName]string name = "")
@@ -251,7 +267,7 @@ namespace MixItUp.Installer
             return false;
         }
 
-        private async Task<MixItUpUpdateModel> GetUpdateData()
+        private async Task<MixItUpUpdateModel> GetUpdateData(bool preview = false)
         {
             this.DisplayText1 = "Finding latest version...";
             this.IsOperationIndeterminate = true;
@@ -259,7 +275,7 @@ namespace MixItUp.Installer
 
             using (HttpClient client = new HttpClient())
             {
-                HttpResponseMessage response = await client.GetAsync((this.IsPreview) ? "https://mixitupapi.azurewebsites.net/api/updates/preview"
+                HttpResponseMessage response = await client.GetAsync((preview) ? "https://mixitupapi.azurewebsites.net/api/updates/preview"
                     : "https://mixitupapi.azurewebsites.net/api/updates");
                 if (response.IsSuccessStatusCode)
                 {
@@ -327,7 +343,11 @@ namespace MixItUp.Installer
                             {
                                 Directory.CreateDirectory(directoryPath);
                             }
-                            entry.ExtractToFile(filePath, overwrite: true);
+
+                            if (Path.HasExtension(filePath))
+                            {
+                                entry.ExtractToFile(filePath, overwrite: true);
+                            }
 
                             current++;
                             this.OperationProgress = (int)((current / total) * 100);

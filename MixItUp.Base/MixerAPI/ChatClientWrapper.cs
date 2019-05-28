@@ -26,10 +26,12 @@ namespace MixItUp.Base.MixerAPI
         public event EventHandler<ChatDeleteMessageEventModel> OnDeleteMessageOccurred = delegate { };
         public event EventHandler OnClearMessagesOccurred = delegate { };
 
-        public event EventHandler<UserViewModel> OnUserJoinOccurred = delegate { };
+        public event EventHandler<IEnumerable<UserViewModel>> OnUsersJoinOccurred = delegate { };
         public event EventHandler<UserViewModel> OnUserUpdateOccurred = delegate { };
-        public event EventHandler<UserViewModel> OnUserLeaveOccurred = delegate { };
+        public event EventHandler<IEnumerable<UserViewModel>> OnUsersLeaveOccurred = delegate { };
         public event EventHandler<Tuple<UserViewModel, string>> OnUserPurgeOccurred = delegate { };
+
+        public event EventHandler<ChatPollEventModel> OnPollEndOccurred { add { this.Client.OnPollEndOccurred += value; } remove { this.Client.OnPollEndOccurred -= value; } }
 
         public LockedDictionary<Guid, ChatMessageViewModel> Messages { get; private set; } = new LockedDictionary<Guid, ChatMessageViewModel>();
 
@@ -40,8 +42,10 @@ namespace MixItUp.Base.MixerAPI
 
         private HashSet<uint> userEntranceCommands = new HashSet<uint>();
 
-        private SemaphoreSlim userJoinEventsSemaphore = new SemaphoreSlim(1);
+        private const int userJoinLeaveEventsTotalToProcess = 25;
+        private SemaphoreSlim userJoinLeaveEventsSemaphore = new SemaphoreSlim(1);
         private Dictionary<uint, ChatUserEventModel> userJoinEvents = new Dictionary<uint, ChatUserEventModel>();
+        private Dictionary<uint, ChatUserEventModel> userLeaveEvents = new Dictionary<uint, ChatUserEventModel>();
 
         public ChatClientWrapper() { }
 
@@ -259,6 +263,14 @@ namespace MixItUp.Base.MixerAPI
             }
         }
 
+        public async Task StartPoll(string question, IEnumerable<string> answers, uint lengthInSeconds)
+        {
+            if (this.Client != null)
+            {
+                await this.Client.StartVote(question, answers, lengthInSeconds);
+            }
+        }
+
         public async Task<IEnumerable<ChatMessageEventModel>> GetChatHistory(uint maxMessages)
         {
             if (this.Client != null)
@@ -329,7 +341,7 @@ namespace MixItUp.Base.MixerAPI
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        Task.Run(async () => { await this.ChatterJoinBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
+                        Task.Run(async () => { await this.ChatterJoinLeaveBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -456,15 +468,15 @@ namespace MixItUp.Base.MixerAPI
 
             if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatWhisperSoundFilePath) && message.IsWhisper)
             {
-                await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatWhisperSoundFilePath, 100);
+                await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatWhisperSoundFilePath, ChannelSession.Settings.NotificationChatWhisperSoundVolume);
             }
             else if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatTaggedSoundFilePath) && message.IsUserTagged)
             {
-                await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatTaggedSoundFilePath, 100);
+                await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatTaggedSoundFilePath, ChannelSession.Settings.NotificationChatTaggedSoundVolume);
             }
             else if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatMessageSoundFilePath))
             {
-                await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatMessageSoundFilePath, 100);
+                await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatMessageSoundFilePath, ChannelSession.Settings.NotificationChatMessageSoundVolume);
             }
 
             GlobalEvents.ChatMessageReceived(message);
@@ -601,31 +613,49 @@ namespace MixItUp.Base.MixerAPI
             });
         }
 
-        private async Task ChatterJoinBackground()
+        private async Task ChatterJoinLeaveBackground()
         {
             await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
             {
-                List<ChatUserEventModel> usersToProcess = new List<ChatUserEventModel>();
-
-                await this.userJoinEventsSemaphore.WaitAndRelease(() =>
+                List<ChatUserEventModel> joinsToProcess = new List<ChatUserEventModel>();
+                await this.userJoinLeaveEventsSemaphore.WaitAndRelease(() =>
                 {
-                    usersToProcess = new List<ChatUserEventModel>(this.userJoinEvents.Values);
-                    this.userJoinEvents.Clear();
+                    for (int i = 0; i < userJoinLeaveEventsTotalToProcess && i < this.userJoinEvents.Count(); i++)
+                    {
+                        ChatUserEventModel chatUser = this.userJoinEvents.Values.First();
+                        joinsToProcess.Add(chatUser);
+                        this.userJoinEvents.Remove(chatUser.id);
+                    }
                     return Task.FromResult(0);
                 });
 
-                if (usersToProcess.Count > 0)
+                if (joinsToProcess.Count > 0)
                 {
-                    IEnumerable<UserViewModel> processedUsers = await ChannelSession.ActiveUsers.AddOrUpdateUsers(usersToProcess.Select(u => u.GetUser()));
-                    foreach (UserViewModel user in processedUsers)
+                    IEnumerable<UserViewModel> processedUsers = await ChannelSession.ActiveUsers.AddOrUpdateUsers(joinsToProcess.Select(u => u.GetUser()));
+                    this.OnUsersJoinOccurred(this, processedUsers);
+                }
+
+                List<ChatUserEventModel> leavesToProcess = new List<ChatUserEventModel>();
+                await this.userJoinLeaveEventsSemaphore.WaitAndRelease(() =>
+                {
+                    for (int i = 0; i < userJoinLeaveEventsTotalToProcess && i < this.userLeaveEvents.Count(); i++)
                     {
-                        this.OnUserJoinOccurred(this, user);
+                        ChatUserEventModel chatUser = this.userLeaveEvents.Values.First();
+                        leavesToProcess.Add(chatUser);
+                        this.userLeaveEvents.Remove(chatUser.id);
                     }
+                    return Task.FromResult(0);
+                });
+
+                if (leavesToProcess.Count > 0)
+                {
+                    IEnumerable<UserViewModel> processedUsers = await ChannelSession.ActiveUsers.RemoveUsers(leavesToProcess.Select(u => u.id));
+                    this.OnUsersLeaveOccurred(this, processedUsers);
                 }
 
                 tokenSource.Token.ThrowIfCancellationRequested();
 
-                await Task.Delay(5000, tokenSource.Token);
+                await Task.Delay(2500, tokenSource.Token);
 
                 tokenSource.Token.ThrowIfCancellationRequested();
             });
@@ -748,7 +778,7 @@ namespace MixItUp.Base.MixerAPI
 
         private async void ChatClient_OnUserJoinOccurred(object sender, ChatUserEventModel chatUser)
         {
-            await this.userJoinEventsSemaphore.WaitAndRelease(() =>
+            await this.userJoinLeaveEventsSemaphore.WaitAndRelease(() =>
             {
                 this.userJoinEvents[chatUser.id] = chatUser;
                 return Task.FromResult(0);
@@ -757,11 +787,11 @@ namespace MixItUp.Base.MixerAPI
 
         private async void ChatClient_OnUserLeaveOccurred(object sender, ChatUserEventModel chatUser)
         {
-            UserViewModel user = await ChannelSession.ActiveUsers.RemoveUser(chatUser.id);
-            if (user != null)
+            await this.userJoinLeaveEventsSemaphore.WaitAndRelease(() =>
             {
-                this.OnUserLeaveOccurred(sender, user);
-            }
+                this.userLeaveEvents[chatUser.id] = chatUser;
+                return Task.FromResult(0);
+            });
         }
 
         private async void ChatClient_OnUserUpdateOccurred(object sender, ChatUserEventModel chatUser)

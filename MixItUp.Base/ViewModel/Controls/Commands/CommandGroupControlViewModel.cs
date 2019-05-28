@@ -1,6 +1,6 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace MixItUp.Base.ViewModel.Controls.Commands
@@ -11,6 +11,8 @@ namespace MixItUp.Base.ViewModel.Controls.Commands
 
         public string GroupName { get { return (this.GroupSettings != null) ? this.GroupSettings.Name : null; } }
         public string DisplayName { get { return (!string.IsNullOrEmpty(this.GroupName)) ? this.GroupName : "Ungrouped"; } }
+
+        public bool HasCommands { get { return this.Commands.Count > 0; } }
 
         public bool IsMinimized
         {
@@ -39,13 +41,15 @@ namespace MixItUp.Base.ViewModel.Controls.Commands
                     }
                 }
 
+                this.RefreshCommands();
+
                 this.NotifyPropertyChanged();
             }
         }
 
         public bool IsEnableSwitchToggable { get { return !string.IsNullOrEmpty(this.GroupName); } }
 
-        public ObservableCollection<CommandBase> Commands
+        public SortableObservableCollection<CommandBase> Commands
         {
             get { return this.commands; }
             set
@@ -54,15 +58,40 @@ namespace MixItUp.Base.ViewModel.Controls.Commands
                 this.NotifyPropertyChanged();
             }
         }
-        private ObservableCollection<CommandBase> commands = new ObservableCollection<CommandBase>();
+        private SortableObservableCollection<CommandBase> commands = new SortableObservableCollection<CommandBase>();
+
+        private List<CommandBase> allCommands = new List<CommandBase>();
 
         public CommandGroupControlViewModel(CommandGroupSettings groupSettings, IEnumerable<CommandBase> commands)
         {
             this.GroupSettings = groupSettings;
-            foreach (CommandBase command in commands)
+            this.allCommands.AddRange(commands);
+            this.RefreshCommands();
+        }
+
+        public void AddCommand(CommandBase command)
+        {
+            this.allCommands.Add(command);
+            this.Commands.SortedInsert(command);
+            this.NotifyPropertyChanged("HasCommands");
+        }
+
+        public void RemoveCommand(CommandBase command)
+        {
+            this.allCommands.Remove(command);
+            this.Commands.Remove(command);
+            this.NotifyPropertyChanged("HasCommands");
+        }
+
+        public void RefreshCommands(string filter = null)
+        {
+            this.Commands.Clear();
+
+            foreach (CommandBase command in ((string.IsNullOrEmpty(filter)) ? this.allCommands : this.allCommands.Where(c => c.Name.ToLower().Contains(filter))))
             {
-                this.Commands.Add(command);
+                this.Commands.SortedInsert(command);
             }
+            this.NotifyPropertyChanged("HasCommands");
         }
     }
 }

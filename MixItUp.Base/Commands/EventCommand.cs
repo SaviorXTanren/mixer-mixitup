@@ -47,19 +47,23 @@ namespace MixItUp.Base.Commands
         [Name("Stream Tweet Retweet")]
         TwitterStreamTweetRetweet = 20,
 
-        [Name("New User Joined")]
+        [Name("Chat New User Joined")]
         MixerUserFirstJoin = 30,
         [Name("Channel Unfollowed")]
         MixerUserUnfollow = 31,
-        [Name("User Purged")]
+        [Name("Chat User Purged")]
         MixerUserPurge = 32,
-        [Name("User Timed Out")]
+        [Name("Chat User Timed Out")]
         [Obsolete]
         MixerUserTimeout = 33,
-        [Name("User Banned")]
+        [Name("Chat User Banned")]
         MixerUserBan = 34,
         [Name("Chat Message Received")]
         MixerChatMessage = 35,
+        [Name("Chat User Joined")]
+        MixerUserJoined = 36,
+        [Name("Chat User Left")]
+        MixerUserLeft = 37,
 
         [Name("Channel Stream Start")]
         MixerChannelStreamStart = 40,
@@ -122,9 +126,9 @@ namespace MixItUp.Base.Commands
 
         public EventCommand(ConstellationEventTypeEnum type) : this(type, 0, string.Empty) { }
 
-        public EventCommand(ConstellationEventTypeEnum type, ChannelAdvancedModel channel) : this(type, channel.id, channel.user.username) { }
+        public EventCommand(ConstellationEventTypeEnum type, ChannelAdvancedModel channel) : this(type, channel.id, channel.user.id.ToString()) { }
 
-        public EventCommand(ConstellationEventTypeEnum type, UserModel user) : this(type, user.id, user.username) { }
+        public EventCommand(ConstellationEventTypeEnum type, UserModel user) : this(type, user.id, user.id.ToString()) { }
 
         public EventCommand(ConstellationEventTypeEnum type, uint id, string name)
             : base(EnumHelper.GetEnumName(type), CommandTypeEnum.Event, name)

@@ -62,6 +62,9 @@ namespace MixItUp.Base.Actions
         Serial,
         Moderation,
         OvrStream,
+        [Name("Streaming Platform")]
+        StreamingPlatform,
+        IFTTT,
 
         Custom = 99,
     }

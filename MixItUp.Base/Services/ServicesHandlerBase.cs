@@ -17,6 +17,7 @@ namespace MixItUp.Base.Services
         public ITextToSpeechService TextToSpeechService { get; protected set; }
         public ITranslationService TranslationService { get; protected set; }
         public ISongRequestService SongRequestService { get; protected set; }
+        public IGiveawayService GiveawayService { get; protected set; }
         public ISerialService SerialService { get; protected set; }
         public LocalRemoteServiceBase RemoteService { get; protected set; }
 
@@ -39,6 +40,7 @@ namespace MixItUp.Base.Services
         public IStreamJarService StreamJar { get; protected set; }
         public IPatreonService Patreon { get; protected set; }
         public IOvrStreamService OvrStreamWebsocket { get; protected set; }
+        public IIFTTTService IFTTT { get; protected set; }
 
         public abstract Task Close();
 
@@ -96,5 +98,8 @@ namespace MixItUp.Base.Services
 
         public abstract Task<bool> InitializeOvrStream();
         public abstract Task DisconnectOvrStream();
+
+        public abstract Task<bool> InitializeIFTTT(string key = null);
+        public abstract Task DisconnectIFTTT();
     }
 }

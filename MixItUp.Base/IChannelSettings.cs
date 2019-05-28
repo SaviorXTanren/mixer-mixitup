@@ -48,6 +48,7 @@ namespace MixItUp.Base
         OAuthTokenModel TreatStreamOAuthToken { get; set; }
         OAuthTokenModel StreamJarOAuthToken { get; set; }
         OAuthTokenModel PatreonOAuthToken { get; set; }
+        OAuthTokenModel IFTTTOAuthToken { get; set; }
 
         Dictionary<string, CommandGroupSettings> CommandGroups { get; set; }
         Dictionary<string, HotKeyConfiguration> HotKeys { get; set; }
@@ -90,9 +91,6 @@ namespace MixItUp.Base
         bool DisableAllTimers { get; set; }
 
         string GiveawayCommand { get; set; }
-        bool GiveawayGawkBoxTrigger { get; set; }
-        bool GiveawayStreamlabsTrigger { get; set; }
-        bool GiveawayTiltifyTrigger { get; set; }
         bool GiveawayDonationRequiredAmount { get; set; }
         double GiveawayDonationAmount { get; set; }
         int GiveawayTimer { get; set; }
@@ -101,6 +99,7 @@ namespace MixItUp.Base
         int GiveawayReminderInterval { get; set; }
         bool GiveawayRequireClaim { get; set; }
         bool GiveawayAllowPastWinners { get; set; }
+        CustomCommand GiveawayStartedReminderCommand { get; set; }
         CustomCommand GiveawayUserJoinedCommand { get; set; }
         CustomCommand GiveawayWinnerSelectedCommand { get; set; }
 
@@ -164,10 +163,15 @@ namespace MixItUp.Base
         string ChatInteractiveAlertsColorScheme { get; set; }
 
         string NotificationChatMessageSoundFilePath { get; set; }
+        int NotificationChatMessageSoundVolume { get; set; }
         string NotificationChatTaggedSoundFilePath { get; set; }
+        int NotificationChatTaggedSoundVolume { get; set; }
         string NotificationChatWhisperSoundFilePath { get; set; }
+        int NotificationChatWhisperSoundVolume { get; set; }
         string NotificationServiceConnectSoundFilePath { get; set; }
+        int NotificationServiceConnectSoundVolume { get; set; }
         string NotificationServiceDisconnectSoundFilePath { get; set; }
+        int NotificationServiceDisconnectSoundVolume { get; set; }
 
         int MaxMessagesInChat { get; set; }
 

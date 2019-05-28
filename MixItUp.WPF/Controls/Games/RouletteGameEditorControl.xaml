@@ -9,6 +9,9 @@
              xmlns:RequirementControls="clr-namespace:MixItUp.WPF.Controls.Requirement"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <local:GameEditorControlBase.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </local:GameEditorControlBase.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -37,18 +40,18 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="MinimumParticipantsTextBox" Grid.Column="0" Width="70" MaterialDesign:HintAssist.Hint="Min Users" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding MinimumParticipantsString}" Grid.Column="0" Width="70" MaterialDesign:HintAssist.Hint="Min Users" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox x:Name="TimeLimitTextBox" Grid.Column="2" Width="70" MaterialDesign:HintAssist.Hint="Time Limit" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding TimeLimitString}" Grid.Column="2" Width="70" MaterialDesign:HintAssist.Hint="Time Limit" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <TextBlock Grid.Column="4" VerticalAlignment="Center" Margin="0,0,0,4">Is Bet Number Range?</TextBlock>
-            <ToggleButton x:Name="IsNumberRangeToggleButton" Grid.Column="6" VerticalAlignment="Center" Checked="IsNumberRangeToggleButton_Checked" Unchecked="IsNumberRangeToggleButton_Checked" />
+            <ToggleButton IsChecked="{Binding IsNumberRange}" Grid.Column="6" VerticalAlignment="Center" />
 
-            <TextBox x:Name="NumberRangeMinimumTextBox" Grid.Column="8" Width="110" MaterialDesign:HintAssist.Hint="Min Bet Number" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding NumberRangeMinimumString}" Visibility="{Binding IsNumberRange, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Column="8" Width="110" MaterialDesign:HintAssist.Hint="Min Bet Number" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox x:Name="NumberRangeMaximumTextBox" Grid.Column="10" Width="110" MaterialDesign:HintAssist.Hint="Max Bet Number" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding NumberRangeMaximumString}" Visibility="{Binding IsNumberRange, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Column="10" Width="110" MaterialDesign:HintAssist.Hint="Max Bet Number" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox x:Name="SelectableBetTypesTextBox" Grid.Column="8" Grid.ColumnSpan="3" Visibility="Collapsed" Width="200" Height="100" MaterialDesign:HintAssist.Hint="Valid Bet Types (One Per Line)" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" />
+            <TextBox Text="{Binding SelectableBetTypes}" Visibility="{Binding IsTextOptions, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Column="8" Grid.ColumnSpan="3" Width="200" Height="100" MaterialDesign:HintAssist.Hint="Valid Bet Types (One Per Line)" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" />
         </Grid>
 
         <Grid Grid.Row="4" HorizontalAlignment="Center">
@@ -64,18 +67,18 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="UserPayoutTextBox" Grid.Column="0" Width="90" MaterialDesign:HintAssist.Hint="User Payout %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding UserPayoutString}" Grid.Column="0" Width="90" MaterialDesign:HintAssist.Hint="User Payout %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox x:Name="SubscriberPayoutTextBox" Grid.Column="2" Width="90" MaterialDesign:HintAssist.Hint="Sub Payout %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding SubscriberPayoutString}" Grid.Column="2" Width="90" MaterialDesign:HintAssist.Hint="Sub Payout %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox x:Name="ModPayoutTextBox" Grid.Column="4" Width="90" MaterialDesign:HintAssist.Hint="Mod Payout %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding ModPayoutString}" Grid.Column="4" Width="90" MaterialDesign:HintAssist.Hint="Mod Payout %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <GroupBox Grid.Column="6" Header="Game Start">
-                <CommandControls:CommandButtonsControl x:Name="GameStartCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl DataContext="{Binding StartedCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
             </GroupBox>
 
             <GroupBox Grid.Column="8" Header="User Joined">
-                <CommandControls:CommandButtonsControl x:Name="UserJoinedCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl DataContext="{Binding UserJoinCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
         </Grid>
 
@@ -86,18 +89,24 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <GroupBox Grid.Column="0" Header="User Success">
-                <CommandControls:CommandButtonsControl x:Name="SuccessOutcomeCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+            <GroupBox Grid.Column="0" Header="Not Enough Players">
+                <CommandControls:CommandButtonsControl DataContext="{Binding NotEnoughPlayersCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
 
-            <GroupBox Grid.Column="2" Header="User Failure">
-                <CommandControls:CommandButtonsControl x:Name="FailOutcomeCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+            <GroupBox Grid.Column="2" Header="User Success">
+                <CommandControls:CommandButtonsControl DataContext="{Binding UserSuccessCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
 
-            <GroupBox Grid.Column="4" Header="Game Complete">
-                <CommandControls:CommandButtonsControl x:Name="GameCompleteCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+            <GroupBox Grid.Column="4" Header="User Failure">
+                <CommandControls:CommandButtonsControl DataContext="{Binding UserFailCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+            </GroupBox>
+
+            <GroupBox Grid.Column="6" Header="Game Complete">
+                <CommandControls:CommandButtonsControl DataContext="{Binding GameCompleteCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
         </Grid>
     </Grid>

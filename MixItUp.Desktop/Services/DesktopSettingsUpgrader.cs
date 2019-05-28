@@ -57,6 +57,7 @@ namespace MixItUp.Desktop.Services
             await DesktopSettingsUpgrader.Version28Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version29Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version30Upgrade(version, filePath);
+            await DesktopSettingsUpgrader.Version31Upgrade(version, filePath);
 
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
             settings.InitializeDB = false;
@@ -329,6 +330,33 @@ namespace MixItUp.Desktop.Services
 
                 settings.GameQueueUserJoinedCommand = CustomCommand.BasicChatCommand("Game Queue Used Joined", "You are #$queueposition in the queue to play.", isWhisper: true);
                 settings.GameQueueUserSelectedCommand = CustomCommand.BasicChatCommand("Game Queue Used Selected", "It's time to play @$username! Listen carefully for instructions on how to join...");
+
+                await ChannelSession.Services.Settings.Save(settings);
+            }
+        }
+
+        private static async Task Version31Upgrade(int version, string filePath)
+        {
+            if (version < 31)
+            {
+                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
+                await ChannelSession.Services.Settings.Initialize(settings);
+
+                settings.GiveawayStartedReminderCommand = CustomCommand.BasicChatCommand("Giveaway Started/Reminder", "A giveaway has started for $giveawayitem! Type $giveawaycommand in chat in the next $giveawaytimelimit minute(s) to enter!");
+
+                foreach (GameCommandBase command in settings.GameCommands)
+                {
+                    if (command is GroupGameCommand)
+                    {
+                        GroupGameCommand groupCommand = (GroupGameCommand)command;
+                        groupCommand.NotEnoughPlayersCommand = CustomCommand.BasicChatCommand("Game Sub-Command", "@$username couldn't get enough users to join in...");
+                    }
+                    else if (command is DuelGameCommand)
+                    {
+                        DuelGameCommand duelCommand = (DuelGameCommand)command;
+                        duelCommand.NotAcceptedCommand = CustomCommand.BasicChatCommand("Game Sub-Command", "@$targetusername did not respond in time...");
+                    }
+                }
 
                 await ChannelSession.Services.Settings.Save(settings);
             }

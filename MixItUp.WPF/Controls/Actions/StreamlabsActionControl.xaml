@@ -21,7 +21,7 @@
 
             <ComboBox x:Name="StreamlabsActionTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="300" />
 
-            <TextBlock x:Name="StreamlabsNotEnabledWarningTextBlock" Grid.Column="4" Foreground="Red" Visibility="Hidden" VerticalAlignment="Center" HorizontalAlignment="Right">Please enable Streamlabs connection in the Services Section!</TextBlock>
+            <TextBlock x:Name="StreamlabsNotEnabledWarningTextBlock" Grid.Column="4" Foreground="Red" Visibility="Hidden" VerticalAlignment="Center" HorizontalAlignment="Right">Please enable Streamlabs connection on the Services page!</TextBlock>
         </Grid>
     </Grid>
 </local:ActionControlBase>

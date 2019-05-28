@@ -7,14 +7,16 @@
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:MainControls="clr-namespace:MixItUp.WPF.Controls.MainControls"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="600">
     <Grid Margin="20">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="20" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="20" />
-            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -35,18 +37,21 @@
             <MaterialDesign:PackIcon Kind="Play" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
         </Button>
         <ComboBox x:Name="ChatMessageComboBox" Grid.Row="0" Grid.Column="4" SelectionChanged="ChatMessageComboBox_SelectionChanged" />
+        <Slider x:Name="ChatMessageVolumeSlider" VerticalAlignment="Center" Grid.Row="0" Grid.Column="6" Minimum="0" Maximum="100" Width="100" PreviewMouseLeftButtonUp="ChatMessageVolumeSlider_PreviewMouseLeftButtonUp" />
 
         <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Chat Tagged Sound:</TextBlock>
         <Button x:Name="PlayChatTaggedButton" Grid.Row="2" Grid.Column="2" Click="PlayChatTaggedButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Play">
             <MaterialDesign:PackIcon Kind="Play" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
         </Button>
         <ComboBox x:Name="ChatTaggedComboBox" Grid.Row="2" Grid.Column="4" SelectionChanged="ChatTaggedComboBox_SelectionChanged" />
+        <Slider x:Name="ChatTaggedVolumeSlider" VerticalAlignment="Center" Grid.Row="2" Grid.Column="6" Minimum="0" Maximum="100" Width="100" PreviewMouseLeftButtonUp="ChatTaggedVolumeSlider_PreviewMouseLeftButtonUp" />
 
         <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Chat Whisper Sound:</TextBlock>
         <Button x:Name="PlayChatWhisperButton" Grid.Row="4" Grid.Column="2" Click="PlayChatWhisperButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Play">
             <MaterialDesign:PackIcon Kind="Play" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
         </Button>
         <ComboBox x:Name="ChatWhisperComboBox" Grid.Row="4" Grid.Column="4" SelectionChanged="ChatWhisperComboBox_SelectionChanged" />
+        <Slider x:Name="ChatWhisperVolumeSlider" VerticalAlignment="Center" Grid.Row="4" Grid.Column="6" Minimum="0" Maximum="100" Width="100" PreviewMouseLeftButtonUp="ChatWhisperVolumeSlider_PreviewMouseLeftButtonUp" />
 
         <Separator Grid.Row="6" Grid.ColumnSpan="5" Margin="10" />
 
@@ -55,11 +60,13 @@
             <MaterialDesign:PackIcon Kind="Play" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
         </Button>
         <ComboBox x:Name="ServiceConnectComboBox" Grid.Row="8" Grid.Column="4" SelectionChanged="ServiceConnectComboBox_SelectionChanged" />
+        <Slider x:Name="ServiceConnectVolumeSlider" VerticalAlignment="Center" Grid.Row="8" Grid.Column="6" Minimum="0" Maximum="100" Width="100" PreviewMouseLeftButtonUp="ServiceConnectVolumeSlider_PreviewMouseLeftButtonUp" />
 
         <TextBlock Grid.Row="10" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Service Disconnect Sound:</TextBlock>
         <Button x:Name="PlayServiceDisconnectButton" Grid.Row="10" Grid.Column="2" Click="PlayServiceDisconnectButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Play">
             <MaterialDesign:PackIcon Kind="Play" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
         </Button>
         <ComboBox x:Name="ServiceDisconnectComboBox" Grid.Row="10" Grid.Column="4" SelectionChanged="ServiceDisconnectComboBox_SelectionChanged" />
+        <Slider x:Name="ServiceDisconnectVolumeSlider" VerticalAlignment="Center" Grid.Row="10" Grid.Column="6" Minimum="0" Maximum="100" Width="100" PreviewMouseLeftButtonUp="ServiceDisconnectVolumeSlider_PreviewMouseLeftButtonUp" />
     </Grid>
 </local:SettingsControlBase>

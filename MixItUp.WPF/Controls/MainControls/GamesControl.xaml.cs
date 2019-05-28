@@ -1,12 +1,9 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
-using MixItUp.Base.ViewModel.User;
+using MixItUp.Base.ViewModel.Controls.MainControls;
+using MixItUp.Base.ViewModel.Window;
 using MixItUp.WPF.Controls.Command;
-using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -17,44 +14,24 @@ namespace MixItUp.WPF.Controls.MainControls
     /// </summary>
     public partial class GamesControl : MainControlBase
     {
-        private ObservableCollection<GameCommandBase> gameCommands = new ObservableCollection<GameCommandBase>();
+        private GamesMainControlViewModel viewModel;
 
         public GamesControl()
         {
             InitializeComponent();
         }
 
-        protected override Task InitializeInternal()
+        protected override async Task InitializeInternal()
         {
-            this.NoCurrenciesGrid.Visibility = Visibility.Collapsed;
-            this.GamesGrid.Visibility = Visibility.Collapsed;
-
-            if (ChannelSession.Settings.Currencies.Count > 0)
-            {
-                this.GamesGrid.Visibility = Visibility.Visible;
-
-                this.GameCommandsListView.ItemsSource = this.gameCommands;
-
-                this.RefreshList();
-            }
-            else
-            {
-                this.NoCurrenciesGrid.Visibility = Visibility.Visible;
-            }
-            return base.InitializeInternal();
+            this.DataContext = this.viewModel = new GamesMainControlViewModel((MainWindowViewModel)this.Window.ViewModel);
+            await this.viewModel.OnLoaded();
+            await base.InitializeInternal();
         }
 
-        protected override async Task OnVisibilityChanged() { await this.InitializeInternal(); }
-
-        private void RefreshList()
+        protected override async Task OnVisibilityChanged()
         {
-            this.GameCommandsListView.SelectedIndex = -1;
-
-            this.gameCommands.Clear();
-            foreach (GameCommandBase command in ChannelSession.Settings.GameCommands.OrderBy(c => c.Name))
-            {
-                this.gameCommands.Add(command);
-            }
+            await this.viewModel.OnVisible();
+            await this.InitializeInternal();
         }
 
         private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
@@ -79,7 +56,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     ChannelSession.Settings.GameCommands.Remove(command);
                     await ChannelSession.SaveSettings();
-                    this.RefreshList();
+                    this.viewModel.Refresh();
                 }
             });
         }
@@ -93,7 +70,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void Window_Closed(object sender, System.EventArgs e)
         {
-            this.RefreshList();
+            this.viewModel.Refresh();
         }
     }
 }
