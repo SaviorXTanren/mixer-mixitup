@@ -15,5 +15,7 @@ namespace MixItUp.AutoHoster
         public int MaxHostLength { get; set; } = 0;
 
         public AgeRatingEnum AgeRating { get; set; } = AgeRatingEnum.Adult;
+
+        public string WhisperMessage { get; set; } = "";
     }
 }
