@@ -44,20 +44,20 @@
             <ItemsControl ItemsSource="{Binding CommandGroups}" HorizontalContentAlignment="Stretch">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border BorderBrush="{StaticResource MaterialDesignBody}" BorderThickness="1" Visibility="{Binding HasCommands, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <Controls:AccordianGroupBoxControl IsMinimized="{Binding IsMinimized}" Minimized="AccordianGroupBoxControl_Minimized" Maximized="AccordianGroupBoxControl_Maximized">
-                                <Controls:AccordianGroupBoxControl.Header>
-                                    <Grid Background="Transparent" Margin="5,0">
+                        <Border BorderBrush="{StaticResource PrimaryHueDarkBrush}" BorderThickness="1">
+                            <Expander VerticalContentAlignment="Top" HorizontalContentAlignment="Stretch" Visibility="{Binding HasCommands, Converter={StaticResource BooleanToVisibilityConverter}}" Background="{StaticResource PrimaryHueMidBrush}">
+                                <Expander.Header>
+                                    <Grid Background="Transparent">
                                         <TextBlock HorizontalAlignment="Left" Text="{Binding DisplayName}" Foreground="{StaticResource WhiteColor}" Style="{StaticResource HeaderTextBlock}" />
 
-                                        <ToggleButton Visibility="{Binding IsEnableSwitchToggable, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Right" IsChecked="{Binding Path=IsEnabled}" />
+                                        <ToggleButton Visibility="{Binding IsEnableSwitchToggable, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource MaterialDesignSwitchLightToggleButton}" HorizontalAlignment="Right" IsChecked="{Binding Path=IsEnabled}" />
                                     </Grid>
-                                </Controls:AccordianGroupBoxControl.Header>
+                                </Expander.Header>
 
-                                <DataGrid ItemsSource="{Binding Commands}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" Margin="-8" PreviewMouseWheel="DataGrid_PreviewMouseWheel">
+                                <DataGrid ItemsSource="{Binding Commands}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" PreviewMouseWheel="DataGrid_PreviewMouseWheel">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
-                                        <DataGridTemplateColumn Header="Actions" Width="240">
+                                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" MinWidth="500" Width="*" />
+                                        <DataGridTemplateColumn Header="Actions" MinWidth="240" Width="240">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <CommandControls:CommandButtonsControl HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
@@ -66,7 +66,7 @@
                                         </DataGridTemplateColumn>
                                     </DataGrid.Columns>
                                 </DataGrid>
-                            </Controls:AccordianGroupBoxControl>
+                            </Expander>
                         </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
