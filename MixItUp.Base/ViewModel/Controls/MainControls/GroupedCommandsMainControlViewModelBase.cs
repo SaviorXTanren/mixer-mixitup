@@ -73,7 +73,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         {
             this.CommandGroups.Clear();
             IEnumerable<CommandBase> commands = this.GetCommands();
-            foreach (var group in commands.GroupBy(c => c.GroupName ?? string.Empty).OrderByDescending(g => !string.IsNullOrEmpty(g.Key)))
+            foreach (var group in commands.GroupBy(c => c.GroupName ?? "ZZZZZZZZZZZZZZZZZZZZZZZ").OrderBy(g => g.Key))
             {
                 CommandGroupSettings groupSettings = null;
                 string groupName = group.First().GroupName;

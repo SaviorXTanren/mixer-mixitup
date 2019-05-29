@@ -8,6 +8,8 @@
              xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
              xmlns:ChatControls="clr-namespace:MixItUp.WPF.Controls.Chat"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:CommandModels="clr-namespace:MixItUp.Base.Commands;assembly=MixItUp.Base"
+             xmlns:CommandViewModels="clr-namespace:MixItUp.Base.ViewModel.Controls.Commands;assembly=MixItUp.Base"
              mc:Ignorable="d"
                           
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -118,32 +120,32 @@
             </Grid.RowDefinitions>
 
             <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
-                <ItemsControl ItemsSource="{Binding CommandGroups}" HorizontalContentAlignment="Stretch">
+                <ItemsControl ItemsSource="{Binding CommandGroups}" HorizontalAlignment="Stretch">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border BorderBrush="{StaticResource MaterialDesignBody}" BorderThickness="1" Visibility="{Binding HasCommands, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                <Controls:AccordianGroupBoxControl IsMinimized="{Binding IsMinimized}" Minimized="AccordianGroupBoxControl_Minimized" Maximized="AccordianGroupBoxControl_Maximized">
-                                    <Controls:AccordianGroupBoxControl.Header>
-                                        <Grid Background="Transparent" Margin="5,0">
+                            <Border BorderBrush="{StaticResource PrimaryHueDarkBrush}" BorderThickness="1">
+                                <Expander VerticalContentAlignment="Top" HorizontalContentAlignment="Stretch" Visibility="{Binding HasCommands, Converter={StaticResource BooleanToVisibilityConverter}}" Background="{StaticResource PrimaryHueMidBrush}">
+                                    <Expander.Header>
+                                        <Grid Background="Transparent">
                                             <TextBlock HorizontalAlignment="Left" Text="{Binding DisplayName}" Foreground="{StaticResource WhiteColor}" Style="{StaticResource HeaderTextBlock}" />
 
-                                            <ToggleButton Visibility="{Binding IsEnableSwitchToggable, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Right" IsChecked="{Binding Path=IsEnabled}" />
+                                            <ToggleButton Visibility="{Binding IsEnableSwitchToggable, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource MaterialDesignSwitchLightToggleButton}" HorizontalAlignment="Right" IsChecked="{Binding Path=IsEnabled}" />
                                         </Grid>
-                                    </Controls:AccordianGroupBoxControl.Header>
+                                    </Expander.Header>
 
-                                    <DataGrid ItemsSource="{Binding Commands}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" Margin="-8" PreviewMouseWheel="DataGrid_PreviewMouseWheel">
+                                    <DataGrid ItemsSource="{Binding Commands}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" PreviewMouseWheel="DataGrid_PreviewMouseWheel">
                                         <DataGrid.Columns>
-                                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
-                                            <DataGridTextColumn Header="Commands" Binding="{Binding CommandsString}" IsReadOnly="True" Width="125" />
-                                            <DataGridTextColumn Header="Permissions" Binding="{Binding UserRoleRequirementString}" IsReadOnly="True" Width="115" />
-                                            <DataGridTextColumn Binding="{Binding Requirements.Cooldown.CooldownAmount}" IsReadOnly="True" Width="60">
+                                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" MinWidth="200" Width="*" />
+                                            <DataGridTextColumn Header="Commands" Binding="{Binding CommandsString}" IsReadOnly="True" MinWidth="125" Width="125" />
+                                            <DataGridTextColumn Header="Permissions" Binding="{Binding UserRoleRequirementString}" IsReadOnly="True" MinWidth="115" Width="115" />
+                                            <DataGridTextColumn Binding="{Binding Requirements.Cooldown.CooldownAmount}" IsReadOnly="True" MinWidth="60" Width="60">
                                                 <DataGridTextColumn.Header>
                                                     <Grid HorizontalAlignment="Center" Background="Transparent">
                                                         <MaterialDesign:PackIcon Kind="Timer" Height="24" Width="24" />
                                                     </Grid>
                                                 </DataGridTextColumn.Header>
                                             </DataGridTextColumn>
-                                            <DataGridTemplateColumn Header="Actions" Width="220">
+                                            <DataGridTemplateColumn Header="Actions" MinWidth="220" Width="220">
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
                                                         <CommandControls:CommandButtonsControl HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
@@ -152,7 +154,7 @@
                                             </DataGridTemplateColumn>
                                         </DataGrid.Columns>
                                     </DataGrid>
-                                </Controls:AccordianGroupBoxControl>
+                                </Expander>
                             </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
