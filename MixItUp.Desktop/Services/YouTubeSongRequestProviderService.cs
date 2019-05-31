@@ -85,7 +85,6 @@ namespace MixItUp.Desktop.Services
             Logger.Log("YouTube Song Requests Error: " + error);
         }
 
-
         public async Task<IEnumerable<SongRequestModel>> GetPlaylist(string identifier)
         {
             List<SongRequestModel> results = new List<SongRequestModel>();

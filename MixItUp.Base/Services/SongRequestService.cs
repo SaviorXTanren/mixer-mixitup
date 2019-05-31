@@ -285,17 +285,7 @@ namespace MixItUp.Base.Services
         {
             await SongRequestService.songRequestLock.WaitAndRelease(async () =>
             {
-                if (this.Status != null)
-                {
-                    foreach (ISongRequestProviderService provider in this.enabledProviders)
-                    {
-                        if (this.Status.Type == provider.Type)
-                        {
-                            await provider.Resume();
-                            this.forceStateQuery = true;
-                        }
-                    }
-                }
+                await this.ResumeInternal();
             });
             GlobalEvents.SongRequestsChangedOccurred();
         }
@@ -541,6 +531,21 @@ namespace MixItUp.Base.Services
             GlobalEvents.SongRequestsChangedOccurred();
         }
 
+        private async Task ResumeInternal()
+        {
+            if (this.Status != null)
+            {
+                foreach (ISongRequestProviderService provider in this.enabledProviders)
+                {
+                    if (this.Status.Type == provider.Type)
+                    {
+                        await provider.Resume();
+                        this.forceStateQuery = true;
+                    }
+                }
+            }
+        }
+
         private async Task SkipInternal()
         {
             if (this.Status != null)
@@ -697,6 +702,10 @@ namespace MixItUp.Base.Services
                             if (failedStatusAttempts >= 3)
                             {
                                 await this.SkipInternal();
+                            }
+                            else
+                            {
+                                await this.ResumeInternal();
                             }
                         }
                         else

@@ -418,7 +418,7 @@ namespace MixItUp.Base.Services
                     Logger.LogDiagnostic(string.Format("Spotify Log: {0} - {1}", response.RequestMessage.ToString(), responseString));
                 }
 
-                await this.DisableRepeat();
+                await this.PlayCurrentlyPlaying();
 
                 return (response.StatusCode == HttpStatusCode.NoContent);
             }
