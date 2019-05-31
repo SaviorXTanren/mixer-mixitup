@@ -175,7 +175,7 @@ namespace MixItUp.Base.Commands
             return arguments.FirstOrDefault();
         }
 
-        protected virtual string GetBetAmountUserArgument(IEnumerable<string> arguments)
+        protected virtual string GetBetAmountSecondArgument(IEnumerable<string> arguments)
         {
             if (arguments.Count() == 2)
             {
@@ -898,7 +898,7 @@ namespace MixItUp.Base.Commands
 
         protected override string GetBetAmountArgument(IEnumerable<string> arguments)
         {
-            return base.GetBetAmountUserArgument(arguments);
+            return base.GetBetAmountSecondArgument(arguments);
         }
 
         protected override Task<UserViewModel> GetTargetUser(UserViewModel user, IEnumerable<string> arguments, UserCurrencyViewModel currency, int betAmount)
@@ -1068,7 +1068,7 @@ namespace MixItUp.Base.Commands
 
         protected override string GetBetAmountArgument(IEnumerable<string> arguments)
         {
-            return base.GetBetAmountUserArgument(arguments);
+            return base.GetBetAmountSecondArgument(arguments);
         }
 
         protected override async Task<UserViewModel> GetArgumentsTargetUser(UserViewModel user, IEnumerable<string> arguments, UserCurrencyViewModel currency, int betAmount)
@@ -1312,7 +1312,7 @@ namespace MixItUp.Base.Commands
 
         protected override string GetBetAmountArgument(IEnumerable<string> arguments)
         {
-            return base.GetBetAmountUserArgument(arguments);
+            return base.GetBetAmountSecondArgument(arguments);
         }
 
         protected override Task<bool> CanUserEnter(UserViewModel user, IEnumerable<string> arguments, int betAmount)
@@ -1388,7 +1388,7 @@ namespace MixItUp.Base.Commands
         public RoleRequirementViewModel GameStarterRequirement { get; set; }
 
         [DataMember]
-        public List<string> Options { get; set; }
+        public List<GameOutcome> Options { get; set; }
 
         [DataMember]
         public CustomCommand BetsClosedCommand { get; set; }
@@ -1406,12 +1406,12 @@ namespace MixItUp.Base.Commands
         public BetGameCommand() { }
 
         public BetGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int minimumParticipants, int timeLimit, RoleRequirementViewModel gameStarterRequirement,
-            CustomCommand startedCommand, IEnumerable<string> options, CustomCommand userJoinCommand, CustomCommand betsClosedCommand, GameOutcome userSuccessOutcome, GameOutcome userFailOutcome,
-            CustomCommand gameCompleteCommand, CustomCommand notEnoughPlayersCommand)
-            : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, userSuccessOutcome, userFailOutcome, notEnoughPlayersCommand)
+            IEnumerable<GameOutcome> options, CustomCommand startedCommand, CustomCommand userJoinCommand, CustomCommand betsClosedCommand, GameOutcome userFailureOutcome, CustomCommand gameCompleteCommand,
+            CustomCommand notEnoughPlayersCommand)
+            : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, null, userFailureOutcome, notEnoughPlayersCommand)
         {
+            this.Options = new List<GameOutcome>(options);
             this.GameStarterRequirement = gameStarterRequirement;
-            this.Options = new List<string>(options);
             this.BetsClosedCommand = betsClosedCommand;
             this.GameCompleteCommand = gameCompleteCommand;
         }
@@ -1483,13 +1483,18 @@ namespace MixItUp.Base.Commands
             return true;
         }
 
-        protected override string GetBetAmountArgument(IEnumerable<string> arguments)
+        protected override async Task<int> GetBetAmount(UserViewModel user, string betAmountText)
         {
             if (this.timeLimitTask == null && !this.timeComplete)
             {
-                return "0";
+                return 0;
             }
-            return base.GetBetAmountUserArgument(arguments);
+            return await base.GetBetAmount(user, betAmountText);
+        }
+
+        protected override string GetBetAmountArgument(IEnumerable<string> arguments)
+        {
+            return base.GetBetAmountSecondArgument(arguments);
         }
 
         protected override async Task<bool> CanUserEnter(UserViewModel user, IEnumerable<string> arguments, int betAmount)
@@ -1539,12 +1544,13 @@ namespace MixItUp.Base.Commands
 
         protected override async Task SelectWinners()
         {
+            GameOutcome winningOutcome = this.Options[this.winningOption - 1];
             foreach (var kvp in this.userOptionSelection)
             {
                 if (kvp.Value == this.winningOption)
                 {
                     this.winners.Add(kvp.Key);
-                    await this.PerformOutcome(kvp.Key, new List<string>(), this.UserSuccessOutcome, this.enteredUsers[kvp.Key]);
+                    await this.PerformOutcome(kvp.Key, new List<string>(), winningOutcome, this.enteredUsers[kvp.Key]);
                 }
                 else
                 {
@@ -1570,13 +1576,13 @@ namespace MixItUp.Base.Commands
             List<string> optionStrings = new List<string>();
             for (int i = 0; i < this.Options.Count; i++)
             {
-                optionStrings.Add(string.Format("{0}) {1}", (i + 1), this.Options[i]));
+                optionStrings.Add(string.Format("{0}) {1}", (i + 1), this.Options[i].Name));
             }
 
             specialIdentifiers[GameBetOptionsSpecialIdentifier] = string.Join(" ", optionStrings);
             if (this.winningOption > 0)
             {
-                specialIdentifiers[GameBetWinningOptionSpecialIdentifier] = this.Options[this.winningOption - 1];
+                specialIdentifiers[GameBetWinningOptionSpecialIdentifier] = this.Options[this.winningOption - 1].Name;
             }
         }
     }
@@ -1650,7 +1656,7 @@ namespace MixItUp.Base.Commands
 
         protected override string GetBetAmountArgument(IEnumerable<string> arguments)
         {
-            return base.GetBetAmountUserArgument(arguments);
+            return base.GetBetAmountSecondArgument(arguments);
         }
 
         protected override async Task<bool> CanUserEnter(UserViewModel user, IEnumerable<string> arguments, int betAmount)

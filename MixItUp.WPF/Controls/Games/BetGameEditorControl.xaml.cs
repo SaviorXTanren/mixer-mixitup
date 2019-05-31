@@ -3,6 +3,7 @@ using MixItUp.Base.ViewModel.Controls.Games;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.Games
 {
@@ -59,6 +60,12 @@ namespace MixItUp.WPF.Controls.Games
             }
 
             await base.OnLoaded();
+        }
+
+        private void DeleteButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            this.viewModel.DeleteOutcomeCommand.Execute(button.DataContext);
         }
     }
 }

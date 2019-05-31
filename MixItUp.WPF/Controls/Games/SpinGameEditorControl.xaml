@@ -31,11 +31,11 @@
 
                     <TextBlock Grid.Column="0" Foreground="{StaticResource WhiteColor}" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="16">Outcomes</TextBlock>
 
-                    <Button Grid.Column="2" Command="{Binding AddOutcomeCommand}" Width="130" HorizontalAlignment="Center">Add Outcome</Button>
+                    <Button Grid.Column="2" Command="{Binding AddOutcomeCommand}" Style="{StaticResource MaterialDesignRaisedLightButton}" Width="130" HorizontalAlignment="Center">Add Outcome</Button>
                 </Grid>
             </GroupBox.Header>
 
-            <ItemsControl ItemsSource="{Binding Outcomes}" Grid.Row="2">
+            <ItemsControl ItemsSource="{Binding Outcomes}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid Margin="15">
