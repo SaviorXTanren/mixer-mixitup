@@ -3,31 +3,30 @@ using MixItUp.Base.ViewModel.Controls.Games;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.Games
 {
     /// <summary>
-    /// Interaction logic for BetGameEditorControl.xaml
+    /// Interaction logic for TreasureDefenseGameEditorControl.xaml
     /// </summary>
-    public partial class BetGameEditorControl : GameEditorControlBase
+    public partial class TreasureDefenseGameEditorControl : GameEditorControlBase
     {
-        private BetGameEditorControlViewModel viewModel;
-        private BetGameCommand existingCommand;
+        private TreasureDefenseGameEditorControlViewModel viewModel;
+        private TreasureDefenseGameCommand existingCommand;
 
-        public BetGameEditorControl(UserCurrencyViewModel currency)
+        public TreasureDefenseGameEditorControl(UserCurrencyViewModel currency)
         {
             InitializeComponent();
 
-            this.viewModel = new BetGameEditorControlViewModel(currency);
+            this.viewModel = new TreasureDefenseGameEditorControlViewModel(currency);
         }
 
-        public BetGameEditorControl(BetGameCommand command)
+        public TreasureDefenseGameEditorControl(TreasureDefenseGameCommand command)
         {
             InitializeComponent();
 
             this.existingCommand = command;
-            this.viewModel = new BetGameEditorControlViewModel(this.existingCommand);
+            this.viewModel = new TreasureDefenseGameEditorControlViewModel(command);
         }
 
         public override async Task<bool> Validate()
@@ -47,7 +46,6 @@ namespace MixItUp.WPF.Controls.Games
         protected override async Task OnLoaded()
         {
             this.DataContext = this.viewModel;
-
             await this.viewModel.OnLoaded();
 
             if (this.existingCommand != null)
@@ -56,16 +54,9 @@ namespace MixItUp.WPF.Controls.Games
             }
             else
             {
-                this.CommandDetailsControl.SetDefaultValues("Bet", "bet", CurrencyRequirementTypeEnum.MinimumAndMaximum, 10, 1000);
+                this.CommandDetailsControl.SetDefaultValues("Treasure Defense", "treasure", CurrencyRequirementTypeEnum.MinimumAndMaximum, 10, 1000);
             }
-
             await base.OnLoaded();
-        }
-
-        private void DeleteButton_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            Button button = (Button)sender;
-            this.viewModel.DeleteOutcomeCommand.Execute(button.DataContext);
         }
     }
 }

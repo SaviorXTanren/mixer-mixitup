@@ -3,15 +3,52 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Controls.Games
 {
+    public class BetOutcome : UIViewModelBase
+    {
+        public string Name { get; set; }
+
+        public CustomCommand Command { get; set; }
+
+        public int Payout { get; set; }
+
+        public BetOutcome(string name, CustomCommand command, int payout = 0)
+        {
+            this.Name = name;
+            this.Command = command;
+            this.Payout = payout;
+        }
+
+        public BetOutcome(GameOutcome outcome) : this(outcome.Name, outcome.Command)
+        {
+            this.Payout = Convert.ToInt32(outcome.Payout * 100.0);
+        }
+
+        public string PayoutString
+        {
+            get { return this.Payout.ToString(); }
+            set { this.Payout = this.GetPositiveIntFromString(value); }
+        }
+
+        public GameOutcome GetGameOutcome()
+        {
+            return new GameOutcome(this.Name, Convert.ToDouble(this.Payout) / 100.0, new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, 0 }, { MixerRoleEnum.Subscriber, 0 }, { MixerRoleEnum.Mod, 0 } }, this.Command);
+        }
+    }
+
     public class BetGameEditorControlViewModel : GameEditorControlViewModelBase
     {
+        public ObservableCollection<BetOutcome> Options { get; set; } = new ObservableCollection<BetOutcome>();
+
         public IEnumerable<string> WhoCanStartRoles { get { return RoleRequirementViewModel.AdvancedUserRoleAllowedValues; } }
 
         public string WhoCanStartString
@@ -47,111 +84,80 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         }
         public int TimeLimit { get; set; } = 60;
 
-        public string UserPayoutString
-        {
-            get { return this.UserPayout.ToString(); }
-            set
-            {
-                this.UserPayout = this.GetPositiveIntFromString(value);
-                this.NotifyPropertyChanged();
-            }
-        }
-        public double UserPayout { get; set; } = 200;
-
-        public string SubscriberPayoutString
-        {
-            get { return this.SubscriberPayout.ToString(); }
-            set
-            {
-                this.SubscriberPayout = this.GetPositiveIntFromString(value);
-                this.NotifyPropertyChanged();
-            }
-        }
-        public double SubscriberPayout { get; set; } = 200;
-
-        public string ModPayoutString
-        {
-            get { return this.ModPayout.ToString(); }
-            set
-            {
-                this.ModPayout = this.GetPositiveIntFromString(value);
-                this.NotifyPropertyChanged();
-            }
-        }
-        public double ModPayout { get; set; } = 200;
-
-        public string SelectableBetTypes
-        {
-            get { return this.selectableBetTypes; }
-            set
-            {
-                this.selectableBetTypes = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private string selectableBetTypes { get; set; }
-
         public CustomCommand StartedCommand { get; set; }
         public CustomCommand UserJoinedCommand { get; set; }
 
         public CustomCommand NotEnoughPlayersCommand { get; set; }
         public CustomCommand BetsClosedCommand { get; set; }
 
-        public CustomCommand UserSuccessCommand { get; set; }
         public CustomCommand UserFailCommand { get; set; }
-
         public CustomCommand GameCompleteCommand { get; set; }
+
+        public ICommand AddOutcomeCommand { get; set; }
+        public ICommand DeleteOutcomeCommand { get; set; }
 
         private BetGameCommand existingCommand;
 
         public BetGameEditorControlViewModel(UserCurrencyViewModel currency)
+            : this()
         {
             this.StartedCommand = this.CreateBasic2ChatCommand("@$username has started a bet on...SOMETHING! Type !bet <OPTION #> <AMOUNT> in chat to participate!", "Options: $gamebetoptions");
             this.UserJoinedCommand = this.CreateBasicChatCommand("Your bet option has been selected!", whisper: true);
 
             this.NotEnoughPlayersCommand = this.CreateBasicChatCommand("@$username couldn't get enough users to join in...");
             this.BetsClosedCommand = this.CreateBasicChatCommand("All bets are now closed! Let's wait and see what the result is...");
-
-            this.UserSuccessCommand = this.CreateBasicChatCommand("Congrats, you made out with $gamepayout " + currency.Name + "!", whisper: true);
             this.UserFailCommand = this.CreateBasicChatCommand("Lady luck wasn't with you today, better luck next time...", whisper: true);
             this.GameCompleteCommand = this.CreateBasicChatCommand("$gamebetwinningoption was the winning choice!");
+
+            this.Options.Add(new BetOutcome("Win Match", this.CreateBasicChatCommand("We both won! Which mean you won $gamepayout " + currency.Name + "!", whisper: true), 200));
+            this.Options.Add(new BetOutcome("Lose Match", this.CreateBasicChatCommand("Well, I lose and you won $gamepayout " + currency.Name + ", so there's something at least...", whisper: true), 200));
         }
 
         public BetGameEditorControlViewModel(BetGameCommand command)
+            : this()
         {
             this.existingCommand = command;
 
             this.WhoCanStart = this.existingCommand.GameStarterRequirement.MixerRole;
             this.MinimumParticipants = this.existingCommand.MinimumParticipants;
             this.TimeLimit = this.existingCommand.TimeLimit;
-            this.SelectableBetTypes = string.Join(Environment.NewLine, this.existingCommand.Options);
 
             this.StartedCommand = this.existingCommand.StartedCommand;
             this.UserJoinedCommand = this.existingCommand.UserJoinCommand;
 
             this.NotEnoughPlayersCommand = this.existingCommand.NotEnoughPlayersCommand;
             this.BetsClosedCommand = this.existingCommand.BetsClosedCommand;
-
-            this.UserSuccessCommand = this.existingCommand.UserSuccessOutcome.Command;
             this.UserFailCommand = this.existingCommand.UserFailOutcome.Command;
             this.GameCompleteCommand = this.existingCommand.GameCompleteCommand;
+
+            foreach (GameOutcome outcome in this.existingCommand.Options)
+            {
+                this.Options.Add(new BetOutcome(outcome));
+            }
+        }
+
+        private BetGameEditorControlViewModel()
+        {
+            this.AddOutcomeCommand = this.CreateCommand((parameter) =>
+            {
+                this.Options.Add(new BetOutcome("", this.CreateBasicChatCommand("@$username")));
+                return Task.FromResult(0);
+            });
+
+            this.DeleteOutcomeCommand = this.CreateCommand((parameter) =>
+            {
+                this.Options.Remove((BetOutcome)parameter);
+                return Task.FromResult(0);
+            });
         }
 
         public override void SaveGameCommand(string name, IEnumerable<string> triggers, RequirementViewModel requirements)
         {
-            List<string> validBetTypes = new List<string>();
-            foreach (string betType in this.SelectableBetTypes.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
-            {
-                validBetTypes.Add(betType.ToLower());
-            }
-
             RoleRequirementViewModel starterRequirement = new RoleRequirementViewModel(this.WhoCanStart);
-            Dictionary<MixerRoleEnum, double> successRolePayouts = new Dictionary<MixerRoleEnum, double>() { { MixerRoleEnum.User, this.UserPayout }, { MixerRoleEnum.Subscriber, this.SubscriberPayout }, { MixerRoleEnum.Mod, this.ModPayout = this.ModPayout } };
-            Dictionary<MixerRoleEnum, int> roleProbabilities = new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, 0 }, { MixerRoleEnum.Subscriber, 0 }, { MixerRoleEnum.Mod, 0 } };
-
             GameCommandBase newCommand = new BetGameCommand(name, triggers, requirements, this.MinimumParticipants, this.TimeLimit, starterRequirement,
-                this.StartedCommand, validBetTypes, this.UserJoinedCommand, this.BetsClosedCommand, new GameOutcome("Success", successRolePayouts, roleProbabilities, this.UserSuccessCommand),
-                new GameOutcome("Failure", 0, roleProbabilities, this.UserFailCommand), this.GameCompleteCommand, this.NotEnoughPlayersCommand);
+                this.Options.Select(o => o.GetGameOutcome()), this.StartedCommand, this.UserJoinedCommand, this.BetsClosedCommand,
+                new GameOutcome("Failure", 0, new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, 0 }, { MixerRoleEnum.Subscriber, 0 }, { MixerRoleEnum.Mod, 0 } }, this.UserFailCommand),
+                this.GameCompleteCommand, this.NotEnoughPlayersCommand);
             if (this.existingCommand != null)
             {
                 ChannelSession.Settings.GameCommands.Remove(this.existingCommand);
@@ -180,40 +186,25 @@ namespace MixItUp.Base.ViewModel.Controls.Games
                 return false;
             }
 
-            if (this.UserPayout < 0)
-            {
-                await DialogHelper.ShowMessage("The User Payout %'s is not a valid number greater than or equal to 0");
-                return false;
-            }
-
-            if (this.SubscriberPayout < 0)
-            {
-                await DialogHelper.ShowMessage("The Subscriber Payout %'s is not a valid number greater than or equal to 0");
-                return false;
-            }
-
-            if (this.ModPayout < 0)
-            {
-                await DialogHelper.ShowMessage("The Mod Payout %'s is not a valid number greater than or equal to 0");
-                return false;
-            }
-
-            if (string.IsNullOrEmpty(this.SelectableBetTypes))
-            {
-                await DialogHelper.ShowMessage("The Valid Bet Types does not have a value");
-                return false;
-            }
-
-            HashSet<string> validBetTypes = new HashSet<string>();
-            foreach (string betType in this.SelectableBetTypes.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
-            {
-                validBetTypes.Add(betType.ToLower());
-            }
-
-            if (validBetTypes.Count() < 2)
+            if (this.Options.Count() < 2)
             {
                 await DialogHelper.ShowMessage("You must specify at least 2 different bet types");
                 return false;
+            }
+
+            foreach (BetOutcome outcome in this.Options)
+            {
+                if (string.IsNullOrEmpty(outcome.Name))
+                {
+                    await DialogHelper.ShowMessage("An outcome is missing a name");
+                    return false;
+                }
+
+                if (outcome.Command == null)
+                {
+                    await DialogHelper.ShowMessage("An outcome is missing a command");
+                    return false;
+                }
             }
 
             return true;

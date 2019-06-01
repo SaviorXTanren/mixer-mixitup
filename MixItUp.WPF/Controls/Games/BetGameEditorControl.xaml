@@ -57,39 +57,69 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Text="{Binding SelectableBetTypes}" Grid.Column="0" Width="200" Height="100" MaterialDesign:HintAssist.Hint="Valid Bet Types (One Per Line)" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" />
-
-            <GroupBox Grid.Column="2" Header="Not Enough Players">
+            <GroupBox Grid.Column="0" Header="Not Enough Players">
                 <CommandControls:CommandButtonsControl DataContext="{Binding NotEnoughPlayersCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
 
-            <GroupBox Grid.Column="4" Header="Bets Closed">
+            <GroupBox Grid.Column="2" Header="Bets Closed">
                 <CommandControls:CommandButtonsControl DataContext="{Binding BetsClosedCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
-        </Grid>
 
-        <Grid Grid.Row="6" HorizontalAlignment="Center">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
-            <GroupBox Grid.Column="0" Header="User Success">
-                <CommandControls:CommandButtonsControl DataContext="{Binding UserSuccessCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
-            </GroupBox>
-
-            <GroupBox Grid.Column="2" Header="User Failure">
+            <GroupBox Grid.Column="4" Header="User Failure">
                 <CommandControls:CommandButtonsControl DataContext="{Binding UserFailCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
 
-            <GroupBox Grid.Column="4" Header="Game Complete">
+            <GroupBox Grid.Column="6" Header="Game Complete">
                 <CommandControls:CommandButtonsControl DataContext="{Binding GameCompleteCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
         </Grid>
+
+        <GroupBox Grid.Row="6">
+            <GroupBox.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Foreground="{StaticResource WhiteColor}" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="16">Bet Options</TextBlock>
+
+                    <Button Grid.Column="2" Command="{Binding AddOutcomeCommand}" Style="{StaticResource MaterialDesignRaisedLightButton}" Width="130" HorizontalAlignment="Center">Add Option</Button>
+                </Grid>
+            </GroupBox.Header>
+
+            <ItemsControl ItemsSource="{Binding Options}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="110" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox Grid.Column="0" MaterialDesign:HintAssist.Hint="Bet Option Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding Name}" />
+
+                            <CommandControls:CommandButtonsControl DataContext="{Binding Command}" Grid.Column="2" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+
+                            <TextBox Grid.Column="4" MaterialDesign:HintAssist.Hint="Payout %" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding PayoutString}" />
+
+                            <Button x:Name="DeleteButton" Grid.Column="6" Click="DeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Delete Command">
+                                <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </GroupBox>
     </Grid>
 </local:GameEditorControlBase>

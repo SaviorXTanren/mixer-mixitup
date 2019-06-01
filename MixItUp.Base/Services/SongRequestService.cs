@@ -285,17 +285,7 @@ namespace MixItUp.Base.Services
         {
             await SongRequestService.songRequestLock.WaitAndRelease(async () =>
             {
-                if (this.Status != null)
-                {
-                    foreach (ISongRequestProviderService provider in this.enabledProviders)
-                    {
-                        if (this.Status.Type == provider.Type)
-                        {
-                            await provider.Resume();
-                            this.forceStateQuery = true;
-                        }
-                    }
-                }
+                await this.ResumeInternal();
             });
             GlobalEvents.SongRequestsChangedOccurred();
         }
@@ -416,7 +406,17 @@ namespace MixItUp.Base.Services
                 this.RequestSongs.Remove(song);
                 return Task.FromResult(0);
             });
-            await ChannelSession.Chat.SendMessage(string.Format("{0} removed from the queue.", song.Name));
+
+            if (ChannelSession.Settings.SongRemovedCommand != null)
+            {
+                Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
+                {
+                    { "songtitle", song.Name },
+                    { "songalbumimage", song.AlbumImage }
+                };
+                await ChannelSession.Settings.SongRemovedCommand.Perform(song.User, arguments: null, extraSpecialIdentifiers: specialIdentifiers);
+            }
+
             GlobalEvents.SongRequestsChangedOccurred();
         }
 
@@ -539,6 +539,21 @@ namespace MixItUp.Base.Services
             ChannelSession.Services.Telemetry.TrackSongRequest(song.Type);
 
             GlobalEvents.SongRequestsChangedOccurred();
+        }
+
+        private async Task ResumeInternal()
+        {
+            if (this.Status != null)
+            {
+                foreach (ISongRequestProviderService provider in this.enabledProviders)
+                {
+                    if (this.Status.Type == provider.Type)
+                    {
+                        await provider.Resume();
+                        this.forceStateQuery = true;
+                    }
+                }
+            }
         }
 
         private async Task SkipInternal()
@@ -697,6 +712,10 @@ namespace MixItUp.Base.Services
                             if (failedStatusAttempts >= 3)
                             {
                                 await this.SkipInternal();
+                            }
+                            else
+                            {
+                                await this.ResumeInternal();
                             }
                         }
                         else

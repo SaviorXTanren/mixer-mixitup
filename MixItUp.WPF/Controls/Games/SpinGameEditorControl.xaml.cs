@@ -64,7 +64,7 @@ namespace MixItUp.WPF.Controls.Games
         private void DeleteButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             Button button = (Button)sender;
-
+            this.viewModel.DeleteOutcomeCommand.Execute(button.DataContext);
         }
     }
 }

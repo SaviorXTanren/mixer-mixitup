@@ -175,6 +175,8 @@ namespace MixItUp.AutoHoster
             }
             this.NotifyPropertyChanged("HostingOrderName");
             this.NotifyPropertyChanged("AgeRatingName");
+            this.NotifyPropertyChanged("MaxHostLength");
+            this.NotifyPropertyChanged("WhisperMessage");
 
             return true;
         }

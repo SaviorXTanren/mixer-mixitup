@@ -30,6 +30,7 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.viewModel.OnLoaded();
 
             this.SongAddedCommand.DataContext = ChannelSession.Settings.SongAddedCommand;
+            this.SongRemovedCommand.DataContext = ChannelSession.Settings.SongRemovedCommand;
             this.SongPlayedCommand.DataContext = ChannelSession.Settings.SongPlayedCommand;
 
             await base.InitializeInternal();

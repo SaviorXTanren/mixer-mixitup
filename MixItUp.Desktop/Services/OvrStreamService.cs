@@ -61,10 +61,29 @@ namespace MixItUp.OvrStream
             return this.connection.HideTitleAsync(titleName, CancellationToken.None);
         }
 
+        public Task EnableTitle(string titleName)
+        {
+            return this.connection.ActivateTitleAsync(titleName, CancellationToken.None);
+        }
+
+        public Task DisableTitle(string titleName)
+        {
+            return this.connection.DeactivateTitleAsync(titleName, CancellationToken.None);
+        }
+
         public async Task PlayTitle(string titleName, Dictionary<string, string> variables)
         {
-            await this.connection.UpdateVariablesAsync(titleName, variables, CancellationToken.None);
-            await this.connection.ShowTitleAsync(titleName, CancellationToken.None);
+            var titles = await this.connection.GetTitlesAsync(CancellationToken.None);
+            var title = titles.SingleOrDefault(t => t.Name.Equals(titleName, StringComparison.InvariantCultureIgnoreCase) || t.Id.Equals(titleName, StringComparison.InvariantCultureIgnoreCase));
+            if (title != null)
+            {
+                await this.connection.UpdateVariablesAsync(title, variables, CancellationToken.None);
+
+                if (title.IsInputActive)
+                {
+                    await this.connection.ShowTitleAsync(title, CancellationToken.None);
+                }
+            }
         }
 
         public Task<string> DownloadImage(string uri)

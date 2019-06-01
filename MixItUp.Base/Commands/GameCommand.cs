@@ -175,7 +175,7 @@ namespace MixItUp.Base.Commands
             return arguments.FirstOrDefault();
         }
 
-        protected virtual string GetBetAmountUserArgument(IEnumerable<string> arguments)
+        protected virtual string GetBetAmountSecondArgument(IEnumerable<string> arguments)
         {
             if (arguments.Count() == 2)
             {
@@ -225,6 +225,23 @@ namespace MixItUp.Base.Commands
                 }
             }
             return betAmount;
+        }
+
+        protected virtual async Task<UserViewModel> GetArgumentsTargetUser(UserViewModel user, IEnumerable<string> arguments)
+        {
+            UserViewModel targetUser = null;
+            if (arguments != null && arguments.Count() > 0)
+            {
+                string username = arguments.FirstOrDefault().Replace("@", "");
+                targetUser = await ChannelSession.ActiveUsers.GetUserByUsername(username);
+
+                if (targetUser == null || user.Equals(targetUser))
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, "The User specified is either not valid or not currently in the channel");
+                    return null;
+                }
+            }
+            return targetUser;
         }
 
         protected async Task<bool> PerformRequirementChecks(UserViewModel user)
@@ -384,7 +401,19 @@ namespace MixItUp.Base.Commands
             this.FailedOutcome = failedOutcome;
         }
 
-        public override IEnumerable<CommandBase> GetAllInnerCommands() { return new List<CommandBase>() { this.SuccessfulOutcome.Command, this.FailedOutcome.Command }; }
+        public override IEnumerable<CommandBase> GetAllInnerCommands()
+        { 
+            List<CommandBase> commands = new List<CommandBase>();
+            if (this.SuccessfulOutcome != null && this.SuccessfulOutcome.Command != null)
+            {
+                commands.Add(this.SuccessfulOutcome.Command);
+            }
+            if (this.FailedOutcome != null && this.FailedOutcome.Command != null)
+            {
+                commands.Add(this.FailedOutcome.Command);
+            }
+            return commands;
+        }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
         {
@@ -446,21 +475,15 @@ namespace MixItUp.Base.Commands
 
         protected virtual async Task<UserViewModel> GetArgumentsTargetUser(UserViewModel user, IEnumerable<string> arguments, UserCurrencyViewModel currency, int betAmount)
         {
-            string username = arguments.FirstOrDefault().Replace("@", "");
-            UserViewModel targetUser = await ChannelSession.ActiveUsers.GetUserByUsername(username);
-
-            if (targetUser == null || user.Equals(targetUser))
+            UserViewModel targetUser = await this.GetArgumentsTargetUser(user, arguments);
+            if (targetUser != null)
             {
-                await ChannelSession.Chat.Whisper(user.UserName, "The User specified is either not valid or not currently in the channel");
-                return null;
+                if (!targetUser.Data.HasCurrencyAmount(currency, betAmount))
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("@{0} does not have {1} {2}", targetUser.UserName, betAmount, currency.Name));
+                    return null;
+                }
             }
-
-            if (!targetUser.Data.HasCurrencyAmount(currency, betAmount))
-            {
-                await ChannelSession.Chat.Whisper(user.UserName, string.Format("@{0} does not have {1} {2}", targetUser.UserName, betAmount, currency.Name));
-                return null;
-            }
-
             return targetUser;
         }
 
@@ -551,23 +574,25 @@ namespace MixItUp.Base.Commands
                             {
                                 await Task.Delay(this.TimeLimit * 1000);
 
-                                await this.TimeComplete();
-
-                                this.Requirements.UpdateCooldown(user);
-
-                                UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
-                                if (currency == null)
-                                {
-                                    this.ResetData(user);
-                                    return;
-                                }
-
                                 if (this.enteredUsers.Count < this.MinimumParticipants)
                                 {
                                     await this.NotEnoughUsers();
+
+                                    this.Requirements.UpdateCooldown(user);
                                 }
                                 else
                                 {
+                                    await this.TimeComplete();
+
+                                    this.Requirements.UpdateCooldown(user);
+
+                                    UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
+                                    if (currency == null)
+                                    {
+                                        this.ResetData(user);
+                                        return;
+                                    }
+
                                     await this.SelectWinners();
 
                                     await this.GameCompleted();
@@ -731,6 +756,159 @@ namespace MixItUp.Base.Commands
     }
 
     #endregion Base Game Classes
+
+    [DataContract]
+    public class HotPotatoGameCommand : GameCommandBase
+    {
+        [DataMember]
+        public int TimeLimit { get; set; }
+        [DataMember]
+        public bool AllowUserTargeting { get; set; }
+
+        [DataMember]
+        public CustomCommand StartedCommand { get; set; }
+
+        [DataMember]
+        public CustomCommand TossPotatoCommand { get; set; }
+
+        [DataMember]
+        public CustomCommand PotatoExplodeCommand { get; set; }
+
+        [JsonIgnore]
+        private Task timeLimitTask;
+        [JsonIgnore]
+        private UserViewModel currentUser;
+        [JsonIgnore]
+        private UserViewModel targetUser;
+
+        public HotPotatoGameCommand() { }
+
+        public HotPotatoGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int timeLimit, bool allowUserTargeting,
+            CustomCommand startedCommand, CustomCommand tossPotatoCommand, CustomCommand potatoExplodeCommand)
+            : base(name, commands, requirements)
+        {
+            this.TimeLimit = timeLimit;
+            this.AllowUserTargeting = allowUserTargeting;
+            this.StartedCommand = startedCommand;
+            this.TossPotatoCommand = tossPotatoCommand;
+            this.PotatoExplodeCommand = potatoExplodeCommand;
+        }
+
+        public override IEnumerable<CommandBase> GetAllInnerCommands() { return new List<CommandBase>() { this.StartedCommand, this.TossPotatoCommand, this.PotatoExplodeCommand }; }
+
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
+        {
+            if (await this.PerformUsageChecks(user, arguments) && await this.PerformRequirementChecks(user))
+            {
+                UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
+                if (currency == null)
+                {
+                    return;
+                }
+
+                if (this.timeLimitTask != null)
+                {
+                    if (this.targetUser.Equals(user))
+                    {
+                        UserViewModel newTarget = await this.GetUserToPassTo(user, arguments);
+                        if (newTarget != null)
+                        {
+                            this.currentUser = this.targetUser;
+                            this.targetUser = newTarget;
+                            await this.PerformCommand(this.TossPotatoCommand, this.currentUser, new List<string>() { this.targetUser.UserName }, 0, 0);
+                        }
+                        else
+                        {
+                            await ChannelSession.Chat.Whisper(user.UserName, "Could not find a user to pass to");
+                        }
+                    }
+                    else
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, "You do not have the ability to pass right now");
+                    }
+                }
+                else
+                {
+                    this.currentUser = user;
+                    this.targetUser = await this.GetUserToPassTo(user, arguments);
+                    if (this.targetUser != null)
+                    {
+                        await this.PerformCommand(this.StartedCommand, this.currentUser, new List<string>() { this.targetUser.UserName }, 0, 0);
+
+                        this.timeLimitTask = Task.Run(async () =>
+                        {
+                            await Task.Delay(1000 * this.TimeLimit);
+
+                            this.Requirements.UpdateCooldown(user);
+
+                            await this.PerformCommand(this.PotatoExplodeCommand, this.currentUser, new List<string>() { this.targetUser.UserName }, 0, 0);
+
+                            this.ResetData(user);
+                        });
+                    }
+                    else
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, "Could not find a user to pass to");
+                    }
+                }
+            }
+        }
+
+        protected override async Task<bool> PerformUsageChecks(UserViewModel user, IEnumerable<string> arguments)
+        {
+            if (this.AllowUserTargeting)
+            {
+                if (arguments.Count() != 0 && arguments.Count() != 1)
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("USAGE: !{0} -OR- !{0} <TARGET USER>", this.Commands.First()));
+                    return false;
+                }
+
+                if (arguments.Count() == 1)
+                {
+                    UserViewModel targetUser = await this.GetArgumentsTargetUser(user, arguments);
+                    if (targetUser == null)
+                    {
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                if (arguments.Count() != 0)
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("USAGE: !{0}", this.Commands.First()));
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        protected override void ResetData(UserViewModel user)
+        {
+            this.timeLimitTask = null;
+            base.ResetData(user);
+        }
+
+        private async Task<UserViewModel> GetUserToPassTo(UserViewModel user, IEnumerable<string> arguments)
+        {
+            if (this.AllowUserTargeting && arguments.Count() == 1)
+            {
+                return await this.GetArgumentsTargetUser(user, arguments);
+            }
+            else
+            {
+                foreach (UserViewModel u in (await ChannelSession.ActiveUsers.GetAllWorkableUsers()).Shuffle())
+                {
+                    if (!u.Data.IsCurrencyRankExempt && (this.targetUser == null || !u.Equals(this.targetUser)))
+                    {
+                        return u;
+                    }
+                }
+            }
+            return null;
+        }
+    }
 
     [DataContract]
     public class SpinGameCommand : SinglePlayerOutcomeGameCommand
@@ -898,7 +1076,7 @@ namespace MixItUp.Base.Commands
 
         protected override string GetBetAmountArgument(IEnumerable<string> arguments)
         {
-            return base.GetBetAmountUserArgument(arguments);
+            return base.GetBetAmountSecondArgument(arguments);
         }
 
         protected override Task<UserViewModel> GetTargetUser(UserViewModel user, IEnumerable<string> arguments, UserCurrencyViewModel currency, int betAmount)
@@ -1068,7 +1246,7 @@ namespace MixItUp.Base.Commands
 
         protected override string GetBetAmountArgument(IEnumerable<string> arguments)
         {
-            return base.GetBetAmountUserArgument(arguments);
+            return base.GetBetAmountSecondArgument(arguments);
         }
 
         protected override async Task<UserViewModel> GetArgumentsTargetUser(UserViewModel user, IEnumerable<string> arguments, UserCurrencyViewModel currency, int betAmount)
@@ -1267,6 +1445,240 @@ namespace MixItUp.Base.Commands
     }
 
     [DataContract]
+    public class TreasureDefenseGameCommand : GroupGameCommand
+    {
+        public const string GameWinLoseTypeSpecialIdentifier = "gameusertype";
+
+        private enum WinLosePlayerType
+        {
+            King,
+            Knight,
+            Thief
+        }
+
+        [DataMember]
+        public int ThiefPlayerPercentage { get; set; }
+
+        [DataMember]
+        public CustomCommand KnightUserCommand { get; set; }
+        [DataMember]
+        public CustomCommand ThiefUserCommand { get; set; }
+        [DataMember]
+        public CustomCommand KingUserCommand { get; set; }
+
+        [DataMember]
+        public CustomCommand KnightSelectedCommand { get; set; }
+        [DataMember]
+        public CustomCommand ThiefSelectedCommand { get; set; }
+
+        [JsonIgnore]
+        private int betAmount = 0;
+
+        [JsonIgnore]
+        private Dictionary<UserViewModel, WinLosePlayerType> playerTypes = new Dictionary<UserViewModel, WinLosePlayerType>();
+
+        [JsonIgnore]
+        private bool timeComplete;
+        [JsonIgnore]
+        private UserViewModel playerSelected = null;
+        [JsonIgnore]
+        protected int individualPayout = 0;
+
+        public TreasureDefenseGameCommand() { }
+
+        public TreasureDefenseGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int minimumParticipants, int timeLimit, int losePlayerPercentage,
+            CustomCommand startedCommand, CustomCommand userJoinCommand, CustomCommand knightUserCommand, CustomCommand thiefUserCommand, CustomCommand kingUserCommand,
+            CustomCommand knightSelectedCommand, CustomCommand thiefSelectedCommand, CustomCommand notEnoughPlayersCommand)
+            : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, null, null, notEnoughPlayersCommand)
+        {
+            this.ThiefPlayerPercentage = losePlayerPercentage;
+            this.KnightUserCommand = knightUserCommand;
+            this.ThiefUserCommand = thiefUserCommand;
+            this.KingUserCommand = kingUserCommand;
+            this.KnightSelectedCommand = knightSelectedCommand;
+            this.ThiefSelectedCommand = thiefSelectedCommand;
+        }
+
+        public override IEnumerable<CommandBase> GetAllInnerCommands()
+        {
+            List<CommandBase> commands = new List<CommandBase>(base.GetAllInnerCommands());
+            commands.Add(this.KnightUserCommand);
+            commands.Add(this.ThiefUserCommand);
+            commands.Add(this.KingUserCommand);
+            commands.Add(this.KnightSelectedCommand);
+            commands.Add(this.ThiefSelectedCommand);
+            return commands;
+        }
+
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
+        {
+            if (this.timeComplete)
+            {
+                if (this.playerTypes.ContainsKey(user) && this.playerTypes[user] == WinLosePlayerType.King)
+                {
+                    UserViewModel targetUser = await this.GetArgumentsTargetUser(user, arguments);
+                    if (targetUser != null)
+                    {
+                        if (this.playerTypes.ContainsKey(targetUser) && this.playerTypes[targetUser] != WinLosePlayerType.King)
+                        {
+                            this.playerSelected = targetUser;
+                        }
+                        else
+                        {
+                            await ChannelSession.Chat.Whisper(user.UserName, "You must select a valid player who is participating in the game");
+                            return;
+                        }
+                    }
+                }
+                else
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, "Only the King can choose a defender");
+                    return;
+                }
+            }
+            else
+            {
+                await base.PerformInternal(user, arguments, extraSpecialIdentifiers, token);
+            }
+        }
+
+        protected override async Task<bool> PerformUsageChecks(UserViewModel user, IEnumerable<string> arguments)
+        {
+            if (this.timeLimitTask != null)
+            {
+                if (arguments.Count() != 0)
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("The game is already underway, type !{0} in chat to join!", this.Commands.First()));
+                    return false;
+                }
+                return true;
+            }
+            else if (this.timeComplete)
+            {
+                await ChannelSession.Chat.Whisper(user.UserName, string.Format("The game is already locked and no more players may join"));
+                return false;
+            }
+            return await base.PerformUsageChecks(user, arguments);
+        }
+
+        protected override async Task<int> GetBetAmount(UserViewModel user, string betAmountText)
+        {
+            if (this.timeLimitTask != null)
+            {
+                return this.betAmount;
+            }
+            return await base.GetBetAmount(user, betAmountText);
+        }
+
+        protected override async Task GameStarted(UserViewModel user, IEnumerable<string> arguments, int betAmount)
+        {
+            this.betAmount = betAmount;
+            await base.GameStarted(user, arguments, betAmount);
+        }
+
+        protected override async Task TimeComplete()
+        {
+            this.timeComplete = true;
+
+            this.playerSelected = null;
+
+            foreach (UserViewModel user in this.enteredUsers.Keys.ToList())
+            {
+                this.playerTypes[user] = WinLosePlayerType.Knight;
+            }
+
+            int totalLosers = (int)Math.Ceiling((double)this.ThiefPlayerPercentage * (double)this.playerTypes.Count);
+            IEnumerable<UserViewModel> shuffledPlayers = this.playerTypes.Keys.ToList().Shuffle();
+            this.playerTypes[shuffledPlayers.First()] = WinLosePlayerType.King;
+            foreach (UserViewModel user in shuffledPlayers.Skip(2).Take(totalLosers))
+            {
+                this.playerTypes[user] = WinLosePlayerType.Thief;
+            }
+
+            foreach (var kvp in this.playerTypes.ToList())
+            {
+                if (kvp.Value == WinLosePlayerType.Knight)
+                {
+                    await this.PerformCommand(this.KnightUserCommand, kvp.Key, null, 0, 0);
+                }
+                else if (kvp.Value == WinLosePlayerType.Thief)
+                {
+                    await this.PerformCommand(this.ThiefUserCommand, kvp.Key, null, 0, 0);
+                }
+            }
+
+            await this.PerformCommand(this.KingUserCommand, shuffledPlayers.First(), null, 0, 0);
+
+            do
+            {
+                await Task.Delay(1000);
+            } while (this.playerSelected == null);
+        }
+
+        protected override Task SelectWinners()
+        {
+            if (this.playerTypes[this.playerSelected] == WinLosePlayerType.Knight)
+            {
+                foreach (var kvp in this.playerTypes.Where(kvp => kvp.Value != WinLosePlayerType.Thief))
+                {
+                    this.winners.Add(kvp.Key);
+                }
+            }
+            else
+            {
+                foreach (var kvp in this.playerTypes.Where(kvp => kvp.Value == WinLosePlayerType.Thief))
+                {
+                    this.winners.Add(kvp.Key);
+                }
+            }
+
+            this.totalPayout = this.enteredUsers.Values.Sum();
+            this.individualPayout = this.totalPayout / this.winners.Count;
+
+            foreach (var kvp in this.enteredUsers)
+            {
+                if (this.winners.Contains(kvp.Key))
+                {
+                    kvp.Key.Data.AddCurrencyAmount(this.Requirements.Currency.GetCurrency(), this.individualPayout);
+                }
+            }
+
+            return Task.FromResult(0);
+        }
+
+        protected override async Task GameCompleted()
+        {
+            UserViewModel king = this.playerTypes.FirstOrDefault(kvp => kvp.Value == WinLosePlayerType.King).Key;
+            if (this.playerTypes[this.playerSelected] == WinLosePlayerType.Knight)
+            {
+                await this.PerformCommand(this.KnightSelectedCommand, king, new List<string>() { this.playerSelected.UserName }, this.betAmount, this.individualPayout);
+            }
+            else
+            {
+                await this.PerformCommand(this.ThiefSelectedCommand, king, new List<string>() { this.playerSelected.UserName }, this.betAmount, this.individualPayout);
+            }
+        }
+
+        protected override void AddAdditionalSpecialIdentifiers(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        {
+            if (this.playerTypes.ContainsKey(user))
+            {
+                specialIdentifiers[GameWinLoseTypeSpecialIdentifier] = this.playerTypes[user].ToString();
+            }
+            base.AddAdditionalSpecialIdentifiers(user, arguments, specialIdentifiers);
+        }
+
+        protected override void ResetData(UserViewModel user)
+        {
+            this.betAmount = 0;
+            this.playerTypes.Clear();
+            this.timeComplete = false;
+            this.playerSelected = null;
+            base.ResetData(user);
+        }
+    }
+
+    [DataContract]
     public class BidGameCommand : GroupGameCommand
     {
         [DataMember]
@@ -1312,7 +1724,7 @@ namespace MixItUp.Base.Commands
 
         protected override string GetBetAmountArgument(IEnumerable<string> arguments)
         {
-            return base.GetBetAmountUserArgument(arguments);
+            return base.GetBetAmountSecondArgument(arguments);
         }
 
         protected override Task<bool> CanUserEnter(UserViewModel user, IEnumerable<string> arguments, int betAmount)
@@ -1388,7 +1800,7 @@ namespace MixItUp.Base.Commands
         public RoleRequirementViewModel GameStarterRequirement { get; set; }
 
         [DataMember]
-        public List<string> Options { get; set; }
+        public List<GameOutcome> Options { get; set; }
 
         [DataMember]
         public CustomCommand BetsClosedCommand { get; set; }
@@ -1406,12 +1818,12 @@ namespace MixItUp.Base.Commands
         public BetGameCommand() { }
 
         public BetGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int minimumParticipants, int timeLimit, RoleRequirementViewModel gameStarterRequirement,
-            CustomCommand startedCommand, IEnumerable<string> options, CustomCommand userJoinCommand, CustomCommand betsClosedCommand, GameOutcome userSuccessOutcome, GameOutcome userFailOutcome,
-            CustomCommand gameCompleteCommand, CustomCommand notEnoughPlayersCommand)
-            : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, userSuccessOutcome, userFailOutcome, notEnoughPlayersCommand)
+            IEnumerable<GameOutcome> options, CustomCommand startedCommand, CustomCommand userJoinCommand, CustomCommand betsClosedCommand, GameOutcome userFailureOutcome, CustomCommand gameCompleteCommand,
+            CustomCommand notEnoughPlayersCommand)
+            : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, null, userFailureOutcome, notEnoughPlayersCommand)
         {
+            this.Options = new List<GameOutcome>(options);
             this.GameStarterRequirement = gameStarterRequirement;
-            this.Options = new List<string>(options);
             this.BetsClosedCommand = betsClosedCommand;
             this.GameCompleteCommand = gameCompleteCommand;
         }
@@ -1483,13 +1895,18 @@ namespace MixItUp.Base.Commands
             return true;
         }
 
-        protected override string GetBetAmountArgument(IEnumerable<string> arguments)
+        protected override async Task<int> GetBetAmount(UserViewModel user, string betAmountText)
         {
             if (this.timeLimitTask == null && !this.timeComplete)
             {
-                return "0";
+                return 0;
             }
-            return base.GetBetAmountUserArgument(arguments);
+            return await base.GetBetAmount(user, betAmountText);
+        }
+
+        protected override string GetBetAmountArgument(IEnumerable<string> arguments)
+        {
+            return base.GetBetAmountSecondArgument(arguments);
         }
 
         protected override async Task<bool> CanUserEnter(UserViewModel user, IEnumerable<string> arguments, int betAmount)
@@ -1539,12 +1956,13 @@ namespace MixItUp.Base.Commands
 
         protected override async Task SelectWinners()
         {
+            GameOutcome winningOutcome = this.Options[this.winningOption - 1];
             foreach (var kvp in this.userOptionSelection)
             {
                 if (kvp.Value == this.winningOption)
                 {
                     this.winners.Add(kvp.Key);
-                    await this.PerformOutcome(kvp.Key, new List<string>(), this.UserSuccessOutcome, this.enteredUsers[kvp.Key]);
+                    await this.PerformOutcome(kvp.Key, new List<string>(), winningOutcome, this.enteredUsers[kvp.Key]);
                 }
                 else
                 {
@@ -1570,13 +1988,13 @@ namespace MixItUp.Base.Commands
             List<string> optionStrings = new List<string>();
             for (int i = 0; i < this.Options.Count; i++)
             {
-                optionStrings.Add(string.Format("{0}) {1}", (i + 1), this.Options[i]));
+                optionStrings.Add(string.Format("{0}) {1}", (i + 1), this.Options[i].Name));
             }
 
             specialIdentifiers[GameBetOptionsSpecialIdentifier] = string.Join(" ", optionStrings);
             if (this.winningOption > 0)
             {
-                specialIdentifiers[GameBetWinningOptionSpecialIdentifier] = this.Options[this.winningOption - 1];
+                specialIdentifiers[GameBetWinningOptionSpecialIdentifier] = this.Options[this.winningOption - 1].Name;
             }
         }
     }
@@ -1650,7 +2068,7 @@ namespace MixItUp.Base.Commands
 
         protected override string GetBetAmountArgument(IEnumerable<string> arguments)
         {
-            return base.GetBetAmountUserArgument(arguments);
+            return base.GetBetAmountSecondArgument(arguments);
         }
 
         protected override async Task<bool> CanUserEnter(UserViewModel user, IEnumerable<string> arguments, int betAmount)

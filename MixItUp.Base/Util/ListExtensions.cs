@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MixItUp.Base.Util
 {
@@ -22,6 +24,17 @@ namespace MixItUp.Base.Util
                 list.Remove(item);
                 list.Insert(index, item);
             }
+        }
+
+        public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> list)
+        {
+            Random random = new Random();
+            var l = new SortedList<int, T>();
+            foreach (var i in list.ToList())
+            {
+                l.Add(random.Next(), i);
+            }
+            return l.Values;
         }
     }
 }

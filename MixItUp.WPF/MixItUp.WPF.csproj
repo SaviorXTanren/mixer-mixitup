@@ -163,8 +163,8 @@
       <HintPath>..\packages\NetOffice.Core.1.7.4.4\lib\net45\OfficeApi.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
-    <Reference Include="ovrstream-client-csharp, Version=0.0.1.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ovrstream-client-csharp.0.0.1.2\lib\netstandard2.0\ovrstream-client-csharp.dll</HintPath>
+    <Reference Include="ovrstream-client-csharp, Version=0.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ovrstream-client-csharp.0.0.2\lib\netstandard2.0\ovrstream-client-csharp.dll</HintPath>
     </Reference>
     <Reference Include="PlayFabAllSDK, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\PlayFabAllSDK.1.50.190509\lib\net45\PlayFabAllSDK.dll</HintPath>
@@ -537,6 +537,9 @@
     <Compile Include="Controls\Games\HitmanGameEditorControl.xaml.cs">
       <DependentUpon>HitmanGameEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Games\HotPotatoGameEditorControl.xaml.cs">
+      <DependentUpon>HotPotatoGameEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Games\LockBoxGameEditorControl.xaml.cs">
       <DependentUpon>LockBoxGameEditorControl.xaml</DependentUpon>
     </Compile>
@@ -563,6 +566,9 @@
     </Compile>
     <Compile Include="Controls\Games\VolcanoGameEditorControl.xaml.cs">
       <DependentUpon>VolcanoGameEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Games\TreasureDefenseGameEditorControl.xaml.cs">
+      <DependentUpon>TreasureDefenseGameEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Games\WordScrambleEditorControl.xaml.cs">
       <DependentUpon>WordScrambleEditorControl.xaml</DependentUpon>
@@ -1258,6 +1264,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Games\HotPotatoGameEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Games\LockBoxGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1291,6 +1301,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Games\VolcanoGameEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Games\TreasureDefenseGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

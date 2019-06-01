@@ -34,7 +34,7 @@ namespace MixItUp.Desktop
     [DataContract]
     public class DesktopSavableChannelSettings : ISavableChannelSettings
     {
-        public const int LatestVersion = 31;
+        public const int LatestVersion = 32;
 
         [JsonProperty]
         public int Version { get; set; } = DesktopChannelSettings.LatestVersion;
@@ -344,6 +344,8 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public CustomCommand SongAddedCommand { get; set; }
         [JsonProperty]
+        public CustomCommand SongRemovedCommand { get; set; }
+        [JsonProperty]
         public CustomCommand SongPlayedCommand { get; set; }
 
         [JsonProperty]
@@ -515,6 +517,7 @@ namespace MixItUp.Desktop
             this.GiveawayWinnerSelectedCommand = CustomCommand.BasicChatCommand("Giveaway Winner Selected", "Congratulations @$username, you won $giveawayitem!");
 
             this.SongAddedCommand = CustomCommand.BasicChatCommand("Song Request Added", "$songtitle has been added to the queue", isWhisper: true);
+            this.SongRemovedCommand = CustomCommand.BasicChatCommand("Song Request Removed", "$songtitle has been removed from the queue", isWhisper: true);
             this.SongPlayedCommand = CustomCommand.BasicChatCommand("Song Request Played", "Now Playing: $songtitle");
 
             this.ModerationStrike1Command = CustomCommand.BasicChatCommand("Moderation Strike 1", "$moderationreason. You have received a moderation strike & currently have $usermoderationstrikes strike(s)", isWhisper: true);

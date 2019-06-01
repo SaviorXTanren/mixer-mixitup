@@ -194,6 +194,7 @@ namespace MixItUp.Base
         int SongRequestVolume { get; set; }
         List<SongRequestModel> SongRequestsBannedSongs { get; set; }
         CustomCommand SongAddedCommand { get; set; }
+        CustomCommand SongRemovedCommand { get; set; }
         CustomCommand SongPlayedCommand { get; set; }
 
         Dictionary<uint, JObject> CustomInteractiveSettings { get; set; }
