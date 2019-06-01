@@ -227,6 +227,23 @@ namespace MixItUp.Base.Commands
             return betAmount;
         }
 
+        protected virtual async Task<UserViewModel> GetArgumentsTargetUser(UserViewModel user, IEnumerable<string> arguments)
+        {
+            UserViewModel targetUser = null;
+            if (arguments != null && arguments.Count() > 0)
+            {
+                string username = arguments.FirstOrDefault().Replace("@", "");
+                targetUser = await ChannelSession.ActiveUsers.GetUserByUsername(username);
+
+                if (targetUser == null || user.Equals(targetUser))
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, "The User specified is either not valid or not currently in the channel");
+                    return null;
+                }
+            }
+            return targetUser;
+        }
+
         protected async Task<bool> PerformRequirementChecks(UserViewModel user)
         {
             if (await this.CheckCooldownRequirement(user) && await this.PerformNonCooldownRequirementChecks(user))
@@ -446,21 +463,15 @@ namespace MixItUp.Base.Commands
 
         protected virtual async Task<UserViewModel> GetArgumentsTargetUser(UserViewModel user, IEnumerable<string> arguments, UserCurrencyViewModel currency, int betAmount)
         {
-            string username = arguments.FirstOrDefault().Replace("@", "");
-            UserViewModel targetUser = await ChannelSession.ActiveUsers.GetUserByUsername(username);
-
-            if (targetUser == null || user.Equals(targetUser))
+            UserViewModel targetUser = await this.GetArgumentsTargetUser(user, arguments);
+            if (targetUser != null)
             {
-                await ChannelSession.Chat.Whisper(user.UserName, "The User specified is either not valid or not currently in the channel");
-                return null;
+                if (!targetUser.Data.HasCurrencyAmount(currency, betAmount))
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("@{0} does not have {1} {2}", targetUser.UserName, betAmount, currency.Name));
+                    return null;
+                }
             }
-
-            if (!targetUser.Data.HasCurrencyAmount(currency, betAmount))
-            {
-                await ChannelSession.Chat.Whisper(user.UserName, string.Format("@{0} does not have {1} {2}", targetUser.UserName, betAmount, currency.Name));
-                return null;
-            }
-
             return targetUser;
         }
 
@@ -551,23 +562,25 @@ namespace MixItUp.Base.Commands
                             {
                                 await Task.Delay(this.TimeLimit * 1000);
 
-                                await this.TimeComplete();
-
-                                this.Requirements.UpdateCooldown(user);
-
-                                UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
-                                if (currency == null)
-                                {
-                                    this.ResetData(user);
-                                    return;
-                                }
-
                                 if (this.enteredUsers.Count < this.MinimumParticipants)
                                 {
                                     await this.NotEnoughUsers();
+
+                                    this.Requirements.UpdateCooldown(user);
                                 }
                                 else
                                 {
+                                    await this.TimeComplete();
+
+                                    this.Requirements.UpdateCooldown(user);
+
+                                    UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
+                                    if (currency == null)
+                                    {
+                                        this.ResetData(user);
+                                        return;
+                                    }
+
                                     await this.SelectWinners();
 
                                     await this.GameCompleted();
@@ -1263,6 +1276,240 @@ namespace MixItUp.Base.Commands
             {
                 await this.PerformCommand(this.GameCompleteCommand, winner, new List<string>(), this.enteredUsers[winner], this.totalPayout);
             }
+        }
+    }
+
+    [DataContract]
+    public class TreasureDefenseGameCommand : GroupGameCommand
+    {
+        public const string GameWinLoseTypeSpecialIdentifier = "gameusertype";
+
+        private enum WinLosePlayerType
+        {
+            King,
+            Knight,
+            Thief
+        }
+
+        [DataMember]
+        public int ThiefPlayerPercentage { get; set; }
+
+        [DataMember]
+        public CustomCommand KnightUserCommand { get; set; }
+        [DataMember]
+        public CustomCommand ThiefUserCommand { get; set; }
+        [DataMember]
+        public CustomCommand KingUserCommand { get; set; }
+
+        [DataMember]
+        public CustomCommand KnightSelectedCommand { get; set; }
+        [DataMember]
+        public CustomCommand ThiefSelectedCommand { get; set; }
+
+        [JsonIgnore]
+        private int betAmount = 0;
+
+        [JsonIgnore]
+        private Dictionary<UserViewModel, WinLosePlayerType> playerTypes = new Dictionary<UserViewModel, WinLosePlayerType>();
+
+        [JsonIgnore]
+        private bool timeComplete;
+        [JsonIgnore]
+        private UserViewModel playerSelected = null;
+        [JsonIgnore]
+        protected int individualPayout = 0;
+
+        public TreasureDefenseGameCommand() { }
+
+        public TreasureDefenseGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int minimumParticipants, int timeLimit, int losePlayerPercentage,
+            CustomCommand startedCommand, CustomCommand userJoinCommand, CustomCommand knightUserCommand, CustomCommand thiefUserCommand, CustomCommand kingUserCommand,
+            CustomCommand knightSelectedCommand, CustomCommand thiefSelectedCommand, CustomCommand notEnoughPlayersCommand)
+            : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, null, null, notEnoughPlayersCommand)
+        {
+            this.ThiefPlayerPercentage = losePlayerPercentage;
+            this.KnightUserCommand = knightUserCommand;
+            this.ThiefUserCommand = thiefUserCommand;
+            this.KingUserCommand = kingUserCommand;
+            this.KnightSelectedCommand = knightSelectedCommand;
+            this.ThiefSelectedCommand = thiefSelectedCommand;
+        }
+
+        public override IEnumerable<CommandBase> GetAllInnerCommands()
+        {
+            List<CommandBase> commands = new List<CommandBase>(base.GetAllInnerCommands());
+            commands.Add(this.KnightUserCommand);
+            commands.Add(this.ThiefUserCommand);
+            commands.Add(this.KingUserCommand);
+            commands.Add(this.KnightSelectedCommand);
+            commands.Add(this.ThiefSelectedCommand);
+            return commands;
+        }
+
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
+        {
+            if (this.timeComplete)
+            {
+                if (this.playerTypes.ContainsKey(user) && this.playerTypes[user] == WinLosePlayerType.King)
+                {
+                    UserViewModel targetUser = await this.GetArgumentsTargetUser(user, arguments);
+                    if (targetUser != null)
+                    {
+                        if (this.playerTypes.ContainsKey(targetUser) && this.playerTypes[targetUser] != WinLosePlayerType.King)
+                        {
+                            this.playerSelected = targetUser;
+                        }
+                        else
+                        {
+                            await ChannelSession.Chat.Whisper(user.UserName, "You must select a valid player who is participating in the game");
+                            return;
+                        }
+                    }
+                }
+                else
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, "Only the King can choose a defender");
+                    return;
+                }
+            }
+            else
+            {
+                await base.PerformInternal(user, arguments, extraSpecialIdentifiers, token);
+            }
+        }
+
+        protected override async Task<bool> PerformUsageChecks(UserViewModel user, IEnumerable<string> arguments)
+        {
+            if (this.timeLimitTask != null)
+            {
+                if (arguments.Count() != 0)
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("The game is already underway, type !{0} in chat to join!", this.Commands.First()));
+                    return false;
+                }
+                return true;
+            }
+            else if (this.timeComplete)
+            {
+                await ChannelSession.Chat.Whisper(user.UserName, string.Format("The game is already locked and no more players may join"));
+                return false;
+            }
+            return await base.PerformUsageChecks(user, arguments);
+        }
+
+        protected override async Task<int> GetBetAmount(UserViewModel user, string betAmountText)
+        {
+            if (this.timeLimitTask != null)
+            {
+                return this.betAmount;
+            }
+            return await base.GetBetAmount(user, betAmountText);
+        }
+
+        protected override async Task GameStarted(UserViewModel user, IEnumerable<string> arguments, int betAmount)
+        {
+            this.betAmount = betAmount;
+            await base.GameStarted(user, arguments, betAmount);
+        }
+
+        protected override async Task TimeComplete()
+        {
+            this.timeComplete = true;
+
+            this.playerSelected = null;
+
+            foreach (UserViewModel user in this.enteredUsers.Keys.ToList())
+            {
+                this.playerTypes[user] = WinLosePlayerType.Knight;
+            }
+
+            int totalLosers = (int)Math.Ceiling((double)this.ThiefPlayerPercentage * (double)this.playerTypes.Count);
+            IEnumerable<UserViewModel> shuffledPlayers = this.playerTypes.Keys.ToList().Shuffle();
+            this.playerTypes[shuffledPlayers.First()] = WinLosePlayerType.King;
+            foreach (UserViewModel user in shuffledPlayers.Skip(2).Take(totalLosers))
+            {
+                this.playerTypes[user] = WinLosePlayerType.Thief;
+            }
+
+            foreach (var kvp in this.playerTypes.ToList())
+            {
+                if (kvp.Value == WinLosePlayerType.Knight)
+                {
+                    await this.PerformCommand(this.KnightUserCommand, kvp.Key, null, 0, 0);
+                }
+                else if (kvp.Value == WinLosePlayerType.Thief)
+                {
+                    await this.PerformCommand(this.ThiefUserCommand, kvp.Key, null, 0, 0);
+                }
+            }
+
+            await this.PerformCommand(this.KingUserCommand, shuffledPlayers.First(), null, 0, 0);
+
+            do
+            {
+                await Task.Delay(1000);
+            } while (this.playerSelected == null);
+        }
+
+        protected override Task SelectWinners()
+        {
+            if (this.playerTypes[this.playerSelected] == WinLosePlayerType.Knight)
+            {
+                foreach (var kvp in this.playerTypes.Where(kvp => kvp.Value != WinLosePlayerType.Thief))
+                {
+                    this.winners.Add(kvp.Key);
+                }
+            }
+            else
+            {
+                foreach (var kvp in this.playerTypes.Where(kvp => kvp.Value == WinLosePlayerType.Thief))
+                {
+                    this.winners.Add(kvp.Key);
+                }
+            }
+
+            this.totalPayout = this.enteredUsers.Values.Sum();
+            this.individualPayout = this.totalPayout / this.winners.Count;
+
+            foreach (var kvp in this.enteredUsers)
+            {
+                if (this.winners.Contains(kvp.Key))
+                {
+                    kvp.Key.Data.AddCurrencyAmount(this.Requirements.Currency.GetCurrency(), this.individualPayout);
+                }
+            }
+
+            return Task.FromResult(0);
+        }
+
+        protected override async Task GameCompleted()
+        {
+            UserViewModel king = this.playerTypes.FirstOrDefault(kvp => kvp.Value == WinLosePlayerType.King).Key;
+            if (this.playerTypes[this.playerSelected] == WinLosePlayerType.Knight)
+            {
+                await this.PerformCommand(this.KnightSelectedCommand, king, new List<string>() { this.playerSelected.UserName }, this.betAmount, this.individualPayout);
+            }
+            else
+            {
+                await this.PerformCommand(this.ThiefSelectedCommand, king, new List<string>() { this.playerSelected.UserName }, this.betAmount, this.individualPayout);
+            }
+        }
+
+        protected override void AddAdditionalSpecialIdentifiers(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        {
+            if (this.playerTypes.ContainsKey(user))
+            {
+                specialIdentifiers[GameWinLoseTypeSpecialIdentifier] = this.playerTypes[user].ToString();
+            }
+            base.AddAdditionalSpecialIdentifiers(user, arguments, specialIdentifiers);
+        }
+
+        protected override void ResetData(UserViewModel user)
+        {
+            this.betAmount = 0;
+            this.playerTypes.Clear();
+            this.timeComplete = false;
+            this.playerSelected = null;
+            base.ResetData(user);
         }
     }
 

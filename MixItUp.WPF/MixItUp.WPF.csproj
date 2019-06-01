@@ -564,6 +564,9 @@
     <Compile Include="Controls\Games\VolcanoGameEditorControl.xaml.cs">
       <DependentUpon>VolcanoGameEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Games\TreasureDefenseGameEditorControl.xaml.cs">
+      <DependentUpon>TreasureDefenseGameEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Games\WordScrambleEditorControl.xaml.cs">
       <DependentUpon>WordScrambleEditorControl.xaml</DependentUpon>
     </Compile>
@@ -1291,6 +1294,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Games\VolcanoGameEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Games\TreasureDefenseGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -57,6 +57,7 @@ namespace MixItUp.WPF.Windows.Command
                 else if (this.viewModel.GameCommand is WordScrambleGameCommand) { this.SetGameEditorControl(new WordScrambleGameEditorControl((WordScrambleGameCommand)this.viewModel.GameCommand)); }
                 else if (this.viewModel.GameCommand is BetGameCommand) { this.SetGameEditorControl(new BetGameEditorControl((BetGameCommand)this.viewModel.GameCommand)); }
                 else if (this.viewModel.GameCommand is HangmanGameCommand) { this.SetGameEditorControl(new HangmanGameEditorControl((HangmanGameCommand)this.viewModel.GameCommand)); }
+                else if (this.viewModel.GameCommand is TreasureDefenseGameCommand) { this.SetGameEditorControl(new TreasureDefenseGameEditorControl((TreasureDefenseGameCommand)this.viewModel.GameCommand)); }
             }
             else
             {
@@ -77,6 +78,7 @@ namespace MixItUp.WPF.Windows.Command
                 this.gameEditors.Add("Word Scramble", new WordScrambleGameEditorControl(this.viewModel.DefaultCurrency));
                 this.gameEditors.Add("Bet", new BetGameEditorControl(this.viewModel.DefaultCurrency));
                 this.gameEditors.Add("Hangman", new HangmanGameEditorControl(this.viewModel.DefaultCurrency));
+                this.gameEditors.Add("Treasure Defense", new TreasureDefenseGameEditorControl(this.viewModel.DefaultCurrency));
             }
         }
 
