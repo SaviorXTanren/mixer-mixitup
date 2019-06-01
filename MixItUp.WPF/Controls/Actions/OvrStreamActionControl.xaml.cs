@@ -59,7 +59,9 @@ namespace MixItUp.WPF.Controls.Actions
                         this.variablePairs.Add(new VariablePair() { Name = kvp.Key, Value = kvp.Value });
                     }
                 }
-                else if (this.action.OvrStreamActionType == OvrStreamActionTypeEnum.HideTitle)
+                else if (this.action.OvrStreamActionType == OvrStreamActionTypeEnum.HideTitle ||
+                    this.action.OvrStreamActionType == OvrStreamActionTypeEnum.EnableTitle ||
+                    this.action.OvrStreamActionType == OvrStreamActionTypeEnum.DisableTitle)
                 {
                     this.TitleNameTextBox.Text = this.action.TitleName;
                 }
@@ -92,11 +94,13 @@ namespace MixItUp.WPF.Controls.Actions
                         return OvrStreamAction.CreateVariableTitleAction(actionType, this.TitleNameTextBox.Text, this.variablePairs.ToDictionary(p => p.Name, p => p.Value));
                     }
                 }
-                else if (actionType == OvrStreamActionTypeEnum.HideTitle)
+                else if (actionType == OvrStreamActionTypeEnum.HideTitle ||
+                    actionType == OvrStreamActionTypeEnum.EnableTitle ||
+                    actionType == OvrStreamActionTypeEnum.DisableTitle)
                 {
                     if (!string.IsNullOrEmpty(this.TitleNameTextBox.Text))
                     {
-                        return OvrStreamAction.CreateHideTitleAction(actionType, this.TitleNameTextBox.Text);
+                        return OvrStreamAction.CreateTitleAction(actionType, this.TitleNameTextBox.Text);
                     }
                 }
             }

@@ -19,8 +19,11 @@ namespace MixItUp.Base.Actions
         PlayTitle,
         [Name("Update Variables")]
         UpdateVariables,
+        [Name("Enable Title")]
+        EnableTitle,
+        [Name("Disable Title")]
+        DisableTitle,
     }
-
 
     [DataContract]
     public class OvrStreamAction : ActionBase
@@ -34,7 +37,7 @@ namespace MixItUp.Base.Actions
             };
         }
 
-        public static OvrStreamAction CreateHideTitleAction(OvrStreamActionTypeEnum actionType, string titleName)
+        public static OvrStreamAction CreateTitleAction(OvrStreamActionTypeEnum actionType, string titleName)
         {
             return new OvrStreamAction(actionType)
             {
@@ -102,6 +105,14 @@ namespace MixItUp.Base.Actions
                 else if (this.OvrStreamActionType == OvrStreamActionTypeEnum.HideTitle)
                 {
                     await ChannelSession.Services.OvrStreamWebsocket.HideTitle(this.TitleName);
+                }
+                else if (this.OvrStreamActionType == OvrStreamActionTypeEnum.EnableTitle)
+                {
+                    await ChannelSession.Services.OvrStreamWebsocket.EnableTitle(this.TitleName);
+                }
+                else if (this.OvrStreamActionType == OvrStreamActionTypeEnum.DisableTitle)
+                {
+                    await ChannelSession.Services.OvrStreamWebsocket.DisableTitle(this.TitleName);
                 }
             }
         }
