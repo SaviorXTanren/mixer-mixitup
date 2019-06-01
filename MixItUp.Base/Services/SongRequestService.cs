@@ -406,7 +406,17 @@ namespace MixItUp.Base.Services
                 this.RequestSongs.Remove(song);
                 return Task.FromResult(0);
             });
-            await ChannelSession.Chat.SendMessage(string.Format("{0} removed from the queue.", song.Name));
+
+            if (ChannelSession.Settings.SongRemovedCommand != null)
+            {
+                Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
+                {
+                    { "songtitle", song.Name },
+                    { "songalbumimage", song.AlbumImage }
+                };
+                await ChannelSession.Settings.SongRemovedCommand.Perform(song.User, arguments: null, extraSpecialIdentifiers: specialIdentifiers);
+            }
+
             GlobalEvents.SongRequestsChangedOccurred();
         }
 

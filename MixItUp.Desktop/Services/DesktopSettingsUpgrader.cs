@@ -58,6 +58,7 @@ namespace MixItUp.Desktop.Services
             await DesktopSettingsUpgrader.Version29Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version30Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version31Upgrade(version, filePath);
+            await DesktopSettingsUpgrader.Version32Upgrade(version, filePath);
 
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
             settings.InitializeDB = false;
@@ -355,6 +356,27 @@ namespace MixItUp.Desktop.Services
                     {
                         DuelGameCommand duelCommand = (DuelGameCommand)command;
                         duelCommand.NotAcceptedCommand = CustomCommand.BasicChatCommand("Game Sub-Command", "@$targetusername did not respond in time...");
+                    }
+                }
+
+                await ChannelSession.Services.Settings.Save(settings);
+            }
+        }
+
+        private static async Task Version32Upgrade(int version, string filePath)
+        {
+            if (version < 32)
+            {
+                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
+                await ChannelSession.Services.Settings.Initialize(settings);
+
+                settings.SongRemovedCommand = CustomCommand.BasicChatCommand("Song Request Removed", "$songtitle has been removed from the queue", isWhisper: true);
+
+                foreach (GameCommandBase command in settings.GameCommands.ToList())
+                {
+                    if (command is BetGameCommand)
+                    {
+                        settings.GameCommands.Remove(command);
                     }
                 }
 

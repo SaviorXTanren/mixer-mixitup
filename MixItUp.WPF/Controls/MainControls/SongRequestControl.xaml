@@ -28,15 +28,15 @@
 
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="2*" />
                 <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="3*" />
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="30" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
@@ -50,13 +50,19 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <GroupBox Header="Song Added" Grid.Column="0" Width="125">
                     <CommandControls:CommandButtonsControl x:Name="SongAddedCommand" HorizontalAlignment="Center" EditClicked="SongCommand_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
                 </GroupBox>
 
-                <GroupBox Header="Song Played" Grid.Column="2" Width="125">
+                <GroupBox Header="Song Removed" Grid.Column="2" Width="125">
+                    <CommandControls:CommandButtonsControl x:Name="SongRemovedCommand" HorizontalAlignment="Center" EditClicked="SongCommand_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+                </GroupBox>
+
+                <GroupBox Header="Song Played" Grid.Column="4" Width="125">
                     <CommandControls:CommandButtonsControl x:Name="SongPlayedCommand" HorizontalAlignment="Center" EditClicked="SongCommand_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
                 </GroupBox>
             </Grid>
