@@ -13,7 +13,7 @@ using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.Settings
 {
-    public class HotKeyUI : IComparable, IComparable<HotKeyUI>
+    public class HotKeyUI : IEquatable<HotKeyUI>, IComparable, IComparable<HotKeyUI>
     {
         public HotKeyConfiguration HotKey { get; set; }
 
@@ -35,6 +35,19 @@ namespace MixItUp.WPF.Controls.Settings
         }
 
         public int CompareTo(HotKeyUI other) { return this.HotKey.Key.CompareTo(other.HotKey.Key); }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is HotKeyUI)
+            {
+                return this.Equals((HotKeyUI)obj);
+            }
+            return false;
+        }
+
+        public bool Equals(HotKeyUI other) { return this.HotKey.Equals(other.HotKey); }
+
+        public override int GetHashCode() { return this.HotKey.GetHashCode(); }
     }
 
     /// <summary>
