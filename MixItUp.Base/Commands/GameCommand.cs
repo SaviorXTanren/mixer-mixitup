@@ -1800,7 +1800,7 @@ namespace MixItUp.Base.Commands
         public RoleRequirementViewModel GameStarterRequirement { get; set; }
 
         [DataMember]
-        public List<GameOutcome> Options { get; set; }
+        public List<GameOutcome> BetOptions { get; set; }
 
         [DataMember]
         public CustomCommand BetsClosedCommand { get; set; }
@@ -1822,7 +1822,7 @@ namespace MixItUp.Base.Commands
             CustomCommand notEnoughPlayersCommand)
             : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, null, userFailureOutcome, notEnoughPlayersCommand)
         {
-            this.Options = new List<GameOutcome>(options);
+            this.BetOptions = new List<GameOutcome>(options);
             this.GameStarterRequirement = gameStarterRequirement;
             this.BetsClosedCommand = betsClosedCommand;
             this.GameCompleteCommand = gameCompleteCommand;
@@ -1840,7 +1840,7 @@ namespace MixItUp.Base.Commands
         {
             if (this.timeComplete)
             {
-                if (arguments.Count() == 2 && arguments.ElementAt(0).Equals("answer") && int.TryParse(arguments.ElementAt(1), out int option) && option > 0 && option <= this.Options.Count)
+                if (arguments.Count() == 2 && arguments.ElementAt(0).Equals("answer") && int.TryParse(arguments.ElementAt(1), out int option) && option > 0 && option <= this.BetOptions.Count)
                 {
                     if (!this.GameStarterRequirement.DoesMeetRequirement(user))
                     {
@@ -1916,7 +1916,7 @@ namespace MixItUp.Base.Commands
                 return true;
             }
 
-            if (!int.TryParse(arguments.First(), out int option) || option <= 0 || option > this.Options.Count)
+            if (!int.TryParse(arguments.First(), out int option) || option <= 0 || option > this.BetOptions.Count)
             {
                 await ChannelSession.Chat.Whisper(user.UserName, "The option number you selected is not a valid number");
                 return false;
@@ -1956,7 +1956,7 @@ namespace MixItUp.Base.Commands
 
         protected override async Task SelectWinners()
         {
-            GameOutcome winningOutcome = this.Options[this.winningOption - 1];
+            GameOutcome winningOutcome = this.BetOptions[this.winningOption - 1];
             foreach (var kvp in this.userOptionSelection)
             {
                 if (kvp.Value == this.winningOption)
@@ -1986,15 +1986,15 @@ namespace MixItUp.Base.Commands
         protected override void AddAdditionalSpecialIdentifiers(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             List<string> optionStrings = new List<string>();
-            for (int i = 0; i < this.Options.Count; i++)
+            for (int i = 0; i < this.BetOptions.Count; i++)
             {
-                optionStrings.Add(string.Format("{0}) {1}", (i + 1), this.Options[i].Name));
+                optionStrings.Add(string.Format("{0}) {1}", (i + 1), this.BetOptions[i].Name));
             }
 
             specialIdentifiers[GameBetOptionsSpecialIdentifier] = string.Join(" ", optionStrings);
             if (this.winningOption > 0)
             {
-                specialIdentifiers[GameBetWinningOptionSpecialIdentifier] = this.Options[this.winningOption - 1].Name;
+                specialIdentifiers[GameBetWinningOptionSpecialIdentifier] = this.BetOptions[this.winningOption - 1].Name;
             }
         }
     }

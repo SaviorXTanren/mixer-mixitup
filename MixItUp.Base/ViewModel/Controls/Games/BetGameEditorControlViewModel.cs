@@ -130,7 +130,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             this.UserFailCommand = this.existingCommand.UserFailOutcome.Command;
             this.GameCompleteCommand = this.existingCommand.GameCompleteCommand;
 
-            foreach (GameOutcome outcome in this.existingCommand.Options)
+            foreach (GameOutcome outcome in this.existingCommand.BetOptions)
             {
                 this.Options.Add(new BetOutcome(outcome));
             }
