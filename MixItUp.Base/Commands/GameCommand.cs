@@ -401,7 +401,19 @@ namespace MixItUp.Base.Commands
             this.FailedOutcome = failedOutcome;
         }
 
-        public override IEnumerable<CommandBase> GetAllInnerCommands() { return new List<CommandBase>() { this.SuccessfulOutcome.Command, this.FailedOutcome.Command }; }
+        public override IEnumerable<CommandBase> GetAllInnerCommands()
+        { 
+            List<CommandBase> commands = new List<CommandBase>();
+            if (this.SuccessfulOutcome != null && this.SuccessfulOutcome.Command != null)
+            {
+                commands.Add(this.SuccessfulOutcome.Command);
+            }
+            if (this.FailedOutcome != null && this.FailedOutcome.Command != null)
+            {
+                commands.Add(this.FailedOutcome.Command);
+            }
+            return commands;
+        }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
         {
@@ -744,6 +756,159 @@ namespace MixItUp.Base.Commands
     }
 
     #endregion Base Game Classes
+
+    [DataContract]
+    public class HotPotatoGameCommand : GameCommandBase
+    {
+        [DataMember]
+        public int TimeLimit { get; set; }
+        [DataMember]
+        public bool AllowUserTargeting { get; set; }
+
+        [DataMember]
+        public CustomCommand StartedCommand { get; set; }
+
+        [DataMember]
+        public CustomCommand TossPotatoCommand { get; set; }
+
+        [DataMember]
+        public CustomCommand PotatoExplodeCommand { get; set; }
+
+        [JsonIgnore]
+        private Task timeLimitTask;
+        [JsonIgnore]
+        private UserViewModel currentUser;
+        [JsonIgnore]
+        private UserViewModel targetUser;
+
+        public HotPotatoGameCommand() { }
+
+        public HotPotatoGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int timeLimit, bool allowUserTargeting,
+            CustomCommand startedCommand, CustomCommand tossPotatoCommand, CustomCommand potatoExplodeCommand)
+            : base(name, commands, requirements)
+        {
+            this.TimeLimit = timeLimit;
+            this.AllowUserTargeting = allowUserTargeting;
+            this.StartedCommand = startedCommand;
+            this.TossPotatoCommand = tossPotatoCommand;
+            this.PotatoExplodeCommand = potatoExplodeCommand;
+        }
+
+        public override IEnumerable<CommandBase> GetAllInnerCommands() { return new List<CommandBase>() { this.StartedCommand, this.TossPotatoCommand, this.PotatoExplodeCommand }; }
+
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
+        {
+            if (await this.PerformUsageChecks(user, arguments) && await this.PerformRequirementChecks(user))
+            {
+                UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
+                if (currency == null)
+                {
+                    return;
+                }
+
+                if (this.timeLimitTask != null)
+                {
+                    if (this.targetUser.Equals(user))
+                    {
+                        UserViewModel newTarget = await this.GetUserToPassTo(user, arguments);
+                        if (newTarget != null)
+                        {
+                            this.currentUser = this.targetUser;
+                            this.targetUser = newTarget;
+                            await this.PerformCommand(this.TossPotatoCommand, this.currentUser, new List<string>() { this.targetUser.UserName }, 0, 0);
+                        }
+                        else
+                        {
+                            await ChannelSession.Chat.Whisper(user.UserName, "Could not find a user to pass to");
+                        }
+                    }
+                    else
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, "You do not have the ability to pass right now");
+                    }
+                }
+                else
+                {
+                    this.currentUser = user;
+                    this.targetUser = await this.GetUserToPassTo(user, arguments);
+                    if (this.targetUser != null)
+                    {
+                        await this.PerformCommand(this.StartedCommand, this.currentUser, new List<string>() { this.targetUser.UserName }, 0, 0);
+
+                        this.timeLimitTask = Task.Run(async () =>
+                        {
+                            await Task.Delay(1000 * this.TimeLimit);
+
+                            this.Requirements.UpdateCooldown(user);
+
+                            await this.PerformCommand(this.PotatoExplodeCommand, this.currentUser, new List<string>() { this.targetUser.UserName }, 0, 0);
+
+                            this.ResetData(user);
+                        });
+                    }
+                    else
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, "Could not find a user to pass to");
+                    }
+                }
+            }
+        }
+
+        protected override async Task<bool> PerformUsageChecks(UserViewModel user, IEnumerable<string> arguments)
+        {
+            if (this.AllowUserTargeting)
+            {
+                if (arguments.Count() != 0 && arguments.Count() != 1)
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("USAGE: !{0} -OR- !{0} <TARGET USER>", this.Commands.First()));
+                    return false;
+                }
+
+                if (arguments.Count() == 1)
+                {
+                    UserViewModel targetUser = await this.GetArgumentsTargetUser(user, arguments);
+                    if (targetUser == null)
+                    {
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                if (arguments.Count() != 0)
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("USAGE: !{0}", this.Commands.First()));
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        protected override void ResetData(UserViewModel user)
+        {
+            this.timeLimitTask = null;
+            base.ResetData(user);
+        }
+
+        private async Task<UserViewModel> GetUserToPassTo(UserViewModel user, IEnumerable<string> arguments)
+        {
+            if (this.AllowUserTargeting && arguments.Count() == 1)
+            {
+                return await this.GetArgumentsTargetUser(user, arguments);
+            }
+            else
+            {
+                foreach (UserViewModel u in (await ChannelSession.ActiveUsers.GetAllWorkableUsers()).Shuffle())
+                {
+                    if (!u.Data.IsCurrencyRankExempt && (this.targetUser == null || !u.Equals(this.targetUser)))
+                    {
+                        return u;
+                    }
+                }
+            }
+            return null;
+        }
+    }
 
     [DataContract]
     public class SpinGameCommand : SinglePlayerOutcomeGameCommand

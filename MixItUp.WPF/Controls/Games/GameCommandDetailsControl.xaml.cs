@@ -56,6 +56,20 @@ namespace MixItUp.WPF.Controls.Games
             this.CurrencyRequirementComboBox.IsEnabled = false;
         }
 
+        public void SetAsNoCostOnly()
+        {
+            this.CurrencyTypeComboBox.IsEnabled = false;
+            this.CurrencyRequirementComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyRequirementTypeEnum.NoCurrencyCost);
+            this.CurrencyRequirementComboBox.IsEnabled = false;
+        }
+
+        public void SetAsRequiredAmount()
+        {
+            this.RequiredAmountTextBox.Visibility = Visibility.Visible;
+            this.MinimumAmountTextBox.Visibility = Visibility.Collapsed;
+            this.MaximumAmountTextBox.Visibility = Visibility.Collapsed;
+        }
+
         public RequirementViewModel GetRequirements()
         {
             RequirementViewModel requirements = this.Requirements.GetRequirements();
@@ -84,13 +98,6 @@ namespace MixItUp.WPF.Controls.Games
             }
 
             return requirements;
-        }
-
-        public void SetAsRequiredAmount()
-        {
-            this.RequiredAmountTextBox.Visibility = Visibility.Visible;
-            this.MinimumAmountTextBox.Visibility = Visibility.Collapsed;
-            this.MaximumAmountTextBox.Visibility = Visibility.Collapsed;
         }
 
         public void SetDefaultValues(string name, string triggers, CurrencyRequirementTypeEnum currencyRequirement, int minimum = 0, int maximum = 0)
