@@ -249,7 +249,7 @@ namespace MixItUp.Base.Services
     }
 
     [DataContract]
-    public class HotKeyConfiguration : HotKey, IEquatable<HotKeyConfiguration>
+    public class HotKeyConfiguration : HotKey, IEquatable<HotKeyConfiguration>, IComparable, IComparable<HotKeyConfiguration>
     {
         [DataMember]
         public Guid CommandID { get; set; }
@@ -274,6 +274,17 @@ namespace MixItUp.Base.Services
         public bool Equals(HotKeyConfiguration other) { return this.Modifiers == other.Modifiers && this.Key == other.Key; }
 
         public override int GetHashCode() { return base.GetHashCode(); }
+
+        public int CompareTo(object obj)
+        {
+            if (obj is HotKeyConfiguration)
+            {
+                return this.CompareTo((HotKeyConfiguration)obj);
+            }
+            return 0;
+        }
+
+        public int CompareTo(HotKeyConfiguration other) { return this.Key.CompareTo(other.Key); }
     }
 
     public interface IInputService
