@@ -93,24 +93,29 @@ namespace MixItUp.WPF.Controls.Interactive
                     });
                 }
 
-                this.userDrawings[user] = new UserSubmittedImage(user, input.input.meta["image"].ToString());
                 await this.Dispatcher.InvokeAsync(() =>
                 {
+                    this.userDrawings[user] = new UserSubmittedImage(user, input.input.meta["image"].ToString());
                     this.userSubmittedImages.Add(this.userDrawings[user]);
                     return Task.FromResult(0);
                 });
             }
         }
 
-        private void SubmittedImagesList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private async void SubmittedImagesList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            if (e.AddedItems.Count > 0)
+            await this.Dispatcher.InvokeAsync(() =>
             {
-                this.ShowButton.IsEnabled = true;
-                this.selectedUserImage = (UserSubmittedImage)e.AddedItems[0];
-                this.SelectedImageGrid.DataContext = this.selectedUserImage;
-                this.SubmittedImagesList.SelectedIndex = -1;
-            }
+                if (e.AddedItems.Count > 0)
+                {
+                    this.ShowButton.IsEnabled = true;
+                    this.selectedUserImage = (UserSubmittedImage)e.AddedItems[0];
+                    this.SelectedImageGrid.DataContext = this.selectedUserImage;
+                    this.SubmittedImagesList.SelectedIndex = -1;
+                }
+                return Task.FromResult(0);
+            });
+
         }
 
         private async void ShowButton_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -123,8 +128,12 @@ namespace MixItUp.WPF.Controls.Interactive
                 control.meta["image"] = this.selectedUserImage.ImageData;
                 await ChannelSession.Interactive.UpdateControls(this.scene, new List<InteractiveControlModel>() { control });
 
-                this.SelectedImageGrid.DataContext = null;
-                this.ShowButton.IsEnabled = false;
+                await this.Dispatcher.InvokeAsync(() =>
+                {
+                    this.SelectedImageGrid.DataContext = null;
+                    this.ShowButton.IsEnabled = false;
+                    return Task.FromResult(0);
+                });
             }
         }
     }
