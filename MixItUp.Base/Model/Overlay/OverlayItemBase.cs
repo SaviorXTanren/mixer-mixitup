@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -9,6 +8,19 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
 {
+    #region Deprecated Overlay Items
+
+    [Obsolete]
+    public class OverlayGameStats : OverlayItemBase
+    {
+        public override Task<OverlayItemBase> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    #endregion Deprecated Overlay Items
+
     [DataContract]
     public abstract class OverlayItemBase
     {

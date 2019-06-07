@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base.Model.Overlay;
-using System.Collections.Generic;
+using MixItUp.Base.ViewModel.Controls.Overlay;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.Overlay
@@ -9,51 +9,39 @@ namespace MixItUp.WPF.Controls.Overlay
     /// </summary>
     public partial class OverlayWebPageItemControl : OverlayItemControl
     {
-        private static readonly List<int> sampleFontSize = new List<int>() { 12, 24, 36, 48, 60, 72, 84, 96, 108, 120 };
-
-        private OverlayWebPageItem item;
+        private OverlayWebPageItemViewModel viewModel;
 
         public OverlayWebPageItemControl()
         {
             InitializeComponent();
+
+            this.viewModel = new OverlayWebPageItemViewModel();
         }
 
         public OverlayWebPageItemControl(OverlayWebPageItem item)
-            : this()
         {
-            this.item = item;
+            InitializeComponent();
+
+            this.viewModel = new OverlayWebPageItemViewModel(item);
         }
 
         public override void SetItem(OverlayItemBase item)
         {
-            this.item = (OverlayWebPageItem)item;
-            this.WebPageFilePathTextBox.Text = this.item.URL;
-            this.WebPageWidthTextBox.Text = this.item.Width.ToString();
-            this.WebPageHeightTextBox.Text = this.item.Height.ToString();
+            if (item != null)
+            {
+                this.viewModel = new OverlayWebPageItemViewModel((OverlayWebPageItem)item);
+            }
         }
 
         public override OverlayItemBase GetItem()
         {
-            if (!string.IsNullOrEmpty(this.WebPageFilePathTextBox.Text))
-            {
-                int width;
-                int height;
-                if (int.TryParse(this.WebPageWidthTextBox.Text, out width) && width > 0 &&
-                    int.TryParse(this.WebPageHeightTextBox.Text, out height) && height > 0)
-                {
-                    return new OverlayWebPageItem(this.WebPageFilePathTextBox.Text, width, height);
-                }
-            }
-            return null;
+            return this.viewModel.GetItem();
         }
 
-        protected override Task OnLoaded()
+        protected override async Task OnLoaded()
         {
-            if (this.item != null)
-            {
-                this.SetItem(this.item);
-            }
-            return Task.FromResult(0);
+            this.DataContext = this.viewModel;
+            await this.viewModel.OnLoaded();
         }
     }
 }

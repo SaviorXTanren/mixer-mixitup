@@ -1,8 +1,7 @@
 ﻿using MixItUp.Base.Model.Overlay;
-using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Controls.Overlay;
 using MixItUp.WPF.Util;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.Overlay
@@ -14,85 +13,41 @@ namespace MixItUp.WPF.Controls.Overlay
     {
         public static readonly List<int> sampleFontSize = new List<int>() { 12, 24, 36, 48, 60, 72, 84, 96, 108, 120 };
 
-        private OverlayTextItem item;
+        private OverlayTextItemViewModel viewModel;
 
         public OverlayTextItemControl()
         {
             InitializeComponent();
+
+            this.viewModel = new OverlayTextItemViewModel();
         }
 
         public OverlayTextItemControl(OverlayTextItem item)
-            : this()
         {
-            this.item = item;
+            InitializeComponent();
+
+            this.viewModel = new OverlayTextItemViewModel(item);
         }
 
         public override void SetItem(OverlayItemBase item)
         {
-            this.item = (OverlayTextItem)item;
-            this.TextTextBox.Text = this.item.Text;
-            this.TextSizeComboBox.Text = this.item.Size.ToString();
-            string color = this.item.Color;
-            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsValue(color))
+            if (item != null)
             {
-                color = ColorSchemes.HTMLColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(color)).Key;
+                this.viewModel = new OverlayTextItemViewModel((OverlayTextItem)item);
             }
-            this.TextFontComboBox.Text = this.item.Font;
-            this.TextBoldCheckBox.IsSelected = this.item.Bold;
-            this.TextItalicCheckBox.IsSelected = this.item.Italic;
-            this.TextUnderlineCheckBox.IsSelected = this.item.Underline;
-            this.TextColorComboBox.Text = color;
-            string shadowColor = this.item.ShadowColor;
-            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsValue(shadowColor))
-            {
-                shadowColor = ColorSchemes.HTMLColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(shadowColor)).Key;
-            }
-            this.TextShadowColorComboBox.Text = shadowColor;
         }
 
         public override OverlayItemBase GetItem()
         {
-            if (!string.IsNullOrEmpty(this.TextTextBox.Text) && !string.IsNullOrEmpty(this.TextColorComboBox.Text))
-            {
-                string color = this.TextColorComboBox.Text;
-                if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(color))
-                {
-                    color = ColorSchemes.HTMLColorSchemeDictionary[color];
-                }
-
-                string font = this.TextFontComboBox.Text;
-                if (string.IsNullOrEmpty(font))
-                {
-                    font = null;
-                }
-
-                string shadowColor = this.TextShadowColorComboBox.Text;
-                if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(shadowColor))
-                {
-                    shadowColor = ColorSchemes.HTMLColorSchemeDictionary[shadowColor];
-                }
-
-                if (int.TryParse(this.TextSizeComboBox.Text, out int size) && size > 0)
-                {
-                    return new OverlayTextItem(this.TextTextBox.Text, color, size, font, this.TextBoldCheckBox.IsSelected, this.TextItalicCheckBox.IsSelected,
-                        this.TextUnderlineCheckBox.IsSelected, shadowColor);
-                }
-            }
-            return null;
+            return this.viewModel.GetItem();
         }
 
-        protected override Task OnLoaded()
+        protected override async Task OnLoaded()
         {
             this.TextFontComboBox.ItemsSource = InstalledFonts.GetInstalledFonts();
-            this.TextSizeComboBox.ItemsSource = OverlayTextItemControl.sampleFontSize.Select(f => f.ToString());
-            this.TextShadowColorComboBox.ItemsSource = this.TextColorComboBox.ItemsSource = ColorSchemes.HTMLColorSchemeDictionary.Keys;
 
-            if (this.item != null)
-            {
-                this.SetItem(this.item);
-            }
-
-            return Task.FromResult(0);
+            this.DataContext = this.viewModel;
+            await this.viewModel.OnLoaded();
         }
     }
 }

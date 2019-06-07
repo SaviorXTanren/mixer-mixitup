@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base.Model.Overlay;
-using System.Collections.Generic;
+using MixItUp.Base.ViewModel.Controls.Overlay;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.Overlay
@@ -9,43 +9,39 @@ namespace MixItUp.WPF.Controls.Overlay
     /// </summary>
     public partial class OverlayHTMLItemControl : OverlayItemControl
     {
-        private static readonly List<int> sampleFontSize = new List<int>() { 12, 24, 36, 48, 60, 72, 84, 96, 108, 120 };
-
-        private OverlayHTMLItem item;
+        private OverlayHTMLItemViewModel viewModel;
 
         public OverlayHTMLItemControl()
         {
             InitializeComponent();
+
+            this.viewModel = new OverlayHTMLItemViewModel();
         }
 
         public OverlayHTMLItemControl(OverlayHTMLItem item)
-            : this()
         {
-            this.item = item;
+            InitializeComponent();
+
+            this.viewModel = new OverlayHTMLItemViewModel(item);
         }
 
         public override void SetItem(OverlayItemBase item)
         {
-            this.item = (OverlayHTMLItem)item;
-            this.HTMLTextBox.Text = this.item.HTMLText;
+            if (item != null)
+            {
+                this.viewModel = new OverlayHTMLItemViewModel((OverlayHTMLItem)item);
+            }
         }
 
         public override OverlayItemBase GetItem()
         {
-            if (!string.IsNullOrEmpty(this.HTMLTextBox.Text))
-            {
-                return new OverlayHTMLItem(this.HTMLTextBox.Text);
-            }
-            return null;
+            return this.viewModel.GetItem();
         }
 
-        protected override Task OnLoaded()
+        protected override async Task OnLoaded()
         {
-            if (this.item != null)
-            {
-                this.SetItem(this.item);
-            }
-            return Task.FromResult(0);
+            this.DataContext = this.viewModel;
+            await this.viewModel.OnLoaded();
         }
     }
 }

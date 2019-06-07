@@ -611,9 +611,6 @@
     <Compile Include="Controls\Overlay\OverlayGameQueueControl.xaml.cs">
       <DependentUpon>OverlayGameQueueControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayGameStatsControl.xaml.cs">
-      <DependentUpon>OverlayGameStatsControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Overlay\OverlayHTMLItemControl.xaml.cs">
       <DependentUpon>OverlayHTMLItemControl.xaml</DependentUpon>
     </Compile>
@@ -1357,10 +1354,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Overlay\OverlayGameQueueControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Overlay\OverlayGameStatsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
