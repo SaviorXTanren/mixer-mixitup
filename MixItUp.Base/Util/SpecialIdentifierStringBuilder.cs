@@ -270,10 +270,15 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier(kvp.Key, kvp.Value);
             }
 
-            this.ReplaceSpecialIdentifier("timedigits", DateTimeOffset.Now.ToString("HHmm"));
             this.ReplaceSpecialIdentifier("dayoftheweek", DateTimeOffset.Now.DayOfWeek.ToString());
             this.ReplaceSpecialIdentifier("datetime", DateTimeOffset.Now.ToString("g"));
+            this.ReplaceSpecialIdentifier("dateyear", DateTimeOffset.Now.ToString("yyyy"));
+            this.ReplaceSpecialIdentifier("datemonth", DateTimeOffset.Now.ToString("MM"));
+            this.ReplaceSpecialIdentifier("dateday", DateTimeOffset.Now.ToString("dd"));
             this.ReplaceSpecialIdentifier("date", DateTimeOffset.Now.ToString("d"));
+            this.ReplaceSpecialIdentifier("timedigits", DateTimeOffset.Now.ToString("HHmm"));
+            this.ReplaceSpecialIdentifier("timehour", DateTimeOffset.Now.ToString("HH"));
+            this.ReplaceSpecialIdentifier("timeminute", DateTimeOffset.Now.ToString("mm"));
             this.ReplaceSpecialIdentifier("time", DateTimeOffset.Now.ToString("t"));
             this.ReplaceSpecialIdentifier("linebreak", Environment.NewLine);
 
