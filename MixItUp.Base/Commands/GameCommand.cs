@@ -829,7 +829,7 @@ namespace MixItUp.Base.Commands
                 }
                 else
                 {
-                    this.currentUser = user;
+                    this.currentUser = this.targetUser = user;
                     this.targetUser = await this.GetUserToPassTo(user, arguments);
                     if (this.targetUser != null)
                     {
