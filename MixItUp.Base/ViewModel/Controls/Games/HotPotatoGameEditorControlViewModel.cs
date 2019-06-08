@@ -63,8 +63,6 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         public override void SaveGameCommand(string name, IEnumerable<string> triggers, RequirementViewModel requirements)
         {
-            Dictionary<MixerRoleEnum, int> roleProbabilities = new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, 0 }, { MixerRoleEnum.Subscriber, 0 }, { MixerRoleEnum.Mod, 0 } };
-
             GameCommandBase newCommand = new HotPotatoGameCommand(name, triggers, requirements, this.TimeLimit, this.AllowUserTargeting, this.StartedCommand, this.TossPotatoCommand,
                 this.PotatoExplodeCommand);
             if (this.existingCommand != null)

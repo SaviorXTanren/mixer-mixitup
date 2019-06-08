@@ -512,6 +512,9 @@
     <Compile Include="Controls\Dialogs\NewCurrencyRankCommandsDialogControl.xaml.cs">
       <DependentUpon>NewCurrencyRankCommandsDialogControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Games\BeachBallGameEditorControl.xaml.cs">
+      <DependentUpon>BeachBallGameEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Games\BetGameEditorControl.xaml.cs">
       <DependentUpon>BetGameEditorControl.xaml</DependentUpon>
     </Compile>
@@ -1226,6 +1229,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Dialogs\NewCurrencyRankCommandsDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Games\BeachBallGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
