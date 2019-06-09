@@ -23,6 +23,8 @@ namespace MixItUp.Base.Model.SongRequests
 
     public class SongRequestModel : IEquatable<SongRequestModel>
     {
+        public int Position { get; set; }
+
         public string ID { get; set; }
         public string URI { get; set; }
         public string Name { get; set; }
