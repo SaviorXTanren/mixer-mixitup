@@ -70,7 +70,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             Dictionary<MixerRoleEnum, int> successRoleProbabilities = new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, this.UserPercentage }, { MixerRoleEnum.Subscriber, this.SubscriberPercentage }, { MixerRoleEnum.Mod, this.ModPercentage } };
             Dictionary<MixerRoleEnum, int> failRoleProbabilities = new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, 100 - this.UserPercentage }, { MixerRoleEnum.Subscriber, 100 - this.SubscriberPercentage }, { MixerRoleEnum.Mod, 100 - this.ModPercentage } };
 
-            GameCommandBase newCommand = new PickpocketGameCommand(name, triggers, requirements, new GameOutcome("Success", 1, successRoleProbabilities, this.SuccessOutcomeCommand),
+            GameCommandBase newCommand = new StealGameCommand(name, triggers, requirements, new GameOutcome("Success", 1, successRoleProbabilities, this.SuccessOutcomeCommand),
                 new GameOutcome("Failure", 0, failRoleProbabilities, this.FailOutcomeCommand));
             if (this.existingCommand != null)
             {
