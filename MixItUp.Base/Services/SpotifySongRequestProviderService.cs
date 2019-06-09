@@ -16,7 +16,8 @@ namespace MixItUp.Base.Services
         private const string SpotifyLinkPrefix = "https://open.spotify.com/track/";
         private const string SpotifyTrackPrefix = "spotify:track:";
 
-        private const string SpotifyPlaylistLinkRegex = @"https://open.spotify.com/user/[\w._-]+/playlist/\w+";
+        private const string SpotifyUserPlaylistLinkRegex = @"https://open.spotify.com/user/[\w._-]+/playlist/\w+";
+        private const string SpotifyPlaylistLinkRegex = @"https://open.spotify.com/playlist/\w+";
         private const string SpotifyPlaylistRegex = @"spotify:playlist:";
         private const string SpotifyPlaylistUriFormat = "spotify:playlist:{0}";
         private const string SpotifyUserPlaylistRegex = @"spotify:user:\w+:playlist:";
@@ -39,11 +40,13 @@ namespace MixItUp.Base.Services
             {
                 if (Regex.IsMatch(identifier, SpotifyPlaylistRegex, RegexOptions.IgnoreCase) ||
                     Regex.IsMatch(identifier, SpotifyUserPlaylistRegex, RegexOptions.IgnoreCase) ||
+                    Regex.IsMatch(identifier, SpotifyUserPlaylistLinkRegex, RegexOptions.IgnoreCase) ||
                     Regex.IsMatch(identifier, SpotifyPlaylistLinkRegex, RegexOptions.IgnoreCase))
                 {
                     if (ChannelSession.Services.Spotify != null)
                     {
-                        if (Regex.IsMatch(ChannelSession.Settings.DefaultPlaylist, SpotifyPlaylistLinkRegex, RegexOptions.IgnoreCase))
+                        if (Regex.IsMatch(ChannelSession.Settings.DefaultPlaylist, SpotifyUserPlaylistLinkRegex, RegexOptions.IgnoreCase) ||
+                            Regex.IsMatch(ChannelSession.Settings.DefaultPlaylist, SpotifyPlaylistLinkRegex, RegexOptions.IgnoreCase))
                         {
                             string playlistID = ChannelSession.Settings.DefaultPlaylist.Split(new char[] { '/' }).Last();
                             if (!string.IsNullOrEmpty(playlistID))
