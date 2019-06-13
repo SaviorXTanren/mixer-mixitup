@@ -198,12 +198,8 @@ namespace MixItUp.Base.Services
             {
                 if (playlist != null)
                 {
-                    HttpResponseMessage response = await this.GetAsync(string.Format("playlists/{0}", playlist.ID));
-                    string responseString = await response.Content.ReadAsStringAsync();
-
-                    Logger.LogDiagnostic(string.Format("Spotify Log: {0} - {1}", response.RequestMessage.ToString(), responseString));
-
-                    return new SpotifyPlaylistModel(JObject.Parse(responseString));
+                    JObject result = await this.GetJObjectAsync(string.Format("playlists/{0}", playlist.ID));
+                    return new SpotifyPlaylistModel(result);
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
@@ -414,10 +410,13 @@ namespace MixItUp.Base.Services
                 payload["uris"] = songArray;
 
                 HttpResponseMessage response = await this.PutAsync("me/player/play", this.CreateContentFromObject(payload));
-                string responseString = await response.Content.ReadAsStringAsync();
-                Logger.LogDiagnostic(string.Format("Spotify Log: {0} - {1}", response.RequestMessage.ToString(), responseString));
-
                 await Task.Delay(250);
+
+                if (ChannelSession.Settings.DiagnosticLogging)
+                {
+                    string responseString = await response.Content.ReadAsStringAsync();
+                    Logger.LogDiagnostic(string.Format("Spotify Log: {0} - {1}", response.RequestMessage.ToString(), responseString));
+                }
 
                 await this.DisableRepeat();
 
