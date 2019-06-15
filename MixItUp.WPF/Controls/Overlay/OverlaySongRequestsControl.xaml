@@ -28,12 +28,12 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="TotalToShowTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Total To Show" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
+            <TextBox Text="{Binding TotalToShowString}" Grid.Column="0" MaterialDesign:HintAssist.Hint="Total To Show" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
 
-            <TextBox Grid.Column="2" x:Name="WidthTextBox" MaterialDesign:HintAssist.Hint="Item Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="110" />
-            <TextBox Grid.Column="4" x:Name="HeightTextBox" MaterialDesign:HintAssist.Hint="Item Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="110" />
+            <TextBox Text="{Binding WidthString}" Grid.Column="2" MaterialDesign:HintAssist.Hint="Item Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="110" />
+            <TextBox Text="{Binding HeightString}" Grid.Column="4" MaterialDesign:HintAssist.Hint="Item Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="110" />
 
-            <ComboBox Grid.Column="6" x:Name="TextFontComboBox" MaterialDesign:HintAssist.Hint="Text Font" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="150" />
+            <ComboBox Grid.Column="6" x:Name="TextFontComboBox" Text="{Binding Font}" MaterialDesign:HintAssist.Hint="Text Font" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="150" />
 
         </Grid>
 
@@ -50,17 +50,17 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox Grid.Column="0" x:Name="BorderColorComboBox" MaterialDesign:HintAssist.Hint="Border Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120" />
+            <ComboBox ItemsSource="{Binding ColorNames}" Text="{Binding BorderColor}" Grid.Column="0" MaterialDesign:HintAssist.Hint="Border Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120" />
 
-            <ComboBox Grid.Column="2" x:Name="BackgroundColorComboBox" MaterialDesign:HintAssist.Hint="Background Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="130" />
+            <ComboBox ItemsSource="{Binding ColorNames}" Text="{Binding BackgroundColor}" Grid.Column="2" MaterialDesign:HintAssist.Hint="Background Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="130" />
 
-            <ComboBox Grid.Column="4" x:Name="TextColorComboBox" MaterialDesign:HintAssist.Hint="Text Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120" />
+            <ComboBox ItemsSource="{Binding ColorNames}" Text="{Binding TextColor}" Grid.Column="4" MaterialDesign:HintAssist.Hint="Text Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120" />
 
-            <ComboBox Grid.Column="6" x:Name="AddEventAnimationComboBox" MaterialDesign:HintAssist.Hint="Add All Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
+            <ComboBox ItemsSource="{Binding EntranceAnimationStrings}" SelectedItem="{Binding EntranceAnimationString}" Grid.Column="6" MaterialDesign:HintAssist.Hint="Add Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
 
-            <ComboBox Grid.Column="8" x:Name="RemoveEventAnimationComboBox" MaterialDesign:HintAssist.Hint="Remove All Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
+            <ComboBox ItemsSource="{Binding ExitAnimationStrings}" SelectedItem="{Binding ExitAnimationString}" Grid.Column="8" MaterialDesign:HintAssist.Hint="Remove Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
         </Grid>
 
-        <TextBox Grid.Row="4" x:Name="HTMLText" MaterialDesign:HintAssist.Hint="HTML Style" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="700" Height="150" VerticalAlignment="Top" HorizontalAlignment="Center" />
+        <TextBox Text="{Binding HTML}" Grid.Row="4" MaterialDesign:HintAssist.Hint="HTML Style" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="700" Height="150" VerticalAlignment="Top" HorizontalAlignment="Center" />
     </Grid>
 </local:OverlayItemControl>

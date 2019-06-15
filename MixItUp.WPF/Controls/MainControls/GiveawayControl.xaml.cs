@@ -56,6 +56,8 @@ namespace MixItUp.WPF.Controls.MainControls
                     return;
                 }
             }
+
+            ChannelSession.Settings.GiveawayRequirements = this.Requirements.GetRequirements();
             this.viewModel.StartGiveawayCommand.Execute(null);
         }
     }

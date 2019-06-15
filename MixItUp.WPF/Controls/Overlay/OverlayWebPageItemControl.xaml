@@ -16,10 +16,10 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <TextBox Grid.Column="0" x:Name="WebPageFilePathTextBox" MaterialDesign:HintAssist.Hint="Web Page URL" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
- 
-        <TextBox Grid.Column="2" x:Name="WebPageWidthTextBox" MaterialDesign:HintAssist.Hint="Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" VerticalAlignment="Center" />
+        <TextBox Grid.Column="0" Text="{Binding URL}" MaterialDesign:HintAssist.Hint="Web Page URL" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
 
-        <TextBox Grid.Column="4" x:Name="WebPageHeightTextBox" MaterialDesign:HintAssist.Hint="Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="95" VerticalAlignment="Center"/>
+        <TextBox Grid.Column="2" Text="{Binding WidthString}" MaterialDesign:HintAssist.Hint="Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" VerticalAlignment="Center" />
+
+        <TextBox Grid.Column="4" Text="{Binding HeightString}" MaterialDesign:HintAssist.Hint="Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="95" VerticalAlignment="Center"/>
     </Grid>
 </local:OverlayItemControl>

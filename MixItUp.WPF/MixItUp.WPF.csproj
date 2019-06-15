@@ -512,6 +512,9 @@
     <Compile Include="Controls\Dialogs\NewCurrencyRankCommandsDialogControl.xaml.cs">
       <DependentUpon>NewCurrencyRankCommandsDialogControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Games\BeachBallGameEditorControl.xaml.cs">
+      <DependentUpon>BeachBallGameEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Games\BetGameEditorControl.xaml.cs">
       <DependentUpon>BetGameEditorControl.xaml</DependentUpon>
     </Compile>
@@ -610,9 +613,6 @@
     </Compile>
     <Compile Include="Controls\Overlay\OverlayGameQueueControl.xaml.cs">
       <DependentUpon>OverlayGameQueueControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Overlay\OverlayGameStatsControl.xaml.cs">
-      <DependentUpon>OverlayGameStatsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Overlay\OverlayHTMLItemControl.xaml.cs">
       <DependentUpon>OverlayHTMLItemControl.xaml</DependentUpon>
@@ -1232,6 +1232,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Games\BeachBallGameEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Games\BetGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1357,10 +1361,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Overlay\OverlayGameQueueControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Overlay\OverlayGameStatsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

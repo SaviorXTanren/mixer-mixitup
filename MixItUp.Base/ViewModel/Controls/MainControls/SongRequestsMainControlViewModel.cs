@@ -129,9 +129,12 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             await DispatcherHelper.InvokeDispatcher(() =>
             {
                 this.RequestSongs.Clear();
+                int position = 1;
                 foreach (SongRequestModel songRequest in ChannelSession.Services.SongRequestService.RequestSongs.ToList())
                 {
+                    songRequest.Position = position;
                     this.RequestSongs.Add(songRequest);
+                    position++;
                 }
                 return Task.FromResult(0);
             });

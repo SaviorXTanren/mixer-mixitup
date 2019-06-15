@@ -59,6 +59,7 @@ namespace MixItUp.Desktop.Services
             await DesktopSettingsUpgrader.Version30Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version31Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version32Upgrade(version, filePath);
+            await DesktopSettingsUpgrader.Version33Upgrade(version, filePath);
 
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
             settings.InitializeDB = false;
@@ -377,6 +378,27 @@ namespace MixItUp.Desktop.Services
                     if (command is BetGameCommand)
                     {
                         settings.GameCommands.Remove(command);
+                    }
+                }
+
+                await ChannelSession.Services.Settings.Save(settings);
+            }
+        }
+
+        private static async Task Version33Upgrade(int version, string filePath)
+        {
+            if (version < 33)
+            {
+                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
+                await ChannelSession.Services.Settings.Initialize(settings);
+
+                foreach (OverlayWidget widget in settings.OverlayWidgets.ToList())
+                {
+#pragma warning disable CS0612 // Type or member is obsolete
+                    if (widget.Item is OverlayGameStats)
+#pragma warning restore CS0612 // Type or member is obsolete
+                    {
+                        settings.OverlayWidgets.Remove(widget);
                     }
                 }
 

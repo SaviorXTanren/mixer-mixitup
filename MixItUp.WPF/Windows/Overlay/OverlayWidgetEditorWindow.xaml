@@ -125,8 +125,6 @@
 
                     <OverlayControls:OverlayStreamBossControl x:Name="StreamBossItem" Visibility="Collapsed" HorizontalAlignment="Center" />
 
-                    <OverlayControls:OverlayGameStatsControl x:Name="GameStatsItem" Visibility="Collapsed" HorizontalAlignment="Center" />
-
                     <OverlayControls:OverlaySongRequestsControl x:Name="SongRequestsItem" Visibility="Collapsed" HorizontalAlignment="Center" />
                 </Grid>
             </ScrollViewer>

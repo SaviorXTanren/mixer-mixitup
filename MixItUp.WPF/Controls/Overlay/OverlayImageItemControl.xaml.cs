@@ -1,7 +1,6 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Model.Overlay;
+﻿using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.ViewModel.Controls.Overlay;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace MixItUp.WPF.Controls.Overlay
 {
@@ -10,58 +9,39 @@ namespace MixItUp.WPF.Controls.Overlay
     /// </summary>
     public partial class OverlayImageItemControl : OverlayItemControl
     {
-        private OverlayImageItem item;
+        private OverlayImageItemViewModel viewModel;
 
         public OverlayImageItemControl()
         {
             InitializeComponent();
+
+            this.viewModel = new OverlayImageItemViewModel();
         }
 
         public OverlayImageItemControl(OverlayImageItem item)
-            : this()
         {
-            this.item = item;
+            InitializeComponent();
+
+            this.viewModel = new OverlayImageItemViewModel(item);
         }
 
         public override void SetItem(OverlayItemBase item)
         {
-            this.item = (OverlayImageItem)item;
-            this.ImageFilePathTextBox.Text = this.item.FilePath;
-            this.ImageWidthTextBox.Text = this.item.Width.ToString();
-            this.ImageHeightTextBox.Text = this.item.Height.ToString();
+            if (item != null)
+            {
+                this.viewModel = new OverlayImageItemViewModel((OverlayImageItem)item);
+            }
         }
 
         public override OverlayItemBase GetItem()
         {
-            if (!string.IsNullOrEmpty(this.ImageFilePathTextBox.Text))
-            {
-                int width;
-                int height;
-                if (int.TryParse(this.ImageWidthTextBox.Text, out width) && width > 0 &&
-                    int.TryParse(this.ImageHeightTextBox.Text, out height) && height > 0)
-                {
-                    return new OverlayImageItem(this.ImageFilePathTextBox.Text, width, height);
-                }
-            }
-            return null;
+            return this.viewModel.GetItem();
         }
 
-        protected override Task OnLoaded()
+        protected override async Task OnLoaded()
         {
-            if (this.item != null)
-            {
-                this.SetItem(this.item);
-            }
-            return Task.FromResult(0);
-        }
-
-        private void ImageFileBrowseButton_Click(object sender, RoutedEventArgs e)
-        {
-            string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(ChannelSession.Services.FileService.ImageFileFilter());
-            if (!string.IsNullOrEmpty(filePath))
-            {
-                this.ImageFilePathTextBox.Text = filePath;
-            }
+            this.DataContext = this.viewModel;
+            await this.viewModel.OnLoaded();
         }
     }
 }

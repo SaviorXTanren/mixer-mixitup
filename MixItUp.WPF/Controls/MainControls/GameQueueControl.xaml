@@ -60,7 +60,7 @@
 
         <DataGrid x:Name="GameQueueUsersListView" ItemsSource="{Binding QueueUsers}" Grid.Row="4" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Pos" Binding="{Binding QueuePosition}" IsReadOnly="True" Width="60" />
+                <DataGridTextColumn Header="Pos" Binding="{Binding QueuePosition}" IsReadOnly="True" Width="70" />
                 <DataGridTextColumn Header="Name" Binding="{Binding UserName}" IsReadOnly="True" Width="*" />
                 <DataGridTextColumn Header="Role" Binding="{Binding PrimaryRole}" IsReadOnly="True" Width="*" />
                 <DataGridTemplateColumn Width="160">

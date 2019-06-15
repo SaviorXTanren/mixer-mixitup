@@ -9,6 +9,10 @@
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <local:OverlayItemControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </local:OverlayItemControl.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -29,23 +33,25 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             
-            <TextBox Grid.Column="0" x:Name="TotalLengthTextBox" MaterialDesign:HintAssist.Hint="Length (Seconds)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="110" />
+            <TextBox Grid.Column="0" Text="{Binding TotalLengthString}" MaterialDesign:HintAssist.Hint="Length (Seconds)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="110" />
 
-            <ComboBox Grid.Column="2" x:Name="TextColorComboBox" MaterialDesign:HintAssist.Hint="Text Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="130" />
+            <ComboBox Grid.Column="2" ItemsSource="{Binding ColorNames}" Text="{Binding Color}" MaterialDesign:HintAssist.Hint="Text Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="130" />
 
-            <ComboBox Grid.Column="4" x:Name="TextFontComboBox" MaterialDesign:HintAssist.Hint="Text Font" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="150" />
+            <ComboBox Grid.Column="4" x:Name="TextFontComboBox" Text="{Binding Font}" MaterialDesign:HintAssist.Hint="Text Font" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="150" />
 
-            <ComboBox Grid.Column="6" x:Name="TextSizeComboBox" MaterialDesign:HintAssist.Hint="Text Size (Pixels)" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="125" />
+            <ComboBox Grid.Column="6" ItemsSource="{Binding SampleFontSizesStrings}" Text="{Binding SizeString}" MaterialDesign:HintAssist.Hint="Text Size (Pixels)" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="125" />
         </Grid>
 
         <GroupBox Header="On Timer Completed" Grid.Row="2" Width="200">
             <Grid Margin="10,0,10,0" HorizontalAlignment="Center">
-                <Button x:Name="NewCommandButton" HorizontalAlignment="Center" Click="NewCommandButton_Click">Add Command</Button>
+                <Button Visibility="{Binding IsTimerCompleteCommandNotSet, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" Click="NewCommandButton_Click">Add Command</Button>
 
-                <CommandControls:CommandButtonsControl x:Name="CommandButtons" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" Visibility="Collapsed" />
+                <Grid Visibility="{Binding IsTimerCompleteCommandSet, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <CommandControls:CommandButtonsControl DataContext="{Binding TimerCompleteCommand}" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" RemoveEnableDisableToggle="True" />
+                </Grid>
             </Grid>
         </GroupBox>
 
-        <TextBox Grid.Row="4" x:Name="HTMLText" MaterialDesign:HintAssist.Hint="HTML Style" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="700" Height="75" VerticalAlignment="Top" />
+        <TextBox Grid.Row="4" Text="{Binding HTML}" MaterialDesign:HintAssist.Hint="HTML Style" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="700" Height="75" VerticalAlignment="Top" />
     </Grid>
 </local:OverlayItemControl>

@@ -28,13 +28,13 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" x:Name="MinimumSecondsTextBox" MaterialDesign:HintAssist.Hint="Min Seconds To Show" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
+            <TextBox Grid.Column="0" Text="{Binding MinimumSecondsToShowString}" MaterialDesign:HintAssist.Hint="Min Seconds To Show" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
             
-            <ComboBox Grid.Column="2" x:Name="TextColorComboBox" MaterialDesign:HintAssist.Hint="Text Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="130" />
+            <ComboBox Grid.Column="2" ItemsSource="{Binding ColorNames}" Text="{Binding Color}" MaterialDesign:HintAssist.Hint="Text Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="130" />
 
-            <ComboBox Grid.Column="4" x:Name="TextFontComboBox" MaterialDesign:HintAssist.Hint="Text Font" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="150" />
+            <ComboBox Grid.Column="4" x:Name="TextFontComboBox" Text="{Binding Font}" MaterialDesign:HintAssist.Hint="Text Font" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="150" />
 
-            <ComboBox Grid.Column="6" x:Name="TextSizeComboBox" MaterialDesign:HintAssist.Hint="Text Size (Pixels)" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" />
+            <ComboBox Grid.Column="6" ItemsSource="{Binding SampleFontSizesStrings}" Text="{Binding SizeString}" MaterialDesign:HintAssist.Hint="Text Size (Pixels)" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" />
         </Grid>
 
         <Grid Grid.Row="2" HorizontalAlignment="Center">
@@ -52,19 +52,19 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" x:Name="FollowBonusTextBox" MaterialDesign:HintAssist.Hint="Follow Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
+            <TextBox Grid.Column="0" Text="{Binding FollowBonusString}" MaterialDesign:HintAssist.Hint="Follow Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
 
-            <TextBox Grid.Column="2" x:Name="HostBonusTextBox" MaterialDesign:HintAssist.Hint="Host Bonus (Per User)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="105" />
+            <TextBox Grid.Column="2" Text="{Binding HostBonusString}" MaterialDesign:HintAssist.Hint="Host Bonus (Per User)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="105" />
 
-            <TextBox Grid.Column="4" x:Name="SubBonusTextBox" MaterialDesign:HintAssist.Hint="Sub Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
+            <TextBox Grid.Column="4" Text="{Binding SubBonusString}" MaterialDesign:HintAssist.Hint="Sub Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
 
-            <TextBox Grid.Column="6" x:Name="DonationBonusTextBox" MaterialDesign:HintAssist.Hint="Donation Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
+            <TextBox Grid.Column="6" Text="{Binding DonationBonusString}" MaterialDesign:HintAssist.Hint="Donation Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
 
-            <TextBox Grid.Column="8" x:Name="SparkBonusTextBox" MaterialDesign:HintAssist.Hint="Spark Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
+            <TextBox Grid.Column="8" Text="{Binding SparkBonusString}" MaterialDesign:HintAssist.Hint="Spark Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
 
-            <TextBox Grid.Column="10" x:Name="EmberBonusTextBox" MaterialDesign:HintAssist.Hint="Ember Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
+            <TextBox Grid.Column="10" Text="{Binding EmberBonusString}" MaterialDesign:HintAssist.Hint="Ember Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
         </Grid>
 
-        <TextBox Grid.Row="4" x:Name="HTMLText" MaterialDesign:HintAssist.Hint="HTML Style" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="700" Height="150" VerticalAlignment="Top" />
+        <TextBox Grid.Row="4" Text="{Binding HTML}" MaterialDesign:HintAssist.Hint="HTML Style" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="700" Height="150" VerticalAlignment="Top" />
     </Grid>
 </local:OverlayItemControl>

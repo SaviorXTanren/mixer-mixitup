@@ -22,15 +22,15 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <TextBox Grid.Column="0" x:Name="VideoWidthTextBox" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="70" />
+        <TextBox Grid.Column="0" Text="{Binding WidthString}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="70" />
 
-        <TextBox Grid.Column="2" x:Name="VideoHeightTextBox" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="70" />
+        <TextBox Grid.Column="2" Text="{Binding HeightString}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="70" />
 
         <TextBlock Grid.Column="4" VerticalAlignment="Center" Margin="0,10,0,0">Volume:</TextBlock>
-        <Slider x:Name="VideoVolumeSlider" VerticalAlignment="Center" Grid.Column="6" Width="120" Minimum="0" Maximum="100" Margin="0,-28,0,0" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="Volume" />
+        <Slider Value="{Binding Volume}" VerticalAlignment="Center" Grid.Column="6" Width="120" Minimum="0" Maximum="100" Margin="0,-28,0,0" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="Volume" />
 
-        <ComboBox x:Name="EntranceAnimationComboBox" Grid.Column="8" MaterialDesign:HintAssist.Hint="Entrance Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
+        <ComboBox ItemsSource="{Binding EntranceAnimationStrings}" SelectedItem="{Binding EntranceAnimationString}" Grid.Column="8" MaterialDesign:HintAssist.Hint="Entrance Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
 
-        <ComboBox x:Name="ExitAnimationComboBox" Grid.Column="10" MaterialDesign:HintAssist.Hint="Exit Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
+        <ComboBox ItemsSource="{Binding ExitAnimationStrings}" SelectedItem="{Binding ExitAnimationString}" Grid.Column="10" MaterialDesign:HintAssist.Hint="Exit Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
     </Grid>
 </local:OverlayItemControl>

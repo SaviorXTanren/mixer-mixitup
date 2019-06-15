@@ -829,7 +829,7 @@ namespace MixItUp.Base.Commands
                 }
                 else
                 {
-                    this.currentUser = user;
+                    this.currentUser = this.targetUser = user;
                     this.targetUser = await this.GetUserToPassTo(user, arguments);
                     if (this.targetUser != null)
                     {
@@ -907,6 +907,183 @@ namespace MixItUp.Base.Commands
                 }
             }
             return null;
+        }
+    }
+
+    [DataContract]
+    public class BeachBallGameCommand : GameCommandBase
+    {
+        [DataMember]
+        public int HitTimeLimit { get; set; }
+        [DataMember]
+        public bool AllowUserTargeting { get; set; }
+
+        [DataMember]
+        public CustomCommand StartedCommand { get; set; }
+
+        [DataMember]
+        public CustomCommand BallHitCommand { get; set; }
+
+        [DataMember]
+        public CustomCommand BallMissedCommand { get; set; }
+
+        [JsonIgnore]
+        private Task timeLimitTask;
+        [JsonIgnore]
+        private CancellationTokenSource timeLimitCancellationTokenSource;
+        [JsonIgnore]
+        private UserViewModel currentUser;
+        [JsonIgnore]
+        private UserViewModel targetUser;
+
+        public BeachBallGameCommand() { }
+
+        public BeachBallGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int hitTimeLimit, bool allowUserTargeting,
+            CustomCommand startedCommand, CustomCommand ballHitCommand, CustomCommand ballMissedCommand)
+            : base(name, commands, requirements)
+        {
+            this.HitTimeLimit = hitTimeLimit;
+            this.AllowUserTargeting = allowUserTargeting;
+            this.StartedCommand = startedCommand;
+            this.BallHitCommand = ballHitCommand;
+            this.BallMissedCommand = ballMissedCommand;
+        }
+
+        public override IEnumerable<CommandBase> GetAllInnerCommands() { return new List<CommandBase>() { this.StartedCommand, this.BallHitCommand, this.BallMissedCommand }; }
+
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
+        {
+            if (await this.PerformUsageChecks(user, arguments) && await this.PerformRequirementChecks(user))
+            {
+                UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
+                if (currency == null)
+                {
+                    return;
+                }
+
+                if (this.timeLimitTask != null)
+                {
+                    if (this.targetUser.Equals(user))
+                    {
+                        UserViewModel newTarget = await this.GetUserToPassTo(user, arguments);
+                        if (newTarget != null)
+                        {
+                            this.currentUser = this.targetUser;
+                            this.targetUser = newTarget;
+
+                            await this.PerformCommand(this.BallHitCommand, this.currentUser, new List<string>() { this.targetUser.UserName }, 0, 0);
+
+                            this.PerformPass();
+                        }
+                        else
+                        {
+                            await ChannelSession.Chat.Whisper(user.UserName, "Could not find a user to pass to");
+                        }
+                    }
+                    else
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, "You do not have the ability to pass right now");
+                    }
+                }
+                else
+                {
+                    this.currentUser = this.targetUser = user;
+                    this.targetUser = await this.GetUserToPassTo(user, arguments);
+                    if (this.targetUser != null)
+                    {
+                        await this.PerformCommand(this.StartedCommand, this.currentUser, new List<string>() { this.targetUser.UserName }, 0, 0);
+
+                        this.PerformPass();
+                    }
+                    else
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, "Could not find a user to pass to");
+                    }
+                }
+            }
+        }
+
+        protected override async Task<bool> PerformUsageChecks(UserViewModel user, IEnumerable<string> arguments)
+        {
+            if (this.AllowUserTargeting)
+            {
+                if (arguments.Count() != 0 && arguments.Count() != 1)
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("USAGE: !{0} -OR- !{0} <TARGET USER>", this.Commands.First()));
+                    return false;
+                }
+
+                if (arguments.Count() == 1)
+                {
+                    UserViewModel targetUser = await this.GetArgumentsTargetUser(user, arguments);
+                    if (targetUser == null)
+                    {
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                if (arguments.Count() != 0)
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("USAGE: !{0}", this.Commands.First()));
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        protected override void ResetData(UserViewModel user)
+        {
+            this.timeLimitTask = null;
+            base.ResetData(user);
+        }
+
+        private async Task<UserViewModel> GetUserToPassTo(UserViewModel user, IEnumerable<string> arguments)
+        {
+            if (this.AllowUserTargeting && arguments.Count() == 1)
+            {
+                return await this.GetArgumentsTargetUser(user, arguments);
+            }
+            else
+            {
+                foreach (UserViewModel u in (await ChannelSession.ActiveUsers.GetAllWorkableUsers()).Shuffle())
+                {
+                    if (!u.Data.IsCurrencyRankExempt && (this.targetUser == null || !u.Equals(this.targetUser)))
+                    {
+                        return u;
+                    }
+                }
+            }
+            return null;
+        }
+
+        private void PerformPass()
+        {
+            if (this.timeLimitCancellationTokenSource != null)
+            {
+                this.timeLimitCancellationTokenSource.Cancel();
+            }
+
+            this.timeLimitCancellationTokenSource = new CancellationTokenSource();
+            this.timeLimitTask = Task.Run(async () =>
+            {
+                try
+                {
+                    CancellationToken token = this.timeLimitCancellationTokenSource.Token;
+
+                    await Task.Delay(1000 * this.HitTimeLimit);
+
+                    if (!token.IsCancellationRequested)
+                    {
+                        await this.PerformCommand(this.BallMissedCommand, this.currentUser, new List<string>() { this.targetUser.UserName }, 0, 0);
+                        this.Requirements.UpdateCooldown(this.currentUser);
+
+                        this.ResetData(this.currentUser);
+                    }
+                }
+                catch (Exception) { }
+            }, this.timeLimitCancellationTokenSource.Token);
         }
     }
 
