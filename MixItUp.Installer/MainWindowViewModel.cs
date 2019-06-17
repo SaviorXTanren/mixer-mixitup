@@ -208,7 +208,7 @@ namespace MixItUp.Installer
 
             if (!result && !this.ErrorOccurred)
             {
-                this.ShowError(string.Format("{0} file created in directory.", InstallerLogFileName), "Email support@mixitupapp.com with this file to help diagnose this issue.");
+                this.ShowError(string.Format("{0} file created in folder.", InstallerLogFileName), "Email support@mixitupapp.com with this file to help diagnose this issue.");
             }
             return result;
         }
