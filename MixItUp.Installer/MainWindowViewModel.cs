@@ -196,10 +196,6 @@ namespace MixItUp.Installer
                                 {
                                     result = true;
                                 }
-                                else
-                                {
-                                    this.ShowError("Failed to install, please reboot your machine & try again.", "If this occurs again, contact support@mixitupapp.com");
-                                }
                             }
                         }
                     }
@@ -212,7 +208,7 @@ namespace MixItUp.Installer
 
             if (!result && !this.ErrorOccurred)
             {
-                this.ShowError(string.Format("{0} File Created", InstallerLogFileName), "Contact support@mixitupapp.com with the file to help diagnose this issue.");
+                this.ShowError(string.Format("{0} file created in directory.", InstallerLogFileName), "Email support@mixitupapp.com with this file to help diagnose this issue.");
             }
             return result;
         }
