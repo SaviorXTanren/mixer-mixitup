@@ -2,7 +2,6 @@
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
-using System.Linq;
 
 namespace MixItUp.Base.ViewModel.Controls.Overlay
 {
@@ -233,28 +232,16 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.Font = item.TextFont;
 
             this.TextColor = item.TextColor;
-            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsValue(this.TextColor))
-            {
-                this.TextColor = ColorSchemes.HTMLColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.TextColor)).Key;
-            }
+            this.TextColor = ColorSchemes.GetColorName(this.TextColor);
 
             this.BorderColor = item.BorderColor;
-            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsValue(this.BorderColor))
-            {
-                this.BorderColor = ColorSchemes.HTMLColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.BorderColor)).Key;
-            }
+            this.BorderColor = ColorSchemes.GetColorName(this.BorderColor);
 
             this.ProgressColor = item.ProgressColor;
-            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsValue(this.ProgressColor))
-            {
-                this.ProgressColor = ColorSchemes.HTMLColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.ProgressColor)).Key;
-            }
+            this.ProgressColor = ColorSchemes.GetColorName(this.ProgressColor);
 
             this.BackgroundColor = item.BackgroundColor;
-            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsValue(this.BackgroundColor))
-            {
-                this.BackgroundColor = ColorSchemes.HTMLColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.BackgroundColor)).Key;
-            }
+            this.BackgroundColor = ColorSchemes.GetColorName(this.BackgroundColor);
 
             this.damageAnimation = item.DamageAnimation;
             this.newBossAnimation = item.NewBossAnimation;
@@ -266,22 +253,10 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         {
             if (this.startingHealth > 0 && this.width > 0 && this.height > 0 && !string.IsNullOrEmpty(this.HTML))
             {
-                if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(this.TextColor))
-                {
-                    this.TextColor = ColorSchemes.HTMLColorSchemeDictionary[this.TextColor];
-                }
-                if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(this.BackgroundColor))
-                {
-                    this.BackgroundColor = ColorSchemes.HTMLColorSchemeDictionary[this.BackgroundColor];
-                }
-                if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(this.ProgressColor))
-                {
-                    this.ProgressColor = ColorSchemes.HTMLColorSchemeDictionary[this.ProgressColor];
-                }
-                if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(this.BackgroundColor))
-                {
-                    this.BackgroundColor = ColorSchemes.HTMLColorSchemeDictionary[this.BackgroundColor];
-                }
+                this.TextColor = ColorSchemes.GetColorCode(this.TextColor);
+                this.BackgroundColor = ColorSchemes.GetColorCode(this.BackgroundColor);
+                this.ProgressColor = ColorSchemes.GetColorCode(this.ProgressColor);
+                this.BackgroundColor = ColorSchemes.GetColorCode(this.BackgroundColor);
 
                 return new OverlayStreamBoss(this.HTML, this.startingHealth, this.width, this.height, this.TextColor, this.Font, this.BorderColor, this.BackgroundColor,
                     this.ProgressColor, this.followBonus, this.hostBonus, this.subBonus, this.donationBonus, this.sparkBonus, this.emberBonus, this.damageAnimation, this.newBossAnimation,

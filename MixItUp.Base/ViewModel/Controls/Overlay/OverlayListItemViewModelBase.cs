@@ -1,7 +1,6 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
-using System.Linq;
 
 namespace MixItUp.Base.ViewModel.Controls.Overlay
 {
@@ -124,22 +123,13 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.Font = textFont;
 
             this.TextColor = textColor;
-            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsValue(this.TextColor))
-            {
-                this.TextColor = ColorSchemes.HTMLColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.TextColor)).Key;
-            }
+            this.TextColor = ColorSchemes.GetColorName(this.TextColor);
 
             this.BorderColor = borderColor;
-            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsValue(this.BorderColor))
-            {
-                this.BorderColor = ColorSchemes.HTMLColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.BorderColor)).Key;
-            }
+            this.BorderColor = ColorSchemes.GetColorName(this.BorderColor);
 
             this.BackgroundColor = backgroundColor;
-            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsValue(this.BackgroundColor))
-            {
-                this.BackgroundColor = ColorSchemes.HTMLColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.BackgroundColor)).Key;
-            }
+            this.BackgroundColor = ColorSchemes.GetColorName(this.BackgroundColor);
 
             this.entranceAnimation = addAnimation;
             this.exitAnimation = removeAnimation;

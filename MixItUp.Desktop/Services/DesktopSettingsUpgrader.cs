@@ -60,6 +60,7 @@ namespace MixItUp.Desktop.Services
             await DesktopSettingsUpgrader.Version31Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version32Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version33Upgrade(version, filePath);
+            await DesktopSettingsUpgrader.Version34Upgrade(version, filePath);
 
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
             settings.InitializeDB = false;
@@ -400,6 +401,31 @@ namespace MixItUp.Desktop.Services
                     {
                         settings.OverlayWidgets.Remove(widget);
                     }
+                }
+
+                await ChannelSession.Services.Settings.Save(settings);
+            }
+        }
+
+        private static async Task Version34Upgrade(int version, string filePath)
+        {
+            if (version < 34)
+            {
+                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
+                await ChannelSession.Services.Settings.Initialize(settings);
+
+                string defaultColor = "Default Color";
+                if (settings.ChatUserJoinLeaveColorScheme.Equals(defaultColor))
+                {
+                    settings.ChatUserJoinLeaveColorScheme = ColorSchemes.DefaultColorScheme;
+                }
+                if (settings.ChatEventAlertsColorScheme.Equals(defaultColor))
+                {
+                    settings.ChatEventAlertsColorScheme = ColorSchemes.DefaultColorScheme;
+                }
+                if (settings.ChatInteractiveAlertsColorScheme.Equals(defaultColor))
+                {
+                    settings.ChatInteractiveAlertsColorScheme = ColorSchemes.DefaultColorScheme;
                 }
 
                 await ChannelSession.Services.Settings.Save(settings);

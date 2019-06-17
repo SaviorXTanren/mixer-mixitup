@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
-using System.Linq;
 
 namespace MixItUp.Base.ViewModel.Controls.Overlay
 {
@@ -137,10 +136,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.Font = item.TextFont;
 
             this.Color = item.TextColor;
-            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsValue(this.Color))
-            {
-                this.Color = ColorSchemes.HTMLColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.Color)).Key;
-            }
+            this.Color = ColorSchemes.GetColorName(this.Color);
 
             this.followBonus = item.FollowBonus;
             this.hostBonus = item.HostBonus;
@@ -156,10 +152,8 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         {
             if (!string.IsNullOrEmpty(this.Font) && !string.IsNullOrEmpty(this.Color) && !string.IsNullOrEmpty(this.HTML) && this.size > 0 && this.minimumSecondsToShow > 0)
             {
-                if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(this.Color))
-                {
-                    this.Color = ColorSchemes.HTMLColorSchemeDictionary[this.Color];
-                }
+                this.Color = ColorSchemes.GetColorCode(this.Color);
+
                 return new OverlayTimerTrain(this.HTML, this.minimumSecondsToShow, this.Color, this.Font, this.size, this.followBonus, this.hostBonus,
                     this.subBonus, this.donationBonus, this.sparkBonus, this.emberBonus);
             }

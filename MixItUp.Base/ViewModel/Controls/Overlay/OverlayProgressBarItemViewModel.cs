@@ -3,7 +3,6 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace MixItUp.Base.ViewModel.Controls.Overlay
 {
@@ -211,22 +210,13 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.Font = item.TextFont;
 
             this.TextColor = item.TextFont;
-            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsValue(this.TextColor))
-            {
-                this.TextColor = ColorSchemes.HTMLColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.TextColor)).Key;
-            }
+            this.TextColor = ColorSchemes.GetColorName(this.TextColor);
 
             this.ProgressColor = item.ProgressColor;
-            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsValue(this.ProgressColor))
-            {
-                this.ProgressColor = ColorSchemes.HTMLColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.ProgressColor)).Key;
-            }
+            this.ProgressColor = ColorSchemes.GetColorName(this.ProgressColor);
 
             this.BackgroundColor = item.BackgroundColor;
-            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsValue(this.BackgroundColor))
-            {
-                this.BackgroundColor = ColorSchemes.HTMLColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.BackgroundColor)).Key;
-            }
+            this.BackgroundColor = ColorSchemes.GetColorName(this.BackgroundColor);
 
             this.HTML = item.HTMLText;
 
@@ -255,18 +245,9 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
                     goalAmount = this.GoalAmount;
                 }
 
-                if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(this.TextColor))
-                {
-                    this.TextColor = ColorSchemes.HTMLColorSchemeDictionary[this.TextColor];
-                }
-                if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(this.ProgressColor))
-                {
-                    this.ProgressColor = ColorSchemes.HTMLColorSchemeDictionary[this.ProgressColor];
-                }
-                if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(this.BackgroundColor))
-                {
-                    this.BackgroundColor = ColorSchemes.HTMLColorSchemeDictionary[this.BackgroundColor];
-                }
+                this.TextColor = ColorSchemes.GetColorCode(this.TextColor);
+                this.ProgressColor = ColorSchemes.GetColorCode(this.ProgressColor);
+                this.BackgroundColor = ColorSchemes.GetColorCode(this.BackgroundColor);
 
                 if (double.TryParse(startingAmount, out double startingAmountNumber) && double.TryParse(goalAmount, out double goalAmountNumber))
                 {

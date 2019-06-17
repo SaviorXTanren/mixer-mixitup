@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
-using System.Linq;
 
 namespace MixItUp.Base.ViewModel.Controls.Overlay
 {
@@ -81,10 +80,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.Font = item.TextFont;
 
             this.Color = item.TextColor;
-            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsValue(this.Color))
-            {
-                this.Color = ColorSchemes.HTMLColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.Color)).Key;
-            }
+            this.Color = ColorSchemes.GetColorName(this.Color);
 
             this.HTML = item.HTMLText;
 
@@ -95,10 +91,8 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         {
             if (!string.IsNullOrEmpty(this.Font) && !string.IsNullOrEmpty(this.Color) && !string.IsNullOrEmpty(this.HTML) && this.size > 0 && this.totalLength > 0)
             {
-                if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(this.Color))
-                {
-                    this.Color = ColorSchemes.HTMLColorSchemeDictionary[this.Color];
-                }
+                this.Color = ColorSchemes.GetColorCode(this.Color);
+
                 return new OverlayTimer(this.HTML, this.totalLength, this.Color, this.Font, size, this.TimerCompleteCommand);
             }
             return null;

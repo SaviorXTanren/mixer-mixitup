@@ -1,7 +1,5 @@
 ﻿using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace MixItUp.Base.ViewModel.Controls.Overlay
 {
@@ -111,31 +109,18 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.Underline = item.Underline;
 
             this.Color = item.Color;
-            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsValue(this.Color))
-            {
-                this.Color = ColorSchemes.HTMLColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.Color)).Key;
-            }
+            this.Color = ColorSchemes.GetColorName(this.Color);
 
             this.ShadowColor = item.ShadowColor;
-            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsValue(this.ShadowColor))
-            {
-                this.ShadowColor = ColorSchemes.HTMLColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.ShadowColor)).Key;
-            }
+            this.ShadowColor = ColorSchemes.GetColorName(this.ShadowColor);
         }
 
         public override OverlayItemBase GetItem()
         {
             if (!string.IsNullOrEmpty(this.Text) && !string.IsNullOrEmpty(this.Font) && !string.IsNullOrEmpty(this.Color) && this.size > 0)
             {
-                if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(this.Color))
-                {
-                    this.Color = ColorSchemes.HTMLColorSchemeDictionary[this.Color];
-                }
-
-                if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(this.ShadowColor))
-                {
-                    this.ShadowColor = ColorSchemes.HTMLColorSchemeDictionary[this.ShadowColor];
-                }
+                this.Color = ColorSchemes.GetColorCode(this.Color);
+                this.ShadowColor = ColorSchemes.GetColorCode(this.ShadowColor);
 
                 return new OverlayTextItem(this.Text, this.Color, this.size, this.Font, this.Bold, this.Italic, this.Underline, this.ShadowColor);
             }
