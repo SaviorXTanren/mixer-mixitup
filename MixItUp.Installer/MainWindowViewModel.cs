@@ -192,12 +192,9 @@ namespace MixItUp.Installer
                         {
                             if (await this.DownloadZipArchive(update))
                             {
-                                if (this.InstallMixItUp())
+                                if (this.InstallMixItUp() && this.CreateMixItUpShortcut())
                                 {
-                                    if (this.IsUpdate || this.CreateMixItUpShortcut())
-                                    {
-                                        result = true;
-                                    }
+                                    result = true;
                                 }
                                 else
                                 {
@@ -365,26 +362,32 @@ namespace MixItUp.Installer
 
         private bool CreateMixItUpShortcut()
         {
-            this.DisplayText1 = "Creating Start Menu shortcut...";
-            this.IsOperationIndeterminate = true;
-            this.OperationProgress = 0;
-
-            if (Directory.Exists(StartMenuDirectory))
+            try
             {
-                Directory.Delete(StartMenuDirectory, recursive: true);
-            }
+                this.DisplayText1 = "Creating Start Menu shortcut...";
+                this.IsOperationIndeterminate = true;
+                this.OperationProgress = 0;
 
-            Directory.CreateDirectory(StartMenuDirectory);
-            if (Directory.Exists(StartMenuDirectory))
-            {
-                string tempLinkFilePath = Path.Combine(DefaultInstallDirectory, "Mix It Up.link");
-                if (File.Exists(tempLinkFilePath))
+                if (!Directory.Exists(StartMenuDirectory))
                 {
-                    string shortcutLinkFilePath = Path.Combine(StartMenuDirectory, ShortcutFileName);
-                    File.Copy(tempLinkFilePath, shortcutLinkFilePath);
-
-                    return true;
+                    Directory.CreateDirectory(StartMenuDirectory);
                 }
+
+                if (Directory.Exists(StartMenuDirectory))
+                {
+                    string tempLinkFilePath = Path.Combine(DefaultInstallDirectory, "Mix It Up.link");
+                    if (File.Exists(tempLinkFilePath))
+                    {
+                        string shortcutLinkFilePath = Path.Combine(StartMenuDirectory, ShortcutFileName);
+                        File.Copy(tempLinkFilePath, shortcutLinkFilePath, overwrite: true);
+
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                this.WriteToLogFile(ex.ToString());
             }
             return false;
         }
