@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,6 +79,10 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         {
             if (this.Validate() && !string.IsNullOrEmpty(this.LeaderboardTypeString))
             {
+                this.TextColor = ColorSchemes.GetColorCode(this.TextColor);
+                this.BorderColor = ColorSchemes.GetColorCode(this.BorderColor);
+                this.BackgroundColor = ColorSchemes.GetColorCode(this.BackgroundColor);
+
                 if (this.leaderboardType == LeaderboardTypeEnum.CurrencyRank)
                 {
                     if (this.CurrencyRank != null)

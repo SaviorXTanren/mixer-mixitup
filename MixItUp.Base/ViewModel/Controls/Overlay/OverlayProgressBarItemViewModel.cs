@@ -209,7 +209,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.height = item.Height;
             this.Font = item.TextFont;
 
-            this.TextColor = item.TextFont;
+            this.TextColor = item.TextColor;
             this.TextColor = ColorSchemes.GetColorName(this.TextColor);
 
             this.ProgressColor = item.ProgressColor;

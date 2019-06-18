@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Util;
 using System.Collections.Generic;
 
 namespace MixItUp.Base.ViewModel.Controls.Overlay
@@ -105,6 +106,10 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         {
             if (this.Validate() && this.eventListTypes.Count > 0)
             {
+                this.TextColor = ColorSchemes.GetColorCode(this.TextColor);
+                this.BorderColor = ColorSchemes.GetColorCode(this.BorderColor);
+                this.BackgroundColor = ColorSchemes.GetColorCode(this.BackgroundColor);
+
                 return new OverlayEventList(this.HTML, this.eventListTypes, totalToShow, this.ResetOnLoad, this.Font, this.width, this.height, this.BorderColor, this.BackgroundColor, this.TextColor, this.entranceAnimation, this.exitAnimation);
             }
             return null;
