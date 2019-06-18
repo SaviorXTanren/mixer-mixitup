@@ -117,7 +117,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
 
         public override OverlayItemBase GetItem()
         {
-            if (!string.IsNullOrEmpty(this.Text) && !string.IsNullOrEmpty(this.Font) && !string.IsNullOrEmpty(this.Color) && this.size > 0)
+            if (!string.IsNullOrEmpty(this.Text) && !string.IsNullOrEmpty(this.Color) && this.size > 0)
             {
                 this.Color = ColorSchemes.GetColorCode(this.Color);
                 this.ShadowColor = ColorSchemes.GetColorCode(this.ShadowColor);
