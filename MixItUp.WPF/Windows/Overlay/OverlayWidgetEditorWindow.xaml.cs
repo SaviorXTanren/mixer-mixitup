@@ -1,380 +1,136 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base;
+﻿using MixItUp.Base;
 using MixItUp.Base.Model.Overlay;
-using MixItUp.WPF.Util;
+using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Window.Overlay;
+using MixItUp.WPF.Controls.Overlay;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
 namespace MixItUp.WPF.Windows.Overlay
 {
-    public enum OverlayWidgetTypeEnum
-    {
-        Text,
-        Image,
-        Video,
-        YouTube,
-        HTML,
-        [Name("Web Page")]
-        WebPage,
-        [Name("Goal/Progress Bar")]
-        ProgressBar,
-        [Name("Event List")]
-        EventList,
-        [Name("Game Queue")]
-        GameQueue,
-        [Name("Chat Messages")]
-        ChatMessages,
-        [Name("Mixer Clip Playback")]
-        MixerClip,
-        Leaderboard,
-        Timer,
-        [Name("Timer Train")]
-        TimerTrain,
-        [Name("Stream Boss")]
-        StreamBoss,
-        [Name("Song Requests")]
-        SongRequests
-    }
-
     /// <summary>
     /// Interaction logic for OverlayWidgetEditorWindow.xaml
     /// </summary>
     public partial class OverlayWidgetEditorWindow : LoadingWindowBase
     {
-        public OverlayWidget Widget { get; private set; }
+        private OverlayWidgetEditorWindowViewModel viewModel;
+
+        private Dictionary<OverlayWidgetTypeEnum, OverlayItemControl> overlayTypeEditors = new Dictionary<OverlayWidgetTypeEnum, OverlayItemControl>();
+        private OverlayItemControl overlayTypeEditor;
+
+        public OverlayWidgetEditorWindow(OverlayWidget widget)
+            : this()
+        {
+            this.viewModel = new OverlayWidgetEditorWindowViewModel(widget);
+        }
 
         public OverlayWidgetEditorWindow()
         {
             InitializeComponent();
 
-            this.Initialize(this.StatusBar);
-        }
+            this.viewModel = new OverlayWidgetEditorWindowViewModel();
 
-        public OverlayWidgetEditorWindow(OverlayWidget widget)
-            : this()
-        {
-            this.Widget = widget;
+            this.Initialize(this.StatusBar);
         }
 
         protected override async Task OnLoaded()
         {
-            this.TypeComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayWidgetTypeEnum>().OrderBy(t => t);
+            this.DataContext = this.viewModel;
+            this.viewModel.OverlayTypeSelected += ViewModel_OverlayTypeSelected;
+            await this.viewModel.OnLoaded();
 
-            if (ChannelSession.Services.OverlayServers.GetOverlayNames().Count() > 1)
+            if (this.viewModel.OverlayWidget != null)
             {
-                this.OverlayNameComboBox.IsEnabled = true;
-                this.OverlayNameComboBox.ItemsSource = ChannelSession.Services.OverlayServers.GetOverlayNames();
+                this.ItemPosition.SetPosition(this.viewModel.OverlayWidget.Position);
+
+                if (this.viewModel.OverlayWidget.Item is OverlayChatMessages) { this.SetGameEditorControl(new OverlayChatMessagesControl((OverlayChatMessages)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayEventList) { this.SetGameEditorControl(new OverlayEventListControl((OverlayEventList)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayGameQueue) { this.SetGameEditorControl(new OverlayGameQueueControl((OverlayGameQueue)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayProgressBar) { this.SetGameEditorControl(new OverlayProgressBarControl((OverlayProgressBar)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayHTMLItem) { this.SetGameEditorControl(new OverlayHTMLItemControl((OverlayHTMLItem)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayImageItem) { this.SetGameEditorControl(new OverlayImageItemControl((OverlayImageItem)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayLeaderboard) { this.SetGameEditorControl(new OverlayLeaderboardControl((OverlayLeaderboard)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayMixerClip) { this.SetGameEditorControl(new OverlayMixerClipControl((OverlayMixerClip)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlaySongRequests) { this.SetGameEditorControl(new OverlaySongRequestsControl((OverlaySongRequests)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayStreamBoss) { this.SetGameEditorControl(new OverlayStreamBossControl((OverlayStreamBoss)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayTextItem) { this.SetGameEditorControl(new OverlayTextItemControl((OverlayTextItem)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayTimer) { this.SetGameEditorControl(new OverlayTimerControl((OverlayTimer)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayTimerTrain) { this.SetGameEditorControl(new OverlayTimerTrainControl((OverlayTimerTrain)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayVideoItem) { this.SetGameEditorControl(new OverlayVideoItemControl((OverlayVideoItem)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayWebPageItem) { this.SetGameEditorControl(new OverlayWebPageItemControl((OverlayWebPageItem)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayYouTubeItem) { this.SetGameEditorControl(new OverlayYouTubeItemControl((OverlayYouTubeItem)this.viewModel.OverlayWidget.Item)); }
             }
             else
             {
-                this.OverlayNameComboBox.IsEnabled = false;
-                this.OverlayNameComboBox.ItemsSource = new List<string>() { ChannelSession.Services.OverlayServers.DefaultOverlayName };
+                this.overlayTypeEditors.Add(OverlayWidgetTypeEnum.ChatMessages, new OverlayChatMessagesControl());
+                this.overlayTypeEditors.Add(OverlayWidgetTypeEnum.EventList, new OverlayEventListControl());
+                this.overlayTypeEditors.Add(OverlayWidgetTypeEnum.GameQueue, new OverlayGameQueueControl());
+                this.overlayTypeEditors.Add(OverlayWidgetTypeEnum.ProgressBar, new OverlayProgressBarControl());
+                this.overlayTypeEditors.Add(OverlayWidgetTypeEnum.HTML, new OverlayHTMLItemControl());
+                this.overlayTypeEditors.Add(OverlayWidgetTypeEnum.Image, new OverlayImageItemControl());
+                this.overlayTypeEditors.Add(OverlayWidgetTypeEnum.Leaderboard, new OverlayLeaderboardControl());
+                this.overlayTypeEditors.Add(OverlayWidgetTypeEnum.MixerClip, new OverlayMixerClipControl());
+                this.overlayTypeEditors.Add(OverlayWidgetTypeEnum.SongRequests, new OverlaySongRequestsControl());
+                this.overlayTypeEditors.Add(OverlayWidgetTypeEnum.StreamBoss, new OverlayStreamBossControl());
+                this.overlayTypeEditors.Add(OverlayWidgetTypeEnum.Text, new OverlayTextItemControl());
+                this.overlayTypeEditors.Add(OverlayWidgetTypeEnum.Timer, new OverlayTimerControl());
+                this.overlayTypeEditors.Add(OverlayWidgetTypeEnum.TimerTrain, new OverlayTimerTrainControl());
+                this.overlayTypeEditors.Add(OverlayWidgetTypeEnum.Video, new OverlayVideoItemControl());
+                this.overlayTypeEditors.Add(OverlayWidgetTypeEnum.WebPage, new OverlayWebPageItemControl());
+                this.overlayTypeEditors.Add(OverlayWidgetTypeEnum.YouTube, new OverlayYouTubeItemControl());
             }
-            this.OverlayNameComboBox.SelectedItem = ChannelSession.Services.OverlayServers.DefaultOverlayName;
-
-            if (this.Widget != null)
-            {
-                this.NameTextBox.Text = this.Widget.Name;
-                this.OverlayNameComboBox.SelectedItem = this.Widget.OverlayName;
-                this.DontRefreshToggleButton.IsChecked = this.Widget.DontRefresh;
-
-                this.ItemPosition.SetPosition(this.Widget.Position);
-
-                if (this.Widget.Item is OverlayImageItem)
-                {
-                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.Image);
-                    this.ImageItem.SetItem(this.Widget.Item);
-                }
-                else if (this.Widget.Item is OverlayTextItem)
-                {
-                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.Text);
-                    this.TextItem.SetItem(this.Widget.Item);
-                }
-                else if (this.Widget.Item is OverlayYouTubeItem)
-                {
-                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.YouTube);
-                    this.YouTubeItem.SetItem(this.Widget.Item);
-                }
-                else if (this.Widget.Item is OverlayVideoItem)
-                {
-                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.Video);
-                    this.VideoItem.SetItem(this.Widget.Item);
-                }
-                else if (this.Widget.Item is OverlayWebPageItem)
-                {
-                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.WebPage);
-                    this.WebPageItem.SetItem(this.Widget.Item);
-                }
-                else if (this.Widget.Item is OverlayHTMLItem)
-                {
-                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.HTML);
-                    this.HTMLItem.SetItem(this.Widget.Item);
-                }
-                else if (this.Widget.Item is OverlayProgressBar)
-                {
-                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.ProgressBar);
-                    this.ProgressBarItem.SetItem(this.Widget.Item);
-                }
-                else if (this.Widget.Item is OverlayEventList)
-                {
-                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.EventList);
-                    this.EventListItem.SetItem(this.Widget.Item);
-                }
-                else if (this.Widget.Item is OverlayGameQueue)
-                {
-                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.GameQueue);
-                    this.GameQueueItem.SetItem(this.Widget.Item);
-                }
-                else if (this.Widget.Item is OverlayChatMessages)
-                {
-                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.ChatMessages);
-                    this.ChatMessagesItem.SetItem(this.Widget.Item);
-                }
-                else if (this.Widget.Item is OverlayMixerClip)
-                {
-                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.MixerClip);
-                    this.MixerClipItem.SetItem(this.Widget.Item);
-                }
-                else if (this.Widget.Item is OverlayLeaderboard)
-                {
-                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.Leaderboard);
-                    this.LeaderboardItem.SetItem(this.Widget.Item);
-                }
-                else if (this.Widget.Item is OverlayTimer)
-                {
-                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.Timer);
-                    this.TimerItem.SetItem(this.Widget.Item);
-                }
-                else if (this.Widget.Item is OverlayTimerTrain)
-                {
-                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.TimerTrain);
-                    this.TimerTrainItem.SetItem(this.Widget.Item);
-                }
-                else if (this.Widget.Item is OverlayStreamBoss)
-                {
-                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.StreamBoss);
-                    this.StreamBossItem.SetItem(this.Widget.Item);
-                }
-                else if (this.Widget.Item is OverlaySongRequests)
-                {
-                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.SongRequests);
-                    this.SongRequestsItem.SetItem(this.Widget.Item);
-                }
-            }
-
-            await base.OnLoaded();
         }
 
-        private void TypeComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void ViewModel_OverlayTypeSelected(object sender, OverlayTypeListing overlayType)
         {
-            this.ImageItem.Visibility = Visibility.Collapsed;
-            this.TextItem.Visibility = Visibility.Collapsed;
-            this.YouTubeItem.Visibility = Visibility.Collapsed;
-            this.VideoItem.Visibility = Visibility.Collapsed;
-            this.WebPageItem.Visibility = Visibility.Collapsed;
-            this.HTMLItem.Visibility = Visibility.Collapsed;
-            this.ProgressBarItem.Visibility = Visibility.Collapsed;
-            this.EventListItem.Visibility = Visibility.Collapsed;
-            this.GameQueueItem.Visibility = Visibility.Collapsed;
-            this.ChatMessagesItem.Visibility = Visibility.Collapsed;
-            this.MixerClipItem.Visibility = Visibility.Collapsed;
-            this.LeaderboardItem.Visibility = Visibility.Collapsed;
-            this.TimerItem.Visibility = Visibility.Collapsed;
-            this.TimerTrainItem.Visibility = Visibility.Collapsed;
-            this.StreamBossItem.Visibility = Visibility.Collapsed;
-            this.SongRequestsItem.Visibility = Visibility.Collapsed;
-            if (this.TypeComboBox.SelectedIndex >= 0)
-            {
-                OverlayWidgetTypeEnum overlayType = EnumHelper.GetEnumValueFromString<OverlayWidgetTypeEnum>((string)this.TypeComboBox.SelectedItem);
-                if (overlayType == OverlayWidgetTypeEnum.Image)
-                {
-                    this.ImageItem.Visibility = Visibility.Visible;
-                }
-                else if (overlayType == OverlayWidgetTypeEnum.Text)
-                {
-                    this.TextItem.Visibility = Visibility.Visible;
-                }
-                else if (overlayType == OverlayWidgetTypeEnum.YouTube)
-                {
-                    this.YouTubeItem.Visibility = Visibility.Visible;
-                }
-                else if (overlayType == OverlayWidgetTypeEnum.Video)
-                {
-                    this.VideoItem.Visibility = Visibility.Visible;
-                }
-                else if (overlayType == OverlayWidgetTypeEnum.WebPage)
-                {
-                    this.WebPageItem.Visibility = Visibility.Visible;
-                }
-                else if (overlayType == OverlayWidgetTypeEnum.HTML)
-                {
-                    this.HTMLItem.Visibility = Visibility.Visible;
-                }
-                else if (overlayType == OverlayWidgetTypeEnum.ProgressBar)
-                {
-                    this.ProgressBarItem.Visibility = Visibility.Visible;
-                }
-                else if (overlayType == OverlayWidgetTypeEnum.EventList)
-                {
-                    this.EventListItem.Visibility = Visibility.Visible;
-                }
-                else if (overlayType == OverlayWidgetTypeEnum.GameQueue)
-                {
-                    this.GameQueueItem.Visibility = Visibility.Visible;
-                }
-                else if (overlayType == OverlayWidgetTypeEnum.ChatMessages)
-                {
-                    this.ChatMessagesItem.Visibility = Visibility.Visible;
-                }
-                else if (overlayType == OverlayWidgetTypeEnum.MixerClip)
-                {
-                    this.MixerClipItem.Visibility = Visibility.Visible;
-                }
-                else if (overlayType == OverlayWidgetTypeEnum.Leaderboard)
-                {
-                    this.LeaderboardItem.Visibility = Visibility.Visible;
-                }
-                else if (overlayType == OverlayWidgetTypeEnum.Timer)
-                {
-                    this.TimerItem.Visibility = Visibility.Visible;
-                }
-                else if (overlayType == OverlayWidgetTypeEnum.TimerTrain)
-                {
-                    this.TimerTrainItem.Visibility = Visibility.Visible;
-                }
-                else if (overlayType == OverlayWidgetTypeEnum.StreamBoss)
-                {
-                    this.StreamBossItem.Visibility = Visibility.Visible;
-                }
-                else if (overlayType == OverlayWidgetTypeEnum.SongRequests)
-                {
-                    this.SongRequestsItem.Visibility = Visibility.Visible;
-                }
-            }
+            this.SetGameEditorControl(this.overlayTypeEditors[this.viewModel.SelectedOverlayType.Type]);
         }
 
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             await this.RunAsyncOperation(async () =>
             {
-                if (string.IsNullOrEmpty(this.NameTextBox.Text))
+                if (await this.viewModel.Validate())
                 {
-                    await MessageBoxHelper.ShowMessageDialog("A name must be specified");
-                    return;
-                }
+                    OverlayItemPosition position = this.ItemPosition.GetPosition();
+                    if (position == null)
+                    {
+                        await DialogHelper.ShowMessage("A valid position for this overlay widget must be selected");
+                        return;
+                    }
 
-                if (this.TypeComboBox.SelectedIndex < 0)
-                {
-                    await MessageBoxHelper.ShowMessageDialog("A widget type must be selected");
-                    return;
-                }
+                    OverlayItemBase overlayItem = overlayTypeEditor.GetItem();
+                    if (overlayItem == null)
+                    {
+                        await DialogHelper.ShowMessage("There are missing details for the overlay item");
+                        return;
+                    }
 
-                if (this.OverlayNameComboBox.SelectedIndex < 0)
-                {
-                    await MessageBoxHelper.ShowMessageDialog("An overlay to use must be selected");
-                    return;
-                }
-                string overlayName = (string)this.OverlayNameComboBox.SelectedItem;
+                    if (this.viewModel.OverlayWidget == null)
+                    {
+                        OverlayWidget widget = new OverlayWidget(this.viewModel.Name, this.viewModel.SelectedOverlayEndpoint, overlayItem, position, this.viewModel.DontRefresh);
+                        ChannelSession.Settings.OverlayWidgets.Add(widget);
+                    }
+                    else
+                    {
+                        overlayItem.ID = this.viewModel.OverlayWidget.Item.ID;
 
-                OverlayItemPosition position = this.ItemPosition.GetPosition();
-                if (position == null)
-                {
-                    return;
-                }
+                        this.viewModel.OverlayWidget.Name = this.viewModel.Name;
+                        this.viewModel.OverlayWidget.OverlayName = this.viewModel.SelectedOverlayEndpoint;
+                        this.viewModel.OverlayWidget.Item = overlayItem;
+                        this.viewModel.OverlayWidget.Position = position;
+                        this.viewModel.OverlayWidget.DontRefresh = this.viewModel.DontRefresh;
+                    }
 
-                OverlayItemBase item = null;
-                OverlayWidgetTypeEnum overlayType = EnumHelper.GetEnumValueFromString<OverlayWidgetTypeEnum>((string)this.TypeComboBox.SelectedItem);
-                if (overlayType == OverlayWidgetTypeEnum.Image)
-                {
-                    item = this.ImageItem.GetItem();
+                    this.Close();
                 }
-                else if (overlayType == OverlayWidgetTypeEnum.Text)
-                {
-                    item = this.TextItem.GetItem();
-                }
-                else if (overlayType == OverlayWidgetTypeEnum.YouTube)
-                {
-                    item = this.YouTubeItem.GetItem();
-                }
-                else if (overlayType == OverlayWidgetTypeEnum.Video)
-                {
-                    item = this.VideoItem.GetItem();
-                }
-                else if (overlayType == OverlayWidgetTypeEnum.WebPage)
-                {
-                    item = this.WebPageItem.GetItem();
-                }
-                else if (overlayType == OverlayWidgetTypeEnum.HTML)
-                {
-                    item = this.HTMLItem.GetItem();
-                }
-                else if (overlayType == OverlayWidgetTypeEnum.ProgressBar)
-                {
-                    item = this.ProgressBarItem.GetItem();
-                }
-                else if (overlayType == OverlayWidgetTypeEnum.EventList)
-                {
-                    item = this.EventListItem.GetItem();
-                }
-                else if (overlayType == OverlayWidgetTypeEnum.GameQueue)
-                {
-                    item = this.GameQueueItem.GetItem();
-                }
-                else if (overlayType == OverlayWidgetTypeEnum.ChatMessages)
-                {
-                    item = this.ChatMessagesItem.GetItem();
-                }
-                else if (overlayType == OverlayWidgetTypeEnum.MixerClip)
-                {
-                    item = this.MixerClipItem.GetItem();
-                }
-                else if (overlayType == OverlayWidgetTypeEnum.Leaderboard)
-                {
-                    item = this.LeaderboardItem.GetItem();
-                }
-                else if (overlayType == OverlayWidgetTypeEnum.Timer)
-                {
-                    item = this.TimerItem.GetItem();
-                }
-                else if (overlayType == OverlayWidgetTypeEnum.TimerTrain)
-                {
-                    item = this.TimerTrainItem.GetItem();
-                }
-                else if (overlayType == OverlayWidgetTypeEnum.StreamBoss)
-                {
-                    item = this.StreamBossItem.GetItem();
-                }
-                else if (overlayType == OverlayWidgetTypeEnum.SongRequests)
-                {
-                    item = this.SongRequestsItem.GetItem();
-                }
-
-                if (item == null)
-                {
-                    await MessageBoxHelper.ShowMessageDialog("There are missing Widget details");
-                    return;
-                }
-
-                if (this.Widget == null)
-                {
-                    this.Widget = new OverlayWidget(this.NameTextBox.Text, overlayName, item, position, this.DontRefreshToggleButton.IsChecked.GetValueOrDefault());
-                    ChannelSession.Settings.OverlayWidgets.Add(this.Widget);
-                }
-                else
-                {
-                    item.ID = this.Widget.Item.ID;
-
-                    this.Widget.Name = this.NameTextBox.Text;
-                    this.Widget.OverlayName = overlayName;
-                    this.Widget.Item = item;
-                    this.Widget.Position = position;
-                    this.Widget.DontRefresh = this.DontRefreshToggleButton.IsChecked.GetValueOrDefault();
-                }
-
-                this.Close();
             });
+        }
+
+        private void SetGameEditorControl(OverlayItemControl overlayTypeEditor)
+        {
+            this.MainContentControl.Content = this.overlayTypeEditor = overlayTypeEditor;
         }
     }
 }
