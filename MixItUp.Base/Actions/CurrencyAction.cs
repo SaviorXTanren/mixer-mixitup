@@ -160,12 +160,13 @@ namespace MixItUp.Base.Actions
                 else
                 {
                     string amountTextValue = await this.ReplaceStringWithSpecialModifiers(this.Amount, user, arguments);
-                    if (!int.TryParse(amountTextValue, out int amountValue))
+                    if (!double.TryParse(amountTextValue, out double doubleAmount))
                     {
                         await ChannelSession.Chat.Whisper(user.UserName, string.Format("{0} is not a valid amount of {1}", amountTextValue, systemName));
                         return;
                     }
 
+                    int amountValue = (int)Math.Ceiling(doubleAmount);
                     if (amountValue <= 0)
                     {
                         await ChannelSession.Chat.Whisper(user.UserName, "The amount specified must be greater than 0");
