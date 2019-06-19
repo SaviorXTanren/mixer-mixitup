@@ -506,6 +506,8 @@ namespace MixItUp.Base.Util
                 PatronageStatusModel patronageStatus = await ChannelSession.Connection.GetPatronageStatus(ChannelSession.Channel);
                 if (patronageStatus != null)
                 {
+                    this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedamount", patronageStatus.patronageEarned.ToString());
+
                     PatronagePeriodModel patronagePeriod = await ChannelSession.Connection.GetPatronagePeriod(patronageStatus);
                     if (patronagePeriod != null)
                     {
@@ -544,12 +546,10 @@ namespace MixItUp.Base.Util
 
                         if (patronageMilestoneHighestEarned != null)
                         {
-                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedamount", patronageStatus.patronageEarned.ToString());
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedreward", patronageMilestoneHighestEarned.DollarAmountText());
                         }
                         else
                         {
-                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedamount", "0");
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedreward", "0");
                         }
                     }
