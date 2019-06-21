@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,6 +18,9 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         public IEnumerable<string> VisibleAnimationStrings { get; set; } = EnumHelper.GetEnumNames<OverlayEffectVisibleAnimationTypeEnum>();
         public IEnumerable<string> ExitAnimationStrings { get; set; } = EnumHelper.GetEnumNames<OverlayEffectExitAnimationTypeEnum>();
 
+        [Obsolete]
         public abstract OverlayItemBase GetItem();
+
+        public virtual OverlayItemModelBase GetOverlayItem() { return null; }
     }
 }

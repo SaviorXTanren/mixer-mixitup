@@ -62,11 +62,28 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.height = item.Height;
         }
 
+        public OverlayWebPageItemViewModel(OverlayWebPageItemModel item)
+            : this()
+        {
+            this.URL = item.FilePath;
+            this.width = item.Width;
+            this.height = item.Height;
+        }
+
         public override OverlayItemBase GetItem()
         {
             if (!string.IsNullOrEmpty(this.URL) && this.width > 0 && this.height > 0)
             {
                 return new OverlayWebPageItem(this.URL, this.width, this.height);
+            }
+            return null;
+        }
+
+        public override OverlayItemModelBase GetOverlayItem()
+        {
+            if (!string.IsNullOrEmpty(this.URL) && this.width > 0 && this.height > 0)
+            {
+                return new OverlayWebPageItemModel(this.URL, this.width, this.height);
             }
             return null;
         }

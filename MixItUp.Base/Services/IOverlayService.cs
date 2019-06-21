@@ -1,5 +1,7 @@
 ﻿using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.ViewModel.User;
 using System;
+using System.Collections.Generic;
 using System.Net.WebSockets;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -28,18 +30,22 @@ namespace MixItUp.Base.Services
 
         Task<bool> Initialize();
 
+        Task Disconnect();
+
         Task<int> TestConnection();
 
         void StartBatching();
 
         Task EndBatching();
 
-        Task SendItem(OverlayItemBase item, OverlayItemPosition position, OverlayItemEffects effects);
+        Task ShowItem(OverlayItemModelBase item, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers);
+        Task HideItem(OverlayItemModelBase item);
 
         Task SendTextToSpeech(OverlayTextToSpeech textToSpeech);
 
+        [Obsolete]
+        Task SendItem(OverlayItemBase item, OverlayItemPosition position, OverlayItemEffects effects);
+        [Obsolete]
         Task RemoveItem(OverlayItemBase item);
-
-        Task Disconnect();
     }
 }

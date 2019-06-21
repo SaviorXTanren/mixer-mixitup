@@ -179,27 +179,30 @@
                         if (packet.type === "test") {
                             testPacket();
                         }
-                        else if (packet.type === "remove") {
+                        else if (packet.type == "Show") {
+                            if (packet.data.ItemTypeName === "Image") {
+                                imagePacket(packet.data);
+                            }
+                            else if (packet.data.ItemTypeName === "Text") {
+                                textPacket(packet.data);
+                            }
+                            else if (packet.data.ItemTypeName === "YouTube") {
+                                youtubePacket(packet.data);
+                            }
+                            else if (packet.data.ItemTypeName === "Video") {
+                                videoPacket(packet.data);
+                            }
+                            else if (packet.data.ItemTypeName === "HTML") {
+                                htmlTextPacket(packet.data);
+                            }
+                            else if (packet.data.ItemTypeName === "WebPage") {
+                                webPagePacket(packet.data);
+                            }
+                        }
+                        else if (packet.type == "Hide") {
                             removePacket(packet.data);
                         }
-                        else if (packet.type === "image") {
-                            imagePacket(packet.data);
-                        }
-                        else if (packet.type === "text") {
-                            textPacket(packet.data);
-                        }
-                        else if (packet.type === "youtube") {
-                            youtubePacket(packet.data);
-                        }
-                        else if (packet.type === "video") {
-                            videoPacket(packet.data);
-                        }
-                        else if (packet.type === "html") {
-                            htmlTextPacket(packet.data);
-                        }
-                        else if (packet.type === "webpage") {
-                            webPagePacket(packet.data);
-                        }
+
                         else if (packet.type === "eventlist") {
                             eventListPacket(packet.data);
                         }
@@ -230,7 +233,7 @@
                         else if (packet.type === "textToSpeech") {
                             textToSpeechPacket(packet.data);
                         }
-                        else if (packet.type === "batch") {
+                        else if (packet.type === "Batch") {
                             for (var i = 0; i < packet.array.length; i++) {
                                 packetReceived(packet.array[i]);
                             }
@@ -245,8 +248,9 @@
 
             function testPacket() {
                 var data = {
-                    Text: 'Connection Test!', Size: 100, Color: 'red', EntranceAnimationName: 'fadeIn', VisibleAnimationName: '', ExitAnimationName: 'fadeOut',
-                    Horizontal: 50, Vertical: 50, Duration: 3, IsPercentagePosition: true
+                    Text: 'Connection Test!', Size: 100, Color: 'red',
+                    Position: { Horizontal: 50, Vertical: 50, IsPercentagePosition: true },
+                    Effects: { EntranceAnimationName: 'fadeIn', VisibleAnimationName: '', ExitAnimationName: 'fadeOut', Duration: 3 }
                 };
                 textPacket(data);
             }
@@ -262,7 +266,9 @@
             function imagePacket(data) {
                 var addedElement = document.createElement('img');
                 addedElement.src = data.FullLink;
-                addedElement.style.cssText += 'width: ' + data.Width + 'px; height: ' + data.Height + 'px; ';
+                if (data.Width > 0 && data.Height > 0) {
+                    addedElement.style.cssText += 'width: ' + data.Width + 'px; height: ' + data.Height + 'px; ';
+                }
 
                 addWaitRemoveElement(data, addedElement);
             }
@@ -293,14 +299,14 @@
             function youtubePacket(data) {
                 if (youtubeIFrameAPIReady) {
                     var addedElement = document.createElement('div');
-                    addedElement.id = 'youtubeVideo' + data.ID;
+                    addedElement.id = data.FilePath;
 
                     addWaitRemoveElement(data, addedElement);
 
                     var youtubeVideoPlayer = new YT.Player(addedElement.id, {
                         height: data.Height,
                         width: data.Width,
-                        videoId: data.VideoID,
+                        videoId: data.FilePath,
                         playerVars: { 'controls': 0, 'modestbranding': 1, 'start': data.StartTime },
                         events: {
                             'onReady': function () {
@@ -330,12 +336,7 @@
 
                 sourceElement = document.createElement('source');
                 sourceElement.src = data.FullLink;
-                if (data.FilePath.endsWith(".mp4")) {
-                    sourceElement.type = "video/mp4";
-                }
-                else if (data.FilePath.endsWith(".webm")) {
-                    sourceElement.type = "video/webm";
-                }
+                sourceElement.type = "video/" + data.FileExtension;
                 addedElement.appendChild(sourceElement);
 
                 addWaitRemoveElement(data, addedElement);
@@ -343,14 +344,14 @@
 
             function htmlTextPacket(data) {
                 var addedElement = document.createElement('div');
-                addedElement.innerHTML = data.HTMLText;
+                addedElement.innerHTML = data.HTML;
 
                 addWaitRemoveElement(data, addedElement);
             }
 
             function webPagePacket(data) {
                 var addedElement = document.createElement('iframe');
-                addedElement.src = data.URL;
+                addedElement.src = data.FilePath;
                 addedElement.width = data.Width;
                 addedElement.height = data.Height;
                 addedElement.frameBorder = 0;
@@ -808,7 +809,10 @@
                     responsiveVoice.speak(data.Text, data.Voice, { pitch: data.Pitch, rate: data.Rate, volume: data.Volume });
                 }
                 else {
-                    var data = { Horizontal: 50, Vertical: 50, Duration: 3 };
+                    var data = {
+                        Position: { Horizontal: 50, Vertical: 50, IsPercentagePosition: true },
+                        Effects: { EntranceAnimationName: 'fadeIn', VisibleAnimationName: '', ExitAnimationName: 'fadeOut', Duration: 3 }
+                    };
                     addWaitRemoveElement(data, noTextToSpeechDiv);
                 }
             }
@@ -817,11 +821,11 @@
                 if (addedElement != null) {
 
                     addedElement.style.cssText += 'position: absolute;  margin: 0px;'
-                    if (data.IsPixelPosition) {
-                        addedElement.style.cssText += 'left: ' + data.Horizontal.toString() + 'px; top: ' + data.Vertical.toString() + 'px;'
+                    if (data.Position.IsPixelPosition) {
+                        addedElement.style.cssText += 'left: ' + data.Position.Horizontal.toString() + 'px; top: ' + data.Position.Vertical.toString() + 'px;'
                     }
                     else {
-                        addedElement.style.cssText += 'left: ' + data.Horizontal.toString() + '%; top: ' + data.Vertical.toString() + '%; transform: translate(-50%, -50%);'
+                        addedElement.style.cssText += 'left: ' + data.Position.Horizontal.toString() + '%; top: ' + data.Position.Vertical.toString() + '%; transform: translate(-50%, -50%);'
                     }
 
                     removePacket(data);
@@ -829,35 +833,35 @@
                     var divContainer = document.createElement('div');
                     divContainer.id = data.ID;
                     divContainer.style.cssText += 'position: absolute; width: 100%; max-width: 100%; min-width: 100%; height: 100%; max-height: 100%; min-height: 100%; margin: 0px;';
-                    if (data.Duration > 0) {
+                    if (data.Effects.Duration > 0) {
                         divContainer.style.zIndex = zIndexCounter++;
                     }
                     divContainer.appendChild(addedElement);
 
                     itemDictionary[data.ID] = divContainer;
 
-                    if (data.Duration > 0) {
-                        $(divContainer).animateCss(data.EntranceAnimationName, function () {
+                    if (data.Effects.Duration > 0) {
+                        $(divContainer).animateCss(data.Effects.EntranceAnimationName, function () {
 
                             setTimeout(function () {
 
-                                $(divContainer).animateCss(data.VisibleAnimationName);
+                                $(divContainer).animateCss(data.Effects.VisibleAnimationName);
 
                                 setTimeout(function () {
 
                                     var elementToAnimate = divContainer;
-                                    if (data.ExitAnimationName && data.ExitAnimationName == 'hinge') {
+                                    if (data.Effects.ExitAnimationName && data.Effects.ExitAnimationName == 'hinge') {
                                         elementToAnimate = addedElement;
                                     }
 
-                                    $(elementToAnimate).animateCss(data.ExitAnimationName, function () {
+                                    $(elementToAnimate).animateCss(data.Effects.ExitAnimationName, function () {
 
                                         removePacket(data);
                                     });
 
-                                }, (data.Duration * 1000 * 2) / 3);
+                                }, (data.Effects.Duration * 1000 * 2) / 3);
 
-                            }, (data.Duration * 1000) / 3);
+                            }, (data.Effects.Duration * 1000) / 3);
                         });
                     }
 

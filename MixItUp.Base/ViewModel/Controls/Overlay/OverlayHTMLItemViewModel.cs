@@ -23,11 +23,27 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.HTML = item.HTMLText;
         }
 
+        public OverlayHTMLItemViewModel(OverlayHTMLItemModel item)
+            : this()
+        {
+            this.HTML = item.HTML;
+        }
+
         public override OverlayItemBase GetItem()
         {
             if (!string.IsNullOrEmpty(this.HTML))
             {
                 return new OverlayHTMLItem(this.HTML);
+            }
+            return null;
+        }
+
+
+        public override OverlayItemModelBase GetOverlayItem()
+        {
+            if (!string.IsNullOrEmpty(this.HTML))
+            {
+                return new OverlayHTMLItemModel(this.HTML);
             }
             return null;
         }

@@ -96,9 +96,27 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         public OverlayTextItemViewModel()
         {
             this.Font = "Arial";
+            this.size = 24;
         }
 
         public OverlayTextItemViewModel(OverlayTextItem item)
+            : this()
+        {
+            this.Text = item.Text;
+            this.size = item.Size;
+            this.Font = item.Font;
+            this.Bold = item.Bold;
+            this.Italic = item.Italic;
+            this.Underline = item.Underline;
+
+            this.Color = item.Color;
+            this.Color = ColorSchemes.GetColorName(this.Color);
+
+            this.ShadowColor = item.ShadowColor;
+            this.ShadowColor = ColorSchemes.GetColorName(this.ShadowColor);
+        }
+
+        public OverlayTextItemViewModel(OverlayTextItemModel item)
             : this()
         {
             this.Text = item.Text;
@@ -123,6 +141,18 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
                 this.ShadowColor = ColorSchemes.GetColorCode(this.ShadowColor);
 
                 return new OverlayTextItem(this.Text, this.Color, this.size, this.Font, this.Bold, this.Italic, this.Underline, this.ShadowColor);
+            }
+            return null;
+        }
+
+        public override OverlayItemModelBase GetOverlayItem()
+        {
+            if (!string.IsNullOrEmpty(this.Text) && !string.IsNullOrEmpty(this.Color) && this.size > 0)
+            {
+                this.Color = ColorSchemes.GetColorCode(this.Color);
+                this.ShadowColor = ColorSchemes.GetColorCode(this.ShadowColor);
+
+                return new OverlayTextItemModel(this.Text, this.Color, this.size, this.Font, this.Bold, this.Italic, this.Underline, this.ShadowColor);
             }
             return null;
         }

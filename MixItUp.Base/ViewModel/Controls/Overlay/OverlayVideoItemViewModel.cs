@@ -78,11 +78,29 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.Volume = item.Volume;
         }
 
+        public OverlayVideoItemViewModel(OverlayVideoItemModel item)
+            : this()
+        {
+            this.FilePath = item.FilePath;
+            this.width = item.Width;
+            this.height = item.Height;
+            this.Volume = item.Volume;
+        }
+
         public override OverlayItemBase GetItem()
         {
             if (!string.IsNullOrEmpty(this.FilePath) && this.width > 0 && this.height > 0)
             {
                 return new OverlayVideoItem(this.FilePath, this.width, this.height, this.volume);
+            }
+            return null;
+        }
+
+        public override OverlayItemModelBase GetOverlayItem()
+        {
+            if (!string.IsNullOrEmpty(this.FilePath) && this.width > 0 && this.height > 0)
+            {
+                return new OverlayVideoItemModel(this.FilePath, this.width, this.height, this.volume);
             }
             return null;
         }
