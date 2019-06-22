@@ -17,7 +17,7 @@ namespace MixItUp.WPF.Controls.MainControls
     /// </summary>
     public partial class OverlayWidgetsControl : MainControlBase
     {
-        private ObservableCollection<OverlayWidget> widgets = new ObservableCollection<OverlayWidget>();
+        private ObservableCollection<OverlayWidgetModel> widgets = new ObservableCollection<OverlayWidgetModel>();
 
         public OverlayWidgetsControl()
         {
@@ -47,19 +47,15 @@ namespace MixItUp.WPF.Controls.MainControls
             this.OverlayWidgetsListView.SelectedIndex = -1;
 
             this.widgets.Clear();
-            foreach (OverlayWidget widget in ChannelSession.Settings.OverlayWidgets.OrderBy(c => c.OverlayName).ThenBy(c => c.Name))
+            foreach (OverlayWidgetModel widget in ChannelSession.Settings.OverlayWidgets.OrderBy(c => c.OverlayName).ThenBy(c => c.Name))
             {
                 this.widgets.Add(widget);
             }
         }
 
-        private async Task HideWidget(OverlayWidget widget)
+        private async Task HideWidget(OverlayWidgetModel widget)
         {
-            IOverlayService overlay = ChannelSession.Services.OverlayServers.GetOverlay(widget.OverlayName);
-            if (overlay != null)
-            {
-                await overlay.RemoveItem(widget.Item);
-            }
+            await widget.HideItem();
         }
 
         private async void Window_Closed(object sender, System.EventArgs e)
@@ -76,8 +72,8 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.Window.RunAsyncOperation(async () =>
             {
                 Button button = (Button)sender;
-                OverlayWidget widget = (OverlayWidget)button.DataContext;
-                if (widget != null && widget.SupportsTestButton)
+                OverlayWidgetModel widget = (OverlayWidgetModel)button.DataContext;
+                if (widget != null && widget.SupportsTestData)
                 {
                     await this.HideWidget(widget);
 
@@ -93,7 +89,7 @@ namespace MixItUp.WPF.Controls.MainControls
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            OverlayWidget widget = (OverlayWidget)button.DataContext;
+            OverlayWidgetModel widget = (OverlayWidgetModel)button.DataContext;
             if (widget != null)
             {
                 OverlayWidgetEditorWindow window = new OverlayWidgetEditorWindow(widget);
@@ -109,7 +105,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 if (await MessageBoxHelper.ShowConfirmationDialog("Are you sure you want to delete this widget?"))
                 {
                     Button button = (Button)sender;
-                    OverlayWidget widget = (OverlayWidget)button.DataContext;
+                    OverlayWidgetModel widget = (OverlayWidgetModel)button.DataContext;
                     if (widget != null)
                     {
                         ChannelSession.Settings.OverlayWidgets.Remove(widget);
@@ -125,7 +121,7 @@ namespace MixItUp.WPF.Controls.MainControls
         private async void EnableDisableToggleSwitch_Checked(object sender, RoutedEventArgs e)
         {
             ToggleButton button = (ToggleButton)sender;
-            OverlayWidget widget = (OverlayWidget)button.DataContext;
+            OverlayWidgetModel widget = (OverlayWidgetModel)button.DataContext;
             if (widget != null)
             {
                 widget.IsEnabled = button.IsChecked.GetValueOrDefault();

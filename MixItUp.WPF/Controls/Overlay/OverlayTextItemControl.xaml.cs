@@ -29,6 +29,13 @@ namespace MixItUp.WPF.Controls.Overlay
             this.viewModel = new OverlayTextItemViewModel(item);
         }
 
+        public OverlayTextItemControl(OverlayTextItemModel item)
+        {
+            InitializeComponent();
+
+            this.viewModel = new OverlayTextItemViewModel(item);
+        }
+
         public override void SetItem(OverlayItemBase item)
         {
             if (item != null)

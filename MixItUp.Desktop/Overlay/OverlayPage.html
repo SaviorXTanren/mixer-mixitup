@@ -198,6 +198,26 @@
                             else if (packet.data.ItemTypeName === "WebPage") {
                                 webPagePacket(packet.data);
                             }
+                            else if (packet.type === "Timer") {
+                                timerPacket(packet.data);
+                            }
+                            else if (packet.type === "StreamBoss") {
+                                streamBossPacket(packet.data);
+                            }
+                            else if (packet.type === "TimerTrain") {
+                                timerTrainPacket(packet.data);
+                            }
+                            else if (packet.type === "StreamClip") {
+                                streamClipPacket(packet.data);
+                            }
+                        }
+                        else if (packet.type == "Update") {
+                            if (packet.type === "StreamBoss") {
+                                streamBossPacket(packet.data);
+                            }
+                            else if (packet.type === "TimerTrain") {
+                                timerTrainPacket(packet.data);
+                            }
                         }
                         else if (packet.type == "Hide") {
                             removePacket(packet.data);
@@ -215,21 +235,13 @@
                         else if (packet.type === "chatmessages") {
                             chatMessagesPacket(packet.data);
                         }
-                        else if (packet.type === "mixerclip") {
-                            mixerClipPacket(packet.data);
-                        }
+
                         else if (packet.type === "leaderboard") {
                             leaderboardPacket(packet.data);
                         }
-                        else if (packet.type === "timer") {
-                            timerPacket(packet.data);
-                        }
-                        else if (packet.type === "timertrain") {
-                            timerTrainPacket(packet.data);
-                        }
-                        else if (packet.type === "streamboss") {
-                            streamBossPacket(packet.data);
-                        }
+
+
+
                         else if (packet.type === "textToSpeech") {
                             textToSpeechPacket(packet.data);
                         }
@@ -605,7 +617,7 @@
                 }
             }
 
-            function mixerClipPacket(data) {
+            function streamClipPacket(data) {
 
                 var addedElement = document.createElement('video');
                 addedElement.id = data.ID;
@@ -725,6 +737,8 @@
                 }
                 else {
                     mainDiv.innerHTML = "";
+
+                    removePacket(data);
                 }
             }
 

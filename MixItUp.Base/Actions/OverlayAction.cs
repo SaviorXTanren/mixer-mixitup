@@ -64,17 +64,17 @@ namespace MixItUp.Base.Actions
         {
             if (this.WidgetID != Guid.Empty)
             {
-                OverlayWidget widget = ChannelSession.Settings.OverlayWidgets.FirstOrDefault(w => w.Item.ID.Equals(this.WidgetID));
+                OverlayWidgetModel widget = ChannelSession.Settings.OverlayWidgets.FirstOrDefault(w => w.Item.ID.Equals(this.WidgetID));
                 if (widget != null)
                 {
                     widget.IsEnabled = this.ShowWidget;
-                    if (!widget.IsEnabled)
+                    if (this.ShowWidget)
                     {
-                        IOverlayService overlay = ChannelSession.Services.OverlayServers.GetOverlay(widget.OverlayName);
-                        if (overlay != null)
-                        {
-                            await overlay.RemoveItem(widget.Item);
-                        }
+                        await widget.ShowItem(user, arguments, this.extraSpecialIdentifiers);
+                    }
+                    else
+                    {
+                        await widget.HideItem();
                     }
                 }
             }

@@ -148,6 +148,26 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.HTML = item.HTMLText;
         }
 
+        public OverlayTimerTrainItemViewModel(OverlayTimerTrainItemModel item)
+            : this()
+        {
+            this.minimumSecondsToShow = item.MinimumSecondsToShow;
+            this.size = item.TextSize;
+            this.Font = item.TextFont;
+
+            this.Color = item.TextColor;
+            this.Color = ColorSchemes.GetColorName(this.Color);
+
+            this.followBonus = item.FollowBonus;
+            this.hostBonus = item.HostBonus;
+            this.subBonus = item.SubscriberBonus;
+            this.donationBonus = item.DonationBonus;
+            this.sparkBonus = item.SparkBonus;
+            this.emberBonus = item.EmberBonus;
+
+            this.HTML = item.HTML;
+        }
+
         public override OverlayItemBase GetItem()
         {
             if (!string.IsNullOrEmpty(this.Font) && !string.IsNullOrEmpty(this.Color) && !string.IsNullOrEmpty(this.HTML) && this.size > 0 && this.minimumSecondsToShow > 0)
@@ -155,6 +175,18 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
                 this.Color = ColorSchemes.GetColorCode(this.Color);
 
                 return new OverlayTimerTrain(this.HTML, this.minimumSecondsToShow, this.Color, this.Font, this.size, this.followBonus, this.hostBonus,
+                    this.subBonus, this.donationBonus, this.sparkBonus, this.emberBonus);
+            }
+            return null;
+        }
+
+        public override OverlayItemModelBase GetOverlayItem()
+        {
+            if (!string.IsNullOrEmpty(this.Font) && !string.IsNullOrEmpty(this.Color) && !string.IsNullOrEmpty(this.HTML) && this.size > 0 && this.minimumSecondsToShow > 0)
+            {
+                this.Color = ColorSchemes.GetColorCode(this.Color);
+
+                return new OverlayTimerTrainItemModel(this.HTML, this.minimumSecondsToShow, this.Color, this.Font, this.size, this.followBonus, this.hostBonus,
                     this.subBonus, this.donationBonus, this.sparkBonus, this.emberBonus);
             }
             return null;

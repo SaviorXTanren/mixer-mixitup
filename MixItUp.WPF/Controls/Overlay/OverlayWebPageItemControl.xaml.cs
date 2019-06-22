@@ -25,6 +25,13 @@ namespace MixItUp.WPF.Controls.Overlay
             this.viewModel = new OverlayWebPageItemViewModel(item);
         }
 
+        public OverlayWebPageItemControl(OverlayWebPageItemModel item)
+        {
+            InitializeComponent();
+
+            this.viewModel = new OverlayWebPageItemViewModel(item);
+        }
+
         public override void SetItem(OverlayItemBase item)
         {
             if (item != null)

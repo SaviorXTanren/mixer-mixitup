@@ -155,6 +155,13 @@ namespace MixItUp.Overlay
             await this.SendPacket("Show", jobj);
         }
 
+
+        public async Task UpdateItem(OverlayItemModelBase item, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        {
+            JObject jobj = await item.GetProcessedItem(user, arguments, extraSpecialIdentifiers);
+            await this.SendPacket("Update", jobj);
+        }
+
         public async Task HideItem(OverlayItemModelBase item)
         {
             await this.SendPacket("Hide", JObject.FromObject(item));

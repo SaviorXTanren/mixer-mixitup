@@ -393,15 +393,15 @@ namespace MixItUp.Desktop.Services
                 DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
                 await ChannelSession.Services.Settings.Initialize(settings);
 
-                foreach (OverlayWidget widget in settings.OverlayWidgets.ToList())
-                {
 #pragma warning disable CS0612 // Type or member is obsolete
+                foreach (OverlayWidget widget in settings.overlayWidgetsInternal.ToList())
+                {
                     if (widget.Item is OverlayGameStats)
-#pragma warning restore CS0612 // Type or member is obsolete
                     {
-                        settings.OverlayWidgets.Remove(widget);
+                        settings.overlayWidgetsInternal.Remove(widget);
                     }
                 }
+#pragma warning restore CS0612 // Type or member is obsolete
 
                 await ChannelSession.Services.Settings.Save(settings);
             }
@@ -484,7 +484,7 @@ namespace MixItUp.Desktop.Services
                 commands.Add(inventory.ItemsSoldCommand);
             }
 
-            foreach (OverlayWidget widget in settings.OverlayWidgets)
+            foreach (OverlayWidget widget in settings.overlayWidgetsInternal)
             {
                 if (widget.Item is OverlayStreamBoss)
                 {

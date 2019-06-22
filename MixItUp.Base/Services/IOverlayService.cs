@@ -39,6 +39,7 @@ namespace MixItUp.Base.Services
         Task EndBatching();
 
         Task ShowItem(OverlayItemModelBase item, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers);
+        Task UpdateItem(OverlayItemModelBase item, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers);
         Task HideItem(OverlayItemModelBase item);
 
         Task SendTextToSpeech(OverlayTextToSpeech textToSpeech);

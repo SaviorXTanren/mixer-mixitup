@@ -50,7 +50,7 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
 
-                                    <Button x:Name="PlayButton" Grid.Column="0" Click="PlayButton_Click" Width="40" HorizontalAlignment="Center" Visibility="{Binding SupportsTestButton, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Hidden}" ToolTip="Test Command">
+                                    <Button x:Name="PlayButton" Grid.Column="0" Click="PlayButton_Click" Width="40" HorizontalAlignment="Center" Visibility="{Binding SupportsTestData, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Hidden}" ToolTip="Test Command">
                                         <MaterialDesign:PackIcon Kind="Play" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                     </Button>
 

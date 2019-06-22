@@ -204,6 +204,9 @@ namespace MixItUp.Base
         string SettingsBackupLocation { get; set; }
         SettingsBackupRateEnum SettingsBackupRate { get; set; }
         DateTimeOffset SettingsLastBackup { get; set; }
+
+        [Obsolete]
+        List<OverlayWidget> overlayWidgetsInternal { get; set; }
     }
 
     public interface IChannelSettings : ISavableChannelSettings
@@ -228,7 +231,7 @@ namespace MixItUp.Base
         LockedList<RemoteProfileModel> RemoteProfiles { get; }
         LockedDictionary<Guid, RemoteProfileBoardsModel> RemoteProfileBoards { get; }
 
-        LockedList<OverlayWidget> OverlayWidgets { get; set; }
+        LockedList<OverlayWidgetModel> OverlayWidgets { get; set; }
 
         LockedList<string> FilteredWords { get; }
         LockedList<string> BannedWords { get; }

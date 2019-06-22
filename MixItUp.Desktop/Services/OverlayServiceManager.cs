@@ -124,7 +124,7 @@ namespace MixItUp.Desktop.Services
                     if (overlay != null)
                     {
                         overlay.StartBatching();
-                        foreach (OverlayWidget widget in widgetGroup)
+                        foreach (OverlayWidgetModel widget in widgetGroup)
                         {
                             try
                             {
@@ -139,11 +139,7 @@ namespace MixItUp.Desktop.Services
 
                                     if (!isInitialized || !widget.DontRefresh)
                                     {
-                                        OverlayItemBase item = await widget.Item.GetProcessedItem(user, new List<string>(), new Dictionary<string, string>());
-                                        if (item != null)
-                                        {
-                                            await overlay.SendItem(item, widget.Position, new OverlayItemEffects());
-                                        }
+                                        await widget.ShowItem(user, new List<string>(), new Dictionary<string, string>());
                                     }
                                 }
                                 else

@@ -28,8 +28,8 @@ namespace MixItUp.Base.Model.Overlay
         GameQueue,
         [Name("Chat Messages")]
         ChatMessages,
-        [Name("Mixer Clip Playback")]
-        MixerClip,
+        [Name("Stream Clip Playback")]
+        StreamClip,
         Leaderboard,
         Timer,
         [Name("Timer Train")]
@@ -243,6 +243,8 @@ namespace MixItUp.Base.Model.Overlay
         [JsonIgnore]
         public bool IsInitialized { get; private set; }
 
+        public event EventHandler OnSendUpdateRequired = delegate { };
+
         public OverlayItemModelBase()
         {
             this.ID = Guid.NewGuid();
@@ -276,13 +278,8 @@ namespace MixItUp.Base.Model.Overlay
 
         public virtual async Task<JObject> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, bool encode = false)
         {
-            return await this.BuildOverlayPacket(user, arguments, extraSpecialIdentifiers, encode);
-        }
-
-        public virtual async Task<JObject> BuildOverlayPacket(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, bool encode = false)
-        {
             JObject jobj = JObject.FromObject(this);
-            foreach (string key in jobj.Properties().Select(p => p.Name).ToList())
+            foreach (string key in jobj.GetKeys())
             {
                 if (jobj[key].Type == JTokenType.String)
                 {
@@ -305,6 +302,8 @@ namespace MixItUp.Base.Model.Overlay
             await siString.ReplaceCommonSpecialModifiers(user, arguments);
             return siString.ToString();
         }
+
+        protected void SendUpdateRequired() { this.OnSendUpdateRequired(this, new EventArgs()); }
     }
 
     [DataContract]

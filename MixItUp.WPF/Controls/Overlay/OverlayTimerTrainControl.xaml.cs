@@ -19,11 +19,17 @@ namespace MixItUp.WPF.Controls.Overlay
             this.viewModel = new OverlayTimerTrainItemViewModel();
         }
 
-        public OverlayTimerTrainControl(OverlayTimerTrain item)
+        public override void SetOverlayItem(OverlayItemModelBase item)
         {
-            InitializeComponent();
+            if (item != null)
+            {
+                this.viewModel = new OverlayTimerTrainItemViewModel((OverlayTimerTrainItemModel)item);
+            }
+        }
 
-            this.viewModel = new OverlayTimerTrainItemViewModel(item);
+        public override OverlayItemModelBase GetOverlayItem()
+        {
+            return this.viewModel.GetOverlayItem();
         }
 
         public override void SetItem(OverlayItemBase item)

@@ -30,6 +30,13 @@ namespace MixItUp.WPF.Controls.Overlay
             this.viewModel = new OverlayTimerItemViewModel(item);
         }
 
+        public OverlayTimerControl(OverlayTimerItemModel item)
+        {
+            InitializeComponent();
+
+            this.viewModel = new OverlayTimerItemViewModel(item);
+        }
+
         public override void SetItem(OverlayItemBase item)
         {
             if (item != null)
@@ -41,6 +48,19 @@ namespace MixItUp.WPF.Controls.Overlay
         public override OverlayItemBase GetItem()
         {
             return this.viewModel.GetItem();
+        }
+
+        public override void SetOverlayItem(OverlayItemModelBase item)
+        {
+            if (item != null)
+            {
+                this.viewModel = new OverlayTimerItemViewModel((OverlayTimerItemModel)item);
+            }
+        }
+
+        public override OverlayItemModelBase GetOverlayItem()
+        {
+            return this.viewModel.GetOverlayItem();
         }
 
         protected override async Task OnLoaded()

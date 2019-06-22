@@ -25,6 +25,13 @@ namespace MixItUp.WPF.Controls.Overlay
             this.viewModel = new OverlayImageItemViewModel(item);
         }
 
+        public OverlayImageItemControl(OverlayImageItemModel item)
+        {
+            InitializeComponent();
+
+            this.viewModel = new OverlayImageItemViewModel(item);
+        }
+
         public override void SetItem(OverlayItemBase item)
         {
             if (item != null)

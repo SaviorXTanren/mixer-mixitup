@@ -388,7 +388,10 @@ namespace MixItUp.Desktop
         protected List<UserQuoteViewModel> userQuotesInternal { get; set; }
 
         [JsonProperty]
-        protected List<OverlayWidget> overlayWidgetsInternal { get; set; }
+        [Obsolete]
+        public List<OverlayWidget> overlayWidgetsInternal { get; set; }
+        [JsonProperty]
+        protected List<OverlayWidgetModel> overlayWidgetModelsInternal { get; set; }
 
         [JsonProperty]
         protected List<RemoteProfileModel> remoteProfilesInternal { get; set; }
@@ -432,11 +435,12 @@ namespace MixItUp.Desktop
             this.userQuotesInternal = new List<UserQuoteViewModel>();
             this.remoteProfilesInternal = new List<RemoteProfileModel>();
             this.remoteProfileBoardsInternal = new Dictionary<Guid, RemoteProfileBoardsModel>();
-            this.overlayWidgetsInternal = new List<OverlayWidget>();
+            this.overlayWidgetModelsInternal = new List<OverlayWidgetModel>();
             this.filteredWordsInternal = new List<string>();
             this.bannedWordsInternal = new List<string>();
             this.interactiveUserGroupsInternal = new Dictionary<uint, List<InteractiveUserGroupViewModel>>();
 #pragma warning disable CS0612 // Type or member is obsolete
+            this.overlayWidgetsInternal = new List<OverlayWidget>();
             this.interactiveCooldownGroupsInternal = new Dictionary<string, int>();
 #pragma warning restore CS0612 // Type or member is obsolete
         }
@@ -477,7 +481,7 @@ namespace MixItUp.Desktop
         public LockedList<UserQuoteViewModel> UserQuotes { get; set; }
 
         [JsonIgnore]
-        public LockedList<OverlayWidget> OverlayWidgets { get; set; }
+        public LockedList<OverlayWidgetModel> OverlayWidgets { get; set; }
 
         [JsonIgnore]
         public LockedList<RemoteProfileModel> RemoteProfiles { get; set; }
@@ -541,7 +545,7 @@ namespace MixItUp.Desktop
             this.GameCommands = new LockedList<GameCommandBase>();
             this.UserQuotes = new LockedList<UserQuoteViewModel>();
             this.RemoteProfiles = new LockedList<RemoteProfileModel>();
-            this.OverlayWidgets = new LockedList<OverlayWidget>();
+            this.OverlayWidgets = new LockedList<OverlayWidgetModel>();
             this.FilteredWords = new LockedList<string>();
             this.BannedWords = new LockedList<string>();
             this.CommunityFilteredWords = new LockedList<string>();
@@ -563,7 +567,7 @@ namespace MixItUp.Desktop
             this.UserQuotes = new LockedList<UserQuoteViewModel>(this.userQuotesInternal);
             this.RemoteProfiles = new LockedList<RemoteProfileModel>(this.remoteProfilesInternal);
             this.RemoteProfileBoards = new LockedDictionary<Guid, RemoteProfileBoardsModel>(this.remoteProfileBoardsInternal);
-            this.OverlayWidgets = new LockedList<OverlayWidget>(this.overlayWidgetsInternal);
+            this.OverlayWidgets = new LockedList<OverlayWidgetModel>(this.overlayWidgetModelsInternal);
             this.FilteredWords = new LockedList<string>(this.filteredWordsInternal);
             this.BannedWords = new LockedList<string>(this.bannedWordsInternal);
             this.InteractiveUserGroups = new LockedDictionary<uint, List<InteractiveUserGroupViewModel>>(this.interactiveUserGroupsInternal);
@@ -672,7 +676,7 @@ namespace MixItUp.Desktop
             this.userQuotesInternal = this.UserQuotes.ToList();
             this.remoteProfilesInternal = this.RemoteProfiles.ToList();
             this.remoteProfileBoardsInternal = this.RemoteProfileBoards.ToDictionary();
-            this.overlayWidgetsInternal = this.OverlayWidgets.ToList();
+            this.overlayWidgetModelsInternal = this.OverlayWidgets.ToList();
             this.filteredWordsInternal = this.FilteredWords.ToList();
             this.bannedWordsInternal = this.BannedWords.ToList();
             this.interactiveUserGroupsInternal = this.InteractiveUserGroups.ToDictionary();
