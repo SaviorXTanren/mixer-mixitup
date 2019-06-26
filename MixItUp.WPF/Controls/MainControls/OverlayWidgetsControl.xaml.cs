@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.Overlay;
-using MixItUp.Base.Services;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Overlay;
 using System.Collections.ObjectModel;
@@ -138,7 +137,7 @@ namespace MixItUp.WPF.Controls.MainControls
         private void EnableDisableToggleSwitch_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             ToggleButton button = (ToggleButton)sender;
-            OverlayWidget widget = (OverlayWidget)button.DataContext;
+            OverlayWidgetModel widget = (OverlayWidgetModel)button.DataContext;
             if (widget != null && widget.IsEnabled)
             {
                 button.IsChecked = true;

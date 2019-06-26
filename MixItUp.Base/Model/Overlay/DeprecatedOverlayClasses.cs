@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
 {
+    [Obsolete]
     [DataContract]
     public class OverlayChatMessage
     {
@@ -32,6 +33,7 @@ namespace MixItUp.Base.Model.Overlay
         public string Message { get; set; }
     }
 
+    [Obsolete]
     [DataContract]
     public class OverlayChatMessages : OverlayCustomHTMLItem
     {
@@ -285,6 +287,7 @@ namespace MixItUp.Base.Model.Overlay
         }
     }
 
+    [Obsolete]
     [DataContract]
     public class OverlayCustomHTMLItem : OverlayItemBase
     {
@@ -327,6 +330,7 @@ namespace MixItUp.Base.Model.Overlay
         }
     }
 
+    [Obsolete]
     public enum EventListItemTypeEnum
     {
         Followers,
@@ -338,6 +342,7 @@ namespace MixItUp.Base.Model.Overlay
         Embers,
     }
 
+    [Obsolete]
     [DataContract]
     public class OverlayEventListItem
     {
@@ -355,6 +360,7 @@ namespace MixItUp.Base.Model.Overlay
         }
     }
 
+    [Obsolete]
     [DataContract]
     public class OverlayEventList : OverlayCustomHTMLItem
     {
@@ -577,6 +583,7 @@ namespace MixItUp.Base.Model.Overlay
         private void GlobalEvents_OnPatronageMilestoneReachedOccurred(object sender, PatronageMilestoneModel patronageMilestone) { this.AddEvent(string.Format("{0} Milestone", patronageMilestone.DollarAmountText()), string.Format("{0} Sparks", patronageMilestone.target)); }
     }
 
+    [Obsolete]
     [DataContract]
     public class OverlayGameQueueItem
     {
@@ -584,6 +591,7 @@ namespace MixItUp.Base.Model.Overlay
         public string HTMLText { get; set; }
     }
 
+    [Obsolete]
     [DataContract]
     public class OverlayGameQueue : OverlayCustomHTMLItem
     {
@@ -724,6 +732,7 @@ namespace MixItUp.Base.Model.Overlay
         }
     }
 
+    [Obsolete]
     [DataContract]
     public class OverlayHTMLItem : OverlayItemBase
     {
@@ -748,6 +757,7 @@ namespace MixItUp.Base.Model.Overlay
         }
     }
 
+    [Obsolete]
     [DataContract]
     public class OverlayImageItem : OverlayItemBase
     {
@@ -800,6 +810,7 @@ namespace MixItUp.Base.Model.Overlay
         }
     }
 
+    [Obsolete]
     [DataContract]
     public abstract class OverlayItemBase
     {
@@ -859,6 +870,7 @@ namespace MixItUp.Base.Model.Overlay
         }
     }
 
+    [Obsolete]
     public enum OverlayEffectEntranceAnimationTypeEnum
     {
         None,
@@ -940,6 +952,7 @@ namespace MixItUp.Base.Model.Overlay
         Random,
     }
 
+    [Obsolete]
     public enum OverlayEffectVisibleAnimationTypeEnum
     {
         None,
@@ -959,6 +972,7 @@ namespace MixItUp.Base.Model.Overlay
         Random,
     }
 
+    [Obsolete]
     public enum OverlayEffectExitAnimationTypeEnum
     {
         None,
@@ -1039,6 +1053,7 @@ namespace MixItUp.Base.Model.Overlay
         Random,
     }
 
+    [Obsolete]
     [DataContract]
     public class OverlayItemEffects
     {
@@ -1092,12 +1107,14 @@ namespace MixItUp.Base.Model.Overlay
         }
     }
 
+    [Obsolete]
     public enum OverlayEffectPositionType
     {
         Percentage,
         Pixel,
     }
 
+    [Obsolete]
     public class OverlayItemPosition
     {
         [DataMember]
@@ -1122,6 +1139,7 @@ namespace MixItUp.Base.Model.Overlay
         }
     }
 
+    [Obsolete]
     public enum LeaderboardTypeEnum
     {
         Subscribers,
@@ -1132,6 +1150,7 @@ namespace MixItUp.Base.Model.Overlay
         Embers,
     }
 
+    [Obsolete]
     public enum LeaderboardSparksEmbersDateEnum
     {
         Weekly,
@@ -1141,6 +1160,7 @@ namespace MixItUp.Base.Model.Overlay
         AllTime,
     }
 
+    [Obsolete]
     [DataContract]
     public class OverlayLeaderboard : OverlayCustomHTMLItem
     {
@@ -1469,6 +1489,7 @@ namespace MixItUp.Base.Model.Overlay
         }
     }
 
+    [Obsolete]
     [DataContract]
     public class OverlayMixerClip : OverlayItemBase
     {
@@ -1561,6 +1582,7 @@ namespace MixItUp.Base.Model.Overlay
         private void GlobalEvents_OnMixerClipCreated(object sender, ClipModel clip) { this.lastClip = clip; }
     }
 
+    [Obsolete]
     public enum ProgressBarTypeEnum
     {
         Followers,
@@ -1572,6 +1594,7 @@ namespace MixItUp.Base.Model.Overlay
         Embers,
     }
 
+    [Obsolete]
     [DataContract]
     public class OverlayProgressBar : OverlayCustomHTMLItem
     {
@@ -1829,6 +1852,7 @@ namespace MixItUp.Base.Model.Overlay
         private void GlobalEvents_OnPatronageMilestoneReachedOccurred(object sender, PatronageMilestoneModel patronageMilestone) { this.refreshMilestone = true; }
     }
 
+    [Obsolete]
     [DataContract]
     public class OverlaySongRequestItem
     {
@@ -1836,6 +1860,7 @@ namespace MixItUp.Base.Model.Overlay
         public string HTMLText { get; set; }
     }
 
+    [Obsolete]
     [DataContract]
     public class OverlaySongRequests : OverlayCustomHTMLItem
     {
@@ -2005,6 +2030,7 @@ namespace MixItUp.Base.Model.Overlay
         private void GlobalEvents_OnSongRequestsChangedOccurred(object sender, System.EventArgs e) { this.songRequestsUpdated = true; }
     }
 
+    [Obsolete]
     [DataContract]
     public class OverlayStreamBoss : OverlayCustomHTMLItem
     {
@@ -2310,6 +2336,7 @@ namespace MixItUp.Base.Model.Overlay
         private async void GlobalEvents_OnEmberUseOccurred(object sender, UserEmberUsageModel emberUsage) { await this.ReduceHealth(emberUsage.User, (emberUsage.Amount * this.EmberBonus)); }
     }
 
+    [Obsolete]
     [DataContract]
     public class OverlayTextItem : OverlayItemBase
     {
@@ -2355,6 +2382,7 @@ namespace MixItUp.Base.Model.Overlay
         }
     }
 
+    [Obsolete]
     [DataContract]
     public class OverlayTimer : OverlayCustomHTMLItem, IDisposable
     {
@@ -2483,6 +2511,7 @@ namespace MixItUp.Base.Model.Overlay
         #endregion
     }
 
+    [Obsolete]
     [DataContract]
     public class OverlayTimerTrain : OverlayCustomHTMLItem
     {
@@ -2653,6 +2682,7 @@ namespace MixItUp.Base.Model.Overlay
         private void GlobalEvents_OnEmberUseOccurred(object sender, UserEmberUsageModel emberUsage) { this.SecondsToAdd += (emberUsage.Amount * this.EmberBonus); }
     }
 
+    [Obsolete]
     [DataContract]
     public class OverlayVideoItem : OverlayItemBase
     {
@@ -2714,6 +2744,7 @@ namespace MixItUp.Base.Model.Overlay
         }
     }
 
+    [Obsolete]
     [DataContract]
     public class OverlayWebPageItem : OverlayItemBase
     {
@@ -2744,6 +2775,7 @@ namespace MixItUp.Base.Model.Overlay
         }
     }
 
+    [Obsolete]
     [DataContract]
     public class OverlayYouTubeItem : OverlayItemBase
     {
@@ -2780,6 +2812,7 @@ namespace MixItUp.Base.Model.Overlay
         }
     }
 
+    [Obsolete]
     [DataContract]
     public class OverlayWidget
     {
