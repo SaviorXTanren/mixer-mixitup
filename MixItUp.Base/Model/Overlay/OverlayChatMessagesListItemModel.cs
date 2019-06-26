@@ -125,7 +125,7 @@ namespace MixItUp.Base.Model.Overlay
                 }
                 else
                 {
-                    StringBuilder messageTextBuilder = new StringBuilder();
+                    text = message.Message;
                     foreach (ChatMessageDataModel messageData in message.MessageComponents)
                     {
                         EmoticonImage emoticon = ChannelSession.GetEmoticonForMessage(messageData);
@@ -135,14 +135,9 @@ namespace MixItUp.Base.Model.Overlay
                             emoticonText = emoticonText.Replace("{EMOTICON}", emoticon.Uri);
                             emoticonText = emoticonText.Replace("{EMOTICON_X}", (-emoticon.X).ToString());
                             emoticonText = emoticonText.Replace("{EMOTICON_Y}", (-emoticon.Y).ToString());
-                            messageTextBuilder.Append(emoticonText + " ");
-                        }
-                        else
-                        {
-                            messageTextBuilder.Append(messageData.text + " ");
+                            text = text.Replace(messageData.text, emoticonText);
                         }
                     }
-                    text = messageTextBuilder.ToString().Trim();
                 }
 
                 this.MessagesToAdd.Add(new OverlayChatMessageItemModel(message.ID, message.User, image, text));
