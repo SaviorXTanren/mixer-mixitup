@@ -82,7 +82,7 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayChatMessagesListItemModel() : base() { }
 
         public OverlayChatMessagesListItemModel(string htmlText, int totalToShow, string textFont, int width, int height,
-            string borderColor, string backgroundColor, string textColor, OverlayEffectEntranceAnimationTypeEnum addEventAnimation, OverlayEffectExitAnimationTypeEnum removeEventAnimation)
+            string borderColor, string backgroundColor, string textColor, OverlayItemEffectEntranceAnimationTypeEnum addEventAnimation, OverlayItemEffectExitAnimationTypeEnum removeEventAnimation)
             : base(OverlayItemModelTypeEnum.ChatMessages, htmlText, totalToShow, textFont, width, height, borderColor, backgroundColor, textColor, addEventAnimation, removeEventAnimation)
         { }
 

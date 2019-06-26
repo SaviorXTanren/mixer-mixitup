@@ -52,6 +52,8 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
+        public async Task ShowItem() { await this.ShowItem(await ChannelSession.GetCurrentUser(), new List<string>(), new Dictionary<string, string>()); }
+
         public async Task ShowItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             IOverlayService overlay = this.GetOverlay();
@@ -61,12 +63,14 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        public async Task UpdateItem()
+        public async Task UpdateItem() { await this.UpdateItem(await ChannelSession.GetCurrentUser(), new List<string>(), new Dictionary<string, string>()); }
+
+        public async Task UpdateItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             IOverlayService overlay = this.GetOverlay();
             if (overlay != null)
             {
-                await overlay.UpdateItem(this.Item, await ChannelSession.GetCurrentUser(), new List<string>(), new Dictionary<string, string>());
+                await overlay.UpdateItem(this.Item, user, arguments, extraSpecialIdentifiers);
             }
         }
 

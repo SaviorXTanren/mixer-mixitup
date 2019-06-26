@@ -262,6 +262,9 @@ namespace MixItUp.Base.Model.Overlay
         [JsonIgnore]
         public virtual bool SupportsTestData { get { return false; } }
 
+        [JsonIgnore]
+        public virtual bool SupportsRefreshUpdating { get { return false; } }
+
         public virtual Task LoadTestData() { return Task.FromResult(0); }
 
         public virtual Task Initialize()

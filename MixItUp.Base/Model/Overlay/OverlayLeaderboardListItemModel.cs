@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
 {
-    public enum LeaderboardListItemTypeEnum
+    public enum OverlayLeaderboardListItemTypeEnum
     {
         Subscribers,
         Donations,
@@ -22,7 +22,7 @@ namespace MixItUp.Base.Model.Overlay
         Embers,
     }
 
-    public enum LeaderboardListItemDateRangeEnum
+    public enum OverlayLeaderboardListItemDateRangeEnum
     {
         Weekly,
         Monthly,
@@ -59,10 +59,10 @@ namespace MixItUp.Base.Model.Overlay
         </div>";
 
         [DataMember]
-        public LeaderboardListItemTypeEnum LeaderboardType { get; set; }
+        public OverlayLeaderboardListItemTypeEnum LeaderboardType { get; set; }
 
         [DataMember]
-        public LeaderboardListItemDateRangeEnum LeaderboardDateRange { get; set; }
+        public OverlayLeaderboardListItemDateRangeEnum LeaderboardDateRange { get; set; }
 
         [DataMember]
         public Guid CurrencyID { get; set; }
@@ -75,22 +75,22 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayLeaderboardListItemModel() : base() { }
 
-        public OverlayLeaderboardListItemModel(string htmlText, LeaderboardListItemTypeEnum leaderboardType, int totalToShow, string borderColor, string backgroundColor, string textColor,
-            string textFont, int width, int height, OverlayEffectEntranceAnimationTypeEnum addEventAnimation, OverlayEffectExitAnimationTypeEnum removeEventAnimation, UserCurrencyViewModel currency)
+        public OverlayLeaderboardListItemModel(string htmlText, OverlayLeaderboardListItemTypeEnum leaderboardType, int totalToShow, string borderColor, string backgroundColor, string textColor,
+            string textFont, int width, int height, OverlayItemEffectEntranceAnimationTypeEnum addEventAnimation, OverlayItemEffectExitAnimationTypeEnum removeEventAnimation, UserCurrencyViewModel currency)
             : this(htmlText, leaderboardType, totalToShow, textFont, width, height, borderColor, backgroundColor, textColor, addEventAnimation, removeEventAnimation)
         {
             this.CurrencyID = currency.ID;
         }
 
-        public OverlayLeaderboardListItemModel(string htmlText, LeaderboardListItemTypeEnum leaderboardType, int totalToShow, string borderColor, string backgroundColor, string textColor,
-            string textFont, int width, int height, OverlayEffectEntranceAnimationTypeEnum addEventAnimation, OverlayEffectExitAnimationTypeEnum removeEventAnimation, LeaderboardListItemDateRangeEnum dateRange)
+        public OverlayLeaderboardListItemModel(string htmlText, OverlayLeaderboardListItemTypeEnum leaderboardType, int totalToShow, string borderColor, string backgroundColor, string textColor,
+            string textFont, int width, int height, OverlayItemEffectEntranceAnimationTypeEnum addEventAnimation, OverlayItemEffectExitAnimationTypeEnum removeEventAnimation, OverlayLeaderboardListItemDateRangeEnum dateRange)
             : this(htmlText, leaderboardType, totalToShow, textFont, width, height, borderColor, backgroundColor, textColor, addEventAnimation, removeEventAnimation)
         {
             this.LeaderboardDateRange = dateRange;
         }
 
-        public OverlayLeaderboardListItemModel(string htmlText, LeaderboardListItemTypeEnum leaderboardType, int totalToShow, string textFont, int width, int height,
-            string borderColor, string backgroundColor, string textColor, OverlayEffectEntranceAnimationTypeEnum addEventAnimation, OverlayEffectExitAnimationTypeEnum removeEventAnimation)
+        public OverlayLeaderboardListItemModel(string htmlText, OverlayLeaderboardListItemTypeEnum leaderboardType, int totalToShow, string textFont, int width, int height,
+            string borderColor, string backgroundColor, string textColor, OverlayItemEffectEntranceAnimationTypeEnum addEventAnimation, OverlayItemEffectExitAnimationTypeEnum removeEventAnimation)
             : base(OverlayItemModelTypeEnum.Leaderboard, htmlText, totalToShow, textFont, width, height, borderColor, backgroundColor, textColor, addEventAnimation, removeEventAnimation)
         {
             this.LeaderboardType = leaderboardType;
@@ -113,7 +113,7 @@ namespace MixItUp.Base.Model.Overlay
             GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
             GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
 
-            if (this.LeaderboardType == LeaderboardListItemTypeEnum.Subscribers)
+            if (this.LeaderboardType == OverlayLeaderboardListItemTypeEnum.Subscribers)
             {
                 foreach (UserWithGroupsModel userWithGroups in await ChannelSession.Connection.GetUsersWithRoles(ChannelSession.Channel, MixerRoleEnum.Subscriber))
                 {
@@ -127,7 +127,7 @@ namespace MixItUp.Base.Model.Overlay
                 GlobalEvents.OnSubscribeOccurred += GlobalEvents_OnSubscribeOccurred;
                 GlobalEvents.OnResubscribeOccurred += GlobalEvents_OnResubscribeOccurred;
             }
-            else if (this.LeaderboardType == LeaderboardListItemTypeEnum.Donations)
+            else if (this.LeaderboardType == OverlayLeaderboardListItemTypeEnum.Donations)
             {
                 GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
             }
@@ -161,7 +161,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             this.LeaderboardItems.Clear();
 
-            if (this.LeaderboardType == LeaderboardListItemTypeEnum.Subscribers)
+            if (this.LeaderboardType == OverlayLeaderboardListItemTypeEnum.Subscribers)
             {
                 var orderedUsers = userSubDates.OrderByDescending(kvp => kvp.Value.TotalDaysFromNow());
                 for (int i = 0; i < this.TotalToShow && i < orderedUsers.Count(); i++)
@@ -169,7 +169,7 @@ namespace MixItUp.Base.Model.Overlay
                     this.LeaderboardItems.Add(new OverlayLeaderboardItemModel(orderedUsers.ElementAt(i).Key.UserName, orderedUsers.ElementAt(i).Value.GetAge()));
                 }
             }
-            else if (this.LeaderboardType == LeaderboardListItemTypeEnum.Donations)
+            else if (this.LeaderboardType == OverlayLeaderboardListItemTypeEnum.Donations)
             {
                 var orderedUsers = this.userDonations.OrderByDescending(kvp => kvp.Value.Amount);
                 for (int i = 0; i < this.TotalToShow && i < orderedUsers.Count(); i++)
@@ -177,7 +177,7 @@ namespace MixItUp.Base.Model.Overlay
                     this.LeaderboardItems.Add(new OverlayLeaderboardItemModel(orderedUsers.ElementAt(i).Key, orderedUsers.ElementAt(i).Value.AmountText));
                 }
             }
-            else if (this.LeaderboardType == LeaderboardListItemTypeEnum.CurrencyRank)
+            else if (this.LeaderboardType == OverlayLeaderboardListItemTypeEnum.CurrencyRank)
             {
                 if (ChannelSession.Settings.Currencies.ContainsKey(this.CurrencyID))
                 {
@@ -200,21 +200,21 @@ namespace MixItUp.Base.Model.Overlay
                     }
                 }
             }
-            else if (this.LeaderboardType == LeaderboardListItemTypeEnum.Sparks)
+            else if (this.LeaderboardType == OverlayLeaderboardListItemTypeEnum.Sparks)
             {
                 IEnumerable<SparksLeaderboardModel> leaderboard = null;
                 switch (this.LeaderboardDateRange)
                 {
-                    case LeaderboardListItemDateRangeEnum.Weekly:
+                    case OverlayLeaderboardListItemDateRangeEnum.Weekly:
                         leaderboard = await ChannelSession.Connection.GetWeeklySparksLeaderboard(ChannelSession.Channel, this.TotalToShow);
                         break;
-                    case LeaderboardListItemDateRangeEnum.Monthly:
+                    case OverlayLeaderboardListItemDateRangeEnum.Monthly:
                         leaderboard = await ChannelSession.Connection.GetMonthlySparksLeaderboard(ChannelSession.Channel, this.TotalToShow);
                         break;
-                    case LeaderboardListItemDateRangeEnum.Yearly:
+                    case OverlayLeaderboardListItemDateRangeEnum.Yearly:
                         leaderboard = await ChannelSession.Connection.GetYearlySparksLeaderboard(ChannelSession.Channel, this.TotalToShow);
                         break;
-                    case LeaderboardListItemDateRangeEnum.AllTime:
+                    case OverlayLeaderboardListItemDateRangeEnum.AllTime:
                         leaderboard = await ChannelSession.Connection.GetAllTimeSparksLeaderboard(ChannelSession.Channel, this.TotalToShow);
                         break;
                 }
@@ -228,21 +228,21 @@ namespace MixItUp.Base.Model.Overlay
                     }
                 }
             }
-            else if (this.LeaderboardType == LeaderboardListItemTypeEnum.Embers)
+            else if (this.LeaderboardType == OverlayLeaderboardListItemTypeEnum.Embers)
             {
                 IEnumerable<EmbersLeaderboardModel> leaderboard = null;
                 switch (this.LeaderboardDateRange)
                 {
-                    case LeaderboardListItemDateRangeEnum.Weekly:
+                    case OverlayLeaderboardListItemDateRangeEnum.Weekly:
                         leaderboard = await ChannelSession.Connection.GetWeeklyEmbersLeaderboard(ChannelSession.Channel, this.TotalToShow);
                         break;
-                    case LeaderboardListItemDateRangeEnum.Monthly:
+                    case OverlayLeaderboardListItemDateRangeEnum.Monthly:
                         leaderboard = await ChannelSession.Connection.GetMonthlyEmbersLeaderboard(ChannelSession.Channel, this.TotalToShow);
                         break;
-                    case LeaderboardListItemDateRangeEnum.Yearly:
+                    case OverlayLeaderboardListItemDateRangeEnum.Yearly:
                         leaderboard = await ChannelSession.Connection.GetYearlyEmbersLeaderboard(ChannelSession.Channel, this.TotalToShow);
                         break;
-                    case LeaderboardListItemDateRangeEnum.AllTime:
+                    case OverlayLeaderboardListItemDateRangeEnum.AllTime:
                         leaderboard = await ChannelSession.Connection.GetAllTimeEmbersLeaderboard(ChannelSession.Channel, this.TotalToShow);
                         break;
                 }

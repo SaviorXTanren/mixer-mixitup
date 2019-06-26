@@ -59,6 +59,8 @@ namespace MixItUp.Overlay
         public string HttpListenerServerAddress { get { return string.Format(OverlayService.IsElevated ? AdministratorOverlayHttpListenerServerAddressFormat : RegularOverlayHttpListenerServerAddressFormat, this.Port); } }
         public string WebSocketServerAddress { get { return string.Format(OverlayService.IsElevated ? AdministratorOverlayWebSocketServerAddressFormat : RegularOverlayWebSocketServerAddressFormat, this.Port); } }
 
+        public int TotalConnectedClients { get { return this.webSocketServer.TotalConnectedClients; } }
+
         private static bool IsElevated
         {
             get

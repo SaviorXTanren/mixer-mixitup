@@ -27,19 +27,10 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public int Height { get; set; }
 
-        [DataMember]
-        public OverlayEffectEntranceAnimationTypeEnum AddEventAnimation { get; set; }
-        [DataMember]
-        public string AddEventAnimationName { get { return OverlayItemEffects.GetAnimationClassName(this.AddEventAnimation); } set { } }
-        [DataMember]
-        public OverlayEffectExitAnimationTypeEnum RemoveEventAnimation { get; set; }
-        [DataMember]
-        public string RemoveEventAnimationName { get { return OverlayItemEffects.GetAnimationClassName(this.RemoveEventAnimation); } set { } }
-
         public OverlayListItemModelBase() : base() { }
 
         public OverlayListItemModelBase(OverlayItemModelTypeEnum type, string htmlText, int totalToShow, string textFont, int width, int height, string borderColor,
-            string backgroundColor, string textColor, OverlayEffectEntranceAnimationTypeEnum addEventAnimation, OverlayEffectExitAnimationTypeEnum removeEventAnimation)
+            string backgroundColor, string textColor, OverlayItemEffectEntranceAnimationTypeEnum addEventAnimation, OverlayItemEffectExitAnimationTypeEnum removeEventAnimation)
             : base(type, htmlText)
         {
             this.TotalToShow = totalToShow;
@@ -49,8 +40,7 @@ namespace MixItUp.Base.Model.Overlay
             this.BorderColor = borderColor;
             this.BackgroundColor = backgroundColor;
             this.TextColor = textColor;
-            this.AddEventAnimation = addEventAnimation;
-            this.RemoveEventAnimation = removeEventAnimation;
+            this.Effects = new OverlayItemEffectsModel(addEventAnimation, OverlayItemEffectVisibleAnimationTypeEnum.None, removeEventAnimation, 0);
         }
 
         [JsonIgnore]

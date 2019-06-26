@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using Newtonsoft.Json;
+using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.Overlay
 {
@@ -14,5 +15,8 @@ namespace MixItUp.Base.Model.Overlay
         {
             this.HTML = html;
         }
+
+        [JsonIgnore]
+        public override bool SupportsRefreshUpdating { get { return true; } }
     }
 }

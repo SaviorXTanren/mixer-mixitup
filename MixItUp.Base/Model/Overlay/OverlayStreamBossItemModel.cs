@@ -71,13 +71,13 @@ namespace MixItUp.Base.Model.Overlay
         public double EmberBonus { get; set; }
 
         [DataMember]
-        public OverlayEffectVisibleAnimationTypeEnum DamageAnimation { get; set; }
+        public OverlayItemEffectVisibleAnimationTypeEnum DamageAnimation { get; set; }
         [DataMember]
-        public string DamageAnimationName { get { return OverlayItemEffects.GetAnimationClassName(this.DamageAnimation); } set { } }
+        public string DamageAnimationName { get { return OverlayItemEffectsModel.GetAnimationClassName(this.DamageAnimation); } set { } }
         [DataMember]
-        public OverlayEffectVisibleAnimationTypeEnum NewBossAnimation { get; set; }
+        public OverlayItemEffectVisibleAnimationTypeEnum NewBossAnimation { get; set; }
         [DataMember]
-        public string NewBossAnimationName { get { return OverlayItemEffects.GetAnimationClassName(this.NewBossAnimation); } set { } }
+        public string NewBossAnimationName { get { return OverlayItemEffectsModel.GetAnimationClassName(this.NewBossAnimation); } set { } }
 
         [DataMember]
         public uint CurrentBossUserID { get; set; }
@@ -104,7 +104,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayStreamBossItemModel(string htmlText, int startingHealth, int width, int height, string textColor, string textFont, string borderColor, string backgroundColor,
             string progressColor, double followBonus, double hostBonus, double subscriberBonus, double donationBonus, double sparkBonus, double emberBonus,
-            OverlayEffectVisibleAnimationTypeEnum damageAnimation, OverlayEffectVisibleAnimationTypeEnum newBossAnimation, CustomCommand newStreamBossCommand)
+            OverlayItemEffectVisibleAnimationTypeEnum damageAnimation, OverlayItemEffectVisibleAnimationTypeEnum newBossAnimation, CustomCommand newStreamBossCommand)
             : base(OverlayItemModelTypeEnum.StreamBoss, htmlText)
         {
             this.StartingHealth = startingHealth;

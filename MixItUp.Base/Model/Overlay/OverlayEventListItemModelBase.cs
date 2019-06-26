@@ -9,6 +9,17 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
 {
+    public enum OverlayEventListItemTypeEnum
+    {
+        Followers,
+        Hosts,
+        Subscribers,
+        Donations,
+        Milestones,
+        Sparks,
+        Embers,
+    }
+
     [DataContract]
     public class OverlayEventListItemModelBase : OverlayListItemModelBase
     {
@@ -36,7 +47,7 @@ namespace MixItUp.Base.Model.Overlay
         </div>";
 
         [DataMember]
-        public List<EventListItemTypeEnum> ItemTypes { get; set; }
+        public List<OverlayEventListItemTypeEnum> ItemTypes { get; set; }
 
         [DataMember]
         public OverlayEventItemModel NewEvent { get; set; }
@@ -47,11 +58,11 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayEventListItemModelBase() : base() { }
 
-        public OverlayEventListItemModelBase(string htmlText, IEnumerable<EventListItemTypeEnum> itemTypes, int totalToShow, string textFont, int width, int height,
-            string borderColor, string backgroundColor, string textColor, OverlayEffectEntranceAnimationTypeEnum addEventAnimation, OverlayEffectExitAnimationTypeEnum removeEventAnimation)
+        public OverlayEventListItemModelBase(string htmlText, IEnumerable<OverlayEventListItemTypeEnum> itemTypes, int totalToShow, string textFont, int width, int height,
+            string borderColor, string backgroundColor, string textColor, OverlayItemEffectEntranceAnimationTypeEnum addEventAnimation, OverlayItemEffectExitAnimationTypeEnum removeEventAnimation)
             : base(OverlayItemModelTypeEnum.EventList, htmlText, totalToShow, textFont, width, height, borderColor, backgroundColor, textColor, addEventAnimation, removeEventAnimation)
         {
-            this.ItemTypes = new List<EventListItemTypeEnum>(itemTypes);
+            this.ItemTypes = new List<OverlayEventListItemTypeEnum>(itemTypes);
         }
 
         public override async Task LoadTestData()
@@ -75,32 +86,32 @@ namespace MixItUp.Base.Model.Overlay
             GlobalEvents.OnEmberUseOccurred -= GlobalEvents_OnEmberUseOccurred;
             GlobalEvents.OnPatronageMilestoneReachedOccurred -= GlobalEvents_OnPatronageMilestoneReachedOccurred;
 
-            if (this.ItemTypes.Contains(EventListItemTypeEnum.Followers))
+            if (this.ItemTypes.Contains(OverlayEventListItemTypeEnum.Followers))
             {
                 GlobalEvents.OnFollowOccurred += GlobalEvents_OnFollowOccurred;
             }
-            if (this.ItemTypes.Contains(EventListItemTypeEnum.Hosts))
+            if (this.ItemTypes.Contains(OverlayEventListItemTypeEnum.Hosts))
             {
                 GlobalEvents.OnHostOccurred += GlobalEvents_OnHostOccurred;
             }
-            if (this.ItemTypes.Contains(EventListItemTypeEnum.Subscribers))
+            if (this.ItemTypes.Contains(OverlayEventListItemTypeEnum.Subscribers))
             {
                 GlobalEvents.OnSubscribeOccurred += GlobalEvents_OnSubscribeOccurred;
                 GlobalEvents.OnResubscribeOccurred += GlobalEvents_OnResubscribeOccurred;
             }
-            if (this.ItemTypes.Contains(EventListItemTypeEnum.Donations))
+            if (this.ItemTypes.Contains(OverlayEventListItemTypeEnum.Donations))
             {
                 GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
             }
-            if (this.ItemTypes.Contains(EventListItemTypeEnum.Sparks))
+            if (this.ItemTypes.Contains(OverlayEventListItemTypeEnum.Sparks))
             {
                 GlobalEvents.OnSparkUseOccurred += GlobalEvents_OnSparkUseOccurred;
             }
-            if (this.ItemTypes.Contains(EventListItemTypeEnum.Embers))
+            if (this.ItemTypes.Contains(OverlayEventListItemTypeEnum.Embers))
             {
                 GlobalEvents.OnEmberUseOccurred += GlobalEvents_OnEmberUseOccurred;
             }
-            if (this.ItemTypes.Contains(EventListItemTypeEnum.Milestones))
+            if (this.ItemTypes.Contains(OverlayEventListItemTypeEnum.Milestones))
             {
                 GlobalEvents.OnPatronageMilestoneReachedOccurred += GlobalEvents_OnPatronageMilestoneReachedOccurred;
             }

@@ -3,6 +3,7 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -31,7 +32,7 @@ namespace MixItUp.Base.Model.Overlay
             <p style=""position: absolute; font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; color: {TEXT_COLOR}; white-space: nowrap; font-weight: bold; margin: auto; transform: translate(-50%, -50%);"">{AMOUNT} ({PERCENTAGE}%)</p>";
 
         [DataMember]
-        public ProgressBarTypeEnum ProgressBarType { get; set; }
+        public OverlayProgressBarItemTypeEnum ProgressBarType { get; set; }
 
         [DataMember]
         public double StartAmount { get; set; }
@@ -77,7 +78,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayProgressBarItemModel() : base() { }
 
-        public OverlayProgressBarItemModel(string htmlText, ProgressBarTypeEnum progressBarType, double startAmount, double goalAmount, string currentAmountCustom, string goalAmountCustom,
+        public OverlayProgressBarItemModel(string htmlText, OverlayProgressBarItemTypeEnum progressBarType, double startAmount, double goalAmount, string currentAmountCustom, string goalAmountCustom,
             int resetAfterDays, string progressColor, string backgroundColor, string textColor, string textFont, int width, int height, CustomCommand goalReachedCommand)
             : base(OverlayItemModelTypeEnum.ProgressBar, htmlText)
         {
@@ -97,6 +98,9 @@ namespace MixItUp.Base.Model.Overlay
             this.LastReset = DateTimeOffset.Now;
         }
 
+        [JsonIgnore]
+        public override bool SupportsRefreshUpdating { get { return true; } }
+
         public override async Task Initialize()
         {
             GlobalEvents.OnFollowOccurred -= GlobalEvents_OnFollowOccurred;
@@ -109,31 +113,31 @@ namespace MixItUp.Base.Model.Overlay
             GlobalEvents.OnPatronageUpdateOccurred -= GlobalEvents_OnPatronageUpdateOccurred;
             GlobalEvents.OnPatronageMilestoneReachedOccurred -= GlobalEvents_OnPatronageMilestoneReachedOccurred;
 
-            if (this.ProgressBarType == ProgressBarTypeEnum.Followers)
+            if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Followers)
             {
                 totalFollowers = (int)ChannelSession.Channel.numFollowers;
 
                 GlobalEvents.OnFollowOccurred += GlobalEvents_OnFollowOccurred;
                 GlobalEvents.OnUnfollowOccurred += GlobalEvents_OnUnfollowOccurred;
             }
-            else if (this.ProgressBarType == ProgressBarTypeEnum.Subscribers)
+            else if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Subscribers)
             {
                 GlobalEvents.OnSubscribeOccurred += GlobalEvents_OnSubscribeOccurred;
                 GlobalEvents.OnResubscribeOccurred += GlobalEvents_OnResubscribeOccurred;
             }
-            else if (this.ProgressBarType == ProgressBarTypeEnum.Donations)
+            else if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Donations)
             {
                 GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
             }
-            else if (this.ProgressBarType == ProgressBarTypeEnum.Sparks)
+            else if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Sparks)
             {
                 GlobalEvents.OnSparkUseOccurred += GlobalEvents_OnSparkUseOccurred;
             }
-            else if (this.ProgressBarType == ProgressBarTypeEnum.Embers)
+            else if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Embers)
             {
                 GlobalEvents.OnEmberUseOccurred += GlobalEvents_OnEmberUseOccurred;
             }
-            else if (this.ProgressBarType == ProgressBarTypeEnum.Milestones)
+            else if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Milestones)
             {
                 PatronageStatusModel patronageStatus = await ChannelSession.Connection.GetPatronageStatus(ChannelSession.Channel);
                 if (patronageStatus != null)
@@ -169,7 +173,7 @@ namespace MixItUp.Base.Model.Overlay
             double amount = this.CurrentAmount;
             double goal = this.GoalAmount;
 
-            if (this.ProgressBarType == ProgressBarTypeEnum.Followers)
+            if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Followers)
             {
                 amount = this.totalFollowers;
                 if (this.StartAmount >= 0)
@@ -177,7 +181,7 @@ namespace MixItUp.Base.Model.Overlay
                     amount = this.totalFollowers - this.CurrentAmount;
                 }
             }
-            else if (this.ProgressBarType == ProgressBarTypeEnum.Milestones)
+            else if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Milestones)
             {
                 if (this.refreshMilestone)
                 {
@@ -189,7 +193,7 @@ namespace MixItUp.Base.Model.Overlay
                     }
                 }
             }
-            else if (this.ProgressBarType == ProgressBarTypeEnum.Custom)
+            else if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Custom)
             {
                 string customAmount = await this.ReplaceStringWithSpecialModifiers(this.CurrentAmountCustom, user, arguments, extraSpecialIdentifiers);
                 if (double.TryParse(customAmount, out amount))

@@ -23,15 +23,6 @@ namespace MixItUp.Base.Model.Overlay
         public int Volume { get; set; }
 
         [DataMember]
-        public OverlayEffectEntranceAnimationTypeEnum EntranceAnimation { get; set; }
-        [DataMember]
-        public string EntranceAnimationName { get { return OverlayItemEffects.GetAnimationClassName(this.EntranceAnimation); } set { } }
-        [DataMember]
-        public OverlayEffectExitAnimationTypeEnum ExitAnimation { get; set; }
-        [DataMember]
-        public string ExitAnimationName { get { return OverlayItemEffects.GetAnimationClassName(this.ExitAnimation); } set { } }
-
-        [DataMember]
         public string URL { get; set; }
         [DataMember]
         public double Duration { get; set; }
@@ -40,14 +31,13 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayStreamClipItemModel() : base() { }
 
-        public OverlayStreamClipItemModel(int width, int height, int volume, OverlayEffectEntranceAnimationTypeEnum entrance, OverlayEffectExitAnimationTypeEnum exit)
+        public OverlayStreamClipItemModel(int width, int height, int volume, OverlayItemEffectEntranceAnimationTypeEnum entranceAnimation, OverlayItemEffectExitAnimationTypeEnum exitAnimation)
             : base(OverlayItemModelTypeEnum.StreamClip, "")
         {
             this.Width = width;
             this.Height = height;
             this.Volume = volume;
-            this.EntranceAnimation = entrance;
-            this.ExitAnimation = exit;
+            this.Effects = new OverlayItemEffectsModel(entranceAnimation, OverlayItemEffectVisibleAnimationTypeEnum.None, exitAnimation, 0);
         }
 
         [DataMember]

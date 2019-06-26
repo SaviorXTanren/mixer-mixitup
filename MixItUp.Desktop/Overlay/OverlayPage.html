@@ -198,51 +198,67 @@
                             else if (packet.data.ItemTypeName === "WebPage") {
                                 webPagePacket(packet.data);
                             }
-                            else if (packet.type === "Timer") {
+                            else if (packet.data.ItemTypeName === "Timer") {
                                 timerPacket(packet.data);
                             }
-                            else if (packet.type === "StreamBoss") {
+                            else if (packet.data.ItemTypeName === "StreamBoss") {
                                 streamBossPacket(packet.data);
                             }
-                            else if (packet.type === "TimerTrain") {
+                            else if (packet.data.ItemTypeName === "TimerTrain") {
                                 timerTrainPacket(packet.data);
                             }
-                            else if (packet.type === "StreamClip") {
+                            else if (packet.data.ItemTypeName === "StreamClip") {
                                 streamClipPacket(packet.data);
                             }
+
+
+
+                            //else if (packet.data.ItemTypeName === "Eventlist") {
+                            //    eventListPacket(packet.data);
+                            //}
+                            //else if (packet.data.ItemTypeName === "Gamequeue") {
+                            //    gameQueuePacket(packet.data);
+                            //}
+                            //else if (packet.data.ItemTypeName === "SongRequestsQueue") {
+                            //    songRequestsQueuePacket(packet.data);
+                            //}
+                            //else if (packet.data.ItemTypeName === "ChatMessages") {
+                            //    chatMessagesPacket(packet.data);
+                            //}
+                            //else if (packet.data.ItemTypeName === "Leaderboard") {
+                            //    leaderboardPacket(packet.data);
+                            //}
                         }
                         else if (packet.type == "Update") {
-                            if (packet.type === "StreamBoss") {
+                            if (packet.data.ItemTypeName === "Image") {
+                                imagePacket(packet.data);
+                            }
+                            else if (packet.data.ItemTypeName === "Text") {
+                                textPacket(packet.data);
+                            }
+                            else if (packet.data.ItemTypeName === "YouTube") {
+                                youtubePacket(packet.data);
+                            }
+                            else if (packet.data.ItemTypeName === "Video") {
+                                videoPacket(packet.data);
+                            }
+                            else if (packet.data.ItemTypeName === "HTML") {
+                                htmlTextPacket(packet.data);
+                            }
+                            else if (packet.data.ItemTypeName === "WebPage") {
+                                webPagePacket(packet.data);
+                            }
+                            else if (packet.data.ItemTypeName === "StreamBoss") {
                                 streamBossPacket(packet.data);
                             }
-                            else if (packet.type === "TimerTrain") {
+                            else if (packet.data.ItemTypeName === "TimerTrain") {
                                 timerTrainPacket(packet.data);
                             }
                         }
                         else if (packet.type == "Hide") {
                             removePacket(packet.data);
                         }
-
-                        else if (packet.type === "eventlist") {
-                            eventListPacket(packet.data);
-                        }
-                        else if (packet.type === "gamequeue") {
-                            gameQueuePacket(packet.data);
-                        }
-                        else if (packet.type === "songrequestsqueue") {
-                            songRequestsQueuePacket(packet.data);
-                        }
-                        else if (packet.type === "chatmessages") {
-                            chatMessagesPacket(packet.data);
-                        }
-
-                        else if (packet.type === "leaderboard") {
-                            leaderboardPacket(packet.data);
-                        }
-
-
-
-                        else if (packet.type === "textToSpeech") {
+                        else if (packet.type === "TextToSpeech") {
                             textToSpeechPacket(packet.data);
                         }
                         else if (packet.type === "Batch") {

@@ -130,21 +130,22 @@ namespace MixItUp.Desktop.Services
                             {
                                 if (widget.IsEnabled)
                                 {
-                                    bool isInitialized = widget.Item.IsInitialized;
-
-                                    if (!isInitialized)
+                                    if (!widget.Item.IsInitialized)
                                     {
                                         await widget.Item.Initialize();
+                                        await widget.ShowItem();
                                     }
-
-                                    if (!isInitialized || !widget.DontRefresh)
+                                    else if (!widget.DontRefresh && widget.Item.SupportsRefreshUpdating)
                                     {
-                                        await widget.ShowItem(user, new List<string>(), new Dictionary<string, string>());
+                                        await widget.UpdateItem();
                                     }
                                 }
                                 else
                                 {
-                                    await widget.Item.Disable();
+                                    if (widget.Item.IsInitialized)
+                                    {
+                                        await widget.Item.Disable();
+                                    }
                                 }
                             }
                             catch (Exception ex) { Logger.Log(ex); }
