@@ -192,7 +192,7 @@ namespace MixItUp.Base.ViewModel.Chat
                         break;
                 }
             }
-            this.Message = this.Message.Trim();
+            this.Message = this.Message.Trim().Replace(Environment.NewLine, string.Empty).Replace("\n", string.Empty);
         }
     }
 }
