@@ -226,6 +226,7 @@ namespace MixItUp.Base.Model.Overlay
         Random,
     }
 
+    [DataContract]
     public abstract class OverlayItemModelBase
     {
         [DataMember]

@@ -179,7 +179,7 @@
                         if (packet.type === "test") {
                             testPacket();
                         }
-                        else if (packet.type == "Show") {
+                        else if (packet.type == "Show" || packet.type == "Update") {
                             if (packet.data.ItemTypeName === "Image") {
                                 imagePacket(packet.data);
                             }
@@ -228,32 +228,6 @@
                             //else if (packet.data.ItemTypeName === "Leaderboard") {
                             //    leaderboardPacket(packet.data);
                             //}
-                        }
-                        else if (packet.type == "Update") {
-                            if (packet.data.ItemTypeName === "Image") {
-                                imagePacket(packet.data);
-                            }
-                            else if (packet.data.ItemTypeName === "Text") {
-                                textPacket(packet.data);
-                            }
-                            else if (packet.data.ItemTypeName === "YouTube") {
-                                youtubePacket(packet.data);
-                            }
-                            else if (packet.data.ItemTypeName === "Video") {
-                                videoPacket(packet.data);
-                            }
-                            else if (packet.data.ItemTypeName === "HTML") {
-                                htmlTextPacket(packet.data);
-                            }
-                            else if (packet.data.ItemTypeName === "WebPage") {
-                                webPagePacket(packet.data);
-                            }
-                            else if (packet.data.ItemTypeName === "StreamBoss") {
-                                streamBossPacket(packet.data);
-                            }
-                            else if (packet.data.ItemTypeName === "TimerTrain") {
-                                timerTrainPacket(packet.data);
-                            }
                         }
                         else if (packet.type == "Hide") {
                             removePacket(packet.data);
@@ -634,7 +608,6 @@
             }
 
             function streamClipPacket(data) {
-
                 var addedElement = document.createElement('video');
                 addedElement.id = data.ID;
                 addedElement.frameBorder = 0;
@@ -643,7 +616,7 @@
                 addedElement.volume = data.VolumeDecimal;
 
                 var sourceElement = document.createElement('source');
-                sourceElement.src = data.URL;
+                sourceElement.src = data.FullLink;
                 addedElement.appendChild(sourceElement);
 
                 addWaitRemoveElement(data, addedElement);

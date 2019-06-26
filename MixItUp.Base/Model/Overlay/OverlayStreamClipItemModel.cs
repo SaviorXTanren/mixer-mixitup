@@ -13,26 +13,21 @@ using System.Threading.Tasks;
 namespace MixItUp.Base.Model.Overlay
 {
     [DataContract]
-    public class OverlayStreamClipItemModel : OverlayHTMLTemplateItemModelBase
+    public class OverlayStreamClipItemModel : OverlayFileItemModelBase
     {
-        [DataMember]
-        public int Width { get; set; }
-        [DataMember]
-        public int Height { get; set; }
         [DataMember]
         public int Volume { get; set; }
 
         [DataMember]
-        public string URL { get; set; }
-        [DataMember]
         public double Duration { get; set; }
 
         private ClipModel lastClip = null;
+        private string lastClipURL = null;
 
         public OverlayStreamClipItemModel() : base() { }
 
         public OverlayStreamClipItemModel(int width, int height, int volume, OverlayItemEffectEntranceAnimationTypeEnum entranceAnimation, OverlayItemEffectExitAnimationTypeEnum exitAnimation)
-            : base(OverlayItemModelTypeEnum.StreamClip, "")
+            : base(OverlayItemModelTypeEnum.StreamClip, string.Empty, width, height)
         {
             this.Width = width;
             this.Height = height;
@@ -41,12 +36,18 @@ namespace MixItUp.Base.Model.Overlay
         }
 
         [DataMember]
+        public override string FullLink { get { return this.lastClipURL; } set { } }
+
+        [DataMember]
+        public override string FileType { get { return "video"; } set { } }
+
+        [DataMember]
         public double VolumeDecimal { get { return ((double)this.Volume / 100.0); } set { } }
 
         [JsonIgnore]
         public override bool SupportsTestData { get { return true; } }
 
-        public override async Task LoadTestData()
+        public override Task LoadTestData()
         {
             this.lastClip = new ClipModel()
             {
@@ -58,9 +59,9 @@ namespace MixItUp.Base.Model.Overlay
                         uri = "https://raw.githubusercontent.com/SaviorXTanren/mixer-mixitup/master/Wiki/MixerTestClip/manifest.m3u8"
                     }
                 },
-                durationInSeconds = 5
+                durationInSeconds = 10
             };
-            await Task.Delay(5000);
+            return Task.FromResult(0);
         }
 
         public override async Task Initialize()
@@ -70,7 +71,7 @@ namespace MixItUp.Base.Model.Overlay
             await base.Initialize();
         }
 
-        public override Task<JObject> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, bool encode = false)
+        public override async Task<JObject> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, bool encode = false)
         {
             if (this.lastClip != null)
             {
@@ -80,12 +81,12 @@ namespace MixItUp.Base.Model.Overlay
                 ClipLocatorModel clipLocator = clip.contentLocators.FirstOrDefault(cl => cl.locatorType.Equals(MixerClipsAction.VideoFileContentLocatorType));
                 if (clipLocator != null)
                 {
-                    this.URL = clipLocator.uri;
-                    this.Duration = Math.Max(0, clip.durationInSeconds - 1);
-                    return base.GetProcessedItem(user, arguments, extraSpecialIdentifiers, encode);
+                    this.lastClipURL = clipLocator.uri;
+                    this.Effects.Duration = Math.Max(0, clip.durationInSeconds - 1);
+                    return await base.GetProcessedItem(user, arguments, extraSpecialIdentifiers, encode);
                 }
             }
-            return null;
+            return new JObject();
         }
 
         private void GlobalEvents_OnMixerClipCreated(object sender, ClipModel clip)

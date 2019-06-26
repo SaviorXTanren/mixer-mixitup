@@ -49,6 +49,7 @@ namespace MixItUp.Base.Model.Overlay
             if (this.SupportsTestData)
             {
                 await this.Item.LoadTestData();
+                await this.UpdateItem();
             }
         }
 

@@ -630,8 +630,8 @@
     <Compile Include="Controls\Overlay\OverlayLeaderboardControl.xaml.cs">
       <DependentUpon>OverlayLeaderboardControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayMixerClipControl.xaml.cs">
-      <DependentUpon>OverlayMixerClipControl.xaml</DependentUpon>
+    <Compile Include="Controls\Overlay\OverlayStreamClipControl.xaml.cs">
+      <DependentUpon>OverlayStreamClipControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Overlay\OverlayProgressBarControl.xaml.cs">
       <DependentUpon>OverlayProgressBarControl.xaml</DependentUpon>
@@ -1384,7 +1384,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayMixerClipControl.xaml">
+    <Page Include="Controls\Overlay\OverlayStreamClipControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

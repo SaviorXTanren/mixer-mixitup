@@ -5,37 +5,42 @@ using System.Threading.Tasks;
 namespace MixItUp.WPF.Controls.Overlay
 {
     /// <summary>
-    /// Interaction logic for OverlayMixerClipControl.xaml
+    /// Interaction logic for OverlayStreamClipControl.xaml
     /// </summary>
-    public partial class OverlayMixerClipControl : OverlayItemControl
+    public partial class OverlayStreamClipControl : OverlayItemControl
     {
-        private OverlayMixerClipItemViewModel viewModel;
+        private OverlayStreamClipItemViewModel viewModel;
 
-        public OverlayMixerClipControl()
+        public OverlayStreamClipControl()
         {
             InitializeComponent();
 
-            this.viewModel = new OverlayMixerClipItemViewModel();
+            this.viewModel = new OverlayStreamClipItemViewModel();
         }
 
-        public OverlayMixerClipControl(OverlayMixerClip item)
+        public OverlayStreamClipControl(OverlayStreamClipItemModel item)
         {
             InitializeComponent();
 
-            this.viewModel = new OverlayMixerClipItemViewModel(item);
+            this.viewModel = new OverlayStreamClipItemViewModel(item);
         }
 
         public override void SetItem(OverlayItemBase item)
         {
             if (item != null)
             {
-                this.viewModel = new OverlayMixerClipItemViewModel((OverlayMixerClip)item);
+                this.viewModel = new OverlayStreamClipItemViewModel((OverlayMixerClip)item);
             }
         }
 
         public override OverlayItemBase GetItem()
         {
             return this.viewModel.GetItem();
+        }
+
+        public override OverlayItemModelBase GetOverlayItem()
+        {
+            return this.viewModel.GetOverlayItem();
         }
 
         protected override async Task OnLoaded()

@@ -23,14 +23,15 @@ namespace MixItUp.Base.Model.Overlay
         public override async Task<JObject> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, bool encode = false)
         {
             JObject jobj = await base.GetProcessedItem(user, arguments, extraSpecialIdentifiers, encode);
-
-            string htmlTemplate = jobj["HTML"].ToString();
-            foreach (var kvp in await this.GetTemplateReplacements(user, arguments, extraSpecialIdentifiers))
+            if (jobj != null)
             {
-                htmlTemplate = htmlTemplate.Replace($"{{{kvp.Key}}}", kvp.Value);
+                string htmlTemplate = jobj["HTML"].ToString();
+                foreach (var kvp in await this.GetTemplateReplacements(user, arguments, extraSpecialIdentifiers))
+                {
+                    htmlTemplate = htmlTemplate.Replace($"{{{kvp.Key}}}", kvp.Value);
+                }
+                jobj["HTML"] = htmlTemplate;
             }
-            jobj["HTML"] = htmlTemplate;
-
             return jobj;
         }
 

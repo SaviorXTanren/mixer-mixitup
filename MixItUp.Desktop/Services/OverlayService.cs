@@ -149,19 +149,24 @@ namespace MixItUp.Overlay
         public async Task ShowItem(OverlayItemModelBase item, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             JObject jobj = await item.GetProcessedItem(user, arguments, extraSpecialIdentifiers);
-            if (item is OverlayImageItemModel || item is OverlayVideoItemModel)
+            if (jobj != null)
             {
-                OverlayFileItemModelBase fileItem = (OverlayFileItemModelBase)item;
-                this.httpListenerServer.SetLocalFile(fileItem.FileID, fileItem.FilePath);
+                if (item is OverlayImageItemModel || item is OverlayVideoItemModel)
+                {
+                    OverlayFileItemModelBase fileItem = (OverlayFileItemModelBase)item;
+                    this.httpListenerServer.SetLocalFile(fileItem.FileID, fileItem.FilePath);
+                }
+                await this.SendPacket("Show", jobj);
             }
-            await this.SendPacket("Show", jobj);
         }
-
 
         public async Task UpdateItem(OverlayItemModelBase item, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             JObject jobj = await item.GetProcessedItem(user, arguments, extraSpecialIdentifiers);
-            await this.SendPacket("Update", jobj);
+            if (jobj != null)
+            {
+                await this.SendPacket("Update", jobj);
+            }
         }
 
         public async Task HideItem(OverlayItemModelBase item)

@@ -4,6 +4,7 @@ using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.Overlay
 {
+    [DataContract]
     public abstract class OverlayFileItemModelBase : OverlayItemModelBase
     {
         [DataMember]
@@ -19,7 +20,7 @@ namespace MixItUp.Base.Model.Overlay
         public string FileID { get; set; }
 
         [DataMember]
-        public string FullLink
+        public virtual string FullLink
         {
             get
             {

@@ -3,7 +3,7 @@ using MixItUp.Base.Model.Overlay;
 
 namespace MixItUp.Base.ViewModel.Controls.Overlay
 {
-    public class OverlayMixerClipItemViewModel : OverlayItemViewModelBase
+    public class OverlayStreamClipItemViewModel : OverlayItemViewModelBase
     {
         public string WidthString
         {
@@ -43,45 +43,64 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             get { return EnumHelper.GetEnumName(this.entranceAnimation); }
             set
             {
-                this.entranceAnimation = EnumHelper.GetEnumValueFromString<OverlayEffectEntranceAnimationTypeEnum>(value);
+                this.entranceAnimation = EnumHelper.GetEnumValueFromString<OverlayItemEffectEntranceAnimationTypeEnum>(value);
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayEffectEntranceAnimationTypeEnum entranceAnimation;
+        private OverlayItemEffectEntranceAnimationTypeEnum entranceAnimation;
 
         public string ExitAnimationString
         {
             get { return EnumHelper.GetEnumName(this.exitAnimation); }
             set
             {
-                this.exitAnimation = EnumHelper.GetEnumValueFromString<OverlayEffectExitAnimationTypeEnum>(value);
+                this.exitAnimation = EnumHelper.GetEnumValueFromString<OverlayItemEffectExitAnimationTypeEnum>(value);
                 this.NotifyPropertyChanged();
             }
         }
-        private OverlayEffectExitAnimationTypeEnum exitAnimation;
+        private OverlayItemEffectExitAnimationTypeEnum exitAnimation;
 
-        public OverlayMixerClipItemViewModel()
+        public OverlayStreamClipItemViewModel()
         {
-            this.width = OverlayVideoItem.DefaultWidth;
-            this.height = OverlayVideoItem.DefaultHeight;
+            this.width = OverlayVideoItemModel.DefaultWidth;
+            this.height = OverlayVideoItemModel.DefaultHeight;
             this.Volume = 100;
         }
 
-        public OverlayMixerClipItemViewModel(OverlayMixerClip item)
+        public OverlayStreamClipItemViewModel(OverlayMixerClip item)
             : this()
         {
             this.width = item.Width;
             this.height = item.Height;
             this.Volume = item.Volume;
-            this.entranceAnimation = item.EntranceAnimation;
-            this.exitAnimation = item.ExitAnimation;
+            //this.entranceAnimation = item.EntranceAnimation;
+            //this.exitAnimation = item.ExitAnimation;
+        }
+
+        public OverlayStreamClipItemViewModel(OverlayStreamClipItemModel item)
+            : this()
+        {
+            this.width = item.Width;
+            this.height = item.Height;
+            this.Volume = item.Volume;
+            this.entranceAnimation = item.Effects.EntranceAnimation;
+            this.exitAnimation = item.Effects.ExitAnimation;
         }
 
         public override OverlayItemBase GetItem()
         {
             if (this.width > 0 && this.height > 0)
             {
-                return new OverlayMixerClip(width, height, this.volume, this.entranceAnimation, this.exitAnimation);
+                return new OverlayMixerClip(width, height, this.volume, OverlayEffectEntranceAnimationTypeEnum.None, OverlayEffectExitAnimationTypeEnum.None);
+            }
+            return null;
+        }
+
+        public override OverlayItemModelBase GetOverlayItem()
+        {
+            if (this.width > 0 && this.height > 0)
+            {
+                return new OverlayStreamClipItemModel(width, height, this.volume, this.entranceAnimation, this.exitAnimation);
             }
             return null;
         }

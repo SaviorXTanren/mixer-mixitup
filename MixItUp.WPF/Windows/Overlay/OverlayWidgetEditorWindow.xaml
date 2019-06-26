@@ -106,7 +106,7 @@
             </Grid>
 
             <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible">
-                <ContentControl Margin="10" x:Name="MainContentControl" />
+                <ContentControl Margin="10" x:Name="MainContentControl" HorizontalAlignment="Center" />
             </ScrollViewer>
 
             <Button x:Name="SaveButton" Grid.Row="4" Margin="0,0,0,10" Click="SaveButton_Click" Width="80">Save</Button>

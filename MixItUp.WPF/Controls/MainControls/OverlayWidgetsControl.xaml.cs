@@ -77,10 +77,6 @@ namespace MixItUp.WPF.Controls.MainControls
                     await this.HideWidget(widget);
 
                     await widget.LoadTestData();
-
-                    await Task.Delay(3000);
-
-                    await this.HideWidget(widget);
                 }
             });
         }
