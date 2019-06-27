@@ -257,7 +257,9 @@ namespace MixItUp.AutoHoster
                                             ChatClient chatClient = ChatClient.CreateFromChannel(connection, channelModel).Result;
                                             if (chatClient.Connect().Result && chatClient.Authenticate().Result)
                                             {
+                                                await Task.Delay(3000);
                                                 await chatClient.Whisper(channelModel.token, this.WhisperMessage);
+                                                await Task.Delay(3000);
                                             }
                                             await chatClient.Disconnect();
                                         }
