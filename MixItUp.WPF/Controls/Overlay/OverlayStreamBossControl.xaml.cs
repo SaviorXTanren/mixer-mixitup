@@ -30,6 +30,13 @@ namespace MixItUp.WPF.Controls.Overlay
             this.viewModel = new OverlayStreamBossItemViewModel(item);
         }
 
+        public OverlayStreamBossControl(OverlayStreamBossItemModel item)
+        {
+            InitializeComponent();
+
+            this.viewModel = new OverlayStreamBossItemViewModel(item);
+        }
+
         public override void SetItem(OverlayItemBase item)
         {
             if (item != null)
@@ -41,6 +48,11 @@ namespace MixItUp.WPF.Controls.Overlay
         public override OverlayItemBase GetItem()
         {
             return this.viewModel.GetItem();
+        }
+
+        public override OverlayItemModelBase GetOverlayItem()
+        {
+            return this.viewModel.GetOverlayItem();
         }
 
         protected override async Task OnLoaded()

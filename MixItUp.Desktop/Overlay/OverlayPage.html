@@ -193,7 +193,7 @@
                                 videoPacket(packet.data);
                             }
                             else if (packet.data.ItemTypeName === "HTML") {
-                                htmlTextPacket(packet.data);
+                                htmlPacket(packet.data);
                             }
                             else if (packet.data.ItemTypeName === "WebPage") {
                                 webPagePacket(packet.data);
@@ -202,7 +202,12 @@
                                 timerPacket(packet.data);
                             }
                             else if (packet.data.ItemTypeName === "StreamBoss") {
-                                streamBossPacket(packet.data);
+                                if (packet.type == "Show") {
+                                    streamBossShowPacket(packet.data);
+                                }
+                                else if (packet.type == "Update") {
+                                    streamBossUpdatePacket(packet.data);
+                                }
                             }
                             else if (packet.data.ItemTypeName === "TimerTrain") {
                                 timerTrainPacket(packet.data);
@@ -239,9 +244,6 @@
                             for (var i = 0; i < packet.array.length; i++) {
                                 packetReceived(packet.array[i]);
                             }
-                        }
-                        else {
-                            customPacket(packet.data);
                         }
                     }
                 }
@@ -344,7 +346,7 @@
                 addWaitRemoveElement(data, addedElement);
             }
 
-            function htmlTextPacket(data) {
+            function htmlPacket(data) {
                 var addedElement = document.createElement('div');
                 addedElement.innerHTML = data.HTML;
 
@@ -408,7 +410,7 @@
 
                     var newItemDiv = document.createElement('div');
                     var newItemInnerDiv = document.createElement('div');
-                    newItemInnerDiv.innerHTML = data.HTMLText;
+                    newItemInnerDiv.innerHTML = data.HTML;
                     newItemDiv.appendChild(newItemInnerDiv);
                     $(newItemDiv).animateCss(data.AddEventAnimationName, function () { });
 
@@ -419,7 +421,7 @@
 
                         existingItem.Div = document.createElement('div');
                         var existingItemInnerDiv = document.createElement('div');
-                        existingItemInnerDiv.innerHTML = existingItem.Data.HTMLText;
+                        existingItemInnerDiv.innerHTML = existingItem.Data.HTML;
                         existingItem.Div.appendChild(existingItemInnerDiv);
 
                         mainDiv.appendChild(existingItem.Div);
@@ -483,7 +485,7 @@
                         var newItemDiv;
                         for (var i = 0; i < data.GameQueueUpdates.length; i++) {
                             newItemDiv = document.createElement('div');
-                            newItemDiv.innerHTML = data.GameQueueUpdates[i].HTMLText;
+                            newItemDiv.innerHTML = data.GameQueueUpdates[i].HTML;
                             mainDiv.appendChild(newItemDiv);
                             $(newItemDiv).animateCss(data.AddEventAnimationName, function () { });
                         }
@@ -543,7 +545,7 @@
                         var newItemDiv;
                         for (var i = 0; i < data.SongRequestUpdates.length; i++) {
                             newItemDiv = document.createElement('div');
-                            newItemDiv.innerHTML = data.SongRequestUpdates[i].HTMLText;
+                            newItemDiv.innerHTML = data.SongRequestUpdates[i].HTML;
                             mainDiv.appendChild(newItemDiv);
                             $(newItemDiv).animateCss(data.AddEventAnimationName, function () { });
                         }
@@ -716,7 +718,7 @@
                 if (seconds < 10) { seconds = "0" + seconds; }
                 var timeText = hours + ':' + minutes + ':' + seconds;
 
-                mainDiv.innerHTML = data.HTMLText.replace("{TIME}", timeText);
+                mainDiv.innerHTML = data.HTML.replace("{TIME}", timeText);
 
                 if (data.TotalLength > 0) {
                     setTimeout(function () {
@@ -763,7 +765,7 @@
                 if (seconds < 10) { seconds = "0" + seconds; }
                 var timeText = hours + ':' + minutes + ':' + seconds;
 
-                timer.MainDiv.innerHTML = data.HTMLText.replace("{TIME}", timeText);
+                timer.MainDiv.innerHTML = data.HTML.replace("{TIME}", timeText);
 
                 if (timer.TotalSeconds > 0) {
                     setTimeout(function () {
@@ -777,17 +779,14 @@
                 }
             }
 
-            function streamBossPacket(data) {
-                if (!widgetData.has(data.ID)) {
-                    var addedElement = document.createElement('div');
+            function streamBossShowPacket(data) {
+                var div = getCreatePersistentElement(data);
 
-                    widgetData.set(data.ID, addedElement);
+                div.innerHTML = data.HTML;
+            }
 
-                    addWaitRemoveElement(data, addedElement);
-                }
-
-                var div = widgetData.get(data.ID);
-                div.innerHTML = data.HTMLText;
+            function streamBossUpdatePacket(data) {
+                streamBossShowPacket(data);
 
                 var divContainer = itemDictionary[data.ID];
                 if (divContainer != null) {
@@ -797,14 +796,16 @@
                     else if (data.DamageTaken) {
                         $(divContainer).animateCss(data.DamageAnimationName, function () { });
                     }
-                }  
+                }
             }
 
-            function customPacket(data) {
-                var addedElement = document.createElement('div');
-                addedElement.innerHTML = data.HTMLText;
-
-                addWaitRemoveElement(data, addedElement);
+            function getCreatePersistentElement(data) {
+                if (!widgetData.has(data.ID)) {
+                    var addedElement = document.createElement('div');
+                    widgetData.set(data.ID, addedElement);
+                    addWaitRemoveElement(data, addedElement);
+                }
+                return widgetData.get(data.ID);
             }
 
             function textToSpeechPacket(data) {

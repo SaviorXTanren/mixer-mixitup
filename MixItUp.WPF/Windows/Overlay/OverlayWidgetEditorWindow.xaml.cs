@@ -54,7 +54,7 @@ namespace MixItUp.WPF.Windows.Overlay
                 //else if (this.viewModel.OverlayWidget.Item is OverlayLeaderboard) { this.SetGameEditorControl(new OverlayLeaderboardControl((OverlayLeaderboard)this.viewModel.OverlayWidget.Item)); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayStreamClipItemModel) { this.SetGameEditorControl(new OverlayStreamClipControl((OverlayStreamClipItemModel)this.viewModel.OverlayWidget.Item)); }
                 //else if (this.viewModel.OverlayWidget.Item is OverlaySongRequests) { this.SetGameEditorControl(new OverlaySongRequestsControl((OverlaySongRequests)this.viewModel.OverlayWidget.Item)); }
-                //else if (this.viewModel.OverlayWidget.Item is OverlayStreamBoss) { this.SetGameEditorControl(new OverlayStreamBossControl((OverlayStreamBoss)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayStreamBossItemModel) { this.SetGameEditorControl(new OverlayStreamBossControl((OverlayStreamBossItemModel)this.viewModel.OverlayWidget.Item)); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayTextItemModel) { this.SetGameEditorControl(new OverlayTextItemControl((OverlayTextItemModel)this.viewModel.OverlayWidget.Item)); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayTimerItemModel) { this.SetGameEditorControl(new OverlayTimerControl((OverlayTimerItemModel)this.viewModel.OverlayWidget.Item)); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayTimerTrainItemModel) { this.SetGameEditorControl(new OverlayTimerTrainControl((OverlayTimerTrainItemModel)this.viewModel.OverlayWidget.Item)); }
@@ -110,14 +110,22 @@ namespace MixItUp.WPF.Windows.Overlay
 
                     overlayItem.Position = position;
 
-                    OverlayWidgetModel widget = new OverlayWidgetModel(this.viewModel.Name, this.viewModel.SelectedOverlayEndpoint, overlayItem, this.viewModel.DontRefresh);
-                    if (this.viewModel.OverlayWidget != null)
+                    if (this.viewModel.OverlayWidget == null)
                     {
-                        overlayItem.ID = this.viewModel.OverlayWidget.Item.ID;
-                        ChannelSession.Settings.OverlayWidgets.Remove(this.viewModel.OverlayWidget);
-                        await this.viewModel.OverlayWidget.HideItem();
+                        OverlayWidgetModel widget = new OverlayWidgetModel(this.viewModel.Name, this.viewModel.SelectedOverlayEndpoint, overlayItem, this.viewModel.DontRefresh);
+                        ChannelSession.Settings.OverlayWidgets.Add(widget);
                     }
-                    ChannelSession.Settings.OverlayWidgets.Add(widget);
+                    else
+                    {
+                        await this.viewModel.OverlayWidget.HideItem();
+
+                        overlayItem.ID = this.viewModel.OverlayWidget.Item.ID;
+
+                        this.viewModel.OverlayWidget.Name = this.viewModel.Name;
+                        this.viewModel.OverlayWidget.OverlayName = this.viewModel.SelectedOverlayEndpoint;
+                        this.viewModel.OverlayWidget.Item = overlayItem;
+                        this.viewModel.OverlayWidget.DontRefresh = this.viewModel.DontRefresh;
+                    }
 
                     this.Close();
                 }

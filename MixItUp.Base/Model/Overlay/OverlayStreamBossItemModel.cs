@@ -227,14 +227,17 @@ namespace MixItUp.Base.Model.Overlay
         {
             await this.HealthSemaphore.WaitAndRelease(async () =>
             {
-                this.DamageTaken = true;
+                this.DamageTaken = false;
+                this.NewBoss = false;
+
                 if (this.CurrentBoss.Equals(user))
                 {
-                    this.CurrentHealth = Math.Min(this.CurrentHealth, this.CurrentHealth + (int)amount);
+                    this.CurrentHealth = Math.Min(this.StartingHealth, this.CurrentHealth + (int)amount);
                 }
                 else
                 {
                     this.CurrentHealth -= (int)amount;
+                    this.DamageTaken = true;
                 }
 
                 if (this.CurrentHealth <= 0)
@@ -248,9 +251,6 @@ namespace MixItUp.Base.Model.Overlay
                 }
 
                 this.SendUpdateRequired();
-
-                this.DamageTaken = false;
-                this.NewBoss = false;
 
                 return Task.FromResult(0);
             });
