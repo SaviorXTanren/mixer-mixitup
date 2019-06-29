@@ -27,7 +27,7 @@ namespace MixItUp.Base.Commands
     }
 
     [DataContract]
-    public abstract class CommandBase : IComparable, IComparable<CommandBase>
+    public abstract class CommandBase : IComparable, IComparable<CommandBase>, IEquatable<CommandBase>
     {
         private static Dictionary<Guid, long> commandUses = new Dictionary<Guid, long>();
 
@@ -320,6 +320,20 @@ namespace MixItUp.Base.Commands
         public int CompareTo(CommandBase other)
         {
             return this.Name.CompareTo(other.Name);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is CommandBase)
+            {
+                return this.Equals((CommandBase)obj);
+            }
+            return false;
+        }
+
+        public bool Equals(CommandBase other)
+        {
+            return this.ID.Equals(other.ID);
         }
     }
 }
