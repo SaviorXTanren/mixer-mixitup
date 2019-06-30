@@ -19,11 +19,17 @@ namespace MixItUp.WPF.Controls.Overlay
             this.viewModel = new OverlayLeaderboardItemViewModel();
         }
 
-        public OverlayLeaderboardControl(OverlayLeaderboard item)
+        public override void SetOverlayItem(OverlayItemModelBase item)
         {
-            InitializeComponent();
+            if (item != null)
+            {
+                this.viewModel = new OverlayLeaderboardItemViewModel((OverlayLeaderboardListItemModel)item);
+            }
+        }
 
-            this.viewModel = new OverlayLeaderboardItemViewModel(item);
+        public override OverlayItemModelBase GetOverlayItem()
+        {
+            return this.viewModel.GetOverlayItem();
         }
 
         public override void SetItem(OverlayItemBase item)

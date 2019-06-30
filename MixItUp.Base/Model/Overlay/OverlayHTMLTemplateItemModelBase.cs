@@ -20,19 +20,22 @@ namespace MixItUp.Base.Model.Overlay
             this.HTML = html;
         }
 
-        public override async Task<JObject> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, bool encode = false)
+        protected override async Task PerformReplacements(JObject jobj, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
-            JObject jobj = await base.GetProcessedItem(user, arguments, extraSpecialIdentifiers, encode);
-            if (jobj != null)
+            if (jobj != null && jobj.ContainsKey("HTML"))
             {
-                string htmlTemplate = jobj["HTML"].ToString();
-                foreach (var kvp in await this.GetTemplateReplacements(user, arguments, extraSpecialIdentifiers))
-                {
-                    htmlTemplate = htmlTemplate.Replace($"{{{kvp.Key}}}", kvp.Value);
-                }
-                jobj["HTML"] = htmlTemplate;
+                jobj["HTML"] = this.PerformTemplateReplacements(jobj["HTML"].ToString(), await this.GetTemplateReplacements(user, arguments, extraSpecialIdentifiers));
             }
-            return jobj;
+            await base.PerformReplacements(jobj, user, arguments, extraSpecialIdentifiers);
+        }
+
+        protected string PerformTemplateReplacements(string text, Dictionary<string, string> templateReplacements)
+        {
+            foreach (var kvp in templateReplacements)
+            {
+                text = text.Replace($"{{{kvp.Key}}}", kvp.Value);
+            }
+            return text;
         }
 
         protected virtual Task<Dictionary<string, string>> GetTemplateReplacements(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)

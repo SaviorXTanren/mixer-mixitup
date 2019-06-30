@@ -5,7 +5,7 @@ using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
@@ -13,50 +13,14 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayChatMessagesListItemModel : OverlayListItemModelBase
     {
-        [DataContract]
-        public class OverlayChatMessageItemModel
-        {
-            [DataMember]
-            public Guid ID { get; set; }
-
-            [DataMember]
-            public string Username { get; set; }
-
-            [DataMember]
-            public string UserAvatar { get; set; }
-
-            [DataMember]
-            public string UserColor { get; set; }
-
-            [DataMember]
-            public string SubBadgeImage { get; set; }
-
-            [DataMember]
-            public string Image { get; set; }
-
-            [DataMember]
-            public string Message { get; set; }
-
-            public OverlayChatMessageItemModel() { }
-
-            public OverlayChatMessageItemModel(Guid id, UserViewModel user, string image, string message)
-            {
-                this.ID = id;
-                this.Username = user.UserName;
-                this.UserAvatar = user.AvatarLink;
-                this.UserColor = OverlayChatMessagesListItemModel.userColors[user.PrimaryRoleColorName];
-                if (user.IsMixerSubscriber && ChannelSession.Channel.badge != null)
-                {
-                    this.SubBadgeImage = ChannelSession.Channel.badge.url;
-                }
-                this.Image = image;
-                this.Message = message;
-            }
-        }
-
         public const string HTMLTemplate =
-        @"<div style=""position: relative; border-style: solid; border-width: 5px; border-color: {BORDER_COLOR}; background-color: {BACKGROUND_COLOR}; width: {WIDTH}px; height: {HEIGHT}px"">
-          <p style=""position: absolute; top: 50%; left: 5%; float: left; text-align: left; font-family: '{TEXT_FONT}'; font-size: {TEXT_HEIGHT}px; color: {TEXT_COLOR}; white-space: nowrap; font-weight: bold; margin: auto; transform: translate(0, -50%);"">#{POSITION} {USERNAME}</p>
+        @"<div style=""border-style: solid; border-width: 5px; border-color: {BORDER_COLOR}; background-color: {BACKGROUND_COLOR}; width: {WIDTH}px;"">
+          <p style=""padding: 10px; margin: auto;"">
+            <img src=""{USER_IMAGE}"" width=""{TEXT_SIZE}"" height=""{TEXT_SIZE}"" style=""vertical-align: middle; padding-right: 2px"">
+            <span style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; font-weight: bold; word-wrap: break-word; color: {USER_COLOR}; vertical-align: middle;"">{USERNAME}</span>
+            <img src=""{SUB_IMAGE}"" style=""vertical-align: middle; padding-right: 5px"" onerror=""this.style.display='none'"">
+            {MESSAGE}
+          </p>
         </div>";
 
         private static readonly Dictionary<string, string> userColors = new Dictionary<string, string>()
@@ -69,15 +33,11 @@ namespace MixItUp.Base.Model.Overlay
             { "UserDefaultRoleColor", "#0000FF" },
         };
 
-        private const string TextMessageHTMLTemplate = @"<span style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_HEIGHT}px; font-weight: bold; word-wrap: break-word; color: {TEXT_COLOR}; vertical-align: middle; margin-left: 10px;"">{TEXT}</span>";
-        private const string EmoticonMessageHTMLTemplate = @"<span role=""img"" style=""height: {TEXT_HEIGHT}px; width: {TEXT_HEIGHT}px; background-repeat: no-repeat; display: inline-block; background-image: url({EMOTICON}); background-position: {EMOTICON_X}px {EMOTICON_Y}px;""></span>";
+        private const string TextMessageHTMLTemplate = @"<span style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; font-weight: bold; word-wrap: break-word; color: {TEXT_COLOR}; vertical-align: middle; margin-left: 10px;"">{TEXT}</span>";
+        private const string EmoticonMessageHTMLTemplate = @"<span role=""img"" style=""height: {TEXT_SIZE}px; width: {TEXT_SIZE}px; background-repeat: no-repeat; display: inline-block; background-image: url({EMOTICON}); background-position: {EMOTICON_X}px {EMOTICON_Y}px;""></span>";
         private const string SkillImageMessageHTMLTemplate = @"<img src=""{IMAGE}"" style=""vertical-align: middle; margin-left: 10px; max-height: 80px;""></img>";
 
-        [DataMember]
-        public List<OverlayChatMessageItemModel> MessagesToAdd { get; set; } = new List<OverlayChatMessageItemModel>();
-
-        [DataMember]
-        public List<Guid> MessagesToDelete { get; set; } = new List<Guid>();
+        private SemaphoreSlim MessageSemaphore = new SemaphoreSlim(1);
 
         public OverlayChatMessagesListItemModel() : base() { }
 
@@ -86,16 +46,18 @@ namespace MixItUp.Base.Model.Overlay
             : base(OverlayItemModelTypeEnum.ChatMessages, htmlText, totalToShow, textFont, width, height, borderColor, backgroundColor, textColor, addEventAnimation, removeEventAnimation)
         { }
 
-        public override async Task LoadTestData()
+        public override Task LoadTestData()
         {
-            UserViewModel user = await ChannelSession.GetCurrentUser();
-            string message = TextMessageHTMLTemplate.Replace("{TEXT}", "TEST MESSAGE");
-
-            this.MessagesToAdd.Clear();
-            for (int i = 0; i < this.TotalToShow; i++)
+            ChatMessageEventModel messageEvent = new ChatMessageEventModel()
             {
-                this.MessagesToAdd.Add(new OverlayChatMessageItemModel(Guid.NewGuid(), user, string.Empty, message));
-            }
+                id = Guid.NewGuid(),
+                user_id = ChannelSession.User.id,
+                user_name = ChannelSession.User.username,
+                channel = ChannelSession.Channel.id,
+                message = new ChatMessageContentsModel() { message = new ChatMessageDataModel[] { new ChatMessageDataModel() { type = "text", text = "Test Message" } } }
+            };
+            this.GlobalEvents_OnChatMessageReceived(this, new ChatMessageViewModel(messageEvent));
+            return Task.FromResult(0);
         }
 
         public override async Task Initialize()
@@ -103,28 +65,33 @@ namespace MixItUp.Base.Model.Overlay
             GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
             GlobalEvents.OnChatMessageDeleted += GlobalEvents_OnChatMessageDeleted;
 
-            this.MessagesToAdd.Clear();
-            this.MessagesToDelete.Clear();
-
             await base.Initialize();
         }
 
-        private void GlobalEvents_OnChatMessageReceived(object sender, ChatMessageViewModel message)
+        private async void GlobalEvents_OnChatMessageReceived(object sender, ChatMessageViewModel message)
         {
             if (!message.IsAlert && !message.IsWhisper)
             {
-                string image = string.Empty;
+                OverlayListIndividualItemModelBase item = OverlayListIndividualItemModelBase.CreateAddItem(message.ID.ToString(), message.User, -1, this.HTML);
+
                 string text = string.Empty;
-                if (message.Skill != null)
+                string messageTemplate = string.Empty;
+                if (message.Skill != null || message.ChatSkill != null)
                 {
-                    image = message.Skill.ImageUrl;
-                }
-                else if (message.ChatSkill != null)
-                {
-                    image = message.ChatSkill.icon_url;
+                    item.TemplateReplacements.Add("MESSAGE", OverlayChatMessagesListItemModel.SkillImageMessageHTMLTemplate);
+                    if (message.Skill != null)
+                    {
+                        item.TemplateReplacements.Add("IMAGE", message.Skill.ImageUrl);
+                    }
+                    else if (message.ChatSkill != null)
+                    {
+                        item.TemplateReplacements.Add("IMAGE", message.ChatSkill.icon_url);
+                    }
                 }
                 else
                 {
+                    item.TemplateReplacements.Add("MESSAGE", OverlayChatMessagesListItemModel.TextMessageHTMLTemplate);
+
                     text = message.Message;
                     foreach (ChatMessageDataModel messageData in message.MessageComponents)
                     {
@@ -138,19 +105,33 @@ namespace MixItUp.Base.Model.Overlay
                             text = text.Replace(messageData.text, emoticonText);
                         }
                     }
+                    item.TemplateReplacements.Add("TEXT", text);
                 }
 
-                this.MessagesToAdd.Add(new OverlayChatMessageItemModel(message.ID, message.User, image, text));
-                this.SendUpdateRequired();
-                this.MessagesToAdd.Clear();
+                item.TemplateReplacements.Add("USERNAME", item.User.UserName);
+                item.TemplateReplacements.Add("USER_IMAGE", item.User.AvatarLink);
+                item.TemplateReplacements.Add("USER_COLOR", OverlayChatMessagesListItemModel.userColors[item.User.PrimaryRoleColorName]);
+                item.TemplateReplacements.Add("SUB_IMAGE", (item.User.IsMixerSubscriber && ChannelSession.Channel.badge != null) ? ChannelSession.Channel.badge.url : string.Empty);
+                item.TemplateReplacements.Add("TEXT_SIZE", this.Height.ToString());
+
+                await this.MessageSemaphore.WaitAndRelease(() =>
+                {
+                    this.Items.Add(item);
+                    this.SendUpdateRequired();
+                    return Task.FromResult(0);
+                });
             }
         }
 
-        private void GlobalEvents_OnChatMessageDeleted(object sender, Guid id)
+        private async void GlobalEvents_OnChatMessageDeleted(object sender, Guid id)
         {
-            this.MessagesToDelete.Add(id);
-            this.SendUpdateRequired();
-            this.MessagesToDelete.Clear();
+            await this.MessageSemaphore.WaitAndRelease(() =>
+            {
+                OverlayListIndividualItemModelBase item = OverlayListIndividualItemModelBase.CreateRemoveItem(id.ToString());
+                this.Items.Add(item);
+                this.SendUpdateRequired();
+                return Task.FromResult(0);
+            });
         }
     }
 }

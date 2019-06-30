@@ -31,7 +31,7 @@
             <TextBox Text="{Binding TotalToShowString}" Grid.Column="0" MaterialDesign:HintAssist.Hint="Total To Show" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
 
             <TextBox Text="{Binding WidthString}" Grid.Column="2" MaterialDesign:HintAssist.Hint="Item Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="110" />
-            <TextBox Text="{Binding TextHeightString}" Grid.Column="4" MaterialDesign:HintAssist.Hint="Text Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="110" />
+            <TextBox Text="{Binding HeightString}" Grid.Column="4" MaterialDesign:HintAssist.Hint="Text Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
 
             <ComboBox Grid.Column="6" x:Name="TextFontComboBox" Text="{Binding Font}" MaterialDesign:HintAssist.Hint="Text Font" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="150" />
 

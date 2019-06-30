@@ -71,7 +71,7 @@ namespace MixItUp.Base.Model.Overlay
             await base.Initialize();
         }
 
-        public override async Task<JObject> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, bool encode = false)
+        protected override async Task PerformReplacements(JObject jobj, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             if (this.lastClip != null)
             {
@@ -83,10 +83,9 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     this.lastClipURL = clipLocator.uri;
                     this.Effects.Duration = Math.Max(0, clip.durationInSeconds - 1);
-                    return await base.GetProcessedItem(user, arguments, extraSpecialIdentifiers, encode);
+                    await base.PerformReplacements(jobj, user, arguments, extraSpecialIdentifiers);
                 }
             }
-            return new JObject();
         }
 
         private void GlobalEvents_OnMixerClipCreated(object sender, ClipModel clip)

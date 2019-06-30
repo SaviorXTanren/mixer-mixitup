@@ -280,22 +280,34 @@ namespace MixItUp.Base.Model.Overlay
             return Task.FromResult(0);
         }
 
-        public virtual async Task<JObject> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, bool encode = false)
+        public virtual async Task<JObject> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             JObject jobj = JObject.FromObject(this);
-            foreach (string key in jobj.GetKeys())
-            {
-                if (jobj[key].Type == JTokenType.String)
-                {
-                    jobj[key] = await this.ReplaceStringWithSpecialModifiers(jobj[key].ToString(), user, arguments, extraSpecialIdentifiers, encode);
-                }
-            }
+            await this.PerformReplacements(jobj, user, arguments, extraSpecialIdentifiers);
             return jobj;
         }
 
-        protected async Task<string> ReplaceStringWithSpecialModifiers(string str, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, bool encode = false)
+        protected virtual async Task PerformReplacements(JObject jobj, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
-            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str, Guid.NewGuid(), encode);
+            if (jobj != null)
+            {
+                foreach (string key in jobj.GetKeys())
+                {
+                    if (jobj[key].Type == JTokenType.String)
+                    {
+                        jobj[key] = await this.ReplaceStringWithSpecialModifiers(jobj[key].ToString(), user, arguments, extraSpecialIdentifiers);
+                    }
+                    else if (jobj[key].Type == JTokenType.Object)
+                    {
+                        await this.PerformReplacements((JObject)jobj[key], user, arguments, extraSpecialIdentifiers);
+                    }
+                }
+            }
+        }
+
+        protected async Task<string> ReplaceStringWithSpecialModifiers(string str, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        {
+            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str, Guid.NewGuid(), encode: false);
             if (extraSpecialIdentifiers != null)
             {
                 foreach (var kvp in extraSpecialIdentifiers)

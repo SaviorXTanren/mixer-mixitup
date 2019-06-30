@@ -215,7 +215,9 @@
                             else if (packet.data.ItemTypeName === "StreamClip") {
                                 streamClipPacket(packet.data);
                             }
-
+                            else if (packet.data.ItemTypeName === "ChatMessages") {
+                                listPacket(packet.data);
+                            }
 
 
                             //else if (packet.data.ItemTypeName === "Eventlist") {
@@ -607,6 +609,75 @@
                         }
                     }
                 }
+            }
+
+            function listPacket(data) {
+
+                var widget = {};
+                if (!widgetData.has(data.ID)) {
+                    widgetData.set(data.ID, widget);
+
+                    widget.MainDiv = document.createElement('div');
+                    widget.Items = [];
+
+                    addWaitRemoveElement(data, widget.MainDiv);
+                }
+
+                widget = widgetData.get(data.ID);
+                var mainDiv = widget.MainDiv;
+
+                for (i = 0; i < data.Items.length; i++) {
+                    var item = data.Items[i];
+
+                    if (item.Remove) {
+                        for (j = 0; j < widget.Items.length; j++) {
+                            if (widget.Items[j].id === item.ID) {
+                                removeListItem(data, j, function () { });
+                            }
+                        }
+                    }
+                    else if (item.Add) {
+                        if (widget.Items.length >= data.TotalToShow) {
+                            while (widget.Items.length > data.TotalToShow) {
+                                removeListItem(data, 0, function () { });
+                            }
+
+                            removeListItem(data, 0, function ()
+                            {
+                                addListItem(data, item);
+                            });
+                        }
+                        else {
+                            addListItem(data, item);
+                        }
+                    }
+                }
+            }
+
+            function removeListItem(data, index, removeFunction) {
+                var widget = widgetData.get(data.ID);
+                var mainDiv = widget.MainDiv;
+                var divToRemove = widget.Items[index].div;
+
+                widget.Items.splice(index, 1);
+                $(divToRemove).animateCss(data.Effects.ExitAnimationName, function () {
+                    mainDiv.removeChild(divToRemove);
+                    removeFunction();
+                });
+            }
+
+            function addListItem(data, item) {
+                var widget = widgetData.get(data.ID);
+                var mainDiv = widget.MainDiv;
+
+                var newItemDiv = document.createElement('div');
+                var newItemInnerDiv = document.createElement('div');
+                newItemInnerDiv.innerHTML = item.HTML;
+                newItemDiv.appendChild(newItemInnerDiv);
+                $(newItemDiv).animateCss(data.Effects.EntranceAnimationName, function () { });
+
+                mainDiv.appendChild(newItemDiv);
+                widget.Items.push({ id: item.ID, div: newItemDiv, item: item });
             }
 
             function streamClipPacket(data) {

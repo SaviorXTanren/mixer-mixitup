@@ -8,70 +8,70 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
     {
         public bool ShowFollows
         {
-            get { return this.eventListTypes.Contains(EventListItemTypeEnum.Followers); }
+            get { return this.eventListTypes.Contains(OverlayEventListItemTypeEnum.Followers); }
             set
             {
-                this.UpdateEventListItem(EventListItemTypeEnum.Followers, value);
+                this.UpdateEventListItem(OverlayEventListItemTypeEnum.Followers, value);
                 this.NotifyPropertyChanged();
             }
         }
 
         public bool ShowHosts
         {
-            get { return this.eventListTypes.Contains(EventListItemTypeEnum.Hosts); }
+            get { return this.eventListTypes.Contains(OverlayEventListItemTypeEnum.Hosts); }
             set
             {
-                this.UpdateEventListItem(EventListItemTypeEnum.Hosts, value);
+                this.UpdateEventListItem(OverlayEventListItemTypeEnum.Hosts, value);
                 this.NotifyPropertyChanged();
             }
         }
 
         public bool ShowSubscribers
         {
-            get { return this.eventListTypes.Contains(EventListItemTypeEnum.Subscribers); }
+            get { return this.eventListTypes.Contains(OverlayEventListItemTypeEnum.Subscribers); }
             set
             {
-                this.UpdateEventListItem(EventListItemTypeEnum.Subscribers, value);
+                this.UpdateEventListItem(OverlayEventListItemTypeEnum.Subscribers, value);
                 this.NotifyPropertyChanged();
             }
         }
 
         public bool ShowDonations
         {
-            get { return this.eventListTypes.Contains(EventListItemTypeEnum.Donations); }
+            get { return this.eventListTypes.Contains(OverlayEventListItemTypeEnum.Donations); }
             set
             {
-                this.UpdateEventListItem(EventListItemTypeEnum.Donations, value);
+                this.UpdateEventListItem(OverlayEventListItemTypeEnum.Donations, value);
                 this.NotifyPropertyChanged();
             }
         }
 
         public bool ShowSparks
         {
-            get { return this.eventListTypes.Contains(EventListItemTypeEnum.Sparks); }
+            get { return this.eventListTypes.Contains(OverlayEventListItemTypeEnum.Sparks); }
             set
             {
-                this.UpdateEventListItem(EventListItemTypeEnum.Sparks, value);
+                this.UpdateEventListItem(OverlayEventListItemTypeEnum.Sparks, value);
                 this.NotifyPropertyChanged();
             }
         }
 
         public bool ShowEmbers
         {
-            get { return this.eventListTypes.Contains(EventListItemTypeEnum.Embers); }
+            get { return this.eventListTypes.Contains(OverlayEventListItemTypeEnum.Embers); }
             set
             {
-                this.UpdateEventListItem(EventListItemTypeEnum.Embers, value);
+                this.UpdateEventListItem(OverlayEventListItemTypeEnum.Embers, value);
                 this.NotifyPropertyChanged();
             }
         }
 
         public bool ShowMilestones
         {
-            get { return this.eventListTypes.Contains(EventListItemTypeEnum.Milestones); }
+            get { return this.eventListTypes.Contains(OverlayEventListItemTypeEnum.Milestones); }
             set
             {
-                this.UpdateEventListItem(EventListItemTypeEnum.Milestones, value);
+                this.UpdateEventListItem(OverlayEventListItemTypeEnum.Milestones, value);
                 this.NotifyPropertyChanged();
             }
         }
@@ -87,18 +87,24 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         }
         private bool resetOnLoad;
 
-        private HashSet<EventListItemTypeEnum> eventListTypes = new HashSet<EventListItemTypeEnum>();
+        private HashSet<OverlayEventListItemTypeEnum> eventListTypes = new HashSet<OverlayEventListItemTypeEnum>();
 
         public OverlayEventListItemViewModel()
             : base()
         {
-            this.HTML = OverlayEventList.HTMLTemplate;
+            this.HTML = OverlayEventListItemModel.HTMLTemplate;
+        }
+
+        public OverlayEventListItemViewModel(OverlayEventListItemModel item)
+            : base(item.TotalToShow, item.Width, item.Height, item.TextFont, item.TextColor, item.BorderColor, item.BackgroundColor, item.Effects.EntranceAnimation, item.Effects.ExitAnimation, item.HTML)
+        {
+            this.ResetOnLoad = item.ResetOnLoad;
         }
 
         public OverlayEventListItemViewModel(OverlayEventList item)
-            : base(item.TotalToShow, item.Width, item.Height, item.TextFont, item.TextColor, item.BorderColor, item.BackgroundColor, item.AddEventAnimation, item.RemoveEventAnimation, item.HTMLText)
+            : base(item.TotalToShow, item.Width, item.Height, item.TextFont, item.TextColor, item.BorderColor, item.BackgroundColor, OverlayItemEffectEntranceAnimationTypeEnum.None, OverlayItemEffectExitAnimationTypeEnum.None, item.HTMLText)
         {
-            this.eventListTypes = new HashSet<EventListItemTypeEnum>(item.ItemTypes);
+            
             this.ResetOnLoad = item.ResetOnLoad;
         }
 
@@ -110,12 +116,25 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
                 this.BorderColor = ColorSchemes.GetColorCode(this.BorderColor);
                 this.BackgroundColor = ColorSchemes.GetColorCode(this.BackgroundColor);
 
-                return new OverlayEventList(this.HTML, this.eventListTypes, totalToShow, this.ResetOnLoad, this.Font, this.width, this.height, this.BorderColor, this.BackgroundColor, this.TextColor, this.entranceAnimation, this.exitAnimation);
+                //return new OverlayEventList(this.HTML, null, totalToShow, this.ResetOnLoad, this.Font, this.width, this.height, this.BorderColor, this.BackgroundColor, this.TextColor, this.entranceAnimation, this.exitAnimation);
             }
             return null;
         }
 
-        private void UpdateEventListItem(EventListItemTypeEnum type, bool value)
+        public override OverlayItemModelBase GetOverlayItem()
+        {
+            if (this.Validate() && this.eventListTypes.Count > 0)
+            {
+                this.TextColor = ColorSchemes.GetColorCode(this.TextColor);
+                this.BorderColor = ColorSchemes.GetColorCode(this.BorderColor);
+                this.BackgroundColor = ColorSchemes.GetColorCode(this.BackgroundColor);
+
+                return new OverlayEventListItemModel(this.HTML, this.eventListTypes, this.ResetOnLoad, totalToShow, this.Font, this.width, this.height, this.BorderColor, this.BackgroundColor, this.TextColor, this.entranceAnimation, this.exitAnimation);
+            }
+            return null;
+        }
+
+        private void UpdateEventListItem(OverlayEventListItemTypeEnum type, bool value)
         {
             if (value)
             {

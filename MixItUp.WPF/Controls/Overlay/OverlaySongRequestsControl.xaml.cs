@@ -19,11 +19,17 @@ namespace MixItUp.WPF.Controls.Overlay
             this.viewModel = new OverlaySongRequestsItemViewModel();
         }
 
-        public OverlaySongRequestsControl(OverlaySongRequests item)
+        public override void SetOverlayItem(OverlayItemModelBase item)
         {
-            InitializeComponent();
+            if (item != null)
+            {
+                this.viewModel = new OverlaySongRequestsItemViewModel((OverlaySongRequestsListItemModel)item);
+            }
+        }
 
-            this.viewModel = new OverlaySongRequestsItemViewModel(item);
+        public override OverlayItemModelBase GetOverlayItem()
+        {
+            return this.viewModel.GetOverlayItem();
         }
 
         public override void SetItem(OverlayItemBase item)

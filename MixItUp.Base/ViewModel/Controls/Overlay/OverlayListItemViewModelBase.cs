@@ -88,22 +88,22 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             get { return EnumHelper.GetEnumName(this.entranceAnimation); }
             set
             {
-                this.entranceAnimation = EnumHelper.GetEnumValueFromString<OverlayEffectEntranceAnimationTypeEnum>(value);
+                this.entranceAnimation = EnumHelper.GetEnumValueFromString<OverlayItemEffectEntranceAnimationTypeEnum>(value);
                 this.NotifyPropertyChanged();
             }
         }
-        protected OverlayEffectEntranceAnimationTypeEnum entranceAnimation;
+        protected OverlayItemEffectEntranceAnimationTypeEnum entranceAnimation;
 
         public string ExitAnimationString
         {
             get { return EnumHelper.GetEnumName(this.exitAnimation); }
             set
             {
-                this.exitAnimation = EnumHelper.GetEnumValueFromString<OverlayEffectExitAnimationTypeEnum>(value);
+                this.exitAnimation = EnumHelper.GetEnumValueFromString<OverlayItemEffectExitAnimationTypeEnum>(value);
                 this.NotifyPropertyChanged();
             }
         }
-        protected OverlayEffectExitAnimationTypeEnum exitAnimation;
+        protected OverlayItemEffectExitAnimationTypeEnum exitAnimation;
 
         public OverlayListItemViewModelBase()
         {
@@ -114,7 +114,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         }
 
         public OverlayListItemViewModelBase(int totalToShow, int width, int height, string textFont, string textColor, string borderColor, string backgroundColor,
-            OverlayEffectEntranceAnimationTypeEnum addAnimation, OverlayEffectExitAnimationTypeEnum removeAnimation, string htmlText)
+            OverlayItemEffectEntranceAnimationTypeEnum addAnimation, OverlayItemEffectExitAnimationTypeEnum removeAnimation, string htmlText)
             : this()
         {
             this.totalToShow = totalToShow;

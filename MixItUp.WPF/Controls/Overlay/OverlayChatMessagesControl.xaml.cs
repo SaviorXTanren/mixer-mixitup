@@ -19,11 +19,17 @@ namespace MixItUp.WPF.Controls.Overlay
             this.viewModel = new OverlayChatMessagesItemViewModel();
         }
 
-        public OverlayChatMessagesControl(OverlayChatMessages item)
+        public override void SetOverlayItem(OverlayItemModelBase item)
         {
-            InitializeComponent();
+            if (item != null)
+            {
+                this.viewModel = new OverlayChatMessagesItemViewModel((OverlayChatMessagesListItemModel)item);
+            }
+        }
 
-            this.viewModel = new OverlayChatMessagesItemViewModel(item);
+        public override OverlayItemModelBase GetOverlayItem()
+        {
+            return this.viewModel.GetOverlayItem();
         }
 
         public override void SetItem(OverlayItemBase item)

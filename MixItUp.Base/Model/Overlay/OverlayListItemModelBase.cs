@@ -1,11 +1,59 @@
 ﻿using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
 {
+    [DataContract]
+    public class OverlayListIndividualItemModelBase
+    {
+        [DataMember]
+        public string ID { get; set; }
+        [DataMember]
+        public UserViewModel User { get; set; }
+        [DataMember]
+        public int Position { get; set; }
+
+        [DataMember]
+        public bool Add { get; set; }
+        [DataMember]
+        public bool Remove { get; set; }
+
+        [DataMember]
+        public Dictionary<string, string> TemplateReplacements { get; set; } = new Dictionary<string, string>();
+        [DataMember]
+        public string HTML { get; set; }
+
+        [DataMember]
+        public int FadeOut { get; set; }
+
+        public OverlayListIndividualItemModelBase() { }
+
+        public static OverlayListIndividualItemModelBase CreateAddItem(string id, UserViewModel user, int position, string html)
+        {
+            return new OverlayListIndividualItemModelBase()
+            {
+                ID = id,
+                User = user,
+                Position = position,
+                HTML = html,
+                Add = true
+            };
+        }
+
+        public static OverlayListIndividualItemModelBase CreateRemoveItem(string id)
+        {
+            return new OverlayListIndividualItemModelBase()
+            {
+                ID = id,
+                Remove = true
+            };
+        }
+    }
+
     [DataContract]
     public class OverlayListItemModelBase : OverlayHTMLTemplateItemModelBase
     {
@@ -27,6 +75,9 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public int Height { get; set; }
 
+        [DataMember]
+        public List<OverlayListIndividualItemModelBase> Items = new List<OverlayListIndividualItemModelBase>();
+
         public OverlayListItemModelBase() : base() { }
 
         public OverlayListItemModelBase(OverlayItemModelTypeEnum type, string htmlText, int totalToShow, string textFont, int width, int height, string borderColor,
@@ -46,9 +97,38 @@ namespace MixItUp.Base.Model.Overlay
         [JsonIgnore]
         public override bool SupportsTestData { get { return true; } }
 
-        protected override Task<Dictionary<string, string>> GetTemplateReplacements(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        public override async Task<JObject> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
-            Dictionary<string, string> replacementSets = new Dictionary<string, string>();
+            JObject jobj = await base.GetProcessedItem(user, arguments, extraSpecialIdentifiers);
+            this.Items.Clear();
+            return jobj;
+        }
+
+        protected override async Task PerformReplacements(JObject jobj, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        {
+            if (jobj != null)
+            {
+                if (jobj.ContainsKey("Items"))
+                {
+                    JArray jarray = (JArray)jobj["Items"];
+                    for (int i = 0; i < jarray.Count; i++)
+                    {
+                        JObject itemJObj = (JObject)jarray[i];
+
+                        itemJObj["HTML"] = jobj["HTML"];
+
+                        itemJObj["HTML"] = this.PerformTemplateReplacements(itemJObj["HTML"].ToString(), this.Items[i].TemplateReplacements);
+
+                        await base.PerformReplacements(itemJObj, user, arguments, extraSpecialIdentifiers);
+                    }
+                }
+                await base.PerformReplacements(jobj, user, arguments, extraSpecialIdentifiers);
+            }
+        }
+
+        protected override async Task<Dictionary<string, string>> GetTemplateReplacements(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        {
+            Dictionary<string, string> replacementSets = await base.GetTemplateReplacements(user, arguments, extraSpecialIdentifiers);
 
             replacementSets["BACKGROUND_COLOR"] = this.BackgroundColor;
             replacementSets["BORDER_COLOR"] = this.BorderColor;
@@ -58,7 +138,7 @@ namespace MixItUp.Base.Model.Overlay
             replacementSets["HEIGHT"] = this.Height.ToString();
             replacementSets["TEXT_HEIGHT"] = ((int)(0.4 * ((double)this.Height))).ToString();
 
-            return Task.FromResult(replacementSets);
+            return replacementSets;
         }
     }
 }

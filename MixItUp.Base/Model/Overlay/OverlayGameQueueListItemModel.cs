@@ -17,14 +17,14 @@ namespace MixItUp.Base.Model.Overlay
             public int Position { get; set; }
 
             [DataMember]
-            public string Username { get; set; }
+            public UserViewModel User { get; set; }
 
             public OverlayGameQueueItemModel() { }
 
-            public OverlayGameQueueItemModel(int position, string username)
+            public OverlayGameQueueItemModel(int position, UserViewModel user)
             {
                 this.Position = position;
-                this.Username = username;
+                this.User = user;
             }
         }
 
@@ -50,7 +50,7 @@ namespace MixItUp.Base.Model.Overlay
             this.GameQueueItems.Clear();
             for (int i = 0; i < this.TotalToShow; i++)
             {
-                this.GameQueueItems.Add(new OverlayGameQueueItemModel(i + 1, user.UserName));
+                this.GameQueueItems.Add(new OverlayGameQueueItemModel(i + 1, user));
             }
         }
 
@@ -70,7 +70,7 @@ namespace MixItUp.Base.Model.Overlay
             this.GameQueueItems.Clear();
             for (int i = 0; i < this.TotalToShow && i < gameQueue.Count(); i++)
             {
-                this.GameQueueItems.Add(new OverlayGameQueueItemModel(i + 1, gameQueue.ElementAt(i).UserName));
+                this.GameQueueItems.Add(new OverlayGameQueueItemModel(i + 1, gameQueue.ElementAt(i)));
             }
 
             this.SendUpdateRequired();

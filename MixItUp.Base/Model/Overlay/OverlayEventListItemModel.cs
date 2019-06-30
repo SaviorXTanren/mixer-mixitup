@@ -21,7 +21,7 @@ namespace MixItUp.Base.Model.Overlay
     }
 
     [DataContract]
-    public class OverlayEventListItemModelBase : OverlayListItemModelBase
+    public class OverlayEventListItemModel : OverlayListItemModelBase
     {
         [DataContract]
         public class OverlayEventItemModel
@@ -50,19 +50,23 @@ namespace MixItUp.Base.Model.Overlay
         public List<OverlayEventListItemTypeEnum> ItemTypes { get; set; }
 
         [DataMember]
+        public bool ResetOnLoad { get; set; }
+
+        [DataMember]
         public OverlayEventItemModel NewEvent { get; set; }
 
         private HashSet<uint> follows = new HashSet<uint>();
         private HashSet<uint> hosts = new HashSet<uint>();
         private HashSet<uint> subs = new HashSet<uint>();
 
-        public OverlayEventListItemModelBase() : base() { }
+        public OverlayEventListItemModel() : base() { }
 
-        public OverlayEventListItemModelBase(string htmlText, IEnumerable<OverlayEventListItemTypeEnum> itemTypes, int totalToShow, string textFont, int width, int height,
+        public OverlayEventListItemModel(string htmlText, IEnumerable<OverlayEventListItemTypeEnum> itemTypes, bool resetOnLoad, int totalToShow, string textFont, int width, int height,
             string borderColor, string backgroundColor, string textColor, OverlayItemEffectEntranceAnimationTypeEnum addEventAnimation, OverlayItemEffectExitAnimationTypeEnum removeEventAnimation)
             : base(OverlayItemModelTypeEnum.EventList, htmlText, totalToShow, textFont, width, height, borderColor, backgroundColor, textColor, addEventAnimation, removeEventAnimation)
         {
             this.ItemTypes = new List<OverlayEventListItemTypeEnum>(itemTypes);
+            this.ResetOnLoad = resetOnLoad;
         }
 
         public override async Task LoadTestData()
