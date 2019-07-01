@@ -215,14 +215,12 @@
                             else if (packet.data.ItemTypeName === "StreamClip") {
                                 streamClipPacket(packet.data);
                             }
-                            else if (packet.data.ItemTypeName === "ChatMessages") {
+                            else if (packet.data.ItemTypeName === "ChatMessages" || packet.data.ItemTypeName === "EventList") {
                                 listPacket(packet.data);
                             }
 
 
-                            //else if (packet.data.ItemTypeName === "Eventlist") {
-                            //    eventListPacket(packet.data);
-                            //}
+
                             //else if (packet.data.ItemTypeName === "Gamequeue") {
                             //    gameQueuePacket(packet.data);
                             //}

@@ -76,17 +76,6 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             }
         }
 
-        public bool ResetOnLoad
-        {
-            get { return this.resetOnLoad; }
-            set
-            {
-                this.resetOnLoad = value;
-                this.NotifyPropertyChanged();
-            }
-        }
-        private bool resetOnLoad;
-
         private HashSet<OverlayEventListItemTypeEnum> eventListTypes = new HashSet<OverlayEventListItemTypeEnum>();
 
         public OverlayEventListItemViewModel()
@@ -98,14 +87,11 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         public OverlayEventListItemViewModel(OverlayEventListItemModel item)
             : base(item.TotalToShow, item.Width, item.Height, item.TextFont, item.TextColor, item.BorderColor, item.BackgroundColor, item.Effects.EntranceAnimation, item.Effects.ExitAnimation, item.HTML)
         {
-            this.ResetOnLoad = item.ResetOnLoad;
         }
 
         public OverlayEventListItemViewModel(OverlayEventList item)
             : base(item.TotalToShow, item.Width, item.Height, item.TextFont, item.TextColor, item.BorderColor, item.BackgroundColor, OverlayItemEffectEntranceAnimationTypeEnum.None, OverlayItemEffectExitAnimationTypeEnum.None, item.HTMLText)
         {
-            
-            this.ResetOnLoad = item.ResetOnLoad;
         }
 
         public override OverlayItemBase GetItem()
@@ -129,7 +115,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
                 this.BorderColor = ColorSchemes.GetColorCode(this.BorderColor);
                 this.BackgroundColor = ColorSchemes.GetColorCode(this.BackgroundColor);
 
-                return new OverlayEventListItemModel(this.HTML, this.eventListTypes, this.ResetOnLoad, totalToShow, this.Font, this.width, this.height, this.BorderColor, this.BackgroundColor, this.TextColor, this.entranceAnimation, this.exitAnimation);
+                return new OverlayEventListItemModel(this.HTML, this.eventListTypes, totalToShow, this.Font, this.width, this.height, this.BorderColor, this.BackgroundColor, this.TextColor, this.entranceAnimation, this.exitAnimation);
             }
             return null;
         }

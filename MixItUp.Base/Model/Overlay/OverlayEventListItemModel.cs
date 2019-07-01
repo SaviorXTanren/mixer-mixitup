@@ -5,6 +5,7 @@ using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
@@ -23,23 +24,6 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayEventListItemModel : OverlayListItemModelBase
     {
-        [DataContract]
-        public class OverlayEventItemModel
-        {
-            [DataMember]
-            public string Name { get; set; }
-            [DataMember]
-            public string Details { get; set; }
-
-            public OverlayEventItemModel() { }
-
-            public OverlayEventItemModel(string name, string details)
-            {
-                this.Name = name;
-                this.Details = details;
-            }
-        }
-
         public const string HTMLTemplate =
         @"<div style=""position: relative; border-style: solid; border-width: 5px; border-color: {BORDER_COLOR}; background-color: {BACKGROUND_COLOR}; width: {WIDTH}px; height: {HEIGHT}px"">
           <p style=""position: absolute; top: 35%; left: 5%; width: 50%; float: left; text-align: left; font-family: '{TEXT_FONT}'; font-size: {TOP_TEXT_HEIGHT}px; color: {TEXT_COLOR}; white-space: nowrap; font-weight: bold; margin: auto; transform: translate(0, -50%);"">{NAME}</p>
@@ -49,33 +33,26 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public List<OverlayEventListItemTypeEnum> ItemTypes { get; set; }
 
-        [DataMember]
-        public bool ResetOnLoad { get; set; }
-
-        [DataMember]
-        public OverlayEventItemModel NewEvent { get; set; }
-
         private HashSet<uint> follows = new HashSet<uint>();
         private HashSet<uint> hosts = new HashSet<uint>();
         private HashSet<uint> subs = new HashSet<uint>();
 
+        private SemaphoreSlim eventSemaphore = new SemaphoreSlim(1);
+
         public OverlayEventListItemModel() : base() { }
 
-        public OverlayEventListItemModel(string htmlText, IEnumerable<OverlayEventListItemTypeEnum> itemTypes, bool resetOnLoad, int totalToShow, string textFont, int width, int height,
+        public OverlayEventListItemModel(string htmlText, IEnumerable<OverlayEventListItemTypeEnum> itemTypes, int totalToShow, string textFont, int width, int height,
             string borderColor, string backgroundColor, string textColor, OverlayItemEffectEntranceAnimationTypeEnum addEventAnimation, OverlayItemEffectExitAnimationTypeEnum removeEventAnimation)
             : base(OverlayItemModelTypeEnum.EventList, htmlText, totalToShow, textFont, width, height, borderColor, backgroundColor, textColor, addEventAnimation, removeEventAnimation)
         {
             this.ItemTypes = new List<OverlayEventListItemTypeEnum>(itemTypes);
-            this.ResetOnLoad = resetOnLoad;
         }
 
         public override async Task LoadTestData()
         {
             for (int i = 0; i < 5; i++)
             {
-                this.AddEvent("Joe Smoe", "Followed");
-
-                await Task.Delay(1000);
+                await this.AddEvent("Joe Smoe", "Followed");
             }
         }
 
@@ -123,54 +100,64 @@ namespace MixItUp.Base.Model.Overlay
             await base.Initialize();
         }
 
-        private void GlobalEvents_OnFollowOccurred(object sender, UserViewModel user)
+        private async void GlobalEvents_OnFollowOccurred(object sender, UserViewModel user)
         {
             if (!this.follows.Contains(user.ID))
             {
                 this.follows.Add(user.ID);
-                this.AddEvent(user.UserName, "Followed");
+                await this.AddEvent(user.UserName, "Followed");
             }
         }
 
-        private void GlobalEvents_OnHostOccurred(object sender, Tuple<UserViewModel, int> host)
+        private async void GlobalEvents_OnHostOccurred(object sender, Tuple<UserViewModel, int> host)
         {
             if (!this.hosts.Contains(host.Item1.ID))
             {
                 this.hosts.Add(host.Item1.ID);
-                this.AddEvent(host.Item1.UserName, string.Format("Hosted ({0})", host.Item2));
+                await this.AddEvent(host.Item1.UserName, string.Format("Hosted ({0})", host.Item2));
             }
         }
 
-        private void GlobalEvents_OnSubscribeOccurred(object sender, UserViewModel user)
+        private async void GlobalEvents_OnSubscribeOccurred(object sender, UserViewModel user)
         {
             if (!this.subs.Contains(user.ID))
             {
                 this.subs.Add(user.ID);
-                this.AddEvent(user.UserName, "Subscribed");
+                await this.AddEvent(user.UserName, "Subscribed");
             }
         }
 
-        private void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserViewModel, int> user)
+        private async void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserViewModel, int> user)
         {
             if (!this.subs.Contains(user.Item1.ID))
             {
                 this.subs.Add(user.Item1.ID);
-                this.AddEvent(user.Item1.UserName, string.Format("Resubscribed ({0} months)", user.Item2));
+                await this.AddEvent(user.Item1.UserName, string.Format("Resubscribed ({0} months)", user.Item2));
             }
         }
 
-        private void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { this.AddEvent(donation.UserName, string.Format("Donated {0}", donation.AmountText)); }
+        private async void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { await this.AddEvent(donation.UserName, string.Format("Donated {0}", donation.AmountText)); }
 
-        private void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, int> sparkUsage) { this.AddEvent(sparkUsage.Item1.UserName, string.Format("{0} Sparks", sparkUsage.Item2)); }
+        private async void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, int> sparkUsage) { await this.AddEvent(sparkUsage.Item1.UserName, string.Format("{0} Sparks", sparkUsage.Item2)); }
 
-        private void GlobalEvents_OnEmberUseOccurred(object sender, UserEmberUsageModel emberUsage) { this.AddEvent(emberUsage.User.UserName, string.Format("{0} Embers", emberUsage.Amount)); }
+        private async void GlobalEvents_OnEmberUseOccurred(object sender, UserEmberUsageModel emberUsage) { await this.AddEvent(emberUsage.User.UserName, string.Format("{0} Embers", emberUsage.Amount)); }
 
-        private void GlobalEvents_OnPatronageMilestoneReachedOccurred(object sender, PatronageMilestoneModel patronageMilestone) { this.AddEvent(string.Format("{0} Milestone", patronageMilestone.DollarAmountText()), string.Format("{0} Sparks", patronageMilestone.target)); }
+        private async void GlobalEvents_OnPatronageMilestoneReachedOccurred(object sender, PatronageMilestoneModel patronageMilestone) { await this.AddEvent(string.Format("{0} Milestone", patronageMilestone.DollarAmountText()), string.Format("{0} Sparks", patronageMilestone.target)); }
 
-        private void AddEvent(string name, string details)
+        private async Task AddEvent(string name, string details)
         {
-            this.NewEvent = new OverlayEventItemModel(name, details);
-            this.SendUpdateRequired();
+            OverlayListIndividualItemModelBase item = OverlayListIndividualItemModelBase.CreateAddItem(name + details, null, -1, this.HTML);
+            item.TemplateReplacements.Add("NAME", name);
+            item.TemplateReplacements.Add("DETAILS", details);
+            item.TemplateReplacements.Add("TOP_TEXT_HEIGHT", ((int)(0.4 * ((double)this.Height))).ToString());
+            item.TemplateReplacements.Add("BOTTOM_TEXT_HEIGHT", ((int)(0.2 * ((double)this.Height))).ToString());
+
+            await this.eventSemaphore.WaitAndRelease(() =>
+            {
+                this.Items.Add(item);
+                this.SendUpdateRequired();
+                return Task.FromResult(0);
+            });
         }
     }
 }
