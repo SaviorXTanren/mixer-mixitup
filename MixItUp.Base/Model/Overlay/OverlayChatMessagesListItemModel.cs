@@ -37,8 +37,6 @@ namespace MixItUp.Base.Model.Overlay
         private const string EmoticonMessageHTMLTemplate = @"<span role=""img"" style=""height: {TEXT_SIZE}px; width: {TEXT_SIZE}px; background-repeat: no-repeat; display: inline-block; background-image: url({EMOTICON}); background-position: {EMOTICON_X}px {EMOTICON_Y}px;""></span>";
         private const string SkillImageMessageHTMLTemplate = @"<img src=""{IMAGE}"" style=""vertical-align: middle; margin-left: 10px; max-height: 80px;""></img>";
 
-        private SemaphoreSlim MessageSemaphore = new SemaphoreSlim(1);
-
         public OverlayChatMessagesListItemModel() : base() { }
 
         public OverlayChatMessagesListItemModel(string htmlText, int totalToShow, string textFont, int width, int height,
@@ -66,6 +64,14 @@ namespace MixItUp.Base.Model.Overlay
             GlobalEvents.OnChatMessageDeleted += GlobalEvents_OnChatMessageDeleted;
 
             await base.Initialize();
+        }
+
+        public override async Task Disable()
+        {
+            GlobalEvents.OnChatMessageReceived -= GlobalEvents_OnChatMessageReceived;
+            GlobalEvents.OnChatMessageDeleted -= GlobalEvents_OnChatMessageDeleted;
+
+            await base.Disable();
         }
 
         private async void GlobalEvents_OnChatMessageReceived(object sender, ChatMessageViewModel message)
@@ -114,7 +120,7 @@ namespace MixItUp.Base.Model.Overlay
                 item.TemplateReplacements.Add("SUB_IMAGE", (item.User.IsMixerSubscriber && ChannelSession.Channel.badge != null) ? ChannelSession.Channel.badge.url : string.Empty);
                 item.TemplateReplacements.Add("TEXT_SIZE", this.Height.ToString());
 
-                await this.MessageSemaphore.WaitAndRelease(() =>
+                await this.listSemaphore.WaitAndRelease(() =>
                 {
                     this.Items.Add(item);
                     this.SendUpdateRequired();
@@ -125,7 +131,7 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void GlobalEvents_OnChatMessageDeleted(object sender, Guid id)
         {
-            await this.MessageSemaphore.WaitAndRelease(() =>
+            await this.listSemaphore.WaitAndRelease(() =>
             {
                 OverlayListIndividualItemModelBase item = OverlayListIndividualItemModelBase.CreateRemoveItem(id.ToString());
                 this.Items.Add(item);

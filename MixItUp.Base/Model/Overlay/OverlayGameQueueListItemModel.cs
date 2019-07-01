@@ -10,31 +10,12 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayGameQueueListItemModel : OverlayListItemModelBase
     {
-        [DataContract]
-        public class OverlayGameQueueItemModel
-        {
-            [DataMember]
-            public int Position { get; set; }
-
-            [DataMember]
-            public UserViewModel User { get; set; }
-
-            public OverlayGameQueueItemModel() { }
-
-            public OverlayGameQueueItemModel(int position, UserViewModel user)
-            {
-                this.Position = position;
-                this.User = user;
-            }
-        }
-
         public const string HTMLTemplate =
         @"<div style=""position: relative; border-style: solid; border-width: 5px; border-color: {BORDER_COLOR}; background-color: {BACKGROUND_COLOR}; width: {WIDTH}px; height: {HEIGHT}px"">
           <p style=""position: absolute; top: 50%; left: 5%; float: left; text-align: left; font-family: '{TEXT_FONT}'; font-size: {TEXT_HEIGHT}px; color: {TEXT_COLOR}; white-space: nowrap; font-weight: bold; margin: auto; transform: translate(0, -50%);"">#{POSITION} {USERNAME}</p>
         </div>";
 
-        [DataMember]
-        public List<OverlayGameQueueItemModel> GameQueueItems { get; set; } = new List<OverlayGameQueueItemModel>();
+        private List<UserViewModel> lastUsers = new List<UserViewModel>();
 
         public OverlayGameQueueListItemModel() : base() { }
 
@@ -47,33 +28,68 @@ namespace MixItUp.Base.Model.Overlay
         {
             UserViewModel user = await ChannelSession.GetCurrentUser();
 
-            this.GameQueueItems.Clear();
+            List<UserViewModel> users = new List<UserViewModel>();
             for (int i = 0; i < this.TotalToShow; i++)
             {
-                this.GameQueueItems.Add(new OverlayGameQueueItemModel(i + 1, user));
+                users.Add(user);
             }
+            await this.AddGameQueueUsers(users);
         }
 
         public override async Task Initialize()
         {
             GlobalEvents.OnGameQueueUpdated += GlobalEvents_OnGameQueueUpdated;
 
-            this.GameQueueItems.Clear();
-
             await base.Initialize();
         }
 
-        private void GlobalEvents_OnGameQueueUpdated(object sender, System.EventArgs e)
+        public override async Task Disable()
         {
-            IEnumerable<UserViewModel> gameQueue = ChannelSession.Services.GameQueueService.Queue;
+            GlobalEvents.OnGameQueueUpdated -= GlobalEvents_OnGameQueueUpdated;
 
-            this.GameQueueItems.Clear();
-            for (int i = 0; i < this.TotalToShow && i < gameQueue.Count(); i++)
+            await base.Disable();
+        }
+
+        private async void GlobalEvents_OnGameQueueUpdated(object sender, System.EventArgs e)
+        {
+            await this.AddGameQueueUsers(ChannelSession.Services.GameQueueService.Queue);
+        }
+
+        private async Task AddGameQueueUsers(IEnumerable<UserViewModel> users)
+        {
+            await this.listSemaphore.WaitAndRelease(() =>
             {
-                this.GameQueueItems.Add(new OverlayGameQueueItemModel(i + 1, gameQueue.ElementAt(i)));
-            }
+                foreach (UserViewModel user in this.lastUsers)
+                {
+                    if (!users.Contains(user))
+                    {
+                        this.Items.Add(OverlayListIndividualItemModelBase.CreateRemoveItem(user.ID.ToString()));
+                    }
+                }
 
-            this.SendUpdateRequired();
+                for (int i = 0; i < users.Count(); i++)
+                {
+                    UserViewModel user = users.ElementAt(i);
+
+                    OverlayListIndividualItemModelBase item = null;
+
+                    int lastIndex = this.lastUsers.IndexOf(user);
+                    if (lastIndex < 0 || lastIndex != i)
+                    {
+                        item = OverlayListIndividualItemModelBase.CreateAddItem(user.ID.ToString(), user, i + 1, this.HTML);
+
+                        item.TemplateReplacements.Add("USERNAME", user.UserName);
+                        item.TemplateReplacements.Add("POSITION", (i + 1).ToString());
+
+                        this.Items.Add(item);
+                    }
+                }
+
+                this.lastUsers = new List<UserViewModel>(users);
+
+                this.SendUpdateRequired();
+                return Task.FromResult(0);
+            });
         }
     }
 }

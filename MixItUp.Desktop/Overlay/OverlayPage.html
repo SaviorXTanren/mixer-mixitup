@@ -215,7 +215,9 @@
                             else if (packet.data.ItemTypeName === "StreamClip") {
                                 streamClipPacket(packet.data);
                             }
-                            else if (packet.data.ItemTypeName === "ChatMessages" || packet.data.ItemTypeName === "EventList") {
+                            else if (packet.data.ItemTypeName === "ChatMessages" || packet.data.ItemTypeName === "EventList" || 
+                                packet.data.ItemTypeName === "GameQueue") {
+
                                 listPacket(packet.data);
                             }
 
@@ -635,15 +637,16 @@
                         }
                     }
                     else if (item.Add) {
-                        if (widget.Items.length >= data.TotalToShow) {
-                            while (widget.Items.length > data.TotalToShow) {
-                                removeListItem(data, 0, function () { });
+                        if (item.Position > 0) {
+                            for (j = 0; j < widget.Items.length; j++) {
+                                if (widget.Items[j].id === item.ID) {
+                                    removeListItem(data, j, function () {
+                                        addListItem(data, item);
+                                    });
+                                    return;
+                                }
                             }
-
-                            removeListItem(data, 0, function ()
-                            {
-                                addListItem(data, item);
-                            });
+                            addListItem(data, item);
                         }
                         else {
                             addListItem(data, item);
@@ -668,14 +671,33 @@
                 var widget = widgetData.get(data.ID);
                 var mainDiv = widget.MainDiv;
 
-                var newItemDiv = document.createElement('div');
-                var newItemInnerDiv = document.createElement('div');
-                newItemInnerDiv.innerHTML = item.HTML;
-                newItemDiv.appendChild(newItemInnerDiv);
-                $(newItemDiv).animateCss(data.Effects.EntranceAnimationName, function () { });
+                if (widget.Items.length >= data.TotalToShow) {
+                    while (widget.Items.length > data.TotalToShow) {
+                        removeListItem(data, 0, function () { });
+                    }
 
-                mainDiv.appendChild(newItemDiv);
-                widget.Items.push({ id: item.ID, div: newItemDiv, item: item });
+                    removeListItem(data, 0, function () {
+                        addListItem(data, item);
+                    });
+                }
+                else {
+                    var newItemDiv = document.createElement('div');
+                    var newItemInnerDiv = document.createElement('div');
+                    var newItem = { id: item.ID, div: newItemDiv, item: item };
+
+                    newItemInnerDiv.innerHTML = item.HTML;
+                    newItemDiv.appendChild(newItemInnerDiv);
+                    $(newItemDiv).animateCss(data.Effects.EntranceAnimationName, function () { });
+
+                    if (item.Position > 0) {
+                        mainDiv.insertBefore(newItemDiv, mainDiv.children[item.Position - 1]);
+                        widget.Items.splice(item.Position - 1, 0, newItem);
+                    }
+                    else {
+                        mainDiv.appendChild(newItemDiv);
+                        widget.Items.push(newItem);
+                    }
+                }
             }
 
             function streamClipPacket(data) {

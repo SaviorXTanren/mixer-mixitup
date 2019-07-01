@@ -46,14 +46,14 @@ namespace MixItUp.WPF.Windows.Overlay
                 this.ItemPosition.SetItemPosition(this.viewModel.OverlayWidget.Item.Position);
 
                 if (this.viewModel.OverlayWidget.Item is OverlayHTMLItemModel) { this.SetGameEditorControl(new OverlayHTMLItemControl((OverlayHTMLItemModel)this.viewModel.OverlayWidget.Item)); }
-                //else if (this.viewModel.OverlayWidget.Item is OverlayChatMessages) { this.SetGameEditorControl(new OverlayChatMessagesControl((OverlayChatMessages)this.viewModel.OverlayWidget.Item)); }
-                //else if (this.viewModel.OverlayWidget.Item is OverlayEventList) { this.SetGameEditorControl(new OverlayEventListControl((OverlayEventList)this.viewModel.OverlayWidget.Item)); }
-                ///else if (this.viewModel.OverlayWidget.Item is OverlayGameQueue) { this.SetGameEditorControl(new OverlayGameQueueControl((OverlayGameQueue)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayChatMessagesListItemModel) { this.SetGameEditorControl(new OverlayChatMessagesControl((OverlayChatMessagesListItemModel)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayEventListItemModel) { this.SetGameEditorControl(new OverlayEventListControl((OverlayEventListItemModel)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayGameQueueListItemModel) { this.SetGameEditorControl(new OverlayGameQueueControl((OverlayGameQueueListItemModel)this.viewModel.OverlayWidget.Item)); }
                 //else if (this.viewModel.OverlayWidget.Item is OverlayProgressBar) { this.SetGameEditorControl(new OverlayProgressBarControl((OverlayProgressBar)this.viewModel.OverlayWidget.Item)); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayImageItemModel) { this.SetGameEditorControl(new OverlayImageItemControl((OverlayImageItemModel)this.viewModel.OverlayWidget.Item)); }
-                //else if (this.viewModel.OverlayWidget.Item is OverlayLeaderboard) { this.SetGameEditorControl(new OverlayLeaderboardControl((OverlayLeaderboard)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayLeaderboardListItemModel) { this.SetGameEditorControl(new OverlayLeaderboardControl((OverlayLeaderboardListItemModel)this.viewModel.OverlayWidget.Item)); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayStreamClipItemModel) { this.SetGameEditorControl(new OverlayStreamClipControl((OverlayStreamClipItemModel)this.viewModel.OverlayWidget.Item)); }
-                //else if (this.viewModel.OverlayWidget.Item is OverlaySongRequests) { this.SetGameEditorControl(new OverlaySongRequestsControl((OverlaySongRequests)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlaySongRequestsListItemModel) { this.SetGameEditorControl(new OverlaySongRequestsControl((OverlaySongRequestsListItemModel)this.viewModel.OverlayWidget.Item)); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayStreamBossItemModel) { this.SetGameEditorControl(new OverlayStreamBossControl((OverlayStreamBossItemModel)this.viewModel.OverlayWidget.Item)); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayTextItemModel) { this.SetGameEditorControl(new OverlayTextItemControl((OverlayTextItemModel)this.viewModel.OverlayWidget.Item)); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayTimerItemModel) { this.SetGameEditorControl(new OverlayTimerControl((OverlayTimerItemModel)this.viewModel.OverlayWidget.Item)); }

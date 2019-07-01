@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
@@ -78,6 +79,8 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public List<OverlayListIndividualItemModelBase> Items = new List<OverlayListIndividualItemModelBase>();
 
+        protected SemaphoreSlim listSemaphore = new SemaphoreSlim(1);
+
         public OverlayListItemModelBase() : base() { }
 
         public OverlayListItemModelBase(OverlayItemModelTypeEnum type, string htmlText, int totalToShow, string textFont, int width, int height, string borderColor,
@@ -96,6 +99,12 @@ namespace MixItUp.Base.Model.Overlay
 
         [JsonIgnore]
         public override bool SupportsTestData { get { return true; } }
+
+        public override async Task Disable()
+        {
+            this.Items.Clear();
+            await base.Disable();
+        }
 
         public override async Task<JObject> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {

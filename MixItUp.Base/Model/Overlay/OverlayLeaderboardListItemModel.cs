@@ -109,10 +109,6 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task Initialize()
         {
-            GlobalEvents.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
-            GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
-            GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
-
             if (this.LeaderboardType == OverlayLeaderboardListItemTypeEnum.Subscribers)
             {
                 foreach (UserWithGroupsModel userWithGroups in await ChannelSession.Connection.GetUsersWithRoles(ChannelSession.Channel, MixerRoleEnum.Subscriber))
@@ -135,6 +131,15 @@ namespace MixItUp.Base.Model.Overlay
             await base.Initialize();
 
             await this.UpdateList();
+        }
+
+        public override async Task Disable()
+        {
+            GlobalEvents.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
+            GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
+            GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
+
+            await base.Disable();
         }
 
         private async void GlobalEvents_OnSubscribeOccurred(object sender, UserViewModel user)

@@ -167,7 +167,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.StartingAmount = "0";
             this.GoalAmount = "0";
             this.resetAfterDays = 0;
-            this.HTML = OverlayProgressBar.HTMLTemplate;
+            this.HTML = OverlayProgressBarItemModel.HTMLTemplate;
         }
 
         public OverlayProgressBarItemViewModel(OverlayProgressBar item)

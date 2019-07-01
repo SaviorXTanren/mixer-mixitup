@@ -37,8 +37,6 @@ namespace MixItUp.Base.Model.Overlay
         private HashSet<uint> hosts = new HashSet<uint>();
         private HashSet<uint> subs = new HashSet<uint>();
 
-        private SemaphoreSlim eventSemaphore = new SemaphoreSlim(1);
-
         public OverlayEventListItemModel() : base() { }
 
         public OverlayEventListItemModel(string htmlText, IEnumerable<OverlayEventListItemTypeEnum> itemTypes, int totalToShow, string textFont, int width, int height,
@@ -58,15 +56,6 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task Initialize()
         {
-            GlobalEvents.OnFollowOccurred -= GlobalEvents_OnFollowOccurred;
-            GlobalEvents.OnHostOccurred -= GlobalEvents_OnHostOccurred;
-            GlobalEvents.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
-            GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
-            GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
-            GlobalEvents.OnSparkUseOccurred -= GlobalEvents_OnSparkUseOccurred;
-            GlobalEvents.OnEmberUseOccurred -= GlobalEvents_OnEmberUseOccurred;
-            GlobalEvents.OnPatronageMilestoneReachedOccurred -= GlobalEvents_OnPatronageMilestoneReachedOccurred;
-
             if (this.ItemTypes.Contains(OverlayEventListItemTypeEnum.Followers))
             {
                 GlobalEvents.OnFollowOccurred += GlobalEvents_OnFollowOccurred;
@@ -98,6 +87,20 @@ namespace MixItUp.Base.Model.Overlay
             }
 
             await base.Initialize();
+        }
+
+        public override async Task Disable()
+        {
+            GlobalEvents.OnFollowOccurred -= GlobalEvents_OnFollowOccurred;
+            GlobalEvents.OnHostOccurred -= GlobalEvents_OnHostOccurred;
+            GlobalEvents.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
+            GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
+            GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
+            GlobalEvents.OnSparkUseOccurred -= GlobalEvents_OnSparkUseOccurred;
+            GlobalEvents.OnEmberUseOccurred -= GlobalEvents_OnEmberUseOccurred;
+            GlobalEvents.OnPatronageMilestoneReachedOccurred -= GlobalEvents_OnPatronageMilestoneReachedOccurred;
+
+            await base.Disable();
         }
 
         private async void GlobalEvents_OnFollowOccurred(object sender, UserViewModel user)
@@ -152,7 +155,7 @@ namespace MixItUp.Base.Model.Overlay
             item.TemplateReplacements.Add("TOP_TEXT_HEIGHT", ((int)(0.4 * ((double)this.Height))).ToString());
             item.TemplateReplacements.Add("BOTTOM_TEXT_HEIGHT", ((int)(0.2 * ((double)this.Height))).ToString());
 
-            await this.eventSemaphore.WaitAndRelease(() =>
+            await this.listSemaphore.WaitAndRelease(() =>
             {
                 this.Items.Add(item);
                 this.SendUpdateRequired();

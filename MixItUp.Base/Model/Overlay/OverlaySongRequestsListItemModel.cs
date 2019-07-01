@@ -63,6 +63,13 @@ namespace MixItUp.Base.Model.Overlay
             await base.Initialize();
         }
 
+        public override async Task Disable()
+        {
+            GlobalEvents.OnSongRequestsChangedOccurred -= GlobalEvents_OnSongRequestsChangedOccurred;
+
+            await base.Disable();
+        }
+
         private void GlobalEvents_OnSongRequestsChangedOccurred(object sender, System.EventArgs e)
         {
             IEnumerable<SongRequestModel> songRequests = ChannelSession.Services.SongRequestService.RequestSongs;
