@@ -216,7 +216,7 @@
                                 streamClipPacket(packet.data);
                             }
                             else if (packet.data.ItemTypeName === "ChatMessages" || packet.data.ItemTypeName === "EventList" || 
-                                packet.data.ItemTypeName === "GameQueue") {
+                                packet.data.ItemTypeName === "GameQueue" || packet.data.ItemTypeName === "SongRequests") {
 
                                 listPacket(packet.data);
                             }

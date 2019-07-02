@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.SongRequests;
 using MixItUp.Base.Util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -10,32 +11,13 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlaySongRequestsListItemModel : OverlayListItemModelBase
     {
-        [DataContract]
-        public class OverlaySongRequestItemModel
-        {
-            [DataMember]
-            public string Name { get; set; }
-
-            [DataMember]
-            public string Image { get; set; }
-
-            public OverlaySongRequestItemModel() { }
-
-            public OverlaySongRequestItemModel(string name, string image)
-            {
-                this.Name = name;
-                this.Image = image;
-            }
-        }
-
         public const string HTMLTemplate =
         @"<div style=""position: relative; border-style: solid; border-width: 5px; border-color: {BORDER_COLOR}; background-color: {BACKGROUND_COLOR}; width: {WIDTH}px; height: {HEIGHT}px"">
             <img src=""{SONG_IMAGE}"" width=""{SONG_IMAGE_SIZE}"" height=""{SONG_IMAGE_SIZE}"" style=""position: absolute; top: 50%; transform: translate(0%, -50%); margin-left: 10px;"">
             <span style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; font-weight: bold; color: {TEXT_COLOR}; position: absolute; top: 50%; left: 28%; transform: translate(0%, -50%);"">{SONG_NAME}</span>
         </div>";
 
-        [DataMember]
-        public List<OverlaySongRequestItemModel> SongRequestItems { get; set; } = new List<OverlaySongRequestItemModel>();
+        private List<SongRequestModel> lastSongRequests { get; set; } = new List<SongRequestModel>();
 
         public OverlaySongRequestsListItemModel() : base() { }
 
@@ -44,21 +26,25 @@ namespace MixItUp.Base.Model.Overlay
             : base(OverlayItemModelTypeEnum.SongRequests, htmlText, totalToShow, textFont, width, height, borderColor, backgroundColor, textColor, addEventAnimation, removeEventAnimation)
         { }
 
-        public override Task LoadTestData()
+        public override async Task LoadTestData()
         {
-            this.SongRequestItems.Clear();
+            List<SongRequestModel> songs = new List<SongRequestModel>();
             for (int i = 0; i < this.TotalToShow; i++)
             {
-                this.SongRequestItems.Add(new OverlaySongRequestItemModel("TEST SONG", "https://www.youtube.com/yt/about/media/images/brand-resources/icons/YouTube_icon_full-color.svg"));
+                songs.Add(new SongRequestModel()
+                {
+                    ID = Guid.NewGuid().ToString(),
+                    Type = SongRequestServiceTypeEnum.YouTube,
+                    Name = "TEST SONG",
+                    AlbumImage = "https://www.youtube.com/yt/about/media/images/brand-resources/icons/YouTube_icon_full-color.svg"
+                });
             }
-            return Task.FromResult(0);
+            await this.AddSongRequests(songs);
         }
 
         public override async Task Initialize()
         {
             GlobalEvents.OnSongRequestsChangedOccurred += GlobalEvents_OnSongRequestsChangedOccurred;
-
-            this.SongRequestItems.Clear();
 
             await base.Initialize();
         }
@@ -70,17 +56,47 @@ namespace MixItUp.Base.Model.Overlay
             await base.Disable();
         }
 
-        private void GlobalEvents_OnSongRequestsChangedOccurred(object sender, System.EventArgs e)
+        private async void GlobalEvents_OnSongRequestsChangedOccurred(object sender, System.EventArgs e)
         {
-            IEnumerable<SongRequestModel> songRequests = ChannelSession.Services.SongRequestService.RequestSongs;
+            await this.AddSongRequests(ChannelSession.Services.SongRequestService.RequestSongs);
+        }
 
-            this.SongRequestItems.Clear();
-            for (int i = 0; i < this.TotalToShow && i < songRequests.Count(); i++)
+        private async Task AddSongRequests(IEnumerable<SongRequestModel> songs)
+        {
+            await this.listSemaphore.WaitAndRelease(() =>
             {
-                this.SongRequestItems.Add(new OverlaySongRequestItemModel(songRequests.ElementAt(i).Name, songRequests.ElementAt(i).AlbumImage));
-            }
+                foreach (SongRequestModel song in this.lastSongRequests)
+                {
+                    if (!songs.Contains(song))
+                    {
+                        this.Items.Add(OverlayListIndividualItemModelBase.CreateRemoveItem(song.ID.ToString()));
+                    }
+                }
 
-            this.SendUpdateRequired();
+                for (int i = 0; i < songs.Count(); i++)
+                {
+                    SongRequestModel song = songs.ElementAt(i);
+
+                    OverlayListIndividualItemModelBase item = null;
+
+                    int lastIndex = this.lastSongRequests.IndexOf(song);
+                    if (lastIndex < 0 || lastIndex != i)
+                    {
+                        item = OverlayListIndividualItemModelBase.CreateAddItem(song.ID.ToString(), song.User, i + 1, this.HTML);
+
+                        item.TemplateReplacements.Add("SONG_NAME", song.Name);
+                        item.TemplateReplacements.Add("SONG_IMAGE", song.AlbumImage);
+                        item.TemplateReplacements.Add("SONG_IMAGE_SIZE", ((int)(0.8 * ((double)this.Height))).ToString());
+
+                        this.Items.Add(item);
+                    }
+                }
+
+                this.lastSongRequests = new List<SongRequestModel>(songs);
+
+                this.SendUpdateRequired();
+                return Task.FromResult(0);
+            });
         }
     }
 }
