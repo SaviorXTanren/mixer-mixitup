@@ -157,10 +157,6 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public string GiveawayCommand { get; set; } = "giveaway";
         [JsonProperty]
-        public bool GiveawayDonationRequiredAmount { get; set; }
-        [JsonProperty]
-        public double GiveawayDonationAmount { get; set; }
-        [JsonProperty]
         public int GiveawayTimer { get; set; } = 1;
         [JsonProperty]
         public int GiveawayMaximumEntries { get; set; } = 1;

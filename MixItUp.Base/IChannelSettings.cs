@@ -91,8 +91,6 @@ namespace MixItUp.Base
         bool DisableAllTimers { get; set; }
 
         string GiveawayCommand { get; set; }
-        bool GiveawayDonationRequiredAmount { get; set; }
-        double GiveawayDonationAmount { get; set; }
         int GiveawayTimer { get; set; }
         int GiveawayMaximumEntries { get; set; }
         RequirementViewModel GiveawayRequirements { get; set; }
