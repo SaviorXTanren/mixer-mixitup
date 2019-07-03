@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace MixItUp.Base.Model.Overlay
 {
     [DataContract]
-    public class OverlayListIndividualItemModelBase
+    public class OverlayListIndividualItemModel
     {
         [DataMember]
         public string ID { get; set; }
@@ -29,13 +29,16 @@ namespace MixItUp.Base.Model.Overlay
         public string HTML { get; set; }
 
         [DataMember]
+        public string Hash { get; set; } = string.Empty;
+
+        [DataMember]
         public int FadeOut { get; set; }
 
-        public OverlayListIndividualItemModelBase() { }
+        public OverlayListIndividualItemModel() { }
 
-        public static OverlayListIndividualItemModelBase CreateAddItem(string id, UserViewModel user, int position, string html)
+        public static OverlayListIndividualItemModel CreateAddItem(string id, UserViewModel user, int position, string html)
         {
-            return new OverlayListIndividualItemModelBase()
+            return new OverlayListIndividualItemModel()
             {
                 ID = id,
                 User = user,
@@ -45,9 +48,9 @@ namespace MixItUp.Base.Model.Overlay
             };
         }
 
-        public static OverlayListIndividualItemModelBase CreateRemoveItem(string id)
+        public static OverlayListIndividualItemModel CreateRemoveItem(string id)
         {
-            return new OverlayListIndividualItemModelBase()
+            return new OverlayListIndividualItemModel()
             {
                 ID = id,
                 Remove = true
@@ -77,7 +80,7 @@ namespace MixItUp.Base.Model.Overlay
         public int Height { get; set; }
 
         [DataMember]
-        public List<OverlayListIndividualItemModelBase> Items = new List<OverlayListIndividualItemModelBase>();
+        public List<OverlayListIndividualItemModel> Items = new List<OverlayListIndividualItemModel>();
 
         protected SemaphoreSlim listSemaphore = new SemaphoreSlim(1);
 

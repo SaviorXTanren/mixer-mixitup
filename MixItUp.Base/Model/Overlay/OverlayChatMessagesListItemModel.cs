@@ -78,7 +78,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (!message.IsAlert && !message.IsWhisper)
             {
-                OverlayListIndividualItemModelBase item = OverlayListIndividualItemModelBase.CreateAddItem(message.ID.ToString(), message.User, -1, this.HTML);
+                OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateAddItem(message.ID.ToString(), message.User, -1, this.HTML);
 
                 string text = string.Empty;
                 string messageTemplate = string.Empty;
@@ -133,7 +133,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             await this.listSemaphore.WaitAndRelease(() =>
             {
-                OverlayListIndividualItemModelBase item = OverlayListIndividualItemModelBase.CreateRemoveItem(id.ToString());
+                OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateRemoveItem(id.ToString());
                 this.Items.Add(item);
                 this.SendUpdateRequired();
                 return Task.FromResult(0);

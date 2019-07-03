@@ -149,7 +149,7 @@ namespace MixItUp.Base.Model.Overlay
 
         private async Task AddEvent(string name, string details)
         {
-            OverlayListIndividualItemModelBase item = OverlayListIndividualItemModelBase.CreateAddItem(name + details, null, -1, this.HTML);
+            OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateAddItem(name + details, null, -1, this.HTML);
             item.TemplateReplacements.Add("NAME", name);
             item.TemplateReplacements.Add("DETAILS", details);
             item.TemplateReplacements.Add("TOP_TEXT_HEIGHT", ((int)(0.4 * ((double)this.Height))).ToString());

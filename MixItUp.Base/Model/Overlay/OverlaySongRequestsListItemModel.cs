@@ -69,7 +69,7 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     if (!songs.Contains(song))
                     {
-                        this.Items.Add(OverlayListIndividualItemModelBase.CreateRemoveItem(song.ID.ToString()));
+                        this.Items.Add(OverlayListIndividualItemModel.CreateRemoveItem(song.ID.ToString()));
                     }
                 }
 
@@ -77,12 +77,12 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     SongRequestModel song = songs.ElementAt(i);
 
-                    OverlayListIndividualItemModelBase item = null;
+                    OverlayListIndividualItemModel item = null;
 
                     int lastIndex = this.lastSongRequests.IndexOf(song);
                     if (lastIndex < 0 || lastIndex != i)
                     {
-                        item = OverlayListIndividualItemModelBase.CreateAddItem(song.ID.ToString(), song.User, i + 1, this.HTML);
+                        item = OverlayListIndividualItemModel.CreateAddItem(song.ID.ToString(), song.User, i + 1, this.HTML);
 
                         item.TemplateReplacements.Add("SONG_NAME", song.Name);
                         item.TemplateReplacements.Add("SONG_IMAGE", song.AlbumImage);
