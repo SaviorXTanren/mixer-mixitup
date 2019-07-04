@@ -2,7 +2,7 @@
 
 namespace MixItUp.Base.ViewModel.Controls.Overlay
 {
-    public abstract class OverlayCustomHTMLItemViewModelBase : OverlayItemViewModelBase
+    public abstract class OverlayHTMLTemplateItemViewModelBase : OverlayItemViewModelBase
     {
         public string HTML
         {
@@ -15,12 +15,12 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         }
         private string html;
 
-        public OverlayCustomHTMLItemViewModelBase() { }
+        public OverlayHTMLTemplateItemViewModelBase() { }
 
-        public OverlayCustomHTMLItemViewModelBase(OverlayCustomHTMLItem item)
+        public OverlayHTMLTemplateItemViewModelBase(OverlayHTMLTemplateItemModelBase item)
             : this()
         {
-            this.HTML = item.HTMLText;
+            this.HTML = item.HTML;
         }
     }
 }

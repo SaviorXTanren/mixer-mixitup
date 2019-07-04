@@ -484,6 +484,7 @@ namespace MixItUp.Desktop.Services
                 commands.Add(inventory.ItemsSoldCommand);
             }
 
+#pragma warning disable CS0612 // Type or member is obsolete
             foreach (OverlayWidget widget in settings.overlayWidgetsInternal)
             {
                 if (widget.Item is OverlayStreamBoss)
@@ -505,6 +506,35 @@ namespace MixItUp.Desktop.Services
                 else if (widget.Item is OverlayTimer)
                 {
                     OverlayTimer item = ((OverlayTimer)widget.Item);
+                    if (item.TimerCompleteCommand != null)
+                    {
+                        commands.Add(item.TimerCompleteCommand);
+                    }
+                }
+            }
+#pragma warning restore CS0612 // Type or member is obsolete
+
+            foreach (OverlayWidgetModel widget in settings.OverlayWidgets)
+            {
+                if (widget.Item is OverlayStreamBossItemModel)
+                {
+                    OverlayStreamBossItemModel item = ((OverlayStreamBossItemModel)widget.Item);
+                    if (item.NewStreamBossCommand != null)
+                    {
+                        commands.Add(item.NewStreamBossCommand);
+                    }
+                }
+                else if (widget.Item is OverlayProgressBarItemModel)
+                {
+                    OverlayProgressBarItemModel item = ((OverlayProgressBarItemModel)widget.Item);
+                    if (item.GoalReachedCommand != null)
+                    {
+                        commands.Add(item.GoalReachedCommand);
+                    }
+                }
+                else if (widget.Item is OverlayTimerItemModel)
+                {
+                    OverlayTimerItemModel item = ((OverlayTimerItemModel)widget.Item);
                     if (item.TimerCompleteCommand != null)
                     {
                         commands.Add(item.TimerCompleteCommand);

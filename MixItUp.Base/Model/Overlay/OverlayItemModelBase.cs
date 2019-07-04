@@ -353,15 +353,15 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public OverlayItemEffectEntranceAnimationTypeEnum EntranceAnimation { get; set; }
         [DataMember]
-        public string EntranceAnimationName { get { return OverlayItemEffects.GetAnimationClassName(this.EntranceAnimation); } set { } }
+        public string EntranceAnimationName { get { return OverlayItemEffectsModel.GetAnimationClassName(this.EntranceAnimation); } set { } }
         [DataMember]
         public OverlayItemEffectVisibleAnimationTypeEnum VisibleAnimation { get; set; }
         [DataMember]
-        public string VisibleAnimationName { get { return OverlayItemEffects.GetAnimationClassName(this.VisibleAnimation); } set { } }
+        public string VisibleAnimationName { get { return OverlayItemEffectsModel.GetAnimationClassName(this.VisibleAnimation); } set { } }
         [DataMember]
         public OverlayItemEffectExitAnimationTypeEnum ExitAnimation { get; set; }
         [DataMember]
-        public string ExitAnimationName { get { return OverlayItemEffects.GetAnimationClassName(this.ExitAnimation); } set { } }
+        public string ExitAnimationName { get { return OverlayItemEffectsModel.GetAnimationClassName(this.ExitAnimation); } set { } }
 
         [DataMember]
         public double Duration;

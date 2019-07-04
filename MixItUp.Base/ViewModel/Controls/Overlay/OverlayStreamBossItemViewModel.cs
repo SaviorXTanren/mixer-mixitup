@@ -5,7 +5,7 @@ using MixItUp.Base.Util;
 
 namespace MixItUp.Base.ViewModel.Controls.Overlay
 {
-    public class OverlayStreamBossItemViewModel : OverlayCustomHTMLItemViewModelBase
+    public class OverlayStreamBossItemViewModel : OverlayHTMLTemplateItemViewModelBase
     {
         public string StartingHealthString
         {
@@ -213,37 +213,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.sparkBonus = 0.01;
             this.emberBonus = 0.1;
 
-            this.HTML = OverlayStreamBoss.HTMLTemplate;
-        }
-
-        public OverlayStreamBossItemViewModel(OverlayStreamBoss item)
-            : this()
-        {
-            this.startingHealth = item.StartingHealth;
-            this.followBonus = item.FollowBonus;
-            this.hostBonus = item.HostBonus;
-            this.subBonus = item.SubscriberBonus;
-            this.donationBonus = item.DonationBonus;
-            this.sparkBonus = item.SparkBonus;
-            this.emberBonus = item.EmberBonus;
-
-            this.width = item.Width;
-            this.height = item.Height;
-            this.Font = item.TextFont;
-
-            this.TextColor = item.TextColor;
-            this.TextColor = ColorSchemes.GetColorName(this.TextColor);
-
-            this.BorderColor = item.BorderColor;
-            this.BorderColor = ColorSchemes.GetColorName(this.BorderColor);
-
-            this.ProgressColor = item.ProgressColor;
-            this.ProgressColor = ColorSchemes.GetColorName(this.ProgressColor);
-
-            this.BackgroundColor = item.BackgroundColor;
-            this.BackgroundColor = ColorSchemes.GetColorName(this.BackgroundColor);
-
-            this.HTML = item.HTMLText;
+            this.HTML = OverlayStreamBossItemModel.HTMLTemplate;
         }
 
         public OverlayStreamBossItemViewModel(OverlayStreamBossItemModel item)
@@ -277,22 +247,6 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.newBossAnimation = item.NewBossAnimation;
 
             this.HTML = item.HTML;
-        }
-
-        public override OverlayItemBase GetItem()
-        {
-            if (this.startingHealth > 0 && this.width > 0 && this.height > 0 && !string.IsNullOrEmpty(this.HTML))
-            {
-                this.TextColor = ColorSchemes.GetColorCode(this.TextColor);
-                this.BackgroundColor = ColorSchemes.GetColorCode(this.BackgroundColor);
-                this.ProgressColor = ColorSchemes.GetColorCode(this.ProgressColor);
-                this.BackgroundColor = ColorSchemes.GetColorCode(this.BackgroundColor);
-
-                return new OverlayStreamBoss(this.HTML, this.startingHealth, this.width, this.height, this.TextColor, this.Font, this.BorderColor, this.BackgroundColor,
-                    this.ProgressColor, this.followBonus, this.hostBonus, this.subBonus, this.donationBonus, this.sparkBonus, this.emberBonus,
-                    OverlayEffectVisibleAnimationTypeEnum.None, OverlayEffectVisibleAnimationTypeEnum.None, this.NewBossCommand);
-            }
-            return null;
         }
 
         public override OverlayItemModelBase GetOverlayItem()

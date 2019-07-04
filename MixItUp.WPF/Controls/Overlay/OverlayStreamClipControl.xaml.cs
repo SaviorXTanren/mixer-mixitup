@@ -25,20 +25,7 @@ namespace MixItUp.WPF.Controls.Overlay
             this.viewModel = new OverlayStreamClipItemViewModel(item);
         }
 
-        public override void SetItem(OverlayItemBase item)
-        {
-            if (item != null)
-            {
-                this.viewModel = new OverlayStreamClipItemViewModel((OverlayMixerClip)item);
-            }
-        }
-
-        public override OverlayItemBase GetItem()
-        {
-            return this.viewModel.GetItem();
-        }
-
-        public override OverlayItemModelBase GetOverlayItem()
+        public override OverlayItemModelBase GetItem()
         {
             return this.viewModel.GetOverlayItem();
         }

@@ -23,13 +23,6 @@ namespace MixItUp.WPF.Controls.Overlay
             this.viewModel = new OverlayTimerItemViewModel();
         }
 
-        public OverlayTimerControl(OverlayTimer item)
-        {
-            InitializeComponent();
-
-            this.viewModel = new OverlayTimerItemViewModel(item);
-        }
-
         public OverlayTimerControl(OverlayTimerItemModel item)
         {
             InitializeComponent();
@@ -37,20 +30,7 @@ namespace MixItUp.WPF.Controls.Overlay
             this.viewModel = new OverlayTimerItemViewModel(item);
         }
 
-        public override void SetItem(OverlayItemBase item)
-        {
-            if (item != null)
-            {
-                this.viewModel = new OverlayTimerItemViewModel((OverlayTimer)item);
-            }
-        }
-
-        public override OverlayItemBase GetItem()
-        {
-            return this.viewModel.GetItem();
-        }
-
-        public override void SetOverlayItem(OverlayItemModelBase item)
+        public override void SetItem(OverlayItemModelBase item)
         {
             if (item != null)
             {
@@ -58,7 +38,7 @@ namespace MixItUp.WPF.Controls.Overlay
             }
         }
 
-        public override OverlayItemModelBase GetOverlayItem()
+        public override OverlayItemModelBase GetItem()
         {
             return this.viewModel.GetOverlayItem();
         }
@@ -73,7 +53,7 @@ namespace MixItUp.WPF.Controls.Overlay
 
         private void NewCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(new CustomCommand(OverlayTimer.TimerCompleteCommandName)));
+            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(new CustomCommand(OverlayTimerItemModel.TimerCompleteCommandName)));
             window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
             window.Show();
         }

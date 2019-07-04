@@ -23,13 +23,6 @@ namespace MixItUp.WPF.Controls.Overlay
             this.viewModel = new OverlayStreamBossItemViewModel();
         }
 
-        public OverlayStreamBossControl(OverlayStreamBoss item)
-        {
-            InitializeComponent();
-
-            this.viewModel = new OverlayStreamBossItemViewModel(item);
-        }
-
         public OverlayStreamBossControl(OverlayStreamBossItemModel item)
         {
             InitializeComponent();
@@ -37,20 +30,7 @@ namespace MixItUp.WPF.Controls.Overlay
             this.viewModel = new OverlayStreamBossItemViewModel(item);
         }
 
-        public override void SetItem(OverlayItemBase item)
-        {
-            if (item != null)
-            {
-                this.viewModel = new OverlayStreamBossItemViewModel((OverlayStreamBoss)item);
-            }
-        }
-
-        public override OverlayItemBase GetItem()
-        {
-            return this.viewModel.GetItem();
-        }
-
-        public override OverlayItemModelBase GetOverlayItem()
+        public override OverlayItemModelBase GetItem()
         {
             return this.viewModel.GetOverlayItem();
         }
@@ -65,7 +45,7 @@ namespace MixItUp.WPF.Controls.Overlay
 
         private void NewCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(new CustomCommand(OverlayStreamBoss.NewStreamBossCommandName)));
+            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(new CustomCommand(OverlayStreamBossItemModel.NewStreamBossCommandName)));
             window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
             window.Show();
         }

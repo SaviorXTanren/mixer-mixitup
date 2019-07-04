@@ -61,19 +61,9 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
 
         public OverlayYouTubeItemViewModel()
         {
-            this.width = OverlayVideoItem.DefaultWidth;
-            this.height = OverlayVideoItem.DefaultHeight;
+            this.width = OverlayVideoItemModel.DefaultWidth;
+            this.height = OverlayVideoItemModel.DefaultHeight;
             this.Volume = 100;
-        }
-
-        public OverlayYouTubeItemViewModel(OverlayYouTubeItem item)
-            : this()
-        {
-            this.VideoID = item.VideoID;
-            this.startTime = item.StartTime;
-            this.width = item.Width;
-            this.height = item.Height;
-            this.Volume = item.Volume;
         }
 
         public OverlayYouTubeItemViewModel(OverlayYouTubeItemModel item)
@@ -84,22 +74,6 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.width = item.Width;
             this.height = item.Height;
             this.Volume = item.Volume;
-        }
-
-        public override OverlayItemBase GetItem()
-        {
-            if (!string.IsNullOrEmpty(this.VideoID) && this.width > 0 && this.height > 0 && this.startTime >= 0)
-            {
-                string videoID = this.VideoID;
-                videoID = videoID.Replace("https://www.youtube.com/watch?v=", "");
-                videoID = videoID.Replace("https://youtu.be/", "");
-                if (videoID.Contains("&"))
-                {
-                    videoID = videoID.Substring(0, videoID.IndexOf("&"));
-                }
-                return new OverlayYouTubeItem(videoID, this.startTime, this.width, this.height, this.volume);
-            }
-            return null;
         }
 
         public override OverlayItemModelBase GetOverlayItem()

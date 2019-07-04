@@ -1,7 +1,6 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,12 +13,9 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
 
         public IEnumerable<string> ColorNames { get; set; } = ColorSchemes.HTMLColorSchemeDictionary.Keys;
 
-        public IEnumerable<string> EntranceAnimationStrings { get; set; } = EnumHelper.GetEnumNames<OverlayEffectEntranceAnimationTypeEnum>();
-        public IEnumerable<string> VisibleAnimationStrings { get; set; } = EnumHelper.GetEnumNames<OverlayEffectVisibleAnimationTypeEnum>();
-        public IEnumerable<string> ExitAnimationStrings { get; set; } = EnumHelper.GetEnumNames<OverlayEffectExitAnimationTypeEnum>();
-
-        [Obsolete]
-        public abstract OverlayItemBase GetItem();
+        public IEnumerable<string> EntranceAnimationStrings { get; set; } = EnumHelper.GetEnumNames<OverlayItemEffectEntranceAnimationTypeEnum>();
+        public IEnumerable<string> VisibleAnimationStrings { get; set; } = EnumHelper.GetEnumNames<OverlayItemEffectVisibleAnimationTypeEnum>();
+        public IEnumerable<string> ExitAnimationStrings { get; set; } = EnumHelper.GetEnumNames<OverlayItemEffectExitAnimationTypeEnum>();
 
         public virtual OverlayItemModelBase GetOverlayItem() { return null; }
     }

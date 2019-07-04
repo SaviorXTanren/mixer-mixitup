@@ -23,22 +23,16 @@ namespace MixItUp.WPF.Controls.Overlay
             this.viewModel = new OverlayProgressBarItemViewModel();
         }
 
-        public override OverlayItemModelBase GetOverlayItem()
+        public OverlayProgressBarControl(OverlayItemModelBase item)
+        {
+            InitializeComponent();
+
+            this.viewModel = new OverlayProgressBarItemViewModel((OverlayProgressBarItemModel)item);
+        }
+
+        public override OverlayItemModelBase GetItem()
         {
             return this.viewModel.GetOverlayItem();
-        }
-
-        public override void SetItem(OverlayItemBase item)
-        {
-            if (item != null)
-            {
-                this.viewModel = new OverlayProgressBarItemViewModel((OverlayProgressBar)item);
-            }
-        }
-
-        public override OverlayItemBase GetItem()
-        {
-            return this.viewModel.GetItem();
         }
 
         protected override async Task OnLoaded()
@@ -51,7 +45,7 @@ namespace MixItUp.WPF.Controls.Overlay
 
         private void NewCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(new CustomCommand(OverlayProgressBar.GoalReachedCommandName)));
+            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(new CustomCommand(OverlayProgressBarItemModel.GoalReachedCommandName)));
             window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
             window.Show();
         }

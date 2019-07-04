@@ -11,6 +11,8 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayTimerItemModel : OverlayHTMLTemplateItemModelBase, IDisposable
     {
+        public const string TimerCompleteCommandName = "Timer Complete";
+
         public const string HTMLTemplate = @"<p style=""position: absolute; font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; color: {TEXT_COLOR}; white-space: nowrap; font-weight: bold; margin: auto; transform: translate(-50%, -50%);"">{TIME}</p>";
 
         [DataMember]

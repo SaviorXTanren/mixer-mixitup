@@ -176,33 +176,6 @@ namespace MixItUp.Overlay
 
         public async Task SendTextToSpeech(OverlayTextToSpeech textToSpeech) { await this.SendPacket("TextToSpeech", textToSpeech); }
 
-        public async Task SendItem(OverlayItemBase item, OverlayItemPosition position, OverlayItemEffects effects)
-        {
-            if (item is OverlayImageItem)
-            {
-                OverlayImageItem imageItem = (OverlayImageItem)item;
-                this.httpListenerServer.SetLocalFile(imageItem.FileID, imageItem.FilePath);
-            }
-            else if (item is OverlayVideoItem)
-            {
-                OverlayVideoItem videoItem = (OverlayVideoItem)item;
-                this.httpListenerServer.SetLocalFile(videoItem.FileID, videoItem.FilePath);
-            }
-
-            await this.SendEffectPacket(item.ItemType, item, position, effects);
-        }
-
-        public async Task RemoveItem(OverlayItemBase item) { await this.SendPacket("remove", JObject.FromObject(item)); }
-
-        private async Task SendEffectPacket(string type, OverlayItemBase item, OverlayItemPosition position, OverlayItemEffects effects)
-        {
-            JObject jobj = new JObject();
-            if (effects != null) { jobj.Merge(JObject.FromObject(effects)); }
-            if (position != null) { jobj.Merge(JObject.FromObject(position)); }
-            jobj.Merge(JObject.FromObject(item));
-            await this.SendPacket(type, jobj);
-        }
-
         private async Task SendPacket(string type, object contents)
         {
             OverlayPacket packet = new OverlayPacket(type, JObject.FromObject(contents));

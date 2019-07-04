@@ -26,7 +26,7 @@ namespace MixItUp.WPF.Controls.Overlay
             this.viewModel = new OverlayTimerTrainItemViewModel(item);
         }
 
-        public override void SetOverlayItem(OverlayItemModelBase item)
+        public override void SetItem(OverlayItemModelBase item)
         {
             if (item != null)
             {
@@ -34,22 +34,9 @@ namespace MixItUp.WPF.Controls.Overlay
             }
         }
 
-        public override OverlayItemModelBase GetOverlayItem()
+        public override OverlayItemModelBase GetItem()
         {
             return this.viewModel.GetOverlayItem();
-        }
-
-        public override void SetItem(OverlayItemBase item)
-        {
-            if (item != null)
-            {
-                this.viewModel = new OverlayTimerTrainItemViewModel((OverlayTimerTrain)item);
-            }
-        }
-
-        public override OverlayItemBase GetItem()
-        {
-            return this.viewModel.GetItem();
         }
 
         protected override async Task OnLoaded()

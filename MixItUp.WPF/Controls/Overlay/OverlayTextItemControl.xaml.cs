@@ -11,8 +11,6 @@ namespace MixItUp.WPF.Controls.Overlay
     /// </summary>
     public partial class OverlayTextItemControl : OverlayItemControl
     {
-        public static readonly List<int> sampleFontSize = new List<int>() { 12, 24, 36, 48, 60, 72, 84, 96, 108, 120 };
-
         private OverlayTextItemViewModel viewModel;
 
         public OverlayTextItemControl()
@@ -22,13 +20,6 @@ namespace MixItUp.WPF.Controls.Overlay
             this.viewModel = new OverlayTextItemViewModel();
         }
 
-        public OverlayTextItemControl(OverlayTextItem item)
-        {
-            InitializeComponent();
-
-            this.viewModel = new OverlayTextItemViewModel(item);
-        }
-
         public OverlayTextItemControl(OverlayTextItemModel item)
         {
             InitializeComponent();
@@ -36,20 +27,7 @@ namespace MixItUp.WPF.Controls.Overlay
             this.viewModel = new OverlayTextItemViewModel(item);
         }
 
-        public override void SetItem(OverlayItemBase item)
-        {
-            if (item != null)
-            {
-                this.viewModel = new OverlayTextItemViewModel((OverlayTextItem)item);
-            }
-        }
-
-        public override OverlayItemBase GetItem()
-        {
-            return this.viewModel.GetItem();
-        }
-
-        public override void SetOverlayItem(OverlayItemModelBase item)
+        public override void SetItem(OverlayItemModelBase item)
         {
             if (item != null)
             {
@@ -57,7 +35,7 @@ namespace MixItUp.WPF.Controls.Overlay
             }
         }
 
-        public override OverlayItemModelBase GetOverlayItem()
+        public override OverlayItemModelBase GetItem()
         {
             return this.viewModel.GetOverlayItem();
         }

@@ -43,13 +43,13 @@ namespace MixItUp.WPF.Windows.Overlay
 
             if (this.viewModel.OverlayWidget != null)
             {
-                this.ItemPosition.SetItemPosition(this.viewModel.OverlayWidget.Item.Position);
+                this.ItemPosition.SetPosition(this.viewModel.OverlayWidget.Item.Position);
 
                 if (this.viewModel.OverlayWidget.Item is OverlayHTMLItemModel) { this.SetGameEditorControl(new OverlayHTMLItemControl((OverlayHTMLItemModel)this.viewModel.OverlayWidget.Item)); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayChatMessagesListItemModel) { this.SetGameEditorControl(new OverlayChatMessagesControl((OverlayChatMessagesListItemModel)this.viewModel.OverlayWidget.Item)); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayEventListItemModel) { this.SetGameEditorControl(new OverlayEventListControl((OverlayEventListItemModel)this.viewModel.OverlayWidget.Item)); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayGameQueueListItemModel) { this.SetGameEditorControl(new OverlayGameQueueControl((OverlayGameQueueListItemModel)this.viewModel.OverlayWidget.Item)); }
-                //else if (this.viewModel.OverlayWidget.Item is OverlayProgressBar) { this.SetGameEditorControl(new OverlayProgressBarControl((OverlayProgressBar)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayProgressBarItemModel) { this.SetGameEditorControl(new OverlayProgressBarControl((OverlayProgressBarItemModel)this.viewModel.OverlayWidget.Item)); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayImageItemModel) { this.SetGameEditorControl(new OverlayImageItemControl((OverlayImageItemModel)this.viewModel.OverlayWidget.Item)); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayLeaderboardListItemModel) { this.SetGameEditorControl(new OverlayLeaderboardControl((OverlayLeaderboardListItemModel)this.viewModel.OverlayWidget.Item)); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayStreamClipItemModel) { this.SetGameEditorControl(new OverlayStreamClipControl((OverlayStreamClipItemModel)this.viewModel.OverlayWidget.Item)); }
@@ -94,14 +94,14 @@ namespace MixItUp.WPF.Windows.Overlay
             {
                 if (await this.viewModel.Validate())
                 {
-                    OverlayItemPositionModel position = this.ItemPosition.GetItemPosition();
+                    OverlayItemPositionModel position = this.ItemPosition.GetPosition();
                     if (position == null)
                     {
                         await DialogHelper.ShowMessage("A valid position for this overlay widget must be selected");
                         return;
                     }
 
-                    OverlayItemModelBase overlayItem = overlayTypeEditor.GetOverlayItem();
+                    OverlayItemModelBase overlayItem = overlayTypeEditor.GetItem();
                     if (overlayItem == null)
                     {
                         await DialogHelper.ShowMessage("There are missing details for the overlay item");

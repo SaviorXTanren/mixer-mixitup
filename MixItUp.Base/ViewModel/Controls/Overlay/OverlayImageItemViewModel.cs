@@ -54,29 +54,12 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             });
         }
 
-        public OverlayImageItemViewModel(OverlayImageItem item)
-            : this()
-        {
-            this.FilePath = item.FilePath;
-            this.width = item.Width;
-            this.height = item.Height;
-        }
-
         public OverlayImageItemViewModel(OverlayImageItemModel item)
             : this()
         {
             this.FilePath = item.FilePath;
             this.width = item.Width;
             this.height = item.Height;
-        }
-
-        public override OverlayItemBase GetItem()
-        {
-            if (!string.IsNullOrEmpty(this.FilePath) && this.width >= 0 && this.height >= 0)
-            {
-                return new OverlayImageItem(this.FilePath, width, height);
-            }
-            return null;
         }
 
         public override OverlayItemModelBase GetOverlayItem()

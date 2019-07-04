@@ -86,26 +86,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
 
         public OverlayEventListItemViewModel(OverlayEventListItemModel item)
             : base(item.TotalToShow, item.Width, item.Height, item.TextFont, item.TextColor, item.BorderColor, item.BackgroundColor, item.Effects.EntranceAnimation, item.Effects.ExitAnimation, item.HTML)
-        {
-        }
-
-        public OverlayEventListItemViewModel(OverlayEventList item)
-            : base(item.TotalToShow, item.Width, item.Height, item.TextFont, item.TextColor, item.BorderColor, item.BackgroundColor, OverlayItemEffectEntranceAnimationTypeEnum.None, OverlayItemEffectExitAnimationTypeEnum.None, item.HTMLText)
-        {
-        }
-
-        public override OverlayItemBase GetItem()
-        {
-            if (this.Validate() && this.eventListTypes.Count > 0)
-            {
-                this.TextColor = ColorSchemes.GetColorCode(this.TextColor);
-                this.BorderColor = ColorSchemes.GetColorCode(this.BorderColor);
-                this.BackgroundColor = ColorSchemes.GetColorCode(this.BackgroundColor);
-
-                //return new OverlayEventList(this.HTML, null, totalToShow, this.ResetOnLoad, this.Font, this.width, this.height, this.BorderColor, this.BackgroundColor, this.TextColor, this.entranceAnimation, this.exitAnimation);
-            }
-            return null;
-        }
+        { }
 
         public override OverlayItemModelBase GetOverlayItem()
         {

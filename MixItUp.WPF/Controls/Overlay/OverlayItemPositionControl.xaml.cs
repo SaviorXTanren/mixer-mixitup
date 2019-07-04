@@ -16,7 +16,7 @@ namespace MixItUp.WPF.Controls.Overlay
             InitializeComponent();
         }
 
-        public void SetItemPosition(OverlayItemPositionModel position)
+        public void SetPosition(OverlayItemPositionModel position)
         {
             if (position != null)
             {
@@ -49,7 +49,7 @@ namespace MixItUp.WPF.Controls.Overlay
             }
         }
 
-        public OverlayItemPositionModel GetItemPosition()
+        public OverlayItemPositionModel GetPosition()
         {
             int horizontal = 0;
             int vertical = 0;
@@ -117,111 +117,6 @@ namespace MixItUp.WPF.Controls.Overlay
                 }
             }
             return new OverlayItemPositionModel(positionType, horizontal, vertical);
-        }
-
-        [Obsolete]
-        public void SetPosition(OverlayItemPosition position)
-        {
-            if (position != null)
-            {
-                if (position.PositionType == OverlayEffectPositionType.Percentage)
-                {
-                    if (position.Horizontal == 25 && position.Vertical == 25) { this.TopLeftPositionButton_Click(this, new RoutedEventArgs()); }
-                    else if (position.Horizontal == 50 && position.Vertical == 25) { this.TopPositionButton_Click(this, new RoutedEventArgs()); }
-                    else if (position.Horizontal == 75 && position.Vertical == 25) { this.TopRightPositionButton_Click(this, new RoutedEventArgs()); }
-                    else if (position.Horizontal == 25 && position.Vertical == 50) { this.LeftPositionButton_Click(this, new RoutedEventArgs()); }
-                    else if (position.Horizontal == 50 && position.Vertical == 50) { this.CenterPositionButton_Click(this, new RoutedEventArgs()); }
-                    else if (position.Horizontal == 75 && position.Vertical == 50) { this.RightPositionButton_Click(this, new RoutedEventArgs()); }
-                    else if (position.Horizontal == 25 && position.Vertical == 75) { this.BottomLeftPositionButton_Click(this, new RoutedEventArgs()); }
-                    else if (position.Horizontal == 50 && position.Vertical == 75) { this.BottomPositionButton_Click(this, new RoutedEventArgs()); }
-                    else if (position.Horizontal == 75 && position.Vertical == 75) { this.BottomRightPositionButton_Click(this, new RoutedEventArgs()); }
-                    else
-                    {
-                        this.PercentagePositionButton_Click(this, new RoutedEventArgs());
-                    }
-
-                    this.PercentagePositionHorizontalSlider.Value = position.Horizontal;
-                    this.PercentagePositionVerticalSlider.Value = position.Vertical;
-                }
-                else
-                {
-                    this.PixelsPositionButton_Click(this, new RoutedEventArgs());
-
-                    this.PixelPositionHorizontalTextBox.Text = position.Horizontal.ToString();
-                    this.PixelPositionVerticalTextBox.Text = position.Vertical.ToString();
-                }
-            }
-        }
-
-        [Obsolete]
-        public OverlayItemPosition GetPosition()
-        {
-            int horizontal = 0;
-            int vertical = 0;
-            OverlayEffectPositionType positionType = OverlayEffectPositionType.Percentage;
-            if (this.PixelsPositionGrid.Visibility == Visibility.Visible)
-            {
-                if (string.IsNullOrEmpty(this.PixelPositionHorizontalTextBox.Text) || !int.TryParse(this.PixelPositionHorizontalTextBox.Text, out horizontal) || horizontal < 0 ||
-                    string.IsNullOrEmpty(this.PixelPositionVerticalTextBox.Text) || !int.TryParse(this.PixelPositionVerticalTextBox.Text, out vertical) || vertical < 0)
-                {
-                    return null;
-                }
-                positionType = OverlayEffectPositionType.Pixel;
-            }
-            else if (this.PercentagePositionGrid.Visibility == Visibility.Visible)
-            {
-                horizontal = (int)this.PercentagePositionHorizontalSlider.Value;
-                vertical = (int)this.PercentagePositionVerticalSlider.Value;
-            }
-            else
-            {
-                if (this.IsSimplePositionButtonSelected(this.TopLeftPositionButton))
-                {
-                    horizontal = 25;
-                    vertical = 25;
-                }
-                else if (this.IsSimplePositionButtonSelected(this.TopPositionButton))
-                {
-                    horizontal = 50;
-                    vertical = 25;
-                }
-                else if (this.IsSimplePositionButtonSelected(this.TopRightPositionButton))
-                {
-                    horizontal = 75;
-                    vertical = 25;
-                }
-                else if (this.IsSimplePositionButtonSelected(this.LeftPositionButton))
-                {
-                    horizontal = 25;
-                    vertical = 50;
-                }
-                else if (this.IsSimplePositionButtonSelected(this.CenterPositionButton))
-                {
-                    horizontal = 50;
-                    vertical = 50;
-                }
-                else if (this.IsSimplePositionButtonSelected(this.RightPositionButton))
-                {
-                    horizontal = 75;
-                    vertical = 50;
-                }
-                else if (this.IsSimplePositionButtonSelected(this.BottomLeftPositionButton))
-                {
-                    horizontal = 25;
-                    vertical = 75;
-                }
-                else if (this.IsSimplePositionButtonSelected(this.BottomPositionButton))
-                {
-                    horizontal = 50;
-                    vertical = 75;
-                }
-                else if (this.IsSimplePositionButtonSelected(this.BottomRightPositionButton))
-                {
-                    horizontal = 75;
-                    vertical = 75;
-                }
-            }
-            return new OverlayItemPosition(positionType, horizontal, vertical);
         }
 
         protected override Task OnLoaded()

@@ -67,16 +67,6 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.Volume = 100;
         }
 
-        public OverlayStreamClipItemViewModel(OverlayMixerClip item)
-            : this()
-        {
-            this.width = item.Width;
-            this.height = item.Height;
-            this.Volume = item.Volume;
-            //this.entranceAnimation = item.EntranceAnimation;
-            //this.exitAnimation = item.ExitAnimation;
-        }
-
         public OverlayStreamClipItemViewModel(OverlayStreamClipItemModel item)
             : this()
         {
@@ -85,15 +75,6 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.Volume = item.Volume;
             this.entranceAnimation = item.Effects.EntranceAnimation;
             this.exitAnimation = item.Effects.ExitAnimation;
-        }
-
-        public override OverlayItemBase GetItem()
-        {
-            if (this.width > 0 && this.height > 0)
-            {
-                return new OverlayMixerClip(width, height, this.volume, OverlayEffectEntranceAnimationTypeEnum.None, OverlayEffectExitAnimationTypeEnum.None);
-            }
-            return null;
         }
 
         public override OverlayItemModelBase GetOverlayItem()

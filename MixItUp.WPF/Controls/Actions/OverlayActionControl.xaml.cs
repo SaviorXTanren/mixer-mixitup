@@ -83,37 +83,37 @@ namespace MixItUp.WPF.Controls.Actions
                     this.VisibleAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.OverlayItem.Effects.VisibleAnimation);
                     this.ExitAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.OverlayItem.Effects.ExitAnimation);
 
-                    this.ItemPosition.SetItemPosition(this.action.OverlayItem.Position);
+                    this.ItemPosition.SetPosition(this.action.OverlayItem.Position);
 
                     if (this.action.OverlayItem is OverlayImageItemModel)
                     {
                         this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayItemModelTypeEnum.Image);
-                        this.ImageItem.SetOverlayItem(this.action.OverlayItem);
+                        this.ImageItem.SetItem(this.action.OverlayItem);
                     }
                     else if (this.action.OverlayItem is OverlayTextItemModel)
                     {
                         this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayItemModelTypeEnum.Text);
-                        this.TextItem.SetOverlayItem(this.action.OverlayItem);
+                        this.TextItem.SetItem(this.action.OverlayItem);
                     }
                     else if (this.action.OverlayItem is OverlayYouTubeItemModel)
                     {
                         this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayItemModelTypeEnum.YouTube);
-                        this.YouTubeItem.SetOverlayItem(this.action.OverlayItem);
+                        this.YouTubeItem.SetItem(this.action.OverlayItem);
                     }
                     else if (this.action.OverlayItem is OverlayVideoItemModel)
                     {
                         this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayItemModelTypeEnum.Video);
-                        this.VideoItem.SetOverlayItem(this.action.OverlayItem);
+                        this.VideoItem.SetItem(this.action.OverlayItem);
                     }
                     else if (this.action.OverlayItem is OverlayWebPageItemModel)
                     {
                         this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayItemModelTypeEnum.WebPage);
-                        this.WebPageItem.SetOverlayItem(this.action.OverlayItem);
+                        this.WebPageItem.SetItem(this.action.OverlayItem);
                     }
                     else if (this.action.OverlayItem is OverlayHTMLItemModel)
                     {
                         this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayItemModelTypeEnum.HTML);
-                        this.HTMLItem.SetOverlayItem(this.action.OverlayItem);
+                        this.HTMLItem.SetItem(this.action.OverlayItem);
                     }
                 }
             }
@@ -129,7 +129,7 @@ namespace MixItUp.WPF.Controls.Actions
                 {
                     if (this.WidgetNameComboBox.SelectedIndex >= 0)
                     {
-                        OverlayWidget widget = (OverlayWidget)this.WidgetNameComboBox.SelectedItem;
+                        OverlayWidgetModel widget = (OverlayWidgetModel)this.WidgetNameComboBox.SelectedItem;
                         return new OverlayAction(widget.Item.ID, this.ShowHideWidgetCheckBox.IsChecked.GetValueOrDefault());
                     }
                 }
@@ -153,33 +153,33 @@ namespace MixItUp.WPF.Controls.Actions
 
                         OverlayItemEffectsModel effects = new OverlayItemEffectsModel(entrance, visible, exit, duration);
 
-                        OverlayItemPositionModel position = this.ItemPosition.GetItemPosition();
+                        OverlayItemPositionModel position = this.ItemPosition.GetPosition();
 
                         OverlayItemModelBase item = null;
 
                         if (overlayType == OverlayItemModelTypeEnum.Image)
                         {
-                            item = this.ImageItem.GetOverlayItem();
+                            item = this.ImageItem.GetItem();
                         }
                         else if (overlayType == OverlayItemModelTypeEnum.Text)
                         {
-                            item = this.TextItem.GetOverlayItem();
+                            item = this.TextItem.GetItem();
                         }
                         else if (overlayType == OverlayItemModelTypeEnum.YouTube)
                         {
-                            item = this.YouTubeItem.GetOverlayItem();
+                            item = this.YouTubeItem.GetItem();
                         }
                         else if (overlayType == OverlayItemModelTypeEnum.Video)
                         {
-                            item = this.VideoItem.GetOverlayItem();
+                            item = this.VideoItem.GetItem();
                         }
                         else if (overlayType == OverlayItemModelTypeEnum.WebPage)
                         {
-                            item = this.WebPageItem.GetOverlayItem();
+                            item = this.WebPageItem.GetItem();
                         }
                         else if (overlayType == OverlayItemModelTypeEnum.HTML)
                         {
-                            item = this.HTMLItem.GetOverlayItem();
+                            item = this.HTMLItem.GetItem();
                         }
 
                         if (item != null)

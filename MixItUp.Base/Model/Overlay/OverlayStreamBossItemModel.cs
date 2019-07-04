@@ -14,6 +14,8 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayStreamBossItemModel : OverlayHTMLTemplateItemModelBase
     {
+        public const string NewStreamBossCommandName = "New Stream Boss";
+
         public const string HTMLTemplate =
         @"<table cellpadding=""10"" style=""border-style: solid; border-width: 5px; border-color: {BORDER_COLOR}; background-color: {BACKGROUND_COLOR}; width: {WIDTH}px; height: {HEIGHT}px;"">
           <tbody>

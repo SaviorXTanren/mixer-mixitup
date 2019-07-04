@@ -43,10 +43,5 @@ namespace MixItUp.Base.Services
         Task HideItem(OverlayItemModelBase item);
 
         Task SendTextToSpeech(OverlayTextToSpeech textToSpeech);
-
-        [Obsolete]
-        Task SendItem(OverlayItemBase item, OverlayItemPosition position, OverlayItemEffects effects);
-        [Obsolete]
-        Task RemoveItem(OverlayItemBase item);
     }
 }

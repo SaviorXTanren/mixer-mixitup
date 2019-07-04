@@ -6,28 +6,28 @@ using System.Collections.Generic;
 
 namespace MixItUp.Base.ViewModel.Controls.Overlay
 {
-    public class OverlayProgressBarItemViewModel : OverlayCustomHTMLItemViewModelBase
+    public class OverlayProgressBarItemViewModel : OverlayHTMLTemplateItemViewModelBase
     {
-        public IEnumerable<string> ProgressBarTypeStrings { get; set; } = EnumHelper.GetEnumNames<ProgressBarTypeEnum>();
+        public IEnumerable<string> ProgressBarTypeStrings { get; set; } = EnumHelper.GetEnumNames<OverlayProgressBarItemTypeEnum>();
         public string ProgressBarTypeString
         {
             get { return EnumHelper.GetEnumName(this.progressBarType); }
             set
             {
-                this.progressBarType = EnumHelper.GetEnumValueFromString<ProgressBarTypeEnum>(value);
+                this.progressBarType = EnumHelper.GetEnumValueFromString<OverlayProgressBarItemTypeEnum>(value);
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged("IsNotMilestonesType");
                 this.NotifyPropertyChanged("IsFollowersType");
-                if (this.progressBarType == ProgressBarTypeEnum.Followers)
+                if (this.progressBarType == OverlayProgressBarItemTypeEnum.Followers)
                 {
                     this.TotalFollowers = true;
                 }
             }
         }
-        private ProgressBarTypeEnum progressBarType;
+        private OverlayProgressBarItemTypeEnum progressBarType;
 
-        public bool IsNotMilestonesType { get { return this.progressBarType != ProgressBarTypeEnum.Milestones; } }
-        public bool IsFollowersType { get { return this.progressBarType == ProgressBarTypeEnum.Followers; } }
+        public bool IsNotMilestonesType { get { return this.progressBarType != OverlayProgressBarItemTypeEnum.Milestones; } }
+        public bool IsFollowersType { get { return this.progressBarType == OverlayProgressBarItemTypeEnum.Followers; } }
 
         public string StartingAmount
         {
@@ -170,24 +170,23 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.HTML = OverlayProgressBarItemModel.HTMLTemplate;
         }
 
-        public OverlayProgressBarItemViewModel(OverlayProgressBar item)
+        public OverlayProgressBarItemViewModel(OverlayProgressBarItemModel item)
             : this()
         {
             this.progressBarType = item.ProgressBarType;
 
             if (!string.IsNullOrEmpty(item.CurrentAmountCustom))
             {
-                this.StartingAmount = item.CurrentAmountCustom;
+                this.StartingAmount = item.StartAmount.ToString();
             }
             else
             {
-                this.StartingAmount = item.CurrentAmountNumber.ToString();
+                this.StartingAmount = item.CurrentAmountCustom.ToString();
             }
 
-            if (this.progressBarType == ProgressBarTypeEnum.Followers && item.CurrentAmountNumber < 0)
+            if (this.progressBarType == OverlayProgressBarItemTypeEnum.Followers && item.StartAmount == 0)
             {
                 this.TotalFollowers = true;
-                this.StartingAmount = "0";
             }
             else
             {
@@ -200,7 +199,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             }
             else
             {
-                this.GoalAmount = item.GoalAmountNumber.ToString();
+                this.GoalAmount = item.GoalAmount.ToString();
             }
 
             this.resetAfterDays = item.ResetAfterDays;
@@ -218,44 +217,30 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.BackgroundColor = item.BackgroundColor;
             this.BackgroundColor = ColorSchemes.GetColorName(this.BackgroundColor);
 
-            this.HTML = item.HTMLText;
+            this.HTML = item.HTML;
 
             this.OnGoalReachedCommand = item.GoalReachedCommand;
         }
 
-        public override OverlayItemBase GetItem()
+        public override OverlayItemModelBase GetOverlayItem()
         {
             if (!string.IsNullOrEmpty(this.HTML) && !string.IsNullOrEmpty(this.StartingAmount) && !string.IsNullOrEmpty(this.GoalAmount) &&
                 !string.IsNullOrEmpty(this.Font) && this.width > 0 && this.height > 0)
             {
-                string startingAmount = "0";
-                string goalAmount = "0";
-                int resetAfterDays = 0;
-
-                if (this.progressBarType != ProgressBarTypeEnum.Milestones)
-                {
-                    if (this.progressBarType == ProgressBarTypeEnum.Followers && this.TotalFollowers)
-                    {
-                        startingAmount = "-1";
-                    }
-                    else
-                    {
-                        startingAmount = this.StartingAmount;
-                    }
-                    goalAmount = this.GoalAmount;
-                }
-
                 this.TextColor = ColorSchemes.GetColorCode(this.TextColor);
                 this.ProgressColor = ColorSchemes.GetColorCode(this.ProgressColor);
                 this.BackgroundColor = ColorSchemes.GetColorCode(this.BackgroundColor);
 
-                if (double.TryParse(startingAmount, out double startingAmountNumber) && double.TryParse(goalAmount, out double goalAmountNumber))
+                if (this.progressBarType == OverlayProgressBarItemTypeEnum.Custom)
                 {
-                    return new OverlayProgressBar(this.HTML, this.progressBarType, startingAmountNumber, goalAmountNumber, resetAfterDays, this.ProgressColor, this.BackgroundColor, this.TextColor, this.Font, this.width, this.height, this.OnGoalReachedCommand);
+                    return new OverlayProgressBarItemModel(this.HTML, this.progressBarType, this.StartingAmount, this.GoalAmount, this.resetAfterDays, this.ProgressColor, this.BackgroundColor, this.TextColor, this.Font, this.width, this.height, this.OnGoalReachedCommand);
                 }
                 else
                 {
-                    return new OverlayProgressBar(this.HTML, this.progressBarType, startingAmount, goalAmount, resetAfterDays, this.ProgressColor, this.BackgroundColor, this.TextColor, this.Font, this.width, this.height, this.OnGoalReachedCommand);
+                    if (double.TryParse(this.StartingAmount, out double start) && double.TryParse(this.GoalAmount, out double goal))
+                    {
+                        return new OverlayProgressBarItemModel(this.HTML, this.progressBarType, start, goal, this.resetAfterDays, this.ProgressColor, this.BackgroundColor, this.TextColor, this.Font, this.width, this.height, this.OnGoalReachedCommand);
+                    }
                 }
             }
             return null;

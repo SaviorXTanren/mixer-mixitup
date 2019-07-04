@@ -4,7 +4,7 @@ using MixItUp.Base.Util;
 
 namespace MixItUp.Base.ViewModel.Controls.Overlay
 {
-    public abstract class OverlayListItemViewModelBase : OverlayCustomHTMLItemViewModelBase
+    public abstract class OverlayListItemViewModelBase : OverlayHTMLTemplateItemViewModelBase
     {
         public string TotalToShowString
         {

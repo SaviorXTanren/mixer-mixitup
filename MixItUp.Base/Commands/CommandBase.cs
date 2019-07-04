@@ -317,10 +317,7 @@ namespace MixItUp.Base.Commands
             return 0;
         }
 
-        public int CompareTo(CommandBase other)
-        {
-            return this.Name.CompareTo(other.Name);
-        }
+        public int CompareTo(CommandBase other) { return this.Name.CompareTo(other.Name); }
 
         public override bool Equals(object obj)
         {
@@ -331,9 +328,8 @@ namespace MixItUp.Base.Commands
             return false;
         }
 
-        public bool Equals(CommandBase other)
-        {
-            return this.ID.Equals(other.ID);
-        }
+        public bool Equals(CommandBase other) { return this.ID.Equals(other.ID); }
+
+        public override int GetHashCode() { return this.ID.GetHashCode(); }
     }
 }

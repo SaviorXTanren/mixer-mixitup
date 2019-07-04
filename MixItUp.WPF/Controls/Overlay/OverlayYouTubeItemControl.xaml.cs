@@ -18,13 +18,6 @@ namespace MixItUp.WPF.Controls.Overlay
             this.viewModel = new OverlayYouTubeItemViewModel();
         }
 
-        public OverlayYouTubeItemControl(OverlayYouTubeItem item)
-        {
-            InitializeComponent();
-
-            this.viewModel = new OverlayYouTubeItemViewModel(item);
-        }
-
         public OverlayYouTubeItemControl(OverlayYouTubeItemModel item)
         {
             InitializeComponent();
@@ -32,20 +25,7 @@ namespace MixItUp.WPF.Controls.Overlay
             this.viewModel = new OverlayYouTubeItemViewModel(item);
         }
 
-        public override void SetItem(OverlayItemBase item)
-        {
-            if (item != null)
-            {
-                this.viewModel = new OverlayYouTubeItemViewModel((OverlayYouTubeItem)item);
-            }
-        }
-
-        public override OverlayItemBase GetItem()
-        {
-            return this.viewModel.GetItem();
-        }
-
-        public override void SetOverlayItem(OverlayItemModelBase item)
+        public override void SetItem(OverlayItemModelBase item)
         {
             if (item != null)
             {
@@ -53,7 +33,7 @@ namespace MixItUp.WPF.Controls.Overlay
             }
         }
 
-        public override OverlayItemModelBase GetOverlayItem()
+        public override OverlayItemModelBase GetItem()
         {
             return this.viewModel.GetOverlayItem();
         }

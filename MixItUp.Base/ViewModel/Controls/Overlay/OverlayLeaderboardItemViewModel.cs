@@ -58,12 +58,6 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.HTML = OverlayLeaderboardListItemModel.HTMLTemplate;
         }
 
-        public OverlayLeaderboardItemViewModel(OverlayLeaderboard item)
-            : base(item.TotalToShow, item.Width, item.Height, item.TextFont, item.TextColor, item.BorderColor, item.BackgroundColor, OverlayItemEffectEntranceAnimationTypeEnum.None, OverlayItemEffectExitAnimationTypeEnum.None, item.HTMLText)
-        {
-
-        }
-
         public OverlayLeaderboardItemViewModel(OverlayLeaderboardListItemModel item)
             : base(item.TotalToShow, item.Width, item.Height, item.TextFont, item.TextColor, item.BorderColor, item.BackgroundColor, item.Effects.EntranceAnimation, item.Effects.ExitAnimation, item.HTML)
         {
@@ -79,39 +73,6 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             {
                 this.sparksEmbersDate = item.LeaderboardDateRange;
             }
-        }
-
-        public override OverlayItemBase GetItem()
-        {
-            //if (this.Validate() && !string.IsNullOrEmpty(this.LeaderboardTypeString))
-            //{
-            //    this.TextColor = ColorSchemes.GetColorCode(this.TextColor);
-            //    this.BorderColor = ColorSchemes.GetColorCode(this.BorderColor);
-            //    this.BackgroundColor = ColorSchemes.GetColorCode(this.BackgroundColor);
-
-            //    if (this.leaderboardType == LeaderboardTypeEnum.CurrencyRank)
-            //    {
-            //        if (this.CurrencyRank != null)
-            //        {
-            //            return new OverlayLeaderboard(this.HTML, this.leaderboardType, totalToShow, this.BorderColor, this.BackgroundColor, this.TextColor, this.Font, this.width,
-            //                this.height, this.entranceAnimation, this.exitAnimation, this.CurrencyRank);
-            //        }
-            //    }
-            //    else if (this.leaderboardType == LeaderboardTypeEnum.Sparks || this.leaderboardType == LeaderboardTypeEnum.Embers)
-            //    {
-            //        if (!string.IsNullOrEmpty(this.SparksEmbersDateString))
-            //        {
-            //            return new OverlayLeaderboard(this.HTML, this.leaderboardType, totalToShow, this.BorderColor, this.BackgroundColor, this.TextColor, this.Font, this.width,
-            //                this.height, this.entranceAnimation, this.exitAnimation, this.sparksEmbersDate);
-            //        }
-            //    }
-            //    else
-            //    {
-            //        return new OverlayLeaderboard(this.HTML, this.leaderboardType, totalToShow, this.BorderColor, this.BackgroundColor, this.TextColor, this.Font, this.width,
-            //            this.height, this.entranceAnimation, this.exitAnimation);
-            //    }
-            //}
-            return null;
         }
 
         public override OverlayItemModelBase GetOverlayItem()

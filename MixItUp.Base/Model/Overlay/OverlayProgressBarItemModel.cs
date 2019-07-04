@@ -25,6 +25,8 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayProgressBarItemModel : OverlayHTMLTemplateItemModelBase
     {
+        public const string GoalReachedCommandName = "Goal Reached";
+
         public const string HTMLTemplate =
             @"<div style=""position: absolute; background-color: {BACKGROUND_COLOR}; width: {BAR_WIDTH}px; height: {BAR_HEIGHT}px; transform: translate(-50%, -50%);"">
                 <div style=""position: absolute; background-color: {PROGRESS_COLOR}; width: {PROGRESS_WIDTH}px; height: {BAR_HEIGHT}px;""></div>
@@ -78,14 +80,25 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayProgressBarItemModel() : base() { }
 
-        public OverlayProgressBarItemModel(string htmlText, OverlayProgressBarItemTypeEnum progressBarType, double startAmount, double goalAmount, string currentAmountCustom, string goalAmountCustom,
-            int resetAfterDays, string progressColor, string backgroundColor, string textColor, string textFont, int width, int height, CustomCommand goalReachedCommand)
-            : base(OverlayItemModelTypeEnum.ProgressBar, htmlText)
+        public OverlayProgressBarItemModel(string htmlText, OverlayProgressBarItemTypeEnum progressBarType, double startAmount, double goalAmount, int resetAfterDays, string progressColor,
+            string backgroundColor, string textColor, string textFont, int width, int height, CustomCommand goalReachedCommand)
+            : this(htmlText, progressBarType, resetAfterDays, progressColor, backgroundColor, textColor, textFont, width, height, goalReachedCommand)
         {
             this.StartAmount = this.CurrentAmount = startAmount;
             this.GoalAmount = goalAmount;
+        }
+
+        public OverlayProgressBarItemModel(string htmlText, OverlayProgressBarItemTypeEnum progressBarType, string currentAmountCustom, string goalAmountCustom, int resetAfterDays,
+            string progressColor, string backgroundColor, string textColor, string textFont, int width, int height, CustomCommand goalReachedCommand)
+            : this(htmlText, progressBarType, resetAfterDays, progressColor, backgroundColor, textColor, textFont, width, height, goalReachedCommand)
+        {
             this.CurrentAmountCustom = currentAmountCustom;
             this.GoalAmountCustom = goalAmountCustom;
+        }
+
+        public OverlayProgressBarItemModel(string htmlText, OverlayProgressBarItemTypeEnum progressBarType, int resetAfterDays, string progressColor, string backgroundColor, string textColor, string textFont, int width, int height, CustomCommand goalReachedCommand)
+            : base(OverlayItemModelTypeEnum.ProgressBar, htmlText)
+        {
             this.ProgressBarType = progressBarType;
             this.ResetAfterDays = resetAfterDays;
             this.ProgressColor = progressColor;
