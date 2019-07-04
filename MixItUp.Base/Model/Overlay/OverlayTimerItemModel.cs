@@ -32,7 +32,7 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayTimerItemModel() : base() { }
 
         public OverlayTimerItemModel(string html, int totalLength, string textColor, string textFont, int textSize, CustomCommand timerCompleteCommand)
-            : base(OverlayItemModelTypeEnum.HTML, html)
+            : base(OverlayItemModelTypeEnum.Timer, html)
         {
             this.TotalLength = totalLength;
             this.TextColor = textColor;

@@ -16,6 +16,7 @@ namespace MixItUp.Base.Model.Overlay
 
         [DataMember]
         public int MinimumSecondsToShow { get; set; }
+
         [DataMember]
         public string TextColor { get; set; }
         [DataMember]
@@ -37,7 +38,7 @@ namespace MixItUp.Base.Model.Overlay
         public double EmberBonus { get; set; }
 
         [DataMember]
-        public double SecondsToAdd { get; set; }
+        public double TotalLength { get; set; }
 
         private HashSet<uint> follows = new HashSet<uint>();
         private HashSet<uint> hosts = new HashSet<uint>();
@@ -66,20 +67,12 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task LoadTestData()
         {
-            this.SecondsToAdd = (double)this.MinimumSecondsToShow * 1.5;
-            await Task.Delay((int)this.SecondsToAdd * 1000);
+            this.TotalLength = (double)this.MinimumSecondsToShow * 1.5;
+            await Task.Delay((int)this.TotalLength * 1000);
         }
 
         public override async Task Initialize()
         {
-            GlobalEvents.OnFollowOccurred -= GlobalEvents_OnFollowOccurred;
-            GlobalEvents.OnHostOccurred -= GlobalEvents_OnHostOccurred;
-            GlobalEvents.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
-            GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
-            GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
-            GlobalEvents.OnSparkUseOccurred -= GlobalEvents_OnSparkUseOccurred;
-            GlobalEvents.OnEmberUseOccurred -= GlobalEvents_OnEmberUseOccurred;
-
             if (this.FollowBonus > 0.0)
             {
                 GlobalEvents.OnFollowOccurred += GlobalEvents_OnFollowOccurred;
@@ -107,6 +100,19 @@ namespace MixItUp.Base.Model.Overlay
             }
 
             await base.Initialize();
+        }
+
+        public override async Task Disable()
+        {
+            GlobalEvents.OnFollowOccurred -= GlobalEvents_OnFollowOccurred;
+            GlobalEvents.OnHostOccurred -= GlobalEvents_OnHostOccurred;
+            GlobalEvents.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
+            GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
+            GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
+            GlobalEvents.OnSparkUseOccurred -= GlobalEvents_OnSparkUseOccurred;
+            GlobalEvents.OnEmberUseOccurred -= GlobalEvents_OnEmberUseOccurred;
+
+            await base.Disable();
         }
 
         protected override Task<Dictionary<string, string>> GetTemplateReplacements(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
@@ -164,7 +170,7 @@ namespace MixItUp.Base.Model.Overlay
 
         private void AddSeconds(double seconds)
         {
-            this.SecondsToAdd += seconds;
+            this.TotalLength = seconds;
             this.SendUpdateRequired();
         }
     }

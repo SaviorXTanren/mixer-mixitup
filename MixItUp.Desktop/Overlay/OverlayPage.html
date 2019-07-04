@@ -201,6 +201,9 @@
                             else if (packet.data.ItemTypeName === "Timer") {
                                 timerPacket(packet.data);
                             }
+                            else if (packet.data.ItemTypeName === "TimerTrain") {
+                                timerTrainPacket(packet.data);
+                            }
                             else if (packet.data.ItemTypeName === "StreamBoss") {
                                 if (packet.type == "Show") {
                                     streamBossShowPacket(packet.data);
@@ -208,9 +211,6 @@
                                 else if (packet.type == "Update") {
                                     streamBossUpdatePacket(packet.data);
                                 }
-                            }
-                            else if (packet.data.ItemTypeName === "TimerTrain") {
-                                timerTrainPacket(packet.data);
                             }
                             else if (packet.data.ItemTypeName === "StreamClip") {
                                 streamClipPacket(packet.data);
@@ -221,21 +221,6 @@
 
                                 listPacket(packet.data);
                             }
-
-
-
-                            //else if (packet.data.ItemTypeName === "Gamequeue") {
-                            //    gameQueuePacket(packet.data);
-                            //}
-                            //else if (packet.data.ItemTypeName === "SongRequestsQueue") {
-                            //    songRequestsQueuePacket(packet.data);
-                            //}
-                            //else if (packet.data.ItemTypeName === "ChatMessages") {
-                            //    chatMessagesPacket(packet.data);
-                            //}
-                            //else if (packet.data.ItemTypeName === "Leaderboard") {
-                            //    leaderboardPacket(packet.data);
-                            //}
                         }
                         else if (packet.type == "Hide") {
                             removePacket(packet.data);
@@ -366,252 +351,6 @@
                 addWaitRemoveElement(data, addedElement);
             }
 
-            // Event List Functions
-
-            function eventListPacket(data) {
-
-                if (!widgetData.has(data.ID)) {
-                    var list = {};
-
-                    widgetData.set(data.ID, list);
-
-                    list.MainDiv = document.createElement('div');
-                    list.Items = [];
-
-                    addWaitRemoveElement(data, list.MainDiv);
-                }
-
-                var list = widgetData.get(data.ID);
-                var mainDiv = list.MainDiv;
-                var items = list.Items;
-
-                if (items.length >= data.TotalToShow) {
-                    items.pop();
-                    $(mainDiv.lastChild).animateCss(data.RemoveEventAnimationName, function () {
-                        mainDiv.lastChild.style.visibility = 'hidden';
-
-                        eventListShiftItems(data, mainDiv, items);
-                    });
-                }
-                else {
-                    eventListShiftItems(data, mainDiv, items);
-                }
-            }
-
-            function eventListShiftItems(data, mainDiv, items) {
-
-                for (var i = 0; i < items.length; i++) {
-                    var itemDiv = items[i].Div;
-                    $(itemDiv).animateCss('slidedown-animation', function () { });
-                }
-
-                setTimeout(function () {
-
-                    while (mainDiv.hasChildNodes()) {
-                        mainDiv.removeChild(mainDiv.lastChild);
-                    }
-
-                    var newItemDiv = document.createElement('div');
-                    var newItemInnerDiv = document.createElement('div');
-                    newItemInnerDiv.innerHTML = data.HTML;
-                    newItemDiv.appendChild(newItemInnerDiv);
-                    $(newItemDiv).animateCss(data.AddEventAnimationName, function () { });
-
-                    mainDiv.insertBefore(newItemDiv, mainDiv.childNodes[0]);
-
-                    for (var i = 0; i < items.length; i++) {
-                        var existingItem = items[i];
-
-                        existingItem.Div = document.createElement('div');
-                        var existingItemInnerDiv = document.createElement('div');
-                        existingItemInnerDiv.innerHTML = existingItem.Data.HTML;
-                        existingItem.Div.appendChild(existingItemInnerDiv);
-
-                        mainDiv.appendChild(existingItem.Div);
-                    }
-
-                    items.unshift({ Data: data, Div: newItemDiv });
-
-                    for (var i = items.length; i < data.TotalToShow; i++) {
-                        var itemDiv = document.createElement('div');
-                        itemDiv.style.height = $(newItemDiv).outerHeight(true) + 'px';
-
-                        mainDiv.appendChild(itemDiv);
-                    }
-
-                }, 1100);
-            }
-
-            // Game Queue Functions
-
-            function gameQueuePacket(data) {
-
-                if (!widgetData.has(data.ID)) {
-                    var list = {};
-
-                    widgetData.set(data.ID, list);
-
-                    list.MainDiv = document.createElement('div');
-                    list.Items = [];
-
-                    addWaitRemoveElement(data, list.MainDiv);
-                }
-
-                var list = widgetData.get(data.ID);
-                var mainDiv = list.MainDiv;
-
-                data.TotalLeftToRemove = mainDiv.children.length;
-
-                for (var i = 0; i < mainDiv.children.length; i++) {
-                    $(mainDiv.children[i]).animateCss(data.RemoveEventAnimationName, function (animatedDiv) {
-                        animatedDiv.style.visibility = 'hidden';
-                        data.TotalLeftToRemove--;
-                    });
-                }
-
-                gameQueueAddItems(data, mainDiv);
-            }
-
-            function gameQueueAddItems(data, mainDiv) {
-                if (data.TotalLeftToRemove > 0) {
-                    setTimeout(function () {
-                        gameQueueAddItems(data, mainDiv);
-                    }, 200);
-                }
-                else {
-
-                    while (mainDiv.hasChildNodes()) {
-                        mainDiv.removeChild(mainDiv.lastChild);
-                    }
-
-                    if (data.GameQueueUpdates.length > 0) {
-                        var newItemDiv;
-                        for (var i = 0; i < data.GameQueueUpdates.length; i++) {
-                            newItemDiv = document.createElement('div');
-                            newItemDiv.innerHTML = data.GameQueueUpdates[i].HTML;
-                            mainDiv.appendChild(newItemDiv);
-                            $(newItemDiv).animateCss(data.AddEventAnimationName, function () { });
-                        }
-
-                        for (var i = data.GameQueueUpdates.length; i < data.TotalToShow; i++) {
-                            var itemDiv = document.createElement('div');
-                            itemDiv.style.height = $(newItemDiv).outerHeight(true) + 'px';
-                            mainDiv.appendChild(itemDiv);
-                        }
-                    }
-                }
-            }
-
-            // Song Requests Queue Functions
-
-            function songRequestsQueuePacket(data) {
-
-                if (!widgetData.has(data.ID)) {
-                    var list = {};
-
-                    widgetData.set(data.ID, list);
-
-                    list.MainDiv = document.createElement('div');
-                    list.Items = [];
-
-                    addWaitRemoveElement(data, list.MainDiv);
-                }
-
-                var list = widgetData.get(data.ID);
-                var mainDiv = list.MainDiv;
-
-                data.TotalLeftToRemove = mainDiv.children.length;
-
-                for (var i = 0; i < mainDiv.children.length; i++) {
-                    $(mainDiv.children[i]).animateCss(data.RemoveEventAnimationName, function (animatedDiv) {
-                        animatedDiv.style.visibility = 'hidden';
-                        data.TotalLeftToRemove--;
-                    });
-                }
-
-                songRequestsQueueAddItems(data, mainDiv);
-            }
-
-            function songRequestsQueueAddItems(data, mainDiv) {
-                if (data.TotalLeftToRemove > 0) {
-                    setTimeout(function () {
-                        songRequestsQueueAddItems(data, mainDiv);
-                    }, 200);
-                }
-                else {
-
-                    while (mainDiv.hasChildNodes()) {
-                        mainDiv.removeChild(mainDiv.lastChild);
-                    }
-
-                    if (data.SongRequestUpdates.length > 0) {
-                        var newItemDiv;
-                        for (var i = 0; i < data.SongRequestUpdates.length; i++) {
-                            newItemDiv = document.createElement('div');
-                            newItemDiv.innerHTML = data.SongRequestUpdates[i].HTML;
-                            mainDiv.appendChild(newItemDiv);
-                            $(newItemDiv).animateCss(data.AddEventAnimationName, function () { });
-                        }
-
-                        for (var i = data.SongRequestUpdates.length; i < data.TotalToShow; i++) {
-                            var itemDiv = document.createElement('div');
-                            itemDiv.style.height = $(newItemDiv).outerHeight(true) + 'px';
-                            mainDiv.appendChild(itemDiv);
-                        }
-                    }
-                }
-            }
-
-            function chatMessagesPacket(data) {
-
-                if (!widgetData.has(data.ID)) {
-                    var list = {};
-
-                    widgetData.set(data.ID, list);
-
-                    list.MainDiv = document.createElement('div');
-                    list.Items = [];
-
-                    addWaitRemoveElement(data, list.MainDiv);
-                }
-
-                var list = widgetData.get(data.ID);
-                var mainDiv = list.MainDiv;
-                var items = list.Items;
-
-                var i = 0;
-
-                if (items.length >= data.TotalToShow) {
-                    for (i = 0; i < data.Messages.length && mainDiv.hasChildNodes(); i++) {
-                        items.pop();
-                        mainDiv.removeChild(mainDiv.firstChild);
-                    }
-                }
-
-                for (i = 0; i < data.Messages.length; i++) {
-                    var newMessage = data.Messages[i];
-
-                    var newItemDiv = document.createElement('div');
-                    var newItemInnerDiv = document.createElement('div');
-                    newItemInnerDiv.innerHTML = newMessage.Message;
-                    newItemDiv.appendChild(newItemInnerDiv);
-                    $(newItemDiv).animateCss(data.AddEventAnimationName, function () { });
-
-                    mainDiv.appendChild(newItemDiv);
-                    items.unshift({ id: data.Messages[i].ID, div: newItemDiv });
-                }
-
-                for (i = 0; i < data.DeletedMessages.length; i++) {
-                    for (j = 0; j < items.length; j++) {
-                        if (data.DeletedMessages[i] == items[j].id) {
-                            mainDiv.removeChild(items[j].div);
-                            items.splice(j, 1);
-                            break;
-                        }
-                    }
-                }
-            }
-
             function listPacket(data) {
 
                 var widget = {};
@@ -729,152 +468,58 @@
                 });
             }
 
-            function leaderboardPacket(data) {
-
-                if (!widgetData.has(data.ID)) {
-                    var list = {};
-
-                    widgetData.set(data.ID, list);
-
-                    list.MainDiv = document.createElement('div');
-                    list.Items = [];
-
-                    addWaitRemoveElement(data, list.MainDiv);
-                }
-
-                var list = widgetData.get(data.ID);
-                var mainDiv = list.MainDiv;
-
-                data.TotalLeftToRemove = mainDiv.children.length;
-
-                for (var i = 0; i < mainDiv.children.length; i++) {
-                    $(mainDiv.children[i]).animateCss(data.RemoveEventAnimationName, function (animatedDiv) {
-                        animatedDiv.style.visibility = 'hidden';
-                        data.TotalLeftToRemove--;
-                    });
-                }
-
-                leaderboardAddItems(data, mainDiv);
-            }
-
-            function leaderboardAddItems(data, mainDiv) {
-                if (data.TotalLeftToRemove > 0) {
-                    setTimeout(function () {
-                        leaderboardAddItems(data, mainDiv);
-                    }, 200);
-                }
-                else {
-
-                    while (mainDiv.hasChildNodes()) {
-                        mainDiv.removeChild(mainDiv.lastChild);
-                    }
-
-                    if (data.LeaderboardEntries.length > 0) {
-                        var newItemDiv;
-                        for (var i = 0; i < data.LeaderboardEntries.length; i++) {
-                            newItemDiv = document.createElement('div');
-                            newItemDiv.innerHTML = data.LeaderboardEntries[i];
-                            mainDiv.appendChild(newItemDiv);
-                            $(newItemDiv).animateCss(data.AddEventAnimationName, function () { });
-                        }
-
-                        for (var i = data.LeaderboardEntries.length; i < data.TotalToShow; i++) {
-                            var itemDiv = document.createElement('div');
-                            itemDiv.style.height = $(newItemDiv).outerHeight(true) + 'px';
-                            mainDiv.appendChild(itemDiv);
-                        }
-                    }
-                }
-            }
-
-            // Timer Functions
-
             function timerPacket(data) {
-                if (!itemDictionary[data.ID]) {
-                    var addedElement = document.createElement('div');
-
-                    timerUpdate(data, addedElement);
-
-                    addWaitRemoveElement(data, addedElement);
-                }
+                var widget = getCreatePersistentElement(data);
+                widget.TotalLength = data.TotalLength;
+                timerLoop(data);
             }
-
-            function timerUpdate(data, mainDiv) {
-
-                var hours = Math.floor(data.TotalLength / 3600);
-                var minutes = Math.floor((data.TotalLength - (hours * 3600)) / 60);
-                var seconds = data.TotalLength - (hours * 3600) - (minutes * 60);
-
-                if (hours < 10) { hours = "0" + hours; }
-                if (minutes < 10) { minutes = "0" + minutes; }
-                if (seconds < 10) { seconds = "0" + seconds; }
-                var timeText = hours + ':' + minutes + ':' + seconds;
-
-                mainDiv.innerHTML = data.HTML.replace("{TIME}", timeText);
-
-                if (data.TotalLength > 0) {
-                    setTimeout(function () {
-                        data.TotalLength--;
-                        timerUpdate(data, mainDiv);
-                    }, 1000);
-                }
-                else {
-                    mainDiv.innerHTML = "";
-
-                    removePacket(data);
-                }
-            }
-
-            // Timer Train Functions
 
             function timerTrainPacket(data) {
-                if (!widgetData.has(data.ID)) {
-                    var newTimer = {};
+                var widget = getCreatePersistentElement(data);
 
-                    widgetData.set(data.ID, newTimer);
-
-                    newTimer.MainDiv = document.createElement('div');
-                    newTimer.TotalSeconds = data.SecondsToAdd;
-
-                    timerTrainUpdate(data, newTimer);
-
-                    addWaitRemoveElement(data, newTimer.MainDiv);
+                var show = false;
+                if (isNaN(widget.TotalLength) || widget.TotalLength == 0) {
+                    show = true;
+                    widget.TotalLength = 0;
                 }
-                else {
-                    var timer = widgetData.get(data.ID);
-                    timer.TotalSeconds += data.SecondsToAdd;
+                widget.TotalLength += data.TotalLength;
+
+                if (show && widget.TotalLength > data.MinimumSecondsToShow) {
+                    timerLoop(data);
                 }
             }
 
-            function timerTrainUpdate(data, timer) {
+            function timerLoop(data) {
+                var widget = getCreatePersistentElement(data);
+                var totalTime = widget.TotalLength;
 
-                var hours = Math.floor(timer.TotalSeconds / 3600);
-                var minutes = Math.floor((timer.TotalSeconds - (hours * 3600)) / 60);
-                var seconds = timer.TotalSeconds - (hours * 3600) - (minutes * 60);
+                var hours = Math.floor(totalTime / 3600);
+                var minutes = Math.floor((totalTime - (hours * 3600)) / 60);
+                var seconds = totalTime - (hours * 3600) - (minutes * 60);
 
                 if (hours < 10) { hours = "0" + hours; }
                 if (minutes < 10) { minutes = "0" + minutes; }
                 if (seconds < 10) { seconds = "0" + seconds; }
                 var timeText = hours + ':' + minutes + ':' + seconds;
 
-                timer.MainDiv.innerHTML = data.HTML.replace("{TIME}", timeText);
+                var widget = getCreatePersistentElement(data);
+                widget.MainDiv.innerHTML = data.HTML.replace("{TIME}", timeText);
 
-                if (timer.TotalSeconds > 0) {
+                if (totalTime > 0) {
                     setTimeout(function () {
-                        timer.TotalSeconds--;
-                        timerTrainUpdate(data, timer);
+                        widget.TotalLength--;
+                        timerLoop(data);
                     }, 1000);
                 }
                 else {
-                    timer.MainDiv.innerHTML = "";
+                    widget.MainDiv.innerHTML = "";
                     removePacket(data);
                 }
             }
 
             function streamBossShowPacket(data) {
-                var div = getCreatePersistentElement(data);
-
-                div.innerHTML = data.HTML;
+                var widget = getCreatePersistentElement(data);
+                widget.MainDiv.innerHTML = data.HTML;
             }
 
             function streamBossUpdatePacket(data) {
@@ -893,9 +538,10 @@
 
             function getCreatePersistentElement(data) {
                 if (!widgetData.has(data.ID)) {
-                    var addedElement = document.createElement('div');
-                    widgetData.set(data.ID, addedElement);
-                    addWaitRemoveElement(data, addedElement);
+                    var widget = {};
+                    widgetData.set(data.ID, widget);
+                    widget.MainDiv = document.createElement('div');
+                    addWaitRemoveElement(data, widget.MainDiv);
                 }
                 return widgetData.get(data.ID);
             }
