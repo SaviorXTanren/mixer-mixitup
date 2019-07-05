@@ -116,15 +116,11 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task Initialize()
         {
-            GlobalEvents.OnFollowOccurred -= GlobalEvents_OnFollowOccurred;
-            GlobalEvents.OnUnfollowOccurred -= GlobalEvents_OnUnfollowOccurred;
-            GlobalEvents.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
-            GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
-            GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
-            GlobalEvents.OnSparkUseOccurred -= GlobalEvents_OnSparkUseOccurred;
-            GlobalEvents.OnEmberUseOccurred -= GlobalEvents_OnEmberUseOccurred;
-            GlobalEvents.OnPatronageUpdateOccurred -= GlobalEvents_OnPatronageUpdateOccurred;
-            GlobalEvents.OnPatronageMilestoneReachedOccurred -= GlobalEvents_OnPatronageMilestoneReachedOccurred;
+            if (this.ResetAfterDays > 0 && this.LastReset.TotalDaysFromNow() > this.ResetAfterDays)
+            {
+                this.CurrentAmount = 0;
+                this.LastReset = DateTimeOffset.Now;
+            }
 
             if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Followers)
             {
@@ -169,6 +165,21 @@ namespace MixItUp.Base.Model.Overlay
             }
 
             await base.Initialize();
+        }
+
+        public override async Task Disable()
+        {
+            GlobalEvents.OnFollowOccurred -= GlobalEvents_OnFollowOccurred;
+            GlobalEvents.OnUnfollowOccurred -= GlobalEvents_OnUnfollowOccurred;
+            GlobalEvents.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
+            GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
+            GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
+            GlobalEvents.OnSparkUseOccurred -= GlobalEvents_OnSparkUseOccurred;
+            GlobalEvents.OnEmberUseOccurred -= GlobalEvents_OnEmberUseOccurred;
+            GlobalEvents.OnPatronageUpdateOccurred -= GlobalEvents_OnPatronageUpdateOccurred;
+            GlobalEvents.OnPatronageMilestoneReachedOccurred -= GlobalEvents_OnPatronageMilestoneReachedOccurred;
+
+            await base.Disable();
         }
 
         protected override async Task<Dictionary<string, string>> GetTemplateReplacements(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
@@ -226,7 +237,6 @@ namespace MixItUp.Base.Model.Overlay
             }
 
             double percentage = (amount / goal);
-
             if (!this.GoalReached && percentage >= 1.0)
             {
                 this.GoalReached = true;
