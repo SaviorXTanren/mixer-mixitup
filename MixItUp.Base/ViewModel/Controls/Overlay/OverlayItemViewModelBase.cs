@@ -17,6 +17,8 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         public IEnumerable<string> VisibleAnimationStrings { get; set; } = EnumHelper.GetEnumNames<OverlayItemEffectVisibleAnimationTypeEnum>();
         public IEnumerable<string> ExitAnimationStrings { get; set; } = EnumHelper.GetEnumNames<OverlayItemEffectExitAnimationTypeEnum>();
 
+        public virtual bool SupportsRefreshUpdating { get { return false; } }
+
         public virtual OverlayItemModelBase GetOverlayItem() { return null; }
     }
 }

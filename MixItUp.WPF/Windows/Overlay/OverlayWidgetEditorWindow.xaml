@@ -92,7 +92,7 @@
 
                         <ComboBox ItemsSource="{Binding OverlayEndpoints}" SelectedItem="{Binding SelectedOverlayEndpoint}" Grid.Column="0" Width="200" MaterialDesign:HintAssist.Hint="Overlay To Use" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-                        <TextBox Grid.Column="2" Text="{Binding RefreshTimeString}" Visibility="{Binding SupportsRefreshUpdating, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="Refresh Time (Secs)" Width="130" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <TextBox x:Name="RefreshTimeTextBox" Grid.Column="2" Text="{Binding RefreshTimeString}" IsEnabled="{Binding SupportsRefreshUpdating}" MaterialDesign:HintAssist.Hint="Refresh Time (Secs)" Width="130" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                     </Grid>
                 </Grid>
 

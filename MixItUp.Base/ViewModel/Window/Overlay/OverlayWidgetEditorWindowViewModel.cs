@@ -85,6 +85,16 @@ namespace MixItUp.Base.ViewModel.Window.Overlay
 
         public int RefreshTime;
 
+        public bool SupportsRefreshUpdating
+        {
+            get { return this.supportsRefreshUpdating; }
+            set
+            {
+                this.supportsRefreshUpdating = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool supportsRefreshUpdating;
 
         public OverlayWidgetEditorWindowViewModel(OverlayWidgetModel widget)
         {

@@ -24,6 +24,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
                 this.NotifyPropertyChanged("IsNotMilestonesType");
                 this.NotifyPropertyChanged("IsFollowersType");
                 this.NotifyPropertyChanged("CanSetStartingAmount");
+                this.NotifyPropertyChanged("SupportsRefreshUpdating");
             }
         }
         private OverlayProgressBarItemTypeEnum progressBarType;
@@ -147,6 +148,8 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             }
         }
         private string backgroundColor;
+
+        public override bool SupportsRefreshUpdating { get { return true; } }
 
         public CustomCommand OnGoalReachedCommand
         {

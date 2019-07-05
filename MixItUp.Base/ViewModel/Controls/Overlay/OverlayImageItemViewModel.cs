@@ -39,6 +39,8 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         }
         private int height;
 
+        public override bool SupportsRefreshUpdating { get { return true; } }
+
         public ICommand BrowseFilePathCommand { get; set; }
 
         public OverlayImageItemViewModel()

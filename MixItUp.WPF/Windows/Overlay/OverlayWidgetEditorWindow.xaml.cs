@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Controls.Overlay;
 using MixItUp.Base.ViewModel.Window.Overlay;
 using MixItUp.WPF.Controls.Overlay;
 using System.Collections.Generic;
@@ -134,6 +135,9 @@ namespace MixItUp.WPF.Windows.Overlay
         private void SetGameEditorControl(OverlayItemControl overlayTypeEditor)
         {
             this.MainContentControl.Content = this.overlayTypeEditor = overlayTypeEditor;
+
+            OverlayItemViewModelBase itemViewModel = this.overlayTypeEditor.GetViewModel();
+            this.viewModel.SupportsRefreshUpdating = itemViewModel.SupportsRefreshUpdating;
         }
     }
 }

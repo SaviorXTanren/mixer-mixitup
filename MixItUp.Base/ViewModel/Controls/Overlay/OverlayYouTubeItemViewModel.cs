@@ -59,6 +59,8 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         }
         private int volume;
 
+        public override bool SupportsRefreshUpdating { get { return true; } }
+
         public OverlayYouTubeItemViewModel()
         {
             this.width = OverlayVideoItemModel.DefaultWidth;

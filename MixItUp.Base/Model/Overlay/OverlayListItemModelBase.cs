@@ -80,6 +80,9 @@ namespace MixItUp.Base.Model.Overlay
         public int Height { get; set; }
 
         [DataMember]
+        public bool ForceBottomAlign { get { return true; } }
+
+        [DataMember]
         public List<OverlayListIndividualItemModel> Items = new List<OverlayListIndividualItemModel>();
 
         protected SemaphoreSlim listSemaphore = new SemaphoreSlim(1);

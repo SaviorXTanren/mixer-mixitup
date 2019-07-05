@@ -111,6 +111,9 @@ namespace MixItUp.Base.Model.Overlay
             this.LastReset = DateTimeOffset.Now;
         }
 
+        [JsonIgnore]
+        public override bool SupportsRefreshUpdating { get { return this.ProgressBarType == OverlayProgressBarItemTypeEnum.Custom; } }
+
         public override async Task Initialize()
         {
             if (this.ResetAfterDays > 0 && this.LastReset.TotalDaysFromNow() > this.ResetAfterDays)

@@ -93,6 +93,8 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         }
         private string shadowColor;
 
+        public override bool SupportsRefreshUpdating { get { return true; } }
+
         public OverlayTextItemViewModel()
         {
             this.Font = "Arial";

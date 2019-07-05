@@ -567,7 +567,14 @@
                         addedElement.style.cssText += 'left: ' + data.Position.Horizontal.toString() + 'px; top: ' + data.Position.Vertical.toString() + 'px;'
                     }
                     else {
-                        addedElement.style.cssText += 'left: ' + data.Position.Horizontal.toString() + '%; top: ' + data.Position.Vertical.toString() + '%; transform: translate(-50%, -50%);'
+                        addedElement.style.cssText += 'left: ' + data.Position.Horizontal.toString() + '%; top: ' + data.Position.Vertical.toString() + '%;'
+                    }
+
+                    if (data.ForceBottomAlign) {
+                        addedElement.style.cssText += "transform: translate(-50%, -100%);";
+                    }
+                    else if (data.Position.IsPercentagePosition) {
+                        addedElement.style.cssText += "transform: translate(-50%, -50%);";
                     }
 
                     removePacket(data);

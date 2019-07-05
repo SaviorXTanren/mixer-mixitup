@@ -15,6 +15,8 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         }
         private string html;
 
+        public override bool SupportsRefreshUpdating { get { return true; } }
+
         public OverlayHTMLItemViewModel() { }
 
         public OverlayHTMLItemViewModel(OverlayHTMLItemModel item)

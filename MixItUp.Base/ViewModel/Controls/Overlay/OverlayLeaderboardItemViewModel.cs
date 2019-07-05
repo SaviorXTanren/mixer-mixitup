@@ -20,6 +20,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
                 this.NotifyPropertyChanged("IsCurrencyRankType");
                 this.NotifyPropertyChanged("IsSparksEmbersType");
                 this.NotifyPropertyChanged("IsDonationsType");
+                this.NotifyPropertyChanged("SupportsRefreshUpdating");
             }
         }
         private OverlayLeaderboardListItemTypeEnum leaderboardType;
@@ -50,6 +51,8 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             }
         }
         private UserCurrencyViewModel currencyRank;
+
+        public override bool SupportsRefreshUpdating { get { return true; } }
 
         public OverlayLeaderboardItemViewModel()
             : base()
