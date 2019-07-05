@@ -31,9 +31,6 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public string Hash { get; set; } = string.Empty;
 
-        [DataMember]
-        public int FadeOut { get; set; }
-
         public OverlayListIndividualItemModel() { }
 
         public static OverlayListIndividualItemModel CreateAddItem(string id, UserViewModel user, int position, string html)
@@ -63,6 +60,8 @@ namespace MixItUp.Base.Model.Overlay
     {
         [DataMember]
         public int TotalToShow { get; set; }
+        [DataMember]
+        public int FadeOut { get; set; }
 
         [DataMember]
         public string BorderColor { get; set; }
@@ -89,11 +88,12 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayListItemModelBase() : base() { }
 
-        public OverlayListItemModelBase(OverlayItemModelTypeEnum type, string htmlText, int totalToShow, string textFont, int width, int height, string borderColor,
+        public OverlayListItemModelBase(OverlayItemModelTypeEnum type, string htmlText, int totalToShow, int fadeOut, string textFont, int width, int height, string borderColor,
             string backgroundColor, string textColor, OverlayItemEffectEntranceAnimationTypeEnum addEventAnimation, OverlayItemEffectExitAnimationTypeEnum removeEventAnimation)
             : base(type, htmlText)
         {
             this.TotalToShow = totalToShow;
+            this.FadeOut = fadeOut;
             this.TextFont = textFont;
             this.Width = width;
             this.Height = height;

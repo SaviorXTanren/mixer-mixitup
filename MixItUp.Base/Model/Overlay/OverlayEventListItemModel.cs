@@ -5,7 +5,6 @@ using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
@@ -39,9 +38,9 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayEventListItemModel() : base() { }
 
-        public OverlayEventListItemModel(string htmlText, IEnumerable<OverlayEventListItemTypeEnum> itemTypes, int totalToShow, string textFont, int width, int height,
+        public OverlayEventListItemModel(string htmlText, IEnumerable<OverlayEventListItemTypeEnum> itemTypes, int totalToShow, int fadeOut, string textFont, int width, int height,
             string borderColor, string backgroundColor, string textColor, OverlayItemEffectEntranceAnimationTypeEnum addEventAnimation, OverlayItemEffectExitAnimationTypeEnum removeEventAnimation)
-            : base(OverlayItemModelTypeEnum.EventList, htmlText, totalToShow, textFont, width, height, borderColor, backgroundColor, textColor, addEventAnimation, removeEventAnimation)
+            : base(OverlayItemModelTypeEnum.EventList, htmlText, totalToShow, fadeOut, textFont, width, height, borderColor, backgroundColor, textColor, addEventAnimation, removeEventAnimation)
         {
             this.ItemTypes = new List<OverlayEventListItemTypeEnum>(itemTypes);
         }

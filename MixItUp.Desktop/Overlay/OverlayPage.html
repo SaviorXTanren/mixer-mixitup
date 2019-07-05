@@ -437,6 +437,19 @@
                         mainDiv.appendChild(newItemDiv);
                         widget.Items.push(newItem);
                     }
+
+                    if (data.FadeOut != null && data.FadeOut > 0) {
+                        setTimeout(function () {
+                            $(newItemDiv).animateCss("fadeOut", function ()
+                            {
+                                var index = widget.Items.indexOf(newItem);
+                                if (index !== -1) {
+                                    widget.Items.splice(index, 1);
+                                    mainDiv.removeChild(newItemDiv);
+                                }
+                            });
+                        }, data.FadeOut * 1000);
+                    }
                 }
             }
 

@@ -77,7 +77,7 @@ namespace MixItUp.Base.Commands
             else if (item is OverlayChatMessages)
             {
                 OverlayChatMessages oItem = (OverlayChatMessages)item;
-                return new OverlayChatMessagesListItemModel(oItem.HTMLText, oItem.TotalToShow, oItem.TextFont, oItem.Width, oItem.TextSize, oItem.BorderColor, oItem.BackgroundColor,
+                return new OverlayChatMessagesListItemModel(oItem.HTMLText, oItem.TotalToShow, 0, oItem.TextFont, oItem.Width, oItem.TextSize, oItem.BorderColor, oItem.BackgroundColor,
                     oItem.TextColor, (OverlayItemEffectEntranceAnimationTypeEnum)oItem.AddEventAnimation, OverlayItemEffectExitAnimationTypeEnum.None);
             }
             else if (item is OverlayEventList)
@@ -88,7 +88,7 @@ namespace MixItUp.Base.Commands
                 {
                     types.Add((OverlayEventListItemTypeEnum)type);
                 }
-                return new OverlayEventListItemModel(oItem.HTMLText, types, oItem.TotalToShow, oItem.TextFont, oItem.Width, oItem.Height, oItem.BorderColor, oItem.BackgroundColor,
+                return new OverlayEventListItemModel(oItem.HTMLText, types, oItem.TotalToShow, 0, oItem.TextFont, oItem.Width, oItem.Height, oItem.BorderColor, oItem.BackgroundColor,
                     oItem.TextColor, (OverlayItemEffectEntranceAnimationTypeEnum)oItem.AddEventAnimation, (OverlayItemEffectExitAnimationTypeEnum)oItem.RemoveEventAnimation);
             }
             else if (item is OverlayGameQueue)

@@ -61,7 +61,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         }
 
         public OverlayLeaderboardItemViewModel(OverlayLeaderboardListItemModel item)
-            : base(item.TotalToShow, item.Width, item.Height, item.TextFont, item.TextColor, item.BorderColor, item.BackgroundColor, item.Effects.EntranceAnimation, item.Effects.ExitAnimation, item.HTML)
+            : base(item.TotalToShow, 0, item.Width, item.Height, item.TextFont, item.TextColor, item.BorderColor, item.BackgroundColor, item.Effects.EntranceAnimation, item.Effects.ExitAnimation, item.HTML)
         {
             this.leaderboardType = item.LeaderboardType;
             if (this.leaderboardType == OverlayLeaderboardListItemTypeEnum.CurrencyRank)

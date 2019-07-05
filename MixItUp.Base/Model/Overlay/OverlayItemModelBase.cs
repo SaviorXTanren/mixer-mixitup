@@ -83,7 +83,6 @@ namespace MixItUp.Base.Model.Overlay
         [Name("Rotate In")]
         RotateIn,
 
-
         [Name("Rotate In Up")]
         [Obsolete]
         RotateInUp,
@@ -96,7 +95,6 @@ namespace MixItUp.Base.Model.Overlay
         [Name("Rotate In Right")]
         [Obsolete]
         RotateInRight,
-
 
         [Name("Slide In Up")]
         SlideInUp,
@@ -183,7 +181,6 @@ namespace MixItUp.Base.Model.Overlay
         [Name("Rotate Out")]
         RotateOut,
 
-
         [Name("Rotate Out Up")]
         [Obsolete]
         RotateOutUp,
@@ -196,7 +193,6 @@ namespace MixItUp.Base.Model.Overlay
         [Name("Rotate Out Right")]
         [Obsolete]
         RotateOutRight,
-
 
         [Name("Slide Out Up")]
         SlideOutUp,

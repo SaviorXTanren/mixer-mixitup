@@ -85,7 +85,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         }
 
         public OverlayEventListItemViewModel(OverlayEventListItemModel item)
-            : base(item.TotalToShow, item.Width, item.Height, item.TextFont, item.TextColor, item.BorderColor, item.BackgroundColor, item.Effects.EntranceAnimation, item.Effects.ExitAnimation, item.HTML)
+            : base(item.TotalToShow, item.FadeOut, item.Width, item.Height, item.TextFont, item.TextColor, item.BorderColor, item.BackgroundColor, item.Effects.EntranceAnimation, item.Effects.ExitAnimation, item.HTML)
         { }
 
         public override OverlayItemModelBase GetOverlayItem()
@@ -96,7 +96,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
                 this.BorderColor = ColorSchemes.GetColorCode(this.BorderColor);
                 this.BackgroundColor = ColorSchemes.GetColorCode(this.BackgroundColor);
 
-                return new OverlayEventListItemModel(this.HTML, this.eventListTypes, totalToShow, this.Font, this.width, this.height, this.BorderColor, this.BackgroundColor, this.TextColor, this.entranceAnimation, this.exitAnimation);
+                return new OverlayEventListItemModel(this.HTML, this.eventListTypes, totalToShow, fadeOut, this.Font, this.width, this.height, this.BorderColor, this.BackgroundColor, this.TextColor, this.entranceAnimation, this.exitAnimation);
             }
             return null;
         }

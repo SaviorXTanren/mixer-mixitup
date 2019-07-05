@@ -12,7 +12,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         }
 
         public OverlaySongRequestsItemViewModel(OverlaySongRequestsListItemModel item)
-            : base(item.TotalToShow, item.Width, item.Height, item.TextFont, item.TextColor, item.BorderColor, item.BackgroundColor, item.Effects.EntranceAnimation, item.Effects.ExitAnimation, item.HTML)
+            : base(item.TotalToShow, 0, item.Width, item.Height, item.TextFont, item.TextColor, item.BorderColor, item.BackgroundColor, item.Effects.EntranceAnimation, item.Effects.ExitAnimation, item.HTML)
         { }
 
         public override OverlayItemModelBase GetOverlayItem()

@@ -19,9 +19,9 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayGameQueueListItemModel() : base() { }
 
-        public OverlayGameQueueListItemModel(string htmlText, int totalToShow, string textFont, int width, int height,
-            string borderColor, string backgroundColor, string textColor, OverlayItemEffectEntranceAnimationTypeEnum addEventAnimation, OverlayItemEffectExitAnimationTypeEnum removeEventAnimation)
-            : base(OverlayItemModelTypeEnum.GameQueue, htmlText, totalToShow, textFont, width, height, borderColor, backgroundColor, textColor, addEventAnimation, removeEventAnimation)
+        public OverlayGameQueueListItemModel(string htmlText, int totalToShow, string textFont, int width, int height, string borderColor, string backgroundColor, string textColor,
+            OverlayItemEffectEntranceAnimationTypeEnum addEventAnimation, OverlayItemEffectExitAnimationTypeEnum removeEventAnimation)
+            : base(OverlayItemModelTypeEnum.GameQueue, htmlText, totalToShow, 0, textFont, width, height, borderColor, backgroundColor, textColor, addEventAnimation, removeEventAnimation)
         { }
 
         public override async Task LoadTestData()

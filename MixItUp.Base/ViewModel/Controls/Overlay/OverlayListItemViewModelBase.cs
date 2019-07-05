@@ -17,6 +17,17 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         }
         protected int totalToShow;
 
+        public string FadeOutString
+        {
+            get { return this.fadeOut.ToString(); }
+            set
+            {
+                this.fadeOut = this.GetPositiveIntFromString(value);
+                this.NotifyPropertyChanged();
+            }
+        }
+        protected int fadeOut;
+
         public string WidthString
         {
             get { return this.width.ToString(); }
@@ -108,16 +119,18 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         public OverlayListItemViewModelBase()
         {
             this.totalToShow = 5;
+            this.fadeOut = 0;
             this.width = 400;
             this.height = 100;
             this.Font = "Arial";
         }
 
-        public OverlayListItemViewModelBase(int totalToShow, int width, int height, string textFont, string textColor, string borderColor, string backgroundColor,
+        public OverlayListItemViewModelBase(int totalToShow, int fadeOut, int width, int height, string textFont, string textColor, string borderColor, string backgroundColor,
             OverlayItemEffectEntranceAnimationTypeEnum entranceAnimation, OverlayItemEffectExitAnimationTypeEnum exitAnimation, string htmlText)
             : this()
         {
             this.totalToShow = totalToShow;
+            this.fadeOut = fadeOut;
             this.width = width;
             this.height = height;
             this.Font = textFont;
@@ -134,7 +147,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
 
         protected bool Validate()
         {
-            return this.totalToShow > 0 && !string.IsNullOrEmpty(this.Font) && !string.IsNullOrEmpty(this.TextColor) && !string.IsNullOrEmpty(this.BorderColor)
+            return this.totalToShow > 0 && this.fadeOut >= 0 && !string.IsNullOrEmpty(this.Font) && !string.IsNullOrEmpty(this.TextColor) && !string.IsNullOrEmpty(this.BorderColor)
                 && !string.IsNullOrEmpty(this.BackgroundColor) && this.width > 0 && this.height > 0 && !string.IsNullOrEmpty(this.HTML);
         }
     }
