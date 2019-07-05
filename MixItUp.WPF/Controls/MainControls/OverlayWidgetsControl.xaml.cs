@@ -27,8 +27,6 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             this.OverlayWidgetsListView.ItemsSource = this.widgets;
 
-            this.RefreshTimeTextBox.Text = ChannelSession.Settings.OverlayWidgetRefreshTime.ToString();
-
             this.RefreshList();
 
             return base.InitializeInternal();
@@ -141,20 +139,6 @@ namespace MixItUp.WPF.Controls.MainControls
             if (widget != null && widget.IsEnabled)
             {
                 button.IsChecked = true;
-            }
-        }
-
-        private async void RefreshTimeTextBox_LostFocus(object sender, RoutedEventArgs e)
-        {
-            int value;
-            if (int.TryParse(this.RefreshTimeTextBox.Text, out value) && value > 0)
-            {
-                ChannelSession.Settings.OverlayWidgetRefreshTime = value;
-            }
-            else
-            {
-                await MessageBoxHelper.ShowMessageDialog("Refresh Interval must be greater than 0");
-                this.RefreshTimeTextBox.Text = ChannelSession.Settings.OverlayWidgetRefreshTime.ToString();
             }
         }
 

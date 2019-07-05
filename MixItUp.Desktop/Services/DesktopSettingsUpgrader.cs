@@ -176,7 +176,12 @@ namespace MixItUp.Desktop.Services
                 {
                     OverlayItemModelBase newItem = StoreCommandUpgrader.ConvertOverlayItem(widget.Item);
                     newItem.Position = new OverlayItemPositionModel((OverlayItemPositionType)widget.Position.PositionType, widget.Position.Horizontal, widget.Position.Vertical);
-                    settings.OverlayWidgets.Add(new OverlayWidgetModel(widget.Name, widget.OverlayName, newItem, widget.DontRefresh));
+                    OverlayWidgetModel newWidget = new OverlayWidgetModel(widget.Name, widget.OverlayName, newItem, 0);
+                    settings.OverlayWidgets.Add(newWidget);
+                    if (newWidget.SupportsRefreshUpdating)
+                    {
+                        newWidget.RefreshTime = settings.OverlayWidgetRefreshTime;
+                    }
                 }
                 settings.overlayWidgetsInternal.Clear();
 #pragma warning restore CS0612 // Type or member is obsolete

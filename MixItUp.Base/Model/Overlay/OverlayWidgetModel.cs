@@ -23,26 +23,29 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayItemModelBase Item { get; set; }
 
         [DataMember]
-        public bool DontRefresh { get; set; }
+        public int RefreshTime { get; set; }
 
         public OverlayWidgetModel()
         {
             this.IsEnabled = true;
         }
 
-        public OverlayWidgetModel(string name, string overlayName, OverlayItemModelBase item, bool dontRefresh)
+        public OverlayWidgetModel(string name, string overlayName, OverlayItemModelBase item, int refreshTime)
             : this()
         {
             this.Name = name;
             this.OverlayName = overlayName;
             this.Item = item;
-            this.DontRefresh = dontRefresh;
+            this.RefreshTime = refreshTime;
 
             this.SetUpEventListener();
         }
 
         [JsonIgnore]
         public virtual bool SupportsTestData { get { return (this.Item != null) ? this.Item.SupportsTestData : false; } }
+
+        [JsonIgnore]
+        public virtual bool SupportsRefreshUpdating { get { return (this.Item != null) ? this.Item.SupportsRefreshUpdating : false; } }
 
         public async Task LoadTestData()
         {

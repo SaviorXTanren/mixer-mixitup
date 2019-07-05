@@ -88,15 +88,11 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="20" />
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="10" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="20" />
                         </Grid.ColumnDefinitions>
 
                         <ComboBox ItemsSource="{Binding OverlayEndpoints}" SelectedItem="{Binding SelectedOverlayEndpoint}" Grid.Column="0" Width="200" MaterialDesign:HintAssist.Hint="Overlay To Use" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-                        <TextBlock Grid.Column="2" VerticalAlignment="Center">Don't Refresh:</TextBlock>
-                        <ToggleButton Grid.Column="4" IsChecked="{Binding DontRefresh}" />
+                        <TextBox Grid.Column="2" Text="{Binding RefreshTimeString}" Visibility="{Binding SupportsRefreshUpdating, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="Refresh Time (Secs)" Width="130" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                     </Grid>
                 </Grid>
 

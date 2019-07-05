@@ -112,6 +112,7 @@ namespace MixItUp.Desktop.Services
 
         private async Task WidgetsBackgroundUpdate()
         {
+            long updateSeconds = 0;
             await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
             {
                 tokenSource.Token.ThrowIfCancellationRequested();
@@ -135,7 +136,7 @@ namespace MixItUp.Desktop.Services
                                         await widget.Item.Initialize();
                                         await widget.ShowItem();
                                     }
-                                    else if (!widget.DontRefresh && widget.Item.SupportsRefreshUpdating)
+                                    else if (widget.SupportsRefreshUpdating && widget.RefreshTime > 0 && (updateSeconds % widget.RefreshTime) == 0)
                                     {
                                         await widget.UpdateItem();
                                     }
@@ -154,7 +155,8 @@ namespace MixItUp.Desktop.Services
                     }
                 }
 
-                await Task.Delay(ChannelSession.Settings.OverlayWidgetRefreshTime * 1000);
+                await Task.Delay(1000);
+                updateSeconds++;
             });
         }
 

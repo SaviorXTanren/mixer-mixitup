@@ -127,6 +127,7 @@ namespace MixItUp.Base
         bool EnableOverlay { get; set; }
         Dictionary<string, int> OverlayCustomNameAndPorts { get; set; }
         string OverlaySourceName { get; set; }
+        [Obsolete]
         int OverlayWidgetRefreshTime { get; set; }
 
         string OvrStreamServerIP { get; set; }

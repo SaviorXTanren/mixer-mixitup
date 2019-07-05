@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.Overlay;
-using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Window.Overlay;
 using MixItUp.WPF.Controls.Overlay;
@@ -90,7 +89,7 @@ namespace MixItUp.WPF.Windows.Overlay
 
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            await this.RunAsyncOperation(async () =>
+            await this.RunAsyncOperation((System.Func<Task>)(async () =>
             {
                 if (await this.viewModel.Validate())
                 {
@@ -112,7 +111,7 @@ namespace MixItUp.WPF.Windows.Overlay
 
                     if (this.viewModel.OverlayWidget == null)
                     {
-                        OverlayWidgetModel widget = new OverlayWidgetModel(this.viewModel.Name, this.viewModel.SelectedOverlayEndpoint, overlayItem, this.viewModel.DontRefresh);
+                        OverlayWidgetModel widget = new OverlayWidgetModel(this.viewModel.Name, this.viewModel.SelectedOverlayEndpoint, overlayItem, (int)this.viewModel.RefreshTime);
                         ChannelSession.Settings.OverlayWidgets.Add(widget);
                     }
                     else
@@ -124,12 +123,12 @@ namespace MixItUp.WPF.Windows.Overlay
                         this.viewModel.OverlayWidget.Name = this.viewModel.Name;
                         this.viewModel.OverlayWidget.OverlayName = this.viewModel.SelectedOverlayEndpoint;
                         this.viewModel.OverlayWidget.Item = overlayItem;
-                        this.viewModel.OverlayWidget.DontRefresh = this.viewModel.DontRefresh;
+                        this.viewModel.OverlayWidget.RefreshTime = this.viewModel.RefreshTime;
                     }
 
                     this.Close();
                 }
-            });
+            }));
         }
 
         private void SetGameEditorControl(OverlayItemControl overlayTypeEditor)

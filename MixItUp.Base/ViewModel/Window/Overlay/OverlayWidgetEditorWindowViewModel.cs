@@ -73,16 +73,17 @@ namespace MixItUp.Base.ViewModel.Window.Overlay
         }
         private string selectedOverlayEndpoint;
 
-        public bool DontRefresh
+        public string RefreshTimeString
         {
-            get { return this.dontRefresh; }
+            get { return this.RefreshTime.ToString(); }
             set
             {
-                this.dontRefresh = value;
+                this.RefreshTime = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }
-        private bool dontRefresh;
+
+        public int RefreshTime;
 
 
         public OverlayWidgetEditorWindowViewModel(OverlayWidgetModel widget)
@@ -93,7 +94,7 @@ namespace MixItUp.Base.ViewModel.Window.Overlay
 
             this.Name = this.OverlayWidget.Name;
             this.SelectedOverlayEndpoint = this.OverlayWidget.OverlayName;
-            this.DontRefresh = this.OverlayWidget.DontRefresh;
+            this.RefreshTime = this.OverlayWidget.RefreshTime;
         }
 
         public OverlayWidgetEditorWindowViewModel()
