@@ -128,7 +128,7 @@ namespace MixItUp.Base.Commands
             {
                 OverlayStreamBoss oItem = (OverlayStreamBoss)item;
                 return new OverlayStreamBossItemModel(oItem.HTMLText, oItem.StartingHealth, oItem.Width, oItem.Height, oItem.TextColor, oItem.TextFont, oItem.BorderColor, oItem.BackgroundColor,
-                    oItem.ProgressColor, oItem.FollowBonus, oItem.HostBonus, oItem.SubscriberBonus, oItem.DonationBonus, oItem.SparkBonus, oItem.EmberBonus,
+                    oItem.ProgressColor, oItem.FollowBonus, oItem.HostBonus, oItem.SubscriberBonus, oItem.DonationBonus, oItem.SparkBonus, oItem.EmberBonus, 1.0, 1.0,
                     (OverlayItemEffectVisibleAnimationTypeEnum)oItem.DamageAnimation, (OverlayItemEffectVisibleAnimationTypeEnum)oItem.NewBossAnimation, oItem.NewStreamBossCommand);
             }
             else if (item is OverlayMixerClip)

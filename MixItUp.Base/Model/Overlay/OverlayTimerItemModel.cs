@@ -75,8 +75,8 @@ namespace MixItUp.Base.Model.Overlay
                     if (this.TimerCompleteCommand != null)
                     {
                         await this.TimerCompleteCommand.Perform();
-                        await this.Disable();
                     }
+                    await this.Disable();
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }

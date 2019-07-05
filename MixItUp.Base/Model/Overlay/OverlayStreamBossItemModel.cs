@@ -3,6 +3,7 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -73,6 +74,11 @@ namespace MixItUp.Base.Model.Overlay
         public double EmberBonus { get; set; }
 
         [DataMember]
+        public double HealingBonus { get; set; }
+        [DataMember]
+        public double OverkillBonus { get; set; }
+
+        [DataMember]
         public OverlayItemEffectVisibleAnimationTypeEnum DamageAnimation { get; set; }
         [DataMember]
         public string DamageAnimationName { get { return OverlayItemEffectsModel.GetAnimationClassName(this.DamageAnimation); } set { } }
@@ -83,6 +89,8 @@ namespace MixItUp.Base.Model.Overlay
 
         [DataMember]
         public uint CurrentBossUserID { get; set; }
+        [DataMember]
+        public int CurrentStartingHealth { get; set; }
         [DataMember]
         public int CurrentHealth { get; set; }
         [DataMember]
@@ -105,7 +113,7 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayStreamBossItemModel() : base() { }
 
         public OverlayStreamBossItemModel(string htmlText, int startingHealth, int width, int height, string textColor, string textFont, string borderColor, string backgroundColor,
-            string progressColor, double followBonus, double hostBonus, double subscriberBonus, double donationBonus, double sparkBonus, double emberBonus,
+            string progressColor, double followBonus, double hostBonus, double subscriberBonus, double donationBonus, double sparkBonus, double emberBonus, double healingBonus, double overkillBonus,
             OverlayItemEffectVisibleAnimationTypeEnum damageAnimation, OverlayItemEffectVisibleAnimationTypeEnum newBossAnimation, CustomCommand newStreamBossCommand)
             : base(OverlayItemModelTypeEnum.StreamBoss, htmlText)
         {
@@ -123,6 +131,8 @@ namespace MixItUp.Base.Model.Overlay
             this.DonationBonus = donationBonus;
             this.SparkBonus = sparkBonus;
             this.EmberBonus = emberBonus;
+            this.HealingBonus = healingBonus;
+            this.OverkillBonus = overkillBonus;
             this.DamageAnimation = damageAnimation;
             this.NewBossAnimation = newBossAnimation;
             this.NewStreamBossCommand = newStreamBossCommand;
@@ -149,17 +159,9 @@ namespace MixItUp.Base.Model.Overlay
             if (this.CurrentBossUserID == 0)
             {
                 this.CurrentBoss = await ChannelSession.GetCurrentUser();
-                this.CurrentHealth = this.StartingHealth;
+                this.CurrentHealth = this.CurrentStartingHealth = this.StartingHealth;
             }
             this.CurrentBossUserID = this.CurrentBoss.ID;
-
-            GlobalEvents.OnFollowOccurred -= GlobalEvents_OnFollowOccurred;
-            GlobalEvents.OnHostOccurred -= GlobalEvents_OnHostOccurred;
-            GlobalEvents.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
-            GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
-            GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
-            GlobalEvents.OnSparkUseOccurred -= GlobalEvents_OnSparkUseOccurred;
-            GlobalEvents.OnEmberUseOccurred -= GlobalEvents_OnEmberUseOccurred;
 
             if (this.FollowBonus > 0.0)
             {
@@ -190,6 +192,19 @@ namespace MixItUp.Base.Model.Overlay
             await base.Initialize();
         }
 
+        public override async Task Disable()
+        {
+            GlobalEvents.OnFollowOccurred -= GlobalEvents_OnFollowOccurred;
+            GlobalEvents.OnHostOccurred -= GlobalEvents_OnHostOccurred;
+            GlobalEvents.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
+            GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
+            GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
+            GlobalEvents.OnSparkUseOccurred -= GlobalEvents_OnSparkUseOccurred;
+            GlobalEvents.OnEmberUseOccurred -= GlobalEvents_OnEmberUseOccurred;
+
+            await base.Disable();
+        }
+
         protected override async Task<Dictionary<string, string>> GetTemplateReplacements(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             UserViewModel boss = null;
@@ -217,10 +232,10 @@ namespace MixItUp.Base.Model.Overlay
             replacementSets["USER_IMAGE_SIZE"] = ((int)(0.8 * ((double)this.Height))).ToString();
 
             replacementSets["HEALTH_REMAINING"] = health.ToString();
-            replacementSets["MAXIMUM_HEALTH"] = this.StartingHealth.ToString();
+            replacementSets["MAXIMUM_HEALTH"] = this.CurrentStartingHealth.ToString();
 
             replacementSets["PROGRESS_COLOR"] = this.ProgressColor;
-            replacementSets["PROGRESS_WIDTH"] = ((((double)health) / ((double)this.StartingHealth)) * 100.0).ToString();
+            replacementSets["PROGRESS_WIDTH"] = ((((double)health) / ((double)this.CurrentStartingHealth)) * 100.0).ToString();
 
             return replacementSets;
         }
@@ -232,9 +247,10 @@ namespace MixItUp.Base.Model.Overlay
                 this.DamageTaken = false;
                 this.NewBoss = false;
 
-                if (this.CurrentBoss.Equals(user))
+                if (this.CurrentBoss.Equals(user) && this.HealingBonus > 0.0)
                 {
-                    this.CurrentHealth = Math.Min(this.StartingHealth, this.CurrentHealth + (int)amount);
+                    int healingAmount = (int)(this.HealingBonus * amount);
+                    this.CurrentHealth = Math.Min(this.CurrentStartingHealth, this.CurrentHealth + healingAmount);
                 }
                 else
                 {
@@ -244,12 +260,22 @@ namespace MixItUp.Base.Model.Overlay
 
                 if (this.CurrentHealth <= 0)
                 {
+                    this.NewBoss = true;
                     this.CurrentBoss = user;
                     this.CurrentBossUserID = user.ID;
-                    this.CurrentHealth = this.StartingHealth;
-                    this.NewBoss = true;
 
-                    await this.NewStreamBossCommand.Perform();
+                    int newHealth = this.StartingHealth;
+                    if (this.OverkillBonus > 0.0)
+                    {
+                        int overkillAmount = this.CurrentHealth * -1;
+                        newHealth += (int)(this.OverkillBonus * overkillAmount);
+                    }
+                    this.CurrentHealth = this.CurrentStartingHealth = newHealth;
+
+                    if (this.NewStreamBossCommand != null)
+                    {
+                        await this.NewStreamBossCommand.Perform();
+                    }
                 }
 
                 this.SendUpdateRequired();

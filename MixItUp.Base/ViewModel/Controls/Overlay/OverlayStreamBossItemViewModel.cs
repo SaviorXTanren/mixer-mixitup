@@ -84,6 +84,28 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         }
         private double emberBonus;
 
+        public string HealingBonusString
+        {
+            get { return this.healingBonus.ToString(); }
+            set
+            {
+                this.healingBonus = this.GetPositiveDoubleFromString(value);
+                this.NotifyPropertyChanged();
+            }
+        }
+        private double healingBonus;
+
+        public string OverkillBonusString
+        {
+            get { return this.overkillBonus.ToString(); }
+            set
+            {
+                this.overkillBonus = this.GetPositiveDoubleFromString(value);
+                this.NotifyPropertyChanged();
+            }
+        }
+        private double overkillBonus;
+
         public string WidthString
         {
             get { return this.width.ToString(); }
@@ -213,6 +235,9 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.sparkBonus = 0.01;
             this.emberBonus = 0.1;
 
+            this.healingBonus = 1.0;
+            this.overkillBonus = 0.0;
+
             this.HTML = OverlayStreamBossItemModel.HTMLTemplate;
         }
 
@@ -226,6 +251,9 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.donationBonus = item.DonationBonus;
             this.sparkBonus = item.SparkBonus;
             this.emberBonus = item.EmberBonus;
+
+            this.healingBonus = item.HealingBonus;
+            this.overkillBonus = item.OverkillBonus;
 
             this.width = item.Width;
             this.height = item.Height;
@@ -252,8 +280,8 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
                 this.BackgroundColor = ColorSchemes.GetColorCode(this.BackgroundColor);
 
                 return new OverlayStreamBossItemModel(this.HTML, this.startingHealth, this.width, this.height, this.TextColor, this.Font, this.BorderColor, this.BackgroundColor,
-                    this.ProgressColor, this.followBonus, this.hostBonus, this.subBonus, this.donationBonus, this.sparkBonus, this.emberBonus, this.damageAnimation, this.newBossAnimation,
-                    this.NewBossCommand);
+                    this.ProgressColor, this.followBonus, this.hostBonus, this.subBonus, this.donationBonus, this.sparkBonus, this.emberBonus, this.healingBonus, this.overkillBonus,
+                    this.damageAnimation, this.newBossAnimation, this.NewBossCommand);
             }
             return null;
         }

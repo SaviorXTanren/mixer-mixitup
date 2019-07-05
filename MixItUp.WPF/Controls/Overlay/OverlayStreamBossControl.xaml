@@ -98,15 +98,35 @@
             <TextBox Grid.Column="12" Text="{Binding EmberBonusString}" MaterialDesign:HintAssist.Hint="Ember Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
         </Grid>
 
-        <GroupBox Header="On New Stream Boss" Grid.Row="6" Width="200">
-            <Grid Margin="10,0,10,0" HorizontalAlignment="Center">
-                <Button Visibility="{Binding IsNewBossCommandCommandNotSet, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" Click="NewCommandButton_Click">Add Command</Button>
+        <Grid Grid.Row="6" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="80" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
 
-                <Grid Visibility="{Binding IsNewBossCommandCommandSet, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <CommandControls:CommandButtonsControl DataContext="{Binding NewBossCommand}" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" RemoveEnableDisableToggle="True" />
-                </Grid>
+            <Grid Grid.Column="0" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="0" Text="{Binding HealingBonusString}"  MaterialDesign:HintAssist.Hint="Healing Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
+
+                <TextBox Grid.Column="2" Text="{Binding OverkillBonusString}" MaterialDesign:HintAssist.Hint="Overkill Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
             </Grid>
-        </GroupBox>
+
+            <GroupBox Header="On New Stream Boss" Grid.Column="2" Width="200">
+                <Grid Margin="10,0,10,0" HorizontalAlignment="Center">
+                    <Button Visibility="{Binding IsNewBossCommandCommandNotSet, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" Click="NewCommandButton_Click">Add Command</Button>
+
+                    <Grid Visibility="{Binding IsNewBossCommandCommandSet, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <CommandControls:CommandButtonsControl DataContext="{Binding NewBossCommand}" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" RemoveEnableDisableToggle="True" />
+                    </Grid>
+                </Grid>
+            </GroupBox>
+        </Grid>
 
         <TextBox Grid.Row="8" Text="{Binding HTML}" MaterialDesign:HintAssist.Hint="HTML Style" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="700" Height="150" VerticalAlignment="Top" HorizontalAlignment="Center" />
     </Grid>

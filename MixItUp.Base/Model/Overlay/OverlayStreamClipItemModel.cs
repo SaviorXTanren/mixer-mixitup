@@ -71,6 +71,13 @@ namespace MixItUp.Base.Model.Overlay
             await base.Initialize();
         }
 
+        public override async Task Disable()
+        {
+            GlobalEvents.OnMixerClipCreated += GlobalEvents_OnMixerClipCreated;
+
+            await base.Disable();
+        }
+
         protected override async Task PerformReplacements(JObject jobj, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             if (this.lastClip != null)

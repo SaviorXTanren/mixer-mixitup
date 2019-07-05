@@ -214,6 +214,7 @@ namespace MixItUp.Base.Model.Overlay
                     if (currentMilestone != null)
                     {
                         goal = this.GoalAmount = currentMilestone.target;
+                        this.GoalReached = false;
                     }
                 }
             }
