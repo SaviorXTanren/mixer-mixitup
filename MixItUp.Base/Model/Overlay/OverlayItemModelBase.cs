@@ -331,6 +331,8 @@ namespace MixItUp.Base.Model.Overlay
         public int Horizontal;
         [DataMember]
         public int Vertical;
+        [DataMember]
+        public int Layer;
 
         [DataMember]
         public bool IsPercentagePosition { get { return this.PositionType == OverlayItemPositionType.Percentage; } }
@@ -339,11 +341,12 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayItemPositionModel() { }
 
-        public OverlayItemPositionModel(OverlayItemPositionType positionType, int horizontal, int vertical)
+        public OverlayItemPositionModel(OverlayItemPositionType positionType, int horizontal, int vertical, int layer)
         {
             this.PositionType = positionType;
             this.Horizontal = horizontal;
             this.Vertical = vertical;
+            this.Layer = layer;
         }
     }
 

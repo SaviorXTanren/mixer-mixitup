@@ -582,7 +582,11 @@
                     var divContainer = document.createElement('div');
                     divContainer.id = data.ID;
                     divContainer.style.cssText += 'position: absolute; width: 100%; max-width: 100%; min-width: 100%; height: 100%; max-height: 100%; min-height: 100%; margin: 0px;';
-                    if (data.Effects != null && data.Effects.Duration != null && data.Effects.Duration > 0) {
+
+                    if (data.Position != null && data.Position.Layer != null && data.Position.Layer > 0) {
+                        divContainer.style.zIndex = data.Position.Layer;
+                    }
+                    else if (data.Effects != null && data.Effects.Duration != null && data.Effects.Duration > 0) {
                         divContainer.style.zIndex = zIndexCounter++;
                     }
                     divContainer.appendChild(addedElement);

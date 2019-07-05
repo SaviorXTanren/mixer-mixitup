@@ -57,27 +57,47 @@
         </Grid>
 
         <Grid x:Name="PercentagePositionGrid" Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,15,0,0" Visibility="Hidden">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="15" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-            <Controls:SliderWithHeaderControl x:Name="PercentagePositionHorizontalSlider" Grid.Column="0" Minimum="0" Maximum="100" Text="Position % From Left:" Width="150" />
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-            <Controls:SliderWithHeaderControl x:Name="PercentagePositionVerticalSlider" Grid.Column="2" Minimum="0" Maximum="100" Text="Position % From Top:" Width="150" />
+                <Controls:SliderWithHeaderControl x:Name="PercentagePositionHorizontalSlider" Grid.Column="0" Minimum="0" Maximum="100" Text="Position % From Left:" Width="150" />
+
+                <Controls:SliderWithHeaderControl x:Name="PercentagePositionVerticalSlider" Grid.Column="2" Minimum="0" Maximum="100" Text="Position % From Top:" Width="150" />
+            </Grid>
+
+            <TextBox Grid.Row="2" x:Name="PercentagePositionLayerTextBox" HorizontalAlignment="Center" MaterialDesign:HintAssist.Hint="Layer Position" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
         </Grid>
 
         <Grid x:Name="PixelsPositionGrid" Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,15,0,0" Visibility="Hidden">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="15" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-            <TextBox x:Name="PixelPositionHorizontalTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Left Pixel Position" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="PixelPositionVerticalTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Top Pixel Position" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
+                <TextBox x:Name="PixelPositionHorizontalTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Left Pixel Position" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
+
+                <TextBox x:Name="PixelPositionVerticalTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Top Pixel Position" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
+            </Grid>
+
+            <TextBox Grid.Row="2" HorizontalAlignment="Center" x:Name="PixelPositionLayerTextBox" MaterialDesign:HintAssist.Hint="Layer Position" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
         </Grid>
     </Grid>
 </Controls:LoadingControlBase>

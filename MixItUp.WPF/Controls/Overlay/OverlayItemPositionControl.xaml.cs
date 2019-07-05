@@ -37,6 +37,7 @@ namespace MixItUp.WPF.Controls.Overlay
 
                     this.PercentagePositionHorizontalSlider.Value = position.Horizontal;
                     this.PercentagePositionVerticalSlider.Value = position.Vertical;
+                    this.PercentagePositionLayerTextBox.Text = position.Layer.ToString();
                 }
                 else
                 {
@@ -44,6 +45,7 @@ namespace MixItUp.WPF.Controls.Overlay
 
                     this.PixelPositionHorizontalTextBox.Text = position.Horizontal.ToString();
                     this.PixelPositionVerticalTextBox.Text = position.Vertical.ToString();
+                    this.PixelPositionLayerTextBox.Text = position.Layer.ToString();
                 }
             }
         }
@@ -52,11 +54,13 @@ namespace MixItUp.WPF.Controls.Overlay
         {
             int horizontal = 0;
             int vertical = 0;
+            int layer = 0;
             OverlayItemPositionType positionType = OverlayItemPositionType.Percentage;
             if (this.PixelsPositionGrid.Visibility == Visibility.Visible)
             {
                 if (string.IsNullOrEmpty(this.PixelPositionHorizontalTextBox.Text) || !int.TryParse(this.PixelPositionHorizontalTextBox.Text, out horizontal) || horizontal < 0 ||
-                    string.IsNullOrEmpty(this.PixelPositionVerticalTextBox.Text) || !int.TryParse(this.PixelPositionVerticalTextBox.Text, out vertical) || vertical < 0)
+                    string.IsNullOrEmpty(this.PixelPositionVerticalTextBox.Text) || !int.TryParse(this.PixelPositionVerticalTextBox.Text, out vertical) || vertical < 0 ||
+                    string.IsNullOrEmpty(this.PixelPositionLayerTextBox.Text) || !int.TryParse(this.PixelPositionLayerTextBox.Text, out layer) || layer < 0)
                 {
                     return null;
                 }
@@ -64,6 +68,10 @@ namespace MixItUp.WPF.Controls.Overlay
             }
             else if (this.PercentagePositionGrid.Visibility == Visibility.Visible)
             {
+                if (string.IsNullOrEmpty(this.PercentagePositionLayerTextBox.Text) || !int.TryParse(this.PercentagePositionLayerTextBox.Text, out layer) || layer < 0)
+                {
+                    return null;
+                }
                 horizontal = (int)this.PercentagePositionHorizontalSlider.Value;
                 vertical = (int)this.PercentagePositionVerticalSlider.Value;
             }
@@ -115,7 +123,7 @@ namespace MixItUp.WPF.Controls.Overlay
                     vertical = 75;
                 }
             }
-            return new OverlayItemPositionModel(positionType, horizontal, vertical);
+            return new OverlayItemPositionModel(positionType, horizontal, vertical, layer);
         }
 
         protected override Task OnLoaded()
@@ -125,6 +133,8 @@ namespace MixItUp.WPF.Controls.Overlay
 
             this.PixelPositionHorizontalTextBox.Text = "0";
             this.PixelPositionVerticalTextBox.Text = "0";
+            this.PixelPositionLayerTextBox.Text = "0";
+            this.PercentagePositionLayerTextBox.Text = "0";
 
             return Task.FromResult(0);
         }

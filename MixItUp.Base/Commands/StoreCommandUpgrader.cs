@@ -27,7 +27,7 @@ namespace MixItUp.Base.Commands
                     if (oAction.Item != null)
                     {
                         oAction.OverlayItem = ConvertOverlayItem(oAction.Item);
-                        oAction.OverlayItem.Position = new OverlayItemPositionModel((OverlayItemPositionType)oAction.Position.PositionType, oAction.Position.Horizontal, oAction.Position.Vertical);
+                        oAction.OverlayItem.Position = new OverlayItemPositionModel((OverlayItemPositionType)oAction.Position.PositionType, oAction.Position.Horizontal, oAction.Position.Vertical, 0);
                         oAction.OverlayItem.Effects = new OverlayItemEffectsModel((OverlayItemEffectEntranceAnimationTypeEnum)oAction.Effects.EntranceAnimation, (OverlayItemEffectVisibleAnimationTypeEnum)oAction.Effects.VisibleAnimation,
                             (OverlayItemEffectExitAnimationTypeEnum)oAction.Effects.ExitAnimation, oAction.Effects.Duration);
 

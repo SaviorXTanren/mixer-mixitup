@@ -175,7 +175,7 @@ namespace MixItUp.Desktop.Services
                 foreach (OverlayWidget widget in settings.overlayWidgetsInternal)
                 {
                     OverlayItemModelBase newItem = StoreCommandUpgrader.ConvertOverlayItem(widget.Item);
-                    newItem.Position = new OverlayItemPositionModel((OverlayItemPositionType)widget.Position.PositionType, widget.Position.Horizontal, widget.Position.Vertical);
+                    newItem.Position = new OverlayItemPositionModel((OverlayItemPositionType)widget.Position.PositionType, widget.Position.Horizontal, widget.Position.Vertical, 0);
                     OverlayWidgetModel newWidget = new OverlayWidgetModel(widget.Name, widget.OverlayName, newItem, 0);
                     settings.OverlayWidgets.Add(newWidget);
                     if (newWidget.SupportsRefreshUpdating)

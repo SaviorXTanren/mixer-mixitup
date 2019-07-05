@@ -84,7 +84,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
             CustomCommand overlayCommand = this.CreateBasicChatCommand("@$username opened their capsule and found a dancing Carlton!");
             OverlayImageItemModel overlayImage = new OverlayImageItemModel("https://78.media.tumblr.com/1921bcd13e12643771410200a322cb0e/tumblr_ogs5bcHWUc1udh5n8o1_500.gif", 500, 500);
-            overlayImage.Position = new OverlayItemPositionModel(OverlayItemPositionType.Percentage, 50, 50);
+            overlayImage.Position = new OverlayItemPositionModel(OverlayItemPositionType.Percentage, 50, 50, 0);
             overlayImage.Effects = new OverlayItemEffectsModel(OverlayItemEffectEntranceAnimationTypeEnum.FadeIn, OverlayItemEffectVisibleAnimationTypeEnum.None, OverlayItemEffectExitAnimationTypeEnum.FadeOut, 3);
             overlayCommand.Actions.Add(new OverlayAction(ChannelSession.Services.OverlayServers.DefaultOverlayName, overlayImage));
 
