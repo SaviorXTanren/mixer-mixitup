@@ -114,7 +114,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         }
 
         public OverlayListItemViewModelBase(int totalToShow, int width, int height, string textFont, string textColor, string borderColor, string backgroundColor,
-            OverlayItemEffectEntranceAnimationTypeEnum addAnimation, OverlayItemEffectExitAnimationTypeEnum removeAnimation, string htmlText)
+            OverlayItemEffectEntranceAnimationTypeEnum entranceAnimation, OverlayItemEffectExitAnimationTypeEnum exitAnimation, string htmlText)
             : this()
         {
             this.totalToShow = totalToShow;
@@ -122,17 +122,12 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.height = height;
             this.Font = textFont;
 
-            this.TextColor = textColor;
-            this.TextColor = ColorSchemes.GetColorName(this.TextColor);
+            this.TextColor = ColorSchemes.GetColorName(textColor);
+            this.BorderColor = ColorSchemes.GetColorName(borderColor);
+            this.BackgroundColor = ColorSchemes.GetColorName(backgroundColor);
 
-            this.BorderColor = borderColor;
-            this.BorderColor = ColorSchemes.GetColorName(this.BorderColor);
-
-            this.BackgroundColor = backgroundColor;
-            this.BackgroundColor = ColorSchemes.GetColorName(this.BackgroundColor);
-
-            this.entranceAnimation = addAnimation;
-            this.exitAnimation = removeAnimation;
+            this.entranceAnimation = entranceAnimation;
+            this.exitAnimation = exitAnimation;
 
             this.HTML = htmlText;
         }

@@ -79,9 +79,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.totalLength = item.TotalLength;
             this.size = item.TextSize;
             this.Font = item.TextFont;
-
-            this.Color = item.TextColor;
-            this.Color = ColorSchemes.GetColorName(this.Color);
+            this.Color = ColorSchemes.GetColorName(item.TextColor);
 
             this.HTML = item.HTML;
 

@@ -118,6 +118,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         public OverlayTimerTrainItemViewModel()
         {
             this.Font = "Arial";
+            this.size = 24;
             this.HTML = OverlayTimerTrainItemModel.HTMLTemplate;
 
             this.followBonus = 1.0;
@@ -134,9 +135,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.minimumSecondsToShow = item.MinimumSecondsToShow;
             this.size = item.TextSize;
             this.Font = item.TextFont;
-
-            this.Color = item.TextColor;
-            this.Color = ColorSchemes.GetColorName(this.Color);
+            this.Color = ColorSchemes.GetColorName(item.TextColor);
 
             this.followBonus = item.FollowBonus;
             this.hostBonus = item.HostBonus;

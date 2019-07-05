@@ -27,16 +27,14 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="15" />
-                <ColumnDefinition Width="300" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <ComboBox Grid.Column="0" ItemsSource="{Binding LeaderboardTypeStrings}" SelectedItem="{Binding LeaderboardTypeString}" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="115" />
 
-            <ComboBox Grid.Column="2" ItemsSource="{Binding CurrencyRanks}" SelectedItem="{Binding CurrencyRank}" Visibility="{Binding IsCurrencyRankType, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Left" MaterialDesign:HintAssist.Hint="Currency/Rank" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200" DisplayMemberPath="Name" />
+            <ComboBox Grid.Column="2" ItemsSource="{Binding CurrencyRanks}" SelectedItem="{Binding CurrencyRank}" Visibility="{Binding IsCurrencyRankType, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="Currency/Rank" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200" DisplayMemberPath="Name" />
 
-            <ComboBox Grid.Column="2" ItemsSource="{Binding SparksEmbersDateStrings}" SelectedItem="{Binding SparksEmbersDateString}" Visibility="{Binding IsSparksEmbersType, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Left" MaterialDesign:HintAssist.Hint="Date Range" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200" />
-
-            <TextBlock Grid.Column="2" Visibility="{Binding IsDonationsType, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" FontWeight="Bold" TextWrapping="Wrap" Width="300">The Donation Leaderboard currently does not support tracking donations from GawkBox</TextBlock>
+            <ComboBox Grid.Column="2" ItemsSource="{Binding SparksEmbersDateStrings}" SelectedItem="{Binding SparksEmbersDateString}" Visibility="{Binding IsSparksEmbersType, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="Date Range" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200" />
         </Grid>
 
         <Grid Grid.Row="2" HorizontalAlignment="Center">

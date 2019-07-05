@@ -15,19 +15,23 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             set
             {
                 this.progressBarType = EnumHelper.GetEnumValueFromString<OverlayProgressBarItemTypeEnum>(value);
-                this.NotifyPropertyChanged();
-                this.NotifyPropertyChanged("IsNotMilestonesType");
-                this.NotifyPropertyChanged("IsFollowersType");
                 if (this.progressBarType == OverlayProgressBarItemTypeEnum.Followers)
                 {
                     this.TotalFollowers = true;
                 }
+
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("IsNotMilestonesType");
+                this.NotifyPropertyChanged("IsFollowersType");
+                this.NotifyPropertyChanged("CanSetStartingAmount");
             }
         }
         private OverlayProgressBarItemTypeEnum progressBarType;
 
         public bool IsNotMilestonesType { get { return this.progressBarType != OverlayProgressBarItemTypeEnum.Milestones; } }
         public bool IsFollowersType { get { return this.progressBarType == OverlayProgressBarItemTypeEnum.Followers; } }
+
+        public bool CanSetStartingAmount { get { return this.IsNotMilestonesType && !this.TotalFollowers; } }
 
         public string StartingAmount
         {
@@ -57,11 +61,12 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             set
             {
                 this.totalFollowers = value;
-                this.NotifyPropertyChanged();
                 if (this.TotalFollowers)
                 {
                     this.StartingAmount = "0";
                 }
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("CanSetStartingAmount");
             }
         }
         protected bool totalFollowers;
@@ -208,14 +213,9 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.height = item.Height;
             this.Font = item.TextFont;
 
-            this.TextColor = item.TextColor;
-            this.TextColor = ColorSchemes.GetColorName(this.TextColor);
-
-            this.ProgressColor = item.ProgressColor;
-            this.ProgressColor = ColorSchemes.GetColorName(this.ProgressColor);
-
-            this.BackgroundColor = item.BackgroundColor;
-            this.BackgroundColor = ColorSchemes.GetColorName(this.BackgroundColor);
+            this.TextColor = ColorSchemes.GetColorName(item.TextColor);
+            this.ProgressColor = ColorSchemes.GetColorName(item.ProgressColor);
+            this.BackgroundColor = ColorSchemes.GetColorName(item.BackgroundColor);
 
             this.HTML = item.HTML;
 

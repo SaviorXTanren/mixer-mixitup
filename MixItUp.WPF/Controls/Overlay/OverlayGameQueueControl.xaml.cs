@@ -19,11 +19,11 @@ namespace MixItUp.WPF.Controls.Overlay
             this.viewModel = new OverlayGameQueueItemViewModel();
         }
 
-        public OverlayGameQueueControl(OverlayItemModelBase item)
+        public OverlayGameQueueControl(OverlayGameQueueListItemModel item)
         {
             InitializeComponent();
 
-            this.viewModel = new OverlayGameQueueItemViewModel((OverlayGameQueueListItemModel)item);
+            this.viewModel = new OverlayGameQueueItemViewModel(item);
         }
 
         public override OverlayItemModelBase GetItem()

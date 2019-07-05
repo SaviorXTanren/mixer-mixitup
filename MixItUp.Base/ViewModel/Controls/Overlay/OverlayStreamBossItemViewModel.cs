@@ -231,17 +231,10 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.height = item.Height;
             this.Font = item.TextFont;
 
-            this.TextColor = item.TextColor;
-            this.TextColor = ColorSchemes.GetColorName(this.TextColor);
-
-            this.BorderColor = item.BorderColor;
-            this.BorderColor = ColorSchemes.GetColorName(this.BorderColor);
-
-            this.ProgressColor = item.ProgressColor;
-            this.ProgressColor = ColorSchemes.GetColorName(this.ProgressColor);
-
-            this.BackgroundColor = item.BackgroundColor;
-            this.BackgroundColor = ColorSchemes.GetColorName(this.BackgroundColor);
+            this.TextColor = ColorSchemes.GetColorName(item.TextColor);
+            this.BorderColor = ColorSchemes.GetColorName(item.BorderColor);
+            this.ProgressColor = ColorSchemes.GetColorName(item.ProgressColor);
+            this.BackgroundColor = ColorSchemes.GetColorName(item.BackgroundColor);
 
             this.damageAnimation = item.DamageAnimation;
             this.newBossAnimation = item.NewBossAnimation;

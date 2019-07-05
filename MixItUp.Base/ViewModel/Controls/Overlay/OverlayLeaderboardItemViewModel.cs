@@ -26,7 +26,6 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
 
         public bool IsCurrencyRankType { get { return this.leaderboardType == OverlayLeaderboardListItemTypeEnum.CurrencyRank; } }
         public bool IsSparksEmbersType { get { return this.leaderboardType == OverlayLeaderboardListItemTypeEnum.Sparks || this.leaderboardType == OverlayLeaderboardListItemTypeEnum.Embers; } }
-        public bool IsDonationsType { get { return this.leaderboardType == OverlayLeaderboardListItemTypeEnum.Donations; } }
 
         public IEnumerable<string> SparksEmbersDateStrings { get; set; } = EnumHelper.GetEnumNames<OverlayLeaderboardListItemDateRangeEnum>();
         public string SparksEmbersDateString

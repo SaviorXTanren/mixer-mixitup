@@ -51,7 +51,7 @@
                 <CheckBox IsChecked="{Binding TotalFollowers}" Grid.Column="2" VerticalAlignment="Center" />
             </Grid>
 
-            <TextBox Grid.Column="3" Text="{Binding StartingAmount}" IsEnabled="{Binding IsNotMilestonesType}" MaterialDesign:HintAssist.Hint="Starting Amount" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
+            <TextBox Grid.Column="3" Text="{Binding StartingAmount}" IsEnabled="{Binding CanSetStartingAmount}" MaterialDesign:HintAssist.Hint="Starting Amount" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
             <TextBox Grid.Column="5" Text="{Binding GoalAmount}" IsEnabled="{Binding IsNotMilestonesType}" MaterialDesign:HintAssist.Hint="Goal Amount" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
 
             <TextBox Grid.Column="7" Text="{Binding ResetAfterDaysString}" IsEnabled="{Binding IsNotMilestonesType}" MaterialDesign:HintAssist.Hint="Reset After Days" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />

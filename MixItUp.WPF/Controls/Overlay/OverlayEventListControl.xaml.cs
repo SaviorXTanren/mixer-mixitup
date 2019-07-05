@@ -19,11 +19,11 @@ namespace MixItUp.WPF.Controls.Overlay
             this.viewModel = new OverlayEventListItemViewModel();
         }
 
-        public OverlayEventListControl(OverlayItemModelBase item)
+        public OverlayEventListControl(OverlayEventListItemModel item)
         {
             InitializeComponent();
 
-            this.viewModel = new OverlayEventListItemViewModel((OverlayEventListItemModel)item);
+            this.viewModel = new OverlayEventListItemViewModel(item);
         }
 
         public override OverlayItemModelBase GetItem()

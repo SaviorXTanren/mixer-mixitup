@@ -23,11 +23,11 @@ namespace MixItUp.WPF.Controls.Overlay
             this.viewModel = new OverlayProgressBarItemViewModel();
         }
 
-        public OverlayProgressBarControl(OverlayItemModelBase item)
+        public OverlayProgressBarControl(OverlayProgressBarItemModel item)
         {
             InitializeComponent();
 
-            this.viewModel = new OverlayProgressBarItemViewModel((OverlayProgressBarItemModel)item);
+            this.viewModel = new OverlayProgressBarItemViewModel(item);
         }
 
         public override OverlayItemModelBase GetItem()

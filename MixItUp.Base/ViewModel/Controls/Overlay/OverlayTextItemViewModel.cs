@@ -108,12 +108,8 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.Bold = item.Bold;
             this.Italic = item.Italic;
             this.Underline = item.Underline;
-
-            this.Color = item.Color;
-            this.Color = ColorSchemes.GetColorName(this.Color);
-
-            this.ShadowColor = item.ShadowColor;
-            this.ShadowColor = ColorSchemes.GetColorName(this.ShadowColor);
+            this.Color = ColorSchemes.GetColorName(item.Color);
+            this.ShadowColor = ColorSchemes.GetColorName(item.ShadowColor);
         }
 
         public override OverlayItemModelBase GetOverlayItem()
