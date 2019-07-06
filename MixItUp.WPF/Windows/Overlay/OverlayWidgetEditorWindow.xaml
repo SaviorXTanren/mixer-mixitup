@@ -96,7 +96,7 @@
                     </Grid>
                 </Grid>
 
-                <Border Grid.Column="2" Style="{StaticResource DefaultBorder}" HorizontalAlignment="Center" Width="350" Height="190">
+                <Border Grid.Column="2" Style="{StaticResource DefaultBorder}" HorizontalAlignment="Center" Width="350" Height="210">
                     <OverlayControls:OverlayItemPositionControl x:Name="ItemPosition" Margin="10" VerticalAlignment="Top" />
                 </Border>
             </Grid>

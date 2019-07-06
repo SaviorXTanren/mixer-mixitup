@@ -630,6 +630,9 @@
     <Compile Include="Controls\Overlay\OverlayLeaderboardListItemControl.xaml.cs">
       <DependentUpon>OverlayLeaderboardListItemControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Overlay\OverlaySparkCrystalItemControl.xaml.cs">
+      <DependentUpon>OverlaySparkCrystalItemControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Overlay\OverlayStreamClipItemControl.xaml.cs">
       <DependentUpon>OverlayStreamClipItemControl.xaml</DependentUpon>
     </Compile>
@@ -1384,6 +1387,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Overlay\OverlayLeaderboardListItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlaySparkCrystalItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

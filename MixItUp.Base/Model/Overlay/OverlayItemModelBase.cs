@@ -39,7 +39,9 @@ namespace MixItUp.Base.Model.Overlay
         [Name("Song Requests")]
         SongRequests,
         [Name("Ticker Tape")]
-        TickerTape
+        TickerTape,
+        [Name("Spark Crystal")]
+        SparkCrystal
     }
 
     public enum OverlayItemPositionType

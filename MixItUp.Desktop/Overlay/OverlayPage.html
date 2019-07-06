@@ -229,6 +229,14 @@
                                     tickerTapeUpdatePacket(packet.data);
                                 }
                             }
+                            else if (packet.data.ItemTypeName === "SparkCrystal") {
+                                if (packet.type == "Show") {
+                                    sparkCrystalShowPacket(packet.data);
+                                }
+                                else if (packet.type == "Update") {
+                                    sparkCrystalUpdatePacket(packet.data);
+                                }
+                            }
                         }
                         else if (packet.type == "Hide") {
                             removePacket(packet.data);
@@ -589,6 +597,25 @@
 
                     widget.Marquee.appendChild(newItemDiv);
                     widget.Items.push(newItem);
+                }
+            }
+
+            function sparkCrystalShowPacket(data) {
+                var widget = getCreatePersistentElement(data);
+                widget.MainDiv.innerHTML = data.HTML;
+            }
+
+            function sparkCrystalUpdatePacket(data) {
+                sparkCrystalShowPacket(data);
+
+                var divContainer = itemDictionary[data.ID];
+                if (divContainer != null) {
+                    if (data.MilestoneReached) {
+                        $(divContainer).animateCss(data.MilestoneReachedAnimationName, function () { });
+                    }
+                    else if (data.ProgressMade) {
+                        $(divContainer).animateCss(data.ProgressAnimationName, function () { });
+                    }
                 }
             }
 
