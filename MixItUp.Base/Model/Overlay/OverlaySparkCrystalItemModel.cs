@@ -12,11 +12,19 @@ namespace MixItUp.Base.Model.Overlay
     public class OverlaySparkCrystalItemModel : OverlayHTMLTemplateItemModelBase
     {
         public const string HTMLTemplate = @"
-            <p style=""font-family: '{TEXT_FONT}'; font-size: {REWARD_TEXT_SIZE}px; color: {TEXT_COLOR}; white-space: nowrap; font-weight: bold; margin: auto; text-align: center;"">{REWARD}</p>
-            <div style=""position: absolute; background-image: url('{CRYSTAL_EMPTY_IMAGE}'); background-repeat: no-repeat; background-position: top; background-size: cover; height: {CRYSTAL_HEIGHT}px; width: {CRYSTAL_WIDTH}px;"" />
-            <div style=""position: absolute; background-image: url('{CRYSTAL_FULL_IMAGE}'); background-repeat: no-repeat; background-position: top; background-size: cover; background-position: bottom; margin-top: {CRYSTAL_EMPTY_HEIGHT}px; height: {CRYSTAL_FILLED_HEIGHT}px; width: {CRYSTAL_WIDTH}px;"" />
-            <div style=""position: absolute; background-color: {TEXT_COLOR}; width: {CRYSTAL_WIDTH}px; height: 2px;"">
-                <p style=""font-family: '{TEXT_FONT}'; font-size: {AMOUNT_TEXT_SIZE}px; color: {TEXT_COLOR}; white-space: nowrap; font-weight: bold; margin: auto; text-align: center;"">{AMOUNT}</p>
+            <div style=""width: {CRYSTAL_WIDTH}px;"">
+                <p style=""font-family: '{TEXT_FONT}'; font-size: {REWARD_TEXT_SIZE}px; color: {TEXT_COLOR}; white-space: nowrap; font-weight: bold; margin: auto; text-align: center;"">{REWARD}</p>
+            </div>
+            <div style=""width: {CRYSTAL_WIDTH}px; height: {CRYSTAL_HEIGHT}px;"">
+                <div>
+                    <span style=""position: absolute; width: {CRYSTAL_WIDTH}px; height: {CRYSTAL_HEIGHT}px; background-repeat: no-repeat; display: inline-block; background-image: url('{CRYSTAL_EMPTY_IMAGE}'); background-size: cover; {CRYSTAL_EMPTY_OPACITY}"" />
+                </div>
+                <div>
+                    <span style=""position: absolute; width: {CRYSTAL_WIDTH}px; height: {CRYSTAL_HEIGHT}px; margin-top: {CRYSTAL_FILLED_HEIGHT}px; background-repeat: no-repeat; display: inline-block; background-image: url('{CRYSTAL_FULL_IMAGE}'); background-position: 0px -{CRYSTAL_FILLED_HEIGHT}px; background-size: cover;""></span>
+                </div>
+                <div style=""position: absolute; width: {CRYSTAL_WIDTH}px; height: 2px; margin-top: {CRYSTAL_FILLED_HEIGHT}px; background-color: {TEXT_COLOR};"">
+                    <p style=""font-family: '{TEXT_FONT}'; font-size: {AMOUNT_TEXT_SIZE}px; color: {TEXT_COLOR}; white-space: nowrap; font-weight: bold; margin: auto; text-align: center;"">{AMOUNT}</p>
+                </div>
             </div>";
 
         [DataMember]
@@ -110,29 +118,30 @@ namespace MixItUp.Base.Model.Overlay
             replacementSets["CRYSTAL_WIDTH"] = this.CrystalWidth.ToString();
             replacementSets["CRYSTAL_HEIGHT"] = this.CrystalHeight.ToString();
 
-            if (!string.IsNullOrEmpty(this.CustomImageFilePath))
-            {
-                replacementSets["CRYSTAL_EMPTY_IMAGE"] = this.CustomImageFilePath.ToString();
-                replacementSets["CRYSTAL_FULL_IMAGE"] = this.CustomImageFilePath.ToString();
-            }
-            else
-            {
-                replacementSets["CRYSTAL_EMPTY_IMAGE"] = this.EmptyImageFilePath.ToString();
-                replacementSets["CRYSTAL_FULL_IMAGE"] = this.FullImageFilePath.ToString();
-            }
+            replacementSets["REWARD_TEXT_SIZE"] = ((int)(((double)this.CrystalWidth) * 0.22)).ToString();
+            replacementSets["AMOUNT_TEXT_SIZE"] = ((int)(((double)this.CrystalWidth) * 0.18)).ToString();
 
             replacementSets["AMOUNT"] = this.Amount.ToString();
             replacementSets["REWARD"] = this.Reward.ToString();
 
             double percentage = (((double)(this.Amount - this.Start)) / ((double)(this.Goal - this.Start)));
-            int progressHeight = (int)(((double)this.CrystalHeight) * percentage);
+            int progressHeight = this.CrystalHeight - (int)(((double)this.CrystalHeight) * percentage);
             progressHeight = MathHelper.Clamp(progressHeight, 0, this.CrystalHeight);
-
             replacementSets["CRYSTAL_FILLED_HEIGHT"] = progressHeight.ToString();
-            replacementSets["CRYSTAL_EMPTY_HEIGHT"] = (this.CrystalHeight - progressHeight).ToString();
 
-            replacementSets["REWARD_TEXT_SIZE"] = ((int)(((double)this.CrystalWidth) * 0.30)).ToString(); 
-            replacementSets["AMOUNT_TEXT_SIZE"] = ((int)(((double)this.CrystalWidth) * 0.18)).ToString();
+            if (!string.IsNullOrEmpty(this.CustomImageFilePath))
+            {
+                string customImageURL = this.GetFileFullLink(this.ID.ToString(), "image", this.CustomImageFilePath);
+                replacementSets["CRYSTAL_EMPTY_IMAGE"] = customImageURL;
+                replacementSets["CRYSTAL_FULL_IMAGE"] = customImageURL;
+                replacementSets["CRYSTAL_EMPTY_OPACITY"] = "opacity: 0.2";
+            }
+            else
+            {
+                replacementSets["CRYSTAL_EMPTY_IMAGE"] = this.EmptyImageFilePath.ToString();
+                replacementSets["CRYSTAL_FULL_IMAGE"] = this.FullImageFilePath.ToString();
+                replacementSets["CRYSTAL_EMPTY_OPACITY"] = string.Empty;
+            }
 
             return Task.FromResult(replacementSets);
         }

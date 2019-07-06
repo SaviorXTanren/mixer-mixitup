@@ -20,18 +20,7 @@ namespace MixItUp.Base.Model.Overlay
         public string FileID { get; set; }
 
         [DataMember]
-        public virtual string FullLink
-        {
-            get
-            {
-                if (!Uri.IsWellFormedUriString(this.FilePath, UriKind.RelativeOrAbsolute))
-                {
-                    return string.Format("/overlay/files/{0}/{1}?nonce={2}", this.FileType, this.FileID, Guid.NewGuid());
-                }
-                return this.FilePath;
-            }
-            set { }
-        }
+        public virtual string FullLink { get { return this.GetFileFullLink(this.FileID, this.FileType, this.FilePath); } set { } }
 
         [DataMember]
         public string FileExtension { get { return Path.GetExtension(this.FilePath).Replace(".", ""); } set { } }

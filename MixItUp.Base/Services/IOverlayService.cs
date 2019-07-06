@@ -43,5 +43,7 @@ namespace MixItUp.Base.Services
         Task HideItem(OverlayItemModelBase item);
 
         Task SendTextToSpeech(OverlayTextToSpeech textToSpeech);
+
+        void SetLocalFile(string fileID, string filePath);
     }
 }

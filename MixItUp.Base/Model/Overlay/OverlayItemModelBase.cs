@@ -287,6 +287,15 @@ namespace MixItUp.Base.Model.Overlay
             return jobj;
         }
 
+        protected string GetFileFullLink(string fileID, string fileType, string filePath)
+        {
+            if (!Uri.IsWellFormedUriString(filePath, UriKind.RelativeOrAbsolute))
+            {
+                return string.Format("/overlay/files/{0}/{1}?nonce={2}", fileType, fileID, Guid.NewGuid());
+            }
+            return filePath;
+        }
+
         protected virtual async Task PerformReplacements(JObject jobj, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             if (jobj != null)

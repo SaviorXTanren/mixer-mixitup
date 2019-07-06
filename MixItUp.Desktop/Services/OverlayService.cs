@@ -154,7 +154,15 @@ namespace MixItUp.Overlay
                 if (item is OverlayImageItemModel || item is OverlayVideoItemModel)
                 {
                     OverlayFileItemModelBase fileItem = (OverlayFileItemModelBase)item;
-                    this.httpListenerServer.SetLocalFile(fileItem.FileID, fileItem.FilePath);
+                    this.SetLocalFile(fileItem.FileID, fileItem.FilePath);
+                }
+                else if (item is OverlaySparkCrystalItemModel)
+                {
+                    OverlaySparkCrystalItemModel sparkCrystalItem = (OverlaySparkCrystalItemModel)item;
+                    if (!string.IsNullOrEmpty(sparkCrystalItem.CustomImageFilePath))
+                    {
+                        this.SetLocalFile(sparkCrystalItem.ID.ToString(), sparkCrystalItem.CustomImageFilePath);
+                    }
                 }
                 await this.SendPacket("Show", jobj);
             }
@@ -175,6 +183,11 @@ namespace MixItUp.Overlay
         }
 
         public async Task SendTextToSpeech(OverlayTextToSpeech textToSpeech) { await this.SendPacket("TextToSpeech", textToSpeech); }
+
+        public void SetLocalFile(string fileID, string filePath)
+        {
+            this.httpListenerServer.SetLocalFile(fileID, filePath);
+        }
 
         private async Task SendPacket(string type, object contents)
         {
