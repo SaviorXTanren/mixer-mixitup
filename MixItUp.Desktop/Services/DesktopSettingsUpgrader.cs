@@ -178,7 +178,7 @@ namespace MixItUp.Desktop.Services
                     newItem.Position = new OverlayItemPositionModel((OverlayItemPositionType)widget.Position.PositionType, widget.Position.Horizontal, widget.Position.Vertical, 0);
                     OverlayWidgetModel newWidget = new OverlayWidgetModel(widget.Name, widget.OverlayName, newItem, 0);
                     settings.OverlayWidgets.Add(newWidget);
-                    if (newWidget.SupportsRefreshUpdating)
+                    if (newWidget.SupportsRefreshUpdating && !widget.DontRefresh)
                     {
                         newWidget.RefreshTime = settings.OverlayWidgetRefreshTime;
                     }
