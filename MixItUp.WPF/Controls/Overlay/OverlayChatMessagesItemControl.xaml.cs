@@ -1,28 +1,29 @@
 ﻿using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.ViewModel.Controls.Overlay;
+using MixItUp.WPF.Util;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.Overlay
 {
     /// <summary>
-    /// Interaction logic for OverlayStreamClipControl.xaml
+    /// Interaction logic for OverlayChatMessagesItemControl.xaml
     /// </summary>
-    public partial class OverlayStreamClipControl : OverlayItemControl
+    public partial class OverlayChatMessagesItemControl : OverlayItemControl
     {
-        private OverlayStreamClipItemViewModel viewModel;
+        private OverlayChatMessagesItemViewModel viewModel;
 
-        public OverlayStreamClipControl()
+        public OverlayChatMessagesItemControl()
         {
             InitializeComponent();
 
-            this.viewModel = new OverlayStreamClipItemViewModel();
+            this.viewModel = new OverlayChatMessagesItemViewModel();
         }
 
-        public OverlayStreamClipControl(OverlayStreamClipItemModel item)
+        public OverlayChatMessagesItemControl(OverlayChatMessagesListItemModel item)
         {
             InitializeComponent();
 
-            this.viewModel = new OverlayStreamClipItemViewModel(item);
+            this.viewModel = new OverlayChatMessagesItemViewModel(item);
         }
 
         public override OverlayItemViewModelBase GetViewModel() { return this.viewModel; }
@@ -34,6 +35,8 @@ namespace MixItUp.WPF.Controls.Overlay
 
         protected override async Task OnLoaded()
         {
+            this.TextFontComboBox.ItemsSource = InstalledFonts.GetInstalledFonts();
+
             this.DataContext = this.viewModel;
             await this.viewModel.OnLoaded();
         }

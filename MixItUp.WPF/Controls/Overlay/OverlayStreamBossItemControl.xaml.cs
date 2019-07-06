@@ -10,20 +10,20 @@ using System.Windows;
 namespace MixItUp.WPF.Controls.Overlay
 {
     /// <summary>
-    /// Interaction logic for OverlayStreamBossControl.xaml
+    /// Interaction logic for OverlaySongRequestsItemControl.xaml
     /// </summary>
-    public partial class OverlayStreamBossControl : OverlayItemControl
+    public partial class OverlayStreamBossItemControl : OverlayItemControl
     {
         private OverlayStreamBossItemViewModel viewModel;
 
-        public OverlayStreamBossControl()
+        public OverlayStreamBossItemControl()
         {
             InitializeComponent();
 
             this.viewModel = new OverlayStreamBossItemViewModel();
         }
 
-        public OverlayStreamBossControl(OverlayStreamBossItemModel item)
+        public OverlayStreamBossItemControl(OverlayStreamBossItemModel item)
         {
             InitializeComponent();
 

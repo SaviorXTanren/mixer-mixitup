@@ -6,35 +6,27 @@ using System.Threading.Tasks;
 namespace MixItUp.WPF.Controls.Overlay
 {
     /// <summary>
-    /// Interaction logic for OverlayTimerTrainControl.xaml
+    /// Interaction logic for OverlayGameQueueItemControl.xaml
     /// </summary>
-    public partial class OverlayTimerTrainControl : OverlayItemControl
+    public partial class OverlayGameQueueItemControl : OverlayItemControl
     {
-        private OverlayTimerTrainItemViewModel viewModel;
+        private OverlayGameQueueItemViewModel viewModel;
 
-        public OverlayTimerTrainControl()
+        public OverlayGameQueueItemControl()
         {
             InitializeComponent();
 
-            this.viewModel = new OverlayTimerTrainItemViewModel();
+            this.viewModel = new OverlayGameQueueItemViewModel();
         }
 
-        public OverlayTimerTrainControl(OverlayTimerTrainItemModel item)
+        public OverlayGameQueueItemControl(OverlayGameQueueListItemModel item)
         {
             InitializeComponent();
 
-            this.viewModel = new OverlayTimerTrainItemViewModel(item);
+            this.viewModel = new OverlayGameQueueItemViewModel(item);
         }
 
         public override OverlayItemViewModelBase GetViewModel() { return this.viewModel; }
-
-        public override void SetItem(OverlayItemModelBase item)
-        {
-            if (item != null)
-            {
-                this.viewModel = new OverlayTimerTrainItemViewModel((OverlayTimerTrainItemModel)item);
-            }
-        }
 
         public override OverlayItemModelBase GetItem()
         {

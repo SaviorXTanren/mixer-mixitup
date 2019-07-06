@@ -6,24 +6,24 @@ using System.Threading.Tasks;
 namespace MixItUp.WPF.Controls.Overlay
 {
     /// <summary>
-    /// Interaction logic for OverlayEventListControl.xaml
+    /// Interaction logic for OverlayLeaderboardItemControl.xaml
     /// </summary>
-    public partial class OverlayEventListControl : OverlayItemControl
+    public partial class OverlayLeaderboardItemControl : OverlayItemControl
     {
-        private OverlayEventListItemViewModel viewModel;
+        private OverlayLeaderboardItemViewModel viewModel;
 
-        public OverlayEventListControl()
+        public OverlayLeaderboardItemControl()
         {
             InitializeComponent();
 
-            this.viewModel = new OverlayEventListItemViewModel();
+            this.viewModel = new OverlayLeaderboardItemViewModel();
         }
 
-        public OverlayEventListControl(OverlayEventListItemModel item)
+        public OverlayLeaderboardItemControl(OverlayLeaderboardListItemModel item)
         {
             InitializeComponent();
 
-            this.viewModel = new OverlayEventListItemViewModel(item);
+            this.viewModel = new OverlayLeaderboardItemViewModel(item);
         }
 
         public override OverlayItemViewModelBase GetViewModel() { return this.viewModel; }

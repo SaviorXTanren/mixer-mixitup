@@ -10,20 +10,20 @@ using System.Windows;
 namespace MixItUp.WPF.Controls.Overlay
 {
     /// <summary>
-    /// Interaction logic for OverlayTimerControl.xaml
+    /// Interaction logic for OverlayTimerItemControl.xaml
     /// </summary>
-    public partial class OverlayTimerControl : OverlayItemControl
+    public partial class OverlayTimerItemControl : OverlayItemControl
     {
         private OverlayTimerItemViewModel viewModel;
 
-        public OverlayTimerControl()
+        public OverlayTimerItemControl()
         {
             InitializeComponent();
 
             this.viewModel = new OverlayTimerItemViewModel();
         }
 
-        public OverlayTimerControl(OverlayTimerItemModel item)
+        public OverlayTimerItemControl(OverlayTimerItemModel item)
         {
             InitializeComponent();
 

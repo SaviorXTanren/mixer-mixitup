@@ -10,20 +10,20 @@ using System.Windows;
 namespace MixItUp.WPF.Controls.Overlay
 {
     /// <summary>
-    /// Interaction logic for OverlayProgressBarControl.xaml
+    /// Interaction logic for OverlayProgressBarItemControl.xaml
     /// </summary>
-    public partial class OverlayProgressBarControl : OverlayItemControl
+    public partial class OverlayProgressBarItemControl : OverlayItemControl
     {
         private OverlayProgressBarItemViewModel viewModel;
 
-        public OverlayProgressBarControl()
+        public OverlayProgressBarItemControl()
         {
             InitializeComponent();
 
             this.viewModel = new OverlayProgressBarItemViewModel();
         }
 
-        public OverlayProgressBarControl(OverlayProgressBarItemModel item)
+        public OverlayProgressBarItemControl(OverlayProgressBarItemModel item)
         {
             InitializeComponent();
 

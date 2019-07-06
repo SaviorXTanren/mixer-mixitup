@@ -608,11 +608,11 @@
     <Compile Include="Controls\MixerStatusAlertControl.xaml.cs">
       <DependentUpon>MixerStatusAlertControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayChatMessagesControl.xaml.cs">
-      <DependentUpon>OverlayChatMessagesControl.xaml</DependentUpon>
+    <Compile Include="Controls\Overlay\OverlayChatMessagesItemControl.xaml.cs">
+      <DependentUpon>OverlayChatMessagesItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayGameQueueControl.xaml.cs">
-      <DependentUpon>OverlayGameQueueControl.xaml</DependentUpon>
+    <Compile Include="Controls\Overlay\OverlayGameQueueItemControl.xaml.cs">
+      <DependentUpon>OverlayGameQueueItemControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Overlay\OverlayHTMLItemControl.xaml.cs">
       <DependentUpon>OverlayHTMLItemControl.xaml</DependentUpon>
@@ -624,32 +624,32 @@
     <Compile Include="Controls\Overlay\OverlayItemPositionControl.xaml.cs">
       <DependentUpon>OverlayItemPositionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayEventListControl.xaml.cs">
-      <DependentUpon>OverlayEventListControl.xaml</DependentUpon>
+    <Compile Include="Controls\Overlay\OverlayEventListItemControl.xaml.cs">
+      <DependentUpon>OverlayEventListItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayLeaderboardControl.xaml.cs">
-      <DependentUpon>OverlayLeaderboardControl.xaml</DependentUpon>
+    <Compile Include="Controls\Overlay\OverlayLeaderboardItemControl.xaml.cs">
+      <DependentUpon>OverlayLeaderboardItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayStreamClipControl.xaml.cs">
-      <DependentUpon>OverlayStreamClipControl.xaml</DependentUpon>
+    <Compile Include="Controls\Overlay\OverlayStreamClipItemControl.xaml.cs">
+      <DependentUpon>OverlayStreamClipItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayProgressBarControl.xaml.cs">
-      <DependentUpon>OverlayProgressBarControl.xaml</DependentUpon>
+    <Compile Include="Controls\Overlay\OverlayProgressBarItemControl.xaml.cs">
+      <DependentUpon>OverlayProgressBarItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlaySongRequestsControl.xaml.cs">
-      <DependentUpon>OverlaySongRequestsControl.xaml</DependentUpon>
+    <Compile Include="Controls\Overlay\OverlaySongRequestsItemControl.xaml.cs">
+      <DependentUpon>OverlaySongRequestsItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayStreamBossControl.xaml.cs">
-      <DependentUpon>OverlayStreamBossControl.xaml</DependentUpon>
+    <Compile Include="Controls\Overlay\OverlayStreamBossItemControl.xaml.cs">
+      <DependentUpon>OverlayStreamBossItemControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Overlay\OverlayTextItemControl.xaml.cs">
       <DependentUpon>OverlayTextItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayTimerControl.xaml.cs">
-      <DependentUpon>OverlayTimerControl.xaml</DependentUpon>
+    <Compile Include="Controls\Overlay\OverlayTimerItemControl.xaml.cs">
+      <DependentUpon>OverlayTimerItemControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayTimerTrainControl.xaml.cs">
-      <DependentUpon>OverlayTimerTrainControl.xaml</DependentUpon>
+    <Compile Include="Controls\Overlay\OverlayTimerTrainItemControl.xaml.cs">
+      <DependentUpon>OverlayTimerTrainItemControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Overlay\OverlayVideoItemControl.xaml.cs">
       <DependentUpon>OverlayVideoItemControl.xaml</DependentUpon>
@@ -1356,11 +1356,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayChatMessagesControl.xaml">
+    <Page Include="Controls\Overlay\OverlayChatMessagesItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayGameQueueControl.xaml">
+    <Page Include="Controls\Overlay\OverlayGameQueueItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1376,27 +1376,27 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayEventListControl.xaml">
+    <Page Include="Controls\Overlay\OverlayEventListItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayLeaderboardControl.xaml">
+    <Page Include="Controls\Overlay\OverlayLeaderboardItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayStreamClipControl.xaml">
+    <Page Include="Controls\Overlay\OverlayStreamClipItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayProgressBarControl.xaml">
+    <Page Include="Controls\Overlay\OverlayProgressBarItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlaySongRequestsControl.xaml">
+    <Page Include="Controls\Overlay\OverlaySongRequestsItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayStreamBossControl.xaml">
+    <Page Include="Controls\Overlay\OverlayStreamBossItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1404,11 +1404,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayTimerControl.xaml">
+    <Page Include="Controls\Overlay\OverlayTimerItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayTimerTrainControl.xaml">
+    <Page Include="Controls\Overlay\OverlayTimerTrainItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
