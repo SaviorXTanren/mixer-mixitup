@@ -1,4 +1,4 @@
-﻿<local:OverlayItemControl x:Class="MixItUp.WPF.Controls.Overlay.OverlayGameQueueItemControl"
+﻿<local:OverlayItemControl x:Class="MixItUp.WPF.Controls.Overlay.OverlayLeaderboardListItemControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -8,8 +8,14 @@
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <local:OverlayItemControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </local:OverlayItemControl.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
@@ -18,6 +24,20 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox Grid.Column="0" ItemsSource="{Binding LeaderboardTypeStrings}" SelectedItem="{Binding LeaderboardTypeString}" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="115" />
+
+            <ComboBox Grid.Column="2" ItemsSource="{Binding CurrencyRanks}" SelectedItem="{Binding CurrencyRank}" Visibility="{Binding IsCurrencyRankType, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="Currency/Rank" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200" DisplayMemberPath="Name" />
+
+            <ComboBox Grid.Column="2" ItemsSource="{Binding SparksEmbersDateStrings}" SelectedItem="{Binding SparksEmbersDateString}" Visibility="{Binding IsSparksEmbersType, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="Date Range" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200" />
+        </Grid>
+
+        <Grid Grid.Row="2" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="15" />
@@ -37,7 +57,7 @@
 
         </Grid>
 
-        <Grid Grid.Row="2" HorizontalAlignment="Center">
+        <Grid Grid.Row="4" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="15" />
@@ -61,6 +81,6 @@
             <ComboBox ItemsSource="{Binding ExitAnimationStrings}" SelectedItem="{Binding ExitAnimationString}" Grid.Column="8" MaterialDesign:HintAssist.Hint="Remove Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
         </Grid>
 
-        <TextBox Text="{Binding HTML}" Grid.Row="4" MaterialDesign:HintAssist.Hint="HTML Style" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="700" Height="150" VerticalAlignment="Top" HorizontalAlignment="Center" />
+        <TextBox Text="{Binding HTML}" Grid.Row="6" MaterialDesign:HintAssist.Hint="HTML Style" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="700" Height="150" VerticalAlignment="Top" HorizontalAlignment="Center" />
     </Grid>
 </local:OverlayItemControl>

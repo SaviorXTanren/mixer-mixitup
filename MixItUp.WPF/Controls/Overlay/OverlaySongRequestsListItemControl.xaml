@@ -1,4 +1,4 @@
-﻿<local:OverlayItemControl x:Class="MixItUp.WPF.Controls.Overlay.OverlaySongRequestsItemControl"
+﻿<local:OverlayItemControl x:Class="MixItUp.WPF.Controls.Overlay.OverlaySongRequestsListItemControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 

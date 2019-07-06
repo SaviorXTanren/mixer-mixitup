@@ -221,6 +221,14 @@
 
                                 listPacket(packet.data);
                             }
+                            else if (packet.data.ItemTypeName === "TickerTape") {
+                                if (packet.type == "Show") {
+                                    tickerTapeShowPacket(packet.data);
+                                }
+                                else if (packet.type == "Update") {
+                                    tickerTapeUpdatePacket(packet.data);
+                                }
+                            }
                         }
                         else if (packet.type == "Hide") {
                             removePacket(packet.data);
@@ -351,6 +359,102 @@
                 addWaitRemoveElement(data, addedElement);
             }
 
+            function timerPacket(data) {
+                var widget = getCreatePersistentElement(data);
+                widget.TotalLength = data.TotalLength;
+                timerLoop(data);
+            }
+
+            function timerTrainPacket(data) {
+                var widget = getCreatePersistentElement(data);
+
+                var show = false;
+                if (isNaN(widget.TotalLength) || widget.TotalLength == 0) {
+                    show = true;
+                    widget.TotalLength = 0;
+                }
+                widget.TotalLength += data.TotalLength;
+
+                if (show && widget.TotalLength > data.MinimumSecondsToShow) {
+                    timerLoop(data);
+                }
+            }
+
+            function timerLoop(data) {
+                var widget = getCreatePersistentElement(data);
+                var totalTime = widget.TotalLength;
+
+                var hours = Math.floor(totalTime / 3600);
+                var minutes = Math.floor((totalTime - (hours * 3600)) / 60);
+                var seconds = totalTime - (hours * 3600) - (minutes * 60);
+
+                if (hours < 10) { hours = "0" + hours; }
+                if (minutes < 10) { minutes = "0" + minutes; }
+                if (seconds < 10) { seconds = "0" + seconds; }
+                var timeText = hours + ':' + minutes + ':' + seconds;
+
+                var widget = getCreatePersistentElement(data);
+                widget.MainDiv.innerHTML = data.HTML.replace("{TIME}", timeText);
+
+                if (totalTime > 0) {
+                    setTimeout(function () {
+                        widget.TotalLength--;
+                        timerLoop(data);
+                    }, 1000);
+                }
+                else {
+                    widget.MainDiv.innerHTML = "";
+                    removePacket(data);
+                }
+            }
+
+            function streamBossShowPacket(data) {
+                var widget = getCreatePersistentElement(data);
+                widget.MainDiv.innerHTML = data.HTML;
+            }
+
+            function streamBossUpdatePacket(data) {
+                streamBossShowPacket(data);
+
+                var divContainer = itemDictionary[data.ID];
+                if (divContainer != null) {
+                    if (data.NewBoss) {
+                        $(divContainer).animateCss(data.NewBossAnimationName, function () { });
+                    }
+                    else if (data.DamageTaken) {
+                        $(divContainer).animateCss(data.DamageAnimationName, function () { });
+                    }
+                }
+            }
+
+            function streamClipPacket(data) {
+                var addedElement = document.createElement('video');
+                addedElement.id = data.ID;
+                addedElement.frameBorder = 0;
+                addedElement.allow = "autoplay; encrypted-media";
+                addedElement.setAttribute('autoplay', '');
+                addedElement.volume = data.VolumeDecimal;
+
+                var sourceElement = document.createElement('source');
+                sourceElement.src = data.FullLink;
+                addedElement.appendChild(sourceElement);
+
+                addWaitRemoveElement(data, addedElement);
+
+                var options = {
+                    autoplay: 'play',
+                    controls: false,
+                    preload: 'auto',
+                };
+
+                videojs(addedElement, options, function onPlayerReady() {
+                    var player = document.getElementById(data.ID).getElementsByTagName('video')[0];
+                    player.volume = data.VolumeDecimal;
+                    player.width = data.Width;
+                    player.height = data.Height;
+                });
+            }
+
             function listPacket(data) {
 
                 var widget = {};
@@ -453,99 +557,38 @@
                 }
             }
 
-            function streamClipPacket(data) {
-                var addedElement = document.createElement('video');
-                addedElement.id = data.ID;
-                addedElement.frameBorder = 0;
-                addedElement.allow = "autoplay; encrypted-media";
-                addedElement.setAttribute('autoplay', '');
-                addedElement.volume = data.VolumeDecimal;
-
-                var sourceElement = document.createElement('source');
-                sourceElement.src = data.FullLink;
-                addedElement.appendChild(sourceElement);
-
-                addWaitRemoveElement(data, addedElement);
-
-                var options = {
-                    autoplay: 'play',
-                    controls: false,
-                    preload: 'auto',
-                };
-
-                videojs(addedElement, options, function onPlayerReady() {
-                    var player = document.getElementById(data.ID).getElementsByTagName('video')[0];
-                    player.volume = data.VolumeDecimal;
-                    player.width = data.Width;
-                    player.height = data.Height;
-                });
+            function tickerTapeShowPacket(data) {
+                var widget = getCreatePersistentElement(data);
+                widget.Items = [];
+                widget.MainDiv.style.cssText += 'width: ' + data.Width + 'px; max-width: ' + data.Width + 'px; min-width: ' + data.Width + 'px;';
+                widget.MainDiv.style.removeProperty('left');
+                widget.MainDiv.style.removeProperty('transform');
+                widget.Marquee = document.createElement('marquee');
+                widget.Marquee.setAttribute("behavior", "scroll");
+                widget.Marquee.setAttribute("direction", "left");
+                widget.MainDiv.appendChild(widget.Marquee);
             }
 
-            function timerPacket(data) {
-                var widget = getCreatePersistentElement(data);
-                widget.TotalLength = data.TotalLength;
-                timerLoop(data);
-            }
-
-            function timerTrainPacket(data) {
+            function tickerTapeUpdatePacket(data) {
                 var widget = getCreatePersistentElement(data);
 
-                var show = false;
-                if (isNaN(widget.TotalLength) || widget.TotalLength == 0) {
-                    show = true;
-                    widget.TotalLength = 0;
-                }
-                widget.TotalLength += data.TotalLength;
-
-                if (show && widget.TotalLength > data.MinimumSecondsToShow) {
-                    timerLoop(data);
-                }
-            }
-
-            function timerLoop(data) {
-                var widget = getCreatePersistentElement(data);
-                var totalTime = widget.TotalLength;
-
-                var hours = Math.floor(totalTime / 3600);
-                var minutes = Math.floor((totalTime - (hours * 3600)) / 60);
-                var seconds = totalTime - (hours * 3600) - (minutes * 60);
-
-                if (hours < 10) { hours = "0" + hours; }
-                if (minutes < 10) { minutes = "0" + minutes; }
-                if (seconds < 10) { seconds = "0" + seconds; }
-                var timeText = hours + ':' + minutes + ':' + seconds;
-
-                var widget = getCreatePersistentElement(data);
-                widget.MainDiv.innerHTML = data.HTML.replace("{TIME}", timeText);
-
-                if (totalTime > 0) {
-                    setTimeout(function () {
-                        widget.TotalLength--;
-                        timerLoop(data);
-                    }, 1000);
-                }
-                else {
-                    widget.MainDiv.innerHTML = "";
-                    removePacket(data);
-                }
-            }
-
-            function streamBossShowPacket(data) {
-                var widget = getCreatePersistentElement(data);
-                widget.MainDiv.innerHTML = data.HTML;
-            }
-
-            function streamBossUpdatePacket(data) {
-                streamBossShowPacket(data);
-
-                var divContainer = itemDictionary[data.ID];
-                if (divContainer != null) {
-                    if (data.NewBoss) {
-                        $(divContainer).animateCss(data.NewBossAnimationName, function () { });
+                for (i = 0; i < data.Items.length; i++) {
+                    while (widget.Items.length >= data.TotalToShow) {
+                        var divToRemove = widget.Items[0].div;
+                        widget.Items.splice(0, 1);
+                        widget.Marquee.removeChild(divToRemove);
                     }
-                    else if (data.DamageTaken) {
-                        $(divContainer).animateCss(data.DamageAnimationName, function () { });
-                    }
+
+                    var item = data.Items[i];
+
+                    var newItemDiv = document.createElement('div');
+                    newItemDiv.innerHTML = item.HTML;
+                    newItemDiv = newItemDiv.firstChild;
+
+                    var newItem = { id: item.ID, div: newItemDiv, item: item };
+
+                    widget.Marquee.appendChild(newItemDiv);
+                    widget.Items.push(newItem);
                 }
             }
 
@@ -575,7 +618,7 @@
             function addWaitRemoveElement(data, addedElement, addToDiv = true) {
                 if (addedElement != null) {
 
-                    addedElement.style.cssText += 'position: absolute;  margin: 0px;'
+                    addedElement.style.cssText += 'position: absolute; margin: 0px;'
                     if (data.Position.IsPixelPosition) {
                         addedElement.style.cssText += 'left: ' + data.Position.Horizontal.toString() + 'px; top: ' + data.Position.Vertical.toString() + 'px;'
                     }

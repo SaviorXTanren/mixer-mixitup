@@ -3,15 +3,15 @@ using MixItUp.Base.Util;
 
 namespace MixItUp.Base.ViewModel.Controls.Overlay
 {
-    public class OverlayGameQueueItemViewModel : OverlayListItemViewModelBase
+    public class OverlayGameQueueListItemViewModel : OverlayListItemViewModelBase
     {
-        public OverlayGameQueueItemViewModel()
+        public OverlayGameQueueListItemViewModel()
             : base()
         {
             this.HTML = OverlayGameQueueListItemModel.HTMLTemplate;
         }
 
-        public OverlayGameQueueItemViewModel(OverlayGameQueueListItemModel item)
+        public OverlayGameQueueListItemViewModel(OverlayGameQueueListItemModel item)
             : base(item.TotalToShow, 0, item.Width, item.Height, item.TextFont, item.TextColor, item.BorderColor, item.BackgroundColor, item.Effects.EntranceAnimation, item.Effects.ExitAnimation, item.HTML)
         { }
 

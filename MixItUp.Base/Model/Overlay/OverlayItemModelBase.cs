@@ -37,7 +37,9 @@ namespace MixItUp.Base.Model.Overlay
         [Name("Stream Boss")]
         StreamBoss,
         [Name("Song Requests")]
-        SongRequests
+        SongRequests,
+        [Name("Ticker Tape")]
+        TickerTape
     }
 
     public enum OverlayItemPositionType

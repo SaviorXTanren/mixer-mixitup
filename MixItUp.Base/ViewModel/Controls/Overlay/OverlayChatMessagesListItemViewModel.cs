@@ -3,16 +3,16 @@ using MixItUp.Base.Util;
 
 namespace MixItUp.Base.ViewModel.Controls.Overlay
 {
-    public class OverlayChatMessagesItemViewModel : OverlayListItemViewModelBase
+    public class OverlayChatMessagesListItemViewModel : OverlayListItemViewModelBase
     {
-        public OverlayChatMessagesItemViewModel()
+        public OverlayChatMessagesListItemViewModel()
             : base()
         {
             this.HTML = OverlayChatMessagesListItemModel.HTMLTemplate;
             this.height = 24;
         }
 
-        public OverlayChatMessagesItemViewModel(OverlayChatMessagesListItemModel item)
+        public OverlayChatMessagesListItemViewModel(OverlayChatMessagesListItemModel item)
             : base(item.TotalToShow, item.FadeOut, item.Width, item.Height, item.TextFont, item.TextColor, item.BorderColor, item.BackgroundColor, item.Effects.EntranceAnimation, item.Effects.ExitAnimation, item.HTML)
         { }
 

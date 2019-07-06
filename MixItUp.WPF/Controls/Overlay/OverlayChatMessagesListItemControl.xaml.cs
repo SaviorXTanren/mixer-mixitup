@@ -6,24 +6,24 @@ using System.Threading.Tasks;
 namespace MixItUp.WPF.Controls.Overlay
 {
     /// <summary>
-    /// Interaction logic for OverlayGameQueueItemControl.xaml
+    /// Interaction logic for OverlayChatMessagesListItemControl.xaml
     /// </summary>
-    public partial class OverlayGameQueueItemControl : OverlayItemControl
+    public partial class OverlayChatMessagesListItemControl : OverlayItemControl
     {
-        private OverlayGameQueueItemViewModel viewModel;
+        private OverlayChatMessagesListItemViewModel viewModel;
 
-        public OverlayGameQueueItemControl()
+        public OverlayChatMessagesListItemControl()
         {
             InitializeComponent();
 
-            this.viewModel = new OverlayGameQueueItemViewModel();
+            this.viewModel = new OverlayChatMessagesListItemViewModel();
         }
 
-        public OverlayGameQueueItemControl(OverlayGameQueueListItemModel item)
+        public OverlayChatMessagesListItemControl(OverlayChatMessagesListItemModel item)
         {
             InitializeComponent();
 
-            this.viewModel = new OverlayGameQueueItemViewModel(item);
+            this.viewModel = new OverlayChatMessagesListItemViewModel(item);
         }
 
         public override OverlayItemViewModelBase GetViewModel() { return this.viewModel; }

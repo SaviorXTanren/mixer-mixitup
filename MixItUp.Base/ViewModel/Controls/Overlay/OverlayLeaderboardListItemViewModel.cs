@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace MixItUp.Base.ViewModel.Controls.Overlay
 {
-    public class OverlayLeaderboardItemViewModel : OverlayListItemViewModelBase
+    public class OverlayLeaderboardListItemViewModel : OverlayListItemViewModelBase
     {
         public IEnumerable<string> LeaderboardTypeStrings { get; set; } = EnumHelper.GetEnumNames<OverlayLeaderboardListItemTypeEnum>();
         public string LeaderboardTypeString
@@ -54,13 +54,13 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
 
         public override bool SupportsRefreshUpdating { get { return true; } }
 
-        public OverlayLeaderboardItemViewModel()
+        public OverlayLeaderboardListItemViewModel()
             : base()
         {
             this.HTML = OverlayLeaderboardListItemModel.HTMLTemplate;
         }
 
-        public OverlayLeaderboardItemViewModel(OverlayLeaderboardListItemModel item)
+        public OverlayLeaderboardListItemViewModel(OverlayLeaderboardListItemModel item)
             : base(item.TotalToShow, 0, item.Width, item.Height, item.TextFont, item.TextColor, item.BorderColor, item.BackgroundColor, item.Effects.EntranceAnimation, item.Effects.ExitAnimation, item.HTML)
         {
             this.leaderboardType = item.LeaderboardType;
