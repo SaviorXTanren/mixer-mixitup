@@ -113,6 +113,7 @@ namespace MixItUp.Base.Services
                                 URI = song.Uri,
                                 Name = song.ToString(),
                                 AlbumImage = (!string.IsNullOrEmpty(song.Album?.ImageLink)) ? song.Album?.ImageLink : SpotifyDefaultAlbumArt,
+                                Length = song.Duration,
                                 Type = SongRequestServiceTypeEnum.Spotify,
                             });
                         }
@@ -130,6 +131,7 @@ namespace MixItUp.Base.Services
                                 URI = song.Uri,
                                 Name = song.ToString(),
                                 AlbumImage = (!string.IsNullOrEmpty(song.Album?.ImageLink)) ? song.Album?.ImageLink : SpotifyDefaultAlbumArt,
+                                Length = song.Duration,
                                 Type = SongRequestServiceTypeEnum.Spotify,
                             });
                         }

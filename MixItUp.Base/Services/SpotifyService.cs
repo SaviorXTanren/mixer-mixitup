@@ -487,6 +487,13 @@ namespace MixItUp.Base.Services
             return results;
         }
 
+        private new async Task<JObject> GetJObjectAsync(string url)
+        {
+            HttpResponseMessage response = await this.GetAsync(url);
+            Logger.LogDiagnostic(response.RequestMessage.RequestUri.ToString() + Environment.NewLine + response.StatusCode + Environment.NewLine + await response.Content.ReadAsStringAsync());
+            return await this.ProcessJObjectResponse(response);
+        }
+
         private async Task DisableRepeat()
         {
             try

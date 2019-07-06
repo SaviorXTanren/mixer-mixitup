@@ -615,6 +615,7 @@ namespace MixItUp.Base.Services
                             URI = newSong.URI,
                             Name = newSong.Name,
                             AlbumImage = newSong.AlbumImage,
+                            Length = newSong.Length,
                             Type = newSong.Type,
                             IsFromBackupPlaylist = newSong.IsFromBackupPlaylist,
                             User = newSong.User,
@@ -712,10 +713,6 @@ namespace MixItUp.Base.Services
                             if (failedStatusAttempts >= 3)
                             {
                                 await this.SkipInternal();
-                            }
-                            else
-                            {
-                                await this.ResumeInternal();
                             }
                         }
                         else
