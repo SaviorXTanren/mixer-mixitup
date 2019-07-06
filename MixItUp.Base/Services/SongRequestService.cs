@@ -702,7 +702,7 @@ namespace MixItUp.Base.Services
                         this.Status.Progress += backgroundInterval;
                     }
 
-                    if (this.forceStateQuery || this.Status == null || (this.Status.Length > 0 && this.Status.Progress >= this.Status.Length))
+                    if (this.forceStateQuery || this.Status == null || this.Status.Length == 0)
                     {
                         this.forceStateQuery = false;
                         SongRequestCurrentlyPlayingModel newStatus = await this.GetStatus();
@@ -724,15 +724,16 @@ namespace MixItUp.Base.Services
                             this.Status.Length = newStatus.Length;
                             this.Status.Volume = newStatus.Volume;
 
-                            if (this.Status.State == SongRequestStateEnum.Ended)
-                            {
-                                await this.SkipInternal();
-                            }
-                            else if (this.Status.Volume != ChannelSession.Settings.SongRequestVolume)
+                            if (this.Status.Volume != ChannelSession.Settings.SongRequestVolume)
                             {
                                 await this.RefreshVolumeInternal();
                             }
                         }
+                    }
+
+                    if (this.Status.Progress >= this.Status.Length || this.Status.State == SongRequestStateEnum.Ended)
+                    {
+                        await this.SkipInternal();
                     }
                 });
             });

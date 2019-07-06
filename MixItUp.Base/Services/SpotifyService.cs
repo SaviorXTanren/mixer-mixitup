@@ -396,8 +396,6 @@ namespace MixItUp.Base.Services
                 HttpResponseMessage playResponse = await this.PutAsync("me/player/play", this.CreateContentFromObject(payload));
                 await Task.Delay(250);
 
-                await this.DisableRepeat();
-
                 return (playResponse.StatusCode == HttpStatusCode.NoContent);
             }
             catch (Exception ex) { Logger.Log(ex); }
@@ -418,8 +416,6 @@ namespace MixItUp.Base.Services
                 Logger.LogDiagnostic(string.Format("Spotify Log: {0} - {1}", response.RequestMessage.ToString(), responseString));
 
                 await Task.Delay(250);
-
-                await this.DisableRepeat();
 
                 return (response.StatusCode == HttpStatusCode.NoContent);
             }
