@@ -83,10 +83,6 @@ namespace MixItUp.WPF.Controls.Actions
                     if (this.action.Item != null)
                     {
                         StoreCommandUpgrader.RestructureNewerOverlayActions(new List<ActionBase>() { this.action });
-                        this.Item = null;
-                        this.Position = null;
-                        this.Effect = null;
-                        this.Effects = null;
                     }
 #pragma warning restore CS0612 // Type or member is obsolete
 
