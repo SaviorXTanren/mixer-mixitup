@@ -52,7 +52,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
         public async Task EnableWidget(OverlayWidgetModel widget)
         {
-            if (widget != null)
+            if (widget != null && !widget.IsEnabled)
             {
                 widget.IsEnabled = true;
                 await widget.ShowItem();
@@ -61,7 +61,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
         public async Task DisableWidget(OverlayWidgetModel widget)
         {
-            if (widget != null)
+            if (widget != null && widget.IsEnabled)
             {
                 widget.IsEnabled = false;
                 await widget.HideItem();
