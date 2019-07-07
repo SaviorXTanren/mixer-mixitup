@@ -85,6 +85,10 @@ namespace MixItUp.Base.Actions
                 if (this.Item != null)
                 {
                     StoreCommandUpgrader.RestructureNewerOverlayActions(new List<ActionBase>() { this });
+                    this.Item = null;
+                    this.Position = null;
+                    this.Effect = null;
+                    this.Effects = null;
                 }
 #pragma warning restore CS0612 // Type or member is obsolete
 
