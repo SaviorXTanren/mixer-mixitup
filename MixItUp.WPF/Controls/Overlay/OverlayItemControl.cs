@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.ViewModel.Controls.Overlay;
 using System.Diagnostics;
 using System.Windows.Navigation;
 
@@ -6,9 +7,11 @@ namespace MixItUp.WPF.Controls.Overlay
 {
     public abstract class OverlayItemControl : LoadingControlBase
     {
-        public abstract void SetItem(OverlayItemBase item);
+        public virtual OverlayItemViewModelBase GetViewModel() { return null; }
 
-        public abstract OverlayItemBase GetItem();
+        public virtual void SetItem(OverlayItemModelBase item) { }
+
+        public virtual OverlayItemModelBase GetItem() { return null; }
 
         protected void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {

@@ -59,24 +59,26 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         }
         private int volume;
 
+        public override bool SupportsRefreshUpdating { get { return true; } }
+
         public OverlayYouTubeItemViewModel()
         {
-            this.width = OverlayVideoItem.DefaultWidth;
-            this.height = OverlayVideoItem.DefaultHeight;
+            this.width = OverlayVideoItemModel.DefaultWidth;
+            this.height = OverlayVideoItemModel.DefaultHeight;
             this.Volume = 100;
         }
 
-        public OverlayYouTubeItemViewModel(OverlayYouTubeItem item)
+        public OverlayYouTubeItemViewModel(OverlayYouTubeItemModel item)
             : this()
         {
-            this.VideoID = item.VideoID;
+            this.VideoID = item.FilePath;
             this.startTime = item.StartTime;
             this.width = item.Width;
             this.height = item.Height;
             this.Volume = item.Volume;
         }
 
-        public override OverlayItemBase GetItem()
+        public override OverlayItemModelBase GetOverlayItem()
         {
             if (!string.IsNullOrEmpty(this.VideoID) && this.width > 0 && this.height > 0 && this.startTime >= 0)
             {
@@ -87,7 +89,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
                 {
                     videoID = videoID.Substring(0, videoID.IndexOf("&"));
                 }
-                return new OverlayYouTubeItem(videoID, this.startTime, this.width, this.height, this.volume);
+                return new OverlayYouTubeItemModel(videoID, this.width, this.height, this.startTime, this.volume);
             }
             return null;
         }

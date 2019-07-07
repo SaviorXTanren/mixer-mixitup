@@ -39,6 +39,8 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         }
         private int height;
 
+        public override bool SupportsRefreshUpdating { get { return true; } }
+
         public ICommand BrowseFilePathCommand { get; set; }
 
         public OverlayImageItemViewModel()
@@ -54,7 +56,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             });
         }
 
-        public OverlayImageItemViewModel(OverlayImageItem item)
+        public OverlayImageItemViewModel(OverlayImageItemModel item)
             : this()
         {
             this.FilePath = item.FilePath;
@@ -62,11 +64,11 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.height = item.Height;
         }
 
-        public override OverlayItemBase GetItem()
+        public override OverlayItemModelBase GetOverlayItem()
         {
-            if (!string.IsNullOrEmpty(this.FilePath) && this.width > 0 && this.height > 0)
+            if (!string.IsNullOrEmpty(this.FilePath) && this.width >= 0 && this.height >= 0)
             {
-                return new OverlayImageItem(this.FilePath, width, height);
+                return new OverlayImageItemModel(this.FilePath, width, height);
             }
             return null;
         }

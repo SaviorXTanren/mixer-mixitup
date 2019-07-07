@@ -29,6 +29,7 @@ namespace MixItUp.Base.Model.SongRequests
         public string URI { get; set; }
         public string Name { get; set; }
         public string AlbumImage { get; set; }
+        public long Length { get; set; }
 
         public SongRequestServiceTypeEnum Type { get; set; }
 
@@ -59,7 +60,6 @@ namespace MixItUp.Base.Model.SongRequests
     {
         public SongRequestStateEnum State { get; set; }
         public long Progress { get; set; }
-        public long Length { get; set; }
 
         public int Volume { get; set; }
 

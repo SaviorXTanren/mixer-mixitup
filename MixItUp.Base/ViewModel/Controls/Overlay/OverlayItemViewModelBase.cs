@@ -13,10 +13,12 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
 
         public IEnumerable<string> ColorNames { get; set; } = ColorSchemes.HTMLColorSchemeDictionary.Keys;
 
-        public IEnumerable<string> EntranceAnimationStrings { get; set; } = EnumHelper.GetEnumNames<OverlayEffectEntranceAnimationTypeEnum>();
-        public IEnumerable<string> VisibleAnimationStrings { get; set; } = EnumHelper.GetEnumNames<OverlayEffectVisibleAnimationTypeEnum>();
-        public IEnumerable<string> ExitAnimationStrings { get; set; } = EnumHelper.GetEnumNames<OverlayEffectExitAnimationTypeEnum>();
+        public IEnumerable<string> EntranceAnimationStrings { get; set; } = EnumHelper.GetEnumNames<OverlayItemEffectEntranceAnimationTypeEnum>();
+        public IEnumerable<string> VisibleAnimationStrings { get; set; } = EnumHelper.GetEnumNames<OverlayItemEffectVisibleAnimationTypeEnum>();
+        public IEnumerable<string> ExitAnimationStrings { get; set; } = EnumHelper.GetEnumNames<OverlayItemEffectExitAnimationTypeEnum>();
 
-        public abstract OverlayItemBase GetItem();
+        public virtual bool SupportsRefreshUpdating { get { return false; } }
+
+        public virtual OverlayItemModelBase GetOverlayItem() { return null; }
     }
 }

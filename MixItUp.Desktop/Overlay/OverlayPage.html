@@ -179,64 +179,75 @@
                         if (packet.type === "test") {
                             testPacket();
                         }
-                        else if (packet.type === "remove") {
+                        else if (packet.type == "Show" || packet.type == "Update") {
+                            if (packet.data.ItemTypeName === "Image") {
+                                imagePacket(packet.data);
+                            }
+                            else if (packet.data.ItemTypeName === "Text") {
+                                textPacket(packet.data);
+                            }
+                            else if (packet.data.ItemTypeName === "YouTube") {
+                                youtubePacket(packet.data);
+                            }
+                            else if (packet.data.ItemTypeName === "Video") {
+                                videoPacket(packet.data);
+                            }
+                            else if (packet.data.ItemTypeName === "HTML") {
+                                htmlPacket(packet.data);
+                            }
+                            else if (packet.data.ItemTypeName === "WebPage") {
+                                webPagePacket(packet.data);
+                            }
+                            else if (packet.data.ItemTypeName === "Timer") {
+                                timerPacket(packet.data);
+                            }
+                            else if (packet.data.ItemTypeName === "TimerTrain") {
+                                timerTrainPacket(packet.data);
+                            }
+                            else if (packet.data.ItemTypeName === "StreamBoss") {
+                                if (packet.type == "Show") {
+                                    streamBossShowPacket(packet.data);
+                                }
+                                else if (packet.type == "Update") {
+                                    streamBossUpdatePacket(packet.data);
+                                }
+                            }
+                            else if (packet.data.ItemTypeName === "StreamClip") {
+                                streamClipPacket(packet.data);
+                            }
+                            else if (packet.data.ItemTypeName === "ChatMessages" || packet.data.ItemTypeName === "EventList" || 
+                                packet.data.ItemTypeName === "GameQueue" || packet.data.ItemTypeName === "SongRequests" ||
+                                packet.data.ItemTypeName === "Leaderboard") {
+
+                                listPacket(packet.data);
+                            }
+                            else if (packet.data.ItemTypeName === "TickerTape") {
+                                if (packet.type == "Show") {
+                                    tickerTapeShowPacket(packet.data);
+                                }
+                                else if (packet.type == "Update") {
+                                    tickerTapeUpdatePacket(packet.data);
+                                }
+                            }
+                            else if (packet.data.ItemTypeName === "SparkCrystal") {
+                                if (packet.type == "Show") {
+                                    sparkCrystalShowPacket(packet.data);
+                                }
+                                else if (packet.type == "Update") {
+                                    sparkCrystalUpdatePacket(packet.data);
+                                }
+                            }
+                        }
+                        else if (packet.type == "Hide") {
                             removePacket(packet.data);
                         }
-                        else if (packet.type === "image") {
-                            imagePacket(packet.data);
-                        }
-                        else if (packet.type === "text") {
-                            textPacket(packet.data);
-                        }
-                        else if (packet.type === "youtube") {
-                            youtubePacket(packet.data);
-                        }
-                        else if (packet.type === "video") {
-                            videoPacket(packet.data);
-                        }
-                        else if (packet.type === "html") {
-                            htmlTextPacket(packet.data);
-                        }
-                        else if (packet.type === "webpage") {
-                            webPagePacket(packet.data);
-                        }
-                        else if (packet.type === "eventlist") {
-                            eventListPacket(packet.data);
-                        }
-                        else if (packet.type === "gamequeue") {
-                            gameQueuePacket(packet.data);
-                        }
-                        else if (packet.type === "songrequestsqueue") {
-                            songRequestsQueuePacket(packet.data);
-                        }
-                        else if (packet.type === "chatmessages") {
-                            chatMessagesPacket(packet.data);
-                        }
-                        else if (packet.type === "mixerclip") {
-                            mixerClipPacket(packet.data);
-                        }
-                        else if (packet.type === "leaderboard") {
-                            leaderboardPacket(packet.data);
-                        }
-                        else if (packet.type === "timer") {
-                            timerPacket(packet.data);
-                        }
-                        else if (packet.type === "timertrain") {
-                            timerTrainPacket(packet.data);
-                        }
-                        else if (packet.type === "streamboss") {
-                            streamBossPacket(packet.data);
-                        }
-                        else if (packet.type === "textToSpeech") {
+                        else if (packet.type === "TextToSpeech") {
                             textToSpeechPacket(packet.data);
                         }
-                        else if (packet.type === "batch") {
+                        else if (packet.type === "Batch") {
                             for (var i = 0; i < packet.array.length; i++) {
                                 packetReceived(packet.array[i]);
                             }
-                        }
-                        else {
-                            customPacket(packet.data);
                         }
                     }
                 }
@@ -245,8 +256,9 @@
 
             function testPacket() {
                 var data = {
-                    Text: 'Connection Test!', Size: 100, Color: 'red', EntranceAnimationName: 'fadeIn', VisibleAnimationName: '', ExitAnimationName: 'fadeOut',
-                    Horizontal: 50, Vertical: 50, Duration: 3, IsPercentagePosition: true
+                    Text: 'Connection Test!', Size: 100, Color: 'red',
+                    Position: { Horizontal: 50, Vertical: 50, IsPercentagePosition: true },
+                    Effects: { EntranceAnimationName: 'fadeIn', VisibleAnimationName: '', ExitAnimationName: 'fadeOut', Duration: 3 }
                 };
                 textPacket(data);
             }
@@ -262,7 +274,9 @@
             function imagePacket(data) {
                 var addedElement = document.createElement('img');
                 addedElement.src = data.FullLink;
-                addedElement.style.cssText += 'width: ' + data.Width + 'px; height: ' + data.Height + 'px; ';
+                if (data.Width > 0 && data.Height > 0) {
+                    addedElement.style.cssText += 'width: ' + data.Width + 'px; height: ' + data.Height + 'px; ';
+                }
 
                 addWaitRemoveElement(data, addedElement);
             }
@@ -293,14 +307,14 @@
             function youtubePacket(data) {
                 if (youtubeIFrameAPIReady) {
                     var addedElement = document.createElement('div');
-                    addedElement.id = 'youtubeVideo' + data.ID;
+                    addedElement.id = data.FilePath;
 
                     addWaitRemoveElement(data, addedElement);
 
                     var youtubeVideoPlayer = new YT.Player(addedElement.id, {
                         height: data.Height,
                         width: data.Width,
-                        videoId: data.VideoID,
+                        videoId: data.FilePath,
                         playerVars: { 'controls': 0, 'modestbranding': 1, 'start': data.StartTime },
                         events: {
                             'onReady': function () {
@@ -330,27 +344,22 @@
 
                 sourceElement = document.createElement('source');
                 sourceElement.src = data.FullLink;
-                if (data.FilePath.endsWith(".mp4")) {
-                    sourceElement.type = "video/mp4";
-                }
-                else if (data.FilePath.endsWith(".webm")) {
-                    sourceElement.type = "video/webm";
-                }
+                sourceElement.type = "video/" + data.FileExtension;
                 addedElement.appendChild(sourceElement);
 
                 addWaitRemoveElement(data, addedElement);
             }
 
-            function htmlTextPacket(data) {
+            function htmlPacket(data) {
                 var addedElement = document.createElement('div');
-                addedElement.innerHTML = data.HTMLText;
+                addedElement.innerHTML = data.HTML;
 
                 addWaitRemoveElement(data, addedElement);
             }
 
             function webPagePacket(data) {
                 var addedElement = document.createElement('iframe');
-                addedElement.src = data.URL;
+                addedElement.src = data.FilePath;
                 addedElement.width = data.Width;
                 addedElement.height = data.Height;
                 addedElement.frameBorder = 0;
@@ -358,254 +367,75 @@
                 addWaitRemoveElement(data, addedElement);
             }
 
-            // Event List Functions
+            function timerPacket(data) {
+                var widget = getCreatePersistentElement(data);
+                widget.TotalLength = data.TotalLength;
+                timerLoop(data);
+            }
 
-            function eventListPacket(data) {
+            function timerTrainPacket(data) {
+                var widget = getCreatePersistentElement(data);
 
-                if (!widgetData.has(data.ID)) {
-                    var list = {};
-
-                    widgetData.set(data.ID, list);
-
-                    list.MainDiv = document.createElement('div');
-                    list.Items = [];
-
-                    addWaitRemoveElement(data, list.MainDiv);
+                var show = false;
+                if (isNaN(widget.TotalLength) || widget.TotalLength == 0) {
+                    show = true;
+                    widget.TotalLength = 0;
                 }
+                widget.TotalLength += data.TotalLength;
 
-                var list = widgetData.get(data.ID);
-                var mainDiv = list.MainDiv;
-                var items = list.Items;
-
-                if (items.length >= data.TotalToShow) {
-                    items.pop();
-                    $(mainDiv.lastChild).animateCss(data.RemoveEventAnimationName, function () {
-                        mainDiv.lastChild.style.visibility = 'hidden';
-
-                        eventListShiftItems(data, mainDiv, items);
-                    });
-                }
-                else {
-                    eventListShiftItems(data, mainDiv, items);
+                if (show && widget.TotalLength > data.MinimumSecondsToShow) {
+                    timerLoop(data);
                 }
             }
 
-            function eventListShiftItems(data, mainDiv, items) {
+            function timerLoop(data) {
+                var widget = getCreatePersistentElement(data);
+                var totalTime = widget.TotalLength;
 
-                for (var i = 0; i < items.length; i++) {
-                    var itemDiv = items[i].Div;
-                    $(itemDiv).animateCss('slidedown-animation', function () { });
-                }
+                var hours = Math.floor(totalTime / 3600);
+                var minutes = Math.floor((totalTime - (hours * 3600)) / 60);
+                var seconds = totalTime - (hours * 3600) - (minutes * 60);
 
-                setTimeout(function () {
+                if (hours < 10) { hours = "0" + hours; }
+                if (minutes < 10) { minutes = "0" + minutes; }
+                if (seconds < 10) { seconds = "0" + seconds; }
+                var timeText = hours + ':' + minutes + ':' + seconds;
 
-                    while (mainDiv.hasChildNodes()) {
-                        mainDiv.removeChild(mainDiv.lastChild);
-                    }
+                var widget = getCreatePersistentElement(data);
+                widget.MainDiv.innerHTML = data.HTML.replace("{TIME}", timeText);
 
-                    var newItemDiv = document.createElement('div');
-                    var newItemInnerDiv = document.createElement('div');
-                    newItemInnerDiv.innerHTML = data.HTMLText;
-                    newItemDiv.appendChild(newItemInnerDiv);
-                    $(newItemDiv).animateCss(data.AddEventAnimationName, function () { });
-
-                    mainDiv.insertBefore(newItemDiv, mainDiv.childNodes[0]);
-
-                    for (var i = 0; i < items.length; i++) {
-                        var existingItem = items[i];
-
-                        existingItem.Div = document.createElement('div');
-                        var existingItemInnerDiv = document.createElement('div');
-                        existingItemInnerDiv.innerHTML = existingItem.Data.HTMLText;
-                        existingItem.Div.appendChild(existingItemInnerDiv);
-
-                        mainDiv.appendChild(existingItem.Div);
-                    }
-
-                    items.unshift({ Data: data, Div: newItemDiv });
-
-                    for (var i = items.length; i < data.TotalToShow; i++) {
-                        var itemDiv = document.createElement('div');
-                        itemDiv.style.height = $(newItemDiv).outerHeight(true) + 'px';
-
-                        mainDiv.appendChild(itemDiv);
-                    }
-
-                }, 1100);
-            }
-
-            // Game Queue Functions
-
-            function gameQueuePacket(data) {
-
-                if (!widgetData.has(data.ID)) {
-                    var list = {};
-
-                    widgetData.set(data.ID, list);
-
-                    list.MainDiv = document.createElement('div');
-                    list.Items = [];
-
-                    addWaitRemoveElement(data, list.MainDiv);
-                }
-
-                var list = widgetData.get(data.ID);
-                var mainDiv = list.MainDiv;
-
-                data.TotalLeftToRemove = mainDiv.children.length;
-
-                for (var i = 0; i < mainDiv.children.length; i++) {
-                    $(mainDiv.children[i]).animateCss(data.RemoveEventAnimationName, function (animatedDiv) {
-                        animatedDiv.style.visibility = 'hidden';
-                        data.TotalLeftToRemove--;
-                    });
-                }
-
-                gameQueueAddItems(data, mainDiv);
-            }
-
-            function gameQueueAddItems(data, mainDiv) {
-                if (data.TotalLeftToRemove > 0) {
+                if (totalTime > 0) {
                     setTimeout(function () {
-                        gameQueueAddItems(data, mainDiv);
-                    }, 200);
+                        widget.TotalLength--;
+                        timerLoop(data);
+                    }, 1000);
                 }
                 else {
+                    widget.MainDiv.innerHTML = "";
+                    removePacket(data);
+                }
+            }
 
-                    while (mainDiv.hasChildNodes()) {
-                        mainDiv.removeChild(mainDiv.lastChild);
+            function streamBossShowPacket(data) {
+                var widget = getCreatePersistentElement(data);
+                widget.MainDiv.innerHTML = data.HTML;
+            }
+
+            function streamBossUpdatePacket(data) {
+                streamBossShowPacket(data);
+
+                var divContainer = itemDictionary[data.ID];
+                if (divContainer != null) {
+                    if (data.NewBoss) {
+                        $(divContainer).animateCss(data.NewBossAnimationName, function () { });
                     }
-
-                    if (data.GameQueueUpdates.length > 0) {
-                        var newItemDiv;
-                        for (var i = 0; i < data.GameQueueUpdates.length; i++) {
-                            newItemDiv = document.createElement('div');
-                            newItemDiv.innerHTML = data.GameQueueUpdates[i].HTMLText;
-                            mainDiv.appendChild(newItemDiv);
-                            $(newItemDiv).animateCss(data.AddEventAnimationName, function () { });
-                        }
-
-                        for (var i = data.GameQueueUpdates.length; i < data.TotalToShow; i++) {
-                            var itemDiv = document.createElement('div');
-                            itemDiv.style.height = $(newItemDiv).outerHeight(true) + 'px';
-                            mainDiv.appendChild(itemDiv);
-                        }
+                    else if (data.DamageTaken) {
+                        $(divContainer).animateCss(data.DamageAnimationName, function () { });
                     }
                 }
             }
 
-            // Song Requests Queue Functions
-
-            function songRequestsQueuePacket(data) {
-
-                if (!widgetData.has(data.ID)) {
-                    var list = {};
-
-                    widgetData.set(data.ID, list);
-
-                    list.MainDiv = document.createElement('div');
-                    list.Items = [];
-
-                    addWaitRemoveElement(data, list.MainDiv);
-                }
-
-                var list = widgetData.get(data.ID);
-                var mainDiv = list.MainDiv;
-
-                data.TotalLeftToRemove = mainDiv.children.length;
-
-                for (var i = 0; i < mainDiv.children.length; i++) {
-                    $(mainDiv.children[i]).animateCss(data.RemoveEventAnimationName, function (animatedDiv) {
-                        animatedDiv.style.visibility = 'hidden';
-                        data.TotalLeftToRemove--;
-                    });
-                }
-
-                songRequestsQueueAddItems(data, mainDiv);
-            }
-
-            function songRequestsQueueAddItems(data, mainDiv) {
-                if (data.TotalLeftToRemove > 0) {
-                    setTimeout(function () {
-                        songRequestsQueueAddItems(data, mainDiv);
-                    }, 200);
-                }
-                else {
-
-                    while (mainDiv.hasChildNodes()) {
-                        mainDiv.removeChild(mainDiv.lastChild);
-                    }
-
-                    if (data.SongRequestUpdates.length > 0) {
-                        var newItemDiv;
-                        for (var i = 0; i < data.SongRequestUpdates.length; i++) {
-                            newItemDiv = document.createElement('div');
-                            newItemDiv.innerHTML = data.SongRequestUpdates[i].HTMLText;
-                            mainDiv.appendChild(newItemDiv);
-                            $(newItemDiv).animateCss(data.AddEventAnimationName, function () { });
-                        }
-
-                        for (var i = data.SongRequestUpdates.length; i < data.TotalToShow; i++) {
-                            var itemDiv = document.createElement('div');
-                            itemDiv.style.height = $(newItemDiv).outerHeight(true) + 'px';
-                            mainDiv.appendChild(itemDiv);
-                        }
-                    }
-                }
-            }
-
-            function chatMessagesPacket(data) {
-
-                if (!widgetData.has(data.ID)) {
-                    var list = {};
-
-                    widgetData.set(data.ID, list);
-
-                    list.MainDiv = document.createElement('div');
-                    list.Items = [];
-
-                    addWaitRemoveElement(data, list.MainDiv);
-                }
-
-                var list = widgetData.get(data.ID);
-                var mainDiv = list.MainDiv;
-                var items = list.Items;
-
-                var i = 0;
-
-                if (items.length >= data.TotalToShow) {
-                    for (i = 0; i < data.Messages.length && mainDiv.hasChildNodes(); i++) {
-                        items.pop();
-                        mainDiv.removeChild(mainDiv.firstChild);
-                    }
-                }
-
-                for (i = 0; i < data.Messages.length; i++) {
-                    var newMessage = data.Messages[i];
-
-                    var newItemDiv = document.createElement('div');
-                    var newItemInnerDiv = document.createElement('div');
-                    newItemInnerDiv.innerHTML = newMessage.Message;
-                    newItemDiv.appendChild(newItemInnerDiv);
-                    $(newItemDiv).animateCss(data.AddEventAnimationName, function () { });
-
-                    mainDiv.appendChild(newItemDiv);
-                    items.unshift({ id: data.Messages[i].ID, div: newItemDiv });
-                }
-
-                for (i = 0; i < data.DeletedMessages.length; i++) {
-                    for (j = 0; j < items.length; j++) {
-                        if (data.DeletedMessages[i] == items[j].id) {
-                            mainDiv.removeChild(items[j].div);
-                            items.splice(j, 1);
-                            break;
-                        }
-                    }
-                }
-            }
-
-            function mixerClipPacket(data) {
-
+            function streamClipPacket(data) {
                 var addedElement = document.createElement('video');
                 addedElement.id = data.ID;
                 addedElement.frameBorder = 0;
@@ -614,7 +444,7 @@
                 addedElement.volume = data.VolumeDecimal;
 
                 var sourceElement = document.createElement('source');
-                sourceElement.src = data.URL;
+                sourceElement.src = data.FullLink;
                 addedElement.appendChild(sourceElement);
 
                 addWaitRemoveElement(data, addedElement);
@@ -633,174 +463,170 @@
                 });
             }
 
-            function leaderboardPacket(data) {
+            function listPacket(data) {
 
+                var widget = {};
                 if (!widgetData.has(data.ID)) {
-                    var list = {};
+                    widgetData.set(data.ID, widget);
 
-                    widgetData.set(data.ID, list);
+                    widget.MainDiv = document.createElement('div');
+                    widget.Items = [];
 
-                    list.MainDiv = document.createElement('div');
-                    list.Items = [];
-
-                    addWaitRemoveElement(data, list.MainDiv);
+                    addWaitRemoveElement(data, widget.MainDiv);
                 }
 
-                var list = widgetData.get(data.ID);
-                var mainDiv = list.MainDiv;
+                widget = widgetData.get(data.ID);
+                var mainDiv = widget.MainDiv;
 
-                data.TotalLeftToRemove = mainDiv.children.length;
+                for (i = 0; i < data.Items.length; i++) {
+                    var item = data.Items[i];
 
-                for (var i = 0; i < mainDiv.children.length; i++) {
-                    $(mainDiv.children[i]).animateCss(data.RemoveEventAnimationName, function (animatedDiv) {
-                        animatedDiv.style.visibility = 'hidden';
-                        data.TotalLeftToRemove--;
+                    if (item.Remove) {
+                        for (j = 0; j < widget.Items.length; j++) {
+                            if (widget.Items[j].id === item.ID) {
+                                removeListItem(data, j, function () { });
+                            }
+                        }
+                    }
+                    else if (item.Add) {
+                        if (item.Position > 0) {
+                            for (j = 0; j < widget.Items.length; j++) {
+                                if (widget.Items[j].id === item.ID) {
+                                    removeListItem(data, j, function () {
+                                        addListItem(data, item);
+                                    });
+                                    return;
+                                }
+                            }
+                            addListItem(data, item);
+                        }
+                        else {
+                            addListItem(data, item);
+                        }
+                    }
+                }
+            }
+
+            function removeListItem(data, index, removeFunction) {
+                var widget = widgetData.get(data.ID);
+                var mainDiv = widget.MainDiv;
+                var divToRemove = widget.Items[index].div;
+
+                widget.Items.splice(index, 1);
+                $(divToRemove).animateCss(data.Effects.ExitAnimationName, function () {
+                    mainDiv.removeChild(divToRemove);
+                    removeFunction();
+                });
+            }
+
+            function addListItem(data, item) {
+                var widget = widgetData.get(data.ID);
+                var mainDiv = widget.MainDiv;
+
+                if (widget.Items.length >= data.TotalToShow) {
+                    while (widget.Items.length > data.TotalToShow) {
+                        removeListItem(data, 0, function () { });
+                    }
+
+                    removeListItem(data, 0, function () {
+                        addListItem(data, item);
                     });
                 }
-
-                leaderboardAddItems(data, mainDiv);
-            }
-
-            function leaderboardAddItems(data, mainDiv) {
-                if (data.TotalLeftToRemove > 0) {
-                    setTimeout(function () {
-                        leaderboardAddItems(data, mainDiv);
-                    }, 200);
-                }
                 else {
+                    var newItemDiv = document.createElement('div');
+                    var newItemInnerDiv = document.createElement('div');
+                    var newItem = { id: item.ID, div: newItemDiv, item: item };
 
-                    while (mainDiv.hasChildNodes()) {
-                        mainDiv.removeChild(mainDiv.lastChild);
+                    newItemInnerDiv.innerHTML = item.HTML;
+                    newItemDiv.appendChild(newItemInnerDiv);
+                    $(newItemDiv).animateCss(data.Effects.EntranceAnimationName, function () { });
+
+                    if (item.Position > 0) {
+                        mainDiv.insertBefore(newItemDiv, mainDiv.children[item.Position - 1]);
+                        widget.Items.splice(item.Position - 1, 0, newItem);
+                    }
+                    else {
+                        mainDiv.appendChild(newItemDiv);
+                        widget.Items.push(newItem);
                     }
 
-                    if (data.LeaderboardEntries.length > 0) {
-                        var newItemDiv;
-                        for (var i = 0; i < data.LeaderboardEntries.length; i++) {
-                            newItemDiv = document.createElement('div');
-                            newItemDiv.innerHTML = data.LeaderboardEntries[i];
-                            mainDiv.appendChild(newItemDiv);
-                            $(newItemDiv).animateCss(data.AddEventAnimationName, function () { });
-                        }
-
-                        for (var i = data.LeaderboardEntries.length; i < data.TotalToShow; i++) {
-                            var itemDiv = document.createElement('div');
-                            itemDiv.style.height = $(newItemDiv).outerHeight(true) + 'px';
-                            mainDiv.appendChild(itemDiv);
-                        }
+                    if (data.FadeOut != null && data.FadeOut > 0) {
+                        setTimeout(function () {
+                            $(newItemDiv).animateCss("fadeOut", function ()
+                            {
+                                var index = widget.Items.indexOf(newItem);
+                                if (index !== -1) {
+                                    widget.Items.splice(index, 1);
+                                    mainDiv.removeChild(newItemDiv);
+                                }
+                            });
+                        }, data.FadeOut * 1000);
                     }
                 }
             }
 
-            // Timer Functions
+            function tickerTapeShowPacket(data) {
+                var widget = getCreatePersistentElement(data);
+                widget.Items = [];
+                widget.MainDiv.style.cssText += 'width: ' + data.Width + 'px; max-width: ' + data.Width + 'px; min-width: ' + data.Width + 'px;';
+                widget.MainDiv.style.removeProperty('left');
+                widget.MainDiv.style.removeProperty('transform');
+                widget.Marquee = document.createElement('marquee');
+                widget.Marquee.setAttribute("behavior", "scroll");
+                widget.Marquee.setAttribute("direction", "left");
+                widget.MainDiv.appendChild(widget.Marquee);
+            }
 
-            function timerPacket(data) {
-                if (!itemDictionary[data.ID]) {
-                    var addedElement = document.createElement('div');
+            function tickerTapeUpdatePacket(data) {
+                var widget = getCreatePersistentElement(data);
 
-                    timerUpdate(data, addedElement);
+                for (i = 0; i < data.Items.length; i++) {
+                    while (widget.Items.length >= data.TotalToShow) {
+                        var divToRemove = widget.Items[0].div;
+                        widget.Items.splice(0, 1);
+                        widget.Marquee.removeChild(divToRemove);
+                    }
 
-                    addWaitRemoveElement(data, addedElement);
+                    var item = data.Items[i];
+
+                    var newItemDiv = document.createElement('div');
+                    newItemDiv.innerHTML = item.HTML;
+                    newItemDiv = newItemDiv.firstChild;
+
+                    var newItem = { id: item.ID, div: newItemDiv, item: item };
+
+                    widget.Marquee.appendChild(newItemDiv);
+                    widget.Items.push(newItem);
                 }
             }
 
-            function timerUpdate(data, mainDiv) {
-
-                var hours = Math.floor(data.TotalLength / 3600);
-                var minutes = Math.floor((data.TotalLength - (hours * 3600)) / 60);
-                var seconds = data.TotalLength - (hours * 3600) - (minutes * 60);
-
-                if (hours < 10) { hours = "0" + hours; }
-                if (minutes < 10) { minutes = "0" + minutes; }
-                if (seconds < 10) { seconds = "0" + seconds; }
-                var timeText = hours + ':' + minutes + ':' + seconds;
-
-                mainDiv.innerHTML = data.HTMLText.replace("{TIME}", timeText);
-
-                if (data.TotalLength > 0) {
-                    setTimeout(function () {
-                        data.TotalLength--;
-                        timerUpdate(data, mainDiv);
-                    }, 1000);
-                }
-                else {
-                    mainDiv.innerHTML = "";
-                }
+            function sparkCrystalShowPacket(data) {
+                var widget = getCreatePersistentElement(data);
+                widget.MainDiv.innerHTML = data.HTML;
             }
 
-            // Timer Train Functions
-
-            function timerTrainPacket(data) {
-                if (!widgetData.has(data.ID)) {
-                    var newTimer = {};
-
-                    widgetData.set(data.ID, newTimer);
-
-                    newTimer.MainDiv = document.createElement('div');
-                    newTimer.TotalSeconds = data.SecondsToAdd;
-
-                    timerTrainUpdate(data, newTimer);
-
-                    addWaitRemoveElement(data, newTimer.MainDiv);
-                }
-                else {
-                    var timer = widgetData.get(data.ID);
-                    timer.TotalSeconds += data.SecondsToAdd;
-                }
-            }
-
-            function timerTrainUpdate(data, timer) {
-
-                var hours = Math.floor(timer.TotalSeconds / 3600);
-                var minutes = Math.floor((timer.TotalSeconds - (hours * 3600)) / 60);
-                var seconds = timer.TotalSeconds - (hours * 3600) - (minutes * 60);
-
-                if (hours < 10) { hours = "0" + hours; }
-                if (minutes < 10) { minutes = "0" + minutes; }
-                if (seconds < 10) { seconds = "0" + seconds; }
-                var timeText = hours + ':' + minutes + ':' + seconds;
-
-                timer.MainDiv.innerHTML = data.HTMLText.replace("{TIME}", timeText);
-
-                if (timer.TotalSeconds > 0) {
-                    setTimeout(function () {
-                        timer.TotalSeconds--;
-                        timerTrainUpdate(data, timer);
-                    }, 1000);
-                }
-                else {
-                    timer.MainDiv.innerHTML = "";
-                    removePacket(data);
-                }
-            }
-
-            function streamBossPacket(data) {
-                if (!widgetData.has(data.ID)) {
-                    var addedElement = document.createElement('div');
-
-                    widgetData.set(data.ID, addedElement);
-
-                    addWaitRemoveElement(data, addedElement);
-                }
-
-                var div = widgetData.get(data.ID);
-                div.innerHTML = data.HTMLText;
+            function sparkCrystalUpdatePacket(data) {
+                sparkCrystalShowPacket(data);
 
                 var divContainer = itemDictionary[data.ID];
                 if (divContainer != null) {
-                    if (data.NewBoss) {
-                        $(divContainer).animateCss(data.NewBossAnimationName, function () { });
+                    if (data.MilestoneReached) {
+                        $(divContainer).animateCss(data.MilestoneReachedAnimationName, function () { });
                     }
-                    else if (data.DamageTaken) {
-                        $(divContainer).animateCss(data.DamageAnimationName, function () { });
+                    else if (data.ProgressMade) {
+                        $(divContainer).animateCss(data.ProgressAnimationName, function () { });
                     }
-                }  
+                }
             }
 
-            function customPacket(data) {
-                var addedElement = document.createElement('div');
-                addedElement.innerHTML = data.HTMLText;
-
-                addWaitRemoveElement(data, addedElement);
+            function getCreatePersistentElement(data) {
+                if (!widgetData.has(data.ID)) {
+                    var widget = {};
+                    widgetData.set(data.ID, widget);
+                    widget.MainDiv = document.createElement('div');
+                    addWaitRemoveElement(data, widget.MainDiv);
+                }
+                return widgetData.get(data.ID);
             }
 
             function textToSpeechPacket(data) {
@@ -808,7 +634,10 @@
                     responsiveVoice.speak(data.Text, data.Voice, { pitch: data.Pitch, rate: data.Rate, volume: data.Volume });
                 }
                 else {
-                    var data = { Horizontal: 50, Vertical: 50, Duration: 3 };
+                    var data = {
+                        Position: { Horizontal: 50, Vertical: 50, IsPercentagePosition: true },
+                        Effects: { EntranceAnimationName: 'fadeIn', VisibleAnimationName: '', ExitAnimationName: 'fadeOut', Duration: 3 }
+                    };
                     addWaitRemoveElement(data, noTextToSpeechDiv);
                 }
             }
@@ -816,12 +645,19 @@
             function addWaitRemoveElement(data, addedElement, addToDiv = true) {
                 if (addedElement != null) {
 
-                    addedElement.style.cssText += 'position: absolute;  margin: 0px;'
-                    if (data.IsPixelPosition) {
-                        addedElement.style.cssText += 'left: ' + data.Horizontal.toString() + 'px; top: ' + data.Vertical.toString() + 'px;'
+                    addedElement.style.cssText += 'position: absolute; margin: 0px;'
+                    if (data.Position.IsPixelPosition) {
+                        addedElement.style.cssText += 'left: ' + data.Position.Horizontal.toString() + 'px; top: ' + data.Position.Vertical.toString() + 'px;'
                     }
                     else {
-                        addedElement.style.cssText += 'left: ' + data.Horizontal.toString() + '%; top: ' + data.Vertical.toString() + '%; transform: translate(-50%, -50%);'
+                        addedElement.style.cssText += 'left: ' + data.Position.Horizontal.toString() + '%; top: ' + data.Position.Vertical.toString() + '%;'
+                    }
+
+                    if (data.ForceBottomAlign) {
+                        addedElement.style.cssText += "transform: translate(-50%, -100%);";
+                    }
+                    else if (data.Position.IsPercentagePosition) {
+                        addedElement.style.cssText += "transform: translate(-50%, -50%);";
                     }
 
                     removePacket(data);
@@ -829,35 +665,39 @@
                     var divContainer = document.createElement('div');
                     divContainer.id = data.ID;
                     divContainer.style.cssText += 'position: absolute; width: 100%; max-width: 100%; min-width: 100%; height: 100%; max-height: 100%; min-height: 100%; margin: 0px;';
-                    if (data.Duration > 0) {
+
+                    if (data.Position != null && data.Position.Layer != null && data.Position.Layer > 0) {
+                        divContainer.style.zIndex = data.Position.Layer;
+                    }
+                    else if (data.Effects != null && data.Effects.Duration != null && data.Effects.Duration > 0) {
                         divContainer.style.zIndex = zIndexCounter++;
                     }
                     divContainer.appendChild(addedElement);
 
                     itemDictionary[data.ID] = divContainer;
 
-                    if (data.Duration > 0) {
-                        $(divContainer).animateCss(data.EntranceAnimationName, function () {
+                    if (data.Effects != null && data.Effects.Duration != null && data.Effects.Duration > 0) {
+                        $(divContainer).animateCss(data.Effects.EntranceAnimationName, function () {
 
                             setTimeout(function () {
 
-                                $(divContainer).animateCss(data.VisibleAnimationName);
+                                $(divContainer).animateCss(data.Effects.VisibleAnimationName);
 
                                 setTimeout(function () {
 
                                     var elementToAnimate = divContainer;
-                                    if (data.ExitAnimationName && data.ExitAnimationName == 'hinge') {
+                                    if (data.Effects.ExitAnimationName && data.Effects.ExitAnimationName == 'hinge') {
                                         elementToAnimate = addedElement;
                                     }
 
-                                    $(elementToAnimate).animateCss(data.ExitAnimationName, function () {
+                                    $(elementToAnimate).animateCss(data.Effects.ExitAnimationName, function () {
 
                                         removePacket(data);
                                     });
 
-                                }, (data.Duration * 1000 * 2) / 3);
+                                }, (data.Effects.Duration * 1000 * 2) / 3);
 
-                            }, (data.Duration * 1000) / 3);
+                            }, (data.Effects.Duration * 1000) / 3);
                         });
                     }
 

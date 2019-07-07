@@ -18,24 +18,26 @@ namespace MixItUp.WPF.Controls.Overlay
             this.viewModel = new OverlayVideoItemViewModel();
         }
 
-        public OverlayVideoItemControl(OverlayVideoItem item)
+        public OverlayVideoItemControl(OverlayVideoItemModel item)
         {
             InitializeComponent();
 
             this.viewModel = new OverlayVideoItemViewModel(item);
         }
 
-        public override void SetItem(OverlayItemBase item)
+        public override OverlayItemViewModelBase GetViewModel() { return this.viewModel; }
+
+        public override void SetItem(OverlayItemModelBase item)
         {
             if (item != null)
             {
-                this.viewModel = new OverlayVideoItemViewModel((OverlayVideoItem)item);
+                this.viewModel = new OverlayVideoItemViewModel((OverlayVideoItemModel)item);
             }
         }
 
-        public override OverlayItemBase GetItem()
+        public override OverlayItemModelBase GetItem()
         {
-            return this.viewModel.GetItem();
+            return this.viewModel.GetOverlayItem();
         }
 
         protected override async Task OnLoaded()

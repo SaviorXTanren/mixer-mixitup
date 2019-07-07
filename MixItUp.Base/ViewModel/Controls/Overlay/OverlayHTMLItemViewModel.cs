@@ -15,19 +15,21 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         }
         private string html;
 
+        public override bool SupportsRefreshUpdating { get { return true; } }
+
         public OverlayHTMLItemViewModel() { }
 
-        public OverlayHTMLItemViewModel(OverlayHTMLItem item)
+        public OverlayHTMLItemViewModel(OverlayHTMLItemModel item)
             : this()
         {
-            this.HTML = item.HTMLText;
+            this.HTML = item.HTML;
         }
 
-        public override OverlayItemBase GetItem()
+        public override OverlayItemModelBase GetOverlayItem()
         {
             if (!string.IsNullOrEmpty(this.HTML))
             {
-                return new OverlayHTMLItem(this.HTML);
+                return new OverlayHTMLItemModel(this.HTML);
             }
             return null;
         }

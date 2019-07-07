@@ -3,7 +3,7 @@ using MixItUp.Base.Util;
 
 namespace MixItUp.Base.ViewModel.Controls.Overlay
 {
-    public class OverlayTimerTrainItemViewModel : OverlayCustomHTMLItemViewModelBase
+    public class OverlayTimerTrainItemViewModel : OverlayHTMLTemplateItemViewModelBase
     {
         public string MinimumSecondsToShowString
         {
@@ -118,7 +118,8 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         public OverlayTimerTrainItemViewModel()
         {
             this.Font = "Arial";
-            this.HTML = OverlayTimerTrain.HTMLTemplate;
+            this.size = 24;
+            this.HTML = OverlayTimerTrainItemModel.HTMLTemplate;
 
             this.followBonus = 1.0;
             this.hostBonus = 1.0;
@@ -128,15 +129,13 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.emberBonus = 0.1;
         }
 
-        public OverlayTimerTrainItemViewModel(OverlayTimerTrain item)
+        public OverlayTimerTrainItemViewModel(OverlayTimerTrainItemModel item)
             : this()
         {
             this.minimumSecondsToShow = item.MinimumSecondsToShow;
             this.size = item.TextSize;
             this.Font = item.TextFont;
-
-            this.Color = item.TextColor;
-            this.Color = ColorSchemes.GetColorName(this.Color);
+            this.Color = ColorSchemes.GetColorName(item.TextColor);
 
             this.followBonus = item.FollowBonus;
             this.hostBonus = item.HostBonus;
@@ -145,16 +144,16 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.sparkBonus = item.SparkBonus;
             this.emberBonus = item.EmberBonus;
 
-            this.HTML = item.HTMLText;
+            this.HTML = item.HTML;
         }
 
-        public override OverlayItemBase GetItem()
+        public override OverlayItemModelBase GetOverlayItem()
         {
             if (!string.IsNullOrEmpty(this.Font) && !string.IsNullOrEmpty(this.Color) && !string.IsNullOrEmpty(this.HTML) && this.size > 0 && this.minimumSecondsToShow > 0)
             {
                 this.Color = ColorSchemes.GetColorCode(this.Color);
 
-                return new OverlayTimerTrain(this.HTML, this.minimumSecondsToShow, this.Color, this.Font, this.size, this.followBonus, this.hostBonus,
+                return new OverlayTimerTrainItemModel(this.HTML, this.minimumSecondsToShow, this.Color, this.Font, this.size, this.followBonus, this.hostBonus,
                     this.subBonus, this.donationBonus, this.sparkBonus, this.emberBonus);
             }
             return null;

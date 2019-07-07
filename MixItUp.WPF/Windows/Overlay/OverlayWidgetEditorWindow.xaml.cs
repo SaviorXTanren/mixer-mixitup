@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Controls.Overlay;
 using MixItUp.Base.ViewModel.Window.Overlay;
 using MixItUp.WPF.Controls.Overlay;
 using System.Collections.Generic;
@@ -16,10 +17,10 @@ namespace MixItUp.WPF.Windows.Overlay
     {
         private OverlayWidgetEditorWindowViewModel viewModel;
 
-        private Dictionary<OverlayWidgetTypeEnum, OverlayItemControl> overlayTypeEditors = new Dictionary<OverlayWidgetTypeEnum, OverlayItemControl>();
+        private Dictionary<OverlayItemModelTypeEnum, OverlayItemControl> overlayTypeEditors = new Dictionary<OverlayItemModelTypeEnum, OverlayItemControl>();
         private OverlayItemControl overlayTypeEditor;
 
-        public OverlayWidgetEditorWindow(OverlayWidget widget)
+        public OverlayWidgetEditorWindow(OverlayWidgetModel widget)
             : this()
         {
             this.viewModel = new OverlayWidgetEditorWindowViewModel(widget);
@@ -42,43 +43,47 @@ namespace MixItUp.WPF.Windows.Overlay
 
             if (this.viewModel.OverlayWidget != null)
             {
-                this.ItemPosition.SetPosition(this.viewModel.OverlayWidget.Position);
+                this.ItemPosition.SetPosition(this.viewModel.OverlayWidget.Item.Position);
 
-                if (this.viewModel.OverlayWidget.Item is OverlayChatMessages) { this.SetGameEditorControl(new OverlayChatMessagesControl((OverlayChatMessages)this.viewModel.OverlayWidget.Item)); }
-                else if (this.viewModel.OverlayWidget.Item is OverlayEventList) { this.SetGameEditorControl(new OverlayEventListControl((OverlayEventList)this.viewModel.OverlayWidget.Item)); }
-                else if (this.viewModel.OverlayWidget.Item is OverlayGameQueue) { this.SetGameEditorControl(new OverlayGameQueueControl((OverlayGameQueue)this.viewModel.OverlayWidget.Item)); }
-                else if (this.viewModel.OverlayWidget.Item is OverlayProgressBar) { this.SetGameEditorControl(new OverlayProgressBarControl((OverlayProgressBar)this.viewModel.OverlayWidget.Item)); }
-                else if (this.viewModel.OverlayWidget.Item is OverlayHTMLItem) { this.SetGameEditorControl(new OverlayHTMLItemControl((OverlayHTMLItem)this.viewModel.OverlayWidget.Item)); }
-                else if (this.viewModel.OverlayWidget.Item is OverlayImageItem) { this.SetGameEditorControl(new OverlayImageItemControl((OverlayImageItem)this.viewModel.OverlayWidget.Item)); }
-                else if (this.viewModel.OverlayWidget.Item is OverlayLeaderboard) { this.SetGameEditorControl(new OverlayLeaderboardControl((OverlayLeaderboard)this.viewModel.OverlayWidget.Item)); }
-                else if (this.viewModel.OverlayWidget.Item is OverlayMixerClip) { this.SetGameEditorControl(new OverlayMixerClipControl((OverlayMixerClip)this.viewModel.OverlayWidget.Item)); }
-                else if (this.viewModel.OverlayWidget.Item is OverlaySongRequests) { this.SetGameEditorControl(new OverlaySongRequestsControl((OverlaySongRequests)this.viewModel.OverlayWidget.Item)); }
-                else if (this.viewModel.OverlayWidget.Item is OverlayStreamBoss) { this.SetGameEditorControl(new OverlayStreamBossControl((OverlayStreamBoss)this.viewModel.OverlayWidget.Item)); }
-                else if (this.viewModel.OverlayWidget.Item is OverlayTextItem) { this.SetGameEditorControl(new OverlayTextItemControl((OverlayTextItem)this.viewModel.OverlayWidget.Item)); }
-                else if (this.viewModel.OverlayWidget.Item is OverlayTimer) { this.SetGameEditorControl(new OverlayTimerControl((OverlayTimer)this.viewModel.OverlayWidget.Item)); }
-                else if (this.viewModel.OverlayWidget.Item is OverlayTimerTrain) { this.SetGameEditorControl(new OverlayTimerTrainControl((OverlayTimerTrain)this.viewModel.OverlayWidget.Item)); }
-                else if (this.viewModel.OverlayWidget.Item is OverlayVideoItem) { this.SetGameEditorControl(new OverlayVideoItemControl((OverlayVideoItem)this.viewModel.OverlayWidget.Item)); }
-                else if (this.viewModel.OverlayWidget.Item is OverlayWebPageItem) { this.SetGameEditorControl(new OverlayWebPageItemControl((OverlayWebPageItem)this.viewModel.OverlayWidget.Item)); }
-                else if (this.viewModel.OverlayWidget.Item is OverlayYouTubeItem) { this.SetGameEditorControl(new OverlayYouTubeItemControl((OverlayYouTubeItem)this.viewModel.OverlayWidget.Item)); }
+                if (this.viewModel.OverlayWidget.Item is OverlayHTMLItemModel) { this.SetGameEditorControl(new OverlayHTMLItemControl((OverlayHTMLItemModel)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayChatMessagesListItemModel) { this.SetGameEditorControl(new OverlayChatMessagesListItemControl((OverlayChatMessagesListItemModel)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayEventListItemModel) { this.SetGameEditorControl(new OverlayEventListItemControl((OverlayEventListItemModel)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayGameQueueListItemModel) { this.SetGameEditorControl(new OverlayGameQueueListItemControl((OverlayGameQueueListItemModel)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayProgressBarItemModel) { this.SetGameEditorControl(new OverlayProgressBarItemControl((OverlayProgressBarItemModel)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayImageItemModel) { this.SetGameEditorControl(new OverlayImageItemControl((OverlayImageItemModel)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayLeaderboardListItemModel) { this.SetGameEditorControl(new OverlayLeaderboardListItemControl((OverlayLeaderboardListItemModel)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayStreamClipItemModel) { this.SetGameEditorControl(new OverlayStreamClipItemControl((OverlayStreamClipItemModel)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlaySongRequestsListItemModel) { this.SetGameEditorControl(new OverlaySongRequestsListItemControl((OverlaySongRequestsListItemModel)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlaySparkCrystalItemModel) { this.SetGameEditorControl(new OverlaySparkCrystalItemControl((OverlaySparkCrystalItemModel)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayStreamBossItemModel) { this.SetGameEditorControl(new OverlayStreamBossItemControl((OverlayStreamBossItemModel)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayTextItemModel) { this.SetGameEditorControl(new OverlayTextItemControl((OverlayTextItemModel)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayTickerTapeListItemModel) { this.SetGameEditorControl(new OverlayTickerTapeListItemControl((OverlayTickerTapeListItemModel)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayTimerItemModel) { this.SetGameEditorControl(new OverlayTimerItemControl((OverlayTimerItemModel)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayTimerTrainItemModel) { this.SetGameEditorControl(new OverlayTimerTrainItemControl((OverlayTimerTrainItemModel)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayVideoItemModel) { this.SetGameEditorControl(new OverlayVideoItemControl((OverlayVideoItemModel)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayWebPageItemModel) { this.SetGameEditorControl(new OverlayWebPageItemControl((OverlayWebPageItemModel)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayYouTubeItemModel) { this.SetGameEditorControl(new OverlayYouTubeItemControl((OverlayYouTubeItemModel)this.viewModel.OverlayWidget.Item)); }
             }
             else
             {
-                this.overlayTypeEditors.Add(OverlayWidgetTypeEnum.ChatMessages, new OverlayChatMessagesControl());
-                this.overlayTypeEditors.Add(OverlayWidgetTypeEnum.EventList, new OverlayEventListControl());
-                this.overlayTypeEditors.Add(OverlayWidgetTypeEnum.GameQueue, new OverlayGameQueueControl());
-                this.overlayTypeEditors.Add(OverlayWidgetTypeEnum.ProgressBar, new OverlayProgressBarControl());
-                this.overlayTypeEditors.Add(OverlayWidgetTypeEnum.HTML, new OverlayHTMLItemControl());
-                this.overlayTypeEditors.Add(OverlayWidgetTypeEnum.Image, new OverlayImageItemControl());
-                this.overlayTypeEditors.Add(OverlayWidgetTypeEnum.Leaderboard, new OverlayLeaderboardControl());
-                this.overlayTypeEditors.Add(OverlayWidgetTypeEnum.MixerClip, new OverlayMixerClipControl());
-                this.overlayTypeEditors.Add(OverlayWidgetTypeEnum.SongRequests, new OverlaySongRequestsControl());
-                this.overlayTypeEditors.Add(OverlayWidgetTypeEnum.StreamBoss, new OverlayStreamBossControl());
-                this.overlayTypeEditors.Add(OverlayWidgetTypeEnum.Text, new OverlayTextItemControl());
-                this.overlayTypeEditors.Add(OverlayWidgetTypeEnum.Timer, new OverlayTimerControl());
-                this.overlayTypeEditors.Add(OverlayWidgetTypeEnum.TimerTrain, new OverlayTimerTrainControl());
-                this.overlayTypeEditors.Add(OverlayWidgetTypeEnum.Video, new OverlayVideoItemControl());
-                this.overlayTypeEditors.Add(OverlayWidgetTypeEnum.WebPage, new OverlayWebPageItemControl());
-                this.overlayTypeEditors.Add(OverlayWidgetTypeEnum.YouTube, new OverlayYouTubeItemControl());
+                this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.ChatMessages, new OverlayChatMessagesListItemControl());
+                this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.EventList, new OverlayEventListItemControl());
+                this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.GameQueue, new OverlayGameQueueListItemControl());
+                this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.ProgressBar, new OverlayProgressBarItemControl());
+                this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.HTML, new OverlayHTMLItemControl());
+                this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.Image, new OverlayImageItemControl());
+                this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.Leaderboard, new OverlayLeaderboardListItemControl());
+                this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.StreamClip, new OverlayStreamClipItemControl());
+                this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.SongRequests, new OverlaySongRequestsListItemControl());
+                this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.SparkCrystal, new OverlaySparkCrystalItemControl());
+                this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.StreamBoss, new OverlayStreamBossItemControl());
+                this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.Text, new OverlayTextItemControl());
+                this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.TickerTape, new OverlayTickerTapeListItemControl());
+                this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.Timer, new OverlayTimerItemControl());
+                this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.TimerTrain, new OverlayTimerTrainItemControl());
+                this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.Video, new OverlayVideoItemControl());
+                this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.WebPage, new OverlayWebPageItemControl());
+                this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.YouTube, new OverlayYouTubeItemControl());
             }
         }
 
@@ -89,48 +94,47 @@ namespace MixItUp.WPF.Windows.Overlay
 
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            await this.RunAsyncOperation(async () =>
+            await this.RunAsyncOperation((System.Func<Task>)(async () =>
             {
                 if (await this.viewModel.Validate())
                 {
-                    OverlayItemPosition position = this.ItemPosition.GetPosition();
+                    OverlayItemPositionModel position = this.ItemPosition.GetPosition();
                     if (position == null)
                     {
                         await DialogHelper.ShowMessage("A valid position for this overlay widget must be selected");
                         return;
                     }
 
-                    OverlayItemBase overlayItem = overlayTypeEditor.GetItem();
+                    OverlayItemModelBase overlayItem = overlayTypeEditor.GetItem();
                     if (overlayItem == null)
                     {
                         await DialogHelper.ShowMessage("There are missing details for the overlay item");
                         return;
                     }
 
-                    if (this.viewModel.OverlayWidget == null)
-                    {
-                        OverlayWidget widget = new OverlayWidget(this.viewModel.Name, this.viewModel.SelectedOverlayEndpoint, overlayItem, position, this.viewModel.DontRefresh);
-                        ChannelSession.Settings.OverlayWidgets.Add(widget);
-                    }
-                    else
-                    {
-                        overlayItem.ID = this.viewModel.OverlayWidget.Item.ID;
+                    overlayItem.Position = position;
 
-                        this.viewModel.OverlayWidget.Name = this.viewModel.Name;
-                        this.viewModel.OverlayWidget.OverlayName = this.viewModel.SelectedOverlayEndpoint;
-                        this.viewModel.OverlayWidget.Item = overlayItem;
-                        this.viewModel.OverlayWidget.Position = position;
-                        this.viewModel.OverlayWidget.DontRefresh = this.viewModel.DontRefresh;
+                    OverlayWidgetModel widget = new OverlayWidgetModel(this.viewModel.Name, this.viewModel.SelectedOverlayEndpoint, overlayItem, (int)this.viewModel.RefreshTime);
+                    if (this.viewModel.OverlayWidget != null)
+                    {
+                        await this.viewModel.OverlayWidget.HideItem();
+                        await this.viewModel.OverlayWidget.Item.Disable();
+                        ChannelSession.Settings.OverlayWidgets.Remove(this.viewModel.OverlayWidget);
+                        overlayItem.ID = this.viewModel.OverlayWidget.Item.ID;
                     }
+                    ChannelSession.Settings.OverlayWidgets.Add(widget);
 
                     this.Close();
                 }
-            });
+            }));
         }
 
         private void SetGameEditorControl(OverlayItemControl overlayTypeEditor)
         {
             this.MainContentControl.Content = this.overlayTypeEditor = overlayTypeEditor;
+
+            OverlayItemViewModelBase itemViewModel = this.overlayTypeEditor.GetViewModel();
+            this.viewModel.SupportsRefreshUpdating = itemViewModel.SupportsRefreshUpdating;
         }
     }
 }

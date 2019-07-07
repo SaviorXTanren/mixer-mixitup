@@ -1,8 +1,6 @@
 ﻿using Mixer.Base.Model.Client;
 using Mixer.Base.Web;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
@@ -17,6 +15,8 @@ namespace MixItUp.Base.Util
         private LockedList<WebSocketServerBase> webSocketServers = new LockedList<WebSocketServerBase>();
 
         public WebSocketHttpListenerServerBase(string address) : base(address) { }
+
+        public int TotalConnectedClients { get { return this.webSocketServers.Count; } }
 
         public new async Task End()
         {

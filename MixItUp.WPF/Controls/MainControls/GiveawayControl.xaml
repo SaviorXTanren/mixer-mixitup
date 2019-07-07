@@ -51,17 +51,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" HorizontalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="20" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <TextBox Grid.Column="0" Text="{Binding Item}" HorizontalAlignment="Center" Width="200" MaterialDesign:HintAssist.Hint="Giveaway Item" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-                    <ComboBox Grid.Column="2" ItemsSource="{Binding EntryTypes}" SelectedItem="{Binding EntryTypeString}" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="Entry Method" Width="150" />
-                </Grid>
+                <TextBox Grid.Row="0" Text="{Binding Item}" HorizontalAlignment="Center" Width="300" MaterialDesign:HintAssist.Hint="Giveaway Item" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                 <Grid Grid.Row="2" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
@@ -97,7 +87,7 @@
                     <CheckBox Grid.Column="6" IsChecked="{Binding AllowPastWinners}" />
                 </Grid>
 
-                <Grid Visibility="{Binding IsCommandBased, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Row="6" HorizontalAlignment="Center">
+                <Grid Grid.Row="6" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="20" />
@@ -107,18 +97,6 @@
                     <TextBox Grid.Column="0" Text="{Binding Command}" Width="120" MaterialDesign:HintAssist.Hint="Command (No '!' needed)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
 
                     <RequirementControls:RequirementControl x:Name="Requirements" Grid.Column="2" />
-                </Grid>
-
-                <Grid Visibility="{Binding IsDonationTipBased, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Row="6" HorizontalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="20" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <ComboBox ItemsSource="{Binding EntryQualificationTypes}" SelectedItem="{Binding EntryQualificationTypeString}" Grid.Column="0" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="Entry Qualification" Width="200" />
-
-                    <TextBox Text="{Binding DonationAmountEntryQualifier}" IsEnabled="{Binding EntryAmountRequired}" Grid.Column="2" Width="175" MaterialDesign:HintAssist.Hint="Required Amount (EX: 1.00)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                 </Grid>
 
                 <Grid Grid.Row="8" HorizontalAlignment="Center">

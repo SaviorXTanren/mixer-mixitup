@@ -4,7 +4,7 @@ using MixItUp.Base.Util;
 
 namespace MixItUp.Base.ViewModel.Controls.Overlay
 {
-    public class OverlayTimerItemViewModel : OverlayCustomHTMLItemViewModelBase
+    public class OverlayTimerItemViewModel : OverlayHTMLTemplateItemViewModelBase
     {
         public string TotalLengthString
         {
@@ -69,31 +69,30 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         public OverlayTimerItemViewModel()
         {
             this.Font = "Arial";
-            this.HTML = OverlayTimer.HTMLTemplate;
+            this.size = 24;
+            this.HTML = OverlayTimerItemModel.HTMLTemplate;
         }
 
-        public OverlayTimerItemViewModel(OverlayTimer item)
+        public OverlayTimerItemViewModel(OverlayTimerItemModel item)
             : this()
         {
             this.totalLength = item.TotalLength;
             this.size = item.TextSize;
             this.Font = item.TextFont;
+            this.Color = ColorSchemes.GetColorName(item.TextColor);
 
-            this.Color = item.TextColor;
-            this.Color = ColorSchemes.GetColorName(this.Color);
-
-            this.HTML = item.HTMLText;
+            this.HTML = item.HTML;
 
             this.TimerCompleteCommand = item.TimerCompleteCommand;
         }
 
-        public override OverlayItemBase GetItem()
+        public override OverlayItemModelBase GetOverlayItem()
         {
             if (!string.IsNullOrEmpty(this.Font) && !string.IsNullOrEmpty(this.Color) && !string.IsNullOrEmpty(this.HTML) && this.size > 0 && this.totalLength > 0)
             {
                 this.Color = ColorSchemes.GetColorCode(this.Color);
 
-                return new OverlayTimer(this.HTML, this.totalLength, this.Color, this.Font, size, this.TimerCompleteCommand);
+                return new OverlayTimerItemModel(this.HTML, this.totalLength, this.Color, this.Font, size, this.TimerCompleteCommand);
             }
             return null;
         }

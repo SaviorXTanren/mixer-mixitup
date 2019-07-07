@@ -5,7 +5,7 @@ using MixItUp.Base.Util;
 
 namespace MixItUp.Base.ViewModel.Controls.Overlay
 {
-    public class OverlayStreamBossItemViewModel : OverlayCustomHTMLItemViewModelBase
+    public class OverlayStreamBossItemViewModel : OverlayHTMLTemplateItemViewModelBase
     {
         public string StartingHealthString
         {
@@ -83,6 +83,28 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             }
         }
         private double emberBonus;
+
+        public string HealingBonusString
+        {
+            get { return this.healingBonus.ToString(); }
+            set
+            {
+                this.healingBonus = this.GetPositiveDoubleFromString(value);
+                this.NotifyPropertyChanged();
+            }
+        }
+        private double healingBonus;
+
+        public string OverkillBonusString
+        {
+            get { return this.overkillBonus.ToString(); }
+            set
+            {
+                this.overkillBonus = this.GetPositiveDoubleFromString(value);
+                this.NotifyPropertyChanged();
+            }
+        }
+        private double overkillBonus;
 
         public string WidthString
         {
@@ -166,22 +188,22 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             get { return EnumHelper.GetEnumName(this.damageAnimation); }
             set
             {
-                this.damageAnimation = EnumHelper.GetEnumValueFromString<OverlayEffectVisibleAnimationTypeEnum>(value);
+                this.damageAnimation = EnumHelper.GetEnumValueFromString<OverlayItemEffectVisibleAnimationTypeEnum>(value);
                 this.NotifyPropertyChanged();
             }
         }
-        protected OverlayEffectVisibleAnimationTypeEnum damageAnimation;
+        protected OverlayItemEffectVisibleAnimationTypeEnum damageAnimation;
 
         public string NewBossAnimationString
         {
             get { return EnumHelper.GetEnumName(this.newBossAnimation); }
             set
             {
-                this.newBossAnimation = EnumHelper.GetEnumValueFromString<OverlayEffectVisibleAnimationTypeEnum>(value);
+                this.newBossAnimation = EnumHelper.GetEnumValueFromString<OverlayItemEffectVisibleAnimationTypeEnum>(value);
                 this.NotifyPropertyChanged();
             }
         }
-        protected OverlayEffectVisibleAnimationTypeEnum newBossAnimation;
+        protected OverlayItemEffectVisibleAnimationTypeEnum newBossAnimation;
 
         public CustomCommand NewBossCommand
         {
@@ -213,10 +235,13 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.sparkBonus = 0.01;
             this.emberBonus = 0.1;
 
-            this.HTML = OverlayStreamBoss.HTMLTemplate;
+            this.healingBonus = 1.0;
+            this.overkillBonus = 0.0;
+
+            this.HTML = OverlayStreamBossItemModel.HTMLTemplate;
         }
 
-        public OverlayStreamBossItemViewModel(OverlayStreamBoss item)
+        public OverlayStreamBossItemViewModel(OverlayStreamBossItemModel item)
             : this()
         {
             this.startingHealth = item.StartingHealth;
@@ -227,29 +252,25 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.sparkBonus = item.SparkBonus;
             this.emberBonus = item.EmberBonus;
 
+            this.healingBonus = item.HealingBonus;
+            this.overkillBonus = item.OverkillBonus;
+
             this.width = item.Width;
             this.height = item.Height;
             this.Font = item.TextFont;
 
-            this.TextColor = item.TextColor;
-            this.TextColor = ColorSchemes.GetColorName(this.TextColor);
-
-            this.BorderColor = item.BorderColor;
-            this.BorderColor = ColorSchemes.GetColorName(this.BorderColor);
-
-            this.ProgressColor = item.ProgressColor;
-            this.ProgressColor = ColorSchemes.GetColorName(this.ProgressColor);
-
-            this.BackgroundColor = item.BackgroundColor;
-            this.BackgroundColor = ColorSchemes.GetColorName(this.BackgroundColor);
+            this.TextColor = ColorSchemes.GetColorName(item.TextColor);
+            this.BorderColor = ColorSchemes.GetColorName(item.BorderColor);
+            this.ProgressColor = ColorSchemes.GetColorName(item.ProgressColor);
+            this.BackgroundColor = ColorSchemes.GetColorName(item.BackgroundColor);
 
             this.damageAnimation = item.DamageAnimation;
             this.newBossAnimation = item.NewBossAnimation;
 
-            this.HTML = item.HTMLText;
+            this.HTML = item.HTML;
         }
 
-        public override OverlayItemBase GetItem()
+        public override OverlayItemModelBase GetOverlayItem()
         {
             if (this.startingHealth > 0 && this.width > 0 && this.height > 0 && !string.IsNullOrEmpty(this.HTML))
             {
@@ -258,9 +279,9 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
                 this.ProgressColor = ColorSchemes.GetColorCode(this.ProgressColor);
                 this.BackgroundColor = ColorSchemes.GetColorCode(this.BackgroundColor);
 
-                return new OverlayStreamBoss(this.HTML, this.startingHealth, this.width, this.height, this.TextColor, this.Font, this.BorderColor, this.BackgroundColor,
-                    this.ProgressColor, this.followBonus, this.hostBonus, this.subBonus, this.donationBonus, this.sparkBonus, this.emberBonus, this.damageAnimation, this.newBossAnimation,
-                    this.NewBossCommand);
+                return new OverlayStreamBossItemModel(this.HTML, this.startingHealth, this.width, this.height, this.TextColor, this.Font, this.BorderColor, this.BackgroundColor,
+                    this.ProgressColor, this.followBonus, this.hostBonus, this.subBonus, this.donationBonus, this.sparkBonus, this.emberBonus, this.healingBonus, this.overkillBonus,
+                    this.damageAnimation, this.newBossAnimation, this.NewBossCommand);
             }
             return null;
         }

@@ -88,25 +88,21 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="20" />
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="10" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="20" />
                         </Grid.ColumnDefinitions>
 
                         <ComboBox ItemsSource="{Binding OverlayEndpoints}" SelectedItem="{Binding SelectedOverlayEndpoint}" Grid.Column="0" Width="200" MaterialDesign:HintAssist.Hint="Overlay To Use" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-                        <TextBlock Grid.Column="2" VerticalAlignment="Center">Don't Refresh:</TextBlock>
-                        <ToggleButton Grid.Column="4" IsChecked="{Binding DontRefresh}" />
+                        <TextBox x:Name="RefreshTimeTextBox" Grid.Column="2" Text="{Binding RefreshTimeString}" IsEnabled="{Binding SupportsRefreshUpdating}" MaterialDesign:HintAssist.Hint="Refresh Time (Secs)" Width="130" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                     </Grid>
                 </Grid>
 
-                <Border Grid.Column="2" Style="{StaticResource DefaultBorder}" HorizontalAlignment="Center" Width="350" Height="190">
+                <Border Grid.Column="2" Style="{StaticResource DefaultBorder}" HorizontalAlignment="Center" Width="350" Height="210">
                     <OverlayControls:OverlayItemPositionControl x:Name="ItemPosition" Margin="10" VerticalAlignment="Top" />
                 </Border>
             </Grid>
 
             <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible">
-                <ContentControl Margin="10" x:Name="MainContentControl" />
+                <ContentControl Margin="10" x:Name="MainContentControl" HorizontalAlignment="Center" />
             </ScrollViewer>
 
             <Button x:Name="SaveButton" Grid.Row="4" Margin="0,0,0,10" Click="SaveButton_Click" Width="80">Save</Button>

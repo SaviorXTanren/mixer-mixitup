@@ -1,0 +1,36 @@
+﻿<local:OverlayItemControl x:Class="MixItUp.WPF.Controls.Overlay.OverlayStreamClipItemControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Overlay"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <TextBox Grid.Column="0" Text="{Binding WidthString}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
+
+        <TextBox Grid.Column="2" Text="{Binding HeightString}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
+
+        <TextBlock Grid.Column="4" VerticalAlignment="Center" Margin="0,10,0,0">Volume:</TextBlock>
+        <Slider Value="{Binding Volume}" VerticalAlignment="Center" Grid.Column="6" Width="120" Minimum="0" Maximum="100" Margin="0,-28,0,0" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="Volume" />
+
+        <ComboBox ItemsSource="{Binding EntranceAnimationStrings}" SelectedItem="{Binding EntranceAnimationString}" Grid.Column="8" MaterialDesign:HintAssist.Hint="Entrance Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
+
+        <ComboBox ItemsSource="{Binding ExitAnimationStrings}" SelectedItem="{Binding ExitAnimationString}" Grid.Column="10" MaterialDesign:HintAssist.Hint="Exit Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
+    </Grid>
+</local:OverlayItemControl>

@@ -621,10 +621,10 @@ namespace MixItUp.Base.Util
 
             if (this.ContainsSpecialIdentifier(StreamBossSpecialIdentifierHeader))
             {
-                OverlayWidget streamBossWidget = ChannelSession.Settings.OverlayWidgets.FirstOrDefault(w => w.Item is OverlayStreamBoss);
+                OverlayWidgetModel streamBossWidget = ChannelSession.Settings.OverlayWidgets.FirstOrDefault(w => w.Item is OverlayStreamBossItemModel);
                 if (streamBossWidget != null)
                 {
-                    OverlayStreamBoss streamBossOverlay = (OverlayStreamBoss)streamBossWidget.Item;
+                    OverlayStreamBossItemModel streamBossOverlay = (OverlayStreamBossItemModel)streamBossWidget.Item;
                     if (streamBossOverlay != null && streamBossOverlay.CurrentBoss != null)
                     {
                         await this.HandleUserSpecialIdentifiers(streamBossOverlay.CurrentBoss, StreamBossSpecialIdentifierHeader);

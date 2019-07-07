@@ -1031,7 +1031,7 @@ namespace MixItUp.Base.Commands
                 {
                     if (arguments.Count() > 0)
                     {
-                        string result = await ChannelSession.Services.GiveawayService.Start(string.Join(" ", arguments), GiveawayEntryTypeEnum.Command, GiveawayDonationEntryQualificationTypeEnum.OneEntryPerUser);
+                        string result = await ChannelSession.Services.GiveawayService.Start(string.Join(" ", arguments));
                         if (!string.IsNullOrEmpty(result))
                         {
                             await ChannelSession.Chat.Whisper(user.UserName, "ERROR: " + result);
