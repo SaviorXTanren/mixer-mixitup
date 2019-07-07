@@ -15,7 +15,7 @@ namespace MixItUp.Base.Commands
             }
         }
 
-        internal static void RestructureNewerOverlayActions(List<ActionBase> actions)
+        public static void RestructureNewerOverlayActions(List<ActionBase> actions)
         {
             for (int i = 0; i < actions.Count; i++)
             {

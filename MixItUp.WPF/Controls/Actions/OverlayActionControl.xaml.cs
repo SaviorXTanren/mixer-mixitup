@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
+using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Overlay;
 using System;
 using System.Collections.Generic;
@@ -78,6 +79,13 @@ namespace MixItUp.WPF.Controls.Actions
                 }
                 else
                 {
+#pragma warning disable CS0612 // Type or member is obsolete
+                    if (this.action.Item != null)
+                    {
+                        StoreCommandUpgrader.RestructureNewerOverlayActions(new List<ActionBase>() { this.action });
+                    }
+#pragma warning restore CS0612 // Type or member is obsolete
+
                     this.DurationTextBox.Text = this.action.OverlayItem.Effects.Duration.ToString();
                     this.EntranceAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.OverlayItem.Effects.EntranceAnimation);
                     this.VisibleAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.OverlayItem.Effects.VisibleAnimation);
