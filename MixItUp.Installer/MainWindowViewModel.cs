@@ -29,7 +29,7 @@ namespace MixItUp.Installer
 
         public static string InstallSettingsDirectory { get { return Path.Combine(MainWindowViewModel.InstallSettingsDirectory, "Settings"); } }
 
-        public static string ZipDownloadFilePath { get { return Path.Combine(Path.GetTempPath(), "MixItUp.zip"); } }
+        public static byte[] ZipArchiveData { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -192,16 +192,9 @@ namespace MixItUp.Installer
                         {
                             if (await this.DownloadZipArchive(update))
                             {
-                                if (this.InstallMixItUp())
+                                if (this.InstallMixItUp() && this.CreateMixItUpShortcut())
                                 {
-                                    if (this.IsUpdate || this.CreateMixItUpShortcut())
-                                    {
-                                        result = true;
-                                    }
-                                }
-                                else
-                                {
-                                    this.ShowError("Failed to install, please reboot your machine & try again.", "If this occurs again, contact support@mixitupapp.com");
+                                    result = true;
                                 }
                             }
                         }
@@ -215,7 +208,7 @@ namespace MixItUp.Installer
 
             if (!result && !this.ErrorOccurred)
             {
-                this.ShowError(string.Format("{0} File Created", InstallerLogFileName), "Contact support@mixitupapp.com with the file to help diagnose this issue.");
+                this.ShowError(string.Format("{0} file created in folder.", InstallerLogFileName), "Email support@mixitupapp.com with this file to help diagnose this issue.");
             }
             return result;
         }
@@ -301,13 +294,21 @@ namespace MixItUp.Installer
                 this.OperationProgress = e.ProgressPercentage;
             };
 
-            client.DownloadFileCompleted += (s, e) =>
+            client.DownloadDataCompleted += (s, e) =>
             {
                 downloadComplete = true;
                 this.OperationProgress = 100;
+                if (e.Error == null && !e.Cancelled)
+                {
+                    ZipArchiveData = e.Result;
+                }
+                else if (e.Error != null)
+                {
+                    this.WriteToLogFile(e.Error.ToString());
+                }
             };
 
-            client.DownloadFileAsync(new Uri(update.ZipArchiveLink), ZipDownloadFilePath);
+            client.DownloadDataAsync(new Uri(update.ZipArchiveLink));
 
             while (!downloadComplete)
             {
@@ -316,7 +317,7 @@ namespace MixItUp.Installer
 
             client.Dispose();
 
-            return File.Exists(ZipDownloadFilePath);
+            return (ZipArchiveData != null && ZipArchiveData.Length > 0);
         }
 
         private bool InstallMixItUp()
@@ -327,32 +328,35 @@ namespace MixItUp.Installer
 
             try
             {
-                if (File.Exists(ZipDownloadFilePath))
+                if (ZipArchiveData != null && ZipArchiveData.Length > 0)
                 {
                     Directory.CreateDirectory(this.installDirectory);
                     if (Directory.Exists(this.installDirectory))
                     {
-                        ZipArchive archive = ZipFile.Open(ZipDownloadFilePath, ZipArchiveMode.Read);
-                        double current = 0;
-                        double total = archive.Entries.Count;
-                        foreach (ZipArchiveEntry entry in archive.Entries)
+                        using (MemoryStream zipStream = new MemoryStream(ZipArchiveData))
                         {
-                            string filePath = Path.Combine(this.installDirectory, entry.FullName);
-                            string directoryPath = Path.GetDirectoryName(filePath);
-                            if (!Directory.Exists(directoryPath))
+                            ZipArchive archive = new ZipArchive(zipStream);
+                            double current = 0;
+                            double total = archive.Entries.Count;
+                            foreach (ZipArchiveEntry entry in archive.Entries)
                             {
-                                Directory.CreateDirectory(directoryPath);
-                            }
+                                string filePath = Path.Combine(this.installDirectory, entry.FullName);
+                                string directoryPath = Path.GetDirectoryName(filePath);
+                                if (!Directory.Exists(directoryPath))
+                                {
+                                    Directory.CreateDirectory(directoryPath);
+                                }
 
-                            if (Path.HasExtension(filePath))
-                            {
-                                entry.ExtractToFile(filePath, overwrite: true);
-                            }
+                                if (Path.HasExtension(filePath))
+                                {
+                                    entry.ExtractToFile(filePath, overwrite: true);
+                                }
 
-                            current++;
-                            this.OperationProgress = (int)((current / total) * 100);
+                                current++;
+                                this.OperationProgress = (int)((current / total) * 100);
+                            }
+                            return true;
                         }
-                        return true;
                     }
                 }
             }
@@ -365,26 +369,32 @@ namespace MixItUp.Installer
 
         private bool CreateMixItUpShortcut()
         {
-            this.DisplayText1 = "Creating Start Menu shortcut...";
-            this.IsOperationIndeterminate = true;
-            this.OperationProgress = 0;
-
-            if (Directory.Exists(StartMenuDirectory))
+            try
             {
-                Directory.Delete(StartMenuDirectory, recursive: true);
-            }
+                this.DisplayText1 = "Creating Start Menu shortcut...";
+                this.IsOperationIndeterminate = true;
+                this.OperationProgress = 0;
 
-            Directory.CreateDirectory(StartMenuDirectory);
-            if (Directory.Exists(StartMenuDirectory))
-            {
-                string tempLinkFilePath = Path.Combine(DefaultInstallDirectory, "Mix It Up.link");
-                if (File.Exists(tempLinkFilePath))
+                if (!Directory.Exists(StartMenuDirectory))
                 {
-                    string shortcutLinkFilePath = Path.Combine(StartMenuDirectory, ShortcutFileName);
-                    File.Copy(tempLinkFilePath, shortcutLinkFilePath);
-
-                    return true;
+                    Directory.CreateDirectory(StartMenuDirectory);
                 }
+
+                if (Directory.Exists(StartMenuDirectory))
+                {
+                    string tempLinkFilePath = Path.Combine(DefaultInstallDirectory, "Mix It Up.link");
+                    if (File.Exists(tempLinkFilePath))
+                    {
+                        string shortcutLinkFilePath = Path.Combine(StartMenuDirectory, ShortcutFileName);
+                        File.Copy(tempLinkFilePath, shortcutLinkFilePath, overwrite: true);
+
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                this.WriteToLogFile(ex.ToString());
             }
             return false;
         }

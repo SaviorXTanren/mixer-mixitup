@@ -163,6 +163,7 @@ namespace MixItUp.WPF.Controls.Command
                 {
                     if (this.command != null)
                     {
+                        newCommand.ID = this.command.ID;
                         ChannelSession.Settings.ChatCommands.Remove(this.command);
                     }
                     ChannelSession.Settings.ChatCommands.Add(newCommand);

@@ -73,7 +73,8 @@ namespace MixItUp.Base.Services
                                         ID = song.ID,
                                         URI = song.Uri,
                                         Name = song.ToString(),
-                                        AlbumImage = (!string.IsNullOrEmpty(song.Album?.ImageLink)) ? song.Album?.ImageLink : SpotifyDefaultAlbumArt
+                                        AlbumImage = (!string.IsNullOrEmpty(song.Album?.ImageLink)) ? song.Album?.ImageLink : SpotifyDefaultAlbumArt,
+                                        Length = song.Duration
                                     });
                                 }
                             }
@@ -114,6 +115,7 @@ namespace MixItUp.Base.Services
                                 Name = song.ToString(),
                                 AlbumImage = (!string.IsNullOrEmpty(song.Album?.ImageLink)) ? song.Album?.ImageLink : SpotifyDefaultAlbumArt,
                                 Type = SongRequestServiceTypeEnum.Spotify,
+                                Length = song.Duration
                             });
                         }
                     }
@@ -131,6 +133,7 @@ namespace MixItUp.Base.Services
                                 Name = song.ToString(),
                                 AlbumImage = (!string.IsNullOrEmpty(song.Album?.ImageLink)) ? song.Album?.ImageLink : SpotifyDefaultAlbumArt,
                                 Type = SongRequestServiceTypeEnum.Spotify,
+                                Length = song.Duration
                             });
                         }
                     }

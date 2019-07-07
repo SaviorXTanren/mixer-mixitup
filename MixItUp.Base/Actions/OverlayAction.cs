@@ -23,18 +23,21 @@ namespace MixItUp.Base.Actions
         [DataMember]
         [Obsolete]
         public OverlayEffectBase Effect { get; set; }
+        [DataMember]
+        [Obsolete]
+        public OverlayItemBase Item { get; set; }
+        [DataMember]
+        [Obsolete]
+        public OverlayItemPosition Position { get; set; }
+        [DataMember]
+        [Obsolete]
+        public OverlayItemEffects Effects { get; set; }
 
         [DataMember]
         public string OverlayName { get; set; }
 
         [DataMember]
-        public OverlayItemBase Item { get; set; }
-
-        [DataMember]
-        public OverlayItemPosition Position { get; set; }
-
-        [DataMember]
-        public OverlayItemEffects Effects { get; set; }
+        public OverlayItemModelBase OverlayItem { get; set; }
 
         [DataMember]
         public Guid WidgetID { get; set; }
@@ -43,13 +46,11 @@ namespace MixItUp.Base.Actions
 
         public OverlayAction() : base(ActionTypeEnum.Overlay) { }
 
-        public OverlayAction(string overlayName, OverlayItemBase item, OverlayItemPosition position, OverlayItemEffects effects)
+        public OverlayAction(string overlayName, OverlayItemModelBase overlayItem)
             : this()
         {
             this.OverlayName = overlayName;
-            this.Item = item;
-            this.Position = position;
-            this.Effects = effects;
+            this.OverlayItem = overlayItem;
         }
 
         public OverlayAction(Guid widgetID, bool showWidget)
@@ -63,17 +64,17 @@ namespace MixItUp.Base.Actions
         {
             if (this.WidgetID != Guid.Empty)
             {
-                OverlayWidget widget = ChannelSession.Settings.OverlayWidgets.FirstOrDefault(w => w.Item.ID.Equals(this.WidgetID));
+                OverlayWidgetModel widget = ChannelSession.Settings.OverlayWidgets.FirstOrDefault(w => w.Item.ID.Equals(this.WidgetID));
                 if (widget != null)
                 {
                     widget.IsEnabled = this.ShowWidget;
-                    if (!widget.IsEnabled)
+                    if (this.ShowWidget)
                     {
-                        IOverlayService overlay = ChannelSession.Services.OverlayServers.GetOverlay(widget.OverlayName);
-                        if (overlay != null)
-                        {
-                            await overlay.RemoveItem(widget.Item);
-                        }
+                        await widget.ShowItem(user, arguments, this.extraSpecialIdentifiers);
+                    }
+                    else
+                    {
+                        await widget.HideItem();
                     }
                 }
             }
@@ -96,8 +97,7 @@ namespace MixItUp.Base.Actions
                 IOverlayService overlay = ChannelSession.Services.OverlayServers.GetOverlay(overlayName);
                 if (overlay != null)
                 {
-                    OverlayItemBase processedItem = await this.Item.GetProcessedItem(user, arguments, this.extraSpecialIdentifiers);
-                    await overlay.SendItem(processedItem, this.Position, this.Effects);
+                    await overlay.ShowItem(this.OverlayItem, user, arguments, this.extraSpecialIdentifiers);
                 }
             }
         }

@@ -91,8 +91,6 @@ namespace MixItUp.Base
         bool DisableAllTimers { get; set; }
 
         string GiveawayCommand { get; set; }
-        bool GiveawayDonationRequiredAmount { get; set; }
-        double GiveawayDonationAmount { get; set; }
         int GiveawayTimer { get; set; }
         int GiveawayMaximumEntries { get; set; }
         RequirementViewModel GiveawayRequirements { get; set; }
@@ -129,6 +127,7 @@ namespace MixItUp.Base
         bool EnableOverlay { get; set; }
         Dictionary<string, int> OverlayCustomNameAndPorts { get; set; }
         string OverlaySourceName { get; set; }
+        [Obsolete]
         int OverlayWidgetRefreshTime { get; set; }
 
         string OvrStreamServerIP { get; set; }
@@ -204,6 +203,9 @@ namespace MixItUp.Base
         string SettingsBackupLocation { get; set; }
         SettingsBackupRateEnum SettingsBackupRate { get; set; }
         DateTimeOffset SettingsLastBackup { get; set; }
+
+        [Obsolete]
+        List<OverlayWidget> overlayWidgetsInternal { get; set; }
     }
 
     public interface IChannelSettings : ISavableChannelSettings
@@ -228,7 +230,7 @@ namespace MixItUp.Base
         LockedList<RemoteProfileModel> RemoteProfiles { get; }
         LockedDictionary<Guid, RemoteProfileBoardsModel> RemoteProfileBoards { get; }
 
-        LockedList<OverlayWidget> OverlayWidgets { get; set; }
+        LockedList<OverlayWidgetModel> OverlayWidgets { get; set; }
 
         LockedList<string> FilteredWords { get; }
         LockedList<string> BannedWords { get; }

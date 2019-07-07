@@ -31,7 +31,6 @@ namespace MixItUp.WPF.Controls.MainControls
         protected override async Task OnVisibilityChanged()
         {
             await this.viewModel.OnVisible();
-            await this.InitializeInternal();
         }
 
         private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)

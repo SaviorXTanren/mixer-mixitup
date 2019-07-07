@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
-using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Controls.MainControls;
 using MixItUp.Base.ViewModel.Window;
 using MixItUp.WPF.Controls.Command;
@@ -49,12 +48,9 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void StartGiveawayButton_Click(object sender, RoutedEventArgs e)
         {
-            if (this.viewModel.EntryType == GiveawayEntryTypeEnum.Command)
+            if (!await this.Requirements.Validate())
             {
-                if (!await this.Requirements.Validate())
-                {
-                    return;
-                }
+                return;
             }
 
             ChannelSession.Settings.GiveawayRequirements = this.Requirements.GetRequirements();

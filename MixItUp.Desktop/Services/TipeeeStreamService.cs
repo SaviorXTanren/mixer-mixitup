@@ -65,7 +65,10 @@ namespace MixItUp.Desktop.Services
 
             this.SocketReceiveWrapper("disconnect", (errorData) =>
             {
-                MixItUp.Base.Util.Logger.Log(errorData.ToString());
+                if (errorData != null)
+                {
+                    MixItUp.Base.Util.Logger.Log(errorData.ToString());
+                }
                 this.service.WebSocketDisconnectedOccurred();
             });
 

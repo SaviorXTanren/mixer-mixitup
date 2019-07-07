@@ -76,8 +76,10 @@ namespace MixItUp.Base.ViewModel.Chat
             this.IsInUsersChannel = true;
             this.IsAlert = true;
             this.Message = "---  " + alertText + "  ---";
-            this.AlertMessageBrush = ColorSchemes.GetColorCode(foregroundBrush);
             this.MessageComponents.Add(new ChatMessageDataModel() { type = "text", text = this.Message });
+
+            string color = ColorSchemes.GetColorCode(foregroundBrush);
+            this.AlertMessageBrush = (!string.IsNullOrEmpty(color)) ? color : "#000000";
         }
 
         public ChatMessageViewModel(SkillInstanceModel skill, UserViewModel user)
@@ -190,7 +192,7 @@ namespace MixItUp.Base.ViewModel.Chat
                         break;
                 }
             }
-            this.Message = this.Message.Trim();
+            this.Message = this.Message.Trim().Replace(Environment.NewLine, string.Empty).Replace("\n", string.Empty);
         }
     }
 }

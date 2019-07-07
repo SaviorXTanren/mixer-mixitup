@@ -762,7 +762,13 @@ namespace MixItUp.Base.MixerAPI
                 if (ChannelSession.Constellation.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserPurge)))
                 {
                     ChannelSession.Constellation.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserPurge));
-                    await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserPurge)), user);
+                    UserViewModel targetUser = user;
+                    UserViewModel modUser = user;
+                    if (e.moderator != null)
+                    {
+                        modUser = new UserViewModel(e.moderator);
+                    }
+                    await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserPurge)), modUser, arguments: new List<string>() { targetUser.UserName });
                 }
             }
         }

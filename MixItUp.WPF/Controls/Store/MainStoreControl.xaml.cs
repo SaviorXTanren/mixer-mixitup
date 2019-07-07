@@ -132,9 +132,9 @@ namespace MixItUp.WPF.Controls.Store
                                 if (action.Type == ActionTypeEnum.Overlay)
                                 {
                                     OverlayAction oAction = (OverlayAction)action;
-                                    if (oAction.Item is OverlayImageItem)
+                                    if (oAction.OverlayItem is OverlayImageItemModel)
                                     {
-                                        OverlayImageItem overlayItem = (OverlayImageItem)oAction.Item;
+                                        OverlayImageItemModel overlayItem = (OverlayImageItemModel)oAction.OverlayItem;
                                         if (assetFileNames.Contains(Path.GetFileName(overlayItem.FilePath)))
                                         {
                                             overlayItem.FilePath = Path.Combine(folderLocation, Path.GetFileName(overlayItem.FilePath));

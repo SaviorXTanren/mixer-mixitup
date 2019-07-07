@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.ViewModel.Controls.Overlay;
 using MixItUp.WPF.Util;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.Overlay
@@ -11,8 +10,6 @@ namespace MixItUp.WPF.Controls.Overlay
     /// </summary>
     public partial class OverlayTextItemControl : OverlayItemControl
     {
-        public static readonly List<int> sampleFontSize = new List<int>() { 12, 24, 36, 48, 60, 72, 84, 96, 108, 120 };
-
         private OverlayTextItemViewModel viewModel;
 
         public OverlayTextItemControl()
@@ -22,24 +19,26 @@ namespace MixItUp.WPF.Controls.Overlay
             this.viewModel = new OverlayTextItemViewModel();
         }
 
-        public OverlayTextItemControl(OverlayTextItem item)
+        public OverlayTextItemControl(OverlayTextItemModel item)
         {
             InitializeComponent();
 
             this.viewModel = new OverlayTextItemViewModel(item);
         }
 
-        public override void SetItem(OverlayItemBase item)
+        public override OverlayItemViewModelBase GetViewModel() { return this.viewModel; }
+
+        public override void SetItem(OverlayItemModelBase item)
         {
             if (item != null)
             {
-                this.viewModel = new OverlayTextItemViewModel((OverlayTextItem)item);
+                this.viewModel = new OverlayTextItemViewModel((OverlayTextItemModel)item);
             }
         }
 
-        public override OverlayItemBase GetItem()
+        public override OverlayItemModelBase GetItem()
         {
-            return this.viewModel.GetItem();
+            return this.viewModel.GetOverlayItem();
         }
 
         protected override async Task OnLoaded()

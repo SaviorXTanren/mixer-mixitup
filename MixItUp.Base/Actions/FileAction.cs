@@ -85,7 +85,7 @@ namespace MixItUp.Base.Actions
             }
             else
             {
-                SpecialIdentifierStringBuilder.RemoveCustomSpecialIdentifier(this.TransferText);
+                this.extraSpecialIdentifiers.Remove(this.TransferText);
 
                 string data = await ChannelSession.Services.FileService.ReadFile(filePath);
                 if (!string.IsNullOrEmpty(data))
@@ -138,7 +138,7 @@ namespace MixItUp.Base.Actions
                     }
 
                     data = await this.ReplaceStringWithSpecialModifiers(data, user, arguments);
-                    SpecialIdentifierStringBuilder.AddCustomSpecialIdentifier(this.TransferText, data);
+                    this.extraSpecialIdentifiers[this.TransferText] = data;
                 }
             }
         }

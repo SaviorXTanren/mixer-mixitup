@@ -3,32 +3,36 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace MixItUp.Base.ViewModel.Controls.Overlay
 {
-    public class OverlayProgressBarItemViewModel : OverlayCustomHTMLItemViewModelBase
+    public class OverlayProgressBarItemViewModel : OverlayHTMLTemplateItemViewModelBase
     {
-        public IEnumerable<string> ProgressBarTypeStrings { get; set; } = EnumHelper.GetEnumNames<ProgressBarTypeEnum>();
+        public IEnumerable<string> ProgressBarTypeStrings { get; set; } = EnumHelper.GetEnumNames<OverlayProgressBarItemTypeEnum>();
         public string ProgressBarTypeString
         {
             get { return EnumHelper.GetEnumName(this.progressBarType); }
             set
             {
-                this.progressBarType = EnumHelper.GetEnumValueFromString<ProgressBarTypeEnum>(value);
-                this.NotifyPropertyChanged();
-                this.NotifyPropertyChanged("IsNotMilestonesType");
-                this.NotifyPropertyChanged("IsFollowersType");
-                if (this.progressBarType == ProgressBarTypeEnum.Followers)
+                this.progressBarType = EnumHelper.GetEnumValueFromString<OverlayProgressBarItemTypeEnum>(value);
+                if (this.progressBarType == OverlayProgressBarItemTypeEnum.Followers)
                 {
                     this.TotalFollowers = true;
                 }
+
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("IsNotMilestonesType");
+                this.NotifyPropertyChanged("IsFollowersType");
+                this.NotifyPropertyChanged("CanSetStartingAmount");
+                this.NotifyPropertyChanged("SupportsRefreshUpdating");
             }
         }
-        private ProgressBarTypeEnum progressBarType;
+        private OverlayProgressBarItemTypeEnum progressBarType;
 
-        public bool IsNotMilestonesType { get { return this.progressBarType != ProgressBarTypeEnum.Milestones; } }
-        public bool IsFollowersType { get { return this.progressBarType == ProgressBarTypeEnum.Followers; } }
+        public bool IsNotMilestonesType { get { return this.progressBarType != OverlayProgressBarItemTypeEnum.Milestones; } }
+        public bool IsFollowersType { get { return this.progressBarType == OverlayProgressBarItemTypeEnum.Followers; } }
+
+        public bool CanSetStartingAmount { get { return this.IsNotMilestonesType && !this.TotalFollowers; } }
 
         public string StartingAmount
         {
@@ -58,11 +62,12 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             set
             {
                 this.totalFollowers = value;
-                this.NotifyPropertyChanged();
                 if (this.TotalFollowers)
                 {
                     this.StartingAmount = "0";
                 }
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("CanSetStartingAmount");
             }
         }
         protected bool totalFollowers;
@@ -144,6 +149,8 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         }
         private string backgroundColor;
 
+        public override bool SupportsRefreshUpdating { get { return true; } }
+
         public CustomCommand OnGoalReachedCommand
         {
             get { return this.onGoalReachedCommand; }
@@ -168,27 +175,26 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.StartingAmount = "0";
             this.GoalAmount = "0";
             this.resetAfterDays = 0;
-            this.HTML = OverlayProgressBar.HTMLTemplate;
+            this.HTML = OverlayProgressBarItemModel.HTMLTemplate;
         }
 
-        public OverlayProgressBarItemViewModel(OverlayProgressBar item)
+        public OverlayProgressBarItemViewModel(OverlayProgressBarItemModel item)
             : this()
         {
             this.progressBarType = item.ProgressBarType;
 
             if (!string.IsNullOrEmpty(item.CurrentAmountCustom))
             {
-                this.StartingAmount = item.CurrentAmountCustom;
+                this.StartingAmount = item.StartAmount.ToString();
             }
             else
             {
-                this.StartingAmount = item.CurrentAmountNumber.ToString();
+                this.StartingAmount = item.CurrentAmountCustom.ToString();
             }
 
-            if (this.progressBarType == ProgressBarTypeEnum.Followers && item.CurrentAmountNumber < 0)
+            if (this.progressBarType == OverlayProgressBarItemTypeEnum.Followers && item.StartAmount == 0)
             {
                 this.TotalFollowers = true;
-                this.StartingAmount = "0";
             }
             else
             {
@@ -201,7 +207,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             }
             else
             {
-                this.GoalAmount = item.GoalAmountNumber.ToString();
+                this.GoalAmount = item.GoalAmount.ToString();
             }
 
             this.resetAfterDays = item.ResetAfterDays;
@@ -210,71 +216,34 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.height = item.Height;
             this.Font = item.TextFont;
 
-            this.TextColor = item.TextFont;
-            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsValue(this.TextColor))
-            {
-                this.TextColor = ColorSchemes.HTMLColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.TextColor)).Key;
-            }
+            this.TextColor = ColorSchemes.GetColorName(item.TextColor);
+            this.ProgressColor = ColorSchemes.GetColorName(item.ProgressColor);
+            this.BackgroundColor = ColorSchemes.GetColorName(item.BackgroundColor);
 
-            this.ProgressColor = item.ProgressColor;
-            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsValue(this.ProgressColor))
-            {
-                this.ProgressColor = ColorSchemes.HTMLColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.ProgressColor)).Key;
-            }
-
-            this.BackgroundColor = item.BackgroundColor;
-            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsValue(this.BackgroundColor))
-            {
-                this.BackgroundColor = ColorSchemes.HTMLColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.BackgroundColor)).Key;
-            }
-
-            this.HTML = item.HTMLText;
+            this.HTML = item.HTML;
 
             this.OnGoalReachedCommand = item.GoalReachedCommand;
         }
 
-        public override OverlayItemBase GetItem()
+        public override OverlayItemModelBase GetOverlayItem()
         {
             if (!string.IsNullOrEmpty(this.HTML) && !string.IsNullOrEmpty(this.StartingAmount) && !string.IsNullOrEmpty(this.GoalAmount) &&
                 !string.IsNullOrEmpty(this.Font) && this.width > 0 && this.height > 0)
             {
-                string startingAmount = "0";
-                string goalAmount = "0";
-                int resetAfterDays = 0;
+                this.TextColor = ColorSchemes.GetColorCode(this.TextColor);
+                this.ProgressColor = ColorSchemes.GetColorCode(this.ProgressColor);
+                this.BackgroundColor = ColorSchemes.GetColorCode(this.BackgroundColor);
 
-                if (this.progressBarType != ProgressBarTypeEnum.Milestones)
+                if (this.progressBarType == OverlayProgressBarItemTypeEnum.Custom)
                 {
-                    if (this.progressBarType == ProgressBarTypeEnum.Followers && this.TotalFollowers)
-                    {
-                        startingAmount = "-1";
-                    }
-                    else
-                    {
-                        startingAmount = this.StartingAmount;
-                    }
-                    goalAmount = this.GoalAmount;
-                }
-
-                if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(this.TextColor))
-                {
-                    this.TextColor = ColorSchemes.HTMLColorSchemeDictionary[this.TextColor];
-                }
-                if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(this.ProgressColor))
-                {
-                    this.ProgressColor = ColorSchemes.HTMLColorSchemeDictionary[this.ProgressColor];
-                }
-                if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(this.BackgroundColor))
-                {
-                    this.BackgroundColor = ColorSchemes.HTMLColorSchemeDictionary[this.BackgroundColor];
-                }
-
-                if (double.TryParse(startingAmount, out double startingAmountNumber) && double.TryParse(goalAmount, out double goalAmountNumber))
-                {
-                    return new OverlayProgressBar(this.HTML, this.progressBarType, startingAmountNumber, goalAmountNumber, resetAfterDays, this.ProgressColor, this.BackgroundColor, this.TextColor, this.Font, this.width, this.height, this.OnGoalReachedCommand);
+                    return new OverlayProgressBarItemModel(this.HTML, this.progressBarType, this.StartingAmount, this.GoalAmount, this.resetAfterDays, this.ProgressColor, this.BackgroundColor, this.TextColor, this.Font, this.width, this.height, this.OnGoalReachedCommand);
                 }
                 else
                 {
-                    return new OverlayProgressBar(this.HTML, this.progressBarType, startingAmount, goalAmount, resetAfterDays, this.ProgressColor, this.BackgroundColor, this.TextColor, this.Font, this.width, this.height, this.OnGoalReachedCommand);
+                    if (double.TryParse(this.StartingAmount, out double start) && double.TryParse(this.GoalAmount, out double goal))
+                    {
+                        return new OverlayProgressBarItemModel(this.HTML, this.progressBarType, start, goal, this.resetAfterDays, this.ProgressColor, this.BackgroundColor, this.TextColor, this.Font, this.width, this.height, this.OnGoalReachedCommand);
+                    }
                 }
             }
             return null;

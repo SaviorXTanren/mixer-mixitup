@@ -27,7 +27,7 @@ namespace MixItUp.Base.Commands
     }
 
     [DataContract]
-    public abstract class CommandBase : IComparable, IComparable<CommandBase>
+    public abstract class CommandBase : IComparable, IComparable<CommandBase>, IEquatable<CommandBase>
     {
         private static Dictionary<Guid, long> commandUses = new Dictionary<Guid, long>();
 
@@ -317,9 +317,19 @@ namespace MixItUp.Base.Commands
             return 0;
         }
 
-        public int CompareTo(CommandBase other)
+        public int CompareTo(CommandBase other) { return this.Name.CompareTo(other.Name); }
+
+        public override bool Equals(object obj)
         {
-            return this.Name.CompareTo(other.Name);
+            if (obj is CommandBase)
+            {
+                return this.Equals((CommandBase)obj);
+            }
+            return false;
         }
+
+        public bool Equals(CommandBase other) { return this.ID.Equals(other.ID); }
+
+        public override int GetHashCode() { return this.ID.GetHashCode(); }
     }
 }

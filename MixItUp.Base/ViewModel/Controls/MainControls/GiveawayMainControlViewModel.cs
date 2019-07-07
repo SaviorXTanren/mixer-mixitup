@@ -14,24 +14,6 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
     {
         public string Item { get; set; }
 
-        public IEnumerable<string> EntryTypes { get { return EnumHelper.GetEnumNames<GiveawayEntryTypeEnum>(); } }
-        public string EntryTypeString
-        {
-            get { return EnumHelper.GetEnumName(this.EntryType); }
-            set
-            {
-                this.EntryType = EnumHelper.GetEnumValueFromString<GiveawayEntryTypeEnum>(value);
-                this.NotifyPropertyChanged();
-                this.NotifyPropertyChanged("IsCommandBased");
-                this.NotifyPropertyChanged("IsDonationTipBased");
-            }
-        }
-        public GiveawayEntryTypeEnum EntryType { get; private set; } = GiveawayEntryTypeEnum.Command;
-
-        public bool IsCommandBased { get { return this.EntryType == GiveawayEntryTypeEnum.Command; } }
-
-        public bool IsDonationTipBased { get { return this.EntryType == GiveawayEntryTypeEnum.DonationTips; } }
-
         public string TotalTime
         {
             get { return ChannelSession.Settings.GiveawayTimer.ToString(); }
@@ -113,42 +95,6 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             }
         }
 
-        public IEnumerable<string> EntryQualificationTypes { get { return EnumHelper.GetEnumNames<GiveawayDonationEntryQualificationTypeEnum>(); } }
-        public string EntryQualificationTypeString
-        {
-            get { return EnumHelper.GetEnumName(this.EntryQualificationType); }
-            set
-            {
-                this.EntryQualificationType = EnumHelper.GetEnumValueFromString<GiveawayDonationEntryQualificationTypeEnum>(value);
-                this.NotifyPropertyChanged();
-                this.NotifyPropertyChanged("EntryAmountRequired");
-            }
-        }
-        public GiveawayDonationEntryQualificationTypeEnum EntryQualificationType { get; private set; } = GiveawayDonationEntryQualificationTypeEnum.OneEntryPerUser;
-
-        public bool EntryAmountRequired
-        {
-            get { return this.EntryQualificationType == GiveawayDonationEntryQualificationTypeEnum.MinimumAmountRequired || this.EntryQualificationType == GiveawayDonationEntryQualificationTypeEnum.OneEntryPerAmount; }
-        }
-
-        public string DonationAmountEntryQualifier
-        {
-            get { return ChannelSession.Settings.GiveawayDonationAmount.ToString(); }
-            set
-            {
-                if (!string.IsNullOrEmpty(value) && double.TryParse(value, out double amount) && amount > 0)
-                {
-                    amount = Math.Round(amount, 2);
-                    ChannelSession.Settings.GiveawayDonationAmount = amount;
-                }
-                else
-                {
-                    ChannelSession.Settings.GiveawayDonationAmount = 0;
-                }
-                this.NotifyPropertyChanged();
-            }
-        }
-
         public bool IsRunning { get { return ChannelSession.Services.GiveawayService.IsRunning; } }
         public bool IsNotRunning { get { return !this.IsRunning; } }
 
@@ -179,7 +125,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
             this.StartGiveawayCommand = this.CreateCommand(async (x) =>
             {
-                string result = await ChannelSession.Services.GiveawayService.Start(this.Item, this.EntryType, this.EntryQualificationType);
+                string result = await ChannelSession.Services.GiveawayService.Start(this.Item);
                 if (!string.IsNullOrEmpty(result))
                 {
                     await DialogHelper.ShowMessage(result);

@@ -396,8 +396,6 @@ namespace MixItUp.Base.Services
                 HttpResponseMessage playResponse = await this.PutAsync("me/player/play", this.CreateContentFromObject(payload));
                 await Task.Delay(250);
 
-                await this.DisableRepeat();
-
                 return (playResponse.StatusCode == HttpStatusCode.NoContent);
             }
             catch (Exception ex) { Logger.Log(ex); }
@@ -418,8 +416,6 @@ namespace MixItUp.Base.Services
                 Logger.LogDiagnostic(string.Format("Spotify Log: {0} - {1}", response.RequestMessage.ToString(), responseString));
 
                 await Task.Delay(250);
-
-                await this.DisableRepeat();
 
                 return (response.StatusCode == HttpStatusCode.NoContent);
             }
@@ -485,6 +481,13 @@ namespace MixItUp.Base.Services
             }
 
             return results;
+        }
+
+        private new async Task<JObject> GetJObjectAsync(string url)
+        {
+            HttpResponseMessage response = await this.GetAsync(url);
+            Logger.LogDiagnostic(response.RequestMessage.RequestUri.ToString() + Environment.NewLine + response.StatusCode + Environment.NewLine + await response.Content.ReadAsStringAsync());
+            return await this.ProcessJObjectResponse(response);
         }
 
         private async Task DisableRepeat()

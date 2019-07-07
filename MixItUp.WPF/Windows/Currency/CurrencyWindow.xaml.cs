@@ -581,6 +581,12 @@ namespace MixItUp.WPF.Windows.Currency
                     return;
                 }
 
+                if (string.IsNullOrEmpty(siName))
+                {
+                    await MessageBoxHelper.ShowMessageDialog("The name must have at least 1 letter in it");
+                    return;
+                }
+
                 int maxAmount = int.MaxValue;
                 if (!string.IsNullOrEmpty(this.MaxAmountTextBox.Text))
                 {

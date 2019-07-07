@@ -50,12 +50,14 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         }
         private int volume;
 
+        public override bool SupportsRefreshUpdating { get { return true; } }
+
         public ICommand BrowseFilePathCommand { get; set; }
 
         public OverlayVideoItemViewModel()
         {
-            this.width = OverlayVideoItem.DefaultWidth;
-            this.height = OverlayVideoItem.DefaultHeight;
+            this.width = OverlayVideoItemModel.DefaultWidth;
+            this.height = OverlayVideoItemModel.DefaultHeight;
             this.Volume = 100;
 
             this.BrowseFilePathCommand = this.CreateCommand((parameter) =>
@@ -69,7 +71,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             });
         }
 
-        public OverlayVideoItemViewModel(OverlayVideoItem item)
+        public OverlayVideoItemViewModel(OverlayVideoItemModel item)
             : this()
         {
             this.FilePath = item.FilePath;
@@ -78,11 +80,11 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.Volume = item.Volume;
         }
 
-        public override OverlayItemBase GetItem()
+        public override OverlayItemModelBase GetOverlayItem()
         {
             if (!string.IsNullOrEmpty(this.FilePath) && this.width > 0 && this.height > 0)
             {
-                return new OverlayVideoItem(this.FilePath, this.width, this.height, this.volume);
+                return new OverlayVideoItemModel(this.FilePath, this.width, this.height, this.volume);
             }
             return null;
         }
