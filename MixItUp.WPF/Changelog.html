@@ -5,6 +5,22 @@
     <body>
         <h1 style="color: #5e9ca0;">Changelog</h1>
 
+        <h2 style="color: #2e6c80;">v0.5.1.501:</h2>
+        <ul>
+            <li>Large-scale overhaul of Overlay system; more Overlay Widgets handle updating dynamically</li>
+            <li>Adding Ticker Tape &amp; Spark Crystal Overlay Widgets</li>
+            <li>Adding Healing &amp; Overkill bonus settings to Stream Boss Overlay Widget</li>
+            <li>Adding Fade Out options to Chat Messages &amp; Event List Overlay Widgets</li>
+            <li>Adding the ability to specify the layer that an Overlay item is positioned at</li>
+            <li>Moving Overlay Widget refresh timer into individual Overlay Widgets to allow for greater flexibility</li>
+            <li>Adding automatic rounding up Special Identifiers that are used in Currency/Rank/Inventory actions to prevent the need for an additional Special Identifier action</li>
+            <li>Fixing bug with optional Overlay item settings causing a crash when not set</li>
+            <li>Changing File Action to create local instead of global Special Identifiers</li>
+            <li>BREAKING CHANGE: Chat User Purged event command now specifies the moderator who performed the purging as $username, while the user that was purged is not $targetusername</li>
+            <li>Adding $usergamequeueposition Special Identifier</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
         <h2 style="color: #2e6c80;">v0.5.1.500:</h2>
         <ul>
             <li>Fixing bug with some Spotify playlists not being properly handled for Song Requests</li>
