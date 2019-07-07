@@ -313,7 +313,7 @@ namespace MixItUp.Desktop.Services
             commands.Add(settings.SongRemovedCommand);
             commands.Add(settings.SongPlayedCommand);
 
-            return commands;
+            return commands.Where(c => c != null);
         }
     }
 
