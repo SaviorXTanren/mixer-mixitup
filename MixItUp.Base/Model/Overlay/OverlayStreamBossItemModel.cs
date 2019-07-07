@@ -226,8 +226,11 @@ namespace MixItUp.Base.Model.Overlay
             replacementSets["HEIGHT"] = this.Height.ToString();
             replacementSets["TEXT_SIZE"] = ((int)(0.2 * ((double)this.Height))).ToString();
 
-            replacementSets["USERNAME"] = boss.UserName;
-            replacementSets["USER_IMAGE"] = boss.AvatarLink;
+            if (boss != null)
+            {
+                replacementSets["USERNAME"] = boss.UserName;
+                replacementSets["USER_IMAGE"] = boss.AvatarLink;
+            }
             replacementSets["USER_IMAGE_SIZE"] = ((int)(0.8 * ((double)this.Height))).ToString();
 
             replacementSets["HEALTH_REMAINING"] = health.ToString();
