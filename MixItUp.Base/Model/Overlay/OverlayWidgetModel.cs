@@ -84,6 +84,7 @@ namespace MixItUp.Base.Model.Overlay
             if (overlay != null)
             {
                 await overlay.HideItem(this.Item);
+                await this.Item.Disable();
             }
         }
 

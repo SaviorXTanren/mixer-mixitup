@@ -1,9 +1,8 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Model.Overlay;
+﻿using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.ViewModel.Controls.MainControls;
+using MixItUp.Base.ViewModel.Window;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Overlay;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,50 +15,30 @@ namespace MixItUp.WPF.Controls.MainControls
     /// </summary>
     public partial class OverlayWidgetsControl : MainControlBase
     {
-        private ObservableCollection<OverlayWidgetModel> widgets = new ObservableCollection<OverlayWidgetModel>();
+        private OverlayWidgetsMainControlViewModel viewModel;
 
         public OverlayWidgetsControl()
         {
             InitializeComponent();
         }
 
-        protected override Task InitializeInternal()
+        protected override async Task InitializeInternal()
         {
-            this.OverlayWidgetsListView.ItemsSource = this.widgets;
-
-            this.RefreshList();
-
-            return base.InitializeInternal();
+            this.DataContext = this.viewModel = new OverlayWidgetsMainControlViewModel((MainWindowViewModel)this.Window.ViewModel);
+            await this.viewModel.OnLoaded();
+            await base.InitializeInternal();
         }
 
-        protected override Task OnVisibilityChanged()
+        protected override async Task OnVisibilityChanged()
         {
-            this.NoOverlayGrid.Visibility = (ChannelSession.Settings.EnableOverlay) ? Visibility.Collapsed : Visibility.Visible;
-            this.MainGrid.Visibility = (ChannelSession.Settings.EnableOverlay) ? Visibility.Visible : Visibility.Collapsed;
-            return Task.FromResult(0);
-        }
-
-        private void RefreshList()
-        {
-            this.OverlayWidgetsListView.SelectedIndex = -1;
-
-            this.widgets.Clear();
-            foreach (OverlayWidgetModel widget in ChannelSession.Settings.OverlayWidgets.OrderBy(c => c.OverlayName).ThenBy(c => c.Name))
-            {
-                this.widgets.Add(widget);
-            }
-        }
-
-        private async Task HideWidget(OverlayWidgetModel widget)
-        {
-            await widget.HideItem();
+            await this.viewModel.OnVisible();
         }
 
         private async void Window_Closed(object sender, System.EventArgs e)
         {
-            await this.Window.RunAsyncOperation(() =>
+            await this.Window.RunAsyncOperation(async () =>
             {
-                this.RefreshList();
+                await this.viewModel.OnVisible();
                 return Task.FromResult(0);
             });
         }
@@ -70,16 +49,7 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 Button button = (Button)sender;
                 OverlayWidgetModel widget = (OverlayWidgetModel)button.DataContext;
-                if (widget != null && widget.SupportsTestData)
-                {
-                    await this.HideWidget(widget);
-
-                    await widget.LoadTestData();
-
-                    await Task.Delay(5000);
-
-                    await this.HideWidget(widget);
-                }
+                await this.viewModel.PlayWidget(widget);
             });
         }
 
@@ -103,14 +73,8 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     Button button = (Button)sender;
                     OverlayWidgetModel widget = (OverlayWidgetModel)button.DataContext;
-                    if (widget != null)
-                    {
-                        ChannelSession.Settings.OverlayWidgets.Remove(widget);
-                        await this.HideWidget(widget);
-
-                        await ChannelSession.SaveSettings();
-                        this.RefreshList();
-                    }
+                    await this.viewModel.DeleteWidget(widget);
+                    await this.viewModel.OnVisible();
                 }
             });
         }
@@ -119,27 +83,14 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             ToggleButton button = (ToggleButton)sender;
             OverlayWidgetModel widget = (OverlayWidgetModel)button.DataContext;
-            if (widget != null)
-            {
-                widget.IsEnabled = button.IsChecked.GetValueOrDefault();
-                if (!widget.IsEnabled)
-                {
-                    await this.Window.RunAsyncOperation(async () =>
-                    {
-                        await this.HideWidget(widget);
-                    });
-                }
-            }
+            await this.viewModel.EnableWidget(widget);
         }
 
-        private void EnableDisableToggleSwitch_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private async void EnableDisableToggleSwitch_Unchecked(object sender, RoutedEventArgs e)
         {
             ToggleButton button = (ToggleButton)sender;
             OverlayWidgetModel widget = (OverlayWidgetModel)button.DataContext;
-            if (widget != null && widget.IsEnabled)
-            {
-                button.IsChecked = true;
-            }
+            await this.viewModel.DisableWidget(widget);
         }
 
         private void AddOverlayWidgetButton_Click(object sender, RoutedEventArgs e)
