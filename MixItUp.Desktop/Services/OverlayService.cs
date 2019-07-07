@@ -148,23 +148,26 @@ namespace MixItUp.Overlay
 
         public async Task ShowItem(OverlayItemModelBase item, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
-            JObject jobj = await item.GetProcessedItem(user, arguments, extraSpecialIdentifiers);
-            if (jobj != null)
+            if (item != null)
             {
-                if (item is OverlayImageItemModel || item is OverlayVideoItemModel)
+                JObject jobj = await item.GetProcessedItem(user, arguments, extraSpecialIdentifiers);
+                if (jobj != null)
                 {
-                    OverlayFileItemModelBase fileItem = (OverlayFileItemModelBase)item;
-                    this.SetLocalFile(fileItem.FileID, fileItem.FilePath);
-                }
-                else if (item is OverlaySparkCrystalItemModel)
-                {
-                    OverlaySparkCrystalItemModel sparkCrystalItem = (OverlaySparkCrystalItemModel)item;
-                    if (!string.IsNullOrEmpty(sparkCrystalItem.CustomImageFilePath))
+                    if (item is OverlayImageItemModel || item is OverlayVideoItemModel)
                     {
-                        this.SetLocalFile(sparkCrystalItem.ID.ToString(), sparkCrystalItem.CustomImageFilePath);
+                        OverlayFileItemModelBase fileItem = (OverlayFileItemModelBase)item;
+                        this.SetLocalFile(fileItem.FileID, fileItem.FilePath);
                     }
+                    else if (item is OverlaySparkCrystalItemModel)
+                    {
+                        OverlaySparkCrystalItemModel sparkCrystalItem = (OverlaySparkCrystalItemModel)item;
+                        if (!string.IsNullOrEmpty(sparkCrystalItem.CustomImageFilePath))
+                        {
+                            this.SetLocalFile(sparkCrystalItem.ID.ToString(), sparkCrystalItem.CustomImageFilePath);
+                        }
+                    }
+                    await this.SendPacket("Show", jobj);
                 }
-                await this.SendPacket("Show", jobj);
             }
         }
 
