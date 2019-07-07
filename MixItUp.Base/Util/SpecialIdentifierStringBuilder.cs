@@ -253,7 +253,7 @@ namespace MixItUp.Base.Util
 
         public SpecialIdentifierStringBuilder(string text, Guid randomUserSpecialIdentifierGroupID, bool encode = false)
         {
-            this.text = text;
+            this.text = !string.IsNullOrEmpty(text) ? text : string.Empty;
             this.randomUserSpecialIdentifierGroupID = randomUserSpecialIdentifierGroupID;
             this.encode = encode;
         }
@@ -681,7 +681,7 @@ namespace MixItUp.Base.Util
         public void ReplaceSpecialIdentifier(string identifier, string replacement, bool includeSpecialIdentifierHeader = true)
         {
             replacement = (replacement == null) ? string.Empty : replacement;
-            if (encode)
+            if (this.encode)
             {
                 replacement = HttpUtility.UrlEncode(replacement);
             }
