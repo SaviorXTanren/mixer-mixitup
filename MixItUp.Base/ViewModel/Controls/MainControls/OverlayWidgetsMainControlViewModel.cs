@@ -9,7 +9,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
     public class OverlayWidgetsMainControlViewModel : MainControlViewModelBase
     {
         public bool OverlayEnabled { get { return ChannelSession.Settings.EnableOverlay; } }
-        public bool OverlayNotEnabled { get { return this.OverlayEnabled; } }
+        public bool OverlayNotEnabled { get { return !this.OverlayEnabled; } }
 
         public ObservableCollection<OverlayWidgetModel> OverlayWidgets { get; private set; } = new ObservableCollection<OverlayWidgetModel>();
 

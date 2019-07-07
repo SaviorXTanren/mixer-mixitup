@@ -215,7 +215,7 @@
                             else if (packet.data.ItemTypeName === "StreamClip") {
                                 streamClipPacket(packet.data);
                             }
-                            else if (packet.data.ItemTypeName === "ChatMessages" || packet.data.ItemTypeName === "EventList" || 
+                            else if (packet.data.ItemTypeName === "ChatMessages" || packet.data.ItemTypeName === "EventList" ||
                                 packet.data.ItemTypeName === "GameQueue" || packet.data.ItemTypeName === "SongRequests" ||
                                 packet.data.ItemTypeName === "Leaderboard") {
 
@@ -236,6 +236,9 @@
                                 else if (packet.type == "Update") {
                                     sparkCrystalUpdatePacket(packet.data);
                                 }
+                            }
+                            else if (packet.data.ItemTypeName === "ProgressBar") {
+                                customPacket(packet.data);
                             }
                         }
                         else if (packet.type == "Hide") {
@@ -640,6 +643,13 @@
                     };
                     addWaitRemoveElement(data, noTextToSpeechDiv);
                 }
+            }
+
+            function customPacket(data) {
+                var addedElement = document.createElement('div');
+                addedElement.innerHTML = data.HTML;
+
+                addWaitRemoveElement(data, addedElement);
             }
 
             function addWaitRemoveElement(data, addedElement, addToDiv = true) {

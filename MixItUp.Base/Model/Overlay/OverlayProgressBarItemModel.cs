@@ -220,20 +220,26 @@ namespace MixItUp.Base.Model.Overlay
             }
             else if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Custom)
             {
-                string customAmount = await this.ReplaceStringWithSpecialModifiers(this.CurrentAmountCustom, user, arguments, extraSpecialIdentifiers);
-                if (double.TryParse(customAmount, out amount))
+                if (!string.IsNullOrEmpty(this.CurrentAmountCustom))
                 {
-                    if (this.StartAmount <= 0)
+                    string customAmount = await this.ReplaceStringWithSpecialModifiers(this.CurrentAmountCustom, user, arguments, extraSpecialIdentifiers);
+                    if (double.TryParse(customAmount, out amount))
                     {
-                        this.StartAmount = amount;
+                        if (this.StartAmount <= 0)
+                        {
+                            this.StartAmount = amount;
+                        }
+                        this.CurrentAmount = amount;
                     }
-                    this.CurrentAmount = amount;
                 }
 
-                string customGoal = await this.ReplaceStringWithSpecialModifiers(this.GoalAmountCustom, user, arguments, extraSpecialIdentifiers);
-                if (double.TryParse(customGoal, out goal))
+                if (!string.IsNullOrEmpty(this.GoalAmountCustom))
                 {
-                    this.GoalAmount = goal;
+                    string customGoal = await this.ReplaceStringWithSpecialModifiers(this.GoalAmountCustom, user, arguments, extraSpecialIdentifiers);
+                    if (double.TryParse(customGoal, out goal))
+                    {
+                        this.GoalAmount = goal;
+                    }
                 }
             }
 

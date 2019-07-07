@@ -185,11 +185,11 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
 
             if (!string.IsNullOrEmpty(item.CurrentAmountCustom))
             {
-                this.StartingAmount = item.StartAmount.ToString();
+                this.StartingAmount = item.CurrentAmountCustom;
             }
             else
             {
-                this.StartingAmount = item.CurrentAmountCustom.ToString();
+                this.StartingAmount = item.StartAmount.ToString();
             }
 
             if (this.progressBarType == OverlayProgressBarItemTypeEnum.Followers && item.StartAmount == 0)
