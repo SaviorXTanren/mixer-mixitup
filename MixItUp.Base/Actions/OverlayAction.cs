@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Util;
+using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
@@ -81,16 +82,10 @@ namespace MixItUp.Base.Actions
             else
             {
 #pragma warning disable CS0612 // Type or member is obsolete
-                if (this.Position == null && this.Effect != null)
+                if (this.Item != null)
                 {
-                    this.Position = new OverlayItemPosition(OverlayEffectPositionType.Percentage, this.Effect.Horizontal, this.Effect.Vertical);
+                    StoreCommandUpgrader.RestructureNewerOverlayActions(new List<ActionBase>() { this });
                 }
-                if (this.Effects == null && this.Effect != null)
-                {
-                    this.Effects = new OverlayItemEffects((OverlayEffectEntranceAnimationTypeEnum)this.Effect.EntranceAnimation,
-                        (OverlayEffectVisibleAnimationTypeEnum)this.Effect.VisibleAnimation, (OverlayEffectExitAnimationTypeEnum)this.Effect.ExitAnimation, this.Effect.Duration);
-                }
-                this.Effect = null;
 #pragma warning restore CS0612 // Type or member is obsolete
 
                 string overlayName = (string.IsNullOrEmpty(this.OverlayName)) ? ChannelSession.Services.OverlayServers.DefaultOverlayName : this.OverlayName;
