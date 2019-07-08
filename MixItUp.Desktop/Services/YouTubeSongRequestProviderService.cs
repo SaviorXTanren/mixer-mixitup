@@ -36,6 +36,8 @@ namespace MixItUp.Desktop.Services
         private SongRequestCurrentlyPlayingModel status = null;
         private YouTubeSongRequestHttpListenerServer httpListenerServer;
 
+        private int lastVolume;
+
         public string HttpListenerServerAddress { get { return string.Format(RegularOverlayHttpListenerServerAddressFormat, Port); } }
 
         public SongRequestServiceTypeEnum Type { get { return SongRequestServiceTypeEnum.YouTube; } }
@@ -250,9 +252,22 @@ namespace MixItUp.Desktop.Services
             return status;
         }
 
-        public async Task Play(SongRequestModel song)
+        public async Task<SongRequestCurrentlyPlayingModel> Play(SongRequestModel song)
         {
             await this.DispatchWrapper(() => this.browser.InvokeScript("play", new object[] { song.ID }));
+            await this.SetVolume(this.lastVolume);
+            return new SongRequestCurrentlyPlayingModel()
+            {
+                ID = song.ID,
+                URI = song.URI,
+                Name = song.Name,
+                AlbumImage = song.AlbumImage,
+                Length = song.Length,
+                Type = song.Type,
+                IsFromBackupPlaylist = song.IsFromBackupPlaylist,
+                User = song.User,
+                State = SongRequestStateEnum.Playing,
+            };
         }
 
         public async Task Pause()
@@ -265,11 +280,6 @@ namespace MixItUp.Desktop.Services
             await this.DispatchWrapper(() => this.browser.InvokeScript("resume"));
         }
 
-        public async Task PauseResume()
-        {
-            await this.DispatchWrapper(() => this.browser.InvokeScript("pauseResume"));
-        }
-
         public async Task Stop()
         {
             await this.DispatchWrapper(() => this.browser.InvokeScript("stop"));
@@ -277,6 +287,7 @@ namespace MixItUp.Desktop.Services
 
         public async Task SetVolume(int volume)
         {
+            this.lastVolume = volume;
             await this.DispatchWrapper(() => this.browser.InvokeScript("setVolume", new object[] { volume }));
         }
 

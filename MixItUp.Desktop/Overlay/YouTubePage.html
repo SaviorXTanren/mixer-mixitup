@@ -112,19 +112,6 @@
             }, 1);
         }
 
-        function pauseResume() {
-            if (!isReady) return;
-
-            setTimeout(function () {
-                if (player.getPlayerState() == YT.PlayerState.PLAYING) {
-                    player.pauseVideo();
-                }
-                else if (player.getPlayerState() == YT.PlayerState.PAUSED) {
-                    player.playVideo();
-                }
-            }, 1);
-        }
-
         function stop() {
             if (!isReady) return;
 

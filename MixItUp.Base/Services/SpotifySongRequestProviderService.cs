@@ -188,16 +188,31 @@ namespace MixItUp.Base.Services
             return null;
         }
 
-        public async Task Play(SongRequestModel song)
+        public async Task<SongRequestCurrentlyPlayingModel> Play(SongRequestModel song)
         {
             try
             {
-                await ChannelSession.Services.Spotify.PlaySong(song.URI);
+                if (await ChannelSession.Services.Spotify.PlaySong(song.URI))
+                {
+                    return new SongRequestCurrentlyPlayingModel()
+                    {
+                        ID = song.ID,
+                        URI = song.URI,
+                        Name = song.Name,
+                        AlbumImage = song.AlbumImage,
+                        Length = song.Length,
+                        Type = song.Type,
+                        IsFromBackupPlaylist = song.IsFromBackupPlaylist,
+                        User = song.User,
+                        State = SongRequestStateEnum.Playing,
+                    };
+                }
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
             }
+            return null;
         }
 
         public async Task Pause()
@@ -217,29 +232,6 @@ namespace MixItUp.Base.Services
             try
             {
                 await ChannelSession.Services.Spotify.PlayCurrentlyPlaying();
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
-        }
-
-        public async Task PauseResume()
-        {
-            try
-            {
-                SpotifyCurrentlyPlayingModel currentlyPlaying = await ChannelSession.Services.Spotify.GetCurrentlyPlaying();
-                if (currentlyPlaying != null && currentlyPlaying.ID != null)
-                {
-                    if (currentlyPlaying.IsPlaying)
-                    {
-                        await this.Pause();
-                    }
-                    else
-                    {
-                        await this.Resume();
-                    }
-                }
             }
             catch (Exception ex)
             {

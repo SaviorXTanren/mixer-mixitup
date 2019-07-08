@@ -24,25 +24,13 @@ namespace MixItUp.Base.Services
 
         Task<SpotifyUserProfileModel> GetCurrentProfile();
 
-        Task<SpotifyUserProfileModel> GetProfile(string username);
-
         Task<IEnumerable<SpotifySongModel>> SearchSongs(string songName);
 
         Task<SpotifySongModel> GetSong(string songID);
 
-        Task<IEnumerable<SpotifyPlaylistModel>> GetCurrentPlaylists();
-
         Task<SpotifyPlaylistModel> GetPlaylist(SpotifyPlaylistModel playlist);
 
         Task<IEnumerable<SpotifySongModel>> GetPlaylistSongs(SpotifyPlaylistModel playlist);
-
-        Task<SpotifyPlaylistModel> CreatePlaylist(string name, string description);
-
-        Task<bool> AddSongToPlaylist(SpotifyPlaylistModel playlist, SpotifySongModel song);
-
-        Task RemoveSongFromPlaylist(SpotifyPlaylistModel playlist, SpotifySongModel song);
-
-        Task RemoveSongsFromPlaylist(SpotifyPlaylistModel playlist, IEnumerable<SpotifySongModel> song);
 
         Task<SpotifyCurrentlyPlayingModel> GetCurrentlyPlaying();
 
@@ -57,8 +45,6 @@ namespace MixItUp.Base.Services
         Task<bool> PlaySong(SpotifySongModel song);
 
         Task<bool> PlaySong(string uri);
-
-        Task<bool> PlayPlaylist(SpotifyPlaylistModel playlist, bool random = false);
 
         Task SetVolume(int volume);
 
@@ -130,19 +116,7 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                JObject result = await this.GetJObjectAsync("me");
-                return new SpotifyUserProfileModel(result);
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-            return null;
-        }
-
-        public async Task<SpotifyUserProfileModel> GetProfile(string username)
-        {
-            try
-            {
-                JObject result = await this.GetJObjectAsync("users/" + username);
-                return new SpotifyUserProfileModel(result);
+                return new SpotifyUserProfileModel(await this.GetJObjectAsync("me"));
             }
             catch (Exception ex) { Logger.Log(ex); }
             return null;
@@ -171,25 +145,10 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                JObject result = await this.GetJObjectAsync(string.Format("tracks/" + songID));
-                return new SpotifySongModel(result);
+                return new SpotifySongModel(await this.GetJObjectAsync(string.Format("tracks/" + songID)));
             }
             catch (Exception ex) { Logger.Log(ex); }
             return null;
-        }
-
-        public async Task<IEnumerable<SpotifyPlaylistModel>> GetCurrentPlaylists()
-        {
-            List<SpotifyPlaylistModel> playlists = new List<SpotifyPlaylistModel>();
-            try
-            {
-                foreach (JObject playlist in await this.GetPagedResult("me/playlists"))
-                {
-                    playlists.Add(new SpotifyPlaylistModel(playlist));
-                }
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-            return playlists;
         }
 
         public async Task<SpotifyPlaylistModel> GetPlaylist(SpotifyPlaylistModel playlist)
@@ -198,12 +157,7 @@ namespace MixItUp.Base.Services
             {
                 if (playlist != null)
                 {
-                    HttpResponseMessage response = await this.GetAsync(string.Format("playlists/{0}", playlist.ID));
-                    string responseString = await response.Content.ReadAsStringAsync();
-
-                    Logger.LogDiagnostic(string.Format("Spotify Log: {0} - {1}", response.RequestMessage.ToString(), responseString));
-
-                    return new SpotifyPlaylistModel(JObject.Parse(responseString));
+                    return new SpotifyPlaylistModel(await this.GetJObjectAsync(string.Format("playlists/{0}", playlist.ID)));
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
@@ -227,91 +181,11 @@ namespace MixItUp.Base.Services
             return results;
         }
 
-        public async Task<SpotifyPlaylistModel> CreatePlaylist(string name, string description)
-        {
-            try
-            {
-                JObject payload = new JObject();
-                payload["name"] = name;
-                payload["description"] = description;
-                payload["public"] = "true";
-
-                HttpResponseMessage response = await this.PostAsync("playlists", this.CreateContentFromObject(payload));
-                string responseString = await response.Content.ReadAsStringAsync();
-                JObject jobj = JObject.Parse(responseString);
-                return new SpotifyPlaylistModel(jobj);
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-            return null;
-        }
-
-        public async Task<bool> AddSongToPlaylist(SpotifyPlaylistModel playlist, SpotifySongModel song)
-        {
-            try
-            {
-                if (playlist != null && song != null)
-                {
-                    HttpResponseMessage response = await this.PostAsync(string.Format("playlists/{0}/tracks?uris=spotify:track:" + song.ID, playlist.ID), null);
-                    return (response.StatusCode == HttpStatusCode.Created);
-                }
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-            return false;
-        }
-
-        public async Task RemoveSongFromPlaylist(SpotifyPlaylistModel playlist, SpotifySongModel song)
-        {
-            await this.RemoveSongsFromPlaylist(playlist, new List<SpotifySongModel>() { song });
-        }
-
-        public async Task RemoveSongsFromPlaylist(SpotifyPlaylistModel playlist, IEnumerable<SpotifySongModel> songs)
-        {
-            try
-            {
-                if (playlist != null)
-                {
-                    for (int i = 0; i < songs.Count(); i += 50)
-                    {
-                        JArray songsToDeleteArray = new JArray();
-                        foreach (SpotifySongModel songToDelete in songs.Skip(i).Take(50))
-                        {
-                            JObject songPayload = new JObject();
-                            songPayload["uri"] = "spotify:track:" + songToDelete.ID;
-                            songsToDeleteArray.Add(songPayload);
-                        }
-
-                        JObject payload = new JObject();
-                        payload["tracks"] = songsToDeleteArray;
-
-                        using (HttpClientWrapper client = await this.GetHttpClient())
-                        {
-                            HttpMethod method = new HttpMethod("DELETE");
-                            HttpRequestMessage request = new HttpRequestMessage(method, string.Format("playlists/{0}/tracks", playlist.ID))
-                            {
-                                Content = this.CreateContentFromObject(payload)
-                            };
-                            await client.SendAsync(request);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-        }
-
         public async Task<SpotifyCurrentlyPlayingModel> GetCurrentlyPlaying()
         {
             try
             {
-                HttpResponseMessage response = await this.GetAsync("me/player");
-                if (response.StatusCode == HttpStatusCode.OK)
-                {
-                    string responseString = await response.Content.ReadAsStringAsync();
-
-                    Logger.LogDiagnostic(string.Format("Spotify Log: {0} - {1}", response.RequestMessage.ToString(), responseString));
-
-                    JObject jobj = JObject.Parse(responseString);
-                    return new SpotifyCurrentlyPlayingModel(jobj);
-                }
+                return new SpotifyCurrentlyPlayingModel(await this.GetJObjectAsync("me/player"));
             }
             catch (Exception ex) { Logger.Log(ex); }
             return null;
@@ -319,117 +193,39 @@ namespace MixItUp.Base.Services
 
         public async Task PlayCurrentlyPlaying()
         {
-            try
-            {
-                HttpResponseMessage response = await this.PutAsync("me/player/play", null);
-                if (ChannelSession.Settings.DiagnosticLogging)
-                {
-                    string responseString = await response.Content.ReadAsStringAsync();
-                    Logger.LogDiagnostic(string.Format("Spotify Log: {0} - {1}", response.RequestMessage.ToString(), responseString));
-                }
-            }
-            catch (Exception ex) { Logger.Log(ex); }
+            await this.PutAsync("me/player/play");
         }
 
         public async Task PauseCurrentlyPlaying()
         {
-            try
-            {
-                HttpResponseMessage response = await this.PutAsync("me/player/pause", null);
-                if (ChannelSession.Settings.DiagnosticLogging)
-                {
-                    string responseString = await response.Content.ReadAsStringAsync();
-                    Logger.LogDiagnostic(string.Format("Spotify Log: {0} - {1}", response.RequestMessage.ToString(), responseString));
-                }
-            }
-            catch (Exception ex) { Logger.Log(ex); }
+            await this.PutAsync("me/player/pause");
         }
 
         public async Task NextCurrentlyPlaying()
         {
-            try
-            {
-                HttpResponseMessage response = await this.PostAsync("me/player/next", null);
-                if (ChannelSession.Settings.DiagnosticLogging)
-                {
-                    string responseString = await response.Content.ReadAsStringAsync();
-                    Logger.LogDiagnostic(string.Format("Spotify Log: {0} - {1}", response.RequestMessage.ToString(), responseString));
-                }
-            }
-            catch (Exception ex) { Logger.Log(ex); }
+            await this.PostAsync("me/player/next");
         }
 
         public async Task PreviousCurrentlyPlaying()
         {
-            try
-            {
-                await this.PostAsync("me/player/previous", null);
-            }
-            catch (Exception ex) { Logger.Log(ex); }
+            await this.PostAsync("me/player/previous");
         }
 
         public async Task<bool> PlaySong(SpotifySongModel song) { return await this.PlaySong(song.Uri); }
 
-        public async Task<bool> PlayPlaylist(SpotifyPlaylistModel playlist, bool random = false)
-        {
-            try
-            {
-                JObject payload = new JObject();
-                payload["context_uri"] = playlist.Uri;
-
-                JObject position = new JObject();
-                position["position"] = 0;
-                payload["offset"] = position;
-
-                if (random)
-                {
-                    IEnumerable<SpotifySongModel> playlistSongs = await this.GetPlaylistSongs(playlist);
-                    if (playlistSongs != null && playlistSongs.Count() > 0)
-                    {
-                        position["position"] = RandomHelper.GenerateRandomNumber(playlistSongs.Count());
-                    }
-                }
-
-                await this.PutAsync("me/player/shuffle?state=true", null);
-                await Task.Delay(250);
-
-                HttpResponseMessage playResponse = await this.PutAsync("me/player/play", this.CreateContentFromObject(payload));
-                await Task.Delay(250);
-
-                return (playResponse.StatusCode == HttpStatusCode.NoContent);
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-            return false;
-        }
-
         public async Task<bool> PlaySong(string uri)
         {
-            try
-            {
-                JArray songArray = new JArray();
-                songArray.Add(uri);
-                JObject payload = new JObject();
-                payload["uris"] = songArray;
+            JArray songArray = new JArray();
+            songArray.Add(uri);
+            JObject payload = new JObject();
+            payload["uris"] = songArray;
 
-                HttpResponseMessage response = await this.PutAsync("me/player/play", this.CreateContentFromObject(payload));
-                string responseString = await response.Content.ReadAsStringAsync();
-                Logger.LogDiagnostic(string.Format("Spotify Log: {0} - {1}", response.RequestMessage.ToString(), responseString));
-
-                await Task.Delay(250);
-
-                return (response.StatusCode == HttpStatusCode.NoContent);
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-            return false;
+            return await this.PutAsync("me/player/play", this.CreateContentFromObject(payload));
         }
 
         public async Task SetVolume(int volume)
         {
-            try
-            {
-                await this.PutAsync("me/player/volume?volume_percent=" + volume, null);
-            }
-            catch (Exception ex) { Logger.Log(ex); }
+            await this.PutAsync("me/player/volume?volume_percent=" + volume);
         }
 
         protected override async Task RefreshOAuthToken()
@@ -486,8 +282,38 @@ namespace MixItUp.Base.Services
         private new async Task<JObject> GetJObjectAsync(string url)
         {
             HttpResponseMessage response = await this.GetAsync(url);
-            Logger.LogDiagnostic(response.RequestMessage.RequestUri.ToString() + Environment.NewLine + response.StatusCode + Environment.NewLine + await response.Content.ReadAsStringAsync());
+            await this.LogSpotifyDiagnostic(response);
             return await this.ProcessJObjectResponse(response);
+        }
+
+        private async Task<bool> PostAsync(string url, HttpContent content = null)
+        {
+            try
+            {
+                HttpResponseMessage response = await base.PostAsync(url, content);
+                await this.LogSpotifyDiagnostic(response);
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            return false;
+        }
+
+        private new async Task<bool> PutAsync(string url, HttpContent content = null)
+        {
+            try
+            {
+                HttpResponseMessage response = await base.PutAsync(url, content);
+                await this.LogSpotifyDiagnostic(response);
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            return false;
         }
 
         private async Task DisableRepeat()
@@ -497,6 +323,11 @@ namespace MixItUp.Base.Services
                 await this.PutAsync("me/player/repeat?state=off", null);
             }
             catch (Exception ex) { Logger.Log(ex); }
+        }
+
+        private async Task LogSpotifyDiagnostic(HttpResponseMessage response)
+        {
+            Logger.LogDiagnostic(string.Format("Spotify Log: {0} - {1} - {2}", response.RequestMessage.ToString(), response.StatusCode, await response.Content.ReadAsStringAsync()));
         }
 
         #region IDisposable Support
