@@ -1,7 +1,9 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -62,6 +64,17 @@ namespace MixItUp.Base.Model.Overlay
                 this.backgroundThreadCancellationTokenSource = null;
             }
             await base.Disable();
+        }
+
+        protected override async Task<Dictionary<string, string>> GetTemplateReplacements(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        {
+            Dictionary<string, string> replacementSets = await base.GetTemplateReplacements(user, arguments, extraSpecialIdentifiers);
+
+            replacementSets["TEXT_COLOR"] = this.TextColor;
+            replacementSets["TEXT_FONT"] = this.TextFont;
+            replacementSets["TEXT_SIZE"] = this.TextSize.ToString();
+
+            return replacementSets;
         }
 
         private async Task TimerBackground()
