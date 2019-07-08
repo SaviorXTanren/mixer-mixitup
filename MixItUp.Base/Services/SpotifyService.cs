@@ -55,9 +55,9 @@ namespace MixItUp.Base.Services
     {
         private const string BaseAddress = "https://api.spotify.com/v1/";
 
-        private const string ClientID = "94c9f9c67c864ae9a0f9f8f5bdf3e000";
+        private const string ClientID = "ae59b0c4f1a8423591f80687702bc31d";
         private const string StateKey = "V21C2J2RWE51CYSM";
-        private const string AuthorizationUrl = "https://accounts.spotify.com/authorize?client_id={0}&redirect_uri=http://localhost:8919/&response_type=code&scope=playlist-read-private+playlist-modify-public+playlist-read-collaborative+user-top-read+user-read-recently-played+user-library-read+user-read-currently-playing+user-modify-playback-state+user-read-playback-state+streaming+user-read-private&state={1}";
+        private const string AuthorizationUrl = "https://accounts.spotify.com/authorize?client_id={0}&redirect_uri=http://localhost:8919/&response_type=code&scope=user-read-private+user-library-read+user-read-playback-state+user-read-currently-playing+user-modify-playback-state+playlist-read-collaborative&state={1}";
 
         public SpotifyUserProfileModel Profile { get; private set; }
 
