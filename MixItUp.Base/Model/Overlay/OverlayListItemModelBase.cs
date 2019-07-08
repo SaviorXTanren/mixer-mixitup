@@ -126,12 +126,11 @@ namespace MixItUp.Base.Model.Overlay
                 if (jobj.ContainsKey("Items"))
                 {
                     JArray jarray = (JArray)jobj["Items"];
-                    for (int i = 0; i < jarray.Count; i++)
+                    for (int i = 0; i < jarray.Count && i < this.Items.Count; i++)
                     {
                         JObject itemJObj = (JObject)jarray[i];
 
                         itemJObj["HTML"] = jobj["HTML"];
-
                         itemJObj["HTML"] = this.PerformTemplateReplacements(itemJObj["HTML"].ToString(), this.Items[i].TemplateReplacements);
 
                         await base.PerformReplacements(itemJObj, user, arguments, extraSpecialIdentifiers);
