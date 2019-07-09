@@ -4,6 +4,7 @@ using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
@@ -69,6 +70,8 @@ namespace MixItUp.Base.Model.Overlay
         public bool ProgressMade { get; set; }
         [DataMember]
         public bool MilestoneReached { get; set; }
+
+        private SemaphoreSlim patronageSemaphore = new SemaphoreSlim(1);
 
         private PatronagePeriodModel period;
         private PatronageStatusModel status;
@@ -138,30 +141,45 @@ namespace MixItUp.Base.Model.Overlay
             }
             else
             {
-                replacementSets["CRYSTAL_EMPTY_IMAGE"] = this.EmptyImageFilePath.ToString();
-                replacementSets["CRYSTAL_FULL_IMAGE"] = this.FullImageFilePath.ToString();
+                replacementSets["CRYSTAL_EMPTY_IMAGE"] = this.EmptyImageFilePath;
+                replacementSets["CRYSTAL_FULL_IMAGE"] = this.FullImageFilePath;
                 replacementSets["CRYSTAL_EMPTY_OPACITY"] = string.Empty;
             }
 
             return Task.FromResult(replacementSets);
         }
 
-        private void GlobalEvents_OnPatronageUpdateOccurred(object sender, PatronageStatusModel status)
+        private async void GlobalEvents_OnPatronageUpdateOccurred(object sender, PatronageStatusModel status)
         {
-            this.ProgressMade = true;
-            this.MilestoneReached = false;
+            await this.patronageSemaphore.WaitAndRelease(() =>
+            {
+                this.ProgressMade = true;
+                this.MilestoneReached = false;
 
-            this.status = status;
-            this.Amount = this.status.patronageEarned;
+                this.status = status;
+                this.Amount = this.status.patronageEarned;
+
+                if (this.Amount >= this.milestone.target)
+                {
+                    this.RefreshPatronageMilestoneData();
+                }
+
+                return Task.FromResult(0);
+            });
             this.SendUpdateRequired();
         }
 
         private async void GlobalEvents_OnPatronageMilestoneReachedOccurred(object sender, PatronageMilestoneModel milestone)
         {
-            this.ProgressMade = false;
-            this.MilestoneReached = true;
+            await this.patronageSemaphore.WaitAndRelease(() =>
+            {
+                this.ProgressMade = false;
+                this.MilestoneReached = true;
 
-            await this.RefreshPatronageData();
+                this.RefreshPatronageMilestoneData();
+
+                return Task.FromResult(0);
+            });
             this.SendUpdateRequired();
         }
 
@@ -175,28 +193,33 @@ namespace MixItUp.Base.Model.Overlay
                 this.period = await ChannelSession.Connection.GetPatronagePeriod(status);
                 if (this.period != null)
                 {
-                    this.milestoneGroup = this.period.milestoneGroups.FirstOrDefault(mg => mg.id == this.status.currentMilestoneGroupId);
-                    if (this.milestoneGroup != null)
+                    this.RefreshPatronageMilestoneData();
+                }
+            }
+        }
+
+        private void RefreshPatronageMilestoneData()
+        {
+            this.milestoneGroup = this.period.milestoneGroups.FirstOrDefault(mg => mg.id == this.status.currentMilestoneGroupId);
+            if (this.milestoneGroup != null)
+            {
+                this.EmptyImageFilePath = this.milestoneGroup.uiComponents["vesselImageEmptyPath"].ToString();
+                this.FullImageFilePath = this.milestoneGroup.uiComponents["vesselImageFullPath"].ToString();
+
+                this.milestone = this.milestoneGroup.milestones.FirstOrDefault(m => m.id == this.status.currentMilestoneId);
+                if (this.milestone != null)
+                {
+                    this.Goal = milestone.target;
+                    this.Reward = milestone.DollarAmountText();
+                }
+
+                this.Start = 0;
+                if (this.status.currentMilestoneId > 0)
+                {
+                    PatronageMilestoneModel previousMilestone = this.period.milestoneGroups.SelectMany(mg => mg.milestones).FirstOrDefault(m => m.id == (this.status.currentMilestoneId - 1));
+                    if (previousMilestone != null)
                     {
-                        this.EmptyImageFilePath = this.milestoneGroup.uiComponents["vesselImageEmptyPath"].ToString();
-                        this.FullImageFilePath = this.milestoneGroup.uiComponents["vesselImageFullPath"].ToString();
-
-                        this.milestone = this.milestoneGroup.milestones.FirstOrDefault(m => m.id == this.status.currentMilestoneId);
-                        if (this.milestone != null)
-                        {
-                            this.Goal = milestone.target;
-                            this.Reward = milestone.DollarAmountText();
-                        }
-
-                        this.Start = 0;
-                        if (this.status.currentMilestoneId > 0)
-                        {
-                            PatronageMilestoneModel previousMilestone = this.period.milestoneGroups.SelectMany(mg => mg.milestones).FirstOrDefault(m => m.id == (this.status.currentMilestoneId - 1));
-                            if (previousMilestone != null)
-                            {
-                                this.Start = milestone.target;
-                            }
-                        }
+                        this.Start = previousMilestone.target;
                     }
                 }
             }
