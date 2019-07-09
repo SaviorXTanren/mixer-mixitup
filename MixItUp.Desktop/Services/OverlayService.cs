@@ -150,33 +150,50 @@ namespace MixItUp.Overlay
         {
             if (item != null)
             {
-                JObject jobj = await item.GetProcessedItem(user, arguments, extraSpecialIdentifiers);
-                if (jobj != null)
+                try
                 {
-                    if (item is OverlayImageItemModel || item is OverlayVideoItemModel)
+                    JObject jobj = await item.GetProcessedItem(user, arguments, extraSpecialIdentifiers);
+                    if (jobj != null)
                     {
-                        OverlayFileItemModelBase fileItem = (OverlayFileItemModelBase)item;
-                        this.SetLocalFile(fileItem.FileID, fileItem.FilePath);
-                    }
-                    else if (item is OverlaySparkCrystalItemModel)
-                    {
-                        OverlaySparkCrystalItemModel sparkCrystalItem = (OverlaySparkCrystalItemModel)item;
-                        if (!string.IsNullOrEmpty(sparkCrystalItem.CustomImageFilePath))
+                        if (item is OverlayImageItemModel || item is OverlayVideoItemModel)
                         {
-                            this.SetLocalFile(sparkCrystalItem.ID.ToString(), sparkCrystalItem.CustomImageFilePath);
+                            OverlayFileItemModelBase fileItem = (OverlayFileItemModelBase)item;
+                            this.SetLocalFile(fileItem.FileID, fileItem.FilePath);
                         }
+                        else if (item is OverlaySparkCrystalItemModel)
+                        {
+                            OverlaySparkCrystalItemModel sparkCrystalItem = (OverlaySparkCrystalItemModel)item;
+                            if (!string.IsNullOrEmpty(sparkCrystalItem.CustomImageFilePath))
+                            {
+                                this.SetLocalFile(sparkCrystalItem.ID.ToString(), sparkCrystalItem.CustomImageFilePath);
+                            }
+                        }
+                        await this.SendPacket("Show", jobj);
                     }
-                    await this.SendPacket("Show", jobj);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
                 }
             }
         }
 
         public async Task UpdateItem(OverlayItemModelBase item, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
-            JObject jobj = await item.GetProcessedItem(user, arguments, extraSpecialIdentifiers);
-            if (jobj != null)
+            if (item != null)
             {
-                await this.SendPacket("Update", jobj);
+                try
+                {
+                    JObject jobj = await item.GetProcessedItem(user, arguments, extraSpecialIdentifiers);
+                    if (jobj != null)
+                    {
+                        await this.SendPacket("Update", jobj);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
             }
         }
 
