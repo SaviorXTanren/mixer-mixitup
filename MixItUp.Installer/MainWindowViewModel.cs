@@ -31,6 +31,9 @@ namespace MixItUp.Installer
 
         public static string ZipDownloadFilePath { get { return Path.Combine(Path.GetTempPath(), "MixItUp.zip"); } }
 
+        public static string StartMenuShortCutFilePath { get { return Path.Combine(StartMenuDirectory, ShortcutFileName); } }
+        public static string DesktopShortCutFilePath { get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), ShortcutFileName); } }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public bool IsUpdate
@@ -217,7 +220,14 @@ namespace MixItUp.Installer
         {
             if (Path.Equals(this.installDirectory, DefaultInstallDirectory))
             {
-                Process.Start(Path.Combine(MainWindowViewModel.StartMenuDirectory, MainWindowViewModel.ShortcutFileName));
+                if (File.Exists(StartMenuShortCutFilePath))
+                {
+                    Process.Start(StartMenuShortCutFilePath);
+                }
+                else if (File.Exists(DesktopShortCutFilePath))
+                {
+                    Process.Start(DesktopShortCutFilePath);
+                }
             }
             else
             {
@@ -360,7 +370,7 @@ namespace MixItUp.Installer
         {
             try
             {
-                this.DisplayText1 = "Creating Start Menu shortcut...";
+                this.DisplayText1 = "Creating Start Menu & Desktop shortcuts...";
                 this.IsOperationIndeterminate = true;
                 this.OperationProgress = 0;
 
@@ -374,10 +384,36 @@ namespace MixItUp.Installer
                     string tempLinkFilePath = Path.Combine(DefaultInstallDirectory, "Mix It Up.link");
                     if (File.Exists(tempLinkFilePath))
                     {
-                        string shortcutLinkFilePath = Path.Combine(StartMenuDirectory, ShortcutFileName);
-                        File.Copy(tempLinkFilePath, shortcutLinkFilePath, overwrite: true);
+                        File.Copy(tempLinkFilePath, StartMenuShortCutFilePath, overwrite: true);
+                        File.Copy(tempLinkFilePath, DesktopShortCutFilePath, overwrite: true);
 
-                        return true;
+                        bool startMenuShortCutCreated = File.Exists(StartMenuShortCutFilePath);
+                        bool desktopShortCutCreated = File.Exists(DesktopShortCutFilePath);
+
+                        if (startMenuShortCutCreated && desktopShortCutCreated)
+                        {
+                            return true;
+                        }
+                        else if (!startMenuShortCutCreated && !desktopShortCutCreated)
+                        {
+                            this.ShowError("We were unable to create the Start Menu & Desktop shortcuts.", "Email support@mixitupapp.com to help diagnose this issue further.");
+                        }
+                        else
+                        {
+                            string shortcutCreatedLocation = "";
+                            string shortcutNotCreatedLocation = "";
+                            if (!startMenuShortCutCreated)
+                            {
+                                shortcutCreatedLocation = "Desktop";
+                                shortcutNotCreatedLocation = "Start Menu";
+                            }
+                            else if (!desktopShortCutCreated)
+                            {
+                                shortcutCreatedLocation = "Start Menu";
+                                shortcutNotCreatedLocation = "Desktop";
+                            }
+                            this.ShowError(string.Format("We were unable to create the {0} shortcut.", shortcutNotCreatedLocation), string.Format("You can use the {0} shortcut to launch Mix It Up", shortcutCreatedLocation));
+                        }
                     }
                 }
             }
