@@ -385,34 +385,21 @@ namespace MixItUp.Installer
                     if (File.Exists(tempLinkFilePath))
                     {
                         File.Copy(tempLinkFilePath, StartMenuShortCutFilePath, overwrite: true);
-                        File.Copy(tempLinkFilePath, DesktopShortCutFilePath, overwrite: true);
-
-                        bool startMenuShortCutCreated = File.Exists(StartMenuShortCutFilePath);
-                        bool desktopShortCutCreated = File.Exists(DesktopShortCutFilePath);
-
-                        if (startMenuShortCutCreated && desktopShortCutCreated)
+                        if (File.Exists(StartMenuShortCutFilePath))
                         {
                             return true;
                         }
-                        else if (!startMenuShortCutCreated && !desktopShortCutCreated)
-                        {
-                            this.ShowError("We were unable to create the Start Menu & Desktop shortcuts.", "Email support@mixitupapp.com to help diagnose this issue further.");
-                        }
                         else
                         {
-                            string shortcutCreatedLocation = "";
-                            string shortcutNotCreatedLocation = "";
-                            if (!startMenuShortCutCreated)
+                            File.Copy(tempLinkFilePath, DesktopShortCutFilePath, overwrite: true);
+                            if (File.Exists(DesktopShortCutFilePath))
                             {
-                                shortcutCreatedLocation = "Desktop";
-                                shortcutNotCreatedLocation = "Start Menu";
+                                this.ShowError("We were unable to create the Start Menu shortcut.", "You can instead use the Desktop shortcut to launch Mix It Up");
                             }
-                            else if (!desktopShortCutCreated)
+                            else
                             {
-                                shortcutCreatedLocation = "Start Menu";
-                                shortcutNotCreatedLocation = "Desktop";
+                                this.ShowError("We were unable to create the Start Menu & Desktop shortcuts.", "Email support@mixitupapp.com to help diagnose this issue further.");
                             }
-                            this.ShowError(string.Format("We were unable to create the {0} shortcut.", shortcutNotCreatedLocation), string.Format("You can use the {0} shortcut to launch Mix It Up", shortcutCreatedLocation));
                         }
                     }
                 }
