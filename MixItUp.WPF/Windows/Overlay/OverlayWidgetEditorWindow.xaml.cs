@@ -117,8 +117,7 @@ namespace MixItUp.WPF.Windows.Overlay
                     OverlayWidgetModel widget = new OverlayWidgetModel(this.viewModel.Name, this.viewModel.SelectedOverlayEndpoint, overlayItem, (int)this.viewModel.RefreshTime);
                     if (this.viewModel.OverlayWidget != null)
                     {
-                        await this.viewModel.OverlayWidget.HideItem();
-                        await this.viewModel.OverlayWidget.Item.Disable();
+                        await this.viewModel.OverlayWidget.Disable();
                         ChannelSession.Settings.OverlayWidgets.Remove(this.viewModel.OverlayWidget);
                         overlayItem.ID = this.viewModel.OverlayWidget.Item.ID;
                     }

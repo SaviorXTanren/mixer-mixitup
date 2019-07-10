@@ -133,8 +133,7 @@ namespace MixItUp.Desktop.Services
                                 {
                                     if (!widget.Item.IsInitialized)
                                     {
-                                        await widget.Item.Initialize();
-                                        await widget.ShowItem();
+                                        await widget.Initialize();
                                     }
                                     else if (widget.SupportsRefreshUpdating && widget.RefreshTime > 0 && (updateSeconds % widget.RefreshTime) == 0)
                                     {
@@ -145,7 +144,7 @@ namespace MixItUp.Desktop.Services
                                 {
                                     if (widget.Item.IsInitialized)
                                     {
-                                        await widget.Item.Disable();
+                                        await widget.Disable();
                                     }
                                 }
                             }

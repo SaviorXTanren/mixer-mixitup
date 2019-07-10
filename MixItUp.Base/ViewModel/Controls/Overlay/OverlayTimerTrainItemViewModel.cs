@@ -121,6 +121,8 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.size = 24;
             this.HTML = OverlayTimerTrainItemModel.HTMLTemplate;
 
+            this.minimumSecondsToShow = 1;
+
             this.followBonus = 1.0;
             this.hostBonus = 1.0;
             this.subBonus = 10.0;
