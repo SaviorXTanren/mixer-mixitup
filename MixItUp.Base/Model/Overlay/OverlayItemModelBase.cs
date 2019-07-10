@@ -244,7 +244,9 @@ namespace MixItUp.Base.Model.Overlay
         [JsonIgnore]
         public bool IsInitialized { get; private set; }
 
+        public event EventHandler<bool> OnChangeState = delegate { };
         public event EventHandler OnSendUpdateRequired = delegate { };
+        public event EventHandler OnHide = delegate { };
 
         public OverlayItemModelBase()
         {
@@ -270,12 +272,14 @@ namespace MixItUp.Base.Model.Overlay
 
         public virtual Task Initialize()
         {
+            this.SendChangeState(newState: true);
             this.IsInitialized = true;
             return Task.FromResult(0);
         }
 
         public virtual Task Disable()
         {
+            this.SendChangeState(newState: false);
             this.IsInitialized = false;
             return Task.FromResult(0);
         }
@@ -328,7 +332,9 @@ namespace MixItUp.Base.Model.Overlay
             return siString.ToString();
         }
 
+        protected void SendChangeState(bool newState) { this.OnChangeState(this, newState); }
         protected void SendUpdateRequired() { this.OnSendUpdateRequired(this, new EventArgs()); }
+        protected void SendHide() { this.OnHide(this, new EventArgs()); }
     }
 
     [DataContract]

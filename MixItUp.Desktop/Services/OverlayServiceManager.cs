@@ -145,7 +145,7 @@ namespace MixItUp.Desktop.Services
                                 {
                                     if (widget.Item.IsInitialized)
                                     {
-                                        await widget.Item.Disable();
+                                        await widget.HideItem();
                                     }
                                 }
                             }

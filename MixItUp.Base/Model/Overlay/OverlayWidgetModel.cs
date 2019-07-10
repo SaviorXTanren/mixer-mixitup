@@ -84,7 +84,6 @@ namespace MixItUp.Base.Model.Overlay
             if (overlay != null)
             {
                 await overlay.HideItem(this.Item);
-                await this.Item.Disable();
             }
         }
 
@@ -96,9 +95,27 @@ namespace MixItUp.Base.Model.Overlay
 
         private void SetUpEventListener()
         {
+            this.Item.OnChangeState += async (s, state) =>
+            {
+                if (state)
+                {
+                    this.IsEnabled = true;
+                }
+                else
+                {
+                    this.IsEnabled = false;
+                    await this.HideItem();
+                }
+            };
+
             this.Item.OnSendUpdateRequired += async (s, e) =>
             {
                 await this.UpdateItem();
+            };
+
+            this.Item.OnHide += async (s, e) =>
+            {
+                await this.HideItem();
             };
         }
 

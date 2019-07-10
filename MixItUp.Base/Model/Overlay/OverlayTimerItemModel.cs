@@ -31,6 +31,9 @@ namespace MixItUp.Base.Model.Overlay
         public CustomCommand TimerCompleteCommand { get; set; }
 
         [JsonIgnore]
+        private int timeLeft;
+
+        [JsonIgnore]
         private CancellationTokenSource backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 
         public OverlayTimerItemModel() : base() { }
@@ -47,17 +50,21 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task Initialize()
         {
-            await base.Initialize();
+            this.timeLeft = this.TotalLength;
 
             this.backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             Task.Run(async () => { await this.TimerBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+            await base.Initialize();
         }
 
         public override async Task Disable()
         {
+            this.timeLeft = this.TotalLength;
+
             if (this.backgroundThreadCancellationTokenSource != null)
             {
                 this.backgroundThreadCancellationTokenSource.Cancel();
@@ -73,6 +80,7 @@ namespace MixItUp.Base.Model.Overlay
             replacementSets["TEXT_COLOR"] = this.TextColor;
             replacementSets["TEXT_FONT"] = this.TextFont;
             replacementSets["TEXT_SIZE"] = this.TextSize.ToString();
+            replacementSets["TIME"] = TimeSpan.FromSeconds(this.timeLeft).ToString("hh\\:mm\\:ss");
 
             return replacementSets;
         }
@@ -81,7 +89,14 @@ namespace MixItUp.Base.Model.Overlay
         {
             try
             {
-                await Task.Delay(this.TotalLength * 1000);
+                while (this.timeLeft > 0)
+                {
+                    this.SendUpdateRequired();
+
+                    await Task.Delay(1000);
+
+                    this.timeLeft--;
+                }
 
                 if (this.IsInitialized && !this.backgroundThreadCancellationTokenSource.Token.IsCancellationRequested)
                 {

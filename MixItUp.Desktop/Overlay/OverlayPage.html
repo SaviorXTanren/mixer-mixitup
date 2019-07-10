@@ -199,10 +199,10 @@
                                 webPagePacket(packet.data);
                             }
                             else if (packet.data.ItemTypeName === "Timer") {
-                                timerPacket(packet.data);
+                                customPacket(packet.data);
                             }
                             else if (packet.data.ItemTypeName === "TimerTrain") {
-                                timerTrainPacket(packet.data);
+                                customPacket(packet.data);
                             }
                             else if (packet.data.ItemTypeName === "StreamBoss") {
                                 if (packet.type == "Show") {
@@ -368,55 +368,6 @@
                 addedElement.frameBorder = 0;
 
                 addWaitRemoveElement(data, addedElement);
-            }
-
-            function timerPacket(data) {
-                var widget = getCreatePersistentElement(data);
-                widget.TotalLength = data.TotalLength;
-                timerLoop(data);
-            }
-
-            function timerTrainPacket(data) {
-                var widget = getCreatePersistentElement(data);
-
-                var show = false;
-                if (isNaN(widget.TotalLength) || widget.TotalLength == 0) {
-                    show = true;
-                    widget.TotalLength = 0;
-                }
-                widget.TotalLength += data.TotalLength;
-
-                if (show && widget.TotalLength > data.MinimumSecondsToShow) {
-                    timerLoop(data);
-                }
-            }
-
-            function timerLoop(data) {
-                var widget = getCreatePersistentElement(data);
-                var totalTime = widget.TotalLength;
-
-                var hours = Math.floor(totalTime / 3600);
-                var minutes = Math.floor((totalTime - (hours * 3600)) / 60);
-                var seconds = totalTime - (hours * 3600) - (minutes * 60);
-
-                if (hours < 10) { hours = "0" + hours; }
-                if (minutes < 10) { minutes = "0" + minutes; }
-                if (seconds < 10) { seconds = "0" + seconds; }
-                var timeText = hours + ':' + minutes + ':' + seconds;
-
-                var widget = getCreatePersistentElement(data);
-                widget.MainDiv.innerHTML = data.HTML.replace("{TIME}", timeText);
-
-                if (totalTime > 0) {
-                    setTimeout(function () {
-                        widget.TotalLength--;
-                        timerLoop(data);
-                    }, 1000);
-                }
-                else {
-                    widget.MainDiv.innerHTML = "";
-                    removePacket(data);
-                }
             }
 
             function streamBossShowPacket(data) {
