@@ -44,8 +44,8 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         {
             if (widget != null)
             {
+                await widget.Disable();
                 ChannelSession.Settings.OverlayWidgets.Remove(widget);
-                await widget.HideItem();
                 await ChannelSession.SaveSettings();
             }
         }
@@ -54,8 +54,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         {
             if (widget != null && !widget.IsEnabled)
             {
-                widget.IsEnabled = true;
-                await widget.ShowItem();
+                await widget.Initialize();
             }
         }
 
@@ -63,8 +62,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         {
             if (widget != null && widget.IsEnabled)
             {
-                widget.IsEnabled = false;
-                await widget.HideItem();
+                await widget.Disable();
             }
         }
 

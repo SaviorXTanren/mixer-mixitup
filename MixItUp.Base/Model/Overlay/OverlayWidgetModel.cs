@@ -56,6 +56,28 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
+        public async Task Initialize() { await this.Initialize(await ChannelSession.GetCurrentUser(), new List<string>(), new Dictionary<string, string>()); }
+
+        public async Task Initialize(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        {
+            this.IsEnabled = true;
+            if (!this.Item.IsInitialized)
+            {
+                await this.Item.Initialize();
+            }
+            await this.ShowItem();
+        }
+
+        public async Task Disable()
+        {
+            this.IsEnabled = false;
+            if (this.Item.IsInitialized)
+            {
+                await this.Item.Disable();
+            }
+            await this.HideItem();
+        }
+
         public async Task ShowItem() { await this.ShowItem(await ChannelSession.GetCurrentUser(), new List<string>(), new Dictionary<string, string>()); }
 
         public async Task ShowItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
@@ -99,12 +121,11 @@ namespace MixItUp.Base.Model.Overlay
             {
                 if (state)
                 {
-                    this.IsEnabled = true;
+                    await this.Initialize();
                 }
                 else
                 {
-                    this.IsEnabled = false;
-                    await this.HideItem();
+                    await this.Disable();
                 }
             };
 

@@ -68,14 +68,13 @@ namespace MixItUp.Base.Actions
                 OverlayWidgetModel widget = ChannelSession.Settings.OverlayWidgets.FirstOrDefault(w => w.Item.ID.Equals(this.WidgetID));
                 if (widget != null)
                 {
-                    widget.IsEnabled = this.ShowWidget;
                     if (this.ShowWidget)
                     {
-                        await widget.ShowItem(user, arguments, this.extraSpecialIdentifiers);
+                        await widget.Initialize(user, arguments, this.extraSpecialIdentifiers);
                     }
                     else
                     {
-                        await widget.HideItem();
+                        await widget.Disable();
                     }
                 }
             }

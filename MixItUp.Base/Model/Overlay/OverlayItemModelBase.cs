@@ -272,15 +272,17 @@ namespace MixItUp.Base.Model.Overlay
 
         public virtual Task Initialize()
         {
-            this.SendChangeState(newState: true);
             this.IsInitialized = true;
             return Task.FromResult(0);
         }
 
         public virtual Task Disable()
         {
-            this.SendChangeState(newState: false);
-            this.IsInitialized = false;
+            if (this.IsInitialized)
+            {
+                this.IsInitialized = false;
+                this.SendChangeState(newState: false);
+            }
             return Task.FromResult(0);
         }
 
