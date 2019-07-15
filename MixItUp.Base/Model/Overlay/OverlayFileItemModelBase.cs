@@ -23,9 +23,6 @@ namespace MixItUp.Base.Model.Overlay
         public virtual string FullLink { get { return this.GetFileFullLink(this.FileID, this.FileType, this.FilePath); } set { } }
 
         [DataMember]
-        public string FileExtension { get { return Path.GetExtension(this.FilePath).Replace(".", ""); } set { } }
-
-        [DataMember]
         public bool DefaultWidthHeight { get { return this.Width == 0 && this.Height == 0; } set { } }
 
         public OverlayFileItemModelBase() : base() { }
