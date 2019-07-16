@@ -1,12 +1,9 @@
 ﻿using Mixer.Base.Model.OAuth;
-using Mixer.Base.Model.User;
-using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
 using MixItUp.Desktop.Util;
 using Newtonsoft.Json.Linq;
 using System;
@@ -59,7 +56,10 @@ namespace MixItUp.Desktop.Services
 
             this.SocketReceiveWrapper("error", (errorData) =>
             {
-                MixItUp.Base.Util.Logger.Log(errorData.ToString());
+                if (errorData != null)
+                {
+                    MixItUp.Base.Util.Logger.Log(errorData.ToString());
+                }
                 this.service.WebSocketDisconnectedOccurred();
             });
 
