@@ -8,6 +8,7 @@ using MixItUp.Desktop.Util;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace MixItUp.Desktop.Services
@@ -248,6 +249,13 @@ namespace MixItUp.Desktop.Services
                 }
             }
             return false;
+        }
+
+        private new async Task<T> GetAsync<T>(string url)
+        {
+            HttpResponseMessage response = await this.GetAsync(url);
+            Logger.LogDiagnostic(string.Format("TipeeeStream Log: {0} - {1} - {2}", response.RequestMessage.ToString(), response.StatusCode, await response.Content.ReadAsStringAsync()));
+            return await this.ProcessResponse<T>(response);
         }
 
         public void WebSocketConnectedOccurred()
