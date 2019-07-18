@@ -10,10 +10,12 @@ using MixItUp.Base.ViewModel.Favorites;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Favorites;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -221,12 +223,9 @@ namespace MixItUp.WPF.Controls.MainControls
 
             await this.Window.RunAsyncOperation(async () =>
             {
-                ChannelSession.Channel.name = this.StreamTitleTextBox.Text;
-                ChannelSession.Channel.type = gameType;
-                ChannelSession.Channel.typeId = ChannelSession.Channel.type.id;
-                ChannelSession.Channel.audience = ((string)this.AgeRatingComboBox.SelectedItem).ToLower();
+                await ChannelSession.Connection.UpdateChannel(ChannelSession.Channel.id, this.StreamTitleTextBox.Text, gameType.id, ((string)this.AgeRatingComboBox.SelectedItem).ToLower());
 
-                await ChannelSession.Connection.UpdateChannel(ChannelSession.Channel);
+                await ChannelSession.RefreshChannel();
             });
         }
 

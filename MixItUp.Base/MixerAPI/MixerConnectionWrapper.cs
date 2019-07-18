@@ -15,6 +15,7 @@ using Mixer.Base.Model.TestStreams;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -126,7 +127,30 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task<IEnumerable<ExpandedChannelModel>> GetFeaturedChannels() { return await this.RunAsync(this.Connection.Channels.GetFeaturedChannels()); }
 
-        public async Task<ChannelModel> UpdateChannel(ChannelModel channel) { return await this.RunAsync(this.Connection.Channels.UpdateChannel(channel)); }
+        public async Task UpdateChannel(uint channelID, string name = null, uint? gameTypeID = null, string ageRating = null)
+        {
+            try
+            {
+                JObject jobj = new JObject();
+                if (!string.IsNullOrEmpty(name))
+                {
+                    jobj["name"] = name;
+                }
+                if (gameTypeID.HasValue)
+                {
+                    jobj["typeId"] = gameTypeID;
+                }
+                if (!string.IsNullOrEmpty(ageRating))
+                {
+                    jobj["audience"] = ageRating;
+                }
+                await ChannelSession.Connection.Connection.Channels.PatchAsync<ChannelModel>("channels/" + channelID, ChannelSession.Connection.Connection.Channels.CreateContentFromObject(jobj));
+            }
+            catch (Exception ex)
+            {
+                MixItUp.Base.Util.Logger.Log(ex);
+            }
+        }
 
         public async Task<ChannelDetailsModel> GetChannelDetails(ChannelModel channel) { return await this.RunAsync(this.Connection.Channels.GetChannelDetails(channel.id)); }
 

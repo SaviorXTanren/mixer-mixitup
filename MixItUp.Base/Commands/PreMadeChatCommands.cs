@@ -743,10 +743,7 @@ namespace MixItUp.Base.Commands
                 {
                     if (arguments.Count() > 0)
                     {
-                        await ChannelSession.RefreshChannel();
-                        string newTitle = string.Join(" ", arguments);
-                        ChannelSession.Channel.name = newTitle;
-                        await ChannelSession.Connection.UpdateChannel(ChannelSession.Channel);
+                        await ChannelSession.Connection.UpdateChannel(ChannelSession.Channel.id, name: string.Join(" ", arguments));
                         await ChannelSession.RefreshChannel();
                     }
                     else
@@ -775,9 +772,7 @@ namespace MixItUp.Base.Commands
                         GameTypeModel newGame = games.FirstOrDefault(g => g.name.Equals(newGameName, StringComparison.CurrentCultureIgnoreCase));
                         if (newGame != null)
                         {
-                            await ChannelSession.RefreshChannel();
-                            ChannelSession.Channel.typeId = newGame.id;
-                            await ChannelSession.Connection.UpdateChannel(ChannelSession.Channel);
+                            await ChannelSession.Connection.UpdateChannel(ChannelSession.Channel.id, gameTypeID: newGame.id);
                             await ChannelSession.RefreshChannel();
 
                             await ChannelSession.Chat.Whisper(user.UserName, "Game Updated: " + newGame.name);
@@ -815,12 +810,10 @@ namespace MixItUp.Base.Commands
                     if (arguments.Count() == 1)
                     {
                         string rating = arguments.ElementAt(0);
-                        if (rating.Equals(FamilySetting) || rating.Equals(TeenSetting) || rating.Equals(AdultSettings) || rating.Equals(Adult18PlusSetting))
+                        rating = rating.ToLower().Replace(AdultSettings, Adult18PlusSetting);
+                        if (rating.Equals(FamilySetting) || rating.Equals(TeenSetting) || rating.Equals(Adult18PlusSetting))
                         {
-                            await ChannelSession.RefreshChannel();
-                            rating = rating.ToLower().Replace(AdultSettings, Adult18PlusSetting);
-                            ChannelSession.Channel.audience = rating;
-                            await ChannelSession.Connection.UpdateChannel(ChannelSession.Channel);
+                            await ChannelSession.Connection.UpdateChannel(ChannelSession.Channel.id, ageRating: rating);
                             await ChannelSession.RefreshChannel();
 
                             return;
