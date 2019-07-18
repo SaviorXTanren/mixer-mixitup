@@ -25,20 +25,13 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public int RefreshTime { get; set; }
 
-        public OverlayWidgetModel()
-        {
-            this.IsEnabled = true;
-        }
-
         public OverlayWidgetModel(string name, string overlayName, OverlayItemModelBase item, int refreshTime)
-            : this()
         {
             this.Name = name;
             this.OverlayName = overlayName;
             this.Item = item;
             this.RefreshTime = refreshTime;
-
-            this.SetUpEventListener();
+            this.IsEnabled = true;
         }
 
         [JsonIgnore]
@@ -64,6 +57,9 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.Item.IsInitialized)
             {
                 await this.Item.Initialize();
+                this.Item.OnChangeState += Item_OnChangeState;
+                this.Item.OnSendUpdateRequired += Item_OnSendUpdateRequired;
+                this.Item.OnHide += Item_OnHide;
             }
             await this.ShowItem();
         }
@@ -74,6 +70,9 @@ namespace MixItUp.Base.Model.Overlay
             if (this.Item.IsInitialized)
             {
                 await this.Item.Disable();
+                this.Item.OnChangeState -= Item_OnChangeState;
+                this.Item.OnSendUpdateRequired -= Item_OnSendUpdateRequired;
+                this.Item.OnHide -= Item_OnHide;
             }
             await this.HideItem();
         }
@@ -109,41 +108,32 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        [OnDeserialized]
-        internal void OnDeserializedMethod(StreamingContext context)
-        {
-            this.SetUpEventListener();
-        }
-
-        private void SetUpEventListener()
-        {
-            this.Item.OnChangeState += async (s, state) =>
-            {
-                if (state)
-                {
-                    await this.Initialize();
-                }
-                else
-                {
-                    await this.Disable();
-                }
-            };
-
-            this.Item.OnSendUpdateRequired += async (s, e) =>
-            {
-                await this.UpdateItem();
-            };
-
-            this.Item.OnHide += async (s, e) =>
-            {
-                await this.HideItem();
-            };
-        }
-
         private IOverlayService GetOverlay()
         {
             string overlayName = (string.IsNullOrEmpty(this.OverlayName)) ? ChannelSession.Services.OverlayServers.DefaultOverlayName : this.OverlayName;
             return ChannelSession.Services.OverlayServers.GetOverlay(overlayName);
+        }
+
+        private async void Item_OnChangeState(object sender, bool state)
+        {
+            if (state)
+            {
+                await this.Initialize();
+            }
+            else
+            {
+                await this.Disable();
+            }
+        }
+
+        private async void Item_OnSendUpdateRequired(object sender, System.EventArgs e)
+        {
+            await this.UpdateItem();
+        }
+
+        private async void Item_OnHide(object sender, System.EventArgs e)
+        {
+            await this.HideItem();
         }
     }
 }

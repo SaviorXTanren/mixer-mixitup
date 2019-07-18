@@ -1,16 +1,14 @@
 ﻿using Mixer.Base.Model.OAuth;
-using Mixer.Base.Model.User;
-using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
 using MixItUp.Desktop.Util;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace MixItUp.Desktop.Services
@@ -59,7 +57,10 @@ namespace MixItUp.Desktop.Services
 
             this.SocketReceiveWrapper("error", (errorData) =>
             {
-                MixItUp.Base.Util.Logger.Log(errorData.ToString());
+                if (errorData != null)
+                {
+                    MixItUp.Base.Util.Logger.Log(errorData.ToString());
+                }
                 this.service.WebSocketDisconnectedOccurred();
             });
 
@@ -251,6 +252,13 @@ namespace MixItUp.Desktop.Services
                 }
             }
             return false;
+        }
+
+        private new async Task<T> GetAsync<T>(string url)
+        {
+            HttpResponseMessage response = await this.GetAsync(url);
+            Logger.LogDiagnostic(string.Format("TipeeeStream Log: {0} - {1} - {2}", response.RequestMessage.ToString(), response.StatusCode, await response.Content.ReadAsStringAsync()));
+            return await this.ProcessResponse<T>(response);
         }
 
         public void WebSocketConnectedOccurred()

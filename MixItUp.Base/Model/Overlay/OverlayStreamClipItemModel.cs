@@ -47,9 +47,9 @@ namespace MixItUp.Base.Model.Overlay
         [JsonIgnore]
         public override bool SupportsTestData { get { return true; } }
 
-        public override Task LoadTestData()
+        public override async Task LoadTestData()
         {
-            this.lastClip = new ClipModel()
+            this.GlobalEvents_OnMixerClipCreated(this, new ClipModel()
             {
                 contentLocators = new List<ClipLocatorModel>()
                 {
@@ -60,8 +60,9 @@ namespace MixItUp.Base.Model.Overlay
                     }
                 },
                 durationInSeconds = 10
-            };
-            return Task.FromResult(0);
+            });
+
+            await Task.Delay(5000);
         }
 
         public override async Task Initialize()
@@ -76,6 +77,15 @@ namespace MixItUp.Base.Model.Overlay
             GlobalEvents.OnMixerClipCreated += GlobalEvents_OnMixerClipCreated;
 
             await base.Disable();
+        }
+
+        public override async Task<JObject> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        {
+            if (this.lastClip != null)
+            {
+                return await base.GetProcessedItem(user, arguments, extraSpecialIdentifiers);
+            }
+            return null;
         }
 
         protected override async Task PerformReplacements(JObject jobj, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)

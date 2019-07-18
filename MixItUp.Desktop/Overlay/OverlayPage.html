@@ -4,8 +4,6 @@
     <meta charset="utf-8" />
     <title>Mix It Up - Overlay</title>
     <link rel="shortcut icon" type="image/x-icon" href="https://github.com/SaviorXTanren/mixer-mixitup/raw/master/Wiki/Branding/logo_hd_2.png" />
-    <link rel="stylesheet" type="text/css" href="https://daneden.github.io/animate.css/animate.min.css">
-    <link href="https://unpkg.com/video.js/dist/video-js.min.css" rel="stylesheet">
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 
@@ -13,88 +11,101 @@
 
     <script src="http://code.responsivevoice.org/responsivevoice.js"></script>
 
-    <script src="https://unpkg.com/video.js/dist/video.min.js"></script>
+    <link href="https://vjs.zencdn.net/7.6.0/video-js.css" rel="stylesheet">
+    <script src="https://vjs.zencdn.net/7.6.0/video.js"></script>
 
-        <style>
-            .slidedown-animation {
-                animation: slidedownAnimationFrames ease-in-out 2s;
-                animation-iteration-count: 1;
-                transform-origin: 50% 50%;
-                -webkit-animation: slidedownAnimationFrames ease-in-out 2s;
-                -webkit-animation-iteration-count: 1;
-                -webkit-transform-origin: 50% 50%;
-                -moz-animation: slidedownAnimationFrames ease-in-out 2s;
-                -moz-animation-iteration-count: 1;
-                -moz-transform-origin: 50% 50%;
-                -o-animation: slidedownAnimationFrames ease-in-out 2s;
-                -o-animation-iteration-count: 1;
-                -o-transform-origin: 50% 50%;
-                -ms-animation: slidedownAnimationFrames ease-in-out 2s;
-                -ms-animation-iteration-count: 1;
-                -ms-transform-origin: 50% 50%;
+    <link rel="stylesheet" type="text/css" href="https://daneden.github.io/animate.css/animate.min.css">
+
+    <style>
+        .slidedown-animation {
+            animation: slidedownAnimationFrames ease-in-out 2s;
+            animation-iteration-count: 1;
+            transform-origin: 50% 50%;
+            -webkit-animation: slidedownAnimationFrames ease-in-out 2s;
+            -webkit-animation-iteration-count: 1;
+            -webkit-transform-origin: 50% 50%;
+            -moz-animation: slidedownAnimationFrames ease-in-out 2s;
+            -moz-animation-iteration-count: 1;
+            -moz-transform-origin: 50% 50%;
+            -o-animation: slidedownAnimationFrames ease-in-out 2s;
+            -o-animation-iteration-count: 1;
+            -o-transform-origin: 50% 50%;
+            -ms-animation: slidedownAnimationFrames ease-in-out 2s;
+            -ms-animation-iteration-count: 1;
+            -ms-transform-origin: 50% 50%;
+        }
+
+        @keyframes slidedownAnimationFrames {
+            0% {
+                transform: translateY(0%);
             }
 
-            @keyframes slidedownAnimationFrames {
-                0% {
-                    transform: translateY(0%);
-                }
-                50% {
-                    transform: translateY(100%);
-                }
-                100% {
-                    transform: translateY(100%);
-                }
+            50% {
+                transform: translateY(100%);
             }
 
-            @-moz-keyframes slidedownAnimationFrames {
-                0% {
-                    -moz-transform: translateY(0%);
-                }
-                50% {
-                    transform: translateY(100%);
-                }
-                100% {
-                    transform: translateY(100%);
-                }
+            100% {
+                transform: translateY(100%);
+            }
+        }
+
+        @-moz-keyframes slidedownAnimationFrames {
+            0% {
+                -moz-transform: translateY(0%);
             }
 
-            @-webkit-keyframes slidedownAnimationFrames {
-                0% {
-                    -webkit-transform: translateY(0%);
-                }
-                50% {
-                    transform: translateY(100%);
-                }
-                100% {
-                    transform: translateY(100%);
-                }
+            50% {
+                transform: translateY(100%);
             }
 
-            @-o-keyframes slidedownAnimationFrames {
-                0% {
-                    -o-transform: translateY(0%);
-                }
-                50% {
-                    transform: translateY(100%);
-                }
-                100% {
-                    transform: translateY(100%);
-                }
+            100% {
+                transform: translateY(100%);
+            }
+        }
+
+        @-webkit-keyframes slidedownAnimationFrames {
+            0% {
+                -webkit-transform: translateY(0%);
             }
 
-            @-ms-keyframes slidedownAnimationFrames {
-                0% {
-                    -ms-transform: translateY(0%);
-                }
-                50% {
-                    transform: translateY(100%);
-                }
-                100% {
-                    transform: translateY(100%);
-                }
+            50% {
+                transform: translateY(100%);
             }
-        </style>
-    </head>
+
+            100% {
+                transform: translateY(100%);
+            }
+        }
+
+        @-o-keyframes slidedownAnimationFrames {
+            0% {
+                -o-transform: translateY(0%);
+            }
+
+            50% {
+                transform: translateY(100%);
+            }
+
+            100% {
+                transform: translateY(100%);
+            }
+        }
+
+        @-ms-keyframes slidedownAnimationFrames {
+            0% {
+                -ms-transform: translateY(0%);
+            }
+
+            50% {
+                transform: translateY(100%);
+            }
+
+            100% {
+                transform: translateY(100%);
+            }
+        }
+    </style>
+</head>
     <body style="background-color: transparent; overflow: hidden; position: absolute; width: 100%; max-width: 100%; min-width: 100%; height: 100%; max-height: 100%; min-height: 100%; margin: 0px;">
         <div id="mainOverlay" style="position: absolute; width: 100%; max-width: 100%; min-width: 100%; height: 100%; max-height: 100%; min-height: 100%; margin: 0px;"></div>
 
@@ -347,7 +358,12 @@
 
                 sourceElement = document.createElement('source');
                 sourceElement.src = data.FullLink;
-                sourceElement.type = "video/" + data.FileExtension;
+
+                var fileExtensionIndex = data.FilePath.lastIndexOf(".");
+                if (fileExtensionIndex > 0) {
+                    var fileExtension = data.FilePath.substring(fileExtensionIndex + 1);
+                    sourceElement.type = "video/" + fileExtension;
+                }
                 addedElement.appendChild(sourceElement);
 
                 addWaitRemoveElement(data, addedElement);
@@ -390,31 +406,32 @@
             }
 
             function streamClipPacket(data) {
-                var addedElement = document.createElement('video');
+                var addedElement = document.createElement('div');
                 addedElement.id = data.ID;
-                addedElement.frameBorder = 0;
-                addedElement.allow = "autoplay; encrypted-media";
-                addedElement.setAttribute('autoplay', '');
-                addedElement.volume = data.VolumeDecimal;
 
-                var sourceElement = document.createElement('source');
-                sourceElement.src = data.FullLink;
-                addedElement.appendChild(sourceElement);
+                var videoElement = document.createElement('video');
+                videoElement.id = "video-" + data.ID;
+                videoElement.className += 'video-js vjs-default-skin';
+                videoElement.frameBorder = 0;
+                videoElement.volume = data.VolumeDecimal;
+
+                addedElement.appendChild(videoElement);
 
                 addWaitRemoveElement(data, addedElement);
 
-                var options = {
+                var player = videojs(videoElement, {
                     autoplay: 'play',
                     controls: false,
-                    preload: 'auto',
-                };
-
-                videojs(addedElement, options, function onPlayerReady() {
-                    var player = document.getElementById(data.ID).getElementsByTagName('video')[0];
-                    player.volume = data.VolumeDecimal;
-                    player.width = data.Width;
-                    player.height = data.Height;
+                    width: data.Width,
+                    height: data.Height,
+                    volume: data.VolumeDecimal
                 });
+
+                player.ready(function () {
+                    player.volume(data.VolumeDecimal);
+                });
+
+                player.src(data.FullLink);
             }
 
             function listPacket(data) {
@@ -607,17 +624,19 @@
                 if (addedElement != null) {
 
                     addedElement.style.cssText += 'position: absolute; margin: 0px;'
-                    if (data.Position.IsPixelPosition) {
-                        addedElement.style.cssText += 'left: ' + data.Position.Horizontal.toString() + 'px; top: ' + data.Position.Vertical.toString() + 'px;'
-                    }
-                    else {
-                        addedElement.style.cssText += 'left: ' + data.Position.Horizontal.toString() + '%; top: ' + data.Position.Vertical.toString() + '%;'
+                    if (data.Position != null) {
+                        if (data.Position.IsPixelPosition) {
+                            addedElement.style.cssText += 'left: ' + data.Position.Horizontal.toString() + 'px; top: ' + data.Position.Vertical.toString() + 'px;'
+                        }
+                        else {
+                            addedElement.style.cssText += 'left: ' + data.Position.Horizontal.toString() + '%; top: ' + data.Position.Vertical.toString() + '%;'
+                        }
                     }
 
                     if (data.ForceBottomAlign) {
                         addedElement.style.cssText += "transform: translate(-50%, -100%);";
                     }
-                    else if (data.Position.IsPercentagePosition) {
+                    else if (data.Position != null && data.Position.IsPercentagePosition) {
                         addedElement.style.cssText += "transform: translate(-50%, -50%);";
                     }
 
@@ -656,7 +675,7 @@
                                         removePacket(data);
                                     });
 
-                                }, (data.Effects.Duration * 1000 * 2) / 3);
+                                }, ((data.Effects.Duration * 1000) / 3) * 2);
 
                             }, (data.Effects.Duration * 1000) / 3);
                         });

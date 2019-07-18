@@ -34,6 +34,12 @@ namespace MixItUp.WPF
         {
             InitializeComponent();
 
+            // NOTE: This is an attempt to fix a random crashing bug related with an
+            // "InvalidOperationException" happening after login as the main window is loading.
+            // There were some links that said the WebBrowser control can sometimes cause this and
+            // loading about:blank would fix it.
+            this.YouTubeSongRequestHost.Navigate("about:blank");
+
             this.Closing += MainWindow_Closing;
             this.Initialize(this.StatusBar);
 
