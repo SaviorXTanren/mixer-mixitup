@@ -10,16 +10,27 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 {
     public class BeachBallGameEditorControlViewModel : GameEditorControlViewModelBase
     {
-        public string HitTimeLimitString
+        public string LowerTimeLimitString
         {
-            get { return this.HitTimeLimit.ToString(); }
+            get { return this.LowerTimeLimit.ToString(); }
             set
             {
-                this.HitTimeLimit = this.GetPositiveIntFromString(value);
+                this.LowerTimeLimit = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }
-        public int HitTimeLimit { get; set; } = 10;
+        public int LowerTimeLimit { get; set; } = 10;
+
+        public string UpperTimeLimitString
+        {
+            get { return this.UpperTimeLimit.ToString(); }
+            set
+            {
+                this.UpperTimeLimit = this.GetPositiveIntFromString(value);
+                this.NotifyPropertyChanged();
+            }
+        }
+        public int UpperTimeLimit { get; set; } = 10;
 
         public bool AllowUserTargeting
         {
@@ -52,7 +63,17 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         {
             this.existingCommand = command;
 
-            this.HitTimeLimit = this.existingCommand.HitTimeLimit;
+#pragma warning disable CS0612 // Type or member is obsolete
+            if (this.existingCommand.HitTimeLimit > 0)
+            {
+                this.existingCommand.LowerLimit = this.existingCommand.HitTimeLimit;
+                this.existingCommand.UpperLimit = this.existingCommand.HitTimeLimit;
+                this.existingCommand.HitTimeLimit = 0;
+            }
+#pragma warning restore CS0612 // Type or member is obsolete
+
+            this.LowerTimeLimit = this.existingCommand.LowerLimit;
+            this.UpperTimeLimit = this.existingCommand.UpperLimit;
             this.AllowUserTargeting = this.existingCommand.AllowUserTargeting;
 
             this.StartedCommand = this.existingCommand.StartedCommand;
@@ -62,7 +83,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         public override void SaveGameCommand(string name, IEnumerable<string> triggers, RequirementViewModel requirements)
         {
-            GameCommandBase newCommand = new BeachBallGameCommand(name, triggers, requirements, this.HitTimeLimit, this.AllowUserTargeting, this.StartedCommand, this.BallHitCommand,
+            GameCommandBase newCommand = new BeachBallGameCommand(name, triggers, requirements, this.LowerTimeLimit, this.UpperTimeLimit, this.AllowUserTargeting, this.StartedCommand, this.BallHitCommand,
                 this.BallMissedCommand);
             if (this.existingCommand != null)
             {
@@ -74,9 +95,15 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         public override async Task<bool> Validate()
         {
-            if (this.HitTimeLimit <= 0)
+            if (this.LowerTimeLimit <= 0)
             {
-                await DialogHelper.ShowMessage("The Hit Time Limit is not a valid number greater than 0");
+                await DialogHelper.ShowMessage("The Lower Time Limit is not a valid number greater than 0");
+                return false;
+            }
+
+            if (this.UpperTimeLimit <= 0)
+            {
+                await DialogHelper.ShowMessage("The Upper Time Limit is not a valid number greater than 0");
                 return false;
             }
             return true;

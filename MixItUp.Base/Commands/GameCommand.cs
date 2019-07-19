@@ -761,7 +761,13 @@ namespace MixItUp.Base.Commands
     public class HotPotatoGameCommand : GameCommandBase
     {
         [DataMember]
+        [Obsolete]
         public int TimeLimit { get; set; }
+
+        [DataMember]
+        public int LowerLimit { get; set; }
+        [DataMember]
+        public int UpperLimit { get; set; }
         [DataMember]
         public bool AllowUserTargeting { get; set; }
 
@@ -783,11 +789,12 @@ namespace MixItUp.Base.Commands
 
         public HotPotatoGameCommand() { }
 
-        public HotPotatoGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int timeLimit, bool allowUserTargeting,
+        public HotPotatoGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int lowerLimit, int upperLimit, bool allowUserTargeting,
             CustomCommand startedCommand, CustomCommand tossPotatoCommand, CustomCommand potatoExplodeCommand)
             : base(name, commands, requirements)
         {
-            this.TimeLimit = timeLimit;
+            this.LowerLimit = lowerLimit;
+            this.UpperLimit = upperLimit;
             this.AllowUserTargeting = allowUserTargeting;
             this.StartedCommand = startedCommand;
             this.TossPotatoCommand = tossPotatoCommand;
@@ -798,6 +805,15 @@ namespace MixItUp.Base.Commands
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
         {
+#pragma warning disable CS0612 // Type or member is obsolete
+            if (this.TimeLimit > 0)
+            {
+                this.LowerLimit = this.TimeLimit;
+                this.UpperLimit = this.TimeLimit;
+                this.TimeLimit = 0;
+            }
+#pragma warning restore CS0612 // Type or member is obsolete
+
             if (await this.PerformUsageChecks(user, arguments) && await this.PerformRequirementChecks(user))
             {
                 UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
@@ -837,7 +853,7 @@ namespace MixItUp.Base.Commands
 
                         this.timeLimitTask = Task.Run(async () =>
                         {
-                            await Task.Delay(1000 * this.TimeLimit);
+                            await Task.Delay(1000 * RandomHelper.GenerateRandomNumber(this.LowerLimit, this.UpperLimit));
 
                             this.Requirements.UpdateCooldown(user);
 
@@ -914,7 +930,13 @@ namespace MixItUp.Base.Commands
     public class BeachBallGameCommand : GameCommandBase
     {
         [DataMember]
+        [Obsolete]
         public int HitTimeLimit { get; set; }
+
+        [DataMember]
+        public int LowerLimit { get; set; }
+        [DataMember]
+        public int UpperLimit { get; set; }
         [DataMember]
         public bool AllowUserTargeting { get; set; }
 
@@ -938,11 +960,12 @@ namespace MixItUp.Base.Commands
 
         public BeachBallGameCommand() { }
 
-        public BeachBallGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int hitTimeLimit, bool allowUserTargeting,
+        public BeachBallGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int lowerLimit, int upperLimit, bool allowUserTargeting,
             CustomCommand startedCommand, CustomCommand ballHitCommand, CustomCommand ballMissedCommand)
             : base(name, commands, requirements)
         {
-            this.HitTimeLimit = hitTimeLimit;
+            this.LowerLimit = lowerLimit;
+            this.UpperLimit = upperLimit;
             this.AllowUserTargeting = allowUserTargeting;
             this.StartedCommand = startedCommand;
             this.BallHitCommand = ballHitCommand;
@@ -953,6 +976,15 @@ namespace MixItUp.Base.Commands
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
         {
+#pragma warning disable CS0612 // Type or member is obsolete
+            if (this.HitTimeLimit > 0)
+            {
+                this.LowerLimit = this.HitTimeLimit;
+                this.UpperLimit = this.HitTimeLimit;
+                this.HitTimeLimit = 0;
+            }
+#pragma warning restore CS0612 // Type or member is obsolete
+
             if (await this.PerformUsageChecks(user, arguments) && await this.PerformRequirementChecks(user))
             {
                 UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
@@ -1072,7 +1104,7 @@ namespace MixItUp.Base.Commands
                 {
                     CancellationToken token = this.timeLimitCancellationTokenSource.Token;
 
-                    await Task.Delay(1000 * this.HitTimeLimit);
+                    await Task.Delay(1000 * RandomHelper.GenerateRandomNumber(this.LowerLimit, this.UpperLimit));
 
                     if (!token.IsCancellationRequested)
                     {
