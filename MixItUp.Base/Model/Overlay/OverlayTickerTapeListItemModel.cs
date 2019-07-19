@@ -66,6 +66,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 GlobalEvents.OnSubscribeOccurred += GlobalEvents_OnSubscribeOccurred;
                 GlobalEvents.OnResubscribeOccurred += GlobalEvents_OnResubscribeOccurred;
+                GlobalEvents.OnSubscriptionGiftedOccurred += GlobalEvents_OnSubscriptionGiftedOccurred;
             }
             if (this.TickerTapeType == OverlayTickerTapeItemTypeEnum.Donations)
             {
@@ -141,6 +142,15 @@ namespace MixItUp.Base.Model.Overlay
             {
                 this.subs.Add(user.Item1.ID);
                 await this.AddEvent(user.Item1.UserName + " x" + user.Item2);
+            }
+        }
+
+        private async void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserViewModel, UserViewModel> e)
+        {
+            if (!this.subs.Contains(e.Item2.ID))
+            {
+                this.subs.Add(e.Item2.ID);
+                await this.AddEvent(e.Item2.UserName);
             }
         }
 
