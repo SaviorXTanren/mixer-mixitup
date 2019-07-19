@@ -1,8 +1,5 @@
-﻿using Mixer.Base.Model.Chat;
-using Mixer.Base.Model.Patronage;
-using Mixer.Base.Model.Skills;
+﻿using Mixer.Base.Model.Patronage;
 using MixItUp.Base.MixerAPI;
-using MixItUp.Base.Model.Skill;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -19,14 +16,15 @@ namespace MixItUp.Base.Statistics
 
         public DateTimeOffset StartTime { get; private set; }
 
-        private EventStatisticDataTracker followTracker = new EventStatisticDataTracker("Follows", "AccountPlus", true, new List<string>() { "Username", "Date & Time" });
-        private EventStatisticDataTracker unfollowTracker = new EventStatisticDataTracker("Unfollows", "AccountMinus", true, new List<string>() { "Username", "Date & Time" });
-        private EventStatisticDataTracker hostsTracker = new EventStatisticDataTracker("Hosts", "AccountMultiple", true, new List<string>() { "Username", "Viewers", "Date & Time" }, (EventStatisticDataTracker dataTracker) =>
+        private EventStatisticDataTracker followTracker = new EventStatisticDataTracker("Follows", "AccountArrowRight", true, new List<string>() { "Username", "Date & Time" });
+        private EventStatisticDataTracker unfollowTracker = new EventStatisticDataTracker("Unfollows", "AccountArrowLeftOutline", true, new List<string>() { "Username", "Date & Time" });
+        private EventStatisticDataTracker hostsTracker = new EventStatisticDataTracker("Hosts", "AccountSupervisor", true, new List<string>() { "Username", "Viewers", "Date & Time" }, (EventStatisticDataTracker dataTracker) =>
         {
             return string.Format("Hosts: {0},    Total Host Viewers: {1},    Average Host Viewers: {2}", dataTracker.UniqueIdentifiers, dataTracker.TotalValue, dataTracker.AverageValueString);
         });
         private EventStatisticDataTracker subscriberTracker = new EventStatisticDataTracker("Subscribes", "AccountStar", true, new List<string>() { "Username", "Date & Time" });
-        private EventStatisticDataTracker resubscriberTracker = new EventStatisticDataTracker("Resubscribes", "AccountConvert", true, new List<string>() { "Username", "Date & Time" });
+        private EventStatisticDataTracker resubscriberTracker = new EventStatisticDataTracker("Resubscribes", "AccountSettings", true, new List<string>() { "Username", "Date & Time" });
+        private EventStatisticDataTracker giftedSubscriptionsTracker = new EventStatisticDataTracker("Gifted Subs", "AccountHeart", true, new List<string>() { "Gifter", "Receiver" });
 
         private EventStatisticDataTracker interactiveTracker = new EventStatisticDataTracker("Interactive", "GamepadVariant", true, new List<string>() { "Control Name", "Username", "Date & Time" }, (EventStatisticDataTracker dataTracker) =>
         {
@@ -56,6 +54,7 @@ namespace MixItUp.Base.Statistics
             GlobalEvents.OnHostOccurred += Constellation_OnHostedOccurred;
             GlobalEvents.OnSubscribeOccurred += Constellation_OnSubscribedOccurred;
             GlobalEvents.OnResubscribeOccurred += Constellation_OnResubscribedOccurred;
+            GlobalEvents.OnSubscriptionGiftedOccurred += GlobalEvents_OnSubscriptionGiftedOccurred;
 
             ChannelSession.Interactive.OnInteractiveControlUsed += Interactive_OnInteractiveControlUsed;
 
@@ -91,6 +90,7 @@ namespace MixItUp.Base.Statistics
             this.Statistics.Add(this.hostsTracker);
             this.Statistics.Add(this.subscriberTracker);
             this.Statistics.Add(this.resubscriberTracker);
+            this.Statistics.Add(this.giftedSubscriptionsTracker);
 
             this.Statistics.Add(this.interactiveTracker);
             this.Statistics.Add(this.sparksTracker);
@@ -156,6 +156,11 @@ namespace MixItUp.Base.Statistics
         private void Constellation_OnResubscribedOccurred(object sender, Tuple<UserViewModel, int> e)
         {
             this.resubscriberTracker.OnStatisticEventOccurred(e.Item1.UserName);
+        }
+
+        private void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserViewModel, UserViewModel> e)
+        {
+            this.giftedSubscriptionsTracker.OnStatisticEventOccurred(e.Item1.UserName, e.Item2.UserName);
         }
 
         private void Interactive_OnInteractiveControlUsed(object sender, InteractiveInputEvent e)

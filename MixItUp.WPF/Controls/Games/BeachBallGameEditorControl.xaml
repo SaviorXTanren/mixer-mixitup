@@ -25,18 +25,22 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Text="{Binding HitTimeLimitString}" Grid.Column="0" Width="80" MaterialDesign:HintAssist.Hint="Hit Time Limit" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding LowerTimeLimitString}" Grid.Column="0" Width="100" MaterialDesign:HintAssist.Hint="Lower Time Limit" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBlock Grid.Column="2" VerticalAlignment="Center">Allow User Targeting:</TextBlock>
-            <ToggleButton Grid.Column="4" IsChecked="{Binding AllowUserTargeting}" />
+            <TextBox Text="{Binding UpperTimeLimitString}" Grid.Column="2" Width="100" MaterialDesign:HintAssist.Hint="Upper Time Limit" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <GroupBox Grid.Column="6" Header="Game Start">
+            <TextBlock Grid.Column="4" VerticalAlignment="Center">Allow User Targeting:</TextBlock>
+            <ToggleButton Grid.Column="6" IsChecked="{Binding AllowUserTargeting}" />
+
+            <GroupBox Grid.Column="8" Header="Game Start">
                 <CommandControls:CommandButtonsControl DataContext="{Binding StartedCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
             </GroupBox>
         </Grid>

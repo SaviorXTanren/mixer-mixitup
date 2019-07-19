@@ -104,6 +104,7 @@ namespace MixItUp.Base.Model.Overlay
 
                 GlobalEvents.OnSubscribeOccurred += GlobalEvents_OnSubscribeOccurred;
                 GlobalEvents.OnResubscribeOccurred += GlobalEvents_OnResubscribeOccurred;
+                GlobalEvents.OnSubscriptionGiftedOccurred += GlobalEvents_OnSubscriptionGiftedOccurred;
             }
             else if (this.LeaderboardType == OverlayLeaderboardListItemTypeEnum.Donations)
             {
@@ -117,6 +118,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             GlobalEvents.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
             GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
+            GlobalEvents.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;
             GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
 
             await base.Disable();
@@ -225,6 +227,12 @@ namespace MixItUp.Base.Model.Overlay
         }
 
         private async void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserViewModel, int> user)
+        {
+            await this.UpdateSubscribers();
+            this.SendUpdateRequired();
+        }
+
+        private async void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserViewModel, UserViewModel> e)
         {
             await this.UpdateSubscribers();
             this.SendUpdateRequired();

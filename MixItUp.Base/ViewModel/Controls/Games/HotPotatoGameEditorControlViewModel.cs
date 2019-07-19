@@ -5,22 +5,32 @@ using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Controls.Games
 {
     public class HotPotatoGameEditorControlViewModel : GameEditorControlViewModelBase
     {
-        public string TimeLimitString
+        public string LowerTimeLimitString
         {
-            get { return this.TimeLimit.ToString(); }
+            get { return this.LowerTimeLimit.ToString(); }
             set
             {
-                this.TimeLimit = this.GetPositiveIntFromString(value);
+                this.LowerTimeLimit = this.GetPositiveIntFromString(value);
                 this.NotifyPropertyChanged();
             }
         }
-        public int TimeLimit { get; set; } = 30;
+        public int LowerTimeLimit { get; set; } = 30;
+
+        public string UpperTimeLimitString
+        {
+            get { return this.UpperTimeLimit.ToString(); }
+            set
+            {
+                this.UpperTimeLimit = this.GetPositiveIntFromString(value);
+                this.NotifyPropertyChanged();
+            }
+        }
+        public int UpperTimeLimit { get; set; } = 30;
 
         public bool AllowUserTargeting
         {
@@ -53,7 +63,17 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         {
             this.existingCommand = command;
 
-            this.TimeLimit = this.existingCommand.TimeLimit;
+#pragma warning disable CS0612 // Type or member is obsolete
+            if (this.existingCommand.TimeLimit > 0)
+            {
+                this.existingCommand.LowerLimit = this.existingCommand.TimeLimit;
+                this.existingCommand.UpperLimit = this.existingCommand.TimeLimit;
+                this.existingCommand.TimeLimit = 0;
+            }
+#pragma warning restore CS0612 // Type or member is obsolete
+
+            this.LowerTimeLimit = this.existingCommand.LowerLimit;
+            this.UpperTimeLimit = this.existingCommand.UpperLimit;
             this.AllowUserTargeting = this.existingCommand.AllowUserTargeting;
 
             this.StartedCommand = this.existingCommand.StartedCommand;
@@ -63,7 +83,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         public override void SaveGameCommand(string name, IEnumerable<string> triggers, RequirementViewModel requirements)
         {
-            GameCommandBase newCommand = new HotPotatoGameCommand(name, triggers, requirements, this.TimeLimit, this.AllowUserTargeting, this.StartedCommand, this.TossPotatoCommand,
+            GameCommandBase newCommand = new HotPotatoGameCommand(name, triggers, requirements, this.LowerTimeLimit, this.UpperTimeLimit, this.AllowUserTargeting, this.StartedCommand, this.TossPotatoCommand,
                 this.PotatoExplodeCommand);
             if (this.existingCommand != null)
             {
@@ -75,9 +95,15 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         public override async Task<bool> Validate()
         {
-            if (this.TimeLimit <= 0)
+            if (this.LowerTimeLimit <= 0)
             {
-                await DialogHelper.ShowMessage("The Time Limit is not a valid number greater than 0");
+                await DialogHelper.ShowMessage("The Lower Time Limit is not a valid number greater than 0");
+                return false;
+            }
+
+            if (this.UpperTimeLimit <= 0)
+            {
+                await DialogHelper.ShowMessage("The Upper Time Limit is not a valid number greater than 0");
                 return false;
             }
             return true;

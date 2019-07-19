@@ -174,6 +174,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 GlobalEvents.OnSubscribeOccurred += GlobalEvents_OnSubscribeOccurred;
                 GlobalEvents.OnResubscribeOccurred += GlobalEvents_OnResubscribeOccurred;
+                GlobalEvents.OnSubscriptionGiftedOccurred += GlobalEvents_OnSubscriptionGiftedOccurred;
             }
             if (this.DonationBonus > 0.0)
             {
@@ -197,6 +198,7 @@ namespace MixItUp.Base.Model.Overlay
             GlobalEvents.OnHostOccurred -= GlobalEvents_OnHostOccurred;
             GlobalEvents.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
             GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
+            GlobalEvents.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;
             GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
             GlobalEvents.OnSparkUseOccurred -= GlobalEvents_OnSparkUseOccurred;
             GlobalEvents.OnEmberUseOccurred -= GlobalEvents_OnEmberUseOccurred;
@@ -319,6 +321,15 @@ namespace MixItUp.Base.Model.Overlay
             {
                 this.subs.Add(user.Item1.ID);
                 await this.ReduceHealth(user.Item1, this.SubscriberBonus);
+            }
+        }
+
+        private async void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserViewModel, UserViewModel> e)
+        {
+            if (!this.subs.Contains(e.Item2.ID))
+            {
+                this.subs.Add(e.Item2.ID);
+                await this.ReduceHealth(e.Item2, this.SubscriberBonus);
             }
         }
 
