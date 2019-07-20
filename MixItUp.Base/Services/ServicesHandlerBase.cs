@@ -12,6 +12,7 @@ namespace MixItUp.Base.Services
         public IFileService FileService { get; protected set; }
         public IAudioService AudioService { get; protected set; }
         public IInputService InputService { get; protected set; }
+        public ITimerService TimerService { get; protected set; }
         public IGameQueueService GameQueueService { get; protected set; }
         public IImageManipulationService ImageManipulationService { get; protected set; }
         public ITextToSpeechService TextToSpeechService { get; protected set; }

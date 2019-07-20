@@ -23,6 +23,7 @@ namespace MixItUp.Desktop.Services
             this.Settings = new DesktopSettingsService();
             this.FileService = new WindowsFileService();
             this.InputService = new WindowsInputService();
+            this.TimerService = new TimerService();
             this.GameQueueService = new GameQueueService();
             this.ImageManipulationService = new DesktopImageManipulationService();
             this.AudioService = new AudioService();
