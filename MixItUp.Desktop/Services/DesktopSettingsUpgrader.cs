@@ -4,10 +4,12 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Desktop.Services
@@ -28,6 +30,7 @@ namespace MixItUp.Desktop.Services
             await DesktopSettingsUpgrader.Version33Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version34Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version35Upgrade(version, filePath);
+            await DesktopSettingsUpgrader.Version36Upgrade(version, filePath);
 
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
             settings.InitializeDB = false;
@@ -186,6 +189,22 @@ namespace MixItUp.Desktop.Services
                 }
                 settings.overlayWidgetsInternal.Clear();
 #pragma warning restore CS0612 // Type or member is obsolete
+
+                await ChannelSession.Services.Settings.Save(settings);
+            }
+        }
+
+        private static async Task Version36Upgrade(int version, string filePath)
+        {
+            if (version < 36)
+            {
+                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
+                await ChannelSession.Services.Settings.Initialize(settings);
+
+                foreach (CommandBase command in GetAllCommands(settings))
+                {
+                    StoreCommandUpgrader.ReplaceActionGroupAction(command.Actions);
+                }
 
                 await ChannelSession.Services.Settings.Save(settings);
             }

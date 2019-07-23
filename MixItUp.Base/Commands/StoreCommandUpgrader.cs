@@ -13,6 +13,30 @@ namespace MixItUp.Base.Commands
             {
                 StoreCommandUpgrader.RestructureNewerOverlayActions(actions);
             }
+
+            if (StoreCommandUpgrader.IsVersionLessThan(version, "0.5.1.700"))
+            {
+                StoreCommandUpgrader.ReplaceActionGroupAction(actions);
+            }
+        }
+
+        public static void ReplaceActionGroupAction(List<ActionBase> actions)
+        {
+            for (int i = 0; i < actions.Count; i++)
+            {
+                ActionBase action = actions[i];
+#pragma warning disable CS0612 // Type or member is obsolete
+                if (action is ActionGroupAction)
+                {
+                    ActionGroupAction aaction = (ActionGroupAction)action;
+                    actions[i] = new CommandAction()
+                    {
+                        CommandActionType = CommandActionTypeEnum.RunCommand,
+                        CommandID = aaction.ActionGroupID
+                    };
+                }
+#pragma warning restore CS0612 // Type or member is obsolete
+            }
         }
 
         public static void RestructureNewerOverlayActions(List<ActionBase> actions)

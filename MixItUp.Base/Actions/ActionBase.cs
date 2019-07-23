@@ -38,6 +38,7 @@ namespace MixItUp.Base.Actions
         Rank,
         [Name("Web Request")]
         WebRequest,
+        [Obsolete]
         [Name("Action Group")]
         ActionGroup,
         [Name("Special Identifier")]

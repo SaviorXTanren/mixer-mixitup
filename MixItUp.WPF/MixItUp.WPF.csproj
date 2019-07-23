@@ -343,9 +343,6 @@
       <DependentUpon>ActionContainerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Actions\ActionControlBase.cs" />
-    <Compile Include="Controls\Actions\ActionGroupActionControl.xaml.cs">
-      <DependentUpon>ActionGroupActionControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Actions\ChatActionControl.xaml.cs">
       <DependentUpon>ChatActionControl.xaml</DependentUpon>
     </Compile>
@@ -1011,10 +1008,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\ActionContainerControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Actions\ActionGroupActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
