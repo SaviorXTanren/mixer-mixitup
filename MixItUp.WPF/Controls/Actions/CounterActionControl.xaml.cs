@@ -21,7 +21,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override Task OnLoaded()
         {
-            this.CounterActionTypeComboBox.ItemsSource = new List<string>() { "Update", "Reset" };
+            this.CounterActionTypeComboBox.ItemsSource = new List<string>() { "Update", "Set", "Reset" };
 
             if (this.action != null)
             {
@@ -34,9 +34,14 @@ namespace MixItUp.WPF.Controls.Actions
                     this.CounterActionTypeComboBox.SelectedIndex = 0;
                     this.CounterAmountTextBox.Text = this.action.Amount;
                 }
-                else if (this.action.ResetAmount)
+                else if (this.action.SetAmount)
                 {
                     this.CounterActionTypeComboBox.SelectedIndex = 1;
+                    this.CounterAmountTextBox.Text = this.action.Amount;
+                }
+                else if (this.action.ResetAmount)
+                {
+                    this.CounterActionTypeComboBox.SelectedIndex = 2;
                 }
             }
             return Task.FromResult(0);
@@ -48,10 +53,15 @@ namespace MixItUp.WPF.Controls.Actions
             {
                 if (this.CounterActionTypeComboBox.SelectedIndex == 0)
                 {
-                    return new CounterAction(this.CounterNameTextBox.Text, this.CounterAmountTextBox.Text, this.SaveToFileToggleButton.IsChecked.GetValueOrDefault(),
+                    return new CounterAction(this.CounterNameTextBox.Text, this.CounterAmountTextBox.Text, false, this.SaveToFileToggleButton.IsChecked.GetValueOrDefault(),
                         this.ResetOnLoadToggleButton.IsChecked.GetValueOrDefault());
                 }
                 else if (this.CounterActionTypeComboBox.SelectedIndex == 1)
+                {
+                    return new CounterAction(this.CounterNameTextBox.Text, this.CounterAmountTextBox.Text, true, this.SaveToFileToggleButton.IsChecked.GetValueOrDefault(),
+                        this.ResetOnLoadToggleButton.IsChecked.GetValueOrDefault());
+                }
+                else if (this.CounterActionTypeComboBox.SelectedIndex == 2)
                 {
                     return new CounterAction(this.CounterNameTextBox.Text, this.SaveToFileToggleButton.IsChecked.GetValueOrDefault(), this.ResetOnLoadToggleButton.IsChecked.GetValueOrDefault());
                 }
@@ -75,6 +85,10 @@ namespace MixItUp.WPF.Controls.Actions
                 this.CounterAmountTextBox.IsEnabled = true;
             }
             else if (this.CounterActionTypeComboBox.SelectedIndex == 1)
+            {
+                this.CounterAmountTextBox.IsEnabled = true;
+            }
+            else if (this.CounterActionTypeComboBox.SelectedIndex == 2)
             {
                 this.CounterAmountTextBox.IsEnabled = false;
                 this.CounterAmountTextBox.Clear();

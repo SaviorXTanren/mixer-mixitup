@@ -33,6 +33,9 @@ namespace MixItUp.Base.Actions
         public bool ResetAmount { get; set; }
 
         [DataMember]
+        public bool SetAmount { get; set; }
+
+        [DataMember]
         public bool SaveToFile { get; set; }
         [DataMember]
         public bool ResetOnLoad { get; set; }
@@ -48,11 +51,12 @@ namespace MixItUp.Base.Actions
             this.ResetOnLoad = resetOnLoad;
         }
 
-        public CounterAction(string counterName, string amount, bool saveToFile, bool resetOnLoad)
+        public CounterAction(string counterName, string amount, bool set, bool saveToFile, bool resetOnLoad)
             : this()
         {
             this.CounterName = counterName;
-            this.UpdateAmount = true;
+            this.UpdateAmount = !set;
+            this.SetAmount = set;
             this.Amount = amount;
             this.SaveToFile = saveToFile;
             this.ResetOnLoad = resetOnLoad;
@@ -95,6 +99,14 @@ namespace MixItUp.Base.Actions
                 if (double.TryParse(amountText, out double amount))
                 {
                     ChannelSession.Counters[this.CounterName] += amount;
+                }
+            }
+            else if (this.SetAmount)
+            {
+                string amountText = await this.ReplaceStringWithSpecialModifiers(this.Amount, user, arguments);
+                if (double.TryParse(amountText, out double amount))
+                {
+                    ChannelSession.Counters[this.CounterName] = amount;
                 }
             }
             else if (this.ResetAmount)
