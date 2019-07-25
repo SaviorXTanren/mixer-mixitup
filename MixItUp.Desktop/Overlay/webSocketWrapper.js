@@ -1,36 +1,36 @@
 var connection;
 var isDebug = false;
 
-function openWebsocketConnection(port)
-{
+function openWebsocketConnection() {
+    openWebsocketConnectionWithAddress(window.location.hostname, window.location.port);
+}
+
+function openWebsocketConnectionWithPort(port) {
     openWebsocketConnectionWithAddress(window.location.hostname, port);
 }
 
-function openWebsocketConnectionWithAddress(address, port)
-{
-    try
-    {
-        connection = new WebSocket("ws://" + address + ":" + port + "/ws/");
+function openWebsocketConnectionWithAddress(address, port) {
+    try {
+        var protocol = "ws";
+        if (window.location.protocol === "https:") {
+            protocol = "wss";
+        }
+        connection = new WebSocket(protocol + "://" + address + ":" + port + "/ws/");
 
         // When the connection is open, send some data to the server
-        connection.onopen = function ()
-        {
+        connection.onopen = function () {
             connectionOpened();
             sendPacket('ping', '');
         };
 
         // Log messages from the server
-        connection.onmessage = function (e)
-        {
+        connection.onmessage = function (e) {
             var packet = getDataFromJSON(e.data);
-            if (packet != null && typeof packet.type !== 'undefined')
-            {
-                if (packet.type === "debug")
-                {
+            if (packet !== null && typeof packet.type !== 'undefined') {
+                if (packet.type === "debug") {
                     isDebug = true;
                 }
-                else if (packet.type === "test")
-                {
+                else if (packet.type === "test") {
                     sendPacket('test', '');
                 }
             }
@@ -38,13 +38,11 @@ function openWebsocketConnectionWithAddress(address, port)
         };
 
         // Log errors
-        connection.onerror = function (error)
-        {
+        connection.onerror = function (error) {
             logToSessionStorage('WebSocket Error ' + error.toString());
         };
 
-        connection.onclose = function (e)
-        {
+        connection.onclose = function (e) {
             connectionClosed();
             setTimeout(function () { openWebsocketConnection(port); }, 1000);
         };
@@ -52,11 +50,9 @@ function openWebsocketConnectionWithAddress(address, port)
     catch (err) { logToSessionStorage(err); }
 }
 
-function sendPacket(type, data)
-{
-    try 
-    {
-        if (connection != null && connection.readyState == WebSocket.OPEN) {
+function sendPacket(type, data) {
+    try {
+        if (connection !== null && connection.readyState === WebSocket.OPEN) {
             var packet = { type: type, data: data };
             connection.send(JSON.stringify(packet));
         }
@@ -64,12 +60,9 @@ function sendPacket(type, data)
     catch (err) { logToSessionStorage(err); }
 }
 
-function getDataFromJSON(packet)
-{
-    try
-    {
-        if (packet != null)
-        {
+function getDataFromJSON(packet) {
+    try {
+        if (packet !== null) {
             return JSON.parse(packet);
         }
     }
@@ -81,14 +74,10 @@ function isStringEmpty(str) {
     return (!str || 0 === str.length);
 }
 
-function logToSessionStorage(log)
-{
-    try
-    {
-        if (typeof (Storage) !== "undefined")
-        {
-            if (!sessionStorage.logs)
-            {
+function logToSessionStorage(log) {
+    try {
+        if (typeof (Storage) !== "undefined") {
+            if (!sessionStorage.logs) {
                 sessionStorage.logs = "";
             }
             sessionStorage.logs += "\n\n" + log.toString();
