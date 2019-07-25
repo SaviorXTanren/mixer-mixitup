@@ -251,30 +251,6 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        public override async Task<bool> InitializeGawkBox(string gawkBoxID = "")
-        {
-            this.GawkBox = (ChannelSession.Settings.GawkBoxOAuthToken != null) ? new GawkBoxService(ChannelSession.Settings.GawkBoxOAuthToken) : new GawkBoxService(gawkBoxID);
-            if (await this.GawkBox.Connect())
-            {
-                return true;
-            }
-            else
-            {
-                await this.DisconnectGawkBox();
-            }
-            return false;
-        }
-
-        public override async Task DisconnectGawkBox()
-        {
-            if (this.GawkBox != null)
-            {
-                await this.GawkBox.Disconnect();
-                this.GawkBox = null;
-                ChannelSession.Settings.GawkBoxOAuthToken = null;
-            }
-        }
-
         public override async Task<bool> InitializeTwitter()
         {
             this.Twitter = (ChannelSession.Settings.TwitterOAuthToken != null) ? new TwitterService(ChannelSession.Settings.TwitterOAuthToken) : new TwitterService();

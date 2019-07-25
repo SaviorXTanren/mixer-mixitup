@@ -551,10 +551,6 @@ namespace MixItUp.Base
                     {
                         await ChannelSession.Services.InitializeStreamlabs();
                     }
-                    if (ChannelSession.Settings.GawkBoxOAuthToken != null)
-                    {
-                        await ChannelSession.Services.InitializeGawkBox();
-                    }
                     if (ChannelSession.Settings.TwitterOAuthToken != null)
                     {
                         await ChannelSession.Services.InitializeTwitter();
