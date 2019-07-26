@@ -293,7 +293,7 @@ namespace MixItUp.Base.Model.Overlay
             return jobj;
         }
 
-        protected string GetFileFullLink(string fileID, string fileType, string filePath)
+        public string GetFileFullLink(string fileID, string fileType, string filePath)
         {
             if (!Uri.IsWellFormedUriString(filePath, UriKind.RelativeOrAbsolute))
             {

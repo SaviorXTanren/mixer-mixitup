@@ -111,7 +111,7 @@ namespace MixItUp.Base.Model.Overlay
             await base.Disable();
         }
 
-        protected override Task<Dictionary<string, string>> GetTemplateReplacements(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        protected override async Task<Dictionary<string, string>> GetTemplateReplacements(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             Dictionary<string, string> replacementSets = new Dictionary<string, string>();
 
@@ -134,7 +134,8 @@ namespace MixItUp.Base.Model.Overlay
 
             if (!string.IsNullOrEmpty(this.CustomImageFilePath))
             {
-                string customImageURL = this.GetFileFullLink(this.ID.ToString(), "image", this.CustomImageFilePath);
+                string customImageURL = await this.ReplaceStringWithSpecialModifiers(this.CustomImageFilePath, user, arguments, extraSpecialIdentifiers);
+                customImageURL = this.GetFileFullLink(this.ID.ToString(), "image", customImageURL);
                 replacementSets["CRYSTAL_EMPTY_IMAGE"] = customImageURL;
                 replacementSets["CRYSTAL_FULL_IMAGE"] = customImageURL;
                 replacementSets["CRYSTAL_EMPTY_OPACITY"] = "opacity: 0.2";
@@ -146,7 +147,7 @@ namespace MixItUp.Base.Model.Overlay
                 replacementSets["CRYSTAL_EMPTY_OPACITY"] = string.Empty;
             }
 
-            return Task.FromResult(replacementSets);
+            return replacementSets;
         }
 
         private async void GlobalEvents_OnPatronageUpdateOccurred(object sender, PatronageStatusModel status)

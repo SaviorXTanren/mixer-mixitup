@@ -158,14 +158,16 @@ namespace MixItUp.Overlay
                         if (item is OverlayImageItemModel || item is OverlayVideoItemModel)
                         {
                             OverlayFileItemModelBase fileItem = (OverlayFileItemModelBase)item;
-                            this.SetLocalFile(fileItem.FileID, fileItem.FilePath);
+                            string filePath = jobj["FilePath"].ToString();
+                            this.SetLocalFile(fileItem.FileID, filePath);
+                            jobj["FullLink"] = fileItem.GetFileFullLink(fileItem.FileID, fileItem.FileType, filePath);
                         }
                         else if (item is OverlaySparkCrystalItemModel)
                         {
                             OverlaySparkCrystalItemModel sparkCrystalItem = (OverlaySparkCrystalItemModel)item;
                             if (!string.IsNullOrEmpty(sparkCrystalItem.CustomImageFilePath))
                             {
-                                this.SetLocalFile(sparkCrystalItem.ID.ToString(), sparkCrystalItem.CustomImageFilePath);
+                                this.SetLocalFile(sparkCrystalItem.ID.ToString(), jobj["CustomImageFilePath"].ToString());
                             }
                         }
                         await this.SendPacket("Show", jobj);

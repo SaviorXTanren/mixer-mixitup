@@ -20,7 +20,7 @@ namespace MixItUp.Base.Model.Overlay
         public string FileID { get; set; }
 
         [DataMember]
-        public virtual string FullLink { get { return this.GetFileFullLink(this.FileID, this.FileType, this.FilePath); } set { } }
+        public virtual string FullLink { get { return this.FilePath; } set { } }
 
         [DataMember]
         public bool DefaultWidthHeight { get { return this.Width == 0 && this.Height == 0; } set { } }
