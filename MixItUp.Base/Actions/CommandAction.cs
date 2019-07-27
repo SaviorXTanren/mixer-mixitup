@@ -108,6 +108,10 @@ namespace MixItUp.Base.Actions
                         string processedMessage = await this.ReplaceStringWithSpecialModifiers(this.CommandArguments, user, arguments);
                         newArguments = processedMessage.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
                     }
+                    else
+                    {
+                        newArguments = arguments;
+                    }
 
                     await command.Perform(user, newArguments, this.GetExtraSpecialIdentifiers());
                 }
