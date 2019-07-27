@@ -18,13 +18,6 @@ using System.Web;
 
 namespace MixItUp.Base.Util
 {
-    public class RandomUserSpecialIdentiferGroup
-    {
-        public UserViewModel RandomUser { get; set; }
-        public UserViewModel RandomFollower { get; set; }
-        public UserViewModel RandomSubscriber { get; set; }
-    }
-
     public class SpecialIdentifierStringBuilder
     {
         public const string SpecialIdentifierHeader = "$";
@@ -85,8 +78,6 @@ namespace MixItUp.Base.Util
             SpecialIdentifierStringBuilder.ArgSpecialIdentifierHeader + "1text";
 
         private static Dictionary<string, string> CustomSpecialIdentifiers = new Dictionary<string, string>();
-
-        private static Dictionary<Guid, RandomUserSpecialIdentiferGroup> RandomUserSpecialIdentifierGroups = new Dictionary<Guid, RandomUserSpecialIdentiferGroup>();
 
         public static void AddCustomSpecialIdentifier(string specialIdentifier, string replacement)
         {
@@ -204,29 +195,6 @@ namespace MixItUp.Base.Util
             return specialIdentifier.ToString().ToLower();
         }
 
-        public static async Task AssignRandomUserSpecialIdentifierGroup(Guid id)
-        {
-            SpecialIdentifierStringBuilder.RandomUserSpecialIdentifierGroups[id] = new RandomUserSpecialIdentiferGroup();
-            IEnumerable<UserViewModel> users = await ChannelSession.ActiveUsers.GetAllWorkableUsers();
-            users = users.Where(u => !u.ID.Equals(ChannelSession.User.id));
-            if (users != null && users.Count() > 0)
-            {
-                SpecialIdentifierStringBuilder.RandomUserSpecialIdentifierGroups[id].RandomUser = users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count()));
-                users = users.Where(u => u.IsFollower);
-                if (users != null && users.Count() > 0)
-                {
-                    SpecialIdentifierStringBuilder.RandomUserSpecialIdentifierGroups[id].RandomFollower = users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count()));
-                    users = users.Where(u => u.HasPermissionsTo(MixerRoleEnum.Subscriber));
-                    if (users != null && users.Count() > 0)
-                    {
-                        SpecialIdentifierStringBuilder.RandomUserSpecialIdentifierGroups[id].RandomSubscriber = users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count()));
-                    }
-                }
-            }
-        }
-
-        public static void ClearRandomUserSpecialIdentifierGroup(Guid id) { SpecialIdentifierStringBuilder.RandomUserSpecialIdentifierGroups.Remove(id); }
-
         public static string ReplaceParameterVariablesEntries(string text, string pattern, string preReplacement, string postReplacement = null)
         {
             int startIndex = 0;
@@ -248,13 +216,11 @@ namespace MixItUp.Base.Util
         }
 
         private string text;
-        private Guid randomUserSpecialIdentifierGroupID;
         private bool encode;
 
-        public SpecialIdentifierStringBuilder(string text, Guid randomUserSpecialIdentifierGroupID, bool encode = false)
+        public SpecialIdentifierStringBuilder(string text, bool encode = false)
         {
             this.text = !string.IsNullOrEmpty(text) ? text : string.Empty;
-            this.randomUserSpecialIdentifierGroupID = randomUserSpecialIdentifierGroupID;
             this.encode = encode;
         }
 
@@ -634,21 +600,33 @@ namespace MixItUp.Base.Util
 
             if (this.ContainsSpecialIdentifier(RandomSpecialIdentifierHeader))
             {
-                if (this.randomUserSpecialIdentifierGroupID != Guid.Empty && RandomUserSpecialIdentifierGroups.ContainsKey(this.randomUserSpecialIdentifierGroupID))
+                if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomSpecialIdentifierHeader + "user"))
                 {
-                    if (RandomUserSpecialIdentifierGroups[randomUserSpecialIdentifierGroupID].RandomUser != null && this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomSpecialIdentifierHeader + "user"))
+                    IEnumerable<UserViewModel> users = await ChannelSession.ActiveUsers.GetAllWorkableUsers();
+                    users = users.Where(u => !u.ID.Equals(ChannelSession.User.id));
+                    if (users != null && users.Count() > 0)
                     {
-                        await this.HandleUserSpecialIdentifiers(RandomUserSpecialIdentifierGroups[randomUserSpecialIdentifierGroupID].RandomUser, RandomSpecialIdentifierHeader);
+                        await this.HandleUserSpecialIdentifiers(users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count())), RandomSpecialIdentifierHeader);
                     }
+                }
 
-                    if (RandomUserSpecialIdentifierGroups[randomUserSpecialIdentifierGroupID].RandomFollower != null && this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomFollowerSpecialIdentifierHeader + "user"))
+                if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomFollowerSpecialIdentifierHeader + "user"))
+                {
+                    IEnumerable<UserViewModel> users = await ChannelSession.ActiveUsers.GetAllWorkableUsers();
+                    users = users.Where(u => !u.ID.Equals(ChannelSession.User.id) && u.IsFollower);
+                    if (users != null && users.Count() > 0)
                     {
-                        await this.HandleUserSpecialIdentifiers(RandomUserSpecialIdentifierGroups[randomUserSpecialIdentifierGroupID].RandomFollower, RandomFollowerSpecialIdentifierHeader);
+                        await this.HandleUserSpecialIdentifiers(users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count())), RandomFollowerSpecialIdentifierHeader);
                     }
+                }
 
-                    if (RandomUserSpecialIdentifierGroups[randomUserSpecialIdentifierGroupID].RandomSubscriber != null && this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomSubscriberSpecialIdentifierHeader + "user"))
+                if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomSubscriberSpecialIdentifierHeader + "user"))
+                {
+                    IEnumerable<UserViewModel> users = await ChannelSession.ActiveUsers.GetAllWorkableUsers();
+                    users = users.Where(u => !u.ID.Equals(ChannelSession.User.id) && u.HasPermissionsTo(MixerRoleEnum.Subscriber));
+                    if (users != null && users.Count() > 0)
                     {
-                        await this.HandleUserSpecialIdentifiers(RandomUserSpecialIdentifierGroups[randomUserSpecialIdentifierGroupID].RandomSubscriber, RandomSubscriberSpecialIdentifierHeader);
+                        await this.HandleUserSpecialIdentifiers(users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count())), RandomSubscriberSpecialIdentifierHeader);
                     }
                 }
 

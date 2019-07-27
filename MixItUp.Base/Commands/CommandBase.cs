@@ -218,13 +218,6 @@ namespace MixItUp.Base.Commands
                             await this.AsyncSemaphore.WaitAsync();
                             waitOccurred = true;
                         }
-
-                        await SpecialIdentifierStringBuilder.AssignRandomUserSpecialIdentifierGroup(this.ID);
-                        foreach (ActionBase action in this.Actions)
-                        {
-                            action.AssignRandomUserSpecialIdentifierGroup(this.ID);
-                        }
-
                         await this.PerformInternal(user, arguments, extraSpecialIdentifiers, this.currentCancellationTokenSource.Token);
                     }
                     catch (TaskCanceledException) { }

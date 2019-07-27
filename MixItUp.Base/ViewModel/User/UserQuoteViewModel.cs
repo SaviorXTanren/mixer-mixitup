@@ -51,7 +51,7 @@ namespace MixItUp.Base.ViewModel.User
 
             if (!string.IsNullOrEmpty(ChannelSession.Settings.QuotesFormat))
             {
-                SpecialIdentifierStringBuilder str = new SpecialIdentifierStringBuilder(ChannelSession.Settings.QuotesFormat, Guid.Empty);
+                SpecialIdentifierStringBuilder str = new SpecialIdentifierStringBuilder(ChannelSession.Settings.QuotesFormat);
                 str.ReplaceSpecialIdentifier(QuoteNumberSpecialIdentifier, (quoteIndex + 1).ToString());
                 str.ReplaceSpecialIdentifier(QuoteTextSpecialIdentifier, this.Quote);
                 str.ReplaceSpecialIdentifier(QuoteGameSpecialIdentifier, this.GameName);
