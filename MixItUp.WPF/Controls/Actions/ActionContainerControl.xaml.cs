@@ -90,8 +90,18 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.WebRequest:
                         this.actionControl = (this.action != null) ? new WebRequestActionControl(this, (WebRequestAction)this.action) : new WebRequestActionControl(this);
                         break;
+#pragma warning disable CS0612 // Type or member is obsolete
                     case ActionTypeEnum.ActionGroup:
-                        this.actionControl = (this.action != null) ? new ActionGroupActionControl(this, (ActionGroupAction)this.action) : new ActionGroupActionControl(this);
+                        if (this.action != null)
+                        {
+                            ActionGroupAction aaction = (ActionGroupAction)this.action;
+                            this.actionControl = new CommandActionControl(this, new CommandAction()
+                            {
+                                CommandActionType = CommandActionTypeEnum.RunCommand,
+                                CommandID = aaction.ActionGroupID
+                            });
+                        }
+#pragma warning restore CS0612 // Type or member is obsolete
                         break;
                     case ActionTypeEnum.SpecialIdentifier:
                         this.actionControl = (this.action != null) ? new SpecialIdentifierActionControl(this, (SpecialIdentifierAction)this.action) : new SpecialIdentifierActionControl(this);

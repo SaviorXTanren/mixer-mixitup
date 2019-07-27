@@ -303,7 +303,6 @@
     <Compile Include="Services\DeveloperAPI\MixPlayController.cs" />
     <Compile Include="Services\DeveloperAPI\UserController.cs" />
     <Compile Include="Services\DiscordService.cs" />
-    <Compile Include="Services\GawkBoxService.cs" />
     <Compile Include="Services\PatreonService.cs" />
     <Compile Include="Services\ScoutService.cs" />
     <Compile Include="Services\OverlayServiceManager.cs" />

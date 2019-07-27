@@ -23,6 +23,7 @@ namespace MixItUp.Desktop.Services
             this.Settings = new DesktopSettingsService();
             this.FileService = new WindowsFileService();
             this.InputService = new WindowsInputService();
+            this.TimerService = new TimerService();
             this.GameQueueService = new GameQueueService();
             this.ImageManipulationService = new DesktopImageManipulationService();
             this.AudioService = new AudioService();
@@ -247,30 +248,6 @@ namespace MixItUp.Desktop.Services
                 await this.Streamlabs.Disconnect();
                 this.Streamlabs = null;
                 ChannelSession.Settings.StreamlabsOAuthToken = null;
-            }
-        }
-
-        public override async Task<bool> InitializeGawkBox(string gawkBoxID = "")
-        {
-            this.GawkBox = (ChannelSession.Settings.GawkBoxOAuthToken != null) ? new GawkBoxService(ChannelSession.Settings.GawkBoxOAuthToken) : new GawkBoxService(gawkBoxID);
-            if (await this.GawkBox.Connect())
-            {
-                return true;
-            }
-            else
-            {
-                await this.DisconnectGawkBox();
-            }
-            return false;
-        }
-
-        public override async Task DisconnectGawkBox()
-        {
-            if (this.GawkBox != null)
-            {
-                await this.GawkBox.Disconnect();
-                this.GawkBox = null;
-                ChannelSession.Settings.GawkBoxOAuthToken = null;
             }
         }
 

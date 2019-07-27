@@ -69,7 +69,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             return base.OnVisibleInternal();
         }
 
-        private void FullRefresh()
+        protected void FullRefresh()
         {
             this.CommandGroups.Clear();
             IEnumerable<CommandBase> commands = this.GetCommands();

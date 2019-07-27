@@ -34,7 +34,7 @@ namespace MixItUp.Desktop
     [DataContract]
     public class DesktopSavableChannelSettings : ISavableChannelSettings
     {
-        public const int LatestVersion = 35;
+        public const int LatestVersion = 36;
 
         [JsonProperty]
         public int Version { get; set; } = DesktopChannelSettings.LatestVersion;
@@ -60,8 +60,6 @@ namespace MixItUp.Desktop
 
         [JsonProperty]
         public OAuthTokenModel StreamlabsOAuthToken { get; set; }
-        [JsonProperty]
-        public OAuthTokenModel GawkBoxOAuthToken { get; set; }
         [JsonProperty]
         public OAuthTokenModel TwitterOAuthToken { get; set; }
         [JsonProperty]
@@ -617,10 +615,6 @@ namespace MixItUp.Desktop
             if (ChannelSession.Services.Streamlabs != null)
             {
                 this.StreamlabsOAuthToken = ChannelSession.Services.Streamlabs.GetOAuthTokenCopy();
-            }
-            if (ChannelSession.Services.GawkBox != null)
-            {
-                this.GawkBoxOAuthToken = ChannelSession.Services.GawkBox.GetOAuthTokenCopy();
             }
             if (ChannelSession.Services.Twitter != null)
             {

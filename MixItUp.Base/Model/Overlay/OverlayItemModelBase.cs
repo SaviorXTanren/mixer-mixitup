@@ -293,7 +293,7 @@ namespace MixItUp.Base.Model.Overlay
             return jobj;
         }
 
-        protected string GetFileFullLink(string fileID, string fileType, string filePath)
+        public string GetFileFullLink(string fileID, string fileType, string filePath)
         {
             if (!Uri.IsWellFormedUriString(filePath, UriKind.RelativeOrAbsolute))
             {
@@ -322,7 +322,7 @@ namespace MixItUp.Base.Model.Overlay
 
         protected async Task<string> ReplaceStringWithSpecialModifiers(string str, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
-            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str, Guid.NewGuid(), encode: false);
+            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str, encode: false);
             if (extraSpecialIdentifiers != null)
             {
                 foreach (var kvp in extraSpecialIdentifiers)

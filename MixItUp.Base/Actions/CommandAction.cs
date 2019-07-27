@@ -132,4 +132,34 @@ namespace MixItUp.Base.Actions
             }
         }
     }
+
+    #region Obsolete Action Group Action
+
+    [Obsolete]
+    [DataContract]
+    public class ActionGroupAction : ActionBase
+    {
+        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
+
+        protected override SemaphoreSlim AsyncSemaphore { get { return ActionGroupAction.asyncSemaphore; } }
+
+        [DataMember]
+        public Guid ActionGroupID { get; set; }
+
+#pragma warning disable CS0612 // Type or member is obsolete
+        public ActionGroupAction() : base(ActionTypeEnum.ActionGroup) { }
+#pragma warning restore CS0612 // Type or member is obsolete
+
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+        {
+            ActionGroupCommand command = ChannelSession.Settings.ActionGroupCommands.FirstOrDefault(c => c.ID.Equals(this.ActionGroupID));
+            if (command != null)
+            {
+                this.ActionGroupID = command.ID;
+                await command.Perform(user, arguments, this.GetExtraSpecialIdentifiers());
+            }
+        }
+    }
+
+    #endregion Obsolete Action Group Action
 }

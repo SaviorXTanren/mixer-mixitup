@@ -1,13 +1,19 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MixItUp.Base.Util
+namespace MixItUp.Base.Services
 {
-    public class TimerCommandHelper : IDisposable
+    public interface ITimerService : IDisposable
+    {
+        void Initialize();
+    }
+
+    public class TimerService : ITimerService
     {
         private bool isInitialized = false;
 
@@ -31,9 +37,9 @@ namespace MixItUp.Base.Util
         {
             this.timerCommandIndexes = new Dictionary<string, int>();
 
-            int totalTime = 0;
-
+            int groupTotalTime = 0;
             int nonGroupTotalTime = 0;
+
             int startTotalMessages = ChannelSession.Chat.Messages.Count;
             timerCommandIndexes[string.Empty] = 0;
 
@@ -47,34 +53,62 @@ namespace MixItUp.Base.Util
 
                 if (!ChannelSession.Settings.DisableAllTimers)
                 {
-                    totalTime++;
-
+                    Dictionary<string, List<TimerCommand>> commandGroups = new Dictionary<string, List<TimerCommand>>();
+                    commandGroups[string.Empty] = new List<TimerCommand>();
                     foreach (var kvp in ChannelSession.Settings.CommandGroups)
                     {
-                        if (kvp.Value.TimerInterval > 0 && totalTime % kvp.Value.TimerInterval == 0)
+                        commandGroups[kvp.Key] = new List<TimerCommand>();
+                    }
+
+                    foreach (TimerCommand command in ChannelSession.Settings.TimerCommands)
+                    {
+                        if (string.IsNullOrEmpty(command.GroupName))
+                        {
+                            commandGroups[string.Empty].Add(command);
+                        }
+                        else if (ChannelSession.Settings.CommandGroups.ContainsKey(command.GroupName))
+                        {
+                            if (ChannelSession.Settings.CommandGroups[command.GroupName].TimerInterval == 0)
+                            {
+                                commandGroups[string.Empty].Add(command);
+                            }
+                            else
+                            {
+                                commandGroups[command.GroupName].Add(command);
+                            }
+                        }
+                    }
+
+                    groupTotalTime++;
+                    foreach (var kvp in ChannelSession.Settings.CommandGroups)
+                    {
+                        if (kvp.Value.TimerInterval > 0 && groupTotalTime % kvp.Value.TimerInterval == 0)
                         {
                             if (!timerCommandIndexes.ContainsKey(kvp.Key))
                             {
                                 timerCommandIndexes[kvp.Key] = 0;
                             }
 
-                            IEnumerable<TimerCommand> groupTimers = ChannelSession.Settings.TimerCommands.Where(c => c.IsEnabled && !string.IsNullOrEmpty(c.GroupName) && c.GroupName.Equals(kvp.Key));
-                            await this.RunTimerFromGroup(kvp.Key, groupTimers);
+                            if (commandGroups.ContainsKey(kvp.Key))
+                            {
+                                await this.RunTimerFromGroup(kvp.Key, commandGroups[kvp.Key]);
+                            }
                         }
                     }
-
-                    nonGroupTotalTime++;
 
                     if (nonGroupTotalTime >= ChannelSession.Settings.TimerCommandsInterval)
                     {
                         if ((ChannelSession.Chat.Messages.Count - startTotalMessages) >= ChannelSession.Settings.TimerCommandsMinimumMessages)
                         {
-                            IEnumerable<TimerCommand> nonGroupTimers = ChannelSession.Settings.TimerCommands.Where(c => c.IsEnabled && string.IsNullOrEmpty(c.GroupName));
-                            await this.RunTimerFromGroup(string.Empty, nonGroupTimers);
+                            await this.RunTimerFromGroup(string.Empty, commandGroups[string.Empty]);
 
                             startTotalMessages = ChannelSession.Chat.Messages.Count;
                             nonGroupTotalTime = 0;
                         }
+                    }
+                    else
+                    {
+                        nonGroupTotalTime++;
                     }
                 }
             });

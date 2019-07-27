@@ -75,7 +75,7 @@ namespace MixItUp.Overlay
             this.Name = name;
             this.Port = port;
 
-            this.httpListenerServer = new OverlayHttpListenerServer(this.HttpListenerServerAddress, this.Port);
+            this.httpListenerServer = new OverlayHttpListenerServer(this.HttpListenerServerAddress);
             this.webSocketServer = new OverlayWebSocketHttpListenerServer(this.WebSocketServerAddress);
         }
 
@@ -158,14 +158,16 @@ namespace MixItUp.Overlay
                         if (item is OverlayImageItemModel || item is OverlayVideoItemModel)
                         {
                             OverlayFileItemModelBase fileItem = (OverlayFileItemModelBase)item;
-                            this.SetLocalFile(fileItem.FileID, fileItem.FilePath);
+                            string filePath = jobj["FilePath"].ToString();
+                            this.SetLocalFile(fileItem.FileID, filePath);
+                            jobj["FullLink"] = fileItem.GetFileFullLink(fileItem.FileID, fileItem.FileType, filePath);
                         }
                         else if (item is OverlaySparkCrystalItemModel)
                         {
                             OverlaySparkCrystalItemModel sparkCrystalItem = (OverlaySparkCrystalItemModel)item;
                             if (!string.IsNullOrEmpty(sparkCrystalItem.CustomImageFilePath))
                             {
-                                this.SetLocalFile(sparkCrystalItem.ID.ToString(), sparkCrystalItem.CustomImageFilePath);
+                                this.SetLocalFile(sparkCrystalItem.ID.ToString(), jobj["CustomImageFilePath"].ToString());
                             }
                         }
                         await this.SendPacket("Show", jobj);
@@ -241,26 +243,19 @@ namespace MixItUp.Overlay
         private const string WebSocketWrapperScriptReplacementString = "<script src=\"webSocketWrapper.js\"></script>";
         private const string WebSocketWrapperFilePath = OverlayFolderPath + "WebSocketWrapper.js";
 
-        private const string OverlayConnectionPortReplacementString = "openWebsocketConnection(\"0000\");";
-        private const string OverlayConnectionPortFormat = "openWebsocketConnection(\"{0}\");";
-
         private const string OverlayFilesWebPath = "overlay/files/";
 
-        private int port;
         private string webPageInstance;
 
         private Dictionary<string, string> localFiles = new Dictionary<string, string>();
 
-        public OverlayHttpListenerServer(string address, int port)
+        public OverlayHttpListenerServer(string address)
             : base(address)
         {
-            this.port = port;
             this.webPageInstance = File.ReadAllText(OverlayWebpageFilePath);
 
             string webSocketWrapperText = File.ReadAllText(WebSocketWrapperFilePath);
             this.webPageInstance = this.webPageInstance.Replace(WebSocketWrapperScriptReplacementString, string.Format("<script>{0}</script>", webSocketWrapperText));
-
-            this.webPageInstance = this.webPageInstance.Replace(OverlayConnectionPortReplacementString, string.Format(OverlayConnectionPortFormat, this.port));
         }
 
         public void SetLocalFile(string id, string filepath)

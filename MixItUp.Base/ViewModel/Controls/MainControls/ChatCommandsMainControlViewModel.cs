@@ -67,6 +67,15 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             }
         }
 
+        protected override async Task OnVisibleInternal()
+        {
+            if (ChannelSession.Settings.ChatCommands.Count != this.CommandGroups.Sum(cg => cg.Commands.Count))
+            {
+                this.FullRefresh();
+            }
+            await base.OnVisibleInternal();
+        }
+
         protected override IEnumerable<CommandBase> GetCommands()
         {
             return ChannelSession.Settings.ChatCommands.ToList();

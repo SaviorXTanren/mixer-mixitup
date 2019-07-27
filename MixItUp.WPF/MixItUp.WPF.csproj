@@ -343,9 +343,6 @@
       <DependentUpon>ActionContainerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Actions\ActionControlBase.cs" />
-    <Compile Include="Controls\Actions\ActionGroupActionControl.xaml.cs">
-      <DependentUpon>ActionGroupActionControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Actions\ChatActionControl.xaml.cs">
       <DependentUpon>ChatActionControl.xaml</DependentUpon>
     </Compile>
@@ -817,9 +814,6 @@
     <Compile Include="Controls\Services\ExtraLifeServiceControl.xaml.cs">
       <DependentUpon>ExtraLifeServiceControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Services\GawkBoxServiceControl.xaml.cs">
-      <DependentUpon>GawkBoxServiceControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Services\MixerBotAccountServiceControl.xaml.cs">
       <DependentUpon>MixerBotAccountServiceControl.xaml</DependentUpon>
     </Compile>
@@ -1011,10 +1005,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\ActionContainerControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Actions\ActionGroupActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1643,10 +1633,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Services\ExtraLifeServiceControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Services\GawkBoxServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
