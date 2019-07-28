@@ -47,9 +47,9 @@ namespace MixItUp.Base.Model.Overlay
         [JsonIgnore]
         public override bool SupportsTestData { get { return true; } }
 
-        public override async Task LoadTestData()
+        public override Task LoadTestData()
         {
-            this.GlobalEvents_OnMixerClipCreated(this, new ClipModel()
+            this.lastClip = new ClipModel()
             {
                 contentLocators = new List<ClipLocatorModel>()
                 {
@@ -60,9 +60,8 @@ namespace MixItUp.Base.Model.Overlay
                     }
                 },
                 durationInSeconds = 10
-            });
-
-            await Task.Delay(5000);
+            };
+            return Task.FromResult(0);
         }
 
         public override async Task Initialize()
@@ -74,7 +73,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task Disable()
         {
-            GlobalEvents.OnMixerClipCreated += GlobalEvents_OnMixerClipCreated;
+            GlobalEvents.OnMixerClipCreated -= GlobalEvents_OnMixerClipCreated;
 
             await base.Disable();
         }
@@ -83,26 +82,16 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (this.lastClip != null)
             {
-                return await base.GetProcessedItem(user, arguments, extraSpecialIdentifiers);
-            }
-            return null;
-        }
-
-        protected override async Task PerformReplacements(JObject jobj, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
-        {
-            if (this.lastClip != null)
-            {
-                ClipModel clip = this.lastClip;
-                this.lastClip = null;
-
-                ClipLocatorModel clipLocator = clip.contentLocators.FirstOrDefault(cl => cl.locatorType.Equals(MixerClipsAction.VideoFileContentLocatorType));
+                ClipLocatorModel clipLocator = this.lastClip.contentLocators.FirstOrDefault(cl => cl.locatorType.Equals(MixerClipsAction.VideoFileContentLocatorType));
                 if (clipLocator != null)
                 {
                     this.lastClipURL = clipLocator.uri;
-                    this.Effects.Duration = Math.Max(0, clip.durationInSeconds - 1);
-                    await base.PerformReplacements(jobj, user, arguments, extraSpecialIdentifiers);
+                    this.Effects.Duration = Math.Max(0, this.lastClip.durationInSeconds - 1);
+                    return await base.GetProcessedItem(user, arguments, extraSpecialIdentifiers);
                 }
+                this.lastClip = null;
             }
+            return null;
         }
 
         private void GlobalEvents_OnMixerClipCreated(object sender, ClipModel clip)
