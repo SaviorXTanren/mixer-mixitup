@@ -634,7 +634,7 @@ namespace MixItUp.Base.Util
                 {
                     await this.ReplaceNumberRangeBasedRegexSpecialIdentifier(RandomNumberRegexSpecialIdentifier + SpecialIdentifierNumberRangeRegexPattern, (min, max) =>
                     {
-                        int number = RandomHelper.GenerateRandomNumber(min, max);
+                        int number = RandomHelper.GenerateRandomNumber(min, max + 1);
                         return Task.FromResult(number.ToString());
                     });
 

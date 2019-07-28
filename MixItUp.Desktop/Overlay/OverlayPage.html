@@ -406,32 +406,34 @@
             }
 
             function streamClipPacket(data) {
-                var addedElement = document.createElement('div');
-                addedElement.id = data.ID;
+                if (data.FullLink !== null) {
+                    var addedElement = document.createElement('div');
+                    addedElement.id = data.ID;
 
-                var videoElement = document.createElement('video');
-                videoElement.id = "video-" + data.ID;
-                videoElement.className += 'video-js vjs-default-skin';
-                videoElement.frameBorder = 0;
-                videoElement.volume = data.VolumeDecimal;
+                    var videoElement = document.createElement('video');
+                    videoElement.id = "video-" + data.ID;
+                    videoElement.className += 'video-js vjs-default-skin';
+                    videoElement.frameBorder = 0;
+                    videoElement.volume = data.VolumeDecimal;
 
-                addedElement.appendChild(videoElement);
+                    addedElement.appendChild(videoElement);
 
-                addWaitRemoveElement(data, addedElement);
+                    addWaitRemoveElement(data, addedElement);
 
-                var player = videojs(videoElement, {
-                    autoplay: 'play',
-                    controls: false,
-                    width: data.Width,
-                    height: data.Height,
-                    volume: data.VolumeDecimal
-                });
+                    var player = videojs(videoElement, {
+                        autoplay: 'play',
+                        controls: false,
+                        width: data.Width,
+                        height: data.Height,
+                        volume: data.VolumeDecimal
+                    });
 
-                player.ready(function () {
-                    player.volume(data.VolumeDecimal);
-                });
+                    player.ready(function () {
+                        player.volume(data.VolumeDecimal);
+                    });
 
-                player.src(data.FullLink);
+                    player.src(data.FullLink);
+                }
             }
 
             function listPacket(data) {
