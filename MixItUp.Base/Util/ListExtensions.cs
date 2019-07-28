@@ -36,5 +36,11 @@ namespace MixItUp.Base.Util
             }
             return l.Values;
         }
+
+        public static T Random<T>(this IEnumerable<T> list)
+        {
+            int index = RandomHelper.GenerateRandomNumber(0, list.Count());
+            return list.ElementAt(index);
+        }
     }
 }

@@ -646,6 +646,14 @@ namespace MixItUp.Base.Util
                 }
             }
 
+            foreach (UserInventoryViewModel inventory in ChannelSession.Settings.Inventories.Values.OrderByDescending(c => c.SpecialIdentifier))
+            {
+                if (this.ContainsSpecialIdentifier(inventory.RandomItemSpecialIdentifier))
+                {
+                    this.ReplaceSpecialIdentifier(inventory.RandomItemSpecialIdentifier, inventory.Items.Values.Random().Name);
+                }
+            }
+
             if (this.ContainsSpecialIdentifier(UnicodeRegexSpecialIdentifier))
             {
                 await this.ReplaceNumberBasedRegexSpecialIdentifier(UnicodeRegexSpecialIdentifier + SpecialIdentifierNumberRegexPattern, (number) =>
@@ -775,28 +783,35 @@ namespace MixItUp.Base.Util
                         if (this.ContainsSpecialIdentifier(identifierHeader + inventory.UserAmountSpecialIdentifierHeader))
                         {
                             UserInventoryDataViewModel inventoryData = userData.GetInventory(inventory);
-                            List<string> allItemsList = new List<string>();
+                            Dictionary<string, int> userItems = new Dictionary<string, int>();
 
                             foreach (UserInventoryItemViewModel item in inventory.Items.Values.OrderByDescending(i => i.Name))
                             {
                                 int amount = inventoryData.GetAmount(item);
                                 if (amount > 0)
                                 {
-                                    allItemsList.Add(item.Name + " x" + amount);
+                                    userItems[item.Name] = amount;
                                 }
 
                                 string itemSpecialIdentifier = identifierHeader + inventory.UserAmountSpecialIdentifierHeader + item.SpecialIdentifier;
                                 this.ReplaceSpecialIdentifier(itemSpecialIdentifier, amount.ToString());
                             }
 
-                            if (allItemsList.Count > 0)
+                            if (userItems.Count > 0)
                             {
-                                this.ReplaceSpecialIdentifier(identifierHeader + inventory.UserAllAmountSpecialIdentifier, string.Join(", ", allItemsList.OrderBy(i => i)));
+                                List<string> userAllItems = new List<string>();
+                                foreach (var kvp in userItems.OrderBy(i => i.Key))
+                                {
+                                    userAllItems.Add(kvp.Key + " x" + kvp.Value);
+                                }
+                                this.ReplaceSpecialIdentifier(identifierHeader + inventory.UserAllAmountSpecialIdentifier, string.Join(", ", userAllItems));
                             }
                             else
                             {
                                 this.ReplaceSpecialIdentifier(identifierHeader + inventory.UserAllAmountSpecialIdentifier, "Nothing");
                             }
+
+                            this.ReplaceSpecialIdentifier(inventory.UserRandomItemSpecialIdentifier, userItems.Keys.Random());
                         }
                     }
 

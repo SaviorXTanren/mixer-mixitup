@@ -152,13 +152,19 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         [JsonIgnore]
-        public string UserAmountSpecialIdentifierExample { get { return string.Format("{0}{1}<ITEM>", SpecialIdentifierStringBuilder.UserSpecialIdentifierHeader, this.SpecialIdentifier); } }
+        public string RandomItemSpecialIdentifier { get { return string.Format("{0}randomitem", this.SpecialIdentifier); } }
 
         [JsonIgnore]
         public string UserAmountSpecialIdentifierHeader { get { return string.Format("{0}{1}", SpecialIdentifierStringBuilder.UserSpecialIdentifierHeader, this.SpecialIdentifier); } }
 
         [JsonIgnore]
-        public string UserAllAmountSpecialIdentifier { get { return string.Format("{0}{1}all", SpecialIdentifierStringBuilder.UserSpecialIdentifierHeader, this.SpecialIdentifier); } }
+        public string UserAmountSpecialIdentifierExample { get { return string.Format("{0}<ITEM>", this.UserAmountSpecialIdentifierHeader); } }
+
+        [JsonIgnore]
+        public string UserAllAmountSpecialIdentifier { get { return string.Format("{0}all", this.UserAmountSpecialIdentifierHeader); } }
+
+        [JsonIgnore]
+        public string UserRandomItemSpecialIdentifier { get { return string.Format("{0}randomitem", this.UserAmountSpecialIdentifierHeader); } }
 
         public async Task Reset()
         {
