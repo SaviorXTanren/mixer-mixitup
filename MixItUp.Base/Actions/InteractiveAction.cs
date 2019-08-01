@@ -69,6 +69,8 @@ namespace MixItUp.Base.Actions
         BackgroundColor,
         [Name("Background Image")]
         BackgroundImage,
+        [Name("Progress")]
+        Progress,
     }
 
     [DataContract]
@@ -376,6 +378,7 @@ namespace MixItUp.Base.Actions
                             {
                                 string replacementValue = await this.ReplaceStringWithSpecialModifiers(this.UpdateValue, user, arguments);
                                 int.TryParse(replacementValue, out int replacementNumberValue);
+                                float.TryParse(replacementValue, out float replacementFloatValue);
 
                                 if (control is InteractiveButtonControlModel)
                                 {
@@ -392,6 +395,7 @@ namespace MixItUp.Base.Actions
                                         case InteractiveActionUpdateControlTypeEnum.BorderColor: button.borderColor = replacementValue; break;
                                         case InteractiveActionUpdateControlTypeEnum.BackgroundColor: button.backgroundColor = replacementValue; break;
                                         case InteractiveActionUpdateControlTypeEnum.BackgroundImage: button.backgroundImage = replacementValue; break;
+                                        case InteractiveActionUpdateControlTypeEnum.Progress: ((InteractiveConnectedButtonControlModel)button).SetProgress(replacementFloatValue); break;
                                     }
                                 }
                                 else if (control is InteractiveLabelControlModel)
