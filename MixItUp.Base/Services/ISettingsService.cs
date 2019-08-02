@@ -35,5 +35,8 @@ namespace MixItUp.Base.Services
         string GetFilePath(IChannelSettings settings);
 
         Task ClearAllUserData(IChannelSettings settings);
+
+        Task<int> GetSettingsVersion(string filePath);
+        int GetLatestVersion();
     }
 }
