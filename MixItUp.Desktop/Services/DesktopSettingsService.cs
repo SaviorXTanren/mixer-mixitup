@@ -205,14 +205,19 @@ namespace MixItUp.Desktop.Services
         private async Task<IChannelSettings> LoadSettings(string filePath)
         {
             int currentVersion = await GetSettingsVersion(filePath);
-            if (currentVersion < DesktopChannelSettings.LatestVersion)
+            if (currentVersion == -1)
             {
-                await DesktopSettingsUpgrader.UpgradeSettingsToLatest(currentVersion, filePath);
+                // Settings file is invalid, we can't use this
+                return null;
             }
             else if (currentVersion > DesktopChannelSettings.LatestVersion)
             {
                 // Future build, like a preview build, we can't load this
                 return null;
+            }
+            else if (currentVersion < DesktopChannelSettings.LatestVersion)
+            {
+                await DesktopSettingsUpgrader.UpgradeSettingsToLatest(currentVersion, filePath);
             }
 
             return await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
