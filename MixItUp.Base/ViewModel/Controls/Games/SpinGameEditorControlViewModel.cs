@@ -85,12 +85,14 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         private SpinGameCommand existingCommand;
 
         public SpinGameEditorControlViewModel(UserCurrencyViewModel currency)
+            : this()
         {
             this.Outcomes.Add(new SpinOutcome("Lose", this.CreateBasicChatCommand("Sorry @$username, you lost the spin!"), 0, 70, 70, 70));
             this.Outcomes.Add(new SpinOutcome("Win", this.CreateBasicChatCommand("Congrats @$username, you won $gamepayout " + currency.Name + "!"), 200, 30, 30, 30));
         }
 
         public SpinGameEditorControlViewModel(SpinGameCommand command)
+            : this()
         {
             this.existingCommand = command;
             foreach (GameOutcome outcome in this.existingCommand.Outcomes)

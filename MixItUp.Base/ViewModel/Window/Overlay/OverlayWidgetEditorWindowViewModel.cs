@@ -113,13 +113,13 @@ namespace MixItUp.Base.ViewModel.Window.Overlay
 
             this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.ChatMessages, "Shows the last X many chat messages from your channel. Chat messages are added as they occur."));
             this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.EventList, "Shows the last X many events that have occurred in your channel. Events are added as they occur."));
-            this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.GameQueue, "Shows a block of text. Refreshes based on user-defined Refresh Interval."));
+            this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.GameQueue, "Shows a block of text. Events are added as they occur."));
             this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.ProgressBar, "Shows a progress bar for a specified goal. Progress is updated as events occur or on user-defined refresh Interval."));
             this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.HTML, "Shows HTML code directly on the overlay. Refreshes based on user-defined Refresh Interval."));
             this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.Image, "Shows an image. Refreshes based on user-defined Refresh Interval."));
             this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.Leaderboard, "Shows the top X users in a specified category. Leaderboard positions are updated as events occur or on user-defined refresh interval"));
-            this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.StreamClip, "Shows the video & audio footage of a Mixer Stream Clip when it is taken."));
-            this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.SongRequests, "how the top X songs currently in the song request queue. Song requests are added as they occur."));
+            this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.StreamClip, "Shows the video & audio footage of a Stream Clip when it is taken."));
+            this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.SongRequests, "Show the top X songs currently in the song request queue. Song requests are added as they occur."));
             this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.SparkCrystal, "Shows the current progress on the channel's spark crystal patronage. Progress is updated as spark patronage occurs."));
             this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.StreamBoss, "Shows a user from your channel as a \"boss\" that can be damaged by performing actions in your channel until they are defeated and a new boss is selected. Damage is added as it occurs. The Stream Boss Special Identifiers can be used in parallel with this overlay widget."));
             this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.Text, "Shows a block of text. Refreshes based on user-defined Refresh Interval."));
