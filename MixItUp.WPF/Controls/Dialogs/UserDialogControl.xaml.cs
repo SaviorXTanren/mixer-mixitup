@@ -37,10 +37,10 @@ namespace MixItUp.WPF.Controls.Dialogs
                 bool follows = false;
                 if (this.user.ChannelID > 0)
                 {
-                    ExpandedChannelModel channelToCheck = await ChannelSession.Connection.GetChannel(this.user.ChannelID);
+                    ExpandedChannelModel channelToCheck = await ChannelSession.MixerStreamerConnection.GetChannel(this.user.ChannelID);
                     if (channelToCheck != null)
                     {
-                        follows = (await ChannelSession.Connection.CheckIfFollows(channelToCheck, ChannelSession.User)).HasValue;
+                        follows = (await ChannelSession.MixerStreamerConnection.CheckIfFollows(channelToCheck, ChannelSession.User)).HasValue;
                         if (channelToCheck.online)
                         {
                             this.StreamStatusTextBlock.Text = $"{channelToCheck.viewersCurrent} Viewers";

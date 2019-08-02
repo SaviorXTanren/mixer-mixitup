@@ -258,18 +258,18 @@ namespace MixItUp.Base.Util
 
                 if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopSparksUsedRegexSpecialIdentifierHeader))
                 {
-                    await this.HandleSparksUsed("weekly", async (amount) => { return await ChannelSession.Connection.GetWeeklySparksLeaderboard(ChannelSession.Channel, amount); });
-                    await this.HandleSparksUsed("monthly", async (amount) => { return await ChannelSession.Connection.GetMonthlySparksLeaderboard(ChannelSession.Channel, amount); });
-                    await this.HandleSparksUsed("yearly", async (amount) => { return await ChannelSession.Connection.GetYearlySparksLeaderboard(ChannelSession.Channel, amount); });
-                    await this.HandleSparksUsed("alltime", async (amount) => { return await ChannelSession.Connection.GetAllTimeSparksLeaderboard(ChannelSession.Channel, amount); });
+                    await this.HandleSparksUsed("weekly", async (amount) => { return await ChannelSession.MixerStreamerConnection.GetWeeklySparksLeaderboard(ChannelSession.Channel, amount); });
+                    await this.HandleSparksUsed("monthly", async (amount) => { return await ChannelSession.MixerStreamerConnection.GetMonthlySparksLeaderboard(ChannelSession.Channel, amount); });
+                    await this.HandleSparksUsed("yearly", async (amount) => { return await ChannelSession.MixerStreamerConnection.GetYearlySparksLeaderboard(ChannelSession.Channel, amount); });
+                    await this.HandleSparksUsed("alltime", async (amount) => { return await ChannelSession.MixerStreamerConnection.GetAllTimeSparksLeaderboard(ChannelSession.Channel, amount); });
                 }
 
                 if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopEmbersUsedRegexSpecialIdentifierHeader))
                 {
-                    await this.HandleEmbersUsed("weekly", async (amount) => { return await ChannelSession.Connection.GetWeeklyEmbersLeaderboard(ChannelSession.Channel, amount); });
-                    await this.HandleEmbersUsed("monthly", async (amount) => { return await ChannelSession.Connection.GetMonthlyEmbersLeaderboard(ChannelSession.Channel, amount); });
-                    await this.HandleEmbersUsed("yearly", async (amount) => { return await ChannelSession.Connection.GetYearlyEmbersLeaderboard(ChannelSession.Channel, amount); });
-                    await this.HandleEmbersUsed("alltime", async (amount) => { return await ChannelSession.Connection.GetAllTimeEmbersLeaderboard(ChannelSession.Channel, amount); });
+                    await this.HandleEmbersUsed("weekly", async (amount) => { return await ChannelSession.MixerStreamerConnection.GetWeeklyEmbersLeaderboard(ChannelSession.Channel, amount); });
+                    await this.HandleEmbersUsed("monthly", async (amount) => { return await ChannelSession.MixerStreamerConnection.GetMonthlyEmbersLeaderboard(ChannelSession.Channel, amount); });
+                    await this.HandleEmbersUsed("yearly", async (amount) => { return await ChannelSession.MixerStreamerConnection.GetYearlyEmbersLeaderboard(ChannelSession.Channel, amount); });
+                    await this.HandleEmbersUsed("alltime", async (amount) => { return await ChannelSession.MixerStreamerConnection.GetAllTimeEmbersLeaderboard(ChannelSession.Channel, amount); });
                 }
 
                 if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopTimeRegexSpecialIdentifier))
@@ -434,7 +434,7 @@ namespace MixItUp.Base.Util
 
             if (this.ContainsSpecialIdentifier(FeaturedChannelsSpecialIdentifer))
             {
-                IEnumerable<ExpandedChannelModel> featuredChannels = await ChannelSession.Connection.GetFeaturedChannels();
+                IEnumerable<ExpandedChannelModel> featuredChannels = await ChannelSession.MixerStreamerConnection.GetFeaturedChannels();
                 if (featuredChannels != null)
                 {
                     this.ReplaceSpecialIdentifier(FeaturedChannelsSpecialIdentifer, string.Join(", ", featuredChannels.Select(c => "@" + c.user.username)));
@@ -443,7 +443,7 @@ namespace MixItUp.Base.Util
 
             if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader))
             {
-                ChannelDetailsModel details = await ChannelSession.Connection.GetChannelDetails(ChannelSession.Channel);
+                ChannelDetailsModel details = await ChannelSession.MixerStreamerConnection.GetChannelDetails(ChannelSession.Channel);
                 if (details != null)
                 {
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", details.name);
@@ -455,7 +455,7 @@ namespace MixItUp.Base.Util
 
                 if (this.ContainsSpecialIdentifier(StreamHostCountSpecialIdentifier))
                 {
-                    IEnumerable<ChannelAdvancedModel> hosters = await ChannelSession.Connection.GetHosters(ChannelSession.Channel);
+                    IEnumerable<ChannelAdvancedModel> hosters = await ChannelSession.MixerStreamerConnection.GetHosters(ChannelSession.Channel);
                     if (hosters != null)
                     {
                         this.ReplaceSpecialIdentifier(StreamHostCountSpecialIdentifier, hosters.Count().ToString());
@@ -469,12 +469,12 @@ namespace MixItUp.Base.Util
 
             if (this.ContainsSpecialIdentifier(MilestoneSpecialIdentifierHeader))
             {
-                PatronageStatusModel patronageStatus = await ChannelSession.Connection.GetPatronageStatus(ChannelSession.Channel);
+                PatronageStatusModel patronageStatus = await ChannelSession.MixerStreamerConnection.GetPatronageStatus(ChannelSession.Channel);
                 if (patronageStatus != null)
                 {
                     this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedamount", patronageStatus.patronageEarned.ToString());
 
-                    PatronagePeriodModel patronagePeriod = await ChannelSession.Connection.GetPatronagePeriod(patronageStatus);
+                    PatronagePeriodModel patronagePeriod = await ChannelSession.MixerStreamerConnection.GetPatronagePeriod(patronageStatus);
                     if (patronagePeriod != null)
                     {
                         IEnumerable<PatronageMilestoneModel> patronageMilestones = patronagePeriod.milestoneGroups.SelectMany(mg => mg.milestones);
@@ -859,7 +859,7 @@ namespace MixItUp.Base.Util
                 if (this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "followers") || this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "game") ||
                     this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channel"))
                 {
-                    ExpandedChannelModel channel = await ChannelSession.Connection.GetChannel(user.ChannelID);
+                    ExpandedChannelModel channel = await ChannelSession.MixerStreamerConnection.GetChannel(user.ChannelID);
                     if (channel != null)
                     {
                         this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "followers", channel?.numFollowers.ToString() ?? "0");
@@ -897,7 +897,7 @@ namespace MixItUp.Base.Util
         private async Task<UserViewModel> GetUserFromArgument(string argument)
         {
             string username = argument.Replace("@", "");
-            UserModel argUserModel = await ChannelSession.Connection.GetUser(username);
+            UserModel argUserModel = await ChannelSession.MixerStreamerConnection.GetUser(username);
             if (argUserModel != null)
             {
                 return new UserViewModel(argUserModel);

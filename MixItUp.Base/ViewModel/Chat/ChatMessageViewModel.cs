@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Model.Chat;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.Skill;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -14,7 +15,9 @@ namespace MixItUp.Base.ViewModel.Chat
     {
         private const string TaggingRegexFormat = "(^|\\s+)@{0}(\\s+|$)";
 
-        public Guid ID { get; private set; }
+        public string ID { get; private set; }
+
+        public PlatformTypeEnum Platform { get; private set; }
 
         public UserViewModel User { get; private set; }
 
@@ -50,7 +53,8 @@ namespace MixItUp.Base.ViewModel.Chat
             : this(chatMessageEvent.message, user)
         {
             this.ChatMessageEvent = chatMessageEvent;
-            this.ID = this.ChatMessageEvent.id;
+            this.ID = this.ChatMessageEvent.id.ToString();
+            this.Platform = PlatformTypeEnum.Mixer;
 
             this.User = (user != null) ? user : new UserViewModel(this.ChatMessageEvent);
             this.IsInUsersChannel = ChannelSession.Channel.id.Equals(this.ChatMessageEvent.channel);

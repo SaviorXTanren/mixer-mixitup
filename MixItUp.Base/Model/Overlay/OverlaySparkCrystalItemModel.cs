@@ -186,12 +186,12 @@ namespace MixItUp.Base.Model.Overlay
 
         private async Task RefreshPatronageData()
         {
-            this.status = await ChannelSession.Connection.GetPatronageStatus(ChannelSession.Channel);
+            this.status = await ChannelSession.MixerStreamerConnection.GetPatronageStatus(ChannelSession.Channel);
             if (status != null)
             {
                 this.Amount = status.patronageEarned;
 
-                this.period = await ChannelSession.Connection.GetPatronagePeriod(status);
+                this.period = await ChannelSession.MixerStreamerConnection.GetPatronagePeriod(status);
                 if (this.period != null)
                 {
                     this.RefreshPatronageMilestoneData();

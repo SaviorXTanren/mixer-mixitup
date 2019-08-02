@@ -184,7 +184,7 @@ namespace MixItUp.Base.Actions
                         {
                             string usernameString = await this.ReplaceStringWithSpecialModifiers(this.Username, user, arguments);
 
-                            UserModel receivingUser = await ChannelSession.Connection.GetUser(usernameString);
+                            UserModel receivingUser = await ChannelSession.MixerStreamerConnection.GetUser(usernameString);
                             if (receivingUser != null)
                             {
                                 receiverUserData.Add(ChannelSession.Settings.UserData.GetValueIfExists(receivingUser.id, new UserDataViewModel(new UserViewModel(receivingUser))));

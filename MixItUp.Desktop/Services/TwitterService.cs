@@ -334,7 +334,7 @@ namespace MixItUp.Base.Services
                                             UserViewModel user = users.FirstOrDefault(u => u.TwitterURL != null && u.TwitterURL.Equals(string.Format("https://twitter.com/{0}", retweet.UserName)));
                                             if (user == null)
                                             {
-                                                UserModel userModel = await ChannelSession.Connection.GetUser(retweet.UserName);
+                                                UserModel userModel = await ChannelSession.MixerStreamerConnection.GetUser(retweet.UserName);
                                                 if (userModel != null)
                                                 {
                                                     user = new UserViewModel(userModel);

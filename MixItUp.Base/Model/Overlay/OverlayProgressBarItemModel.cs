@@ -149,13 +149,13 @@ namespace MixItUp.Base.Model.Overlay
             }
             else if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Milestones)
             {
-                PatronageStatusModel patronageStatus = await ChannelSession.Connection.GetPatronageStatus(ChannelSession.Channel);
+                PatronageStatusModel patronageStatus = await ChannelSession.MixerStreamerConnection.GetPatronageStatus(ChannelSession.Channel);
                 if (patronageStatus != null)
                 {
                     this.CurrentAmount = patronageStatus.patronageEarned;
                 }
 
-                PatronageMilestoneModel currentMilestone = await ChannelSession.Connection.GetCurrentPatronageMilestone();
+                PatronageMilestoneModel currentMilestone = await ChannelSession.MixerStreamerConnection.GetCurrentPatronageMilestone();
                 if (currentMilestone != null)
                 {
                     this.GoalAmount = currentMilestone.target;
@@ -212,7 +212,7 @@ namespace MixItUp.Base.Model.Overlay
                 if (this.refreshMilestone)
                 {
                     this.refreshMilestone = false;
-                    PatronageMilestoneModel currentMilestone = await ChannelSession.Connection.GetCurrentPatronageMilestone();
+                    PatronageMilestoneModel currentMilestone = await ChannelSession.MixerStreamerConnection.GetCurrentPatronageMilestone();
                     if (currentMilestone != null)
                     {
                         goal = this.GoalAmount = currentMilestone.target;

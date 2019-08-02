@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace MixItUp.Base.MixerAPI
+namespace MixItUp.Base.Services.Mixer
 {
     public abstract class MixerWebSocketWrapper : MixerRequestWrapperBase
     {

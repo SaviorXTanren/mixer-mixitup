@@ -603,13 +603,13 @@ namespace MixItUp.Desktop
         {
             this.Version = DesktopChannelSettings.LatestVersion;
 
-            if (ChannelSession.Connection != null)
+            if (ChannelSession.MixerStreamerConnection != null)
             {
-                this.OAuthToken = ChannelSession.Connection.Connection.GetOAuthTokenCopy();
+                this.OAuthToken = ChannelSession.MixerStreamerConnection.Connection.GetOAuthTokenCopy();
             }
-            if (ChannelSession.BotConnection != null)
+            if (ChannelSession.MixerBotConnection != null)
             {
-                this.BotOAuthToken = ChannelSession.BotConnection.Connection.GetOAuthTokenCopy();
+                this.BotOAuthToken = ChannelSession.MixerBotConnection.Connection.GetOAuthTokenCopy();
             }
 
             if (ChannelSession.Services.Streamlabs != null)

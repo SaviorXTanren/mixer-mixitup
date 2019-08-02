@@ -76,12 +76,12 @@ namespace MixItUp.Base.Actions
                     ClipModel clip = null;
                     DateTimeOffset clipCreationTime = DateTimeOffset.Now;
 
-                    BroadcastModel broadcast = await ChannelSession.Connection.GetCurrentBroadcast();
+                    BroadcastModel broadcast = await ChannelSession.MixerStreamerConnection.GetCurrentBroadcast();
                     if (broadcast != null)
                     {
-                        if (await ChannelSession.Connection.CanClipBeMade(broadcast))
+                        if (await ChannelSession.MixerStreamerConnection.CanClipBeMade(broadcast))
                         {
-                            clip = await ChannelSession.Connection.CreateClip(new ClipRequestModel()
+                            clip = await ChannelSession.MixerStreamerConnection.CreateClip(new ClipRequestModel()
                             {
                                 broadcastId = broadcast.id.ToString(),
                                 highlightTitle = clipName,
@@ -96,7 +96,7 @@ namespace MixItUp.Base.Actions
                         {
                             await Task.Delay(2000);
 
-                            IEnumerable<ClipModel> clips = await ChannelSession.Connection.GetChannelClips(ChannelSession.Channel);
+                            IEnumerable<ClipModel> clips = await ChannelSession.MixerStreamerConnection.GetChannelClips(ChannelSession.Channel);
                             clip = clips.OrderByDescending(c => c.uploadDate).FirstOrDefault();
                             if (clip != null && clip.uploadDate.ToLocalTime() >= clipCreationTime && clip.title.Equals(clipName))
                             {

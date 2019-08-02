@@ -50,7 +50,7 @@ namespace MixItUp.Base.Model.Store
         {
             if (this.UserID > 0)
             {
-                this.User = await ChannelSession.Connection.GetUser(this.UserID);
+                this.User = await ChannelSession.MixerStreamerConnection.GetUser(this.UserID);
             }
         }
     }

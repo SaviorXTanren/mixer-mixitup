@@ -99,12 +99,12 @@ namespace MixItUp.Base.Statistics
                 StaticTextStatisticDataTracker staticStats = (StaticTextStatisticDataTracker)stats;
                 staticStats.ClearValues();
 
-                if (ChannelSession.Connection != null && ChannelSession.Channel != null)
+                if (ChannelSession.MixerStreamerConnection != null && ChannelSession.Channel != null)
                 {
-                    PatronageStatusModel patronageStatus = await ChannelSession.Connection.GetPatronageStatus(ChannelSession.Channel);
+                    PatronageStatusModel patronageStatus = await ChannelSession.MixerStreamerConnection.GetPatronageStatus(ChannelSession.Channel);
                     if (patronageStatus != null)
                     {
-                        PatronagePeriodModel patronagePeriod = await ChannelSession.Connection.GetPatronagePeriod(patronageStatus);
+                        PatronagePeriodModel patronagePeriod = await ChannelSession.MixerStreamerConnection.GetPatronagePeriod(patronageStatus);
                         if (patronagePeriod != null)
                         {
                             IEnumerable<PatronageMilestoneModel> patronageMilestones = patronagePeriod.milestoneGroups.SelectMany(mg => mg.milestones);

@@ -344,22 +344,22 @@ namespace MixItUp.Base.ViewModel.User
         {
             if (!this.IsAnonymous && (this.LastUpdated.TotalMinutesFromNow() >= 1 || force))
             {
-                UserWithChannelModel user = await ChannelSession.Connection.GetUser(this.ID);
+                UserWithChannelModel user = await ChannelSession.MixerStreamerConnection.GetUser(this.ID);
                 if (user != null)
                 {
                     this.SetMixerUserDetails(user);
 
-                    this.FollowDate = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, this.GetModel());
+                    this.FollowDate = await ChannelSession.MixerStreamerConnection.CheckIfFollows(ChannelSession.Channel, this.GetModel());
                     if (this.IsMixerSubscriber || force)
                     {
-                        UserWithGroupsModel userGroups = await ChannelSession.Connection.GetUserInChannel(ChannelSession.Channel, this.ID);
+                        UserWithGroupsModel userGroups = await ChannelSession.MixerStreamerConnection.GetUserInChannel(ChannelSession.Channel, this.ID);
                         if (userGroups != null)
                         {
                             this.MixerSubscribeDate = userGroups.GetSubscriberDate();
                         }
                     }
 
-                    this.FanProgression = await ChannelSession.Connection.GetUserFanProgression(ChannelSession.Channel, user);
+                    this.FanProgression = await ChannelSession.MixerStreamerConnection.GetUserFanProgression(ChannelSession.Channel, user);
                 }
 
                 if (!this.IsInChat)
@@ -377,7 +377,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             if (!this.IsAnonymous && this.LastUpdated.TotalMinutesFromNow() >= 1)
             {
-                ChatUserModel chatUser = await ChannelSession.Connection.GetChatUser(ChannelSession.Channel, this.ID);
+                ChatUserModel chatUser = await ChannelSession.MixerStreamerConnection.GetChatUser(ChannelSession.Channel, this.ID);
                 if (chatUser != null)
                 {
                     this.SetChatDetails(chatUser, addToChat);

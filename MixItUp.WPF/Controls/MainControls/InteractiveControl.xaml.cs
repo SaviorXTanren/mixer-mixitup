@@ -190,10 +190,10 @@ namespace MixItUp.WPF.Controls.MainControls
 
             this.selectedGameVersion = await this.Window.RunAsyncOperation(async () =>
             {
-                IEnumerable<InteractiveGameVersionModel> versions = await ChannelSession.Connection.GetInteractiveGameVersions(this.selectedGame);
+                IEnumerable<InteractiveGameVersionModel> versions = await ChannelSession.MixerStreamerConnection.GetInteractiveGameVersions(this.selectedGame);
                 if (versions != null && versions.Count() > 0)
                 {
-                    return await ChannelSession.Connection.GetInteractiveGameVersion(versions.First());
+                    return await ChannelSession.MixerStreamerConnection.GetInteractiveGameVersion(versions.First());
                 }
                 return null;
             });

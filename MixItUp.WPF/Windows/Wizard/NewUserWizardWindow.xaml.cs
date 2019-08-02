@@ -65,7 +65,7 @@ namespace MixItUp.WPF.Windows.Wizard
             this.XSplitExtensionPathTextBox.Text = Path.Combine(this.directoryPath, "XSplit\\Mix It Up.html");
             this.IntroPageGrid.Visibility = System.Windows.Visibility.Visible;
 
-            this.interactiveGames = await ChannelSession.Connection.GetOwnedInteractiveGames(ChannelSession.Channel);
+            this.interactiveGames = await ChannelSession.MixerStreamerConnection.GetOwnedInteractiveGames(ChannelSession.Channel);
 
             await this.GatherSoundwaveSettings();
             if (this.soundwaveData != null)
@@ -786,7 +786,7 @@ namespace MixItUp.WPF.Windows.Wizard
 
                 foreach (StreamlabsChatBotViewer viewer in this.streamlabsChatBotData.Viewers)
                 {
-                    UserModel user = await ChannelSession.Connection.GetUser(viewer.Name);
+                    UserModel user = await ChannelSession.MixerStreamerConnection.GetUser(viewer.Name);
                     if (user != null)
                     {
                         viewer.ID = user.id;
@@ -837,7 +837,7 @@ namespace MixItUp.WPF.Windows.Wizard
                     InteractiveGameVersionModel version = soundwaveGame.versions.FirstOrDefault();
                     if (version != null)
                     {
-                        InteractiveGameVersionModel soundwaveGameVersion = await ChannelSession.Connection.GetInteractiveGameVersion(version);
+                        InteractiveGameVersionModel soundwaveGameVersion = await ChannelSession.MixerStreamerConnection.GetInteractiveGameVersion(version);
                         if (soundwaveGameVersion != null)
                         {
                             InteractiveSceneModel soundwaveGameScene = soundwaveGameVersion.controls.scenes.FirstOrDefault();
@@ -847,11 +847,11 @@ namespace MixItUp.WPF.Windows.Wizard
                                 {
                                     // Add code logic to create Interactive Game on Mixer that is a copy of the Soundwave Interactive game, but with buttons filed in with name and not disabled
                                     InteractiveSceneModel profileScene = InteractiveGameHelper.CreateDefaultScene();
-                                    InteractiveGameListingModel profileGame = await ChannelSession.Connection.CreateInteractiveGame(ChannelSession.Channel, ChannelSession.User, profile, profileScene);
+                                    InteractiveGameListingModel profileGame = await ChannelSession.MixerStreamerConnection.CreateInteractiveGame(ChannelSession.Channel, ChannelSession.User, profile, profileScene);
                                     InteractiveGameVersionModel gameVersion = profileGame.versions.FirstOrDefault();
                                     if (gameVersion != null)
                                     {
-                                        InteractiveGameVersionModel profileGameVersion = await ChannelSession.Connection.GetInteractiveGameVersion(gameVersion);
+                                        InteractiveGameVersionModel profileGameVersion = await ChannelSession.MixerStreamerConnection.GetInteractiveGameVersion(gameVersion);
                                         if (profileGameVersion != null)
                                         {
                                             profileScene = profileGameVersion.controls.scenes.First();
@@ -880,7 +880,7 @@ namespace MixItUp.WPF.Windows.Wizard
                                                 profileScene.buttons.Add(button);
                                             }
 
-                                            await ChannelSession.Connection.UpdateInteractiveGameVersion(profileGameVersion);
+                                            await ChannelSession.MixerStreamerConnection.UpdateInteractiveGameVersion(profileGameVersion);
                                         }
                                     }
                                 }

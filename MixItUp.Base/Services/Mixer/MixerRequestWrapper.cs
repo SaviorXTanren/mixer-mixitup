@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MixItUp.Base.MixerAPI
+namespace MixItUp.Base.Services.Mixer
 {
     public abstract class MixerRequestWrapperBase
     {

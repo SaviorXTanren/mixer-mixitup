@@ -78,7 +78,7 @@ namespace MixItUp.WPF.Windows.Favorites
             FavoriteUser user = (FavoriteUser)button.DataContext;
             await this.RunAsyncOperation(async () =>
             {
-                await ChannelSession.Connection.SetHostChannel(ChannelSession.Channel, user.User.channel);
+                await ChannelSession.MixerStreamerConnection.SetHostChannel(ChannelSession.Channel, user.User.channel);
             });
         }
 
@@ -110,7 +110,7 @@ namespace MixItUp.WPF.Windows.Favorites
                     GameTypeSimpleModel game = null;
                     if (user.channel.typeId != null)
                     {
-                        game = await ChannelSession.Connection.GetGameType(user.channel.typeId.GetValueOrDefault());
+                        game = await ChannelSession.MixerStreamerConnection.GetGameType(user.channel.typeId.GetValueOrDefault());
                     }
                     this.groupUsers.Add(new FavoriteUser(user, game, !this.favoriteGroup.IsTeam));
                 }

@@ -138,7 +138,7 @@ namespace MixItUp.WPF.Controls.Command
                     this.command.HeldRate = heldRate;
                 }
 
-                await ChannelSession.Connection.UpdateInteractiveGameVersion(this.Version);
+                await ChannelSession.MixerStreamerConnection.UpdateInteractiveGameVersion(this.Version);
                 return this.command;
             }
             return null;

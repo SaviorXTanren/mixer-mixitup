@@ -88,7 +88,7 @@ namespace MixItUp.Base.Commands
 
             UserViewModel user = new UserViewModel(0, donation.UserName);
 
-            UserModel userModel = await ChannelSession.Connection.GetUser(user.UserName);
+            UserModel userModel = await ChannelSession.MixerStreamerConnection.GetUser(user.UserName);
             if (userModel != null)
             {
                 user = new UserViewModel(userModel);

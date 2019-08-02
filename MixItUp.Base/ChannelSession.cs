@@ -9,6 +9,7 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Model.API;
 using MixItUp.Base.Services;
+using MixItUp.Base.Services.Mixer;
 using MixItUp.Base.Statistics;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
@@ -116,8 +117,8 @@ namespace MixItUp.Base
 
         public static SecretManagerService SecretManager { get; internal set; }
 
-        public static MixerConnectionWrapper Connection { get; private set; }
-        public static MixerConnectionWrapper BotConnection { get; private set; }
+        public static MixerConnectionService MixerStreamerConnection { get; private set; }
+        public static MixerConnectionService MixerBotConnection { get; private set; }
 
         public static PrivatePopulatedUserModel User { get; private set; }
         public static PrivatePopulatedUserModel BotUser { get; private set; }
@@ -242,7 +243,7 @@ namespace MixItUp.Base
                 MixerConnection connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ChannelSession.ClientID, scopes, false, loginSuccessHtmlPageFilePath: OAuthServiceBase.LoginRedirectPageFileName);
                 if (connection != null)
                 {
-                    ChannelSession.Connection = new MixerConnectionWrapper(connection);
+                    ChannelSession.MixerStreamerConnection = new MixerConnectionService(connection);
                     return await ChannelSession.InitializeInternal((channelName == null), channelName);
                 }
             }
@@ -264,7 +265,7 @@ namespace MixItUp.Base
                 MixerConnection connection = await MixerConnection.ConnectViaOAuthToken(ChannelSession.Settings.OAuthToken);
                 if (connection != null)
                 {
-                    ChannelSession.Connection = new MixerConnectionWrapper(connection);
+                    ChannelSession.MixerStreamerConnection = new MixerConnectionService(connection);
                     result = await ChannelSession.InitializeInternal(ChannelSession.Settings.IsStreamer, ChannelSession.Settings.IsStreamer ? null : ChannelSession.Settings.Channel.token);
                 }
             }
@@ -288,7 +289,7 @@ namespace MixItUp.Base
                 MixerConnection connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ChannelSession.ClientID, ChannelSession.BotScopes, false, loginSuccessHtmlPageFilePath: OAuthServiceBase.LoginRedirectPageFileName);
                 if (connection != null)
                 {
-                    ChannelSession.BotConnection = new MixerConnectionWrapper(connection);
+                    ChannelSession.MixerBotConnection = new MixerConnectionService(connection);
                     return await ChannelSession.InitializeBotInternal();
                 }
             }
@@ -310,7 +311,7 @@ namespace MixItUp.Base
                     MixerConnection connection = await MixerConnection.ConnectViaOAuthToken(settings.BotOAuthToken);
                     if (connection != null)
                     {
-                        ChannelSession.BotConnection = new MixerConnectionWrapper(connection);
+                        ChannelSession.MixerBotConnection = new MixerConnectionService(connection);
                         result = await ChannelSession.InitializeBotInternal();
                     }
                 }
@@ -326,7 +327,7 @@ namespace MixItUp.Base
 
         public static async Task DisconnectBot()
         {
-            ChannelSession.BotConnection = null;
+            ChannelSession.MixerBotConnection = null;
             await ChannelSession.Chat.DisconnectBot();
         }
 
@@ -349,7 +350,7 @@ namespace MixItUp.Base
         {
             if (ChannelSession.User != null)
             {
-                PrivatePopulatedUserModel user = await ChannelSession.Connection.GetCurrentUser();
+                PrivatePopulatedUserModel user = await ChannelSession.MixerStreamerConnection.GetCurrentUser();
                 if (user != null)
                 {
                     ChannelSession.User = user;
@@ -361,7 +362,7 @@ namespace MixItUp.Base
         {
             if (ChannelSession.Channel != null)
             {
-                ExpandedChannelModel channel = await ChannelSession.Connection.GetChannel(ChannelSession.Channel.id);
+                ExpandedChannelModel channel = await ChannelSession.MixerStreamerConnection.GetChannel(ChannelSession.Channel.id);
                 if (channel != null)
                 {
                     ChannelSession.Channel = channel;
@@ -478,17 +479,17 @@ namespace MixItUp.Base
         {
             await ChannelSession.Services.InitializeTelemetryService();
 
-            PrivatePopulatedUserModel user = await ChannelSession.Connection.GetCurrentUser();
+            PrivatePopulatedUserModel user = await ChannelSession.MixerStreamerConnection.GetCurrentUser();
             if (user != null)
             {
                 ExpandedChannelModel channel = null;
                 if (channelName == null || isStreamer)
                 {
-                    channel = await ChannelSession.Connection.GetChannel(user.channel.id);
+                    channel = await ChannelSession.MixerStreamerConnection.GetChannel(user.channel.id);
                 }
                 else
                 {
-                    channel = await ChannelSession.Connection.GetChannel(channelName);
+                    channel = await ChannelSession.MixerStreamerConnection.GetChannel(channelName);
                 }
                 
                 if (channel != null)
@@ -517,7 +518,7 @@ namespace MixItUp.Base
 
                     ChannelSession.Services.Telemetry.SetUserId(ChannelSession.Settings.TelemetryUserId);
 
-                    ChannelSession.Connection.Initialize();
+                    ChannelSession.MixerStreamerConnection.Initialize();
 
                     if (!await ChannelSession.Chat.Connect() || !await ChannelSession.Constellation.Connect())
                     {
@@ -610,7 +611,7 @@ namespace MixItUp.Base
 
                     if (ChannelSession.Settings.DefaultInteractiveGame > 0)
                     {
-                        IEnumerable<InteractiveGameListingModel> games = await ChannelSession.Connection.GetOwnedInteractiveGames(ChannelSession.Channel);
+                        IEnumerable<InteractiveGameListingModel> games = await ChannelSession.MixerStreamerConnection.GetOwnedInteractiveGames(ChannelSession.Channel);
                         InteractiveGameListingModel game = games.FirstOrDefault(g => g.id.Equals(ChannelSession.Settings.DefaultInteractiveGame));
                         if (game != null)
                         {
@@ -672,12 +673,12 @@ namespace MixItUp.Base
 
         private static async Task<bool> InitializeBotInternal()
         {
-            PrivatePopulatedUserModel user = await ChannelSession.BotConnection.GetCurrentUser();
+            PrivatePopulatedUserModel user = await ChannelSession.MixerBotConnection.GetCurrentUser();
             if (user != null)
             {
                 ChannelSession.BotUser = user;
 
-                ChannelSession.BotConnection.Initialize();
+                ChannelSession.MixerBotConnection.Initialize();
 
                 await ChannelSession.Chat.ConnectBot();
 
@@ -772,7 +773,7 @@ namespace MixItUp.Base
 
         private static async Task LoadEmoticons(UserModel user, LockedDictionary<string, LockedDictionary<string, EmoticonImage>> storage)
         {
-            List<EmoticonPackModel> userPacks = (await ChannelSession.Connection.GetEmoticons(ChannelSession.Channel, user)).ToList();
+            List<EmoticonPackModel> userPacks = (await ChannelSession.MixerStreamerConnection.GetEmoticons(ChannelSession.Channel, user)).ToList();
             foreach (EmoticonPackModel userPack in userPacks)
             {
                 if (!storage.ContainsKey(userPack.channelId.ToString()))

@@ -144,7 +144,7 @@ namespace MixItUp.Base.Model.Overlay
 
             if (this.CurrentBossUserID > 0)
             {
-                UserModel user = await ChannelSession.Connection.GetUser(this.CurrentBossUserID);
+                UserModel user = await ChannelSession.MixerStreamerConnection.GetUser(this.CurrentBossUserID);
                 if (user != null)
                 {
                     this.CurrentBoss = new UserViewModel(user);

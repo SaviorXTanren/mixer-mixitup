@@ -94,10 +94,10 @@ namespace MixItUp.Base.Actions
             else if (this.ActionType == StreamingPlatformActionType.Host)
             {
                 string hostChannelName = await this.ReplaceStringWithSpecialModifiers(this.HostChannelName, user, arguments);
-                ChannelModel channel = await ChannelSession.Connection.GetChannel(hostChannelName);
+                ChannelModel channel = await ChannelSession.MixerStreamerConnection.GetChannel(hostChannelName);
                 if (channel != null)
                 {
-                    await ChannelSession.Connection.SetHostChannel(ChannelSession.Channel, channel);
+                    await ChannelSession.MixerStreamerConnection.SetHostChannel(ChannelSession.Channel, channel);
                 }
             }
         }

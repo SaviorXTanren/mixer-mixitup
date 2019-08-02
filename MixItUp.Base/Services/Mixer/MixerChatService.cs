@@ -15,39 +15,24 @@ using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MixItUp.Base.MixerAPI
+namespace MixItUp.Base.Services.Mixer
 {
-    public class ChatClientWrapper : MixerWebSocketWrapper
+    public interface IMixerChatService : IChatService
     {
-        private SemaphoreSlim whisperNumberLock = new SemaphoreSlim(1);
-        private Dictionary<uint, int> whisperMap = new Dictionary<uint, int>();
 
-        public event EventHandler<ChatMessageViewModel> OnMessageOccurred = delegate { };
-        public event EventHandler<ChatDeleteMessageEventModel> OnDeleteMessageOccurred = delegate { };
-        public event EventHandler OnClearMessagesOccurred = delegate { };
+    }
 
-        public event EventHandler<IEnumerable<UserViewModel>> OnUsersJoinOccurred = delegate { };
-        public event EventHandler<UserViewModel> OnUserUpdateOccurred = delegate { };
-        public event EventHandler<IEnumerable<UserViewModel>> OnUsersLeaveOccurred = delegate { };
-        public event EventHandler<Tuple<UserViewModel, string>> OnUserPurgeOccurred = delegate { };
-
-        public event EventHandler<ChatPollEventModel> OnPollEndOccurred { add { this.Client.OnPollEndOccurred += value; } remove { this.Client.OnPollEndOccurred -= value; } }
-
-        public LockedDictionary<Guid, ChatMessageViewModel> Messages { get; private set; } = new LockedDictionary<Guid, ChatMessageViewModel>();
-
-        public bool DisableChat { get; set; }
-
+    public class MixerChatService : MixerWebSocketWrapper, IMixerChatService
+    {
         public ChatClient Client { get; private set; }
         public ChatClient BotClient { get; private set; }
-
-        private HashSet<uint> userEntranceCommands = new HashSet<uint>();
 
         private const int userJoinLeaveEventsTotalToProcess = 25;
         private SemaphoreSlim userJoinLeaveEventsSemaphore = new SemaphoreSlim(1);
         private Dictionary<uint, ChatUserEventModel> userJoinEvents = new Dictionary<uint, ChatUserEventModel>();
         private Dictionary<uint, ChatUserEventModel> userLeaveEvents = new Dictionary<uint, ChatUserEventModel>();
 
-        public ChatClientWrapper() { }
+        public MixerChatService() { }
 
         public async Task<bool> Connect()
         {
@@ -356,7 +341,7 @@ namespace MixItUp.Base.MixerAPI
             return false;
         }
 
-        private async Task<ChatClient> ConnectAndAuthenticateChatClient(MixerConnectionWrapper connection)
+        private async Task<ChatClient> ConnectAndAuthenticateChatClient(MixerConnectionService connection)
         {
             ChatClient client = await this.RunAsync(ChatClient.CreateFromChannel(connection.Connection, ChannelSession.Channel));
             if (client != null)

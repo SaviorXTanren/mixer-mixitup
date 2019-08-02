@@ -110,7 +110,7 @@ namespace MixItUp.WPF.Controls.Command
                 this.command.Unlocked = this.UnlockedControl.Unlocked;
                 this.command.Requirements = requirements;
 
-                await ChannelSession.Connection.UpdateInteractiveGameVersion(this.Version);
+                await ChannelSession.MixerStreamerConnection.UpdateInteractiveGameVersion(this.Version);
                 return this.command;
             }
             return null;

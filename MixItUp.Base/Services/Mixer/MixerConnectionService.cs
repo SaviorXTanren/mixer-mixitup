@@ -22,15 +22,36 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace MixItUp.Base.MixerAPI
+namespace MixItUp.Base.Services.Mixer
 {
+    public interface IMixerConnectionService
+    {
 
+    }
 
-    public class MixerConnectionWrapper : MixerRequestWrapperBase
+    public static class MixerModelExtensions
+    {
+        public static ChatUserModel GetUser(this ChatUserEventModel chatUserEvent)
+        {
+            return new ChatUserModel() { userId = chatUserEvent.id, userName = chatUserEvent.username, userRoles = chatUserEvent.roles };
+        }
+
+        public static ChatUserModel GetUser(this ChatMessageEventModel chatMessageEvent)
+        {
+            return new ChatUserModel() { userId = chatMessageEvent.user_id, userName = chatMessageEvent.user_name, userRoles = chatMessageEvent.user_roles };
+        }
+
+        public static ChatUserModel GetUser(this ChatSkillAttributionEventModel skillAttributionEvent)
+        {
+            return new ChatUserModel() { userId = skillAttributionEvent.user_id, userName = skillAttributionEvent.user_name, userRoles = skillAttributionEvent.user_roles };
+        }
+    }
+
+    public class MixerConnectionService : MixerRequestWrapperBase, IMixerConnectionService
     {
         public MixerConnection Connection { get; private set; }
 
-        public MixerConnectionWrapper(MixerConnection connection)
+        public MixerConnectionService(MixerConnection connection)
         {
             this.Connection = connection;
         }
@@ -176,7 +197,7 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task AddUserRoles(ChannelModel channel, UserModel user, IEnumerable<MixerRoleEnum> roles) { await this.RunAsync(this.Connection.Channels.UpdateUserRoles(channel, user, roles.Select(r => EnumHelper.GetEnumName(r)), null)); }
 
-        public async Task RemoveUserRoles(ChannelModel channel, UserModel user, IEnumerable<MixerRoleEnum> roles) { await this.RunAsync(this.Connection.Channels.UpdateUserRoles(channel, user, null, roles.Select(r => EnumHelper.GetEnumName(r)))); } 
+        public async Task RemoveUserRoles(ChannelModel channel, UserModel user, IEnumerable<MixerRoleEnum> roles) { await this.RunAsync(this.Connection.Channels.UpdateUserRoles(channel, user, null, roles.Select(r => EnumHelper.GetEnumName(r)))); }
 
         public async Task<IEnumerable<InteractiveGameListingModel>> GetOwnedInteractiveGames(ChannelModel channel) { return await this.RunAsync(this.Connection.Interactive.GetOwnedInteractiveGames(channel)); }
 

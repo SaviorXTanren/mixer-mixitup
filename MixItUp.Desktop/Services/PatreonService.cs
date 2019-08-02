@@ -361,7 +361,7 @@ namespace MixItUp.Desktop.Services
                                 {
                                     UserViewModel user = new UserViewModel(0, member.User.LookupName);
 
-                                    UserModel userModel = await ChannelSession.Connection.GetUser(user.UserName);
+                                    UserModel userModel = await ChannelSession.MixerStreamerConnection.GetUser(user.UserName);
                                     if (userModel != null)
                                     {
                                         user = await ChannelSession.ActiveUsers.GetUserByID(userModel.id);
