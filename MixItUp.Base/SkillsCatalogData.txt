@@ -1,22 +1,5 @@
 {
 	"skills": [{
-		"id": "7044c85a-271f-4e6f-9832-7e898436891d",
-		"name": "Mirage",
-		"description": "Mirage",
-		"locked": false,
-		"lockReason": 0,
-		"category": "Stickers",
-		"iconUrl": "https://xforgeassets001.xboxlive.com/serviceid-562a2165-bb5d-46f6-828c-2acdc8b22eb9-public/5dea5422-62f5-4e18-847e-e545ccaccd1f/007_apex_mirage.png",
-		"previewUrl": null,
-		"globalLevelUnlock": 0,
-		"price": 5000,
-		"currency": 1,
-		"skillSetupUrl": null,
-		"skillExecutionUrl": null,
-		"attributionIconUrl": null,
-		"skillAssetsUrl": "not_used"
-	},
-	{
 		"id": "ea4afd17-6668-499b-b346-a875ac673c34",
 		"name": "Coconut Drink",
 		"description": "Coconut Drink",
