@@ -1428,12 +1428,13 @@ namespace MixItUp.Base.Commands
                                                 {
                                                     this.currentStarterUser.Data.AddInventoryAmount(this.Requirements.Inventory.GetInventory(), this.Requirements.Inventory.ItemName, this.Requirements.Inventory.Amount);
                                                 }
-                                                this.ResetData(user);
 
                                                 if (this.NotAcceptedCommand != null)
                                                 {
                                                     await this.NotAcceptedCommand.Perform(this.currentStarterUser, arguments: new List<string>() { this.currentTargetUser.UserName });
                                                 }
+
+                                                this.ResetData(user);
                                             }
                                         });
                                     }
