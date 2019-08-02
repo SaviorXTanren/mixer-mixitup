@@ -22,7 +22,7 @@ namespace MixItUp.Desktop.Services
         private string apiKey;
 
         public TipeeeStreamWebSocketService(TipeeeStreamService service, string username, string apiKey)
-            : base("https://sso.tipeeestream.com:4242")
+            : base("https://sso.tipeeestream.com:443")
         {
             this.service = service;
             this.username = username;
