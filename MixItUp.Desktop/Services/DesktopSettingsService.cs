@@ -46,12 +46,10 @@ namespace MixItUp.Desktop.Services
                     catch (Exception ex) { Logger.Log(ex); }
 
                     string backupFilePath = filePath + DesktopSettingsService.BackupFileExtension;
-
                     setting = await this.LoadSettings(backupFilePath);
                     if (setting != null)
                     {
                         settings.Add(setting);
-
                         GlobalEvents.ShowMessageBox("We were unable to load your settings file due to file corruption and will instead load your backup. This means that your most recent changes from the last time you ran Mix It Up will not be present." + Environment.NewLine + Environment.NewLine + "We apologize for this inconvenience and have already recorded this issue to help prevent this from happening in the future.");
                     }
                 }
@@ -187,15 +185,34 @@ namespace MixItUp.Desktop.Services
             return Path.Combine(SettingsDirectoryName, string.Format("{0}.{1}.sqlite", settings.Channel.id.ToString(), (settings.IsStreamer) ? "Streamer" : "Moderator"));
         }
 
-        private async Task<IChannelSettings> LoadSettings(string filePath)
+        public async Task<int> GetSettingsVersion(string filePath)
         {
             string fileData = await ChannelSession.Services.FileService.ReadFile(filePath);
-            JObject settingsJObj = JObject.Parse(fileData);
-            int currentVersion = (int)settingsJObj["Version"];
+            if (string.IsNullOrEmpty(fileData))
+            {
+                return -1;
+            }
 
+            JObject settingsJObj = JObject.Parse(fileData);
+            return (int)settingsJObj["Version"];
+        }
+
+        public int GetLatestVersion()
+        {
+            return DesktopChannelSettings.LatestVersion;
+        }
+
+        private async Task<IChannelSettings> LoadSettings(string filePath)
+        {
+            int currentVersion = await GetSettingsVersion(filePath);
             if (currentVersion < DesktopChannelSettings.LatestVersion)
             {
                 await DesktopSettingsUpgrader.UpgradeSettingsToLatest(currentVersion, filePath);
+            }
+            else if (currentVersion > DesktopChannelSettings.LatestVersion)
+            {
+                // Future build, like a preview build, we can't load this
+                return null;
             }
 
             return await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
