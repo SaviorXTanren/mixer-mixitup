@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.Controls.MainControls;
+﻿using MixItUp.Base;
+using MixItUp.Base.ViewModel.Controls.MainControls;
 using MixItUp.Base.ViewModel.Window;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,6 +15,9 @@ namespace MixItUp.WPF.Controls.MainControls
     public partial class ChatControl : MainControlBase
     {
         public static BitmapImage SubscriberBadgeBitmap { get; private set; }
+
+        private ScrollViewer chatListScrollViewer;
+        private bool lockChatList = true;
 
         private ChatMainControlViewModel viewModel;
 
@@ -35,6 +39,22 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void ChatList_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
+            if (this.chatListScrollViewer == null)
+            {
+                this.chatListScrollViewer = (ScrollViewer)e.OriginalSource;
+            }
+
+            if (this.lockChatList && this.chatListScrollViewer != null)
+            {
+                if (ChannelSession.Settings.LatestChatAtTop)
+                {
+                    this.chatListScrollViewer.ScrollToTop();
+                }
+                else
+                {
+                    this.chatListScrollViewer.ScrollToBottom();
+                }
+            }
         }
 
         private void ChatLockButton_MouseEnter(object sender, MouseEventArgs e)
