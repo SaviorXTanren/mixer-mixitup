@@ -4,6 +4,8 @@
     {
         Mixer,
         Twitch,
-        YouTube
+        YouTube,
+
+        All = 100,
     }
 }

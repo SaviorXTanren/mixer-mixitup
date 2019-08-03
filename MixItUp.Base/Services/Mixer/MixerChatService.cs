@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.Mixer
 {
-    public interface IMixerChatService : IChatService
+    public interface IMixerChatService
     {
 
     }
@@ -26,6 +26,17 @@ namespace MixItUp.Base.Services.Mixer
     {
         public ChatClient Client { get; private set; }
         public ChatClient BotClient { get; private set; }
+
+        public event EventHandler<ChatMessageViewModel> OnMessageOccurred = delegate { };
+        public event EventHandler<Guid> OnDeleteMessageOccurred = delegate { };
+        public event EventHandler OnClearMessagesOccurred = delegate { };
+
+        public event EventHandler<IEnumerable<UserViewModel>> OnUsersJoinOccurred = delegate { };
+        public event EventHandler<UserViewModel> OnUserUpdateOccurred = delegate { };
+        public event EventHandler<IEnumerable<UserViewModel>> OnUsersLeaveOccurred = delegate { };
+        public event EventHandler<Tuple<UserViewModel, UserViewModel>> OnUserPurgeOccurred = delegate { };
+
+        public event EventHandler<ChatPollEventModel> OnPollEndOccurred { add { this.Client.OnPollEndOccurred += value; } remove { this.Client.OnPollEndOccurred -= value; } }
 
         private const int userJoinLeaveEventsTotalToProcess = 25;
         private SemaphoreSlim userJoinLeaveEventsSemaphore = new SemaphoreSlim(1);
@@ -182,9 +193,9 @@ namespace MixItUp.Base.Services.Mixer
         {
             if (this.Client != null)
             {
-                Util.Logger.LogDiagnostic(string.Format("Deleting Message - {0}", message.Message));
+                Util.Logger.LogDiagnostic(string.Format("Deleting Message - {0}", message.PlainTextMessage));
 
-                await this.RunAsync(this.Client.DeleteMessage(message.ID));
+                await this.RunAsync(this.Client.DeleteMessage(Guid.Parse(message.ID)));
             }
         }
 
@@ -216,7 +227,7 @@ namespace MixItUp.Base.Services.Mixer
         {
             if (this.Client != null)
             {
-                await ChannelSession.MixerStreamerConnection.AddUserRoles(ChannelSession.Channel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Banned });
+                await ChannelSession.MixerStreamerConnection.AddUserRoles(ChannelSession.MixerChannel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Banned });
                 await user.RefreshDetails(true);
             }
         }
@@ -225,7 +236,7 @@ namespace MixItUp.Base.Services.Mixer
         {
             if (this.Client != null)
             {
-                await ChannelSession.MixerStreamerConnection.RemoveUserRoles(ChannelSession.Channel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Banned });
+                await ChannelSession.MixerStreamerConnection.RemoveUserRoles(ChannelSession.MixerChannel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Banned });
                 await user.RefreshDetails(true);
             }
         }
@@ -234,7 +245,7 @@ namespace MixItUp.Base.Services.Mixer
         {
             if (this.Client != null)
             {
-                await ChannelSession.MixerStreamerConnection.AddUserRoles(ChannelSession.Channel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Mod });
+                await ChannelSession.MixerStreamerConnection.AddUserRoles(ChannelSession.MixerChannel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Mod });
                 await user.RefreshDetails(true);
             }
         }
@@ -243,7 +254,7 @@ namespace MixItUp.Base.Services.Mixer
         {
             if (this.Client != null)
             {
-                await ChannelSession.MixerStreamerConnection.RemoveUserRoles(ChannelSession.Channel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Mod });
+                await ChannelSession.MixerStreamerConnection.RemoveUserRoles(ChannelSession.MixerChannel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Mod });
                 await user.RefreshDetails(true);
             }
         }
@@ -260,9 +271,8 @@ namespace MixItUp.Base.Services.Mixer
         {
             if (this.Client != null)
             {
-                return await this.Client.GetChatHistory(50);
+                return await this.Client.GetChatHistory(maxMessages);
             }
-
             return new List<ChatMessageEventModel>();
         }
 
@@ -273,77 +283,45 @@ namespace MixItUp.Base.Services.Mixer
                 this.backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 
                 this.Client = await this.ConnectAndAuthenticateChatClient(ChannelSession.MixerStreamerConnection);
-                return await this.RunAsync(async () =>
+                if (this.Client != null)
                 {
-                    if (this.Client != null)
+                    this.Client.OnClearMessagesOccurred += ChatClient_OnClearMessagesOccurred;
+                    this.Client.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
+                    this.Client.OnMessageOccurred += ChatClient_OnMessageOccurred;
+                    this.Client.OnPollEndOccurred += ChatClient_OnPollEndOccurred;
+                    this.Client.OnPollStartOccurred += ChatClient_OnPollStartOccurred;
+                    this.Client.OnPurgeMessageOccurred += ChatClient_OnPurgeMessageOccurred;
+                    this.Client.OnUserJoinOccurred += ChatClient_OnUserJoinOccurred;
+                    this.Client.OnUserLeaveOccurred += ChatClient_OnUserLeaveOccurred;
+                    this.Client.OnUserUpdateOccurred += ChatClient_OnUserUpdateOccurred;
+                    this.Client.OnSkillAttributionOccurred += Client_OnSkillAttributionOccurred;
+                    this.Client.OnDisconnectOccurred += StreamerClient_OnDisconnectOccurred;
+                    if (ChannelSession.Settings.DiagnosticLogging)
                     {
-                        this.Client.OnClearMessagesOccurred += ChatClient_OnClearMessagesOccurred;
-                        this.Client.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
-                        this.Client.OnMessageOccurred += ChatClient_OnMessageOccurred;
-                        this.Client.OnPollEndOccurred += ChatClient_OnPollEndOccurred;
-                        this.Client.OnPollStartOccurred += ChatClient_OnPollStartOccurred;
-                        this.Client.OnPurgeMessageOccurred += ChatClient_OnPurgeMessageOccurred;
-                        this.Client.OnUserJoinOccurred += ChatClient_OnUserJoinOccurred;
-                        this.Client.OnUserLeaveOccurred += ChatClient_OnUserLeaveOccurred;
-                        this.Client.OnUserUpdateOccurred += ChatClient_OnUserUpdateOccurred;
-                        this.Client.OnSkillAttributionOccurred += Client_OnSkillAttributionOccurred;
-                        this.Client.OnDisconnectOccurred += StreamerClient_OnDisconnectOccurred;
-                        if (ChannelSession.Settings.DiagnosticLogging)
-                        {
-                            this.Client.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
-                            this.Client.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
-                            this.Client.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
-                            this.Client.OnEventOccurred += WebSocketClient_OnEventOccurred;
-                        }
-
-                        await ChannelSession.ActiveUsers.AddOrUpdateUsers(await ChannelSession.MixerStreamerConnection.GetChatUsers(ChannelSession.Channel, Math.Max(ChannelSession.Channel.viewersCurrent, 1)));
-
-                        if (ChannelSession.IsStreamer)
-                        {
-                            ChannelSession.PreMadeChatCommands.Clear();
-                            foreach (PreMadeChatCommand command in ReflectionHelper.CreateInstancesOfImplementingType<PreMadeChatCommand>())
-                            {
-#pragma warning disable CS0612 // Type or member is obsolete
-                                if (!(command is ObsoletePreMadeCommand))
-                                {
-                                    ChannelSession.PreMadeChatCommands.Add(command);
-                                }
-#pragma warning restore CS0612 // Type or member is obsolete
-                            }
-
-                            foreach (PreMadeChatCommandSettings commandSetting in ChannelSession.Settings.PreMadeChatCommandSettings)
-                            {
-                                PreMadeChatCommand command = ChannelSession.PreMadeChatCommands.FirstOrDefault(c => c.Name.Equals(commandSetting.Name));
-                                if (command != null)
-                                {
-                                    command.UpdateFromSettings(commandSetting);
-                                }
-                            }
-                        }
-
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        Task.Run(async () => { await this.ChannelRefreshBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        Task.Run(async () => { await this.ChatterJoinLeaveBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        Task.Run(async () => { await this.ChatterRefreshBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
-                        return true;
+                        this.Client.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
+                        this.Client.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
+                        this.Client.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
+                        this.Client.OnEventOccurred += WebSocketClient_OnEventOccurred;
                     }
-                    return false;
-                });
+
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    Task.Run(async () => { await this.ChatterJoinLeaveBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    Task.Run(async () => { await this.ChatterRefreshBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+                    return true;
+                }
+                return false;
             }
             return false;
         }
 
         private async Task<ChatClient> ConnectAndAuthenticateChatClient(MixerConnectionService connection)
         {
-            ChatClient client = await this.RunAsync(ChatClient.CreateFromChannel(connection.Connection, ChannelSession.Channel));
+            ChatClient client = await this.RunAsync(ChatClient.CreateFromChannel(connection.Connection, ChannelSession.MixerChannel));
             if (client != null)
             {
                 if (await this.RunAsync(client.Connect()) && await this.RunAsync(client.Authenticate()))
@@ -376,227 +354,7 @@ namespace MixItUp.Base.Services.Mixer
             return message;
         }
 
-        #region Chat Update Methods
-
-        private async Task<ChatMessageViewModel> AddMessage(ChatMessageEventModel messageEvent)
-        {
-            UserViewModel user = await ChannelSession.ActiveUsers.AddOrUpdateUser(messageEvent.GetUser());
-            if (user == null)
-            {
-                user = new UserViewModel(messageEvent);
-            }
-            else
-            {
-                await user.RefreshDetails();
-            }
-            user.UpdateLastActivity();
-
-            ChatMessageViewModel message = new ChatMessageViewModel(messageEvent, user);
-
-            Util.Logger.LogDiagnostic(string.Format("Message Received - {0}", message.ToString()));
-
-            if (!message.IsWhisper && !this.userEntranceCommands.Contains(user.ID))
-            {
-                this.userEntranceCommands.Add(user.ID);
-                if (user.Data.EntranceCommand != null)
-                {
-                    await user.Data.EntranceCommand.Perform(user);
-                }
-            }
-
-            if (this.Messages.ContainsKey(message.ID))
-            {
-                return null;
-            }
-            this.Messages[message.ID] = message;
-
-            if (this.DisableChat && !message.ID.Equals(Guid.Empty))
-            {
-                Util.Logger.LogDiagnostic(string.Format("Deleting Message As Chat Disabled - {0}", message.Message));
-                await this.DeleteMessage(message);
-                return message;
-            }
-
-            if (!ModerationHelper.MeetsChatInteractiveParticipationRequirement(user) || !ModerationHelper.MeetsChatEmoteSkillsOnlyParticipationRequirement(user, message))
-            {
-                Util.Logger.LogDiagnostic(string.Format("Deleting Message As User does not meet requirement - {0} - {1}", ChannelSession.Settings.ModerationChatInteractiveParticipation, message.Message));
-
-                await this.DeleteMessage(message);
-
-                await ModerationHelper.SendChatInteractiveParticipationWhisper(user, isChat: true);
-
-                return message;
-            }
-
-            string moderationReason = await message.ShouldBeModerated();
-            if (!string.IsNullOrEmpty(moderationReason))
-            {
-                Util.Logger.LogDiagnostic(string.Format("Message Should Be Moderated - {0}", message.ToString()));
-
-                bool shouldBeModerated = true;
-                PermissionsCommandBase command = this.CheckMessageForCommand(message);
-                if (command != null && string.IsNullOrEmpty(await ModerationHelper.ShouldBeFilteredWordModerated(user, message.Message)))
-                {
-                    shouldBeModerated = false;
-                }
-
-                if (shouldBeModerated)
-                {
-                    Util.Logger.LogDiagnostic(string.Format("Moderation Being Performed - {0}", message.ToString()));
-
-                    message.ModerationReason = moderationReason;
-                    await this.DeleteMessage(message);
-
-                    return message;
-                }
-            }
-
-            if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatWhisperSoundFilePath) && message.IsWhisper)
-            {
-                await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatWhisperSoundFilePath, ChannelSession.Settings.NotificationChatWhisperSoundVolume);
-            }
-            else if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatTaggedSoundFilePath) && message.IsUserTagged)
-            {
-                await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatTaggedSoundFilePath, ChannelSession.Settings.NotificationChatTaggedSoundVolume);
-            }
-            else if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatMessageSoundFilePath))
-            {
-                await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatMessageSoundFilePath, ChannelSession.Settings.NotificationChatMessageSoundVolume);
-            }
-
-            GlobalEvents.ChatMessageReceived(message);
-
-            if (!await this.CheckMessageForCommandAndRun(message))
-            {
-                if (message.IsWhisper && ChannelSession.Settings.TrackWhispererNumber && !message.IsStreamerOrBot())
-                {
-                    await this.whisperNumberLock.WaitAndRelease(() =>
-                    {
-                        if (!whisperMap.ContainsKey(message.User.ID))
-                        {
-                            whisperMap[message.User.ID] = whisperMap.Count + 1;
-                        }
-                        message.User.WhispererNumber = whisperMap[message.User.ID];
-                        return Task.FromResult(0);
-                    });
-
-                    await ChannelSession.Chat.Whisper(message.User.UserName, $"You are whisperer #{message.User.WhispererNumber}.", false);
-                }
-            }
-
-            return message;
-        }
-
-        private async Task<bool> CheckMessageForCommandAndRun(ChatMessageViewModel message)
-        {
-            PermissionsCommandBase command = this.CheckMessageForCommand(message);
-            if (command != null)
-            {
-                Util.Logger.LogDiagnostic(string.Format("Command Found For Message - {0} - {1}", message.ToString(), command.ToString()));
-
-                await this.RunMessageCommand(message, command);
-                return true;
-            }
-            return false;
-        }
-
-        private PermissionsCommandBase CheckMessageForCommand(ChatMessageViewModel message)
-        {
-            Util.Logger.LogDiagnostic(string.Format("Checking Message For Command - {0}", message.ToString()));
-
-            if (!ChannelSession.Settings.AllowCommandWhispering && message.IsWhisper)
-            {
-                return null;
-            }
-
-            if (ChannelSession.BotUser != null && ChannelSession.Settings.IgnoreBotAccountCommands && message.User != null && message.User.ID.Equals(ChannelSession.BotUser.id))
-            {
-                return null;
-            }
-
-            if (ChannelSession.Settings.CommandsOnlyInYourStream && !message.IsInUsersChannel)
-            {
-                return null;
-            }
-
-            if (ChannelSession.IsStreamer && !message.User.MixerRoles.Contains(MixerRoleEnum.Banned))
-            {
-                GlobalEvents.ChatCommandMessageReceived(message);
-
-                List<PermissionsCommandBase> commandsToCheck = new List<PermissionsCommandBase>(ChannelSession.AllEnabledChatCommands);
-                commandsToCheck.AddRange(message.User.Data.CustomCommands);
-
-                PermissionsCommandBase command = commandsToCheck.FirstOrDefault(c => c.MatchesCommand(message.Message));
-                if (command == null)
-                {
-                    command = commandsToCheck.FirstOrDefault(c => c.ContainsCommand(message.Message));
-                }
-
-                return command;
-            }
-
-            return null;
-        }
-
-        private async Task RunMessageCommand(ChatMessageViewModel message, PermissionsCommandBase command)
-        {
-            await command.Perform(message.User, command.GetArgumentsFromText(message.Message));
-
-            bool delete = false;
-            if (ChannelSession.Settings.DeleteChatCommandsWhenRun)
-            {
-                if (!command.Requirements.Settings.DontDeleteChatCommandWhenRun)
-                {
-                    delete = true;
-                }
-            }
-            else if (command.Requirements.Settings.DeleteChatCommandWhenRun)
-            {
-                delete = true;
-            }
-
-            if (delete)
-            {
-                Util.Logger.LogDiagnostic(string.Format("Deleting Message As Chat Command - {0}", message.Message));
-                await this.DeleteMessage(message);
-            }
-        }
-
-        #endregion Chat Update Methods
-
         #region Refresh Methods
-
-        private async Task ChannelRefreshBackground()
-        {
-            await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
-            {
-                tokenSource.Token.ThrowIfCancellationRequested();
-
-                await ChannelSession.RefreshChannel();
-                await Task.Delay(30000, tokenSource.Token);
-
-                tokenSource.Token.ThrowIfCancellationRequested();
-
-                await ChannelSession.RefreshChannel();
-                await Task.Delay(30000, tokenSource.Token);
-
-                tokenSource.Token.ThrowIfCancellationRequested();
-
-                foreach (UserViewModel user in await ChannelSession.ActiveUsers.GetAllWorkableUsers())
-                {
-                    user.UpdateMinuteData();
-                }
-
-                foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
-                {
-                    await currency.UpdateUserData();
-                }
-
-                await ChannelSession.SaveSettings();
-
-                tokenSource.Token.ThrowIfCancellationRequested();
-            });
-        }
 
         private async Task ChatterJoinLeaveBackground()
         {
@@ -654,7 +412,7 @@ namespace MixItUp.Base.Services.Mixer
 
                 tokenSource.Token.ThrowIfCancellationRequested();
 
-                IEnumerable<ChatUserModel> chatUsers = await ChannelSession.MixerStreamerConnection.GetChatUsers(ChannelSession.Channel, int.MaxValue);
+                IEnumerable<ChatUserModel> chatUsers = await ChannelSession.MixerStreamerConnection.GetChatUsers(ChannelSession.MixerChannel, int.MaxValue);
                 chatUsers = chatUsers.Where(u => u.userId.HasValue);
                 HashSet<uint> chatUserIDs = new HashSet<uint>(chatUsers.Select(u => u.userId.GetValueOrDefault()));
 
@@ -696,9 +454,9 @@ namespace MixItUp.Base.Services.Mixer
 
         #region Chat Event Handlers
 
-        private async void ChatClient_OnMessageOccurred(object sender, ChatMessageEventModel e)
+        private void ChatClient_OnMessageOccurred(object sender, ChatMessageEventModel e)
         {
-            ChatMessageViewModel message = await this.AddMessage(e);
+            ChatMessageViewModel message = new ChatMessageViewModel(e);
             if (message != null)
             {
                 this.OnMessageOccurred(sender, message);
@@ -710,31 +468,26 @@ namespace MixItUp.Base.Services.Mixer
                     }
                     else if (SkillUsageModel.IsEmbersChatSkill(message.ChatSkill))
                     {
-                        GlobalEvents.EmberUseOccurred(new UserEmberUsageModel(message.User, (int)message.ChatSkill.cost, message.Message));
+                        GlobalEvents.EmberUseOccurred(new UserEmberUsageModel(message.User, (int)message.ChatSkill.cost, message.PlainTextMessage));
                     }
 
-                    GlobalEvents.SkillUseOccurred(new SkillUsageModel(message.User, message.ChatSkill, message.Message));
+                    GlobalEvents.SkillUseOccurred(new SkillUsageModel(message.User, message.ChatSkill, message.PlainTextMessage));
                 }
             }
         }
 
-        private async void BotChatClient_OnMessageOccurred(object sender, ChatMessageEventModel e)
+        private void BotChatClient_OnMessageOccurred(object sender, ChatMessageEventModel e)
         {
             ChatMessageViewModel message = new ChatMessageViewModel(e);
             if (message.IsWhisper)
             {
-                message = await this.AddMessage(e);
-                if (message != null)
-                {
-                    this.OnMessageOccurred(sender, message);
-                }
+                this.OnMessageOccurred(sender, message);
             }
         }
 
         private void ChatClient_OnDeleteMessageOccurred(object sender, ChatDeleteMessageEventModel e)
         {
-            this.OnDeleteMessageOccurred(sender, e);
-            GlobalEvents.ChatMessageDeleted(e.id);
+            this.OnDeleteMessageOccurred(sender, e.id);
         }
 
         private async void ChatClient_OnPurgeMessageOccurred(object sender, ChatPurgeMessageEventModel e)
@@ -742,19 +495,12 @@ namespace MixItUp.Base.Services.Mixer
             UserViewModel user = await ChannelSession.ActiveUsers.GetUserByID(e.user_id);
             if (user != null)
             {
-                this.OnUserPurgeOccurred(sender, new Tuple<UserViewModel, string>(user, e.moderator?.user_name));
-
-                if (ChannelSession.Constellation.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserPurge)))
+                UserViewModel modUser = null;
+                if (e.moderator != null)
                 {
-                    ChannelSession.Constellation.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserPurge));
-                    UserViewModel targetUser = user;
-                    UserViewModel modUser = user;
-                    if (e.moderator != null)
-                    {
-                        modUser = new UserViewModel(e.moderator);
-                    }
-                    await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserPurge)), modUser, arguments: new List<string>() { targetUser.UserName });
+                    modUser = new UserViewModel(e.moderator);
                 }
+                this.OnUserPurgeOccurred(sender, new Tuple<UserViewModel, UserViewModel>(user, modUser));
             }
         }
 
@@ -823,7 +569,7 @@ namespace MixItUp.Base.Services.Mixer
                 if (skillAttribution.message != null && skillAttribution.message.message != null && skillAttribution.message.message.Length > 0)
                 {
                     ChatMessageViewModel messageModel = new ChatMessageViewModel(skillAttribution.message, user);
-                    message = messageModel.Message;
+                    message = messageModel.PlainTextMessage;
                 }
 
                 GlobalEvents.SkillUseOccurred(new SkillUsageModel(user, skillAttribution.skill, message));

@@ -3,6 +3,7 @@ using Mixer.Base.Model.Interactive;
 using Mixer.Base.Util;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Interactive;
+using MixItUp.Base.Services.Mixer;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.User;
@@ -274,7 +275,7 @@ namespace MixItUp.Base.MixerAPI
                     this.lastRefresh = DateTimeOffset.Now.AddMinutes(1);
                     this.games.Clear();
 
-                    this.games.AddRange(await ChannelSession.MixerStreamerConnection.GetOwnedInteractiveGames(ChannelSession.Channel));
+                    this.games.AddRange(await ChannelSession.MixerStreamerConnection.GetOwnedInteractiveGames(ChannelSession.MixerChannel));
                     games.RemoveAll(g => g.name.Equals("Soundwave Interactive Soundboard"));
 
                     foreach (InteractiveSharedProjectModel project in ChannelSession.Settings.CustomInteractiveProjectIDs)
@@ -611,11 +612,11 @@ namespace MixItUp.Base.MixerAPI
 
             if (this.SharedProject != null)
             {
-                this.Client = await this.RunAsync(InteractiveClient.CreateFromChannel(ChannelSession.MixerStreamerConnection.Connection, ChannelSession.Channel, this.Game, this.Version, this.SharedProject.ShareCode));
+                this.Client = await this.RunAsync(InteractiveClient.CreateFromChannel(ChannelSession.MixerStreamerConnection.Connection, ChannelSession.MixerChannel, this.Game, this.Version, this.SharedProject.ShareCode));
             }
             else
             {
-                this.Client = await this.RunAsync(InteractiveClient.CreateFromChannel(ChannelSession.MixerStreamerConnection.Connection, ChannelSession.Channel, this.Game, this.Version));
+                this.Client = await this.RunAsync(InteractiveClient.CreateFromChannel(ChannelSession.MixerStreamerConnection.Connection, ChannelSession.MixerChannel, this.Game, this.Version));
             }
 
             return await this.RunAsync(async () =>

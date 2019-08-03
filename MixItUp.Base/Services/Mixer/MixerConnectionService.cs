@@ -239,7 +239,7 @@ namespace MixItUp.Base.Services.Mixer
 
         public async Task<PatronageMilestoneModel> GetCurrentPatronageMilestone()
         {
-            PatronageStatusModel patronageStatus = await this.GetPatronageStatus(ChannelSession.Channel);
+            PatronageStatusModel patronageStatus = await this.GetPatronageStatus(ChannelSession.MixerChannel);
             if (patronageStatus != null)
             {
                 PatronagePeriodModel patronagePeriod = await this.GetPatronagePeriod(patronageStatus);

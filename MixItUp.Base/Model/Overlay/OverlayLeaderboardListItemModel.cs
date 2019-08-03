@@ -155,16 +155,16 @@ namespace MixItUp.Base.Model.Overlay
                 switch (this.LeaderboardDateRange)
                 {
                     case OverlayLeaderboardListItemDateRangeEnum.Weekly:
-                        sparkLeaderboard = await ChannelSession.MixerStreamerConnection.GetWeeklySparksLeaderboard(ChannelSession.Channel, this.TotalToShow);
+                        sparkLeaderboard = await ChannelSession.MixerStreamerConnection.GetWeeklySparksLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                         break;
                     case OverlayLeaderboardListItemDateRangeEnum.Monthly:
-                        sparkLeaderboard = await ChannelSession.MixerStreamerConnection.GetMonthlySparksLeaderboard(ChannelSession.Channel, this.TotalToShow);
+                        sparkLeaderboard = await ChannelSession.MixerStreamerConnection.GetMonthlySparksLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                         break;
                     case OverlayLeaderboardListItemDateRangeEnum.Yearly:
-                        sparkLeaderboard = await ChannelSession.MixerStreamerConnection.GetYearlySparksLeaderboard(ChannelSession.Channel, this.TotalToShow);
+                        sparkLeaderboard = await ChannelSession.MixerStreamerConnection.GetYearlySparksLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                         break;
                     case OverlayLeaderboardListItemDateRangeEnum.AllTime:
-                        sparkLeaderboard = await ChannelSession.MixerStreamerConnection.GetAllTimeSparksLeaderboard(ChannelSession.Channel, this.TotalToShow);
+                        sparkLeaderboard = await ChannelSession.MixerStreamerConnection.GetAllTimeSparksLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                         break;
                 }
 
@@ -186,16 +186,16 @@ namespace MixItUp.Base.Model.Overlay
                 switch (this.LeaderboardDateRange)
                 {
                     case OverlayLeaderboardListItemDateRangeEnum.Weekly:
-                        emberLeaderboard = await ChannelSession.MixerStreamerConnection.GetWeeklyEmbersLeaderboard(ChannelSession.Channel, this.TotalToShow);
+                        emberLeaderboard = await ChannelSession.MixerStreamerConnection.GetWeeklyEmbersLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                         break;
                     case OverlayLeaderboardListItemDateRangeEnum.Monthly:
-                        emberLeaderboard = await ChannelSession.MixerStreamerConnection.GetMonthlyEmbersLeaderboard(ChannelSession.Channel, this.TotalToShow);
+                        emberLeaderboard = await ChannelSession.MixerStreamerConnection.GetMonthlyEmbersLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                         break;
                     case OverlayLeaderboardListItemDateRangeEnum.Yearly:
-                        emberLeaderboard = await ChannelSession.MixerStreamerConnection.GetYearlyEmbersLeaderboard(ChannelSession.Channel, this.TotalToShow);
+                        emberLeaderboard = await ChannelSession.MixerStreamerConnection.GetYearlyEmbersLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                         break;
                     case OverlayLeaderboardListItemDateRangeEnum.AllTime:
-                        emberLeaderboard = await ChannelSession.MixerStreamerConnection.GetAllTimeEmbersLeaderboard(ChannelSession.Channel, this.TotalToShow);
+                        emberLeaderboard = await ChannelSession.MixerStreamerConnection.GetAllTimeEmbersLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                         break;
                 }
 
@@ -267,7 +267,7 @@ namespace MixItUp.Base.Model.Overlay
         private async Task UpdateSubscribers()
         {
             this.userSubDates.Clear();
-            foreach (UserWithGroupsModel userWithGroups in await ChannelSession.MixerStreamerConnection.GetUsersWithRoles(ChannelSession.Channel, MixerRoleEnum.Subscriber))
+            foreach (UserWithGroupsModel userWithGroups in await ChannelSession.MixerStreamerConnection.GetUsersWithRoles(ChannelSession.MixerChannel, MixerRoleEnum.Subscriber))
             {
                 DateTimeOffset? subDate = userWithGroups.GetSubscriberDate();
                 if (subDate.HasValue)

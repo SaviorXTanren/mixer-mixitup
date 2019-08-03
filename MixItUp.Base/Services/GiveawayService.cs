@@ -233,7 +233,7 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                if (this.TimeLeft > 0 && this.Winner == null && this.giveawayCommand.MatchesOrContainsCommand(message.Message))
+                if (this.TimeLeft > 0 && this.Winner == null && this.giveawayCommand.MatchesOrContainsCommand(message.PlainTextMessage))
                 {
                     int entries = 1;
 
@@ -243,7 +243,7 @@ namespace MixItUp.Base.Services
                         return;
                     }
 
-                    IEnumerable<string> arguments = this.giveawayCommand.GetArgumentsFromText(message.Message);
+                    IEnumerable<string> arguments = this.giveawayCommand.GetArgumentsFromText(message.PlainTextMessage);
                     if (arguments.Count() > 0)
                     {
                         int.TryParse(arguments.ElementAt(0), out entries);
@@ -299,7 +299,7 @@ namespace MixItUp.Base.Services
                         }
                     }
                 }
-                else if (this.Winner != null && this.Winner.Equals(message.User) && message.Message.Equals("!claim", StringComparison.InvariantCultureIgnoreCase))
+                else if (this.Winner != null && this.Winner.Equals(message.User) && message.PlainTextMessage.Equals("!claim", StringComparison.InvariantCultureIgnoreCase))
                 {
                     await ChannelSession.Settings.GiveawayWinnerSelectedCommand.Perform(this.Winner, extraSpecialIdentifiers: this.GetSpecialIdentifiers());
                     await this.End();

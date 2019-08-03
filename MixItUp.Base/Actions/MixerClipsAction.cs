@@ -96,7 +96,7 @@ namespace MixItUp.Base.Actions
                         {
                             await Task.Delay(2000);
 
-                            IEnumerable<ClipModel> clips = await ChannelSession.MixerStreamerConnection.GetChannelClips(ChannelSession.Channel);
+                            IEnumerable<ClipModel> clips = await ChannelSession.MixerStreamerConnection.GetChannelClips(ChannelSession.MixerChannel);
                             clip = clips.OrderByDescending(c => c.uploadDate).FirstOrDefault();
                             if (clip != null && clip.uploadDate.ToLocalTime() >= clipCreationTime && clip.title.Equals(clipName))
                             {
@@ -118,7 +118,7 @@ namespace MixItUp.Base.Actions
         {
             GlobalEvents.MixerClipCreated(clip);
 
-            string clipUrl = string.Format("https://mixer.com/{0}?clip={1}", ChannelSession.Channel.token, clip.shareableId);
+            string clipUrl = string.Format("https://mixer.com/{0}?clip={1}", ChannelSession.MixerChannel.token, clip.shareableId);
 
             if (this.ShowClipInfoInChat)
             {
@@ -133,7 +133,7 @@ namespace MixItUp.Base.Actions
                 {
                     string error = "ERROR: The download folder specified for Mixer Clips does not exist";
                     Logger.Log(error);
-                    await ChannelSession.Chat.Whisper(ChannelSession.User.username, error);
+                    await ChannelSession.Chat.Whisper(ChannelSession.MixerStreamerUser.username, error);
                     return;
                 }
 
@@ -141,7 +141,7 @@ namespace MixItUp.Base.Actions
                 {
                     string error = "ERROR: FFMPEG could not be found and the Mixer Clip can not be converted without it";
                     Logger.Log(error);
-                    await ChannelSession.Chat.Whisper(ChannelSession.User.username, error);
+                    await ChannelSession.Chat.Whisper(ChannelSession.MixerStreamerUser.username, error);
                     return;
                 }
 

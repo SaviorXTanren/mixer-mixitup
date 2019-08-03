@@ -172,6 +172,7 @@ namespace MixItUp.Base
         int NotificationServiceDisconnectSoundVolume { get; set; }
 
         int MaxMessagesInChat { get; set; }
+        int MaxUsersShownInChat { get; set; }
 
         bool AutoExportStatistics { get; set; }
 

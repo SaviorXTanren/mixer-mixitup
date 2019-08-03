@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Services;
+using MixItUp.Base.Services.Mixer;
 using MixItUp.Desktop.Audio;
 using MixItUp.Desktop.Files;
 using MixItUp.Desktop.Services.DeveloperAPI;
@@ -19,6 +20,8 @@ namespace MixItUp.Desktop.Services
         {
             this.MixItUpService = new MixItUpService();
             this.MixerStatus = new MixerStatusService();
+
+            this.ChatService = new ChatService();
 
             this.Settings = new DesktopSettingsService();
             this.FileService = new WindowsFileService();

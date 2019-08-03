@@ -125,11 +125,11 @@ namespace MixItUp.WPF.Controls.Command
                 EventCommand newCommand = null;
                 if (this.otherEventType != OtherEventTypeEnum.None)
                 {
-                    newCommand = new EventCommand(this.otherEventType, ChannelSession.Channel.user.id.ToString());
+                    newCommand = new EventCommand(this.otherEventType, ChannelSession.MixerChannel.user.id.ToString());
                 }
                 else
                 {
-                    newCommand = new EventCommand(this.eventType, ChannelSession.Channel);
+                    newCommand = new EventCommand(this.eventType, ChannelSession.MixerChannel);
                 }
 
                 newCommand.IsBasic = true;

@@ -30,7 +30,7 @@ namespace MixItUp.Base.Model.Store
         public StoreListingReviewModel(StoreListingModel listing, int rating, string review)
         {
             this.ListingID = listing.ID;
-            this.UserID = ChannelSession.User.id;
+            this.UserID = ChannelSession.MixerStreamerUser.id;
             this.Rating = rating;
             this.Review = review;
         }

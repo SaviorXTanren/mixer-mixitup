@@ -40,7 +40,7 @@ namespace MixItUp.WPF.Controls.Dialogs
                     ExpandedChannelModel channelToCheck = await ChannelSession.MixerStreamerConnection.GetChannel(this.user.ChannelID);
                     if (channelToCheck != null)
                     {
-                        follows = (await ChannelSession.MixerStreamerConnection.CheckIfFollows(channelToCheck, ChannelSession.User)).HasValue;
+                        follows = (await ChannelSession.MixerStreamerConnection.CheckIfFollows(channelToCheck, ChannelSession.MixerStreamerUser)).HasValue;
                         if (channelToCheck.online)
                         {
                             this.StreamStatusTextBlock.Text = $"{channelToCheck.viewersCurrent} Viewers";

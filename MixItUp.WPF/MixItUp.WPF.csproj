@@ -433,8 +433,8 @@
     <Compile Include="Controls\Chat\ChatMessageHeaderControl.xaml.cs">
       <DependentUpon>ChatMessageHeaderControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Chat\EmoticonControl.xaml.cs">
-      <DependentUpon>EmoticonControl.xaml</DependentUpon>
+    <Compile Include="Controls\Chat\ChatEmoteControl.xaml.cs">
+      <DependentUpon>ChatEmoteControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Chat\GifSkillControl.xaml.cs">
       <DependentUpon>GifSkillControl.xaml</DependentUpon>
@@ -588,6 +588,9 @@
     </Compile>
     <Compile Include="Controls\MainControls\AutoHosterControl.xaml.cs">
       <DependentUpon>AutoHosterControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\ChatControl.xaml.cs">
+      <DependentUpon>ChatControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\CurrencyRankInventoryControl.xaml.cs">
       <DependentUpon>CurrencyRankInventoryControl.xaml</DependentUpon>
@@ -955,6 +958,7 @@
     <Compile Include="Util\LocalizationConverter.cs" />
     <Compile Include="Util\LogicalTreeHelpers.cs" />
     <Compile Include="Util\MessageBoxHelper.cs" />
+    <Compile Include="Util\ColorBrushConverter.cs" />
     <Compile Include="Util\VisualTreeHelpers.cs" />
     <Compile Include="Util\WPFDialogShower.cs" />
     <Compile Include="Windows\Command\CommandWindow.xaml.cs">
@@ -1128,7 +1132,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Chat\EmoticonControl.xaml">
+    <Page Include="Controls\Chat\ChatEmoteControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -1332,6 +1336,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\MainControls\ChatControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\MainControls\CurrencyRankInventoryControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1524,7 +1532,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\MainControls\ChatControl.xaml">
+    <Page Include="Controls\MainControls\OldChatControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1808,8 +1816,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controls\MainControls\ChatControl.xaml.cs">
-      <DependentUpon>ChatControl.xaml</DependentUpon>
+    <Compile Include="Controls\MainControls\OldChatControl.xaml.cs">
+      <DependentUpon>OldChatControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Chat\ChatMessageControl.xaml.cs">
       <DependentUpon>ChatMessageControl.xaml</DependentUpon>

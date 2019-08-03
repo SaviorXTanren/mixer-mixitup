@@ -182,19 +182,19 @@ namespace MixItUp.Base.ViewModel.User
                 }
                 else if (!this.IsTrackingSparks && !this.IsTrackingEmbers)
                 {
-                    int interval = ChannelSession.Channel.online ? this.AcquireInterval : this.OfflineAcquireInterval;
+                    int interval = ChannelSession.MixerChannel.online ? this.AcquireInterval : this.OfflineAcquireInterval;
                     if (interval > 0)
                     {
                         DateTimeOffset minActiveTime = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(this.MinimumActiveRate));
-                        bool bonusesCanBeApplied = (ChannelSession.Channel.online || this.OfflineAcquireAmount > 0);
+                        bool bonusesCanBeApplied = (ChannelSession.MixerChannel.online || this.OfflineAcquireAmount > 0);
                         foreach (UserViewModel user in await ChannelSession.ActiveUsers.GetAllWorkableUsers())
                         {
                             if (!user.Data.IsCurrencyRankExempt && (!this.HasMinimumActiveRate || user.LastActivity > minActiveTime))
                             {
-                                int minutes = ChannelSession.Channel.online ? user.Data.ViewingMinutes : user.Data.OfflineViewingMinutes;
+                                int minutes = ChannelSession.MixerChannel.online ? user.Data.ViewingMinutes : user.Data.OfflineViewingMinutes;
                                 if (minutes % interval == 0)
                                 {
-                                    user.Data.AddCurrencyAmount(this, ChannelSession.Channel.online ? this.AcquireAmount : this.OfflineAcquireAmount);
+                                    user.Data.AddCurrencyAmount(this, ChannelSession.MixerChannel.online ? this.AcquireAmount : this.OfflineAcquireAmount);
                                     if (bonusesCanBeApplied)
                                     {
                                         if (user.HasPermissionsTo(MixerRoleEnum.Mod) && this.ModeratorBonus > 0)

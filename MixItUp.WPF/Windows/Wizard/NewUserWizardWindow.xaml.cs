@@ -65,7 +65,7 @@ namespace MixItUp.WPF.Windows.Wizard
             this.XSplitExtensionPathTextBox.Text = Path.Combine(this.directoryPath, "XSplit\\Mix It Up.html");
             this.IntroPageGrid.Visibility = System.Windows.Visibility.Visible;
 
-            this.interactiveGames = await ChannelSession.MixerStreamerConnection.GetOwnedInteractiveGames(ChannelSession.Channel);
+            this.interactiveGames = await ChannelSession.MixerStreamerConnection.GetOwnedInteractiveGames(ChannelSession.MixerChannel);
 
             await this.GatherSoundwaveSettings();
             if (this.soundwaveData != null)
@@ -211,11 +211,11 @@ namespace MixItUp.WPF.Windows.Wizard
 
             if (result)
             {
-                this.BotLoggedInNameTextBlock.Text = ChannelSession.BotUser.username;
-                if (!string.IsNullOrEmpty(ChannelSession.BotUser.avatarUrl))
+                this.BotLoggedInNameTextBlock.Text = ChannelSession.MixerBotUser.username;
+                if (!string.IsNullOrEmpty(ChannelSession.MixerBotUser.avatarUrl))
                 {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    this.BotProfileAvatar.SetUserAvatarUrl(ChannelSession.BotUser.id);
+                    this.BotProfileAvatar.SetUserAvatarUrl(ChannelSession.MixerBotUser.id);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 }
 
@@ -847,7 +847,7 @@ namespace MixItUp.WPF.Windows.Wizard
                                 {
                                     // Add code logic to create Interactive Game on Mixer that is a copy of the Soundwave Interactive game, but with buttons filed in with name and not disabled
                                     InteractiveSceneModel profileScene = InteractiveGameHelper.CreateDefaultScene();
-                                    InteractiveGameListingModel profileGame = await ChannelSession.MixerStreamerConnection.CreateInteractiveGame(ChannelSession.Channel, ChannelSession.User, profile, profileScene);
+                                    InteractiveGameListingModel profileGame = await ChannelSession.MixerStreamerConnection.CreateInteractiveGame(ChannelSession.MixerChannel, ChannelSession.MixerStreamerUser, profile, profileScene);
                                     InteractiveGameVersionModel gameVersion = profileGame.versions.FirstOrDefault();
                                     if (gameVersion != null)
                                     {

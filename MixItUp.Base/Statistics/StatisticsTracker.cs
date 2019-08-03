@@ -70,9 +70,9 @@ namespace MixItUp.Base.Statistics
                 TrackedNumberStatisticDataTracker numberStats = (TrackedNumberStatisticDataTracker)stats;
 
                 int viewersCurrent = 0;
-                if (ChannelSession.Channel != null)
+                if (ChannelSession.MixerChannel != null)
                 {
-                    viewersCurrent = (int)ChannelSession.Channel.viewersCurrent;
+                    viewersCurrent = (int)ChannelSession.MixerChannel.viewersCurrent;
                 }
 
                 numberStats.AddValue(viewersCurrent);
@@ -99,9 +99,9 @@ namespace MixItUp.Base.Statistics
                 StaticTextStatisticDataTracker staticStats = (StaticTextStatisticDataTracker)stats;
                 staticStats.ClearValues();
 
-                if (ChannelSession.MixerStreamerConnection != null && ChannelSession.Channel != null)
+                if (ChannelSession.MixerStreamerConnection != null && ChannelSession.MixerChannel != null)
                 {
-                    PatronageStatusModel patronageStatus = await ChannelSession.MixerStreamerConnection.GetPatronageStatus(ChannelSession.Channel);
+                    PatronageStatusModel patronageStatus = await ChannelSession.MixerStreamerConnection.GetPatronageStatus(ChannelSession.MixerChannel);
                     if (patronageStatus != null)
                     {
                         PatronagePeriodModel patronagePeriod = await ChannelSession.MixerStreamerConnection.GetPatronagePeriod(patronageStatus);

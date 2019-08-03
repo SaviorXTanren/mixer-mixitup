@@ -3,6 +3,7 @@ using Mixer.Base.Model.Chat;
 using Mixer.Base.Model.Interactive;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
@@ -86,6 +87,9 @@ namespace MixItUp.Base.ViewModel.User
 
         [DataMember]
         public uint ID { get; set; }
+
+        [DataMember]
+        public PlatformTypeEnum Platform { get; set; }
 
         [DataMember]
         public string UserName { get; set; }
@@ -172,6 +176,8 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         public string AvatarLink { get { return string.Format(UserAvatarLinkFormat, this.ID); } }
+
+        public string SubscriberBadgeLink { get { return (ChannelSession.MixerChannel.badge != null) ? ChannelSession.MixerChannel.badge.url : string.Empty; } }
 
         private readonly HashSet<MixerRoleEnum> mixerRoles = new HashSet<MixerRoleEnum>();
         public HashSet<MixerRoleEnum> MixerRoles
@@ -349,17 +355,17 @@ namespace MixItUp.Base.ViewModel.User
                 {
                     this.SetMixerUserDetails(user);
 
-                    this.FollowDate = await ChannelSession.MixerStreamerConnection.CheckIfFollows(ChannelSession.Channel, this.GetModel());
+                    this.FollowDate = await ChannelSession.MixerStreamerConnection.CheckIfFollows(ChannelSession.MixerChannel, this.GetModel());
                     if (this.IsMixerSubscriber || force)
                     {
-                        UserWithGroupsModel userGroups = await ChannelSession.MixerStreamerConnection.GetUserInChannel(ChannelSession.Channel, this.ID);
+                        UserWithGroupsModel userGroups = await ChannelSession.MixerStreamerConnection.GetUserInChannel(ChannelSession.MixerChannel, this.ID);
                         if (userGroups != null)
                         {
                             this.MixerSubscribeDate = userGroups.GetSubscriberDate();
                         }
                     }
 
-                    this.FanProgression = await ChannelSession.MixerStreamerConnection.GetUserFanProgression(ChannelSession.Channel, user);
+                    this.FanProgression = await ChannelSession.MixerStreamerConnection.GetUserFanProgression(ChannelSession.MixerChannel, user);
                 }
 
                 if (!this.IsInChat)
@@ -377,7 +383,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             if (!this.IsAnonymous && this.LastUpdated.TotalMinutesFromNow() >= 1)
             {
-                ChatUserModel chatUser = await ChannelSession.MixerStreamerConnection.GetChatUser(ChannelSession.Channel, this.ID);
+                ChatUserModel chatUser = await ChannelSession.MixerStreamerConnection.GetChatUser(ChannelSession.MixerChannel, this.ID);
                 if (chatUser != null)
                 {
                     this.SetChatDetails(chatUser, addToChat);
@@ -502,7 +508,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public void UpdateMinuteData()
         {
-            if (ChannelSession.Channel.online)
+            if (ChannelSession.MixerChannel.online)
             {
                 this.Data.ViewingMinutes++;
             }
@@ -611,7 +617,7 @@ namespace MixItUp.Base.ViewModel.User
                     if (userRoles.Any(r => r.Equals("Banned"))) { this.mixerRoles.Add(MixerRoleEnum.Banned); }
                 }
 
-                if (ChannelSession.Channel != null && ChannelSession.Channel.user.id.Equals(this.ID))
+                if (ChannelSession.MixerChannel != null && ChannelSession.MixerChannel.user.id.Equals(this.ID))
                 {
                     this.mixerRoles.Add(MixerRoleEnum.Streamer);
                 }

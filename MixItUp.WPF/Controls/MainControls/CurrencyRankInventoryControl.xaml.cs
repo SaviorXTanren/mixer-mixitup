@@ -193,9 +193,9 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             foreach (UserInventoryViewModel inventory in ChannelSession.Settings.Inventories.Values)
             {
-                if (inventory.ShopEnabled && message.Message.StartsWith(inventory.ShopCommand))
+                if (inventory.ShopEnabled && message.PlainTextMessage.StartsWith(inventory.ShopCommand))
                 {
-                    string args = message.Message.Replace(inventory.ShopCommand, "");
+                    string args = message.PlainTextMessage.Replace(inventory.ShopCommand, "");
                     await inventory.PerformShopCommand(message.User, args.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
                 }
             }

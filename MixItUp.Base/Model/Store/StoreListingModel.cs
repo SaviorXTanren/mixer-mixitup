@@ -98,7 +98,7 @@ namespace MixItUp.Base.Model.Store
         public UserModel User { get; set; }
 
         [JsonIgnore]
-        public bool IsCommandOwnedByUser { get { return (this.User != null && this.User.id.Equals(ChannelSession.User.id)); } }
+        public bool IsCommandOwnedByUser { get { return (this.User != null && this.User.id.Equals(ChannelSession.MixerStreamerUser.id)); } }
 
         [JsonIgnore]
         public string UserName { get { return (this.User != null) ? this.User.username : "Unknown"; } }

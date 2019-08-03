@@ -78,7 +78,7 @@ namespace MixItUp.WPF.Windows.Favorites
             FavoriteUser user = (FavoriteUser)button.DataContext;
             await this.RunAsyncOperation(async () =>
             {
-                await ChannelSession.MixerStreamerConnection.SetHostChannel(ChannelSession.Channel, user.User.channel);
+                await ChannelSession.MixerStreamerConnection.SetHostChannel(ChannelSession.MixerChannel, user.User.channel);
             });
         }
 

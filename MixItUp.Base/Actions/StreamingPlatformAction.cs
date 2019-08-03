@@ -97,7 +97,7 @@ namespace MixItUp.Base.Actions
                 ChannelModel channel = await ChannelSession.MixerStreamerConnection.GetChannel(hostChannelName);
                 if (channel != null)
                 {
-                    await ChannelSession.MixerStreamerConnection.SetHostChannel(ChannelSession.Channel, channel);
+                    await ChannelSession.MixerStreamerConnection.SetHostChannel(ChannelSession.MixerChannel, channel);
                 }
             }
         }

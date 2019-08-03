@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.Chat;
 using MixItUp.Base.Model;
+using MixItUp.Base.Model.Chat;
 using MixItUp.Base.Model.Skill;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -21,7 +22,9 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public UserViewModel User { get; private set; }
 
-        public string Message { get; private set; }
+        public string PlainTextMessage { get; private set; }
+
+        public List<object> MessageParts { get; set; } = new List<object>();
 
         public string TargetUsername { get; private set; }
 
@@ -57,7 +60,7 @@ namespace MixItUp.Base.ViewModel.Chat
             this.Platform = PlatformTypeEnum.Mixer;
 
             this.User = (user != null) ? user : new UserViewModel(this.ChatMessageEvent);
-            this.IsInUsersChannel = ChannelSession.Channel.id.Equals(this.ChatMessageEvent.channel);
+            this.IsInUsersChannel = ChannelSession.MixerChannel.id.Equals(this.ChatMessageEvent.channel);
             this.TargetUsername = this.ChatMessageEvent.target;
 
             if (this.ChatMessageEvent.message.ContainsSkill)
@@ -70,7 +73,7 @@ namespace MixItUp.Base.ViewModel.Chat
         {
             this.User = user;
 
-            this.Message = string.Empty;
+            this.PlainTextMessage = string.Empty;
             this.SetMessageContents(chatMessageContents);
         }
 
@@ -79,8 +82,8 @@ namespace MixItUp.Base.ViewModel.Chat
             this.User = user;
             this.IsInUsersChannel = true;
             this.IsAlert = true;
-            this.Message = "---  " + alertText + "  ---";
-            this.MessageComponents.Add(new ChatMessageDataModel() { type = "text", text = this.Message });
+            this.PlainTextMessage = "---  " + alertText + "  ---";
+            this.MessageComponents.Add(new ChatMessageDataModel() { type = "text", text = this.PlainTextMessage });
 
             string color = ColorSchemes.GetColorCode(foregroundBrush);
             this.AlertMessageBrush = (!string.IsNullOrEmpty(color)) ? color : "#000000";
@@ -91,7 +94,7 @@ namespace MixItUp.Base.ViewModel.Chat
             this.User = user;
             this.IsAlert = true;
             this.IsInUsersChannel = true;
-            this.Message = "---  \"" + skill.Skill.name + "\" Skill Used  ---";
+            this.PlainTextMessage = "---  \"" + skill.Skill.name + "\" Skill Used  ---";
             this.Skill = skill;
         }
 
@@ -99,7 +102,7 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public bool IsWhisper { get { return !string.IsNullOrEmpty(this.TargetUsername); } }
 
-        public bool IsUserTagged { get { return Regex.IsMatch(this.Message, string.Format(TaggingRegexFormat, ChannelSession.User.username)); } }
+        public bool IsUserTagged { get { return Regex.IsMatch(this.PlainTextMessage, string.Format(TaggingRegexFormat, ChannelSession.MixerStreamerUser.username)); } }
 
         public bool ContainsImage { get { return this.Images.Count > 0; } }
 
@@ -114,22 +117,22 @@ namespace MixItUp.Base.ViewModel.Chat
                 return string.Empty;
             }
 
-            if ((this.IsSkill || this.IsChatSkill) && string.IsNullOrEmpty(this.Message))
+            if ((this.IsSkill || this.IsChatSkill) && string.IsNullOrEmpty(this.PlainTextMessage))
             {
                 return string.Empty;
             }
 
-            return await ModerationHelper.ShouldBeModerated(this.User, this.Message, this.ContainsLink);
+            return await ModerationHelper.ShouldBeModerated(this.User, this.PlainTextMessage, this.ContainsLink);
         }
 
         public bool IsStreamerOrBot()
         {
-            return this.User.ID.Equals(ChannelSession.User.id) || (ChannelSession.BotUser != null && this.User.ID.Equals(ChannelSession.BotUser.id));
+            return this.User.ID.Equals(ChannelSession.MixerStreamerUser.id) || (ChannelSession.MixerBotUser != null && this.User.ID.Equals(ChannelSession.MixerBotUser.id));
         }
 
         public void AddToMessage(string text)
         {
-            this.Message += text;
+            this.PlainTextMessage += text;
         }
 
         public bool ContainsOnlyEmotes()
@@ -158,15 +161,15 @@ namespace MixItUp.Base.ViewModel.Chat
         {
             if (this.IsAlert)
             {
-                return this.Message;
+                return this.PlainTextMessage;
             }
             else if (this.IsWhisper)
             {
-                return string.Format("{0} -> {1}: {2}", this.User, this.TargetUsername, this.Message);
+                return string.Format("{0} -> {1}: {2}", this.User, this.TargetUsername, this.PlainTextMessage);
             }
             else
             {
-                return string.Format("{0}: {1}", this.User, this.Message);
+                return string.Format("{0}: {1}", this.User, this.PlainTextMessage);
             }
         }
 
@@ -175,16 +178,26 @@ namespace MixItUp.Base.ViewModel.Chat
             foreach (ChatMessageDataModel message in chatMessageContents.message)
             {
                 this.MessageComponents.Add(message);
+                message.text = message.text.Trim().Replace(Environment.NewLine, string.Empty).Replace("\n", string.Empty);
                 switch (message.type)
                 {
                     case "emoticon":
                         // Special code here to process emoticons
-                        ChannelSession.EnsureEmoticonForMessage(message);
-                        this.Message += message.text;
+                        this.AddToMessage(message.text);
+                        MixerChatEmoteModel emote = MixerChatEmoteModel.GetEmoteForMessageData(message);
+                        if (emote != null)
+                        {
+                            this.MessageParts.Add(emote);
+                        }
+                        else
+                        {
+                            this.MessageParts.Add(message.text);
+                        }
                         break;
                     case "link":
                         this.ContainsLink = true;
-                        this.Message += message.text;
+                        this.AddToMessage(message.text);
+                        this.MessageParts.Add(message.text);
                         break;
                     case "image":
                         this.Images[message.text] = message.url;
@@ -192,11 +205,11 @@ namespace MixItUp.Base.ViewModel.Chat
                     case "text":
                     case "tag":
                     default:
-                        this.Message += message.text;
+                        this.AddToMessage(message.text);
+                        this.MessageParts.Add(message.text);
                         break;
                 }
             }
-            this.Message = this.Message.Trim().Replace(Environment.NewLine, string.Empty).Replace("\n", string.Empty);
         }
     }
 }

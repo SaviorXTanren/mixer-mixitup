@@ -29,7 +29,7 @@ namespace MixItUp.WPF.Controls.MainControls
         private void IssueReportHyperlink_Click(object sender, RoutedEventArgs e)
         {
             string reporterFilePath = Path.Combine(ChannelSession.Services.FileService.GetApplicationDirectory(), "MixItUp.Reporter.exe");
-            ProcessStartInfo processStartInfo = new ProcessStartInfo(reporterFilePath, string.Format("{0} {1}", ChannelSession.User.id, Logger.CurrentLogFilePath));
+            ProcessStartInfo processStartInfo = new ProcessStartInfo(reporterFilePath, string.Format("{0} {1}", ChannelSession.MixerStreamerUser.id, Logger.CurrentLogFilePath));
             Process.Start(processStartInfo);
         }
 

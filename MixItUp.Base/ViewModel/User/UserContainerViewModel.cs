@@ -249,9 +249,9 @@ namespace MixItUp.Base.ViewModel.User
         {
             List<UserViewModel> users = new List<UserViewModel>(await this.GetAllUsers());
             users.RemoveAll(u => UserContainerViewModel.SpecialUserAccounts.Contains(u.UserName));
-            if (ChannelSession.BotUser != null)
+            if (ChannelSession.MixerBotUser != null)
             {
-                users.RemoveAll(u => ChannelSession.BotUser.username.Equals(u.UserName));
+                users.RemoveAll(u => ChannelSession.MixerBotUser.username.Equals(u.UserName));
             }
             return users.Where(u => u.IsInChat);
         }

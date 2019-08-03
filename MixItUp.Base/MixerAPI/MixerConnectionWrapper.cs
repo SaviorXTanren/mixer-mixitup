@@ -14,6 +14,7 @@ using Mixer.Base.Model.Teams;
 using Mixer.Base.Model.TestStreams;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
+using MixItUp.Base.Services.Mixer;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using System;
@@ -24,8 +25,6 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.MixerAPI
 {
-
-
     public class MixerConnectionWrapper : MixerRequestWrapperBase
     {
         public MixerConnection Connection { get; private set; }
@@ -218,7 +217,7 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task<PatronageMilestoneModel> GetCurrentPatronageMilestone()
         {
-            PatronageStatusModel patronageStatus = await this.GetPatronageStatus(ChannelSession.Channel);
+            PatronageStatusModel patronageStatus = await this.GetPatronageStatus(ChannelSession.MixerChannel);
             if (patronageStatus != null)
             {
                 PatronagePeriodModel patronagePeriod = await this.GetPatronagePeriod(patronageStatus);

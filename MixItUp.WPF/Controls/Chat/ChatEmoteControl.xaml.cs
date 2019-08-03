@@ -8,17 +8,18 @@ using MixItUp.Base.Util;
 using System.Net;
 using System.Threading.Tasks;
 using System.IO;
+using MixItUp.Base.Model.Chat;
 
 namespace MixItUp.WPF.Controls.Chat
 {
     /// <summary>
-    /// Interaction logic for EmoticonControl.xaml
+    /// Interaction logic for ChatEmoteControl.xaml
     /// </summary>
-    public partial class EmoticonControl : UserControl
+    public partial class ChatEmoteControl : UserControl
     {
         private static Dictionary<string, BitmapImage> emoticonBitmapImages = new Dictionary<string, BitmapImage>();
 
-        public EmoticonImage Emoticon { get { return this.DataContext as EmoticonImage; } }
+        public MixerChatEmoteModel Emoticon { get { return this.DataContext as MixerChatEmoteModel; } }
         public bool ShowText
         {
             get { return EmoticonText.Visibility == Visibility.Visible; }
@@ -35,16 +36,23 @@ namespace MixItUp.WPF.Controls.Chat
             }
         }
 
-        public EmoticonControl()
+        public ChatEmoteControl()
         {
-            this.DataContextChanged += EmoticonControl_DataContextChanged;
             InitializeComponent();
+
+            this.Loaded += ChatEmoteControl_Loaded;
+            this.DataContextChanged += EmoticonControl_DataContextChanged;
         }
 
-        public EmoticonControl(EmoticonImage emoticon) : this()
+        public ChatEmoteControl(MixerChatEmoteModel emoticon)
+            : this()
         {
-            InitializeComponent();
             this.DataContext = emoticon;
+        }
+
+        private void ChatEmoteControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.EmoticonControl_DataContextChanged(sender, new DependencyPropertyChangedEventArgs());
         }
 
         private async void EmoticonControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -54,7 +62,7 @@ namespace MixItUp.WPF.Controls.Chat
                 if (this.Emoticon != null)
                 {
                     string uri = Emoticon.Uri;
-                    if (!EmoticonControl.emoticonBitmapImages.ContainsKey(uri))
+                    if (!ChatEmoteControl.emoticonBitmapImages.ContainsKey(uri))
                     {
                         BitmapImage bitmap = new BitmapImage();
                         using (WebClient client = new WebClient())
@@ -66,14 +74,13 @@ namespace MixItUp.WPF.Controls.Chat
                             bitmap.StreamSource = new MemoryStream(bytes);
                             bitmap.EndInit();
                         }
-                        EmoticonControl.emoticonBitmapImages[uri] = bitmap;
+                        ChatEmoteControl.emoticonBitmapImages[uri] = bitmap;
                     }
 
-                    CroppedBitmap croppedBitmap = new CroppedBitmap(
-                        EmoticonControl.emoticonBitmapImages[uri],
+                    CroppedBitmap croppedBitmap = new CroppedBitmap(ChatEmoteControl.emoticonBitmapImages[uri],
                         new Int32Rect((int)Emoticon.X, (int)Emoticon.Y, (int)Emoticon.Width, (int)Emoticon.Height));
 
-                    this.EmoticonImage.Source = croppedBitmap;
+                    this.EmoteImage.Source = croppedBitmap;
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }

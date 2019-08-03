@@ -5,6 +5,7 @@ using Mixer.Base.Util;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Skill;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services.Mixer;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
@@ -17,6 +18,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.MixerAPI
 {
+    [Obsolete]
     public class ChatClientWrapper : MixerWebSocketWrapper
     {
         private SemaphoreSlim whisperNumberLock = new SemaphoreSlim(1);
@@ -197,9 +199,9 @@ namespace MixItUp.Base.MixerAPI
         {
             if (this.Client != null)
             {
-                Util.Logger.LogDiagnostic(string.Format("Deleting Message - {0}", message.Message));
+                Util.Logger.LogDiagnostic(string.Format("Deleting Message - {0}", message.PlainTextMessage));
 
-                await this.RunAsync(this.Client.DeleteMessage(message.ID));
+                await this.RunAsync(this.Client.DeleteMessage(Guid.Parse(message.ID)));
             }
         }
 
@@ -231,7 +233,7 @@ namespace MixItUp.Base.MixerAPI
         {
             if (this.Client != null)
             {
-                await ChannelSession.MixerStreamerConnection.AddUserRoles(ChannelSession.Channel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Banned });
+                await ChannelSession.MixerStreamerConnection.AddUserRoles(ChannelSession.MixerChannel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Banned });
                 await user.RefreshDetails(true);
             }
         }
@@ -240,7 +242,7 @@ namespace MixItUp.Base.MixerAPI
         {
             if (this.Client != null)
             {
-                await ChannelSession.MixerStreamerConnection.RemoveUserRoles(ChannelSession.Channel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Banned });
+                await ChannelSession.MixerStreamerConnection.RemoveUserRoles(ChannelSession.MixerChannel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Banned });
                 await user.RefreshDetails(true);
             }
         }
@@ -249,7 +251,7 @@ namespace MixItUp.Base.MixerAPI
         {
             if (this.Client != null)
             {
-                await ChannelSession.MixerStreamerConnection.AddUserRoles(ChannelSession.Channel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Mod });
+                await ChannelSession.MixerStreamerConnection.AddUserRoles(ChannelSession.MixerChannel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Mod });
                 await user.RefreshDetails(true);
             }
         }
@@ -258,7 +260,7 @@ namespace MixItUp.Base.MixerAPI
         {
             if (this.Client != null)
             {
-                await ChannelSession.MixerStreamerConnection.RemoveUserRoles(ChannelSession.Channel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Mod });
+                await ChannelSession.MixerStreamerConnection.RemoveUserRoles(ChannelSession.MixerChannel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Mod });
                 await user.RefreshDetails(true);
             }
         }
@@ -311,7 +313,7 @@ namespace MixItUp.Base.MixerAPI
                             this.Client.OnEventOccurred += WebSocketClient_OnEventOccurred;
                         }
 
-                        await ChannelSession.ActiveUsers.AddOrUpdateUsers(await ChannelSession.MixerStreamerConnection.GetChatUsers(ChannelSession.Channel, Math.Max(ChannelSession.Channel.viewersCurrent, 1)));
+                        await ChannelSession.ActiveUsers.AddOrUpdateUsers(await ChannelSession.MixerStreamerConnection.GetChatUsers(ChannelSession.MixerChannel, Math.Max(ChannelSession.MixerChannel.viewersCurrent, 1)));
 
                         if (ChannelSession.IsStreamer)
                         {
@@ -356,9 +358,9 @@ namespace MixItUp.Base.MixerAPI
             return false;
         }
 
-        private async Task<ChatClient> ConnectAndAuthenticateChatClient(MixerConnectionWrapper connection)
+        private async Task<ChatClient> ConnectAndAuthenticateChatClient(MixerConnectionService connection)
         {
-            ChatClient client = await this.RunAsync(ChatClient.CreateFromChannel(connection.Connection, ChannelSession.Channel));
+            ChatClient client = await this.RunAsync(ChatClient.CreateFromChannel(connection.Connection, ChannelSession.MixerChannel));
             if (client != null)
             {
                 if (await this.RunAsync(client.Connect()) && await this.RunAsync(client.Authenticate()))
@@ -419,22 +421,22 @@ namespace MixItUp.Base.MixerAPI
                 }
             }
 
-            if (this.Messages.ContainsKey(message.ID))
+            if (this.Messages.ContainsKey(Guid.Parse(message.ID)))
             {
                 return null;
             }
-            this.Messages[message.ID] = message;
+            this.Messages[Guid.Parse(message.ID)] = message;
 
             if (this.DisableChat && !message.ID.Equals(Guid.Empty))
             {
-                Util.Logger.LogDiagnostic(string.Format("Deleting Message As Chat Disabled - {0}", message.Message));
+                Util.Logger.LogDiagnostic(string.Format("Deleting Message As Chat Disabled - {0}", message.PlainTextMessage));
                 await this.DeleteMessage(message);
                 return message;
             }
 
             if (!ModerationHelper.MeetsChatInteractiveParticipationRequirement(user) || !ModerationHelper.MeetsChatEmoteSkillsOnlyParticipationRequirement(user, message))
             {
-                Util.Logger.LogDiagnostic(string.Format("Deleting Message As User does not meet requirement - {0} - {1}", ChannelSession.Settings.ModerationChatInteractiveParticipation, message.Message));
+                Util.Logger.LogDiagnostic(string.Format("Deleting Message As User does not meet requirement - {0} - {1}", ChannelSession.Settings.ModerationChatInteractiveParticipation, message.PlainTextMessage));
 
                 await this.DeleteMessage(message);
 
@@ -450,7 +452,7 @@ namespace MixItUp.Base.MixerAPI
 
                 bool shouldBeModerated = true;
                 PermissionsCommandBase command = this.CheckMessageForCommand(message);
-                if (command != null && string.IsNullOrEmpty(await ModerationHelper.ShouldBeFilteredWordModerated(user, message.Message)))
+                if (command != null && string.IsNullOrEmpty(await ModerationHelper.ShouldBeFilteredWordModerated(user, message.PlainTextMessage)))
                 {
                     shouldBeModerated = false;
                 }
@@ -524,7 +526,7 @@ namespace MixItUp.Base.MixerAPI
                 return null;
             }
 
-            if (ChannelSession.BotUser != null && ChannelSession.Settings.IgnoreBotAccountCommands && message.User != null && message.User.ID.Equals(ChannelSession.BotUser.id))
+            if (ChannelSession.MixerBotUser != null && ChannelSession.Settings.IgnoreBotAccountCommands && message.User != null && message.User.ID.Equals(ChannelSession.MixerBotUser.id))
             {
                 return null;
             }
@@ -541,10 +543,10 @@ namespace MixItUp.Base.MixerAPI
                 List<PermissionsCommandBase> commandsToCheck = new List<PermissionsCommandBase>(ChannelSession.AllEnabledChatCommands);
                 commandsToCheck.AddRange(message.User.Data.CustomCommands);
 
-                PermissionsCommandBase command = commandsToCheck.FirstOrDefault(c => c.MatchesCommand(message.Message));
+                PermissionsCommandBase command = commandsToCheck.FirstOrDefault(c => c.MatchesCommand(message.PlainTextMessage));
                 if (command == null)
                 {
-                    command = commandsToCheck.FirstOrDefault(c => c.ContainsCommand(message.Message));
+                    command = commandsToCheck.FirstOrDefault(c => c.ContainsCommand(message.PlainTextMessage));
                 }
 
                 return command;
@@ -555,7 +557,7 @@ namespace MixItUp.Base.MixerAPI
 
         private async Task RunMessageCommand(ChatMessageViewModel message, PermissionsCommandBase command)
         {
-            await command.Perform(message.User, command.GetArgumentsFromText(message.Message));
+            await command.Perform(message.User, command.GetArgumentsFromText(message.PlainTextMessage));
 
             bool delete = false;
             if (ChannelSession.Settings.DeleteChatCommandsWhenRun)
@@ -572,7 +574,7 @@ namespace MixItUp.Base.MixerAPI
 
             if (delete)
             {
-                Util.Logger.LogDiagnostic(string.Format("Deleting Message As Chat Command - {0}", message.Message));
+                Util.Logger.LogDiagnostic(string.Format("Deleting Message As Chat Command - {0}", message.PlainTextMessage));
                 await this.DeleteMessage(message);
             }
         }
@@ -669,7 +671,7 @@ namespace MixItUp.Base.MixerAPI
 
                 tokenSource.Token.ThrowIfCancellationRequested();
 
-                IEnumerable<ChatUserModel> chatUsers = await ChannelSession.MixerStreamerConnection.GetChatUsers(ChannelSession.Channel, int.MaxValue);
+                IEnumerable<ChatUserModel> chatUsers = await ChannelSession.MixerStreamerConnection.GetChatUsers(ChannelSession.MixerChannel, int.MaxValue);
                 chatUsers = chatUsers.Where(u => u.userId.HasValue);
                 HashSet<uint> chatUserIDs = new HashSet<uint>(chatUsers.Select(u => u.userId.GetValueOrDefault()));
 
@@ -725,10 +727,10 @@ namespace MixItUp.Base.MixerAPI
                     }
                     else if (SkillUsageModel.IsEmbersChatSkill(message.ChatSkill))
                     {
-                        GlobalEvents.EmberUseOccurred(new UserEmberUsageModel(message.User, (int)message.ChatSkill.cost, message.Message));
+                        GlobalEvents.EmberUseOccurred(new UserEmberUsageModel(message.User, (int)message.ChatSkill.cost, message.PlainTextMessage));
                     }
 
-                    GlobalEvents.SkillUseOccurred(new SkillUsageModel(message.User, message.ChatSkill, message.Message));
+                    GlobalEvents.SkillUseOccurred(new SkillUsageModel(message.User, message.ChatSkill, message.PlainTextMessage));
                 }
             }
         }
@@ -838,7 +840,7 @@ namespace MixItUp.Base.MixerAPI
                 if (skillAttribution.message != null && skillAttribution.message.message != null && skillAttribution.message.message.Length > 0)
                 {
                     ChatMessageViewModel messageModel = new ChatMessageViewModel(skillAttribution.message, user);
-                    message = messageModel.Message;
+                    message = messageModel.PlainTextMessage;
                 }
 
                 GlobalEvents.SkillUseOccurred(new SkillUsageModel(user, skillAttribution.skill, message));

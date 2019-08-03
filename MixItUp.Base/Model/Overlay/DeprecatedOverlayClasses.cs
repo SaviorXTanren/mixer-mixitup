@@ -6,6 +6,7 @@ using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Chat;
 using MixItUp.Base.Model.SongRequests;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
@@ -123,9 +124,9 @@ namespace MixItUp.Base.Model.Overlay
                 ChatMessageEventModel messageEvent = new ChatMessageEventModel()
                 {
                     id = Guid.NewGuid(),
-                    user_id = ChannelSession.User.id,
-                    user_name = ChannelSession.User.username,
-                    channel = ChannelSession.Channel.id,
+                    user_id = ChannelSession.MixerStreamerUser.id,
+                    user_name = ChannelSession.MixerStreamerUser.username,
+                    channel = ChannelSession.MixerChannel.id,
                     message = new ChatMessageContentsModel() { message = new ChatMessageDataModel[] { new ChatMessageDataModel() { type = "text", text = "Test Message" } } }
                 };
                 this.GlobalEvents_OnChatMessageReceived(this, new ChatMessageViewModel(messageEvent));
@@ -172,7 +173,7 @@ namespace MixItUp.Base.Model.Overlay
                             OverlayCustomHTMLItem overlayItem = (OverlayCustomHTMLItem)await base.GetProcessedItem(user, arguments, extraSpecialIdentifiers);
                             copy.Messages.Add(new OverlayChatMessage()
                             {
-                                ID = this.messagesToProcess.ElementAt(0).ID,
+                                ID = Guid.Parse(this.messagesToProcess.ElementAt(0).ID),
                                 Message = overlayItem.HTMLText,
                             });
                             this.messagesToProcess.RemoveAt(0);
@@ -225,42 +226,42 @@ namespace MixItUp.Base.Model.Overlay
             replacementSets["USER_COLOR"] = OverlayChatMessages.userColors[message.User.PrimaryRoleColorName];
 
             replacementSets["SUB_IMAGE"] = "";
-            if (message.User.IsMixerSubscriber && ChannelSession.Channel.badge != null)
+            if (message.User.IsMixerSubscriber && ChannelSession.MixerChannel.badge != null)
             {
-                replacementSets["SUB_IMAGE"] = ChannelSession.Channel.badge.url;
+                replacementSets["SUB_IMAGE"] = ChannelSession.MixerChannel.badge.url;
             }
 
-            if (message.Skill != null)
-            {
-                replacementSets["IMAGE"] = message.Skill.ImageUrl;
-            }
-            else if (message.ChatSkill != null)
-            {
-                replacementSets["IMAGE"] = message.ChatSkill.icon_url;
-            }
-            else
-            {
-                StringBuilder text = new StringBuilder();
-                foreach (ChatMessageDataModel messageData in message.MessageComponents)
-                {
-                    EmoticonImage emoticon = ChannelSession.GetEmoticonForMessage(messageData);
-                    if (emoticon != null)
-                    {
-                        string emoticonText = OverlayChatMessages.EmoticonMessageHTMLTemplate;
-                        emoticonText = emoticonText.Replace("{EMOTICON}", emoticon.Uri);
-                        emoticonText = emoticonText.Replace("{TEXT_SIZE}", this.TextSize.ToString());
-                        emoticonText = emoticonText.Replace("{EMOTICON_SIZE}", emoticon.Width.ToString());
-                        emoticonText = emoticonText.Replace("{EMOTICON_X}", (-emoticon.X).ToString());
-                        emoticonText = emoticonText.Replace("{EMOTICON_Y}", (-emoticon.Y).ToString());
-                        text.Append(emoticonText + " ");
-                    }
-                    else
-                    {
-                        text.Append(messageData.text + " ");
-                    }
-                }
-                replacementSets["TEXT"] = text.ToString().Trim();
-            }
+            //if (message.Skill != null)
+            //{
+            //    replacementSets["IMAGE"] = message.Skill.ImageUrl;
+            //}
+            //else if (message.ChatSkill != null)
+            //{
+            //    replacementSets["IMAGE"] = message.ChatSkill.icon_url;
+            //}
+            //else
+            //{
+            //    StringBuilder text = new StringBuilder();
+            //    foreach (ChatMessageDataModel messageData in message.MessageComponents)
+            //    {
+            //        MixerChatEmoteModel emoticon = MixerChatEmoteModel.GetEmoteForMessageData(messageData);
+            //        if (emoticon != null)
+            //        {
+            //            string emoticonText = OverlayChatMessages.EmoticonMessageHTMLTemplate;
+            //            emoticonText = emoticonText.Replace("{EMOTICON}", emoticon.Uri);
+            //            emoticonText = emoticonText.Replace("{TEXT_SIZE}", this.TextSize.ToString());
+            //            emoticonText = emoticonText.Replace("{EMOTICON_SIZE}", emoticon.Width.ToString());
+            //            emoticonText = emoticonText.Replace("{EMOTICON_X}", (-emoticon.X).ToString());
+            //            emoticonText = emoticonText.Replace("{EMOTICON_Y}", (-emoticon.Y).ToString());
+            //            text.Append(emoticonText + " ");
+            //        }
+            //        else
+            //        {
+            //            text.Append(messageData.text + " ");
+            //        }
+            //    }
+            //    replacementSets["TEXT"] = text.ToString().Trim();
+            //}
 
             return Task.FromResult(replacementSets);
         }
@@ -1261,7 +1262,7 @@ namespace MixItUp.Base.Model.Overlay
 
             if (this.LeaderboardType == LeaderboardTypeEnum.Subscribers)
             {
-                foreach (UserWithGroupsModel userWithGroups in await ChannelSession.MixerStreamerConnection.GetUsersWithRoles(ChannelSession.Channel, MixerRoleEnum.Subscriber))
+                foreach (UserWithGroupsModel userWithGroups in await ChannelSession.MixerStreamerConnection.GetUsersWithRoles(ChannelSession.MixerChannel, MixerRoleEnum.Subscriber))
                 {
                     DateTimeOffset? subDate = userWithGroups.GetSubscriberDate();
                     if (subDate.HasValue)
@@ -1387,16 +1388,16 @@ namespace MixItUp.Base.Model.Overlay
                     switch (this.DateRange)
                     {
                         case LeaderboardSparksEmbersDateEnum.Weekly:
-                            this.sparkLeaders = await ChannelSession.MixerStreamerConnection.GetWeeklySparksLeaderboard(ChannelSession.Channel, this.TotalToShow);
+                            this.sparkLeaders = await ChannelSession.MixerStreamerConnection.GetWeeklySparksLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                             break;
                         case LeaderboardSparksEmbersDateEnum.Monthly:
-                            this.sparkLeaders = await ChannelSession.MixerStreamerConnection.GetMonthlySparksLeaderboard(ChannelSession.Channel, this.TotalToShow);
+                            this.sparkLeaders = await ChannelSession.MixerStreamerConnection.GetMonthlySparksLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                             break;
                         case LeaderboardSparksEmbersDateEnum.Yearly:
-                            this.sparkLeaders = await ChannelSession.MixerStreamerConnection.GetYearlySparksLeaderboard(ChannelSession.Channel, this.TotalToShow);
+                            this.sparkLeaders = await ChannelSession.MixerStreamerConnection.GetYearlySparksLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                             break;
                         case LeaderboardSparksEmbersDateEnum.AllTime:
-                            this.sparkLeaders = await ChannelSession.MixerStreamerConnection.GetAllTimeSparksLeaderboard(ChannelSession.Channel, this.TotalToShow);
+                            this.sparkLeaders = await ChannelSession.MixerStreamerConnection.GetAllTimeSparksLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                             break;
                     }
                 }
@@ -1419,16 +1420,16 @@ namespace MixItUp.Base.Model.Overlay
                     switch (this.DateRange)
                     {
                         case LeaderboardSparksEmbersDateEnum.Weekly:
-                            this.emberLeaders = await ChannelSession.MixerStreamerConnection.GetWeeklyEmbersLeaderboard(ChannelSession.Channel, this.TotalToShow);
+                            this.emberLeaders = await ChannelSession.MixerStreamerConnection.GetWeeklyEmbersLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                             break;
                         case LeaderboardSparksEmbersDateEnum.Monthly:
-                            this.emberLeaders = await ChannelSession.MixerStreamerConnection.GetMonthlyEmbersLeaderboard(ChannelSession.Channel, this.TotalToShow);
+                            this.emberLeaders = await ChannelSession.MixerStreamerConnection.GetMonthlyEmbersLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                             break;
                         case LeaderboardSparksEmbersDateEnum.Yearly:
-                            this.emberLeaders = await ChannelSession.MixerStreamerConnection.GetYearlyEmbersLeaderboard(ChannelSession.Channel, this.TotalToShow);
+                            this.emberLeaders = await ChannelSession.MixerStreamerConnection.GetYearlyEmbersLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                             break;
                         case LeaderboardSparksEmbersDateEnum.AllTime:
-                            this.emberLeaders = await ChannelSession.MixerStreamerConnection.GetAllTimeEmbersLeaderboard(ChannelSession.Channel, this.TotalToShow);
+                            this.emberLeaders = await ChannelSession.MixerStreamerConnection.GetAllTimeEmbersLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                             break;
                     }
                 }
@@ -1697,7 +1698,7 @@ namespace MixItUp.Base.Model.Overlay
 
             if (this.ProgressBarType == ProgressBarTypeEnum.Followers)
             {
-                totalFollowers = (int)ChannelSession.Channel.numFollowers;
+                totalFollowers = (int)ChannelSession.MixerChannel.numFollowers;
 
                 GlobalEvents.OnFollowOccurred += GlobalEvents_OnFollowOccurred;
                 GlobalEvents.OnUnfollowOccurred += GlobalEvents_OnUnfollowOccurred;
@@ -1721,7 +1722,7 @@ namespace MixItUp.Base.Model.Overlay
             }
             else if (this.ProgressBarType == ProgressBarTypeEnum.Milestones)
             {
-                PatronageStatusModel patronageStatus = await ChannelSession.MixerStreamerConnection.GetPatronageStatus(ChannelSession.Channel);
+                PatronageStatusModel patronageStatus = await ChannelSession.MixerStreamerConnection.GetPatronageStatus(ChannelSession.MixerChannel);
                 if (patronageStatus != null)
                 {
                     this.CurrentAmountNumber = patronageStatus.patronageEarned;

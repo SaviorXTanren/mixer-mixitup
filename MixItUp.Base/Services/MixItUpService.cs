@@ -60,9 +60,9 @@ namespace MixItUp.Base.Services
 
         public async Task RefreshOAuthToken()
         {
-            if (ChannelSession.User != null)
+            if (ChannelSession.MixerStreamerUser != null)
             {
-                this.token = await this.GetAsync<OAuthTokenModel>("authentication?userID=" + ChannelSession.User.id);
+                this.token = await this.GetAsync<OAuthTokenModel>("authentication?userID=" + ChannelSession.MixerStreamerUser.id);
             }
         }
 

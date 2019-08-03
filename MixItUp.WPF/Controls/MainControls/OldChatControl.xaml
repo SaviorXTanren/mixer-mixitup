@@ -1,4 +1,4 @@
-﻿<local:MainControlBase x:Class="MixItUp.WPF.Controls.MainControls.ChatControl"
+﻿<local:MainControlBase x:Class="MixItUp.WPF.Controls.MainControls.OldChatControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,8 +6,6 @@
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:ChatControls="clr-namespace:MixItUp.WPF.Controls.Chat"
-             xmlns:UsersControls="clr-namespace:MixItUp.WPF.Controls.Users"
-             xmlns:Util="clr-namespace:MixItUp.WPF.Util"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
                           
@@ -33,9 +31,6 @@
                 <MenuItem x:Name="UserInformationMenuItem" Header="User Info" Click="UserInformationMenuItem_Click" />
             </ContextMenu>
 
-            <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-            <Util:ColorBrushConverter x:Key="ColorBrushConverter" />
-
         </ResourceDictionary>
     </local:MainControlBase.Resources>
 
@@ -57,9 +52,24 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <Button Command="{Binding ClearChatCommand}" Grid.Column="2" Width="100" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}">Clear Chat</Button>
+                        <Button x:Name="PopOutChatButton" Grid.Row="0" Visibility="Visible" HorizontalAlignment="Center" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" Click="PopOutChatButton_Click">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="5" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
 
-                        <Button Command="{Binding EnableDisableChatCommand}" Content="{Binding EnableDisableButtonText}" Grid.Column="4" Width="115" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" />
+                                <TextBlock Grid.Column="0" VerticalAlignment="Center">Pop Out</TextBlock>
+
+                                <MaterialDesign:PackIcon Grid.Column="2" Kind="Launch" Height="24" Width="24" VerticalAlignment="Center" Foreground="{StaticResource PrimaryHueLightForegroundBrush}" />
+                            </Grid>
+                        </Button>
+
+                        <Button x:Name="ChatClearMessagesButton" Grid.Column="2" Width="100" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" Click="ChatClearMessagesButton_Click">Clear Chat</Button>
+
+                        <Button x:Name="DisableChatButton" Grid.Column="4" Width="115" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" Click="DisableChatButton_Click">Disable Chat</Button>
+                        <Button x:Name="EnableChatButton" Grid.Column="4" Width="115" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" Click="EnableChatButton_Click" Visibility="Collapsed">Enable Chat</Button>
 
                     </Grid>
 
@@ -75,11 +85,13 @@
                         </Grid.ColumnDefinitions>
 
                         <MaterialDesign:PackIcon Kind="Eye" Grid.Column="0" Foreground="{StaticResource WhiteColor}" />
-                        <TextBlock Grid.Column="2" Foreground="{StaticResource WhiteColor}" Text="{Binding ViewersCount}" />
+                        <TextBlock Grid.Column="2" x:Name="ViewersCountTextBlock" Foreground="{StaticResource WhiteColor}">0</TextBlock>
 
                         <MaterialDesign:PackIcon Kind="Message" Grid.Column="4" Foreground="{StaticResource WhiteColor}" />
-                        <TextBlock Grid.Column="6" Foreground="{StaticResource WhiteColor}" Text="{Binding ChattersCount}" />
+                        <TextBlock Grid.Column="6" x:Name="ChatCountTextBlock" Foreground="{StaticResource WhiteColor}">0</TextBlock>
+
                     </Grid>
+
                 </Grid>
             </GroupBox.Header>
 
@@ -96,7 +108,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <ListView x:Name="ChatList" ItemsSource="{Binding Messages}" Grid.Row="0" ContextMenu="{StaticResource ChatListContextMenu}" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch" ScrollViewer.ScrollChanged="ChatList_ScrollChanged">
+                    <ListView x:Name="ChatList" Grid.Row="0" ContextMenu="{StaticResource ChatListContextMenu}" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch" ScrollViewer.ScrollChanged="ChatList_ScrollChanged">
                         <ListView.Resources>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="Width" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ScrollContentPresenter}, Path=ActualWidth}" />
@@ -108,12 +120,6 @@
                                 <Setter Property="Padding" Value="0"/>
                             </Style>
                         </ListView.ItemContainerStyle>
-
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <ChatControls:ChatMessageControl DataContext="{Binding}" />
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
                     </ListView>
 
                     <Button x:Name="ChatLockButton" ToolTip="Lock/Unlock Chat Scrolling" Margin="0,0,20,0" Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}" HorizontalAlignment="Right" Grid.Row="0" VerticalAlignment="Bottom" Opacity="0.3" Click="ChatLockButton_Click" MouseEnter="ChatLockButton_MouseEnter" MouseLeave="ChatLockButton_MouseLeave">
@@ -141,25 +147,7 @@
 
                 <GridSplitter x:Name="ChatSplitter" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="5" />
 
-                <ListView x:Name="UserList" ItemsSource="{Binding DisplayUsers}" Grid.Column="2" VirtualizingPanel.VirtualizationMode="Recycling" ScrollViewer.IsDeferredScrollingEnabled="True" ScrollViewer.VerticalScrollBarVisibility="Visible" HorizontalContentAlignment="Stretch" SelectionChanged="UserList_SelectionChanged" MinWidth="200">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-
-                                <UsersControls:UserProfileAvatarControl Grid.Column="0" Width="20" Height="20" DataContext="{Binding User.AvatarLink}" />
-
-                                <Image Source="{Binding User.SubscriberBadgeLink}" Visibility="{Binding User.IsMixerSubscriber}" Grid.Column="1" Margin="5,0,0,0" VerticalAlignment="Center" />
-
-                                <TextBlock Grid.Column="2" Margin="5,0,0,0" Text="{Binding UserName}" FontWeight="Bold" VerticalAlignment="Center" />
-                            </Grid>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                <ListView x:Name="UserList" Grid.Column="2" VirtualizingPanel.VirtualizationMode="Recycling" ScrollViewer.IsDeferredScrollingEnabled="True" ScrollViewer.VerticalScrollBarVisibility="Visible" HorizontalContentAlignment="Stretch" SelectionChanged="UserList_SelectionChanged" MinWidth="200" />
             </Grid>
 
         </GroupBox>
@@ -182,7 +170,7 @@
                     <ListBox x:Name="EmoticonIntellisenseListBox" ItemContainerStyle="{StaticResource BorderedListBoxItem}" SelectionMode="Single" PreviewMouseUp="EmoticonIntellisenseListBox_PreviewMouseUp">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <ChatControls:ChatEmoteControl ShowText="True" />
+                                <ChatControls:ChatEmoteControl ShowText="True"/>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>

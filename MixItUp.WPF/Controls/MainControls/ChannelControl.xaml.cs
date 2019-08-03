@@ -62,12 +62,12 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             this.AgeRatingComboBox.ItemsSource = EnumHelper.GetEnumNames<AgeRatingEnum>();
 
-            this.StreamTitleTextBox.Text = ChannelSession.Channel.name;
+            this.StreamTitleTextBox.Text = ChannelSession.MixerChannel.name;
 
             this.shouldShowIntellisense = false;
-            if (ChannelSession.Channel?.type?.name != null)
+            if (ChannelSession.MixerChannel?.type?.name != null)
             {
-                this.GameNameTextBox.Text = ChannelSession.Channel.type.name;
+                this.GameNameTextBox.Text = ChannelSession.MixerChannel.type.name;
             }
             else
             {
@@ -76,7 +76,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.shouldShowIntellisense = true;
 
             List<string> ageRatingList = EnumHelper.GetEnumNames<AgeRatingEnum>().Select(s => s.ToLower()).ToList();
-            this.AgeRatingComboBox.SelectedIndex = ageRatingList.IndexOf(ChannelSession.Channel.audience);
+            this.AgeRatingComboBox.SelectedIndex = ageRatingList.IndexOf(ChannelSession.MixerChannel.audience);
 
             this.ChannelToRaidSearchCriteriaComboBox.ItemsSource = EnumHelper.GetEnumNames<RaidSearchCriteriaEnum>();
 
@@ -223,7 +223,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
             await this.Window.RunAsyncOperation(async () =>
             {
-                await ChannelSession.MixerStreamerConnection.UpdateChannel(ChannelSession.Channel.id, this.StreamTitleTextBox.Text, gameType.id, ((string)this.AgeRatingComboBox.SelectedItem).ToLower());
+                await ChannelSession.MixerStreamerConnection.UpdateChannel(ChannelSession.MixerChannel.id, this.StreamTitleTextBox.Text, gameType.id, ((string)this.AgeRatingComboBox.SelectedItem).ToLower());
 
                 await ChannelSession.RefreshChannel();
             });
@@ -245,12 +245,12 @@ namespace MixItUp.WPF.Controls.MainControls
                 RaidSearchCriteriaEnum searchCriteria = EnumHelper.GetEnumValueFromString<RaidSearchCriteriaEnum>((string)this.ChannelToRaidSearchCriteriaComboBox.SelectedItem);
                 if (searchCriteria == RaidSearchCriteriaEnum.SameGame)
                 {
-                    channels = await ChannelSession.MixerStreamerConnection.GetChannelsByGameTypes(ChannelSession.Channel.type, 1);
+                    channels = await ChannelSession.MixerStreamerConnection.GetChannelsByGameTypes(ChannelSession.MixerChannel.type, 1);
                 }
                 else if (searchCriteria == RaidSearchCriteriaEnum.SameTeam)
                 {
                     Dictionary<uint, UserWithChannelModel> teamChannels = new Dictionary<uint, UserWithChannelModel>();
-                    foreach (TeamMembershipExpandedModel extendedTeam in await ChannelSession.MixerStreamerConnection.GetUserTeams(ChannelSession.User))
+                    foreach (TeamMembershipExpandedModel extendedTeam in await ChannelSession.MixerStreamerConnection.GetUserTeams(ChannelSession.MixerStreamerUser))
                     {
                         TeamModel team = await ChannelSession.MixerStreamerConnection.GetTeam(extendedTeam.id);
                         IEnumerable<UserWithChannelModel> teamUsers = await ChannelSession.MixerStreamerConnection.GetTeamUsers(team);
@@ -266,7 +266,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     string query = "channels";
                     if (searchCriteria == RaidSearchCriteriaEnum.AgeRating)
                     {
-                        query += "?where=audience:eq:" + ChannelSession.Channel.audience;
+                        query += "?where=audience:eq:" + ChannelSession.MixerChannel.audience;
                     }
                     else if (searchCriteria == RaidSearchCriteriaEnum.LargeStreamer)
                     {
@@ -446,7 +446,7 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 await this.Window.RunAsyncOperation(async () =>
                 {
-                    await ChannelSession.MixerStreamerConnection.SetHostChannel(ChannelSession.Channel, this.channelToRaid);
+                    await ChannelSession.MixerStreamerConnection.SetHostChannel(ChannelSession.MixerChannel, this.channelToRaid);
                 });
             }
         }

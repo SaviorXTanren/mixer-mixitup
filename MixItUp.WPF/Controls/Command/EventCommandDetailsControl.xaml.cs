@@ -69,11 +69,11 @@ namespace MixItUp.WPF.Controls.Command
 
             if (this.EventType.ToString().Contains("channel") || this.EventType.ToString().Contains("progression"))
             {
-                this.EventIDTextBox.Text = ChannelSession.User.channel.id.ToString();
+                this.EventIDTextBox.Text = ChannelSession.MixerStreamerUser.channel.id.ToString();
             }
             else
             {
-                this.EventIDTextBox.Text = ChannelSession.User.id.ToString();
+                this.EventIDTextBox.Text = ChannelSession.MixerStreamerUser.id.ToString();
             }
 
             if (this.command != null)
@@ -117,7 +117,7 @@ namespace MixItUp.WPF.Controls.Command
                 {
                     if (this.OtherEventTypeTextBox.Visibility == Visibility.Visible)
                     {
-                        this.command = new EventCommand(EnumHelper.GetEnumValueFromString<OtherEventTypeEnum>(this.OtherEventTypeTextBox.Text), ChannelSession.Channel.id.ToString());
+                        this.command = new EventCommand(EnumHelper.GetEnumValueFromString<OtherEventTypeEnum>(this.OtherEventTypeTextBox.Text), ChannelSession.MixerChannel.id.ToString());
                     }
                     else if (this.EventTypeComboBox.Visibility == Visibility.Visible)
                     {

@@ -22,7 +22,7 @@ namespace MixItUp.Base.Model.Store
         public StoreListingReportModel(StoreListingModel listing, string report)
         {
             this.ListingID = listing.ID;
-            this.UserID = ChannelSession.User.id;
+            this.UserID = ChannelSession.MixerStreamerUser.id;
             this.Report = report;
         }
     }

@@ -10,5 +10,7 @@
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     </UserControl.Resources>
 
-    <WrapPanel x:Name="MessageWrapPanel" Orientation="Horizontal" />
+    <WrapPanel x:Name="MessageWrapPanel" Orientation="Horizontal">
+        <local:ChatMessageHeaderControl DataContext="{Binding}" />
+    </WrapPanel>
 </UserControl>

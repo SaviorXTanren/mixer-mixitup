@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Model.Chat;
+using MixItUp.Base.Model.Chat;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using System;
@@ -47,9 +48,9 @@ namespace MixItUp.Base.Model.Overlay
             ChatMessageEventModel messageEvent = new ChatMessageEventModel()
             {
                 id = Guid.NewGuid(),
-                user_id = ChannelSession.User.id,
-                user_name = ChannelSession.User.username,
-                channel = ChannelSession.Channel.id,
+                user_id = ChannelSession.MixerStreamerUser.id,
+                user_name = ChannelSession.MixerStreamerUser.username,
+                channel = ChannelSession.MixerChannel.id,
                 message = new ChatMessageContentsModel() { message = new ChatMessageDataModel[] { new ChatMessageDataModel() { type = "text", text = "Test Message" } } }
             };
             this.GlobalEvents_OnChatMessageReceived(this, new ChatMessageViewModel(messageEvent));
@@ -96,10 +97,10 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     item.TemplateReplacements.Add("MESSAGE", OverlayChatMessagesListItemModel.TextMessageHTMLTemplate);
 
-                    text = message.Message;
+                    text = message.PlainTextMessage;
                     foreach (ChatMessageDataModel messageData in message.MessageComponents)
                     {
-                        EmoticonImage emoticon = ChannelSession.GetEmoticonForMessage(messageData);
+                        MixerChatEmoteModel emoticon = MixerChatEmoteModel.GetEmoteForMessageData(messageData);
                         if (emoticon != null)
                         {
                             string emoticonText = OverlayChatMessagesListItemModel.EmoticonMessageHTMLTemplate;
@@ -115,7 +116,7 @@ namespace MixItUp.Base.Model.Overlay
                 item.TemplateReplacements.Add("USERNAME", item.User.UserName);
                 item.TemplateReplacements.Add("USER_IMAGE", item.User.AvatarLink);
                 item.TemplateReplacements.Add("USER_COLOR", OverlayChatMessagesListItemModel.userColors[item.User.PrimaryRoleColorName]);
-                item.TemplateReplacements.Add("SUB_IMAGE", (item.User.IsMixerSubscriber && ChannelSession.Channel.badge != null) ? ChannelSession.Channel.badge.url : string.Empty);
+                item.TemplateReplacements.Add("SUB_IMAGE", (item.User.IsMixerSubscriber && ChannelSession.MixerChannel.badge != null) ? ChannelSession.MixerChannel.badge.url : string.Empty);
                 item.TemplateReplacements.Add("TEXT_SIZE", this.Height.ToString());
 
                 await this.listSemaphore.WaitAndRelease(() =>

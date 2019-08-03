@@ -2493,7 +2493,7 @@ namespace MixItUp.Base.Commands
         {
             if (!string.IsNullOrEmpty(this.hitmanName) && this.winners.Count == 0 && this.enteredUsers.ContainsKey(message.User))
             {
-                if (!string.IsNullOrEmpty(message.Message) && message.Message.Equals(this.hitmanName, StringComparison.CurrentCultureIgnoreCase))
+                if (!string.IsNullOrEmpty(message.PlainTextMessage) && message.PlainTextMessage.Equals(this.hitmanName, StringComparison.CurrentCultureIgnoreCase))
                 {
                     this.winners.Add(message.User);
                 }
@@ -2639,7 +2639,7 @@ namespace MixItUp.Base.Commands
         {
             if (!string.IsNullOrEmpty(this.selectedWord) && this.winners.Count == 0 && this.enteredUsers.ContainsKey(message.User))
             {
-                if (!string.IsNullOrEmpty(message.Message) && message.Message.Equals(this.selectedWord, StringComparison.CurrentCultureIgnoreCase))
+                if (!string.IsNullOrEmpty(message.PlainTextMessage) && message.PlainTextMessage.Equals(this.selectedWord, StringComparison.CurrentCultureIgnoreCase))
                 {
                     this.winners.Add(message.User);
                 }

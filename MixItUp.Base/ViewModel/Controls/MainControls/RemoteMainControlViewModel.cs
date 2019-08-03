@@ -172,7 +172,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             {
                 if (ChannelSession.Settings.RemoteHostConnection == null || (!await ChannelSession.Services.RemoteService.ValidateConnection(ChannelSession.Settings.RemoteHostConnection)))
                 {
-                    ChannelSession.Settings.RemoteHostConnection = await ChannelSession.Services.RemoteService.NewHost(ChannelSession.Channel.token);
+                    ChannelSession.Settings.RemoteHostConnection = await ChannelSession.Services.RemoteService.NewHost(ChannelSession.MixerChannel.token);
                     ChannelSession.Settings.RemoteClientConnections.Clear();
                 }
 

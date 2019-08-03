@@ -124,7 +124,7 @@ namespace MixItUp.Base.Model.Overlay
 
             if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Followers)
             {
-                totalFollowers = (int)ChannelSession.Channel.numFollowers;
+                totalFollowers = (int)ChannelSession.MixerChannel.numFollowers;
 
                 GlobalEvents.OnFollowOccurred += GlobalEvents_OnFollowOccurred;
                 GlobalEvents.OnUnfollowOccurred += GlobalEvents_OnUnfollowOccurred;
@@ -149,7 +149,7 @@ namespace MixItUp.Base.Model.Overlay
             }
             else if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Milestones)
             {
-                PatronageStatusModel patronageStatus = await ChannelSession.MixerStreamerConnection.GetPatronageStatus(ChannelSession.Channel);
+                PatronageStatusModel patronageStatus = await ChannelSession.MixerStreamerConnection.GetPatronageStatus(ChannelSession.MixerChannel);
                 if (patronageStatus != null)
                 {
                     this.CurrentAmount = patronageStatus.patronageEarned;
