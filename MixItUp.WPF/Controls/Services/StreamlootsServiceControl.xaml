@@ -23,7 +23,7 @@
 
             <TextBlock Grid.Row="0" TextWrapping="Wrap" VerticalAlignment="Center">Streamloots service connectivity allows you to trigger events from when a card is used on your channel.</TextBlock>
 
-            <TextBlock Grid.Row="2" TextWrapping="Wrap">NOTE: For Streamloots connectivity to work, you will NOT be able to use the Streamloots Stream Overlay in your streaming overlay. Streamloots only allows one thing to be connected to you account at a time.</TextBlock>
+            <TextBlock Grid.Row="2" TextWrapping="Wrap">To connect to Streamloots, copy your Alert Overlay URL from streamloots into the text box and click Log In.</TextBlock>
         </Grid>
 
         <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">

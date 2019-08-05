@@ -2,15 +2,14 @@
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.Commands;
-using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,21 +21,39 @@ namespace MixItUp.Base.Services
         private const string messageMiddleRegex = ", greetings from ";
         private const string messageEndRegex = " !$";
 
+        public string type { get; set; }
         public string imageUrl { get; set; }
-        public string message { get; set; }
-        public string username { get; set; }
+        public StreamlootsCardDataModel data { get; set; }
+    }
 
-        public void InitializeData()
+    public class StreamlootsCardDataModel
+    {
+        public string cardName { get; set; }
+        public List<StreamlotsCardDataFieldModel> fields { get; set; }
+
+        public string Message
         {
-            this.message = Regex.Replace(this.message, messageStartRegex, string.Empty);
-            this.message = Regex.Replace(this.message, messageEndRegex, string.Empty);
-            string[] splits = this.message.Split(new string[] { messageMiddleRegex }, StringSplitOptions.RemoveEmptyEntries);
-            if (splits.Length == 2)
+            get
             {
-                this.message = splits[0];
-                this.username = splits[1];
+                StreamlotsCardDataFieldModel field = this.fields.FirstOrDefault(f => f.name.Equals("message"));
+                return (field != null) ? field.value : string.Empty;
             }
         }
+
+        public string Username
+        {
+            get
+            {
+                StreamlotsCardDataFieldModel field = this.fields.FirstOrDefault(f => f.name.Equals("username"));
+                return (field != null) ? field.value : string.Empty;
+            }
+        }
+    }
+
+    public class StreamlotsCardDataFieldModel
+    {
+        public string name { get; set; }
+        public string value { get; set; }
     }
 
     public interface IStreamlootsService
@@ -124,9 +141,7 @@ namespace MixItUp.Base.Services
                                     StreamlootsCardModel card = jobj["data"].ToObject<StreamlootsCardModel>();
                                     if (card != null)
                                     {
-                                        card.InitializeData();
-
-                                        UserViewModel user = new UserViewModel(0, card.username);
+                                        UserViewModel user = new UserViewModel(0, card.data.Username);
 
                                         UserModel userModel = await ChannelSession.Connection.GetUser(user.UserName);
                                         if (userModel != null)
@@ -138,9 +153,9 @@ namespace MixItUp.Base.Services
                                         if (command != null)
                                         {
                                             Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
-                                            specialIdentifiers.Add("streamlootscardname", "TEST CARD");
+                                            specialIdentifiers.Add("streamlootscardname", card.data.cardName);
                                             specialIdentifiers.Add("streamlootscardimage", card.imageUrl);
-                                            specialIdentifiers.Add("streamlootsmessage", card.message);
+                                            specialIdentifiers.Add("streamlootsmessage", card.data.Message);
                                             await command.Perform(user, arguments: null, extraSpecialIdentifiers: specialIdentifiers);
                                         }
                                     }
