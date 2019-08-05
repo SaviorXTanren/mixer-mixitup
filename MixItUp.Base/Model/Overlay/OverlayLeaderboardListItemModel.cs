@@ -305,7 +305,7 @@ namespace MixItUp.Base.Model.Overlay
                     }
                 }
 
-                for (int i = 0; i < items.Count(); i++)
+                for (int i = 0; i < items.Count() && i < this.TotalToShow; i++)
                 {
                     OverlayListIndividualItemModel item = items.ElementAt(i);
 

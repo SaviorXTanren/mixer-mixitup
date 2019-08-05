@@ -67,7 +67,7 @@ namespace MixItUp.Base.Model.Overlay
                     }
                 }
 
-                for (int i = 0; i < users.Count(); i++)
+                for (int i = 0; i < users.Count() && i < this.TotalToShow; i++)
                 {
                     UserViewModel user = users.ElementAt(i);
 
