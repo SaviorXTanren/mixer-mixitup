@@ -20,11 +20,11 @@
     </local:MainControlBase.Resources>
 
     <Grid>
-        <Grid x:Name="NoOverlayGrid" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Visible">
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding OverlayNotEnabled, Converter={StaticResource BoolToVisibilityConverter}}">
             <TextBlock Style="{StaticResource HeaderTextBlock}" TextWrapping="Wrap">The Overlay must be enabled in the Services menu to use Overlay Widgets</TextBlock>
         </Grid>
 
-        <Grid x:Name="MainGrid">
+        <Grid Visibility="{Binding OverlayEnabled, Converter={StaticResource BoolToVisibilityConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="20" />
@@ -32,7 +32,7 @@
                 <RowDefinition Height="10" />
             </Grid.RowDefinitions>
 
-            <DataGrid x:Name="OverlayWidgetsListView" Grid.Row="0" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
+            <DataGrid ItemsSource="{Binding OverlayWidgets}" Grid.Row="0" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
                     <DataGridTextColumn Header="Overlay" Binding="{Binding OverlayName}" IsReadOnly="True" Width="*" />
@@ -50,7 +50,7 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
 
-                                    <Button x:Name="PlayButton" Grid.Column="0" Click="PlayButton_Click" Width="40" HorizontalAlignment="Center" Visibility="{Binding SupportsTestButton, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Hidden}" ToolTip="Test Command">
+                                    <Button x:Name="PlayButton" Grid.Column="0" Click="PlayButton_Click" Width="40" HorizontalAlignment="Center" Visibility="{Binding SupportsTestData, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Hidden}" ToolTip="Test Command">
                                         <MaterialDesign:PackIcon Kind="Play" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                     </Button>
 
@@ -62,7 +62,7 @@
                                         <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                     </Button>
 
-                                    <ToggleButton x:Name="EnableDisableToggleSwitch" Grid.Column="6" DataContextChanged="EnableDisableToggleSwitch_DataContextChanged" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Enable/Disable Command" Checked="EnableDisableToggleSwitch_Checked" Unchecked="EnableDisableToggleSwitch_Checked" />
+                                    <ToggleButton x:Name="EnableDisableToggleSwitch" Grid.Column="6" IsChecked="{Binding IsEnabled}" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Enable/Disable Command" Checked="EnableDisableToggleSwitch_Checked" Unchecked="EnableDisableToggleSwitch_Unchecked" />
                                 </Grid>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -70,17 +70,7 @@
                 </DataGrid.Columns>
             </DataGrid>
 
-            <Grid Grid.Row="2" HorizontalAlignment="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="40" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <TextBox x:Name="RefreshTimeTextBox" Grid.Column="0" Width="120" LostFocus="RefreshTimeTextBox_LostFocus" MaterialDesign:HintAssist.Hint="Refresh Interval (Secs)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-                <Button x:Name="AddOverlayWidgetButton" Grid.Column="2" Width="180" Click="AddOverlayWidgetButton_Click">Add Overlay Widget</Button>
-            </Grid>
+            <Button x:Name="AddOverlayWidgetButton" Grid.Row="2" HorizontalAlignment="Center" Width="180" Click="AddOverlayWidgetButton_Click">Add Overlay Widget</Button>
 
         </Grid>
     </Grid>

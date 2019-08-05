@@ -42,6 +42,8 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0" HorizontalAlignment="Center">
@@ -58,7 +60,7 @@
 
             <Border Grid.Row="2" BorderThickness="1" BorderBrush="DarkBlue">
                 <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
-                    <DataGrid x:Name="HostsDataGrid" ItemsSource="{Binding Channels}" Style="{StaticResource NonSortableDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
+                    <DataGrid ItemsSource="{Binding Channels}" Style="{StaticResource NonSortableDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
                             <DataGridTemplateColumn Header="Enabled" Width="75">
@@ -80,15 +82,15 @@
                                                 <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
 
-                                            <Button x:Name="UpButton" Click="UpButton_Click" Grid.Column="0" Margin="0,0,0,0" Width="40" HorizontalAlignment="Center" ToolTip="Move Up">
+                                            <Button x:Name="UpButton" Click="UpButton_Click" Grid.Column="0" Width="40" HorizontalAlignment="Center" ToolTip="Move Up">
                                                 <MaterialDesign:PackIcon Kind="ArrowUp" Height="24" Width="24" Margin="-13,-10" Foreground="White" />
                                             </Button>
 
-                                            <Button x:Name="DownButton" Click="DownButton_Click" Grid.Column="2" Margin="0,0,0,0" Width="40" HorizontalAlignment="Center" ToolTip="Move Down">
+                                            <Button x:Name="DownButton" Click="DownButton_Click" Grid.Column="2" Width="40" HorizontalAlignment="Center" ToolTip="Move Down">
                                                 <MaterialDesign:PackIcon Kind="ArrowDown" Height="24" Width="24" Margin="-13,-10" Foreground="White" />
                                             </Button>
 
-                                            <Button x:Name="DeleteButton" Click="DeleteButton_Click" Grid.Column="4" Margin="0,0,0,0" Width="40" HorizontalAlignment="Center" ToolTip="Delete">
+                                            <Button x:Name="DeleteButton" Click="DeleteButton_Click" Grid.Column="4" Width="40" HorizontalAlignment="Center" ToolTip="Delete">
                                                 <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="White" />
                                             </Button>
                                         </Grid>
@@ -105,14 +107,20 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <ComboBox Grid.Column="0" x:Name="HostOrderComboBox" ItemsSource="{Binding HostingOrderItems}" SelectedItem="{Binding HostingOrderName}" Width="75" MaterialDesign:HintAssist.Hint="Host Order" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+                <ComboBox Grid.Column="0" ItemsSource="{Binding HostingOrderItems}" SelectedItem="{Binding HostingOrderName}" Width="85" MaterialDesign:HintAssist.Hint="Host Order" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-                <ComboBox Grid.Column="2" x:Name="AgeRatingComboBox" ItemsSource="{Binding AgeRatingItems}" SelectedItem="{Binding AgeRatingName}" Width="90" MaterialDesign:HintAssist.Hint="Max Age Rating" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+                <TextBox Grid.Column="2" Text="{Binding MaxHostLength}" Width="105" MaterialDesign:HintAssist.Hint="Max Host (Mins)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                
+                <ComboBox Grid.Column="4" ItemsSource="{Binding AgeRatingItems}" SelectedItem="{Binding AgeRatingName}" Width="100" MaterialDesign:HintAssist.Hint="Max Age Rating" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
             </Grid>
 
-            <Grid Grid.Row="6" HorizontalAlignment="Center">
+            <TextBox Grid.Row="6" Margin="20,0" Text="{Binding WhisperMessage}" MaterialDesign:HintAssist.Hint="Whisper Message to Streamer (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <Grid Grid.Row="8" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="115" />
                     <ColumnDefinition Width="50" />

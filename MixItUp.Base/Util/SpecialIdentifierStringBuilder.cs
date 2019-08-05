@@ -4,6 +4,8 @@ using Mixer.Base.Model.Patronage;
 using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.SongRequests;
+using MixItUp.Base.Model.Spotify;
 using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -16,16 +18,12 @@ using System.Web;
 
 namespace MixItUp.Base.Util
 {
-    public class RandomUserSpecialIdentiferGroup
-    {
-        public UserViewModel RandomUser { get; set; }
-        public UserViewModel RandomFollower { get; set; }
-        public UserViewModel RandomSubscriber { get; set; }
-    }
-
     public class SpecialIdentifierStringBuilder
     {
         public const string SpecialIdentifierHeader = "$";
+
+        public const string SpecialIdentifierNumberRegexPattern = "\\d+";
+        public const string SpecialIdentifierNumberRangeRegexPattern = "\\d+:\\d+";
 
         public const string UptimeSpecialIdentifierHeader = "uptime";
         public const string StartSpecialIdentifierHeader = "start";
@@ -43,7 +41,7 @@ namespace MixItUp.Base.Util
         public const string RandomSpecialIdentifierHeader = "random";
         public const string RandomFollowerSpecialIdentifierHeader = RandomSpecialIdentifierHeader + "follower";
         public const string RandomSubscriberSpecialIdentifierHeader = RandomSpecialIdentifierHeader + "sub";
-        public const string RandomNumberRegexSpecialIdentifier = RandomSpecialIdentifierHeader + "number\\d+";
+        public const string RandomNumberRegexSpecialIdentifier = RandomSpecialIdentifierHeader + "number";
 
         public const string FeaturedChannelsSpecialIdentifer = "featuredchannels";
         public const string CostreamUsersSpecialIdentifier = "costreamusers";
@@ -55,8 +53,8 @@ namespace MixItUp.Base.Util
         public const string MilestoneSpecialIdentifierHeader = "milestone";
 
         public const string QuoteSpecialIdentifierHeader = "quote";
-        public const string QuoteNumberRegexSpecialIdentifier = QuoteSpecialIdentifierHeader + "\\d+";
 
+        public const string SongIdentifierHeader = "song";
         public const string CurrentSongIdentifierHeader = "currentsong";
         public const string NextSongIdentifierHeader = "nextsong";
 
@@ -74,18 +72,21 @@ namespace MixItUp.Base.Util
 
         public const string ExtraLifeSpecialIdentifierHeader = "extralife";
 
-        public const string UnicodeRegexSpecialIdentifier = "unicode\\d+";
+        public const string UnicodeRegexSpecialIdentifier = "unicode";
 
         public const string InteractiveTextBoxTextEntrySpecialIdentifierHelpText = "User Text Entered = " + SpecialIdentifierStringBuilder.SpecialIdentifierHeader +
             SpecialIdentifierStringBuilder.ArgSpecialIdentifierHeader + "1text";
 
         private static Dictionary<string, string> CustomSpecialIdentifiers = new Dictionary<string, string>();
 
-        private static Dictionary<Guid, RandomUserSpecialIdentiferGroup> RandomUserSpecialIdentifierGroups = new Dictionary<Guid, RandomUserSpecialIdentiferGroup>();
-
         public static void AddCustomSpecialIdentifier(string specialIdentifier, string replacement)
         {
             SpecialIdentifierStringBuilder.CustomSpecialIdentifiers[specialIdentifier] = replacement;
+        }
+
+        public static void RemoveCustomSpecialIdentifier(string specialIdentifier)
+        {
+            SpecialIdentifierStringBuilder.CustomSpecialIdentifiers.Remove(specialIdentifier);
         }
 
         public static string ConvertScorpBotText(string text)
@@ -194,29 +195,6 @@ namespace MixItUp.Base.Util
             return specialIdentifier.ToString().ToLower();
         }
 
-        public static async Task AssignRandomUserSpecialIdentifierGroup(Guid id)
-        {
-            SpecialIdentifierStringBuilder.RandomUserSpecialIdentifierGroups[id] = new RandomUserSpecialIdentiferGroup();
-            IEnumerable<UserViewModel> users = await ChannelSession.ActiveUsers.GetAllWorkableUsers();
-            users = users.Where(u => !u.ID.Equals(ChannelSession.User.id));
-            if (users != null && users.Count() > 0)
-            {
-                SpecialIdentifierStringBuilder.RandomUserSpecialIdentifierGroups[id].RandomUser = users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count()));
-                users = users.Where(u => u.IsFollower);
-                if (users != null && users.Count() > 0)
-                {
-                    SpecialIdentifierStringBuilder.RandomUserSpecialIdentifierGroups[id].RandomFollower = users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count()));
-                    users = users.Where(u => u.HasPermissionsTo(MixerRoleEnum.Subscriber));
-                    if (users != null && users.Count() > 0)
-                    {
-                        SpecialIdentifierStringBuilder.RandomUserSpecialIdentifierGroups[id].RandomSubscriber = users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count()));
-                    }
-                }
-            }
-        }
-
-        public static void ClearRandomUserSpecialIdentifierGroup(Guid id) { SpecialIdentifierStringBuilder.RandomUserSpecialIdentifierGroups.Remove(id); }
-
         public static string ReplaceParameterVariablesEntries(string text, string pattern, string preReplacement, string postReplacement = null)
         {
             int startIndex = 0;
@@ -238,13 +216,11 @@ namespace MixItUp.Base.Util
         }
 
         private string text;
-        private Guid randomUserSpecialIdentifierGroupID;
         private bool encode;
 
-        public SpecialIdentifierStringBuilder(string text, Guid randomUserSpecialIdentifierGroupID, bool encode = false)
+        public SpecialIdentifierStringBuilder(string text, bool encode = false)
         {
-            this.text = text;
-            this.randomUserSpecialIdentifierGroupID = randomUserSpecialIdentifierGroupID;
+            this.text = !string.IsNullOrEmpty(text) ? text : string.Empty;
             this.encode = encode;
         }
 
@@ -260,10 +236,15 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier(kvp.Key, kvp.Value);
             }
 
-            this.ReplaceSpecialIdentifier("timedigits", DateTimeOffset.Now.ToString("HHmm"));
             this.ReplaceSpecialIdentifier("dayoftheweek", DateTimeOffset.Now.DayOfWeek.ToString());
             this.ReplaceSpecialIdentifier("datetime", DateTimeOffset.Now.ToString("g"));
+            this.ReplaceSpecialIdentifier("dateyear", DateTimeOffset.Now.ToString("yyyy"));
+            this.ReplaceSpecialIdentifier("datemonth", DateTimeOffset.Now.ToString("MM"));
+            this.ReplaceSpecialIdentifier("dateday", DateTimeOffset.Now.ToString("dd"));
             this.ReplaceSpecialIdentifier("date", DateTimeOffset.Now.ToString("d"));
+            this.ReplaceSpecialIdentifier("timedigits", DateTimeOffset.Now.ToString("HHmm"));
+            this.ReplaceSpecialIdentifier("timehour", DateTimeOffset.Now.ToString("HH"));
+            this.ReplaceSpecialIdentifier("timeminute", DateTimeOffset.Now.ToString("mm"));
             this.ReplaceSpecialIdentifier("time", DateTimeOffset.Now.ToString("t"));
             this.ReplaceSpecialIdentifier("linebreak", Environment.NewLine);
 
@@ -337,12 +318,13 @@ namespace MixItUp.Base.Util
                 }
             }
 
-            if (this.ContainsSpecialIdentifier(CurrentSongIdentifierHeader) || this.ContainsSpecialIdentifier(NextSongIdentifierHeader))
+            if (this.ContainsSpecialIdentifier(SongIdentifierHeader) || this.ContainsSpecialIdentifier(CurrentSongIdentifierHeader) || this.ContainsSpecialIdentifier(NextSongIdentifierHeader))
             {
                 if (ChannelSession.Services.SongRequestService != null && ChannelSession.Services.SongRequestService.IsEnabled)
                 {
-                    this.ReplaceSongRequestSpecialIdentifiers(CurrentSongIdentifierHeader, await ChannelSession.Services.SongRequestService.GetCurrentlyPlaying());
-                    this.ReplaceSongRequestSpecialIdentifiers(NextSongIdentifierHeader, await ChannelSession.Services.SongRequestService.GetNextTrack());
+                    await this.ReplaceSongRequestSpecialIdentifiers(SongIdentifierHeader, await ChannelSession.Services.SongRequestService.GetCurrent());
+                    await this.ReplaceSongRequestSpecialIdentifiers(CurrentSongIdentifierHeader, await ChannelSession.Services.SongRequestService.GetCurrent());
+                    await this.ReplaceSongRequestSpecialIdentifiers(NextSongIdentifierHeader, await ChannelSession.Services.SongRequestService.GetNext());
                 }
             }
 
@@ -372,9 +354,9 @@ namespace MixItUp.Base.Util
                     this.ReplaceSpecialIdentifier(QuoteSpecialIdentifierHeader + "random", quote.ToString());
                 }
 
-                if (this.ContainsRegexSpecialIdentifier(QuoteNumberRegexSpecialIdentifier))
+                if (this.ContainsRegexSpecialIdentifier(QuoteSpecialIdentifierHeader + SpecialIdentifierNumberRegexPattern))
                 {
-                    await this.ReplaceNumberBasedRegexSpecialIdentifier(QuoteNumberRegexSpecialIdentifier, (index) =>
+                    await this.ReplaceNumberBasedRegexSpecialIdentifier(QuoteSpecialIdentifierHeader + SpecialIdentifierNumberRegexPattern, (index) =>
                     {
                         if (index > 0 && index <= ChannelSession.Settings.UserQuotes.Count)
                         {
@@ -420,15 +402,17 @@ namespace MixItUp.Base.Util
 
             if (ChannelSession.Services.Spotify != null && this.ContainsSpecialIdentifier("spotify"))
             {
-                SpotifyUserProfile profile = await ChannelSession.Services.Spotify.GetCurrentProfile();
+                SpotifyUserProfileModel profile = await ChannelSession.Services.Spotify.GetCurrentProfile();
                 if (profile != null)
                 {
                     this.ReplaceSpecialIdentifier("spotifyprofileurl", profile.Link);
                 }
 
-                SpotifyCurrentlyPlaying currentlyPlaying = await ChannelSession.Services.Spotify.GetCurrentlyPlaying();
+                SpotifyCurrentlyPlayingModel currentlyPlaying = await ChannelSession.Services.Spotify.GetCurrentlyPlaying();
                 if (currentlyPlaying != null)
                 {
+                    this.ReplaceSpecialIdentifier("spotifysongalbumimage", (!string.IsNullOrEmpty(currentlyPlaying.Album?.ImageLink)) ? currentlyPlaying.Album?.ImageLink : SpotifySongRequestProviderService.SpotifyDefaultAlbumArt);
+                    this.ReplaceSpecialIdentifier("spotifysongtitle", currentlyPlaying.ToString());
                     this.ReplaceSpecialIdentifier("spotifycurrentlyplaying", currentlyPlaying.ToString());
                 }
             }
@@ -488,6 +472,8 @@ namespace MixItUp.Base.Util
                 PatronageStatusModel patronageStatus = await ChannelSession.Connection.GetPatronageStatus(ChannelSession.Channel);
                 if (patronageStatus != null)
                 {
+                    this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedamount", patronageStatus.patronageEarned.ToString());
+
                     PatronagePeriodModel patronagePeriod = await ChannelSession.Connection.GetPatronagePeriod(patronageStatus);
                     if (patronagePeriod != null)
                     {
@@ -526,12 +512,10 @@ namespace MixItUp.Base.Util
 
                         if (patronageMilestoneHighestEarned != null)
                         {
-                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedamount", patronageStatus.patronageEarned.ToString());
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedreward", patronageMilestoneHighestEarned.DollarAmountText());
                         }
                         else
                         {
-                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedamount", "0");
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedreward", "0");
                         }
                     }
@@ -562,6 +546,22 @@ namespace MixItUp.Base.Util
 
                 this.ReplaceSpecialIdentifier("allargs", string.Join(" ", arguments));
                 this.ReplaceSpecialIdentifier("argcount", arguments.Count().ToString());
+
+                await this.ReplaceNumberRangeBasedRegexSpecialIdentifier(ArgSpecialIdentifierHeader + SpecialIdentifierNumberRangeRegexPattern + "text", (min, max) =>
+                {
+                    string result = "";
+
+                    min = min - 1;
+                    max = Math.Min(max, arguments.Count());
+                    int total = max - min;
+
+                    if (total > 0 && min <= arguments.Count())
+                    {
+                        result = string.Join(" ", arguments.Skip(min).Take(total));
+                    }
+
+                    return Task.FromResult(result);
+                });
             }
 
             if (this.ContainsSpecialIdentifier(TargetSpecialIdentifierHeader))
@@ -587,10 +587,10 @@ namespace MixItUp.Base.Util
 
             if (this.ContainsSpecialIdentifier(StreamBossSpecialIdentifierHeader))
             {
-                OverlayWidget streamBossWidget = ChannelSession.Settings.OverlayWidgets.FirstOrDefault(w => w.Item is OverlayStreamBoss);
+                OverlayWidgetModel streamBossWidget = ChannelSession.Settings.OverlayWidgets.FirstOrDefault(w => w.Item is OverlayStreamBossItemModel);
                 if (streamBossWidget != null)
                 {
-                    OverlayStreamBoss streamBossOverlay = (OverlayStreamBoss)streamBossWidget.Item;
+                    OverlayStreamBossItemModel streamBossOverlay = (OverlayStreamBossItemModel)streamBossWidget.Item;
                     if (streamBossOverlay != null && streamBossOverlay.CurrentBoss != null)
                     {
                         await this.HandleUserSpecialIdentifiers(streamBossOverlay.CurrentBoss, StreamBossSpecialIdentifierHeader);
@@ -600,27 +600,45 @@ namespace MixItUp.Base.Util
 
             if (this.ContainsSpecialIdentifier(RandomSpecialIdentifierHeader))
             {
-                if (this.randomUserSpecialIdentifierGroupID != Guid.Empty && RandomUserSpecialIdentifierGroups.ContainsKey(this.randomUserSpecialIdentifierGroupID))
+                if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomSpecialIdentifierHeader + "user"))
                 {
-                    if (RandomUserSpecialIdentifierGroups[randomUserSpecialIdentifierGroupID].RandomUser != null && this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomSpecialIdentifierHeader + "user"))
+                    IEnumerable<UserViewModel> users = await ChannelSession.ActiveUsers.GetAllWorkableUsers();
+                    users = users.Where(u => !u.ID.Equals(ChannelSession.User.id));
+                    if (users != null && users.Count() > 0)
                     {
-                        await this.HandleUserSpecialIdentifiers(RandomUserSpecialIdentifierGroups[randomUserSpecialIdentifierGroupID].RandomUser, RandomSpecialIdentifierHeader);
-                    }
-
-                    if (RandomUserSpecialIdentifierGroups[randomUserSpecialIdentifierGroupID].RandomFollower != null && this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomFollowerSpecialIdentifierHeader + "user"))
-                    {
-                        await this.HandleUserSpecialIdentifiers(RandomUserSpecialIdentifierGroups[randomUserSpecialIdentifierGroupID].RandomFollower, RandomFollowerSpecialIdentifierHeader);
-                    }
-
-                    if (RandomUserSpecialIdentifierGroups[randomUserSpecialIdentifierGroupID].RandomSubscriber != null && this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomSubscriberSpecialIdentifierHeader + "user"))
-                    {
-                        await this.HandleUserSpecialIdentifiers(RandomUserSpecialIdentifierGroups[randomUserSpecialIdentifierGroupID].RandomSubscriber, RandomSubscriberSpecialIdentifierHeader);
+                        await this.HandleUserSpecialIdentifiers(users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count())), RandomSpecialIdentifierHeader);
                     }
                 }
 
-                if (this.ContainsRegexSpecialIdentifier(RandomNumberRegexSpecialIdentifier))
+                if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomFollowerSpecialIdentifierHeader + "user"))
                 {
-                    await this.ReplaceNumberBasedRegexSpecialIdentifier(RandomNumberRegexSpecialIdentifier, (maxNumber) =>
+                    IEnumerable<UserViewModel> users = await ChannelSession.ActiveUsers.GetAllWorkableUsers();
+                    users = users.Where(u => !u.ID.Equals(ChannelSession.User.id) && u.IsFollower);
+                    if (users != null && users.Count() > 0)
+                    {
+                        await this.HandleUserSpecialIdentifiers(users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count())), RandomFollowerSpecialIdentifierHeader);
+                    }
+                }
+
+                if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomSubscriberSpecialIdentifierHeader + "user"))
+                {
+                    IEnumerable<UserViewModel> users = await ChannelSession.ActiveUsers.GetAllWorkableUsers();
+                    users = users.Where(u => !u.ID.Equals(ChannelSession.User.id) && u.HasPermissionsTo(MixerRoleEnum.Subscriber));
+                    if (users != null && users.Count() > 0)
+                    {
+                        await this.HandleUserSpecialIdentifiers(users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count())), RandomSubscriberSpecialIdentifierHeader);
+                    }
+                }
+
+                if (this.ContainsSpecialIdentifier(RandomNumberRegexSpecialIdentifier))
+                {
+                    await this.ReplaceNumberRangeBasedRegexSpecialIdentifier(RandomNumberRegexSpecialIdentifier + SpecialIdentifierNumberRangeRegexPattern, (min, max) =>
+                    {
+                        int number = RandomHelper.GenerateRandomNumber(min, max + 1);
+                        return Task.FromResult(number.ToString());
+                    });
+
+                    await this.ReplaceNumberBasedRegexSpecialIdentifier(RandomNumberRegexSpecialIdentifier + SpecialIdentifierNumberRegexPattern, (maxNumber) =>
                     {
                         int number = RandomHelper.GenerateRandomNumber(maxNumber) + 1;
                         return Task.FromResult(number.ToString());
@@ -628,9 +646,17 @@ namespace MixItUp.Base.Util
                 }
             }
 
-            if (this.ContainsRegexSpecialIdentifier(UnicodeRegexSpecialIdentifier))
+            foreach (UserInventoryViewModel inventory in ChannelSession.Settings.Inventories.Values.OrderByDescending(c => c.SpecialIdentifier))
             {
-                await this.ReplaceNumberBasedRegexSpecialIdentifier(UnicodeRegexSpecialIdentifier, (number) =>
+                if (this.ContainsSpecialIdentifier(inventory.RandomItemSpecialIdentifier))
+                {
+                    this.ReplaceSpecialIdentifier(inventory.RandomItemSpecialIdentifier, inventory.Items.Values.Random().Name);
+                }
+            }
+
+            if (this.ContainsSpecialIdentifier(UnicodeRegexSpecialIdentifier))
+            {
+                await this.ReplaceNumberBasedRegexSpecialIdentifier(UnicodeRegexSpecialIdentifier + SpecialIdentifierNumberRegexPattern, (number) =>
                 {
                     char uChar = (char)number;
                     return Task.FromResult(uChar.ToString());
@@ -641,7 +667,7 @@ namespace MixItUp.Base.Util
         public void ReplaceSpecialIdentifier(string identifier, string replacement, bool includeSpecialIdentifierHeader = true)
         {
             replacement = (replacement == null) ? string.Empty : replacement;
-            if (encode)
+            if (this.encode)
             {
                 replacement = HttpUtility.UrlEncode(replacement);
             }
@@ -757,28 +783,35 @@ namespace MixItUp.Base.Util
                         if (this.ContainsSpecialIdentifier(identifierHeader + inventory.UserAmountSpecialIdentifierHeader))
                         {
                             UserInventoryDataViewModel inventoryData = userData.GetInventory(inventory);
-                            List<string> allItemsList = new List<string>();
+                            Dictionary<string, int> userItems = new Dictionary<string, int>();
 
                             foreach (UserInventoryItemViewModel item in inventory.Items.Values.OrderByDescending(i => i.Name))
                             {
                                 int amount = inventoryData.GetAmount(item);
                                 if (amount > 0)
                                 {
-                                    allItemsList.Add(item.Name + " x" + amount);
+                                    userItems[item.Name] = amount;
                                 }
 
                                 string itemSpecialIdentifier = identifierHeader + inventory.UserAmountSpecialIdentifierHeader + item.SpecialIdentifier;
                                 this.ReplaceSpecialIdentifier(itemSpecialIdentifier, amount.ToString());
                             }
 
-                            if (allItemsList.Count > 0)
+                            if (userItems.Count > 0)
                             {
-                                this.ReplaceSpecialIdentifier(identifierHeader + inventory.UserAllAmountSpecialIdentifier, string.Join(", ", allItemsList.OrderBy(i => i)));
+                                List<string> userAllItems = new List<string>();
+                                foreach (var kvp in userItems.OrderBy(i => i.Key))
+                                {
+                                    userAllItems.Add(kvp.Key + " x" + kvp.Value);
+                                }
+                                this.ReplaceSpecialIdentifier(identifierHeader + inventory.UserAllAmountSpecialIdentifier, string.Join(", ", userAllItems));
                             }
                             else
                             {
                                 this.ReplaceSpecialIdentifier(identifierHeader + inventory.UserAllAmountSpecialIdentifier, "Nothing");
                             }
+
+                            this.ReplaceSpecialIdentifier(inventory.UserRandomItemSpecialIdentifier, userItems.Keys.Random());
                         }
                     }
 
@@ -809,39 +842,55 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "fanprogressionimage", user.FanProgression?.level?.LargeGIFAssetURL?.ToString());
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "fanprogression", user.FanProgression?.level?.currentXp.ToString());
 
+                if (this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "gamequeueposition"))
+                {
+                    string gameQueuePosition = "Not In Queue";
+                    if (ChannelSession.Services.GameQueueService != null && ChannelSession.Services.GameQueueService.IsEnabled)
+                    {
+                        int position = ChannelSession.Services.GameQueueService.GetUserPosition(user);
+                        if (position > 0)
+                        {
+                            gameQueuePosition = position.ToString();
+                        }
+                    }
+                    this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "gamequeueposition", gameQueuePosition);
+                }
+
                 if (this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "followers") || this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "game") ||
                     this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channel"))
                 {
-                    ExpandedChannelModel channel = await ChannelSession.Connection.GetChannel(user.UserName);
-
-                    this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "followers", channel?.numFollowers.ToString() ?? "0");
-
-                    if (channel.type != null)
+                    ExpandedChannelModel channel = await ChannelSession.Connection.GetChannel(user.ChannelID);
+                    if (channel != null)
                     {
-                        this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "gameimage", channel.type.coverUrl);
-                        this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "game", channel.type.name.ToString());
-                    }
+                        this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "followers", channel?.numFollowers.ToString() ?? "0");
 
-                    this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channelid", channel.id.ToString());
-                    this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channellive", channel.online.ToString());
-                    this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channelfeatured", channel.featured.ToString());
+                        if (channel.type != null)
+                        {
+                            this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "gameimage", channel.type.coverUrl);
+                            this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "game", channel.type.name.ToString());
+                        }
+
+                        this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channelid", channel.id.ToString());
+                        this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channellive", channel.online.ToString());
+                        this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channelfeatured", channel.featured.ToString());
+                    }
                 }
             }
         }
 
-        private void ReplaceSongRequestSpecialIdentifiers(string header, SongRequestItem song)
+        private async Task ReplaceSongRequestSpecialIdentifiers(string header, SongRequestModel song)
         {
             if (song != null)
             {
                 this.ReplaceSpecialIdentifier(header + "title", song.Name);
-                this.ReplaceSpecialIdentifier(header + "username", (song.User != null && !string.IsNullOrEmpty(song.User.UserName)) ? song.User.UserName : "Backup");
                 this.ReplaceSpecialIdentifier(header + "albumimage", (song.AlbumImage != null) ? song.AlbumImage : string.Empty);
+                await this.HandleUserSpecialIdentifiers((song.User != null) ? song.User : new UserViewModel(0, "Backup"), header);
             }
             else
             {
                 this.ReplaceSpecialIdentifier(header + "title", "No Song");
-                this.ReplaceSpecialIdentifier(header + "username", "Nobody");
                 this.ReplaceSpecialIdentifier(header + "albumimage", string.Empty);
+                this.ReplaceSpecialIdentifier(header + "username", "Nobody");
             }
         }
 
@@ -864,6 +913,23 @@ namespace MixItUp.Base.Util
                 if (int.TryParse(text, out int number))
                 {
                     string replacement = await replacer(number);
+                    if (replacement != null)
+                    {
+                        this.ReplaceSpecialIdentifier(match.Value, replacement, includeSpecialIdentifierHeader: false);
+                    }
+                }
+            }
+        }
+
+        private async Task ReplaceNumberRangeBasedRegexSpecialIdentifier(string regex, Func<int, int, Task<string>> replacer)
+        {
+            foreach (Match match in Regex.Matches(this.text, "\\" + SpecialIdentifierHeader + regex))
+            {
+                string text = new String(match.Value.Where(c => char.IsDigit(c) || c == ':').ToArray());
+                string[] splits = text.Split(':');
+                if (splits.Length == 2 && int.TryParse(splits[0], out int min) && int.TryParse(splits[1], out int max) && max >= min)
+                {
+                    string replacement = await replacer(min, max);
                     if (replacement != null)
                     {
                         this.ReplaceSpecialIdentifier(match.Value, replacement, includeSpecialIdentifierHeader: false);

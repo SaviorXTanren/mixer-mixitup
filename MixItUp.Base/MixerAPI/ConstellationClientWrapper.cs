@@ -391,6 +391,7 @@ namespace MixItUp.Base.MixerAPI
                             UserFanProgressionModel fanProgression = e.payload.ToObject<UserFanProgressionModel>();
                             if (fanProgression != null)
                             {
+                                userViewModel.FanProgression = fanProgression;
                                 EventCommand command = this.FindMatchingEventCommand(e.channel);
                                 if (command != null)
                                 {
@@ -403,6 +404,11 @@ namespace MixItUp.Base.MixerAPI
                                         { "userfanprogression", fanProgression.level.currentXp.ToString() },
                                     };
                                     await this.RunEventCommand(command, userViewModel, extraSpecialIdentifiers: specialIdentifiers);
+                                }
+
+                                foreach (UserCurrencyViewModel fanProgressionCurrency in ChannelSession.Settings.Currencies.Values.Where(c => c.IsTrackingFanProgression))
+                                {
+                                    userViewModel.Data.SetCurrencyAmount(fanProgressionCurrency, (int)fanProgression.level.level);
                                 }
 
                                 GlobalEvents.ProgressionLevelUpOccurred(userViewModel);

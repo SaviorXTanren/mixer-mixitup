@@ -5,12 +5,15 @@ using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Chat
 {
     public class ChatMessageViewModel : IEquatable<ChatMessageViewModel>
     {
+        private const string TaggingRegexFormat = "(^|\\s+)@{0}(\\s+|$)";
+
         public Guid ID { get; private set; }
 
         public UserViewModel User { get; private set; }
@@ -73,8 +76,10 @@ namespace MixItUp.Base.ViewModel.Chat
             this.IsInUsersChannel = true;
             this.IsAlert = true;
             this.Message = "---  " + alertText + "  ---";
-            this.AlertMessageBrush = ColorSchemes.GetColorCode(foregroundBrush);
             this.MessageComponents.Add(new ChatMessageDataModel() { type = "text", text = this.Message });
+
+            string color = ColorSchemes.GetColorCode(foregroundBrush);
+            this.AlertMessageBrush = (!string.IsNullOrEmpty(color)) ? color : "#000000";
         }
 
         public ChatMessageViewModel(SkillInstanceModel skill, UserViewModel user)
@@ -90,7 +95,7 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public bool IsWhisper { get { return !string.IsNullOrEmpty(this.TargetUsername); } }
 
-        public bool IsUserTagged { get { return this.Message.Contains("@" + ChannelSession.User.username + " "); } }
+        public bool IsUserTagged { get { return Regex.IsMatch(this.Message, string.Format(TaggingRegexFormat, ChannelSession.User.username)); } }
 
         public bool ContainsImage { get { return this.Images.Count > 0; } }
 
@@ -187,7 +192,7 @@ namespace MixItUp.Base.ViewModel.Chat
                         break;
                 }
             }
-            this.Message = this.Message.Trim();
+            this.Message = this.Message.Trim().Replace(Environment.NewLine, string.Empty).Replace("\n", string.Empty);
         }
     }
 }

@@ -118,7 +118,7 @@ namespace MixItUp.Base.Actions
         {
             GlobalEvents.MixerClipCreated(clip);
 
-            string clipUrl = string.Format("https://mixer.com/{0}?clip={1}", ChannelSession.User.username, clip.shareableId);
+            string clipUrl = string.Format("https://mixer.com/{0}?clip={1}", ChannelSession.Channel.token, clip.shareableId);
 
             if (this.ShowClipInfoInChat)
             {

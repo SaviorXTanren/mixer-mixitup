@@ -32,6 +32,8 @@ namespace MixItUp.WPF.Windows.Currency
         Sparks,
         [Name("1 Per Ember")]
         Embers,
+        [Name("Fan Progression")]
+        FanProgression,
         Custom,
         Disabled,
     }
@@ -106,6 +108,10 @@ namespace MixItUp.WPF.Windows.Currency
                 else if (this.currency.IsTrackingEmbers)
                 {
                     this.OnlineRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Embers);
+                }
+                else if (this.currency.IsTrackingFanProgression)
+                {
+                    this.OnlineRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.FanProgression);
                 }
                 else if (this.currency.IsOnlineIntervalMinutes)
                 {
@@ -217,7 +223,7 @@ namespace MixItUp.WPF.Windows.Currency
                         this.OnlineTimeRateTextBox.Text = "60";
                     }
                 }
-                else if (acquireRate == CurrencyAcquireRateTypeEnum.Sparks || acquireRate == CurrencyAcquireRateTypeEnum.Embers)
+                else if (acquireRate == CurrencyAcquireRateTypeEnum.Sparks || acquireRate == CurrencyAcquireRateTypeEnum.Embers || acquireRate == CurrencyAcquireRateTypeEnum.FanProgression)
                 {
                     this.OnlineAmountRateTextBox.Text = "1";
                     this.OnlineTimeRateTextBox.Text = "1";
@@ -373,6 +379,12 @@ namespace MixItUp.WPF.Windows.Currency
                 {
                     if (this.currency != null && this.currency.AcquireInterval > 0)
                     {
+                        if (this.currency.IsTrackingSparks || this.currency.IsTrackingEmbers || this.currency.IsTrackingFanProgression)
+                        {
+                            await MessageBoxHelper.ShowMessageDialog("The rate type for this currency does not support retroactively giving points.");
+                            return;
+                        }
+
                         await this.currency.Reset();
 
                         HashSet<uint> subscriberIDs = new HashSet<uint>();
@@ -563,10 +575,15 @@ namespace MixItUp.WPF.Windows.Currency
                 }
 
                 string siName = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(this.NameTextBox.Text);
-
-                if (siName.Equals("time") || siName.Equals("hours") || siName.Equals("mins") || siName.Equals("sparks") || siName.Equals("embers"))
+                if (siName.Equals("time") || siName.Equals("hours") || siName.Equals("mins") || siName.Equals("sparks") || siName.Equals("embers") || siName.Equals("fanprogression"))
                 {
                     await MessageBoxHelper.ShowMessageDialog("This name is reserved and can not be used");
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(siName))
+                {
+                    await MessageBoxHelper.ShowMessageDialog("The name must have at least 1 letter in it");
                     return;
                 }
 
@@ -683,6 +700,7 @@ namespace MixItUp.WPF.Windows.Currency
 
                 this.currency.IsTrackingSparks = false;
                 this.currency.IsTrackingEmbers = false;
+                this.currency.IsTrackingFanProgression = false;
                 if (acquireRate == CurrencyAcquireRateTypeEnum.Sparks)
                 {
                     this.currency.IsTrackingSparks = true;
@@ -690,6 +708,10 @@ namespace MixItUp.WPF.Windows.Currency
                 else if (acquireRate == CurrencyAcquireRateTypeEnum.Embers)
                 {
                     this.currency.IsTrackingEmbers = true;
+                }
+                else if (acquireRate == CurrencyAcquireRateTypeEnum.FanProgression)
+                {
+                    this.currency.IsTrackingFanProgression = true;
                 }
 
                 this.currency.Name = this.NameTextBox.Text;

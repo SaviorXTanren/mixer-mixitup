@@ -31,11 +31,11 @@
 
                     <TextBlock Grid.Column="0" Foreground="{StaticResource WhiteColor}" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="16">Outcomes</TextBlock>
 
-                    <Button Grid.Column="2" x:Name="AddOutcomeButton" Click="AddOutcomeButton_Click" Width="130" HorizontalAlignment="Center">Add Outcome</Button>
+                    <Button Grid.Column="2" Command="{Binding AddOutcomeCommand}" Style="{StaticResource MaterialDesignRaisedLightButton}" Width="130" HorizontalAlignment="Center">Add Outcome</Button>
                 </Grid>
             </GroupBox.Header>
 
-            <ItemsControl x:Name="OutcomesItemsControl" Grid.Row="2">
+            <ItemsControl ItemsSource="{Binding Outcomes}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid Margin="15">
@@ -51,11 +51,11 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBox x:Name="OutcomeNameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Outcome Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding Name}" />
+                            <TextBox Grid.Column="0" MaterialDesign:HintAssist.Hint="Outcome Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding Name}" />
 
-                            <CommandControls:CommandButtonsControl x:Name="OutcomeCommandButtonsControl" DataContext="{Binding Command}" Grid.Column="2" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+                            <CommandControls:CommandButtonsControl DataContext="{Binding Command}" Grid.Column="2" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
 
-                            <TextBox x:Name="PayoutTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Payout %" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding PayoutString}" />
+                            <TextBox Grid.Column="4" MaterialDesign:HintAssist.Hint="Payout %" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding PayoutString}" />
 
                             <Grid Grid.Column="6">
                                 <Grid.ColumnDefinitions>
@@ -66,11 +66,11 @@
                                     <ColumnDefinition Width="85" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBox x:Name="UserPercentageTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="User Chance %" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding UserChanceString}" />
+                                <TextBox Grid.Column="0" MaterialDesign:HintAssist.Hint="User Chance %" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding UserChanceString}" />
 
-                                <TextBox x:Name="SubscriberPercentageTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Sub Chance %" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding SubscriberChanceString}" />
+                                <TextBox Grid.Column="2" MaterialDesign:HintAssist.Hint="Sub Chance %" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding SubscriberChanceString}" />
 
-                                <TextBox x:Name="ModPercentageTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Mod Chance %" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding ModChanceString}" />
+                                <TextBox Grid.Column="4" MaterialDesign:HintAssist.Hint="Mod Chance %" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding ModChanceString}" />
                             </Grid>
 
                             <Button x:Name="DeleteButton" Grid.Column="8" Click="DeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Delete Command">

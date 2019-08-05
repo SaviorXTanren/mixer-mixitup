@@ -18,5 +18,7 @@
         <ComboBox x:Name="GameQueueActionTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Game Queue Action" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="GameQueueActionTypeComboBox_SelectionChanged" />
 
         <RequirementControls:RoleRequirementControl x:Name="RoleRequirement" Grid.Column="2" Visibility="Collapsed" VerticalAlignment="Center" />
+
+        <TextBox Grid.Column="2" x:Name="TargetUsernameTextBox" Visibility="Collapsed" MaterialDesign:HintAssist.Hint="Target User (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
     </Grid>
 </local:ActionControlBase>

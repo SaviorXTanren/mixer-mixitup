@@ -27,7 +27,7 @@ namespace MixItUp.Base.Commands
     }
 
     [DataContract]
-    public abstract class CommandBase
+    public abstract class CommandBase : IComparable, IComparable<CommandBase>, IEquatable<CommandBase>
     {
         private static Dictionary<Guid, long> commandUses = new Dictionary<Guid, long>();
 
@@ -141,6 +141,9 @@ namespace MixItUp.Base.Commands
         [JsonIgnore]
         public virtual IEnumerable<string> CommandTriggers { get { return this.Commands; } }
 
+        [JsonIgnore]
+        protected abstract SemaphoreSlim AsyncSemaphore { get; }
+
         public override string ToString() { return string.Format("{0} - {1}", this.ID, this.Name); }
 
         public bool MatchesOrContainsCommand(string command) { return this.MatchesCommand(command) || this.ContainsCommand(command); }
@@ -163,9 +166,10 @@ namespace MixItUp.Base.Commands
             return messageText.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        public async Task Perform() { await this.Perform(null); }
-
-        public async Task Perform(IEnumerable<string> arguments) { await this.Perform(await ChannelSession.GetCurrentUser(), arguments); }
+        public async Task Perform(IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
+        {
+            await this.Perform(await ChannelSession.GetCurrentUser(), arguments, extraSpecialIdentifiers: extraSpecialIdentifiers);
+        }
 
         public async Task Perform(UserViewModel user, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
         {
@@ -214,13 +218,6 @@ namespace MixItUp.Base.Commands
                             await this.AsyncSemaphore.WaitAsync();
                             waitOccurred = true;
                         }
-
-                        await SpecialIdentifierStringBuilder.AssignRandomUserSpecialIdentifierGroup(this.ID);
-                        foreach (ActionBase action in this.Actions)
-                        {
-                            action.AssignRandomUserSpecialIdentifierGroup(this.ID);
-                        }
-
                         await this.PerformInternal(user, arguments, extraSpecialIdentifiers, this.currentCancellationTokenSource.Token);
                     }
                     catch (TaskCanceledException) { }
@@ -304,6 +301,28 @@ namespace MixItUp.Base.Commands
             }
         }
 
-        protected abstract SemaphoreSlim AsyncSemaphore { get; }
+        public int CompareTo(object obj)
+        {
+            if (obj is CommandBase)
+            {
+                return this.CompareTo((CommandBase)obj);
+            }
+            return 0;
+        }
+
+        public int CompareTo(CommandBase other) { return this.Name.CompareTo(other.Name); }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is CommandBase)
+            {
+                return this.Equals((CommandBase)obj);
+            }
+            return false;
+        }
+
+        public bool Equals(CommandBase other) { return this.ID.Equals(other.ID); }
+
+        public override int GetHashCode() { return this.ID.GetHashCode(); }
     }
 }

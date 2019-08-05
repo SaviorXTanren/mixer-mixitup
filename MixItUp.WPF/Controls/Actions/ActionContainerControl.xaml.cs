@@ -90,8 +90,18 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.WebRequest:
                         this.actionControl = (this.action != null) ? new WebRequestActionControl(this, (WebRequestAction)this.action) : new WebRequestActionControl(this);
                         break;
+#pragma warning disable CS0612 // Type or member is obsolete
                     case ActionTypeEnum.ActionGroup:
-                        this.actionControl = (this.action != null) ? new ActionGroupActionControl(this, (ActionGroupAction)this.action) : new ActionGroupActionControl(this);
+                        if (this.action != null)
+                        {
+                            ActionGroupAction aaction = (ActionGroupAction)this.action;
+                            this.actionControl = new CommandActionControl(this, new CommandAction()
+                            {
+                                CommandActionType = CommandActionTypeEnum.RunCommand,
+                                CommandID = aaction.ActionGroupID
+                            });
+                        }
+#pragma warning restore CS0612 // Type or member is obsolete
                         break;
                     case ActionTypeEnum.SpecialIdentifier:
                         this.actionControl = (this.action != null) ? new SpecialIdentifierActionControl(this, (SpecialIdentifierAction)this.action) : new SpecialIdentifierActionControl(this);
@@ -134,6 +144,15 @@ namespace MixItUp.WPF.Controls.Actions
                         break;
                     case ActionTypeEnum.Moderation:
                         this.actionControl = (this.action != null) ? new ModerationActionControl(this, (ModerationAction)this.action) : new ModerationActionControl(this);
+                        break;
+                    case ActionTypeEnum.OvrStream:
+                        this.actionControl = (this.action != null) ? new OvrStreamActionControl(this, (OvrStreamAction)this.action) : new OvrStreamActionControl(this);
+                        break;
+                    case ActionTypeEnum.StreamingPlatform:
+                        this.actionControl = (this.action != null) ? new StreamingPlatformActionControl(this, (StreamingPlatformAction)this.action) : new StreamingPlatformActionControl(this);
+                        break;
+                    case ActionTypeEnum.IFTTT:
+                        this.actionControl = (this.action != null) ? new IFTTTActionControl(this, (IFTTTAction)this.action) : new IFTTTActionControl(this);
                         break;
                 }
             }

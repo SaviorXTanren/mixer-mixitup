@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base.Model.Overlay;
-using System.Collections.Generic;
+using MixItUp.Base.ViewModel.Controls.Overlay;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.Overlay
@@ -9,51 +9,41 @@ namespace MixItUp.WPF.Controls.Overlay
     /// </summary>
     public partial class OverlayWebPageItemControl : OverlayItemControl
     {
-        private static readonly List<int> sampleFontSize = new List<int>() { 12, 24, 36, 48, 60, 72, 84, 96, 108, 120 };
-
-        private OverlayWebPageItem item;
+        private OverlayWebPageItemViewModel viewModel;
 
         public OverlayWebPageItemControl()
         {
             InitializeComponent();
+
+            this.viewModel = new OverlayWebPageItemViewModel();
         }
 
-        public OverlayWebPageItemControl(OverlayWebPageItem item)
-            : this()
+        public OverlayWebPageItemControl(OverlayWebPageItemModel item)
         {
-            this.item = item;
+            InitializeComponent();
+
+            this.viewModel = new OverlayWebPageItemViewModel(item);
         }
 
-        public override void SetItem(OverlayItemBase item)
-        {
-            this.item = (OverlayWebPageItem)item;
-            this.WebPageFilePathTextBox.Text = this.item.URL;
-            this.WebPageWidthTextBox.Text = this.item.Width.ToString();
-            this.WebPageHeightTextBox.Text = this.item.Height.ToString();
-        }
+        public override OverlayItemViewModelBase GetViewModel() { return this.viewModel; }
 
-        public override OverlayItemBase GetItem()
+        public override void SetItem(OverlayItemModelBase item)
         {
-            if (!string.IsNullOrEmpty(this.WebPageFilePathTextBox.Text))
+            if (item != null)
             {
-                int width;
-                int height;
-                if (int.TryParse(this.WebPageWidthTextBox.Text, out width) && width > 0 &&
-                    int.TryParse(this.WebPageHeightTextBox.Text, out height) && height > 0)
-                {
-                    return new OverlayWebPageItem(this.WebPageFilePathTextBox.Text, width, height);
-                }
+                this.viewModel = new OverlayWebPageItemViewModel((OverlayWebPageItemModel)item);
             }
-            return null;
         }
 
-        protected override Task OnLoaded()
+        public override OverlayItemModelBase GetItem()
         {
-            if (this.item != null)
-            {
-                this.SetItem(this.item);
-            }
-            return Task.FromResult(0);
+            return this.viewModel.GetOverlayItem();
+        }
+
+        protected override async Task OnLoaded()
+        {
+            this.DataContext = this.viewModel;
+            await this.viewModel.OnLoaded();
         }
     }
 }

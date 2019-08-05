@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base.Model.Overlay;
-using System.Collections.Generic;
+using MixItUp.Base.ViewModel.Controls.Overlay;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.Overlay
@@ -9,70 +9,41 @@ namespace MixItUp.WPF.Controls.Overlay
     /// </summary>
     public partial class OverlayYouTubeItemControl : OverlayItemControl
     {
-        private static readonly List<int> sampleFontSize = new List<int>() { 12, 24, 36, 48, 60, 72, 84, 96, 108, 120 };
-
-        private OverlayYouTubeItem item;
+        private OverlayYouTubeItemViewModel viewModel;
 
         public OverlayYouTubeItemControl()
         {
             InitializeComponent();
+
+            this.viewModel = new OverlayYouTubeItemViewModel();
         }
 
-        public OverlayYouTubeItemControl(OverlayYouTubeItem item)
-            : this()
+        public OverlayYouTubeItemControl(OverlayYouTubeItemModel item)
         {
-            this.item = item;
+            InitializeComponent();
+
+            this.viewModel = new OverlayYouTubeItemViewModel(item);
         }
 
-        public override void SetItem(OverlayItemBase item)
-        {
-            this.item = (OverlayYouTubeItem)item;
-            this.YoutubeVideoIDTextBox.Text = this.item.VideoID;
-            this.YoutubeStartTimeTextBox.Text = this.item.StartTime.ToString();
-            this.YouTubeWidthTextBox.Text = this.item.Width.ToString();
-            this.YouTubeHeightTextBox.Text = this.item.Height.ToString();
-            this.YouTubeVolumeSlider.Value = this.item.Volume;
-        }
+        public override OverlayItemViewModelBase GetViewModel() { return this.viewModel; }
 
-        public override OverlayItemBase GetItem()
+        public override void SetItem(OverlayItemModelBase item)
         {
-            if (!string.IsNullOrEmpty(this.YoutubeVideoIDTextBox.Text))
+            if (item != null)
             {
-                string videoID = this.YoutubeVideoIDTextBox.Text;
-                videoID = videoID.Replace("https://www.youtube.com/watch?v=", "");
-                videoID = videoID.Replace("https://youtu.be/", "");
-                if (videoID.Contains("&"))
-                {
-                    videoID = videoID.Substring(0, videoID.IndexOf("&"));
-                }
-
-                if (int.TryParse(this.YoutubeStartTimeTextBox.Text, out int startTime))
-                {
-                    int width;
-                    int height;
-                    if (int.TryParse(this.YouTubeWidthTextBox.Text, out width) && width > 0 &&
-                        int.TryParse(this.YouTubeHeightTextBox.Text, out height) && height > 0)
-                    {
-                        return new OverlayYouTubeItem(videoID, startTime, width, height, (int)this.YouTubeVolumeSlider.Value);
-                    }
-                }
+                this.viewModel = new OverlayYouTubeItemViewModel((OverlayYouTubeItemModel)item);
             }
-            return null;
         }
 
-        protected override Task OnLoaded()
+        public override OverlayItemModelBase GetItem()
         {
-            this.YoutubeStartTimeTextBox.Text = "0";
-            this.YouTubeWidthTextBox.Text = OverlayVideoItem.DefaultWidth.ToString();
-            this.YouTubeHeightTextBox.Text = OverlayVideoItem.DefaultHeight.ToString();
-            this.YouTubeVolumeSlider.Value = 100;
+            return this.viewModel.GetOverlayItem();
+        }
 
-            if (this.item != null)
-            {
-                this.SetItem(this.item);
-            }
-
-            return Task.FromResult(0);
+        protected override async Task OnLoaded()
+        {
+            this.DataContext = this.viewModel;
+            await this.viewModel.OnLoaded();
         }
     }
 }

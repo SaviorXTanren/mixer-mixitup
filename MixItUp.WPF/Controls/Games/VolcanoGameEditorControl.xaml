@@ -43,34 +43,34 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBox x:Name="StatusArgumentTextBox" Grid.Column="0" Grid.Row="0" Width="110" MaterialDesign:HintAssist.Hint="Status Argument" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Text="{Binding StatusArgument}" Grid.Column="0" Grid.Row="0" Width="110" MaterialDesign:HintAssist.Hint="Status Argument" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                 <GroupBox Grid.Column="2" Grid.Row="0" Header="Stage 1 Deposit">
-                    <CommandControls:CommandButtonsControl x:Name="Stage1DepositCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                    <CommandControls:CommandButtonsControl DataContext="{Binding Stage1DepositCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
                 </GroupBox>
 
                 <GroupBox Grid.Column="4" Grid.Row="0" Header="Stage 1 Status">
-                    <CommandControls:CommandButtonsControl x:Name="Stage1StatusCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                    <CommandControls:CommandButtonsControl DataContext="{Binding Stage1StatusCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
                 </GroupBox>
 
-                <TextBox x:Name="Stage2MinimumAmountTextBox" Grid.Column="0" Grid.Row="2" Width="110" MaterialDesign:HintAssist.Hint="Stage 2 Min Amount" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Text="{Binding Stage2MinimumAmountString}" Grid.Column="0" Grid.Row="2" Width="110" MaterialDesign:HintAssist.Hint="Stage 2 Min Amount" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                 <GroupBox Grid.Column="2" Grid.Row="2" Header="Stage 2 Deposit">
-                    <CommandControls:CommandButtonsControl x:Name="Stage2DepositCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                    <CommandControls:CommandButtonsControl DataContext="{Binding Stage2DepositCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
                 </GroupBox>
 
                 <GroupBox Grid.Column="4" Grid.Row="2" Header="Stage 2 Status">
-                    <CommandControls:CommandButtonsControl x:Name="Stage2StatusCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                    <CommandControls:CommandButtonsControl DataContext="{Binding Stage2StatusCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
                 </GroupBox>
 
-                <TextBox x:Name="Stage3MinimumAmountTextBox" Grid.Column="0" Grid.Row="4" Width="110" MaterialDesign:HintAssist.Hint="Stage 3 Min Amount" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Text="{Binding Stage3MinimumAmountString}" Grid.Column="0" Grid.Row="4" Width="110" MaterialDesign:HintAssist.Hint="Stage 3 Min Amount" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                 <GroupBox Grid.Column="2" Grid.Row="4" Header="Stage 3 Deposit">
-                    <CommandControls:CommandButtonsControl x:Name="Stage3DepositCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                    <CommandControls:CommandButtonsControl DataContext="{Binding Stage3DepositCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
                 </GroupBox>
 
                 <GroupBox Grid.Column="4" Grid.Row="4" Header="Stage 3 Status">
-                    <CommandControls:CommandButtonsControl x:Name="Stage3StatusCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                    <CommandControls:CommandButtonsControl DataContext="{Binding Stage3StatusCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
                 </GroupBox>
             </Grid>
 
@@ -87,14 +87,14 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
-                        <TextBox x:Name="PayoutProbabilityTextBox" Grid.Row="0" Width="70" MaterialDesign:HintAssist.Hint="Payout %" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <TextBox Text="{Binding PayoutProbabilityString}" Grid.Row="0" Width="70" MaterialDesign:HintAssist.Hint="Payout %" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                        <TextBox x:Name="PayoutPercentageMinimumLimitTextBox" Grid.Row="2" Width="100" MaterialDesign:HintAssist.Hint="Min Payout %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <TextBox Text="{Binding PayoutPercentageMinimumString}" Grid.Row="2" Width="100" MaterialDesign:HintAssist.Hint="Min Payout %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                        <TextBox x:Name="PayoutPercentageMaximumLimitTextBox" Grid.Row="4" Width="100" MaterialDesign:HintAssist.Hint="Max Payout %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <TextBox Text="{Binding PayoutPercentageMaximumString}" Grid.Row="4" Width="100" MaterialDesign:HintAssist.Hint="Max Payout %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                         <GroupBox Header="Payout" Grid.Row="6">
-                            <CommandControls:CommandButtonsControl x:Name="PayoutCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+                            <CommandControls:CommandButtonsControl DataContext="{Binding PayoutCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
                         </GroupBox>
                     </Grid>
                 </GroupBox>
@@ -116,16 +116,16 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBox x:Name="CollectArgumentTextBox" Grid.Column="0" Width="100" MaterialDesign:HintAssist.Hint="Collect Argument" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Text="{Binding CollectArgument}" Grid.Column="0" Width="100" MaterialDesign:HintAssist.Hint="Collect Argument" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                    <TextBox x:Name="CollectTimeLimitTextBox" Grid.Column="2" Width="100" MaterialDesign:HintAssist.Hint="Time Limit (Secs)" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Text="{Binding CollectTimeLimitString}" Grid.Column="2" Width="100" MaterialDesign:HintAssist.Hint="Time Limit (Secs)" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                    <TextBox x:Name="CollectPayoutPercentageMinimumLimitTextBox" Grid.Column="4" Width="100" MaterialDesign:HintAssist.Hint="Collect Min Payout %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Text="{Binding CollectPayoutPercentageMinimumString}" Grid.Column="4" Width="100" MaterialDesign:HintAssist.Hint="Collect Min Payout %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                    <TextBox x:Name="CollectPayoutPercentageMaximumLimitTextBox" Grid.Column="6" Width="100" MaterialDesign:HintAssist.Hint="Collect Max Payout %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Text="{Binding CollectPayoutPercentageMaximumString}" Grid.Column="6" Width="100" MaterialDesign:HintAssist.Hint="Collect Max Payout %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                     <GroupBox Header="Payout" Grid.Column="8">
-                        <CommandControls:CommandButtonsControl x:Name="CollectPayoutCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                        <CommandControls:CommandButtonsControl DataContext="{Binding CollectCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
                     </GroupBox>
                 </Grid>
             </GroupBox>

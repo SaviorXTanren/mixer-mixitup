@@ -85,6 +85,10 @@ namespace MixItUp.WPF.Windows.Store
                     case OtherEventTypeEnum.StreamlabsDonation:
                     case OtherEventTypeEnum.GawkBoxDonation:
                     case OtherEventTypeEnum.TiltifyDonation:
+                    case OtherEventTypeEnum.ExtraLifeDonation:
+                    case OtherEventTypeEnum.StreamJarDonation:
+                    case OtherEventTypeEnum.TipeeeStreamDonation:
+                    case OtherEventTypeEnum.TreatStreamDonation:
                         this.Tag4ComboBox.SelectedItem = StoreListingModel.DonationTag;
                         break;
                 }
@@ -171,9 +175,9 @@ namespace MixItUp.WPF.Windows.Store
                         if (action.Type == ActionTypeEnum.Overlay)
                         {
                             OverlayAction oAction = (OverlayAction)action;
-                            if (oAction.Item is OverlayImageItem)
+                            if (oAction.OverlayItem is OverlayImageItemModel)
                             {
-                                OverlayImageItem overlayItem = (OverlayImageItem)oAction.Item;
+                                OverlayImageItemModel overlayItem = (OverlayImageItemModel)oAction.OverlayItem;
                                 if (File.Exists(overlayItem.FilePath))
                                 {
                                     assetFiles.Add(overlayItem.FilePath);

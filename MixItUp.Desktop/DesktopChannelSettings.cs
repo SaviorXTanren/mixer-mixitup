@@ -8,6 +8,7 @@ using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Remote.Authentication;
 using MixItUp.Base.Model.Serial;
+using MixItUp.Base.Model.SongRequests;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Remote.Models;
 using MixItUp.Base.Services;
@@ -33,7 +34,7 @@ namespace MixItUp.Desktop
     [DataContract]
     public class DesktopSavableChannelSettings : ISavableChannelSettings
     {
-        public const int LatestVersion = 28;
+        public const int LatestVersion = 36;
 
         [JsonProperty]
         public int Version { get; set; } = DesktopChannelSettings.LatestVersion;
@@ -60,8 +61,6 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public OAuthTokenModel StreamlabsOAuthToken { get; set; }
         [JsonProperty]
-        public OAuthTokenModel GawkBoxOAuthToken { get; set; }
-        [JsonProperty]
         public OAuthTokenModel TwitterOAuthToken { get; set; }
         [JsonProperty]
         public OAuthTokenModel SpotifyOAuthToken { get; set; }
@@ -77,6 +76,8 @@ namespace MixItUp.Desktop
         public OAuthTokenModel StreamJarOAuthToken { get; set; }
         [JsonProperty]
         public OAuthTokenModel PatreonOAuthToken { get; set; }
+        [JsonProperty]
+        public OAuthTokenModel IFTTTOAuthToken { get; set; }
         [JsonProperty]
         public OAuthTokenModel StreamlootsOAuthToken { get; set; }
 
@@ -136,6 +137,10 @@ namespace MixItUp.Desktop
         public bool GameQueueSubPriority { get; set; }
         [JsonProperty]
         public RequirementViewModel GameQueueRequirements { get; set; } = new RequirementViewModel();
+        [JsonProperty]
+        public CustomCommand GameQueueUserJoinedCommand { get; set; }
+        [JsonProperty]
+        public CustomCommand GameQueueUserSelectedCommand { get; set; }
 
         [JsonProperty]
         public bool QuotesEnabled { get; set; }
@@ -152,16 +157,6 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public string GiveawayCommand { get; set; } = "giveaway";
         [JsonProperty]
-        public bool GiveawayGawkBoxTrigger { get; set; }
-        [JsonProperty]
-        public bool GiveawayStreamlabsTrigger { get; set; }
-        [JsonProperty]
-        public bool GiveawayTiltifyTrigger { get; set; }
-        [JsonProperty]
-        public bool GiveawayDonationRequiredAmount { get; set; }
-        [JsonProperty]
-        public double GiveawayDonationAmount { get; set; }
-        [JsonProperty]
         public int GiveawayTimer { get; set; } = 1;
         [JsonProperty]
         public int GiveawayMaximumEntries { get; set; } = 1;
@@ -173,6 +168,8 @@ namespace MixItUp.Desktop
         public bool GiveawayRequireClaim { get; set; } = true;
         [JsonProperty]
         public bool GiveawayAllowPastWinners { get; set; }
+        [JsonProperty]
+        public CustomCommand GiveawayStartedReminderCommand { get; set; }
         [JsonProperty]
         public CustomCommand GiveawayUserJoinedCommand { get; set; }
         [JsonProperty]
@@ -234,6 +231,9 @@ namespace MixItUp.Desktop
         public int OverlayWidgetRefreshTime { get; set; } = 5;
 
         [JsonProperty]
+        public string OvrStreamServerIP { get; set; }
+
+        [JsonProperty]
         public string OBSStudioServerIP { get; set; }
         [JsonProperty]
         public string OBSStudioServerPassword { get; set; }
@@ -284,13 +284,23 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public string NotificationChatMessageSoundFilePath { get; set; }
         [JsonProperty]
+        public int NotificationChatMessageSoundVolume { get; set; } = 100;
+        [JsonProperty]
         public string NotificationChatTaggedSoundFilePath { get; set; }
+        [JsonProperty]
+        public int NotificationChatTaggedSoundVolume { get; set; } = 100;
         [JsonProperty]
         public string NotificationChatWhisperSoundFilePath { get; set; }
         [JsonProperty]
+        public int NotificationChatWhisperSoundVolume { get; set; } = 100;
+        [JsonProperty]
         public string NotificationServiceConnectSoundFilePath { get; set; }
         [JsonProperty]
+        public int NotificationServiceConnectSoundVolume { get; set; } = 100;
+        [JsonProperty]
         public string NotificationServiceDisconnectSoundFilePath { get; set; }
+        [JsonProperty]
+        public int NotificationServiceDisconnectSoundVolume { get; set; } = 100;
 
         [JsonProperty]
         public int MaxMessagesInChat { get; set; } = 100;
@@ -313,12 +323,26 @@ namespace MixItUp.Desktop
         public HashSet<SongRequestServiceTypeEnum> SongRequestServiceTypes { get; set; }
         [JsonProperty]
         public bool SpotifyAllowExplicit { get; set; }
-
         [JsonProperty]
         public string DefaultPlaylist { get; set; }
-
+        [JsonProperty]
+        public bool SongRequestSubPriority { get; set; }
+        [JsonProperty]
+        public int SongRequestsMaxRequests { get; set; }
+        [JsonProperty]
+        public bool SongRequestsSaveRequestQueue { get; set; }
+        [JsonProperty]
+        public List<SongRequestModel> SongRequestsSavedRequestQueue { get; set; } = new List<SongRequestModel>();
         [JsonProperty]
         public int SongRequestVolume { get; set; } = 100;
+        [JsonProperty]
+        public List<SongRequestModel> SongRequestsBannedSongs { get; set; } = new List<SongRequestModel>();
+        [JsonProperty]
+        public CustomCommand SongAddedCommand { get; set; }
+        [JsonProperty]
+        public CustomCommand SongRemovedCommand { get; set; }
+        [JsonProperty]
+        public CustomCommand SongPlayedCommand { get; set; }
 
         [JsonProperty]
         public Dictionary<uint, JObject> CustomInteractiveSettings { get; set; }
@@ -360,7 +384,10 @@ namespace MixItUp.Desktop
         protected List<UserQuoteViewModel> userQuotesInternal { get; set; }
 
         [JsonProperty]
-        protected List<OverlayWidget> overlayWidgetsInternal { get; set; }
+        [Obsolete]
+        public List<OverlayWidget> overlayWidgetsInternal { get; set; }
+        [JsonProperty]
+        protected List<OverlayWidgetModel> overlayWidgetModelsInternal { get; set; }
 
         [JsonProperty]
         protected List<RemoteProfileModel> remoteProfilesInternal { get; set; }
@@ -404,11 +431,12 @@ namespace MixItUp.Desktop
             this.userQuotesInternal = new List<UserQuoteViewModel>();
             this.remoteProfilesInternal = new List<RemoteProfileModel>();
             this.remoteProfileBoardsInternal = new Dictionary<Guid, RemoteProfileBoardsModel>();
-            this.overlayWidgetsInternal = new List<OverlayWidget>();
+            this.overlayWidgetModelsInternal = new List<OverlayWidgetModel>();
             this.filteredWordsInternal = new List<string>();
             this.bannedWordsInternal = new List<string>();
             this.interactiveUserGroupsInternal = new Dictionary<uint, List<InteractiveUserGroupViewModel>>();
 #pragma warning disable CS0612 // Type or member is obsolete
+            this.overlayWidgetsInternal = new List<OverlayWidget>();
             this.interactiveCooldownGroupsInternal = new Dictionary<string, int>();
 #pragma warning restore CS0612 // Type or member is obsolete
         }
@@ -449,7 +477,7 @@ namespace MixItUp.Desktop
         public LockedList<UserQuoteViewModel> UserQuotes { get; set; }
 
         [JsonIgnore]
-        public LockedList<OverlayWidget> OverlayWidgets { get; set; }
+        public LockedList<OverlayWidgetModel> OverlayWidgets { get; set; }
 
         [JsonIgnore]
         public LockedList<RemoteProfileModel> RemoteProfiles { get; set; }
@@ -481,8 +509,16 @@ namespace MixItUp.Desktop
             this.Channel = channel;
             this.IsStreamer = isStreamer;
 
+            this.GameQueueUserJoinedCommand = CustomCommand.BasicChatCommand("Game Queue Used Joined", "You are #$queueposition in the queue to play.", isWhisper: true);
+            this.GameQueueUserSelectedCommand = CustomCommand.BasicChatCommand("Game Queue Used Selected", "It's time to play @$username! Listen carefully for instructions on how to join...");
+
+            this.GiveawayStartedReminderCommand = CustomCommand.BasicChatCommand("Giveaway Started/Reminder", "A giveaway has started for $giveawayitem! Type $giveawaycommand in chat in the next $giveawaytimelimit minute(s) to enter!");
             this.GiveawayUserJoinedCommand = CustomCommand.BasicChatCommand("Giveaway User Joined", "You have been entered into the giveaway, stay tuned to see who wins!", isWhisper: true);
-            this.GiveawayWinnerSelectedCommand = CustomCommand.BasicChatCommand("Giveaway Winner Selected", "Congratulations @$username, you won! Type \"!claim\" in chat in the next 60 seconds to claim your prize!", isWhisper: true);
+            this.GiveawayWinnerSelectedCommand = CustomCommand.BasicChatCommand("Giveaway Winner Selected", "Congratulations @$username, you won $giveawayitem!");
+
+            this.SongAddedCommand = CustomCommand.BasicChatCommand("Song Request Added", "$songtitle has been added to the queue", isWhisper: true);
+            this.SongRemovedCommand = CustomCommand.BasicChatCommand("Song Request Removed", "$songtitle has been removed from the queue", isWhisper: true);
+            this.SongPlayedCommand = CustomCommand.BasicChatCommand("Song Request Played", "Now Playing: $songtitle");
 
             this.ModerationStrike1Command = CustomCommand.BasicChatCommand("Moderation Strike 1", "$moderationreason. You have received a moderation strike & currently have $usermoderationstrikes strike(s)", isWhisper: true);
             this.ModerationStrike2Command = CustomCommand.BasicChatCommand("Moderation Strike 2", "$moderationreason. You have received a moderation strike & currently have $usermoderationstrikes strike(s)", isWhisper: true);
@@ -505,7 +541,7 @@ namespace MixItUp.Desktop
             this.GameCommands = new LockedList<GameCommandBase>();
             this.UserQuotes = new LockedList<UserQuoteViewModel>();
             this.RemoteProfiles = new LockedList<RemoteProfileModel>();
-            this.OverlayWidgets = new LockedList<OverlayWidget>();
+            this.OverlayWidgets = new LockedList<OverlayWidgetModel>();
             this.FilteredWords = new LockedList<string>();
             this.BannedWords = new LockedList<string>();
             this.CommunityFilteredWords = new LockedList<string>();
@@ -527,7 +563,7 @@ namespace MixItUp.Desktop
             this.UserQuotes = new LockedList<UserQuoteViewModel>(this.userQuotesInternal);
             this.RemoteProfiles = new LockedList<RemoteProfileModel>(this.remoteProfilesInternal);
             this.RemoteProfileBoards = new LockedDictionary<Guid, RemoteProfileBoardsModel>(this.remoteProfileBoardsInternal);
-            this.OverlayWidgets = new LockedList<OverlayWidget>(this.overlayWidgetsInternal);
+            this.OverlayWidgets = new LockedList<OverlayWidgetModel>(this.overlayWidgetModelsInternal);
             this.FilteredWords = new LockedList<string>(this.filteredWordsInternal);
             this.BannedWords = new LockedList<string>(this.bannedWordsInternal);
             this.InteractiveUserGroups = new LockedDictionary<uint, List<InteractiveUserGroupViewModel>>(this.interactiveUserGroupsInternal);
@@ -582,10 +618,6 @@ namespace MixItUp.Desktop
             {
                 this.StreamlabsOAuthToken = ChannelSession.Services.Streamlabs.GetOAuthTokenCopy();
             }
-            if (ChannelSession.Services.GawkBox != null)
-            {
-                this.GawkBoxOAuthToken = ChannelSession.Services.GawkBox.GetOAuthTokenCopy();
-            }
             if (ChannelSession.Services.Twitter != null)
             {
                 this.TwitterOAuthToken = ChannelSession.Services.Twitter.GetOAuthTokenCopy();
@@ -618,6 +650,10 @@ namespace MixItUp.Desktop
             {
                 this.PatreonOAuthToken = ChannelSession.Services.Patreon.GetOAuthTokenCopy();
             }
+            if (ChannelSession.Services.IFTTT != null)
+            {
+                this.IFTTTOAuthToken = ChannelSession.Services.IFTTT.Token;
+            }
             if (ChannelSession.Services.Streamloots != null)
             {
                 this.StreamlootsOAuthToken = ChannelSession.Services.Streamloots.GetOAuthTokenCopy();
@@ -636,7 +672,7 @@ namespace MixItUp.Desktop
             this.userQuotesInternal = this.UserQuotes.ToList();
             this.remoteProfilesInternal = this.RemoteProfiles.ToList();
             this.remoteProfileBoardsInternal = this.RemoteProfileBoards.ToDictionary();
-            this.overlayWidgetsInternal = this.OverlayWidgets.ToList();
+            this.overlayWidgetModelsInternal = this.OverlayWidgets.ToList();
             this.filteredWordsInternal = this.FilteredWords.ToList();
             this.bannedWordsInternal = this.BannedWords.ToList();
             this.interactiveUserGroupsInternal = this.InteractiveUserGroups.ToDictionary();

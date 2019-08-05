@@ -29,10 +29,10 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="SymbolsTextBox" Grid.Column="0" Width="400" VerticalAlignment="Center" HorizontalAlignment="Center" MaterialDesign:HintAssist.Hint="All Slot Symbols (Space separated)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding Symbols}" Grid.Column="0" Width="400" VerticalAlignment="Center" HorizontalAlignment="Center" MaterialDesign:HintAssist.Hint="All Slot Symbols (Space separated)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
             
             <GroupBox Grid.Column="2" Header="Failure Outcome">
-                <CommandControls:CommandButtonsControl x:Name="FailureOutcomeCommandButtonsControl" DataContext="{Binding Command}" Grid.Column="4" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl DataContext="{Binding FailureOutcomeCommand}" Grid.Column="4" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
 
         </Grid>
@@ -48,11 +48,11 @@
 
                     <TextBlock Grid.Column="0" Foreground="{StaticResource WhiteColor}" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="16">Outcomes</TextBlock>
 
-                    <Button Grid.Column="2" x:Name="AddOutcomeButton" Click="AddOutcomeButton_Click" Width="130" HorizontalAlignment="Center">Add Outcome</Button>
+                    <Button Grid.Column="2" x:Name="AddOutcomeButton" Style="{StaticResource MaterialDesignRaisedLightButton}" Click="AddOutcomeButton_Click" Width="130" HorizontalAlignment="Center">Add Outcome</Button>
                 </Grid>
             </GroupBox.Header>
 
-            <ItemsControl x:Name="OutcomesItemsControl" Grid.Row="2">
+            <ItemsControl ItemsSource="{Binding Outcomes}" Grid.Row="2">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid Margin="15">
@@ -77,11 +77,11 @@
                                     <ColumnDefinition Width="50" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBox x:Name="Symbol1TextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Symbol 1" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding Symbol1}" />
+                                <TextBox Grid.Column="0" MaterialDesign:HintAssist.Hint="Symbol 1" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding Symbol1}" />
 
-                                <TextBox x:Name="Symbol2TextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Symbol 2" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding Symbol2}" />
+                                <TextBox Grid.Column="2" MaterialDesign:HintAssist.Hint="Symbol 2" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding Symbol2}" />
 
-                                <TextBox x:Name="Symbol3TextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Symbol 3" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding Symbol3}" />
+                                <TextBox Grid.Column="4" MaterialDesign:HintAssist.Hint="Symbol 3" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding Symbol3}" />
                             </Grid>
 
                             <Grid Grid.Column="2">
@@ -93,11 +93,11 @@
                                     <ColumnDefinition Width="70" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBox x:Name="UserPayoutTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="User Payout %" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding UserPayoutString}" />
+                                <TextBox Grid.Column="0" MaterialDesign:HintAssist.Hint="User Payout %" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding UserPayoutString}" />
 
-                                <TextBox x:Name="SubscriberPayoutTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Sub Payout %" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding SubscriberPayoutString}" />
+                                <TextBox Grid.Column="2" MaterialDesign:HintAssist.Hint="Sub Payout %" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding SubscriberPayoutString}" />
 
-                                <TextBox x:Name="ModPayoutTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Mod Payout %" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding ModPayoutString}" />
+                                <TextBox Grid.Column="4" MaterialDesign:HintAssist.Hint="Mod Payout %" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding ModPayoutString}" />
                             </Grid>
 
                             <Grid Grid.Column="4">
@@ -108,10 +108,10 @@
                                 </Grid.RowDefinitions>
 
                                 <TextBlock Grid.Row="0">Any Order:</TextBlock>
-                                <ToggleButton x:Name="AnyOrderToggleButton" Grid.Row="2" IsChecked="{Binding AnyOrder}" Checked="AnyOrderToggleButton_Checked" Unchecked="AnyOrderToggleButton_Checked" />
+                                <ToggleButton Grid.Row="2" IsChecked="{Binding AnyOrder}" />
                             </Grid>
                             
-                            <CommandControls:CommandButtonsControl x:Name="OutcomeCommandButtonsControl" DataContext="{Binding Command}" Grid.Column="6" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+                            <CommandControls:CommandButtonsControl DataContext="{Binding Command}" Grid.Column="6" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
 
                             <Button x:Name="DeleteButton" Grid.Column="8" Click="DeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Delete Outcome">
                                 <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />

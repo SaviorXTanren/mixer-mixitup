@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
-             xmlns:RequirementControls="clr-namespace:MixItUp.WPF.Controls.Requirement"
+             xmlns:Util="clr-namespace:MixItUp.WPF.Util"
+             xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
                           
@@ -15,6 +16,10 @@
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
 
              d:DesignHeight="400" d:DesignWidth="500">
+    <local:MainControlBase.Resources>
+        <Util:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+    </local:MainControlBase.Resources>
+
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -22,79 +27,66 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" HorizontalAlignment="Center">
+        <Grid Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Grid Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="20" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+            <Button x:Name="EnableDisableButton" Grid.Column="0" Content="{Binding EnableDisableButtonText}" Command="{Binding EnableDisableCommand}" Width="90" />
 
-                <Grid Grid.Row="0" HorizontalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="10" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="30" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="10" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="30" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="2" VerticalAlignment="Center">Sub Priority:</TextBlock>
+            <ToggleButton Grid.Column="4" IsChecked="{Binding SubPriority}" IsEnabled="{Binding IsEnabled, Converter={StaticResource InverseBooleanConverter}}" ToolTip="Subscribers Receive Priority" />
 
-                    <TextBlock Grid.Column="0" VerticalAlignment="Center">Enable:</TextBlock>
-                    <ToggleButton Grid.Column="2" x:Name="EnableGameQueueToggleButton" Checked="EnableGameQueueToggleButton_Checked" Unchecked="EnableGameQueueToggleButton_Unchecked" ToolTip="Enable/Disable" />
+            <Button Grid.Column="6" Command="{Binding ClearQueueCommand}" IsEnabled="{Binding IsEnabled}" Width="110">Clear Queue</Button>
 
-                    <TextBlock Grid.Column="4" VerticalAlignment="Center">Sub Priority:</TextBlock>
-                    <ToggleButton  Grid.Column="6" x:Name="SubPriorityToggleButton" Checked="SubPriorityToggleButton_Checked" Unchecked="SubPriorityToggleButton_Checked" ToolTip="Subscribers Receive Priority" />
+            <GroupBox Header="User Joined" Grid.Column="8" Width="125">
+                <CommandControls:CommandButtonsControl x:Name="UserJoinedCommand" HorizontalAlignment="Center" EditClicked="GameQueueCommand_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+            </GroupBox>
 
-                    <Button x:Name="ClearQueueButton" Grid.Column="8" Grid.ColumnSpan="3" Click="ClearQueueButton_Click" IsEnabled="False">Clear Queue</Button>
-                </Grid>
-
-                <TextBlock Grid.Row="2" TextWrapping="Wrap">To use the Game Queue, create a command with a <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Actions#game-queue" RequestNavigate="Hyperlink_RequestNavigate">Game Queue action</Hyperlink>.</TextBlock>
-            </Grid>
-
-            <Grid Grid.Column="2">
-                <RequirementControls:RequirementControl x:Name="Requirement" />
-            </Grid>
+            <GroupBox Header="User Selected" Grid.Column="10" Width="125">
+                <CommandControls:CommandButtonsControl x:Name="UserSelectedCommand" HorizontalAlignment="Center" EditClicked="GameQueueCommand_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+            </GroupBox>
         </Grid>
 
-        <DataGrid x:Name="GameQueueUsersListView" Grid.Row="4" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
+        <DataGrid x:Name="GameQueueUsersListView" ItemsSource="{Binding QueueUsers}" Grid.Row="4" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Pos #" Binding="{Binding QueuePosition}" IsReadOnly="True" Width="55" />
+                <DataGridTextColumn Header="Pos" Binding="{Binding QueuePosition}" IsReadOnly="True" Width="70" />
                 <DataGridTextColumn Header="Name" Binding="{Binding UserName}" IsReadOnly="True" Width="*" />
                 <DataGridTextColumn Header="Role" Binding="{Binding PrimaryRole}" IsReadOnly="True" Width="*" />
-                <DataGridTemplateColumn Width="65">
+                <DataGridTemplateColumn Width="160">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button x:Name="MoveUpButton" Click="MoveUpButton_Click" Width="40" HorizontalAlignment="Center">
-                                <MaterialDesign:PackIcon Kind="ArrowUpBold" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                            </Button>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn Width="65">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button x:Name="MoveDownButton" Click="MoveDownButton_Click" Width="40" HorizontalAlignment="Center">
-                                <MaterialDesign:PackIcon Kind="ArrowDownBold" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                            </Button>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn Width="65">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button x:Name="DeleteButton" Click="DeleteButton_Click" Width="40" HorizontalAlignment="Center">
-                                <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                            </Button>
+                            <Grid HorizontalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="5" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="5" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Button x:Name="MoveUpButton" Grid.Column="0" Click="MoveUpButton_Click" Width="40" HorizontalAlignment="Center">
+                                    <MaterialDesign:PackIcon Kind="ArrowUp" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                </Button>
+
+                                <Button x:Name="MoveDownButton" Grid.Column="2" Click="MoveDownButton_Click" Width="40" HorizontalAlignment="Center">
+                                    <MaterialDesign:PackIcon Kind="ArrowDown" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                </Button>
+
+                                <Button x:Name="DeleteButton" Grid.Column="4" Click="DeleteButton_Click" Width="40" HorizontalAlignment="Center">
+                                    <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                </Button>
+                            </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

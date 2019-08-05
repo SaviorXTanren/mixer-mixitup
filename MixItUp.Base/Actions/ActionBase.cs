@@ -38,6 +38,7 @@ namespace MixItUp.Base.Actions
         Rank,
         [Name("Web Request")]
         WebRequest,
+        [Obsolete]
         [Name("Action Group")]
         ActionGroup,
         [Name("Special Identifier")]
@@ -61,6 +62,10 @@ namespace MixItUp.Base.Actions
         Command,
         Serial,
         Moderation,
+        OvrStream,
+        [Name("Streaming Platform")]
+        StreamingPlatform,
+        IFTTT,
 
         Custom = 99,
     }
@@ -79,8 +84,6 @@ namespace MixItUp.Base.Actions
 
         [JsonIgnore]
         protected Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();
-        [JsonIgnore]
-        private Guid randomUserSpecialIdentifierGroup = Guid.Empty;
 
         public ActionBase()
         {
@@ -106,13 +109,11 @@ namespace MixItUp.Base.Actions
             });
         }
 
-        public void AssignRandomUserSpecialIdentifierGroup(Guid id) { this.randomUserSpecialIdentifierGroup = id; }
-
         protected abstract Task PerformInternal(UserViewModel user, IEnumerable<string> arguments);
 
         protected async Task<string> ReplaceStringWithSpecialModifiers(string str, UserViewModel user, IEnumerable<string> arguments, bool encode = false)
         {
-            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str, this.randomUserSpecialIdentifierGroup, encode);
+            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str, encode);
             foreach (var kvp in this.extraSpecialIdentifiers)
             {
                 siString.ReplaceSpecialIdentifier(kvp.Key, kvp.Value);

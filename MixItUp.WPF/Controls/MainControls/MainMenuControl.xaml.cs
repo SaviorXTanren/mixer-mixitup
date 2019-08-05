@@ -143,7 +143,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationServiceDisconnectSoundFilePath))
             {
-                await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationServiceDisconnectSoundFilePath, 100);
+                await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationServiceDisconnectSoundFilePath, ChannelSession.Settings.NotificationServiceDisconnectSoundVolume);
             }
 
             lock (this.serviceDisconnections)
@@ -157,7 +157,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationServiceConnectSoundFilePath))
             {
-                await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationServiceConnectSoundFilePath, 100);
+                await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationServiceConnectSoundFilePath, ChannelSession.Settings.NotificationServiceConnectSoundVolume);
             }
 
             lock (this.serviceDisconnections)

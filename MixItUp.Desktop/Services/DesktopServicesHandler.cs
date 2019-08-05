@@ -5,6 +5,7 @@ using MixItUp.Desktop.Files;
 using MixItUp.Desktop.Services.DeveloperAPI;
 using MixItUp.Input;
 using MixItUp.OBS;
+using MixItUp.OvrStream;
 using MixItUp.XSplit;
 using System;
 using System.Net.WebSockets;
@@ -22,10 +23,13 @@ namespace MixItUp.Desktop.Services
             this.Settings = new DesktopSettingsService();
             this.FileService = new WindowsFileService();
             this.InputService = new WindowsInputService();
+            this.TimerService = new TimerService();
+            this.GameQueueService = new GameQueueService();
             this.ImageManipulationService = new DesktopImageManipulationService();
             this.AudioService = new AudioService();
             this.TextToSpeechService = new WindowsTextToSpeechService();
             this.SongRequestService = new SongRequestService();
+            this.GiveawayService = new GiveawayService();
             this.TranslationService = new TranslationService();
             this.SerialService = new SerialService();
             this.RemoteService = new RemoteService("https://mixitup-remote-server.azurewebsites.net/api/", "https://mixitup-remote-server.azurewebsites.net/RemoteHub");
@@ -38,6 +42,7 @@ namespace MixItUp.Desktop.Services
         public override async Task Close()
         {
             await this.DisconnectOverlayServer();
+            await this.DisconnectOvrStream();
             await this.DisconnectOBSStudio();
             await this.DisconnectStreamlabsOBSService();
             await this.DisconnectXSplitServer();
@@ -89,6 +94,32 @@ namespace MixItUp.Desktop.Services
                 this.OBSWebsocket.Disconnected -= OBSWebsocket_Disconnected;
                 await this.OBSWebsocket.Disconnect();
                 this.OBSWebsocket = null;
+            }
+        }
+
+        public override async Task<bool> InitializeOvrStream()
+        {
+            if (this.OvrStreamWebsocket == null)
+            {
+                this.OvrStreamWebsocket = new OvrStreamService(ChannelSession.Settings.OvrStreamServerIP);
+                if (await this.OvrStreamWebsocket.Connect())
+                {
+                    return true;
+                }
+                else
+                {
+                    await this.DisconnectOvrStream();
+                }
+            }
+            return false;
+        }
+
+        public override async Task DisconnectOvrStream()
+        {
+            if (this.OvrStreamWebsocket != null)
+            {
+                await this.OvrStreamWebsocket.Disconnect();
+                this.OvrStreamWebsocket = null;
             }
         }
 
@@ -217,30 +248,6 @@ namespace MixItUp.Desktop.Services
                 await this.Streamlabs.Disconnect();
                 this.Streamlabs = null;
                 ChannelSession.Settings.StreamlabsOAuthToken = null;
-            }
-        }
-
-        public override async Task<bool> InitializeGawkBox(string gawkBoxID = "")
-        {
-            this.GawkBox = (ChannelSession.Settings.GawkBoxOAuthToken != null) ? new GawkBoxService(ChannelSession.Settings.GawkBoxOAuthToken) : new GawkBoxService(gawkBoxID);
-            if (await this.GawkBox.Connect())
-            {
-                return true;
-            }
-            else
-            {
-                await this.DisconnectGawkBox();
-            }
-            return false;
-        }
-
-        public override async Task DisconnectGawkBox()
-        {
-            if (this.GawkBox != null)
-            {
-                await this.GawkBox.Disconnect();
-                this.GawkBox = null;
-                ChannelSession.Settings.GawkBoxOAuthToken = null;
             }
         }
 
@@ -471,6 +478,22 @@ namespace MixItUp.Desktop.Services
             }
         }
 
+        public override Task<bool> InitializeIFTTT(string key = null)
+        {
+            this.IFTTT = (ChannelSession.Settings.IFTTTOAuthToken != null) ? new IFTTTService(ChannelSession.Settings.IFTTTOAuthToken) : new IFTTTService(key);
+            return Task.FromResult(true);
+        }
+
+        public override Task DisconnectIFTTT()
+        {
+            if (this.IFTTT != null)
+            {
+                this.IFTTT = null;
+                ChannelSession.Settings.IFTTTOAuthToken = null;
+            }
+            return Task.FromResult(0);
+        }
+
         public override async Task<bool> InitializeStreamloots(string streamlootsID = null)
         {
             this.Streamloots = (ChannelSession.Settings.StreamlootsOAuthToken != null) ? new StreamlootsService(ChannelSession.Settings.StreamlootsOAuthToken) : new StreamlootsService(streamlootsID);
@@ -513,6 +536,16 @@ namespace MixItUp.Desktop.Services
         private void OBSWebsocket_Disconnected(object sender, EventArgs e)
         {
             ChannelSession.DisconnectionOccurred("OBS");
+        }
+
+        private void OvrStreamWebsocket_Connected(object sender, EventArgs e)
+        {
+            ChannelSession.ReconnectionOccurred("OvrStream");
+        }
+
+        private void OvrStreamWebsocket_Disconnected(object sender, EventArgs e)
+        {
+            ChannelSession.DisconnectionOccurred("OvrStream");
         }
 
         private void XSplitServer_Connected(object sender, EventArgs e)

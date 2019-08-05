@@ -1,5 +1,4 @@
-﻿using AutoUpdaterDotNET;
-using Mixer.Base;
+﻿using Mixer.Base;
 using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.User;
 using MixItUp.Base;
@@ -7,15 +6,11 @@ using MixItUp.Base.Model.API;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Desktop;
-using MixItUp.Installer;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows;
 using MixItUp.WPF.Windows.Wizard;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -29,8 +24,6 @@ namespace MixItUp.WPF
     /// </summary>
     public partial class LoginWindow : LoadingWindowBase
     {
-        private static readonly Version minimumOSVersion = new Version(6, 2, 0, 0);
-
         private MixItUpUpdateModel currentUpdate;
         private bool updateFound = false;
 
@@ -53,64 +46,9 @@ namespace MixItUp.WPF
             this.ExistingStreamerComboBox.ItemsSource = streamerSettings;
             this.ModeratorChannelComboBox.ItemsSource = moderatorSettings;
 
-            if (Environment.OSVersion.Version < minimumOSVersion)
-            {
-                await MessageBoxHelper.ShowMessageDialog("Thank you for using Mix It Up, but unfortunately we only support Windows 8 & higher. If you are running Windows 8 or higher and see this message, please contact Mix It Up support for assistance.");
-                this.Close();
-                return;
-            }
-
-            if (!App.AppSettings.InstallerFolderUpgradeAsked)
-            {
-                App.AppSettings.InstallerFolderUpgradeAsked = true;
-                App.AppSettings.Save();
-
-                string currentInstallDirectory = ChannelSession.Services.FileService.GetApplicationDirectory();
-                if (!Logger.IsDebug && !currentInstallDirectory.Equals(InstallerHelpers.InstallDirectory))
-                {
-                    if (await MessageBoxHelper.ShowConfirmationDialog("We noticed you are not running Mix It Up from the default installation folder." +
-                        " We now have a full installer that puts Mix It Up into your Local App Data folder and creates a Start Menu shortcut for you to easily launch it." +
-                        Environment.NewLine + Environment.NewLine + 
-                        "We can install the latest version of Mix It Up with the Start Menu shortcut, copy over your current settings over there for you, and keep this version of Mix It Up as is for backup purposes." +
-                        Environment.NewLine + Environment.NewLine +
-                        "The process should take no more than a miunute; would you like us to do this for you?"))
-                    {
-                        bool installationSuccessful = await Task.Run(() =>
-                        {
-                            try
-                            {
-                                return InstallerHelpers.DownloadMixItUp() && InstallerHelpers.InstallMixItUp() && InstallerHelpers.CreateMixItUpShortcut();
-                            }
-                            catch (Exception ex) { Logger.Log(ex); }
-                            return false;
-                        });
-
-                        if (installationSuccessful)
-                        {
-                            await ChannelSession.Services.FileService.CopyDirectory(Path.Combine(currentInstallDirectory, "Settings"),
-                                Path.Combine(InstallerHelpers.InstallDirectory, "Settings"));
-
-                            await ChannelSession.Services.FileService.CopyDirectory(Path.Combine(currentInstallDirectory, "Counters"),
-                                Path.Combine(InstallerHelpers.InstallDirectory, "Counters"));
-
-                            await MessageBoxHelper.ShowMessageDialog("Mix It Up was successfully installed to your Local App Data folder and a shortcut was created on the Start Menu." + 
-                                " We will now close this version of Mix It Up and launch your newly installed version.");
-
-                            Process.Start(Path.Combine(InstallerHelpers.StartMenuDirectory, InstallerHelpers.ShortcutFileName));
-                            this.Close();
-                            return;
-                        }
-                        else
-                        {
-                            await MessageBoxHelper.ShowMessageDialog("The installation failed for an unknown reason");
-                        }
-                    }
-                }
-            }
-
             await this.CheckForUpdates();
 
-            foreach (IChannelSettings setting in (await ChannelSession.Services.Settings.GetAllSettings()).OrderBy(s => s.Channel.user.username))
+            foreach (IChannelSettings setting in (await ChannelSession.Services.Settings.GetAllSettings()).OrderBy(s => s.Channel.token))
             {
                 if (setting.IsStreamer)
                 {
@@ -125,7 +63,7 @@ namespace MixItUp.WPF
             if (this.streamerSettings.Count > 0)
             {
                 this.ExistingStreamerComboBox.Visibility = Visibility.Visible;
-                this.streamerSettings.Add(new DesktopChannelSettings() { Channel = new ExpandedChannelModel() { id = 0, user = new UserModel() { username = "NEW STREAMER" } } });
+                this.streamerSettings.Add(new DesktopChannelSettings() { Channel = new ExpandedChannelModel() { id = 0, user = new UserModel() { username = "NEW STREAMER" }, token = "NEW STREAMER" } });
                 if (this.streamerSettings.Count() == 2)
                 {
                     this.ExistingStreamerComboBox.SelectedIndex = 0;
@@ -292,8 +230,12 @@ namespace MixItUp.WPF
                     }
                 }
 
-                AutoUpdater.CheckForUpdateEvent += AutoUpdater_CheckForUpdateEvent;
-                AutoUpdater.Start(this.currentUpdate.AutoUpdaterLink);
+                if (this.currentUpdate.SystemVersion > Assembly.GetEntryAssembly().GetName().Version)
+                {
+                    updateFound = true;
+                    UpdateWindow window = new UpdateWindow(this.currentUpdate);
+                    window.Show();
+                }
             }
         }
 
@@ -337,16 +279,6 @@ namespace MixItUp.WPF
         private async Task<bool> EstablishConnection(IEnumerable<OAuthClientScopeEnum> scopes, string channelName = null)
         {
             return await ChannelSession.ConnectUser(scopes, channelName);
-        }
-
-        private void AutoUpdater_CheckForUpdateEvent(UpdateInfoEventArgs args)
-        {
-            if (args != null && args.IsUpdateAvailable)
-            {
-                updateFound = true;
-                UpdateWindow window = new UpdateWindow(args);
-                window.Show();
-            }
         }
 
         private async void GlobalEvents_OnShowMessageBox(object sender, string message)

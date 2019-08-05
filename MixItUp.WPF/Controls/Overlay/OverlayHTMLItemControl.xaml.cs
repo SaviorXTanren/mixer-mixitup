@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base.Model.Overlay;
-using System.Collections.Generic;
+using MixItUp.Base.ViewModel.Controls.Overlay;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.Overlay
@@ -9,43 +9,41 @@ namespace MixItUp.WPF.Controls.Overlay
     /// </summary>
     public partial class OverlayHTMLItemControl : OverlayItemControl
     {
-        private static readonly List<int> sampleFontSize = new List<int>() { 12, 24, 36, 48, 60, 72, 84, 96, 108, 120 };
-
-        private OverlayHTMLItem item;
+        private OverlayHTMLItemViewModel viewModel;
 
         public OverlayHTMLItemControl()
         {
             InitializeComponent();
+
+            this.viewModel = new OverlayHTMLItemViewModel();
         }
 
-        public OverlayHTMLItemControl(OverlayHTMLItem item)
-            : this()
+        public OverlayHTMLItemControl(OverlayHTMLItemModel item)
         {
-            this.item = item;
+            InitializeComponent();
+
+            this.viewModel = new OverlayHTMLItemViewModel(item);
         }
 
-        public override void SetItem(OverlayItemBase item)
-        {
-            this.item = (OverlayHTMLItem)item;
-            this.HTMLTextBox.Text = this.item.HTMLText;
-        }
+        public override OverlayItemViewModelBase GetViewModel() { return this.viewModel; }
 
-        public override OverlayItemBase GetItem()
+        public override void SetItem(OverlayItemModelBase item)
         {
-            if (!string.IsNullOrEmpty(this.HTMLTextBox.Text))
+            if (item != null)
             {
-                return new OverlayHTMLItem(this.HTMLTextBox.Text);
+                this.viewModel = new OverlayHTMLItemViewModel((OverlayHTMLItemModel)item);
             }
-            return null;
         }
 
-        protected override Task OnLoaded()
+        public override OverlayItemModelBase GetItem()
         {
-            if (this.item != null)
-            {
-                this.SetItem(this.item);
-            }
-            return Task.FromResult(0);
+            return this.viewModel.GetOverlayItem();
+        }
+
+        protected override async Task OnLoaded()
+        {
+            this.DataContext = this.viewModel;
+            await this.viewModel.OnLoaded();
         }
     }
 }

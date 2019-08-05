@@ -77,14 +77,6 @@ namespace MixItUp.WPF.Controls.Settings
             this.AvailableColorSchemes.Remove(new ColorSchemeOption("White"));
         }
 
-        public void AddDefaultOption()
-        {
-            if (!this.AvailableColorSchemes.Any(c => c.Name.Equals(ColorSchemes.DefaultColorScheme)))
-            {
-                this.AvailableColorSchemes.Add(new ColorSchemeOption(ColorSchemes.DefaultColorScheme, ""));
-            }
-        }
-
         private void ColorComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (this.SelectionChanged != null)

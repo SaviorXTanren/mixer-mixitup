@@ -7,6 +7,7 @@ using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Remote.Authentication;
 using MixItUp.Base.Model.Serial;
+using MixItUp.Base.Model.SongRequests;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Remote.Models;
 using MixItUp.Base.Services;
@@ -38,7 +39,6 @@ namespace MixItUp.Base
         OAuthTokenModel BotOAuthToken { get; set; }
 
         OAuthTokenModel StreamlabsOAuthToken { get; set; }
-        OAuthTokenModel GawkBoxOAuthToken { get; set; }
         OAuthTokenModel TwitterOAuthToken { get; set; }
         OAuthTokenModel SpotifyOAuthToken { get; set; }
         OAuthTokenModel DiscordOAuthToken { get; set; }
@@ -47,6 +47,7 @@ namespace MixItUp.Base
         OAuthTokenModel TreatStreamOAuthToken { get; set; }
         OAuthTokenModel StreamJarOAuthToken { get; set; }
         OAuthTokenModel PatreonOAuthToken { get; set; }
+        OAuthTokenModel IFTTTOAuthToken { get; set; }
         OAuthTokenModel StreamlootsOAuthToken { get; set; }
 
         Dictionary<string, CommandGroupSettings> CommandGroups { get; set; }
@@ -79,7 +80,8 @@ namespace MixItUp.Base
         List<UserTitleModel> UserTitles { get; set; }
 
         bool GameQueueSubPriority { get; set; }
-        RequirementViewModel GameQueueRequirements { get; set; }
+        CustomCommand GameQueueUserJoinedCommand { get; set; }
+        CustomCommand GameQueueUserSelectedCommand { get; set; }
 
         bool QuotesEnabled { get; set; }
         string QuotesFormat { get; set; }
@@ -89,17 +91,13 @@ namespace MixItUp.Base
         bool DisableAllTimers { get; set; }
 
         string GiveawayCommand { get; set; }
-        bool GiveawayGawkBoxTrigger { get; set; }
-        bool GiveawayStreamlabsTrigger { get; set; }
-        bool GiveawayTiltifyTrigger { get; set; }
-        bool GiveawayDonationRequiredAmount { get; set; }
-        double GiveawayDonationAmount { get; set; }
         int GiveawayTimer { get; set; }
         int GiveawayMaximumEntries { get; set; }
         RequirementViewModel GiveawayRequirements { get; set; }
         int GiveawayReminderInterval { get; set; }
         bool GiveawayRequireClaim { get; set; }
         bool GiveawayAllowPastWinners { get; set; }
+        CustomCommand GiveawayStartedReminderCommand { get; set; }
         CustomCommand GiveawayUserJoinedCommand { get; set; }
         CustomCommand GiveawayWinnerSelectedCommand { get; set; }
 
@@ -129,7 +127,10 @@ namespace MixItUp.Base
         bool EnableOverlay { get; set; }
         Dictionary<string, int> OverlayCustomNameAndPorts { get; set; }
         string OverlaySourceName { get; set; }
+        [Obsolete]
         int OverlayWidgetRefreshTime { get; set; }
+
+        string OvrStreamServerIP { get; set; }
 
         string OBSStudioServerIP { get; set; }
         string OBSStudioServerPassword { get; set; }
@@ -161,10 +162,15 @@ namespace MixItUp.Base
         string ChatInteractiveAlertsColorScheme { get; set; }
 
         string NotificationChatMessageSoundFilePath { get; set; }
+        int NotificationChatMessageSoundVolume { get; set; }
         string NotificationChatTaggedSoundFilePath { get; set; }
+        int NotificationChatTaggedSoundVolume { get; set; }
         string NotificationChatWhisperSoundFilePath { get; set; }
+        int NotificationChatWhisperSoundVolume { get; set; }
         string NotificationServiceConnectSoundFilePath { get; set; }
+        int NotificationServiceConnectSoundVolume { get; set; }
         string NotificationServiceDisconnectSoundFilePath { get; set; }
+        int NotificationServiceDisconnectSoundVolume { get; set; }
 
         int MaxMessagesInChat { get; set; }
 
@@ -180,7 +186,15 @@ namespace MixItUp.Base
         HashSet<SongRequestServiceTypeEnum> SongRequestServiceTypes { get; set; }
         bool SpotifyAllowExplicit { get; set; }
         string DefaultPlaylist { get; set; }
+        bool SongRequestSubPriority { get; set; }
+        int SongRequestsMaxRequests { get; set; }
+        bool SongRequestsSaveRequestQueue { get; set; }
+        List<SongRequestModel> SongRequestsSavedRequestQueue { get; set; }
         int SongRequestVolume { get; set; }
+        List<SongRequestModel> SongRequestsBannedSongs { get; set; }
+        CustomCommand SongAddedCommand { get; set; }
+        CustomCommand SongRemovedCommand { get; set; }
+        CustomCommand SongPlayedCommand { get; set; }
 
         Dictionary<uint, JObject> CustomInteractiveSettings { get; set; }
 
@@ -189,6 +203,9 @@ namespace MixItUp.Base
         string SettingsBackupLocation { get; set; }
         SettingsBackupRateEnum SettingsBackupRate { get; set; }
         DateTimeOffset SettingsLastBackup { get; set; }
+
+        [Obsolete]
+        List<OverlayWidget> overlayWidgetsInternal { get; set; }
     }
 
     public interface IChannelSettings : ISavableChannelSettings
@@ -213,7 +230,7 @@ namespace MixItUp.Base
         LockedList<RemoteProfileModel> RemoteProfiles { get; }
         LockedDictionary<Guid, RemoteProfileBoardsModel> RemoteProfileBoards { get; }
 
-        LockedList<OverlayWidget> OverlayWidgets { get; set; }
+        LockedList<OverlayWidgetModel> OverlayWidgets { get; set; }
 
         LockedList<string> FilteredWords { get; }
         LockedList<string> BannedWords { get; }

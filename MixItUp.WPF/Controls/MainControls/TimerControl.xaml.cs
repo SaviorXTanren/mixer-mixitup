@@ -1,14 +1,12 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
-using MixItUp.Base.ViewModel.Controls.Commands;
+using MixItUp.Base.ViewModel.Controls.MainControls;
+using MixItUp.Base.ViewModel.Window;
 using MixItUp.WPF.Controls.Command;
-using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace MixItUp.WPF.Controls.MainControls
@@ -16,49 +14,27 @@ namespace MixItUp.WPF.Controls.MainControls
     /// <summary>
     /// Interaction logic for TimerControl.xaml
     /// </summary>
-    public partial class TimerControl : MainControlBase
+    public partial class TimerControl : GroupedCommandsMainControlBase
     {
-        private ObservableCollection<CommandGroupControlViewModel> timerCommands = new ObservableCollection<CommandGroupControlViewModel>();
-
-        private int nameOrder = 1;
+        private TimerMainControlViewModel viewModel;
 
         public TimerControl()
         {
             InitializeComponent();
         }
 
-        protected override Task InitializeInternal()
+        protected override async Task InitializeInternal()
         {
-            this.TimerCommandsItemsControl.ItemsSource = this.timerCommands;
-            this.TimerIntervalTextBox.Text = ChannelSession.Settings.TimerCommandsInterval.ToString();
-            this.TimerMinimumMessagesTextBox.Text = ChannelSession.Settings.TimerCommandsMinimumMessages.ToString();
-            this.DisableAllTimers.IsChecked = ChannelSession.Settings.DisableAllTimers;
+            this.DataContext = this.viewModel = new TimerMainControlViewModel((MainWindowViewModel)this.Window.ViewModel);
+            this.SetViewModel(this.viewModel);
+            await this.viewModel.OnLoaded();
 
-            this.RefreshList();
-
-            return base.InitializeInternal();
+            await base.InitializeInternal();
         }
 
-        protected override Task OnVisibilityChanged()
+        private void NameFilterTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
-            this.RefreshList();
-            return Task.FromResult(0);
-        }
-
-        private void RefreshList()
-        {
-            this.timerCommands.Clear();
-            IEnumerable<TimerCommand> commands = ChannelSession.Settings.TimerCommands.ToList();
-            foreach (var group in commands.GroupBy(c => c.GroupName ?? string.Empty).OrderByDescending(g => !string.IsNullOrEmpty(g.Key)).ThenBy(g => g.Key))
-            {
-                IEnumerable<CommandBase> cmds = (nameOrder > 0) ? group.OrderBy(c => c.Name) : group.OrderByDescending(c => c.Name);
-                CommandGroupSettings groupSettings = null;
-                if (!string.IsNullOrEmpty(cmds.First().GroupName) && ChannelSession.Settings.CommandGroups.ContainsKey(cmds.First().GroupName))
-                {
-                    groupSettings = ChannelSession.Settings.CommandGroups[cmds.First().GroupName];
-                }
-                this.timerCommands.Add(new CommandGroupControlViewModel(groupSettings, cmds));
-            }
+            this.viewModel.NameFilter = this.NameFilterTextBox.Text;
         }
 
         private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
@@ -68,7 +44,7 @@ namespace MixItUp.WPF.Controls.MainControls
             if (command != null)
             {
                 CommandWindow window = new CommandWindow(new TimerCommandDetailsControl(command));
-                window.Closed += Window_Closed;
+                window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
                 window.Show();
             }
         }
@@ -83,7 +59,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     ChannelSession.Settings.TimerCommands.Remove(command);
                     await ChannelSession.SaveSettings();
-                    this.RefreshList();
+                    this.viewModel.RemoveCommand(command);
                 }
             });
         }
@@ -91,115 +67,20 @@ namespace MixItUp.WPF.Controls.MainControls
         private void AddCommandButton_Click(object sender, RoutedEventArgs e)
         {
             CommandWindow window = new CommandWindow(new TimerCommandDetailsControl());
-            window.Closed += Window_Closed;
+            window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
             window.Show();
         }
 
-        private void Window_Closed(object sender, System.EventArgs e)
+        private void DataGrid_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
         {
-            this.RefreshList();
-        }
-
-        private async void TimerMinimumMessagesTextBox_LostFocus(object sender, RoutedEventArgs e)
-        {
-            int value;
-            if (int.TryParse(this.TimerMinimumMessagesTextBox.Text, out value) && value >= 0)
+            if (!e.Handled)
             {
-                ChannelSession.Settings.TimerCommandsMinimumMessages = value;
-            }
-            else
-            {
-                await MessageBoxHelper.ShowMessageDialog("Minimum Messages must be 0 or greater");
-                this.TimerMinimumMessagesTextBox.Text = ChannelSession.Settings.TimerCommandsMinimumMessages.ToString();
-            }
-
-            await this.CheckIfMinMessagesAndIntervalAreBothZero();
-        }
-
-        private async void TimerIntervalTextBox_LostFocus(object sender, RoutedEventArgs e)
-        {
-            int value;
-            if (int.TryParse(this.TimerIntervalTextBox.Text, out value) && value >= 0)
-            {
-                ChannelSession.Settings.TimerCommandsInterval = value;
-            }
-            else
-            {
-                await MessageBoxHelper.ShowMessageDialog("Interval must be 0 or greater");
-                this.TimerIntervalTextBox.Text = ChannelSession.Settings.TimerCommandsInterval.ToString();
-            }
-
-            await this.CheckIfMinMessagesAndIntervalAreBothZero();
-        }
-
-        private async Task CheckIfMinMessagesAndIntervalAreBothZero()
-        {
-            if (ChannelSession.Settings.TimerCommandsMinimumMessages <= 0 && ChannelSession.Settings.TimerCommandsInterval <= 0)
-            {
-                await MessageBoxHelper.ShowMessageDialog("Minimum Messages & Interval can not both be 0");
-                ChannelSession.Settings.TimerCommandsInterval = 1;
-                this.TimerIntervalTextBox.Text = ChannelSession.Settings.TimerCommandsInterval.ToString();
-            }
-        }
-
-        private void DisableAllTimers_Click(object sender, RoutedEventArgs e)
-        {
-            ChannelSession.Settings.DisableAllTimers = this.DisableAllTimers.IsChecked.GetValueOrDefault();
-        }
-
-        private void GroupCommandsToggleButton_Checked(object sender, RoutedEventArgs e)
-        {
-            this.RefreshList();
-        }
-
-        private void Name_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            nameOrder *= -1;
-            this.NameSortingIcon.Visibility = Visibility.Collapsed;
-            if (nameOrder == 1)
-            {
-                this.NameSortingIcon.Visibility = Visibility.Visible;
-                this.NameSortingIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.ArrowDown;
-            }
-            else if (nameOrder == -1)
-            {
-                this.NameSortingIcon.Visibility = Visibility.Visible;
-                this.NameSortingIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.ArrowUp;
-            }
-            this.RefreshList();
-        }
-
-        private void AccordianGroupBoxControl_Minimized(object sender, RoutedEventArgs e)
-        {
-            AccordianGroupBoxControl control = (AccordianGroupBoxControl)sender;
-            if (control.Content != null)
-            {
-                FrameworkElement content = (FrameworkElement)control.Content;
-                if (content != null)
-                {
-                    CommandGroupControlViewModel group = (CommandGroupControlViewModel)content.DataContext;
-                    if (group != null)
-                    {
-                        group.IsMinimized = true;
-                    }
-                }
-            }
-        }
-
-        private void AccordianGroupBoxControl_Maximized(object sender, RoutedEventArgs e)
-        {
-            AccordianGroupBoxControl control = (AccordianGroupBoxControl)sender;
-            if (control.Content != null)
-            {
-                FrameworkElement content = (FrameworkElement)control.Content;
-                if (content != null)
-                {
-                    CommandGroupControlViewModel group = (CommandGroupControlViewModel)content.DataContext;
-                    if (group != null)
-                    {
-                        group.IsMinimized = false;
-                    }
-                }
+                e.Handled = true;
+                var eventArg = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta);
+                eventArg.RoutedEvent = UIElement.MouseWheelEvent;
+                eventArg.Source = sender;
+                var parent = ((Control)sender).Parent as UIElement;
+                parent.RaiseEvent(eventArg);
             }
         }
     }

@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace MixItUp.Base.Util
 {
     public static class ColorSchemes
     {
-        public const string DefaultColorScheme = "Default Color";
+        public const string DefaultColorScheme = "Black";
 
         public static readonly Dictionary<string, string> HTMLColorSchemeDictionary = new Dictionary<string, string>()
         {
@@ -53,11 +54,20 @@ namespace MixItUp.Base.Util
 
         public static string GetColorCode(string name)
         {
-            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(name))
+            if (!string.IsNullOrEmpty(name) && ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(name))
             {
                 return ColorSchemes.HTMLColorSchemeDictionary[name];
             }
-            return "#000000";
+            return name;
+        }
+
+        public static string GetColorName(string code)
+        {
+            if (!string.IsNullOrEmpty(code) && ColorSchemes.HTMLColorSchemeDictionary.ContainsValue(code))
+            {
+                return ColorSchemes.HTMLColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(code)).Key;
+            }
+            return code;
         }
     }
 }

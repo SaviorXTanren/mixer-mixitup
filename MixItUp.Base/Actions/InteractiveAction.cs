@@ -69,6 +69,8 @@ namespace MixItUp.Base.Actions
         BackgroundColor,
         [Name("Background Image")]
         BackgroundImage,
+        [Name("Progress")]
+        Progress,
     }
 
     [DataContract]
@@ -351,11 +353,12 @@ namespace MixItUp.Base.Actions
                         InteractiveConnectedSceneModel scene = null;
                         InteractiveControlModel control = null;
 
+                        string processedControlId = await this.ReplaceStringWithSpecialModifiers(this.ControlID, user, arguments);
                         foreach (InteractiveConnectedSceneModel s in ChannelSession.Interactive.Scenes)
                         {
                             foreach (InteractiveControlModel c in s.allControls)
                             {
-                                if (c.controlID.Equals(this.ControlID))
+                                if (c.controlID.Equals(processedControlId))
                                 {
                                     scene = s;
                                     control = c;
@@ -375,6 +378,7 @@ namespace MixItUp.Base.Actions
                             {
                                 string replacementValue = await this.ReplaceStringWithSpecialModifiers(this.UpdateValue, user, arguments);
                                 int.TryParse(replacementValue, out int replacementNumberValue);
+                                float.TryParse(replacementValue, out float replacementFloatValue);
 
                                 if (control is InteractiveButtonControlModel)
                                 {
@@ -391,6 +395,7 @@ namespace MixItUp.Base.Actions
                                         case InteractiveActionUpdateControlTypeEnum.BorderColor: button.borderColor = replacementValue; break;
                                         case InteractiveActionUpdateControlTypeEnum.BackgroundColor: button.backgroundColor = replacementValue; break;
                                         case InteractiveActionUpdateControlTypeEnum.BackgroundImage: button.backgroundImage = replacementValue; break;
+                                        case InteractiveActionUpdateControlTypeEnum.Progress: ((InteractiveConnectedButtonControlModel)button).SetProgress(replacementFloatValue); break;
                                     }
                                 }
                                 else if (control is InteractiveLabelControlModel)

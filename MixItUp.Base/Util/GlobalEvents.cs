@@ -175,12 +175,12 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler<Tuple<UserViewModel>> OnProgressionLevelUpOccurred;
+        public static event EventHandler<UserViewModel> OnProgressionLevelUpOccurred;
         public static void ProgressionLevelUpOccurred(UserViewModel user)
         {
             if (GlobalEvents.OnProgressionLevelUpOccurred != null)
             {
-                GlobalEvents.OnProgressionLevelUpOccurred(null, new Tuple<UserViewModel>(user));
+                GlobalEvents.OnProgressionLevelUpOccurred(null, user);
             }
         }
 
@@ -208,6 +208,15 @@ namespace MixItUp.Base.Util
             if (GlobalEvents.OnSongRequestsChangedOccurred != null)
             {
                 GlobalEvents.OnSongRequestsChangedOccurred(null, new EventArgs());
+            }
+        }
+
+        public static event EventHandler<bool> OnGiveawaysChangedOccurred;
+        public static void GiveawaysChangedOccurred(bool usersUpdated = false)
+        {
+            if (GlobalEvents.OnGiveawaysChangedOccurred != null)
+            {
+                GlobalEvents.OnGiveawaysChangedOccurred(null, usersUpdated);
             }
         }
 

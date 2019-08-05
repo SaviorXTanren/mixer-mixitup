@@ -55,6 +55,6 @@
         </Grid>
 
         <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="1" />
-        <WebBrowser x:Name="YouTubeSongRequestHost" IsHitTestVisible="False" Grid.Row="2" Visibility="Hidden"/>
+        <WebBrowser x:Name="YouTubeSongRequestHost" IsHitTestVisible="False" Grid.Row="2" Visibility="Hidden" Source="about:blank"/>
     </Grid>
 </Windows:LoadingWindowBase>

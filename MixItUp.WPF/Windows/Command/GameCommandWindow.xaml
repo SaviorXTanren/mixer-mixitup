@@ -25,6 +25,8 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Card.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         </ResourceDictionary>
     </Windows:LoadingWindowBase.Resources>
 
@@ -36,7 +38,7 @@
 
         <MaterialDesign:DialogHost x:Name="MDDialogHost" Identifier="RootDialog" />
 
-        <Grid Margin="10" x:Name="GameTypeSelectionGrid" Visibility="Collapsed" Grid.Row="0">
+        <Grid Margin="10" Visibility="{Binding GameNotSelected, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Row="0">
             <Grid HorizontalAlignment="Center" Margin="0,40">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -48,15 +50,15 @@
 
                 <TextBlock Grid.Row="0" HorizontalAlignment="Center">Select the Game Type you would like to create:</TextBlock>
 
-                <ComboBox Grid.Row="2" x:Name="GameTypeComboBox" HorizontalAlignment="Center" Width="200" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="Game Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="GameTypeComboBox_SelectionChanged" />
+                <ComboBox Grid.Row="2" ItemsSource="{Binding GameListings}" SelectedItem="{Binding SelectedGameType}" HorizontalAlignment="Center" Width="200" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="Game Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-                <TextBlock Grid.Row="4" x:Name="GameDescriptionTextBlock" HorizontalAlignment="Center" Width="500" TextWrapping="Wrap" />
+                <TextBlock Grid.Row="4" Text="{Binding SelectedGameType.Description}" HorizontalAlignment="Center" Width="500" TextWrapping="Wrap" />
             </Grid>
 
-            <Button x:Name="NextButton" Width="80" Margin="0,0,40,20" IsEnabled="False" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="NextButton_Click">Next</Button>
+            <Button Command="{Binding GameTypeSelectedCommand}" Width="80" Margin="0,0,40,20" IsEnabled="{Binding GameTypeSelected}" HorizontalAlignment="Right" VerticalAlignment="Bottom">Next</Button>
         </Grid>
 
-        <Grid x:Name="GameEditorGrid" Visibility="Collapsed" Grid.Row="0">
+        <Grid Visibility="{Binding GameSelected, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Row="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="20" />

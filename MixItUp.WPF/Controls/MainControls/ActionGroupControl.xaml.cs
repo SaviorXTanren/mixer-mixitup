@@ -1,13 +1,12 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
-using MixItUp.Base.ViewModel.Controls.Commands;
+using MixItUp.Base.ViewModel.Controls.MainControls;
+using MixItUp.Base.ViewModel.Window;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Windows.Command;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace MixItUp.WPF.Controls.MainControls
@@ -15,58 +14,27 @@ namespace MixItUp.WPF.Controls.MainControls
     /// <summary>
     /// Interaction logic for ActionGroupControl.xaml
     /// </summary>
-    public partial class ActionGroupControl : MainControlBase
+    public partial class ActionGroupControl : GroupedCommandsMainControlBase
     {
-        private ObservableCollection<CommandGroupControlViewModel> actionGroupCommands = new ObservableCollection<CommandGroupControlViewModel>();
-
-        private int nameOrder = 1;
+        private ActionGroupMainControlViewModel viewModel;
 
         public ActionGroupControl()
         {
             InitializeComponent();
         }
 
-        protected override Task InitializeInternal()
+        protected override async Task InitializeInternal()
         {
-            this.ActionGroupCommandsItemsControl.ItemsSource = this.actionGroupCommands;
+            this.DataContext = this.viewModel = new ActionGroupMainControlViewModel((MainWindowViewModel)this.Window.ViewModel);
+            this.SetViewModel(this.viewModel);
+            await this.viewModel.OnLoaded();
 
-            this.RefreshList();
-
-            return base.InitializeInternal();
+            await base.InitializeInternal();
         }
 
-        protected override Task OnVisibilityChanged()
+        private void NameFilterTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
-            this.RefreshList();
-            return Task.FromResult(0);
-        }
-
-        private void RefreshList()
-        {
-            string filter = this.ActionGroupNameFilterTextBox.Text;
-            if (!string.IsNullOrEmpty(filter))
-            {
-                filter = filter.ToLower();
-            }
-
-            this.actionGroupCommands.Clear();
-
-            IEnumerable<ActionGroupCommand> commands = ChannelSession.Settings.ActionGroupCommands.ToList();
-            foreach (var group in commands.Where(c => string.IsNullOrEmpty(filter) || c.Name.ToLower().Contains(filter)).GroupBy(c => c.GroupName ?? string.Empty).OrderByDescending(g => !string.IsNullOrEmpty(g.Key)).ThenBy(g => g.Key))
-            {
-                IEnumerable<CommandBase> cmds = (nameOrder > 0) ? group.OrderBy(c => c.Name) : group.OrderByDescending(c => c.Name);
-                CommandGroupSettings groupSettings = null;
-                if (!string.IsNullOrEmpty(cmds.First().GroupName) && ChannelSession.Settings.CommandGroups.ContainsKey(cmds.First().GroupName))
-                {
-                    groupSettings = ChannelSession.Settings.CommandGroups[cmds.First().GroupName];
-                }
-                this.actionGroupCommands.Add(new CommandGroupControlViewModel(groupSettings, cmds));
-            }
-        }
-
-        private void ActionGroupNameFilterTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
-        {
-            this.RefreshList();
+            this.viewModel.NameFilter = this.NameFilterTextBox.Text;
         }
 
         private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
@@ -76,7 +44,7 @@ namespace MixItUp.WPF.Controls.MainControls
             if (command != null)
             {
                 CommandWindow window = new CommandWindow(new ActionGroupCommandDetailsControl(command));
-                window.Closed += Window_Closed;
+                window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
                 window.Show();
             }
         }
@@ -91,7 +59,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     ChannelSession.Settings.ActionGroupCommands.Remove(command);
                     await ChannelSession.SaveSettings();
-                    this.RefreshList();
+                    this.viewModel.RemoveCommand(command);
                 }
             });
         }
@@ -99,68 +67,20 @@ namespace MixItUp.WPF.Controls.MainControls
         private void AddCommandButton_Click(object sender, RoutedEventArgs e)
         {
             CommandWindow window = new CommandWindow(new ActionGroupCommandDetailsControl());
-            window.Closed += Window_Closed;
+            window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
             window.Show();
         }
 
-        private void Window_Closed(object sender, System.EventArgs e)
+        private void DataGrid_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
         {
-            this.RefreshList();
-        }
-
-        private void GroupCommandsToggleButton_Checked(object sender, RoutedEventArgs e)
-        {
-            this.RefreshList();
-        }
-
-        private void Name_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            nameOrder *= -1;
-            this.NameSortingIcon.Visibility = Visibility.Collapsed;
-            if (nameOrder == 1)
+            if (!e.Handled)
             {
-                this.NameSortingIcon.Visibility = Visibility.Visible;
-                this.NameSortingIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.ArrowDown;
-            }
-            else if (nameOrder == -1)
-            {
-                this.NameSortingIcon.Visibility = Visibility.Visible;
-                this.NameSortingIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.ArrowUp;
-            }
-            this.RefreshList();
-        }
-
-        private void AccordianGroupBoxControl_Minimized(object sender, RoutedEventArgs e)
-        {
-            AccordianGroupBoxControl control = (AccordianGroupBoxControl)sender;
-            if (control.Content != null)
-            {
-                FrameworkElement content = (FrameworkElement)control.Content;
-                if (content != null)
-                {
-                    CommandGroupControlViewModel group = (CommandGroupControlViewModel)content.DataContext;
-                    if (group != null)
-                    {
-                        group.IsMinimized = true;
-                    }
-                }
-            }
-        }
-
-        private void AccordianGroupBoxControl_Maximized(object sender, RoutedEventArgs e)
-        {
-            AccordianGroupBoxControl control = (AccordianGroupBoxControl)sender;
-            if (control.Content != null)
-            {
-                FrameworkElement content = (FrameworkElement)control.Content;
-                if (content != null)
-                {
-                    CommandGroupControlViewModel group = (CommandGroupControlViewModel)content.DataContext;
-                    if (group != null)
-                    {
-                        group.IsMinimized = false;
-                    }
-                }
+                e.Handled = true;
+                var eventArg = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta);
+                eventArg.RoutedEvent = UIElement.MouseWheelEvent;
+                eventArg.Source = sender;
+                var parent = ((Control)sender).Parent as UIElement;
+                parent.RaiseEvent(eventArg);
             }
         }
     }

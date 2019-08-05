@@ -23,11 +23,11 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" HorizontalAlignment="Center" Margin="0,0,0,20">
-                    <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">Special Identifiers Reference</Hyperlink>
+                <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">Special Identifiers Reference</Hyperlink>
             </TextBlock>
-            <TextBox x:Name="TextTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Text" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding Text}" Grid.Column="0" MaterialDesign:HintAssist.Hint="Text" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <ComboBox Grid.Column="2" x:Name="TextSizeComboBox" MaterialDesign:HintAssist.Hint="Size (Pixels)" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" />
+            <ComboBox Grid.Column="2" ItemsSource="{Binding SampleFontSizesStrings}" Text="{Binding SizeString}" MaterialDesign:HintAssist.Hint="Size (Pixels)" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" />
         </Grid>
 
         <Grid Grid.Row="2">
@@ -41,20 +41,20 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox Grid.Column="0" x:Name="TextColorComboBox" MaterialDesign:HintAssist.Hint="Font Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox Grid.Column="0" ItemsSource="{Binding ColorNames}" Text="{Binding Color}" MaterialDesign:HintAssist.Hint="Font Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-            <ComboBox x:Name="TextFontComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Font Name (Optional)" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" />
+            <ComboBox x:Name="TextFontComboBox" Text="{Binding Font}" Grid.Column="2" MaterialDesign:HintAssist.Hint="Font Name (Optional)" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" />
 
-            <ComboBox Grid.Column="4" x:Name="TextShadowColorComboBox" MaterialDesign:HintAssist.Hint="Shadow (Optional)" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox Grid.Column="4" ItemsSource="{Binding ColorNames}" Text="{Binding ShadowColor}" MaterialDesign:HintAssist.Hint="Shadow (Optional)" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
             <ListBox Grid.Column="6" SelectionMode="Extended" Style="{StaticResource MaterialDesignToolToggleFlatListBox}">
-                <ListBoxItem x:Name="TextBoldCheckBox">
+                <ListBoxItem x:Name="TextBoldCheckBox" IsSelected="{Binding Bold}">
                     <MaterialDesign:PackIcon Kind="FormatBold"/>
                 </ListBoxItem>
-                <ListBoxItem x:Name="TextItalicCheckBox">
+                <ListBoxItem x:Name="TextItalicCheckBox" IsSelected="{Binding Italic}">
                     <MaterialDesign:PackIcon Kind="FormatItalic"/>
                 </ListBoxItem>
-                <ListBoxItem x:Name="TextUnderlineCheckBox">
+                <ListBoxItem x:Name="TextUnderlineCheckBox" IsSelected="{Binding Underline}">
                     <MaterialDesign:PackIcon Kind="FormatUnderline"/>
                 </ListBoxItem>
             </ListBox>

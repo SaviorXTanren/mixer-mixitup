@@ -14,7 +14,7 @@ namespace MixItUp.Base.Actions
         ChatTimeout,
         [Name("Purge User")]
         PurgeUser,
-        [Name("Interactive Timeout")]
+        [Name("MixPlay Timeout")]
         InteractiveTimeout,
         [Name("Ban User")]
         BanUser,

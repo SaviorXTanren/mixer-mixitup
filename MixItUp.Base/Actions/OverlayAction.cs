@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Util;
+using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
@@ -23,18 +24,21 @@ namespace MixItUp.Base.Actions
         [DataMember]
         [Obsolete]
         public OverlayEffectBase Effect { get; set; }
+        [DataMember]
+        [Obsolete]
+        public OverlayItemBase Item { get; set; }
+        [DataMember]
+        [Obsolete]
+        public OverlayItemPosition Position { get; set; }
+        [DataMember]
+        [Obsolete]
+        public OverlayItemEffects Effects { get; set; }
 
         [DataMember]
         public string OverlayName { get; set; }
 
         [DataMember]
-        public OverlayItemBase Item { get; set; }
-
-        [DataMember]
-        public OverlayItemPosition Position { get; set; }
-
-        [DataMember]
-        public OverlayItemEffects Effects { get; set; }
+        public OverlayItemModelBase OverlayItem { get; set; }
 
         [DataMember]
         public Guid WidgetID { get; set; }
@@ -43,13 +47,11 @@ namespace MixItUp.Base.Actions
 
         public OverlayAction() : base(ActionTypeEnum.Overlay) { }
 
-        public OverlayAction(string overlayName, OverlayItemBase item, OverlayItemPosition position, OverlayItemEffects effects)
+        public OverlayAction(string overlayName, OverlayItemModelBase overlayItem)
             : this()
         {
             this.OverlayName = overlayName;
-            this.Item = item;
-            this.Position = position;
-            this.Effects = effects;
+            this.OverlayItem = overlayItem;
         }
 
         public OverlayAction(Guid widgetID, bool showWidget)
@@ -63,41 +65,33 @@ namespace MixItUp.Base.Actions
         {
             if (this.WidgetID != Guid.Empty)
             {
-                OverlayWidget widget = ChannelSession.Settings.OverlayWidgets.FirstOrDefault(w => w.Item.ID.Equals(this.WidgetID));
+                OverlayWidgetModel widget = ChannelSession.Settings.OverlayWidgets.FirstOrDefault(w => w.Item.ID.Equals(this.WidgetID));
                 if (widget != null)
                 {
-                    widget.IsEnabled = this.ShowWidget;
-                    if (!widget.IsEnabled)
+                    if (this.ShowWidget)
                     {
-                        IOverlayService overlay = ChannelSession.Services.OverlayServers.GetOverlay(widget.OverlayName);
-                        if (overlay != null)
-                        {
-                            await overlay.RemoveItem(widget.Item);
-                        }
+                        await widget.Initialize(user, arguments, this.extraSpecialIdentifiers);
+                    }
+                    else
+                    {
+                        await widget.Disable();
                     }
                 }
             }
             else
             {
 #pragma warning disable CS0612 // Type or member is obsolete
-                if (this.Position == null && this.Effect != null)
+                if (this.Item != null)
                 {
-                    this.Position = new OverlayItemPosition(OverlayEffectPositionType.Percentage, this.Effect.Horizontal, this.Effect.Vertical);
+                    StoreCommandUpgrader.RestructureNewerOverlayActions(new List<ActionBase>() { this });
                 }
-                if (this.Effects == null && this.Effect != null)
-                {
-                    this.Effects = new OverlayItemEffects((OverlayEffectEntranceAnimationTypeEnum)this.Effect.EntranceAnimation,
-                        (OverlayEffectVisibleAnimationTypeEnum)this.Effect.VisibleAnimation, (OverlayEffectExitAnimationTypeEnum)this.Effect.ExitAnimation, this.Effect.Duration);
-                }
-                this.Effect = null;
 #pragma warning restore CS0612 // Type or member is obsolete
 
                 string overlayName = (string.IsNullOrEmpty(this.OverlayName)) ? ChannelSession.Services.OverlayServers.DefaultOverlayName : this.OverlayName;
                 IOverlayService overlay = ChannelSession.Services.OverlayServers.GetOverlay(overlayName);
                 if (overlay != null)
                 {
-                    OverlayItemBase processedItem = await this.Item.GetProcessedItem(user, arguments, this.extraSpecialIdentifiers);
-                    await overlay.SendItem(processedItem, this.Position, this.Effects);
+                    await overlay.ShowItem(this.OverlayItem, user, arguments, this.extraSpecialIdentifiers);
                 }
             }
         }

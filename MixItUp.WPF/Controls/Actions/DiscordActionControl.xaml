@@ -23,7 +23,7 @@
 
             <ComboBox x:Name="DiscordActionTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="DiscordActionTypeComboBox_SelectionChanged" />
 
-            <TextBlock x:Name="DiscordNotEnabledWarningTextBlock" Grid.Column="4" Foreground="Red" Visibility="Hidden" VerticalAlignment="Center">Please enable Discord connection in the Services Section!</TextBlock>
+            <TextBlock x:Name="DiscordNotEnabledWarningTextBlock" Grid.Column="4" Foreground="Red" Visibility="Hidden" VerticalAlignment="Center">Please enable Discord connection on the Services page!</TextBlock>
         </Grid>
 
         <Grid Grid.Row="2">

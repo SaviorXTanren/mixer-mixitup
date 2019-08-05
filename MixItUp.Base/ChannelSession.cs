@@ -30,6 +30,7 @@ namespace MixItUp.Base
         public const string ClientID = "5e3140d0719f5842a09dd2700befbfc100b5a246e35f2690";
 
         public const string DefaultOBSStudioConnection = "ws://127.0.0.1:4444";
+        public const string DefaultOvrStreamConnection = "ws://127.0.0.1:8023";
 
         private const string DefaultEmoticonsManifest = "https://mixer.com/_latest/assets/emoticons/manifest.json";
         private const string DefaultEmoticonsLinkFormat = "https://mixer.com/_latest/assets/emoticons/{0}.png";
@@ -92,6 +93,8 @@ namespace MixItUp.Base
             OAuthClientScopeEnum.channel__follow__self,
 
             OAuthClientScopeEnum.user__details__self,
+
+            OAuthClientScopeEnum.user__act_as,
         };
 
         public static readonly List<OAuthClientScopeEnum> BotScopes = new List<OAuthClientScopeEnum>()
@@ -107,6 +110,8 @@ namespace MixItUp.Base
             OAuthClientScopeEnum.chat__whisper,
 
             OAuthClientScopeEnum.user__details__self,
+
+            OAuthClientScopeEnum.user__act_as,
         };
 
         public static SecretManagerService SecretManager { get; internal set; }
@@ -125,16 +130,12 @@ namespace MixItUp.Base
         public static ChatClientWrapper Chat { get; private set; }
         public static InteractiveClientWrapper Interactive { get; private set; }
         public static ConstellationClientWrapper Constellation { get; private set; }
-        public static TimerCommandHelper Timers { get; private set; }
 
         public static StatisticsTracker Statistics { get; private set; }
 
         public static ServicesHandlerBase Services { get; private set; }
 
         public static List<PreMadeChatCommand> PreMadeChatCommands { get; private set; }
-
-        public static bool GameQueueEnabled { get; set; }
-        public static LockedList<UserViewModel> GameQueue { get; private set; }
 
         public static LockedDictionary<string, double> Counters { get; private set; }
 
@@ -222,7 +223,6 @@ namespace MixItUp.Base
             ChannelSession.ActiveUsers = new UserContainerViewModel();
 
             ChannelSession.PreMadeChatCommands = new List<PreMadeChatCommand>();
-            ChannelSession.GameQueue = new LockedList<UserViewModel>();
 
             ChannelSession.Counters = new LockedDictionary<string, double>();
 
@@ -233,8 +233,6 @@ namespace MixItUp.Base
             ChannelSession.Interactive = new InteractiveClientWrapper();
 
             ChannelSession.Statistics = new StatisticsTracker();
-
-            ChannelSession.Timers = new TimerCommandHelper();
         }
 
         public static async Task<bool> ConnectUser(IEnumerable<OAuthClientScopeEnum> scopes, string channelName = null)
@@ -263,17 +261,17 @@ namespace MixItUp.Base
 
             try
             {
-                MixerConnection connection = await MixerConnection.ConnectViaOAuthToken(settings.OAuthToken);
+                MixerConnection connection = await MixerConnection.ConnectViaOAuthToken(ChannelSession.Settings.OAuthToken);
                 if (connection != null)
                 {
                     ChannelSession.Connection = new MixerConnectionWrapper(connection);
-                    result = await ChannelSession.InitializeInternal(ChannelSession.Settings.IsStreamer, ChannelSession.Settings.Channel.user.username);
+                    result = await ChannelSession.InitializeInternal(ChannelSession.Settings.IsStreamer, ChannelSession.Settings.IsStreamer ? null : ChannelSession.Settings.Channel.token);
                 }
             }
             catch (RestServiceRequestException ex)
             {
                 Util.Logger.Log(ex);
-                result = await ChannelSession.ConnectUser(ChannelSession.StreamerScopes, settings.IsStreamer ? null : settings.Channel.user.username);
+                result = await ChannelSession.ConnectUser(ChannelSession.StreamerScopes, ChannelSession.Settings.IsStreamer ? null : ChannelSession.Settings.Channel.token);
             }
             catch (Exception ex)
             {
@@ -363,7 +361,7 @@ namespace MixItUp.Base
         {
             if (ChannelSession.Channel != null)
             {
-                ExpandedChannelModel channel = await ChannelSession.Connection.GetChannel(ChannelSession.Channel.user.username);
+                ExpandedChannelModel channel = await ChannelSession.Connection.GetChannel(ChannelSession.Channel.id);
                 if (channel != null)
                 {
                     ChannelSession.Channel = channel;
@@ -483,7 +481,16 @@ namespace MixItUp.Base
             PrivatePopulatedUserModel user = await ChannelSession.Connection.GetCurrentUser();
             if (user != null)
             {
-                ExpandedChannelModel channel = await ChannelSession.Connection.GetChannel((channelName == null) ? user.username : channelName);
+                ExpandedChannelModel channel = null;
+                if (channelName == null || isStreamer)
+                {
+                    channel = await ChannelSession.Connection.GetChannel(user.channel.id);
+                }
+                else
+                {
+                    channel = await ChannelSession.Connection.GetChannel(channelName);
+                }
+                
                 if (channel != null)
                 {
                     ChannelSession.User = user;
@@ -544,10 +551,6 @@ namespace MixItUp.Base
                     {
                         await ChannelSession.Services.InitializeStreamlabs();
                     }
-                    if (ChannelSession.Settings.GawkBoxOAuthToken != null)
-                    {
-                        await ChannelSession.Services.InitializeGawkBox();
-                    }
                     if (ChannelSession.Settings.TwitterOAuthToken != null)
                     {
                         await ChannelSession.Services.InitializeTwitter();
@@ -579,6 +582,14 @@ namespace MixItUp.Base
                     if (ChannelSession.Settings.PatreonOAuthToken != null)
                     {
                         await ChannelSession.Services.InitializePatreon();
+                    }
+                    if (!string.IsNullOrEmpty(ChannelSession.Settings.OvrStreamServerIP))
+                    {
+                        await ChannelSession.Services.InitializeOvrStream();
+                    }
+                    if (ChannelSession.Settings.IFTTTOAuthToken != null)
+                    {
+                        await ChannelSession.Services.InitializeIFTTT();
                     }
                     if (ChannelSession.Settings.StreamlootsOAuthToken != null)
                     {
@@ -635,7 +646,7 @@ namespace MixItUp.Base
                         }
                     }
 
-                    ChannelSession.Timers.Initialize();
+                    ChannelSession.Services.TimerService.Initialize();
 
                     ChannelSession.Services.InputService.HotKeyPressed += InputService_HotKeyPressed;
 

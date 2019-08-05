@@ -1,8 +1,6 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Model.Overlay;
-using System.Collections.Generic;
+﻿using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.ViewModel.Controls.Overlay;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace MixItUp.WPF.Controls.Overlay
 {
@@ -11,64 +9,41 @@ namespace MixItUp.WPF.Controls.Overlay
     /// </summary>
     public partial class OverlayVideoItemControl : OverlayItemControl
     {
-        private OverlayVideoItem item;
+        private OverlayVideoItemViewModel viewModel;
 
         public OverlayVideoItemControl()
         {
             InitializeComponent();
+
+            this.viewModel = new OverlayVideoItemViewModel();
         }
 
-        public OverlayVideoItemControl(OverlayVideoItem item)
-            : this()
+        public OverlayVideoItemControl(OverlayVideoItemModel item)
         {
-            this.item = item;
+            InitializeComponent();
+
+            this.viewModel = new OverlayVideoItemViewModel(item);
         }
 
-        public override void SetItem(OverlayItemBase item)
-        {
-            this.item = (OverlayVideoItem)item;
-            this.VideoFilePathTextBox.Text = this.item.FilePath;
-            this.VideoWidthTextBox.Text = this.item.Width.ToString();
-            this.VideoHeightTextBox.Text = this.item.Height.ToString();
-            this.VideoVolumeSlider.Value = this.item.Volume;
-        }
+        public override OverlayItemViewModelBase GetViewModel() { return this.viewModel; }
 
-        public override OverlayItemBase GetItem()
+        public override void SetItem(OverlayItemModelBase item)
         {
-            if (!string.IsNullOrEmpty(this.VideoFilePathTextBox.Text))
+            if (item != null)
             {
-                int width;
-                int height;
-                if (int.TryParse(this.VideoWidthTextBox.Text, out width) && width > 0 &&
-                    int.TryParse(this.VideoHeightTextBox.Text, out height) && height > 0)
-                {
-                    return new OverlayVideoItem(this.VideoFilePathTextBox.Text, width, height, (int)this.VideoVolumeSlider.Value);
-                }
+                this.viewModel = new OverlayVideoItemViewModel((OverlayVideoItemModel)item);
             }
-            return null;
         }
 
-        protected override Task OnLoaded()
+        public override OverlayItemModelBase GetItem()
         {
-            this.VideoVolumeSlider.Value = 100;
-            this.VideoWidthTextBox.Text = OverlayVideoItem.DefaultWidth.ToString();
-            this.VideoHeightTextBox.Text = OverlayVideoItem.DefaultHeight.ToString();
-
-            if (this.item != null)
-            {
-                this.SetItem(this.item);
-            }
-
-            return Task.FromResult(0);
+            return this.viewModel.GetOverlayItem();
         }
 
-        private void VideoFileBrowseButton_Click(object sender, RoutedEventArgs e)
+        protected override async Task OnLoaded()
         {
-            string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(ChannelSession.Services.FileService.VideoFileFilter());
-            if (!string.IsNullOrEmpty(filePath))
-            {
-                this.VideoFilePathTextBox.Text = filePath;
-            }
+            this.DataContext = this.viewModel;
+            await this.viewModel.OnLoaded();
         }
     }
 }

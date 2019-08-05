@@ -118,7 +118,25 @@ namespace MixItUp.Base.ViewModel.User
 
                 return Task.FromResult(0);
             });
+
             await this.PerformUserFirstJoins(newUsers);
+
+            EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserJoined));
+            if (command != null)
+            {
+                foreach (UserViewModel user in allProcessedUsers.Values)
+                {
+                    if (user.IsInChat)
+                    {
+                        if (ChannelSession.Constellation.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserJoined)))
+                        {
+                            ChannelSession.Constellation.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserJoined));
+                            await ChannelSession.Constellation.RunEventCommand(command, user);
+                        }
+                    }
+                }
+            }
+
             return allProcessedUsers.Values;
         }
 
@@ -179,23 +197,51 @@ namespace MixItUp.Base.ViewModel.User
 
         public async Task<UserViewModel> RemoveUser(uint userID)
         {
-            return await this.semaphore.WaitAndRelease(() =>
+            IEnumerable<UserViewModel> results = await this.RemoveUsers(new List<uint>() { userID });
+            return (results.Count() > 0) ? results.First() : null;
+        }
+
+        public async Task<IEnumerable<UserViewModel>> RemoveUsers(IEnumerable<uint> userIDs)
+        {
+            List<UserViewModel> results = new List<UserViewModel>();
+            await this.semaphore.WaitAndRelease(() =>
             {
-                UserViewModel user = null;
-                if (this.users.ContainsKey(userID))
+                foreach (uint userID in userIDs)
                 {
-                    user = this.users[userID];
-                    this.users.Remove(userID);
+                    if (this.users.ContainsKey(userID))
+                    {
+                        UserViewModel user = this.users[userID];
+                        this.users.Remove(userID);
+                        results.Add(user);
+                    }
                 }
-                return Task.FromResult(user);
+                return Task.FromResult(0);
             });
+
+            EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserLeft));
+            if (command != null)
+            {
+                foreach (UserViewModel user in results)
+                {
+                    if (user.IsInChat)
+                    {
+                        if (ChannelSession.Constellation.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserLeft)))
+                        {
+                            ChannelSession.Constellation.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserLeft));
+                            await ChannelSession.Constellation.RunEventCommand(command, user);
+                        }
+                    }
+                }
+            }
+
+            return results;
         }
 
         public async Task<IEnumerable<UserViewModel>> GetAllUsers()
         {
             return await this.semaphore.WaitAndRelease(() =>
             {
-                return Task.FromResult(this.users.Values.Where(u => u.IsInChat));
+                return Task.FromResult(this.users.Values.Where(u => u.IsInChat).ToList());
             });
         }
 
@@ -225,14 +271,18 @@ namespace MixItUp.Base.ViewModel.User
         {
             try
             {
-                foreach (UserViewModel user in users)
+                EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserFirstJoin));
+                if (command != null)
                 {
-                    if (user.Data.ViewingMinutes == 0)
+                    foreach (UserViewModel user in users)
                     {
-                        if (ChannelSession.Constellation.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserFirstJoin)))
+                        if (user.Data.ViewingMinutes == 0)
                         {
-                            ChannelSession.Constellation.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserFirstJoin));
-                            await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserFirstJoin)), user);
+                            if (ChannelSession.Constellation.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserFirstJoin)))
+                            {
+                                ChannelSession.Constellation.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserFirstJoin));
+                                await ChannelSession.Constellation.RunEventCommand(command, user);
+                            }
                         }
                     }
                 }

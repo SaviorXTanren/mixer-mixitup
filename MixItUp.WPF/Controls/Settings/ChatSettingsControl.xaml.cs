@@ -24,11 +24,8 @@ namespace MixItUp.WPF.Controls.Settings
 
         protected override async Task InitializeInternal()
         {
-            this.UserJoinLeaveColorSchemeComboBox.AddDefaultOption();
             this.UserJoinLeaveColorSchemeComboBox.SelectionChanged += UserJoinLeaveColorSchemeComboBox_SelectionChanged;
-            this.EventAlertsColorSchemeComboBox.AddDefaultOption();
             this.EventAlertsColorSchemeComboBox.SelectionChanged += EventAlertsColorSchemeComboBox_SelectionChanged;
-            this.InteractiveAlertsColorSchemeComboBox.AddDefaultOption();
             this.InteractiveAlertsColorSchemeComboBox.SelectionChanged += InteractiveAlertsColorSchemeComboBox_SelectionChanged;
 
             this.FontSizeComboBox.ItemsSource = this.fontSizes.Keys;

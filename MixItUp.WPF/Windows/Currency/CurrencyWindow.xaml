@@ -99,7 +99,7 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <ComboBox x:Name="OnlineRateComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Acquire Rate" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="100" SelectionChanged="OnlineRateComboBox_SelectionChanged" />
+                            <ComboBox x:Name="OnlineRateComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Acquire Rate" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120" SelectionChanged="OnlineRateComboBox_SelectionChanged" />
 
                             <TextBox x:Name="OnlineAmountRateTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Amount" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="60" IsEnabled="False" />
 

@@ -91,6 +91,9 @@ namespace MixItUp.Base.ViewModel.User
         public string UserName { get; set; }
 
         [DataMember]
+        public uint ChannelID { get; set; }
+
+        [DataMember]
         public DateTimeOffset? MixerAccountDate { get; set; }
 
         [DataMember]
@@ -148,6 +151,8 @@ namespace MixItUp.Base.ViewModel.User
         public UserViewModel(ChatUserModel user) : this(user.userId.GetValueOrDefault(), user.userName, user.userRoles) { this.IsInChat = true; }
 
         public UserViewModel(ChatMessageEventModel messageEvent) : this(messageEvent.user_id, messageEvent.user_name, messageEvent.user_roles) { this.IsInChat = true; }
+
+        public UserViewModel(ChatMessageUserModel chatUser) : this(chatUser.user_id, chatUser.user_name, chatUser.user_roles) { this.IsInChat = true; }
 
         public UserViewModel(InteractiveParticipantModel participant) : this(participant.userID, participant.username) { this.SetInteractiveDetails(participant); }
 
@@ -345,7 +350,7 @@ namespace MixItUp.Base.ViewModel.User
                     this.SetMixerUserDetails(user);
 
                     this.FollowDate = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, this.GetModel());
-                    if (this.IsMixerSubscriber)
+                    if (this.IsMixerSubscriber || force)
                     {
                         UserWithGroupsModel userGroups = await ChannelSession.Connection.GetUserInChannel(ChannelSession.Channel, this.ID);
                         if (userGroups != null)
@@ -581,6 +586,7 @@ namespace MixItUp.Base.ViewModel.User
             if (user is UserWithChannelModel)
             {
                 UserWithChannelModel userChannel = (UserWithChannelModel)user;
+                this.ChannelID = userChannel.channel.id;
                 this.CurrentViewerCount = userChannel.channel.viewersCurrent;
             }
         }
@@ -605,7 +611,7 @@ namespace MixItUp.Base.ViewModel.User
                     if (userRoles.Any(r => r.Equals("Banned"))) { this.mixerRoles.Add(MixerRoleEnum.Banned); }
                 }
 
-                if (ChannelSession.Channel != null && ChannelSession.Channel.user.username.Equals(this.UserName))
+                if (ChannelSession.Channel != null && ChannelSession.Channel.user.id.Equals(this.ID))
                 {
                     this.mixerRoles.Add(MixerRoleEnum.Streamer);
                 }

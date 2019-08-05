@@ -29,6 +29,11 @@ namespace MixItUp.Base.MixerAPI
                 button.cooldown = cooldown;
             }
         }
+
+        public static void SetProgress(this InteractiveConnectedButtonControlModel button, float value)
+        {
+            button.progress = value;
+        }
     }
 
     public abstract class InteractiveConnectedControlCommand
@@ -68,6 +73,20 @@ namespace MixItUp.Base.MixerAPI
                 { "mixplaycontrolid", this.Name },
                 { "mixplaycontrolcost", this.SparkCost.ToString() },
             };
+            
+            if (this.Control is InteractiveButtonControlModel)
+            {
+                extraSpecialIdentifiers.Add("mixplaycontroltext", ((InteractiveButtonControlModel)this.Control).text);
+                extraSpecialIdentifiers.Add("mixplaycontrolprogress", ((InteractiveConnectedButtonControlModel)this.Control).progress.ToString());
+            }
+            else if (this.Control is InteractiveTextBoxControlModel)
+            {
+                extraSpecialIdentifiers.Add("mixplaycontroltext", ((InteractiveTextBoxControlModel)this.Control).placeholder);
+            }
+            else if (this.Control is InteractiveLabelControlModel)
+            {
+                extraSpecialIdentifiers.Add("mixplaycontroltext", ((InteractiveLabelControlModel)this.Control).text);
+            }
 
             await this.Command.Perform(user, arguments, extraSpecialIdentifiers);
         }

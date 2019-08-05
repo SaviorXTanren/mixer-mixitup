@@ -40,9 +40,6 @@ namespace MixItUp.WPF
         public bool SettingsChangeRestartRequired { get; set; }
 
         [DataMember]
-        public bool InstallerFolderUpgradeAsked { get; set; }
-
-        [DataMember]
         public bool PreviewProgram { get; set; }
 
         [DataMember]

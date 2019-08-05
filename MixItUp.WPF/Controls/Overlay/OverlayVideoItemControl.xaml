@@ -22,14 +22,14 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <TextBox Grid.Column="0" x:Name="VideoFilePathTextBox" MaterialDesign:HintAssist.Hint="Video File Path" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-        <Button Grid.Column="2" x:Name="VideoFileBrowseButton" Click="VideoFileBrowseButton_Click">Browse</Button>
+        <TextBox Grid.Column="0" Text="{Binding FilePath}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Video File Path" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        <Button Grid.Column="2" Command="{Binding BrowseFilePathCommand}">Browse</Button>
 
-        <TextBox Grid.Column="4" x:Name="VideoWidthTextBox" MaterialDesign:HintAssist.Hint="Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="70" />
+        <TextBox Grid.Column="4" Text="{Binding WidthString}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="70" />
 
-        <TextBox Grid.Column="6" x:Name="VideoHeightTextBox" MaterialDesign:HintAssist.Hint="Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="70" />
+        <TextBox Grid.Column="6" Text="{Binding HeightString}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="70" />
 
         <TextBlock Grid.Column="8" VerticalAlignment="Center" Margin="0,20,0,0">Volume:</TextBlock>
-        <Slider x:Name="VideoVolumeSlider" VerticalAlignment="Center" Grid.Column="10" Width="120" Minimum="0" Maximum="100" Margin="0,-18,0,0" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="Volume" />
+        <Slider Value="{Binding Volume}" VerticalAlignment="Center" Grid.Column="10" Width="120" Minimum="0" Maximum="100" Margin="0,-18,0,0" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="Volume" />
     </Grid>
 </local:OverlayItemControl>

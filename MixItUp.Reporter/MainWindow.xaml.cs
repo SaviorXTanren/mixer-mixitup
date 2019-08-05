@@ -26,7 +26,13 @@ namespace MixItUp.Reporter
             {
                 if (string.IsNullOrEmpty(this.IssueDescriptionTextBox.Text))
                 {
-                    await this.ShowDialog("Please include a description of the issue");
+                    await this.ShowMessageDialog("Please include a description of the issue");
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(this.ReplyEmailTextBox.Text))
+                {
+                    await this.ShowMessageDialog("Please include a reply email so we can respond with how to resolve your issue");
                     return;
                 }
 
@@ -50,7 +56,7 @@ namespace MixItUp.Reporter
                 this.IsEnabled = true;
                 this.StatusBar.Visibility = Visibility.Hidden;
 
-                await this.ShowDialog("Thank you for reporting this issue!" + Environment.NewLine + Environment.NewLine + "We'll look into it as soon as we can.");
+                await this.ShowMessageDialog("Thank you for reporting this issue! Bug reports typically take at least a day or two to respond to." + Environment.NewLine + Environment.NewLine + "If you need more immediate assistance, please visit our Discord server. You can find links to it on our website & on the About page of the application.");
             }
             catch (Exception ex) { Console.WriteLine(ex); }
 
@@ -62,7 +68,7 @@ namespace MixItUp.Reporter
             this.Close();
         }
 
-        private async Task ShowDialog(string message)
+        private async Task ShowMessageDialog(string message)
         {
             object dialogObj = this.FindName("MDDialogHost");
             if (dialogObj != null && dialogObj is DialogHost)

@@ -112,6 +112,7 @@ namespace MixItUp.Desktop.Services
 
         private async Task WidgetsBackgroundUpdate()
         {
+            long updateSeconds = 0;
             await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
             {
                 tokenSource.Token.ThrowIfCancellationRequested();
@@ -124,31 +125,27 @@ namespace MixItUp.Desktop.Services
                     if (overlay != null)
                     {
                         overlay.StartBatching();
-                        foreach (OverlayWidget widget in widgetGroup)
+                        foreach (OverlayWidgetModel widget in widgetGroup)
                         {
                             try
                             {
                                 if (widget.IsEnabled)
                                 {
-                                    bool isInitialized = widget.Item.IsInitialized;
-
-                                    if (!isInitialized)
+                                    if (!widget.Item.IsInitialized)
                                     {
-                                        await widget.Item.Initialize();
+                                        await widget.Initialize();
                                     }
-
-                                    if (!isInitialized || !widget.DontRefresh)
+                                    else if (widget.SupportsRefreshUpdating && widget.RefreshTime > 0 && (updateSeconds % widget.RefreshTime) == 0)
                                     {
-                                        OverlayItemBase item = await widget.Item.GetProcessedItem(user, new List<string>(), new Dictionary<string, string>());
-                                        if (item != null)
-                                        {
-                                            await overlay.SendItem(item, widget.Position, new OverlayItemEffects());
-                                        }
+                                        await widget.UpdateItem();
                                     }
                                 }
                                 else
                                 {
-                                    await widget.Item.Disable();
+                                    if (widget.Item.IsInitialized)
+                                    {
+                                        await widget.Disable();
+                                    }
                                 }
                             }
                             catch (Exception ex) { Logger.Log(ex); }
@@ -157,7 +154,8 @@ namespace MixItUp.Desktop.Services
                     }
                 }
 
-                await Task.Delay(ChannelSession.Settings.OverlayWidgetRefreshTime * 1000);
+                await Task.Delay(1000);
+                updateSeconds++;
             });
         }
 
