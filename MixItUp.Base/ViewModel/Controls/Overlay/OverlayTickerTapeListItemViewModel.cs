@@ -68,7 +68,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         }
 
         public OverlayTickerTapeListItemViewModel(OverlayTickerTapeListItemModel item)
-            : base(item.TotalToShow, item.FadeOut, item.Width, item.Height, item.TextFont, item.TextColor, item.BorderColor, item.BackgroundColor, item.Effects.EntranceAnimation, item.Effects.ExitAnimation, item.HTML)
+            : base(item.TotalToShow, item.FadeOut, item.Width, item.Height, item.TextFont, item.TextColor, item.BorderColor, item.BackgroundColor, OverlayListItemAlignmentTypeEnum.None, item.Effects.EntranceAnimation, item.Effects.ExitAnimation, item.HTML)
         {
             this.tickerTapeType = item.TickerTapeType;
             this.minimumAmountRequiredToShow = item.MinimumAmountRequiredToShow;

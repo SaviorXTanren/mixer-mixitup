@@ -635,10 +635,13 @@
                         }
                     }
 
-                    if (data.ForceBottomAlign) {
+                    if (data.ForceTopAlign) {
+                        addedElement.style.cssText += "transform: translate(-50%, 0%);";
+                    }
+                    else if (data.ForceBottomAlign) {
                         addedElement.style.cssText += "transform: translate(-50%, -100%);";
                     }
-                    else if (data.Position != null && data.Position.IsPercentagePosition) {
+                    else if (data.ForceCenterAlign || (data.Position != null && data.Position.IsPercentagePosition)) {
                         addedElement.style.cssText += "transform: translate(-50%, -50%);";
                     }
 

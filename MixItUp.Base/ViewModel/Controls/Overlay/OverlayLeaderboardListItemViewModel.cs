@@ -61,7 +61,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         }
 
         public OverlayLeaderboardListItemViewModel(OverlayLeaderboardListItemModel item)
-            : base(item.TotalToShow, 0, item.Width, item.Height, item.TextFont, item.TextColor, item.BorderColor, item.BackgroundColor, item.Effects.EntranceAnimation, item.Effects.ExitAnimation, item.HTML)
+            : base(item.TotalToShow, 0, item.Width, item.Height, item.TextFont, item.TextColor, item.BorderColor, item.BackgroundColor, item.Alignment, item.Effects.EntranceAnimation, item.Effects.ExitAnimation, item.HTML)
         {
             this.leaderboardType = item.LeaderboardType;
             if (this.leaderboardType == OverlayLeaderboardListItemTypeEnum.CurrencyRank)
@@ -90,7 +90,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
                     if (this.CurrencyRank != null)
                     {
                         return new OverlayLeaderboardListItemModel(this.HTML, this.leaderboardType, totalToShow, this.Font, this.width, this.height, this.BorderColor, this.BackgroundColor,
-                            this.TextColor, this.entranceAnimation, this.exitAnimation, this.CurrencyRank);
+                            this.TextColor, this.alignment, this.entranceAnimation, this.exitAnimation, this.CurrencyRank);
                     }
                 }
                 else if (this.leaderboardType == OverlayLeaderboardListItemTypeEnum.Sparks || this.leaderboardType == OverlayLeaderboardListItemTypeEnum.Embers)
@@ -98,13 +98,13 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
                     if (!string.IsNullOrEmpty(this.SparksEmbersDateString))
                     {
                         return new OverlayLeaderboardListItemModel(this.HTML, this.leaderboardType, totalToShow, this.Font, this.width, this.height, this.BorderColor, this.BackgroundColor,
-                            this.TextColor, this.entranceAnimation, this.exitAnimation, this.sparksEmbersDate);
+                            this.TextColor, this.alignment, this.entranceAnimation, this.exitAnimation, this.sparksEmbersDate);
                     }
                 }
                 else
                 {
                     return new OverlayLeaderboardListItemModel(this.HTML, this.leaderboardType, totalToShow, this.Font, this.width, this.height, this.BorderColor, this.BackgroundColor,
-                            this.TextColor, this.entranceAnimation, this.exitAnimation);
+                            this.TextColor, this.alignment, this.entranceAnimation, this.exitAnimation);
                 }
             }
             return null;
