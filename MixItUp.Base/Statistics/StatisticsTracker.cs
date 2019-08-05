@@ -116,7 +116,7 @@ namespace MixItUp.Base.Statistics
                                 {
                                     staticStats.AddValue("Milestone #", patronageStatus.currentMilestoneId.ToString());
                                     staticStats.AddValue("Total Sparks", patronageStatus.patronageEarned.ToString());
-                                    staticStats.AddValue("Total Payout", patronageMilestoneHighestEarned.DollarAmountText());
+                                    staticStats.AddValue("Total Boost", patronageMilestoneHighestEarned.PercentageAmountText());
                                     return;
                                 }
                             }
@@ -126,7 +126,7 @@ namespace MixItUp.Base.Statistics
 
                 staticStats.AddValue("Milestone #", "0");
                 staticStats.AddValue("Total Sparks", "0");
-                staticStats.AddValue("Total Payout", "$0.00");
+                staticStats.AddValue("Total Boost", "$0.00");
             }));
             this.Statistics.Add(this.embersTracker);
 

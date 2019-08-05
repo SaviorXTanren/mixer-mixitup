@@ -484,7 +484,7 @@ namespace MixItUp.Base.Util
                         {
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "amount", patronageMilestone.target.ToString());
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "remainingamount", (patronageMilestone.target - patronageStatus.patronageEarned).ToString());
-                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "reward", patronageMilestone.DollarAmountText());
+                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "reward", patronageMilestone.PercentageAmountText());
                         }
 
                         PatronageMilestoneModel patronageNextMilestone = patronageMilestones.FirstOrDefault(m => m.id == (patronageStatus.currentMilestoneId + 1));
@@ -492,7 +492,7 @@ namespace MixItUp.Base.Util
                         {
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "nextamount", patronageNextMilestone.target.ToString());
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "remainingnextamount", (patronageNextMilestone.target - patronageStatus.patronageEarned).ToString());
-                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "nextreward", patronageNextMilestone.DollarAmountText());
+                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "nextreward", patronageNextMilestone.PercentageAmountText());
                         }
 
                         PatronageMilestoneModel patronageFinalMilestone = patronageMilestones.OrderByDescending(m => m.id).FirstOrDefault();
@@ -500,7 +500,7 @@ namespace MixItUp.Base.Util
                         {
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "finalamount", patronageFinalMilestone.target.ToString());
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "remainingfinalamount", (patronageFinalMilestone.target - patronageStatus.patronageEarned).ToString());
-                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "finalreward", patronageFinalMilestone.DollarAmountText());
+                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "finalreward", patronageFinalMilestone.PercentageAmountText());
                         }
 
                         PatronageMilestoneModel patronageMilestoneHighestEarned = null;
@@ -512,7 +512,7 @@ namespace MixItUp.Base.Util
 
                         if (patronageMilestoneHighestEarned != null)
                         {
-                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedreward", patronageMilestoneHighestEarned.DollarAmountText());
+                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedreward", patronageMilestoneHighestEarned.PercentageAmountText());
                         }
                         else
                         {
