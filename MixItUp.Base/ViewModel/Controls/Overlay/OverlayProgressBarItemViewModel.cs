@@ -220,9 +220,9 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.ProgressColor = ColorSchemes.GetColorName(item.ProgressColor);
             this.BackgroundColor = ColorSchemes.GetColorName(item.BackgroundColor);
 
-            this.HTML = item.HTML;
-
             this.OnGoalReachedCommand = item.GoalReachedCommand;
+
+            this.HTML = item.HTML;
         }
 
         public override OverlayItemModelBase GetOverlayItem()
