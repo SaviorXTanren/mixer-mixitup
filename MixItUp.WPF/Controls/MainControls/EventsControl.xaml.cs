@@ -4,7 +4,6 @@ using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Windows.Command;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -146,7 +145,6 @@ namespace MixItUp.WPF.Controls.MainControls
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.MixerUserBan));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.MixerChatMessage));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.StreamlabsDonation));
-            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.GawkBoxDonation));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TiltifyDonation));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.ExtraLifeDonation));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TipeeeStreamDonation));
