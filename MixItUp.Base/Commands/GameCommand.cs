@@ -2325,7 +2325,7 @@ namespace MixItUp.Base.Commands
 
         protected override async Task GameCompleted()
         {
-            await this.PerformCommand(this.GameCompleteCommand, await ChannelSession.GetCurrentUser(), new List<string>(), 0, this.totalPayout);
+            await this.PerformCommand(this.GameCompleteCommand, null, new List<string>(), 0, this.totalPayout);
         }
 
         protected override void ResetData(UserViewModel user)
@@ -2336,7 +2336,10 @@ namespace MixItUp.Base.Commands
 
         protected override void AddAdditionalSpecialIdentifiers(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
-            specialIdentifiers[GameBetTypeSpecialIdentifier] = this.userBetTypes[user];
+            if (user != null)
+            {
+                specialIdentifiers[GameBetTypeSpecialIdentifier] = this.userBetTypes[user];
+            }
             specialIdentifiers[GameValidBetTypesSpecialIdentifier] = this.GetValidBetTypeString();
             if (!string.IsNullOrEmpty(this.winningBetType))
             {
