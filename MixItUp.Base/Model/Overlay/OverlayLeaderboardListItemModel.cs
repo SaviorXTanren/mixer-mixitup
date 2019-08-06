@@ -325,10 +325,10 @@ namespace MixItUp.Base.Model.Overlay
                     }
                 }
 
-                // Detect if we had a list before, and we have a list now, and the top user changed, let's trigger the event
-                if (this.lastItems.Count() > 0 && items.Count() > 0 && this.lastItems.First().User.ID != items.First().User.ID)
+                if (this.NewLeaderCommand != null)
                 {
-                    if (this.NewLeaderCommand != null)
+                    // Detect if we had a list before, and we have a list now, and the top user changed, let's trigger the event
+                    if (this.lastItems.Count() > 0 && items.Count() > 0 && !this.lastItems.First().User.ID.Equals(items.First().User.ID))
                     {
                         await this.NewLeaderCommand.Perform(items.First().User, new string[] { this.lastItems.First().User.UserName });
                     }
