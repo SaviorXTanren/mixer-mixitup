@@ -174,10 +174,10 @@ namespace MixItUp.WPF.Controls.Command
                 if (setup == InteractiveJoystickSetupType.MapToIndividualKeys)
                 {
                     this.UpKeyComboBox.IsEnabled = this.RightKeyComboBox.IsEnabled = this.DownKeyComboBox.IsEnabled = this.LeftKeyComboBox.IsEnabled = true;
-                    this.UpKeyComboBox.SelectedItem = GetSelectedIndex(this.command?.MappedKeys[0]);
-                    this.RightKeyComboBox.SelectedItem = GetSelectedIndex(this.command?.MappedKeys[1]);
-                    this.DownKeyComboBox.SelectedItem = GetSelectedIndex(this.command?.MappedKeys[2]);
-                    this.LeftKeyComboBox.SelectedItem = GetSelectedIndex(this.command?.MappedKeys[3]);
+                    this.UpKeyComboBox.SelectedItem = GetSelectedIndex(this.command?.MappedKeys.ElementAtOrDefault(0));
+                    this.RightKeyComboBox.SelectedItem = GetSelectedIndex(this.command?.MappedKeys.ElementAtOrDefault(1));
+                    this.DownKeyComboBox.SelectedItem = GetSelectedIndex(this.command?.MappedKeys.ElementAtOrDefault(2));
+                    this.LeftKeyComboBox.SelectedItem = GetSelectedIndex(this.command?.MappedKeys.ElementAtOrDefault(3));
                 }
                 else
                 {
