@@ -787,14 +787,9 @@ namespace MixItUp.Base.Util
 
                             foreach (UserInventoryItemViewModel item in inventory.Items.Values.OrderByDescending(i => i.Name))
                             {
-                                int amount = inventoryData.GetAmount(item);
-                                if (amount > 0)
-                                {
-                                    userItems[item.Name] = amount;
-                                }
-
+                                userItems[item.Name] = inventoryData.GetAmount(item);
                                 string itemSpecialIdentifier = identifierHeader + inventory.UserAmountSpecialIdentifierHeader + item.SpecialIdentifier;
-                                this.ReplaceSpecialIdentifier(itemSpecialIdentifier, amount.ToString());
+                                this.ReplaceSpecialIdentifier(itemSpecialIdentifier, userItems[item.Name].ToString());
                             }
 
                             if (userItems.Count > 0)
@@ -802,7 +797,10 @@ namespace MixItUp.Base.Util
                                 List<string> userAllItems = new List<string>();
                                 foreach (var kvp in userItems.OrderBy(i => i.Key))
                                 {
-                                    userAllItems.Add(kvp.Key + " x" + kvp.Value);
+                                    if (kvp.Value > 0)
+                                    {
+                                        userAllItems.Add(kvp.Key + " x" + kvp.Value);
+                                    }
                                 }
                                 this.ReplaceSpecialIdentifier(identifierHeader + inventory.UserAllAmountSpecialIdentifier, string.Join(", ", userAllItems));
                             }
