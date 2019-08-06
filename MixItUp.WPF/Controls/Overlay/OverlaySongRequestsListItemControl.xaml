@@ -28,6 +28,10 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="15" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <TextBox Text="{Binding TotalToShowString}" Grid.Column="0" MaterialDesign:HintAssist.Hint="Total To Show" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
@@ -37,6 +41,8 @@
 
             <ComboBox Grid.Column="6" x:Name="TextFontComboBox" Text="{Binding Font}" MaterialDesign:HintAssist.Hint="Text Font" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="150" />
 
+            <TextBlock Grid.Column="8" VerticalAlignment="Center">Include Current Song:</TextBlock>
+            <CheckBox Grid.Column="10" VerticalAlignment="Center" IsChecked="{Binding IncludeCurrentSong}" />
         </Grid>
 
         <Grid Grid.Row="2" HorizontalAlignment="Center">

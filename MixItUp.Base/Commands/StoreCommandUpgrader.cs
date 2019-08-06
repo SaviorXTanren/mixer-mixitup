@@ -146,7 +146,7 @@ namespace MixItUp.Base.Commands
             {
                 OverlaySongRequests oItem = (OverlaySongRequests)item;
                 return new OverlaySongRequestsListItemModel(oItem.HTMLText, oItem.TotalToShow, oItem.TextFont, oItem.Width, oItem.Height, oItem.BorderColor, oItem.BackgroundColor,
-                    oItem.TextColor, OverlayListItemAlignmentTypeEnum.Top, (OverlayItemEffectEntranceAnimationTypeEnum)oItem.AddEventAnimation, (OverlayItemEffectExitAnimationTypeEnum)oItem.RemoveEventAnimation);
+                    oItem.TextColor, true, OverlayListItemAlignmentTypeEnum.Top, (OverlayItemEffectEntranceAnimationTypeEnum)oItem.AddEventAnimation, (OverlayItemEffectExitAnimationTypeEnum)oItem.RemoveEventAnimation);
             }
             else if (item is OverlayStreamBoss)
             {
