@@ -111,7 +111,7 @@ namespace MixItUp.Base.Statistics
                             IEnumerable<PatronageMilestoneModel> patronageMilestonesEarned = patronageMilestones.Where(m => m.target <= patronageStatus.patronageEarned);
                             if (patronageMilestonesEarned.Count() > 0)
                             {
-                                PatronageMilestoneModel patronageMilestoneHighestEarned = patronageMilestonesEarned.OrderByDescending(m => m.reward).FirstOrDefault();
+                                PatronageMilestoneModel patronageMilestoneHighestEarned = patronageMilestonesEarned.OrderByDescending(m => m.bonus).FirstOrDefault();
                                 if (patronageMilestoneHighestEarned != null)
                                 {
                                     staticStats.AddValue("Milestone #", patronageStatus.currentMilestoneId.ToString());
@@ -126,7 +126,7 @@ namespace MixItUp.Base.Statistics
 
                 staticStats.AddValue("Milestone #", "0");
                 staticStats.AddValue("Total Sparks", "0");
-                staticStats.AddValue("Total Boost", "$0.00");
+                staticStats.AddValue("Total Boost", "0%");
             }));
             this.Statistics.Add(this.embersTracker);
 

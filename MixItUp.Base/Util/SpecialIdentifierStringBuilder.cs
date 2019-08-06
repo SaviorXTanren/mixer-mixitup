@@ -507,7 +507,7 @@ namespace MixItUp.Base.Util
                         IEnumerable<PatronageMilestoneModel> patronageMilestonesEarned = patronageMilestones.Where(m => m.target <= patronageStatus.patronageEarned);
                         if (patronageMilestonesEarned != null && patronageMilestonesEarned.Count() > 0)
                         {
-                            patronageMilestoneHighestEarned = patronageMilestonesEarned.OrderByDescending(m => m.reward).FirstOrDefault();
+                            patronageMilestoneHighestEarned = patronageMilestonesEarned.OrderByDescending(m => m.bonus).FirstOrDefault();
                         }
 
                         if (patronageMilestoneHighestEarned != null)

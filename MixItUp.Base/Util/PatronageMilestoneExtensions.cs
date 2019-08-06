@@ -7,7 +7,7 @@ namespace MixItUp.Base.Util
     {
         public static string PercentageAmountText(this PatronageMilestoneModel patronageMilestone)
         {
-            return string.Format("{0}%", patronageMilestone.reward);
+            return string.Format("{0}%", patronageMilestone.bonus);
         }
     }
 }
