@@ -38,7 +38,7 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayTickerTapeListItemModel(string html, int totalToShow, OverlayTickerTapeItemTypeEnum tickerTapeType, double minimumAmountRequiredToShow, string textColor, string textFont,
             int width, int height)
             : base(OverlayItemModelTypeEnum.TickerTape, html, totalToShow, 0, textFont, width, height, string.Empty, string.Empty, textColor,
-                  OverlayItemEffectEntranceAnimationTypeEnum.None, OverlayItemEffectExitAnimationTypeEnum.None)
+                  OverlayListItemAlignmentTypeEnum.None, OverlayItemEffectEntranceAnimationTypeEnum.None, OverlayItemEffectExitAnimationTypeEnum.None)
         {
             this.TickerTapeType = tickerTapeType;
             this.MinimumAmountRequiredToShow = minimumAmountRequiredToShow;

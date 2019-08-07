@@ -102,7 +102,7 @@ namespace MixItUp.Base.Commands
             {
                 OverlayChatMessages oItem = (OverlayChatMessages)item;
                 return new OverlayChatMessagesListItemModel(oItem.HTMLText, oItem.TotalToShow, 0, oItem.TextFont, oItem.Width, oItem.TextSize, oItem.BorderColor, oItem.BackgroundColor,
-                    oItem.TextColor, (OverlayItemEffectEntranceAnimationTypeEnum)oItem.AddEventAnimation, OverlayItemEffectExitAnimationTypeEnum.None);
+                    oItem.TextColor, OverlayListItemAlignmentTypeEnum.Top, (OverlayItemEffectEntranceAnimationTypeEnum)oItem.AddEventAnimation, OverlayItemEffectExitAnimationTypeEnum.None);
             }
             else if (item is OverlayEventList)
             {
@@ -113,20 +113,20 @@ namespace MixItUp.Base.Commands
                     types.Add((OverlayEventListItemTypeEnum)type);
                 }
                 return new OverlayEventListItemModel(oItem.HTMLText, types, oItem.TotalToShow, 0, oItem.TextFont, oItem.Width, oItem.Height, oItem.BorderColor, oItem.BackgroundColor,
-                    oItem.TextColor, (OverlayItemEffectEntranceAnimationTypeEnum)oItem.AddEventAnimation, (OverlayItemEffectExitAnimationTypeEnum)oItem.RemoveEventAnimation);
+                    oItem.TextColor, OverlayListItemAlignmentTypeEnum.Top, (OverlayItemEffectEntranceAnimationTypeEnum)oItem.AddEventAnimation, (OverlayItemEffectExitAnimationTypeEnum)oItem.RemoveEventAnimation);
             }
             else if (item is OverlayGameQueue)
             {
                 OverlayGameQueue oItem = (OverlayGameQueue)item;
                 return new OverlayGameQueueListItemModel(oItem.HTMLText, oItem.TotalToShow, oItem.TextFont, oItem.Width, oItem.Height, oItem.BorderColor, oItem.BackgroundColor,
-                    oItem.TextColor, (OverlayItemEffectEntranceAnimationTypeEnum)oItem.AddEventAnimation, (OverlayItemEffectExitAnimationTypeEnum)oItem.RemoveEventAnimation);
+                    oItem.TextColor, OverlayListItemAlignmentTypeEnum.Top, (OverlayItemEffectEntranceAnimationTypeEnum)oItem.AddEventAnimation, (OverlayItemEffectExitAnimationTypeEnum)oItem.RemoveEventAnimation);
             }
             else if (item is OverlayLeaderboard)
             {
                 OverlayLeaderboard oItem = (OverlayLeaderboard)item;
                 OverlayLeaderboardListItemModel result = new OverlayLeaderboardListItemModel(oItem.HTMLText, (OverlayLeaderboardListItemTypeEnum)oItem.LeaderboardType, oItem.TotalToShow,
-                    oItem.TextFont, oItem.Width, oItem.Height, oItem.BorderColor, oItem.BackgroundColor, oItem.TextColor, (OverlayItemEffectEntranceAnimationTypeEnum)oItem.AddEventAnimation,
-                    (OverlayItemEffectExitAnimationTypeEnum)oItem.RemoveEventAnimation);
+                    oItem.TextFont, oItem.Width, oItem.Height, oItem.BorderColor, oItem.BackgroundColor, oItem.TextColor, OverlayListItemAlignmentTypeEnum.Top,
+                    (OverlayItemEffectEntranceAnimationTypeEnum)oItem.AddEventAnimation, (OverlayItemEffectExitAnimationTypeEnum)oItem.RemoveEventAnimation, null);
                 result.CurrencyID = oItem.CurrencyID;
                 result.LeaderboardDateRange = (OverlayLeaderboardListItemDateRangeEnum)oItem.DateRange;
                 return result;
@@ -146,7 +146,7 @@ namespace MixItUp.Base.Commands
             {
                 OverlaySongRequests oItem = (OverlaySongRequests)item;
                 return new OverlaySongRequestsListItemModel(oItem.HTMLText, oItem.TotalToShow, oItem.TextFont, oItem.Width, oItem.Height, oItem.BorderColor, oItem.BackgroundColor,
-                    oItem.TextColor, (OverlayItemEffectEntranceAnimationTypeEnum)oItem.AddEventAnimation, (OverlayItemEffectExitAnimationTypeEnum)oItem.RemoveEventAnimation);
+                    oItem.TextColor, true, OverlayListItemAlignmentTypeEnum.Top, (OverlayItemEffectEntranceAnimationTypeEnum)oItem.AddEventAnimation, (OverlayItemEffectExitAnimationTypeEnum)oItem.RemoveEventAnimation);
             }
             else if (item is OverlayStreamBoss)
             {

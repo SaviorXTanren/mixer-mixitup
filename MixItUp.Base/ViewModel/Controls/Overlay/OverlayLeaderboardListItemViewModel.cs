@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Util;
+using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -27,6 +28,8 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
 
         public bool IsCurrencyRankType { get { return this.leaderboardType == OverlayLeaderboardListItemTypeEnum.CurrencyRank; } }
         public bool IsSparksEmbersType { get { return this.leaderboardType == OverlayLeaderboardListItemTypeEnum.Sparks || this.leaderboardType == OverlayLeaderboardListItemTypeEnum.Embers; } }
+        public bool HasNewLeaderCommand { get { return this.NewLeaderCommand != null; } }
+        public bool DoesNotHaveNewLeaderCommand { get { return !this.HasNewLeaderCommand; } }
 
         public IEnumerable<string> SparksEmbersDateStrings { get; set; } = EnumHelper.GetEnumNames<OverlayLeaderboardListItemDateRangeEnum>();
         public string SparksEmbersDateString
@@ -54,6 +57,19 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
 
         public override bool SupportsRefreshUpdating { get { return true; } }
 
+        private CustomCommand newLeaderCommand;
+        public CustomCommand NewLeaderCommand
+        {
+            get { return this.newLeaderCommand; }
+            set
+            {
+                this.newLeaderCommand = value;
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("HasNewLeaderCommand");
+                this.NotifyPropertyChanged("DoesNotHaveNewLeaderCommand");
+            }
+        }
+
         public OverlayLeaderboardListItemViewModel()
             : base()
         {
@@ -61,8 +77,9 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         }
 
         public OverlayLeaderboardListItemViewModel(OverlayLeaderboardListItemModel item)
-            : base(item.TotalToShow, 0, item.Width, item.Height, item.TextFont, item.TextColor, item.BorderColor, item.BackgroundColor, item.Effects.EntranceAnimation, item.Effects.ExitAnimation, item.HTML)
+            : base(item.TotalToShow, 0, item.Width, item.Height, item.TextFont, item.TextColor, item.BorderColor, item.BackgroundColor, item.Alignment, item.Effects.EntranceAnimation, item.Effects.ExitAnimation, item.HTML)
         {
+            this.newLeaderCommand = item.NewLeaderCommand;
             this.leaderboardType = item.LeaderboardType;
             if (this.leaderboardType == OverlayLeaderboardListItemTypeEnum.CurrencyRank)
             {
@@ -90,7 +107,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
                     if (this.CurrencyRank != null)
                     {
                         return new OverlayLeaderboardListItemModel(this.HTML, this.leaderboardType, totalToShow, this.Font, this.width, this.height, this.BorderColor, this.BackgroundColor,
-                            this.TextColor, this.entranceAnimation, this.exitAnimation, this.CurrencyRank);
+                            this.TextColor, this.alignment, this.entranceAnimation, this.exitAnimation, this.CurrencyRank, this.NewLeaderCommand);
                     }
                 }
                 else if (this.leaderboardType == OverlayLeaderboardListItemTypeEnum.Sparks || this.leaderboardType == OverlayLeaderboardListItemTypeEnum.Embers)
@@ -98,13 +115,13 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
                     if (!string.IsNullOrEmpty(this.SparksEmbersDateString))
                     {
                         return new OverlayLeaderboardListItemModel(this.HTML, this.leaderboardType, totalToShow, this.Font, this.width, this.height, this.BorderColor, this.BackgroundColor,
-                            this.TextColor, this.entranceAnimation, this.exitAnimation, this.sparksEmbersDate);
+                            this.TextColor, this.alignment, this.entranceAnimation, this.exitAnimation, this.sparksEmbersDate, this.NewLeaderCommand);
                     }
                 }
                 else
                 {
                     return new OverlayLeaderboardListItemModel(this.HTML, this.leaderboardType, totalToShow, this.Font, this.width, this.height, this.BorderColor, this.BackgroundColor,
-                            this.TextColor, this.entranceAnimation, this.exitAnimation);
+                            this.TextColor, this.alignment, this.entranceAnimation, this.exitAnimation, this.NewLeaderCommand);
                 }
             }
             return null;

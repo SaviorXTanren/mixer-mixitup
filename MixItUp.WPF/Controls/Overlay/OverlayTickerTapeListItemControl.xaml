@@ -56,6 +56,7 @@
             <ComboBox ItemsSource="{Binding ColorNames}" Text="{Binding TextColor}" Grid.Column="8" MaterialDesign:HintAssist.Hint="Text Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120" />
 
         </Grid>
-        <TextBox Text="{Binding HTML}" Grid.Row="4" MaterialDesign:HintAssist.Hint="HTML Style" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="700" Height="150" VerticalAlignment="Top" HorizontalAlignment="Center" />
+        
+        <TextBox Text="{Binding HTML}" Grid.Row="4" MaterialDesign:HintAssist.Hint="HTML Style" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="700" Height="70" VerticalAlignment="Top" HorizontalAlignment="Center" />
     </Grid>
 </local:OverlayItemControl>

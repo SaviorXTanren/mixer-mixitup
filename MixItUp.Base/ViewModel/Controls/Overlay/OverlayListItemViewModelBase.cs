@@ -1,11 +1,14 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
+using System.Collections.Generic;
 
 namespace MixItUp.Base.ViewModel.Controls.Overlay
 {
     public abstract class OverlayListItemViewModelBase : OverlayHTMLTemplateItemViewModelBase
     {
+        public IEnumerable<string> AlignmentStrings { get; set; } = EnumHelper.GetEnumNames<OverlayListItemAlignmentTypeEnum>();
+
         public string TotalToShowString
         {
             get { return this.totalToShow.ToString(); }
@@ -94,6 +97,17 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         }
         private string backgroundColor;
 
+        public string AlignmentString
+        {
+            get { return EnumHelper.GetEnumName(this.alignment); }
+            set
+            {
+                this.alignment = EnumHelper.GetEnumValueFromString<OverlayListItemAlignmentTypeEnum>(value);
+                this.NotifyPropertyChanged();
+            }
+        }
+        protected OverlayListItemAlignmentTypeEnum alignment;
+
         public string EntranceAnimationString
         {
             get { return EnumHelper.GetEnumName(this.entranceAnimation); }
@@ -123,10 +137,11 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.width = 400;
             this.height = 100;
             this.Font = "Arial";
+            this.alignment = OverlayListItemAlignmentTypeEnum.Top;
         }
 
         public OverlayListItemViewModelBase(int totalToShow, int fadeOut, int width, int height, string textFont, string textColor, string borderColor, string backgroundColor,
-            OverlayItemEffectEntranceAnimationTypeEnum entranceAnimation, OverlayItemEffectExitAnimationTypeEnum exitAnimation, string htmlText)
+            OverlayListItemAlignmentTypeEnum alignment, OverlayItemEffectEntranceAnimationTypeEnum entranceAnimation, OverlayItemEffectExitAnimationTypeEnum exitAnimation, string htmlText)
             : this()
         {
             this.totalToShow = totalToShow;
@@ -139,6 +154,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.BorderColor = ColorSchemes.GetColorName(borderColor);
             this.BackgroundColor = ColorSchemes.GetColorName(backgroundColor);
 
+            this.alignment = alignment;
             this.entranceAnimation = entranceAnimation;
             this.exitAnimation = exitAnimation;
 

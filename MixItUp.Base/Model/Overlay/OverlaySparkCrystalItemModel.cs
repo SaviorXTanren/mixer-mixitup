@@ -211,7 +211,7 @@ namespace MixItUp.Base.Model.Overlay
                 if (this.milestone != null)
                 {
                     this.Goal = milestone.target;
-                    this.Reward = milestone.DollarAmountText();
+                    this.Reward = milestone.PercentageAmountText();
                 }
 
                 this.Start = 0;

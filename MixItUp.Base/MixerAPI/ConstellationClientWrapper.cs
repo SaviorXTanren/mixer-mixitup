@@ -478,7 +478,9 @@ namespace MixItUp.Base.MixerAPI
 
                         bool milestoneUpdateOccurred = await this.patronageMilestonesSemaphore.WaitAndRelease(() =>
                         {
-                            return Task.FromResult(this.remainingPatronageMilestones.RemoveAll(m => m.target <= patronageStatus.patronageEarned) > 0);
+                            int previousMilestones = this.remainingPatronageMilestones.Count;
+                            int currentMilestones = this.remainingPatronageMilestones.RemoveAll(m => m.target <= patronageStatus.patronageEarned);
+                            return Task.FromResult(currentMilestones < previousMilestones);
                         });
 
                         if (milestoneUpdateOccurred)
@@ -491,7 +493,7 @@ namespace MixItUp.Base.MixerAPI
                                 Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
                                 {
                                     { SpecialIdentifierStringBuilder.MilestoneSpecialIdentifierHeader + "amount", milestoneReached.target.ToString() },
-                                    { SpecialIdentifierStringBuilder.MilestoneSpecialIdentifierHeader + "reward", milestoneReached.DollarAmountText() },
+                                    { SpecialIdentifierStringBuilder.MilestoneSpecialIdentifierHeader + "reward", milestoneReached.PercentageAmountText() },
                                 };
                                 await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerMilestoneReached)), await ChannelSession.GetCurrentUser(), extraSpecialIdentifiers: specialIdentifiers);
                             }

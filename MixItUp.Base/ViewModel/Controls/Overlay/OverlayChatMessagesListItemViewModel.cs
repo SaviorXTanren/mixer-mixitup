@@ -13,7 +13,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         }
 
         public OverlayChatMessagesListItemViewModel(OverlayChatMessagesListItemModel item)
-            : base(item.TotalToShow, item.FadeOut, item.Width, item.Height, item.TextFont, item.TextColor, item.BorderColor, item.BackgroundColor, item.Effects.EntranceAnimation, item.Effects.ExitAnimation, item.HTML)
+            : base(item.TotalToShow, item.FadeOut, item.Width, item.Height, item.TextFont, item.TextColor, item.BorderColor, item.BackgroundColor, item.Alignment, item.Effects.EntranceAnimation, item.Effects.ExitAnimation, item.HTML)
         { }
 
         public override OverlayItemModelBase GetOverlayItem()
@@ -24,7 +24,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
                 this.BorderColor = ColorSchemes.GetColorCode(this.BorderColor);
                 this.BackgroundColor = ColorSchemes.GetColorCode(this.BackgroundColor);
 
-                return new OverlayChatMessagesListItemModel(this.HTML, totalToShow, fadeOut, this.Font, this.width, this.height, this.BorderColor, this.BackgroundColor, this.TextColor, this.entranceAnimation, this.exitAnimation);
+                return new OverlayChatMessagesListItemModel(this.HTML, totalToShow, fadeOut, this.Font, this.width, this.height, this.BorderColor, this.BackgroundColor, this.TextColor, this.alignment, this.entranceAnimation, this.exitAnimation);
             }
             return null;
         }

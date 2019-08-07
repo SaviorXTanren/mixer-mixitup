@@ -31,7 +31,7 @@ namespace MixItUp.Base.Services
 
     public interface ISongRequestService
     {
-        List<SongRequestModel> RequestSongs { get; }
+        IEnumerable<SongRequestModel> RequestSongs { get; }
 
         SongRequestCurrentlyPlayingModel Status { get; }
 
@@ -74,7 +74,9 @@ namespace MixItUp.Base.Services
 
         private const int backgroundInterval = 1000;
 
-        public List<SongRequestModel> RequestSongs { get; private set; } = new List<SongRequestModel>();
+        public IEnumerable<SongRequestModel> RequestSongs { get { return this.requestSongs.ToList(); } }
+        private List<SongRequestModel> requestSongs = new List<SongRequestModel>();
+
         private List<SongRequestModel> playlistSongs = new List<SongRequestModel>();
 
         public SongRequestCurrentlyPlayingModel Status { get; private set; }
@@ -98,10 +100,10 @@ namespace MixItUp.Base.Services
 
         public Task Initialize()
         {
-            this.RequestSongs.Clear();
+            this.requestSongs.Clear();
             if (ChannelSession.Settings.SongRequestsSaveRequestQueue)
             {
-                this.RequestSongs.AddRange(ChannelSession.Settings.SongRequestsSavedRequestQueue);
+                this.requestSongs.AddRange(ChannelSession.Settings.SongRequestsSavedRequestQueue);
             }
 
             bannedSongsCache.Clear();
@@ -174,7 +176,7 @@ namespace MixItUp.Base.Services
         {
             await SongRequestService.songRequestLock.WaitAndRelease(async () =>
             {
-                this.RequestSongs.Clear();
+                this.requestSongs.Clear();
 
                 foreach (ISongRequestProviderService provider in this.enabledProviders)
                 {
@@ -368,9 +370,9 @@ namespace MixItUp.Base.Services
         {
             return await SongRequestService.songRequestLock.WaitAndRelease(() =>
             {
-                if (this.RequestSongs.Count > 0)
+                if (this.requestSongs.Count > 0)
                 {
-                    return Task.FromResult(this.RequestSongs.FirstOrDefault());
+                    return Task.FromResult(this.requestSongs.FirstOrDefault());
                 }
                 else if (this.playlistSongs.Count > 0)
                 {
@@ -387,7 +389,7 @@ namespace MixItUp.Base.Services
         {
             await SongRequestService.songRequestLock.WaitAndRelease(() =>
             {
-                this.RequestSongs.MoveUp(song);
+                this.requestSongs.MoveUp(song);
                 return Task.FromResult(0);
             });
             GlobalEvents.SongRequestsChangedOccurred();
@@ -397,7 +399,7 @@ namespace MixItUp.Base.Services
         {
             await SongRequestService.songRequestLock.WaitAndRelease(() =>
             {
-                this.RequestSongs.MoveDown(song);
+                this.requestSongs.MoveDown(song);
                 return Task.FromResult(0);
             });
             GlobalEvents.SongRequestsChangedOccurred();
@@ -407,7 +409,7 @@ namespace MixItUp.Base.Services
         {
             await SongRequestService.songRequestLock.WaitAndRelease(() =>
             {
-                this.RequestSongs.Remove(song);
+                this.requestSongs.Remove(song);
                 return Task.FromResult(0);
             });
 
@@ -429,7 +431,7 @@ namespace MixItUp.Base.Services
             SongRequestModel song = null;
             await SongRequestService.songRequestLock.WaitAndRelease(() =>
             {
-                song = this.RequestSongs.LastOrDefault();
+                song = this.requestSongs.LastOrDefault();
                 return Task.FromResult(0);
             });
 
@@ -446,7 +448,7 @@ namespace MixItUp.Base.Services
             SongRequestModel song = null;
             await SongRequestService.songRequestLock.WaitAndRelease(() =>
             {
-                song = this.RequestSongs.LastOrDefault(s => s.User.ID == user.ID);
+                song = this.requestSongs.LastOrDefault(s => s.User.ID == user.ID);
                 return Task.FromResult(0);
             });
 
@@ -466,7 +468,7 @@ namespace MixItUp.Base.Services
         {
             await SongRequestService.songRequestLock.WaitAndRelease(() =>
             {
-                this.RequestSongs.Clear();
+                this.requestSongs.Clear();
                 return Task.FromResult(0);
             });
             GlobalEvents.SongRequestsChangedOccurred();
@@ -504,20 +506,20 @@ namespace MixItUp.Base.Services
 
                 if (ChannelSession.Settings.SongRequestSubPriority && user.IsMixerSubscriber)
                 {
-                    for (int i = 0; i < this.RequestSongs.Count; i++)
+                    for (int i = 0; i < this.requestSongs.Count; i++)
                     {
-                        if (!this.RequestSongs[i].User.IsMixerSubscriber)
+                        if (!this.requestSongs[i].User.IsMixerSubscriber)
                         {
-                            this.RequestSongs.Insert(i, song);
+                            this.requestSongs.Insert(i, song);
                             return Task.FromResult(0);
                         }
                     }
                 }
-                this.RequestSongs.Add(song);
+                this.requestSongs.Add(song);
 
                 if (ChannelSession.Settings.SongRequestsSaveRequestQueue)
                 {
-                    ChannelSession.Settings.SongRequestsSavedRequestQueue = this.RequestSongs.ToList();
+                    ChannelSession.Settings.SongRequestsSavedRequestQueue = this.requestSongs.ToList();
                 }
 
                 return Task.FromResult(0);
@@ -567,14 +569,14 @@ namespace MixItUp.Base.Services
             }
 
             SongRequestModel newSong = null;
-            if (this.RequestSongs.Count > 0)
+            if (this.requestSongs.Count > 0)
             {
-                newSong = this.RequestSongs.First();
-                this.RequestSongs.RemoveAt(0);
+                newSong = this.requestSongs.First();
+                this.requestSongs.RemoveAt(0);
 
                 if (ChannelSession.Settings.SongRequestsSaveRequestQueue)
                 {
-                    ChannelSession.Settings.SongRequestsSavedRequestQueue = this.RequestSongs.ToList();
+                    ChannelSession.Settings.SongRequestsSavedRequestQueue = this.requestSongs.ToList();
                 }
             }
             else

@@ -267,6 +267,8 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.damageAnimation = item.DamageAnimation;
             this.newBossAnimation = item.NewBossAnimation;
 
+            this.NewBossCommand = item.NewStreamBossCommand;
+
             this.HTML = item.HTML;
         }
 
