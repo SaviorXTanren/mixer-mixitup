@@ -253,6 +253,8 @@ namespace MixItUp.AutoHoster
                                     {
                                         Base.Util.Logger.Log("Now hosting " + channelModel.token);
 
+                                        await this.SaveData();
+
                                         this.CurrentlyHosting = channel;
                                         this.totalMinutesHosted = 0;
 
@@ -279,8 +281,6 @@ namespace MixItUp.AutoHoster
             {
                 this.totalMinutesHosted = 0;
             }
-
-            await this.SaveData();
         }
 
         public async Task<PrivatePopulatedUserModel> GetCurrentUser() { return await this.connection.Users.GetCurrentUser(); }

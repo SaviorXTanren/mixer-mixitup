@@ -484,7 +484,7 @@ namespace MixItUp.Base.Util
                         {
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "amount", patronageMilestone.target.ToString());
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "remainingamount", (patronageMilestone.target - patronageStatus.patronageEarned).ToString());
-                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "reward", patronageMilestone.DollarAmountText());
+                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "reward", patronageMilestone.PercentageAmountText());
                         }
 
                         PatronageMilestoneModel patronageNextMilestone = patronageMilestones.FirstOrDefault(m => m.id == (patronageStatus.currentMilestoneId + 1));
@@ -492,7 +492,7 @@ namespace MixItUp.Base.Util
                         {
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "nextamount", patronageNextMilestone.target.ToString());
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "remainingnextamount", (patronageNextMilestone.target - patronageStatus.patronageEarned).ToString());
-                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "nextreward", patronageNextMilestone.DollarAmountText());
+                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "nextreward", patronageNextMilestone.PercentageAmountText());
                         }
 
                         PatronageMilestoneModel patronageFinalMilestone = patronageMilestones.OrderByDescending(m => m.id).FirstOrDefault();
@@ -500,19 +500,19 @@ namespace MixItUp.Base.Util
                         {
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "finalamount", patronageFinalMilestone.target.ToString());
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "remainingfinalamount", (patronageFinalMilestone.target - patronageStatus.patronageEarned).ToString());
-                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "finalreward", patronageFinalMilestone.DollarAmountText());
+                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "finalreward", patronageFinalMilestone.PercentageAmountText());
                         }
 
                         PatronageMilestoneModel patronageMilestoneHighestEarned = null;
                         IEnumerable<PatronageMilestoneModel> patronageMilestonesEarned = patronageMilestones.Where(m => m.target <= patronageStatus.patronageEarned);
                         if (patronageMilestonesEarned != null && patronageMilestonesEarned.Count() > 0)
                         {
-                            patronageMilestoneHighestEarned = patronageMilestonesEarned.OrderByDescending(m => m.reward).FirstOrDefault();
+                            patronageMilestoneHighestEarned = patronageMilestonesEarned.OrderByDescending(m => m.bonus).FirstOrDefault();
                         }
 
                         if (patronageMilestoneHighestEarned != null)
                         {
-                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedreward", patronageMilestoneHighestEarned.DollarAmountText());
+                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedreward", patronageMilestoneHighestEarned.PercentageAmountText());
                         }
                         else
                         {
@@ -787,14 +787,9 @@ namespace MixItUp.Base.Util
 
                             foreach (UserInventoryItemViewModel item in inventory.Items.Values.OrderByDescending(i => i.Name))
                             {
-                                int amount = inventoryData.GetAmount(item);
-                                if (amount > 0)
-                                {
-                                    userItems[item.Name] = amount;
-                                }
-
+                                userItems[item.Name] = inventoryData.GetAmount(item);
                                 string itemSpecialIdentifier = identifierHeader + inventory.UserAmountSpecialIdentifierHeader + item.SpecialIdentifier;
-                                this.ReplaceSpecialIdentifier(itemSpecialIdentifier, amount.ToString());
+                                this.ReplaceSpecialIdentifier(itemSpecialIdentifier, userItems[item.Name].ToString());
                             }
 
                             if (userItems.Count > 0)
@@ -802,7 +797,10 @@ namespace MixItUp.Base.Util
                                 List<string> userAllItems = new List<string>();
                                 foreach (var kvp in userItems.OrderBy(i => i.Key))
                                 {
-                                    userAllItems.Add(kvp.Key + " x" + kvp.Value);
+                                    if (kvp.Value > 0)
+                                    {
+                                        userAllItems.Add(kvp.Key + " x" + kvp.Value);
+                                    }
                                 }
                                 this.ReplaceSpecialIdentifier(identifierHeader + inventory.UserAllAmountSpecialIdentifier, string.Join(", ", userAllItems));
                             }

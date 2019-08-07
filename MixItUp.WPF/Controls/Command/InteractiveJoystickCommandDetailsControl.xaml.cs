@@ -156,6 +156,16 @@ namespace MixItUp.WPF.Controls.Command
             return null;
         }
 
+        private string GetSelectedIndex(InputKeyEnum? inputKey)
+        {
+            if (inputKey.HasValue)
+            {
+                return EnumHelper.GetEnumName(inputKey.Value);
+            }
+
+            return null;
+        }
+
         private void JoystickSetupComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             if (this.JoystickSetupComboBox.SelectedIndex >= 0)
@@ -164,7 +174,10 @@ namespace MixItUp.WPF.Controls.Command
                 if (setup == InteractiveJoystickSetupType.MapToIndividualKeys)
                 {
                     this.UpKeyComboBox.IsEnabled = this.RightKeyComboBox.IsEnabled = this.DownKeyComboBox.IsEnabled = this.LeftKeyComboBox.IsEnabled = true;
-                    this.UpKeyComboBox.SelectedIndex = this.RightKeyComboBox.SelectedIndex = this.DownKeyComboBox.SelectedIndex = this.LeftKeyComboBox.SelectedIndex = -1;
+                    this.UpKeyComboBox.SelectedItem = GetSelectedIndex(this.command?.MappedKeys.ElementAtOrDefault(0));
+                    this.RightKeyComboBox.SelectedItem = GetSelectedIndex(this.command?.MappedKeys.ElementAtOrDefault(1));
+                    this.DownKeyComboBox.SelectedItem = GetSelectedIndex(this.command?.MappedKeys.ElementAtOrDefault(2));
+                    this.LeftKeyComboBox.SelectedItem = GetSelectedIndex(this.command?.MappedKeys.ElementAtOrDefault(3));
                 }
                 else
                 {

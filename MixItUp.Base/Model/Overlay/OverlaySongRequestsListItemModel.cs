@@ -17,14 +17,22 @@ namespace MixItUp.Base.Model.Overlay
             <span style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; font-weight: bold; color: {TEXT_COLOR}; position: absolute; top: 50%; left: 28%; transform: translate(0%, -50%);"">{SONG_NAME}</span>
         </div>";
 
+        public bool IncludeCurrentSong { get; set; }
+
         private List<OverlayListIndividualItemModel> lastItems { get; set; } = new List<OverlayListIndividualItemModel>();
 
-        public OverlaySongRequestsListItemModel() : base() { }
+        public OverlaySongRequestsListItemModel()
+            : base()
+        {
+            this.IncludeCurrentSong = true;
+        }
 
         public OverlaySongRequestsListItemModel(string htmlText, int totalToShow, string textFont, int width, int height, string borderColor, string backgroundColor, string textColor,
-            OverlayListItemAlignmentTypeEnum alignment, OverlayItemEffectEntranceAnimationTypeEnum addEventAnimation, OverlayItemEffectExitAnimationTypeEnum removeEventAnimation)
+            bool includeCurrentSong, OverlayListItemAlignmentTypeEnum alignment, OverlayItemEffectEntranceAnimationTypeEnum addEventAnimation, OverlayItemEffectExitAnimationTypeEnum removeEventAnimation)
             : base(OverlayItemModelTypeEnum.SongRequests, htmlText, totalToShow, 0, textFont, width, height, borderColor, backgroundColor, textColor, alignment, addEventAnimation, removeEventAnimation)
-        { }
+        {
+            this.IncludeCurrentSong = includeCurrentSong;
+        }
 
         public override async Task LoadTestData()
         {
@@ -58,7 +66,16 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void GlobalEvents_OnSongRequestsChangedOccurred(object sender, System.EventArgs e)
         {
-            await this.AddSongRequests(ChannelSession.Services.SongRequestService.RequestSongs.Take(this.TotalToShow));
+            List<SongRequestModel> songs = ChannelSession.Services.SongRequestService.RequestSongs.ToList();
+            if (this.IncludeCurrentSong)
+            {
+                SongRequestModel current = await ChannelSession.Services.SongRequestService.GetCurrent();
+                if (current != null)
+                {
+                    songs.Insert(0, current);
+                }
+            }
+            await this.AddSongRequests(songs.Take(this.TotalToShow));
         }
 
         private async Task AddSongRequests(IEnumerable<SongRequestModel> songs)
