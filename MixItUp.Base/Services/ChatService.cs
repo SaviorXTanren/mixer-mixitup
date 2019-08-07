@@ -60,10 +60,10 @@ namespace MixItUp.Base.Services
             this.mixerChatService.OnMessageOccurred += MixerChatService_OnMessageOccurred;
             this.mixerChatService.OnDeleteMessageOccurred += MixerChatService_OnDeleteMessageOccurred;
             this.mixerChatService.OnClearMessagesOccurred += MixerChatService_OnClearMessagesOccurred;
-            this.mixerChatService.OnUsersJoinOccurred += MixerChatService_OnUsersJoinOccurred;
-            this.mixerChatService.OnUserUpdateOccurred += MixerChatService_OnUserUpdateOccurred;
-            this.mixerChatService.OnUsersLeaveOccurred += MixerChatService_OnUsersLeaveOccurred;
-            this.mixerChatService.OnUserPurgeOccurred += MixerChatService_OnUserPurgeOccurred;
+            //this.mixerChatService.OnUsersJoinOccurred += MixerChatService_OnUsersJoinOccurred;
+            //this.mixerChatService.OnUserUpdateOccurred += MixerChatService_OnUserUpdateOccurred;
+            //this.mixerChatService.OnUsersLeaveOccurred += MixerChatService_OnUsersLeaveOccurred;
+            //this.mixerChatService.OnUserPurgeOccurred += MixerChatService_OnUserPurgeOccurred;
 
             foreach (ChatMessageEventModel message in await this.mixerChatService.GetChatHistory(50))
             {
@@ -341,7 +341,7 @@ namespace MixItUp.Base.Services
             }
         }
 
-        private async void MixerChatService_OnClearMessagesOccurred(object sender, EventArgs e)
+        private void MixerChatService_OnClearMessagesOccurred(object sender, EventArgs e)
         {
             this.messagesLookup.Clear();
             this.Messages.Clear();
