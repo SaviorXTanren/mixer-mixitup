@@ -64,7 +64,15 @@ namespace MixItUp.Desktop.Services
             IChannelSettings settings = new DesktopChannelSettings(channel, isStreamer);
             if (File.Exists(this.GetFilePath(settings)))
             {
-                settings = await this.LoadSettings(this.GetFilePath(settings));
+                var tempSettings = await this.LoadSettings(this.GetFilePath(settings));
+                if (tempSettings == null)
+                {
+                    GlobalEvents.ShowMessageBox("We were unable to load your settings file due to file corruption. Unfortunately, we could not repair your settings."+ Environment.NewLine + Environment.NewLine + "We apologize for this inconvenience. If you have backups, you can restore them from the settings menu.");
+                }
+                else
+                {
+                    settings = tempSettings;
+                }
             }
 
             string databaseFilePath = this.GetDatabaseFilePath(settings);
