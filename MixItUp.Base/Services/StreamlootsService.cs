@@ -17,10 +17,6 @@ namespace MixItUp.Base.Services
 {
     public class StreamlootsCardModel
     {
-        private const string messageStartRegex = "^Hey ";
-        private const string messageMiddleRegex = ", greetings from ";
-        private const string messageEndRegex = " !$";
-
         public string type { get; set; }
         public string imageUrl { get; set; }
         public StreamlootsCardDataModel data { get; set; }
