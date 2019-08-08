@@ -48,6 +48,7 @@ namespace MixItUp.Base
         OAuthTokenModel StreamJarOAuthToken { get; set; }
         OAuthTokenModel PatreonOAuthToken { get; set; }
         OAuthTokenModel IFTTTOAuthToken { get; set; }
+        OAuthTokenModel StreamlootsOAuthToken { get; set; }
 
         Dictionary<string, CommandGroupSettings> CommandGroups { get; set; }
         Dictionary<string, HotKeyConfiguration> HotKeys { get; set; }

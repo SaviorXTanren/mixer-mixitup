@@ -842,6 +842,9 @@
     <Compile Include="Controls\Services\StreamlabsServiceControl.xaml.cs">
       <DependentUpon>StreamlabsServiceControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Services\StreamlootsServiceControl.xaml.cs">
+      <DependentUpon>StreamlootsServiceControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Services\TiltifyServiceControl.xaml.cs">
       <DependentUpon>TiltifyServiceControl.xaml</DependentUpon>
     </Compile>
@@ -1669,6 +1672,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Services\StreamlabsServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\StreamlootsServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -29,6 +29,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.services.Add(new ServicesGroupBoxControl(this.Window, new XSplitServiceControl()));
             this.services.Add(new ServicesGroupBoxControl(this.Window, new OvrStreamServiceControl()));
             this.services.Add(new ServicesGroupBoxControl(this.Window, new StreamlabsServiceControl()));
+            this.services.Add(new ServicesGroupBoxControl(this.Window, new StreamlootsServiceControl()));
             this.services.Add(new ServicesGroupBoxControl(this.Window, new TiltifyServiceControl()));
             this.services.Add(new ServicesGroupBoxControl(this.Window, new ExtraLifeServiceControl()));
             this.services.Add(new ServicesGroupBoxControl(this.Window, new TipeeeStreamServiceControl()));

@@ -591,6 +591,10 @@ namespace MixItUp.Base
                     {
                         await ChannelSession.Services.InitializeIFTTT();
                     }
+                    if (ChannelSession.Settings.StreamlootsOAuthToken != null)
+                    {
+                        await ChannelSession.Services.InitializeStreamloots();
+                    }
 
                     if (ChannelSession.Settings.RemoteHostConnection != null)
                     {
