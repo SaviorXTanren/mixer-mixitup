@@ -119,39 +119,9 @@ namespace MixItUp.Desktop.Services
 
                 UserViewModel user = await ChannelSession.GetCurrentUser();
 
-                foreach (var widgetGroup in ChannelSession.Settings.OverlayWidgets.GroupBy(ow => ow.OverlayName))
+                foreach (IOverlayService overlay in this.overlays.Values.ToList())
                 {
-                    IOverlayService overlay = this.GetOverlay(widgetGroup.Key);
-                    if (overlay != null)
-                    {
-                        overlay.StartBatching();
-                        foreach (OverlayWidgetModel widget in widgetGroup)
-                        {
-                            try
-                            {
-                                if (widget.IsEnabled)
-                                {
-                                    if (!widget.Item.IsInitialized)
-                                    {
-                                        await widget.Initialize();
-                                    }
-                                    else if (widget.SupportsRefreshUpdating && widget.RefreshTime > 0 && (updateSeconds % widget.RefreshTime) == 0)
-                                    {
-                                        await widget.UpdateItem();
-                                    }
-                                }
-                                else
-                                {
-                                    if (widget.Item.IsInitialized)
-                                    {
-                                        await widget.Disable();
-                                    }
-                                }
-                            }
-                            catch (Exception ex) { Logger.Log(ex); }
-                        }
-                        await overlay.EndBatching();
-                    }
+                    await this.RefreshWidgetsForOverlay(overlay, updateSeconds);
                 }
 
                 await Task.Delay(1000);
@@ -159,10 +129,43 @@ namespace MixItUp.Desktop.Services
             });
         }
 
-        private void Overlay_OnWebSocketConnectedOccurred(object sender, EventArgs e)
+        private async Task RefreshWidgetsForOverlay(IOverlayService overlay, long updateSeconds, bool forceRefresh = false)
+        {
+            overlay.StartBatching();
+            foreach (OverlayWidgetModel widget in ChannelSession.Settings.OverlayWidgets.Where(ow => ow.OverlayName.Equals(overlay.Name)))
+            {
+                try
+                {
+                    if (widget.IsEnabled)
+                    {
+                        if (!widget.Item.IsInitialized)
+                        {
+                            await widget.Initialize();
+                        }
+                        else if ((widget.SupportsRefreshUpdating || forceRefresh) && widget.RefreshTime > 0 && (updateSeconds % widget.RefreshTime) == 0)
+                        {
+                            await widget.UpdateItem();
+                        }
+                    }
+                    else
+                    {
+                        if (widget.Item.IsInitialized)
+                        {
+                            await widget.Disable();
+                        }
+                    }
+                }
+                catch (Exception ex) { Logger.Log(ex); }
+            }
+            await overlay.EndBatching();
+        }
+
+        private async void Overlay_OnWebSocketConnectedOccurred(object sender, EventArgs e)
         {
             IOverlayService overlay = (IOverlayService)sender;
             this.OnOverlayConnectedOccurred(overlay, new EventArgs());
+
+            await this.RefreshWidgetsForOverlay(overlay, 0, forceRefresh: true);
         }
 
         private void Overlay_OnWebSocketDisconnectedOccurred(object sender, WebSocketCloseStatus closeStatus)
