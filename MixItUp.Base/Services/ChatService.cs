@@ -38,8 +38,6 @@ namespace MixItUp.Base.Services
 
     public class ChatService : IChatService
     {
-        private const int MaxDisplayUsers = 100;
-
         public bool DisableChat { get; set; }
 
         public ObservableCollection<ChatMessageViewModel> Messages { get; private set; } = new ObservableCollection<ChatMessageViewModel>();
@@ -52,7 +50,7 @@ namespace MixItUp.Base.Services
             {
                 IEnumerable<UserViewModel> users = this.displayUsers.Values;
                 users = users.ToList();
-                users = users.Take(MaxDisplayUsers);
+                users = users.Take(ChannelSession.Settings.MaxUsersShownInChat);
                 return users;
             }
         }

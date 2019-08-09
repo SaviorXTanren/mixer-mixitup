@@ -305,7 +305,7 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public int MaxMessagesInChat { get; set; } = 100;
         [JsonProperty]
-        public int MaxUsersShownInChat { get; set; } = 250;
+        public int MaxUsersShownInChat { get; set; } = 100;
 
         [JsonProperty]
         public bool AutoExportStatistics { get; set; }
