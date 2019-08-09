@@ -159,7 +159,6 @@ namespace MixItUp.Base.Services
                                                 Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
                                                 specialIdentifiers.Add("streamlootscardname", card.data.cardName);
                                                 specialIdentifiers.Add("streamlootscardimage", card.imageUrl);
-                                                specialIdentifiers.Add("streamlootscardsound", card.soundUrl);
                                                 specialIdentifiers.Add("streamlootsmessage", card.data.Message);
                                                 await command.Perform(user, arguments: null, extraSpecialIdentifiers: specialIdentifiers);
                                             }

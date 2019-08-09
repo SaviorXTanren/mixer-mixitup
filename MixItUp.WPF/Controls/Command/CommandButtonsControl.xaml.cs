@@ -214,7 +214,6 @@ namespace MixItUp.WPF.Controls.Command
                         case OtherEventTypeEnum.StreamlootsCardRedeemed:
                             extraSpecialIdentifiers["streamlootscardname"] = "Test Card";
                             extraSpecialIdentifiers["streamlootscardimage"] = "https://res.cloudinary.com/streamloots/image/upload/f_auto,c_scale,w_250,q_90/static/e19c7bf6-ca3e-49a8-807e-b2e9a1a47524/en_dl_character.png";
-                            extraSpecialIdentifiers["streamlootscardsound"] = "https://static.streamloots.com/b355d1ef-d931-4c16-a48f-8bed0076401b/alerts/default.mp3";
                             extraSpecialIdentifiers["streamlootsmessage"] = "Test Message";
                             break;
                         case OtherEventTypeEnum.TwitterStreamTweetRetweet:
