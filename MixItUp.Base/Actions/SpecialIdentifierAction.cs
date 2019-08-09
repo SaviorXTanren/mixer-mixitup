@@ -4,6 +4,7 @@ using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,6 +13,8 @@ namespace MixItUp.Base.Actions
     [DataContract]
     public class SpecialIdentifierAction : ActionBase
     {
+        private const string TextProcessorFunctionRegexPatternFormat = "{0}\\([^)]+\\)";
+
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
         protected override SemaphoreSlim AsyncSemaphore { get { return SpecialIdentifierAction.asyncSemaphore; } }
@@ -66,6 +69,12 @@ namespace MixItUp.Base.Actions
                     replacementText = "0";
                 }
             }
+            else
+            {
+                replacementText = await this.ProcessStringFunction(replacementText, "removespaces", (text) => { return Task.FromResult(text.Replace(" ", string.Empty)); });
+                replacementText = await this.ProcessStringFunction(replacementText, "tolower", (text) => { return Task.FromResult(text.ToLower()); });
+                replacementText = await this.ProcessStringFunction(replacementText, "toupper", (text) => { return Task.FromResult(text.ToUpper()); });
+            }
 
             if (this.MakeGloballyUsable)
             {
@@ -75,6 +84,17 @@ namespace MixItUp.Base.Actions
             {
                 this.extraSpecialIdentifiers[this.SpecialIdentifierName] = replacementText;
             }
+        }
+
+        private async Task<string> ProcessStringFunction(string text, string functionName, Func<string, Task<string>> processor)
+        {
+            foreach (Match match in Regex.Matches(text, string.Format(TextProcessorFunctionRegexPatternFormat, functionName)))
+            {
+                string textToProcess = match.Value.Substring(functionName.Length + 1);
+                textToProcess = textToProcess.Substring(0, textToProcess.Length - 1);
+                text = text.Replace(match.Value, await processor(textToProcess));
+            }
+            return text;
         }
         
         private double Random(double max)

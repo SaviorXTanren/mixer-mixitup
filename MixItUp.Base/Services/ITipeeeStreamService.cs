@@ -128,6 +128,7 @@ namespace MixItUp.Base.Services
 
         Task<TipeeeStreamUser> GetUser();
         Task<string> GetAPIKey();
+        Task<string> GetSocketAddress();
 
         Task<IEnumerable<TipeeeStreamEvent>> GetDonationEvents();
 

@@ -211,6 +211,11 @@ namespace MixItUp.WPF.Controls.Command
                             extraSpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierAmountSpecialIdentifier] = "12.34";
                             extraSpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierImageSpecialIdentifier] = "https://xforgeassets002.xboxlive.com/xuid-2535473787585366-public/b7a1d715-3a9e-4bdd-a030-32f9e2e0f51e/0013_lots-o-stars_256.png";
                             break;
+                        case OtherEventTypeEnum.StreamlootsCardRedeemed:
+                            extraSpecialIdentifiers["streamlootscardname"] = "Test Card";
+                            extraSpecialIdentifiers["streamlootscardimage"] = "https://res.cloudinary.com/streamloots/image/upload/f_auto,c_scale,w_250,q_90/static/e19c7bf6-ca3e-49a8-807e-b2e9a1a47524/en_dl_character.png";
+                            extraSpecialIdentifiers["streamlootsmessage"] = "Test Message";
+                            break;
                         case OtherEventTypeEnum.TwitterStreamTweetRetweet:
                             break;
                         case OtherEventTypeEnum.MixerSkillUsed:

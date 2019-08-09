@@ -302,6 +302,8 @@ namespace MixItUp.Base.Model.Overlay
             return filePath;
         }
 
+        public virtual Task LoadCachedData() { return Task.FromResult(0); }
+
         protected virtual async Task PerformReplacements(JObject jobj, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             if (jobj != null)

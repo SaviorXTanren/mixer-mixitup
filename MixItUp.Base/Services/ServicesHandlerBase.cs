@@ -43,6 +43,7 @@ namespace MixItUp.Base.Services
         public IPatreonService Patreon { get; protected set; }
         public IOvrStreamService OvrStreamWebsocket { get; protected set; }
         public IIFTTTService IFTTT { get; protected set; }
+        public IStreamlootsService Streamloots { get; protected set; }
 
         public abstract Task Close();
 
@@ -100,5 +101,8 @@ namespace MixItUp.Base.Services
 
         public abstract Task<bool> InitializeIFTTT(string key = null);
         public abstract Task DisconnectIFTTT();
+
+        public abstract Task<bool> InitializeStreamloots(string streamlootsID = null);
+        public abstract Task DisconnectStreamloots();
     }
 }

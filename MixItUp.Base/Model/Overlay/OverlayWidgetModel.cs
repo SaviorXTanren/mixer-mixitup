@@ -77,6 +77,8 @@ namespace MixItUp.Base.Model.Overlay
             await this.HideItem();
         }
 
+        public async Task LoadCachedData() { await this.Item.LoadCachedData(); }
+
         public async Task ShowItem() { await this.ShowItem(await ChannelSession.GetCurrentUser(), new List<string>(), new Dictionary<string, string>()); }
 
         public async Task ShowItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)

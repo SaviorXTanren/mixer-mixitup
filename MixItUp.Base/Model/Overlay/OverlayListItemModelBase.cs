@@ -100,6 +100,8 @@ namespace MixItUp.Base.Model.Overlay
 
         [DataMember]
         public List<OverlayListIndividualItemModel> Items = new List<OverlayListIndividualItemModel>();
+        [DataMember]
+        private List<OverlayListIndividualItemModel> cachedItems = new List<OverlayListIndividualItemModel>();
 
         protected SemaphoreSlim listSemaphore = new SemaphoreSlim(1);
 
@@ -131,14 +133,28 @@ namespace MixItUp.Base.Model.Overlay
         public override async Task Disable()
         {
             this.Items.Clear();
+            this.cachedItems.Clear();
             await base.Disable();
         }
 
         public override async Task<JObject> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             JObject jobj = await base.GetProcessedItem(user, arguments, extraSpecialIdentifiers);
+            this.cachedItems.AddRange(this.Items);
+            while (this.cachedItems.Count > this.TotalToShow)
+            {
+                this.cachedItems.RemoveAt(0);
+            }
             this.Items.Clear();
             return jobj;
+        }
+
+        public override Task LoadCachedData()
+        {
+            this.Items.Clear();
+            this.Items.AddRange(this.cachedItems);
+            this.cachedItems.Clear();
+            return Task.FromResult(0);
         }
 
         protected override async Task PerformReplacements(JObject jobj, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
