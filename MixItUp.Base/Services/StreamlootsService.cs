@@ -125,36 +125,46 @@ namespace MixItUp.Base.Services
                 {
                     if (this.responseStream.CanRead)
                     {
+                        string cardData = string.Empty;
                         int len = this.responseStream.Read(buffer, 0, 100000);
                         if (len > 10)
                         {
                             string text = encoder.GetString(buffer, 0, len);
                             if (!string.IsNullOrEmpty(text))
                             {
-                                JObject jobj = JObject.Parse("{ " + text + " }");
-                                if (jobj != null && jobj.ContainsKey("data"))
+                                cardData += text;
+                                try
                                 {
-                                    StreamlootsCardModel card = jobj["data"].ToObject<StreamlootsCardModel>();
-                                    if (card != null)
+                                    JObject jobj = JObject.Parse("{ " + cardData + " }");
+                                    if (jobj != null && jobj.ContainsKey("data"))
                                     {
-                                        UserViewModel user = new UserViewModel(0, card.data.Username);
-
-                                        UserModel userModel = await ChannelSession.Connection.GetUser(user.UserName);
-                                        if (userModel != null)
+                                        cardData = string.Empty;
+                                        StreamlootsCardModel card = jobj["data"].ToObject<StreamlootsCardModel>();
+                                        if (card != null)
                                         {
-                                            user = new UserViewModel(userModel);
-                                        }
+                                            UserViewModel user = new UserViewModel(0, card.data.Username);
 
-                                        EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.StreamlootsCardRedeemed));
-                                        if (command != null)
-                                        {
-                                            Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
-                                            specialIdentifiers.Add("streamlootscardname", card.data.cardName);
-                                            specialIdentifiers.Add("streamlootscardimage", card.imageUrl);
-                                            specialIdentifiers.Add("streamlootsmessage", card.data.Message);
-                                            await command.Perform(user, arguments: null, extraSpecialIdentifiers: specialIdentifiers);
+                                            UserModel userModel = await ChannelSession.Connection.GetUser(user.UserName);
+                                            if (userModel != null)
+                                            {
+                                                user = new UserViewModel(userModel);
+                                            }
+
+                                            EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.StreamlootsCardRedeemed));
+                                            if (command != null)
+                                            {
+                                                Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
+                                                specialIdentifiers.Add("streamlootscardname", card.data.cardName);
+                                                specialIdentifiers.Add("streamlootscardimage", card.imageUrl);
+                                                specialIdentifiers.Add("streamlootsmessage", card.data.Message);
+                                                await command.Perform(user, arguments: null, extraSpecialIdentifiers: specialIdentifiers);
+                                            }
                                         }
                                     }
+                                }
+                                catch (Exception ex)
+                                {
+                                    Logger.Log(ex);
                                 }
                             }
                         }
