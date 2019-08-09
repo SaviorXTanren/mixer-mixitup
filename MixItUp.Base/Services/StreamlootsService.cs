@@ -167,7 +167,7 @@ namespace MixItUp.Base.Services
                                 }
                                 catch (Exception ex)
                                 {
-                                    Logger.Log(ex);
+                                    Util.Logger.LogDiagnostic(ex);
                                 }
                             }
                         }
