@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Model.Chat;
+using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model;
@@ -22,8 +23,10 @@ namespace MixItUp.Base.Services
         bool DisableChat { get; set; }
 
         ObservableCollection<ChatMessageViewModel> Messages { get; }
-        ObservableCollection<UserViewModel> DisplayUsers { get; }
+
         LockedDictionary<string, UserViewModel> AllUsers { get; }
+        IEnumerable<UserViewModel> DisplayUsers { get; }
+        event EventHandler DisplayUsersUpdated;
 
         Task SendMessage(PlatformTypeEnum platform, string message, bool sendAsStreamer = false);
         Task DeleteMessage(ChatMessageViewModel message);
@@ -35,15 +38,27 @@ namespace MixItUp.Base.Services
 
     public class ChatService : IChatService
     {
+        private const int MaxDisplayUsers = 100;
+
         public bool DisableChat { get; set; }
 
         public ObservableCollection<ChatMessageViewModel> Messages { get; private set; } = new ObservableCollection<ChatMessageViewModel>();
         private LockedDictionary<string, ChatMessageViewModel> messagesLookup = new LockedDictionary<string, ChatMessageViewModel>();
 
-        public ObservableCollection<UserViewModel> DisplayUsers { get; private set; } = new ObservableCollection<UserViewModel>();
         public LockedDictionary<string, UserViewModel> AllUsers { get; private set; } = new LockedDictionary<string, UserViewModel>();
-        private SemaphoreSlim usersLock = new SemaphoreSlim(1);
-        private Dictionary<string, MixerRoleEnum> cachedUserRoles = new Dictionary<string, MixerRoleEnum>();
+        public IEnumerable<UserViewModel> DisplayUsers
+        {
+            get
+            {
+                IEnumerable<UserViewModel> users = this.displayUsers.Values;
+                users = users.ToList();
+                users = users.Take(MaxDisplayUsers);
+                return users;
+            }
+        }
+        public event EventHandler DisplayUsersUpdated = delegate { };
+        private SortedList<string, UserViewModel> displayUsers = new SortedList<string, UserViewModel>();
+
         private HashSet<string> userEntranceCommands = new HashSet<string>();
 
         private SemaphoreSlim whisperNumberLock = new SemaphoreSlim(1);
@@ -60,15 +75,27 @@ namespace MixItUp.Base.Services
             this.mixerChatService.OnMessageOccurred += MixerChatService_OnMessageOccurred;
             this.mixerChatService.OnDeleteMessageOccurred += MixerChatService_OnDeleteMessageOccurred;
             this.mixerChatService.OnClearMessagesOccurred += MixerChatService_OnClearMessagesOccurred;
-            //this.mixerChatService.OnUsersJoinOccurred += MixerChatService_OnUsersJoinOccurred;
-            //this.mixerChatService.OnUserUpdateOccurred += MixerChatService_OnUserUpdateOccurred;
-            //this.mixerChatService.OnUsersLeaveOccurred += MixerChatService_OnUsersLeaveOccurred;
-            //this.mixerChatService.OnUserPurgeOccurred += MixerChatService_OnUserPurgeOccurred;
+            this.mixerChatService.OnUsersJoinOccurred += MixerChatService_OnUsersJoinOccurred;
+            this.mixerChatService.OnUserUpdateOccurred += MixerChatService_OnUserUpdateOccurred;
+            this.mixerChatService.OnUsersLeaveOccurred += MixerChatService_OnUsersLeaveOccurred;
+            this.mixerChatService.OnUserPurgeOccurred += MixerChatService_OnUserPurgeOccurred;
 
             foreach (ChatMessageEventModel message in await this.mixerChatService.GetChatHistory(50))
             {
                 await this.AddMessage(new ChatMessageViewModel(message));
             }
+
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            Task.Run(async () =>
+            {
+                List<UserViewModel> users = new List<UserViewModel>();
+                foreach (ChatUserModel chatUser in await ChannelSession.MixerStreamerConnection.GetChatUsers(ChannelSession.MixerChannel, int.MaxValue))
+                {
+                    users.Add(new UserViewModel(chatUser));
+                }
+                await this.UsersJoined(users);
+            });
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
         public async Task SendMessage(PlatformTypeEnum platform, string message, bool sendAsStreamer = false)
@@ -105,11 +132,11 @@ namespace MixItUp.Base.Services
 
         private async Task AddMessage(ChatMessageViewModel message)
         {
-            //if (message.User != null)
-            //{
-            //    await message.User.RefreshDetails();
-            //}
-            //message.User.UpdateLastActivity();
+            if (message.User != null)
+            {
+                await message.User.RefreshDetails();
+            }
+            message.User.UpdateLastActivity();
 
             Util.Logger.LogDiagnostic(string.Format("Message Received - {0}", message.ToString()));
 
@@ -253,54 +280,15 @@ namespace MixItUp.Base.Services
             //}
         }
 
-        private async Task UsersJoined(IEnumerable<UserViewModel> users)
+        private Task UsersJoined(IEnumerable<UserViewModel> users)
         {
-            await this.usersLock.WaitAndRelease(() =>
+            foreach (UserViewModel user in users)
             {
-                foreach (UserViewModel user in users)
-                {
-                    this.AllUsers[user.ID.ToString()] = user;
-                    if (this.DisplayUsers.Count <= ChannelSession.Settings.MaxUsersShownInChat)
-                    {
-                        this.cachedUserRoles[user.ID.ToString()] = user.PrimarySortableRole;
-
-                        int insertIndex = 0;
-                        for (insertIndex = 0; insertIndex < this.DisplayUsers.Count; insertIndex++)
-                        {
-                            UserViewModel compareUser = this.DisplayUsers[insertIndex];
-                            if (compareUser != null)
-                            {
-                                if (!this.cachedUserRoles.ContainsKey(compareUser.ID.ToString()))
-                                {
-                                    this.cachedUserRoles[compareUser.ID.ToString()] = compareUser.PrimarySortableRole;
-                                }
-
-                                if (this.cachedUserRoles[compareUser.ID.ToString()] == this.cachedUserRoles[user.ID.ToString()])
-                                {
-                                    if (!string.IsNullOrEmpty(user.UserName) && compareUser.UserName.CompareTo(user.UserName) > 0)
-                                    {
-                                        break;
-                                    }
-                                }
-                                else if (this.cachedUserRoles[compareUser.ID.ToString()] < this.cachedUserRoles[user.ID.ToString()])
-                                {
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (insertIndex < this.DisplayUsers.Count)
-                        {
-                            this.DisplayUsers.Insert(insertIndex, user);
-                        }
-                        else
-                        {
-                            this.DisplayUsers.Add(user);
-                        }
-                    }
-                }
-                return Task.FromResult(0);
-            });
+                this.AllUsers[user.ID.ToString()] = user;
+                this.displayUsers[user.SortableID] = user;
+            }
+            this.DisplayUsersUpdated(this, new EventArgs());
+            return Task.FromResult(0);
         }
 
         private async Task UsersUpdated(IEnumerable<UserViewModel> users)
@@ -309,20 +297,17 @@ namespace MixItUp.Base.Services
             await this.UsersJoined(users);
         }
 
-        private async Task UsersLeft(IEnumerable<UserViewModel> users)
+        private Task UsersLeft(IEnumerable<UserViewModel> users)
         {
-            await this.usersLock.WaitAndRelease(() =>
+            foreach (UserViewModel user in users)
             {
-                foreach (UserViewModel user in users)
+                if (this.AllUsers.Remove(user.ID.ToString()))
                 {
-                    if (this.AllUsers.ContainsKey(user.ID.ToString()))
-                    {
-                        this.DisplayUsers.Remove(user);
-                        this.AllUsers.Remove(user.ID.ToString());
-                    }
+                    this.displayUsers.Remove(user.UserName);
                 }
-                return Task.FromResult(0);
-            });
+            }
+            this.DisplayUsersUpdated(this, new EventArgs());
+            return Task.FromResult(0);
         }
 
         #region Mixer Events

@@ -48,7 +48,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     if (user != null && !this.existingUsers.ContainsKey(user.ID))
                     {
-                        this.cachedUserRoles[user.ID] = user.PrimarySortableRole;
+                        this.cachedUserRoles[user.ID] = user.PrimaryRole;
 
                         int insertIndex = 0;
                         for (insertIndex = 0; insertIndex < this.collection.Count; insertIndex++)
@@ -61,7 +61,7 @@ namespace MixItUp.WPF.Controls.MainControls
                                 {
                                     if (!this.cachedUserRoles.ContainsKey(currentUser.ID))
                                     {
-                                        this.cachedUserRoles[currentUser.ID] = currentUser.PrimarySortableRole;
+                                        this.cachedUserRoles[currentUser.ID] = currentUser.PrimaryRole;
                                     }
 
                                     if (this.cachedUserRoles[currentUser.ID] == this.cachedUserRoles[user.ID])

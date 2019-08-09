@@ -217,7 +217,18 @@ namespace MixItUp.Base.ViewModel.User
         public string PrimaryRoleString { get { return EnumHelper.GetEnumName(this.PrimaryRole); } }
 
         [JsonIgnore]
-        public MixerRoleEnum PrimarySortableRole { get { return this.MixerRoles.Where(r => r != MixerRoleEnum.Follower).Max(); } }
+        public string SortableID
+        {
+            get
+            {
+                MixerRoleEnum role = this.PrimaryRole;
+                if (role == MixerRoleEnum.Follower)
+                {
+                    role = MixerRoleEnum.User;
+                }
+                return (999 - role) + "-" + this.Platform.ToString() + "-" + this.UserName;
+            }
+        }
 
         [JsonIgnore]
         public string Title
@@ -570,15 +581,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public bool Equals(UserViewModel other) { return this.ID.Equals(other.ID); }
 
-        public int CompareTo(UserViewModel other)
-        {
-            int order = this.PrimaryRole.CompareTo(other.PrimaryRole);
-            if (order == 0)
-            {
-                return this.UserName.CompareTo(other.UserName);
-            }
-            return order;
-        }
+        public int CompareTo(UserViewModel other) { return this.UserName.CompareTo(other.UserName); }
 
         public override int GetHashCode() { return this.ID.GetHashCode(); }
 

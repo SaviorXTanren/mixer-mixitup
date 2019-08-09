@@ -3,6 +3,7 @@ using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModel.Window;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net;
 using System.Threading.Tasks;
@@ -38,8 +39,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         }
 
         public ObservableCollection<ChatMessageViewModel> Messages { get; private set; }
-        public ObservableCollection<UserViewModel> AllUsers { get; private set; }
-        public ObservableCollection<UserViewModel> DisplayUsers { get; private set; }
+        public IEnumerable<UserViewModel> DisplayUsers { get; private set; }
 
         public uint ViewersCount
         {
@@ -79,6 +79,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
         protected override async Task OnLoadedInternal()
         {
+            ChannelSession.Services.ChatService.DisplayUsersUpdated += ChatService_DisplayUsersUpdated;
             this.Messages = ChannelSession.Services.ChatService.Messages;
             this.DisplayUsers = ChannelSession.Services.ChatService.DisplayUsers;
 
@@ -108,6 +109,12 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         {
             this.ViewersCount = ChannelSession.MixerChannel.viewersCurrent;
             this.ChattersCount = (uint)ChannelSession.Services.ChatService.AllUsers.Count;
+        }
+
+        private void ChatService_DisplayUsersUpdated(object sender, EventArgs e)
+        {
+            this.DisplayUsers = ChannelSession.Services.ChatService.DisplayUsers;
+            this.NotifyPropertyChanged("DisplayUsers");
         }
     }
 }
