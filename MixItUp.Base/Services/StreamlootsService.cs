@@ -19,6 +19,7 @@ namespace MixItUp.Base.Services
     {
         public string type { get; set; }
         public string imageUrl { get; set; }
+        public string soundUrl { get; set; }
         public StreamlootsCardDataModel data { get; set; }
     }
 
@@ -132,6 +133,8 @@ namespace MixItUp.Base.Services
                             string text = encoder.GetString(buffer, 0, len);
                             if (!string.IsNullOrEmpty(text))
                             {
+                                Util.Logger.LogDiagnostic("Streamloots Packet Received: " + text);
+
                                 cardData += text;
                                 try
                                 {
@@ -156,6 +159,7 @@ namespace MixItUp.Base.Services
                                                 Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
                                                 specialIdentifiers.Add("streamlootscardname", card.data.cardName);
                                                 specialIdentifiers.Add("streamlootscardimage", card.imageUrl);
+                                                specialIdentifiers.Add("streamlootscardsound", card.soundUrl);
                                                 specialIdentifiers.Add("streamlootsmessage", card.data.Message);
                                                 await command.Perform(user, arguments: null, extraSpecialIdentifiers: specialIdentifiers);
                                             }
