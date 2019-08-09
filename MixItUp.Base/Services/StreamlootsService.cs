@@ -119,14 +119,14 @@ namespace MixItUp.Base.Services
             this.responseStream = response.GetResponseStream();
 
             UTF8Encoding encoder = new UTF8Encoding();
+            string cardData = string.Empty;
             var buffer = new byte[100000];
             while (true)
             {
                 try
                 {
-                    if (this.responseStream.CanRead)
+                    while (this.responseStream.CanRead)
                     {
-                        string cardData = string.Empty;
                         int len = this.responseStream.Read(buffer, 0, 100000);
                         if (len > 10)
                         {
@@ -177,7 +177,6 @@ namespace MixItUp.Base.Services
                 {
                     Util.Logger.Log(ex);
                 }
-                await Task.Delay(1000);
             }
         }
 
