@@ -162,6 +162,8 @@ namespace MixItUp.Desktop.Services
         {
             if (await this.TestConnection())
             {
+                await this.StartReplayBuffer();
+
                 this.Connected(this, new EventArgs());
                 return true;
             }
@@ -277,8 +279,16 @@ namespace MixItUp.Desktop.Services
             await this.SendAndReceive(new StreamlabsOBSRequest("toggleStreaming", "StreamingService"));
         }
 
-        public Task SaveReplayBuffer() { return Task.FromResult(0); }
-        public Task<bool> StartReplayBuffer() { return Task.FromResult(false); }
+        public async Task SaveReplayBuffer()
+        {
+            await this.SendAndReceive(new StreamlabsOBSRequest("saveReplay", "StreamingService"));
+        }
+
+        public async Task<bool> StartReplayBuffer()
+        {
+            await this.SendAndReceive(new StreamlabsOBSRequest("startReplayBuffer", "StreamingService"));
+            return true;
+        }
 
         public Task SetSceneCollection(string sceneCollectionName) { return Task.FromResult(0); }
 
