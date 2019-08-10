@@ -40,16 +40,13 @@ namespace MixItUp.Base.Actions
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
             string audioFilePath = await this.ReplaceStringWithSpecialModifiers(this.FilePath, user, arguments);
-            if (File.Exists(audioFilePath))
+            int audioDevice = -1;
+            if (!string.IsNullOrEmpty(this.OutputDevice))
             {
-                int audioDevice = -1;
-                if (!string.IsNullOrEmpty(this.OutputDevice))
-                {
-                    audioDevice = await ChannelSession.Services.AudioService.GetOutputDevice(this.OutputDevice);
-                }
-
-                await ChannelSession.Services.AudioService.Play(audioFilePath, this.VolumeScale, audioDevice);
+                audioDevice = await ChannelSession.Services.AudioService.GetOutputDevice(this.OutputDevice);
             }
+
+            await ChannelSession.Services.AudioService.Play(audioFilePath, this.VolumeScale, audioDevice);
         }
     }
 }

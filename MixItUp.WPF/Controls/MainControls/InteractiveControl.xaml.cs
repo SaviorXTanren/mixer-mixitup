@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Model.MixPlay;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
@@ -486,26 +487,38 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             try
             {
-                bool result = await this.Window.RunAsyncOperation(async () =>
+                InteractiveConnectionResult result = await this.Window.RunAsyncOperation(async () =>
                 {
                     if (!this.IsCustomInteractiveGame)
                     {
                         await ChannelSession.Interactive.DisableAllControlsWithoutCommands(this.selectedGameVersion);
                     }
+
                     return await ChannelSession.Interactive.Connect(this.selectedGame, this.selectedGameVersion);
                 });
 
-                if (result)
+                switch (result)
                 {
-                    await this.InteractiveGameConnected();
-                    return;
-                }
-                else
-                {
-                    await this.Window.RunAsyncOperation(async () =>
-                    {
-                        await ChannelSession.Interactive.Disconnect();
-                    });
+                    case InteractiveConnectionResult.Success:
+                        await this.InteractiveGameConnected();
+                        return;
+                    case InteractiveConnectionResult.DuplicateControlIDs:
+                        await this.Window.RunAsyncOperation(async () =>
+                        {
+                            await ChannelSession.Interactive.Disconnect();
+                        });
+
+                        await MessageBoxHelper.ShowMessageDialog("This MixPlay game configuration is invalid. It has multiple controls with the same control ID on different scenes.  Please visit the interactive lab and correct this problem."
+                            + Environment.NewLine
+                            + Environment.NewLine
+                            + string.Join(Environment.NewLine, ChannelSession.Interactive.DuplicatedControls));
+                        return;
+                    case InteractiveConnectionResult.Unknown:
+                        await this.Window.RunAsyncOperation(async () =>
+                        {
+                            await ChannelSession.Interactive.Disconnect();
+                        });
+                        break;
                 }
             }
             catch (Exception ex)

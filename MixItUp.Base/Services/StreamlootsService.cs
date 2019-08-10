@@ -19,6 +19,8 @@ namespace MixItUp.Base.Services
     {
         public string type { get; set; }
         public string imageUrl { get; set; }
+        public string videoUrl { get; set; }
+        public string soundUrl { get; set; }
         public StreamlootsCardDataModel data { get; set; }
     }
 
@@ -118,12 +120,13 @@ namespace MixItUp.Base.Services
             this.responseStream = response.GetResponseStream();
 
             UTF8Encoding encoder = new UTF8Encoding();
+            string cardData = string.Empty;
             var buffer = new byte[100000];
             while (true)
             {
                 try
                 {
-                    if (this.responseStream.CanRead)
+                    while (this.responseStream.CanRead)
                     {
                         int len = this.responseStream.Read(buffer, 0, 100000);
                         if (len > 10)
@@ -131,13 +134,19 @@ namespace MixItUp.Base.Services
                             string text = encoder.GetString(buffer, 0, len);
                             if (!string.IsNullOrEmpty(text))
                             {
-                                JObject jobj = JObject.Parse("{ " + text + " }");
-                                if (jobj != null && jobj.ContainsKey("data"))
+                                Util.Logger.LogDiagnostic("Streamloots Packet Received: " + text);
+
+                                cardData += text;
+                                try
                                 {
-                                    StreamlootsCardModel card = jobj["data"].ToObject<StreamlootsCardModel>();
-                                    if (card != null)
+                                    JObject jobj = JObject.Parse("{ " + cardData + " }");
+                                    if (jobj != null && jobj.ContainsKey("data"))
                                     {
-                                        UserViewModel user = new UserViewModel(0, card.data.Username);
+                                        cardData = string.Empty;
+                                        StreamlootsCardModel card = jobj["data"].ToObject<StreamlootsCardModel>();
+                                        if (card != null)
+                                        {
+                                            UserViewModel user = new UserViewModel(0, card.data.Username);
 
                                         UserModel userModel = await ChannelSession.MixerStreamerConnection.GetUser(user.UserName);
                                         if (userModel != null)
@@ -145,16 +154,24 @@ namespace MixItUp.Base.Services
                                             user = new UserViewModel(userModel);
                                         }
 
-                                        EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.StreamlootsCardRedeemed));
-                                        if (command != null)
-                                        {
-                                            Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
-                                            specialIdentifiers.Add("streamlootscardname", card.data.cardName);
-                                            specialIdentifiers.Add("streamlootscardimage", card.imageUrl);
-                                            specialIdentifiers.Add("streamlootsmessage", card.data.Message);
-                                            await command.Perform(user, arguments: null, extraSpecialIdentifiers: specialIdentifiers);
+                                            EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.StreamlootsCardRedeemed));
+                                            if (command != null)
+                                            {
+                                                Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
+                                                specialIdentifiers.Add("streamlootscardname", card.data.cardName);
+                                                specialIdentifiers.Add("streamlootscardimage", card.imageUrl);
+                                                specialIdentifiers.Add("streamlootscardhasvideo", (!string.IsNullOrEmpty(card.videoUrl)).ToString());
+                                                specialIdentifiers.Add("streamlootscardvideo", card.videoUrl);
+                                                specialIdentifiers.Add("streamlootscardsound", card.soundUrl);
+                                                specialIdentifiers.Add("streamlootsmessage", card.data.Message);
+                                                await command.Perform(user, arguments: null, extraSpecialIdentifiers: specialIdentifiers);
+                                            }
                                         }
                                     }
+                                }
+                                catch (Exception ex)
+                                {
+                                    Util.Logger.LogDiagnostic(ex);
                                 }
                             }
                         }
@@ -164,7 +181,6 @@ namespace MixItUp.Base.Services
                 {
                     Logger.Log(ex);
                 }
-                await Task.Delay(1000);
             }
         }
 

@@ -28,13 +28,9 @@
         <Grid Grid.Row="2" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="40" />
-                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column="0" x:Name="ExportStatsButton" Width="130" Click="ExportStatsButton_Click">Export To File</Button>
-
-            <TextBlock Grid.Column="2" VerticalAlignment="Center">Also check out: <Hyperlink NavigateUri="http://mixdash.cc" RequestNavigate="Hyperlink_RequestNavigate">http://mixdash.cc</Hyperlink></TextBlock>
         </Grid>
     </Grid>
 </local:MainControlBase>
