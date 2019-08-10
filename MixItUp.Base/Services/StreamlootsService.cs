@@ -160,6 +160,7 @@ namespace MixItUp.Base.Services
                                                 Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
                                                 specialIdentifiers.Add("streamlootscardname", card.data.cardName);
                                                 specialIdentifiers.Add("streamlootscardimage", card.imageUrl);
+                                                specialIdentifiers.Add("streamlootscardhasvideo", (!string.IsNullOrEmpty(card.videoUrl)).ToString());
                                                 specialIdentifiers.Add("streamlootscardvideo", card.videoUrl);
                                                 specialIdentifiers.Add("streamlootscardsound", card.soundUrl);
                                                 specialIdentifiers.Add("streamlootsmessage", card.data.Message);
