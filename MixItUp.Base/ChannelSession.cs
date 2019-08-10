@@ -1,9 +1,7 @@
 ﻿using Mixer.Base;
 using Mixer.Base.Model.Channel;
-using Mixer.Base.Model.Chat;
-using Mixer.Base.Model.Interactive;
+using Mixer.Base.Model.MixPlay;
 using Mixer.Base.Model.User;
-using Mixer.Base.Util;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.MixerAPI;
@@ -13,13 +11,11 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Services.Mixer;
 using MixItUp.Base.Statistics;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
-using Newtonsoft.Json;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
@@ -122,7 +118,7 @@ namespace MixItUp.Base
         public static IChannelSettings Settings { get; private set; }
 
         public static ChatClientWrapper Chat { get; private set; }
-        public static InteractiveClientWrapper Interactive { get; private set; }
+        public static MixPlayClientWrapper Interactive { get; private set; }
         public static ConstellationClientWrapper Constellation { get; private set; }
 
         public static StatisticsTracker Statistics { get; private set; }
@@ -224,7 +220,7 @@ namespace MixItUp.Base
 
             ChannelSession.Chat = new ChatClientWrapper();
             ChannelSession.Constellation = new ConstellationClientWrapper();
-            ChannelSession.Interactive = new InteractiveClientWrapper();
+            ChannelSession.Interactive = new MixPlayClientWrapper();
 
             ChannelSession.Statistics = new StatisticsTracker();
         }
@@ -262,7 +258,7 @@ namespace MixItUp.Base
                     result = await ChannelSession.InitializeInternal(ChannelSession.Settings.IsStreamer, ChannelSession.Settings.IsStreamer ? null : ChannelSession.Settings.Channel.token);
                 }
             }
-            catch (RestServiceRequestException ex)
+            catch (HttpRestRequestException ex)
             {
                 Util.Logger.Log(ex);
                 result = await ChannelSession.ConnectUser(ChannelSession.StreamerScopes, ChannelSession.Settings.IsStreamer ? null : ChannelSession.Settings.Channel.token);
@@ -308,7 +304,7 @@ namespace MixItUp.Base
                         result = await ChannelSession.InitializeBotInternal();
                     }
                 }
-                catch (RestServiceRequestException)
+                catch (HttpRestRequestException)
                 {
                     settings.BotOAuthToken = null;
                     return false;
@@ -553,8 +549,8 @@ namespace MixItUp.Base
 
                     if (ChannelSession.Settings.DefaultInteractiveGame > 0)
                     {
-                        IEnumerable<InteractiveGameListingModel> games = await ChannelSession.MixerStreamerConnection.GetOwnedInteractiveGames(ChannelSession.MixerChannel);
-                        InteractiveGameListingModel game = games.FirstOrDefault(g => g.id.Equals(ChannelSession.Settings.DefaultInteractiveGame));
+                        IEnumerable<MixPlayGameListingModel> games = await ChannelSession.MixerStreamerConnection.GetOwnedMixPlayGames(ChannelSession.MixerChannel);
+                        MixPlayGameListingModel game = games.FirstOrDefault(g => g.id.Equals(ChannelSession.Settings.DefaultInteractiveGame));
                         if (game != null)
                         {
                             if (!await ChannelSession.Interactive.Connect(game))

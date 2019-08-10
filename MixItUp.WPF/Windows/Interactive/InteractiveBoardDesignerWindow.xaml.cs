@@ -34,9 +34,9 @@ namespace MixItUp.WPF.Windows.Interactive
         private const int SmallWidth = 30;
         private const int SmallHeight = 40;
 
-        private InteractiveGameListingModel gameListing;
-        private List<InteractiveSceneModel> scenes = new List<InteractiveSceneModel>();
-        private InteractiveSceneModel selectedScene = null;
+        private MixPlayGameListingModel gameListing;
+        private List<MixPlaySceneModel> scenes = new List<MixPlaySceneModel>();
+        private MixPlaySceneModel selectedScene = null;
 
         private List<InteractiveBoardSize> boardSizes = new List<InteractiveBoardSize>();
         private InteractiveBoardSize selectedBoardSize = null;
@@ -44,14 +44,14 @@ namespace MixItUp.WPF.Windows.Interactive
         private bool[,] boardBlocks;
         private int blockWidthHeight;
 
-        public InteractiveBoardDesignerWindow(InteractiveGameListingModel gameListing, IEnumerable<InteractiveSceneModel> scenes)
+        public InteractiveBoardDesignerWindow(MixPlayGameListingModel gameListing, IEnumerable<MixPlaySceneModel> scenes)
         {
             InitializeComponent();
 
             this.Initialize(this.StatusBar);
 
             this.gameListing = gameListing;
-            this.scenes = new List<InteractiveSceneModel>(scenes);
+            this.scenes = new List<MixPlaySceneModel>(scenes);
 
             this.SizeChanged += InteractiveBoardDesignerWindow_SizeChanged;
         }
@@ -76,7 +76,7 @@ namespace MixItUp.WPF.Windows.Interactive
 
         private void SaveChangesButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            //foreach (InteractiveSceneModel scene in this.interactiveScenes)
+            //foreach (MixPlaySceneModel scene in this.interactiveScenes)
             //{
             //    if (scene.buttons.Count == 0 && scene.joysticks.Count == 0)
             //    {
@@ -105,9 +105,9 @@ namespace MixItUp.WPF.Windows.Interactive
                 return;
             }
 
-            InteractiveGameListingModel game = await this.RunAsyncOperation(async () =>
+            MixPlayGameListingModel game = await this.RunAsyncOperation(async () =>
             {
-                InteractiveSceneModel defaultScene = InteractiveGameHelper.CreateDefaultScene();
+                MixPlaySceneModel defaultScene = InteractiveGameHelper.CreateDefaultScene();
                 return await ChannelSession.MixerStreamerConnection.CreateInteractiveGame(ChannelSession.MixerChannel, ChannelSession.MixerStreamerUser, this.GameNameTextBox.Text, InteractiveGameHelper.CreateDefaultScene());
             });
 
@@ -127,7 +127,7 @@ namespace MixItUp.WPF.Windows.Interactive
             int perBlockHeight = (int)this.InteractiveBoardCanvas.ActualHeight / (this.selectedBoardSize.Height);
             this.blockWidthHeight = Math.Min(perBlockWidth, perBlockHeight);
 
-            foreach (InteractiveControlModel control in this.selectedScene.allControls)
+            foreach (MixPlayControlModel control in this.selectedScene.allControls)
             {
                 this.BlockOutControlArea(control);
             }
@@ -144,7 +144,7 @@ namespace MixItUp.WPF.Windows.Interactive
             }
         }
 
-        private void BlockOutControlArea(InteractiveControlModel control)
+        private void BlockOutControlArea(MixPlayControlModel control)
         {
             InteractiveControlPositionModel position = control.position.FirstOrDefault(p => p.size.Equals(this.selectedBoardSize.Name.ToLower()));
             for (int w = 0; w < position.width; w++)
@@ -185,7 +185,7 @@ namespace MixItUp.WPF.Windows.Interactive
         {
             if (this.selectedScene != null && this.SceneComboBox.SelectedIndex >= 0)
             {
-                this.selectedScene = (InteractiveSceneModel)this.SceneComboBox.SelectedItem;
+                this.selectedScene = (MixPlaySceneModel)this.SceneComboBox.SelectedItem;
                 this.RefreshScene();
             }
         }

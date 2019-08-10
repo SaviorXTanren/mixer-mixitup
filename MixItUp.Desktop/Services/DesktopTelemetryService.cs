@@ -79,7 +79,7 @@ namespace MixItUp.Desktop.Services
             this.SendPlayFabEvent("Action", "Type", EnumHelper.GetEnumName(type));
         }
 
-        public void TrackInteractiveGame(InteractiveGameModel game)
+        public void TrackInteractiveGame(MixPlayGameModel game)
         {
             this.TrySendEvent(() => this.telemetryClient.TrackEvent("InteractiveGame", new Dictionary<string, string> { { "Name", game.name } }));
             this.SendPlayFabEvent("InteractiveGame", "Name", game.name);

@@ -1,6 +1,8 @@
 ﻿using Mixer.Base;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Model.OAuth;
+using StreamingClient.Base.Services;
+using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
-    public abstract class OAuthServiceBase : RestServiceBase
+    public abstract class OAuthServiceBase : OAuthRestServiceBase
     {
         public const string LoginRedirectPageFileName = "LoginRedirectPage.html";
 
@@ -41,7 +43,7 @@ namespace MixItUp.Base.Services
 
         protected virtual async Task<string> ConnectViaOAuthRedirect(string oauthPageURL, string listeningAddress)
         {
-            OAuthHttpListenerServer oauthServer = new OAuthHttpListenerServer(listeningAddress, loginSuccessHtmlPageFilePath: OAuthServiceBase.LoginRedirectPageFileName);
+            LocalOAuthHttpListenerService oauthServer = new LocalOAuthHttpListenerService(listeningAddress, loginSuccessHtmlPageFilePath: OAuthServiceBase.LoginRedirectPageFileName);
             oauthServer.Start();
 
             ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = oauthPageURL, UseShellExecute = true };

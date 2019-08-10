@@ -1,6 +1,5 @@
-﻿using Mixer.Base.Model.Chat;
-using Mixer.Base.Model.Clips;
-using Mixer.Base.Model.Interactive;
+﻿using Mixer.Base.Model.Clips;
+using Mixer.Base.Model.MixPlay;
 using Mixer.Base.Model.Patronage;
 using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Model.Skill;
@@ -85,8 +84,8 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler<InteractiveGameModel> OnInteractiveConnected;
-        public static void InteractiveConnected(InteractiveGameModel game)
+        public static event EventHandler<MixPlayGameModel> OnInteractiveConnected;
+        public static void InteractiveConnected(MixPlayGameModel game)
         {
             if (GlobalEvents.OnInteractiveConnected != null)
             {

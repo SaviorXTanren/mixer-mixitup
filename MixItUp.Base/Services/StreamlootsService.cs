@@ -1,6 +1,4 @@
-﻿using Mixer.Base.Model.OAuth;
-using Mixer.Base.Model.User;
-using Mixer.Base.Util;
+﻿using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;

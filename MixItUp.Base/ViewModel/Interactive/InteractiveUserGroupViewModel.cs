@@ -1,7 +1,7 @@
-﻿using Mixer.Base.Model.Interactive;
-using Mixer.Base.Util;
+﻿using Mixer.Base.Model.MixPlay;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
+using StreamingClient.Base.Util;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.ViewModel.Interactive
@@ -28,7 +28,7 @@ namespace MixItUp.Base.ViewModel.Interactive
             this.AssociatedUserRole = MixerRoleEnum.Custom;
         }
 
-        public InteractiveUserGroupViewModel(InteractiveGroupModel group) : this(group.groupID, group.sceneID) { }
+        public InteractiveUserGroupViewModel(MixPlayGroupModel group) : this(group.groupID, group.sceneID) { }
 
         [DataMember]
         public string GroupName { get; set; }

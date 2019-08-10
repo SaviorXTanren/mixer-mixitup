@@ -6,16 +6,16 @@ using Mixer.Base.Model.Chat;
 using Mixer.Base.Model.Clips;
 using Mixer.Base.Model.Costream;
 using Mixer.Base.Model.Game;
-using Mixer.Base.Model.Interactive;
 using Mixer.Base.Model.Leaderboards;
+using Mixer.Base.Model.MixPlay;
 using Mixer.Base.Model.Patronage;
 using Mixer.Base.Model.Skills;
 using Mixer.Base.Model.Teams;
 using Mixer.Base.Model.TestStreams;
 using Mixer.Base.Model.User;
-using Mixer.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,43 +56,7 @@ namespace MixItUp.Base.Services.Mixer
             this.Connection = connection;
         }
 
-        public void Initialize()
-        {
-            if (ChannelSession.Settings.DiagnosticLogging)
-            {
-                this.Connection.Channels.OnRequestSent += RestAPIService_OnRequestSent;
-                this.Connection.Channels.OnSuccessResponseReceived += RestAPIService_OnSuccessResponseReceived;
-                this.Connection.Channels.OnFailureResponseReceived += RestAPIServices_OnFailureResponseReceived;
-
-                this.Connection.Chats.OnRequestSent += RestAPIService_OnRequestSent;
-                this.Connection.Chats.OnSuccessResponseReceived += RestAPIService_OnSuccessResponseReceived;
-                this.Connection.Chats.OnFailureResponseReceived += RestAPIServices_OnFailureResponseReceived;
-
-                this.Connection.Costream.OnRequestSent += RestAPIService_OnRequestSent;
-                this.Connection.Costream.OnSuccessResponseReceived += RestAPIService_OnSuccessResponseReceived;
-                this.Connection.Costream.OnFailureResponseReceived += RestAPIServices_OnFailureResponseReceived;
-
-                this.Connection.GameTypes.OnRequestSent += RestAPIService_OnRequestSent;
-                this.Connection.GameTypes.OnSuccessResponseReceived += RestAPIService_OnSuccessResponseReceived;
-                this.Connection.GameTypes.OnFailureResponseReceived += RestAPIServices_OnFailureResponseReceived;
-
-                this.Connection.Interactive.OnRequestSent += RestAPIService_OnRequestSent;
-                this.Connection.Interactive.OnSuccessResponseReceived += RestAPIService_OnSuccessResponseReceived;
-                this.Connection.Interactive.OnFailureResponseReceived += RestAPIServices_OnFailureResponseReceived;
-
-                this.Connection.OAuth.OnRequestSent += RestAPIService_OnRequestSent;
-                this.Connection.OAuth.OnSuccessResponseReceived += RestAPIService_OnSuccessResponseReceived;
-                this.Connection.OAuth.OnFailureResponseReceived += RestAPIServices_OnFailureResponseReceived;
-
-                this.Connection.Teams.OnRequestSent += RestAPIService_OnRequestSent;
-                this.Connection.Teams.OnSuccessResponseReceived += RestAPIService_OnSuccessResponseReceived;
-                this.Connection.Teams.OnFailureResponseReceived += RestAPIServices_OnFailureResponseReceived;
-
-                this.Connection.Users.OnRequestSent += RestAPIService_OnRequestSent;
-                this.Connection.Users.OnSuccessResponseReceived += RestAPIService_OnSuccessResponseReceived;
-                this.Connection.Users.OnFailureResponseReceived += RestAPIServices_OnFailureResponseReceived;
-            }
-        }
+        public void Initialize() { }
 
         public async Task<UserModel> GetUser(string username) { return await this.RunAsync(this.Connection.Users.GetUser(username), logNotFoundException: false); }
 
@@ -199,19 +163,19 @@ namespace MixItUp.Base.Services.Mixer
 
         public async Task RemoveUserRoles(ChannelModel channel, UserModel user, IEnumerable<MixerRoleEnum> roles) { await this.RunAsync(this.Connection.Channels.UpdateUserRoles(channel, user, null, roles.Select(r => EnumHelper.GetEnumName(r)))); }
 
-        public async Task<IEnumerable<InteractiveGameListingModel>> GetOwnedInteractiveGames(ChannelModel channel) { return await this.RunAsync(this.Connection.Interactive.GetOwnedInteractiveGames(channel)); }
+        public async Task<IEnumerable<MixPlayGameListingModel>> GetOwnedMixPlayGames(ChannelModel channel) { return await this.RunAsync(this.Connection.MixPlay.GetOwnedMixPlayGames(channel)); }
 
-        public async Task<InteractiveGameModel> GetInteractiveGame(uint gameID) { return await this.RunAsync(this.Connection.Interactive.GetInteractiveGame(gameID)); }
+        public async Task<MixPlayGameModel> GetMixPlayGame(uint gameID) { return await this.RunAsync(this.Connection.MixPlay.GetMixPlayGame(gameID)); }
 
-        public async Task<InteractiveGameListingModel> CreateInteractiveGame(ChannelModel channel, UserModel user, string name, InteractiveSceneModel defaultScene) { return await this.RunAsync(InteractiveGameHelper.CreateInteractive2Game(this.Connection, channel, user, name, defaultScene)); }
+        public async Task<MixPlayGameListingModel> CreateMixPlayGame(ChannelModel channel, UserModel user, string name, MixPlaySceneModel defaultScene) { return await this.RunAsync(MixPlayGameHelper.CreateMixPlay2Game(this.Connection, channel, user, name, defaultScene)); }
 
-        public async Task<IEnumerable<InteractiveGameVersionModel>> GetInteractiveGameVersions(InteractiveGameModel game) { return await this.RunAsync(this.Connection.Interactive.GetInteractiveGameVersions(game)); }
+        public async Task<IEnumerable<MixPlayGameVersionModel>> GetMixPlayGameVersions(MixPlayGameModel game) { return await this.RunAsync(this.Connection.MixPlay.GetMixPlayGameVersions(game)); }
 
-        public async Task<InteractiveGameVersionModel> GetInteractiveGameVersion(InteractiveGameVersionModel version) { return await this.RunAsync(this.Connection.Interactive.GetInteractiveGameVersion(version)); }
+        public async Task<MixPlayGameVersionModel> GetMixPlayGameVersion(MixPlayGameVersionModel version) { return await this.RunAsync(this.Connection.MixPlay.GetMixPlayGameVersion(version)); }
 
-        public async Task<InteractiveGameVersionModel> GetInteractiveGameVersion(uint versionID) { return await this.RunAsync(this.Connection.Interactive.GetInteractiveGameVersion(versionID)); }
+        public async Task<MixPlayGameVersionModel> GetMixPlayGameVersion(uint versionID) { return await this.RunAsync(this.Connection.MixPlay.GetMixPlayGameVersion(versionID)); }
 
-        public async Task UpdateInteractiveGameVersion(InteractiveGameVersionModel version) { await this.RunAsync(this.Connection.Interactive.UpdateInteractiveGameVersion(version)); }
+        public async Task UpdateMixPlayGameVersion(MixPlayGameVersionModel version) { await this.RunAsync(this.Connection.MixPlay.UpdateMixPlayGameVersion(version)); }
 
         public async Task<TeamModel> GetTeam(uint id) { return await this.RunAsync(this.Connection.Teams.GetTeam(id)); }
 
@@ -272,6 +236,6 @@ namespace MixItUp.Base.Services.Mixer
 
         private void RestAPIService_OnSuccessResponseReceived(object sender, string e) { Util.Logger.Log(string.Format("Rest API Success Response: {0}", e)); }
 
-        private void RestAPIServices_OnFailureResponseReceived(object sender, RestServiceRequestException e) { Util.Logger.Log(string.Format("Rest API Failure Response: {0}", e.ToString())); }
+        private void RestAPIServices_OnFailureResponseReceived(object sender, HttpRestRequestException e) { Util.Logger.Log(string.Format("Rest API Failure Response: {0}", e.ToString())); }
     }
 }

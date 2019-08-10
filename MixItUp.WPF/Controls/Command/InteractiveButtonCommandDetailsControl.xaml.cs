@@ -14,14 +14,14 @@ namespace MixItUp.WPF.Controls.Command
     /// </summary>
     public partial class InteractiveButtonCommandDetailsControl : CommandDetailsControlBase
     {
-        public InteractiveGameModel Game { get; private set; }
-        public InteractiveGameVersionModel Version { get; private set; }
-        public InteractiveSceneModel Scene { get; private set; }
-        public InteractiveButtonControlModel Control { get; private set; }
+        public MixPlayGameModel Game { get; private set; }
+        public MixPlayGameVersionModel Version { get; private set; }
+        public MixPlaySceneModel Scene { get; private set; }
+        public MixPlayButtonControlModel Control { get; private set; }
 
         private InteractiveButtonCommand command;
 
-        public InteractiveButtonCommandDetailsControl(InteractiveGameModel game, InteractiveGameVersionModel version, InteractiveButtonCommand command)
+        public InteractiveButtonCommandDetailsControl(MixPlayGameModel game, MixPlayGameVersionModel version, InteractiveButtonCommand command)
         {
             this.Game = game;
             this.Version = version;
@@ -31,7 +31,7 @@ namespace MixItUp.WPF.Controls.Command
             InitializeComponent();
         }
 
-        public InteractiveButtonCommandDetailsControl(InteractiveGameModel game, InteractiveGameVersionModel version, InteractiveSceneModel scene, InteractiveButtonControlModel control)
+        public InteractiveButtonCommandDetailsControl(MixPlayGameModel game, MixPlayGameVersionModel version, MixPlaySceneModel scene, MixPlayButtonControlModel control)
         {
             this.Game = game;
             this.Version = version;

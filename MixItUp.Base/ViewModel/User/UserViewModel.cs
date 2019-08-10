@@ -1,8 +1,7 @@
 ﻿using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.Chat;
-using Mixer.Base.Model.Interactive;
+using Mixer.Base.Model.MixPlay;
 using Mixer.Base.Model.User;
-using Mixer.Base.Util;
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
@@ -126,7 +125,7 @@ namespace MixItUp.Base.ViewModel.User
         public bool IsInChat { get; set; }
 
         [DataMember]
-        public LockedDictionary<string, InteractiveParticipantModel> InteractiveIDs { get; set; }
+        public LockedDictionary<string, MixPlayParticipantModel> InteractiveIDs { get; set; }
 
         [DataMember]
         public string InteractiveGroupID { get; set; }
@@ -143,7 +142,7 @@ namespace MixItUp.Base.ViewModel.User
         public UserViewModel()
         {
             this.CustomRoles = new HashSet<string>();
-            this.InteractiveIDs = new LockedDictionary<string, InteractiveParticipantModel>();
+            this.InteractiveIDs = new LockedDictionary<string, MixPlayParticipantModel>();
         }
 
         public UserViewModel(UserModel user) : this(user.id, user.username)
@@ -159,7 +158,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserViewModel(ChatMessageUserModel chatUser) : this(chatUser.user_id, chatUser.user_name, chatUser.user_roles) { this.IsInChat = true; }
 
-        public UserViewModel(InteractiveParticipantModel participant) : this(participant.userID, participant.username) { this.SetInteractiveDetails(participant); }
+        public UserViewModel(MixPlayParticipantModel participant) : this(participant.userID, participant.username) { this.SetInteractiveDetails(participant); }
 
         public UserViewModel(uint id, string username) : this(id, username, new string[] { }) { }
 
@@ -436,13 +435,13 @@ namespace MixItUp.Base.ViewModel.User
             this.IsInChat = false;
         }
 
-        public void SetInteractiveDetails(InteractiveParticipantModel participant)
+        public void SetInteractiveDetails(MixPlayParticipantModel participant)
         {
             this.InteractiveIDs[participant.sessionID] = participant;
             this.InteractiveGroupID = participant.groupID;
         }
 
-        public void RemoveInteractiveDetails(InteractiveParticipantModel participant)
+        public void RemoveInteractiveDetails(MixPlayParticipantModel participant)
         {
             this.InteractiveIDs.Remove(participant.sessionID);
             if (this.InteractiveIDs.Count == 0)
@@ -554,12 +553,12 @@ namespace MixItUp.Base.ViewModel.User
             };
         }
 
-        public IEnumerable<InteractiveParticipantModel> GetParticipantModels()
+        public IEnumerable<MixPlayParticipantModel> GetParticipantModels()
         {
-            List<InteractiveParticipantModel> participants = new List<InteractiveParticipantModel>();
+            List<MixPlayParticipantModel> participants = new List<MixPlayParticipantModel>();
             foreach (string interactiveID in this.InteractiveIDs.Keys)
             {
-                participants.Add(new InteractiveParticipantModel()
+                participants.Add(new MixPlayParticipantModel()
                 {
                     userID = this.ID,
                     username = this.UserName,

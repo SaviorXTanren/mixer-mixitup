@@ -7,6 +7,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -565,7 +566,7 @@ namespace MixItUp.Base.Commands
 
             string cv = Convert.ToBase64String(Guid.NewGuid().ToByteArray(), 0, 12);
 
-            using (HttpClientWrapper client = new HttpClientWrapper("https://displaycatalog.mp.microsoft.com"))
+            using (AdvancedHttpClient client = new AdvancedHttpClient("https://displaycatalog.mp.microsoft.com"))
             {
                 client.DefaultRequestHeaders.UserAgent.ParseAdd("MixItUp");
                 client.DefaultRequestHeaders.Add("MS-CV", cv);
@@ -636,7 +637,7 @@ namespace MixItUp.Base.Commands
 
             if (steamGameList.Count == 0)
             {
-                using (HttpClientWrapper client = new HttpClientWrapper("http://api.steampowered.com/"))
+                using (AdvancedHttpClient client = new AdvancedHttpClient("http://api.steampowered.com/"))
                 {
                     HttpResponseMessage response = await client.GetAsync("ISteamApps/GetAppList/v0002");
                     if (response.StatusCode == HttpStatusCode.OK)
@@ -669,7 +670,7 @@ namespace MixItUp.Base.Commands
 
             if (gameID > 0)
             {
-                using (HttpClientWrapper client = new HttpClientWrapper("http://store.steampowered.com/"))
+                using (AdvancedHttpClient client = new AdvancedHttpClient("http://store.steampowered.com/"))
                 {
                     HttpResponseMessage response = await client.GetAsync("api/appdetails?appids=" + gameID);
                     if (response.StatusCode == HttpStatusCode.OK)

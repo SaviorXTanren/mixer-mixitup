@@ -1,5 +1,4 @@
-﻿using Mixer.Base.Model.Interactive;
-using Mixer.Base.Util;
+﻿using Mixer.Base.Model.MixPlay;
 using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
@@ -135,7 +134,7 @@ namespace MixItUp.Base.Actions
             };
         }
 
-        public static InteractiveAction CreateConnectAction(InteractiveGameModel game)
+        public static InteractiveAction CreateConnectAction(MixPlayGameModel game)
         {
             return new InteractiveAction(InteractiveActionTypeEnum.Connect)
             {
@@ -236,8 +235,8 @@ namespace MixItUp.Base.Actions
                         GlobalEvents.InteractiveDisconnected();
                     }
 
-                    IEnumerable<InteractiveGameModel> games = await ChannelSession.Interactive.GetAllConnectableGames();
-                    InteractiveGameModel game = games.FirstOrDefault(g => g.id.Equals(this.InteractiveGameID));
+                    IEnumerable<MixPlayGameModel> games = await ChannelSession.Interactive.GetAllConnectableGames();
+                    MixPlayGameModel game = games.FirstOrDefault(g => g.id.Equals(this.InteractiveGameID));
                     if (game != null)
                     {
                         if (await ChannelSession.Interactive.Connect(game))
@@ -294,8 +293,8 @@ namespace MixItUp.Base.Actions
                             await ChannelSession.Interactive.AddUserToGroup(chatUser, this.GroupName);
                         }
 
-                        IEnumerable<InteractiveParticipantModel> participants = ChannelSession.Interactive.Participants.Values;
-                        foreach (InteractiveParticipantModel participant in participants)
+                        IEnumerable<MixPlayParticipantModel> participants = ChannelSession.Interactive.Participants.Values;
+                        foreach (MixPlayParticipantModel participant in participants)
                         {
                             participant.groupID = this.GroupName;
                         }
@@ -304,8 +303,8 @@ namespace MixItUp.Base.Actions
                     else if (this.InteractiveType == InteractiveActionTypeEnum.CooldownButton || this.InteractiveType == InteractiveActionTypeEnum.CooldownGroup ||
                         this.InteractiveType == InteractiveActionTypeEnum.CooldownScene)
                     {
-                        InteractiveConnectedSceneModel scene = null;
-                        List<InteractiveConnectedButtonControlModel> buttons = new List<InteractiveConnectedButtonControlModel>();
+                        MixPlayConnectedSceneModel scene = null;
+                        List<MixPlayConnectedButtonControlModel> buttons = new List<MixPlayConnectedButtonControlModel>();
                         if (this.InteractiveType == InteractiveActionTypeEnum.CooldownButton)
                         {
                             if (ChannelSession.Interactive.ControlCommands.ContainsKey(this.CooldownID) && ChannelSession.Interactive.ControlCommands[this.CooldownID] is InteractiveConnectedButtonCommand)
@@ -340,8 +339,8 @@ namespace MixItUp.Base.Actions
 
                         if (buttons.Count > 0)
                         {
-                            long timestamp = DateTimeHelper.DateTimeOffsetToUnixTimestamp(DateTimeOffset.Now.AddSeconds(this.CooldownAmount));
-                            foreach (InteractiveConnectedButtonControlModel button in buttons)
+                            long timestamp = DateTimeOffset.Now.AddSeconds(this.CooldownAmount).ToUnixTimeMilliseconds();
+                            foreach (MixPlayConnectedButtonControlModel button in buttons)
                             {
                                 button.SetCooldownTimestamp(timestamp);
                             }
@@ -351,13 +350,13 @@ namespace MixItUp.Base.Actions
                     else if (this.InteractiveType == InteractiveActionTypeEnum.UpdateControl || this.InteractiveType == InteractiveActionTypeEnum.SetCustomMetadata ||
                         this.InteractiveType == InteractiveActionTypeEnum.EnableDisableControl)
                     {
-                        InteractiveConnectedSceneModel scene = null;
-                        InteractiveControlModel control = null;
+                        MixPlayConnectedSceneModel scene = null;
+                        MixPlayControlModel control = null;
 
                         string processedControlId = await this.ReplaceStringWithSpecialModifiers(this.ControlID, user, arguments);
-                        foreach (InteractiveConnectedSceneModel s in ChannelSession.Interactive.Scenes)
+                        foreach (MixPlayConnectedSceneModel s in ChannelSession.Interactive.Scenes)
                         {
-                            foreach (InteractiveControlModel c in s.allControls)
+                            foreach (MixPlayControlModel c in s.allControls)
                             {
                                 if (c.controlID.Equals(processedControlId))
                                 {
@@ -381,9 +380,9 @@ namespace MixItUp.Base.Actions
                                 int.TryParse(replacementValue, out int replacementNumberValue);
                                 float.TryParse(replacementValue, out float replacementFloatValue);
 
-                                if (control is InteractiveButtonControlModel)
+                                if (control is MixPlayButtonControlModel)
                                 {
-                                    InteractiveButtonControlModel button = (InteractiveButtonControlModel)control;
+                                    MixPlayButtonControlModel button = (MixPlayButtonControlModel)control;
                                     switch (this.UpdateControlType)
                                     {
                                         case InteractiveActionUpdateControlTypeEnum.Text: button.text = replacementValue; break;
@@ -396,12 +395,12 @@ namespace MixItUp.Base.Actions
                                         case InteractiveActionUpdateControlTypeEnum.BorderColor: button.borderColor = replacementValue; break;
                                         case InteractiveActionUpdateControlTypeEnum.BackgroundColor: button.backgroundColor = replacementValue; break;
                                         case InteractiveActionUpdateControlTypeEnum.BackgroundImage: button.backgroundImage = replacementValue; break;
-                                        case InteractiveActionUpdateControlTypeEnum.Progress: ((InteractiveConnectedButtonControlModel)button).SetProgress(replacementFloatValue); break;
+                                        case InteractiveActionUpdateControlTypeEnum.Progress: ((MixPlayConnectedButtonControlModel)button).SetProgress(replacementFloatValue); break;
                                     }
                                 }
-                                else if (control is InteractiveLabelControlModel)
+                                else if (control is MixPlayLabelControlModel)
                                 {
-                                    InteractiveLabelControlModel label = (InteractiveLabelControlModel)control;
+                                    MixPlayLabelControlModel label = (MixPlayLabelControlModel)control;
                                     switch (this.UpdateControlType)
                                     {
                                         case InteractiveActionUpdateControlTypeEnum.Text: label.text = replacementValue; break;
@@ -409,9 +408,9 @@ namespace MixItUp.Base.Actions
                                         case InteractiveActionUpdateControlTypeEnum.TextColor: label.textColor = replacementValue; break;
                                     }
                                 }
-                                else if (control is InteractiveTextBoxControlModel)
+                                else if (control is MixPlayTextBoxControlModel)
                                 {
-                                    InteractiveTextBoxControlModel textbox = (InteractiveTextBoxControlModel)control;
+                                    MixPlayTextBoxControlModel textbox = (MixPlayTextBoxControlModel)control;
                                     switch (this.UpdateControlType)
                                     {
                                         case InteractiveActionUpdateControlTypeEnum.Text: textbox.submitText = replacementValue; break;
@@ -449,7 +448,7 @@ namespace MixItUp.Base.Actions
                                 control.disabled = !this.EnableDisableControl;
                             }
 
-                            await ChannelSession.Interactive.UpdateControls(scene, new List<InteractiveControlModel>() { control });
+                            await ChannelSession.Interactive.UpdateControls(scene, new List<MixPlayControlModel>() { control });
                         }
                     }
                 }

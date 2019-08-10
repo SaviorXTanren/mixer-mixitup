@@ -12,10 +12,10 @@ namespace MixItUp.WPF.Controls.Interactive
 {
     public class CustomInteractiveGameControl : UserControl
     {
-        public InteractiveGameModel Game { get; private set; }
-        public InteractiveGameVersionModel Version { get; private set; }
+        public MixPlayGameModel Game { get; private set; }
+        public MixPlayGameVersionModel Version { get; private set; }
 
-        public CustomInteractiveGameControl(InteractiveGameModel game, InteractiveGameVersionModel version)
+        public CustomInteractiveGameControl(MixPlayGameModel game, MixPlayGameVersionModel version)
         {
             this.Game = game;
             this.Version = version;
@@ -41,7 +41,7 @@ namespace MixItUp.WPF.Controls.Interactive
 
         protected virtual Task GameDisconnectedInternal() { return Task.FromResult(0); }
 
-        protected virtual Task OnInteractiveControlUsed(UserViewModel user, InteractiveGiveInputModel input, InteractiveConnectedControlCommand command) { return Task.FromResult(0); }
+        protected virtual Task OnInteractiveControlUsed(UserViewModel user, MixPlayGiveInputModel input, InteractiveConnectedControlCommand command) { return Task.FromResult(0); }
 
         protected JObject GetCustomSettings()
         {

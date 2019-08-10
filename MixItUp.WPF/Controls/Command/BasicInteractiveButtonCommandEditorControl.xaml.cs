@@ -21,16 +21,16 @@ namespace MixItUp.WPF.Controls.Command
         private CommandWindow window;
 
         private BasicCommandTypeEnum commandType;
-        private InteractiveGameModel game;
-        private InteractiveGameVersionModel version;
-        private InteractiveSceneModel scene;
-        private InteractiveButtonControlModel button;
+        private MixPlayGameModel game;
+        private MixPlayGameVersionModel version;
+        private MixPlaySceneModel scene;
+        private MixPlayButtonControlModel button;
 
         private InteractiveButtonCommand command;
 
         private ActionControlBase actionControl;
 
-        public BasicInteractiveButtonCommandEditorControl(CommandWindow window, InteractiveGameModel game, InteractiveGameVersionModel version, InteractiveButtonCommand command)
+        public BasicInteractiveButtonCommandEditorControl(CommandWindow window, MixPlayGameModel game, MixPlayGameVersionModel version, InteractiveButtonCommand command)
         {
             this.window = window;
             this.game = game;
@@ -40,8 +40,8 @@ namespace MixItUp.WPF.Controls.Command
             InitializeComponent();
         }
 
-        public BasicInteractiveButtonCommandEditorControl(CommandWindow window, InteractiveGameModel game, InteractiveGameVersionModel version, InteractiveSceneModel scene,
-            InteractiveButtonControlModel button, BasicCommandTypeEnum commandType)
+        public BasicInteractiveButtonCommandEditorControl(CommandWindow window, MixPlayGameModel game, MixPlayGameVersionModel version, MixPlaySceneModel scene,
+            MixPlayButtonControlModel button, BasicCommandTypeEnum commandType)
         {
             this.window = window;
             this.game = game;
