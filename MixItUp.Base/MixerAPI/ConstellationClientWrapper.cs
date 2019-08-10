@@ -98,7 +98,7 @@ namespace MixItUp.Base.MixerAPI
                     }
                 }
             }
-            catch (Exception ex) { Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
 
             return await this.AttemptConnect();
         }
@@ -505,7 +505,7 @@ namespace MixItUp.Base.MixerAPI
                     this.OnEventOccurred(this, e);
                 }
             }
-            catch (Exception ex) { Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
         }
 
         private async void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, int> sparkUsage)

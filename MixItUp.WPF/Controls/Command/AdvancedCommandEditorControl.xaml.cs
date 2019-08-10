@@ -223,7 +223,7 @@ namespace MixItUp.WPF.Controls.Command
                             }
                         }
                     }
-                    catch (Exception ex) { Base.Util.Logger.Log(ex); }
+                    catch (Exception ex) { Base.Logger.Log(ex); }
                 }
             });
         }

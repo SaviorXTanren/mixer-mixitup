@@ -4,6 +4,7 @@ using Mixer.Base.Web;
 using MixItUp.Base;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using StreamingClient.Base.Model.OAuth;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

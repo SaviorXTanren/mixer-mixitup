@@ -1368,7 +1368,7 @@ namespace MixItUp.Base.Model.Overlay
                                     currencyAmounts.Remove(top.Key);
                                 }
                             }
-                            catch (Exception ex) { Util.Logger.Log(ex); }
+                            catch (Exception ex) { Logger.Log(ex); }
                         }
                     }
 
@@ -2481,7 +2481,7 @@ namespace MixItUp.Base.Model.Overlay
                     }
                 }
             }
-            catch (Exception ex) { Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
         }
 
         #region IDisposable Support

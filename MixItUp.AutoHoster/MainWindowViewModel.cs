@@ -147,7 +147,7 @@ namespace MixItUp.AutoHoster
                 {
                     this.connection = await MixerConnection.ConnectViaOAuthToken(this.settings.OAuthToken);
                 }
-                catch (Exception ex) { Base.Util.Logger.Log(ex); }
+                catch (Exception ex) { Base.Logger.Log(ex); }
             }
             else
             {
@@ -162,7 +162,7 @@ namespace MixItUp.AutoHoster
                         new List<OAuthClientScopeEnum>() { OAuthClientScopeEnum.channel__details__self, OAuthClientScopeEnum.channel__update__self, OAuthClientScopeEnum.chat__connect, OAuthClientScopeEnum.chat__chat, OAuthClientScopeEnum.chat__whisper },
                         loginSuccessHtmlPageFilePath: "LoginRedirectPage.html");
                 }
-                catch (Exception ex) { Base.Util.Logger.Log(ex); }
+                catch (Exception ex) { Base.Logger.Log(ex); }
                 if (this.connection == null)
                 {
                     return false;
@@ -222,7 +222,7 @@ namespace MixItUp.AutoHoster
 
                 if (this.IsAutoHostingEnabled && (this.CurrentlyHosting == null || !this.CurrentlyHosting.IsOnline || (this.settings.MaxHostLength > 0 && this.totalMinutesHosted >= this.settings.MaxHostLength)))
                 {
-                    Base.Util.Logger.Log("Attempting to find new host...");
+                    Base.Logger.Log("Attempting to find new host...");
 
                     if (hostOrder == HostingOrderEnum.Random)
                     {
@@ -251,7 +251,7 @@ namespace MixItUp.AutoHoster
                                     ChannelModel updatedChannel = await this.connection.Channels.SetHostChannel(currentUser.channel, channelModel);
                                     if (updatedChannel.hosteeId.GetValueOrDefault() == channelModel.id)
                                     {
-                                        Base.Util.Logger.Log("Now hosting " + channelModel.token);
+                                        Base.Logger.Log("Now hosting " + channelModel.token);
 
                                         await this.SaveData();
 
@@ -344,7 +344,7 @@ namespace MixItUp.AutoHoster
             }
             catch (Exception ex)
             {
-                Base.Util.Logger.Log(ex);
+                Base.Logger.Log(ex);
             }
         }
 

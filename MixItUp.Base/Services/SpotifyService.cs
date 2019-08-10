@@ -326,7 +326,7 @@ namespace MixItUp.Base.Services
 
         private async Task LogSpotifyDiagnostic(HttpResponseMessage response)
         {
-            Logger.LogDiagnostic(string.Format("Spotify Log: {0} - {1} - {2}", response.RequestMessage.ToString(), response.StatusCode, await response.Content.ReadAsStringAsync()));
+            Logger.Log(LogLevel.Debug, string.Format("Spotify Log: {0} - {1} - {2}", response.RequestMessage.ToString(), response.StatusCode, await response.Content.ReadAsStringAsync()));
         }
 
         #region IDisposable Support

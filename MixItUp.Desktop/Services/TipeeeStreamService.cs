@@ -66,7 +66,7 @@ namespace MixItUp.Desktop.Services
             {
                 if (errorData != null)
                 {
-                    MixItUp.Base.Util.Logger.Log(errorData.ToString());
+                    Logger.Log(errorData.ToString());
                 }
                 this.service.WebSocketDisconnectedOccurred();
 
@@ -77,7 +77,7 @@ namespace MixItUp.Desktop.Services
             {
                 if (errorData != null)
                 {
-                    MixItUp.Base.Util.Logger.Log(errorData.ToString());
+                    Logger.Log(errorData.ToString());
                 }
                 this.service.WebSocketDisconnectedOccurred();
 
@@ -145,7 +145,7 @@ namespace MixItUp.Desktop.Services
                         return true;
                     }
                 }
-                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
             }
 
             this.authorizationToken = await this.ConnectViaOAuthRedirect(string.Format(TipeeeStreamService.AuthorizationURL, TipeeeStreamService.ClientID, TipeeeStreamService.ListeningURL));
@@ -170,7 +170,7 @@ namespace MixItUp.Desktop.Services
                         return await this.InitializeInternal();
                     }
                 }
-                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
             }
             return false;
         }
@@ -191,7 +191,7 @@ namespace MixItUp.Desktop.Services
             {
                 return await this.GetAsync<TipeeeStreamUser>("v1.0/me");
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
             return null;
         }
 
@@ -205,7 +205,7 @@ namespace MixItUp.Desktop.Services
                     return jobj["apiKey"].ToString();
                 }
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
             return null;
         }
 
@@ -219,7 +219,7 @@ namespace MixItUp.Desktop.Services
                     return string.Format("{0}:{1}", jobj["datas"]["host"], jobj["datas"]["port"]);
                 }
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
             return null;
         }
 
@@ -241,7 +241,7 @@ namespace MixItUp.Desktop.Services
                     }
                 }
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
             return results;
         }
 

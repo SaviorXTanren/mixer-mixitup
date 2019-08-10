@@ -1,6 +1,7 @@
 ﻿using Jace;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -65,7 +66,7 @@ namespace MixItUp.Base.Actions
                 catch (Exception ex)
                 {
                     // Calculation failed, log and set to 0
-                    Logger.Log(ex, false, false);
+                    Logger.Log(ex);
                     replacementText = "0";
                 }
             }

@@ -146,7 +146,7 @@ namespace MixItUp.Base.Services
             }
             message.User.UpdateLastActivity();
 
-            Util.Logger.LogDiagnostic(string.Format("Message Received - {0}", message.ToString()));
+            Logger.Log(LogLevel.Debug, string.Format("Message Received - {0}", message.ToString()));
 
             if (!message.IsWhisper && !this.userEntranceCommands.Contains(message.User.ID.ToString()))
             {
@@ -176,14 +176,14 @@ namespace MixItUp.Base.Services
 
             if (this.DisableChat && !message.ID.Equals(Guid.Empty))
             {
-                Util.Logger.LogDiagnostic(string.Format("Deleting Message As Chat Disabled - {0}", message.PlainTextMessage));
+                Logger.Log(LogLevel.Debug, string.Format("Deleting Message As Chat Disabled - {0}", message.PlainTextMessage));
                 await this.DeleteMessage(message);
                 return;
             }
 
             //if (!ModerationHelper.MeetsChatInteractiveParticipationRequirement(message.User) || !ModerationHelper.MeetsChatEmoteSkillsOnlyParticipationRequirement(message.User, message))
             //{
-            //    Util.Logger.LogDiagnostic(string.Format("Deleting Message As User does not meet requirement - {0} - {1}", ChannelSession.Settings.ModerationChatInteractiveParticipation, message.PlainTextMessage));
+            //    Logger.Log(LogLevel.Debug, string.Format("Deleting Message As User does not meet requirement - {0} - {1}", ChannelSession.Settings.ModerationChatInteractiveParticipation, message.PlainTextMessage));
 
             //    await this.DeleteMessage(message);
 
@@ -194,7 +194,7 @@ namespace MixItUp.Base.Services
             //string moderationReason = await message.ShouldBeModerated();
             //if (!string.IsNullOrEmpty(moderationReason))
             //{
-            //    Util.Logger.LogDiagnostic(string.Format("Moderation Being Performed - {0}", message.ToString()));
+            //    Logger.Log(LogLevel.Debug, string.Format("Moderation Being Performed - {0}", message.ToString()));
 
             //    message.ModerationReason = moderationReason;
             //    await this.DeleteMessage(message);
@@ -230,7 +230,7 @@ namespace MixItUp.Base.Services
 
             //GlobalEvents.ChatMessageReceived(message);
 
-            //Util.Logger.LogDiagnostic(string.Format("Checking Message For Command - {0}", message.ToString()));
+            //Logger.Log(LogLevel.Debug, string.Format("Checking Message For Command - {0}", message.ToString()));
 
             //if (!ChannelSession.Settings.AllowCommandWhispering && message.IsWhisper)
             //{
@@ -262,7 +262,7 @@ namespace MixItUp.Base.Services
 
             //    if (command != null)
             //    {
-            //        Util.Logger.LogDiagnostic(string.Format("Command Found For Message - {0} - {1}", message.ToString(), command.ToString()));
+            //        Logger.Log(LogLevel.Debug, string.Format("Command Found For Message - {0} - {1}", message.ToString(), command.ToString()));
 
             //        await command.Perform(message.User, command.GetArgumentsFromText(message.PlainTextMessage));
 
@@ -281,7 +281,7 @@ namespace MixItUp.Base.Services
 
             //        if (delete)
             //        {
-            //            Util.Logger.LogDiagnostic(string.Format("Deleting Message As Chat Command - {0}", message.PlainTextMessage));
+            //            Logger.Log(LogLevel.Debug, string.Format("Deleting Message As Chat Command - {0}", message.PlainTextMessage));
             //            await this.DeleteMessage(message);
             //        }
             //    }

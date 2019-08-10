@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Model.Client;
+using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
 using System;
 using System.Net;

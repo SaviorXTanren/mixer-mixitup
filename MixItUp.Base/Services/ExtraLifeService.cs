@@ -190,7 +190,7 @@ namespace MixItUp.Base.Services
             {
                 return await this.GetAsync<ExtraLifeTeam>(string.Format("teams/{0}", teamID));
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
             return null;
         }
 
@@ -202,7 +202,7 @@ namespace MixItUp.Base.Services
             {
                 return await this.GetAsync<IEnumerable<ExtraLifeTeamParticipant>>(string.Format("teams/{0}/participants", teamID));
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
             return new List<ExtraLifeTeamParticipant>();
         }
 
@@ -212,7 +212,7 @@ namespace MixItUp.Base.Services
             {
                 return await this.GetAsync<ExtraLifeTeamParticipant>(string.Format("participants/{0}", participantID));
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
             return null;
         }
 
@@ -222,7 +222,7 @@ namespace MixItUp.Base.Services
             {
                 return await this.GetAsync<IEnumerable<ExtraLifeDonation>>(string.Format("participants/{0}/donations?limit=10", participantID));
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
             return new List<ExtraLifeDonation>();
         }
 
@@ -232,7 +232,7 @@ namespace MixItUp.Base.Services
             {
                 return await this.GetAsync<IEnumerable<ExtraLifeDonation>>(string.Format("teams/{0}/donations?limit=10", teamID));
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
             return new List<ExtraLifeDonation>();
         }
 
@@ -303,7 +303,7 @@ namespace MixItUp.Base.Services
                         }
                     }
                 }
-                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
 
                 await Task.Delay(20000);
             }

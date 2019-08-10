@@ -203,7 +203,7 @@ namespace MixItUp.Base
                     ChannelSession.SecretManager = (SecretManagerService)Activator.CreateInstance(mixItUpSecretsType);
                 }
             }
-            catch (Exception ex) { Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
 
             if (ChannelSession.SecretManager == null)
             {
@@ -238,7 +238,7 @@ namespace MixItUp.Base
             }
             catch (Exception ex)
             {
-                Util.Logger.Log(ex);
+                Logger.Log(ex);
             }
             return false;
         }
@@ -260,12 +260,12 @@ namespace MixItUp.Base
             }
             catch (HttpRestRequestException ex)
             {
-                Util.Logger.Log(ex);
+                Logger.Log(ex);
                 result = await ChannelSession.ConnectUser(ChannelSession.StreamerScopes, ChannelSession.Settings.IsStreamer ? null : ChannelSession.Settings.Channel.token);
             }
             catch (Exception ex)
             {
-                Util.Logger.Log(ex);
+                Logger.Log(ex);
             }
 
             return result;
@@ -284,7 +284,7 @@ namespace MixItUp.Base
             }
             catch (Exception ex)
             {
-                Util.Logger.Log(ex);
+                Logger.Log(ex);
             }
             return false;
         }
@@ -371,13 +371,13 @@ namespace MixItUp.Base
 
         public static void DisconnectionOccurred(string serviceName)
         {
-            Util.Logger.Log(serviceName + " Service disconnection occurred");
+            Logger.Log(serviceName + " Service disconnection occurred");
             GlobalEvents.ServiceDisconnect(serviceName);
         }
 
         public static void ReconnectionOccurred(string serviceName)
         {
-            Util.Logger.Log(serviceName + " Service reconnection successful");
+            Logger.Log(serviceName + " Service reconnection successful");
             GlobalEvents.ServiceReconnect(serviceName);
         }
 

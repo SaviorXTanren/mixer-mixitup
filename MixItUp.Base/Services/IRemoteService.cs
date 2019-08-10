@@ -4,6 +4,7 @@ using MixItUp.Base.Util;
 using MixItUp.SignalR.Client;
 using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Services;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;

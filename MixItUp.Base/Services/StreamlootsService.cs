@@ -84,7 +84,7 @@ namespace MixItUp.Base.Services
 
                 return Task.FromResult(true);
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
             return Task.FromResult(false);
         }
 
@@ -162,7 +162,7 @@ namespace MixItUp.Base.Services
                 }
                 catch (Exception ex)
                 {
-                    Util.Logger.Log(ex);
+                    Logger.Log(ex);
                 }
                 await Task.Delay(1000);
             }

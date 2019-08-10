@@ -62,7 +62,7 @@ namespace MixItUp.WPF.Controls
 
                     await Task.Delay(60000);
                 }
-                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
             }
         }
     }

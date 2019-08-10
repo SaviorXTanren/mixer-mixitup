@@ -51,7 +51,7 @@ namespace MixItUp.Desktop.Services
                         return true;
                     }
                 }
-                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
             }
 
             string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(PatreonService.AuthorizationUrl, PatreonService.ClientID, MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL));
@@ -102,7 +102,7 @@ namespace MixItUp.Desktop.Services
                     }
                 }
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
             return null;
         }
 
@@ -170,7 +170,7 @@ namespace MixItUp.Desktop.Services
             }
             catch (Exception ex)
             {
-                MixItUp.Base.Util.Logger.Log(ex);
+                Logger.Log(ex);
                 return null;
             }
             return campaign;
@@ -288,7 +288,7 @@ namespace MixItUp.Desktop.Services
             }
             catch (Exception ex)
             {
-                MixItUp.Base.Util.Logger.Log(ex);
+                Logger.Log(ex);
                 return null;
             }
             return results;
@@ -340,7 +340,7 @@ namespace MixItUp.Desktop.Services
                     this.currentMembersAndTiers[member.UserID] = member.TierID;
                 }
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
 
             while (!this.cancellationTokenSource.Token.IsCancellationRequested)
             {
@@ -388,7 +388,7 @@ namespace MixItUp.Desktop.Services
                         }
                     }
                 }
-                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
             }
         }
 

@@ -22,14 +22,14 @@ namespace MixItUp.Base.Util
             LoggerHandler.fileService.CreateDirectory(LogsDirectoryName);
             LoggerHandler.CurrentLogFilePath = Path.Combine(LogsDirectoryName, string.Format(LogFileNameFormat, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture)));
 
-            StreamingClient.Base.Util.Logger.LogOccurred += Logger_LogOccurred;
+            Logger.LogOccurred += Logger_LogOccurred;
         }
 
         private static void Logger_LogOccurred(object sender, Log log)
         {
             try
             {
-                LoggerHandler.fileService.AppendFile(Logger.CurrentLogFilePath, string.Format("{0} - {1} - {2} " + Environment.NewLine + Environment.NewLine,
+                LoggerHandler.fileService.AppendFile(LoggerHandler.CurrentLogFilePath, string.Format("{0} - {1} - {2} " + Environment.NewLine + Environment.NewLine,
                     DateTimeOffset.Now.ToString(), EnumHelper.GetEnumName(log.Level), log.Message));
             }
             catch (Exception) { }

@@ -55,13 +55,13 @@ namespace MixItUp.Desktop.Services
 
             this.SocketReceiveWrapper("error", (errorData) =>
             {
-                MixItUp.Base.Util.Logger.Log(errorData.ToString());
+                Logger.Log(errorData.ToString());
                 this.service.WebSocketDisconnectedOccurred();
             });
 
             this.SocketReceiveWrapper("disconnect", (errorData) =>
             {
-                MixItUp.Base.Util.Logger.Log(errorData.ToString());
+                Logger.Log(errorData.ToString());
                 this.service.WebSocketDisconnectedOccurred();
             });
 
@@ -127,7 +127,7 @@ namespace MixItUp.Desktop.Services
                         return true;
                     }
                 }
-                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
             }
 
             this.authorizationToken = await this.ConnectViaOAuthRedirect(string.Format(TreatStreamService.AuthorizationURL, TreatStreamService.ClientID, TreatStreamService.ListeningURL));
@@ -153,7 +153,7 @@ namespace MixItUp.Desktop.Services
                         return await this.InitializeInternal();
                     }
                 }
-                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
             }
             return false;
         }
@@ -185,7 +185,7 @@ namespace MixItUp.Desktop.Services
                     return jobj["socket_token"].ToString();
                 }
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
             return null;
         }
 
@@ -195,7 +195,7 @@ namespace MixItUp.Desktop.Services
             {
                 string result = await this.GetStringAsync(string.Format("getMonthTreats/{0}", this.token.accessToken));
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
         }
 
         public void WebSocketConnectedOccurred()

@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.SongRequests;
 using MixItUp.Base.Model.Spotify;
 using MixItUp.Base.Util;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;

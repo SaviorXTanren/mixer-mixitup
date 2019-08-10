@@ -48,7 +48,7 @@ namespace MixItUp.Desktop.Util
                     {
                         processEvent(eventData);
                     }
-                    catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+                    catch (Exception ex) { Logger.Log(ex); }
                 });
             }
         }
@@ -71,7 +71,7 @@ namespace MixItUp.Desktop.Util
             {
                 this.socket.Emit(eventString, data);
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
         }
     }
 }

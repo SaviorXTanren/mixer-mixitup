@@ -525,7 +525,7 @@ namespace MixItUp.Base.MixerAPI
                         await ChannelSession.Interactive.SetUserDisabledState(user, disabled: false);
                     }
                 }
-                catch (Exception ex) { Util.Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
             });
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
@@ -929,7 +929,7 @@ namespace MixItUp.Base.MixerAPI
                             {
                                 if (!string.IsNullOrEmpty(e.transactionID) && !user.Data.IsSparkExempt)
                                 {
-                                    Util.Logger.LogDiagnostic("Sending Spark Transaction Capture - " + e.transactionID);
+                                    Logger.Log(LogLevel.Debug, "Sending Spark Transaction Capture - " + e.transactionID);
 
                                     await this.CaptureSparkTransaction(e.transactionID);
 
@@ -970,7 +970,7 @@ namespace MixItUp.Base.MixerAPI
                     this.OnInteractiveControlUsed(this, new InteractiveInputEvent(user, e, connectedControl));
                 }
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
         }
 
         private async void MixPlayClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)

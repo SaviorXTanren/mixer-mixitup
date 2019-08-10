@@ -38,7 +38,7 @@ namespace MixItUp.OvrStream
 
                 return true;
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
             return false;
         }
 

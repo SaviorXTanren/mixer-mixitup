@@ -286,7 +286,7 @@ namespace MixItUp.Base.ViewModel.User
                     }
                 }
             }
-            catch (Exception ex) { Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
         }
     }
 }

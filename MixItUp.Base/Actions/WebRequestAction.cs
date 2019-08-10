@@ -208,7 +208,7 @@ namespace MixItUp.Base.Actions
                                 }
                                 catch (Exception ex)
                                 {
-                                    MixItUp.Base.Util.Logger.Log(ex);
+                                    Logger.Log(ex);
                                 }
                             }
                         }

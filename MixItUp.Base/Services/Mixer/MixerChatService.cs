@@ -194,7 +194,7 @@ namespace MixItUp.Base.Services.Mixer
         {
             if (this.Client != null)
             {
-                Util.Logger.LogDiagnostic(string.Format("Deleting Message - {0}", message.PlainTextMessage));
+                Logger.Log(LogLevel.Debug, string.Format("Deleting Message - {0}", message.PlainTextMessage));
 
                 await this.RunAsync(this.Client.DeleteMessage(Guid.Parse(message.ID)));
             }
@@ -331,7 +331,7 @@ namespace MixItUp.Base.Services.Mixer
                 }
                 else
                 {
-                    MixItUp.Base.Util.Logger.Log("Failed to connect & authenticate Chat client");
+                    Logger.Log("Failed to connect & authenticate Chat client");
                 }
             }
             return null;

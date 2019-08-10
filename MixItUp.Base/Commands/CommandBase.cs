@@ -44,7 +44,7 @@ namespace MixItUp.Base.Commands
                     CommandBase.commandUses[key] = 0;
                 }
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
 
             return results;
         }
@@ -202,7 +202,7 @@ namespace MixItUp.Base.Commands
                         CommandBase.commandUses[this.StoreID]++;
                     }
                 }
-                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
 
                 ChannelSession.Services.Telemetry.TrackCommand(this.Type, this.IsBasic);
 
@@ -222,7 +222,7 @@ namespace MixItUp.Base.Commands
                         await this.PerformInternal(user, arguments, extraSpecialIdentifiers, this.currentCancellationTokenSource.Token);
                     }
                     catch (TaskCanceledException) { }
-                    catch (Exception ex) { Util.Logger.Log(ex); }
+                    catch (Exception ex) { Logger.Log(ex); }
                     finally
                     {
                         if (waitOccurred)
@@ -244,7 +244,7 @@ namespace MixItUp.Base.Commands
                     await this.currentTaskRun;
                 }
             }
-            catch (Exception ex) { Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
         }
 
         public void StopCurrentRun()

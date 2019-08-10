@@ -592,7 +592,7 @@ namespace MixItUp.Desktop
 
             if (string.IsNullOrEmpty(this.TelemetryUserId))
             {
-                if (MixItUp.Base.Util.Logger.IsDebug)
+                if (Logger.IsDebug)
                 {
                     this.TelemetryUserId = "MixItUpDebuggingUser";
                 }

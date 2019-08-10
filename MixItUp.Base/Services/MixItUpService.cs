@@ -3,6 +3,7 @@ using MixItUp.Base.Model.API;
 using MixItUp.Base.Model.Store;
 using MixItUp.Base.Util;
 using StreamingClient.Base.Model.OAuth;
+using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
@@ -262,7 +263,7 @@ namespace MixItUp.Base.Services
                         await Task.Delay(2000);
                     }
                 }
-                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
 
                 await Task.Delay(60000);
             }
