@@ -671,6 +671,7 @@ namespace MixItUp.Base.Services
 
         private async Task BackgroundSongMaintainer(CancellationTokenSource cancellationTokenSource)
         {
+            int totalLoops = 0;
             await BackgroundTaskWrapper.RunBackgroundTask(cancellationTokenSource, async (tokenSource) =>
             {
                 await Task.Delay(backgroundInterval, tokenSource.Token);
@@ -679,9 +680,22 @@ namespace MixItUp.Base.Services
                 {
                     if (this.Status != null && this.Status.Length > 0)
                     {
+                        totalLoops++;
                         if (this.Status.State == SongRequestStateEnum.Playing)
                         {
                             this.Status.Progress += backgroundInterval;
+                            if (totalLoops >= 30)
+                            {
+                                SongRequestCurrentlyPlayingModel newStatus = await this.GetStatus();
+                                if (newStatus != null)
+                                {
+                                    this.Status.State = newStatus.State;
+                                    this.Status.Progress = newStatus.Progress;
+                                    this.Status.Length = newStatus.Length;
+                                    this.Status.Volume = newStatus.Volume;
+                                }
+                                totalLoops = 0;
+                            }
                         }
 
                         if (this.Status.Progress >= this.Status.Length || this.Status.State == SongRequestStateEnum.Ended)
