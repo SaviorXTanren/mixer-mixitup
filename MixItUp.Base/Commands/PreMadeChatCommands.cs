@@ -767,10 +767,19 @@ namespace MixItUp.Base.Commands
                 {
                     if (arguments.Count() > 0)
                     {
-                        string newGameName = string.Join(" ", arguments);
-                        IEnumerable<GameTypeModel> games = await ChannelSession.Connection.GetGameTypes(newGameName);
+                        GameTypeModel newGame = null;
+                        if (arguments.Count() == 1 && uint.TryParse(arguments.ElementAt(0), out uint gameID))
+                        {
+                            newGame = await ChannelSession.Connection.GetGameType(gameID);
+                        }
+                        else
+                        {
+                            string newGameName = string.Join(" ", arguments);
+                            IEnumerable<GameTypeModel> games = await ChannelSession.Connection.GetGameTypes(newGameName);
 
-                        GameTypeModel newGame = games.FirstOrDefault(g => g.name.Equals(newGameName, StringComparison.CurrentCultureIgnoreCase));
+                            newGame = games.FirstOrDefault(g => g.name.Equals(newGameName, StringComparison.CurrentCultureIgnoreCase));
+                        }
+
                         if (newGame != null)
                         {
                             await ChannelSession.Connection.UpdateChannel(ChannelSession.Channel.id, gameTypeID: newGame.id);
@@ -780,7 +789,7 @@ namespace MixItUp.Base.Commands
                         }
                         else
                         {
-                            await ChannelSession.Chat.Whisper(user.UserName, "We could not find a game with that name");
+                            await ChannelSession.Chat.Whisper(user.UserName, "We could not find a game with that name/ID");
                         }
                     }
                     else
