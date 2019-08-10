@@ -64,7 +64,7 @@ namespace MixItUp.XSplit
             return Task.FromResult(true);
         }
 
-        public async Task Disconnect() { await this.End(); }
+        public async Task Disconnect() { await this.Stop(); }
 
         public new async Task<bool> TestConnection()
         {

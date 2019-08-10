@@ -1,6 +1,5 @@
 ﻿using Microsoft.ApplicationInsights;
-using Mixer.Base.Model.Interactive;
-using Mixer.Base.Util;
+using Mixer.Base.Model.MixPlay;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
@@ -9,6 +8,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using PlayFab;
 using PlayFab.ClientModels;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -143,7 +143,7 @@ namespace MixItUp.Desktop.Services
                 }
                 catch (Exception ex)
                 {
-                    Mixer.Base.Logger.Log(ex);
+                    Logger.Log(ex);
                 }
             });
         }

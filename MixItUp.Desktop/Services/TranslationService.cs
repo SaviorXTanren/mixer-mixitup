@@ -1,10 +1,9 @@
-﻿using Mixer.Base.Model.OAuth;
-using Mixer.Base.Services;
-using Mixer.Base.Web;
-using MixItUp.Base;
+﻿using MixItUp.Base;
 using MixItUp.Base.Services;
-using MixItUp.Base.Util;
 using StreamingClient.Base.Model.OAuth;
+using StreamingClient.Base.Services;
+using StreamingClient.Base.Util;
+using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -17,7 +16,7 @@ using System.Web;
 
 namespace MixItUp.Desktop.Services
 {
-    public class BingTranslationService : RestServiceBase, ITranslationService
+    public class BingTranslationService : OAuthRestServiceBase, ITranslationService
     {
         private const int ExpirationLength = 300000;
 
@@ -38,7 +37,7 @@ namespace MixItUp.Desktop.Services
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", ChannelSession.SecretManager.GetSecret("AzureTranslationKey"));
                     HttpResponseMessage response = await client.PostAsync("https://api.cognitive.microsoft.com/sts/v1.0/issueToken", null);
-                    string accessToken = await this.ProcessStringResponse(response);
+                    string accessToken = await response.ProcessStringResponse();
                     if (response.StatusCode == System.Net.HttpStatusCode.OK && !string.IsNullOrEmpty(accessToken))
                     {
                         this.token = new OAuthTokenModel() { accessToken = accessToken, expiresIn = ExpirationLength };
@@ -72,7 +71,7 @@ namespace MixItUp.Desktop.Services
                 HttpResponseMessage response = await this.PostAsync("https://api.microsofttranslator.com/V2/Http.svc/TranslateArray", new StringContent(content, Encoding.UTF8, "text/xml"));
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    string translation = await this.ProcessStringResponse(response);
+                    string translation = await response.ProcessStringResponse();
                     translation = translation.Substring(translation.IndexOf(TranslatedTextStartTag) + TranslatedTextStartTag.Length);
                     translation = translation.Substring(0, translation.IndexOf(TranslatedTextEndTag));
                     return translation;
@@ -93,9 +92,9 @@ namespace MixItUp.Desktop.Services
             return this.token;
         }
 
-        protected override async Task<HttpClientWrapper> GetHttpClient(bool autoRefreshToken = true)
+        protected override async Task<AdvancedHttpClient> GetHttpClient(bool autoRefreshToken = true)
         {
-            HttpClientWrapper client = await base.GetHttpClient(autoRefreshToken);
+            AdvancedHttpClient client = await base.GetHttpClient(autoRefreshToken);
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/xml"));
             return client;

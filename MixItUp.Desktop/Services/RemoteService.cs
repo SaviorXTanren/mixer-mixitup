@@ -4,6 +4,8 @@ using MixItUp.Base.Model.Remote.Authentication;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.SignalR.Client;
+using StreamingClient.Base.Util;
+using StreamingClient.Base.Web;
 using System;
 using System.Linq;
 using System.Net.Http;
@@ -116,7 +118,7 @@ namespace MixItUp.Desktop.Services
         {
             return await this.AsyncWrapper<bool>(async () =>
             {
-                HttpResponseMessage response = await this.PostAsync("authentication/validateconnection", this.CreateContentFromObject(authToken));
+                HttpResponseMessage response = await this.PostAsync("authentication/validateconnection", AdvancedHttpClient.CreateContentFromObject(authToken));
                 return response.IsSuccessStatusCode;
             });
         }

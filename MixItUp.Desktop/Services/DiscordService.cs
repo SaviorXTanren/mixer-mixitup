@@ -1,16 +1,14 @@
 ﻿using Mixer.Base;
-using Mixer.Base.Clients;
-using Mixer.Base.Model.OAuth;
-using Mixer.Base.Web;
 using MixItUp.Base;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Model.OAuth;
+using StreamingClient.Base.Util;
+using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -21,7 +19,7 @@ using static MixItUp.Base.Services.DiscordWebSocketPacket;
 
 namespace MixItUp.Desktop.Services
 {
-    public class DiscordOAuthServer : OAuthHttpListenerServer
+    public class DiscordOAuthServer : LocalOAuthHttpListenerService
     {
         private const string ServerIDIdentifier = "guild_id=";
         private const string BotPermissionsIdentifier = "permissions=";
@@ -29,24 +27,24 @@ namespace MixItUp.Desktop.Services
         public string ServerID { get; private set; }
         public string BotPermissions { get; private set; }
 
-        public DiscordOAuthServer() : base(MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL, loginSuccessHtmlPageFilePath: OAuthServiceBase.LoginRedirectPageFileName) { }
+        public DiscordOAuthServer() : base(MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL, MixerConnection.DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER, OAuthServiceBase.LoginRedirectPageFileName) { }
 
         protected override async Task ProcessConnection(HttpListenerContext listenerContext)
         {
             if (this.ServerID == null)
             {
-                this.ServerID = this.GetIdentifierValue(listenerContext, ServerIDIdentifier);
+                this.ServerID = this.GetRequestParameter(listenerContext, ServerIDIdentifier);
             }
             if (this.BotPermissions == null)
             {
-                this.BotPermissions = this.GetIdentifierValue(listenerContext, BotPermissionsIdentifier);
+                this.BotPermissions = this.GetRequestParameter(listenerContext, BotPermissionsIdentifier);
             }
 
             await base.ProcessConnection(listenerContext);
         }
     }
 
-    public class DiscordWebSocket : WebSocketClientBase
+    public class DiscordWebSocket : ClientWebSocketBase
     {
         public DiscordUser BotUser { get; private set; }
 
@@ -291,7 +289,7 @@ namespace MixItUp.Desktop.Services
             try
             {
                 DiscordMessage messageObj = new DiscordMessage() { Content = message };
-                return await this.PostAsync<DiscordMessage>("channels/" + channel.ID + "/messages", this.CreateContentFromObject(messageObj));
+                return await this.PostAsync<DiscordMessage>("channels/" + channel.ID + "/messages", AdvancedHttpClient.CreateContentFromObject(messageObj));
             }
             catch (Exception ex) { Logger.Log(ex); }
             return null;
@@ -303,15 +301,15 @@ namespace MixItUp.Desktop.Services
             {
                 JObject obj = new JObject();
                 obj["temporary"] = isTemporary;
-                return await this.PostAsync<DiscordChannelInvite>("channels/" + channel.ID + "/invites", this.CreateContentFromObject(obj));
+                return await this.PostAsync<DiscordChannelInvite>("channels/" + channel.ID + "/invites", AdvancedHttpClient.CreateContentFromObject(obj));
             }
             catch (Exception ex) { Logger.Log(ex); }
             return null;
         }
 
-        protected override async Task<HttpClientWrapper> GetHttpClient(bool autoRefreshToken = true)
+        protected override async Task<AdvancedHttpClient> GetHttpClient(bool autoRefreshToken = true)
         {
-            HttpClientWrapper client = await base.GetHttpClient(autoRefreshToken);
+            AdvancedHttpClient client = await base.GetHttpClient(autoRefreshToken);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bot", this.botToken);
             return client;
         }
@@ -322,7 +320,7 @@ namespace MixItUp.Desktop.Services
         {
             try
             {
-                return await this.PatchAsync("guilds/" + server.ID + "/members/" + user.ID, this.CreateContentFromObject(content));
+                return await this.PatchAsync("guilds/" + server.ID + "/members/" + user.ID, AdvancedHttpClient.CreateContentFromObject(content));
             }
             catch (Exception ex) { Logger.Log(ex); }
             return null;
@@ -487,7 +485,7 @@ namespace MixItUp.Desktop.Services
             Process.Start(startInfo);
 
             string authorizationCode = await oauthServer.WaitForAuthorizationCode();
-            oauthServer.End();
+            oauthServer.Stop();
 
             ChannelSession.Settings.DiscordServer = oauthServer.ServerID;
             this.BotPermissions = oauthServer.BotPermissions;

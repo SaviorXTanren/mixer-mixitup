@@ -36,7 +36,6 @@ namespace MixItUp.Base.Services
         public ITiltifyService Tiltify { get; protected set; }
         public IExtraLifeService ExtraLife { get; protected set; }
         public ITelemetryService Telemetry { get; protected set; }
-        public IScoutService Scout { get; protected set; }
         public ITipeeeStreamService TipeeeStream { get; protected set; }
         public ITreatStreamService TreatStream { get; protected set; }
         public IStreamJarService StreamJar { get; protected set; }

@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
 using Quobject.SocketIoClientDotNet.Client;
+using StreamingClient.Base.Util;
 using System;
 using System.Threading.Tasks;
 

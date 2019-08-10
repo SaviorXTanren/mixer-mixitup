@@ -1,11 +1,13 @@
-﻿using Mixer.Base.Model.OAuth;
-using MixItUp.Base;
+﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Desktop.Util;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Model.OAuth;
+using StreamingClient.Base.Util;
+using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -160,7 +162,7 @@ namespace MixItUp.Desktop.Services
                     payload["code"] = this.authorizationToken;
                     payload["redirect_uri"] = TipeeeStreamService.ListeningURL;
 
-                    this.token = await this.PostAsync<OAuthTokenModel>("https://api.tipeeestream.com/oauth/v2/token", this.CreateContentFromObject(payload), autoRefreshToken: false);
+                    this.token = await this.PostAsync<OAuthTokenModel>("https://api.tipeeestream.com/oauth/v2/token", AdvancedHttpClient.CreateContentFromObject(payload), autoRefreshToken: false);
                     if (this.token != null)
                     {
                         token.authorizationCode = this.authorizationToken;
@@ -254,7 +256,7 @@ namespace MixItUp.Desktop.Services
                 payload["client_secret"] = ChannelSession.SecretManager.GetSecret("TipeeeStreamSecret");
                 payload["refresh_token"] = this.token.refreshToken;
 
-                this.token = await this.PostAsync<OAuthTokenModel>("https://api.tipeeestream.com/oauth/v2/refresh-token", this.CreateContentFromObject(payload), autoRefreshToken: false);
+                this.token = await this.PostAsync<OAuthTokenModel>("https://api.tipeeestream.com/oauth/v2/refresh-token", AdvancedHttpClient.CreateContentFromObject(payload), autoRefreshToken: false);
             }
         }
 
@@ -281,8 +283,8 @@ namespace MixItUp.Desktop.Services
         private new async Task<T> GetAsync<T>(string url)
         {
             HttpResponseMessage response = await this.GetAsync(url);
-            Logger.LogDiagnostic(string.Format("TipeeeStream Log: {0} - {1} - {2}", response.RequestMessage.ToString(), response.StatusCode, await response.Content.ReadAsStringAsync()));
-            return await this.ProcessResponse<T>(response);
+            Logger.Log(LogLevel.Debug, string.Format("TipeeeStream Log: {0} - {1} - {2}", response.RequestMessage.ToString(), response.StatusCode, await response.Content.ReadAsStringAsync()));
+            return await response.ProcessResponse<T>();
         }
 
         public void WebSocketConnectedOccurred()

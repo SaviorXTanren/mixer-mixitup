@@ -1,10 +1,12 @@
 ﻿using Mixer.Base;
-using Mixer.Base.Model.OAuth;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Model.OAuth;
+using StreamingClient.Base.Util;
+using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -52,7 +54,7 @@ namespace MixItUp.Desktop.Services
                 payload["code"] = authorizationCode;
                 payload["redirect_uri"] = MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL;
 
-                this.token = await this.PostAsync<OAuthTokenModel>("token", this.CreateContentFromObject(payload), autoRefreshToken: false);
+                this.token = await this.PostAsync<OAuthTokenModel>("token", AdvancedHttpClient.CreateContentFromObject(payload), autoRefreshToken: false);
                 if (this.token != null)
                 {
                     token.authorizationCode = authorizationCode;
@@ -86,7 +88,7 @@ namespace MixItUp.Desktop.Services
                     }
 
                     HttpResponseMessage response = await this.GetAsync("donations" + beforeFilter);
-                    JObject jobj = await this.ProcessJObjectResponse(response);
+                    JObject jobj = await response.ProcessJObjectResponse();
                     JArray data = (JArray)jobj["data"];
 
                     if (data.Count == 0)
@@ -132,7 +134,7 @@ namespace MixItUp.Desktop.Services
                 payload["refresh_token"] = this.token.refreshToken;
                 payload["redirect_uri"] = MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL;
 
-                this.token = await this.PostAsync<OAuthTokenModel>("token", this.CreateContentFromObject(payload), autoRefreshToken: false);
+                this.token = await this.PostAsync<OAuthTokenModel>("token", AdvancedHttpClient.CreateContentFromObject(payload), autoRefreshToken: false);
             }
         }
 
