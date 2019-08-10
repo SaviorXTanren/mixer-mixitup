@@ -239,7 +239,7 @@ namespace MixItUp.Base.Actions
                     InteractiveGameModel game = games.FirstOrDefault(g => g.id.Equals(this.InteractiveGameID));
                     if (game != null)
                     {
-                        if (await ChannelSession.Interactive.Connect(game))
+                        if (await ChannelSession.Interactive.Connect(game) == InteractiveConnectionResult.Success)
                         {
                             GlobalEvents.InteractiveConnected(game);
                         }

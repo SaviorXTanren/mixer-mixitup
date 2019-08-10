@@ -15,6 +15,12 @@ namespace MixItUp.Base.MixerAPI
                 {
                     return true;
                 }
+
+                if (!ShouldRetry)
+                {
+                    return false;
+                }
+
                 await Task.Delay(1000);
             }
             return false;

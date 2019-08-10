@@ -618,7 +618,7 @@ namespace MixItUp.Base
                         InteractiveGameListingModel game = games.FirstOrDefault(g => g.id.Equals(ChannelSession.Settings.DefaultInteractiveGame));
                         if (game != null)
                         {
-                            if (!await ChannelSession.Interactive.Connect(game))
+                            if (await ChannelSession.Interactive.Connect(game) != InteractiveConnectionResult.Success)
                             {
                                 await ChannelSession.Interactive.Disconnect();
                             }

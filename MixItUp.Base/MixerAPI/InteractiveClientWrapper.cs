@@ -16,6 +16,13 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.MixerAPI
 {
+    public enum InteractiveConnectionResult
+    {
+        Success = 0,
+        DuplicateControlIDs,
+        Unknown,
+    }
+
     public static class InteractiveConnectedButtonControlModelExtensions
     {
         public static void SetCooldownTimestamp(this InteractiveConnectedButtonControlModel button, long cooldown)
@@ -246,10 +253,12 @@ namespace MixItUp.Base.MixerAPI
         public InteractiveGameVersionModel Version { get; private set; }
         public InteractiveClient Client { get; private set; }
 
-        public List<InteractiveConnectedSceneModel> Scenes { get; private set; }
-        public Dictionary<string, InteractiveControlModel> Controls { get; private set; }
-        public Dictionary<string, InteractiveConnectedControlCommand> ControlCommands { get; private set; }
-        public LockedDictionary<string, InteractiveParticipantModel> Participants { get; private set; }
+        public List<string> DuplicatedControls { get; private set; } = new List<string>();
+        public List<InteractiveConnectedSceneModel> Scenes { get; private set; } = new List<InteractiveConnectedSceneModel>();
+        public Dictionary<string, InteractiveControlModel> Controls { get; private set; } = new Dictionary<string, InteractiveControlModel>(StringComparer.InvariantCultureIgnoreCase);
+        public Dictionary<string, InteractiveConnectedSceneModel> ControlScenes { get; private set; } = new Dictionary<string, InteractiveConnectedSceneModel>(StringComparer.InvariantCultureIgnoreCase);
+        public Dictionary<string, InteractiveConnectedControlCommand> ControlCommands { get; private set; } = new Dictionary<string, InteractiveConnectedControlCommand>(StringComparer.InvariantCultureIgnoreCase);
+        public LockedDictionary<string, InteractiveParticipantModel> Participants { get; private set; } = new LockedDictionary<string, InteractiveParticipantModel>(StringComparer.InvariantCultureIgnoreCase);
 
         private List<InteractiveGameModel> games = new List<InteractiveGameModel>();
         private DateTimeOffset lastRefresh = DateTimeOffset.MinValue;
@@ -257,13 +266,7 @@ namespace MixItUp.Base.MixerAPI
 
         private SemaphoreSlim giveInputLock = new SemaphoreSlim(1);
 
-        public InteractiveClientWrapper()
-        {
-            this.Scenes = new List<InteractiveConnectedSceneModel>();
-            this.Controls = new Dictionary<string, InteractiveControlModel>();
-            this.ControlCommands = new Dictionary<string, InteractiveConnectedControlCommand>();
-            this.Participants = new LockedDictionary<string, InteractiveParticipantModel>();
-        }
+        private InteractiveConnectionResult connectionResult = InteractiveConnectionResult.Unknown;
 
         public async Task<IEnumerable<InteractiveGameModel>> GetAllConnectableGames(bool forceRefresh = false)
         {
@@ -308,18 +311,18 @@ namespace MixItUp.Base.MixerAPI
             return games;
         }
 
-        public async Task<bool> Connect(InteractiveGameListingModel game)
+        public async Task<InteractiveConnectionResult> Connect(InteractiveGameListingModel game)
         {
             return await this.Connect(game, game.versions.First());
         }
 
-        public async Task<bool> Connect(InteractiveGameModel game)
+        public async Task<InteractiveConnectionResult> Connect(InteractiveGameModel game)
         {
             IEnumerable<InteractiveGameVersionModel> versions = await ChannelSession.Connection.GetInteractiveGameVersions(game);
             return await this.Connect(game, versions.First());
         }
 
-        public async Task<bool> Connect(InteractiveGameModel game, InteractiveGameVersionModel version)
+        public async Task<InteractiveConnectionResult> Connect(InteractiveGameModel game, InteractiveGameVersionModel version)
         {
             this.Game = game;
             this.Version = version;
@@ -329,7 +332,8 @@ namespace MixItUp.Base.MixerAPI
             this.ControlCommands.Clear();
             this.Participants.Clear();
 
-            return await this.AttemptConnect();
+            await this.AttemptConnect();
+            return connectionResult;
         }
 
         public async Task Disconnect()
@@ -372,6 +376,7 @@ namespace MixItUp.Base.MixerAPI
                 this.Controls.Clear();
                 this.ControlCommands.Clear();
                 this.Participants.Clear();
+                this.connectionResult = InteractiveConnectionResult.Unknown;
             });
         }
 
@@ -543,6 +548,7 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task RefreshCachedControls()
         {
+            this.DuplicatedControls.Clear();
             this.Scenes.Clear();
             this.Controls.Clear();
             this.ControlCommands.Clear();
@@ -569,15 +575,17 @@ namespace MixItUp.Base.MixerAPI
                             }
                         }
 
+                        CheckDuplicatedControls(scene.sceneID, button.controlID);
                         this.Controls[button.controlID] = button;
-
+                        this.ControlScenes[button.controlID] = scene;
                         this.AddConnectedControl(scene, button);
                     }
 
                     foreach (InteractiveConnectedJoystickControlModel joystick in scene.joysticks)
                     {
+                        CheckDuplicatedControls(scene.sceneID, joystick.controlID);
                         this.Controls[joystick.controlID] = joystick;
-
+                        this.ControlScenes[joystick.controlID] = scene;
                         this.AddConnectedControl(scene, joystick);
                     }
 
@@ -593,16 +601,29 @@ namespace MixItUp.Base.MixerAPI
                             }
                         }
 
+                        CheckDuplicatedControls(scene.sceneID, textBox.controlID);
                         this.Controls[textBox.controlID] = textBox;
-
+                        this.ControlScenes[textBox.controlID] = scene;
                         this.AddConnectedControl(scene, textBox);
                     }
                 }
             }
         }
 
+        private void CheckDuplicatedControls(string sceneID, string controlID)
+        {
+            if (this.Controls.ContainsKey(controlID))
+            {
+                this.DuplicatedControls.Add($"Scene: {this.ControlScenes[controlID].sceneID}  Control: {controlID}");
+                this.DuplicatedControls.Add($"Scene: {sceneID}  Control: {controlID}");
+                this.connectionResult = InteractiveConnectionResult.DuplicateControlIDs;
+            }
+        }
+
         protected override async Task<bool> ConnectInternal()
         {
+            this.connectionResult = InteractiveConnectionResult.Unknown;
+            this.ShouldRetry = true;
             this.SharedProject = ChannelSession.Settings.CustomInteractiveProjectIDs.FirstOrDefault(p => p.VersionID == this.Version.id);
             if (this.SharedProject == null)
             {
@@ -681,6 +702,13 @@ namespace MixItUp.Base.MixerAPI
             await this.RefreshCachedControls();
             if (this.Scenes.Count == 0)
             {
+                this.ShouldRetry = false;
+                return false;
+            }
+
+            if (this.DuplicatedControls.Count > 0)
+            {
+                this.ShouldRetry = false;
                 return false;
             }
 
@@ -703,6 +731,7 @@ namespace MixItUp.Base.MixerAPI
             // Initialize Participants
             await this.AddParticipants(await this.GetRecentParticipants());
 
+            this.connectionResult = InteractiveConnectionResult.Success;
             return true;
         }
 
@@ -980,7 +1009,7 @@ namespace MixItUp.Base.MixerAPI
             {
                 await Task.Delay(2500);
             }
-            while (!await this.Connect(this.Game, this.Version));
+            while (await this.Connect(this.Game, this.Version) != InteractiveConnectionResult.Success);
 
             ChannelSession.ReconnectionOccurred("Interactive");
         }
