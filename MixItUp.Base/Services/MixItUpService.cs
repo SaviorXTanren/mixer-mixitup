@@ -1,9 +1,9 @@
-﻿using Mixer.Base.Model.OAuth;
-using Mixer.Base.Web;
-using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model.API;
 using MixItUp.Base.Model.Store;
 using MixItUp.Base.Util;
+using StreamingClient.Base.Model.OAuth;
+using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -135,7 +135,7 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                using (HttpClientWrapper client = new HttpClientWrapper(MixItUpAPIEndpoint))
+                using (AdvancedHttpClient client = new AdvancedHttpClient(MixItUpAPIEndpoint))
                 {
                     HttpResponseMessage response = await client.GetAsync(endpoint);
                     if (response.StatusCode == HttpStatusCode.OK)
@@ -157,7 +157,7 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                using (HttpClientWrapper client = new HttpClientWrapper(MixItUpAPIEndpoint))
+                using (AdvancedHttpClient client = new AdvancedHttpClient(MixItUpAPIEndpoint))
                 {
                     string content = SerializerHelper.SerializeToString(data);
                     HttpResponseMessage response = await client.PostAsync(endpoint, new StringContent(content, Encoding.UTF8, "application/json"));
@@ -177,7 +177,7 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                using (HttpClientWrapper client = new HttpClientWrapper(MixItUpAPIEndpoint))
+                using (AdvancedHttpClient client = new AdvancedHttpClient(MixItUpAPIEndpoint))
                 {
                     string content = SerializerHelper.SerializeToString(data);
                     HttpResponseMessage response = await client.PostAsync(endpoint, new StringContent(content, Encoding.UTF8, "application/json"));
@@ -200,7 +200,7 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                using (HttpClientWrapper client = new HttpClientWrapper(MixItUpAPIEndpoint))
+                using (AdvancedHttpClient client = new AdvancedHttpClient(MixItUpAPIEndpoint))
                 {
                     string content = SerializerHelper.SerializeToString(data);
                     HttpResponseMessage response = await client.PutAsync(endpoint, new StringContent(content, Encoding.UTF8, "application/json"));
@@ -214,7 +214,7 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                using (HttpClientWrapper client = new HttpClientWrapper(MixItUpAPIEndpoint))
+                using (AdvancedHttpClient client = new AdvancedHttpClient(MixItUpAPIEndpoint))
                 {
                     string content = SerializerHelper.SerializeToString(data);
                     HttpRequestMessage message = new HttpRequestMessage(new HttpMethod("PATCH"), endpoint);
@@ -230,10 +230,9 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                using (HttpClientWrapper client = new HttpClientWrapper(MixItUpAPIEndpoint))
+                using (AdvancedHttpClient client = new AdvancedHttpClient(MixItUpAPIEndpoint))
                 {
-                    HttpResponseMessage response = await client.DeleteAsync(endpoint);
-                    await this.ProcessResponseIfError(response);
+                    await client.DeleteAsync(endpoint);
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }

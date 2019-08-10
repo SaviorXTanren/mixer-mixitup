@@ -1,9 +1,8 @@
-﻿using Mixer.Base.Model.OAuth;
-using Mixer.Base.Services;
-using MixItUp.Base.Model.Remote.Authentication;
+﻿using MixItUp.Base.Model.Remote.Authentication;
 using MixItUp.Base.Remote.Models;
 using MixItUp.Base.Util;
 using MixItUp.SignalR.Client;
+using StreamingClient.Base.Model.OAuth;
 using System;
 using System.Collections.Generic;
 using System.Linq;

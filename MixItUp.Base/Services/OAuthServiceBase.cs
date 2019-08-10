@@ -1,8 +1,6 @@
 ﻿using Mixer.Base;
-using Mixer.Base.Model.OAuth;
-using Mixer.Base.Services;
-using Mixer.Base.Web;
 using MixItUp.Base.Util;
+using StreamingClient.Base.Model.OAuth;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

@@ -17,6 +17,7 @@ using Mixer.Base.Util;
 using MixItUp.Base.Services.Mixer;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -250,6 +251,6 @@ namespace MixItUp.Base.MixerAPI
 
         private void RestAPIService_OnSuccessResponseReceived(object sender, string e) { Util.Logger.Log(string.Format("Rest API Success Response: {0}", e)); }
 
-        private void RestAPIServices_OnFailureResponseReceived(object sender, RestServiceRequestException e) { Util.Logger.Log(string.Format("Rest API Failure Response: {0}", e.ToString())); }
+        private void RestAPIServices_OnFailureResponseReceived(object sender, HttpRestRequestException e) { Util.Logger.Log(string.Format("Rest API Failure Response: {0}", e.ToString())); }
     }
 }

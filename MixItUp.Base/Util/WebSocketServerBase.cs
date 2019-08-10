@@ -1,7 +1,7 @@
 ﻿using Mixer.Base.Model.Client;
-using Mixer.Base.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Web;
 using System;
 using System.Net;
 using System.Net.WebSockets;

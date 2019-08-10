@@ -1,8 +1,7 @@
-﻿using Mixer.Base.Model.OAuth;
-using Mixer.Base.Util;
-using MixItUp.Base.Model.User;
+﻿using MixItUp.Base.Model.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Model.OAuth;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;

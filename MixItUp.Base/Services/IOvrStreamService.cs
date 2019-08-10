@@ -1,9 +1,4 @@
-﻿using Mixer.Base.Model.OAuth;
-using MixItUp.Base.Model.User;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
