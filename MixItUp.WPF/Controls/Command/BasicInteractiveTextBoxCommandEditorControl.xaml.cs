@@ -1,4 +1,4 @@
-﻿using Mixer.Base.Model.Interactive;
+﻿using Mixer.Base.Model.MixPlay;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
@@ -7,7 +7,6 @@ using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.WPF.Controls.Actions;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -133,7 +132,7 @@ namespace MixItUp.WPF.Controls.Command
                 }
 
                 this.command.TextBox.cost = sparkCost;
-                await ChannelSession.MixerStreamerConnection.UpdateInteractiveGameVersion(this.version);
+                await ChannelSession.MixerStreamerConnection.UpdateMixPlayGameVersion(this.version);
 
                 this.command.UseChatModeration = this.UseChatModerationCheckBox.IsChecked.GetValueOrDefault();
                 this.command.IsBasic = true;

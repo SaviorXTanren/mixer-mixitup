@@ -7,6 +7,7 @@ using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Store;
 using MixItUp.WPF.Util;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;

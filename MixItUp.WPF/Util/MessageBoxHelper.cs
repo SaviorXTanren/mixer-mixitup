@@ -4,6 +4,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Dialogs;
 using MixItUp.WPF.Windows;
+using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

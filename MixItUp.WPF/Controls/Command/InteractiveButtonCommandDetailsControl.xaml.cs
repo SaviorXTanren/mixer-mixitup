@@ -1,9 +1,9 @@
-﻿using Mixer.Base.Model.Interactive;
-using Mixer.Base.Util;
+﻿using Mixer.Base.Model.MixPlay;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.WPF.Util;
+using StreamingClient.Base.Util;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -138,7 +138,7 @@ namespace MixItUp.WPF.Controls.Command
                     this.command.HeldRate = heldRate;
                 }
 
-                await ChannelSession.MixerStreamerConnection.UpdateInteractiveGameVersion(this.Version);
+                await ChannelSession.MixerStreamerConnection.UpdateMixPlayGameVersion(this.Version);
                 return this.command;
             }
             return null;

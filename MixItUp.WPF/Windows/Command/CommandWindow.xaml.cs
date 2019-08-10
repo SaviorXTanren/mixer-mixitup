@@ -1,4 +1,4 @@
-﻿using Mixer.Base.Model.Interactive;
+﻿using Mixer.Base.Model.MixPlay;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.WPF.Controls.Command;

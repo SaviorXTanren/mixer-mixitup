@@ -1,5 +1,4 @@
 ﻿using Mixer.Base.Model.User;
-using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
@@ -10,6 +9,7 @@ using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Controls.Dialogs;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -513,7 +513,7 @@ namespace MixItUp.WPF.Windows.Currency
                     }
                     catch (Exception ex)
                     {
-                        Base.Logger.Log(ex);
+                        Logger.Log(ex);
                     }
 
                     await MessageBoxHelper.ShowMessageDialog("We were unable to import the data. Please ensure your file is in one of the following formats:" +

@@ -6,6 +6,7 @@ using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Store;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

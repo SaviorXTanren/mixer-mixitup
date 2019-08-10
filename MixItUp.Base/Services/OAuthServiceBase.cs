@@ -44,7 +44,7 @@ namespace MixItUp.Base.Services
 
         protected virtual async Task<string> ConnectViaOAuthRedirect(string oauthPageURL, string listeningAddress)
         {
-            LocalOAuthHttpListenerService oauthServer = new LocalOAuthHttpListenerService(listeningAddress, MixerConnection.DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER, OAuthServiceBase.LoginRedirectPageFileName);
+            LocalOAuthHttpListenerServer oauthServer = new LocalOAuthHttpListenerServer(listeningAddress, MixerConnection.DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER, OAuthServiceBase.LoginRedirectPageFileName);
             oauthServer.Start();
 
             ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = oauthPageURL, UseShellExecute = true };

@@ -5,6 +5,7 @@ using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

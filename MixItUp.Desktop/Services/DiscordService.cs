@@ -19,7 +19,7 @@ using static MixItUp.Base.Services.DiscordWebSocketPacket;
 
 namespace MixItUp.Desktop.Services
 {
-    public class DiscordOAuthServer : LocalOAuthHttpListenerService
+    public class DiscordOAuthServer : LocalOAuthHttpListenerServer
     {
         private const string ServerIDIdentifier = "guild_id=";
         private const string BotPermissionsIdentifier = "permissions=";

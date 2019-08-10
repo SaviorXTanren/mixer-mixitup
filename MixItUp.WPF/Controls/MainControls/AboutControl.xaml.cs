@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Util;
+using StreamingClient.Base.Util;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -29,7 +30,7 @@ namespace MixItUp.WPF.Controls.MainControls
         private void IssueReportHyperlink_Click(object sender, RoutedEventArgs e)
         {
             string reporterFilePath = Path.Combine(ChannelSession.Services.FileService.GetApplicationDirectory(), "MixItUp.Reporter.exe");
-            ProcessStartInfo processStartInfo = new ProcessStartInfo(reporterFilePath, string.Format("{0} {1}", ChannelSession.MixerStreamerUser.id, Logger.CurrentLogFilePath));
+            ProcessStartInfo processStartInfo = new ProcessStartInfo(reporterFilePath, string.Format("{0} {1}", ChannelSession.MixerStreamerUser.id, FileLoggerHandler.CurrentLogFilePath));
             Process.Start(processStartInfo);
         }
 

@@ -1,4 +1,4 @@
-﻿using Mixer.Base.Model.Interactive;
+﻿using Mixer.Base.Model.MixPlay;
 using MixItUp.Base;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;

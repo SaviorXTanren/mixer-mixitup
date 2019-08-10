@@ -1,5 +1,5 @@
 ﻿using Mixer.Base.Interactive;
-using Mixer.Base.Model.Interactive;
+using Mixer.Base.Model.MixPlay;
 using MixItUp.Base;
 using MixItUp.WPF.Util;
 using System;
@@ -90,7 +90,7 @@ namespace MixItUp.WPF.Windows.Interactive
             //    await this.Window.RunAsyncOperation(async () =>
             //    {
             //        await ChannelSession.MixerConnection.Interactive.UpdateInteractiveGame(this.selectedGame);
-            //        await ChannelSession.MixerConnection.Interactive.UpdateInteractiveGameVersion(this.selectedGameVersion);
+            //        await ChannelSession.MixerConnection.Interactive.UpdateMixPlayGameVersion(this.selectedGameVersion);
             //    });
             //}
 
@@ -107,8 +107,8 @@ namespace MixItUp.WPF.Windows.Interactive
 
             MixPlayGameListingModel game = await this.RunAsyncOperation(async () =>
             {
-                MixPlaySceneModel defaultScene = InteractiveGameHelper.CreateDefaultScene();
-                return await ChannelSession.MixerStreamerConnection.CreateInteractiveGame(ChannelSession.MixerChannel, ChannelSession.MixerStreamerUser, this.GameNameTextBox.Text, InteractiveGameHelper.CreateDefaultScene());
+                MixPlaySceneModel defaultScene = MixPlayGameHelper.CreateDefaultScene();
+                return await ChannelSession.MixerStreamerConnection.CreateMixPlayGame(ChannelSession.MixerChannel, ChannelSession.MixerStreamerUser, this.GameNameTextBox.Text, MixPlayGameHelper.CreateDefaultScene());
             });
 
             if (game == null)
@@ -146,7 +146,7 @@ namespace MixItUp.WPF.Windows.Interactive
 
         private void BlockOutControlArea(MixPlayControlModel control)
         {
-            InteractiveControlPositionModel position = control.position.FirstOrDefault(p => p.size.Equals(this.selectedBoardSize.Name.ToLower()));
+            MixPlayControlPositionModel position = control.position.FirstOrDefault(p => p.size.Equals(this.selectedBoardSize.Name.ToLower()));
             for (int w = 0; w < position.width; w++)
             {
                 for (int h = 0; h < position.height; h++)

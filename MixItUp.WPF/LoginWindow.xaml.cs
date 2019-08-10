@@ -9,6 +9,7 @@ using MixItUp.Desktop;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows;
 using MixItUp.WPF.Windows.Wizard;
+using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -63,7 +64,7 @@ namespace MixItUp.WPF
             if (this.streamerSettings.Count > 0)
             {
                 this.ExistingStreamerComboBox.Visibility = Visibility.Visible;
-                this.streamerSettings.Add(new DesktopChannelSettings() { Channel = new ExpandedChannelModel() { id = 0, user = new UserModel() { username = "NEW STREAMER" }, token = "NEW STREAMER" } });
+                this.streamerSettings.Add(new DesktopChannelSettings() { Channel = new ExpandedChannelModel() { id = 0, user = new UserWithGroupsModel() { username = "NEW STREAMER" }, token = "NEW STREAMER" } });
                 if (this.streamerSettings.Count() == 2)
                 {
                     this.ExistingStreamerComboBox.SelectedIndex = 0;
@@ -198,7 +199,7 @@ namespace MixItUp.WPF
                 if (authenticationSuccessful)
                 {
                     IEnumerable<UserWithGroupsModel> users = await ChannelSession.MixerStreamerConnection.GetUsersWithRoles(ChannelSession.MixerChannel, MixerRoleEnum.Mod);
-                    if (users.Any(uwg => uwg.id.Equals(ChannelSession.MixerStreamerUser.id)) || Logger.IsDebug)
+                    if (users.Any(uwg => uwg.id.Equals(ChannelSession.MixerStreamerUser.id)) || Logger.IsDebug())
                     {
                         ShowMainWindow(new MainWindow());
                         this.Hide();

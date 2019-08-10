@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.API;
 using MixItUp.Base.Util;
 using MixItUp.WPF.Windows;
+using StreamingClient.Base.Util;
 using System;
 using System.Diagnostics;
 using System.IO;

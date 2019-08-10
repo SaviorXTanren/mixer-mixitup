@@ -2,6 +2,7 @@
 using MixItUp.Base.Util;
 using MixItUp.Desktop.Files;
 using MixItUp.Desktop.Services;
+using StreamingClient.Base.Util;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -21,7 +22,7 @@ namespace MixItUp.AutoHoster
         protected override void OnStartup(StartupEventArgs e)
         {
             WindowsFileService fileService = new WindowsFileService();
-            Logger.Initialize(fileService);
+            FileLoggerHandler.Initialize(fileService);
             SerializerHelper.Initialize(fileService);
 
             Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
@@ -51,18 +52,11 @@ namespace MixItUp.AutoHoster
                     ChannelSession.Services.Telemetry.TrackException(ex);
                 }
 
-                try
-                {
-                    using (StreamWriter writer = File.AppendText(Logger.CurrentLogFilePath))
-                    {
-                        writer.WriteLine("CRASHING EXCEPTION: " + Environment.NewLine + ex.ToString());
-                    }
-                }
-                catch (Exception) { }
-                Logger.Log(ex, includeFullStackTrace: false, isCrashing: true);
+                Logger.Log("CRASH OCCURRED");
+                Logger.Log(ex, includeStackTrace: true);
 
                 string reporterFilePath = Path.Combine(ChannelSession.Services.FileService.GetApplicationDirectory(), "MixItUp.Reporter.exe");
-                ProcessStartInfo processStartInfo = new ProcessStartInfo(reporterFilePath, string.Format("{0} {1}", (ChannelSession.MixerStreamerUser != null) ? ChannelSession.MixerStreamerUser.id : 0, Logger.CurrentLogFilePath));
+                ProcessStartInfo processStartInfo = new ProcessStartInfo(reporterFilePath, string.Format("{0} {1}", (ChannelSession.MixerStreamerUser != null) ? ChannelSession.MixerStreamerUser.id : 0, FileLoggerHandler.CurrentLogFilePath));
                 Process.Start(processStartInfo);
 
                 Task.Delay(1000).Wait();

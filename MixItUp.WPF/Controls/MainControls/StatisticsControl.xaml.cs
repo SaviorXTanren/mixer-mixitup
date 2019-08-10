@@ -4,6 +4,7 @@ using MixItUp.Base.Util;
 using MixItUp.WPF.Controls.Statistics;
 using MixItUp.WPF.Util;
 using NetOffice.ExcelApi;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

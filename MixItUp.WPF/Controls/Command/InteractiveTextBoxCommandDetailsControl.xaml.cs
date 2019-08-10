@@ -1,4 +1,4 @@
-﻿using Mixer.Base.Model.Interactive;
+﻿using Mixer.Base.Model.MixPlay;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
@@ -110,7 +110,7 @@ namespace MixItUp.WPF.Controls.Command
                 this.command.Unlocked = this.UnlockedControl.Unlocked;
                 this.command.Requirements = requirements;
 
-                await ChannelSession.MixerStreamerConnection.UpdateInteractiveGameVersion(this.Version);
+                await ChannelSession.MixerStreamerConnection.UpdateMixPlayGameVersion(this.Version);
                 return this.command;
             }
             return null;

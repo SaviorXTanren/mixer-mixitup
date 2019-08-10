@@ -6,6 +6,7 @@ using System.Windows.Media;
 using System.Threading.Tasks;
 using System;
 using MixItUp.Base.Util;
+using StreamingClient.Base.Util;
 
 namespace MixItUp.WPF.Controls.Chat
 {

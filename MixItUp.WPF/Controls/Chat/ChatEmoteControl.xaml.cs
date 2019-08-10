@@ -9,6 +9,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.IO;
 using MixItUp.Base.Model.Chat;
+using StreamingClient.Base.Util;
 
 namespace MixItUp.WPF.Controls.Chat
 {

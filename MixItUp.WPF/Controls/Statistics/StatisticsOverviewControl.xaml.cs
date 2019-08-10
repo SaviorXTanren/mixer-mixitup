@@ -1,6 +1,7 @@
 ﻿using MaterialDesignThemes.Wpf;
 using Mixer.Base.Util;
 using MixItUp.Base.Statistics;
+using StreamingClient.Base.Util;
 using System;
 using System.Threading.Tasks;
 

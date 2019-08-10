@@ -6,7 +6,7 @@ using System.IO;
 
 namespace MixItUp.Base.Util
 {
-    public static class LoggerHandler
+    public static class FileLoggerHandler
     {
         public static string CurrentLogFilePath { get; private set; }
         public static string CurrentChatEventLogFilePath { get; private set; }
@@ -18,9 +18,9 @@ namespace MixItUp.Base.Util
 
         public static void Initialize(IFileService fileService)
         {
-            LoggerHandler.fileService = fileService;
-            LoggerHandler.fileService.CreateDirectory(LogsDirectoryName);
-            LoggerHandler.CurrentLogFilePath = Path.Combine(LogsDirectoryName, string.Format(LogFileNameFormat, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture)));
+            FileLoggerHandler.fileService = fileService;
+            FileLoggerHandler.fileService.CreateDirectory(LogsDirectoryName);
+            FileLoggerHandler.CurrentLogFilePath = Path.Combine(LogsDirectoryName, string.Format(LogFileNameFormat, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture)));
 
             Logger.LogOccurred += Logger_LogOccurred;
         }
@@ -29,7 +29,7 @@ namespace MixItUp.Base.Util
         {
             try
             {
-                LoggerHandler.fileService.AppendFile(LoggerHandler.CurrentLogFilePath, string.Format("{0} - {1} - {2} " + Environment.NewLine + Environment.NewLine,
+                FileLoggerHandler.fileService.AppendFile(FileLoggerHandler.CurrentLogFilePath, string.Format("{0} - {1} - {2} " + Environment.NewLine + Environment.NewLine,
                     DateTimeOffset.Now.ToString(), EnumHelper.GetEnumName(log.Level), log.Message));
             }
             catch (Exception) { }

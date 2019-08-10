@@ -7,6 +7,7 @@ using MixItUp.WPF.Controls.Actions;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
 using MixItUp.WPF.Windows.Store;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -223,7 +224,7 @@ namespace MixItUp.WPF.Controls.Command
                             }
                         }
                     }
-                    catch (Exception ex) { Base.Logger.Log(ex); }
+                    catch (Exception ex) { Logger.Log(ex); }
                 }
             });
         }

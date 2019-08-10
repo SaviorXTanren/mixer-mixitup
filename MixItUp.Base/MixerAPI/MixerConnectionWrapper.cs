@@ -61,7 +61,7 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task<ExpandedChannelModel> GetChannel(ChannelModel channel) { return await this.RunAsync(this.Connection.Channels.GetChannel(channel.id)); }
 
-        public async Task<IEnumerable<ExpandedChannelModel>> GetChannels(uint maxResults = 1) { return await this.RunAsync(this.Connection.Channels.GetChannels(maxResults)); }
+        public async Task<IEnumerable<ExpandedChannelModel>> GetChannels(string filters, uint maxResults = 1) { return await this.RunAsync(this.Connection.Channels.GetChannels(filters, maxResults)); }
 
         public async Task<IEnumerable<ExpandedChannelModel>> GetChannelsFromUsers(IEnumerable<uint> userIDs) { return await this.RunAsync(this.Connection.Channels.GetChannelsFromUsers(userIDs)); }
 
@@ -123,13 +123,13 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task<MixPlayGameListingModel> CreateInteractiveGame(ChannelModel channel, UserModel user, string name, MixPlaySceneModel defaultScene) { return await this.RunAsync(MixPlayGameHelper.CreateMixPlay2Game(this.Connection, channel, user, name, defaultScene)); }
 
-        public async Task<IEnumerable<MixPlayGameVersionModel>> GetInteractiveGameVersions(MixPlayGameModel game) { return await this.RunAsync(this.Connection.MixPlay.GetMixPlayGameVersions(game)); }
+        public async Task<IEnumerable<MixPlayGameVersionModel>> GetMixPlayGameVersions(MixPlayGameModel game) { return await this.RunAsync(this.Connection.MixPlay.GetMixPlayGameVersions(game)); }
 
-        public async Task<MixPlayGameVersionModel> GetInteractiveGameVersion(MixPlayGameVersionModel version) { return await this.RunAsync(this.Connection.MixPlay.GetMixPlayGameVersion(version)); }
+        public async Task<MixPlayGameVersionModel> GetMixPlayGameVersion(MixPlayGameVersionModel version) { return await this.RunAsync(this.Connection.MixPlay.GetMixPlayGameVersion(version)); }
 
-        public async Task<MixPlayGameVersionModel> GetInteractiveGameVersion(uint versionID) { return await this.RunAsync(this.Connection.MixPlay.GetMixPlayGameVersion(versionID)); }
+        public async Task<MixPlayGameVersionModel> GetMixPlayGameVersion(uint versionID) { return await this.RunAsync(this.Connection.MixPlay.GetMixPlayGameVersion(versionID)); }
 
-        public async Task UpdateInteractiveGameVersion(MixPlayGameVersionModel version) { await this.RunAsync(this.Connection.MixPlay.UpdateMixPlayGameVersion(version)); }
+        public async Task UpdateMixPlayGameVersion(MixPlayGameVersionModel version) { await this.RunAsync(this.Connection.MixPlay.UpdateMixPlayGameVersion(version)); }
 
         public async Task<TeamModel> GetTeam(uint id) { return await this.RunAsync(this.Connection.Teams.GetTeam(id)); }
 

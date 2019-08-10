@@ -6,6 +6,7 @@ using MixItUp.Base.Commands;
 using MixItUp.WPF.Controls.Actions;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
+using StreamingClient.Base.Util;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;

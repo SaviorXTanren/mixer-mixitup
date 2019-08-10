@@ -1,4 +1,4 @@
-﻿using Mixer.Base.Web;
+﻿using Mixer.Base;
 using MixItUp.Base;
 using MixItUp.Base.Services;
 using System;
@@ -47,11 +47,11 @@ namespace MixItUp.WPF.Windows.OAuth
             {
                 this.Browser.NavigateToString(this.redirectPageText);
 
-                if (e.Uri.AbsoluteUri.Contains(OAuthHttpListenerServer.URL_CODE_IDENTIFIER))
+                if (e.Uri.AbsoluteUri.Contains(MixerConnection.DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER))
                 {
-                    int startIndex = e.Uri.AbsoluteUri.IndexOf(OAuthHttpListenerServer.URL_CODE_IDENTIFIER);
+                    int startIndex = e.Uri.AbsoluteUri.IndexOf(MixerConnection.DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER);
 
-                    string token = e.Uri.AbsoluteUri.Substring(startIndex + OAuthHttpListenerServer.URL_CODE_IDENTIFIER.Length);
+                    string token = e.Uri.AbsoluteUri.Substring(startIndex + MixerConnection.DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER.Length);
 
                     int endIndex = token.IndexOf("&");
                     if (endIndex > 0)

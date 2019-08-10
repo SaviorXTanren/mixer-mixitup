@@ -19,6 +19,7 @@ using MixItUp.Desktop.Database;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Model.OAuth;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -592,7 +593,7 @@ namespace MixItUp.Desktop
 
             if (string.IsNullOrEmpty(this.TelemetryUserId))
             {
-                if (Logger.IsDebug)
+                if (Logger.IsDebug())
                 {
                     this.TelemetryUserId = "MixItUpDebuggingUser";
                 }

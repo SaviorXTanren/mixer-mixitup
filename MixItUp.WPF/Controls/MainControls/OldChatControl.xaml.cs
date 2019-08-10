@@ -12,6 +12,7 @@ using MixItUp.WPF.Controls.Chat;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.PopOut;
 using MixItUp.WPF.Windows.Users;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -317,7 +318,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
                 if (!this.isPopOut)
                 {
-                    Logger.LogChatEvent(message.ToString());
+                    
                 }
 
                 return Task.FromResult(0);

@@ -1,4 +1,4 @@
-﻿using Mixer.Base.Model.Interactive;
+﻿using Mixer.Base.Model.MixPlay;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Interactive;
@@ -10,6 +10,7 @@ using MixItUp.WPF.Controls.Dialogs;
 using MixItUp.WPF.Controls.Interactive;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -190,10 +191,10 @@ namespace MixItUp.WPF.Controls.MainControls
 
             this.selectedGameVersion = await this.Window.RunAsyncOperation(async () =>
             {
-                IEnumerable<MixPlayGameVersionModel> versions = await ChannelSession.MixerStreamerConnection.GetInteractiveGameVersions(this.selectedGame);
+                IEnumerable<MixPlayGameVersionModel> versions = await ChannelSession.MixerStreamerConnection.GetMixPlayGameVersions(this.selectedGame);
                 if (versions != null && versions.Count() > 0)
                 {
-                    return await ChannelSession.MixerStreamerConnection.GetInteractiveGameVersion(versions.First());
+                    return await ChannelSession.MixerStreamerConnection.GetMixPlayGameVersion(versions.First());
                 }
                 return null;
             });

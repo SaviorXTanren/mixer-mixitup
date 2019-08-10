@@ -2,7 +2,6 @@
 using Mixer.Base.Model.Game;
 using Mixer.Base.Model.Teams;
 using Mixer.Base.Model.User;
-using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Model.Favorites;
 using MixItUp.Base.Util;
@@ -10,12 +9,11 @@ using MixItUp.Base.ViewModel.Favorites;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Favorites;
-using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -263,28 +261,28 @@ namespace MixItUp.WPF.Controls.MainControls
                 }
                 else
                 {
-                    string query = "channels";
+                    string filters = string.Empty;
                     if (searchCriteria == RaidSearchCriteriaEnum.AgeRating)
                     {
-                        query += "?where=audience:eq:" + ChannelSession.MixerChannel.audience;
+                        filters = "audience:eq:" + ChannelSession.MixerChannel.audience;
                     }
                     else if (searchCriteria == RaidSearchCriteriaEnum.LargeStreamer)
                     {
-                        query += "?where=viewersCurrent:gte:25";
+                        filters = "viewersCurrent:gte:25";
                     }
                     else if (searchCriteria == RaidSearchCriteriaEnum.MediumStreamer)
                     {
-                        query += "?where=viewersCurrent:gte:10,viewersCurrent:lt:25";
+                        filters = "viewersCurrent:gte:10,viewersCurrent:lt:25";
                     }
                     else if (searchCriteria == RaidSearchCriteriaEnum.SmallStreamer)
                     {
-                        query += "?where=viewersCurrent:gt:0,viewersCurrent:lt:10";
+                        filters = "viewersCurrent:gt:0,viewersCurrent:lt:10";
                     }
                     else if (searchCriteria == RaidSearchCriteriaEnum.PartneredStreamer)
                     {
-                        query += "?where=partnered:eq:true";
+                        filters = "partnered:eq:true";
                     }
-                    channels = await ChannelSession.MixerStreamerConnection.Connection.Channels.GetPagedNumberAsync<ChannelModel>(query, 50, linkPagesAvailable: false);
+                    channels = await ChannelSession.MixerStreamerConnection.Connection.Channels.GetChannels(filters, 50);
                 }
 
                 this.ChannelRaidNameTextBox.Clear();

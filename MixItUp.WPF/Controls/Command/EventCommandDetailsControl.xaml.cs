@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows;
+using StreamingClient.Base.Util;
 
 namespace MixItUp.WPF.Controls.Command
 {
