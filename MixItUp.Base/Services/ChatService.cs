@@ -1,15 +1,17 @@
 ﻿using Mixer.Base.Model.Chat;
 using Mixer.Base.Model.User;
-using Mixer.Base.Util;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model;
 using MixItUp.Base.Services.Mixer;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,6 +40,9 @@ namespace MixItUp.Base.Services
 
     public class ChatService : IChatService
     {
+        private const string ChatEventLogDirectoryName = "ChatEventLogs";
+        private const string ChatEventLogFileNameFormat = "ChatEventLog-{0}.txt";
+
         public bool DisableChat { get; set; }
 
         public ObservableCollection<ChatMessageViewModel> Messages { get; private set; } = new ObservableCollection<ChatMessageViewModel>();
@@ -64,11 +69,16 @@ namespace MixItUp.Base.Services
 
         private MixerChatService mixerChatService;
 
+        private string currentChatEventLogFilePath;
+
         public ChatService() { }
 
         public async Task Initialize(MixerChatService mixerChatService)
         {
             this.mixerChatService = mixerChatService;
+
+            await ChannelSession.Services.FileService.CreateDirectory(ChatEventLogDirectoryName);
+            this.currentChatEventLogFilePath = Path.Combine(ChatEventLogDirectoryName, string.Format(ChatEventLogFileNameFormat, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture)));
 
             this.mixerChatService.OnMessageOccurred += MixerChatService_OnMessageOccurred;
             this.mixerChatService.OnDeleteMessageOccurred += MixerChatService_OnDeleteMessageOccurred;
@@ -313,6 +323,15 @@ namespace MixItUp.Base.Services
         private async void MixerChatService_OnMessageOccurred(object sender, ChatMessageViewModel message)
         {
             await this.AddMessage(message);
+            if (ChannelSession.Settings.SaveChatEventLogs)
+            {
+                try
+                {
+                    await ChannelSession.Services.FileService.AppendFile(this.currentChatEventLogFilePath, string.Format("{0} ({1}){2}",
+                        message, DateTime.Now.ToString("HH:mm", CultureInfo.InvariantCulture), Environment.NewLine));
+                }
+                catch (Exception) { }
+            }
         }
 
         private void MixerChatService_OnDeleteMessageOccurred(object sender, Guid id)

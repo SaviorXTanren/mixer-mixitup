@@ -4,6 +4,7 @@ using StreamingClient.Base.Model.OAuth;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using StreamingClient.Base.Util;
 
 namespace MixItUp.Base.Services
 {
@@ -41,7 +42,7 @@ namespace MixItUp.Base.Services
 
         public StreamlabsDonation()
         {
-            this.CreatedAt = DateTimeHelper.DateTimeOffsetToUnixTimestamp(DateTimeOffset.Now);
+            this.CreatedAt = DateTimeOffset.Now.ToUnixTimeMilliseconds();
         }
 
         public UserDonationModel ToGenericDonation()
@@ -56,7 +57,7 @@ namespace MixItUp.Base.Services
 
                 Amount = Math.Round(this.Amount, 2),
 
-                DateTime = DateTimeHelper.UnixTimestampToDateTimeOffset(this.CreatedAt),
+                DateTime = this.CreatedAt.FromUTCUnixTimeMilliseconds(),
             };
         }
     }

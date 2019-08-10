@@ -3,6 +3,8 @@ using MixItUp.Base.Model.Spotify;
 using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Model.OAuth;
+using StreamingClient.Base.Util;
+using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -124,7 +126,7 @@ namespace MixItUp.Base.Services
             List<SpotifySongModel> songs = new List<SpotifySongModel>();
             try
             {
-                JObject result = await this.GetJObjectAsync(string.Format("search?q={0}&type=track", this.EncodeString(songName)));
+                JObject result = await this.GetJObjectAsync(string.Format("search?q={0}&type=track", AdvancedHttpClient.EncodeString(songName)));
                 if (result != null)
                 {
                     JArray results = (JArray)result["tracks"]["items"];
@@ -217,7 +219,7 @@ namespace MixItUp.Base.Services
             JObject payload = new JObject();
             payload["uris"] = songArray;
 
-            return await this.PutAsync("me/player/play", this.CreateContentFromObject(payload));
+            return await this.PutAsync("me/player/play", AdvancedHttpClient.CreateContentFromObject(payload));
         }
 
         public async Task SetVolume(int volume)
@@ -280,7 +282,7 @@ namespace MixItUp.Base.Services
         {
             HttpResponseMessage response = await this.GetAsync(url);
             await this.LogSpotifyDiagnostic(response);
-            return await this.ProcessJObjectResponse(response);
+            return await response.ProcessJObjectResponse();
         }
 
         private async Task<bool> PostAsync(string url, HttpContent content = null)

@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Util;
+using StreamingClient.Base.Util;
 using System;
 using System.Net;
 using System.Threading.Tasks;
@@ -28,9 +29,9 @@ namespace MixItUp.Base.Util
             }
             catch (Exception ex)
             {
-                if (!logNotFoundException && ex is RestServiceRequestException)
+                if (!logNotFoundException && ex is HttpRestRequestException)
                 {
-                    RestServiceRequestException restEx = (RestServiceRequestException)ex;
+                    HttpRestRequestException restEx = (HttpRestRequestException)ex;
                     if (restEx.StatusCode == HttpStatusCode.NotFound)
                     {
                         return default(T);

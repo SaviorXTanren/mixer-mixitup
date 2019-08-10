@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Model.Patronage;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;

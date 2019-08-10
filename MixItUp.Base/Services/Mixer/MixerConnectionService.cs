@@ -96,30 +96,7 @@ namespace MixItUp.Base.Services.Mixer
 
         public async Task<IEnumerable<ExpandedChannelModel>> GetFeaturedChannels() { return await this.RunAsync(this.Connection.Channels.GetFeaturedChannels()); }
 
-        public async Task UpdateChannel(uint channelID, string name = null, uint? gameTypeID = null, string ageRating = null)
-        {
-            try
-            {
-                JObject jobj = new JObject();
-                if (!string.IsNullOrEmpty(name))
-                {
-                    jobj["name"] = name;
-                }
-                if (gameTypeID.HasValue)
-                {
-                    jobj["typeId"] = gameTypeID;
-                }
-                if (!string.IsNullOrEmpty(ageRating))
-                {
-                    jobj["audience"] = ageRating;
-                }
-                await ChannelSession.MixerStreamerConnection.Connection.Channels.PatchAsync<ChannelModel>("channels/" + channelID, ChannelSession.MixerStreamerConnection.Connection.Channels.CreateContentFromObject(jobj));
-            }
-            catch (Exception ex)
-            {
-                MixItUp.Base.Util.Logger.Log(ex);
-            }
-        }
+        public async Task UpdateChannel(uint channelID, string name = null, uint? gameTypeID = null, string ageRating = null) { await this.RunAsync(this.Connection.Channels.UpdateChannel(channelID, name, gameTypeID, ageRating)); }
 
         public async Task<ChannelDetailsModel> GetChannelDetails(ChannelModel channel) { return await this.RunAsync(this.Connection.Channels.GetChannelDetails(channel.id)); }
 

@@ -2,6 +2,7 @@
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
+using StreamingClient.Base.Util;
 
 namespace MixItUp.Base.ViewModel.Controls.Overlay
 {

@@ -2,6 +2,7 @@
 using MixItUp.Base.Util;
 using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Services;
+using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
@@ -43,14 +44,14 @@ namespace MixItUp.Base.Services
 
         protected virtual async Task<string> ConnectViaOAuthRedirect(string oauthPageURL, string listeningAddress)
         {
-            LocalOAuthHttpListenerService oauthServer = new LocalOAuthHttpListenerService(listeningAddress, loginSuccessHtmlPageFilePath: OAuthServiceBase.LoginRedirectPageFileName);
+            LocalOAuthHttpListenerService oauthServer = new LocalOAuthHttpListenerService(listeningAddress, MixerConnection.DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER, OAuthServiceBase.LoginRedirectPageFileName);
             oauthServer.Start();
 
             ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = oauthPageURL, UseShellExecute = true };
             Process.Start(startInfo);
 
             string authorizationCode = await oauthServer.WaitForAuthorizationCode();
-            oauthServer.End();
+            oauthServer.Stop();
 
             return authorizationCode;
         }
@@ -83,7 +84,7 @@ namespace MixItUp.Base.Services
                         content.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
 
                         HttpResponseMessage response = await client.PostAsync(endpoint, content);
-                        return await this.ProcessResponse<OAuthTokenModel>(response);
+                        return await response.ProcessResponse<OAuthTokenModel>();
                     }
                 }
             }

@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
+using StreamingClient.Base.Util;
 using System.Collections.Generic;
 
 namespace MixItUp.Base.ViewModel.Controls.Overlay

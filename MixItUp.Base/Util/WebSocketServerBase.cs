@@ -50,7 +50,7 @@ namespace MixItUp.Base.Util
 
             await this.Send(new WebSocketPacket() { type = "test" });
 
-            await this.WaitForResponse(() => this.connectionTestSuccessful);
+            await this.WaitForSuccess(() => this.connectionTestSuccessful);
 
             return this.connectionTestSuccessful;
         }

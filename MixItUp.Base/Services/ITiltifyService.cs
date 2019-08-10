@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using StreamingClient.Base.Util;
 
 namespace MixItUp.Base.Services
 {
@@ -89,7 +90,7 @@ namespace MixItUp.Base.Services
 
                 Amount = Math.Round(this.Amount, 2),
 
-                DateTime = DateTimeHelper.UnixTimestampToDateTimeOffset(this.CompletedAtTimestamp),
+                DateTime = this.CompletedAtTimestamp.FromUTCUnixTimeMilliseconds(),
             };
         }
     }
