@@ -1,15 +1,13 @@
-﻿using MixItUp.Base.ViewModel.Chat;
+﻿using MixItUp.Base.Model.Chat;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
-using System.Windows.Controls;
-using System.Windows;
-using System.Windows.Media.Imaging;
-using MixItUp.Base.Util;
+using System.IO;
 using System.Net;
 using System.Threading.Tasks;
-using System.IO;
-using MixItUp.Base.Model.Chat;
-using StreamingClient.Base.Util;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 
 namespace MixItUp.WPF.Controls.Chat
 {

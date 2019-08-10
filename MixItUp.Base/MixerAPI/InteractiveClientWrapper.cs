@@ -255,11 +255,11 @@ namespace MixItUp.Base.MixerAPI
         public MixPlayClient Client { get; private set; }
 
         public List<string> DuplicatedControls { get; private set; } = new List<string>();
-        public List<MixPlayConnectedSceneModel> Scenes { get; private set; } = new List<InteractiveConnectedSceneModel>();
-        public Dictionary<string, MixPlayControlModel> Controls { get; private set; } = new Dictionary<string, InteractiveControlModel>(StringComparer.InvariantCultureIgnoreCase);
-        public Dictionary<string, MixPlayConnectedSceneModel> ControlScenes { get; private set; } = new Dictionary<string, InteractiveConnectedSceneModel>(StringComparer.InvariantCultureIgnoreCase);
-        public Dictionary<string, MixPlayConnectedControlCommand> ControlCommands { get; private set; } = new Dictionary<string, InteractiveConnectedControlCommand>(StringComparer.InvariantCultureIgnoreCase);
-        public LockedDictionary<string, MixPlayParticipantModel> Participants { get; private set; } = new LockedDictionary<string, InteractiveParticipantModel>(StringComparer.InvariantCultureIgnoreCase);
+        public List<MixPlayConnectedSceneModel> Scenes { get; private set; } = new List<MixPlayConnectedSceneModel>();
+        public Dictionary<string, MixPlayControlModel> Controls { get; private set; } = new Dictionary<string, MixPlayControlModel>(StringComparer.InvariantCultureIgnoreCase);
+        public Dictionary<string, MixPlayConnectedSceneModel> ControlScenes { get; private set; } = new Dictionary<string, MixPlayConnectedSceneModel>(StringComparer.InvariantCultureIgnoreCase);
+        public Dictionary<string, InteractiveConnectedControlCommand> ControlCommands { get; private set; } = new Dictionary<string, InteractiveConnectedControlCommand>(StringComparer.InvariantCultureIgnoreCase);
+        public LockedDictionary<string, MixPlayParticipantModel> Participants { get; private set; } = new LockedDictionary<string, MixPlayParticipantModel>(StringComparer.InvariantCultureIgnoreCase);
 
         private List<MixPlayGameModel> games = new List<MixPlayGameModel>();
         private DateTimeOffset lastRefresh = DateTimeOffset.MinValue;
@@ -320,18 +320,18 @@ namespace MixItUp.Base.MixerAPI
             return games;
         }
 
-        public async Task<MixPlayConnectionResult> Connect(InteractiveGameListingModel game)
+        public async Task<MixPlayConnectionResult> Connect(MixPlayGameListingModel game)
         {
             return await this.Connect(game, game.versions.First());
         }
 
-        public async Task<MixPlayConnectionResult> Connect(InteractiveGameModel game)
+        public async Task<MixPlayConnectionResult> Connect(MixPlayGameModel game)
         {
             IEnumerable<MixPlayGameVersionModel> versions = await ChannelSession.MixerStreamerConnection.GetMixPlayGameVersions(game);
             return await this.Connect(game, versions.First());
         }
 
-        public async Task<MixPlayConnectionResult> Connect(InteractiveGameModel game, InteractiveGameVersionModel version)
+        public async Task<MixPlayConnectionResult> Connect(MixPlayGameModel game, MixPlayGameVersionModel version)
         {
             this.Game = game;
             this.Version = version;
@@ -385,7 +385,7 @@ namespace MixItUp.Base.MixerAPI
                 this.Controls.Clear();
                 this.ControlCommands.Clear();
                 this.Participants.Clear();
-                this.connectionResult = InteractiveConnectionResult.Unknown;
+                this.connectionResult = MixPlayConnectionResult.Unknown;
             });
         }
 
@@ -625,13 +625,13 @@ namespace MixItUp.Base.MixerAPI
             {
                 this.DuplicatedControls.Add($"Scene: {this.ControlScenes[controlID].sceneID}  Control: {controlID}");
                 this.DuplicatedControls.Add($"Scene: {sceneID}  Control: {controlID}");
-                this.connectionResult = InteractiveConnectionResult.DuplicateControlIDs;
+                this.connectionResult = MixPlayConnectionResult.DuplicateControlIDs;
             }
         }
 
         protected override async Task<bool> ConnectInternal()
         {
-            this.connectionResult = InteractiveConnectionResult.Unknown;
+            this.connectionResult = MixPlayConnectionResult.Unknown;
             this.ShouldRetry = true;
             this.SharedProject = ChannelSession.Settings.CustomInteractiveProjectIDs.FirstOrDefault(p => p.VersionID == this.Version.id);
             if (this.SharedProject == null)
@@ -740,7 +740,7 @@ namespace MixItUp.Base.MixerAPI
             // Initialize Participants
             await this.AddParticipants(await this.GetRecentParticipants());
 
-            this.connectionResult = InteractiveConnectionResult.Success;
+            this.connectionResult = MixPlayConnectionResult.Success;
             return true;
         }
 
@@ -1018,7 +1018,7 @@ namespace MixItUp.Base.MixerAPI
             {
                 await Task.Delay(2500);
             }
-            while (await this.Connect(this.Game, this.Version) != InteractiveConnectionResult.Success);
+            while (await this.Connect(this.Game, this.Version) != MixPlayConnectionResult.Success);
 
             ChannelSession.ReconnectionOccurred("Interactive");
         }

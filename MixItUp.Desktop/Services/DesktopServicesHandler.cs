@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.Mixer;
 using MixItUp.Desktop.Audio;
 using MixItUp.Desktop.Files;
 using MixItUp.Desktop.Services.DeveloperAPI;

@@ -487,7 +487,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             try
             {
-                InteractiveConnectionResult result = await this.Window.RunAsyncOperation(async () =>
+                MixPlayConnectionResult result = await this.Window.RunAsyncOperation(async () =>
                 {
                     if (!this.IsCustomInteractiveGame)
                     {
@@ -499,10 +499,10 @@ namespace MixItUp.WPF.Controls.MainControls
 
                 switch (result)
                 {
-                    case InteractiveConnectionResult.Success:
+                    case MixPlayConnectionResult.Success:
                         await this.InteractiveGameConnected();
                         return;
-                    case InteractiveConnectionResult.DuplicateControlIDs:
+                    case MixPlayConnectionResult.DuplicateControlIDs:
                         await this.Window.RunAsyncOperation(async () =>
                         {
                             await ChannelSession.Interactive.Disconnect();
@@ -513,7 +513,7 @@ namespace MixItUp.WPF.Controls.MainControls
                             + Environment.NewLine
                             + string.Join(Environment.NewLine, ChannelSession.Interactive.DuplicatedControls));
                         return;
-                    case InteractiveConnectionResult.Unknown:
+                    case MixPlayConnectionResult.Unknown:
                         await this.Window.RunAsyncOperation(async () =>
                         {
                             await ChannelSession.Interactive.Disconnect();
