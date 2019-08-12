@@ -118,6 +118,8 @@ namespace MixItUp.Base.Services
         F8 = 0x42,
         F9 = 0x43,
         F10 = 0x44,
+        F11 = 0x45,
+        F12 = 0x46,
 
         Insert = 0xD2,
         Delete = 0xD3,
