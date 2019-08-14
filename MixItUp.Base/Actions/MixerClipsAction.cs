@@ -71,67 +71,44 @@ namespace MixItUp.Base.Actions
                 }
 
                 string clipName = await this.ReplaceStringWithSpecialModifiers(this.ClipName, user, arguments);
-                DateTimeOffset clipCreationTime = DateTimeOffset.Now;
-
                 if (!string.IsNullOrEmpty(clipName) && MixerClipsAction.MinimumLength <= this.ClipLength && this.ClipLength <= MixerClipsAction.MaximumLength)
                 {
-                    Logger.LogDiagnostic("Getting current broadcast...");
+                    ClipModel clip = null;
+                    DateTimeOffset clipCreationTime = DateTimeOffset.Now;
+
                     BroadcastModel broadcast = await ChannelSession.Connection.GetCurrentBroadcast();
-                    if (broadcast == null)
+                    if (broadcast != null)
                     {
-                        Logger.LogDiagnostic("Could not find current broadcast...");
-                        await ChannelSession.Chat.SendMessage("ERROR: Unable to get information about current broadcast for clip creation. Please verify that clips can be created by ensuring the Clips button on your stream is not grayed out and try restarting your stream to see if this resolves the issue.");
-                        return;
+                        if (await ChannelSession.Connection.CanClipBeMade(broadcast))
+                        {
+                            clip = await ChannelSession.Connection.CreateClip(new ClipRequestModel()
+                            {
+                                broadcastId = broadcast.id.ToString(),
+                                highlightTitle = clipName,
+                                clipDurationInSeconds = this.ClipLength
+                            });
+                        }
                     }
-
-                    Logger.LogDiagnostic("Checking if clips can be made...");
-                    if (await ChannelSession.Connection.CanClipBeMade(broadcast))
-                    {
-                        Logger.LogDiagnostic("Clips can not be made...");
-                        await ChannelSession.Chat.SendMessage("ERROR: Clips can not be made for current broadcast. Please verify that clips can be created by ensuring the Clips button on your stream is not grayed out and try restarting your stream to see if this resolves the issue.");
-                        return;
-                    }
-
-                    Logger.LogDiagnostic("Creating clip...");
-                    ClipModel clip = await ChannelSession.Connection.CreateClip(new ClipRequestModel()
-                    {
-                        broadcastId = broadcast.id.ToString(),
-                        highlightTitle = clipName,
-                        clipDurationInSeconds = this.ClipLength
-                    });
 
                     if (clip == null)
                     {
-                        Logger.LogDiagnostic("Clip data not returned, attempting to query for it...");
-                        for (int i = 0; i < 10 && clip == null; i++)
+                        for (int i = 0; i < 10; i++)
                         {
                             await Task.Delay(2000);
 
                             IEnumerable<ClipModel> clips = await ChannelSession.Connection.GetChannelClips(ChannelSession.Channel);
-                            clips = clips.OrderByDescending(c => c.uploadDate);
-                            Logger.LogDiagnostic("Found Clips: " + string.Join(", ", clips.Select(c => c.title)));
-
-                            clip = clips.FirstOrDefault();
+                            clip = clips.OrderByDescending(c => c.uploadDate).FirstOrDefault();
                             if (clip != null && clip.uploadDate.ToLocalTime() >= clipCreationTime && clip.title.Equals(clipName))
                             {
-                                break;
-                            }
-                            else
-                            {
-                                clip = null;
+                                await this.ProcessClip(clip, clipName);
+                                return;
                             }
                         }
-                    }
-
-                    if (clip != null)
-                    {
-                        Logger.LogDiagnostic("Clip found: " + clip.contentId);
-                        await this.ProcessClip(clip, clipName);
+                        await ChannelSession.Chat.SendMessage("ERROR: Unable to create clip or could not find clip, please verify that clips can be created by ensuring the Clips button on your stream is not grayed out.");
                     }
                     else
                     {
-                        Logger.LogDiagnostic("Could not find clip with matching clip name");
-                        await ChannelSession.Chat.SendMessage("ERROR: Unable to create clip or could not find clip. Please verify that clips can be created by ensuring the Clips button on your stream is not grayed out and try restarting your stream to see if this resolves the issue.");
+                        await this.ProcessClip(clip, clipName);
                     }
                 }
             }
