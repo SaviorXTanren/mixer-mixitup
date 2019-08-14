@@ -14,6 +14,13 @@ namespace MixItUp.XSplit
     #region Data Classes
 
     [DataContract]
+    public class XSplitOutput
+    {
+        [DataMember]
+        public string outputName;
+    }
+
+    [DataContract]
     public class XSplitScene
     {
         [DataMember]
@@ -90,7 +97,10 @@ namespace MixItUp.XSplit
 
         public Task<StreamingSourceDimensions> GetSourceDimensions(string sceneName, string sourceName) { return Task.FromResult(new StreamingSourceDimensions()); }
 
-        public Task StartStopStream() { return Task.FromResult(0); }
+        public async Task StartStopStream()
+        {
+            await this.Send(new XSplitPacket("startStopStream", JObject.FromObject(new XSplitOutput() { outputName = "Beam" })));
+        }
 
         public Task SaveReplayBuffer() { return Task.FromResult(0); }
         public Task<bool> StartReplayBuffer() { return Task.FromResult(false); }
@@ -101,11 +111,6 @@ namespace MixItUp.XSplit
         {
             return new XSplitWebSocketServer(listenerContext);
         }
-
-        private void XSplitWebServer_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
-        {
-            this.Disconnected(sender, new EventArgs());
-        }
     }
 
     public class XSplitWebSocketServer : WebSocketServerBase
@@ -114,34 +119,6 @@ namespace MixItUp.XSplit
 
         public event EventHandler Connected { add { this.OnConnectedOccurred += value; } remove { this.OnConnectedOccurred -= value; } }
         public event EventHandler Disconnected = delegate { };
-
-        public async Task<bool> Connect() { return await this.Initialize(); }
-
-        public async Task Disconnect() { await base.Disconnect(); }
-
-        public async Task ShowScene(string sceneName)
-        {
-            await this.Send(new XSplitPacket("sceneTransition", JObject.FromObject(new XSplitScene() { sceneName = sceneName })));
-        }
-
-        public async Task SetSourceVisibility(string sceneName, string sourceName, bool visibility)
-        {
-            await this.Send(new XSplitPacket("sourceUpdate", JObject.FromObject(new XSplitSource() { sceneName = sceneName, sourceName = sourceName, sourceVisible = visibility })));
-        }
-
-        public async Task SetWebBrowserSourceURL(string sceneName, string sourceName, string url)
-        {
-            await this.Send(new XSplitPacket("sourceUpdate", JObject.FromObject(new XSplitWebBrowserSource() { sceneName = sceneName, sourceName = sourceName, webBrowserUrl = url })));
-        }
-
-        public Task SetSourceDimensions(string sceneName, string sourceName, StreamingSourceDimensions dimensions) { return Task.FromResult(0); }
-
-        public Task<StreamingSourceDimensions> GetSourceDimensions(string sceneName, string sourceName) { return Task.FromResult(new StreamingSourceDimensions()); }
-
-        public Task StartStopStream() { return Task.FromResult(0); }
-
-        public Task SaveReplayBuffer() { return Task.FromResult(0); }
-        public Task<bool> StartReplayBuffer() { return Task.FromResult(false); }
 
         protected override async Task ProcessReceivedPacket(string packetJSON)
         {
