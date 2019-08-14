@@ -707,7 +707,11 @@ namespace MixItUp.Desktop
                 this.CooldownGroups.Remove(unused.Key);
             }
 
-            var allUsedCommandGroupNames = this.ChatCommands.Select(c => c.GroupName).Distinct();
+            var allUsedCommandGroupNames = 
+                this.ChatCommands.Select(c => c.GroupName)
+                .Union(this.ActionGroupCommands.Select(a=>a.GroupName))
+                .Union(this.TimerCommands.Select(a => a.GroupName))
+                .Distinct();
             var allUnusedCommandGroupNames = this.CommandGroups.Where(c => !allUsedCommandGroupNames.Contains(c.Key, StringComparer.InvariantCultureIgnoreCase));
             foreach (var unused in allUnusedCommandGroupNames)
             {
