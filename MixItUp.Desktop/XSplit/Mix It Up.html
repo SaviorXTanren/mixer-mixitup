@@ -1,144 +1,161 @@
 ﻿<html>
 <head>
-    <meta charset="utf-8">
-    <style>
-        body {
-            color: white;
-        }
-    </style>
+  <meta charset="utf-8">
+  <style>
+    body {
+      color: white;
+    }
+  </style>
 </head>
 <body>
-    <div id='eventsDiv'>
-        Mix It Up Events:<BR><BR>
-    </div>
+  <div id='eventsDiv'>
+    Mix It Up Events:<BR><BR>
+  </div>
 
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="https://cdn2.xsplit.com/xjs/download/xjs.min.js"></script>
-    <script src="../Overlay/webSocketWrapper.js"></script>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://cdn2.xsplit.com/xjs/download/xjs.min.js"></script>
+  <script src="../Overlay/webSocketWrapper.js"></script>
 
-    <script>
-        var xjs = require('xjs');
-        var eventsDiv = document.getElementById('eventsDiv');
-        var disconnected = true;
+  <script>
+    var xjs = require('xjs');
+    var eventsDiv = document.getElementById('eventsDiv');
+    var disconnected = true;
 
-        function connectionOpened()
-        {
-            eventsDiv.innerHTML += 'Connected to Mix It Up!<BR>';
-            disconnected = false;
+    function connectionOpened() {
+      eventsDiv.innerHTML += 'Connected to Mix It Up!<BR>';
+      disconnected = false;
+    }
+
+    function connectionClosed() {
+      if (!disconnected) {
+        eventsDiv.innerHTML += 'Disconnected from Mix It Up!<BR>';
+        disconnected = true;
+      }
+    }
+
+    function packetReceived(packet) {
+      try {
+        if (packet != null && typeof packet.type !== 'undefined') {
+          if (packet.type === "test") {
+            eventsDiv.innerHTML += 'Connection Test Successful!<BR>';
+          }
+          else if (packet.type === "sceneTransition") {
+            sceneTransition(packet.data);
+          }
+          else if (packet.type === "sourceUpdate") {
+            sourceUpdate(packet.data);
+          }
+          else if (packet.type === "startStopStream") {
+            startStopStream(packet.data);
+          }
+        }
+      }
+      catch (err) { logException(err); }
+    }
+
+    function sceneTransition(data) {
+      eventsDiv.innerHTML += 'Scene Transition: ' + data.sceneName + '<BR>';
+
+      xjs.ready().then(function () {
+        return xjs.Scene.getByName(data.sceneName);
+      }).then(function (scenes) {
+        if (scenes != null && scenes.length > 0) {
+          xjs.Scene.setActiveScene(scenes[0]);
+        }
+      });
+    }
+
+    function sourceUpdate(data) {
+      eventsDiv.innerHTML += 'Source Update: ' + data.sceneName + ' - ' + data.sourceName + ' - ' + data.sourceVisible + '<BR>';
+
+      xjs.ready().then(function () {
+        if (!isStringEmpty(data.sceneName)) {
+          return xjs.Scene.getByName(data.sceneName);
+        }
+        else {
+          return xjs.Scene.getActiveScene();
+        }
+      }).then(function (scene) {
+        if (Array.isArray(scene)) {
+          scene = scene[0];
         }
 
-        function connectionClosed()
-        {
-            if (!disconnected)
-            {
-                eventsDiv.innerHTML += 'Disconnected from Mix It Up!<BR>';
-                disconnected = true;
+        return scene.getSources();
+      }).then(function (sources) {
+        if (sources != null && sources.length > 0) {
+          for (let i = 0; i < sources.length; i++) {
+            if (sources[i]._cname == data.sourceName) {
+              if (data.webBrowserUrl != null) {
+                eventsDiv.innerHTML += 'Source Web Browser Update: ' + data.webBrowserUrl + '<BR>';
+                try {
+                  sources[i].setURL(data.webBrowserUrl);
+                }
+                catch (err) { logException(err); }
+              }
+
+              sources[i].getItemList().then(function (items) {
+                if (items != null && items.length > 0) {
+                  for (let j = 0; j < items.length; j++) {
+                    try {
+                      items[j].setVisible(data.sourceVisible);
+                    }
+                    catch (err) { logException(err); }
+                  }
+                }
+              });
             }
+          }
         }
+      });
+    }
 
-        function packetReceived(packet)
-        {
-            try
-            {
-                if (packet != null && typeof packet.type !== 'undefined' && typeof packet.data !== 'undefined')
-                {
-                    if (packet.type === "test")
-                    {
-                        eventsDiv.innerHTML += 'Connection Test Successful!<BR>';
-                    }
-                    else if (packet.type === "sceneTransition")
-                    {
-                        sceneTransition(packet.data);
-                    }
-                    else if (packet.type === "sourceUpdate")
-                    {
-                        sourceUpdate(packet.data);
-                    }
+    function startStopStream(data) {
+      xjs.ready()
+        .then(xjs.StreamInfo.getActiveStreamChannels)
+        .then(function (channels) {
+          var stream = []
+          channels.forEach(function (channel) {
+            channel.getName()
+              .then(name => {
+                if (name.includes(data.outputName)) {
+                  stream.push(channel)
                 }
-            }
-            catch (err) { logException(err); }
-        }
+              })
+          })
+          return stream
+        })
+        .then(function (stream) {
+          var isOnline = stream.length > 0;
 
-        function sceneTransition(data)
-        {
-            eventsDiv.innerHTML += 'Scene Transition: ' + data.sceneName + '<BR>';
-
-            xjs.ready().then(function ()
-            {
-                return xjs.Scene.getByName(data.sceneName);
-            }).then(function (scenes)
-            {
-                if (scenes != null && scenes.length > 0)
-                {
-                    xjs.Scene.setActiveScene(scenes[0]);
-                }
+          xjs.Output.getOutputList()
+            .then(function (outputs) {
+              outputs.forEach(function (output) {
+                output.getName()
+                  .then(function (name) {
+                    if (name.includes(data.outputName)) {
+                      if (isOnline) {
+                        eventsDiv.innerHTML += 'Stopping broadcast<BR>';
+                        output.stopBroadcast();
+                      } else {
+                        eventsDiv.innerHTML += 'Starting broadcast<BR>';
+                        output.startBroadcast({
+                          suppressPrestreamDialog: true
+                        });
+                      }
+                    }
+                  });
+              });
             });
-        }
+        });
+    }
 
-        function sourceUpdate(data) {
-            eventsDiv.innerHTML += 'Source Update: ' + data.sceneName + ' - ' + data.sourceName + ' - ' + data.sourceVisible + '<BR>';
+    function logException(err) {
+      eventsDiv.innerHTML += 'Error Occurred: ' + err.toString() + '<BR>';
+      logToSessionStorage(err);
+    }
 
-            xjs.ready().then(function ()
-            {
-                if (!isStringEmpty(data.sceneName)) {
-                    return xjs.Scene.getByName(data.sceneName);
-                }
-                else {
-                    return xjs.Scene.getActiveScene();
-                }
-            }).then(function (scene)
-            {
-                if (Array.isArray(scene)) {
-                    scene = scene[0];
-                }
-
-                return scene.getSources();
-            }).then(function (sources)
-            {
-                if (sources != null && sources.length > 0)
-                {
-                    for (let i = 0; i < sources.length; i++)
-                    {
-                        if (sources[i]._cname == data.sourceName)
-                        {
-                            if (data.webBrowserUrl != null)
-                            {
-                                eventsDiv.innerHTML += 'Source Web Browser Update: ' + data.webBrowserUrl + '<BR>';
-                                try
-                                {
-                                    sources[i].setURL(data.webBrowserUrl);
-                                }
-                                catch (err) { logException(err); }
-                            }
-
-                            sources[i].getItemList().then(function (items)
-                            {
-                                if (items != null && items.length > 0)
-                                {
-                                    for (let j = 0; j < items.length; j++)
-                                    {
-                                        try
-                                        {
-                                            items[j].setVisible(data.sourceVisible);
-                                        }
-                                        catch (err) { logException(err); }
-                                    }
-                                }
-                            });
-                        }
-                    }
-                }
-            });
-        }
-
-        function logException(err)
-        {
-            eventsDiv.innerHTML += 'Error Occurred: ' + err.toString() + '<BR>';
-            logToSessionStorage(err);
-        }
-
-        openWebsocketConnectionWithAddress("localhost", "8211");
-    </script>
+    openWebsocketConnectionWithAddress("localhost", "8211");
+  </script>
 </body>
 
 </html>
