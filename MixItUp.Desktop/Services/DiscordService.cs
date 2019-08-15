@@ -27,7 +27,7 @@ namespace MixItUp.Desktop.Services
         public string ServerID { get; private set; }
         public string BotPermissions { get; private set; }
 
-        public DiscordOAuthServer() : base(MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL, MixerConnection.DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER, OAuthServiceBase.LoginRedirectPageFileName) { }
+        public DiscordOAuthServer() : base(MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL, MixerConnection.DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER, OAuthServiceBase.LoginRedirectPageHTML) { }
 
         protected override async Task ProcessConnection(HttpListenerContext listenerContext)
         {

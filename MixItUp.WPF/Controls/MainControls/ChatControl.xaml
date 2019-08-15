@@ -144,19 +144,7 @@
                 <ListView x:Name="UserList" ItemsSource="{Binding DisplayUsers}" Grid.Column="2" VirtualizingPanel.VirtualizationMode="Recycling" ScrollViewer.IsDeferredScrollingEnabled="True" ScrollViewer.VerticalScrollBarVisibility="Visible" HorizontalContentAlignment="Stretch" SelectionChanged="UserList_SelectionChanged" MinWidth="200">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-
-                                <UsersControls:UserProfileAvatarControl Grid.Column="0" Width="20" Height="20" DataContext="{Binding User.AvatarLink}" />
-
-                                <Image Source="{Binding User.SubscriberBadgeLink}" Visibility="{Binding User.IsMixerSubscriber}" Grid.Column="1" Margin="5,0,0,0" VerticalAlignment="Center" />
-
-                                <TextBlock Grid.Column="2" Margin="5,0,0,0" Text="{Binding UserName}" FontWeight="Bold" VerticalAlignment="Center" />
-                            </Grid>
+                            <ChatControls:ChatUserControl DataContext="{Binding}" Grid.Column="0" />
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>

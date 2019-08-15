@@ -23,9 +23,9 @@ namespace MixItUp.Base.Services.Mixer
 
     }
 
-    public class MixerChatService : MixerWebSocketWrapper, IMixerChatService
+    public class MixerChatService : MixerWebSocketServiceBase, IMixerChatService
     {
-        public ChatClient Client { get; private set; }
+        public ChatClient StreamerClient { get; private set; }
         public ChatClient BotClient { get; private set; }
 
         public event EventHandler<ChatMessageViewModel> OnMessageOccurred = delegate { };
@@ -37,77 +37,124 @@ namespace MixItUp.Base.Services.Mixer
         public event EventHandler<IEnumerable<UserViewModel>> OnUsersLeaveOccurred = delegate { };
         public event EventHandler<Tuple<UserViewModel, UserViewModel>> OnUserPurgeOccurred = delegate { };
 
-        public event EventHandler<ChatPollEventModel> OnPollEndOccurred { add { this.Client.OnPollEndOccurred += value; } remove { this.Client.OnPollEndOccurred -= value; } }
+        public event EventHandler<ChatPollEventModel> OnPollEndOccurred = delegate { };
 
         private const int userJoinLeaveEventsTotalToProcess = 25;
         private SemaphoreSlim userJoinLeaveEventsSemaphore = new SemaphoreSlim(1);
         private Dictionary<uint, ChatUserEventModel> userJoinEvents = new Dictionary<uint, ChatUserEventModel>();
         private Dictionary<uint, ChatUserEventModel> userLeaveEvents = new Dictionary<uint, ChatUserEventModel>();
 
+        private CancellationTokenSource cancellationTokenSource;
+
         public MixerChatService() { }
 
-        public async Task<bool> Connect()
+        public async Task<bool> ConnectStreamer()
         {
-            return await this.AttemptConnect();
+            return await this.AttemptConnect(async () =>
+            {
+                if (ChannelSession.MixerStreamerConnection != null)
+                {
+                    this.cancellationTokenSource = new CancellationTokenSource();
+
+                    this.StreamerClient = await this.ConnectAndAuthenticateChatClient(ChannelSession.MixerStreamerConnection);
+                    if (this.StreamerClient != null)
+                    {
+                        this.StreamerClient.OnClearMessagesOccurred += ChatClient_OnClearMessagesOccurred;
+                        this.StreamerClient.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
+                        this.StreamerClient.OnMessageOccurred += ChatClient_OnMessageOccurred;
+                        this.StreamerClient.OnPollEndOccurred += ChatClient_OnPollEndOccurred;
+                        this.StreamerClient.OnPollStartOccurred += ChatClient_OnPollStartOccurred;
+                        this.StreamerClient.OnPurgeMessageOccurred += ChatClient_OnPurgeMessageOccurred;
+                        this.StreamerClient.OnUserJoinOccurred += ChatClient_OnUserJoinOccurred;
+                        this.StreamerClient.OnUserLeaveOccurred += ChatClient_OnUserLeaveOccurred;
+                        this.StreamerClient.OnUserUpdateOccurred += ChatClient_OnUserUpdateOccurred;
+                        this.StreamerClient.OnSkillAttributionOccurred += Client_OnSkillAttributionOccurred;
+                        this.StreamerClient.OnDisconnectOccurred += StreamerClient_OnDisconnectOccurred;
+                        if (ChannelSession.Settings.DiagnosticLogging)
+                        {
+                            this.StreamerClient.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
+                            this.StreamerClient.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
+                            this.StreamerClient.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
+                            this.StreamerClient.OnEventOccurred += WebSocketClient_OnEventOccurred;
+                        }
+
+                        AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, this.ChatterJoinLeaveBackground, 2500);
+                        AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, this.ChatterRefreshBackground, 300000);
+
+                        return true;
+                    }
+                }
+                await this.DisconnectStreamer();
+                return false;
+            });
+        }
+
+        public async Task DisconnectStreamer()
+        {
+            await this.RunAsync(async () =>
+            {
+                if (this.StreamerClient != null)
+                {
+                    this.StreamerClient.OnClearMessagesOccurred -= ChatClient_OnClearMessagesOccurred;
+                    this.StreamerClient.OnDeleteMessageOccurred -= ChatClient_OnDeleteMessageOccurred;
+                    this.StreamerClient.OnMessageOccurred -= ChatClient_OnMessageOccurred;
+                    this.StreamerClient.OnPollEndOccurred -= ChatClient_OnPollEndOccurred;
+                    this.StreamerClient.OnPollStartOccurred -= ChatClient_OnPollStartOccurred;
+                    this.StreamerClient.OnPurgeMessageOccurred -= ChatClient_OnPurgeMessageOccurred;
+                    this.StreamerClient.OnUserJoinOccurred -= ChatClient_OnUserJoinOccurred;
+                    this.StreamerClient.OnUserLeaveOccurred -= ChatClient_OnUserLeaveOccurred;
+                    this.StreamerClient.OnUserUpdateOccurred -= ChatClient_OnUserUpdateOccurred;
+                    this.StreamerClient.OnSkillAttributionOccurred -= Client_OnSkillAttributionOccurred;
+                    this.StreamerClient.OnDisconnectOccurred -= StreamerClient_OnDisconnectOccurred;
+                    if (ChannelSession.Settings.DiagnosticLogging)
+                    {
+                        this.StreamerClient.OnPacketSentOccurred -= WebSocketClient_OnPacketSentOccurred;
+                        this.StreamerClient.OnMethodOccurred -= WebSocketClient_OnMethodOccurred;
+                        this.StreamerClient.OnReplyOccurred -= WebSocketClient_OnReplyOccurred;
+                        this.StreamerClient.OnEventOccurred -= WebSocketClient_OnEventOccurred;
+                    }
+
+                    await this.RunAsync(this.StreamerClient.Disconnect());
+                }
+
+                this.StreamerClient = null;
+                if (this.cancellationTokenSource != null)
+                {
+                    this.cancellationTokenSource.Cancel();
+                    this.cancellationTokenSource = null;
+                }
+            });
         }
 
         public async Task<bool> ConnectBot()
         {
             if (ChannelSession.MixerBotConnection != null)
             {
-                return await this.RunAsync(async () =>
+                return await this.AttemptConnect(async () =>
                 {
-                    this.BotClient = await this.ConnectAndAuthenticateChatClient(ChannelSession.MixerBotConnection);
-                    if (this.BotClient != null)
+                    if (ChannelSession.MixerBotConnection != null)
                     {
-                        this.BotClient.OnMessageOccurred += BotChatClient_OnMessageOccurred;
-                        this.BotClient.OnDisconnectOccurred += BotClient_OnDisconnectOccurred;
-                        if (ChannelSession.Settings.DiagnosticLogging)
+                        this.BotClient = await this.ConnectAndAuthenticateChatClient(ChannelSession.MixerBotConnection);
+                        if (this.BotClient != null)
                         {
-                            this.BotClient.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
-                            this.BotClient.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
-                            this.BotClient.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
-                            this.BotClient.OnEventOccurred += WebSocketClient_OnEventOccurred;
+                            this.BotClient.OnMessageOccurred += BotChatClient_OnMessageOccurred;
+                            this.BotClient.OnDisconnectOccurred += BotClient_OnDisconnectOccurred;
+                            if (ChannelSession.Settings.DiagnosticLogging)
+                            {
+                                this.BotClient.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
+                                this.BotClient.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
+                                this.BotClient.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
+                                this.BotClient.OnEventOccurred += WebSocketClient_OnEventOccurred;
+                            }
+                            return true;
                         }
-                        return true;
+                        return false;
                     }
+                    await this.DisconnectBot();
                     return false;
                 });
             }
-            return false;
-        }
-
-        public async Task Disconnect()
-        {
-            await this.RunAsync(async () =>
-            {
-                if (this.Client != null)
-                {
-                    this.Client.OnClearMessagesOccurred -= ChatClient_OnClearMessagesOccurred;
-                    this.Client.OnDeleteMessageOccurred -= ChatClient_OnDeleteMessageOccurred;
-                    this.Client.OnMessageOccurred -= ChatClient_OnMessageOccurred;
-                    this.Client.OnPollEndOccurred -= ChatClient_OnPollEndOccurred;
-                    this.Client.OnPollStartOccurred -= ChatClient_OnPollStartOccurred;
-                    this.Client.OnPurgeMessageOccurred -= ChatClient_OnPurgeMessageOccurred;
-                    this.Client.OnUserJoinOccurred -= ChatClient_OnUserJoinOccurred;
-                    this.Client.OnUserLeaveOccurred -= ChatClient_OnUserLeaveOccurred;
-                    this.Client.OnUserUpdateOccurred -= ChatClient_OnUserUpdateOccurred;
-                    this.Client.OnSkillAttributionOccurred -= Client_OnSkillAttributionOccurred;
-                    this.Client.OnDisconnectOccurred -= StreamerClient_OnDisconnectOccurred;
-                    if (ChannelSession.Settings.DiagnosticLogging)
-                    {
-                        this.Client.OnPacketSentOccurred -= WebSocketClient_OnPacketSentOccurred;
-                        this.Client.OnMethodOccurred -= WebSocketClient_OnMethodOccurred;
-                        this.Client.OnReplyOccurred -= WebSocketClient_OnReplyOccurred;
-                        this.Client.OnEventOccurred -= WebSocketClient_OnEventOccurred;
-                    }
-
-                    await this.RunAsync(this.Client.Disconnect());
-
-                    this.backgroundThreadCancellationTokenSource.Cancel();
-                }
-                this.Client = null;
-            });
+            return true;
         }
 
         public async Task DisconnectBot()
@@ -134,191 +181,167 @@ namespace MixItUp.Base.Services.Mixer
 
         public async Task SendMessage(string message, bool sendAsStreamer = false)
         {
-            if (this.GetBotClient(sendAsStreamer) != null)
+            await this.RunAsync(async () =>
             {
-                message = this.SplitLargeMessage(message, out string subMessage);
-
-                await this.RunAsync(this.GetBotClient(sendAsStreamer).SendMessage(message));
-
-                // Adding delay to prevent messages from arriving in wrong order
-                await Task.Delay(250);
-
-                if (!string.IsNullOrEmpty(subMessage))
+                ChatClient client = this.GetChatClient(sendAsStreamer);
+                if (client != null)
                 {
-                    await this.SendMessage(subMessage, sendAsStreamer: sendAsStreamer);
+                    message = this.SplitLargeMessage(message, out string subMessage);
+
+                    await client.SendMessage(message);
+
+                    // Adding delay to prevent messages from arriving in wrong order
+                    await Task.Delay(250);
+
+                    if (!string.IsNullOrEmpty(subMessage))
+                    {
+                        await this.SendMessage(subMessage, sendAsStreamer: sendAsStreamer);
+                    }
                 }
-            }
+            });
         }
 
         public async Task Whisper(string username, string message, bool sendAsStreamer = false)
         {
-            if (!string.IsNullOrEmpty(username) && this.GetBotClient(sendAsStreamer) != null)
+            await this.RunAsync(async () =>
             {
-                message = this.SplitLargeMessage(message, out string subMessage);
-
-                await this.RunAsync(this.GetBotClient(sendAsStreamer).Whisper(username, message));
-
-                // Adding delay to prevent messages from arriving in wrong order
-                await Task.Delay(250);
-
-                if (!string.IsNullOrEmpty(subMessage))
+                ChatClient client = this.GetChatClient(sendAsStreamer);
+                if (client != null)
                 {
-                    await this.Whisper(username, subMessage, sendAsStreamer: sendAsStreamer);
+                    if (!string.IsNullOrEmpty(username))
+                    {
+                        message = this.SplitLargeMessage(message, out string subMessage);
+
+                        await client.Whisper(username, message);
+
+                        // Adding delay to prevent messages from arriving in wrong order
+                        await Task.Delay(250);
+
+                        if (!string.IsNullOrEmpty(subMessage))
+                        {
+                            await this.Whisper(username, subMessage, sendAsStreamer: sendAsStreamer);
+                        }
+                    }
                 }
-            }
+            });
         }
 
         public async Task<ChatMessageEventModel> WhisperWithResponse(string username, string message, bool sendAsStreamer = false)
         {
-            if (this.GetBotClient(sendAsStreamer) != null)
+            return await this.RunAsync(async () =>
             {
-                message = this.SplitLargeMessage(message, out string subMessage);
-
-                ChatMessageEventModel firstChatMessage = await this.RunAsync(this.GetBotClient(sendAsStreamer).WhisperWithResponse(username, message));
-
-                // Adding delay to prevent messages from arriving in wrong order
-                await Task.Delay(250);
-
-                if (!string.IsNullOrEmpty(subMessage))
+                ChatClient client = this.GetChatClient(sendAsStreamer);
+                if (client != null)
                 {
-                    await this.WhisperWithResponse(username, subMessage, sendAsStreamer: sendAsStreamer);
+                    message = this.SplitLargeMessage(message, out string subMessage);
+
+                    ChatMessageEventModel firstChatMessage = await client.WhisperWithResponse(username, message);
+
+                    // Adding delay to prevent messages from arriving in wrong order
+                    await Task.Delay(250);
+
+                    if (!string.IsNullOrEmpty(subMessage))
+                    {
+                        await this.WhisperWithResponse(username, subMessage, sendAsStreamer: sendAsStreamer);
+                    }
+
+                    return firstChatMessage;
                 }
-
-                return firstChatMessage;
-            }
-
-            return null;
+                return null;
+            });
         }
 
         public async Task DeleteMessage(ChatMessageViewModel message)
         {
-            if (this.Client != null)
+            await this.RunAsync(async () =>
             {
                 Logger.Log(LogLevel.Debug, string.Format("Deleting Message - {0}", message.PlainTextMessage));
 
-                await this.RunAsync(this.Client.DeleteMessage(Guid.Parse(message.ID)));
-            }
+                await this.StreamerClient.DeleteMessage(Guid.Parse(message.ID));
+            });
         }
 
         public async Task ClearMessages()
         {
-            if (this.Client != null)
+            await this.RunAsync(async () =>
             {
-                await this.RunAsync(this.Client.ClearMessages());
-            }
+                await this.StreamerClient.ClearMessages();
+            });
         }
 
         public async Task PurgeUser(string username)
         {
-            if (this.Client != null)
+            await this.RunAsync(async () =>
             {
-                await this.RunAsync(this.Client.PurgeUser(username));
-            }
+                await this.StreamerClient.PurgeUser(username);
+            });
         }
 
         public async Task TimeoutUser(string username, uint durationInSeconds)
         {
-            if (this.Client != null)
+            await this.RunAsync(async () =>
             {
-                await this.RunAsync(this.Client.TimeoutUser(username, durationInSeconds));
-            }
+                await this.StreamerClient.TimeoutUser(username, durationInSeconds);
+            });
         }
 
         public async Task BanUser(UserViewModel user)
         {
-            if (this.Client != null)
+            await this.RunAsync(async () =>
             {
                 await ChannelSession.MixerStreamerConnection.AddUserRoles(ChannelSession.MixerChannel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Banned });
                 await user.RefreshDetails(true);
-            }
+            });
         }
 
         public async Task UnBanUser(UserViewModel user)
         {
-            if (this.Client != null)
+            await this.RunAsync(async () =>
             {
                 await ChannelSession.MixerStreamerConnection.RemoveUserRoles(ChannelSession.MixerChannel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Banned });
                 await user.RefreshDetails(true);
-            }
+            });
         }
 
         public async Task ModUser(UserViewModel user)
         {
-            if (this.Client != null)
+            await this.RunAsync(async () =>
             {
                 await ChannelSession.MixerStreamerConnection.AddUserRoles(ChannelSession.MixerChannel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Mod });
                 await user.RefreshDetails(true);
-            }
+            });
         }
 
         public async Task UnModUser(UserViewModel user)
         {
-            if (this.Client != null)
+            await this.RunAsync(async () =>
             {
                 await ChannelSession.MixerStreamerConnection.RemoveUserRoles(ChannelSession.MixerChannel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Mod });
                 await user.RefreshDetails(true);
-            }
+            });
         }
 
         public async Task StartPoll(string question, IEnumerable<string> answers, uint lengthInSeconds)
         {
-            if (this.Client != null)
+            await this.RunAsync(async () =>
             {
-                await this.Client.StartVote(question, answers, lengthInSeconds);
-            }
+                await this.StreamerClient.StartVote(question, answers, lengthInSeconds);
+            });
         }
 
         public async Task<IEnumerable<ChatMessageEventModel>> GetChatHistory(uint maxMessages)
         {
-            if (this.Client != null)
+            return await this.RunAsync(async () =>
             {
-                return await this.Client.GetChatHistory(maxMessages);
-            }
-            return new List<ChatMessageEventModel>();
-        }
-
-        protected override async Task<bool> ConnectInternal()
-        {
-            if (ChannelSession.MixerStreamerConnection != null)
-            {
-                this.backgroundThreadCancellationTokenSource = new CancellationTokenSource();
-
-                this.Client = await this.ConnectAndAuthenticateChatClient(ChannelSession.MixerStreamerConnection);
-                if (this.Client != null)
+                if (this.StreamerClient != null)
                 {
-                    this.Client.OnClearMessagesOccurred += ChatClient_OnClearMessagesOccurred;
-                    this.Client.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
-                    this.Client.OnMessageOccurred += ChatClient_OnMessageOccurred;
-                    this.Client.OnPollEndOccurred += ChatClient_OnPollEndOccurred;
-                    this.Client.OnPollStartOccurred += ChatClient_OnPollStartOccurred;
-                    this.Client.OnPurgeMessageOccurred += ChatClient_OnPurgeMessageOccurred;
-                    this.Client.OnUserJoinOccurred += ChatClient_OnUserJoinOccurred;
-                    this.Client.OnUserLeaveOccurred += ChatClient_OnUserLeaveOccurred;
-                    this.Client.OnUserUpdateOccurred += ChatClient_OnUserUpdateOccurred;
-                    this.Client.OnSkillAttributionOccurred += Client_OnSkillAttributionOccurred;
-                    this.Client.OnDisconnectOccurred += StreamerClient_OnDisconnectOccurred;
-                    if (ChannelSession.Settings.DiagnosticLogging)
-                    {
-                        this.Client.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
-                        this.Client.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
-                        this.Client.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
-                        this.Client.OnEventOccurred += WebSocketClient_OnEventOccurred;
-                    }
-
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    Task.Run(async () => { await this.ChatterJoinLeaveBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    Task.Run(async () => { await this.ChatterRefreshBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
-                    return true;
+                    return await this.StreamerClient.GetChatHistory(maxMessages);
                 }
-                return false;
-            }
-            return false;
+                return new List<ChatMessageEventModel>();
+            });
         }
+
+        private ChatClient GetChatClient(bool sendAsStreamer = false) { return (this.BotClient != null && !sendAsStreamer) ? this.BotClient : this.StreamerClient; }
 
         private async Task<ChatClient> ConnectAndAuthenticateChatClient(MixerConnectionService connection)
         {
@@ -336,8 +359,6 @@ namespace MixItUp.Base.Services.Mixer
             }
             return null;
         }
-
-        private ChatClient GetBotClient(bool sendAsStreamer = false) { return (this.BotClient != null && !sendAsStreamer) ? this.BotClient : this.Client; }
 
         private string SplitLargeMessage(string message, out string subMessage)
         {
@@ -357,98 +378,80 @@ namespace MixItUp.Base.Services.Mixer
 
         #region Refresh Methods
 
-        private async Task ChatterJoinLeaveBackground()
+        private async Task ChatterJoinLeaveBackground(CancellationToken cancellationToken)
         {
-            await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
+            List<ChatUserEventModel> joinsToProcess = new List<ChatUserEventModel>();
+            await this.userJoinLeaveEventsSemaphore.WaitAndRelease(() =>
             {
-                List<ChatUserEventModel> joinsToProcess = new List<ChatUserEventModel>();
-                await this.userJoinLeaveEventsSemaphore.WaitAndRelease(() =>
+                for (int i = 0; i < userJoinLeaveEventsTotalToProcess && i < this.userJoinEvents.Count(); i++)
                 {
-                    for (int i = 0; i < userJoinLeaveEventsTotalToProcess && i < this.userJoinEvents.Count(); i++)
-                    {
-                        ChatUserEventModel chatUser = this.userJoinEvents.Values.First();
-                        joinsToProcess.Add(chatUser);
-                        this.userJoinEvents.Remove(chatUser.id);
-                    }
-                    return Task.FromResult(0);
-                });
-
-                if (joinsToProcess.Count > 0)
-                {
-                    IEnumerable<UserViewModel> processedUsers = await ChannelSession.ActiveUsers.AddOrUpdateUsers(joinsToProcess.Select(u => u.GetUser()));
-                    this.OnUsersJoinOccurred(this, processedUsers);
+                    ChatUserEventModel chatUser = this.userJoinEvents.Values.First();
+                    joinsToProcess.Add(chatUser);
+                    this.userJoinEvents.Remove(chatUser.id);
                 }
-
-                List<ChatUserEventModel> leavesToProcess = new List<ChatUserEventModel>();
-                await this.userJoinLeaveEventsSemaphore.WaitAndRelease(() =>
-                {
-                    for (int i = 0; i < userJoinLeaveEventsTotalToProcess && i < this.userLeaveEvents.Count(); i++)
-                    {
-                        ChatUserEventModel chatUser = this.userLeaveEvents.Values.First();
-                        leavesToProcess.Add(chatUser);
-                        this.userLeaveEvents.Remove(chatUser.id);
-                    }
-                    return Task.FromResult(0);
-                });
-
-                if (leavesToProcess.Count > 0)
-                {
-                    IEnumerable<UserViewModel> processedUsers = await ChannelSession.ActiveUsers.RemoveUsers(leavesToProcess.Select(u => u.id));
-                    this.OnUsersLeaveOccurred(this, processedUsers);
-                }
-
-                tokenSource.Token.ThrowIfCancellationRequested();
-
-                await Task.Delay(2500, tokenSource.Token);
-
-                tokenSource.Token.ThrowIfCancellationRequested();
+                return Task.FromResult(0);
             });
+
+            if (joinsToProcess.Count > 0)
+            {
+                IEnumerable<UserViewModel> processedUsers = await ChannelSession.ActiveUsers.AddOrUpdateUsers(joinsToProcess.Select(u => u.GetUser()));
+                this.OnUsersJoinOccurred(this, processedUsers);
+            }
+
+            List<ChatUserEventModel> leavesToProcess = new List<ChatUserEventModel>();
+            await this.userJoinLeaveEventsSemaphore.WaitAndRelease(() =>
+            {
+                for (int i = 0; i < userJoinLeaveEventsTotalToProcess && i < this.userLeaveEvents.Count(); i++)
+                {
+                    ChatUserEventModel chatUser = this.userLeaveEvents.Values.First();
+                    leavesToProcess.Add(chatUser);
+                    this.userLeaveEvents.Remove(chatUser.id);
+                }
+                return Task.FromResult(0);
+            });
+
+            if (leavesToProcess.Count > 0)
+            {
+                IEnumerable<UserViewModel> processedUsers = await ChannelSession.ActiveUsers.RemoveUsers(leavesToProcess.Select(u => u.id));
+                this.OnUsersLeaveOccurred(this, processedUsers);
+            }
         }
 
-        private async Task ChatterRefreshBackground()
+        private async Task ChatterRefreshBackground(CancellationToken cancellationToken)
         {
-            await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
-            {
-                await Task.Delay(300000, tokenSource.Token);
+            //IEnumerable<ChatUserModel> chatUsers = await ChannelSession.MixerStreamerConnection.GetChatUsers(ChannelSession.MixerChannel, int.MaxValue);
+            //chatUsers = chatUsers.Where(u => u.userId.HasValue);
+            //HashSet<uint> chatUserIDs = new HashSet<uint>(chatUsers.Select(u => u.userId.GetValueOrDefault()));
 
-                tokenSource.Token.ThrowIfCancellationRequested();
+            //IEnumerable<UserViewModel> existingUsers = await ChannelSession.ActiveUsers.GetAllUsers();
+            //HashSet<uint> existingUsersIDs = new HashSet<uint>(existingUsers.Select(u => u.ID));
 
-                //IEnumerable<ChatUserModel> chatUsers = await ChannelSession.MixerStreamerConnection.GetChatUsers(ChannelSession.MixerChannel, int.MaxValue);
-                //chatUsers = chatUsers.Where(u => u.userId.HasValue);
-                //HashSet<uint> chatUserIDs = new HashSet<uint>(chatUsers.Select(u => u.userId.GetValueOrDefault()));
+            //Dictionary<uint, ChatUserModel> usersToAdd = chatUsers.ToDictionary(u => u.userId.GetValueOrDefault(), u => u);
+            //List<uint> usersToRemove = new List<uint>();
 
-                //IEnumerable<UserViewModel> existingUsers = await ChannelSession.ActiveUsers.GetAllUsers();
-                //HashSet<uint> existingUsersIDs = new HashSet<uint>(existingUsers.Select(u => u.ID));
+            //foreach (uint userID in existingUsersIDs)
+            //{
+            //    usersToAdd.Remove(userID);
+            //    if (!chatUserIDs.Contains(userID))
+            //    {
+            //        usersToRemove.Add(userID);
+            //    }
+            //}
 
-                //Dictionary<uint, ChatUserModel> usersToAdd = chatUsers.ToDictionary(u => u.userId.GetValueOrDefault(), u => u);
-                //List<uint> usersToRemove = new List<uint>();
+            //foreach (ChatUserModel user in usersToAdd.Values)
+            //{
+            //    this.ChatClient_OnUserJoinOccurred(this, new ChatUserEventModel()
+            //    {
+            //        id = user.userId.GetValueOrDefault(),
+            //        username = user.userName,
+            //        roles = user.userRoles,
+            //    });
+            //}
 
-                //foreach (uint userID in existingUsersIDs)
-                //{
-                //    usersToAdd.Remove(userID);
-                //    if (!chatUserIDs.Contains(userID))
-                //    {
-                //        usersToRemove.Add(userID);
-                //    }
-                //}
-
-                //foreach (ChatUserModel user in usersToAdd.Values)
-                //{
-                //    this.ChatClient_OnUserJoinOccurred(this, new ChatUserEventModel()
-                //    {
-                //        id = user.userId.GetValueOrDefault(),
-                //        username = user.userName,
-                //        roles = user.userRoles,
-                //    });
-                //}
-
-                //foreach (uint userID in usersToRemove)
-                //{
-                //    this.ChatClient_OnUserLeaveOccurred(this, new ChatUserEventModel() { id = userID });
-                //}
-
-                tokenSource.Token.ThrowIfCancellationRequested();
-            });
+            //foreach (uint userID in usersToRemove)
+            //{
+            //    this.ChatClient_OnUserLeaveOccurred(this, new ChatUserEventModel() { id = userID });
+            //}
         }
 
         #endregion Refresh Methods
@@ -457,32 +460,14 @@ namespace MixItUp.Base.Services.Mixer
 
         private void ChatClient_OnMessageOccurred(object sender, ChatMessageEventModel e)
         {
-            ChatMessageViewModel message = new ChatMessageViewModel(e);
-            if (message != null)
-            {
-                this.OnMessageOccurred(sender, message);
-                if (message.IsChatSkill && message.IsInUsersChannel)
-                {
-                    if (SkillUsageModel.IsSparksChatSkill(message.ChatSkill))
-                    {
-                        GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, int>(message.User, (int)message.ChatSkill.cost));
-                    }
-                    else if (SkillUsageModel.IsEmbersChatSkill(message.ChatSkill))
-                    {
-                        GlobalEvents.EmberUseOccurred(new UserEmberUsageModel(message.User, (int)message.ChatSkill.cost, message.PlainTextMessage));
-                    }
-
-                    GlobalEvents.SkillUseOccurred(new SkillUsageModel(message.User, message.ChatSkill, message.PlainTextMessage));
-                }
-            }
+            this.OnMessageOccurred(sender, new ChatMessageViewModel(e));
         }
 
         private void BotChatClient_OnMessageOccurred(object sender, ChatMessageEventModel e)
         {
-            ChatMessageViewModel message = new ChatMessageViewModel(e);
-            if (message.IsWhisper)
+            if (!string.IsNullOrEmpty(e.target))
             {
-                this.OnMessageOccurred(sender, message);
+                this.OnMessageOccurred(sender, new ChatMessageViewModel(e));
             }
         }
 
@@ -512,7 +497,7 @@ namespace MixItUp.Base.Services.Mixer
 
         private void ChatClient_OnPollStartOccurred(object sender, ChatPollEventModel e) { }
 
-        private void ChatClient_OnPollEndOccurred(object sender, ChatPollEventModel e) { }
+        private void ChatClient_OnPollEndOccurred(object sender, ChatPollEventModel e) { this.OnPollEndOccurred(sender, e); }
 
         private async void ChatClient_OnUserJoinOccurred(object sender, ChatUserEventModel chatUser)
         {
@@ -534,61 +519,24 @@ namespace MixItUp.Base.Services.Mixer
 
         private async void ChatClient_OnUserUpdateOccurred(object sender, ChatUserEventModel chatUser)
         {
-            UserViewModel user = await ChannelSession.ActiveUsers.AddOrUpdateUser(chatUser.GetUser());
-            if (user != null)
-            {
-                this.OnUserUpdateOccurred(sender, user);
 
-                if (chatUser.roles != null && chatUser.roles.Count() > 0 && chatUser.roles.Where(r => !string.IsNullOrEmpty(r)).Contains(EnumHelper.GetEnumName(MixerRoleEnum.Banned)))
-                {
-                    if (ChannelSession.Constellation.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserBan)))
-                    {
-                        ChannelSession.Constellation.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserBan));
-                        await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserBan)), user);
-                    }
-                }
-            }
         }
 
         private async void Client_OnSkillAttributionOccurred(object sender, ChatSkillAttributionEventModel skillAttribution)
         {
-            if (!ChannelSession.Constellation.AvailableSkills.ContainsKey(skillAttribution.skill.skill_id))
-            {
-                ChatUserModel chatUser = skillAttribution.GetUser();
-                UserViewModel user = await ChannelSession.ActiveUsers.AddOrUpdateUser(chatUser);
-                if (user == null)
-                {
-                    user = new UserViewModel(chatUser);
-                }
-                else
-                {
-                    await user.RefreshDetails();
-                }
-                user.UpdateLastActivity();
 
-                string message = null;
-                if (skillAttribution.message != null && skillAttribution.message.message != null && skillAttribution.message.message.Length > 0)
-                {
-                    ChatMessageViewModel messageModel = new ChatMessageViewModel(skillAttribution.message, user);
-                    message = messageModel.PlainTextMessage;
-                }
-
-                GlobalEvents.SkillUseOccurred(new SkillUsageModel(user, skillAttribution.skill, message));
-            }
         }
 
         private async void StreamerClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
             ChannelSession.DisconnectionOccurred("Streamer Chat");
 
-            // Force background tasks to stop before reconnecting
-            this.backgroundThreadCancellationTokenSource.Cancel();
-
+            await this.DisconnectStreamer();
             do
             {
                 await Task.Delay(2500);
             }
-            while (!await this.Connect());
+            while (!await this.ConnectStreamer());
 
             ChannelSession.ReconnectionOccurred("Streamer Chat");
         }
@@ -597,6 +545,7 @@ namespace MixItUp.Base.Services.Mixer
         {
             ChannelSession.DisconnectionOccurred("Bot Chat");
 
+            await this.DisconnectBot();
             do
             {
                 await Task.Delay(2500);

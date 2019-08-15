@@ -57,7 +57,7 @@ namespace MixItUp.WPF.Controls.MainControls
                             ChatUserControl userControl = this.collection[insertIndex];
                             if (userControl != null)
                             {
-                                UserViewModel currentUser = userControl.User;
+                                UserViewModel currentUser = null; //userControl.User;
                                 if (currentUser != null)
                                 {
                                     if (!this.cachedUserRoles.ContainsKey(currentUser.ID))
@@ -80,7 +80,7 @@ namespace MixItUp.WPF.Controls.MainControls
                             }
                         }
 
-                        ChatUserControl control = new ChatUserControl(user);
+                        ChatUserControl control = null;// new ChatUserControl(user);
                         this.existingUsers[user.ID] = control;
 
                         if (insertIndex < this.collection.Count)
@@ -775,7 +775,7 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 ChatUserControl userControl = (ChatUserControl)this.UserList.SelectedItem;
                 this.UserList.SelectedIndex = -1;
-                await this.ShowUserDialog(userControl.User);
+                //await this.ShowUserDialog(userControl.User);
             }
         }
 

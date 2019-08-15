@@ -32,12 +32,12 @@ namespace MixItUp.WPF.Windows.OAuth
             this.Loaded += OAuthWebBrowserWindow_Loaded;
         }
 
-        private async void OAuthWebBrowserWindow_Loaded(object sender, RoutedEventArgs e)
+        private void OAuthWebBrowserWindow_Loaded(object sender, RoutedEventArgs e)
         {
             this.Browser.Navigating += Browser_Navigating;
             this.Browser.Navigate(this.oauthURL);
 
-            this.redirectPageText = await ChannelSession.Services.FileService.ReadFile(Path.Combine(ChannelSession.Services.FileService.GetApplicationDirectory(), OAuthServiceBase.LoginRedirectPageFileName));
+            this.redirectPageText = OAuthServiceBase.LoginRedirectPageHTML;
             this.redirectPageText = this.redirectPageText.Replace(LogInTextBoxPositionHTML, "left: 50%; top: 60%;");
         }
 

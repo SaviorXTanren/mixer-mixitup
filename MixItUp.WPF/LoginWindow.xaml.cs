@@ -199,7 +199,7 @@ namespace MixItUp.WPF
                 if (authenticationSuccessful)
                 {
                     IEnumerable<UserWithGroupsModel> users = await ChannelSession.MixerStreamerConnection.GetUsersWithRoles(ChannelSession.MixerChannel, MixerRoleEnum.Mod);
-                    if (users.Any(uwg => uwg.id.Equals(ChannelSession.MixerStreamerUser.id)) || Logger.IsDebug())
+                    if (users.Any(uwg => uwg.id.Equals(ChannelSession.MixerStreamerUser.id)) || ChannelSession.IsDebug())
                     {
                         ShowMainWindow(new MainWindow());
                         this.Hide();

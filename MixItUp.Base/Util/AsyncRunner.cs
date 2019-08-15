@@ -1,7 +1,7 @@
-﻿using Mixer.Base.Util;
-using StreamingClient.Base.Util;
+﻿using StreamingClient.Base.Util;
 using System;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Util
@@ -116,6 +116,30 @@ namespace MixItUp.Base.Util
             {
                 Logger.Log(ex, includeStackTrace: true);
             }
+        }
+
+        public static void RunBackgroundTask(CancellationToken token, Func<CancellationToken, Task> backgroundTask, int delayInSeconds = 0)
+        {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            Task.Run(async () =>
+            {
+                while (!token.IsCancellationRequested)
+                {
+                    try
+                    {
+                        await backgroundTask(token);
+
+                        if (delayInSeconds > 0 && !token.IsCancellationRequested)
+                        {
+                            await Task.Delay(delayInSeconds, token);
+                        }
+                    }
+                    catch (ThreadAbortException) { return; }
+                    catch (OperationCanceledException) { return; }
+                    catch (Exception ex) { Logger.Log(ex); }
+                }
+            });
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
     }
 }

@@ -17,19 +17,12 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="10" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <UsersControls:UserProfileAvatarControl Grid.Column="0" DataContext="{Binding User}" Size="16" VerticalAlignment="Center" />
+        <local:ChatUserControl DataContext="{Binding User}" Grid.Column="0" />
 
-        <Image Source="{Binding User.SubscriberBadgeLink}" Visibility="{Binding User.IsMixerSubscriber}" Grid.Column="1" Margin="0,0,0,0" VerticalAlignment="Center" />
-
-        <TextBlock Grid.Column="3" Text="{Binding User.UserName}" Foreground="{Binding User.PrimaryRoleColorName, Converter={StaticResource ColorBrushConverter}}" VerticalAlignment="Center" />
-
-        <Grid Grid.Column="4" Visibility="{Binding IsWhisper, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}" VerticalAlignment="Center">
+        <Grid Grid.Column="1" Visibility="{Binding IsWhisper, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}" VerticalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3" />
                 <ColumnDefinition Width="Auto" />
@@ -47,6 +40,6 @@
 
         </Grid>
 
-        <TextBlock Grid.Column="5" VerticalAlignment="Center">:</TextBlock>
+        <TextBlock Grid.Column="2" VerticalAlignment="Center">:</TextBlock>
     </Grid>
 </UserControl>

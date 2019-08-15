@@ -222,7 +222,7 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 MixerRoleEnum role = this.PrimaryRole;
-                if (role == MixerRoleEnum.Follower)
+                if (role < MixerRoleEnum.Subscriber)
                 {
                     role = MixerRoleEnum.User;
                 }

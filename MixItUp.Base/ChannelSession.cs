@@ -129,6 +129,15 @@ namespace MixItUp.Base
 
         public static LockedDictionary<string, double> Counters { get; private set; }
 
+        public static bool IsDebug()
+        {
+            #if DEBUG
+                return true;
+            #else
+                return false;
+            #endif
+        }
+
         public static IEnumerable<PermissionsCommandBase> AllEnabledChatCommands
         {
             get
@@ -229,7 +238,7 @@ namespace MixItUp.Base
         {
             try
             {
-                MixerConnection connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ChannelSession.ClientID, scopes, false, loginSuccessHtmlPageFilePath: OAuthServiceBase.LoginRedirectPageFileName);
+                MixerConnection connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ChannelSession.ClientID, scopes, false, successResponse: OAuthServiceBase.LoginRedirectPageHTML);
                 if (connection != null)
                 {
                     ChannelSession.MixerStreamerConnection = new MixerConnectionService(connection);
@@ -275,7 +284,7 @@ namespace MixItUp.Base
         {
             try
             {
-                MixerConnection connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ChannelSession.ClientID, ChannelSession.BotScopes, false, loginSuccessHtmlPageFilePath: OAuthServiceBase.LoginRedirectPageFileName);
+                MixerConnection connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ChannelSession.ClientID, ChannelSession.BotScopes, false, successResponse: OAuthServiceBase.LoginRedirectPageHTML);
                 if (connection != null)
                 {
                     ChannelSession.MixerBotConnection = new MixerConnectionService(connection);
@@ -429,7 +438,7 @@ namespace MixItUp.Base
 
                     MixerChatService mixerChatService = new MixerChatService();
 
-                    if (!await ChannelSession.Chat.Connect() || !await ChannelSession.Constellation.Connect() || !await mixerChatService.Connect())
+                    if (!await ChannelSession.Chat.Connect() || !await ChannelSession.Constellation.Connect() || !await mixerChatService.ConnectStreamer())
                     {
                         return false;
                     }

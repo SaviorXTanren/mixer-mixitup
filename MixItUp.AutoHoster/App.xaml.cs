@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Desktop.Files;
 using MixItUp.Desktop.Services;
@@ -17,18 +18,20 @@ namespace MixItUp.AutoHoster
     /// </summary>
     public partial class App : Application
     {
+        public static IFileService FileService { get; private set; }
+
         private bool crashObtained;
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            WindowsFileService fileService = new WindowsFileService();
-            FileLoggerHandler.Initialize(fileService);
-            SerializerHelper.Initialize(fileService);
+            App.FileService = new WindowsFileService();
+            FileLoggerHandler.Initialize(App.FileService);
+            SerializerHelper.Initialize(App.FileService);
 
             Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
-            Logger.Log("Auto Hoster Application Version: " + fileService.GetApplicationVersion());
+            Logger.Log("Auto Hoster Application Version: " + App.FileService.GetApplicationVersion());
 
             base.OnStartup(e);
         }

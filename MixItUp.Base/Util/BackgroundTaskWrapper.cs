@@ -7,6 +7,7 @@ namespace MixItUp.Base.Util
 {
     public static class BackgroundTaskWrapper
     {
+        [Obsolete]
         public static async Task RunBackgroundTask(CancellationTokenSource tokenSource, Func<CancellationTokenSource, Task> backgroundTask)
         {
             while (!tokenSource.IsCancellationRequested)

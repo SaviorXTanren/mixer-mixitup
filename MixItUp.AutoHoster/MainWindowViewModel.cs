@@ -2,6 +2,7 @@
 using Mixer.Base.Clients;
 using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
@@ -160,7 +161,7 @@ namespace MixItUp.AutoHoster
                 {
                     this.connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ClientID,
                         new List<OAuthClientScopeEnum>() { OAuthClientScopeEnum.channel__details__self, OAuthClientScopeEnum.channel__update__self, OAuthClientScopeEnum.chat__connect, OAuthClientScopeEnum.chat__chat, OAuthClientScopeEnum.chat__whisper },
-                        loginSuccessHtmlPageFilePath: "LoginRedirectPage.html");
+                        successResponse: OAuthServiceBase.LoginRedirectPageHTML);
                 }
                 catch (Exception ex) { Logger.Log(ex); }
                 if (this.connection == null)
