@@ -96,12 +96,15 @@ namespace MixItUp.Base.Services
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             Task.Run(async () =>
             {
-                List<UserViewModel> users = new List<UserViewModel>();
-                foreach (ChatUserModel chatUser in await ChannelSession.MixerStreamerConnection.GetChatUsers(ChannelSession.MixerChannel, int.MaxValue))
+                await ChannelSession.MixerStreamerConnection.GetChatUsers(ChannelSession.MixerChannel, async (collection) =>
                 {
-                    users.Add(new UserViewModel(chatUser));
-                }
-                await this.UsersJoined(users);
+                    List<UserViewModel> users = new List<UserViewModel>();
+                    foreach (ChatUserModel chatUser in collection)
+                    {
+                        users.Add(new UserViewModel(chatUser));
+                    }
+                    await this.UsersJoined(users);
+                }, int.MaxValue);
             });
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }

@@ -413,39 +413,39 @@ namespace MixItUp.Base.Services.Mixer
 
                 tokenSource.Token.ThrowIfCancellationRequested();
 
-                IEnumerable<ChatUserModel> chatUsers = await ChannelSession.MixerStreamerConnection.GetChatUsers(ChannelSession.MixerChannel, int.MaxValue);
-                chatUsers = chatUsers.Where(u => u.userId.HasValue);
-                HashSet<uint> chatUserIDs = new HashSet<uint>(chatUsers.Select(u => u.userId.GetValueOrDefault()));
+                //IEnumerable<ChatUserModel> chatUsers = await ChannelSession.MixerStreamerConnection.GetChatUsers(ChannelSession.MixerChannel, int.MaxValue);
+                //chatUsers = chatUsers.Where(u => u.userId.HasValue);
+                //HashSet<uint> chatUserIDs = new HashSet<uint>(chatUsers.Select(u => u.userId.GetValueOrDefault()));
 
-                IEnumerable<UserViewModel> existingUsers = await ChannelSession.ActiveUsers.GetAllUsers();
-                HashSet<uint> existingUsersIDs = new HashSet<uint>(existingUsers.Select(u => u.ID));
+                //IEnumerable<UserViewModel> existingUsers = await ChannelSession.ActiveUsers.GetAllUsers();
+                //HashSet<uint> existingUsersIDs = new HashSet<uint>(existingUsers.Select(u => u.ID));
 
-                Dictionary<uint, ChatUserModel> usersToAdd = chatUsers.ToDictionary(u => u.userId.GetValueOrDefault(), u => u);
-                List<uint> usersToRemove = new List<uint>();
+                //Dictionary<uint, ChatUserModel> usersToAdd = chatUsers.ToDictionary(u => u.userId.GetValueOrDefault(), u => u);
+                //List<uint> usersToRemove = new List<uint>();
 
-                foreach (uint userID in existingUsersIDs)
-                {
-                    usersToAdd.Remove(userID);
-                    if (!chatUserIDs.Contains(userID))
-                    {
-                        usersToRemove.Add(userID);
-                    }
-                }
+                //foreach (uint userID in existingUsersIDs)
+                //{
+                //    usersToAdd.Remove(userID);
+                //    if (!chatUserIDs.Contains(userID))
+                //    {
+                //        usersToRemove.Add(userID);
+                //    }
+                //}
 
-                foreach (ChatUserModel user in usersToAdd.Values)
-                {
-                    this.ChatClient_OnUserJoinOccurred(this, new ChatUserEventModel()
-                    {
-                        id = user.userId.GetValueOrDefault(),
-                        username = user.userName,
-                        roles = user.userRoles,
-                    });
-                }
+                //foreach (ChatUserModel user in usersToAdd.Values)
+                //{
+                //    this.ChatClient_OnUserJoinOccurred(this, new ChatUserEventModel()
+                //    {
+                //        id = user.userId.GetValueOrDefault(),
+                //        username = user.userName,
+                //        roles = user.userRoles,
+                //    });
+                //}
 
-                foreach (uint userID in usersToRemove)
-                {
-                    this.ChatClient_OnUserLeaveOccurred(this, new ChatUserEventModel() { id = userID });
-                }
+                //foreach (uint userID in usersToRemove)
+                //{
+                //    this.ChatClient_OnUserLeaveOccurred(this, new ChatUserEventModel() { id = userID });
+                //}
 
                 tokenSource.Token.ThrowIfCancellationRequested();
             });

@@ -8,7 +8,7 @@ namespace MixItUp.Base.Util
 {
     public static class AsyncRunner
     {
-        public static async Task RunAsync(Task task)
+        public static async Task RunAsync(Task task, bool logNotFoundException = true)
         {
             try
             {
@@ -16,6 +16,14 @@ namespace MixItUp.Base.Util
             }
             catch (Exception ex)
             {
+                if (!logNotFoundException && ex is HttpRestRequestException)
+                {
+                    HttpRestRequestException restEx = (HttpRestRequestException)ex;
+                    if (restEx.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        return;
+                    }
+                }
                 Logger.Log(ex, includeStackTrace: true);
             }
         }

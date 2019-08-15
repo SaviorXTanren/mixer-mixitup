@@ -275,14 +275,18 @@ namespace MixItUp.Base.Model.Overlay
         private async Task UpdateSubscribers()
         {
             this.userSubDates.Clear();
-            foreach (UserWithGroupsModel userWithGroups in await ChannelSession.MixerStreamerConnection.GetUsersWithRoles(ChannelSession.MixerChannel, MixerRoleEnum.Subscriber))
+            await ChannelSession.MixerStreamerConnection.GetUsersWithRoles(ChannelSession.MixerChannel, MixerRoleEnum.Subscriber, (collection) =>
             {
-                DateTimeOffset? subDate = userWithGroups.GetSubscriberDate();
-                if (subDate.HasValue)
+                foreach (UserWithGroupsModel userWithGroups in collection)
                 {
-                    this.userSubDates[new UserViewModel(userWithGroups)] = subDate.GetValueOrDefault();
+                    DateTimeOffset? subDate = userWithGroups.GetSubscriberDate();
+                    if (subDate.HasValue)
+                    {
+                        this.userSubDates[new UserViewModel(userWithGroups)] = subDate.GetValueOrDefault();
+                    }
                 }
-            }
+                return Task.FromResult(0);
+            });
 
             List<OverlayListIndividualItemModel> items = new List<OverlayListIndividualItemModel>();
 

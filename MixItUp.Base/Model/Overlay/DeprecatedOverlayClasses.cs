@@ -1263,15 +1263,6 @@ namespace MixItUp.Base.Model.Overlay
 
             if (this.LeaderboardType == LeaderboardTypeEnum.Subscribers)
             {
-                foreach (UserWithGroupsModel userWithGroups in await ChannelSession.MixerStreamerConnection.GetUsersWithRoles(ChannelSession.MixerChannel, MixerRoleEnum.Subscriber))
-                {
-                    DateTimeOffset? subDate = userWithGroups.GetSubscriberDate();
-                    if (subDate.HasValue)
-                    {
-                        userSubDates.Add(new UserViewModel(userWithGroups), subDate.GetValueOrDefault());
-                    }
-                }
-
                 GlobalEvents.OnSubscribeOccurred += GlobalEvents_OnSubscribeOccurred;
                 GlobalEvents.OnResubscribeOccurred += GlobalEvents_OnResubscribeOccurred;
             }

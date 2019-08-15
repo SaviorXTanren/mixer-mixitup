@@ -80,7 +80,7 @@ namespace MixItUp.Base.Actions
                     BroadcastModel broadcast = await ChannelSession.MixerStreamerConnection.GetCurrentBroadcast();
                     if (broadcast != null)
                     {
-                        clip = await ChannelSession.Connection.CreateClip(new ClipRequestModel()
+                        clip = await ChannelSession.MixerStreamerConnection.CreateClip(new ClipRequestModel()
                         {
                             broadcastId = broadcast.id.ToString(),
                             highlightTitle = clipName,

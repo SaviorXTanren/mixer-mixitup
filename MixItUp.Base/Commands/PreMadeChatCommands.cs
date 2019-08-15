@@ -769,12 +769,12 @@ namespace MixItUp.Base.Commands
                         GameTypeModel newGame = null;
                         if (arguments.Count() == 1 && uint.TryParse(arguments.ElementAt(0), out uint gameID))
                         {
-                            newGame = await ChannelSession.Connection.GetGameType(gameID);
+                            newGame = await ChannelSession.MixerStreamerConnection.GetGameType(gameID);
                         }
                         else
                         {
                             string newGameName = string.Join(" ", arguments);
-                            IEnumerable<GameTypeModel> games = await ChannelSession.Connection.GetGameTypes(newGameName);
+                            IEnumerable<GameTypeModel> games = await ChannelSession.MixerStreamerConnection.GetGameTypes(newGameName);
 
                             newGame = games.FirstOrDefault(g => g.name.Equals(newGameName, StringComparison.CurrentCultureIgnoreCase));
                         }

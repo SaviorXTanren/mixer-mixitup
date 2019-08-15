@@ -206,10 +206,13 @@ namespace MixItUp.WPF.Controls.Settings
                 {
                     if (await MessageBoxHelper.ShowConfirmationDialog("This will unban all currently banned users from your channel. This will take some time to complete, are you sure you wish to do this?"))
                     {
-                        foreach (UserWithGroupsModel user in await ChannelSession.MixerStreamerConnection.GetUsersWithRoles(ChannelSession.MixerChannel, MixerRoleEnum.Banned))
+                        await ChannelSession.MixerStreamerConnection.GetUsersWithRoles(ChannelSession.MixerChannel, MixerRoleEnum.Banned, async (collection) =>
                         {
-                            await ChannelSession.MixerStreamerConnection.RemoveUserRoles(ChannelSession.MixerChannel, user, new List<MixerRoleEnum>() { MixerRoleEnum.Banned });
-                        }
+                            foreach (UserWithGroupsModel user in collection)
+                            {
+                                await ChannelSession.MixerStreamerConnection.RemoveUserRoles(ChannelSession.MixerChannel, user, new List<MixerRoleEnum>() { MixerRoleEnum.Banned });
+                            }
+                        });
                     }
                 }
                 else

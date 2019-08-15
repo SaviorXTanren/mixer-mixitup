@@ -11,7 +11,7 @@ namespace MixItUp.Base.Services.Mixer
     {
         public bool ShouldRetry { get; set; } = true;
 
-        public async Task RunAsync(Task task) { await AsyncRunner.RunAsync(task); }
+        public async Task RunAsync(Task task, bool logNotFoundException = true) { await AsyncRunner.RunAsync(task, logNotFoundException); }
 
         public async Task<T> RunAsync<T>(Task<T> task, bool logNotFoundException = true) { return await AsyncRunner.RunAsync(task, logNotFoundException); }
 

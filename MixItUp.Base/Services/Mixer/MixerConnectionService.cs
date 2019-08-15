@@ -72,21 +72,19 @@ namespace MixItUp.Base.Services.Mixer
 
         public async Task<IEnumerable<UserWithGroupsModel>> GetUsersWithRoles(ChannelModel channel, MixerRoleEnum role) { return await this.RunAsync(this.Connection.Channels.GetUsersWithRoles(channel, role.ToString(), int.MaxValue), logNotFoundException: false); }
 
+        public async Task GetUsersWithRoles(ChannelModel channel, MixerRoleEnum role, Func<IEnumerable<UserWithGroupsModel>, Task> processor) { await this.RunAsync(this.Connection.Channels.GetUsersWithRoles(channel, role.ToString(), processor, int.MaxValue), logNotFoundException: false); }
+
         public async Task<PrivatePopulatedUserModel> GetCurrentUser() { return await this.RunAsync(this.Connection.Users.GetCurrentUser()); }
 
         public async Task<ChatUserModel> GetChatUser(ChannelModel channel, uint userID) { return await this.RunAsync(this.Connection.Chats.GetUser(channel, userID), logNotFoundException: false); }
 
-        public async Task<IEnumerable<ChatUserModel>> GetChatUsers(ChannelModel channel, uint maxResults = 1) { return await this.RunAsync(this.Connection.Chats.GetUsers(channel, maxResults)); }
+        public async Task GetChatUsers(ChannelModel channel, Func<IEnumerable<ChatUserModel>, Task> processor, uint maxResults = 1) { await this.RunAsync(this.Connection.Chats.GetUsers(channel, processor, maxResults)); }
 
         public async Task<ExpandedChannelModel> GetChannel(string channelName) { return await this.RunAsync(this.Connection.Channels.GetChannel(channelName)); }
 
         public async Task<ExpandedChannelModel> GetChannel(uint channelID) { return await this.RunAsync(this.Connection.Channels.GetChannel(channelID)); }
 
         public async Task<ExpandedChannelModel> GetChannel(ChannelModel channel) { return await this.RunAsync(this.Connection.Channels.GetChannel(channel.id)); }
-
-        public async Task<IEnumerable<ExpandedChannelModel>> GetChannels(uint maxResults = 1) { return await this.RunAsync(this.Connection.Channels.GetChannels(maxResults)); }
-
-        public async Task<IEnumerable<ExpandedChannelModel>> GetChannelsFromUsers(IEnumerable<uint> userIDs) { return await this.RunAsync(this.Connection.Channels.GetChannelsFromUsers(userIDs)); }
 
         public async Task<IEnumerable<EmoticonPackModel>> GetEmoticons(ChannelModel channel, UserModel user = null) { return await this.RunAsync(this.Connection.Channels.GetEmoticons(channel, user)); }
 
@@ -109,10 +107,6 @@ namespace MixItUp.Base.Services.Mixer
         public async Task<IEnumerable<ChannelModel>> GetChannelsByGameTypes(GameTypeSimpleModel gameType, uint maxResults = 1) { return await this.RunAsync(this.Connection.GameTypes.GetChannelsByGameType(gameType, maxResults)); }
 
         public async Task<DateTimeOffset?> CheckIfFollows(ChannelModel channel, UserModel user) { return await this.RunAsync(this.Connection.Channels.CheckIfFollows(channel, user)); }
-
-        public async Task<Dictionary<uint, DateTimeOffset?>> CheckIfFollows(ChannelModel channel, IEnumerable<UserModel> users) { return await this.RunAsync(this.Connection.Channels.CheckIfFollows(channel, users)); }
-
-        public async Task<Dictionary<uint, DateTimeOffset?>> CheckIfUsersHaveRole(ChannelModel channel, IEnumerable<UserModel> users, MixerRoleEnum role) { return await this.RunAsync(this.Connection.Channels.CheckIfUsersHaveRole(channel, users, EnumHelper.GetEnumName(role))); }
 
         public async Task<CostreamModel> GetCurrentCostream() { return await this.RunAsync(this.Connection.Costream.GetCurrentCostream()); }
 
