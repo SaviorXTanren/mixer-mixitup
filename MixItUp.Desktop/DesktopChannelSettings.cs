@@ -701,6 +701,25 @@ namespace MixItUp.Desktop
                     new SQLiteParameter("@CurrencyAmounts", value: u.GetCurrencyAmountsString()), new SQLiteParameter("@InventoryAmounts", value: u.GetInventoryAmountsString()),
                     new SQLiteParameter("@CustomCommands", value: u.GetCustomCommandsString()), new SQLiteParameter("@Options", value: u.GetOptionsString()), new SQLiteParameter("@ID", value: (int)u.ID) }));
             }
+
+            // Clear out unused Cooldown Groups and Command Groups
+            var allUsedCooldownGroupNames = this.InteractiveCommands.Select(c => c.Requirements?.Cooldown?.GroupName).Distinct();
+            var allUnusedCooldownGroupNames = this.CooldownGroups.ToDictionary().Where(c => !allUsedCooldownGroupNames.Contains(c.Key, StringComparer.InvariantCultureIgnoreCase));
+            foreach(var unused in allUnusedCooldownGroupNames)
+            {
+                this.CooldownGroups.Remove(unused.Key);
+            }
+
+            var allUsedCommandGroupNames = 
+                this.ChatCommands.Select(c => c.GroupName)
+                .Union(this.ActionGroupCommands.Select(a=>a.GroupName))
+                .Union(this.TimerCommands.Select(a => a.GroupName))
+                .Distinct();
+            var allUnusedCommandGroupNames = this.CommandGroups.Where(c => !allUsedCommandGroupNames.Contains(c.Key, StringComparer.InvariantCultureIgnoreCase));
+            foreach (var unused in allUnusedCommandGroupNames)
+            {
+                this.CommandGroups.Remove(unused.Key);
+            }
         }
 
         public Version GetLatestVersion() { return Assembly.GetEntryAssembly().GetName().Version; }

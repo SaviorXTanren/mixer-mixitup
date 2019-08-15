@@ -74,8 +74,6 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         private bool GoalReached { get; set; }
 
-        private int totalFollowers = 0;
-
         private bool refreshMilestone;
 
         public OverlayProgressBarItemModel() : base() { }
@@ -124,7 +122,7 @@ namespace MixItUp.Base.Model.Overlay
 
             if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Followers)
             {
-                totalFollowers = (int)ChannelSession.MixerChannel.numFollowers;
+                this.CurrentAmount = (int)ChannelSession.Channel.numFollowers;
 
                 GlobalEvents.OnFollowOccurred += GlobalEvents_OnFollowOccurred;
                 GlobalEvents.OnUnfollowOccurred += GlobalEvents_OnUnfollowOccurred;
@@ -201,10 +199,9 @@ namespace MixItUp.Base.Model.Overlay
 
             if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Followers)
             {
-                amount = this.totalFollowers;
-                if (this.StartAmount >= 0)
+                if (this.StartAmount > 0)
                 {
-                    amount = this.totalFollowers - this.CurrentAmount;
+                    amount = this.CurrentAmount - this.StartAmount;
                 }
             }
             else if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Milestones)

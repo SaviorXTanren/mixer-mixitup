@@ -191,15 +191,7 @@ namespace MixItUp.WPF.Controls.Actions
                 }
                 else if (type == StreamingActionTypeEnum.StartStopStream)
                 {
-                    if (software == StreamingSoftwareTypeEnum.XSplit)
-                    {
-                        this.FeatureNotSupportedGrid.Visibility = Visibility.Visible;
-                        return;
-                    }
-                    else
-                    {
-                        // Do nothing...
-                    }
+                    // Do nothing...
                 }
                 else if (type == StreamingActionTypeEnum.SaveReplayBuffer)
                 {

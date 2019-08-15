@@ -10,6 +10,7 @@ using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.WebSockets;
 using System.Security.Principal;
@@ -142,7 +143,7 @@ namespace MixItUp.Overlay
             this.isBatching = false;
             if (batchPackets.Count > 0)
             {
-                await this.webSocketServer.Send(new OverlayPacket("Batch", JArray.FromObject(this.batchPackets)));
+                await this.webSocketServer.Send(new OverlayPacket("Batch", JArray.FromObject(this.batchPackets.ToList())));
             }
             this.batchPackets.Clear();
         }

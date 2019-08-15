@@ -56,7 +56,7 @@ namespace MixItUp.Base.Actions
                 try
                 {
                     // Process Math
-                    CalculationEngine engine = new CalculationEngine();
+                    CalculationEngine engine = new CalculationEngine(new System.Globalization.CultureInfo("en-US"));
                     engine.AddFunction("random", Random);
                     engine.AddFunction("randomrange", RandomRange);
 

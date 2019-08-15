@@ -71,7 +71,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
                 this.NotifyPropertyChanged("CanSetStartingAmount");
             }
         }
-        protected bool totalFollowers;
+        protected bool totalFollowers = true;
 
         public string ResetAfterDaysString
         {
