@@ -625,7 +625,7 @@ namespace MixItUp.Base
 
                 ChannelSession.MixerBotConnection.Initialize();
 
-                await ChannelSession.Chat.ConnectBot();
+                await ChannelSession.Services.ChatService.MixerChatService.ConnectBot();
 
                 await ChannelSession.SaveSettings();
 

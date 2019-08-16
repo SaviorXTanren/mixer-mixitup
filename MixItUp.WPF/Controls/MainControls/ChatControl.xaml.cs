@@ -33,6 +33,12 @@ namespace MixItUp.WPF.Controls.MainControls
             this.DataContext = this.viewModel;
         }
 
+        protected override async Task OnVisibilityChanged()
+        {
+            await this.viewModel.OnVisible();
+            await base.OnVisibilityChanged();
+        }
+
         private void ViewModel_ScrollingLockChanged(object sender, System.EventArgs e)
         {
             this.ChatLockButtonIcon.Kind = (this.viewModel.IsScrollingLocked) ? MaterialDesignThemes.Wpf.PackIconKind.LockOutline : MaterialDesignThemes.Wpf.PackIconKind.LockOpenOutline;
@@ -53,7 +59,20 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
-        private void SendChatMessageButton_Click(object sender, RoutedEventArgs e)
+        private void ChatMessageTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                this.viewModel.SendMessageText = this.ChatMessageTextBox.Text;
+                this.viewModel.SendMessageCommand.Execute(null);
+            }
+        }
+
+        private void ChatMessageTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+        }
+
+        private void ChatMessageTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
         }
 
@@ -82,18 +101,6 @@ namespace MixItUp.WPF.Controls.MainControls
         private void ChatLockButton_MouseLeave(object sender, MouseEventArgs e) { this.ChatLockButton.Opacity = 0.3; }
 
         private void ChatLockButton_Click(object sender, RoutedEventArgs e)
-        {
-        }
-
-        private void ChatMessageTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-        }
-
-        private void ChatMessageTextBox_KeyDown(object sender, KeyEventArgs e)
-        {
-        }
-
-        private void ChatMessageTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
         }
 

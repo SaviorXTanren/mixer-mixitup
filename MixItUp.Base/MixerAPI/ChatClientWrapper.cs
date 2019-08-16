@@ -40,7 +40,9 @@ namespace MixItUp.Base.MixerAPI
 
         public bool DisableChat { get; set; }
 
+        [Obsolete]
         public ChatClient Client { get; private set; }
+        [Obsolete]
         public ChatClient BotClient { get; private set; }
 
         private HashSet<uint> userEntranceCommands = new HashSet<uint>();

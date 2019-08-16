@@ -20,6 +20,8 @@ namespace MixItUp.Base.Services
 {
     public interface IChatService
     {
+        IMixerChatService MixerChatService { get; }
+
         Task Initialize(MixerChatService mixerChatService);
 
         bool DisableChat { get; set; }
@@ -67,7 +69,7 @@ namespace MixItUp.Base.Services
         private SemaphoreSlim whisperNumberLock = new SemaphoreSlim(1);
         private Dictionary<string, int> whisperMap = new Dictionary<string, int>();
 
-        private MixerChatService mixerChatService;
+        public IMixerChatService MixerChatService { get; private set; }
 
         private string currentChatEventLogFilePath;
 
@@ -75,21 +77,21 @@ namespace MixItUp.Base.Services
 
         public async Task Initialize(MixerChatService mixerChatService)
         {
-            this.mixerChatService = mixerChatService;
+            this.MixerChatService = mixerChatService;
 
             await ChannelSession.Services.FileService.CreateDirectory(ChatEventLogDirectoryName);
             this.currentChatEventLogFilePath = Path.Combine(ChatEventLogDirectoryName, string.Format(ChatEventLogFileNameFormat, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture)));
 
-            this.mixerChatService.OnMessageOccurred += MixerChatService_OnMessageOccurred;
-            this.mixerChatService.OnDeleteMessageOccurred += MixerChatService_OnDeleteMessageOccurred;
-            this.mixerChatService.OnClearMessagesOccurred += MixerChatService_OnClearMessagesOccurred;
-            this.mixerChatService.OnUsersJoinOccurred += MixerChatService_OnUsersJoinOccurred;
-            this.mixerChatService.OnUserUpdateOccurred += MixerChatService_OnUserUpdateOccurred;
-            this.mixerChatService.OnUsersLeaveOccurred += MixerChatService_OnUsersLeaveOccurred;
-            this.mixerChatService.OnUserPurgeOccurred += MixerChatService_OnUserPurgeOccurred;
-            this.mixerChatService.OnUserBanOccurred += MixerChatService_OnUserBanOccurred;
+            this.MixerChatService.OnMessageOccurred += MixerChatService_OnMessageOccurred;
+            this.MixerChatService.OnDeleteMessageOccurred += MixerChatService_OnDeleteMessageOccurred;
+            this.MixerChatService.OnClearMessagesOccurred += MixerChatService_OnClearMessagesOccurred;
+            this.MixerChatService.OnUsersJoinOccurred += MixerChatService_OnUsersJoinOccurred;
+            this.MixerChatService.OnUserUpdateOccurred += MixerChatService_OnUserUpdateOccurred;
+            this.MixerChatService.OnUsersLeaveOccurred += MixerChatService_OnUsersLeaveOccurred;
+            this.MixerChatService.OnUserPurgeOccurred += MixerChatService_OnUserPurgeOccurred;
+            this.MixerChatService.OnUserBanOccurred += MixerChatService_OnUserBanOccurred;
 
-            foreach (ChatMessageEventModel message in await this.mixerChatService.GetChatHistory(50))
+            foreach (ChatMessageEventModel message in await this.MixerChatService.GetChatHistory(50))
             {
                 await this.AddMessage(new ChatMessageViewModel(message));
             }
@@ -114,7 +116,7 @@ namespace MixItUp.Base.Services
         {
             if (platform == PlatformTypeEnum.Mixer)
             {
-                await this.mixerChatService.SendMessage(message, sendAsStreamer);
+                await this.MixerChatService.SendMessage(message, sendAsStreamer);
             }
         }
 
@@ -123,7 +125,7 @@ namespace MixItUp.Base.Services
             message.IsDeleted = true;
             if (message.Platform == PlatformTypeEnum.Mixer)
             {
-                await this.mixerChatService.DeleteMessage(message);
+                await this.MixerChatService.DeleteMessage(message);
             }
         }
 
@@ -131,14 +133,14 @@ namespace MixItUp.Base.Services
         {
             this.messagesLookup.Clear();
             this.Messages.Clear();
-            await this.mixerChatService.ClearMessages();
+            await this.MixerChatService.ClearMessages();
         }
 
         public async Task PurgeUser(UserViewModel user)
         {
             if (user.Platform == PlatformTypeEnum.Mixer)
             {
-                await this.mixerChatService.PurgeUser(user.UserName);
+                await this.MixerChatService.PurgeUser(user.UserName);
             }
         }
 

@@ -52,6 +52,41 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         }
         private string enableDisableButtonText = "Disable Chat";
 
+        public IEnumerable<string> SendAsOptions
+        {
+            get
+            {
+                List<string> results = new List<string>() { "Streamer" };
+                if (ChannelSession.Services.ChatService.MixerChatService.IsBotConnected)
+                {
+                    results.Add("Bot");
+                }
+                return results;
+            }
+        }
+
+        public int SendAsIndex
+        {
+            get { return this.sendAsIndex; }
+            set
+            {
+                this.sendAsIndex = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private int sendAsIndex = 0;
+
+        public string SendMessageText
+        {
+            get { return this.sendMessageText; }
+            set
+            {
+                this.sendMessageText = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string sendMessageText;
+
         public bool IsScrollingLocked
         {
             get { return this.isScrollingLocked; }
@@ -70,6 +105,8 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
         public ICommand ClearChatCommand { get; private set; }
         public ICommand EnableDisableChatCommand { get; private set; }
+
+        public ICommand SendMessageCommand { get; private set; }
 
         public ICommand ScrollingLockCommand { get; private set; }
 
@@ -91,6 +128,16 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 else
                 {
                     this.EnableDisableButtonText = "Disable Chat";
+                }
+                return Task.FromResult(0);
+            });
+
+            this.SendMessageCommand = this.CreateCommand((parameter) =>
+            {
+                if (!string.IsNullOrEmpty(this.SendMessageText))
+                {
+                    ChannelSession.Services.ChatService.SendMessage(Model.PlatformTypeEnum.Mixer, this.SendMessageText, sendAsStreamer: (this.SendAsIndex == 0));
+                    this.SendMessageText = string.Empty;
                 }
                 return Task.FromResult(0);
             });
@@ -124,6 +171,12 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             }
 
             this.RefreshNumbers();
+        }
+
+        protected override async Task OnVisibleInternal()
+        {
+            this.NotifyPropertyChanged("SendAsOptions");
+            await base.OnVisibleInternal();
         }
 
         private void Messages_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)

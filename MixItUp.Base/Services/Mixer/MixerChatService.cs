@@ -16,14 +16,47 @@ namespace MixItUp.Base.Services.Mixer
 {
     public interface IMixerChatService
     {
+        event EventHandler<ChatMessageViewModel> OnMessageOccurred;
+        event EventHandler<Guid> OnDeleteMessageOccurred;
+        event EventHandler OnClearMessagesOccurred;
 
+        event EventHandler<IEnumerable<UserViewModel>> OnUsersJoinOccurred;
+        event EventHandler<UserViewModel> OnUserUpdateOccurred;
+        event EventHandler<IEnumerable<UserViewModel>> OnUsersLeaveOccurred;
+        event EventHandler<Tuple<UserViewModel, UserViewModel>> OnUserPurgeOccurred;
+        event EventHandler<UserViewModel> OnUserBanOccurred;
+
+        event EventHandler<ChatPollEventModel> OnPollEndOccurred;
+
+        bool IsBotConnected { get; }
+
+        Task<bool> ConnectStreamer();
+        Task DisconnectStreamer();
+
+        Task<bool> ConnectBot();
+        Task DisconnectBot();
+
+        Task SendMessage(string message, bool sendAsStreamer = false);
+        Task Whisper(string username, string message, bool sendAsStreamer = false);
+        Task<ChatMessageEventModel> WhisperWithResponse(string username, string message, bool sendAsStreamer = false);
+
+        Task<IEnumerable<ChatMessageEventModel>> GetChatHistory(uint maxMessages);
+        Task DeleteMessage(ChatMessageViewModel message);
+        Task ClearMessages();
+
+        Task PurgeUser(string username);
+        Task TimeoutUser(string username, uint durationInSeconds);
+
+        Task BanUser(UserViewModel user);
+        Task UnBanUser(UserViewModel user);
+        Task ModUser(UserViewModel user);
+        Task UnModUser(UserViewModel user);
+
+        Task StartPoll(string question, IEnumerable<string> answers, uint lengthInSeconds);
     }
 
     public class MixerChatService : MixerWebSocketServiceBase, IMixerChatService
     {
-        public ChatClient StreamerClient { get; private set; }
-        public ChatClient BotClient { get; private set; }
-
         public event EventHandler<ChatMessageViewModel> OnMessageOccurred = delegate { };
         public event EventHandler<Guid> OnDeleteMessageOccurred = delegate { };
         public event EventHandler OnClearMessagesOccurred = delegate { };
@@ -36,6 +69,9 @@ namespace MixItUp.Base.Services.Mixer
 
         public event EventHandler<ChatPollEventModel> OnPollEndOccurred = delegate { };
 
+        private ChatClient streamerClient;
+        private ChatClient botClient;
+
         private const int userJoinLeaveEventsTotalToProcess = 25;
         private SemaphoreSlim userJoinLeaveEventsSemaphore = new SemaphoreSlim(1);
         private Dictionary<uint, ChatUserEventModel> userJoinEvents = new Dictionary<uint, ChatUserEventModel>();
@@ -45,6 +81,8 @@ namespace MixItUp.Base.Services.Mixer
 
         public MixerChatService() { }
 
+        public bool IsBotConnected { get { return this.botClient != null && this.botClient.Connected; } }
+
         public async Task<bool> ConnectStreamer()
         {
             return await this.AttemptConnect(async () =>
@@ -53,26 +91,26 @@ namespace MixItUp.Base.Services.Mixer
                 {
                     this.cancellationTokenSource = new CancellationTokenSource();
 
-                    this.StreamerClient = await this.ConnectAndAuthenticateChatClient(ChannelSession.MixerStreamerConnection);
-                    if (this.StreamerClient != null)
+                    this.streamerClient = await this.ConnectAndAuthenticateChatClient(ChannelSession.MixerStreamerConnection);
+                    if (this.streamerClient != null)
                     {
-                        this.StreamerClient.OnClearMessagesOccurred += ChatClient_OnClearMessagesOccurred;
-                        this.StreamerClient.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
-                        this.StreamerClient.OnMessageOccurred += ChatClient_OnMessageOccurred;
-                        this.StreamerClient.OnPollEndOccurred += ChatClient_OnPollEndOccurred;
-                        this.StreamerClient.OnPollStartOccurred += ChatClient_OnPollStartOccurred;
-                        this.StreamerClient.OnPurgeMessageOccurred += ChatClient_OnPurgeMessageOccurred;
-                        this.StreamerClient.OnUserJoinOccurred += ChatClient_OnUserJoinOccurred;
-                        this.StreamerClient.OnUserLeaveOccurred += ChatClient_OnUserLeaveOccurred;
-                        this.StreamerClient.OnUserUpdateOccurred += ChatClient_OnUserUpdateOccurred;
-                        this.StreamerClient.OnSkillAttributionOccurred += Client_OnSkillAttributionOccurred;
-                        this.StreamerClient.OnDisconnectOccurred += StreamerClient_OnDisconnectOccurred;
+                        this.streamerClient.OnClearMessagesOccurred += ChatClient_OnClearMessagesOccurred;
+                        this.streamerClient.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
+                        this.streamerClient.OnMessageOccurred += ChatClient_OnMessageOccurred;
+                        this.streamerClient.OnPollEndOccurred += ChatClient_OnPollEndOccurred;
+                        this.streamerClient.OnPollStartOccurred += ChatClient_OnPollStartOccurred;
+                        this.streamerClient.OnPurgeMessageOccurred += ChatClient_OnPurgeMessageOccurred;
+                        this.streamerClient.OnUserJoinOccurred += ChatClient_OnUserJoinOccurred;
+                        this.streamerClient.OnUserLeaveOccurred += ChatClient_OnUserLeaveOccurred;
+                        this.streamerClient.OnUserUpdateOccurred += ChatClient_OnUserUpdateOccurred;
+                        this.streamerClient.OnSkillAttributionOccurred += Client_OnSkillAttributionOccurred;
+                        this.streamerClient.OnDisconnectOccurred += StreamerClient_OnDisconnectOccurred;
                         if (ChannelSession.Settings.DiagnosticLogging)
                         {
-                            this.StreamerClient.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
-                            this.StreamerClient.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
-                            this.StreamerClient.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
-                            this.StreamerClient.OnEventOccurred += WebSocketClient_OnEventOccurred;
+                            this.streamerClient.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
+                            this.streamerClient.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
+                            this.streamerClient.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
+                            this.streamerClient.OnEventOccurred += WebSocketClient_OnEventOccurred;
                         }
 
                         AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, this.ChatterJoinLeaveBackground, 2500);
@@ -90,31 +128,31 @@ namespace MixItUp.Base.Services.Mixer
         {
             await this.RunAsync(async () =>
             {
-                if (this.StreamerClient != null)
+                if (this.streamerClient != null)
                 {
-                    this.StreamerClient.OnClearMessagesOccurred -= ChatClient_OnClearMessagesOccurred;
-                    this.StreamerClient.OnDeleteMessageOccurred -= ChatClient_OnDeleteMessageOccurred;
-                    this.StreamerClient.OnMessageOccurred -= ChatClient_OnMessageOccurred;
-                    this.StreamerClient.OnPollEndOccurred -= ChatClient_OnPollEndOccurred;
-                    this.StreamerClient.OnPollStartOccurred -= ChatClient_OnPollStartOccurred;
-                    this.StreamerClient.OnPurgeMessageOccurred -= ChatClient_OnPurgeMessageOccurred;
-                    this.StreamerClient.OnUserJoinOccurred -= ChatClient_OnUserJoinOccurred;
-                    this.StreamerClient.OnUserLeaveOccurred -= ChatClient_OnUserLeaveOccurred;
-                    this.StreamerClient.OnUserUpdateOccurred -= ChatClient_OnUserUpdateOccurred;
-                    this.StreamerClient.OnSkillAttributionOccurred -= Client_OnSkillAttributionOccurred;
-                    this.StreamerClient.OnDisconnectOccurred -= StreamerClient_OnDisconnectOccurred;
+                    this.streamerClient.OnClearMessagesOccurred -= ChatClient_OnClearMessagesOccurred;
+                    this.streamerClient.OnDeleteMessageOccurred -= ChatClient_OnDeleteMessageOccurred;
+                    this.streamerClient.OnMessageOccurred -= ChatClient_OnMessageOccurred;
+                    this.streamerClient.OnPollEndOccurred -= ChatClient_OnPollEndOccurred;
+                    this.streamerClient.OnPollStartOccurred -= ChatClient_OnPollStartOccurred;
+                    this.streamerClient.OnPurgeMessageOccurred -= ChatClient_OnPurgeMessageOccurred;
+                    this.streamerClient.OnUserJoinOccurred -= ChatClient_OnUserJoinOccurred;
+                    this.streamerClient.OnUserLeaveOccurred -= ChatClient_OnUserLeaveOccurred;
+                    this.streamerClient.OnUserUpdateOccurred -= ChatClient_OnUserUpdateOccurred;
+                    this.streamerClient.OnSkillAttributionOccurred -= Client_OnSkillAttributionOccurred;
+                    this.streamerClient.OnDisconnectOccurred -= StreamerClient_OnDisconnectOccurred;
                     if (ChannelSession.Settings.DiagnosticLogging)
                     {
-                        this.StreamerClient.OnPacketSentOccurred -= WebSocketClient_OnPacketSentOccurred;
-                        this.StreamerClient.OnMethodOccurred -= WebSocketClient_OnMethodOccurred;
-                        this.StreamerClient.OnReplyOccurred -= WebSocketClient_OnReplyOccurred;
-                        this.StreamerClient.OnEventOccurred -= WebSocketClient_OnEventOccurred;
+                        this.streamerClient.OnPacketSentOccurred -= WebSocketClient_OnPacketSentOccurred;
+                        this.streamerClient.OnMethodOccurred -= WebSocketClient_OnMethodOccurred;
+                        this.streamerClient.OnReplyOccurred -= WebSocketClient_OnReplyOccurred;
+                        this.streamerClient.OnEventOccurred -= WebSocketClient_OnEventOccurred;
                     }
 
-                    await this.RunAsync(this.StreamerClient.Disconnect());
+                    await this.RunAsync(this.streamerClient.Disconnect());
                 }
 
-                this.StreamerClient = null;
+                this.streamerClient = null;
                 if (this.cancellationTokenSource != null)
                 {
                     this.cancellationTokenSource.Cancel();
@@ -131,17 +169,17 @@ namespace MixItUp.Base.Services.Mixer
                 {
                     if (ChannelSession.MixerBotConnection != null)
                     {
-                        this.BotClient = await this.ConnectAndAuthenticateChatClient(ChannelSession.MixerBotConnection);
-                        if (this.BotClient != null)
+                        this.botClient = await this.ConnectAndAuthenticateChatClient(ChannelSession.MixerBotConnection);
+                        if (this.botClient != null)
                         {
-                            this.BotClient.OnMessageOccurred += BotChatClient_OnMessageOccurred;
-                            this.BotClient.OnDisconnectOccurred += BotClient_OnDisconnectOccurred;
+                            this.botClient.OnMessageOccurred += BotChatClient_OnMessageOccurred;
+                            this.botClient.OnDisconnectOccurred += BotClient_OnDisconnectOccurred;
                             if (ChannelSession.Settings.DiagnosticLogging)
                             {
-                                this.BotClient.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
-                                this.BotClient.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
-                                this.BotClient.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
-                                this.BotClient.OnEventOccurred += WebSocketClient_OnEventOccurred;
+                                this.botClient.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
+                                this.botClient.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
+                                this.botClient.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
+                                this.botClient.OnEventOccurred += WebSocketClient_OnEventOccurred;
                             }
                             return true;
                         }
@@ -158,21 +196,21 @@ namespace MixItUp.Base.Services.Mixer
         {
             await this.RunAsync(async () =>
             {
-                if (this.BotClient != null)
+                if (this.botClient != null)
                 {
-                    this.BotClient.OnMessageOccurred -= BotChatClient_OnMessageOccurred;
-                    this.BotClient.OnDisconnectOccurred -= BotClient_OnDisconnectOccurred;
+                    this.botClient.OnMessageOccurred -= BotChatClient_OnMessageOccurred;
+                    this.botClient.OnDisconnectOccurred -= BotClient_OnDisconnectOccurred;
                     if (ChannelSession.Settings.DiagnosticLogging)
                     {
-                        this.BotClient.OnPacketSentOccurred -= WebSocketClient_OnPacketSentOccurred;
-                        this.BotClient.OnMethodOccurred -= WebSocketClient_OnMethodOccurred;
-                        this.BotClient.OnReplyOccurred -= WebSocketClient_OnReplyOccurred;
-                        this.BotClient.OnEventOccurred -= WebSocketClient_OnEventOccurred;
+                        this.botClient.OnPacketSentOccurred -= WebSocketClient_OnPacketSentOccurred;
+                        this.botClient.OnMethodOccurred -= WebSocketClient_OnMethodOccurred;
+                        this.botClient.OnReplyOccurred -= WebSocketClient_OnReplyOccurred;
+                        this.botClient.OnEventOccurred -= WebSocketClient_OnEventOccurred;
                     }
 
-                    await this.RunAsync(this.BotClient.Disconnect());
+                    await this.RunAsync(this.botClient.Disconnect());
                 }
-                this.BotClient = null;
+                this.botClient = null;
             });
         }
 
@@ -248,13 +286,25 @@ namespace MixItUp.Base.Services.Mixer
             });
         }
 
+        public async Task<IEnumerable<ChatMessageEventModel>> GetChatHistory(uint maxMessages)
+        {
+            return await this.RunAsync(async () =>
+            {
+                if (this.streamerClient != null)
+                {
+                    return await this.streamerClient.GetChatHistory(maxMessages);
+                }
+                return new List<ChatMessageEventModel>();
+            });
+        }
+
         public async Task DeleteMessage(ChatMessageViewModel message)
         {
             await this.RunAsync(async () =>
             {
                 Logger.Log(LogLevel.Debug, string.Format("Deleting Message - {0}", message.PlainTextMessage));
 
-                await this.StreamerClient.DeleteMessage(Guid.Parse(message.ID));
+                await this.streamerClient.DeleteMessage(Guid.Parse(message.ID));
             });
         }
 
@@ -262,7 +312,7 @@ namespace MixItUp.Base.Services.Mixer
         {
             await this.RunAsync(async () =>
             {
-                await this.StreamerClient.ClearMessages();
+                await this.streamerClient.ClearMessages();
             });
         }
 
@@ -270,7 +320,7 @@ namespace MixItUp.Base.Services.Mixer
         {
             await this.RunAsync(async () =>
             {
-                await this.StreamerClient.PurgeUser(username);
+                await this.streamerClient.PurgeUser(username);
             });
         }
 
@@ -278,7 +328,7 @@ namespace MixItUp.Base.Services.Mixer
         {
             await this.RunAsync(async () =>
             {
-                await this.StreamerClient.TimeoutUser(username, durationInSeconds);
+                await this.streamerClient.TimeoutUser(username, durationInSeconds);
             });
         }
 
@@ -322,23 +372,11 @@ namespace MixItUp.Base.Services.Mixer
         {
             await this.RunAsync(async () =>
             {
-                await this.StreamerClient.StartVote(question, answers, lengthInSeconds);
+                await this.streamerClient.StartVote(question, answers, lengthInSeconds);
             });
         }
 
-        public async Task<IEnumerable<ChatMessageEventModel>> GetChatHistory(uint maxMessages)
-        {
-            return await this.RunAsync(async () =>
-            {
-                if (this.StreamerClient != null)
-                {
-                    return await this.StreamerClient.GetChatHistory(maxMessages);
-                }
-                return new List<ChatMessageEventModel>();
-            });
-        }
-
-        private ChatClient GetChatClient(bool sendAsStreamer = false) { return (this.BotClient != null && !sendAsStreamer) ? this.BotClient : this.StreamerClient; }
+        private ChatClient GetChatClient(bool sendAsStreamer = false) { return (this.botClient != null && !sendAsStreamer) ? this.botClient : this.streamerClient; }
 
         private async Task<ChatClient> ConnectAndAuthenticateChatClient(MixerConnectionService connection)
         {
