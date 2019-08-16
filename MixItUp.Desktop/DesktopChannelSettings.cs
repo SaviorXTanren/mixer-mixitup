@@ -700,7 +700,11 @@ namespace MixItUp.Desktop
             }
 
             // Clear out unused Cooldown Groups and Command Groups
-            var allUsedCooldownGroupNames = this.InteractiveCommands.Select(c => c.Requirements?.Cooldown?.GroupName).Distinct();
+            var allUsedCooldownGroupNames = 
+                this.InteractiveCommands.Select(c => c.Requirements?.Cooldown?.GroupName)
+                .Union(this.ChatCommands.Select(c => c.Requirements?.Cooldown?.GroupName))
+                .Union(this.GameCommands.Select(c => c.Requirements?.Cooldown?.GroupName))
+                .Distinct();
             var allUnusedCooldownGroupNames = this.CooldownGroups.ToDictionary().Where(c => !allUsedCooldownGroupNames.Contains(c.Key, StringComparer.InvariantCultureIgnoreCase));
             foreach(var unused in allUnusedCooldownGroupNames)
             {
