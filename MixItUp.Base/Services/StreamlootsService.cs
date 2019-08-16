@@ -38,6 +38,15 @@ namespace MixItUp.Base.Services
             }
         }
 
+        public string LongMessage
+        {
+            get
+            {
+                StreamlotsCardDataFieldModel field = this.fields.FirstOrDefault(f => f.name.Equals("longMessage"));
+                return (field != null) ? field.value : string.Empty;
+            }
+        }
+
         public string Username
         {
             get
@@ -163,7 +172,14 @@ namespace MixItUp.Base.Services
                                                 specialIdentifiers.Add("streamlootscardhasvideo", (!string.IsNullOrEmpty(card.videoUrl)).ToString());
                                                 specialIdentifiers.Add("streamlootscardvideo", card.videoUrl);
                                                 specialIdentifiers.Add("streamlootscardsound", card.soundUrl);
-                                                specialIdentifiers.Add("streamlootsmessage", card.data.Message);
+
+                                                string message = card.data.Message;
+                                                if (!string.IsNullOrEmpty(message))
+                                                {
+                                                    message = card.data.LongMessage;
+                                                }
+                                                specialIdentifiers.Add("streamlootsmessage", message);
+
                                                 await command.Perform(user, arguments: null, extraSpecialIdentifiers: specialIdentifiers);
                                             }
                                         }
