@@ -115,11 +115,19 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         {
             this.ClearChatCommand = this.CreateCommand(async (parameter) =>
             {
-                await ChannelSession.Services.ChatService.ClearMessages();
+                if (await DialogHelper.ShowConfirmation("This will clear all chat messages for the stream. Are you sure?"))
+                {
+                    await ChannelSession.Services.ChatService.ClearMessages();
+                }
             });
 
-            this.EnableDisableChatCommand = this.CreateCommand((parameter) =>
+            this.EnableDisableChatCommand = this.CreateCommand(async (parameter) =>
             {
+                if (!ChannelSession.Services.ChatService.DisableChat && !await DialogHelper.ShowConfirmation("This will disable chat for all users. Are you sure?"))
+                {
+                    return;
+                }
+
                 ChannelSession.Services.ChatService.DisableChat = !ChannelSession.Services.ChatService.DisableChat;
                 if (ChannelSession.Services.ChatService.DisableChat)
                 {
@@ -129,7 +137,6 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 {
                     this.EnableDisableButtonText = "Disable Chat";
                 }
-                return Task.FromResult(0);
             });
 
             this.SendMessageCommand = this.CreateCommand((parameter) =>
