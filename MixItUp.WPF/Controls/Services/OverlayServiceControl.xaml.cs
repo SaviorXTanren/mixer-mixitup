@@ -43,7 +43,7 @@ namespace MixItUp.WPF.Controls.Services
         {
             try
             {
-                Process.Start(e.Uri.AbsoluteUri);
+                ProcessHelper.LaunchLink(e.Uri.AbsoluteUri);
                 e.Handled = true;
             }
             catch (Exception ex) { Logger.Log(ex); }

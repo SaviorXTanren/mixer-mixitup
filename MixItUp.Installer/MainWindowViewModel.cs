@@ -222,11 +222,19 @@ namespace MixItUp.Installer
             {
                 if (File.Exists(StartMenuShortCutFilePath))
                 {
-                    Process.Start(StartMenuShortCutFilePath);
+                    ProcessStartInfo processInfo = new ProcessStartInfo(StartMenuShortCutFilePath)
+                    {
+                        UseShellExecute = true
+                    };
+                    Process.Start(processInfo);
                 }
                 else if (File.Exists(DesktopShortCutFilePath))
                 {
-                    Process.Start(DesktopShortCutFilePath);
+                    ProcessStartInfo processInfo = new ProcessStartInfo(DesktopShortCutFilePath)
+                    {
+                        UseShellExecute = true
+                    };
+                    Process.Start(processInfo);
                 }
             }
             else

@@ -4,6 +4,7 @@ using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Store;
+using MixItUp.Base.Util;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
 using StreamingClient.Base.Util;
@@ -287,7 +288,7 @@ namespace MixItUp.WPF.Controls.Store
 
         private void HelpButton_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Mix-It-Up-Store");
+            ProcessHelper.LaunchLink("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Mix-It-Up-Store");
         }
     }
 }

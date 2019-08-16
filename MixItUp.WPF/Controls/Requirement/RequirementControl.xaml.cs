@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.Requirement;
+﻿using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Requirement;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
@@ -81,6 +82,6 @@ namespace MixItUp.WPF.Controls.Requirement
             this.SettingsRequirement.SetSettingsRequirement(requirement.Settings);
         }
 
-        private void UsageRequirementsHelpButton_Click(object sender, RoutedEventArgs e) { Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Usage-Requirements"); }
+        private void UsageRequirementsHelpButton_Click(object sender, RoutedEventArgs e) { ProcessHelper.LaunchLink("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Usage-Requirements"); }
     }
 }

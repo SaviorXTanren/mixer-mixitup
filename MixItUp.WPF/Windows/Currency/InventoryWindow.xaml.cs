@@ -98,7 +98,7 @@ namespace MixItUp.WPF.Windows.Currency
 
         private void HelpButton_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Currency-&-Rank");
+            ProcessHelper.LaunchLink("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Currency-&-Rank");
         }
 
         private void EditItemButton_Click(object sender, RoutedEventArgs e)

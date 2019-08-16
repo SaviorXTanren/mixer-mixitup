@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Window;
 using MixItUp.Desktop.Services;
 using MixItUp.WPF.Controls.MainControls;
@@ -197,7 +198,7 @@ namespace MixItUp.WPF
             this.Close();
             if (this.restartApplication)
             {
-                Process.Start(Application.ResourceAssembly.Location);
+                ProcessHelper.LaunchFolder(Application.ResourceAssembly.Location);
             }
         }
 

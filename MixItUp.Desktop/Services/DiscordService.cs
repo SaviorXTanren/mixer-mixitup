@@ -481,8 +481,7 @@ namespace MixItUp.Desktop.Services
             DiscordOAuthServer oauthServer = new DiscordOAuthServer();
             oauthServer.Start();
 
-            ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = oauthPageURL, UseShellExecute = true };
-            Process.Start(startInfo);
+            ProcessHelper.LaunchProgram(oauthPageURL);
 
             string authorizationCode = await oauthServer.WaitForAuthorizationCode();
             oauthServer.Stop();

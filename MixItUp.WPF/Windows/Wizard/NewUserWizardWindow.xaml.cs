@@ -230,7 +230,7 @@ namespace MixItUp.WPF.Windows.Wizard
             string pluginPath = Path.Combine(this.directoryPath, "OBS\\obs-websocket-4.3.3-Windows-Installer.exe");
             if (File.Exists(pluginPath))
             {
-                Process.Start(pluginPath);
+                ProcessHelper.LaunchProgram(pluginPath);
             }
         }
 
@@ -898,7 +898,7 @@ namespace MixItUp.WPF.Windows.Wizard
         {
             try
             {
-                Process.Start(e.Uri.AbsoluteUri);
+                ProcessHelper.LaunchLink(e.Uri.AbsoluteUri);
                 e.Handled = true;
             }
             catch (Exception ex) { Logger.Log(ex); }

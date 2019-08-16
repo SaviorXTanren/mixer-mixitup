@@ -372,7 +372,7 @@ namespace MixItUp.WPF.Controls.MainControls
                         }
                         break;
                     case UserDialogResult.MixerPage:
-                        Process.Start($"https://mixer.com/{user.UserName}");
+                        ProcessHelper.LaunchLink($"https://mixer.com/{user.UserName}");
                         break;
                     case UserDialogResult.EditUser:
                         UserDataEditorWindow window = new UserDataEditorWindow(ChannelSession.Settings.UserData[user.ID]);

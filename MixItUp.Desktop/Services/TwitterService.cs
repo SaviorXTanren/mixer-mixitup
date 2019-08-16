@@ -78,7 +78,7 @@ namespace MixItUp.Base.Services
                         ConsumerKey = TwitterService.ClientID,
                         ConsumerSecret = ChannelSession.SecretManager.GetSecret("TwitterSecret"),
                     },
-                    GoToTwitterAuthorization = pageLink => Process.Start(pageLink),
+                    GoToTwitterAuthorization = pageLink => ProcessHelper.LaunchLink(pageLink),
                     GetPin = () =>
                     {
                         while (string.IsNullOrEmpty(this.authPin))

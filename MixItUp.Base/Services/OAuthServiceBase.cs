@@ -1,4 +1,5 @@
 ﻿using Mixer.Base;
+using MixItUp.Base.Util;
 using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Services;
 using StreamingClient.Base.Util;
@@ -66,8 +67,7 @@ namespace MixItUp.Base.Services
             LocalOAuthHttpListenerServer oauthServer = new LocalOAuthHttpListenerServer(listeningAddress, MixerConnection.DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER, successResponse: OAuthServiceBase.LoginRedirectPageHTML);
             oauthServer.Start();
 
-            ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = oauthPageURL, UseShellExecute = true };
-            Process.Start(startInfo);
+            ProcessHelper.LaunchProgram(oauthPageURL);
 
             string authorizationCode = await oauthServer.WaitForAuthorizationCode();
             oauthServer.Stop();

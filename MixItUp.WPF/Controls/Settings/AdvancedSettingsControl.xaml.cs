@@ -2,6 +2,7 @@
 using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Desktop;
 using MixItUp.WPF.Util;
@@ -59,7 +60,7 @@ namespace MixItUp.WPF.Controls.Settings
 
         private void InstallationDirectoryButton_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
+            ProcessHelper.LaunchFolder(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
         }
 
         private async void BackupSettingsButton_Click(object sender, RoutedEventArgs e)

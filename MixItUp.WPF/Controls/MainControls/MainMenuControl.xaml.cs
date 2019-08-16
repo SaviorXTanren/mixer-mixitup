@@ -120,7 +120,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 MainMenuItem menuItem = (MainMenuItem)this.DataContext;
                 if (!string.IsNullOrEmpty(menuItem.HelpLink))
                 {
-                    Process.Start(menuItem.HelpLink);
+                    ProcessHelper.LaunchLink(menuItem.HelpLink);
                 }
             }
         }
@@ -134,7 +134,7 @@ namespace MixItUp.WPF.Controls.MainControls
             }
             else if (!string.IsNullOrEmpty(item.Link))
             {
-                Process.Start(item.Link);
+                ProcessHelper.LaunchLink(item.Link);
             }
             this.MenuToggleButton.IsChecked = false;
         }

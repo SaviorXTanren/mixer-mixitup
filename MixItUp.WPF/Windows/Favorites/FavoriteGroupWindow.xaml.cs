@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Model.Game;
 using Mixer.Base.Model.User;
 using MixItUp.Base;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Favorites;
 using MixItUp.WPF.Util;
 using System.Collections.ObjectModel;
@@ -69,7 +70,7 @@ namespace MixItUp.WPF.Windows.Favorites
         {
             Button button = (Button)sender;
             FavoriteUser user = (FavoriteUser)button.DataContext;
-            Process.Start(user.Link);
+            ProcessHelper.LaunchLink(user.Link);
         }
 
         private async void HostChannelButton_Click(object sender, RoutedEventArgs e)

@@ -102,8 +102,7 @@ namespace MixItUp.WPF.Controls.Actions
             {
                 await ChannelSession.Services.FileService.CreateDirectory(counterFolderPath);
             }
-
-            Process.Start(counterFolderPath);
+            ProcessHelper.LaunchFolder(counterFolderPath);
         }
     }
 }

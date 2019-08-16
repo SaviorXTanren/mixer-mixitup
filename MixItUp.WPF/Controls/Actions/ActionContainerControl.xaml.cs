@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Util;
@@ -250,7 +251,7 @@ namespace MixItUp.WPF.Controls.Actions
             actionName = actionName.ToLower();
             actionName = actionName.Replace(" ", "-");
             actionName = actionName.Replace("/", "");
-            Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Actions#" + actionName);
+            ProcessHelper.LaunchLink("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Actions#" + actionName);
         }
 
         private async void ActionDuplicateButton_Click(object sender, RoutedEventArgs e)
