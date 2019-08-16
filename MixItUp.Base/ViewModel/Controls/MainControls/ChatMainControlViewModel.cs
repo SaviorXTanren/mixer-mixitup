@@ -16,29 +16,6 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
     {
         public byte[] SubscriberBadgeBytes { get; private set; }
 
-        public ChatMainControlViewModel(MainWindowViewModel windowViewModel)
-            : base(windowViewModel)
-        {
-            this.ClearChatCommand = this.CreateCommand(async (parameter) =>
-            {
-                await ChannelSession.Services.ChatService.ClearMessages();
-            });
-
-            this.EnableDisableChatCommand = this.CreateCommand((parameter) =>
-            {
-                ChannelSession.Services.ChatService.DisableChat = !ChannelSession.Services.ChatService.DisableChat;
-                if (ChannelSession.Services.ChatService.DisableChat)
-                {
-                    this.EnableDisableButtonText = "Enable Chat";
-                }
-                else
-                {
-                    this.EnableDisableButtonText = "Disable Chat";
-                }
-                return Task.FromResult(0);
-            });
-        }
-
         public ObservableCollection<ChatMessageViewModel> Messages { get; private set; }
         public IEnumerable<UserViewModel> DisplayUsers { get; private set; }
 
@@ -75,8 +52,56 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         }
         private string enableDisableButtonText = "Disable Chat";
 
+        public bool IsScrollingLocked
+        {
+            get { return this.isScrollingLocked; }
+            set
+            {
+                this.isScrollingLocked = value;
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("LockIconColor");
+            }
+        }
+        private bool isScrollingLocked = true;
+
+        public string LockIconColor { get { return (this.IsScrollingLocked) ? "Green" : "Red"; } }
+
+        public event EventHandler ScrollingLockChanged = delegate { };
+
         public ICommand ClearChatCommand { get; private set; }
         public ICommand EnableDisableChatCommand { get; private set; }
+
+        public ICommand ScrollingLockCommand { get; private set; }
+
+        public ChatMainControlViewModel(MainWindowViewModel windowViewModel)
+            : base(windowViewModel)
+        {
+            this.ClearChatCommand = this.CreateCommand(async (parameter) =>
+            {
+                await ChannelSession.Services.ChatService.ClearMessages();
+            });
+
+            this.EnableDisableChatCommand = this.CreateCommand((parameter) =>
+            {
+                ChannelSession.Services.ChatService.DisableChat = !ChannelSession.Services.ChatService.DisableChat;
+                if (ChannelSession.Services.ChatService.DisableChat)
+                {
+                    this.EnableDisableButtonText = "Enable Chat";
+                }
+                else
+                {
+                    this.EnableDisableButtonText = "Disable Chat";
+                }
+                return Task.FromResult(0);
+            });
+
+            this.ScrollingLockCommand = this.CreateCommand((parameter) =>
+            {
+                this.IsScrollingLocked = !this.IsScrollingLocked;
+                this.ScrollingLockChanged(this, new EventArgs());
+                return Task.FromResult(0);
+            });
+        }
 
         protected override async Task OnLoadedInternal()
         {

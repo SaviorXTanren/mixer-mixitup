@@ -17,7 +17,6 @@ namespace MixItUp.WPF.Controls.MainControls
         public static BitmapImage SubscriberBadgeBitmap { get; private set; }
 
         private ScrollViewer chatListScrollViewer;
-        private bool lockChatList = true;
 
         private ChatMainControlViewModel viewModel;
 
@@ -29,8 +28,29 @@ namespace MixItUp.WPF.Controls.MainControls
         protected override async Task InitializeInternal()
         {
             this.viewModel = new ChatMainControlViewModel((MainWindowViewModel)this.Window.ViewModel);
+            this.viewModel.ScrollingLockChanged += ViewModel_ScrollingLockChanged;
             await this.viewModel.OnLoaded();
             this.DataContext = this.viewModel;
+        }
+
+        private void ViewModel_ScrollingLockChanged(object sender, System.EventArgs e)
+        {
+            this.ChatLockButtonIcon.Kind = (this.viewModel.IsScrollingLocked) ? MaterialDesignThemes.Wpf.PackIconKind.LockOutline : MaterialDesignThemes.Wpf.PackIconKind.LockOpenOutline;
+            if (this.chatListScrollViewer != null)
+            {
+                this.chatListScrollViewer.VerticalScrollBarVisibility = (this.viewModel.IsScrollingLocked) ? ScrollBarVisibility.Hidden : ScrollBarVisibility.Visible;
+                if (this.viewModel.IsScrollingLocked)
+                {
+                    if (ChannelSession.Settings.LatestChatAtTop)
+                    {
+                        this.chatListScrollViewer.ScrollToTop();
+                    }
+                    else
+                    {
+                        this.chatListScrollViewer.ScrollToBottom();
+                    }
+                }
+            }
         }
 
         private void SendChatMessageButton_Click(object sender, RoutedEventArgs e)
@@ -44,7 +64,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 this.chatListScrollViewer = (ScrollViewer)e.OriginalSource;
             }
 
-            if (this.lockChatList && this.chatListScrollViewer != null)
+            if (this.viewModel.IsScrollingLocked && this.chatListScrollViewer != null)
             {
                 if (ChannelSession.Settings.LatestChatAtTop)
                 {
@@ -57,13 +77,9 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
-        private void ChatLockButton_MouseEnter(object sender, MouseEventArgs e)
-        {
-        }
+        private void ChatLockButton_MouseEnter(object sender, MouseEventArgs e) { this.ChatLockButton.Opacity = 1; }
 
-        private void ChatLockButton_MouseLeave(object sender, MouseEventArgs e)
-        {
-        }
+        private void ChatLockButton_MouseLeave(object sender, MouseEventArgs e) { this.ChatLockButton.Opacity = 0.3; }
 
         private void ChatLockButton_Click(object sender, RoutedEventArgs e)
         {
