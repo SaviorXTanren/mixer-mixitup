@@ -87,6 +87,7 @@ namespace MixItUp.Base.Services
             this.mixerChatService.OnUserUpdateOccurred += MixerChatService_OnUserUpdateOccurred;
             this.mixerChatService.OnUsersLeaveOccurred += MixerChatService_OnUsersLeaveOccurred;
             this.mixerChatService.OnUserPurgeOccurred += MixerChatService_OnUserPurgeOccurred;
+            this.mixerChatService.OnUserBanOccurred += MixerChatService_OnUserBanOccurred;
 
             foreach (ChatMessageEventModel message in await this.mixerChatService.GetChatHistory(50))
             {
@@ -391,6 +392,15 @@ namespace MixItUp.Base.Services
                     modUser = new UserViewModel(ChannelSession.MixerStreamerUser);
                 }
                 await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserPurge)), modUser, arguments: new List<string>() { targetUser.UserName });
+            }
+        }
+
+        private async void MixerChatService_OnUserBanOccurred(object sender, UserViewModel user)
+        {
+            if (ChannelSession.Constellation.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserBan)))
+            {
+                ChannelSession.Constellation.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserBan));
+                await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserBan)), user);
             }
         }
 

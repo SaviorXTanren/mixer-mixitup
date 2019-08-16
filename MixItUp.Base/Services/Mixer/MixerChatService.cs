@@ -1,10 +1,6 @@
 ﻿using Mixer.Base.Clients;
 using Mixer.Base.Model.Chat;
-using Mixer.Base.Model.User;
-using Mixer.Base.Util;
 using MixItUp.Base.Commands;
-using MixItUp.Base.Model.Skill;
-using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
@@ -36,6 +32,7 @@ namespace MixItUp.Base.Services.Mixer
         public event EventHandler<UserViewModel> OnUserUpdateOccurred = delegate { };
         public event EventHandler<IEnumerable<UserViewModel>> OnUsersLeaveOccurred = delegate { };
         public event EventHandler<Tuple<UserViewModel, UserViewModel>> OnUserPurgeOccurred = delegate { };
+        public event EventHandler<UserViewModel> OnUserBanOccurred = delegate { };
 
         public event EventHandler<ChatPollEventModel> OnPollEndOccurred = delegate { };
 
@@ -519,7 +516,15 @@ namespace MixItUp.Base.Services.Mixer
 
         private async void ChatClient_OnUserUpdateOccurred(object sender, ChatUserEventModel chatUser)
         {
-
+            UserViewModel user = await ChannelSession.ActiveUsers.AddOrUpdateUser(chatUser.GetUser());
+            if (user != null)
+            {
+                this.OnUserUpdateOccurred(sender, user);
+                if (chatUser.roles != null && chatUser.roles.Count() > 0 && chatUser.roles.Where(r => !string.IsNullOrEmpty(r)).Contains(EnumHelper.GetEnumName(MixerRoleEnum.Banned)))
+                {
+                    this.OnUserBanOccurred(sender, user);
+                }
+            }
         }
 
         private async void Client_OnSkillAttributionOccurred(object sender, ChatSkillAttributionEventModel skillAttribution)
