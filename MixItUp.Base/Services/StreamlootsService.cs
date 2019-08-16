@@ -123,79 +123,97 @@ namespace MixItUp.Base.Services
 
         private async Task BackgroundCheck()
         {
-            this.webRequest = WebRequest.Create(string.Format("https://widgets.streamloots.com/alerts/{0}/media-stream", this.token.accessToken));
-            ((HttpWebRequest)this.webRequest).AllowReadStreamBuffering = false;
-            var response = this.webRequest.GetResponse();
-            this.responseStream = response.GetResponseStream();
-
-            UTF8Encoding encoder = new UTF8Encoding();
-            string cardData = string.Empty;
-            var buffer = new byte[100000];
-            while (true)
+            while (!this.cancellationTokenSource.Token.IsCancellationRequested)
             {
                 try
                 {
-                    while (this.responseStream.CanRead)
+                    this.webRequest = WebRequest.Create(string.Format("https://widgets.streamloots.com/alerts/{0}/media-stream", this.token.accessToken));
+                    ((HttpWebRequest)this.webRequest).AllowReadStreamBuffering = false;
+                    var response = this.webRequest.GetResponse();
+                    this.responseStream = response.GetResponseStream();
+
+                    UTF8Encoding encoder = new UTF8Encoding();
+                    string cardData = string.Empty;
+                    var buffer = new byte[100000];
+                    while (!this.cancellationTokenSource.Token.IsCancellationRequested)
                     {
-                        int len = this.responseStream.Read(buffer, 0, 100000);
-                        if (len > 10)
+                        if (this.responseStream.CanRead)
                         {
-                            string text = encoder.GetString(buffer, 0, len);
-                            if (!string.IsNullOrEmpty(text))
+                            int len = this.responseStream.Read(buffer, 0, 100000);
+                            if (len > 10)
                             {
-                                Util.Logger.LogDiagnostic("Streamloots Packet Received: " + text);
-
-                                cardData += text;
-                                try
+                                string text = encoder.GetString(buffer, 0, len);
+                                if (!string.IsNullOrEmpty(text))
                                 {
-                                    JObject jobj = JObject.Parse("{ " + cardData + " }");
-                                    if (jobj != null && jobj.ContainsKey("data"))
+                                    Util.Logger.LogDiagnostic("Streamloots Packet Received: " + text);
+
+                                    cardData += text;
+                                    try
                                     {
-                                        cardData = string.Empty;
-                                        StreamlootsCardModel card = jobj["data"].ToObject<StreamlootsCardModel>();
-                                        if (card != null)
+                                        JObject jobj = JObject.Parse("{ " + cardData + " }");
+                                        if (jobj != null && jobj.ContainsKey("data"))
                                         {
-                                            UserViewModel user = new UserViewModel(0, card.data.Username);
-
-                                            UserModel userModel = await ChannelSession.Connection.GetUser(user.UserName);
-                                            if (userModel != null)
+                                            cardData = string.Empty;
+                                            StreamlootsCardModel card = jobj["data"].ToObject<StreamlootsCardModel>();
+                                            if (card != null)
                                             {
-                                                user = new UserViewModel(userModel);
-                                            }
+                                                UserViewModel user = new UserViewModel(0, card.data.Username);
 
-                                            EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.StreamlootsCardRedeemed));
-                                            if (command != null)
-                                            {
-                                                Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
-                                                specialIdentifiers.Add("streamlootscardname", card.data.cardName);
-                                                specialIdentifiers.Add("streamlootscardimage", card.imageUrl);
-                                                specialIdentifiers.Add("streamlootscardhasvideo", (!string.IsNullOrEmpty(card.videoUrl)).ToString());
-                                                specialIdentifiers.Add("streamlootscardvideo", card.videoUrl);
-                                                specialIdentifiers.Add("streamlootscardsound", card.soundUrl);
-
-                                                string message = card.data.Message;
-                                                if (!string.IsNullOrEmpty(message))
+                                                UserModel userModel = await ChannelSession.Connection.GetUser(user.UserName);
+                                                if (userModel != null)
                                                 {
-                                                    message = card.data.LongMessage;
+                                                    user = new UserViewModel(userModel);
                                                 }
-                                                specialIdentifiers.Add("streamlootsmessage", message);
 
-                                                await command.Perform(user, arguments: null, extraSpecialIdentifiers: specialIdentifiers);
+                                                EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.StreamlootsCardRedeemed));
+                                                if (command != null)
+                                                {
+                                                    Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
+                                                    specialIdentifiers.Add("streamlootscardname", card.data.cardName);
+                                                    specialIdentifiers.Add("streamlootscardimage", card.imageUrl);
+                                                    specialIdentifiers.Add("streamlootscardhasvideo", (!string.IsNullOrEmpty(card.videoUrl)).ToString());
+                                                    specialIdentifiers.Add("streamlootscardvideo", card.videoUrl);
+                                                    specialIdentifiers.Add("streamlootscardsound", card.soundUrl);
+
+                                                    string message = card.data.Message;
+                                                    if (string.IsNullOrEmpty(message))
+                                                    {
+                                                        message = card.data.LongMessage;
+                                                    }
+                                                    specialIdentifiers.Add("streamlootsmessage", message);
+
+                                                    await command.Perform(user, arguments: null, extraSpecialIdentifiers: specialIdentifiers);
+                                                }
                                             }
                                         }
                                     }
-                                }
-                                catch (Exception ex)
-                                {
-                                    Util.Logger.LogDiagnostic(ex);
+                                    catch (Exception ex)
+                                    {
+                                        Util.Logger.LogDiagnostic(ex);
+                                    }
                                 }
                             }
                         }
+                        await Task.Delay(1000);
                     }
                 }
                 catch (Exception ex)
                 {
                     Util.Logger.Log(ex);
+                    await Task.Delay(5000);
+                }
+                finally
+                {
+                    if (this.webRequest != null)
+                    {
+                        this.webRequest.Abort();
+                        this.webRequest = null;
+                    }
+                    if (this.responseStream != null)
+                    {
+                        this.responseStream.Close();
+                        this.responseStream = null;
+                    }
                 }
             }
         }
