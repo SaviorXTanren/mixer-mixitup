@@ -9,6 +9,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Chat;
+using MixItUp.WPF.Controls.Dialogs;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.PopOut;
 using MixItUp.WPF.Windows.Users;

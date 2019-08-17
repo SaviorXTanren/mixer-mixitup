@@ -5,6 +5,22 @@ using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.Dialogs
 {
+    public enum UserDialogResult
+    {
+        Purge,
+        Timeout1,
+        Timeout5,
+        Ban,
+        Unban,
+        Close,
+        Follow,
+        Unfollow,
+        PromoteToMod,
+        DemoteFromMod,
+        MixerPage,
+        EditUser,
+    }
+
     /// <summary>
     /// Interaction logic for UserDialogControl.xaml
     /// </summary>
@@ -25,14 +41,11 @@ namespace MixItUp.WPF.Controls.Dialogs
         {
             if (this.user != null && !this.user.IsAnonymous && !string.IsNullOrEmpty(this.user.UserName))
             {
+                this.DataContext = this.user;
+
                 await this.user.RefreshDetails(force: true);
 
-                this.UserAvatar.SetSize(100);
-                await this.UserAvatar.SetUserAvatarUrl(this.user);
-
-                PromoteToModButton.IsEnabled = ChannelSession.IsStreamer;
-                DemoteFromModButton.IsEnabled = ChannelSession.IsStreamer;
-                EditUserButton.IsEnabled = ChannelSession.IsStreamer;
+                this.PromoteToModButton.IsEnabled = this.DemoteFromModButton.IsEnabled = this.EditUserButton.IsEnabled = ChannelSession.IsStreamer;
 
                 bool follows = false;
                 if (this.user.ChannelID > 0)
@@ -69,8 +82,6 @@ namespace MixItUp.WPF.Controls.Dialogs
                     this.DemoteFromModButton.Visibility = System.Windows.Visibility.Visible;
                     this.PromoteToModButton.Visibility = System.Windows.Visibility.Collapsed;
                 }
-
-                this.DataContext = this.user;
             }
         }
     }

@@ -1,8 +1,13 @@
-﻿using MixItUp.Base;
+﻿using Mixer.Base.Model.Channel;
+using MixItUp.Base;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Controls.MainControls;
+using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModel.Window;
-using MixItUp.WPF.Controls.Chat;
+using MixItUp.WPF.Controls.Dialogs;
+using MixItUp.WPF.Util;
+using MixItUp.WPF.Windows.Users;
 using StreamingClient.Base.Util;
 using System;
 using System.Threading.Tasks;
@@ -80,7 +85,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
         }
 
-                private void UsernameIntellisenseListBox_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        private void UsernameIntellisenseListBox_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
         }
 
@@ -112,10 +117,6 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void ChatLockButton_MouseLeave(object sender, MouseEventArgs e) { this.ChatLockButton.Opacity = 0.3; }
 
-        private void UserList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-        }
-
         private void MessageCopyMenuItem_Click(object sender, RoutedEventArgs e)
         {
             if (this.ChatList.SelectedItem != null && this.ChatList.SelectedItem is ChatMessageViewModel)
@@ -129,16 +130,119 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
-        private void MessageDeleteMenuItem_Click(object sender, System.Windows.RoutedEventArgs e)
+        private async void MessageDeleteMenuItem_Click(object sender, RoutedEventArgs e)
         {
+            if (this.ChatList.SelectedItem != null && this.ChatList.SelectedItem is ChatMessageViewModel)
+            {
+                ChatMessageViewModel message = (ChatMessageViewModel)this.ChatList.SelectedItem;
+                if (!message.IsWhisper && !message.IsAlert)
+                {
+                    await ChannelSession.Services.ChatService.DeleteMessage(message);
+                }
+            }
         }
 
         private void MessageWhisperUserMenuItem_Click(object sender, RoutedEventArgs e)
         {
+            if (this.ChatList.SelectedItem != null && this.ChatList.SelectedItem is ChatMessageViewModel)
+            {
+                ChatMessageViewModel message = (ChatMessageViewModel)this.ChatList.SelectedItem;
+                if (message.User != null)
+                {
+                    this.viewModel.SendMessageText = $"/w @{message.User.UserName} ";
+                    this.ChatMessageTextBox.Focus();
+                    this.ChatMessageTextBox.CaretIndex = this.ChatMessageTextBox.Text.Length;
+                }
+            }
         }
 
-        private void UserInformationMenuItem_Click(object sender, RoutedEventArgs e)
+        private async void UserInformationMenuItem_Click(object sender, RoutedEventArgs e)
         {
+            if (this.ChatList.SelectedItem != null && this.ChatList.SelectedItem is ChatMessageViewModel)
+            {
+                ChatMessageViewModel message = (ChatMessageViewModel)this.ChatList.SelectedItem;
+                if (message.User != null)
+                {
+                    await this.ShowUserDialog(message.User);
+                }
+            }
+        }
+
+        private async void UserList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (this.UserList.SelectedItem != null && this.UserList.SelectedItem is UserViewModel)
+            {
+                UserViewModel user = (UserViewModel)this.UserList.SelectedItem;
+                this.UserList.SelectedIndex = -1;
+                await this.ShowUserDialog(user);
+            }
+        }
+
+        private async Task ShowUserDialog(UserViewModel user)
+        {
+            if (user != null && !user.IsAnonymous)
+            {
+                object result = await DialogHelper.ShowCustom(new UserDialogControl(user));
+                if (result != null)
+                {
+                    UserDialogResult dialogResult = EnumHelper.GetEnumValueFromString<UserDialogResult>(result.ToString());
+                    switch (dialogResult)
+                    {
+                        case UserDialogResult.Purge:
+                            await ChannelSession.Chat.PurgeUser(user.UserName);
+                            break;
+                        case UserDialogResult.Timeout1:
+                            await ChannelSession.Chat.TimeoutUser(user.UserName, 60);
+                            break;
+                        case UserDialogResult.Timeout5:
+                            await ChannelSession.Chat.TimeoutUser(user.UserName, 300);
+                            break;
+                        case UserDialogResult.Ban:
+                            if (await DialogHelper.ShowConfirmation(string.Format("This will ban the user {0} from this channel. Are you sure?", user.UserName)))
+                            {
+                                await ChannelSession.Chat.BanUser(user);
+                            }
+                            break;
+                        case UserDialogResult.Unban:
+                            await ChannelSession.Chat.UnBanUser(user);
+                            break;
+                        case UserDialogResult.Follow:
+                            ExpandedChannelModel channelToFollow = await ChannelSession.MixerStreamerConnection.GetChannel(user.ChannelID);
+                            await ChannelSession.MixerStreamerConnection.Follow(channelToFollow, ChannelSession.MixerStreamerUser);
+                            break;
+                        case UserDialogResult.Unfollow:
+                            ExpandedChannelModel channelToUnfollow = await ChannelSession.MixerStreamerConnection.GetChannel(user.ChannelID);
+                            await ChannelSession.MixerStreamerConnection.Unfollow(channelToUnfollow, ChannelSession.MixerStreamerUser);
+                            break;
+                        case UserDialogResult.PromoteToMod:
+                            if (await DialogHelper.ShowConfirmation(string.Format("This will promote the user {0} to a moderator of this channel. Are you sure?", user.UserName)))
+                            {
+                                await ChannelSession.Chat.ModUser(user);
+                            }
+                            break;
+                        case UserDialogResult.DemoteFromMod:
+                            if (await DialogHelper.ShowConfirmation(string.Format("This will demote the user {0} from a moderator of this channel. Are you sure?", user.UserName)))
+                            {
+                                await ChannelSession.Chat.UnModUser(user);
+                            }
+                            break;
+                        case UserDialogResult.MixerPage:
+                            ProcessHelper.LaunchLink($"https://mixer.com/{user.UserName}");
+                            break;
+                        case UserDialogResult.EditUser:
+                            UserDataEditorWindow window = new UserDataEditorWindow(ChannelSession.Settings.UserData[user.ID]);
+                            await Task.Delay(100);
+                            window.Show();
+                            await Task.Delay(100);
+                            window.Focus();
+                            break;
+                        case UserDialogResult.Close:
+                        default:
+                            // Just close
+                            break;
+                    }
+                }
+            }
         }
     }
 }

@@ -5,6 +5,7 @@ using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Dialogs;
 using MixItUp.WPF.Windows;
 using StreamingClient.Base.Util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,22 +14,7 @@ using System.Windows.Controls;
 
 namespace MixItUp.WPF.Util
 {
-    public enum UserDialogResult
-    {
-        Purge,
-        Timeout1,
-        Timeout5,
-        Ban,
-        Unban,
-        Close,
-        Follow,
-        Unfollow,
-        PromoteToMod,
-        DemoteFromMod,
-        MixerPage,
-        EditUser,
-    }
-
+    [Obsolete]
     public static class MessageBoxHelper
     {
         private static bool isDialogShown = false;

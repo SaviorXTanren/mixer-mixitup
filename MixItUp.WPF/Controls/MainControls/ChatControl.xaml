@@ -28,8 +28,8 @@
             <ContextMenu x:Key="ChatListContextMenu">
                 <MenuItem x:Name="MessageCopyMenuItem" Header="Copy Message" Click="MessageCopyMenuItem_Click" />
                 <MenuItem x:Name="MessageDeleteMenuItem" Header="Delete Message" Click="MessageDeleteMenuItem_Click" />
-                <MenuItem x:Name="MessageWhisperUserMenuItem" Header="Whisper User" Click="MessageWhisperUserMenuItem_Click" />
                 <Separator/>
+                <MenuItem x:Name="MessageWhisperUserMenuItem" Header="Whisper User" Click="MessageWhisperUserMenuItem_Click" />
                 <MenuItem x:Name="UserInformationMenuItem" Header="User Info" Click="UserInformationMenuItem_Click" />
             </ContextMenu>
 
