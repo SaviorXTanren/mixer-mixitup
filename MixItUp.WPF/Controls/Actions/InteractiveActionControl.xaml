@@ -99,9 +99,9 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="CooldownNameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Name" />
+            <TextBox x:Name="CooldownNameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox x:Name="CooldownAmountTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Cooldown Amount" />
+            <TextBox x:Name="CooldownAmountTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Cooldown Amount" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid Grid.Row="2" x:Name="ConnectGrid" Visibility="Collapsed">
@@ -117,11 +117,11 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="UpdateControlNameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Control ID" />
+            <TextBox x:Name="UpdateControlNameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Control ID" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <ComboBox x:Name="UpdateControlTypeComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Field Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
 
-            <TextBox x:Name="UpdateControlValueTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Updated Value" />
+            <TextBox x:Name="UpdateControlValueTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Updated Value" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid x:Name="SetCustomMetadataGrid" Grid.Row="2" Visibility="Collapsed">
@@ -176,7 +176,7 @@
                 <ColumnDefinition Width="10" />
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="EnableDisableControlNameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Control ID" />
+            <TextBox x:Name="EnableDisableControlNameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Control ID" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <TextBlock Grid.Column="2" VerticalAlignment="Center">Enable/Disable:</TextBlock>
             <ToggleButton Grid.Column="4" x:Name="EnableDisableControlToggleButton" VerticalAlignment="Center" />
