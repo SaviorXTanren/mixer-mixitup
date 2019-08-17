@@ -1,6 +1,10 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Controls.MainControls;
 using MixItUp.Base.ViewModel.Window;
+using MixItUp.WPF.Controls.Chat;
+using StreamingClient.Base.Util;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -76,6 +80,14 @@ namespace MixItUp.WPF.Controls.MainControls
         {
         }
 
+                private void UsernameIntellisenseListBox_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+        }
+
+        private void EmoticonIntellisenseListBox_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+        }
+
         private void ChatList_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             if (this.chatListScrollViewer == null)
@@ -100,24 +112,21 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void ChatLockButton_MouseLeave(object sender, MouseEventArgs e) { this.ChatLockButton.Opacity = 0.3; }
 
-        private void ChatLockButton_Click(object sender, RoutedEventArgs e)
-        {
-        }
-
-        private void UsernameIntellisenseListBox_PreviewMouseUp(object sender, MouseButtonEventArgs e)
-        {
-        }
-
-        private void EmoticonIntellisenseListBox_PreviewMouseUp(object sender, MouseButtonEventArgs e)
-        {
-        }
-
         private void UserList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
         }
 
         private void MessageCopyMenuItem_Click(object sender, RoutedEventArgs e)
         {
+            if (this.ChatList.SelectedItem != null && this.ChatList.SelectedItem is ChatMessageViewModel)
+            {
+                ChatMessageViewModel message = (ChatMessageViewModel)this.ChatList.SelectedItem;
+                try
+                {
+                    Clipboard.SetText(message.PlainTextMessage);
+                }
+                catch (Exception ex) { Logger.Log(ex); }
+            }
         }
 
         private void MessageDeleteMenuItem_Click(object sender, System.Windows.RoutedEventArgs e)
