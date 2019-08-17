@@ -91,6 +91,9 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         }
         private string sendMessageText;
 
+        public List<string> SentMessageHistory { get; set; } = new List<string>();
+        private int SentMessageHistoryIndex = 0;
+
         public bool IsScrollingLocked
         {
             get { return this.isScrollingLocked; }
@@ -170,6 +173,10 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                         await ChannelSession.Services.ChatService.SendMessage(Model.PlatformTypeEnum.Mixer, this.SendMessageText, sendAsStreamer: this.SendAsStreamer);
                     }
 
+                    this.SentMessageHistory.Remove(this.SendMessageText);
+                    this.SentMessageHistory.Insert(0, this.SendMessageText);
+                    this.SentMessageHistoryIndex = -1;
+
                     this.SendMessageText = string.Empty;
                     this.MessageSentOccurred(this, new EventArgs());
                 }
@@ -181,6 +188,31 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 this.ScrollingLockChanged(this, new EventArgs());
                 return Task.FromResult(0);
             });
+        }
+
+        public void MoveSentMessageHistoryUp()
+        {
+            if (this.SentMessageHistory.Count > 0 && this.SentMessageHistoryIndex < (this.SentMessageHistory.Count - 1))
+            {
+                this.SentMessageHistoryIndex++;
+                this.SendMessageText = this.SentMessageHistory[this.SentMessageHistoryIndex];
+            }
+        }
+
+        public void MoveSentMessageHistoryDown()
+        {
+            if (this.SentMessageHistory.Count > 0 && this.SentMessageHistoryIndex >= 0)
+            {
+                this.SentMessageHistoryIndex--;
+                if (this.SentMessageHistoryIndex < 0)
+                {
+                    this.SendMessageText = string.Empty;
+                }
+                else
+                {
+                    this.SendMessageText = this.SentMessageHistory[this.SentMessageHistoryIndex];
+                }
+            }
         }
 
         protected override async Task OnLoadedInternal()

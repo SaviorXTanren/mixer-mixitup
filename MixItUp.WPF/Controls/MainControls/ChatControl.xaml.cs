@@ -91,6 +91,29 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void ChatMessageTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
+            if (this.UsernameIntellisense.IsPopupOpen)
+            {
+
+            }
+            else if (this.EmoticonIntellisense.IsPopupOpen)
+            {
+
+            }
+            else
+            {
+                switch (e.Key)
+                {
+                    case Key.Up:
+                        this.viewModel.MoveSentMessageHistoryUp();
+                        this.ChatMessageTextBox.CaretIndex = this.ChatMessageTextBox.Text.Length;
+                        break;
+
+                    case Key.Down:
+                        this.viewModel.MoveSentMessageHistoryDown();
+                        this.ChatMessageTextBox.CaretIndex = this.ChatMessageTextBox.Text.Length;
+                        break;
+                }
+            }
         }
 
         private void UsernameIntellisenseListBox_PreviewMouseUp(object sender, MouseButtonEventArgs e)
