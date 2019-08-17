@@ -33,6 +33,8 @@ namespace MixItUp.Base.Services
         event EventHandler DisplayUsersUpdated;
 
         Task SendMessage(PlatformTypeEnum platform, string message, bool sendAsStreamer = false);
+        Task Whisper(PlatformTypeEnum platform, UserViewModel user, string message, bool sendAsStreamer = false);
+        Task Whisper(PlatformTypeEnum platform, string username, string message, bool sendAsStreamer = false);
         Task DeleteMessage(ChatMessageViewModel message);
 
         Task ClearMessages();
@@ -117,6 +119,16 @@ namespace MixItUp.Base.Services
             if (platform == PlatformTypeEnum.Mixer)
             {
                 await this.MixerChatService.SendMessage(message, sendAsStreamer);
+            }
+        }
+
+        public async Task Whisper(PlatformTypeEnum platform, UserViewModel user, string message, bool sendAsStreamer = false) { await this.Whisper(platform, user.UserName, message, sendAsStreamer); }
+
+        public async Task Whisper(PlatformTypeEnum platform, string username, string message, bool sendAsStreamer = false)
+        {
+            if (platform == PlatformTypeEnum.Mixer)
+            {
+                await this.MixerChatService.Whisper(username, message, sendAsStreamer);
             }
         }
 

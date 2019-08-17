@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Actions;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModel.Window;
@@ -7,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -76,6 +78,8 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         }
         private int sendAsIndex = 0;
 
+        public bool SendAsStreamer { get { return (this.SendAsIndex == 0); } }
+
         public string SendMessageText
         {
             get { return this.sendMessageText; }
@@ -139,14 +143,33 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 }
             });
 
-            this.SendMessageCommand = this.CreateCommand((parameter) =>
+            this.SendMessageCommand = this.CreateCommand(async (parameter) =>
             {
                 if (!string.IsNullOrEmpty(this.SendMessageText))
                 {
-                    ChannelSession.Services.ChatService.SendMessage(Model.PlatformTypeEnum.Mixer, this.SendMessageText, sendAsStreamer: (this.SendAsIndex == 0));
+                    if (ChatAction.WhisperRegex.IsMatch(this.SendMessageText))
+                    {
+                        Match whisperRegexMatch = ChatAction.WhisperRegex.Match(this.SendMessageText);
+
+                        string message = this.SendMessageText.Substring(whisperRegexMatch.Value.Length);
+
+                        Match userNameMatch = ChatAction.UserNameTagRegex.Match(whisperRegexMatch.Value);
+                        string username = userNameMatch.Value;
+                        username = username.Trim();
+                        username = username.Replace("@", "");
+
+                        await ChannelSession.Services.ChatService.Whisper(Model.PlatformTypeEnum.Mixer, username, message, this.SendAsStreamer);
+                    }
+                    else if (ChatAction.ClearRegex.IsMatch(this.SendMessageText))
+                    {
+                        await ChannelSession.Services.ChatService.ClearMessages();
+                    }
+                    else
+                    {
+                        await ChannelSession.Services.ChatService.SendMessage(Model.PlatformTypeEnum.Mixer, this.SendMessageText, sendAsStreamer: this.SendAsStreamer);
+                    }
                     this.SendMessageText = string.Empty;
                 }
-                return Task.FromResult(0);
             });
 
             this.ScrollingLockCommand = this.CreateCommand((parameter) =>
