@@ -105,6 +105,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
         public string LockIconColor { get { return (this.IsScrollingLocked) ? "Green" : "Red"; } }
 
+        public event EventHandler MessageSentOccurred = delegate { };
         public event EventHandler ScrollingLockChanged = delegate { };
 
         public ICommand ClearChatCommand { get; private set; }
@@ -158,7 +159,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                         username = username.Trim();
                         username = username.Replace("@", "");
 
-                        await ChannelSession.Services.ChatService.Whisper(Model.PlatformTypeEnum.Mixer, username, message, this.SendAsStreamer);
+                        await ChannelSession.Services.ChatService.Whisper(Model.PlatformTypeEnum.Mixer, username, message, this.SendAsStreamer, waitForResponse: true);
                     }
                     else if (ChatAction.ClearRegex.IsMatch(this.SendMessageText))
                     {
@@ -168,7 +169,9 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                     {
                         await ChannelSession.Services.ChatService.SendMessage(Model.PlatformTypeEnum.Mixer, this.SendMessageText, sendAsStreamer: this.SendAsStreamer);
                     }
+
                     this.SendMessageText = string.Empty;
+                    this.MessageSentOccurred(this, new EventArgs());
                 }
             });
 

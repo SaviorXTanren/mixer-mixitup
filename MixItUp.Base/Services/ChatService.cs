@@ -33,9 +33,10 @@ namespace MixItUp.Base.Services
         event EventHandler DisplayUsersUpdated;
 
         Task SendMessage(PlatformTypeEnum platform, string message, bool sendAsStreamer = false);
-        Task Whisper(PlatformTypeEnum platform, UserViewModel user, string message, bool sendAsStreamer = false);
-        Task Whisper(PlatformTypeEnum platform, string username, string message, bool sendAsStreamer = false);
+        Task Whisper(PlatformTypeEnum platform, UserViewModel user, string message, bool sendAsStreamer = false, bool waitForResponse = false);
+        Task Whisper(PlatformTypeEnum platform, string username, string message, bool sendAsStreamer = false, bool waitForResponse = false);
         Task DeleteMessage(ChatMessageViewModel message);
+        Task AddMessage(ChatMessageViewModel message);
 
         Task ClearMessages();
 
@@ -122,13 +123,24 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task Whisper(PlatformTypeEnum platform, UserViewModel user, string message, bool sendAsStreamer = false) { await this.Whisper(platform, user.UserName, message, sendAsStreamer); }
+        public async Task Whisper(PlatformTypeEnum platform, UserViewModel user, string message, bool sendAsStreamer = false, bool waitForResponse = false) { await this.Whisper(platform, user.UserName, message, sendAsStreamer); }
 
-        public async Task Whisper(PlatformTypeEnum platform, string username, string message, bool sendAsStreamer = false)
+        public async Task Whisper(PlatformTypeEnum platform, string username, string message, bool sendAsStreamer = false, bool waitForResponse = false)
         {
             if (platform == PlatformTypeEnum.Mixer)
             {
-                await this.MixerChatService.Whisper(username, message, sendAsStreamer);
+                if (waitForResponse)
+                {
+                    ChatMessageEventModel messageEvent = await this.MixerChatService.WhisperWithResponse(username, message, sendAsStreamer);
+                    if (messageEvent != null)
+                    {
+                        await this.AddMessage(new ChatMessageViewModel(messageEvent));
+                    }
+                }
+                else
+                {
+                    await this.MixerChatService.Whisper(username, message, sendAsStreamer);
+                }
             }
         }
 
@@ -156,7 +168,7 @@ namespace MixItUp.Base.Services
             }
         }
 
-        private async Task AddMessage(ChatMessageViewModel message)
+        public async Task AddMessage(ChatMessageViewModel message)
         {
             if (message.User != null)
             {

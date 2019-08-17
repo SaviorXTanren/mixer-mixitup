@@ -6,7 +6,6 @@ using MixItUp.Base.ViewModel.Controls.MainControls;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModel.Window;
 using MixItUp.WPF.Controls.Dialogs;
-using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Users;
 using StreamingClient.Base.Util;
 using System;
@@ -37,7 +36,10 @@ namespace MixItUp.WPF.Controls.MainControls
         protected override async Task InitializeInternal()
         {
             this.viewModel = new ChatMainControlViewModel((MainWindowViewModel)this.Window.ViewModel);
+
+            this.viewModel.MessageSentOccurred += ViewModel_MessageSentOccurred;
             this.viewModel.ScrollingLockChanged += ViewModel_ScrollingLockChanged;
+
             await this.viewModel.OnLoaded();
             this.DataContext = this.viewModel;
         }
@@ -46,6 +48,12 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.viewModel.OnVisible();
             await base.OnVisibilityChanged();
+        }
+
+        private async void ViewModel_MessageSentOccurred(object sender, EventArgs e)
+        {
+            await Task.Delay(100);
+            this.ChatMessageTextBox.Focus();
         }
 
         private void ViewModel_ScrollingLockChanged(object sender, System.EventArgs e)
