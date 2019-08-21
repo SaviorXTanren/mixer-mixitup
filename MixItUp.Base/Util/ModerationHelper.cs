@@ -297,7 +297,7 @@ namespace MixItUp.Base.Util
                 {
                     return true;
                 }
-                return message.IsAlert || message.IsChatSkill || message.IsSkill || message.ContainsOnlyEmotes();
+                //return message.IsAlert || message.IsChatSkill || message.IsSkill || message.ContainsOnlyEmotes();
             }
             return true;
         }

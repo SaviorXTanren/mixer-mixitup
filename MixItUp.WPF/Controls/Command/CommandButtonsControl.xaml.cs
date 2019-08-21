@@ -1,8 +1,6 @@
-﻿using Mixer.Base.Model.Skills;
-using Mixer.Base.Util;
-using MixItUp.Base;
+﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
-using MixItUp.Base.Model.Skill;
+using MixItUp.Base.Model.Chat;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
@@ -11,9 +9,7 @@ using MixItUp.WPF.Controls.MainControls;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Currency;
 using StreamingClient.Base.Util;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 
 namespace MixItUp.WPF.Controls.Command
@@ -223,7 +219,7 @@ namespace MixItUp.WPF.Controls.Command
                             break;
                         case OtherEventTypeEnum.MixerSkillUsed:
                             extraSpecialIdentifiers["skillname"] = "Lots of stars";
-                            extraSpecialIdentifiers["skilltype"] = EnumHelper.GetEnumName(SkillTypeEnum.Sticker);
+                            extraSpecialIdentifiers["skilltype"] = EnumHelper.GetEnumName(MixerSkillTypeEnum.Sticker);
                             extraSpecialIdentifiers["skillcosttype"] = "Embers";
                             extraSpecialIdentifiers["skillcost"] = "50";
                             extraSpecialIdentifiers["skillimage"] = "https://xforgeassets002.xboxlive.com/xuid-2535473787585366-public/b7a1d715-3a9e-4bdd-a030-32f9e2e0f51e/0013_lots-o-stars_256.png";

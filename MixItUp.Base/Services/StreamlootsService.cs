@@ -165,25 +165,21 @@ namespace MixItUp.Base.Services
                                                     user = new UserViewModel(userModel);
                                                 }
 
-                                                EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.StreamlootsCardRedeemed));
-                                                if (command != null)
+                                                Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
+                                                specialIdentifiers.Add("streamlootscardname", card.data.cardName);
+                                                specialIdentifiers.Add("streamlootscardimage", card.imageUrl);
+                                                specialIdentifiers.Add("streamlootscardhasvideo", (!string.IsNullOrEmpty(card.videoUrl)).ToString());
+                                                specialIdentifiers.Add("streamlootscardvideo", card.videoUrl);
+                                                specialIdentifiers.Add("streamlootscardsound", card.soundUrl);
+
+                                                string message = card.data.Message;
+                                                if (string.IsNullOrEmpty(message))
                                                 {
-                                                    Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
-                                                    specialIdentifiers.Add("streamlootscardname", card.data.cardName);
-                                                    specialIdentifiers.Add("streamlootscardimage", card.imageUrl);
-                                                    specialIdentifiers.Add("streamlootscardhasvideo", (!string.IsNullOrEmpty(card.videoUrl)).ToString());
-                                                    specialIdentifiers.Add("streamlootscardvideo", card.videoUrl);
-                                                    specialIdentifiers.Add("streamlootscardsound", card.soundUrl);
-
-                                                    string message = card.data.Message;
-                                                    if (string.IsNullOrEmpty(message))
-                                                    {
-                                                        message = card.data.LongMessage;
-                                                    }
-                                                    specialIdentifiers.Add("streamlootsmessage", message);
-
-                                                    await command.Perform(user, arguments: null, extraSpecialIdentifiers: specialIdentifiers);
+                                                    message = card.data.LongMessage;
                                                 }
+                                                specialIdentifiers.Add("streamlootsmessage", message);
+
+                                                await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.StreamlootsCardRedeemed), user, arguments: null, extraSpecialIdentifiers: specialIdentifiers);
                                             }
                                         }
                                     }

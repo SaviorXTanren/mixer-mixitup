@@ -5,6 +5,7 @@ using MixItUp.Base.Model;
 using MixItUp.Base.Services.Mixer;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
+using MixItUp.Base.ViewModel.Chat.Mixer;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
@@ -22,7 +23,7 @@ namespace MixItUp.Base.Services
     {
         IMixerChatService MixerChatService { get; }
 
-        Task Initialize(MixerChatService mixerChatService);
+        Task Initialize(IMixerChatService mixerChatService);
 
         bool DisableChat { get; set; }
 
@@ -32,9 +33,9 @@ namespace MixItUp.Base.Services
         IEnumerable<UserViewModel> DisplayUsers { get; }
         event EventHandler DisplayUsersUpdated;
 
-        Task SendMessage(PlatformTypeEnum platform, string message, bool sendAsStreamer = false);
-        Task Whisper(PlatformTypeEnum platform, UserViewModel user, string message, bool sendAsStreamer = false, bool waitForResponse = false);
-        Task Whisper(PlatformTypeEnum platform, string username, string message, bool sendAsStreamer = false, bool waitForResponse = false);
+        Task SendMessage(StreamingPlatformTypeEnum platform, string message, bool sendAsStreamer = false);
+        Task Whisper(StreamingPlatformTypeEnum platform, UserViewModel user, string message, bool sendAsStreamer = false, bool waitForResponse = false);
+        Task Whisper(StreamingPlatformTypeEnum platform, string username, string message, bool sendAsStreamer = false, bool waitForResponse = false);
         Task DeleteMessage(ChatMessageViewModel message);
         Task AddMessage(ChatMessageViewModel message);
 
@@ -78,7 +79,7 @@ namespace MixItUp.Base.Services
 
         public ChatService() { }
 
-        public async Task Initialize(MixerChatService mixerChatService)
+        public async Task Initialize(IMixerChatService mixerChatService)
         {
             this.MixerChatService = mixerChatService;
 
@@ -96,7 +97,7 @@ namespace MixItUp.Base.Services
 
             foreach (ChatMessageEventModel message in await this.MixerChatService.GetChatHistory(50))
             {
-                await this.AddMessage(new ChatMessageViewModel(message));
+                await this.AddMessage(new MixerChatMessageViewModel(message));
             }
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -115,26 +116,26 @@ namespace MixItUp.Base.Services
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
-        public async Task SendMessage(PlatformTypeEnum platform, string message, bool sendAsStreamer = false)
+        public async Task SendMessage(StreamingPlatformTypeEnum platform, string message, bool sendAsStreamer = false)
         {
-            if (platform == PlatformTypeEnum.Mixer)
+            if (platform == StreamingPlatformTypeEnum.Mixer)
             {
                 await this.MixerChatService.SendMessage(message, sendAsStreamer);
             }
         }
 
-        public async Task Whisper(PlatformTypeEnum platform, UserViewModel user, string message, bool sendAsStreamer = false, bool waitForResponse = false) { await this.Whisper(platform, user.UserName, message, sendAsStreamer); }
+        public async Task Whisper(StreamingPlatformTypeEnum platform, UserViewModel user, string message, bool sendAsStreamer = false, bool waitForResponse = false) { await this.Whisper(platform, user.UserName, message, sendAsStreamer); }
 
-        public async Task Whisper(PlatformTypeEnum platform, string username, string message, bool sendAsStreamer = false, bool waitForResponse = false)
+        public async Task Whisper(StreamingPlatformTypeEnum platform, string username, string message, bool sendAsStreamer = false, bool waitForResponse = false)
         {
-            if (platform == PlatformTypeEnum.Mixer)
+            if (platform == StreamingPlatformTypeEnum.Mixer)
             {
                 if (waitForResponse)
                 {
                     ChatMessageEventModel messageEvent = await this.MixerChatService.WhisperWithResponse(username, message, sendAsStreamer);
                     if (messageEvent != null)
                     {
-                        await this.AddMessage(new ChatMessageViewModel(messageEvent));
+                        await this.AddMessage(new MixerChatMessageViewModel(messageEvent));
                     }
                 }
                 else
@@ -146,8 +147,8 @@ namespace MixItUp.Base.Services
 
         public async Task DeleteMessage(ChatMessageViewModel message)
         {
-            message.IsDeleted = true;
-            if (message.Platform == PlatformTypeEnum.Mixer)
+            message.Delete();
+            if (message.Platform == StreamingPlatformTypeEnum.Mixer)
             {
                 await this.MixerChatService.DeleteMessage(message);
             }
@@ -162,7 +163,7 @@ namespace MixItUp.Base.Services
 
         public async Task PurgeUser(UserViewModel user)
         {
-            if (user.Platform == PlatformTypeEnum.Mixer)
+            if (user.Platform == StreamingPlatformTypeEnum.Mixer)
             {
                 await this.MixerChatService.PurgeUser(user.UserName);
             }
@@ -368,7 +369,7 @@ namespace MixItUp.Base.Services
         {
             if (this.messagesLookup.TryGetValue(id.ToString(), out ChatMessageViewModel message))
             {
-                message.IsDeleted = true;
+                message.Delete();
                 GlobalEvents.ChatMessageDeleted(id);
             }
         }
@@ -398,35 +399,29 @@ namespace MixItUp.Base.Services
         {
             foreach (ChatMessageViewModel message in this.Messages.ToList())
             {
-                if (message.User.Equals(e.Item1))
+                if (message.Platform == StreamingPlatformTypeEnum.Mixer && message.User.Equals(e.Item1))
                 {
-                    message.IsDeleted = true;
-                    if (e.Item2 != null)
-                    {
-                        message.DeletedBy = e.Item2.UserName;
-                    }
+                    message.Delete(user: e.Item2);
                 }
             }
 
-            if (ChannelSession.Constellation.CanUserRunEvent(e.Item1, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserPurge)))
+            if (EventCommand.CanUserRunEvent(e.Item1, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserPurge)))
             {
-                ChannelSession.Constellation.LogUserRunEvent(e.Item1, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserPurge));
                 UserViewModel targetUser = e.Item1;
                 UserViewModel modUser = e.Item2;
                 if (e.Item2 == null)
                 {
                     modUser = new UserViewModel(ChannelSession.MixerStreamerUser);
                 }
-                await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserPurge)), modUser, arguments: new List<string>() { targetUser.UserName });
+                await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserPurge), modUser, arguments: new List<string>() { targetUser.UserName });
             }
         }
 
         private async void MixerChatService_OnUserBanOccurred(object sender, UserViewModel user)
         {
-            if (ChannelSession.Constellation.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserBan)))
+            if (EventCommand.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserBan)))
             {
-                ChannelSession.Constellation.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserBan));
-                await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserBan)), user);
+                await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserBan), user);
             }
         }
 

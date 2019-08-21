@@ -1,13 +1,11 @@
 ﻿using Mixer.Base.Clients;
 using Mixer.Base.Model.Chat;
 using Mixer.Base.Model.User;
-using Mixer.Base.Util;
 using MixItUp.Base.Commands;
-using MixItUp.Base.Model.Skill;
-using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.Mixer;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
+using MixItUp.Base.ViewModel.Chat.Mixer;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
@@ -400,6 +398,8 @@ namespace MixItUp.Base.MixerAPI
 
         private async Task<ChatMessageViewModel> AddMessage(ChatMessageEventModel messageEvent)
         {
+            ChatMessageViewModel message = new MixerChatMessageViewModel(messageEvent);
+
             UserViewModel user = await ChannelSession.ActiveUsers.AddOrUpdateUser(messageEvent.GetUser());
             if (user == null)
             {
@@ -410,8 +410,6 @@ namespace MixItUp.Base.MixerAPI
                 await user.RefreshDetails();
             }
             user.UpdateLastActivity();
-
-            ChatMessageViewModel message = new ChatMessageViewModel(messageEvent, user);
 
             Logger.Log(LogLevel.Debug, string.Format("Message Received - {0}", message.ToString()));
 
@@ -448,7 +446,7 @@ namespace MixItUp.Base.MixerAPI
                 return message;
             }
 
-            string moderationReason = await message.ShouldBeModerated();
+            string moderationReason = null;// await message.ShouldBeModerated();
             if (!string.IsNullOrEmpty(moderationReason))
             {
                 Logger.Log(LogLevel.Debug, string.Format("Message Should Be Moderated - {0}", message.ToString()));
@@ -464,7 +462,7 @@ namespace MixItUp.Base.MixerAPI
                 {
                     Logger.Log(LogLevel.Debug, string.Format("Moderation Being Performed - {0}", message.ToString()));
 
-                    message.ModerationReason = moderationReason;
+                    //message.ModerationReason = moderationReason;
                     await this.DeleteMessage(message);
 
                     return message;
@@ -488,7 +486,7 @@ namespace MixItUp.Base.MixerAPI
 
             if (!await this.CheckMessageForCommandAndRun(message))
             {
-                if (message.IsWhisper && ChannelSession.Settings.TrackWhispererNumber && !message.IsStreamerOrBot())
+                if (message.IsWhisper && ChannelSession.Settings.TrackWhispererNumber)// && !message.IsStreamerOrBot())
                 {
                     await this.whisperNumberLock.WaitAndRelease(() =>
                     {
@@ -534,7 +532,7 @@ namespace MixItUp.Base.MixerAPI
                 return null;
             }
 
-            if (ChannelSession.Settings.CommandsOnlyInYourStream && !message.IsInUsersChannel)
+            if (ChannelSession.Settings.CommandsOnlyInYourStream)// && !message.IsInUsersChannel)
             {
                 return null;
             }
@@ -722,25 +720,25 @@ namespace MixItUp.Base.MixerAPI
             if (message != null)
             {
                 this.OnMessageOccurred(sender, message);
-                if (message.IsChatSkill && message.IsInUsersChannel)
-                {
-                    if (SkillUsageModel.IsSparksChatSkill(message.ChatSkill))
-                    {
-                        GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, int>(message.User, (int)message.ChatSkill.cost));
-                    }
-                    else if (SkillUsageModel.IsEmbersChatSkill(message.ChatSkill))
-                    {
-                        GlobalEvents.EmberUseOccurred(new UserEmberUsageModel(message.User, (int)message.ChatSkill.cost, message.PlainTextMessage));
-                    }
+                //if (message.IsChatSkill && message.IsInUsersChannel)
+                //{
+                //    if (SkillUsageModel.IsSparksChatSkill(message.ChatSkill))
+                //    {
+                //        GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, int>(message.User, (int)message.ChatSkill.cost));
+                //    }
+                //    else if (SkillUsageModel.IsEmbersChatSkill(message.ChatSkill))
+                //    {
+                //        GlobalEvents.EmberUseOccurred(new UserEmberUsageModel(message.User, (int)message.ChatSkill.cost, message.PlainTextMessage));
+                //    }
 
-                    GlobalEvents.SkillUseOccurred(new SkillUsageModel(message.User, message.ChatSkill, message.PlainTextMessage));
-                }
+                //    GlobalEvents.SkillUseOccurred(new SkillUsageModel(message.User, message.ChatSkill, message.PlainTextMessage));
+                //}
             }
         }
 
         private async void BotChatClient_OnMessageOccurred(object sender, ChatMessageEventModel e)
         {
-            ChatMessageViewModel message = new ChatMessageViewModel(e);
+            ChatMessageViewModel message = new MixerChatMessageViewModel(e);
             if (message.IsWhisper)
             {
                 message = await this.AddMessage(e);
@@ -764,16 +762,15 @@ namespace MixItUp.Base.MixerAPI
             {
                 this.OnUserPurgeOccurred(sender, new Tuple<UserViewModel, string>(user, e.moderator?.user_name));
 
-                if (ChannelSession.Constellation.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserPurge)))
+                if (EventCommand.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserPurge)))
                 {
-                    ChannelSession.Constellation.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserPurge));
                     UserViewModel targetUser = user;
                     UserViewModel modUser = user;
                     if (e.moderator != null)
                     {
                         modUser = new UserViewModel(e.moderator);
                     }
-                    await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserPurge)), modUser, arguments: new List<string>() { targetUser.UserName });
+                    await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserPurge), modUser, arguments: new List<string>() { targetUser.UserName });
                 }
             }
         }
@@ -814,10 +811,9 @@ namespace MixItUp.Base.MixerAPI
 
                 if (chatUser.roles != null && chatUser.roles.Count() > 0 && chatUser.roles.Where(r => !string.IsNullOrEmpty(r)).Contains(EnumHelper.GetEnumName(MixerRoleEnum.Banned)))
                 {
-                    if (ChannelSession.Constellation.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserBan)))
+                    if (EventCommand.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserBan)))
                     {
-                        ChannelSession.Constellation.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserBan));
-                        await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserBan)), user);
+                        await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserBan), user);
                     }
                 }
             }
@@ -825,29 +821,29 @@ namespace MixItUp.Base.MixerAPI
 
         private async void Client_OnSkillAttributionOccurred(object sender, ChatSkillAttributionEventModel skillAttribution)
         {
-            if (!ChannelSession.Constellation.AvailableSkills.ContainsKey(skillAttribution.skill.skill_id))
-            {
-                ChatUserModel chatUser = skillAttribution.GetUser();
-                UserViewModel user = await ChannelSession.ActiveUsers.AddOrUpdateUser(chatUser);
-                if (user == null)
-                {
-                    user = new UserViewModel(chatUser);
-                }
-                else
-                {
-                    await user.RefreshDetails();
-                }
-                user.UpdateLastActivity();
+            //if (!ChannelSession.Constellation.AvailableSkills.ContainsKey(skillAttribution.skill.skill_id))
+            //{
+            //    ChatUserModel chatUser = skillAttribution.GetUser();
+            //    UserViewModel user = await ChannelSession.ActiveUsers.AddOrUpdateUser(chatUser);
+            //    if (user == null)
+            //    {
+            //        user = new UserViewModel(chatUser);
+            //    }
+            //    else
+            //    {
+            //        await user.RefreshDetails();
+            //    }
+            //    user.UpdateLastActivity();
 
-                string message = null;
-                if (skillAttribution.message != null && skillAttribution.message.message != null && skillAttribution.message.message.Length > 0)
-                {
-                    ChatMessageViewModel messageModel = new ChatMessageViewModel(skillAttribution.message, user);
-                    message = messageModel.PlainTextMessage;
-                }
+            //    string message = null;
+            //    if (skillAttribution.message != null && skillAttribution.message.message != null && skillAttribution.message.message.Length > 0)
+            //    {
+            //        //ChatMessageViewModel messageModel = new ChatMessageViewModel(skillAttribution.message, user);
+            //        //message = messageModel.PlainTextMessage;
+            //    }
 
-                GlobalEvents.SkillUseOccurred(new SkillUsageModel(user, skillAttribution.skill, message));
-            }
+            //   // GlobalEvents.SkillUseOccurred(new SkillUsageModel(user, skillAttribution.skill, message));
+            //}
         }
 
         private async void StreamerClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)

@@ -2,6 +2,8 @@
 using MixItUp.Base.Model.Chat;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
+using MixItUp.Base.ViewModel.Chat.Mixer;
+using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -46,6 +48,9 @@ namespace MixItUp.Base.Model.Overlay
 
         public override Task LoadTestData()
         {
+            ChatMessageViewModel message = new ChatMessageViewModel(Guid.NewGuid().ToString(), StreamingPlatformTypeEnum.Mixer, new UserViewModel(ChannelSession.MixerStreamerUser));
+            message.AddStringMessagePart("Test Message");
+
             ChatMessageEventModel messageEvent = new ChatMessageEventModel()
             {
                 id = Guid.NewGuid(),
@@ -54,7 +59,7 @@ namespace MixItUp.Base.Model.Overlay
                 channel = ChannelSession.MixerChannel.id,
                 message = new ChatMessageContentsModel() { message = new ChatMessageDataModel[] { new ChatMessageDataModel() { type = "text", text = "Test Message" } } }
             };
-            this.GlobalEvents_OnChatMessageReceived(this, new ChatMessageViewModel(messageEvent));
+            this.GlobalEvents_OnChatMessageReceived(this, message);
             return Task.FromResult(0);
         }
 
@@ -76,56 +81,59 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void GlobalEvents_OnChatMessageReceived(object sender, ChatMessageViewModel message)
         {
-            if (!message.IsAlert && !message.IsWhisper)
+            if (!message.IsWhisper)
             {
-                OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateAddItem(message.ID.ToString(), message.User, -1, this.HTML);
-
-                string text = string.Empty;
-                string messageTemplate = string.Empty;
-                if (message.Skill != null || message.ChatSkill != null)
+                if (message is MixerChatMessageViewModel)
                 {
-                    item.TemplateReplacements.Add("MESSAGE", OverlayChatMessagesListItemModel.SkillImageMessageHTMLTemplate);
-                    if (message.Skill != null)
-                    {
-                        item.TemplateReplacements.Add("IMAGE", message.Skill.ImageUrl);
-                    }
-                    else if (message.ChatSkill != null)
-                    {
-                        item.TemplateReplacements.Add("IMAGE", message.ChatSkill.icon_url);
-                    }
+                    //OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateAddItem(message.ID.ToString(), message.User, -1, this.HTML);
+
+                    //string text = string.Empty;
+                    //string messageTemplate = string.Empty;
+                    //if (message.Skill != null || message.ChatSkill != null)
+                    //{
+                    //    item.TemplateReplacements.Add("MESSAGE", OverlayChatMessagesListItemModel.SkillImageMessageHTMLTemplate);
+                    //    if (message.Skill != null)
+                    //    {
+                    //        item.TemplateReplacements.Add("IMAGE", message.Skill.ImageUrl);
+                    //    }
+                    //    else if (message.ChatSkill != null)
+                    //    {
+                    //        item.TemplateReplacements.Add("IMAGE", message.ChatSkill.icon_url);
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    item.TemplateReplacements.Add("MESSAGE", OverlayChatMessagesListItemModel.TextMessageHTMLTemplate);
+
+                    //    text = message.PlainTextMessage;
+                    //    foreach (ChatMessageDataModel messageData in message.MessageComponents)
+                    //    {
+                    //        MixerChatEmoteModel emoticon = MixerChatEmoteModel.GetEmoteForMessageData(messageData);
+                    //        if (emoticon != null)
+                    //        {
+                    //            string emoticonText = OverlayChatMessagesListItemModel.EmoticonMessageHTMLTemplate;
+                    //            emoticonText = emoticonText.Replace("{EMOTICON}", emoticon.Uri);
+                    //            emoticonText = emoticonText.Replace("{EMOTICON_X}", (-emoticon.X).ToString());
+                    //            emoticonText = emoticonText.Replace("{EMOTICON_Y}", (-emoticon.Y).ToString());
+                    //            text = text.Replace(messageData.text, emoticonText);
+                    //        }
+                    //    }
+                    //    item.TemplateReplacements.Add("TEXT", text);
+                    //}
+
+                    //item.TemplateReplacements.Add("USERNAME", item.User.UserName);
+                    //item.TemplateReplacements.Add("USER_IMAGE", item.User.AvatarLink);
+                    //item.TemplateReplacements.Add("USER_COLOR", OverlayChatMessagesListItemModel.userColors[item.User.PrimaryRoleColorName]);
+                    //item.TemplateReplacements.Add("SUB_IMAGE", (item.User.IsMixerSubscriber && ChannelSession.MixerChannel.badge != null) ? ChannelSession.MixerChannel.badge.url : string.Empty);
+                    //item.TemplateReplacements.Add("TEXT_SIZE", this.Height.ToString());
+
+                    //await this.listSemaphore.WaitAndRelease(() =>
+                    //{
+                    //    this.Items.Add(item);
+                    //    this.SendUpdateRequired();
+                    //    return Task.FromResult(0);
+                    //});
                 }
-                else
-                {
-                    item.TemplateReplacements.Add("MESSAGE", OverlayChatMessagesListItemModel.TextMessageHTMLTemplate);
-
-                    text = message.PlainTextMessage;
-                    foreach (ChatMessageDataModel messageData in message.MessageComponents)
-                    {
-                        MixerChatEmoteModel emoticon = MixerChatEmoteModel.GetEmoteForMessageData(messageData);
-                        if (emoticon != null)
-                        {
-                            string emoticonText = OverlayChatMessagesListItemModel.EmoticonMessageHTMLTemplate;
-                            emoticonText = emoticonText.Replace("{EMOTICON}", emoticon.Uri);
-                            emoticonText = emoticonText.Replace("{EMOTICON_X}", (-emoticon.X).ToString());
-                            emoticonText = emoticonText.Replace("{EMOTICON_Y}", (-emoticon.Y).ToString());
-                            text = text.Replace(messageData.text, emoticonText);
-                        }
-                    }
-                    item.TemplateReplacements.Add("TEXT", text);
-                }
-
-                item.TemplateReplacements.Add("USERNAME", item.User.UserName);
-                item.TemplateReplacements.Add("USER_IMAGE", item.User.AvatarLink);
-                item.TemplateReplacements.Add("USER_COLOR", OverlayChatMessagesListItemModel.userColors[item.User.PrimaryRoleColorName]);
-                item.TemplateReplacements.Add("SUB_IMAGE", (item.User.IsMixerSubscriber && ChannelSession.MixerChannel.badge != null) ? ChannelSession.MixerChannel.badge.url : string.Empty);
-                item.TemplateReplacements.Add("TEXT_SIZE", this.Height.ToString());
-
-                await this.listSemaphore.WaitAndRelease(() =>
-                {
-                    this.Items.Add(item);
-                    this.SendUpdateRequired();
-                    return Task.FromResult(0);
-                });
             }
         }
 

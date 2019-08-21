@@ -1,12 +1,16 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.Chat;
+using MixItUp.Base.Model.Chat.Mixer;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
+using MixItUp.Base.ViewModel.Chat.Mixer;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace MixItUp.WPF.Controls.Chat
 {
@@ -34,49 +38,122 @@ namespace MixItUp.WPF.Controls.Chat
 
         private void ChatMessageControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (this.DataContext != null && this.DataContext is ChatMessageViewModel && this.Message == null)
+            if (this.DataContext != null)
             {
-                this.Message = (ChatMessageViewModel)this.DataContext;
-                foreach (object messagePart in this.Message.MessageParts)
+                if (this.DataContext is ChatMessageViewModel && this.Message == null)
                 {
-                    if (messagePart is string)
+                    this.Message = (ChatMessageViewModel)this.DataContext;
+                    bool showMessage = true;
+
+                    if (this.DataContext is MixerSkillChatMessageViewModel)
                     {
-                        foreach (string word in ((string)messagePart).Split(new string[] { " " }, StringSplitOptions.None))
+                        MixerSkillChatMessageViewModel skillMessage = (MixerSkillChatMessageViewModel)this.DataContext;
+                        if (skillMessage.Skill.Type == MixerSkillTypeEnum.Gif)
                         {
-                            TextBlock textBlock = new TextBlock();
-                            textBlock.Text = word + " ";
-                            textBlock.VerticalAlignment = VerticalAlignment.Center;
-                            if (this.Message.IsAlert)
-                            {
-                                textBlock.FontWeight = FontWeights.Bold;
-                                if (!string.IsNullOrEmpty(this.Message.AlertMessageBrush) && !this.Message.AlertMessageBrush.Equals(ColorSchemes.DefaultColorScheme))
-                                {
-                                    textBlock.Foreground = (SolidColorBrush)(new BrushConverter().ConvertFrom(this.Message.AlertMessageBrush));
-                                }
-                                else
-                                {
-                                    textBlock.Foreground = (App.AppSettings.IsDarkBackground) ? new SolidColorBrush(Colors.White) : new SolidColorBrush(Colors.Black);
-                                }
-                            }
+                            this.GifSkillPopup.DataContext = skillMessage.Skill.Image;
+                            this.GifSkillPopup.Visibility = Visibility.Visible;
+                            this.GifSkillIcon.Height = this.GifSkillIcon.Width = ChannelSession.Settings.ChatFontSize * 2;
+                        }
+                        else
+                        {
+                            this.AddImage(new Uri(skillMessage.Skill.Image), ChannelSession.Settings.ChatFontSize * 3, skillMessage.Skill.Name);
+                        }
 
-                            bool isWhisperToStreamer = this.Message.IsWhisper && ChannelSession.MixerStreamerUser.username.Equals(this.Message.TargetUsername, StringComparison.InvariantCultureIgnoreCase);
-                            bool isStreamerTagged = word.Equals("@" + ChannelSession.MixerStreamerUser.username, StringComparison.InvariantCultureIgnoreCase);
-                            if (isWhisperToStreamer || isStreamerTagged)
-                            {
-                                textBlock.Background = (Brush)FindResource("PrimaryHueLightBrush");
-                                textBlock.Foreground = (Brush)FindResource("PrimaryHueLightForegroundBrush");
-                            }
+                        if (skillMessage.Skill.Type == MixerSkillTypeEnum.Other)
+                        {
+                            this.AddStringMessage(skillMessage.Skill.Name);
+                        }
 
-                            this.textBlocks.Add(textBlock);
-                            this.MessageWrapPanel.Children.Add(textBlock);
+                        if (skillMessage.Skill.IsEmbersSkill)
+                        {
+                            this.AddImage(new Uri("/Assets/Images/Embers.png", UriKind.Relative), ChannelSession.Settings.ChatFontSize + 2, MixerSkillModel.EmbersCurrencyName);
+                        }
+                        else
+                        {
+                            this.AddImage(new Uri("/Assets/Images/Sparks.png", UriKind.Relative), ChannelSession.Settings.ChatFontSize + 2, MixerSkillModel.SparksCurrencyName);
+                            showMessage = false;
+                        }
+
+                        this.AddStringMessage(" " + skillMessage.Skill.Cost.ToString());
+                    }
+
+                    if (showMessage)
+                    {
+                        foreach (object messagePart in this.Message.MessageParts)
+                        {
+                            if (messagePart is string)
+                            {
+                                string messagePartString = (string)messagePart;
+
+                                bool isWhisperToStreamer = this.Message.IsWhisper && ChannelSession.MixerStreamerUser.username.Equals(this.Message.TargetUsername, StringComparison.InvariantCultureIgnoreCase);
+                                bool isStreamerTagged = messagePartString.Contains("@" + ChannelSession.MixerStreamerUser.username);
+
+                                this.AddStringMessage(messagePartString, isHighlighted: (isWhisperToStreamer || isStreamerTagged));
+                            }
+                            else if (messagePart is MixerChatEmoteModel)
+                            {
+                                this.MessageWrapPanel.Children.Add(new ChatEmoteControl((MixerChatEmoteModel)messagePart));
+                            }
                         }
                     }
-                    else if (messagePart is MixerChatEmoteModel)
+                }
+                else if (this.DataContext is AlertMessageViewModel)
+                {
+                    AlertMessageViewModel alert = (AlertMessageViewModel)this.DataContext;
+                    SolidColorBrush foreground = null;
+                    if (!string.IsNullOrEmpty(alert.Color) && !alert.Color.Equals(ColorSchemes.DefaultColorScheme))
                     {
-                        this.MessageWrapPanel.Children.Add(new ChatEmoteControl((MixerChatEmoteModel)messagePart));
+                        try
+                        {
+                            foreground = (SolidColorBrush)(new BrushConverter().ConvertFrom(alert.Color));
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Log("Bad Alert Color: " + alert.Color);
+                            Logger.Log(ex);
+                        }
                     }
+                    this.AddStringMessage(alert.Message, foreground: foreground);
                 }
             }
+        }
+
+        private void AddStringMessage(string text, bool isHighlighted = false, SolidColorBrush foreground = null)
+        {
+            foreach (string word in text.Split(new string[] { " " }, StringSplitOptions.None))
+            {
+                TextBlock textBlock = new TextBlock();
+                textBlock.Text = word + " ";
+                textBlock.FontSize = ChannelSession.Settings.ChatFontSize;
+                textBlock.VerticalAlignment = VerticalAlignment.Center;
+                if (foreground != null)
+                {
+                    textBlock.FontWeight = FontWeights.Bold;
+                    textBlock.Foreground = foreground;
+                }
+
+                if (isHighlighted)
+                {
+                    textBlock.Background = (Brush)FindResource("PrimaryHueLightBrush");
+                    textBlock.Foreground = (Brush)FindResource("PrimaryHueLightForegroundBrush");
+                }
+
+                this.textBlocks.Add(textBlock);
+                this.MessageWrapPanel.Children.Add(textBlock);
+            }
+        }
+
+        private void AddImage(Uri uri, int size, string tooltip = "")
+        {
+            Image image = new Image();
+            image.Source = new BitmapImage(uri);
+            image.Width = size;
+            image.Height = size;
+            image.ToolTip = tooltip;
+            image.VerticalAlignment = VerticalAlignment.Center;
+            image.HorizontalAlignment = HorizontalAlignment.Center;
+            image.Margin = new Thickness(5, 0, 5, 0);
+            this.MessageWrapPanel.Children.Add(image);
         }
 
         //private void xChatMessageControl_Loaded(object sender, RoutedEventArgs e)

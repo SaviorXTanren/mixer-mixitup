@@ -2,9 +2,9 @@
 using Mixer.Base.Model.MixPlay;
 using Mixer.Base.Model.Patronage;
 using MixItUp.Base.Model.Interactive;
-using MixItUp.Base.Model.Skill;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.Chat;
+using MixItUp.Base.ViewModel.Chat.Mixer;
 using MixItUp.Base.ViewModel.User;
 using System;
 
@@ -237,8 +237,8 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler<SkillUsageModel> OnSkillUseOccurred;
-        public static void SkillUseOccurred(SkillUsageModel skill)
+        public static event EventHandler<MixerSkillChatMessageViewModel> OnSkillUseOccurred;
+        public static void SkillUseOccurred(MixerSkillChatMessageViewModel skill)
         {
             if (GlobalEvents.OnSkillUseOccurred != null)
             {

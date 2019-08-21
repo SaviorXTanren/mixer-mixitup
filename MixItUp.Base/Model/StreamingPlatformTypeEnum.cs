@@ -1,6 +1,6 @@
 ﻿namespace MixItUp.Base.Model
 {
-    public enum PlatformTypeEnum
+    public enum StreamingPlatformTypeEnum
     {
         Mixer,
         Twitch,

@@ -166,7 +166,7 @@ namespace MixItUp.WPF.Controls.MainControls
             if (this.ChatList.SelectedItem != null && this.ChatList.SelectedItem is ChatMessageViewModel)
             {
                 ChatMessageViewModel message = (ChatMessageViewModel)this.ChatList.SelectedItem;
-                if (!message.IsWhisper && !message.IsAlert)
+                if (!message.IsWhisper)
                 {
                     await ChannelSession.Services.ChatService.DeleteMessage(message);
                 }

@@ -8,7 +8,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace MixItUp.Base.Model.Chat
+namespace MixItUp.Base.Model.Chat.Mixer
 {
     public class MixerChatEmoteModel : IEquatable<MixerChatEmoteModel>
     {

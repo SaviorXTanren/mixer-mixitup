@@ -89,7 +89,7 @@ namespace MixItUp.Base.ViewModel.User
         public uint ID { get; set; }
 
         [DataMember]
-        public PlatformTypeEnum Platform { get; set; }
+        public StreamingPlatformTypeEnum Platform { get; set; }
 
         [DataMember]
         public string UserName { get; set; }

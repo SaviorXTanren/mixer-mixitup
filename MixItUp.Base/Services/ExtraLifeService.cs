@@ -295,11 +295,7 @@ namespace MixItUp.Base.Services
                                 user = new UserViewModel(userModel);
                             }
 
-                            EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.ExtraLifeDonation));
-                            if (command != null)
-                            {
-                                await command.Perform(user, arguments: null, extraSpecialIdentifiers: donation.GetSpecialIdentifiers());
-                            }
+                            await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.ExtraLifeDonation), user, arguments: null, extraSpecialIdentifiers: donation.GetSpecialIdentifiers());
                         }
                     }
                 }

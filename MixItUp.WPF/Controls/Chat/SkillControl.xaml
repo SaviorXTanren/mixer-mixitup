@@ -19,14 +19,14 @@
         </Grid.ColumnDefinitions>
 
         <Image x:Name="SkillImage" Grid.Column="0" Visibility="Collapsed" />
-        <MaterialDesign:PopupBox x:Name="GifSkillPopup" Grid.Column="0" Visibility="Collapsed" PopupMode="MouseOver" Margin="0,0" StaysOpen="False" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
+        <!--<MaterialDesign:PopupBox x:Name="GifSkillPopup" Grid.Column="0" Visibility="Collapsed" PopupMode="MouseOver" Margin="0,0" StaysOpen="False" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
             <MaterialDesign:PopupBox.ToggleContent>
                 <MaterialDesign:PackIcon x:Name="GifSkillIcon" Kind="Image" Style="{StaticResource DefaultPackIcon}" />
             </MaterialDesign:PopupBox.ToggleContent>
             <Grid Margin="5">
                 <local:GifSkillControl DataContext="{Binding ImageUrl}" />
             </Grid>
-        </MaterialDesign:PopupBox>
+        </MaterialDesign:PopupBox>-->
 
         <TextBlock x:Name="SkillNameTextBlock" VerticalAlignment="Center" Grid.Column="2" Text="{Binding Skill.name}" />
 

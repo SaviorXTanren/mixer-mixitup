@@ -3,8 +3,6 @@ using Mixer.Base.Model.Chat;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.MixerAPI;
-using MixItUp.Base.Model.Chat;
-using MixItUp.Base.Model.Skill;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
@@ -17,7 +15,6 @@ using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -162,7 +159,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 this.DisableChatButton.Visibility = Visibility.Collapsed;
             }
 
-            GlobalEvents.OnSkillUseOccurred += GlobalEvents_OnSkillUseOccurred;
+            //GlobalEvents.OnSkillUseOccurred += GlobalEvents_OnSkillUseOccurred;
         }
 
         protected override async Task InitializeInternal()
@@ -224,7 +221,7 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 foreach (ChatMessageEventModel message in oldMessages)
                 {
-                    await AddMessage(new ChatMessageViewModel(message));
+                    //await AddMessage(new ChatMessageViewModel(message));
                 }
             }
         }
@@ -516,21 +513,21 @@ namespace MixItUp.WPF.Controls.MainControls
                     }
                     else
                     {
-                        List<MixerChatEmoteModel> emotes = MixerChatEmoteModel.FindMatchingEmoticons(tag).ToList();
-                        if (emotes.ToList().Count > 0)
-                        {
-                            emotes = emotes.Take(5).Reverse().ToList();
-                            this.indexOfTag = this.ChatMessageTextBox.Text.LastIndexOf(tag);
-                            EmoticonIntellisenseListBox.ItemsSource = emotes;
+                        //List<MixerChatEmoteModel> emotes = MixerChatEmoteModel.FindMatchingEmoticons(tag).ToList();
+                        //if (emotes.ToList().Count > 0)
+                        //{
+                        //    emotes = emotes.Take(5).Reverse().ToList();
+                        //    this.indexOfTag = this.ChatMessageTextBox.Text.LastIndexOf(tag);
+                        //    EmoticonIntellisenseListBox.ItemsSource = emotes;
 
-                            // Select the bottom icon
-                            EmoticonIntellisenseListBox.SelectedIndex = emotes.Count - 1;
+                        //    // Select the bottom icon
+                        //    EmoticonIntellisenseListBox.SelectedIndex = emotes.Count - 1;
 
-                            Rect positionOfCarat = this.ChatMessageTextBox.GetRectFromCharacterIndex(this.ChatMessageTextBox.CaretIndex, true);
-                            Point topLeftOffset = this.ChatMessageTextBox.TransformToAncestor(this).Transform(new Point(positionOfCarat.Left, positionOfCarat.Top));
+                        //    Rect positionOfCarat = this.ChatMessageTextBox.GetRectFromCharacterIndex(this.ChatMessageTextBox.CaretIndex, true);
+                        //    Point topLeftOffset = this.ChatMessageTextBox.TransformToAncestor(this).Transform(new Point(positionOfCarat.Left, positionOfCarat.Top));
 
-                            ShowEmoticonIntellisense(topLeftOffset.X, topLeftOffset.Y, emotes.Count);
-                        }
+                        //    ShowEmoticonIntellisense(topLeftOffset.X, topLeftOffset.Y, emotes.Count);
+                        //}
                     }
                 }
             }
@@ -695,21 +692,21 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void SelectIntellisenseEmoticon()
         {
-            MixerChatEmoteModel emoticon = EmoticonIntellisenseListBox.SelectedItem as MixerChatEmoteModel;
-            if (emoticon != null)
-            {
-                if (this.indexOfTag == 0)
-                {
-                    this.ChatMessageTextBox.Text = emoticon.Name + " ";
-                }
-                else
-                {
-                    this.ChatMessageTextBox.Text = this.ChatMessageTextBox.Text.Substring(0, this.indexOfTag) + emoticon.Name + " ";
-                }
+            //MixerChatEmoteModel emoticon = EmoticonIntellisenseListBox.SelectedItem as MixerChatEmoteModel;
+            //if (emoticon != null)
+            //{
+            //    if (this.indexOfTag == 0)
+            //    {
+            //        this.ChatMessageTextBox.Text = emoticon.Name + " ";
+            //    }
+            //    else
+            //    {
+            //        this.ChatMessageTextBox.Text = this.ChatMessageTextBox.Text.Substring(0, this.indexOfTag) + emoticon.Name + " ";
+            //    }
 
-                this.ChatMessageTextBox.CaretIndex = this.ChatMessageTextBox.Text.Length;
-            }
-            HideIntellisense();
+            //    this.ChatMessageTextBox.CaretIndex = this.ChatMessageTextBox.Text.Length;
+            //}
+            //HideIntellisense();
         }
 
         private async void SendChatMessageButton_Click(object sender, RoutedEventArgs e)
@@ -745,7 +742,7 @@ namespace MixItUp.WPF.Controls.MainControls
                         ChatMessageEventModel response = await ChannelSession.Chat.WhisperWithResponse(username, message, ShouldSendAsStreamer());
                         if (response != null)
                         {
-                            await this.AddMessage(new ChatMessageViewModel(response));
+                            //await this.AddMessage(new ChatMessageViewModel(response));
                         }
                     });
                 }
@@ -1005,7 +1002,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Dispatcher.InvokeAsync<Task>(async () =>
             {
-                await this.AddMessage(new ChatMessageViewModel(message, user, colorScheme));
+                //await this.AddMessage(new ChatMessageViewModel(message, user, colorScheme));
             });
 
             if (ChannelSession.Settings.WhisperAllAlerts)
@@ -1014,32 +1011,32 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
-        private async void GlobalEvents_OnSkillUseOccurred(object sender, SkillUsageModel skill)
-        {
-            if (skill.SkillInstance != null)
-            {
-                await this.Dispatcher.InvokeAsync<Task>(async () =>
-                {
-                    await this.AddMessage(new ChatMessageViewModel(skill.SkillInstance, skill.User));
-                });
+//        private async void GlobalEvents_OnSkillUseOccurred(object sender, MixerSkillModel skill)
+//        {
+//            if (skill.SkillInstance != null)
+//            {
+//                await this.Dispatcher.InvokeAsync<Task>(async () =>
+//                {
+//                    //await this.AddMessage(new ChatMessageViewModel(skill.SkillInstance, skill.User));
+//                });
 
-                if (skill.SkillInstance != null && skill.SkillInstance.IsGif)
-                {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    Task.Run(async () =>
-                    {
-                        await this.gifSkillPopoutLock.WaitAndRelease(async () =>
-                        {
-                            await this.Dispatcher.InvokeAsync<Task>(async () =>
-                            {
-                                await this.GifSkillPopout.ShowGif(skill);
-                            });
-                        });
-                    });
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                }
-            }
-        }
+//                if (skill.SkillInstance != null && skill.SkillInstance.IsGif)
+//                {
+//#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+//                    Task.Run(async () =>
+//                    {
+//                        await this.gifSkillPopoutLock.WaitAndRelease(async () =>
+//                        {
+//                            await this.Dispatcher.InvokeAsync<Task>(async () =>
+//                            {
+//                                await this.GifSkillPopout.ShowGif(skill);
+//                            });
+//                        });
+//                    });
+//#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+//                }
+//            }
+//        }
 
         #endregion Chat Event Handlers
 

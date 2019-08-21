@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Chat;
+using MixItUp.Base.Model.Chat.Mixer;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;

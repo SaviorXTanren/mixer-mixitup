@@ -120,20 +120,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task LoadTestData()
         {
-            for (int i = 0; i < 5; i++)
-            {
-                ChatMessageEventModel messageEvent = new ChatMessageEventModel()
-                {
-                    id = Guid.NewGuid(),
-                    user_id = ChannelSession.MixerStreamerUser.id,
-                    user_name = ChannelSession.MixerStreamerUser.username,
-                    channel = ChannelSession.MixerChannel.id,
-                    message = new ChatMessageContentsModel() { message = new ChatMessageDataModel[] { new ChatMessageDataModel() { type = "text", text = "Test Message" } } }
-                };
-                this.GlobalEvents_OnChatMessageReceived(this, new ChatMessageViewModel(messageEvent));
-
-                await Task.Delay(1000);
-            }
+            await Task.Delay(1000);
         }
 
         public override async Task Initialize()
@@ -191,20 +178,6 @@ namespace MixItUp.Base.Model.Overlay
 
         protected override async Task<string> PerformReplacement(string text, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
-            ChatMessageViewModel message = this.messagesToProcess.First();
-            if (message.Skill != null || message.ChatSkill != null)
-            {
-                text = text.Replace("{MESSAGE}", OverlayChatMessages.SkillImageMessageHTMLTemplate);
-            }
-            else
-            {
-                text = text.Replace("{MESSAGE}", OverlayChatMessages.TextMessageHTMLTemplate);
-            }
-
-            foreach (var kvp in await this.GetReplacementSets(user, arguments, extraSpecialIdentifiers))
-            {
-                text = text.Replace($"{{{kvp.Key}}}", kvp.Value);
-            }
             return await this.ReplaceStringWithSpecialModifiers(text, user, arguments, extraSpecialIdentifiers);
         }
 
@@ -267,16 +240,8 @@ namespace MixItUp.Base.Model.Overlay
             return Task.FromResult(replacementSets);
         }
 
-        private async void GlobalEvents_OnChatMessageReceived(object sender, ChatMessageViewModel message)
+        private void GlobalEvents_OnChatMessageReceived(object sender, ChatMessageViewModel message)
         {
-            if (!message.IsAlert && !message.IsWhisper)
-            {
-                await this.semaphore.WaitAndRelease(() =>
-                {
-                    this.allMessages.Add(message);
-                    return Task.FromResult(0);
-                });
-            }
         }
 
         private async void GlobalEvents_OnChatMessageDeleted(object sender, Guid id)

@@ -1,8 +1,8 @@
 ﻿using Mixer.Base.Clients;
 using Mixer.Base.Model.Chat;
-using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
+using MixItUp.Base.ViewModel.Chat.Mixer;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
@@ -16,7 +16,8 @@ namespace MixItUp.Base.Services.Mixer
 {
     public interface IMixerChatService
     {
-        event EventHandler<ChatMessageViewModel> OnMessageOccurred;
+        event EventHandler<MixerChatMessageViewModel> OnMessageOccurred;
+        event EventHandler<MixerSkillChatMessageViewModel> OnSkillOccurred;
         event EventHandler<Guid> OnDeleteMessageOccurred;
         event EventHandler OnClearMessagesOccurred;
 
@@ -57,7 +58,8 @@ namespace MixItUp.Base.Services.Mixer
 
     public class MixerChatService : MixerWebSocketServiceBase, IMixerChatService
     {
-        public event EventHandler<ChatMessageViewModel> OnMessageOccurred = delegate { };
+        public event EventHandler<MixerChatMessageViewModel> OnMessageOccurred = delegate { };
+        public event EventHandler<MixerSkillChatMessageViewModel> OnSkillOccurred = delegate { };
         public event EventHandler<Guid> OnDeleteMessageOccurred = delegate { };
         public event EventHandler OnClearMessagesOccurred = delegate { };
 
@@ -80,6 +82,8 @@ namespace MixItUp.Base.Services.Mixer
         private CancellationTokenSource cancellationTokenSource;
 
         public MixerChatService() { }
+
+        #region Interface Methods
 
         public bool IsBotConnected { get { return this.botClient != null && this.botClient.Connected; } }
 
@@ -411,6 +415,8 @@ namespace MixItUp.Base.Services.Mixer
             return message;
         }
 
+        #endregion Interface Methods
+
         #region Refresh Methods
 
         private async Task ChatterJoinLeaveBackground(CancellationToken cancellationToken)
@@ -495,14 +501,26 @@ namespace MixItUp.Base.Services.Mixer
 
         private void ChatClient_OnMessageOccurred(object sender, ChatMessageEventModel e)
         {
-            this.OnMessageOccurred(sender, new ChatMessageViewModel(e));
+            if (e.message != null)
+            {
+                if (e.message.ContainsSkill)
+                {
+                    MixerSkillChatMessageViewModel message = new MixerSkillChatMessageViewModel(e);
+                    this.OnMessageOccurred(sender, message);
+                    GlobalEvents.SkillUseOccurred(message);
+                }
+                else
+                {
+                    this.OnMessageOccurred(sender, new MixerChatMessageViewModel(e));
+                }
+            }
         }
 
         private void BotChatClient_OnMessageOccurred(object sender, ChatMessageEventModel e)
         {
             if (!string.IsNullOrEmpty(e.target))
             {
-                this.OnMessageOccurred(sender, new ChatMessageViewModel(e));
+                this.OnMessageOccurred(sender, new MixerChatMessageViewModel(e));
             }
         }
 
@@ -567,7 +585,22 @@ namespace MixItUp.Base.Services.Mixer
 
         private async void Client_OnSkillAttributionOccurred(object sender, ChatSkillAttributionEventModel skillAttribution)
         {
+            MixerSkillChatMessageViewModel message = new MixerSkillChatMessageViewModel(skillAttribution);
 
+            // Add artificial delay to ensure skill event data from Constellation was received.
+            for (int i = 0; i < 8; i++)
+            {
+                await Task.Delay(250);
+                if (ChannelSession.Constellation.SkillEventsTriggered.ContainsKey(skillAttribution.id))
+                {
+                    message.Skill.SetPayload(ChannelSession.Constellation.SkillEventsTriggered[skillAttribution.id]);
+                    ChannelSession.Constellation.SkillEventsTriggered.Remove(skillAttribution.id);
+                    break;
+                }
+            }
+
+            this.OnMessageOccurred(sender, message);
+            GlobalEvents.SkillUseOccurred(message);
         }
 
         private async void StreamerClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)

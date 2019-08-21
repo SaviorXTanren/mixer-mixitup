@@ -373,15 +373,12 @@ namespace MixItUp.Desktop.Services
                                         await user.RefreshDetails(force: true);
                                     }
 
-                                    EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.PatreonSubscribed));
-                                    if (command != null)
-                                    {
-                                        Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();
-                                        extraSpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierNameSpecialIdentifier] = tier.Title;
-                                        extraSpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierAmountSpecialIdentifier] = tier.Amount.ToString();
-                                        extraSpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierImageSpecialIdentifier] = tier.ImageUrl;
-                                        await command.Perform(user, arguments: null, extraSpecialIdentifiers: extraSpecialIdentifiers);
-                                    }
+                                    Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();
+                                    extraSpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierNameSpecialIdentifier] = tier.Title;
+                                    extraSpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierAmountSpecialIdentifier] = tier.Amount.ToString();
+                                    extraSpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierImageSpecialIdentifier] = tier.ImageUrl;
+
+                                    await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.PatreonSubscribed), user, arguments: null, extraSpecialIdentifiers: extraSpecialIdentifiers);
                                 }
                             }
                             this.currentMembersAndTiers[member.UserID] = member.TierID;

@@ -439,17 +439,14 @@
     <Compile Include="Controls\Chat\ChatEmoteControl.xaml.cs">
       <DependentUpon>ChatEmoteControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Chat\GifSkillControl.xaml.cs">
-      <DependentUpon>GifSkillControl.xaml</DependentUpon>
+    <Compile Include="Controls\Chat\GifImageControl.xaml.cs">
+      <DependentUpon>GifImageControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Chat\GifSkillPopoutControl.xaml.cs">
       <DependentUpon>GifSkillPopoutControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Chat\SkillControl.xaml.cs">
       <DependentUpon>SkillControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Chat\StickerControl.xaml.cs">
-      <DependentUpon>StickerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Command\ActionGroupCommandDetailsControl.xaml.cs">
       <DependentUpon>ActionGroupCommandDetailsControl.xaml</DependentUpon>
@@ -1142,7 +1139,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\Chat\GifSkillControl.xaml">
+    <Page Include="Controls\Chat\GifImageControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1151,10 +1148,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Chat\SkillControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Chat\StickerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
