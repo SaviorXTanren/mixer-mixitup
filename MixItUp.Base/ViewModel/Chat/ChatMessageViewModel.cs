@@ -79,7 +79,7 @@ namespace MixItUp.Base.ViewModel.Chat
             this.MessageComponents.Add(new ChatMessageDataModel() { type = "text", text = this.Message });
 
             string color = ColorSchemes.GetColorCode(foregroundBrush);
-            this.AlertMessageBrush = (!string.IsNullOrEmpty(color)) ? color : "#000000";
+            this.AlertMessageBrush = (!string.IsNullOrEmpty(color)) ? color : "Black";
         }
 
         public ChatMessageViewModel(SkillInstanceModel skill, UserViewModel user)
