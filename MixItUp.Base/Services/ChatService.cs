@@ -300,11 +300,17 @@ namespace MixItUp.Base.Services
                             commandsToCheck[trigger] = command;
                         }
                     }
+                    int maxTriggerLength = commandsToCheck.Keys.Max(t => t.Length);
 
                     IEnumerable<string> messageParts = message.PlainTextMessage.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     for (int i = 0; i < messageParts.Count(); i++)
                     {
                         string commandTriggerCheck = string.Join(" ", messageParts.Take(i + 1));
+                        if (commandTriggerCheck.Length > maxTriggerLength)
+                        {
+                            break;  // Early shorting logic
+                        }
+
                         if (commandsToCheck.ContainsKey(commandTriggerCheck))
                         {
                             ChatCommand command = commandsToCheck[commandTriggerCheck];
