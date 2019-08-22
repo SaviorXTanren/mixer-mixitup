@@ -81,6 +81,10 @@ namespace MixItUp.Base.Commands
 
         [Name("Streamloots Card Redeemed")]
         StreamlootsCardRedeemed = 60,
+        [Name("Streamloots Pack Purchased")]
+        StreamlootsPackPurchased = 61,
+        [Name("Streamloots Pack Gifted")]
+        StreamlootsPackGifted = 62,
     }
 
     public class EventCommand : CommandBase, IEquatable<EventCommand>

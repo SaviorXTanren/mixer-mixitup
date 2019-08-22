@@ -218,6 +218,12 @@ namespace MixItUp.WPF.Controls.Command
                             extraSpecialIdentifiers["streamlootscardsound"] = "https://static.streamloots.com/b355d1ef-d931-4c16-a48f-8bed0076401b/alerts/default.mp3";
                             extraSpecialIdentifiers["streamlootsmessage"] = "Test Message";
                             break;
+                        case OtherEventTypeEnum.StreamlootsPackPurchased:
+                            extraSpecialIdentifiers["streamlootspurchasequantity"] = "1";
+                            break;
+                        case OtherEventTypeEnum.StreamlootsPackGifted:
+                            extraSpecialIdentifiers["streamlootspurchasequantity"] = "1";
+                            break;
                         case OtherEventTypeEnum.TwitterStreamTweetRetweet:
                             break;
                         case OtherEventTypeEnum.MixerSkillUsed:

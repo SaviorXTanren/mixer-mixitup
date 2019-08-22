@@ -15,6 +15,52 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
+    public class StreamlootsPurchaseModel
+    {
+        public string type { get; set; }
+        public StreamlootsPurchaseDataModel data { get; set; }
+    }
+
+    public class StreamlootsPurchaseDataModel
+    {
+        public List<StreamlotsPurchaseDataFieldModel> fields { get; set; }
+
+        // This is the person receiving the action (if gifted)
+        public string Giftee
+        {
+            get
+            {
+                var field = this.fields.FirstOrDefault(f => f.name.Equals("giftee"));
+                return (field != null) ? field.value : string.Empty;
+            }
+        }
+
+        public int Quantity
+        {
+            get
+            {
+                var field = this.fields.FirstOrDefault(f => f.name.Equals("quantity"));
+                return (field != null) ? int.Parse(field.value) : 0;
+            }
+        }
+
+        // This is the person doing the action (purchase or gifter)
+        public string Username
+        {
+            get
+            {
+                var field = this.fields.FirstOrDefault(f => f.name.Equals("username"));
+                return (field != null) ? field.value : string.Empty;
+            }
+        }
+    }
+
+    public class StreamlotsPurchaseDataFieldModel
+    {
+        public string name { get; set; }
+        public string value { get; set; }
+    }
+
     public class StreamlootsCardModel
     {
         public string type { get; set; }
@@ -133,7 +179,7 @@ namespace MixItUp.Base.Services
                     this.responseStream = response.GetResponseStream();
 
                     UTF8Encoding encoder = new UTF8Encoding();
-                    string cardData = string.Empty;
+                    string textBuffer = string.Empty;
                     var buffer = new byte[100000];
                     while (!this.cancellationTokenSource.Token.IsCancellationRequested)
                     {
@@ -147,42 +193,27 @@ namespace MixItUp.Base.Services
                                 {
                                     Util.Logger.LogDiagnostic("Streamloots Packet Received: " + text);
 
-                                    cardData += text;
+                                    textBuffer += text;
                                     try
                                     {
-                                        JObject jobj = JObject.Parse("{ " + cardData + " }");
+                                        JObject jobj = JObject.Parse("{ " + textBuffer + " }");
                                         if (jobj != null && jobj.ContainsKey("data"))
                                         {
-                                            cardData = string.Empty;
-                                            StreamlootsCardModel card = jobj["data"].ToObject<StreamlootsCardModel>();
-                                            if (card != null)
+                                            textBuffer = string.Empty;
+                                            if (jobj.Value<JObject>("data").ContainsKey("data") && jobj.Value<JObject>("data").Value<JObject>("data").ContainsKey("type"))
                                             {
-                                                UserViewModel user = new UserViewModel(0, card.data.Username);
-
-                                                UserModel userModel = await ChannelSession.Connection.GetUser(user.UserName);
-                                                if (userModel != null)
+                                                var type = jobj.Value<JObject>("data").Value<JObject>("data").Value<string>("type");
+                                                switch(type.ToLower())
                                                 {
-                                                    user = new UserViewModel(userModel);
-                                                }
-
-                                                EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.StreamlootsCardRedeemed));
-                                                if (command != null)
-                                                {
-                                                    Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
-                                                    specialIdentifiers.Add("streamlootscardname", card.data.cardName);
-                                                    specialIdentifiers.Add("streamlootscardimage", card.imageUrl);
-                                                    specialIdentifiers.Add("streamlootscardhasvideo", (!string.IsNullOrEmpty(card.videoUrl)).ToString());
-                                                    specialIdentifiers.Add("streamlootscardvideo", card.videoUrl);
-                                                    specialIdentifiers.Add("streamlootscardsound", card.soundUrl);
-
-                                                    string message = card.data.Message;
-                                                    if (string.IsNullOrEmpty(message))
-                                                    {
-                                                        message = card.data.LongMessage;
-                                                    }
-                                                    specialIdentifiers.Add("streamlootsmessage", message);
-
-                                                    await command.Perform(user, arguments: null, extraSpecialIdentifiers: specialIdentifiers);
+                                                    case "purchase":
+                                                        await ProcessPurchase(jobj);
+                                                        break;
+                                                    case "redemption":
+                                                        await ProcessCardRedemption(jobj);
+                                                        break;
+                                                    default:
+                                                        Util.Logger.LogDiagnostic($"Unknown Streamloots packet type: {type}");
+                                                        break;
                                                 }
                                             }
                                         }
@@ -214,6 +245,87 @@ namespace MixItUp.Base.Services
                         this.responseStream.Close();
                         this.responseStream = null;
                     }
+                }
+            }
+        }
+
+        private async Task ProcessPurchase(JObject jobj)
+        {
+            var purchase = jobj["data"].ToObject<StreamlootsPurchaseModel>();
+            if (purchase != null)
+            {
+                UserViewModel user = new UserViewModel(0, purchase.data.Username);
+                UserViewModel giftee = (string.IsNullOrEmpty(purchase.data.Giftee)) ? null : new UserViewModel(0, purchase.data.Giftee);
+
+                UserModel userModel = await ChannelSession.Connection.GetUser(user.UserName);
+                if (userModel != null)
+                {
+                    user = new UserViewModel(userModel);
+                }
+
+                if (giftee != null)
+                {
+                    UserModel gifteeModel = await ChannelSession.Connection.GetUser(giftee.UserName);
+                    if (gifteeModel != null)
+                    {
+                        giftee = new UserViewModel(gifteeModel);
+                    }
+                }
+
+                EventCommand command = null;
+                IEnumerable<string> arguments = null;
+                if (giftee == null)
+                {
+                    command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.StreamlootsPackPurchased));
+                }
+                else
+                {
+                    command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.StreamlootsPackGifted));
+                    arguments = new List<string>() { giftee.UserName };
+                }
+
+                if (command != null)
+                {
+                    Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
+                    specialIdentifiers.Add("streamlootspurchasequantity", purchase.data.Quantity.ToString());
+
+                    await command.Perform(user, arguments, extraSpecialIdentifiers: specialIdentifiers);
+                }
+            }
+        }
+
+        private async Task ProcessCardRedemption(JObject jobj)
+        {
+            string cardData = string.Empty;
+            StreamlootsCardModel card = jobj["data"].ToObject<StreamlootsCardModel>();
+            if (card != null)
+            {
+                UserViewModel user = new UserViewModel(0, card.data.Username);
+
+                UserModel userModel = await ChannelSession.Connection.GetUser(user.UserName);
+                if (userModel != null)
+                {
+                    user = new UserViewModel(userModel);
+                }
+
+                EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.StreamlootsCardRedeemed));
+                if (command != null)
+                {
+                    Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
+                    specialIdentifiers.Add("streamlootscardname", card.data.cardName);
+                    specialIdentifiers.Add("streamlootscardimage", card.imageUrl);
+                    specialIdentifiers.Add("streamlootscardhasvideo", (!string.IsNullOrEmpty(card.videoUrl)).ToString());
+                    specialIdentifiers.Add("streamlootscardvideo", card.videoUrl);
+                    specialIdentifiers.Add("streamlootscardsound", card.soundUrl);
+
+                    string message = card.data.Message;
+                    if (string.IsNullOrEmpty(message))
+                    {
+                        message = card.data.LongMessage;
+                    }
+                    specialIdentifiers.Add("streamlootsmessage", message);
+
+                    await command.Perform(user, arguments: null, extraSpecialIdentifiers: specialIdentifiers);
                 }
             }
         }
