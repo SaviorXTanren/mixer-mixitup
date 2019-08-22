@@ -544,13 +544,13 @@ namespace MixItUp.Base.MixerAPI
                 List<PermissionsCommandBase> commandsToCheck = new List<PermissionsCommandBase>(ChannelSession.AllEnabledChatCommands);
                 commandsToCheck.AddRange(message.User.Data.CustomCommands);
 
-                PermissionsCommandBase command = commandsToCheck.FirstOrDefault(c => c.MatchesCommand(message.PlainTextMessage));
-                if (command == null)
-                {
-                    command = commandsToCheck.FirstOrDefault(c => c.ContainsCommand(message.PlainTextMessage));
-                }
-
-                return command;
+                //PermissionsCommandBase command = commandsToCheck.FirstOrDefault(c => c.MatchesCommand(message.PlainTextMessage));
+                //if (command == null)
+                //{
+                //    command = commandsToCheck.FirstOrDefault(c => c.ContainsCommand(message.PlainTextMessage));
+                //}
+                //
+                //return command;
             }
 
             return null;
@@ -558,7 +558,7 @@ namespace MixItUp.Base.MixerAPI
 
         private async Task RunMessageCommand(ChatMessageViewModel message, PermissionsCommandBase command)
         {
-            await command.Perform(message.User, command.GetArgumentsFromText(message.PlainTextMessage));
+            //await command.Perform(message.User, command.GetArgumentsFromText(message.PlainTextMessage));
 
             bool delete = false;
             if (ChannelSession.Settings.DeleteChatCommandsWhenRun)

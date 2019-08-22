@@ -147,26 +147,6 @@ namespace MixItUp.Base.Commands
 
         public override string ToString() { return string.Format("{0} - {1}", this.ID, this.Name); }
 
-        public bool MatchesOrContainsCommand(string command) { return this.MatchesCommand(command) || this.ContainsCommand(command); }
-
-        public bool MatchesCommand(string command) { return this.CommandTriggers.Count() > 0 && this.CommandTriggers.Any(c => command.Equals(c, StringComparison.InvariantCultureIgnoreCase)); }
-
-        public bool ContainsCommand(string command) { return this.CommandTriggers.Count() > 0 && this.CommandTriggers.Any(c => command.StartsWith(c + " ", StringComparison.InvariantCultureIgnoreCase)); }
-
-        public IEnumerable<string> GetArgumentsFromText(string text)
-        {
-            string messageText = text;
-            foreach (string commandTrigger in this.CommandTriggers)
-            {
-                if (messageText.StartsWith(commandTrigger, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    messageText = messageText.Substring(commandTrigger.Length);
-                    break;
-                }
-            }
-            return messageText.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-        }
-
         public async Task Perform(IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
         {
             await this.Perform(await ChannelSession.GetCurrentUser(), arguments, extraSpecialIdentifiers: extraSpecialIdentifiers);

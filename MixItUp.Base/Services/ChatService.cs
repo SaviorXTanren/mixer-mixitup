@@ -42,12 +42,16 @@ namespace MixItUp.Base.Services
         Task ClearMessages();
 
         Task PurgeUser(UserViewModel user);
+
+        void RebuildCommandTriggers();
     }
 
     public class ChatService : IChatService
     {
         private const string ChatEventLogDirectoryName = "ChatEventLogs";
         private const string ChatEventLogFileNameFormat = "ChatEventLog-{0}.txt";
+
+        public IMixerChatService MixerChatService { get; private set; }
 
         public bool DisableChat { get; set; }
 
@@ -68,12 +72,12 @@ namespace MixItUp.Base.Services
         public event EventHandler DisplayUsersUpdated = delegate { };
         private SortedList<string, UserViewModel> displayUsers = new SortedList<string, UserViewModel>();
 
+        private LockedDictionary<string, ChatCommand> chatCommandTriggers = new LockedDictionary<string, ChatCommand>();
+
         private HashSet<string> userEntranceCommands = new HashSet<string>();
 
         private SemaphoreSlim whisperNumberLock = new SemaphoreSlim(1);
         private Dictionary<string, int> whisperMap = new Dictionary<string, int>();
-
-        public IMixerChatService MixerChatService { get; private set; }
 
         private string currentChatEventLogFilePath;
 
@@ -82,6 +86,8 @@ namespace MixItUp.Base.Services
         public async Task Initialize(IMixerChatService mixerChatService)
         {
             this.MixerChatService = mixerChatService;
+
+            this.RebuildCommandTriggers();
 
             await ChannelSession.Services.FileService.CreateDirectory(ChatEventLogDirectoryName);
             this.currentChatEventLogFilePath = Path.Combine(ChatEventLogDirectoryName, string.Format(ChatEventLogFileNameFormat, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture)));
@@ -95,9 +101,18 @@ namespace MixItUp.Base.Services
             this.MixerChatService.OnUserPurgeOccurred += MixerChatService_OnUserPurgeOccurred;
             this.MixerChatService.OnUserBanOccurred += MixerChatService_OnUserBanOccurred;
 
-            foreach (ChatMessageEventModel message in await this.MixerChatService.GetChatHistory(50))
+            foreach (ChatMessageEventModel messageEvent in await this.MixerChatService.GetChatHistory(50))
             {
-                await this.AddMessage(new MixerChatMessageViewModel(message));
+                MixerChatMessageViewModel message = new MixerChatMessageViewModel(messageEvent);
+                this.messagesLookup[message.ID] = message;
+                if (ChannelSession.Settings.LatestChatAtTop)
+                {
+                    this.Messages.Insert(0, message);
+                }
+                else
+                {
+                    this.Messages.Add(message);
+                }
             }
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -258,7 +273,7 @@ namespace MixItUp.Base.Services
 
                 GlobalEvents.ChatMessageReceived(message);
 
-                if (ChannelSession.IsStreamer && message.User != null && !message.User.MixerRoles.Contains(MixerRoleEnum.Banned))
+                if (ChannelSession.IsStreamer && !string.IsNullOrEmpty(message.PlainTextMessage) && message.User != null && !message.User.MixerRoles.Contains(MixerRoleEnum.Banned))
                 {
                     if (!ChannelSession.Settings.AllowCommandWhispering && message.IsWhisper)
                     {
@@ -276,6 +291,40 @@ namespace MixItUp.Base.Services
                     }
 
                     Logger.Log(LogLevel.Debug, string.Format("Checking Message For Command - {0}", message.ToString()));
+
+                    Dictionary<string, ChatCommand> commandsToCheck = this.chatCommandTriggers.ToDictionary();
+                    foreach (ChatCommand command in message.User.Data.CustomCommands)
+                    {
+                        foreach (string trigger in command.CommandTriggers)
+                        {
+                            commandsToCheck[trigger] = command;
+                        }
+                    }
+
+                    IEnumerable<string> messageParts = message.PlainTextMessage.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    for (int i = 0; i < messageParts.Count(); i++)
+                    {
+                        string commandTriggerCheck = string.Join(" ", messageParts.Take(i + 1));
+                        if (commandsToCheck.ContainsKey(commandTriggerCheck))
+                        {
+                            ChatCommand command = commandsToCheck[commandTriggerCheck];
+                            if (command.IsEnabled)
+                            {
+                                Logger.Log(LogLevel.Debug, string.Format("Command Found For Message - {0} - {1}", message.ToString(), command.ToString()));
+
+                                if (command.Requirements.Settings.DeleteChatCommandWhenRun || (ChannelSession.Settings.DeleteChatCommandsWhenRun && !command.Requirements.Settings.DontDeleteChatCommandWhenRun))
+                                {
+                                    Logger.Log(LogLevel.Debug, string.Format("Deleting Message As Chat Command - {0}", message.PlainTextMessage));
+                                    await this.DeleteMessage(message);
+                                }
+
+                                IEnumerable<string> arguments = messageParts.Skip(i + 1);
+                                await command.Perform(message.User, arguments: arguments);
+
+                                break;
+                            }
+                        }
+                    }
                 }
             }
             else if (message is AlertChatMessageViewModel)
@@ -314,11 +363,10 @@ namespace MixItUp.Base.Services
             //    commandsToCheck.AddRange(message.User.Data.CustomCommands);
 
             //    PermissionsCommandBase command = commandsToCheck.FirstOrDefault(c => c.MatchesCommand(message.PlainTextMessage));
-            //    if (command == null)
-            //    {
-            //        command = commandsToCheck.FirstOrDefault(c => c.ContainsCommand(message.PlainTextMessage));
-            //    }
-
+            //if (command == null)
+            //{
+            //    command = commandsToCheck.FirstOrDefault(c => c.ContainsCommand(message.PlainTextMessage));
+            //}
             //    if (command != null)
             //    {
             //        Logger.Log(LogLevel.Debug, string.Format("Command Found For Message - {0} - {1}", message.ToString(), command.ToString()));
@@ -345,6 +393,18 @@ namespace MixItUp.Base.Services
             //        }
             //    }
             //}
+        }
+
+        public void RebuildCommandTriggers()
+        {
+            this.chatCommandTriggers.Clear();
+            foreach (ChatCommand command in ChannelSession.Settings.ChatCommands)
+            {
+                foreach (string trigger in command.CommandTriggers)
+                {
+                    this.chatCommandTriggers[trigger] = command;
+                }
+            }
         }
 
         private async Task UsersJoined(IEnumerable<UserViewModel> users)

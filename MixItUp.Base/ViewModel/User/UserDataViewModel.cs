@@ -159,13 +159,13 @@ namespace MixItUp.Base.ViewModel.User
         public int OfflineViewingMinutes { get; set; }
 
         [DataMember]
-        public LockedDictionary<UserCurrencyViewModel, UserCurrencyDataViewModel> CurrencyAmounts { get; set; }
+        public LockedDictionary<UserCurrencyViewModel, UserCurrencyDataViewModel> CurrencyAmounts { get; set; } = new LockedDictionary<UserCurrencyViewModel, UserCurrencyDataViewModel>();
 
         [DataMember]
-        public LockedDictionary<UserInventoryViewModel, UserInventoryDataViewModel> InventoryAmounts { get; set; }
+        public LockedDictionary<UserInventoryViewModel, UserInventoryDataViewModel> InventoryAmounts { get; set; } = new LockedDictionary<UserInventoryViewModel, UserInventoryDataViewModel>();
 
         [DataMember]
-        public LockedList<ChatCommand> CustomCommands { get; set; }
+        public LockedList<ChatCommand> CustomCommands { get; set; } = new LockedList<ChatCommand>();
 
         [DataMember]
         public CustomCommand EntranceCommand { get; set; }
@@ -185,12 +185,7 @@ namespace MixItUp.Base.ViewModel.User
         [DataMember]
         public uint ModerationStrikes { get; set; }
 
-        public UserDataViewModel()
-        {
-            this.CurrencyAmounts = new LockedDictionary<UserCurrencyViewModel, UserCurrencyDataViewModel>();
-            this.InventoryAmounts = new LockedDictionary<UserInventoryViewModel, UserInventoryDataViewModel>();
-            this.CustomCommands = new LockedList<ChatCommand>();
-        }
+        public UserDataViewModel() { }
 
         public UserDataViewModel(uint id, string username)
             : this()
