@@ -8,8 +8,6 @@ namespace MixItUp.Base.ViewModel.Chat.Mixer
 {
     public class MixerChatMessageViewModel : ChatMessageViewModel
     {
-        public bool IsInUsersChannel { get; private set; } = true;
-
         public MixerChatMessageViewModel(ChatMessageEventModel chatMessageEvent)
             : base(chatMessageEvent.id.ToString(), StreamingPlatformTypeEnum.Mixer, new UserViewModel(chatMessageEvent))
         {

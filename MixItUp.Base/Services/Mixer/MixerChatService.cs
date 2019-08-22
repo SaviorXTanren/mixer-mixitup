@@ -436,7 +436,11 @@ namespace MixItUp.Base.Services.Mixer
             if (joinsToProcess.Count > 0)
             {
                 IEnumerable<UserViewModel> processedUsers = await ChannelSession.ActiveUsers.AddOrUpdateUsers(joinsToProcess.Select(u => u.GetUser()));
-                this.OnUsersJoinOccurred(this, processedUsers);
+                await DispatcherHelper.InvokeDispatcher(() =>
+                {
+                    this.OnUsersJoinOccurred(this, processedUsers);
+                    return Task.FromResult(0);
+                });
             }
 
             List<ChatUserEventModel> leavesToProcess = new List<ChatUserEventModel>();
@@ -454,7 +458,11 @@ namespace MixItUp.Base.Services.Mixer
             if (leavesToProcess.Count > 0)
             {
                 IEnumerable<UserViewModel> processedUsers = await ChannelSession.ActiveUsers.RemoveUsers(leavesToProcess.Select(u => u.id));
-                this.OnUsersLeaveOccurred(this, processedUsers);
+                await DispatcherHelper.InvokeDispatcher(() =>
+                {
+                    this.OnUsersLeaveOccurred(this, processedUsers);
+                    return Task.FromResult(0);
+                });
             }
         }
 

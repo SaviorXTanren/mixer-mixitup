@@ -23,6 +23,8 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public string TargetUsername { get; protected set; }
 
+        public bool IsInUsersChannel { get; protected set; } = true;
+
         public DateTimeOffset Timestamp { get; protected set; } = DateTimeOffset.Now;
 
         public bool IsDeleted { get; private set; }

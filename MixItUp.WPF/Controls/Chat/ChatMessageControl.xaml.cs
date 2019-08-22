@@ -38,13 +38,34 @@ namespace MixItUp.WPF.Controls.Chat
 
         private void ChatMessageControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (this.DataContext != null)
+            if (this.DataContext != null && this.DataContext is ChatMessageViewModel && this.Message == null)
             {
-                if (this.DataContext is ChatMessageViewModel && this.Message == null)
+                this.Message = (ChatMessageViewModel)this.DataContext;
+                if (this.DataContext is AlertChatMessageViewModel)
                 {
-                    this.Message = (ChatMessageViewModel)this.DataContext;
-                    bool showMessage = true;
+                    AlertChatMessageViewModel alert = (AlertChatMessageViewModel)this.DataContext;
+                    SolidColorBrush foreground = null;
+                    if (!string.IsNullOrEmpty(alert.Color) && !alert.Color.Equals(ColorSchemes.DefaultColorScheme))
+                    {
+                        try
+                        {
+                            foreground = (SolidColorBrush)(new BrushConverter().ConvertFrom(alert.Color));
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Log("Bad Alert Color: " + alert.Color);
+                            Logger.Log(ex);
+                        }
+                    }
+                    this.AddStringMessage(alert.PlainTextMessage, foreground: foreground);
+                }
+                else
+                {
+                    ChatMessageHeaderControl header = new ChatMessageHeaderControl();
+                    header.DataContext = this.DataContext;
+                    this.MessageWrapPanel.Children.Add(header);
 
+                    bool showMessage = true;
                     if (this.DataContext is MixerSkillChatMessageViewModel)
                     {
                         MixerSkillChatMessageViewModel skillMessage = (MixerSkillChatMessageViewModel)this.DataContext;
@@ -96,24 +117,6 @@ namespace MixItUp.WPF.Controls.Chat
                             }
                         }
                     }
-                }
-                else if (this.DataContext is AlertMessageViewModel)
-                {
-                    AlertMessageViewModel alert = (AlertMessageViewModel)this.DataContext;
-                    SolidColorBrush foreground = null;
-                    if (!string.IsNullOrEmpty(alert.Color) && !alert.Color.Equals(ColorSchemes.DefaultColorScheme))
-                    {
-                        try
-                        {
-                            foreground = (SolidColorBrush)(new BrushConverter().ConvertFrom(alert.Color));
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.Log("Bad Alert Color: " + alert.Color);
-                            Logger.Log(ex);
-                        }
-                    }
-                    this.AddStringMessage(alert.Message, foreground: foreground);
                 }
             }
         }

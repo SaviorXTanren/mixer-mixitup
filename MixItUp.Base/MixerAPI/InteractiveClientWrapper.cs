@@ -1,9 +1,11 @@
 ﻿using Mixer.Base.Clients;
 using Mixer.Base.Model.MixPlay;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Services.Mixer;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
@@ -1005,6 +1007,12 @@ namespace MixItUp.Base.MixerAPI
                     this.OnGiveInput(this, e);
 
                     this.OnInteractiveControlUsed(this, new InteractiveInputEvent(user, e, connectedControl));
+
+                    if (ChannelSession.Settings.ChatShowInteractiveAlerts)
+                    {
+                        await ChannelSession.Services.ChatService.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer,
+                            string.Format("{0} Used The \"{1}\" Interactive Control", user.UserName, connectedControl.Command.Name), ChannelSession.Settings.ChatInteractiveAlertsColorScheme));
+                    }
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }

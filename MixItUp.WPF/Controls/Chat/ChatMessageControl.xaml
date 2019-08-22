@@ -12,8 +12,6 @@
     </UserControl.Resources>
 
     <WrapPanel x:Name="MessageWrapPanel" Orientation="Horizontal">
-        <local:ChatMessageHeaderControl DataContext="{Binding}" />
-
         <MaterialDesign:PopupBox x:Name="GifSkillPopup" Visibility="Collapsed" PopupMode="MouseOver" Margin="0,0" StaysOpen="False" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
             <MaterialDesign:PopupBox.ToggleContent>
                 <Image x:Name="GifSkillIcon" Source="https://static.mixer.com/img/design/ui/skills-chat-attribution/giphy_chat_24.png" />

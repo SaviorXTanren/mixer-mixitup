@@ -5,6 +5,7 @@ using Mixer.Base.Model.Patronage;
 using Mixer.Base.Model.Skills;
 using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.Chat;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
@@ -58,7 +59,6 @@ namespace MixItUp.Base.MixerAPI
             GlobalEvents.OnSparkUseOccurred += GlobalEvents_OnSparkUseOccurred;
             GlobalEvents.OnEmberUseOccurred += GlobalEvents_OnEmberUseOccurred;
             GlobalEvents.OnSkillUseOccurred += GlobalEvents_OnSkillUseOccurred;
-            GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
         }
 
         public async Task<bool> Connect()
@@ -204,8 +204,9 @@ namespace MixItUp.Base.MixerAPI
                             }
 
                             await EventCommand.FindAndRunEventCommand(e.channel, user);
-                        }
 
+                            await this.AddAlertChatMessage(string.Format("{0} Followed", user.UserName));
+                        }
                         GlobalEvents.FollowOccurred(user);
                     }
                     else
@@ -213,8 +214,9 @@ namespace MixItUp.Base.MixerAPI
                         if (EventCommand.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserUnfollow)))
                         {
                             await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserUnfollow), user);
-                        }
 
+                            await this.AddAlertChatMessage(string.Format("{0} Unfollowed", user.UserName));
+                        }
                         GlobalEvents.UnfollowOccurred(user);
                     }
                 }
@@ -236,6 +238,8 @@ namespace MixItUp.Base.MixerAPI
                         Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>() { { "hostviewercount", viewerCount.ToString() } };
                         await EventCommand.FindAndRunEventCommand(e.channel, user, extraSpecialIdentifiers: specialIdentifiers);
 
+                        await this.AddAlertChatMessage(string.Format("{0} Hosted With {1} Viewers", user.UserName, viewerCount));
+
                         GlobalEvents.HostOccurred(new Tuple<UserViewModel, int>(user, viewerCount));
                     }
                 }
@@ -250,6 +254,8 @@ namespace MixItUp.Base.MixerAPI
                         }
 
                         await EventCommand.FindAndRunEventCommand(e.channel, user);
+
+                        await this.AddAlertChatMessage(string.Format("{0} Subscribed", user.UserName));
                     }
 
                     GlobalEvents.SubscribeOccurred(user);
@@ -272,6 +278,8 @@ namespace MixItUp.Base.MixerAPI
                         Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>() { { "usersubmonths", resubMonths.ToString() } };
                         await EventCommand.FindAndRunEventCommand(ConstellationClientWrapper.ChannelResubscribedEvent.ToString(), user, extraSpecialIdentifiers: specialIdentifiers);
 
+                        await this.AddAlertChatMessage(string.Format("{0} Re-Subscribed For {1} Months", user.UserName, resubMonths));
+
                         GlobalEvents.ResubscribeOccurred(new Tuple<UserViewModel, int>(user, resubMonths));
                     }
                 }
@@ -287,6 +295,8 @@ namespace MixItUp.Base.MixerAPI
                             UserViewModel receiverUser = new UserViewModel(receiverUserModel);
 
                             await EventCommand.FindAndRunEventCommand(e.channel, gifterUser, arguments: new List<string>() { receiverUser.UserName });
+
+                            await this.AddAlertChatMessage(string.Format("{0} Gifted A Subscription To {1}", gifterUser.UserName, receiverUser.UserName));
 
                             GlobalEvents.SubscriptionGiftedOccurred(gifterUser, receiverUser);
                         }
@@ -405,15 +415,11 @@ namespace MixItUp.Base.MixerAPI
             await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerSkillUsed), skill.User, extraSpecialIdentifiers: specialIdentifiers);
         }
 
-        private async void GlobalEvents_OnChatMessageReceived(object sender, ChatMessageViewModel message)
+        private async Task AddAlertChatMessage(string message)
         {
-            if (!message.IsWhisper)
+            if (ChannelSession.Settings.ChatShowEventAlerts)
             {
-                Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
-                {
-                    { "message", message.PlainTextMessage },
-                };
-                await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChatMessage), message.User, extraSpecialIdentifiers: specialIdentifiers);
+                await ChannelSession.Services.ChatService.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer, message, ChannelSession.Settings.ChatEventAlertsColorScheme));
             }
         }
 
