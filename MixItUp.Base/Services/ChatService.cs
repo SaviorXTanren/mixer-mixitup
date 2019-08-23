@@ -300,34 +300,37 @@ namespace MixItUp.Base.Services
                             commandsToCheck[trigger] = command;
                         }
                     }
-                    int maxTriggerLength = commandsToCheck.Keys.Max(t => t.Length);
 
-                    IEnumerable<string> messageParts = message.PlainTextMessage.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                    for (int i = 0; i < messageParts.Count(); i++)
+                    if (commandsToCheck.Keys.Count() > 0)
                     {
-                        string commandTriggerCheck = string.Join(" ", messageParts.Take(i + 1));
-                        if (commandTriggerCheck.Length > maxTriggerLength)
+                        int maxTriggerLength = commandsToCheck.Keys.Max(t => t.Length);
+                        IEnumerable<string> messageParts = message.PlainTextMessage.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                        for (int i = 0; i < messageParts.Count(); i++)
                         {
-                            break;  // Early shorting logic
-                        }
-
-                        if (commandsToCheck.ContainsKey(commandTriggerCheck))
-                        {
-                            ChatCommand command = commandsToCheck[commandTriggerCheck];
-                            if (command.IsEnabled)
+                            string commandTriggerCheck = string.Join(" ", messageParts.Take(i + 1));
+                            if (commandTriggerCheck.Length > maxTriggerLength)
                             {
-                                Logger.Log(LogLevel.Debug, string.Format("Command Found For Message - {0} - {1}", message.ToString(), command.ToString()));
+                                break;  // Early shorting logic
+                            }
 
-                                if (command.Requirements.Settings.DeleteChatCommandWhenRun || (ChannelSession.Settings.DeleteChatCommandsWhenRun && !command.Requirements.Settings.DontDeleteChatCommandWhenRun))
+                            if (commandsToCheck.ContainsKey(commandTriggerCheck))
+                            {
+                                ChatCommand command = commandsToCheck[commandTriggerCheck];
+                                if (command.IsEnabled)
                                 {
-                                    Logger.Log(LogLevel.Debug, string.Format("Deleting Message As Chat Command - {0}", message.PlainTextMessage));
-                                    await this.DeleteMessage(message);
+                                    Logger.Log(LogLevel.Debug, string.Format("Command Found For Message - {0} - {1}", message.ToString(), command.ToString()));
+
+                                    if (command.Requirements.Settings.DeleteChatCommandWhenRun || (ChannelSession.Settings.DeleteChatCommandsWhenRun && !command.Requirements.Settings.DontDeleteChatCommandWhenRun))
+                                    {
+                                        Logger.Log(LogLevel.Debug, string.Format("Deleting Message As Chat Command - {0}", message.PlainTextMessage));
+                                        await this.DeleteMessage(message);
+                                    }
+
+                                    IEnumerable<string> arguments = messageParts.Skip(i + 1);
+                                    await command.Perform(message.User, arguments: arguments);
+
+                                    break;
                                 }
-
-                                IEnumerable<string> arguments = messageParts.Skip(i + 1);
-                                await command.Perform(message.User, arguments: arguments);
-
-                                break;
                             }
                         }
                     }
