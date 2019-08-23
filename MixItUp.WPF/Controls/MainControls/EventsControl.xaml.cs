@@ -93,7 +93,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     return "Patreon";
                 }
-                else if (this.OtherEventType == OtherEventTypeEnum.StreamlootsCardRedeemed)
+                else if (this.OtherEventType == OtherEventTypeEnum.StreamlootsCardRedeemed || this.OtherEventType == OtherEventTypeEnum.StreamlootsPackGifted || this.OtherEventType == OtherEventTypeEnum.StreamlootsPackPurchased)
                 {
                     return "Streamloots";
                 }
@@ -157,6 +157,8 @@ namespace MixItUp.WPF.Controls.MainControls
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.StreamJarDonation));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.PatreonSubscribed));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.StreamlootsCardRedeemed));
+            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.StreamlootsPackPurchased));
+            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.StreamlootsPackGifted));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TwitterStreamTweetRetweet));
         }
 

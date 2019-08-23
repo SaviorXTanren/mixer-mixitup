@@ -29,11 +29,11 @@ namespace MixItUp.WPF.Controls.MainControls
         SameTeam,
         [Name("Same Age Rating")]
         AgeRating,
-        [Name("Small Streamer (> 10)")]
+        [Name("Small Streamer (< 10)")]
         SmallStreamer,
         [Name("Medium Streamer (10-25)")]
         MediumStreamer,
-        [Name("Large Streamer (< 25)")]
+        [Name("Large Streamer (> 25)")]
         LargeStreamer,
         [Name("Partnered Streamer")]
         PartneredStreamer,
