@@ -219,8 +219,6 @@ namespace MixItUp.WPF.Controls.Command
                             extraSpecialIdentifiers["streamlootsmessage"] = "Test Message";
                             break;
                         case OtherEventTypeEnum.StreamlootsPackPurchased:
-                            extraSpecialIdentifiers["streamlootspurchasequantity"] = "1";
-                            break;
                         case OtherEventTypeEnum.StreamlootsPackGifted:
                             extraSpecialIdentifiers["streamlootspurchasequantity"] = "1";
                             break;
