@@ -206,7 +206,7 @@ namespace MixItUp.Base.Services
                                                         await ProcessCardRedemption(jobj);
                                                         break;
                                                     default:
-                                                        Util.Logger.LogDiagnostic($"Unknown Streamloots packet type: {type}");
+                                                        Logger.Log(LogLevel.Debug, $"Unknown Streamloots packet type: {type}");
                                                         break;
                                                 }
                                             }
@@ -251,7 +251,7 @@ namespace MixItUp.Base.Services
                 UserViewModel user = new UserViewModel(0, purchase.data.Username);
                 UserViewModel giftee = (string.IsNullOrEmpty(purchase.data.Giftee)) ? null : new UserViewModel(0, purchase.data.Giftee);
 
-                UserModel userModel = await ChannelSession.Connection.GetUser(user.UserName);
+                UserModel userModel = await ChannelSession.MixerStreamerConnection.GetUser(user.UserName);
                 if (userModel != null)
                 {
                     user = new UserViewModel(userModel);
@@ -259,31 +259,22 @@ namespace MixItUp.Base.Services
 
                 if (giftee != null)
                 {
-                    UserModel gifteeModel = await ChannelSession.Connection.GetUser(giftee.UserName);
+                    UserModel gifteeModel = await ChannelSession.MixerStreamerConnection.GetUser(giftee.UserName);
                     if (gifteeModel != null)
                     {
                         giftee = new UserViewModel(gifteeModel);
                     }
                 }
 
-                EventCommand command = null;
-                IEnumerable<string> arguments = null;
+                Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
+                specialIdentifiers.Add("streamlootspurchasequantity", purchase.data.Quantity.ToString());
                 if (giftee == null)
                 {
-                    command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.StreamlootsPackPurchased));
+                    await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.StreamlootsPackPurchased), user, extraSpecialIdentifiers: specialIdentifiers);
                 }
                 else
                 {
-                    command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.StreamlootsPackGifted));
-                    arguments = new List<string>() { giftee.UserName };
-                }
-
-                if (command != null)
-                {
-                    Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
-                    specialIdentifiers.Add("streamlootspurchasequantity", purchase.data.Quantity.ToString());
-
-                    await command.Perform(user, arguments, extraSpecialIdentifiers: specialIdentifiers);
+                    await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.StreamlootsPackGifted), user, arguments: new List<string>() { giftee.UserName }, extraSpecialIdentifiers: specialIdentifiers);
                 }
             }
         }
@@ -296,31 +287,27 @@ namespace MixItUp.Base.Services
             {
                 UserViewModel user = new UserViewModel(0, card.data.Username);
 
-                UserModel userModel = await ChannelSession.Connection.GetUser(user.UserName);
+                UserModel userModel = await ChannelSession.MixerStreamerConnection.GetUser(user.UserName);
                 if (userModel != null)
                 {
                     user = new UserViewModel(userModel);
                 }
 
-                EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.StreamlootsCardRedeemed));
-                if (command != null)
+                Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
+                specialIdentifiers.Add("streamlootscardname", card.data.cardName);
+                specialIdentifiers.Add("streamlootscardimage", card.imageUrl);
+                specialIdentifiers.Add("streamlootscardhasvideo", (!string.IsNullOrEmpty(card.videoUrl)).ToString());
+                specialIdentifiers.Add("streamlootscardvideo", card.videoUrl);
+                specialIdentifiers.Add("streamlootscardsound", card.soundUrl);
+
+                string message = card.data.Message;
+                if (string.IsNullOrEmpty(message))
                 {
-                    Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
-                    specialIdentifiers.Add("streamlootscardname", card.data.cardName);
-                    specialIdentifiers.Add("streamlootscardimage", card.imageUrl);
-                    specialIdentifiers.Add("streamlootscardhasvideo", (!string.IsNullOrEmpty(card.videoUrl)).ToString());
-                    specialIdentifiers.Add("streamlootscardvideo", card.videoUrl);
-                    specialIdentifiers.Add("streamlootscardsound", card.soundUrl);
-
-                    string message = card.data.Message;
-                    if (string.IsNullOrEmpty(message))
-                    {
-                        message = card.data.LongMessage;
-                    }
-                    specialIdentifiers.Add("streamlootsmessage", message);
-
-                    await command.Perform(user, arguments: null, extraSpecialIdentifiers: specialIdentifiers);
+                    message = card.data.LongMessage;
                 }
+                specialIdentifiers.Add("streamlootsmessage", message);
+
+                await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.StreamlootsCardRedeemed), user, extraSpecialIdentifiers: specialIdentifiers);
             }
         }
 
