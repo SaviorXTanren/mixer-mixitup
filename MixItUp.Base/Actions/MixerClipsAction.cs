@@ -19,7 +19,7 @@ namespace MixItUp.Base.Actions
         public const string MixerClipURLSpecialIdentifier = "mixerclipurl";
 
         public const int MinimumLength = 15;
-        public const int MaximumLength = 30;
+        public const int MaximumLength = 300;
 
         public const string VideoFileContentLocatorType = "HlsStreaming";
 
@@ -70,50 +70,43 @@ namespace MixItUp.Base.Actions
                     await ChannelSession.Chat.SendMessage("Sending clip creation request to Mixer...");
                 }
 
-                if (MixerClipsAction.MinimumLength <= this.ClipLength && this.ClipLength <= MixerClipsAction.MaximumLength)
+                string clipName = await this.ReplaceStringWithSpecialModifiers(this.ClipName, user, arguments);
+                if (!string.IsNullOrEmpty(clipName) && MixerClipsAction.MinimumLength <= this.ClipLength && this.ClipLength <= MixerClipsAction.MaximumLength)
                 {
-                    string clipName = await this.ReplaceStringWithSpecialModifiers(this.ClipName, user, arguments);
-                    if (!string.IsNullOrEmpty(clipName))
+                    ClipModel clip = null;
+                    DateTimeOffset clipCreationTime = DateTimeOffset.Now;
+
+                    BroadcastModel broadcast = await ChannelSession.Connection.GetCurrentBroadcast();
+                    if (broadcast != null)
                     {
-                        ClipModel clip = null;
-                        DateTimeOffset clipCreationTime = DateTimeOffset.Now;
-
-                        BroadcastModel broadcast = await ChannelSession.Connection.GetCurrentBroadcast();
-                        if (broadcast != null)
+                        clip = await ChannelSession.Connection.CreateClip(new ClipRequestModel()
                         {
-                            clip = await ChannelSession.Connection.CreateClip(new ClipRequestModel()
-                            {
-                                broadcastId = broadcast.id.ToString(),
-                                highlightTitle = clipName,
-                                clipDurationInSeconds = this.ClipLength
-                            });
-                        }
-
-                        if (clip == null)
-                        {
-                            for (int i = 0; i < 10; i++)
-                            {
-                                await Task.Delay(2000);
-
-                                IEnumerable<ClipModel> clips = await ChannelSession.Connection.GetChannelClips(ChannelSession.Channel);
-                                clip = clips.OrderByDescending(c => c.uploadDate).FirstOrDefault();
-                                if (clip != null && clip.uploadDate.ToLocalTime() >= clipCreationTime && clip.title.Equals(clipName))
-                                {
-                                    await this.ProcessClip(clip, clipName);
-                                    return;
-                                }
-                            }
-                            await ChannelSession.Chat.SendMessage("ERROR: Unable to create clip or could not find clip, please verify that clips can be created by ensuring the Clips button on your stream is not grayed out.");
-                        }
-                        else
-                        {
-                            await this.ProcessClip(clip, clipName);
-                        }
+                            broadcastId = broadcast.id.ToString(),
+                            highlightTitle = clipName,
+                            clipDurationInSeconds = this.ClipLength
+                        });
                     }
-                }
-                else
-                {
-                    await ChannelSession.Chat.SendMessage(string.Format("ERROR: Clip length must be between {0} - {1} seconds", MixerClipsAction.MinimumLength, MixerClipsAction.MaximumLength));
+
+                    if (clip == null)
+                    {
+                        for (int i = 0; i < 10; i++)
+                        {
+                            await Task.Delay(2000);
+
+                            IEnumerable<ClipModel> clips = await ChannelSession.Connection.GetChannelClips(ChannelSession.Channel);
+                            clip = clips.OrderByDescending(c => c.uploadDate).FirstOrDefault();
+                            if (clip != null && clip.uploadDate.ToLocalTime() >= clipCreationTime && clip.title.Equals(clipName))
+                            {
+                                await this.ProcessClip(clip, clipName);
+                                return;
+                            }
+                        }
+                        await ChannelSession.Chat.SendMessage("ERROR: Unable to create clip or could not find clip, please verify that clips can be created by ensuring the Clips button on your stream is not grayed out.");
+                    }
+                    else
+                    {
+                        await this.ProcessClip(clip, clipName);
+                    }
                 }
             }
         }

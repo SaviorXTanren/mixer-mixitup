@@ -45,7 +45,7 @@
 
             <TextBox Grid.Column="0" x:Name="ClipNameTextBox" MaterialDesign:HintAssist.Hint="Clip Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="380" />
 
-            <TextBox Grid.Column="2" x:Name="ClipLengthTextBox" MaterialDesign:HintAssist.Hint="Length (15-30 Secs)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
+            <TextBox Grid.Column="2" x:Name="ClipLengthTextBox" MaterialDesign:HintAssist.Hint="Length (15-300 Secs)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
 
             <TextBlock Grid.Column="4" VerticalAlignment="Bottom">Show Info In Chat:</TextBlock>
             <ToggleButton Grid.Column="6" x:Name="ShowClipInfoInChatToggleButton" VerticalAlignment="Bottom" />
