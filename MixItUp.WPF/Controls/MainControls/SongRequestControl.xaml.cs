@@ -63,7 +63,7 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.Window.RunAsyncOperation(() =>
             {
                 Button button = (Button)sender;
-                if (button != null && button.DataContext != null && button.CommandTarget is SongRequestModel)
+                if (button != null && button.DataContext != null && button.DataContext is SongRequestModel)
                 {
                     SongRequestModel songRequest = (SongRequestModel)button.DataContext;
                     this.viewModel.MoveUpCommand.Execute(songRequest);
@@ -77,7 +77,7 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.Window.RunAsyncOperation(() =>
             {
                 Button button = (Button)sender;
-                if (button != null && button.DataContext != null && button.CommandTarget is SongRequestModel)
+                if (button != null && button.DataContext != null && button.DataContext is SongRequestModel)
                 {
                     SongRequestModel songRequest = (SongRequestModel)button.DataContext;
                     this.viewModel.MoveDownCommand.Execute(songRequest);
@@ -91,7 +91,7 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.Window.RunAsyncOperation(() =>
             {
                 Button button = (Button)sender;
-                if (button != null && button.DataContext != null && button.CommandTarget is SongRequestModel)
+                if (button != null && button.DataContext != null && button.DataContext is SongRequestModel)
                 {
                     SongRequestModel songRequest = (SongRequestModel)button.DataContext;
                     this.viewModel.DeleteCommand.Execute(songRequest);
@@ -105,7 +105,7 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.Window.RunAsyncOperation(() =>
             {
                 Button button = (Button)sender;
-                if (button != null && button.DataContext != null && button.CommandTarget is SongRequestModel)
+                if (button != null && button.DataContext != null && button.DataContext is SongRequestModel)
                 {
                     SongRequestModel songRequest = (SongRequestModel)button.DataContext;
                     this.viewModel.BanCommand.Execute(songRequest);
