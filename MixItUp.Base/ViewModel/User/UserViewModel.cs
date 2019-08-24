@@ -273,6 +273,9 @@ namespace MixItUp.Base.ViewModel.User
         public int WhispererNumber { get; set; }
 
         [JsonIgnore]
+        public bool HasWhisperNumber { get { return this.WhispererNumber > 0; } }
+
+        [JsonIgnore]
         public int SubscribeMonths
         {
             get

@@ -9,7 +9,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <Util:ColorBrushConverter x:Key="ColorBrushConverter" />
     </UserControl.Resources>
 
@@ -22,7 +22,7 @@
 
         <local:ChatUserControl DataContext="{Binding User}" Grid.Column="0" />
 
-        <Grid Grid.Column="1" Visibility="{Binding IsWhisper, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}" VerticalAlignment="Center">
+        <Grid Grid.Column="1" Visibility="{Binding IsWhisper, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" VerticalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3" />
                 <ColumnDefinition Width="Auto" />
@@ -32,7 +32,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="1" Text="{Binding User.WhispererNumber, StringFormat=[Whisperer #{0}]}" />
+            <TextBlock Grid.Column="1" Visibility="{Binding User.HasWhisperNumber, Converter={StaticResource BooleanToVisibilityConverter}}" Text="{Binding User.WhispererNumber, StringFormat=[Whisperer #{0}]}" />
 
             <TextBlock Grid.Column="3" Text="&#x2794;" />
 
