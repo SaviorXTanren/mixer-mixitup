@@ -23,7 +23,7 @@ namespace MixItUp.Base.Services
 
     public class StreamlootsPurchaseDataModel
     {
-        public List<StreamlotsDataFieldModel> fields { get; set; }
+        public List<StreamlootsDataFieldModel> fields { get; set; }
 
         // This is the person receiving the action (if gifted)
         public string Giftee
@@ -67,13 +67,13 @@ namespace MixItUp.Base.Services
     public class StreamlootsCardDataModel
     {
         public string cardName { get; set; }
-        public List<StreamlotsDataFieldModel> fields { get; set; }
+        public List<StreamlootsDataFieldModel> fields { get; set; }
 
         public string Message
         {
             get
             {
-                StreamlotsDataFieldModel field = this.fields.FirstOrDefault(f => f.name.Equals("message"));
+                StreamlootsDataFieldModel field = this.fields.FirstOrDefault(f => f.name.Equals("message"));
                 return (field != null) ? field.value : string.Empty;
             }
         }
@@ -82,7 +82,7 @@ namespace MixItUp.Base.Services
         {
             get
             {
-                StreamlotsDataFieldModel field = this.fields.FirstOrDefault(f => f.name.Equals("longMessage"));
+                StreamlootsDataFieldModel field = this.fields.FirstOrDefault(f => f.name.Equals("longMessage"));
                 return (field != null) ? field.value : string.Empty;
             }
         }
@@ -91,13 +91,13 @@ namespace MixItUp.Base.Services
         {
             get
             {
-                StreamlotsDataFieldModel field = this.fields.FirstOrDefault(f => f.name.Equals("username"));
+                StreamlootsDataFieldModel field = this.fields.FirstOrDefault(f => f.name.Equals("username"));
                 return (field != null) ? field.value : string.Empty;
             }
         }
     }
 
-    public class StreamlotsDataFieldModel
+    public class StreamlootsDataFieldModel
     {
         public string name { get; set; }
         public string value { get; set; }
