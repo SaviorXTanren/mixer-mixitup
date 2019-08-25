@@ -104,7 +104,11 @@
               if (items !== null && items.length > 0) {
                 for (let j = 0; j < items.length; j++) {
                   try {
-                    await items[j].setVisible(data.sourceVisible);
+                    if (items[j].setVisible) {
+                      await items[j].setVisible(data.sourceVisible);
+                    } else if (items[j].setMute) {
+                      await items[j].setMute(!data.sourceVisible);
+                    }
                   }
                   catch (err) { logException(err); }
                 }
