@@ -84,7 +84,14 @@
       }).then(function (sources) {
         if (sources != null && sources.length > 0) {
           for (let i = 0; i < sources.length; i++) {
-            if (sources[i]._cname == data.sourceName) {
+            let found = false;
+            if (sources[i]._cname.length > 0) {
+              found = sources[i]._cname === data.sourceName;
+            } else {
+              found = sources[i]._name === data.sourceName;
+            }
+
+            if (found) {
               if (data.webBrowserUrl != null) {
                 eventsDiv.innerHTML += 'Source Web Browser Update: ' + data.webBrowserUrl + '<BR>';
                 try {
