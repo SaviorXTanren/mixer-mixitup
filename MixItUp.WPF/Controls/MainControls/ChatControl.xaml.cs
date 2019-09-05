@@ -1,5 +1,7 @@
-﻿using Mixer.Base.Model.Channel;
+﻿using MaterialDesignThemes.Wpf;
+using Mixer.Base.Model.Channel;
 using MixItUp.Base;
+using MixItUp.Base.Model.Chat.Mixer;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Controls.MainControls;
@@ -9,6 +11,8 @@ using MixItUp.WPF.Controls.Dialogs;
 using MixItUp.WPF.Windows.Users;
 using StreamingClient.Base.Util;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -27,6 +31,8 @@ namespace MixItUp.WPF.Controls.MainControls
         private ScrollViewer chatListScrollViewer;
 
         private ChatMainControlViewModel viewModel;
+
+        private int indexOfLastIntellisenseText;
 
         public ChatControl()
         {
@@ -85,19 +91,92 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
-        private void ChatMessageTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private async void ChatMessageTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+            try
+            {
+                this.HideIntellisense();
+
+                string tag = this.ChatMessageTextBox.Text.Split(' ').LastOrDefault();
+                if (!string.IsNullOrEmpty(tag))
+                {
+                    if (tag.StartsWith("@"))
+                    {
+                        string filter = tag.Substring(1);
+
+                        List<UserViewModel> users = (await ChannelSession.ActiveUsers.GetAllUsers()).ToList();
+                        if (!string.IsNullOrEmpty(filter))
+                        {
+                            users = users.Where(u => !string.IsNullOrEmpty(u.UserName) && u.UserName.StartsWith(filter, StringComparison.InvariantCultureIgnoreCase)).ToList();
+                        }
+
+                        if (users.Count > 0)
+                        {
+                            users = users.OrderBy(u => u.UserName).Take(5).Reverse().ToList();
+                            this.ShowIntellisense(tag, this.UsernameIntellisense, this.UsernameIntellisenseListBox, users);
+                        }
+                    }
+                    else if (tag.StartsWith(":"))
+                    {
+                        List<MixerChatEmoteModel> emotes = MixerChatEmoteModel.FindMatchingEmoticons(tag).ToList();
+                        if (emotes.ToList().Count > 0)
+                        {
+                            emotes = emotes.Take(5).Reverse().ToList();
+                            this.ShowIntellisense(tag, this.EmoticonIntellisense, this.EmoticonIntellisenseListBox, emotes);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex) { Logger.Log(ex); }
         }
 
         private void ChatMessageTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (this.UsernameIntellisense.IsPopupOpen)
             {
-
+                switch (e.Key)
+                {
+                    case Key.Escape:
+                        this.HideIntellisense();
+                        e.Handled = true;
+                        break;
+                    case Key.Tab:
+                    case Key.Enter:
+                        this.SelectIntellisenseUser();
+                        e.Handled = true;
+                        break;
+                    case Key.Up:
+                        this.UsernameIntellisenseListBox.SelectedIndex = MathHelper.Clamp(this.UsernameIntellisenseListBox.SelectedIndex - 1, 0, this.UsernameIntellisenseListBox.Items.Count - 1);
+                        e.Handled = true;
+                        break;
+                    case Key.Down:
+                        this.UsernameIntellisenseListBox.SelectedIndex = MathHelper.Clamp(this.UsernameIntellisenseListBox.SelectedIndex + 1, 0, this.UsernameIntellisenseListBox.Items.Count - 1);
+                        e.Handled = true;
+                        break;
+                }
             }
             else if (this.EmoticonIntellisense.IsPopupOpen)
             {
-
+                switch (e.Key)
+                {
+                    case Key.Escape:
+                        this.HideIntellisense();
+                        e.Handled = true;
+                        break;
+                    case Key.Tab:
+                    case Key.Enter:
+                        this.SelectIntellisenseEmoticon();
+                        e.Handled = true;
+                        break;
+                    case Key.Up:
+                        EmoticonIntellisenseListBox.SelectedIndex = MathHelper.Clamp(this.EmoticonIntellisenseListBox.SelectedIndex - 1, 0, this.EmoticonIntellisenseListBox.Items.Count - 1);
+                        e.Handled = true;
+                        break;
+                    case Key.Down:
+                        this.EmoticonIntellisenseListBox.SelectedIndex = MathHelper.Clamp(this.EmoticonIntellisenseListBox.SelectedIndex + 1, 0, this.EmoticonIntellisenseListBox.Items.Count - 1);
+                        e.Handled = true;
+                        break;
+                }
             }
             else
             {
@@ -116,13 +195,9 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
-        private void UsernameIntellisenseListBox_PreviewMouseUp(object sender, MouseButtonEventArgs e)
-        {
-        }
+        private void UsernameIntellisenseListBox_PreviewMouseUp(object sender, MouseButtonEventArgs e) { this.SelectIntellisenseUser(); }
 
-        private void EmoticonIntellisenseListBox_PreviewMouseUp(object sender, MouseButtonEventArgs e)
-        {
-        }
+        private void EmoticonIntellisenseListBox_PreviewMouseUp(object sender, MouseButtonEventArgs e) { this.SelectIntellisenseEmoticon(); }
 
         private void ChatList_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
@@ -206,6 +281,75 @@ namespace MixItUp.WPF.Controls.MainControls
                 UserViewModel user = (UserViewModel)this.UserList.SelectedItem;
                 this.UserList.SelectedIndex = -1;
                 await this.ShowUserDialog(user);
+            }
+        }
+
+        private void ShowIntellisense<T>(string text, PopupBox intellisense, ListBox listBox, List<T> items)
+        {
+            this.indexOfLastIntellisenseText = this.ChatMessageTextBox.Text.LastIndexOf(text);
+            listBox.ItemsSource = items;
+            listBox.SelectedIndex = items.Count - 1;
+
+            Rect positionOfCarat = this.ChatMessageTextBox.GetRectFromCharacterIndex(this.ChatMessageTextBox.CaretIndex, true);
+            Point topLeftOffset = this.ChatMessageTextBox.TransformToAncestor(this).Transform(new Point(positionOfCarat.Left, positionOfCarat.Top));
+
+            int itemHeight = items.Count * 40;
+            Canvas.SetLeft(intellisense, topLeftOffset.X + 10);
+            Canvas.SetTop(intellisense, topLeftOffset.Y - itemHeight - 40);
+            intellisense.UpdateLayout();
+
+            if (!intellisense.IsPopupOpen)
+            {
+                intellisense.IsPopupOpen = true;
+            }
+        }
+
+        private void SelectIntellisenseEmoticon()
+        {
+            MixerChatEmoteModel emoticon = EmoticonIntellisenseListBox.SelectedItem as MixerChatEmoteModel;
+            if (emoticon != null)
+            {
+                this.SelectIntellisenseItem(emoticon.Name);
+            }
+            this.HideIntellisense();
+        }
+
+        private void SelectIntellisenseUser()
+        {
+            UserViewModel user = UsernameIntellisenseListBox.SelectedItem as UserViewModel;
+            if (user != null)
+            {
+                this.SelectIntellisenseItem("@" + user.UserName);
+            }
+            this.HideIntellisense();
+        }
+
+        private void SelectIntellisenseItem(string name)
+        {
+            if (!string.IsNullOrEmpty(name))
+            {
+                if (this.indexOfLastIntellisenseText == 0)
+                {
+                    this.ChatMessageTextBox.Text = name + " ";
+                }
+                else
+                {
+                    this.ChatMessageTextBox.Text = this.ChatMessageTextBox.Text.Substring(0, this.indexOfLastIntellisenseText) + name + " ";
+                }
+                this.ChatMessageTextBox.CaretIndex = this.ChatMessageTextBox.Text.Length;
+            }
+        }
+
+        private void HideIntellisense()
+        {
+            if (this.UsernameIntellisense.IsPopupOpen)
+            {
+                this.UsernameIntellisense.IsPopupOpen = false;
+            }
+
+            if (this.EmoticonIntellisense.IsPopupOpen)
+            {
+                this.EmoticonIntellisense.IsPopupOpen = false;
             }
         }
 
