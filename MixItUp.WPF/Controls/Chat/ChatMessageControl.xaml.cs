@@ -29,6 +29,15 @@ namespace MixItUp.WPF.Controls.Chat
 
             this.Loaded += ChatMessageControl_Loaded;
             this.DataContextChanged += ChatMessageControl_DataContextChanged;
+
+            GlobalEvents.OnChatFontSizeChanged += GlobalEvents_OnChatFontSizeChanged;
+        }
+
+        private void GlobalEvents_OnChatFontSizeChanged(object sender, EventArgs e)
+        {
+            this.Message = null;
+            this.MessageWrapPanel.Children.Clear();
+            this.ChatMessageControl_DataContextChanged(this, new DependencyPropertyChangedEventArgs());
         }
 
         private void ChatMessageControl_Loaded(object sender, RoutedEventArgs e)
@@ -274,33 +283,6 @@ namespace MixItUp.WPF.Controls.Chat
         //            this.MessageWrapPanel.Children.Add(textBlock);
         //        }
         //    });
-        //}
-
-        //public void UpdateSizing()
-        //{
-        //    foreach (var item in this.MessageWrapPanel.Children)
-        //    {
-        //        if (item is TextBlock)
-        //        {
-        //            TextBlock textBlock = (TextBlock)item;
-        //            textBlock.FontSize = ChannelSession.Settings.ChatFontSize;
-        //        }
-        //        else if (item is MixerChatEmoteModel)
-        //        {
-        //            MixerChatEmoteModel emoticon = (MixerChatEmoteModel)item;
-        //            emoticon.Height = emoticon.Width = (uint)ChannelSession.Settings.ChatFontSize + 2;
-        //        }
-        //        else if (item is StickerControl)
-        //        {
-        //            StickerControl sticker = (StickerControl)item;
-        //            sticker.UpdateSizing();
-        //        }
-        //        else if (item is SkillControl)
-        //        {
-        //            SkillControl skill = (SkillControl)item;
-        //            skill.UpdateSizing();
-        //        }
-        //    }
         //}
     }
 }
