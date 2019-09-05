@@ -1,9 +1,12 @@
 ﻿using MixItUp.Base.Model;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Chat
 {
@@ -25,6 +28,8 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public bool IsInUsersChannel { get; protected set; } = true;
 
+        public bool ContainsLink { get; protected set; } = false;
+
         public DateTimeOffset Timestamp { get; protected set; } = DateTimeOffset.Now;
 
         public bool IsDeleted { get; private set; }
@@ -45,6 +50,30 @@ namespace MixItUp.Base.ViewModel.Chat
         public bool IsUserTagged { get { return Regex.IsMatch(this.PlainTextMessage, string.Format(TaggingRegexFormat, ChannelSession.MixerStreamerUser.username)); } }
 
         public bool IsStreamerOrBot { get { return this.User != null && this.User.ID.Equals(ChannelSession.MixerStreamerUser.id) || (ChannelSession.MixerBotUser != null && this.User.ID.Equals(ChannelSession.MixerBotUser.id)); } }
+
+        public virtual bool ContainsOnlyEmotes() { return false; }
+
+        public async Task<bool> CheckForModeration()
+        {
+            if (!ModerationHelper.MeetsChatInteractiveParticipationRequirement(this.User, this))
+            {
+                Logger.Log(LogLevel.Debug, string.Format("Deleting Message As User does not meet requirement - {0} - {1}", ChannelSession.Settings.ModerationChatInteractiveParticipation, this.PlainTextMessage));
+                this.DeletedBy = "Moderation";
+                this.Delete(reason: "Chat/MixPlay Participation");
+                await ModerationHelper.SendChatInteractiveParticipationWhisper(this.User, isChat: true);
+                return true;
+            }
+
+            string moderationReason = await ModerationHelper.ShouldBeModerated(this.User, this.PlainTextMessage, this.ContainsLink);
+            if (!string.IsNullOrEmpty(moderationReason))
+            {
+                Logger.Log(LogLevel.Debug, string.Format("Moderation Being Performed - {0}", this.ToString()));
+                this.DeletedBy = "Moderation";
+                this.Delete(reason: moderationReason);
+                return true;
+            }
+            return false;
+        }
 
         public void Delete(UserViewModel user = null, string reason = null)
         {

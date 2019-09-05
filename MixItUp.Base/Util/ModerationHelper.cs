@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Actions;
 using MixItUp.Base.ViewModel.Chat;
+using MixItUp.Base.ViewModel.Chat.Mixer;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
@@ -40,6 +41,10 @@ namespace MixItUp.Base.Util
         ModeratorOnly = 30,
         [Name("Emotes & Skills Only")]
         EmotesSkillsOnly = 40,
+        [Name("Skills Only")]
+        SkillsOnly = 41,
+        [Name("Ember Skills Only")]
+        EmberSkillsOnly = 42,
     }
 
     public static class ModerationHelper
@@ -57,12 +62,14 @@ namespace MixItUp.Base.Util
 
         public static async Task<string> ShouldBeModerated(UserViewModel user, string text, bool containsLink = false)
         {
+            string reason = null;
+
             if (UserContainerViewModel.SpecialUserAccounts.Contains(user.UserName))
             {
-                return null;
+                return reason;
             }
 
-            string reason = await ShouldBeFilteredWordModerated(user, text);
+            reason = await ShouldBeFilteredWordModerated(user, text);
             if (!string.IsNullOrEmpty(reason))
             {
                 if (ChannelSession.Settings.ModerationFilteredWordsApplyStrikes)
@@ -92,7 +99,7 @@ namespace MixItUp.Base.Util
                 return reason;
             }
 
-            return null;
+            return reason;
         }
 
         public static async Task<string> ShouldBeFilteredWordModerated(UserViewModel user, string text)
@@ -205,7 +212,7 @@ namespace MixItUp.Base.Util
             return null;
         }
 
-        public static bool MeetsChatInteractiveParticipationRequirement(UserViewModel user)
+        public static bool MeetsChatInteractiveParticipationRequirement(UserViewModel user, ChatMessageViewModel message = null)
         {
             if (ChannelSession.Settings.ModerationChatInteractiveParticipation != ModerationChatInteractiveParticipationEnum.None)
             {
@@ -285,6 +292,22 @@ namespace MixItUp.Base.Util
                 {
                     return false;
                 }
+
+                if (message != null)
+                {
+                    if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.EmotesSkillsOnly)
+                    {
+                        return message.ContainsOnlyEmotes() || message is MixerSkillChatMessageViewModel;
+                    }
+                    else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.SkillsOnly)
+                    {
+                        return message is MixerSkillChatMessageViewModel;
+                    }
+                    else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.EmberSkillsOnly)
+                    {
+                        return message is MixerSkillChatMessageViewModel && ((MixerSkillChatMessageViewModel)message).Skill.IsEmbersSkill;
+                    }
+                }
             }
             return true;
         }
@@ -322,6 +345,14 @@ namespace MixItUp.Base.Util
                 else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.EmotesSkillsOnly)
                 {
                     reason = "Emotes & Skills";
+                }
+                else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.SkillsOnly)
+                {
+                    reason = "Skills";
+                }
+                else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.EmberSkillsOnly)
+                {
+                    reason = "Ember Skills";
                 }
                 else if(ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountHour)
                 {

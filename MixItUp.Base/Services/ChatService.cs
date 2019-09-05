@@ -72,7 +72,7 @@ namespace MixItUp.Base.Services
         public event EventHandler DisplayUsersUpdated = delegate { };
         private SortedList<string, UserViewModel> displayUsers = new SortedList<string, UserViewModel>();
 
-        private LockedDictionary<string, ChatCommand> chatCommandTriggers = new LockedDictionary<string, ChatCommand>();
+        private LockedDictionary<string, PermissionsCommandBase> chatCommandTriggers = new LockedDictionary<string, PermissionsCommandBase>();
 
         private HashSet<string> userEntranceCommands = new HashSet<string>();
 
@@ -248,6 +248,12 @@ namespace MixItUp.Base.Services
                         }
                     }
 
+                    if (await message.CheckForModeration())
+                    {
+                        await this.DeleteMessage(message);
+                        return;
+                    }
+
                     if (!string.IsNullOrEmpty(message.PlainTextMessage))
                     {
                         Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
@@ -292,8 +298,8 @@ namespace MixItUp.Base.Services
 
                     Logger.Log(LogLevel.Debug, string.Format("Checking Message For Command - {0}", message.ToString()));
 
-                    Dictionary<string, ChatCommand> commandsToCheck = this.chatCommandTriggers.ToDictionary();
-                    foreach (ChatCommand command in message.User.Data.CustomCommands)
+                    Dictionary<string, PermissionsCommandBase> commandsToCheck = this.chatCommandTriggers.ToDictionary();
+                    foreach (PermissionsCommandBase command in message.User.Data.CustomCommands)
                     {
                         foreach (string trigger in command.CommandTriggers)
                         {
@@ -315,7 +321,7 @@ namespace MixItUp.Base.Services
 
                             if (commandsToCheck.ContainsKey(commandTriggerCheck))
                             {
-                                ChatCommand command = commandsToCheck[commandTriggerCheck];
+                                PermissionsCommandBase command = commandsToCheck[commandTriggerCheck];
                                 if (command.IsEnabled)
                                 {
                                     Logger.Log(LogLevel.Debug, string.Format("Command Found For Message - {0} - {1}", message.ToString(), command.ToString()));
@@ -340,74 +346,20 @@ namespace MixItUp.Base.Services
             {
 
             }
-
-            //if (!ModerationHelper.MeetsChatInteractiveParticipationRequirement(message.User) || !ModerationHelper.MeetsChatEmoteSkillsOnlyParticipationRequirement(message.User, message))
-            //{
-            //    Logger.Log(LogLevel.Debug, string.Format("Deleting Message As User does not meet requirement - {0} - {1}", ChannelSession.Settings.ModerationChatInteractiveParticipation, message.PlainTextMessage));
-
-            //    await this.DeleteMessage(message);
-
-            //    await ModerationHelper.SendChatInteractiveParticipationWhisper(message.User, isChat: true);
-            //    return;
-            //}
-
-            //string moderationReason = await message.ShouldBeModerated();
-            //if (!string.IsNullOrEmpty(moderationReason))
-            //{
-            //    Logger.Log(LogLevel.Debug, string.Format("Moderation Being Performed - {0}", message.ToString()));
-
-            //    message.ModerationReason = moderationReason;
-            //    await this.DeleteMessage(message);
-            //}
-
-
-
-
-
-            //if (ChannelSession.IsStreamer && !message.User.MixerRoles.Contains(MixerRoleEnum.Banned))
-            //{
-            //    GlobalEvents.ChatCommandMessageReceived(message);
-
-            //    List<PermissionsCommandBase> commandsToCheck = new List<PermissionsCommandBase>(ChannelSession.AllEnabledChatCommands);
-            //    commandsToCheck.AddRange(message.User.Data.CustomCommands);
-
-            //    PermissionsCommandBase command = commandsToCheck.FirstOrDefault(c => c.MatchesCommand(message.PlainTextMessage));
-            //if (command == null)
-            //{
-            //    command = commandsToCheck.FirstOrDefault(c => c.ContainsCommand(message.PlainTextMessage));
-            //}
-            //    if (command != null)
-            //    {
-            //        Logger.Log(LogLevel.Debug, string.Format("Command Found For Message - {0} - {1}", message.ToString(), command.ToString()));
-
-            //        await command.Perform(message.User, command.GetArgumentsFromText(message.PlainTextMessage));
-
-            //        bool delete = false;
-            //        if (ChannelSession.Settings.DeleteChatCommandsWhenRun)
-            //        {
-            //            if (!command.Requirements.Settings.DontDeleteChatCommandWhenRun)
-            //            {
-            //                delete = true;
-            //            }
-            //        }
-            //        else if (command.Requirements.Settings.DeleteChatCommandWhenRun)
-            //        {
-            //            delete = true;
-            //        }
-
-            //        if (delete)
-            //        {
-            //            Logger.Log(LogLevel.Debug, string.Format("Deleting Message As Chat Command - {0}", message.PlainTextMessage));
-            //            await this.DeleteMessage(message);
-            //        }
-            //    }
-            //}
         }
 
         public void RebuildCommandTriggers()
         {
             this.chatCommandTriggers.Clear();
             foreach (ChatCommand command in ChannelSession.Settings.ChatCommands)
+            {
+                foreach (string trigger in command.CommandTriggers)
+                {
+                    this.chatCommandTriggers[trigger] = command;
+                }
+            }
+
+            foreach (GameCommandBase command in ChannelSession.Settings.GameCommands)
             {
                 foreach (string trigger in command.CommandTriggers)
                 {
