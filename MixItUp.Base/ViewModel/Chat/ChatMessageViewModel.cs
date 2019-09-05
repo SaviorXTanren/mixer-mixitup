@@ -38,6 +38,8 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public string ModerationReason { get; private set; }
 
+        public event EventHandler OnDeleted = delegate { };
+
         public ChatMessageViewModel(string id, StreamingPlatformTypeEnum platform, UserViewModel user)
         {
             this.ID = id;
@@ -58,7 +60,6 @@ namespace MixItUp.Base.ViewModel.Chat
             if (!ModerationHelper.MeetsChatInteractiveParticipationRequirement(this.User, this))
             {
                 Logger.Log(LogLevel.Debug, string.Format("Deleting Message As User does not meet requirement - {0} - {1}", ChannelSession.Settings.ModerationChatInteractiveParticipation, this.PlainTextMessage));
-                this.DeletedBy = "Moderation";
                 this.Delete(reason: "Chat/MixPlay Participation");
                 await ModerationHelper.SendChatInteractiveParticipationWhisper(this.User, isChat: true);
                 return true;
@@ -68,7 +69,6 @@ namespace MixItUp.Base.ViewModel.Chat
             if (!string.IsNullOrEmpty(moderationReason))
             {
                 Logger.Log(LogLevel.Debug, string.Format("Moderation Being Performed - {0}", this.ToString()));
-                this.DeletedBy = "Moderation";
                 this.Delete(reason: moderationReason);
                 return true;
             }
@@ -77,16 +77,21 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public void Delete(UserViewModel user = null, string reason = null)
         {
-            this.IsDeleted = true;
-            if (user != null)
+            if (!this.IsDeleted)
             {
-                this.DeletedBy = user.UserName;
-            }
-            this.ModerationReason = reason;
+                this.IsDeleted = true;
+                if (user != null)
+                {
+                    this.DeletedBy = user.UserName;
+                }
+                this.ModerationReason = reason;
 
-            this.NotifyPropertyChanged("IsDeleted");
-            this.NotifyPropertyChanged("DeletedBy");
-            this.NotifyPropertyChanged("ModerationReason");
+                this.NotifyPropertyChanged("IsDeleted");
+                this.NotifyPropertyChanged("DeletedBy");
+                this.NotifyPropertyChanged("ModerationReason");
+
+                this.OnDeleted(this, new EventArgs());
+            }
         }
 
         protected internal virtual void AddStringMessagePart(string str)

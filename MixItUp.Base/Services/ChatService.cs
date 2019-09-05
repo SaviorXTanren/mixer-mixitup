@@ -162,7 +162,6 @@ namespace MixItUp.Base.Services
 
         public async Task DeleteMessage(ChatMessageViewModel message)
         {
-            message.Delete();
             if (message.Platform == StreamingPlatformTypeEnum.Mixer)
             {
                 await this.MixerChatService.DeleteMessage(message);
@@ -472,7 +471,7 @@ namespace MixItUp.Base.Services
             {
                 if (message.Platform == StreamingPlatformTypeEnum.Mixer && message.User.Equals(e.Item1))
                 {
-                    message.Delete(user: e.Item2);
+                    message.Delete(user: e.Item2, reason: "Purged");
                 }
             }
 

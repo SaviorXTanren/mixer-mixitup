@@ -35,6 +35,10 @@ namespace MixItUp.WPF.Controls.Chat
 
         private void GlobalEvents_OnChatFontSizeChanged(object sender, EventArgs e)
         {
+            if (this.Message != null)
+            {
+                this.Message.OnDeleted -= Message_OnDeleted;
+            }
             this.Message = null;
             this.MessageWrapPanel.Children.Clear();
             this.ChatMessageControl_DataContextChanged(this, new DependencyPropertyChangedEventArgs());
@@ -50,6 +54,7 @@ namespace MixItUp.WPF.Controls.Chat
             if (this.DataContext != null && this.DataContext is ChatMessageViewModel && this.Message == null)
             {
                 this.Message = (ChatMessageViewModel)this.DataContext;
+                this.Message.OnDeleted += Message_OnDeleted;
                 if (this.DataContext is AlertChatMessageViewModel)
                 {
                     AlertChatMessageViewModel alert = (AlertChatMessageViewModel)this.DataContext;
@@ -168,121 +173,35 @@ namespace MixItUp.WPF.Controls.Chat
             this.MessageWrapPanel.Children.Add(image);
         }
 
-        //private void xChatMessageControl_Loaded(object sender, RoutedEventArgs e)
-        //{
-        //    this.MessageWrapPanel.Children.Clear();
+        private void Message_OnDeleted(object sender, EventArgs e)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                foreach (TextBlock tb in this.textBlocks)
+                {
+                    tb.TextDecorations = TextDecorations.Strikethrough;
+                }
 
-        //    if (this.Message.IsSkill)
-        //    {
-        //        SkillControl skillControl = new SkillControl(this.Message.Skill);
-        //        this.MessageWrapPanel.Children.Add(skillControl);
-        //    }
-
-        //    foreach (ChatMessageDataModel messageData in this.Message.MessageComponents)
-        //    {
-        //        MixerChatEmoteModel emoticon = MixerChatEmoteModel.GetEmoteForMessageData(messageData);
-        //        if (emoticon != null)
-        //        {
-        //            ChatEmoteControl emoticonControl = new ChatEmoteControl(emoticon);
-        //            this.MessageWrapPanel.Children.Add(emoticonControl);
-        //        }
-        //        else if (messageData.type.Equals("image"))
-        //        {
-        //            StickerControl stickerControl = new StickerControl(this.Message.ChatSkill);
-        //            this.MessageWrapPanel.Children.Add(stickerControl);
-        //        }
-        //        else
-        //        {
-        //            foreach (string word in messageData.text.Split(new string[] { " " }, StringSplitOptions.None))
-        //            {
-        //                TextBlock textBlock = new TextBlock();
-        //                textBlock.Text = word + " ";
-        //                textBlock.VerticalAlignment = VerticalAlignment.Center;
-        //                if (this.Message.IsAlert)
-        //                {
-        //                    textBlock.FontWeight = FontWeights.Bold;
-        //                    if (!string.IsNullOrEmpty(this.Message.AlertMessageBrush) && !this.Message.AlertMessageBrush.Equals(ColorSchemes.DefaultColorScheme))
-        //                    {
-        //                        textBlock.Foreground = (SolidColorBrush)(new BrushConverter().ConvertFrom(this.Message.AlertMessageBrush));
-        //                    }
-        //                    else
-        //                    {
-        //                        textBlock.Foreground = (App.AppSettings.IsDarkBackground) ? new SolidColorBrush(Colors.White) : new SolidColorBrush(Colors.Black);
-        //                    }
-        //                }
-
-        //                bool isWhisperToStreamer = this.Message.IsWhisper && ChannelSession.MixerStreamerUser.username.Equals(this.Message.TargetUsername, StringComparison.InvariantCultureIgnoreCase);
-        //                bool isStreamerTagged = messageData.type == "tag" && word.Equals("@" + ChannelSession.MixerStreamerUser.username, StringComparison.InvariantCultureIgnoreCase);
-        //                if (isWhisperToStreamer || isStreamerTagged)
-        //                {
-        //                    textBlock.Background = (Brush)FindResource("PrimaryHueLightBrush");
-        //                    textBlock.Foreground = (Brush)FindResource("PrimaryHueLightForegroundBrush");
-        //                }
-
-        //                this.textBlocks.Add(textBlock);
-        //                this.MessageWrapPanel.Children.Add(textBlock);
-        //            }
-        //        }
-        //    }
-
-        //    this.UpdateSizing();
-
-        //    if (!string.IsNullOrEmpty(this.Message.ModerationReason))
-        //    {
-        //        this.DeleteMessage();
-        //    }
-        //}
-
-        //public void DeleteMessage(string deletedBy = null)
-        //{
-        //    this.Dispatcher.Invoke(() =>
-        //    {
-        //        TextBlock textBlock = new TextBlock();
-        //        textBlock.VerticalAlignment = VerticalAlignment.Center;
-
-        //        if (!string.IsNullOrEmpty(deletedBy))
-        //        {
-        //            string text = " (Deleted By: " + deletedBy + ")";
-        //            textBlock.Text += text;
-        //            this.Message.AddToMessage(text);
-        //            this.Message.DeletedBy = deletedBy;
-        //        }
-
-        //        if (this.Message.IsAlert)
-        //        {
-        //            textBlock.FontWeight = FontWeights.Bold;
-        //            if (!string.IsNullOrEmpty(this.Message.AlertMessageBrush) && !this.Message.AlertMessageBrush.Equals(ColorSchemes.DefaultColorScheme))
-        //            {
-        //                textBlock.Foreground = (SolidColorBrush)(new BrushConverter().ConvertFrom(this.Message.AlertMessageBrush));
-        //            }
-        //            else
-        //            {
-        //                textBlock.Foreground = (App.AppSettings.IsDarkBackground) ? new SolidColorBrush(Colors.White) : new SolidColorBrush(Colors.Black);
-        //            }
-        //        }
-
-        //        this.Message.IsDeleted = true;
-        //        foreach (TextBlock tb in this.textBlocks)
-        //        {
-        //            tb.TextDecorations = TextDecorations.Strikethrough;
-        //        }
-
-        //        this.textBlocks.Add(textBlock);
-        //        this.MessageWrapPanel.Children.Add(textBlock);
-
-        //        if (!string.IsNullOrEmpty(this.Message.ModerationReason))
-        //        {
-        //            textBlock = new TextBlock();
-        //            textBlock.VerticalAlignment = VerticalAlignment.Center;
-
-        //            string text = " (Auto-Moderated: " + this.Message.ModerationReason + ")";
-        //            textBlock.Text += text;
-        //            this.Message.AddToMessage(text);
-
-        //            this.textBlocks.Add(textBlock);
-        //            this.MessageWrapPanel.Children.Add(textBlock);
-        //        }
-        //    });
-        //}
+                if (!string.IsNullOrEmpty(this.Message.DeletedBy))
+                {
+                    if (!string.IsNullOrEmpty(this.Message.ModerationReason))
+                    {
+                        this.AddStringMessage(" (" + this.Message.ModerationReason + " By: " + this.Message.DeletedBy + ")");
+                    }
+                    else
+                    {
+                        this.AddStringMessage(" (Deleted By: " + this.Message.DeletedBy + ")");
+                    }
+                }
+                else if (!string.IsNullOrEmpty(this.Message.ModerationReason))
+                {
+                    this.AddStringMessage(" (Auto-Moderated: " + this.Message.ModerationReason + ")");
+                }
+                else
+                {
+                    this.AddStringMessage(" (Manual Deletion)");
+                }
+            });
+        }
     }
 }
