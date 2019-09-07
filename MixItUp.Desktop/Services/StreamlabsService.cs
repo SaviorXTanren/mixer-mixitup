@@ -24,6 +24,8 @@ namespace MixItUp.Desktop.Services
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
+        private DateTimeOffset startTime;
+
         public StreamlabsService() : base(StreamlabsService.BaseAddress) { }
 
         public StreamlabsService(OAuthTokenModel token) : base(StreamlabsService.BaseAddress, token) { }
@@ -142,6 +144,8 @@ namespace MixItUp.Desktop.Services
         {
             this.cancellationTokenSource = new CancellationTokenSource();
 
+            this.startTime = DateTimeOffset.Now;
+
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             Task.Run(this.BackgroundDonationCheck, this.cancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -152,12 +156,6 @@ namespace MixItUp.Desktop.Services
         private async Task BackgroundDonationCheck()
         {
             Dictionary<int, StreamlabsDonation> donationsReceived = new Dictionary<int, StreamlabsDonation>();
-
-            foreach (StreamlabsDonation donation in await this.GetDonations())
-            {
-                donationsReceived[donation.ID] = donation;
-            }
-
             while (!this.cancellationTokenSource.Token.IsCancellationRequested)
             {
                 try
@@ -168,7 +166,10 @@ namespace MixItUp.Desktop.Services
                         {
                             donationsReceived[slDonation.ID] = slDonation;
                             UserDonationModel donation = slDonation.ToGenericDonation();
-                            await EventCommand.ProcessDonationEventCommand(donation, OtherEventTypeEnum.StreamlabsDonation);
+                            if (donation.DateTime > this.startTime)
+                            {
+                                await EventCommand.ProcessDonationEventCommand(donation, OtherEventTypeEnum.StreamlabsDonation);
+                            }
                         }
                     }
                 }
