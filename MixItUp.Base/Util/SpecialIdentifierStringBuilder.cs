@@ -594,6 +594,7 @@ namespace MixItUp.Base.Util
                     if (streamBossOverlay != null && streamBossOverlay.CurrentBoss != null)
                     {
                         await this.HandleUserSpecialIdentifiers(streamBossOverlay.CurrentBoss, StreamBossSpecialIdentifierHeader);
+                        this.ReplaceSpecialIdentifier("streambosshealth", streamBossOverlay.CurrentHealth.ToString());
                     }
                 }
             }
