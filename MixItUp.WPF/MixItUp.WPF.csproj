@@ -442,6 +442,9 @@
     <Compile Include="Controls\Chat\GifImageControl.xaml.cs">
       <DependentUpon>GifImageControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Chat\GifSkillHoverControl.xaml.cs">
+      <DependentUpon>GifSkillHoverControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Chat\GifSkillPopoutControl.xaml.cs">
       <DependentUpon>GifSkillPopoutControl.xaml</DependentUpon>
     </Compile>
@@ -1137,6 +1140,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Chat\GifImageControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Chat\GifSkillHoverControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

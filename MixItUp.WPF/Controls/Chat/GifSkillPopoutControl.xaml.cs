@@ -20,10 +20,6 @@ namespace MixItUp.WPF.Controls.Chat
         public async Task ShowGif(MixerSkillChatMessageViewModel message)
         {
             this.DataContext = message;
-
-            //await this.UserAvatar.SetUserAvatarUrl(skill.User);
-            //this.UserAvatar.SetSize(16);
-           
             while (this.DataContext != null)
             {
                 await Task.Delay(1000);

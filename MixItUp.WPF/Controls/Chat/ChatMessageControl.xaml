@@ -3,22 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Chat"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300" Padding="5">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     </UserControl.Resources>
 
-    <WrapPanel x:Name="MessageWrapPanel" Orientation="Horizontal">
-        <MaterialDesign:PopupBox x:Name="GifSkillPopup" Visibility="Collapsed" PopupMode="MouseOver" Margin="0,0" StaysOpen="False" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
-            <MaterialDesign:PopupBox.ToggleContent>
-                <Image x:Name="GifSkillIcon" Source="https://static.mixer.com/img/design/ui/skills-chat-attribution/giphy_chat_24.png" />
-            </MaterialDesign:PopupBox.ToggleContent>
-            <Grid Margin="5">
-                <local:GifImageControl DataContext="{Binding}" />
-            </Grid>
-        </MaterialDesign:PopupBox>
-    </WrapPanel>
+    <WrapPanel x:Name="MessageWrapPanel" Orientation="Horizontal" />
 </UserControl>

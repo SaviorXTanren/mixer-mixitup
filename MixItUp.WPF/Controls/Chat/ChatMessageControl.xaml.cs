@@ -51,7 +51,7 @@ namespace MixItUp.WPF.Controls.Chat
 
         private void ChatMessageControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (this.DataContext != null && this.DataContext is ChatMessageViewModel && this.Message == null)
+            if (this.IsLoaded && this.DataContext != null && this.DataContext is ChatMessageViewModel && this.Message == null)
             {
                 this.Message = (ChatMessageViewModel)this.DataContext;
                 this.Message.OnDeleted += Message_OnDeleted;
@@ -85,9 +85,9 @@ namespace MixItUp.WPF.Controls.Chat
                         MixerSkillChatMessageViewModel skillMessage = (MixerSkillChatMessageViewModel)this.DataContext;
                         if (skillMessage.Skill.Type == MixerSkillTypeEnum.Gif)
                         {
-                            this.GifSkillPopup.DataContext = skillMessage.Skill.Image;
-                            this.GifSkillPopup.Visibility = Visibility.Visible;
-                            this.GifSkillIcon.Height = this.GifSkillIcon.Width = ChannelSession.Settings.ChatFontSize * 2;
+                            GifSkillHoverControl gifSkillControl = new GifSkillHoverControl();
+                            gifSkillControl.DataContext = skillMessage;
+                            this.MessageWrapPanel.Children.Add(gifSkillControl);
                         }
                         else
                         {

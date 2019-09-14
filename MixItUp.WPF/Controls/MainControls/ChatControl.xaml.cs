@@ -4,6 +4,7 @@ using MixItUp.Base;
 using MixItUp.Base.Model.Chat.Mixer;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
+using MixItUp.Base.ViewModel.Chat.Mixer;
 using MixItUp.Base.ViewModel.Controls.MainControls;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModel.Window;
@@ -13,6 +14,7 @@ using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -34,6 +36,8 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private int indexOfLastIntellisenseText;
 
+        private SemaphoreSlim gifSkillPopoutLock = new SemaphoreSlim(1);
+
         public ChatControl()
         {
             InitializeComponent();
@@ -43,6 +47,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             this.viewModel = new ChatMainControlViewModel((MainWindowViewModel)this.Window.ViewModel);
 
+            this.viewModel.GifSkillOccured += ViewModel_GifSkillOccured;
             this.viewModel.MessageSentOccurred += ViewModel_MessageSentOccurred;
             this.viewModel.ScrollingLockChanged += ViewModel_ScrollingLockChanged;
 
@@ -54,6 +59,23 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.viewModel.OnVisible();
             await base.OnVisibilityChanged();
+        }
+
+        private void ViewModel_GifSkillOccured(object sender, MixerSkillChatMessageViewModel skillMessage)
+        {
+            if (!string.IsNullOrEmpty(skillMessage.Skill.Image))
+            {
+                Task.Run(() =>
+                {
+                    this.gifSkillPopoutLock.WaitAndRelease(async () =>
+                    {
+                        await this.Dispatcher.InvokeAsync(async () =>
+                        {
+                            await this.GifSkillPopout.ShowGif(skillMessage);
+                        });
+                    });
+                });
+            }
         }
 
         private async void ViewModel_MessageSentOccurred(object sender, EventArgs e)

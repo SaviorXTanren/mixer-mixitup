@@ -1,6 +1,8 @@
 ﻿using MixItUp.Base.Actions;
+using MixItUp.Base.Model.Chat;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
+using MixItUp.Base.ViewModel.Chat.Mixer;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModel.Window;
 using StreamingClient.Base.Util;
@@ -108,6 +110,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
         public string LockIconColor { get { return (this.IsScrollingLocked) ? "Green" : "Red"; } }
 
+        public event EventHandler<MixerSkillChatMessageViewModel> GifSkillOccured = delegate { };
         public event EventHandler MessageSentOccurred = delegate { };
         public event EventHandler ScrollingLockChanged = delegate { };
 
@@ -188,6 +191,8 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 this.ScrollingLockChanged(this, new EventArgs());
                 return Task.FromResult(0);
             });
+
+            GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
         }
 
         public void MoveSentMessageHistoryUp()
@@ -259,6 +264,18 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         {
             this.DisplayUsers = ChannelSession.Services.ChatService.DisplayUsers;
             this.NotifyPropertyChanged("DisplayUsers");
+        }
+
+        private void GlobalEvents_OnChatMessageReceived(object sender, ChatMessageViewModel message)
+        {
+            if (message is MixerSkillChatMessageViewModel)
+            {
+                MixerSkillChatMessageViewModel skillMessage = (MixerSkillChatMessageViewModel)message;
+                if (skillMessage.Skill.Type == MixerSkillTypeEnum.Gif)
+                {
+                    this.GifSkillOccured(this, skillMessage);
+                }
+            }
         }
     }
 }
