@@ -331,7 +331,7 @@ namespace MixItUp.Base.Services
                                         {
                                             existingRetweets.Add(retweet.ID);
 
-                                            IEnumerable<UserViewModel> users = await ChannelSession.ActiveUsers.GetAllUsers();
+                                            IEnumerable<UserViewModel> users = ChannelSession.Services.User.GetAllUsers();
                                             UserViewModel user = users.FirstOrDefault(u => u.TwitterURL != null && u.TwitterURL.Equals(string.Format("https://twitter.com/{0}", retweet.UserName)));
                                             if (user == null)
                                             {

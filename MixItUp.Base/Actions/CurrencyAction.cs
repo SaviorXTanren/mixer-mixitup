@@ -199,7 +199,7 @@ namespace MixItUp.Base.Actions
                     }
                     else if (this.CurrencyActionType == CurrencyActionTypeEnum.AddToAllChatUsers || this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromAllChatUsers)
                     {
-                        foreach (UserViewModel chatUser in await ChannelSession.ActiveUsers.GetAllWorkableUsers())
+                        foreach (UserViewModel chatUser in ChannelSession.Services.User.GetAllWorkableUsers())
                         {
                             if (chatUser.HasPermissionsTo(this.RoleRequirement))
                             {

@@ -122,6 +122,9 @@ namespace MixItUp.Base.ViewModel.User
         public uint CurrentViewerCount { get; set; }
 
         [DataMember]
+        public bool IgnoreForQueries { get; set; }
+
+        [DataMember]
         public bool IsInChat { get; set; }
 
         [DataMember]

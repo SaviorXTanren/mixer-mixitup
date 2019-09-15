@@ -82,7 +82,7 @@ namespace MixItUp.Base.Statistics
             this.Statistics.Add(new TrackedNumberStatisticDataTracker("Chatters", "MessageTextOutline", true, async (StatisticDataTrackerBase stats) =>
             {
                 TrackedNumberStatisticDataTracker numberStats = (TrackedNumberStatisticDataTracker)stats;
-                numberStats.AddValue(await ChannelSession.ActiveUsers.Count());
+                numberStats.AddValue(ChannelSession.Services.User.Count());
             }));
 
             this.Statistics.Add(this.followTracker);

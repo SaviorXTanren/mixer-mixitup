@@ -400,7 +400,7 @@ namespace MixItUp.Base.MixerAPI
         {
             ChatMessageViewModel message = new MixerChatMessageViewModel(messageEvent);
 
-            UserViewModel user = await ChannelSession.ActiveUsers.AddOrUpdateUser(messageEvent.GetUser());
+            UserViewModel user = await ChannelSession.Services.User.AddOrUpdateUser(messageEvent.GetUser());
             if (user == null)
             {
                 user = new UserViewModel(messageEvent);
@@ -600,7 +600,7 @@ namespace MixItUp.Base.MixerAPI
 
                 tokenSource.Token.ThrowIfCancellationRequested();
 
-                foreach (UserViewModel user in await ChannelSession.ActiveUsers.GetAllWorkableUsers())
+                foreach (UserViewModel user in ChannelSession.Services.User.GetAllWorkableUsers())
                 {
                     user.UpdateMinuteData();
                 }
@@ -634,8 +634,8 @@ namespace MixItUp.Base.MixerAPI
 
                 if (joinsToProcess.Count > 0)
                 {
-                    IEnumerable<UserViewModel> processedUsers = await ChannelSession.ActiveUsers.AddOrUpdateUsers(joinsToProcess.Select(u => u.GetUser()));
-                    this.OnUsersJoinOccurred(this, processedUsers);
+                    //IEnumerable<UserViewModel> processedUsers = await ChannelSession.ActiveUsers.AddOrUpdateUsers(joinsToProcess.Select(u => u.GetUser()));
+                    //this.OnUsersJoinOccurred(this, processedUsers);
                 }
 
                 List<ChatUserEventModel> leavesToProcess = new List<ChatUserEventModel>();
@@ -652,8 +652,8 @@ namespace MixItUp.Base.MixerAPI
 
                 if (leavesToProcess.Count > 0)
                 {
-                    IEnumerable<UserViewModel> processedUsers = await ChannelSession.ActiveUsers.RemoveUsers(leavesToProcess.Select(u => u.id));
-                    this.OnUsersLeaveOccurred(this, processedUsers);
+                    //IEnumerable<UserViewModel> processedUsers = await ChannelSession.ActiveUsers.RemoveUsers(leavesToProcess.Select(u => u.id));
+                    //this.OnUsersLeaveOccurred(this, processedUsers);
                 }
 
                 tokenSource.Token.ThrowIfCancellationRequested();
@@ -757,7 +757,7 @@ namespace MixItUp.Base.MixerAPI
 
         private async void ChatClient_OnPurgeMessageOccurred(object sender, ChatPurgeMessageEventModel e)
         {
-            UserViewModel user = await ChannelSession.ActiveUsers.GetUserByID(e.user_id);
+            UserViewModel user = ChannelSession.Services.User.GetUserByID(e.user_id);
             if (user != null)
             {
                 this.OnUserPurgeOccurred(sender, new Tuple<UserViewModel, string>(user, e.moderator?.user_name));
@@ -804,7 +804,7 @@ namespace MixItUp.Base.MixerAPI
 
         private async void ChatClient_OnUserUpdateOccurred(object sender, ChatUserEventModel chatUser)
         {
-            UserViewModel user = await ChannelSession.ActiveUsers.AddOrUpdateUser(chatUser.GetUser());
+            UserViewModel user = await ChannelSession.Services.User.AddOrUpdateUser(chatUser.GetUser());
             if (user != null)
             {
                 this.OnUserUpdateOccurred(sender, user);

@@ -275,7 +275,7 @@ namespace MixItUp.Base.Actions
                         if (!string.IsNullOrEmpty(this.OptionalUserName))
                         {
                             string optionalUserName = await this.ReplaceStringWithSpecialModifiers(this.OptionalUserName, user, arguments);
-                            UserViewModel optionalUser = await ChannelSession.ActiveUsers.GetUserByUsername(optionalUserName);
+                            UserViewModel optionalUser = ChannelSession.Services.User.GetUserByUsername(optionalUserName);
                             if (optionalUser != null)
                             {
                                 await ChannelSession.Interactive.AddUserToGroup(optionalUser, this.GroupName);
@@ -288,7 +288,7 @@ namespace MixItUp.Base.Actions
                     }
                     if (this.InteractiveType == InteractiveActionTypeEnum.MoveAllUsersToGroup || this.InteractiveType == InteractiveActionTypeEnum.MoveAllUsersToScene)
                     {
-                        foreach (UserViewModel chatUser in await ChannelSession.ActiveUsers.GetAllUsers())
+                        foreach (UserViewModel chatUser in ChannelSession.Services.User.GetAllUsers())
                         {
                             await ChannelSession.Interactive.AddUserToGroup(chatUser, this.GroupName);
                         }

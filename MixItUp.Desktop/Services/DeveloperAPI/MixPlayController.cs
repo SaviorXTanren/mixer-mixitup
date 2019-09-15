@@ -29,7 +29,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
         [HttpGet]
         public async Task<IEnumerable<MixPlayUser>> GetUsers()
         {
-            var mixplayUsers = await ChannelSession.ActiveUsers.GetAllWorkableUsers();
+            var mixplayUsers = ChannelSession.Services.User.GetAllWorkableUsers();
             return mixplayUsers.Where(x => x.IsInteractiveParticipant).Select(x => new MixPlayUser()
             {
                 ID = x.ID,
@@ -42,7 +42,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
         [HttpGet]
         public async Task<MixPlayUser> GetUser(uint userID)
         {
-            UserViewModel user = await ChannelSession.ActiveUsers.GetUserByID(userID);
+            UserViewModel user = ChannelSession.Services.User.GetUserByID(userID);
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -65,7 +65,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
         [HttpGet]
         public async Task<MixPlayUser> GetUserByUserName(string userName)
         {
-            UserViewModel user = await ChannelSession.ActiveUsers.GetUserByUsername(userName);
+            UserViewModel user = ChannelSession.Services.User.GetUserByUsername(userName);
 
             if (user == null)
             {
@@ -89,7 +89,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
         [HttpGet]
         public async Task<MixPlayUser> GetUserByParticipantID(string participantID)
         {
-            UserViewModel user = await ChannelSession.ActiveUsers.GetUserByParticipantID(participantID);
+            UserViewModel user = ChannelSession.Services.User.GetUserByMixPlayID(participantID);
 
             if (user == null)
             {
@@ -162,7 +162,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
 
             MixPlayBroadcastTargetBase[] targets;
 
-            var mixplayUsers = await ChannelSession.ActiveUsers.GetUsersByID(broadcast.Users.Select(x => x.UserID).ToArray());
+            var mixplayUsers = ChannelSession.Services.User.GetUsersByID(broadcast.Users.Select(x => x.UserID).ToArray());
 
             targets = mixplayUsers.Where(x => x.IsInteractiveParticipant).SelectMany(x => x.InteractiveIDs.Keys).Select(x => new MixPlayBroadcastParticipant(x)).ToArray();
 

@@ -169,7 +169,7 @@ namespace MixItUp.Base.ViewModel.User
             {
                 if (this.IsTrackingFanProgression)
                 {
-                    foreach (UserViewModel user in await ChannelSession.ActiveUsers.GetAllWorkableUsers())
+                    foreach (UserViewModel user in ChannelSession.Services.User.GetAllWorkableUsers())
                     {
                         if (!user.Data.IsCurrencyRankExempt)
                         {
@@ -187,7 +187,7 @@ namespace MixItUp.Base.ViewModel.User
                     {
                         DateTimeOffset minActiveTime = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(this.MinimumActiveRate));
                         bool bonusesCanBeApplied = (ChannelSession.MixerChannel.online || this.OfflineAcquireAmount > 0);
-                        foreach (UserViewModel user in await ChannelSession.ActiveUsers.GetAllWorkableUsers())
+                        foreach (UserViewModel user in ChannelSession.Services.User.GetAllWorkableUsers())
                         {
                             if (!user.Data.IsCurrencyRankExempt && (!this.HasMinimumActiveRate || user.LastActivity > minActiveTime))
                             {

@@ -1,7 +1,6 @@
 ﻿using MixItUp.API.Models;
 using MixItUp.Base;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
@@ -19,7 +18,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
         {
             List<User> users = new List<User>();
 
-            var chatUsers = await ChannelSession.ActiveUsers.GetAllWorkableUsers();
+            var chatUsers = ChannelSession.Services.User.GetAllWorkableUsers();
             foreach (var chatUser in chatUsers)
             {
                 if (ChannelSession.Settings.UserData.ContainsKey(chatUser.ID))

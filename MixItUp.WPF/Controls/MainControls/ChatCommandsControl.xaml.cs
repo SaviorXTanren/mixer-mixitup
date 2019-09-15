@@ -41,7 +41,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         protected override void Window_CommandSaveSuccessfully(object sender, CommandBase command)
         {
-            ChannelSession.Services.ChatService.RebuildCommandTriggers();
+            ChannelSession.Services.Chat.RebuildCommandTriggers();
 
             base.Window_CommandSaveSuccessfully(sender, command);
         }
@@ -75,7 +75,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     await ChannelSession.SaveSettings();
                     this.viewModel.RemoveCommand(command);
 
-                    ChannelSession.Services.ChatService.RebuildCommandTriggers();
+                    ChannelSession.Services.Chat.RebuildCommandTriggers();
                 }
             });
         }

@@ -61,7 +61,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             get
             {
                 List<string> results = new List<string>() { "Streamer" };
-                if (ChannelSession.Services.ChatService.MixerChatService.IsBotConnected)
+                if (ChannelSession.Services.Chat.MixerChatService.IsBotConnected)
                 {
                     results.Add("Bot");
                 }
@@ -128,19 +128,19 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             {
                 if (await DialogHelper.ShowConfirmation("This will clear all chat messages for the stream. Are you sure?"))
                 {
-                    await ChannelSession.Services.ChatService.ClearMessages();
+                    await ChannelSession.Services.Chat.ClearMessages();
                 }
             });
 
             this.EnableDisableChatCommand = this.CreateCommand(async (parameter) =>
             {
-                if (!ChannelSession.Services.ChatService.DisableChat && !await DialogHelper.ShowConfirmation("This will disable chat for all users. Are you sure?"))
+                if (!ChannelSession.Services.Chat.DisableChat && !await DialogHelper.ShowConfirmation("This will disable chat for all users. Are you sure?"))
                 {
                     return;
                 }
 
-                ChannelSession.Services.ChatService.DisableChat = !ChannelSession.Services.ChatService.DisableChat;
-                if (ChannelSession.Services.ChatService.DisableChat)
+                ChannelSession.Services.Chat.DisableChat = !ChannelSession.Services.Chat.DisableChat;
+                if (ChannelSession.Services.Chat.DisableChat)
                 {
                     this.EnableDisableButtonText = "Enable Chat";
                 }
@@ -165,15 +165,15 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                         username = username.Trim();
                         username = username.Replace("@", "");
 
-                        await ChannelSession.Services.ChatService.Whisper(Model.StreamingPlatformTypeEnum.Mixer, username, message, this.SendAsStreamer, waitForResponse: true);
+                        await ChannelSession.Services.Chat.Whisper(Model.StreamingPlatformTypeEnum.Mixer, username, message, this.SendAsStreamer, waitForResponse: true);
                     }
                     else if (ChatAction.ClearRegex.IsMatch(this.SendMessageText))
                     {
-                        await ChannelSession.Services.ChatService.ClearMessages();
+                        await ChannelSession.Services.Chat.ClearMessages();
                     }
                     else
                     {
-                        await ChannelSession.Services.ChatService.SendMessage(Model.StreamingPlatformTypeEnum.Mixer, this.SendMessageText, sendAsStreamer: this.SendAsStreamer);
+                        await ChannelSession.Services.Chat.SendMessage(Model.StreamingPlatformTypeEnum.Mixer, this.SendMessageText, sendAsStreamer: this.SendAsStreamer);
                     }
 
                     this.SentMessageHistory.Remove(this.SendMessageText);
@@ -222,9 +222,9 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
         protected override async Task OnLoadedInternal()
         {
-            ChannelSession.Services.ChatService.DisplayUsersUpdated += ChatService_DisplayUsersUpdated;
-            this.Messages = ChannelSession.Services.ChatService.Messages;
-            this.DisplayUsers = ChannelSession.Services.ChatService.DisplayUsers;
+            ChannelSession.Services.Chat.DisplayUsersUpdated += ChatService_DisplayUsersUpdated;
+            this.Messages = ChannelSession.Services.Chat.Messages;
+            this.DisplayUsers = ChannelSession.Services.Chat.DisplayUsers;
 
             this.Messages.CollectionChanged += Messages_CollectionChanged;
 
@@ -257,12 +257,12 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         private void RefreshNumbers()
         {
             this.ViewersCount = ChannelSession.MixerChannel.viewersCurrent;
-            this.ChattersCount = (uint)ChannelSession.Services.ChatService.AllUsers.Count;
+            this.ChattersCount = (uint)ChannelSession.Services.Chat.AllUsers.Count;
         }
 
         private void ChatService_DisplayUsersUpdated(object sender, EventArgs e)
         {
-            this.DisplayUsers = ChannelSession.Services.ChatService.DisplayUsers;
+            this.DisplayUsers = ChannelSession.Services.Chat.DisplayUsers;
             this.NotifyPropertyChanged("DisplayUsers");
         }
 

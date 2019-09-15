@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Clients;
 using Mixer.Base.Model.Chat;
+using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Mixer;
@@ -435,7 +436,16 @@ namespace MixItUp.Base.Services.Mixer
 
             if (joinsToProcess.Count > 0)
             {
-                IEnumerable<UserViewModel> processedUsers = await ChannelSession.ActiveUsers.AddOrUpdateUsers(joinsToProcess.Select(u => u.GetUser()));
+                List<UserViewModel> processedUsers = new List<UserViewModel>();
+                foreach (ChatUserEventModel chatUser in joinsToProcess)
+                {
+                    UserViewModel user = await ChannelSession.Services.User.AddOrUpdateUser(chatUser);
+                    if (user != null)
+                    {
+                        processedUsers.Add(user);
+                    }
+                }
+
                 await DispatcherHelper.InvokeDispatcher(() =>
                 {
                     this.OnUsersJoinOccurred(this, processedUsers);
@@ -457,7 +467,16 @@ namespace MixItUp.Base.Services.Mixer
 
             if (leavesToProcess.Count > 0)
             {
-                IEnumerable<UserViewModel> processedUsers = await ChannelSession.ActiveUsers.RemoveUsers(leavesToProcess.Select(u => u.id));
+                List<UserViewModel> processedUsers = new List<UserViewModel>();
+                foreach (ChatUserEventModel chatUser in leavesToProcess)
+                {
+                    UserViewModel user = await ChannelSession.Services.User.RemoveUser(chatUser);
+                    if (user != null)
+                    {
+                        processedUsers.Add(user);
+                    }
+                }
+
                 await DispatcherHelper.InvokeDispatcher(() =>
                 {
                     this.OnUsersLeaveOccurred(this, processedUsers);
@@ -539,7 +558,7 @@ namespace MixItUp.Base.Services.Mixer
 
         private async void ChatClient_OnPurgeMessageOccurred(object sender, ChatPurgeMessageEventModel e)
         {
-            UserViewModel user = await ChannelSession.ActiveUsers.GetUserByID(e.user_id);
+            UserViewModel user = ChannelSession.Services.User.GetUserByID(e.user_id);
             if (user != null)
             {
                 UserViewModel modUser = null;
@@ -580,9 +599,21 @@ namespace MixItUp.Base.Services.Mixer
 
         private async void ChatClient_OnUserUpdateOccurred(object sender, ChatUserEventModel chatUser)
         {
-            UserViewModel user = await ChannelSession.ActiveUsers.AddOrUpdateUser(chatUser.GetUser());
+            UserViewModel user = await ChannelSession.Services.User.AddOrUpdateUser(chatUser.GetUser());
             if (user != null)
             {
+                try
+                {
+                    if (user.Data.ViewingMinutes == 0)
+                    {
+                        if (EventCommand.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserFirstJoin)))
+                        {
+                            await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserFirstJoin), user);
+                        }
+                    }
+                }
+                catch (Exception ex) { Logger.Log(ex); }
+
                 this.OnUserUpdateOccurred(sender, user);
                 if (chatUser.roles != null && chatUser.roles.Count() > 0 && chatUser.roles.Where(r => !string.IsNullOrEmpty(r)).Contains(EnumHelper.GetEnumName(MixerRoleEnum.Banned)))
                 {

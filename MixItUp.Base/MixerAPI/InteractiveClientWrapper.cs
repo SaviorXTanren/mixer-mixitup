@@ -773,7 +773,10 @@ namespace MixItUp.Base.MixerAPI
             {
                 List<MixPlayParticipantModel> participantsToUpdate = new List<MixPlayParticipantModel>();
 
-                await ChannelSession.ActiveUsers.AddOrUpdateUsers(participants);
+                foreach (MixPlayParticipantModel participant in participants)
+                {
+                    await ChannelSession.Services.User.AddOrUpdateUser(participant);
+                }
 
                 List<InteractiveUserGroupViewModel> gameGroups = new List<InteractiveUserGroupViewModel>();
                 if (this.Client != null && this.Client.Game != null && ChannelSession.Settings.InteractiveUserGroups.ContainsKey(this.Client.Game.id))
@@ -787,7 +790,7 @@ namespace MixItUp.Base.MixerAPI
                     {
                         this.Participants[participant.sessionID] = participant;
 
-                        UserViewModel user = await ChannelSession.ActiveUsers.GetUserByID(participant.userID);
+                        UserViewModel user = ChannelSession.Services.User.GetUserByID(participant.userID);
                         if (user != null)
                         {
                             InteractiveUserGroupViewModel group = gameGroups.FirstOrDefault(g => user.HasPermissionsTo(g.AssociatedUserRole));
@@ -848,7 +851,7 @@ namespace MixItUp.Base.MixerAPI
                 {
                     if (!string.IsNullOrEmpty(participant.sessionID))
                     {
-                        await ChannelSession.ActiveUsers.RemoveInteractiveUser(participant);
+                        await ChannelSession.Services.User.RemoveUser(participant);
                         this.Participants.Remove(participant.sessionID);
                     }
                 }
@@ -906,7 +909,7 @@ namespace MixItUp.Base.MixerAPI
                     UserViewModel user = null;
                     if (!string.IsNullOrEmpty(e.participantID))
                     {
-                        user = await ChannelSession.ActiveUsers.GetUserByParticipantID(e.participantID);
+                        user = ChannelSession.Services.User.GetUserByMixPlayID(e.participantID);
                         if (user == null)
                         {
                             MixPlayParticipantModel participant = null;
@@ -920,7 +923,7 @@ namespace MixItUp.Base.MixerAPI
                                 participant = recentParticipants.FirstOrDefault(p => p.sessionID.Equals(e.participantID));
                                 if (participant != null)
                                 {
-                                    user = await ChannelSession.ActiveUsers.AddOrUpdateUser(participant);
+                                    user = await ChannelSession.Services.User.AddOrUpdateUser(participant);
                                 }
                             }
                         }
@@ -1010,7 +1013,7 @@ namespace MixItUp.Base.MixerAPI
 
                     if (ChannelSession.Settings.ChatShowInteractiveAlerts)
                     {
-                        await ChannelSession.Services.ChatService.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer,
+                        await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer,
                             string.Format("{0} Used The \"{1}\" Interactive Control", user.UserName, connectedControl.Command.Name), ChannelSession.Settings.ChatInteractiveAlertsColorScheme));
                     }
                 }

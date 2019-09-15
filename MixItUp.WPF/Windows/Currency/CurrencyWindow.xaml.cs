@@ -805,7 +805,7 @@ namespace MixItUp.WPF.Windows.Currency
                                 ChannelSession.Settings.ChatCommands.Add(command.Command);
                             }
                         }
-                        ChannelSession.Services.ChatService.RebuildCommandTriggers();
+                        ChannelSession.Services.Chat.RebuildCommandTriggers();
                     }
                 }
 

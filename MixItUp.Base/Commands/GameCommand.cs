@@ -234,7 +234,7 @@ namespace MixItUp.Base.Commands
             if (arguments != null && arguments.Count() > 0)
             {
                 string username = arguments.FirstOrDefault().Replace("@", "");
-                targetUser = await ChannelSession.ActiveUsers.GetUserByUsername(username);
+                targetUser = ChannelSession.Services.User.GetUserByUsername(username);
 
                 if (targetUser == null || user.Equals(targetUser))
                 {
@@ -455,7 +455,7 @@ namespace MixItUp.Base.Commands
         protected virtual async Task<UserViewModel> GetTargetUser(UserViewModel user, IEnumerable<string> arguments, UserCurrencyViewModel currency, int betAmount)
         {
             List<UserViewModel> users = new List<UserViewModel>();
-            foreach (UserViewModel activeUser in await ChannelSession.ActiveUsers.GetAllWorkableUsers())
+            foreach (UserViewModel activeUser in ChannelSession.Services.User.GetAllWorkableUsers())
             {
                 if (!user.Equals(activeUser) && !activeUser.Data.IsCurrencyRankExempt && activeUser.Data.HasCurrencyAmount(currency, betAmount))
                 {
@@ -915,7 +915,7 @@ namespace MixItUp.Base.Commands
             }
             else
             {
-                foreach (UserViewModel u in (await ChannelSession.ActiveUsers.GetAllWorkableUsers()).Shuffle())
+                foreach (UserViewModel u in ChannelSession.Services.User.GetAllWorkableUsers().Shuffle())
                 {
                     if (!u.Data.IsCurrencyRankExempt && (this.targetUser == null || !u.Equals(this.targetUser)))
                     {
@@ -1080,7 +1080,7 @@ namespace MixItUp.Base.Commands
             }
             else
             {
-                foreach (UserViewModel u in (await ChannelSession.ActiveUsers.GetAllWorkableUsers()).Shuffle())
+                foreach (UserViewModel u in ChannelSession.Services.User.GetAllWorkableUsers().Shuffle())
                 {
                     if (!u.Data.IsCurrencyRankExempt && (this.targetUser == null || !u.Equals(this.targetUser)))
                     {

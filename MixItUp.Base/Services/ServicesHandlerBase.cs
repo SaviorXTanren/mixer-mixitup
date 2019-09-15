@@ -8,7 +8,9 @@ namespace MixItUp.Base.Services
 
         public IMixerStatusService MixerStatus { get; protected set; }
 
-        public IChatService ChatService { get; protected set; }
+        public IUserService User { get; protected set; }
+
+        public IChatService Chat { get; protected set; }
 
         public ISettingsService Settings { get; protected set; }
         public IFileService FileService { get; protected set; }

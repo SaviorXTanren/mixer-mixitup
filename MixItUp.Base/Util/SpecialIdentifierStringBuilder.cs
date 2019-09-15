@@ -601,10 +601,11 @@ namespace MixItUp.Base.Util
 
             if (this.ContainsSpecialIdentifier(RandomSpecialIdentifierHeader))
             {
+                IEnumerable<UserViewModel> workableUsers = ChannelSession.Services.User.GetAllWorkableUsers();
+
                 if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomSpecialIdentifierHeader + "user"))
                 {
-                    IEnumerable<UserViewModel> users = await ChannelSession.ActiveUsers.GetAllWorkableUsers();
-                    users = users.Where(u => !u.ID.Equals(ChannelSession.MixerStreamerUser.id));
+                    IEnumerable<UserViewModel> users = workableUsers.Where(u => !u.ID.Equals(ChannelSession.MixerStreamerUser.id));
                     if (users != null && users.Count() > 0)
                     {
                         await this.HandleUserSpecialIdentifiers(users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count())), RandomSpecialIdentifierHeader);
@@ -613,8 +614,7 @@ namespace MixItUp.Base.Util
 
                 if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomFollowerSpecialIdentifierHeader + "user"))
                 {
-                    IEnumerable<UserViewModel> users = await ChannelSession.ActiveUsers.GetAllWorkableUsers();
-                    users = users.Where(u => !u.ID.Equals(ChannelSession.MixerStreamerUser.id) && u.IsFollower);
+                    IEnumerable<UserViewModel> users = workableUsers.Where(u => !u.ID.Equals(ChannelSession.MixerStreamerUser.id) && u.IsFollower);
                     if (users != null && users.Count() > 0)
                     {
                         await this.HandleUserSpecialIdentifiers(users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count())), RandomFollowerSpecialIdentifierHeader);
@@ -623,8 +623,7 @@ namespace MixItUp.Base.Util
 
                 if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomSubscriberSpecialIdentifierHeader + "user"))
                 {
-                    IEnumerable<UserViewModel> users = await ChannelSession.ActiveUsers.GetAllWorkableUsers();
-                    users = users.Where(u => !u.ID.Equals(ChannelSession.MixerStreamerUser.id) && u.HasPermissionsTo(MixerRoleEnum.Subscriber));
+                    IEnumerable<UserViewModel> users = workableUsers.Where(u => !u.ID.Equals(ChannelSession.MixerStreamerUser.id) && u.HasPermissionsTo(MixerRoleEnum.Subscriber));
                     if (users != null && users.Count() > 0)
                     {
                         await this.HandleUserSpecialIdentifiers(users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count())), RandomSubscriberSpecialIdentifierHeader);

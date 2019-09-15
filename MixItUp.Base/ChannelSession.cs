@@ -114,8 +114,6 @@ namespace MixItUp.Base
         public static PrivatePopulatedUserModel MixerBotUser { get; private set; }
         public static ExpandedChannelModel MixerChannel { get; private set; }
 
-        public static UserContainerViewModel ActiveUsers { get; private set; }
-
         public static IChannelSettings Settings { get; private set; }
 
         public static ChatClientWrapper Chat { get; private set; }
@@ -219,8 +217,6 @@ namespace MixItUp.Base
             {
                 ChannelSession.SecretManager = new SecretManagerService();
             }
-
-            ChannelSession.ActiveUsers = new UserContainerViewModel();
 
             ChannelSession.PreMadeChatCommands = new List<PreMadeChatCommand>();
 
@@ -371,7 +367,7 @@ namespace MixItUp.Base
 
         public static async Task<UserViewModel> GetCurrentUser()
         {
-            UserViewModel user = await ChannelSession.ActiveUsers.GetUserByID(ChannelSession.MixerStreamerUser.id);
+            UserViewModel user = ChannelSession.Services.User.GetUserByID(ChannelSession.MixerStreamerUser.id);
             if (user == null)
             {
                 user = new UserViewModel(ChannelSession.MixerStreamerUser);
@@ -444,7 +440,7 @@ namespace MixItUp.Base
                         return false;
                     }
 
-                    await ChannelSession.Services.ChatService.Initialize(mixerChatService);
+                    await ChannelSession.Services.Chat.Initialize(mixerChatService);
 
                     if (ChannelSession.IsStreamer)
                     {
@@ -626,7 +622,7 @@ namespace MixItUp.Base
 
                 ChannelSession.MixerBotConnection.Initialize();
 
-                await ChannelSession.Services.ChatService.MixerChatService.ConnectBot();
+                await ChannelSession.Services.Chat.MixerChatService.ConnectBot();
 
                 await ChannelSession.SaveSettings();
 
@@ -639,7 +635,7 @@ namespace MixItUp.Base
         {
             if (currency.Currency.RankChangedCommand != null)
             {
-                UserViewModel user = await ChannelSession.ActiveUsers.GetUserByID(currency.User.ID);
+                UserViewModel user = ChannelSession.Services.User.GetUserByID(currency.User.ID);
                 if (user != null)
                 {
                     await currency.Currency.RankChangedCommand.Perform(user);

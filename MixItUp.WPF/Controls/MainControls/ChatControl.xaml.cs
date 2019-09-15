@@ -126,16 +126,16 @@ namespace MixItUp.WPF.Controls.MainControls
                     {
                         string filter = tag.Substring(1);
 
-                        List<UserViewModel> users = (await ChannelSession.ActiveUsers.GetAllUsers()).ToList();
+                        IEnumerable<UserViewModel> users = ChannelSession.Services.User.GetAllUsers();
                         if (!string.IsNullOrEmpty(filter))
                         {
                             users = users.Where(u => !string.IsNullOrEmpty(u.UserName) && u.UserName.StartsWith(filter, StringComparison.InvariantCultureIgnoreCase)).ToList();
                         }
 
-                        if (users.Count > 0)
+                        if (users.Count() > 0)
                         {
                             users = users.OrderBy(u => u.UserName).Take(5).Reverse().ToList();
-                            this.ShowIntellisense(tag, this.UsernameIntellisense, this.UsernameIntellisenseListBox, users);
+                            this.ShowIntellisense(tag, this.UsernameIntellisense, this.UsernameIntellisenseListBox, users.ToList());
                         }
                     }
                     else if (tag.StartsWith(":"))
@@ -265,7 +265,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 ChatMessageViewModel message = (ChatMessageViewModel)this.ChatList.SelectedItem;
                 if (!message.IsWhisper)
                 {
-                    await ChannelSession.Services.ChatService.DeleteMessage(message);
+                    await ChannelSession.Services.Chat.DeleteMessage(message);
                 }
             }
         }
