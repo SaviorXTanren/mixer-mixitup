@@ -158,7 +158,7 @@
                     <ListBox x:Name="UsernameIntellisenseListBox" ItemContainerStyle="{StaticResource BorderedListBoxItem}" SelectionMode="Single" PreviewMouseUp="UsernameIntellisenseListBox_PreviewMouseUp">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <ChatControls:ChatUserControl/>
+                                <ChatControls:ChatUserControl />
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>

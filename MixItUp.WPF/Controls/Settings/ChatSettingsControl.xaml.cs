@@ -50,6 +50,8 @@ namespace MixItUp.WPF.Controls.Settings
             this.CommandsOnlyInYourStreamToggleButton.IsChecked = ChannelSession.Settings.CommandsOnlyInYourStream;
             this.DeleteChatCommandsWhenRunToggleButton.IsChecked = ChannelSession.Settings.DeleteChatCommandsWhenRun;
 
+            this.ShowMixrElixrEmotesToggleButton.IsChecked = ChannelSession.Settings.ShowMixrElixrEmotes;
+
             await base.InitializeInternal();
         }
 
@@ -161,6 +163,11 @@ namespace MixItUp.WPF.Controls.Settings
         private void DeleteChatCommandsWhenRunToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             ChannelSession.Settings.DeleteChatCommandsWhenRun = this.DeleteChatCommandsWhenRunToggleButton.IsChecked.GetValueOrDefault();
+        }
+
+        private void ShowMixrElixrEmotesToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            ChannelSession.Settings.ShowMixrElixrEmotes = this.ShowMixrElixrEmotesToggleButton.IsChecked.GetValueOrDefault();
         }
     }
 }

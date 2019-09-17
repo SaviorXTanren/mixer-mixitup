@@ -119,6 +119,8 @@ namespace MixItUp.Desktop
         public bool CommandsOnlyInYourStream { get; set; }
         [JsonProperty]
         public bool DeleteChatCommandsWhenRun { get; set; }
+        [JsonProperty]
+        public bool ShowMixrElixrEmotes { get; set; };
 
         [JsonProperty]
         public uint DefaultInteractiveGame { get; set; }

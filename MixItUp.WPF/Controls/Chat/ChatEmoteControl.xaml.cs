@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Model.Chat;
+﻿using MixItUp.Base;
 using MixItUp.Base.Model.Chat.Mixer;
 using StreamingClient.Base.Util;
 using System;
@@ -17,24 +17,23 @@ namespace MixItUp.WPF.Controls.Chat
     /// </summary>
     public partial class ChatEmoteControl : UserControl
     {
-        private static Dictionary<string, BitmapImage> emoticonBitmapImages = new Dictionary<string, BitmapImage>();
-
-        public MixerChatEmoteModel Emoticon { get { return this.DataContext as MixerChatEmoteModel; } }
         public bool ShowText
         {
-            get { return EmoticonText.Visibility == Visibility.Visible; }
+            get { return this.EmoticonText.Visibility == Visibility.Visible; }
             set
             {
                 if (value)
                 {
-                    EmoticonText.Visibility = Visibility.Visible;
+                    this.EmoticonText.Visibility = Visibility.Visible;
                 }
                 else
                 {
-                    EmoticonText.Visibility = Visibility.Collapsed;
+                    this.EmoticonText.Visibility = Visibility.Collapsed;
                 }
             }
         }
+
+        private static Dictionary<string, BitmapImage> emoticonBitmapImages = new Dictionary<string, BitmapImage>();
 
         public ChatEmoteControl()
         {
@@ -44,11 +43,9 @@ namespace MixItUp.WPF.Controls.Chat
             this.DataContextChanged += EmoticonControl_DataContextChanged;
         }
 
-        public ChatEmoteControl(MixerChatEmoteModel emoticon)
-            : this()
-        {
-            this.DataContext = emoticon;
-        }
+        public ChatEmoteControl(MixerChatEmoteModel emoticon) : this() { this.DataContext = emoticon; }
+
+        public ChatEmoteControl(MixrElixrEmoteModel emoticon) : this() { this.DataContext = emoticon; }
 
         private void ChatEmoteControl_Loaded(object sender, RoutedEventArgs e)
         {
@@ -59,31 +56,61 @@ namespace MixItUp.WPF.Controls.Chat
         {
             try
             {
-                if (this.Emoticon != null)
+                if (this.DataContext != null)
                 {
-                    string uri = Emoticon.Uri;
-                    if (!ChatEmoteControl.emoticonBitmapImages.ContainsKey(uri))
+                    if (this.DataContext is MixerChatEmoteModel)
                     {
-                        BitmapImage bitmap = new BitmapImage();
-                        using (WebClient client = new WebClient())
+                        MixerChatEmoteModel emote = (MixerChatEmoteModel)this.DataContext;
+                        await this.DownloadImageUrl(emote.Uri);
+                        CroppedBitmap croppedBitmap = new CroppedBitmap(ChatEmoteControl.emoticonBitmapImages[emote.Uri], new Int32Rect((int)emote.X, (int)emote.Y, (int)emote.Width, (int)emote.Height));
+                        this.EmoteImage.Source = croppedBitmap;
+                        this.EmoteImage.ToolTip = this.EmoticonText.Text = emote.Name;
+                    }
+                    else if (this.DataContext is MixrElixrEmoteModel)
+                    {
+                        MixrElixrEmoteModel emote = (MixrElixrEmoteModel)this.DataContext;
+                        if (emote.animated)
                         {
-                            var bytes = await Task.Run<byte[]>(async () => { return await client.DownloadDataTaskAsync(uri); });
-
-                            bitmap.BeginInit();
-                            bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                            bitmap.StreamSource = new MemoryStream(bytes);
-                            bitmap.EndInit();
+                            this.EmoteGifImage.DataContext = emote.Url;
+                            this.EmoteGifImage.ToolTip = this.EmoticonText.Text = emote.code;
                         }
-                        ChatEmoteControl.emoticonBitmapImages[uri] = bitmap;
+                        else
+                        {
+                            await this.DownloadImageUrl(emote.Url);
+                            this.EmoteImage.Source = ChatEmoteControl.emoticonBitmapImages[emote.Url];
+                            this.EmoteImage.ToolTip = this.EmoticonText.Text = emote.code;
+                        }
                     }
 
-                    CroppedBitmap croppedBitmap = new CroppedBitmap(ChatEmoteControl.emoticonBitmapImages[uri],
-                        new Int32Rect((int)Emoticon.X, (int)Emoticon.Y, (int)Emoticon.Width, (int)Emoticon.Height));
-
-                    this.EmoteImage.Source = croppedBitmap;
+                    if (this.EmoteImage.Source != null)
+                    {
+                        this.EmoteImage.Width = this.EmoteImage.Height = ChannelSession.Settings.ChatFontSize * 2;
+                    }
+                    else if (this.EmoteGifImage.DataContext != null)
+                    {
+                        this.EmoteGifImage.Width = this.EmoteGifImage.Height = ChannelSession.Settings.ChatFontSize * 2;
+                    }
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
+        }
+
+        private async Task DownloadImageUrl(string url)
+        {
+            if (!ChatEmoteControl.emoticonBitmapImages.ContainsKey(url))
+            {
+                BitmapImage bitmap = new BitmapImage();
+                using (WebClient client = new WebClient())
+                {
+                    var bytes = await Task.Run<byte[]>(async () => { return await client.DownloadDataTaskAsync(url); });
+
+                    bitmap.BeginInit();
+                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmap.StreamSource = new MemoryStream(bytes);
+                    bitmap.EndInit();
+                }
+                ChatEmoteControl.emoticonBitmapImages[url] = bitmap;
+            }
         }
     }
 }

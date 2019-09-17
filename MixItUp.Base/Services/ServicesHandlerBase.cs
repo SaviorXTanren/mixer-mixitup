@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using MixItUp.Base.Services.Mixer;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
@@ -45,6 +46,7 @@ namespace MixItUp.Base.Services
         public IOvrStreamService OvrStreamWebsocket { get; protected set; }
         public IIFTTTService IFTTT { get; protected set; }
         public IStreamlootsService Streamloots { get; protected set; }
+        public IMixrElixrService MixrElixr { get; protected set; }
 
         public abstract Task Close();
 

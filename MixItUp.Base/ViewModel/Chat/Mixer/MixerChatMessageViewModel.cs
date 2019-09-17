@@ -63,6 +63,32 @@ namespace MixItUp.Base.ViewModel.Chat.Mixer
                             this.AddStringMessagePart(message.text);
                             break;
                         case "text":
+                            if (ChannelSession.Settings.ShowMixrElixrEmotes)
+                            {
+                                if (!string.IsNullOrEmpty(message.text))
+                                {
+                                    string[] splits = message.text.Split(new char[] { ' ' });
+                                    if (splits != null)
+                                    {
+                                        foreach (string split in splits)
+                                        {
+                                            if (ChannelSession.Services.Chat.MixrElixrEmotes.ContainsKey(split))
+                                            {
+                                                this.MessageParts.Add(ChannelSession.Services.Chat.MixrElixrEmotes[split]);
+                                            }
+                                            else
+                                            {
+                                                this.AddStringMessagePart(split);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                this.AddStringMessagePart(message.text);
+                            }
+                            break;
                         case "tag":
                         default:
                             this.AddStringMessagePart(message.text);

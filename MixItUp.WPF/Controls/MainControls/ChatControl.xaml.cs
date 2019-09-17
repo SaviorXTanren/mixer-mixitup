@@ -113,7 +113,7 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
-        private async void ChatMessageTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void ChatMessageTextBox_TextChanged(object sender, TextChangedEventArgs textChanged)
         {
             try
             {
@@ -141,10 +141,19 @@ namespace MixItUp.WPF.Controls.MainControls
                     else if (tag.StartsWith(":"))
                     {
                         List<MixerChatEmoteModel> emotes = MixerChatEmoteModel.FindMatchingEmoticons(tag).ToList();
-                        if (emotes.ToList().Count > 0)
+                        if (emotes.Count > 0)
                         {
                             emotes = emotes.Take(5).Reverse().ToList();
                             this.ShowIntellisense(tag, this.EmoticonIntellisense, this.EmoticonIntellisenseListBox, emotes);
+                        }
+                    }
+                    else if (ChannelSession.Settings.ShowMixrElixrEmotes)
+                    {
+                        var emotes = ChannelSession.Services.Chat.MixrElixrEmotes.Where(e => e.Key.StartsWith(tag, StringComparison.InvariantCultureIgnoreCase));
+                        if (emotes.Count() > 0)
+                        {
+                            emotes = emotes.Take(5).Reverse();
+                            this.ShowIntellisense(tag, this.EmoticonIntellisense, this.EmoticonIntellisenseListBox, emotes.Select(e => e.Value).ToList());
                         }
                     }
                 }
@@ -328,10 +337,21 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void SelectIntellisenseEmoticon()
         {
-            MixerChatEmoteModel emoticon = EmoticonIntellisenseListBox.SelectedItem as MixerChatEmoteModel;
-            if (emoticon != null)
+            if (this.EmoticonIntellisenseListBox.SelectedItem is MixerChatEmoteModel)
             {
-                this.SelectIntellisenseItem(emoticon.Name);
+                MixerChatEmoteModel emoticon = this.EmoticonIntellisenseListBox.SelectedItem as MixerChatEmoteModel;
+                if (emoticon != null)
+                {
+                    this.SelectIntellisenseItem(emoticon.Name);
+                }
+            }
+            else
+            {
+                MixrElixrEmoteModel emoticon = this.EmoticonIntellisenseListBox.SelectedItem as MixrElixrEmoteModel;
+                if (emoticon != null)
+                {
+                    this.SelectIntellisenseItem(emoticon.code);
+                }
             }
             this.HideIntellisense();
         }

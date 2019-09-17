@@ -2,6 +2,7 @@
 using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model;
+using MixItUp.Base.Model.Chat.Mixer;
 using MixItUp.Base.Services.Mixer;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
@@ -28,6 +29,8 @@ namespace MixItUp.Base.Services
         bool DisableChat { get; set; }
 
         ObservableCollection<ChatMessageViewModel> Messages { get; }
+
+        Dictionary<string, MixrElixrEmoteModel> MixrElixrEmotes { get; }
 
         LockedDictionary<string, UserViewModel> AllUsers { get; }
         IEnumerable<UserViewModel> DisplayUsers { get; }
@@ -69,6 +72,8 @@ namespace MixItUp.Base.Services
 
         public ObservableCollection<ChatMessageViewModel> Messages { get; private set; } = new ObservableCollection<ChatMessageViewModel>();
         private LockedDictionary<string, ChatMessageViewModel> messagesLookup = new LockedDictionary<string, ChatMessageViewModel>();
+
+        public Dictionary<string, MixrElixrEmoteModel> MixrElixrEmotes { get; private set; } = new Dictionary<string, MixrElixrEmoteModel>();
 
         public LockedDictionary<string, UserViewModel> AllUsers { get; private set; } = new LockedDictionary<string, UserViewModel>();
         public IEnumerable<UserViewModel> DisplayUsers
@@ -114,6 +119,18 @@ namespace MixItUp.Base.Services
             this.MixerChatService.OnUsersLeaveOccurred += MixerChatService_OnUsersLeaveOccurred;
             this.MixerChatService.OnUserPurgeOccurred += MixerChatService_OnUserPurgeOccurred;
             this.MixerChatService.OnUserBanOccurred += MixerChatService_OnUserBanOccurred;
+
+            if (ChannelSession.Settings.ShowMixrElixrEmotes)
+            {
+                IEnumerable<MixrElixrEmoteModel> emotes = await ChannelSession.Services.MixrElixr.GetChannelEmotes(ChannelSession.MixerChannel);
+                if (emotes != null)
+                {
+                    foreach (MixrElixrEmoteModel emote in emotes)
+                    {
+                        this.MixrElixrEmotes[emote.code] = emote;
+                    }
+                }
+            }
 
             foreach (ChatMessageEventModel messageEvent in await this.MixerChatService.GetChatHistory(50))
             {

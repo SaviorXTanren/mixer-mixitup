@@ -8,6 +8,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Image Gif:ImageBehavior.AnimatedSource="{Binding}" Margin="0,-5" />
+        <Image x:Name="GifImage" Gif:ImageBehavior.AnimatedSource="{Binding}" Margin="0,-5" />
     </Grid>
 </UserControl>

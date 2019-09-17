@@ -129,6 +129,10 @@ namespace MixItUp.WPF.Controls.Chat
                             {
                                 this.MessageWrapPanel.Children.Add(new ChatEmoteControl((MixerChatEmoteModel)messagePart));
                             }
+                            else if (messagePart is MixrElixrEmoteModel)
+                            {
+                                this.MessageWrapPanel.Children.Add(new ChatEmoteControl((MixrElixrEmoteModel)messagePart));
+                            }
                         }
                     }
                 }
