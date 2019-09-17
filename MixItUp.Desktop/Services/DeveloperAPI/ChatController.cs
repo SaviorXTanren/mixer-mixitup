@@ -34,7 +34,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
         [HttpDelete]
         public async Task ClearChat()
         {
-            await ChannelSession.Chat.ClearMessages();
+            await ChannelSession.Services.Chat.ClearMessages();
         }
 
         [Route("message")]
@@ -51,7 +51,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            await ChannelSession.Chat.SendMessage(chatMessage.Message, chatMessage.SendAsStreamer);
+            await ChannelSession.Services.Chat.SendMessage(chatMessage.Message, chatMessage.SendAsStreamer);
         }
 
         [Route("whisper")]
@@ -68,7 +68,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            await ChannelSession.Chat.Whisper(chatWhisper.UserName, chatWhisper.Message, chatWhisper.SendAsStreamer);
+            await ChannelSession.Services.Chat.Whisper(chatWhisper.UserName, chatWhisper.Message, chatWhisper.SendAsStreamer);
         }
     }
 }

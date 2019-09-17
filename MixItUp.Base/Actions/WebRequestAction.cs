@@ -115,9 +115,9 @@ namespace MixItUp.Base.Actions
                             string decodedWebRequestResult = HttpUtility.HtmlDecode(webRequestResult);
                             if (this.ResponseAction == WebRequestResponseActionTypeEnum.Chat)
                             {
-                                if (ChannelSession.Chat != null)
+                                if (ChannelSession.Services.Chat != null)
                                 {
-                                    await ChannelSession.Chat.SendMessage(await this.ReplaceSpecialIdentifiers(this.ResponseChatText, user, arguments, decodedWebRequestResult));
+                                    await ChannelSession.Services.Chat.SendMessage(await this.ReplaceSpecialIdentifiers(this.ResponseChatText, user, arguments, decodedWebRequestResult));
                                 }
                             }
                             else if (this.ResponseAction == WebRequestResponseActionTypeEnum.Command)

@@ -178,14 +178,6 @@ namespace MixItUp.WPF.Controls.MainControls
             this.ChatList.ItemsSource = this.MessageControls;
             this.UserList.ItemsSource = this.UserControls.Collection;
 
-            ChannelSession.Chat.OnMessageOccurred += ChatClient_OnMessageOccurred;
-            ChannelSession.Chat.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
-            ChannelSession.Chat.OnClearMessagesOccurred += Chat_OnClearMessagesOccurred;
-            ChannelSession.Chat.OnUsersJoinOccurred += ChatClient_OnUsersJoinOccurred;
-            ChannelSession.Chat.OnUsersLeaveOccurred += ChatClient_OnUsersLeaveOccurred;
-            ChannelSession.Chat.OnUserUpdateOccurred += ChatClient_OnUserUpdateOccurred;
-            ChannelSession.Chat.OnUserPurgeOccurred += ChatClient_OnUserPurgeOccurred;
-
             if (ChannelSession.MixerChannel.badge != null && ChannelSession.MixerChannel.badge != null && !string.IsNullOrEmpty(ChannelSession.MixerChannel.badge.url))
             {
                 try
@@ -215,24 +207,11 @@ namespace MixItUp.WPF.Controls.MainControls
                     await this.RefreshViewerChatterCounts();
                 });
             }
-
-            IEnumerable<ChatMessageEventModel> oldMessages = await ChannelSession.Chat.GetChatHistory(50);
-            if (oldMessages != null)
-            {
-                foreach (ChatMessageEventModel message in oldMessages)
-                {
-                    //await AddMessage(new ChatMessageViewModel(message));
-                }
-            }
         }
 
         protected override Task OnVisibilityChanged()
         {
             List<string> chatVoices = new List<string>() { "Streamer" };
-            if (ChannelSession.Chat.BotClient != null)
-            {
-                chatVoices.Add("Bot");
-            }
 
             List<string> chatterList = this.SendChatAsComboBox.ItemsSource as List<string>;
             if (chatterList == null || chatterList.Count != chatVoices.Count)
@@ -332,22 +311,22 @@ namespace MixItUp.WPF.Controls.MainControls
                 switch (result)
                 {
                     case UserDialogResult.Purge:
-                        await ChannelSession.Chat.PurgeUser(user.UserName);
+                        
                         break;
                     case UserDialogResult.Timeout1:
-                        await ChannelSession.Chat.TimeoutUser(user.UserName, 60);
+                        
                         break;
                     case UserDialogResult.Timeout5:
-                        await ChannelSession.Chat.TimeoutUser(user.UserName, 300);
+                        
                         break;
                     case UserDialogResult.Ban:
                         if (await MessageBoxHelper.ShowConfirmationDialog(string.Format("This will ban the user {0} from this channel. Are you sure?", user.UserName)))
                         {
-                            await ChannelSession.Chat.BanUser(user);
+                            
                         }
                         break;
                     case UserDialogResult.Unban:
-                        await ChannelSession.Chat.UnBanUser(user);
+                        
                         break;
                     case UserDialogResult.Follow:
                         ExpandedChannelModel channelToFollow = await ChannelSession.MixerStreamerConnection.GetChannel(user.ChannelID);
@@ -360,13 +339,13 @@ namespace MixItUp.WPF.Controls.MainControls
                     case UserDialogResult.PromoteToMod:
                         if (await MessageBoxHelper.ShowConfirmationDialog(string.Format("This will promote the user {0} to a moderator of this channel. Are you sure?", user.UserName)))
                         {
-                            await ChannelSession.Chat.ModUser(user);
+                            
                         }
                         break;
                     case UserDialogResult.DemoteFromMod:
                         if (await MessageBoxHelper.ShowConfirmationDialog(string.Format("This will demote the user {0} from a moderator of this channel. Are you sure?", user.UserName)))
                         {
-                            await ChannelSession.Chat.UnModUser(user);
+                            
                         }
                         break;
                     case UserDialogResult.MixerPage:
@@ -401,7 +380,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             if (await MessageBoxHelper.ShowConfirmationDialog("This will clear all Chat for the stream. Are you sure?"))
             {
-                await ChannelSession.Chat.ClearMessages();
+                await ChannelSession.Services.Chat.ClearMessages();
                 this.MessageControls.Clear();
             }
         }
@@ -410,7 +389,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             if (await MessageBoxHelper.ShowConfirmationDialog("This will disable chat for all users. Are you sure?"))
             {
-                ChannelSession.Chat.DisableChat = true;
+                ChannelSession.Services.Chat.DisableChat = true;
                 this.DisableChatButton.Visibility = Visibility.Collapsed;
                 this.EnableChatButton.Visibility = Visibility.Visible;
             }
@@ -418,7 +397,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void EnableChatButton_Click(object sender, RoutedEventArgs e)
         {
-            ChannelSession.Chat.DisableChat = false;
+            ChannelSession.Services.Chat.DisableChat = false;
             this.DisableChatButton.Visibility = Visibility.Visible;
             this.EnableChatButton.Visibility = Visibility.Collapsed;
         }
@@ -736,25 +715,16 @@ namespace MixItUp.WPF.Controls.MainControls
                     string username = usernNameMatch.Value;
                     username = username.Trim();
                     username = username.Replace("@", "");
-
-                    await this.Window.RunAsyncOperation(async () =>
-                    {
-                        ChatMessageEventModel response = await ChannelSession.Chat.WhisperWithResponse(username, message, ShouldSendAsStreamer());
-                        if (response != null)
-                        {
-                            //await this.AddMessage(new ChatMessageViewModel(response));
-                        }
-                    });
                 }
                 else if (ChatAction.ClearRegex.IsMatch(message))
                 {
-                    await ChannelSession.Chat.ClearMessages();
+                    await ChannelSession.Services.Chat.ClearMessages();
                 }
                 else
                 {
                     await this.Window.RunAsyncOperation((Func<Task>)(async () =>
                     {
-                        await ChannelSession.Chat.SendMessage(message, ShouldSendAsStreamer());
+                        await ChannelSession.Services.Chat.SendMessage(message, ShouldSendAsStreamer());
                     }));
                 }
 
@@ -797,7 +767,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 ChatMessageControl control = (ChatMessageControl)this.ChatList.SelectedItem;
                 if (!control.Message.IsWhisper)
                 {
-                    await ChannelSession.Chat.DeleteMessage(control.Message);
+                    await ChannelSession.Services.Chat.DeleteMessage(control.Message);
                 }
             }
         }
@@ -1007,7 +977,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
             if (ChannelSession.Settings.WhisperAllAlerts)
             {
-                await ChannelSession.Chat.Whisper(ChannelSession.MixerStreamerUser.username, message);
+                await ChannelSession.Services.Chat.Whisper(ChannelSession.MixerStreamerUser.username, message);
             }
         }
 

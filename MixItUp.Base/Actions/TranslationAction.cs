@@ -103,9 +103,9 @@ namespace MixItUp.Base.Actions
                     {
                         if (this.ResponseAction == TranslationResponseActionTypeEnum.Chat)
                         {
-                            if (ChannelSession.Chat != null)
+                            if (ChannelSession.Services.Chat != null)
                             {
-                                await ChannelSession.Chat.SendMessage(await this.ReplaceSpecialIdentifiers(this.ResponseChatText, user, arguments, translationResult));
+                                await ChannelSession.Services.Chat.SendMessage(await this.ReplaceSpecialIdentifiers(this.ResponseChatText, user, arguments, translationResult));
                             }
                         }
                         else if (this.ResponseAction == TranslationResponseActionTypeEnum.Command)

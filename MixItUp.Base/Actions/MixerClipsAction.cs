@@ -64,11 +64,11 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.Chat != null)
+            if (ChannelSession.Services.Chat != null)
             {
                 if (this.ShowClipInfoInChat)
                 {
-                    await ChannelSession.Chat.SendMessage("Sending clip creation request to Mixer...");
+                    await ChannelSession.Services.Chat.SendMessage("Sending clip creation request to Mixer...");
                 }
 
                 string clipName = await this.ReplaceStringWithSpecialModifiers(this.ClipName, user, arguments);
@@ -102,7 +102,7 @@ namespace MixItUp.Base.Actions
                                 return;
                             }
                         }
-                        await ChannelSession.Chat.SendMessage("ERROR: Unable to create clip or could not find clip, please verify that clips can be created by ensuring the Clips button on your stream is not grayed out.");
+                        await ChannelSession.Services.Chat.SendMessage("ERROR: Unable to create clip or could not find clip, please verify that clips can be created by ensuring the Clips button on your stream is not grayed out.");
                     }
                     else
                     {
@@ -120,7 +120,7 @@ namespace MixItUp.Base.Actions
 
             if (this.ShowClipInfoInChat)
             {
-                await ChannelSession.Chat.SendMessage("Clip Created: " + clipUrl);
+                await ChannelSession.Services.Chat.SendMessage("Clip Created: " + clipUrl);
             }
 
             this.extraSpecialIdentifiers[MixerClipURLSpecialIdentifier] = clipUrl;
@@ -131,7 +131,7 @@ namespace MixItUp.Base.Actions
                 {
                     string error = "ERROR: The download folder specified for Mixer Clips does not exist";
                     Logger.Log(error);
-                    await ChannelSession.Chat.Whisper(ChannelSession.MixerStreamerUser.username, error);
+                    await ChannelSession.Services.Chat.Whisper(ChannelSession.MixerStreamerUser.username, error);
                     return;
                 }
 
@@ -139,7 +139,7 @@ namespace MixItUp.Base.Actions
                 {
                     string error = "ERROR: FFMPEG could not be found and the Mixer Clip can not be converted without it";
                     Logger.Log(error);
-                    await ChannelSession.Chat.Whisper(ChannelSession.MixerStreamerUser.username, error);
+                    await ChannelSession.Services.Chat.Whisper(ChannelSession.MixerStreamerUser.username, error);
                     return;
                 }
 

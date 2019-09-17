@@ -40,7 +40,7 @@ namespace MixItUp.Base.Services
             int groupTotalTime = 0;
             int nonGroupTotalTime = 0;
 
-            int startTotalMessages = ChannelSession.Chat.Messages.Count;
+            int startTotalMessages = ChannelSession.Services.Chat.Messages.Count;
             timerCommandIndexes[string.Empty] = 0;
 
             await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
@@ -98,11 +98,11 @@ namespace MixItUp.Base.Services
 
                     if (nonGroupTotalTime >= ChannelSession.Settings.TimerCommandsInterval)
                     {
-                        if ((ChannelSession.Chat.Messages.Count - startTotalMessages) >= ChannelSession.Settings.TimerCommandsMinimumMessages)
+                        if ((ChannelSession.Services.Chat.Messages.Count - startTotalMessages) >= ChannelSession.Settings.TimerCommandsMinimumMessages)
                         {
                             await this.RunTimerFromGroup(string.Empty, commandGroups[string.Empty]);
 
-                            startTotalMessages = ChannelSession.Chat.Messages.Count;
+                            startTotalMessages = ChannelSession.Services.Chat.Messages.Count;
                             nonGroupTotalTime = 0;
                         }
                     }

@@ -76,7 +76,7 @@ namespace MixItUp.Base.Actions
             this.lastArguments = arguments;
             if (this.ActionType == StreamingPlatformActionType.Poll)
             {
-                if (ChannelSession.Chat != null)
+                if (ChannelSession.Services.Chat != null)
                 {
                     string pollQuestion = await this.ReplaceStringWithSpecialModifiers(this.PollQuestion, user, arguments);
                     List<string> pollAnswers = new List<string>();
@@ -87,9 +87,9 @@ namespace MixItUp.Base.Actions
 
                     if (this.CommandID != Guid.Empty)
                     {
-                        ChannelSession.Chat.OnPollEndOccurred += Chat_OnPollEndOccurred;
+                        ChannelSession.Services.Chat.OnPollEndOccurred += Chat_OnPollEnd;
                     }
-                    await ChannelSession.Chat.StartPoll(pollQuestion, pollAnswers, this.PollLength);
+                    await ChannelSession.Services.Chat.StartPoll(pollQuestion, pollAnswers, this.PollLength);
                 }
             }
             else if (this.ActionType == StreamingPlatformActionType.Host)
@@ -103,22 +103,14 @@ namespace MixItUp.Base.Actions
             }
         }
 
-        private void Chat_OnPollEndOccurred(object sender, ChatPollEventModel pollResults)
+
+        private void Chat_OnPollEnd(object sender, Dictionary<string, uint> results)
         {
-            ChannelSession.Chat.OnPollEndOccurred -= Chat_OnPollEndOccurred;
+            ChannelSession.Services.Chat.OnPollEndOccurred -= Chat_OnPollEnd;
             Task.Run(async () =>
             {
                 try
                 {
-                    Dictionary<string, uint> results = new Dictionary<string, uint>();
-                    foreach (string answer in pollResults.answers)
-                    {
-                        if (pollResults.responses.ContainsKey(answer))
-                        {
-                            results[answer] = pollResults.responses[answer].ToObject<uint>();
-                        }
-                    }
-
                     if (results.Count > 0)
                     {
                         var winner = results.OrderByDescending(r => r.Value).First();

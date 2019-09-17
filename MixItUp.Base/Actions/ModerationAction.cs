@@ -60,7 +60,7 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.Chat != null)
+            if (ChannelSession.Services.Chat != null)
             {
                 UserViewModel targetUser = null;
                 if (!string.IsNullOrEmpty(this.UserName))
@@ -79,21 +79,21 @@ namespace MixItUp.Base.Actions
 
                 if (this.ModerationType == ModerationActionTypeEnum.ClearChat)
                 {
-                    await ChannelSession.Chat.ClearMessages();
+                    await ChannelSession.Services.Chat.ClearMessages();
                 }
                 else if (targetUser != null)
                 {
                     if (this.ModerationType == ModerationActionTypeEnum.PurgeUser)
                     {
-                        await ChannelSession.Chat.PurgeUser(targetUser.UserName);
+                        await ChannelSession.Services.Chat.PurgeUser(targetUser);
                     }
                     else if (this.ModerationType == ModerationActionTypeEnum.BanUser)
                     {
-                        await ChannelSession.Chat.BanUser(targetUser);
+                        await ChannelSession.Services.Chat.BanUser(targetUser);
                     }
                     else if (this.ModerationType == ModerationActionTypeEnum.UnbanUser)
                     {
-                        await ChannelSession.Chat.UnBanUser(targetUser);
+                        await ChannelSession.Services.Chat.UnbanUser(targetUser);
                     }
                     else if (this.ModerationType == ModerationActionTypeEnum.AddModerationStrike)
                     {
@@ -115,7 +115,7 @@ namespace MixItUp.Base.Actions
                         {
                             if (this.ModerationType == ModerationActionTypeEnum.ChatTimeout)
                             {
-                                await ChannelSession.Chat.TimeoutUser(targetUser.UserName, timeAmount);
+                                await ChannelSession.Services.Chat.TimeoutUser(targetUser, timeAmount);
                             }
                             else if (this.ModerationType == ModerationActionTypeEnum.InteractiveTimeout)
                             {

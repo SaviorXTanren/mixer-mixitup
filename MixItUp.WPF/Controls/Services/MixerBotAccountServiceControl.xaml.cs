@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.TestStreams;
 using MixItUp.Base;
+using MixItUp.Base.Util;
 using MixItUp.WPF.Util;
 using System.Threading.Tasks;
 using System.Windows;
@@ -51,7 +52,7 @@ namespace MixItUp.WPF.Controls.Services
                 TestStreamSettingsModel testStreamSettings = await ChannelSession.MixerStreamerConnection.GetTestStreamSettings(ChannelSession.MixerChannel);
                 if (testStreamSettings != null && testStreamSettings.isActive.GetValueOrDefault())
                 {
-                    if (!await MessageBoxHelper.ShowConfirmationDialog("Because test stream settings are enabled, your bot account will not be able to connect correctly. You will need to disable Test Streams in order to use your bot account for things such a chat messages & whispers. Are you sure you still wish to connect it?"))
+                    if (!await DialogHelper.ShowConfirmation("Because test stream settings are enabled, your bot account will not be able to connect correctly. You will need to disable Test Streams in order to use your bot account for things such a chat messages & whispers. Are you sure you still wish to connect it?"))
                     {
                         return false;
                     }
@@ -61,7 +62,7 @@ namespace MixItUp.WPF.Controls.Services
 
             if (!result)
             {
-                await MessageBoxHelper.ShowMessageDialog("Unable to authenticate Bot with Mixer. Please ensure you approved access for the application in a timely manner.");
+                await DialogHelper.ShowMessage("Unable to authenticate Bot with Mixer. Please ensure you approved access for the application in a timely manner.");
             }
             else if (ChannelSession.MixerBotUser.id.Equals(ChannelSession.MixerStreamerUser.id))
             {
@@ -70,7 +71,7 @@ namespace MixItUp.WPF.Controls.Services
                     await ChannelSession.DisconnectBot();
                 });
                 ChannelSession.Settings.BotOAuthToken = null;
-                await MessageBoxHelper.ShowMessageDialog("You must sign in to a different account than your Streamer account.");
+                await DialogHelper.ShowMessage("You must sign in to a different account than your Streamer account.");
             }
             else
             {

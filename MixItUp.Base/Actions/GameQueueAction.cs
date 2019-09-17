@@ -66,7 +66,7 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.Chat != null)
+            if (ChannelSession.Services.Chat != null)
             {
                 if (this.GameQueueType == GameQueueActionType.EnableDisableQueue)
                 {
@@ -91,7 +91,7 @@ namespace MixItUp.Base.Actions
                 {
                     if (!ChannelSession.Services.GameQueueService.IsEnabled)
                     {
-                        await ChannelSession.Chat.Whisper(user.UserName, "The game queue is not currently enabled");
+                        await ChannelSession.Services.Chat.Whisper(user.UserName, "The game queue is not currently enabled");
                         return;
                     }
 
@@ -105,7 +105,7 @@ namespace MixItUp.Base.Actions
                         }
                         else
                         {
-                            await ChannelSession.Chat.Whisper(user.UserName, "The user could not be found");
+                            await ChannelSession.Services.Chat.Whisper(user.UserName, "The user could not be found");
                             return;
                         }
                     }

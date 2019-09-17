@@ -33,17 +33,29 @@ namespace MixItUp.Base.Services
         IEnumerable<UserViewModel> DisplayUsers { get; }
         event EventHandler DisplayUsersUpdated;
 
-        Task SendMessage(StreamingPlatformTypeEnum platform, string message, bool sendAsStreamer = false);
-        Task Whisper(StreamingPlatformTypeEnum platform, UserViewModel user, string message, bool sendAsStreamer = false, bool waitForResponse = false);
-        Task Whisper(StreamingPlatformTypeEnum platform, string username, string message, bool sendAsStreamer = false, bool waitForResponse = false);
-        Task DeleteMessage(ChatMessageViewModel message);
-        Task AddMessage(ChatMessageViewModel message);
+        event EventHandler<Dictionary<string, uint>> OnPollEndOccurred;
 
+        Task SendMessage(string message, bool sendAsStreamer = false);
+        Task Whisper(UserViewModel user, string message, bool sendAsStreamer = false, bool waitForResponse = false);
+        Task Whisper(string username, string message, bool sendAsStreamer = false, bool waitForResponse = false);
+
+        Task DeleteMessage(ChatMessageViewModel message);
         Task ClearMessages();
 
+        Task StartPoll(string question, IEnumerable<string> answers, uint lengthInSeconds);
+
+        Task TimeoutUser(UserViewModel user, uint durationInSeconds);
         Task PurgeUser(UserViewModel user);
 
+        Task ModUser(UserViewModel user);
+        Task UnmodUser(UserViewModel user);
+
+        Task BanUser(UserViewModel user);
+        Task UnbanUser(UserViewModel user);
+
         void RebuildCommandTriggers();
+
+        Task AddMessage(ChatMessageViewModel message);
     }
 
     public class ChatService : IChatService
@@ -71,6 +83,8 @@ namespace MixItUp.Base.Services
         }
         public event EventHandler DisplayUsersUpdated = delegate { };
         private SortedList<string, UserViewModel> displayUsers = new SortedList<string, UserViewModel>();
+
+        public event EventHandler<Dictionary<string, uint>> OnPollEndOccurred = delegate { };
 
         private LockedDictionary<string, PermissionsCommandBase> chatCommandTriggers = new LockedDictionary<string, PermissionsCommandBase>();
 
@@ -131,18 +145,20 @@ namespace MixItUp.Base.Services
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
-        public async Task SendMessage(StreamingPlatformTypeEnum platform, string message, bool sendAsStreamer = false)
+        public async Task SendMessage(string message, bool sendAsStreamer = false)
         {
+            StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.Mixer;
             if (platform == StreamingPlatformTypeEnum.Mixer)
             {
                 await this.MixerChatService.SendMessage(message, sendAsStreamer);
             }
         }
 
-        public async Task Whisper(StreamingPlatformTypeEnum platform, UserViewModel user, string message, bool sendAsStreamer = false, bool waitForResponse = false) { await this.Whisper(platform, user.UserName, message, sendAsStreamer); }
+        public async Task Whisper(UserViewModel user, string message, bool sendAsStreamer = false, bool waitForResponse = false) { await this.Whisper(user.UserName, message, sendAsStreamer); }
 
-        public async Task Whisper(StreamingPlatformTypeEnum platform, string username, string message, bool sendAsStreamer = false, bool waitForResponse = false)
+        public async Task Whisper(string username, string message, bool sendAsStreamer = false, bool waitForResponse = false)
         {
+            StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.Mixer;
             if (platform == StreamingPlatformTypeEnum.Mixer)
             {
                 if (waitForResponse)
@@ -175,11 +191,81 @@ namespace MixItUp.Base.Services
             await this.MixerChatService.ClearMessages();
         }
 
+        public async Task StartPoll(string question, IEnumerable<string> answers, uint lengthInSeconds)
+        {
+            StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.Mixer;
+            if (platform == StreamingPlatformTypeEnum.Mixer)
+            {
+                this.MixerChatService.OnPollEndOccurred += MixerChatService_OnPollEndOccurred;
+                await this.MixerChatService.StartPoll(question, answers, lengthInSeconds);
+            }
+        }
+
         public async Task PurgeUser(UserViewModel user)
         {
             if (user.Platform == StreamingPlatformTypeEnum.Mixer)
             {
                 await this.MixerChatService.PurgeUser(user.UserName);
+            }
+        }
+
+        public async Task TimeoutUser(UserViewModel user, uint durationInSeconds)
+        {
+            if (user.Platform == StreamingPlatformTypeEnum.Mixer)
+            {
+                await this.MixerChatService.TimeoutUser(user.UserName, durationInSeconds);
+            }
+        }
+
+        public async Task ModUser(UserViewModel user)
+        {
+            if (user.Platform == StreamingPlatformTypeEnum.Mixer)
+            {
+                await this.MixerChatService.ModUser(user);
+            }
+        }
+
+        public async Task UnmodUser(UserViewModel user)
+        {
+            if (user.Platform == StreamingPlatformTypeEnum.Mixer)
+            {
+                await this.MixerChatService.UnmodUser(user);
+            }
+        }
+
+        public async Task BanUser(UserViewModel user)
+        {
+            if (user.Platform == StreamingPlatformTypeEnum.Mixer)
+            {
+                await this.MixerChatService.BanUser(user);
+            }
+        }
+
+        public async Task UnbanUser(UserViewModel user)
+        {
+            if (user.Platform == StreamingPlatformTypeEnum.Mixer)
+            {
+                await this.MixerChatService.UnbanUser(user);
+            }
+        }
+
+        public void RebuildCommandTriggers()
+        {
+            this.chatCommandTriggers.Clear();
+            foreach (ChatCommand command in ChannelSession.Settings.ChatCommands)
+            {
+                foreach (string trigger in command.CommandTriggers)
+                {
+                    this.chatCommandTriggers[trigger] = command;
+                }
+            }
+
+            foreach (GameCommandBase command in ChannelSession.Settings.GameCommands)
+            {
+                foreach (string trigger in command.CommandTriggers)
+                {
+                    this.chatCommandTriggers[trigger] = command;
+                }
             }
         }
 
@@ -233,7 +319,7 @@ namespace MixItUp.Base.Services
                             return Task.FromResult(0);
                         });
 
-                        await ChannelSession.Chat.Whisper(message.User.UserName, $"You are whisperer #{message.User.WhispererNumber}.", false);
+                        await ChannelSession.Services.Chat.Whisper(message.User.UserName, $"You are whisperer #{message.User.WhispererNumber}.", false);
                     }
                 }
                 else
@@ -344,26 +430,6 @@ namespace MixItUp.Base.Services
             else if (message is AlertChatMessageViewModel)
             {
 
-            }
-        }
-
-        public void RebuildCommandTriggers()
-        {
-            this.chatCommandTriggers.Clear();
-            foreach (ChatCommand command in ChannelSession.Settings.ChatCommands)
-            {
-                foreach (string trigger in command.CommandTriggers)
-                {
-                    this.chatCommandTriggers[trigger] = command;
-                }
-            }
-
-            foreach (GameCommandBase command in ChannelSession.Settings.GameCommands)
-            {
-                foreach (string trigger in command.CommandTriggers)
-                {
-                    this.chatCommandTriggers[trigger] = command;
-                }
             }
         }
 
@@ -493,6 +559,23 @@ namespace MixItUp.Base.Services
             {
                 await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserBan), user);
             }
+        }
+
+        private void MixerChatService_OnPollEndOccurred(object sender, ChatPollEventModel pollResults)
+        {
+            this.MixerChatService.OnPollEndOccurred -= MixerChatService_OnPollEndOccurred;
+
+            Dictionary<string, uint> results = new Dictionary<string, uint>();
+            foreach (string answer in pollResults.answers)
+            {
+                results[answer] = 0;
+                if (pollResults.responses.ContainsKey(answer))
+                {
+                    results[answer] = pollResults.responses[answer].ToObject<uint>();
+                }
+            }
+
+            this.OnPollEndOccurred(this, results);
         }
 
         #endregion Mixer Events

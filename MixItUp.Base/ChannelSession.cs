@@ -116,7 +116,6 @@ namespace MixItUp.Base
 
         public static IChannelSettings Settings { get; private set; }
 
-        public static ChatClientWrapper Chat { get; private set; }
         public static MixPlayClientWrapper Interactive { get; private set; }
         public static ConstellationClientWrapper Constellation { get; private set; }
 
@@ -224,7 +223,6 @@ namespace MixItUp.Base
 
             ChannelSession.Services = serviceHandler;
 
-            ChannelSession.Chat = new ChatClientWrapper();
             ChannelSession.Constellation = new ConstellationClientWrapper();
             ChannelSession.Interactive = new MixPlayClientWrapper();
 
@@ -323,14 +321,14 @@ namespace MixItUp.Base
         public static async Task DisconnectBot()
         {
             ChannelSession.MixerBotConnection = null;
-            await ChannelSession.Chat.DisconnectBot();
+            await ChannelSession.Services.Chat.MixerChatService.DisconnectBot();
         }
 
         public static async Task Close()
         {
             await ChannelSession.Services.Close();
 
-            await ChannelSession.Chat.Disconnect();
+            await ChannelSession.Services.Chat.MixerChatService.DisconnectStreamer();
             await ChannelSession.DisconnectBot();
 
             await ChannelSession.Constellation.Disconnect();
@@ -435,7 +433,7 @@ namespace MixItUp.Base
 
                     MixerChatService mixerChatService = new MixerChatService();
 
-                    if (!await ChannelSession.Chat.Connect() || !await ChannelSession.Constellation.Connect() || !await mixerChatService.ConnectStreamer())
+                    if (!await mixerChatService.ConnectStreamer() || !await ChannelSession.Constellation.Connect())
                     {
                         return false;
                     }

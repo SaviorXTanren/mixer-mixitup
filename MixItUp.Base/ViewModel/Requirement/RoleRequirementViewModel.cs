@@ -67,9 +67,9 @@ namespace MixItUp.Base.ViewModel.Requirement
 
         public async Task SendNotMetWhisper(UserViewModel user)
         {
-            if (ChannelSession.Chat != null)
+            if (ChannelSession.Services.Chat != null)
             {
-                await ChannelSession.Chat.Whisper(user.UserName, string.Format("You must be a {0} to do this", (this.MixerRole != MixerRoleEnum.Custom) ?
+                await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You must be a {0} to do this", (this.MixerRole != MixerRoleEnum.Custom) ?
                     EnumHelper.GetEnumName(this.MixerRole) : this.CustomRole));
             }
         }

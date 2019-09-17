@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Actions;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Mixer;
 using MixItUp.Base.ViewModel.User;
@@ -64,7 +65,7 @@ namespace MixItUp.Base.Util
         {
             string reason = null;
 
-            if (UserContainerViewModel.SpecialUserAccounts.Contains(user.UserName))
+            if (user.IgnoreForQueries)
             {
                 return reason;
             }
@@ -131,7 +132,7 @@ namespace MixItUp.Base.Util
                 {
                     if (Regex.IsMatch(text, string.Format(BannedWordRegexFormat, word), RegexOptions.IgnoreCase))
                     {
-                        await ChannelSession.Chat.BanUser(user);
+                        await ChannelSession.Services.Chat.BanUser(user);
                         return "The following word is banned: " + word;
                     }
                 }
@@ -221,7 +222,7 @@ namespace MixItUp.Base.Util
                     return false;
                 }
 
-                if (UserContainerViewModel.SpecialUserAccounts.Contains(user.UserName))
+                if (user.IgnoreForQueries)
                 {
                     return true;
                 }
@@ -385,11 +386,11 @@ namespace MixItUp.Base.Util
 
                 if (isChat)
                 {
-                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("Your message has been deleted because only {0} can participate currently.", reason));
+                    await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("Your message has been deleted because only {0} can participate currently.", reason));
                 }
                 else if (isInteractive)
                 {
-                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("Your interactive selection has been ignored because only {0} can participate currently.", reason));
+                    await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("Your interactive selection has been ignored because only {0} can participate currently.", reason));
                 }
             }
         }

@@ -201,7 +201,7 @@ namespace MixItUp.Base.Services
         {
             if (string.IsNullOrEmpty(identifier))
             {
-                await ChannelSession.Chat.Whisper(user.UserName, "You must specify your request with the command. For details on how to request songs, check out: https://github.com/SaviorXTanren/mixer-mixitup/wiki/Song-Requests#requesting-songs");
+                await ChannelSession.Services.Chat.Whisper(user.UserName, "You must specify your request with the command. For details on how to request songs, check out: https://github.com/SaviorXTanren/mixer-mixitup/wiki/Song-Requests#requesting-songs");
                 return;
             }
 
@@ -212,7 +212,7 @@ namespace MixItUp.Base.Services
             }
             else
             {
-                await ChannelSession.Chat.Whisper(user.UserName, "We were unable to find a song that matched you request. For details on how to request songs, check out: https://github.com/SaviorXTanren/mixer-mixitup/wiki/Song-Requests#requesting-songs");
+                await ChannelSession.Services.Chat.Whisper(user.UserName, "We were unable to find a song that matched you request. For details on how to request songs, check out: https://github.com/SaviorXTanren/mixer-mixitup/wiki/Song-Requests#requesting-songs");
             }
         }
 
@@ -220,7 +220,7 @@ namespace MixItUp.Base.Services
         {
             if (string.IsNullOrEmpty(identifier))
             {
-                await ChannelSession.Chat.Whisper(user.UserName, "You must specify your request with the command. For details on how to request songs, check out: https://github.com/SaviorXTanren/mixer-mixitup/wiki/Song-Requests#requesting-songs");
+                await ChannelSession.Services.Chat.Whisper(user.UserName, "You must specify your request with the command. For details on how to request songs, check out: https://github.com/SaviorXTanren/mixer-mixitup/wiki/Song-Requests#requesting-songs");
                 return;
             }
 
@@ -252,12 +252,12 @@ namespace MixItUp.Base.Services
                         {
                             resultsStrings.Add((i + 1) + ". " + this.lastUserSongSearches[user][i].Name);
                         }
-                        await ChannelSession.Chat.Whisper(user.UserName, "Multiple results found, please re-run this command with a space & the number of the song: " + string.Join(",  ", resultsStrings));
+                        await ChannelSession.Services.Chat.Whisper(user.UserName, "Multiple results found, please re-run this command with a space & the number of the song: " + string.Join(",  ", resultsStrings));
                     }
                 }
                 else
                 {
-                    await ChannelSession.Chat.Whisper(user.UserName, "We were unable to find a song that matched you request. For details on how to request songs, check out: https://github.com/SaviorXTanren/mixer-mixitup/wiki/Song-Requests#requesting-songs");
+                    await ChannelSession.Services.Chat.Whisper(user.UserName, "We were unable to find a song that matched you request. For details on how to request songs, check out: https://github.com/SaviorXTanren/mixer-mixitup/wiki/Song-Requests#requesting-songs");
                 }
             }
         }
@@ -459,7 +459,7 @@ namespace MixItUp.Base.Services
             }
             else
             {
-                await ChannelSession.Chat.Whisper(user.UserName, string.Format("You have no songs in the queue.", song.Name));
+                await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You have no songs in the queue.", song.Name));
             }
 
             GlobalEvents.SongRequestsChangedOccurred();
@@ -496,7 +496,7 @@ namespace MixItUp.Base.Services
 
             if (bannedSongsCache[song.Type].Contains(song.ID))
             {
-                await ChannelSession.Chat.Whisper(user.UserName, "This song is banned from being requested.");
+                await ChannelSession.Services.Chat.Whisper(user.UserName, "This song is banned from being requested.");
                 return;
             }
 

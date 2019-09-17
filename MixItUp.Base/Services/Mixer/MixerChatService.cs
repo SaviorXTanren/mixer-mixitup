@@ -50,9 +50,9 @@ namespace MixItUp.Base.Services.Mixer
         Task TimeoutUser(string username, uint durationInSeconds);
 
         Task BanUser(UserViewModel user);
-        Task UnBanUser(UserViewModel user);
+        Task UnbanUser(UserViewModel user);
         Task ModUser(UserViewModel user);
-        Task UnModUser(UserViewModel user);
+        Task UnmodUser(UserViewModel user);
 
         Task StartPoll(string question, IEnumerable<string> answers, uint lengthInSeconds);
     }
@@ -346,7 +346,7 @@ namespace MixItUp.Base.Services.Mixer
             });
         }
 
-        public async Task UnBanUser(UserViewModel user)
+        public async Task UnbanUser(UserViewModel user)
         {
             await this.RunAsync(async () =>
             {
@@ -364,7 +364,7 @@ namespace MixItUp.Base.Services.Mixer
             });
         }
 
-        public async Task UnModUser(UserViewModel user)
+        public async Task UnmodUser(UserViewModel user)
         {
             await this.RunAsync(async () =>
             {

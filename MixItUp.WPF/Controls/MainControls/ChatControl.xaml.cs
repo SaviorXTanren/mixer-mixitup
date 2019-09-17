@@ -386,22 +386,22 @@ namespace MixItUp.WPF.Controls.MainControls
                     switch (dialogResult)
                     {
                         case UserDialogResult.Purge:
-                            await ChannelSession.Chat.PurgeUser(user.UserName);
+                            await ChannelSession.Services.Chat.PurgeUser(user);
                             break;
                         case UserDialogResult.Timeout1:
-                            await ChannelSession.Chat.TimeoutUser(user.UserName, 60);
+                            await ChannelSession.Services.Chat.TimeoutUser(user, 60);
                             break;
                         case UserDialogResult.Timeout5:
-                            await ChannelSession.Chat.TimeoutUser(user.UserName, 300);
+                            await ChannelSession.Services.Chat.TimeoutUser(user, 300);
                             break;
                         case UserDialogResult.Ban:
                             if (await DialogHelper.ShowConfirmation(string.Format("This will ban the user {0} from this channel. Are you sure?", user.UserName)))
                             {
-                                await ChannelSession.Chat.BanUser(user);
+                                await ChannelSession.Services.Chat.BanUser(user);
                             }
                             break;
                         case UserDialogResult.Unban:
-                            await ChannelSession.Chat.UnBanUser(user);
+                            await ChannelSession.Services.Chat.UnbanUser(user);
                             break;
                         case UserDialogResult.Follow:
                             ExpandedChannelModel channelToFollow = await ChannelSession.MixerStreamerConnection.GetChannel(user.ChannelID);
@@ -414,13 +414,13 @@ namespace MixItUp.WPF.Controls.MainControls
                         case UserDialogResult.PromoteToMod:
                             if (await DialogHelper.ShowConfirmation(string.Format("This will promote the user {0} to a moderator of this channel. Are you sure?", user.UserName)))
                             {
-                                await ChannelSession.Chat.ModUser(user);
+                                await ChannelSession.Services.Chat.ModUser(user);
                             }
                             break;
                         case UserDialogResult.DemoteFromMod:
                             if (await DialogHelper.ShowConfirmation(string.Format("This will demote the user {0} from a moderator of this channel. Are you sure?", user.UserName)))
                             {
-                                await ChannelSession.Chat.UnModUser(user);
+                                await ChannelSession.Services.Chat.UnmodUser(user);
                             }
                             break;
                         case UserDialogResult.MixerPage:

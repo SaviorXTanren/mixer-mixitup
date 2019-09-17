@@ -303,7 +303,7 @@ namespace MixItUp.WPF.Controls.Interactive
                         control.meta["location"] = location;
                         await ChannelSession.Interactive.UpdateControls(this.scene, new List<MixPlayControlModel>() { control });
 
-                        await ChannelSession.Chat.SendMessage(string.Format("Winner: @{0}, Drop Location: {1}", username, location));
+                        await ChannelSession.Services.Chat.SendMessage(string.Format("Winner: @{0}, Drop Location: {1}", username, location));
                     }
                 }
             });

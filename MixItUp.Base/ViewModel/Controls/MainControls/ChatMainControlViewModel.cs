@@ -165,7 +165,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                         username = username.Trim();
                         username = username.Replace("@", "");
 
-                        await ChannelSession.Services.Chat.Whisper(Model.StreamingPlatformTypeEnum.Mixer, username, message, this.SendAsStreamer, waitForResponse: true);
+                        await ChannelSession.Services.Chat.Whisper(username, message, this.SendAsStreamer, waitForResponse: true);
                     }
                     else if (ChatAction.ClearRegex.IsMatch(this.SendMessageText))
                     {
@@ -173,7 +173,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                     }
                     else
                     {
-                        await ChannelSession.Services.Chat.SendMessage(Model.StreamingPlatformTypeEnum.Mixer, this.SendMessageText, sendAsStreamer: this.SendAsStreamer);
+                        await ChannelSession.Services.Chat.SendMessage(this.SendMessageText, sendAsStreamer: this.SendAsStreamer);
                     }
 
                     this.SentMessageHistory.Remove(this.SendMessageText);

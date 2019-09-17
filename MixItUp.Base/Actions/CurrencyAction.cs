@@ -100,7 +100,7 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.Chat != null)
+            if (ChannelSession.Services.Chat != null)
             {
                 UserCurrencyViewModel currency = null;
                 UserInventoryViewModel inventory = null;
@@ -163,14 +163,14 @@ namespace MixItUp.Base.Actions
                     string amountTextValue = await this.ReplaceStringWithSpecialModifiers(this.Amount, user, arguments);
                     if (!double.TryParse(amountTextValue, out double doubleAmount))
                     {
-                        await ChannelSession.Chat.Whisper(user.UserName, string.Format("{0} is not a valid amount of {1}", amountTextValue, systemName));
+                        await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("{0} is not a valid amount of {1}", amountTextValue, systemName));
                         return;
                     }
 
                     int amountValue = (int)Math.Ceiling(doubleAmount);
                     if (amountValue <= 0)
                     {
-                        await ChannelSession.Chat.Whisper(user.UserName, "The amount specified must be greater than 0");
+                        await ChannelSession.Services.Chat.Whisper(user.UserName, "The amount specified must be greater than 0");
                         return;
                     }
 
@@ -192,7 +192,7 @@ namespace MixItUp.Base.Actions
                             }
                             else
                             {
-                                await ChannelSession.Chat.Whisper(user.UserName, "The user could not be found");
+                                await ChannelSession.Services.Chat.Whisper(user.UserName, "The user could not be found");
                                 return;
                             }
                         }
@@ -215,7 +215,7 @@ namespace MixItUp.Base.Actions
                         {
                             if (!user.Data.HasCurrencyAmount(currency, amountValue))
                             {
-                                await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to do this", amountValue, systemName));
+                                await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to do this", amountValue, systemName));
                                 return;
                             }
                             user.Data.SubtractCurrencyAmount(currency, amountValue);
@@ -224,7 +224,7 @@ namespace MixItUp.Base.Actions
                         {
                             if (!user.Data.HasInventoryAmount(inventory, itemName, amountValue))
                             {
-                                await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to do this", amountValue, itemName));
+                                await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to do this", amountValue, itemName));
                                 return;
                             }
                             user.Data.SubtractInventoryAmount(inventory, itemName, amountValue);
