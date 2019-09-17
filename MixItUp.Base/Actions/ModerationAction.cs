@@ -66,10 +66,14 @@ namespace MixItUp.Base.Actions
                 if (!string.IsNullOrEmpty(this.UserName))
                 {
                     string username = await this.ReplaceStringWithSpecialModifiers(this.UserName, user, arguments);
-                    UserModel targetUserModel = await ChannelSession.MixerStreamerConnection.GetUser(username);
+                    targetUser = ChannelSession.Services.User.GetUserByUsername(username);
                     if (targetUser == null)
                     {
-                        targetUser = new UserViewModel(targetUserModel);
+                        UserModel targetUserModel = await ChannelSession.MixerStreamerConnection.GetUser(username);
+                        if (targetUser == null)
+                        {
+                            targetUser = new UserViewModel(targetUserModel);
+                        }
                     }
                 }
                 else
