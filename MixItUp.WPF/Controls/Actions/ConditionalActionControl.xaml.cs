@@ -41,12 +41,12 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override ActionBase GetAction()
         {
-            if (!string.IsNullOrEmpty(this.Value1TextBox.Text) && this.ComparisionTypeComboBox.SelectedIndex >= 0 && this.CommandReference.Command != null)
+            if (this.ComparisionTypeComboBox.SelectedIndex >= 0 && this.CommandReference.Command != null)
             {
                 ConditionalComparisionTypeEnum type = EnumHelper.GetEnumValueFromString<ConditionalComparisionTypeEnum>((string)this.ComparisionTypeComboBox.SelectedItem);
                 if (type == ConditionalComparisionTypeEnum.Between)
                 {
-                    if (!string.IsNullOrEmpty(this.MinValue2TextBox.Text) && !string.IsNullOrEmpty(this.MaxValue3TextBox.Text))
+                    if (!string.IsNullOrEmpty(this.Value1TextBox.Text) && !string.IsNullOrEmpty(this.MinValue2TextBox.Text) && !string.IsNullOrEmpty(this.MaxValue3TextBox.Text))
                     {
                         return new ConditionalAction(type, this.IgnoreCasingToggleButton.IsChecked.GetValueOrDefault(), this.Value1TextBox.Text, this.MinValue2TextBox.Text,
                             this.MaxValue3TextBox.Text, this.CommandReference.Command);
@@ -54,7 +54,7 @@ namespace MixItUp.WPF.Controls.Actions
                 }
                 else
                 {
-                    if (!string.IsNullOrEmpty(this.Value2TextBox.Text))
+                    if (!(string.IsNullOrEmpty(this.Value1TextBox.Text) && string.IsNullOrEmpty(this.Value2TextBox.Text)))
                     {
                         return new ConditionalAction(type, this.IgnoreCasingToggleButton.IsChecked.GetValueOrDefault(), this.Value1TextBox.Text, this.Value2TextBox.Text,
                             this.CommandReference.Command);
