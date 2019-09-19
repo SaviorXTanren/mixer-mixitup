@@ -53,6 +53,10 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public bool IsStreamerOrBot { get { return this.User != null && this.User.ID.Equals(ChannelSession.MixerStreamerUser.id) || (ChannelSession.MixerBotUser != null && this.User.ID.Equals(ChannelSession.MixerBotUser.id)); } }
 
+        public bool ShowTimestamp { get { return ChannelSession.Settings.ShowChatMessageTimestamps; } }
+
+        public string TimestampDisplay { get { return string.Format("({0})", this.Timestamp.ToString("t")); } }
+
         public virtual bool ContainsOnlyEmotes() { return false; }
 
         public async Task<bool> CheckForModeration()

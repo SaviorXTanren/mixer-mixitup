@@ -18,6 +18,7 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
         <local:ChatUserControl DataContext="{Binding User}" Grid.Column="0" />
@@ -40,6 +41,8 @@
 
         </Grid>
 
-        <TextBlock Grid.Column="2" VerticalAlignment="Center">:</TextBlock>
+        <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="3,0,0,0" Visibility="{Binding ShowTimestamp, Converter={StaticResource BooleanToVisibilityConverter}}" Text="{Binding TimestampDisplay}" />
+
+        <TextBlock Grid.Column="3" VerticalAlignment="Center">:</TextBlock>
     </Grid>
 </UserControl>

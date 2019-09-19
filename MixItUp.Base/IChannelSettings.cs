@@ -71,6 +71,7 @@ namespace MixItUp.Base
         bool CommandsOnlyInYourStream { get; set; }
         bool DeleteChatCommandsWhenRun { get; set; }
         bool ShowMixrElixrEmotes { get; set; }
+        bool ShowChatMessageTimestamps { get; set; }
 
         uint DefaultInteractiveGame { get; set; }
         bool PreventUnknownInteractiveUsers { get; set; }
