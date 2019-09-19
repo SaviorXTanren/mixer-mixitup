@@ -15,6 +15,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -92,6 +93,7 @@ namespace MixItUp.Base.Services
         public event EventHandler<Dictionary<string, uint>> OnPollEndOccurred = delegate { };
 
         private LockedDictionary<string, PermissionsCommandBase> chatCommandTriggers = new LockedDictionary<string, PermissionsCommandBase>();
+        private LockedDictionary<string, PermissionsCommandBase> chatCommandWildcardTriggers = new LockedDictionary<string, PermissionsCommandBase>();
 
         private HashSet<string> userEntranceCommands = new HashSet<string>();
 
@@ -269,11 +271,22 @@ namespace MixItUp.Base.Services
         public void RebuildCommandTriggers()
         {
             this.chatCommandTriggers.Clear();
+            this.chatCommandWildcardTriggers.Clear();
             foreach (ChatCommand command in ChannelSession.Settings.ChatCommands)
             {
-                foreach (string trigger in command.CommandTriggers)
+                if (command.ContainsWildcards)
                 {
-                    this.chatCommandTriggers[trigger] = command;
+                    foreach (string trigger in command.CommandTriggers)
+                    {
+                        this.chatCommandWildcardTriggers[trigger] = command;
+                    }
+                }
+                else
+                {
+                    foreach (string trigger in command.CommandTriggers)
+                    {
+                        this.chatCommandTriggers[trigger] = command;
+                    }
                 }
             }
 
@@ -411,6 +424,8 @@ namespace MixItUp.Base.Services
 
                     if (commandsToCheck.Keys.Count() > 0)
                     {
+                        bool commandTriggered = false;
+
                         int maxTriggerLength = commandsToCheck.Keys.Max(t => t.Length);
                         IEnumerable<string> messageParts = message.PlainTextMessage.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                         for (int i = 0; i < messageParts.Count(); i++)
@@ -423,20 +438,22 @@ namespace MixItUp.Base.Services
 
                             if (commandsToCheck.ContainsKey(commandTriggerCheck))
                             {
-                                PermissionsCommandBase command = commandsToCheck[commandTriggerCheck];
-                                if (command.IsEnabled)
+                                await this.RunCommand(message, commandsToCheck[commandTriggerCheck], messageParts.Skip(i + 1));
+                                commandTriggered = true;
+                                break;
+                            }
+                        }
+
+                        if (!commandTriggered && this.chatCommandWildcardTriggers.Count > 0)
+                        {
+                            foreach (var commandToCheck in this.chatCommandWildcardTriggers.Keys.ToList())
+                            {
+                                Match match = Regex.Match(message.PlainTextMessage, commandToCheck);
+                                if (match != null && match.Success)
                                 {
-                                    Logger.Log(LogLevel.Debug, string.Format("Command Found For Message - {0} - {1}", message.ToString(), command.ToString()));
-
-                                    if (command.Requirements.Settings.DeleteChatCommandWhenRun || (ChannelSession.Settings.DeleteChatCommandsWhenRun && !command.Requirements.Settings.DontDeleteChatCommandWhenRun))
-                                    {
-                                        Logger.Log(LogLevel.Debug, string.Format("Deleting Message As Chat Command - {0}", message.PlainTextMessage));
-                                        await this.DeleteMessage(message);
-                                    }
-
-                                    IEnumerable<string> arguments = messageParts.Skip(i + 1);
-                                    await command.Perform(message.User, arguments: arguments);
-
+                                    IEnumerable<string> arguments = message.PlainTextMessage.Substring(match.Index, match.Length).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                                    await this.RunCommand(message, this.chatCommandWildcardTriggers[commandToCheck], arguments);
+                                    commandTriggered = true;
                                     break;
                                 }
                             }
@@ -447,6 +464,22 @@ namespace MixItUp.Base.Services
             else if (message is AlertChatMessageViewModel)
             {
 
+            }
+        }
+
+        private async Task RunCommand(ChatMessageViewModel message, PermissionsCommandBase command, IEnumerable<string> arguments)
+        {
+            if (command.IsEnabled)
+            {
+                Logger.Log(LogLevel.Debug, string.Format("Command Found For Message - {0} - {1}", message.ToString(), command.ToString()));
+
+                if (command.Requirements.Settings.DeleteChatCommandWhenRun || (ChannelSession.Settings.DeleteChatCommandsWhenRun && !command.Requirements.Settings.DontDeleteChatCommandWhenRun))
+                {
+                    Logger.Log(LogLevel.Debug, string.Format("Deleting Message As Chat Command - {0}", message.PlainTextMessage));
+                    await this.DeleteMessage(message);
+                }
+
+                await command.Perform(message.User, arguments: arguments);
             }
         }
 

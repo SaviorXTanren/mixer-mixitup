@@ -58,6 +58,9 @@ namespace MixItUp.Base.Commands
             }
         }
 
+        [JsonIgnore]
+        public bool ContainsWildcards { get { return !this.IncludeExclamationInCommands && this.Commands.Any(c => c.Contains('*')); } }
+
         protected override SemaphoreSlim AsyncSemaphore { get { return ChatCommand.chatCommandPerformSemaphore; } }
     }
 }
