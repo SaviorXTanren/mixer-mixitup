@@ -146,7 +146,12 @@ namespace MixItUp.Base.MixerAPI
                 JToken payloadToken;
                 if (e.payload.TryGetValue("user", out payloadToken))
                 {
-                    user = new UserViewModel(payloadToken.ToObject<UserModel>());
+                    UserModel userPayload = payloadToken.ToObject<UserModel>();
+                    user = ChannelSession.Services.User.GetUserByID(userPayload.id.ToString());
+                    if (user == null)
+                    {
+                        user = new UserViewModel(userPayload);
+                    }
 
                     JToken subscribeStartToken;
                     if (e.payload.TryGetValue("since", out subscribeStartToken))
@@ -162,7 +167,23 @@ namespace MixItUp.Base.MixerAPI
                 else if (e.payload.TryGetValue("hoster", out payloadToken))
                 {
                     channel = payloadToken.ToObject<ChannelModel>();
-                    user = new UserViewModel(channel.userId, channel.token);
+                    user = ChannelSession.Services.User.GetUserByID(channel.userId.ToString());
+                    if (user == null)
+                    {
+                        user = new UserViewModel(channel.userId, channel.token);
+                    }
+                }
+                else if (e.payload.TryGetValue("userId", out JToken userID))
+                {
+                    user = ChannelSession.Services.User.GetUserByID(userID.ToObject<uint>().ToString());
+                    if (user == null)
+                    {
+                        UserModel userModel = await ChannelSession.MixerStreamerConnection.GetUser(userID.ToObject<uint>());
+                        if (userModel != null)
+                        {
+                            user = new UserViewModel(userModel);
+                        }
+                    }
                 }
 
                 if (user != null)
@@ -304,17 +325,11 @@ namespace MixItUp.Base.MixerAPI
                 }
                 else if (e.channel.Equals(ConstellationClientWrapper.ProgressionLevelupEvent.ToString()))
                 {
-                    if (e.payload.TryGetValue("userId", out JToken userID))
+                    UserFanProgressionModel fanProgression = e.payload.ToObject<UserFanProgressionModel>();
+                    if (fanProgression != null)
                     {
-                        UserModel userModel = await ChannelSession.MixerStreamerConnection.GetUser(userID.ToObject<uint>());
-                        if (userModel != null)
-                        {
-                            UserViewModel userViewModel = new UserViewModel(userModel);
-                            UserFanProgressionModel fanProgression = e.payload.ToObject<UserFanProgressionModel>();
-                            if (fanProgression != null)
-                            {
-                                userViewModel.FanProgression = fanProgression;
-                                Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
+                        user.FanProgression = fanProgression;
+                        Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
                                 {
                                     { "userfanprogressionnext", fanProgression.level.nextLevelXp.ToString() },
                                     { "userfanprogressionrank", fanProgression.level.level.ToString() },
@@ -323,16 +338,14 @@ namespace MixItUp.Base.MixerAPI
                                     { "userfanprogression", fanProgression.level.currentXp.ToString() },
                                 };
 
-                                await EventCommand.FindAndRunEventCommand(e.channel, userViewModel, extraSpecialIdentifiers: specialIdentifiers);
+                        await EventCommand.FindAndRunEventCommand(e.channel, user, extraSpecialIdentifiers: specialIdentifiers);
 
-                                foreach (UserCurrencyViewModel fanProgressionCurrency in ChannelSession.Settings.Currencies.Values.Where(c => c.IsTrackingFanProgression))
-                                {
-                                    userViewModel.Data.SetCurrencyAmount(fanProgressionCurrency, (int)fanProgression.level.level);
-                                }
-
-                                GlobalEvents.ProgressionLevelUpOccurred(userViewModel);
-                            }
+                        foreach (UserCurrencyViewModel fanProgressionCurrency in ChannelSession.Settings.Currencies.Values.Where(c => c.IsTrackingFanProgression))
+                        {
+                            user.Data.SetCurrencyAmount(fanProgressionCurrency, (int)fanProgression.level.level);
                         }
+
+                        GlobalEvents.ProgressionLevelUpOccurred(user);
                     }
                 }
                 else if (e.channel.Equals(ConstellationClientWrapper.ChannelSkillEvent.ToString()))
