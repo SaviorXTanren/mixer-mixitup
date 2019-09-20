@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Clients;
 using Mixer.Base.Model.Chat;
+using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
@@ -118,8 +119,25 @@ namespace MixItUp.Base.Services.Mixer
                             this.streamerClient.OnEventOccurred += WebSocketClient_OnEventOccurred;
                         }
 
+                        AsyncRunner.RunAsyncInBackground(async () =>
+                        {
+                            await ChannelSession.MixerStreamerConnection.GetChatUsers(ChannelSession.MixerChannel, (users) =>
+                            {
+                                foreach (ChatUserModel user in users)
+                                {
+                                    this.ChatClient_OnUserJoinOccurred(this, new ChatUserEventModel()
+                                    {
+                                        id = user.userId.GetValueOrDefault(),
+                                        username = user.userName,
+                                        roles = user.userRoles,
+                                    });
+                                }
+                                return Task.FromResult(0);
+                            }, uint.MaxValue);
+
+                            AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, this.ChatterRefreshBackground, 300000);
+                        });
                         AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, this.ChatterJoinLeaveBackground, 2500);
-                        AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, this.ChatterRefreshBackground, 300000);
 
                         return true;
                     }
@@ -556,7 +574,7 @@ namespace MixItUp.Base.Services.Mixer
             this.OnDeleteMessageOccurred(sender, e.id);
         }
 
-        private async void ChatClient_OnPurgeMessageOccurred(object sender, ChatPurgeMessageEventModel e)
+        private void ChatClient_OnPurgeMessageOccurred(object sender, ChatPurgeMessageEventModel e)
         {
             UserViewModel user = ChannelSession.Services.User.GetUserByID(e.user_id);
             if (user != null)

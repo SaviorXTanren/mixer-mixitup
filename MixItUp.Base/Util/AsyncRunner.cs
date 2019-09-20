@@ -75,6 +75,21 @@ namespace MixItUp.Base.Util
             return default(T);
         }
 
+        public static void RunAsyncInBackground(Func<Task> task)
+        {
+            Task.Run(async () =>
+            {
+                try
+                {
+                    await task();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex, includeStackTrace: true);
+                }
+            });
+        }
+
         public static async Task RunSyncAsAsync(Action action)
         {
             await Task.Run(() =>

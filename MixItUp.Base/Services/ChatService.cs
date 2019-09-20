@@ -303,6 +303,12 @@ namespace MixItUp.Base.Services
         {
             Logger.Log(LogLevel.Debug, string.Format("Message Received - {0}", message.ToString()));
 
+            UserViewModel activeUser = ChannelSession.Services.User.GetUserByID(message.User.ID.ToString());
+            if (activeUser != null)
+            {
+                message.User = activeUser;
+            }
+
             this.messagesLookup[message.ID] = message;
             if (ChannelSession.Settings.LatestChatAtTop)
             {
