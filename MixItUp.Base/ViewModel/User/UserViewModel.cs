@@ -182,6 +182,10 @@ namespace MixItUp.Base.ViewModel.User
 
         public string SubscriberBadgeLink { get { return (ChannelSession.MixerChannel.badge != null) ? ChannelSession.MixerChannel.badge.url : string.Empty; } }
 
+        public string MixerChannelBadgeLink { get { return this.FanProgression?.level?.SmallAssetURL?.ToString(); } }
+
+        public bool HasMixerChannelBadgeLink { get { return !string.IsNullOrEmpty(this.MixerChannelBadgeLink); } }
+
         private readonly HashSet<MixerRoleEnum> mixerRoles = new HashSet<MixerRoleEnum>();
         public HashSet<MixerRoleEnum> MixerRoles
         {

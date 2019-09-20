@@ -18,8 +18,6 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public StreamingPlatformTypeEnum Platform { get; private set; }
 
-        public UserViewModel User { get; private set; }
-
         public List<object> MessageParts { get; protected set; } = new List<object>();
 
         public string PlainTextMessage { get; protected set; } = string.Empty;
@@ -37,6 +35,8 @@ namespace MixItUp.Base.ViewModel.Chat
         public string DeletedBy { get; private set; }
 
         public string ModerationReason { get; private set; }
+
+        public UserViewModel User { get; set; }
 
         public event EventHandler OnDeleted = delegate { };
 
