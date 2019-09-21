@@ -21,6 +21,9 @@ namespace MixItUp.Base.Commands
         [DataMember]
         public bool IncludeExclamationInCommands { get; set; }
 
+        [DataMember]
+        public bool Wildcards { get; set; }
+
         public ChatCommand() { }
 
         public ChatCommand(string name, string command, RequirementViewModel requirements)
@@ -62,9 +65,6 @@ namespace MixItUp.Base.Commands
                 return commandsToCheck;
             }
         }
-
-        [JsonIgnore]
-        public bool ContainsWildcards { get { return !this.IncludeExclamationInCommands && this.Commands.Any(c => c.Contains('*')); } }
 
         protected override SemaphoreSlim AsyncSemaphore { get { return ChatCommand.chatCommandPerformSemaphore; } }
 

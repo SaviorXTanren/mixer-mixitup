@@ -274,11 +274,13 @@ namespace MixItUp.Base.Services
             this.chatCommandWildcardTriggers.Clear();
             foreach (ChatCommand command in ChannelSession.Settings.ChatCommands)
             {
-                if (command.ContainsWildcards)
+                if (command.Wildcards)
                 {
                     foreach (string trigger in command.CommandTriggers)
                     {
-                        this.chatCommandWildcardTriggers[trigger] = command;
+                        string t = Regex.Escape(trigger);
+                        t = t.Replace("\\*", "*");
+                        this.chatCommandWildcardTriggers[t] = command;
                     }
                 }
                 else

@@ -17,6 +17,7 @@ namespace MixItUp.WPF.Controls.Command
     {
         private const string ChatTriggersNoExclamationHintAssist = "Chat Trigger(s) (No \"!\" needed, space seperated, semi-colon for multi-word)";
         private const string ChatTriggersHintAssist = "Chat Trigger(s) (Space seperated, semi-colon for multi-word)";
+        private const string ChatTriggersWildcardHintAssist = "Chat Trigger(s) (\"*\" for wildcards, semi-colon for multi-word)";
 
         private ChatCommand command;
 
@@ -122,7 +123,7 @@ namespace MixItUp.WPF.Controls.Command
                 if (this.command != null)
                 {
                     this.command.Name = this.NameTextBox.Text;
-                    this.command.Commands = commands.ToList();
+                    this.command.Commands = new HashSet<string>(commands);
                     this.command.Requirements = requirements;
                 }
                 else
@@ -135,6 +136,7 @@ namespace MixItUp.WPF.Controls.Command
                 }
 
                 this.command.IncludeExclamationInCommands = this.IncludeExclamationInCommandsToggleButton.IsChecked.GetValueOrDefault();
+                this.command.Wildcards = this.WildcardsToggleButton.IsChecked.GetValueOrDefault();
                 this.command.Unlocked = this.UnlockedControl.Unlocked;
 
                 this.command.GroupName = !string.IsNullOrEmpty(this.CommandGroupComboBox.Text) ? this.CommandGroupComboBox.Text : null;
@@ -179,6 +181,19 @@ namespace MixItUp.WPF.Controls.Command
             else
             {
                 HintAssist.SetHint(this.ChatCommandTextBox, ChatTriggersHintAssist);
+            }
+        }
+
+        private void WildcardsToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (this.WildcardsToggleButton.IsChecked.GetValueOrDefault())
+            {
+                this.IncludeExclamationInCommandsToggleButton.IsChecked = this.IncludeExclamationInCommandsToggleButton.IsEnabled = false;
+                HintAssist.SetHint(this.ChatCommandTextBox, ChatTriggersWildcardHintAssist);
+            }
+            else
+            {
+                this.IncludeExclamationInCommandsToggleButton.IsChecked = this.IncludeExclamationInCommandsToggleButton.IsEnabled = true;
             }
         }
     }

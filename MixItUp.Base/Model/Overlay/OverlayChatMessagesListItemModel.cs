@@ -130,7 +130,7 @@ namespace MixItUp.Base.Model.Overlay
                             }
                         }
 
-                        item.TemplateReplacements.Add("TEXT", string.Join(" ", textParts);
+                        item.TemplateReplacements.Add("TEXT", string.Join(" ", textParts));
                     }
 
                     item.TemplateReplacements.Add("USERNAME", item.User.UserName);

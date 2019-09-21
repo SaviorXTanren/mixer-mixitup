@@ -106,7 +106,7 @@ namespace MixItUp.Base.Commands
         public GameCommandBase(string name, IEnumerable<string> commands, RequirementViewModel requirements) : base(name, CommandTypeEnum.Game, commands, requirements) { }
 
         [JsonIgnore]
-        public override IEnumerable<string> CommandTriggers { get { return this.Commands.Select(c => "!" + c); } }
+        public override HashSet<string> CommandTriggers { get { return new HashSet<string>(this.Commands.Select(c => "!" + c)); } }
 
         public abstract IEnumerable<CommandBase> GetAllInnerCommands();
 
