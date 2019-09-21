@@ -234,77 +234,76 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                //if (this.TimeLeft > 0 && this.Winner == null && this.giveawayCommand.MatchesOrContainsCommand(message.PlainTextMessage))
-                //{
-                //    int entries = 1;
+                if (this.TimeLeft > 0 && this.Winner == null && this.giveawayCommand.DoesTextMatchCommand(message.PlainTextMessage, out IEnumerable<string> arguments))
+                {
+                    int entries = 1;
 
-                //    if (pastWinners.Contains(message.User.ID))
-                //    {
-                //        await ChannelSession.Services.Chat.Whisper(message.User.UserName, "You have already won a giveaway and can not enter this one");
-                //        return;
-                //    }
+                    if (pastWinners.Contains(message.User.ID))
+                    {
+                        await ChannelSession.Services.Chat.Whisper(message.User.UserName, "You have already won a giveaway and can not enter this one");
+                        return;
+                    }
 
-                //    IEnumerable<string> arguments = this.giveawayCommand.GetArgumentsFromText(message.PlainTextMessage);
-                //    if (arguments.Count() > 0)
-                //    {
-                //        int.TryParse(arguments.ElementAt(0), out entries);
-                //    }
+                    if (arguments.Count() > 0)
+                    {
+                        int.TryParse(arguments.ElementAt(0), out entries);
+                    }
 
-                //    int currentEntries = 0;
-                //    if (this.enteredUsers.ContainsKey(message.User.ID))
-                //    {
-                //        currentEntries = this.enteredUsers[message.User.ID].Entries;
-                //    }
+                    int currentEntries = 0;
+                    if (this.enteredUsers.ContainsKey(message.User.ID))
+                    {
+                        currentEntries = this.enteredUsers[message.User.ID].Entries;
+                    }
 
-                //    if ((entries + currentEntries) > ChannelSession.Settings.GiveawayMaximumEntries)
-                //    {
-                //        await ChannelSession.Services.Chat.Whisper(message.User.UserName, string.Format("You may only enter {0} time(s), you currently have entered {1} time(s)", ChannelSession.Settings.GiveawayMaximumEntries, currentEntries));
-                //        return;
-                //    }
+                    if ((entries + currentEntries) > ChannelSession.Settings.GiveawayMaximumEntries)
+                    {
+                        await ChannelSession.Services.Chat.Whisper(message.User.UserName, string.Format("You may only enter {0} time(s), you currently have entered {1} time(s)", ChannelSession.Settings.GiveawayMaximumEntries, currentEntries));
+                        return;
+                    }
 
-                //    if (await this.giveawayCommand.CheckAllRequirements(message.User))
-                //    {
-                //        if (ChannelSession.Settings.GiveawayRequirements.Currency != null && ChannelSession.Settings.GiveawayRequirements.Currency.GetCurrency() != null)
-                //        {
-                //            int totalAmount = ChannelSession.Settings.GiveawayRequirements.Currency.RequiredAmount * entries;
-                //            if (!ChannelSession.Settings.GiveawayRequirements.TrySubtractCurrencyAmount(message.User, totalAmount))
-                //            {
-                //                await ChannelSession.Services.Chat.Whisper(message.User.UserName, string.Format("You do not have the required {0} {1} to do this", totalAmount, ChannelSession.Settings.GiveawayRequirements.Currency.GetCurrency().Name));
-                //                return;
-                //            }
-                //        }
+                    if (await this.giveawayCommand.CheckAllRequirements(message.User))
+                    {
+                        if (ChannelSession.Settings.GiveawayRequirements.Currency != null && ChannelSession.Settings.GiveawayRequirements.Currency.GetCurrency() != null)
+                        {
+                            int totalAmount = ChannelSession.Settings.GiveawayRequirements.Currency.RequiredAmount * entries;
+                            if (!ChannelSession.Settings.GiveawayRequirements.TrySubtractCurrencyAmount(message.User, totalAmount))
+                            {
+                                await ChannelSession.Services.Chat.Whisper(message.User.UserName, string.Format("You do not have the required {0} {1} to do this", totalAmount, ChannelSession.Settings.GiveawayRequirements.Currency.GetCurrency().Name));
+                                return;
+                            }
+                        }
 
-                //        if (ChannelSession.Settings.GiveawayRequirements.Inventory != null)
-                //        {
-                //            int totalAmount = ChannelSession.Settings.GiveawayRequirements.Inventory.Amount * entries;
-                //            if (!ChannelSession.Settings.GiveawayRequirements.TrySubtractInventoryAmount(message.User, totalAmount))
-                //            {
-                //                await ChannelSession.Services.Chat.Whisper(message.User.UserName, string.Format("You do not have the required {0} {1} to do this", totalAmount, ChannelSession.Settings.GiveawayRequirements.Inventory.GetInventory().Name));
-                //                return;
-                //            }
-                //        }
+                        if (ChannelSession.Settings.GiveawayRequirements.Inventory != null)
+                        {
+                            int totalAmount = ChannelSession.Settings.GiveawayRequirements.Inventory.Amount * entries;
+                            if (!ChannelSession.Settings.GiveawayRequirements.TrySubtractInventoryAmount(message.User, totalAmount))
+                            {
+                                await ChannelSession.Services.Chat.Whisper(message.User.UserName, string.Format("You do not have the required {0} {1} to do this", totalAmount, ChannelSession.Settings.GiveawayRequirements.Inventory.GetInventory().Name));
+                                return;
+                            }
+                        }
 
-                //        if (!this.enteredUsers.ContainsKey(message.User.ID))
-                //        {
-                //            this.enteredUsers[message.User.ID] = new GiveawayUser() { User = message.User, Entries = 0 };
-                //        }
-                //        GiveawayUser giveawayUser = this.enteredUsers[message.User.ID];
+                        if (!this.enteredUsers.ContainsKey(message.User.ID))
+                        {
+                            this.enteredUsers[message.User.ID] = new GiveawayUser() { User = message.User, Entries = 0 };
+                        }
+                        GiveawayUser giveawayUser = this.enteredUsers[message.User.ID];
 
-                //        if (giveawayUser != null)
-                //        {
-                //            giveawayUser.Entries += entries;
+                        if (giveawayUser != null)
+                        {
+                            giveawayUser.Entries += entries;
 
-                //            await ChannelSession.Settings.GiveawayUserJoinedCommand.Perform(message.User, extraSpecialIdentifiers: this.GetSpecialIdentifiers());
+                            await ChannelSession.Settings.GiveawayUserJoinedCommand.Perform(message.User, extraSpecialIdentifiers: this.GetSpecialIdentifiers());
 
-                //            GlobalEvents.GiveawaysChangedOccurred(usersUpdated: true);
-                //        }
-                //    }
-                //}
-                //else if (this.Winner != null && this.Winner.Equals(message.User) && message.PlainTextMessage.Equals("!claim", StringComparison.InvariantCultureIgnoreCase))
-                //{
-                //    await ChannelSession.Settings.GiveawayWinnerSelectedCommand.Perform(this.Winner, extraSpecialIdentifiers: this.GetSpecialIdentifiers());
-                //    await this.End();
-                //}
+                            GlobalEvents.GiveawaysChangedOccurred(usersUpdated: true);
+                        }
+                    }
+                }
+                else if (this.Winner != null && this.Winner.Equals(message.User) && message.PlainTextMessage.Equals("!claim", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    await ChannelSession.Settings.GiveawayWinnerSelectedCommand.Perform(this.Winner, extraSpecialIdentifiers: this.GetSpecialIdentifiers());
+                    await this.End();
+                }
             }
             catch (Exception ex)
             {

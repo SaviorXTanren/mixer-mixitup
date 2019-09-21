@@ -101,7 +101,6 @@ namespace MixItUp.Base.Model.Chat
                 { "skillimage", this.Image },
                 { "skillissparks", this.IsSparksSkill.ToString() },
                 { "skillisembers", this.IsEmbersSkill.ToString() },
-                //{ "skillmessage", (!string.IsNullOrEmpty(this.Message)) ? this.Message : string.Empty },
             };
         }
     }

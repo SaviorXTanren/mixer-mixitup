@@ -313,19 +313,6 @@ namespace MixItUp.Base.Util
             return true;
         }
 
-        public static bool MeetsChatEmoteSkillsOnlyParticipationRequirement(UserViewModel user, ChatMessageViewModel message)
-        {
-            if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.EmotesSkillsOnly)
-            {
-                if (user.HasPermissionsTo(ChannelSession.Settings.ModerationChatInteractiveParticipationExcempt))
-                {
-                    return true;
-                }
-                //return message.IsAlert || message.IsChatSkill || message.IsSkill || message.ContainsOnlyEmotes();
-            }
-            return true;
-        }
-
         public static async Task SendChatInteractiveParticipationWhisper(UserViewModel user, bool isChat = false, bool isInteractive = false)
         {
             if (user != null)

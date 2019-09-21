@@ -1,9 +1,12 @@
 ﻿using MixItUp.Base.Model.Import;
+using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Requirement;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace MixItUp.Base.Commands
@@ -12,6 +15,8 @@ namespace MixItUp.Base.Commands
     public class ChatCommand : PermissionsCommandBase
     {
         private static SemaphoreSlim chatCommandPerformSemaphore = new SemaphoreSlim(1);
+
+        private const string CommandMatchingRegexFormat = "^{0}*";
 
         [DataMember]
         public bool IncludeExclamationInCommands { get; set; }
@@ -45,14 +50,14 @@ namespace MixItUp.Base.Commands
         }
 
         [JsonIgnore]
-        public override IEnumerable<string> CommandTriggers
+        public override HashSet<string> CommandTriggers
         {
             get
             {
-                var commandsToCheck = this.Commands;
+                HashSet<string> commandsToCheck = this.Commands;
                 if (this.IncludeExclamationInCommands)
                 {
-                    commandsToCheck = commandsToCheck.Select(c => "!" + c).ToList();
+                    commandsToCheck = new HashSet<string>(commandsToCheck.Select(c => "!" + c));
                 }
                 return commandsToCheck;
             }
@@ -62,5 +67,20 @@ namespace MixItUp.Base.Commands
         public bool ContainsWildcards { get { return !this.IncludeExclamationInCommands && this.Commands.Any(c => c.Contains('*')); } }
 
         protected override SemaphoreSlim AsyncSemaphore { get { return ChatCommand.chatCommandPerformSemaphore; } }
+
+        public bool DoesTextMatchCommand(string text, out IEnumerable<string> arguments)
+        {
+            arguments = null;
+            foreach (string command in this.CommandTriggers)
+            {
+                Match match = Regex.Match(text, string.Format(CommandMatchingRegexFormat, command));
+                if (match != null && match.Success)
+                {
+                    arguments = text.Substring(match.Index, match.Length).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

@@ -73,7 +73,7 @@ namespace MixItUp.Base.Commands
         public CommandTypeEnum Type { get; set; }
 
         [DataMember]
-        public List<string> Commands { get; set; }
+        public HashSet<string> Commands { get; set; }
 
         [DataMember]
         public List<ActionBase> Actions { get; set; }
@@ -101,7 +101,7 @@ namespace MixItUp.Base.Commands
         public CommandBase()
         {
             this.ID = Guid.NewGuid();
-            this.Commands = new List<string>();
+            this.Commands = new HashSet<string>();
             this.Actions = new List<ActionBase>();
             this.IsEnabled = true;
         }
@@ -113,7 +113,7 @@ namespace MixItUp.Base.Commands
         {
             this.Name = name;
             this.Type = type;
-            this.Commands.AddRange(commands);
+            this.Commands = new HashSet<string>(commands);
         }
 
         [JsonIgnore]
@@ -140,7 +140,7 @@ namespace MixItUp.Base.Commands
         }
 
         [JsonIgnore]
-        public virtual IEnumerable<string> CommandTriggers { get { return this.Commands; } }
+        public virtual HashSet<string> CommandTriggers { get { return this.Commands; } }
 
         [JsonIgnore]
         protected abstract SemaphoreSlim AsyncSemaphore { get; }
