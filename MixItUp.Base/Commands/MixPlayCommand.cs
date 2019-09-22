@@ -36,7 +36,7 @@ namespace MixItUp.Base.Commands
         MapToIndividualKeys,
     }
 
-    public class InteractiveCommand : PermissionsCommandBase
+    public class MixPlayCommand : PermissionsCommandBase
     {
         private static SemaphoreSlim interactiveCommandPerformSemaphore = new SemaphoreSlim(1);
 
@@ -57,11 +57,11 @@ namespace MixItUp.Base.Commands
         [Obsolete]
         public string CooldownGroup { get; set; }
 
-        protected override SemaphoreSlim AsyncSemaphore { get { return InteractiveCommand.interactiveCommandPerformSemaphore; } }
+        protected override SemaphoreSlim AsyncSemaphore { get { return MixPlayCommand.interactiveCommandPerformSemaphore; } }
 
-        public InteractiveCommand() { }
+        public MixPlayCommand() { }
 
-        protected InteractiveCommand(MixPlayGameModel game, MixPlaySceneModel scene, MixPlayControlModel control, string command, RequirementViewModel requirements)
+        protected MixPlayCommand(MixPlayGameModel game, MixPlaySceneModel scene, MixPlayControlModel control, string command, RequirementViewModel requirements)
             : base(control.controlID, CommandTypeEnum.Interactive, command, requirements)
         {
             this.GameID = game.id;
@@ -75,7 +75,7 @@ namespace MixItUp.Base.Commands
         public void UpdateWithLatestControl(MixPlayControlModel control) { this.Control = control; }
     }
 
-    public class InteractiveButtonCommand : InteractiveCommand
+    public class InteractiveButtonCommand : MixPlayCommand
     {
         public const string BasicCommandCooldownGroup = "All Buttons";
 
@@ -172,7 +172,7 @@ namespace MixItUp.Base.Commands
         }
     }
 
-    public class InteractiveJoystickCommand : InteractiveCommand
+    public class InteractiveJoystickCommand : MixPlayCommand
     {
         private class InteractiveJoystickAction : ActionBase
         {
@@ -365,7 +365,7 @@ namespace MixItUp.Base.Commands
         }
     }
 
-    public class InteractiveTextBoxCommand : InteractiveCommand
+    public class InteractiveTextBoxCommand : MixPlayCommand
     {
         public InteractiveTextBoxCommand() { }
 

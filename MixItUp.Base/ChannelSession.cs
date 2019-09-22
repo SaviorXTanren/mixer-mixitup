@@ -171,7 +171,7 @@ namespace MixItUp.Base
                 List<CommandBase> commands = new List<CommandBase>();
                 commands.AddRange(ChannelSession.AllChatCommands);
                 commands.AddRange(ChannelSession.Settings.EventCommands);
-                commands.AddRange(ChannelSession.Settings.InteractiveCommands);
+                commands.AddRange(ChannelSession.Settings.MixPlayCommands);
                 commands.AddRange(ChannelSession.Settings.TimerCommands);
                 commands.AddRange(ChannelSession.Settings.ActionGroupCommands);
                 return commands;
