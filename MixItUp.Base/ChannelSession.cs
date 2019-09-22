@@ -551,10 +551,10 @@ namespace MixItUp.Base
                         }
                     }
 
-                    if (ChannelSession.Settings.DefaultInteractiveGame > 0)
+                    if (ChannelSession.Settings.DefaultMixPlayGame > 0)
                     {
                         IEnumerable<MixPlayGameListingModel> games = await ChannelSession.MixerStreamerConnection.GetOwnedMixPlayGames(ChannelSession.MixerChannel);
-                        MixPlayGameListingModel game = games.FirstOrDefault(g => g.id.Equals(ChannelSession.Settings.DefaultInteractiveGame));
+                        MixPlayGameListingModel game = games.FirstOrDefault(g => g.id.Equals(ChannelSession.Settings.DefaultMixPlayGame));
                         if (game != null)
                         {
                             if (await ChannelSession.Interactive.Connect(game) != MixPlayConnectionResult.Success)
@@ -564,7 +564,7 @@ namespace MixItUp.Base
                         }
                         else
                         {
-                            ChannelSession.Settings.DefaultInteractiveGame = 0;
+                            ChannelSession.Settings.DefaultMixPlayGame = 0;
                         }
                     }
 

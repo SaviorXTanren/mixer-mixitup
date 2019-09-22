@@ -57,15 +57,15 @@ namespace MixItUp.WPF.Windows.Command
                         {
                             this.ShowCommandEditor(new BasicChatCommandEditorControl(this, (ChatCommand)command));
                         }
-                        else if (command is InteractiveButtonCommand)
+                        else if (command is MixPlayButtonCommand)
                         {
                             InteractiveButtonCommandDetailsControl interactiveCommandDetails = (InteractiveButtonCommandDetailsControl)this.commandDetailsControl;
-                            this.ShowCommandEditor(new BasicInteractiveButtonCommandEditorControl(this, interactiveCommandDetails.Game, interactiveCommandDetails.Version, (InteractiveButtonCommand)command));
+                            this.ShowCommandEditor(new BasicInteractiveButtonCommandEditorControl(this, interactiveCommandDetails.Game, interactiveCommandDetails.Version, (MixPlayButtonCommand)command));
                         }
-                        else if (command is InteractiveTextBoxCommand)
+                        else if (command is MixPlayTextBoxCommand)
                         {
                             InteractiveTextBoxCommandDetailsControl interactiveCommandDetails = (InteractiveTextBoxCommandDetailsControl)this.commandDetailsControl;
-                            this.ShowCommandEditor(new BasicInteractiveTextBoxCommandEditorControl(this, interactiveCommandDetails.Game, interactiveCommandDetails.Version, (InteractiveTextBoxCommand)command));
+                            this.ShowCommandEditor(new BasicInteractiveTextBoxCommandEditorControl(this, interactiveCommandDetails.Game, interactiveCommandDetails.Version, (MixPlayTextBoxCommand)command));
                         }
                         else if (command is EventCommand)
                         {

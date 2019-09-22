@@ -1,7 +1,7 @@
 ﻿using Mixer.Base.Model.MixPlay;
 using MixItUp.Base;
+using MixItUp.Base.Model.MixPlay;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.User;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -13,10 +13,10 @@ namespace MixItUp.WPF.Controls.Dialogs
 {
     public class GroupListItem : NotifyPropertyChangedBase
     {
-        public InteractiveUserGroupViewModel Group { get; set; }
+        public MixPlayUserGroupModel Group { get; set; }
         public MixPlaySceneModel Scene { get; set; }
 
-        public GroupListItem(InteractiveUserGroupViewModel group, MixPlaySceneModel scene)
+        public GroupListItem(MixPlayUserGroupModel group, MixPlaySceneModel scene)
         {
             this.Group = group;
             this.Scene = scene;
@@ -28,7 +28,7 @@ namespace MixItUp.WPF.Controls.Dialogs
 
         public bool IsCustomGroup { get { return this.Group.AssociatedUserRole == MixerRoleEnum.Custom; } }
 
-        public bool CanBeToggled { get { return !(this.Scene.sceneID.Equals(InteractiveUserGroupViewModel.DefaultName) && this.SetAsDefault); } }
+        public bool CanBeToggled { get { return !(this.Scene.sceneID.Equals(MixPlayUserGroupModel.DefaultName) && this.SetAsDefault); } }
 
         public bool SetAsDefault { get; set; }
 
@@ -67,9 +67,9 @@ namespace MixItUp.WPF.Controls.Dialogs
         private void InteractiveSceneUserGroupsDialogControl_Loaded(object sender, RoutedEventArgs e)
         {
             this.InteractiveGroupsListView.ItemsSource = this.UserGroups;
-            foreach (InteractiveUserGroupViewModel userGroup in ChannelSession.Settings.InteractiveUserGroups[this.game.id])
+            foreach (MixPlayUserGroupModel userGroup in ChannelSession.Settings.MixPlayUserGroups[this.game.id])
             {
-                if (!userGroup.GroupName.Equals(InteractiveUserGroupViewModel.DefaultName))
+                if (!userGroup.GroupName.Equals(MixPlayUserGroupModel.DefaultName))
                 {
                     this.UserGroups.Add(new GroupListItem(userGroup, this.scene));
                 }
@@ -94,7 +94,7 @@ namespace MixItUp.WPF.Controls.Dialogs
                 }
                 else
                 {
-                    group.DefaultScene = InteractiveUserGroupViewModel.DefaultName;
+                    group.DefaultScene = MixPlayUserGroupModel.DefaultName;
                     group.SetAsDefault = false;
                 }
                 group.NotifyProperties();
@@ -108,7 +108,7 @@ namespace MixItUp.WPF.Controls.Dialogs
             if (group != null)
             {
                 this.UserGroups.Remove(group);
-                ChannelSession.Settings.InteractiveUserGroups[this.game.id].Remove(group.Group);
+                ChannelSession.Settings.MixPlayUserGroups[this.game.id].Remove(group.Group);
             }
         }
 
@@ -121,10 +121,10 @@ namespace MixItUp.WPF.Controls.Dialogs
                     return;
                 }
 
-                GroupListItem group = new GroupListItem(new InteractiveUserGroupViewModel(this.GroupNameTextBox.Text), this.scene);
+                GroupListItem group = new GroupListItem(new MixPlayUserGroupModel(this.GroupNameTextBox.Text), this.scene);
 
                 this.UserGroups.Add(group);
-                ChannelSession.Settings.InteractiveUserGroups[this.game.id].Add(group.Group);
+                ChannelSession.Settings.MixPlayUserGroups[this.game.id].Add(group.Group);
 
                 this.GroupNameTextBox.Clear();
             }

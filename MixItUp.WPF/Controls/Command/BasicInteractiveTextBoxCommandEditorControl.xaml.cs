@@ -26,11 +26,11 @@ namespace MixItUp.WPF.Controls.Command
         private MixPlaySceneModel scene;
         private MixPlayTextBoxControlModel textBox;
 
-        private InteractiveTextBoxCommand command;
+        private MixPlayTextBoxCommand command;
 
         private ActionControlBase actionControl;
 
-        public BasicInteractiveTextBoxCommandEditorControl(CommandWindow window, MixPlayGameModel game, MixPlayGameVersionModel version, InteractiveTextBoxCommand command)
+        public BasicInteractiveTextBoxCommandEditorControl(CommandWindow window, MixPlayGameModel game, MixPlayGameVersionModel version, MixPlayTextBoxCommand command)
         {
             this.window = window;
             this.game = game;
@@ -100,7 +100,7 @@ namespace MixItUp.WPF.Controls.Command
 
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            await this.window.RunAsyncOperation(async () =>
+            await this.window.RunAsyncOperation((System.Func<Task>)(async () =>
             {
                 int sparkCost = 0;
                 if (!int.TryParse(this.SparkCostTextBox.Text, out sparkCost) || sparkCost < 0)
@@ -127,8 +127,8 @@ namespace MixItUp.WPF.Controls.Command
 
                 if (this.command == null)
                 {
-                    this.command = new InteractiveTextBoxCommand(this.game, this.scene, this.textBox, requirements);
-                    ChannelSession.Settings.InteractiveCommands.Add(this.command);
+                    this.command = new MixPlayTextBoxCommand(this.game, this.scene, this.textBox, requirements);
+                    ChannelSession.Settings.MixPlayCommands.Add(this.command);
                 }
 
                 this.command.TextBox.cost = sparkCost;
@@ -142,7 +142,7 @@ namespace MixItUp.WPF.Controls.Command
                 await ChannelSession.SaveSettings();
 
                 this.window.Close();
-            });
+            }));
         }
     }
 }

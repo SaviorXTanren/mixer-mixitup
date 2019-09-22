@@ -872,12 +872,12 @@ namespace MixItUp.WPF.Windows.Wizard
                                                     requirements.Cooldown.Type = CooldownTypeEnum.Group;
                                                     requirements.Cooldown.GroupName = SoundwaveInteractiveCooldownGroupName;
                                                 }
-                                                InteractiveButtonCommand command = new InteractiveButtonCommand(profileGame, profileScene, button, InteractiveButtonCommandTriggerType.MouseKeyDown, requirements);
+                                                MixPlayButtonCommand command = new MixPlayButtonCommand(profileGame, profileScene, button, MixPlayButtonCommandTriggerType.MouseKeyDown, requirements);
 
                                                 SoundAction action = new SoundAction(soundwaveButton.path, soundwaveButton.volume);
                                                 command.Actions.Add(action);
 
-                                                ChannelSession.Settings.InteractiveCommands.Add(command);
+                                                ChannelSession.Settings.MixPlayCommands.Add(command);
                                                 profileScene.buttons.Add(button);
                                             }
 

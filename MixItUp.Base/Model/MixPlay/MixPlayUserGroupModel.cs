@@ -4,31 +4,31 @@ using Newtonsoft.Json;
 using StreamingClient.Base.Util;
 using System.Runtime.Serialization;
 
-namespace MixItUp.Base.ViewModel.Interactive
+namespace MixItUp.Base.Model.MixPlay
 {
     [DataContract]
-    public class InteractiveUserGroupViewModel
+    public class MixPlayUserGroupModel
     {
         public const string DefaultName = "default";
 
-        public InteractiveUserGroupViewModel() { }
+        public MixPlayUserGroupModel() { }
 
-        public InteractiveUserGroupViewModel(MixerRoleEnum associatedUserRole)
+        public MixPlayUserGroupModel(MixerRoleEnum associatedUserRole)
             : this((associatedUserRole != MixerRoleEnum.User) ? EnumHelper.GetEnumName(associatedUserRole) : DefaultName)
         {
             this.AssociatedUserRole = associatedUserRole;
         }
 
-        public InteractiveUserGroupViewModel(string groupName) : this(groupName, InteractiveUserGroupViewModel.DefaultName) { }
+        public MixPlayUserGroupModel(string groupName) : this(groupName, MixPlayUserGroupModel.DefaultName) { }
 
-        public InteractiveUserGroupViewModel(string groupName, string defaultScene)
+        public MixPlayUserGroupModel(string groupName, string defaultScene)
         {
             this.GroupName = groupName;
             this.DefaultScene = defaultScene;
             this.AssociatedUserRole = MixerRoleEnum.Custom;
         }
 
-        public InteractiveUserGroupViewModel(MixPlayGroupModel group) : this(group.groupID, group.sceneID) { }
+        public MixPlayUserGroupModel(MixPlayGroupModel group) : this(group.groupID, group.sceneID) { }
 
         [DataMember]
         public string GroupName { get; set; }

@@ -19,9 +19,9 @@ namespace MixItUp.WPF.Controls.Command
         public MixPlaySceneModel Scene { get; private set; }
         public MixPlayTextBoxControlModel Control { get; private set; }
 
-        private InteractiveTextBoxCommand command;
+        private MixPlayTextBoxCommand command;
 
-        public InteractiveTextBoxCommandDetailsControl(MixPlayGameModel game, MixPlayGameVersionModel version, InteractiveTextBoxCommand command)
+        public InteractiveTextBoxCommandDetailsControl(MixPlayGameModel game, MixPlayGameVersionModel version, MixPlayTextBoxCommand command)
         {
             this.Game = game;
             this.Version = version;
@@ -101,8 +101,8 @@ namespace MixItUp.WPF.Controls.Command
 
                 if (this.command == null)
                 {
-                    this.command = new InteractiveTextBoxCommand(this.Game, this.Scene, this.Control, requirements);
-                    ChannelSession.Settings.InteractiveCommands.Add(this.command);
+                    this.command = new MixPlayTextBoxCommand(this.Game, this.Scene, this.Control, requirements);
+                    ChannelSession.Settings.MixPlayCommands.Add(this.command);
                 }
 
                 this.command.TextBox.cost = int.Parse(this.SparkCostTextBox.Text);

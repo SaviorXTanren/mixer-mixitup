@@ -1,7 +1,7 @@
 ﻿using Mixer.Base.Model.MixPlay;
 using MixItUp.Base.MixerAPI;
+using MixItUp.Base.Model.MixPlay;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
@@ -264,7 +264,7 @@ namespace MixItUp.Base.Actions
                         return;
                     }
 
-                    await ChannelSession.Interactive.AddGroup(this.GroupName, (!string.IsNullOrEmpty(this.SceneID)) ? this.SceneID : InteractiveUserGroupViewModel.DefaultName);
+                    await ChannelSession.Interactive.AddGroup(this.GroupName, (!string.IsNullOrEmpty(this.SceneID)) ? this.SceneID : MixPlayUserGroupModel.DefaultName);
 
                     if (this.InteractiveType == InteractiveActionTypeEnum.MoveGroupToScene)
                     {

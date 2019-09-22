@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Commands
 {
-    public enum InteractiveButtonCommandTriggerType
+    public enum MixPlayButtonCommandTriggerType
     {
         [Name("Mouse/Key Down")]
         MouseKeyDown,
@@ -25,7 +25,7 @@ namespace MixItUp.Base.Commands
         MouseKeyHeld,
     }
 
-    public enum InteractiveJoystickSetupType
+    public enum MixPlayJoystickSetupType
     {
         [Name("Directional Arrows")]
         DirectionalArrows,
@@ -38,7 +38,7 @@ namespace MixItUp.Base.Commands
 
     public class MixPlayCommand : PermissionsCommandBase
     {
-        private static SemaphoreSlim interactiveCommandPerformSemaphore = new SemaphoreSlim(1);
+        private static SemaphoreSlim mixPlayCommandPerformSemaphore = new SemaphoreSlim(1);
 
         [JsonProperty]
         public uint GameID { get; set; }
@@ -57,7 +57,7 @@ namespace MixItUp.Base.Commands
         [Obsolete]
         public string CooldownGroup { get; set; }
 
-        protected override SemaphoreSlim AsyncSemaphore { get { return MixPlayCommand.interactiveCommandPerformSemaphore; } }
+        protected override SemaphoreSlim AsyncSemaphore { get { return MixPlayCommand.mixPlayCommandPerformSemaphore; } }
 
         public MixPlayCommand() { }
 
@@ -75,12 +75,12 @@ namespace MixItUp.Base.Commands
         public void UpdateWithLatestControl(MixPlayControlModel control) { this.Control = control; }
     }
 
-    public class InteractiveButtonCommand : MixPlayCommand
+    public class MixPlayButtonCommand : MixPlayCommand
     {
         public const string BasicCommandCooldownGroup = "All Buttons";
 
         [JsonProperty]
-        public InteractiveButtonCommandTriggerType Trigger { get; set; }
+        public MixPlayButtonCommandTriggerType Trigger { get; set; }
 
         [JsonProperty]
         public int HeldRate { get; set; }
@@ -88,13 +88,13 @@ namespace MixItUp.Base.Commands
         [JsonIgnore]
         public bool IsBeingHeld { get; set; }
 
-        public InteractiveButtonCommand() { }
+        public MixPlayButtonCommand() { }
 
-        public InteractiveButtonCommand(MixPlayGameModel game, MixPlaySceneModel scene, MixPlayButtonControlModel control, InteractiveButtonCommandTriggerType eventType, RequirementViewModel requirements)
+        public MixPlayButtonCommand(MixPlayGameModel game, MixPlaySceneModel scene, MixPlayButtonControlModel control, MixPlayButtonCommandTriggerType eventType, RequirementViewModel requirements)
             : this(game, scene, control, eventType, 0, requirements)
         { }
 
-        public InteractiveButtonCommand(MixPlayGameModel game, MixPlaySceneModel scene, MixPlayButtonControlModel control, InteractiveButtonCommandTriggerType eventType, int heldRate, RequirementViewModel requirements)
+        public MixPlayButtonCommand(MixPlayGameModel game, MixPlaySceneModel scene, MixPlayButtonControlModel control, MixPlayButtonCommandTriggerType eventType, int heldRate, RequirementViewModel requirements)
             : base(game, scene, control, EnumHelper.GetEnumName(eventType), requirements)
         {
             this.Trigger = eventType;
@@ -138,7 +138,7 @@ namespace MixItUp.Base.Commands
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
         {
-            if (this.Trigger == InteractiveButtonCommandTriggerType.MouseKeyHeld)
+            if (this.Trigger == MixPlayButtonCommandTriggerType.MouseKeyHeld)
             {
                 do
                 {
@@ -172,28 +172,28 @@ namespace MixItUp.Base.Commands
         }
     }
 
-    public class InteractiveJoystickCommand : MixPlayCommand
+    public class MixPlayJoystickCommand : MixPlayCommand
     {
-        private class InteractiveJoystickAction : ActionBase
+        private class MixPlayJoystickAction : ActionBase
         {
             private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
-            protected override SemaphoreSlim AsyncSemaphore { get { return InteractiveJoystickAction.asyncSemaphore; } }
+            protected override SemaphoreSlim AsyncSemaphore { get { return MixPlayJoystickAction.asyncSemaphore; } }
 
-            private InteractiveJoystickCommand command;
+            private MixPlayJoystickCommand command;
 
             private SemaphoreSlim mouseMovementLock = new SemaphoreSlim(1);
             private Task mouseMovementTask;
             private double mouseMovementX = 0;
             private double mouseMovementY = 0;
 
-            public InteractiveJoystickAction(InteractiveJoystickCommand command) { this.command = command; }
+            public MixPlayJoystickAction(MixPlayJoystickCommand command) { this.command = command; }
 
             protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
             {
                 if (double.TryParse(arguments.ElementAt(0), out double x) && double.TryParse(arguments.ElementAt(1), out double y))
                 {
-                    if (this.command.SetupType == InteractiveJoystickSetupType.MouseMovement)
+                    if (this.command.SetupType == MixPlayJoystickSetupType.MouseMovement)
                     {
                         if (!(x > command.DeadZone || x < -command.DeadZone)) { x = 0.0; }
                         if (!(y > command.DeadZone || y < -command.DeadZone)) { y = 0.0; }
@@ -226,14 +226,14 @@ namespace MixItUp.Base.Commands
                     else
                     {
                         List<InputKeyEnum?> keysToUse = new List<InputKeyEnum?>();
-                        if (this.command.SetupType == InteractiveJoystickSetupType.DirectionalArrows)
+                        if (this.command.SetupType == MixPlayJoystickSetupType.DirectionalArrows)
                         {
                             keysToUse.Add(InputKeyEnum.Up);
                             keysToUse.Add(InputKeyEnum.Right);
                             keysToUse.Add(InputKeyEnum.Down);
                             keysToUse.Add(InputKeyEnum.Left);
                         }
-                        else if (this.command.SetupType == InteractiveJoystickSetupType.WASD)
+                        else if (this.command.SetupType == MixPlayJoystickSetupType.WASD)
                         {
                             keysToUse.Add(InputKeyEnum.W);
                             keysToUse.Add(InputKeyEnum.A);
@@ -298,7 +298,7 @@ namespace MixItUp.Base.Commands
         }
 
         [JsonProperty]
-        public InteractiveJoystickSetupType SetupType { get; set; }
+        public MixPlayJoystickSetupType SetupType { get; set; }
 
         [JsonProperty]
         public double DeadZone { get; set; }
@@ -309,12 +309,12 @@ namespace MixItUp.Base.Commands
         [JsonProperty]
         public double MouseMovementMultiplier { get; set; }
 
-        public InteractiveJoystickCommand()
+        public MixPlayJoystickCommand()
         {
             this.MappedKeys = new List<InputKeyEnum?>();
         }
 
-        public InteractiveJoystickCommand(MixPlayGameModel game, MixPlaySceneModel scene, MixPlayJoystickControlModel control, RequirementViewModel requirements)
+        public MixPlayJoystickCommand(MixPlayGameModel game, MixPlaySceneModel scene, MixPlayJoystickControlModel control, RequirementViewModel requirements)
             : base(game, scene, control, string.Empty, requirements)
         {
             this.MappedKeys = new List<InputKeyEnum?>();
@@ -355,7 +355,7 @@ namespace MixItUp.Base.Commands
         public void InitializeAction()
         {
             this.Actions.Clear();
-            this.Actions.Add(new InteractiveJoystickAction(this));
+            this.Actions.Add(new MixPlayJoystickAction(this));
         }
 
         [OnDeserialized]
@@ -365,11 +365,11 @@ namespace MixItUp.Base.Commands
         }
     }
 
-    public class InteractiveTextBoxCommand : MixPlayCommand
+    public class MixPlayTextBoxCommand : MixPlayCommand
     {
-        public InteractiveTextBoxCommand() { }
+        public MixPlayTextBoxCommand() { }
 
-        public InteractiveTextBoxCommand(MixPlayGameModel game, MixPlaySceneModel scene, MixPlayTextBoxControlModel control, RequirementViewModel requirements)
+        public MixPlayTextBoxCommand(MixPlayGameModel game, MixPlaySceneModel scene, MixPlayTextBoxControlModel control, RequirementViewModel requirements)
             : base(game, scene, control, string.Empty, requirements)
         { }
 

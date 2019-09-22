@@ -37,7 +37,7 @@ namespace MixItUp.Desktop.Services
                     IChannelSettings setting = null;
                     try
                     {
-                        setting = await this.LoadSettings(filePath);
+                        setting = await this.UpgradeSettings(filePath);
                         if (setting != null)
                         {
                             settings.Add(setting);
@@ -47,7 +47,7 @@ namespace MixItUp.Desktop.Services
                     catch (Exception ex) { Logger.Log(ex); }
 
                     string backupFilePath = filePath + DesktopSettingsService.BackupFileExtension;
-                    setting = await this.LoadSettings(backupFilePath);
+                    setting = await this.UpgradeSettings(backupFilePath);
                     if (setting != null)
                     {
                         settings.Add(setting);
@@ -65,7 +65,7 @@ namespace MixItUp.Desktop.Services
             IChannelSettings settings = new DesktopChannelSettings(channel, isStreamer);
             if (File.Exists(this.GetFilePath(settings)))
             {
-                var tempSettings = await this.LoadSettings(this.GetFilePath(settings));
+                var tempSettings = await this.UpgradeSettings(this.GetFilePath(settings));
                 if (tempSettings == null)
                 {
                     GlobalEvents.ShowMessageBox("We were unable to load your settings file due to file corruption. Unfortunately, we could not repair your settings."+ Environment.NewLine + Environment.NewLine + "We apologize for this inconvenience. If you have backups, you can restore them from the settings menu.");
@@ -102,7 +102,7 @@ namespace MixItUp.Desktop.Services
             try
             {
                 await this.Save(settings);
-                IChannelSettings loadedSettings = await this.LoadSettings(this.GetFilePath(settings));
+                IChannelSettings loadedSettings = await this.UpgradeSettings(this.GetFilePath(settings));
                 return true;
             }
             catch (Exception ex)
@@ -211,7 +211,7 @@ namespace MixItUp.Desktop.Services
             return DesktopChannelSettings.LatestVersion;
         }
 
-        private async Task<IChannelSettings> LoadSettings(string filePath)
+        private async Task<IChannelSettings> UpgradeSettings(string filePath)
         {
             int currentVersion = await GetSettingsVersion(filePath);
             if (currentVersion == -1)

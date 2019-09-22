@@ -2,9 +2,8 @@
 using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.MixerAPI;
-using MixItUp.Base.Model.Interactive;
+using MixItUp.Base.Model.MixPlay;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Controls.Dialogs;
@@ -15,7 +14,6 @@ using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -31,7 +29,7 @@ namespace MixItUp.WPF.Controls.MainControls
         public MixPlayJoystickControlModel Joystick { get; set; }
         public MixPlayTextBoxControlModel TextBox { get; set; }
 
-        public InteractiveCommand Command { get; set; }
+        public MixPlayCommand Command { get; set; }
         public Visibility NewCommandButtonVisibility { get { return (this.Command == null) ? Visibility.Visible : Visibility.Collapsed; } }
         public Visibility ExistingCommandButtonVisibility { get { return (this.Command != null) ? Visibility.Visible : Visibility.Collapsed; } }
 
@@ -39,7 +37,7 @@ namespace MixItUp.WPF.Controls.MainControls
         public InteractiveControlCommandItem(MixPlayJoystickControlModel joystick) { this.Joystick = joystick; }
         public InteractiveControlCommandItem(MixPlayTextBoxControlModel textBox) { this.TextBox = textBox; }
 
-        public InteractiveControlCommandItem(InteractiveCommand command)
+        public InteractiveControlCommandItem(MixPlayCommand command)
         {
             this.Command = command;
             if (command.Control is MixPlayButtonControlModel)
@@ -142,9 +140,9 @@ namespace MixItUp.WPF.Controls.MainControls
 
             await this.RefreshAllInteractiveGames();
 
-            if (ChannelSession.Settings.DefaultInteractiveGame > 0)
+            if (ChannelSession.Settings.DefaultMixPlayGame > 0)
             {
-                MixPlayGameModel game = this.interactiveGames.FirstOrDefault(g => g.id.Equals(ChannelSession.Settings.DefaultInteractiveGame));
+                MixPlayGameModel game = this.interactiveGames.FirstOrDefault(g => g.id.Equals(ChannelSession.Settings.DefaultMixPlayGame));
                 if (game != null)
                 {
                     this.InteractiveGamesComboBox.SelectedItem = game;
@@ -177,16 +175,16 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async Task RefreshSelectedGame()
         {
-            if (!ChannelSession.Settings.InteractiveUserGroups.ContainsKey(this.selectedGame.id))
+            if (!ChannelSession.Settings.MixPlayUserGroups.ContainsKey(this.selectedGame.id))
             {
-                ChannelSession.Settings.InteractiveUserGroups[this.selectedGame.id] = new List<InteractiveUserGroupViewModel>();
+                ChannelSession.Settings.MixPlayUserGroups[this.selectedGame.id] = new List<MixPlayUserGroupModel>();
             }
 
             foreach (MixerRoleEnum role in UserViewModel.SelectableBasicUserRoles())
             {
-                if (!ChannelSession.Settings.InteractiveUserGroups[this.selectedGame.id].Any(ug => ug.AssociatedUserRole == role))
+                if (!ChannelSession.Settings.MixPlayUserGroups[this.selectedGame.id].Any(ug => ug.AssociatedUserRole == role))
                 {
-                    ChannelSession.Settings.InteractiveUserGroups[this.selectedGame.id].Add(new InteractiveUserGroupViewModel(role));
+                    ChannelSession.Settings.MixPlayUserGroups[this.selectedGame.id].Add(new MixPlayUserGroupModel(role));
                 }
             }
 
@@ -201,35 +199,35 @@ namespace MixItUp.WPF.Controls.MainControls
             });
 
             this.GroupsButton.IsEnabled = false;
-            if (this.selectedGame.id == InteractiveSharedProjectModel.FortniteDropMap.GameID)
+            if (this.selectedGame.id == MixPlaySharedProjectModel.FortniteDropMap.GameID)
             {
                 this.SetCustomInteractiveGame(new DropMapInteractiveControl(DropMapTypeEnum.Fortnite, this.selectedGame, this.selectedGameVersion));
             }
-            else if (this.selectedGame.id == InteractiveSharedProjectModel.PUBGDropMap.GameID)
+            else if (this.selectedGame.id == MixPlaySharedProjectModel.PUBGDropMap.GameID)
             {
                 this.SetCustomInteractiveGame(new DropMapInteractiveControl(DropMapTypeEnum.PUBG, this.selectedGame, this.selectedGameVersion));
             }
-            else if (this.selectedGame.id == InteractiveSharedProjectModel.RealmRoyaleDropMap.GameID)
+            else if (this.selectedGame.id == MixPlaySharedProjectModel.RealmRoyaleDropMap.GameID)
             {
                 this.SetCustomInteractiveGame(new DropMapInteractiveControl(DropMapTypeEnum.RealmRoyale, this.selectedGame, this.selectedGameVersion));
             }
-            else if (this.selectedGame.id == InteractiveSharedProjectModel.BlackOps4DropMap.GameID)
+            else if (this.selectedGame.id == MixPlaySharedProjectModel.BlackOps4DropMap.GameID)
             {
                 this.SetCustomInteractiveGame(new DropMapInteractiveControl(DropMapTypeEnum.BlackOps4, this.selectedGame, this.selectedGameVersion));
             }
-            else if (this.selectedGame.id == InteractiveSharedProjectModel.ApexLegendsDropMap.GameID)
+            else if (this.selectedGame.id == MixPlaySharedProjectModel.ApexLegendsDropMap.GameID)
             {
                 this.SetCustomInteractiveGame(new DropMapInteractiveControl(DropMapTypeEnum.ApexLegends, this.selectedGame, this.selectedGameVersion));
             }
-            else if (this.selectedGame.id == InteractiveSharedProjectModel.SuperAnimalRoyaleDropMap.GameID)
+            else if (this.selectedGame.id == MixPlaySharedProjectModel.SuperAnimalRoyaleDropMap.GameID)
             {
                 this.SetCustomInteractiveGame(new DropMapInteractiveControl(DropMapTypeEnum.SuperAnimalRoyale, this.selectedGame, this.selectedGameVersion));
             }
-            else if (this.selectedGame.id == InteractiveSharedProjectModel.MixerPaint.GameID)
+            else if (this.selectedGame.id == MixPlaySharedProjectModel.MixerPaint.GameID)
             {
                 this.SetCustomInteractiveGame(new MixerPaintInteractiveControl(this.selectedGame, this.selectedGameVersion));
             }
-            else if (this.selectedGame.id == InteractiveSharedProjectModel.FlySwatter.GameID)
+            else if (this.selectedGame.id == MixPlaySharedProjectModel.FlySwatter.GameID)
             {
                 this.SetCustomInteractiveGame(new FlySwatterInteractiveControl(this.selectedGame, this.selectedGameVersion));
             }
@@ -304,7 +302,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void AddControlItem(string sceneID, MixPlayControlModel control)
         {
-            InteractiveCommand command = ChannelSession.Settings.InteractiveCommands.FirstOrDefault(c => c.GameID.Equals(this.selectedGame.id) &&
+            MixPlayCommand command = ChannelSession.Settings.MixPlayCommands.FirstOrDefault(c => c.GameID.Equals(this.selectedGame.id) &&
                 c.SceneID.Equals(sceneID) && c.Control.controlID.Equals(control.controlID));
 
             InteractiveControlCommandItem item = null;
@@ -419,15 +417,15 @@ namespace MixItUp.WPF.Controls.MainControls
         private async void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
             CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-            InteractiveCommand command = commandButtonsControl.GetCommandFromCommandButtons<InteractiveCommand>(sender);
+            MixPlayCommand command = commandButtonsControl.GetCommandFromCommandButtons<MixPlayCommand>(sender);
             if (command != null)
             {
                 if (!this.ValidateCommandMatchesControl(command))
                 {
                     string oldControlType = string.Empty;
-                    if (command is InteractiveButtonCommand) { oldControlType = "Button"; }
-                    if (command is InteractiveJoystickCommand) { oldControlType = "Joystick"; }
-                    if (command is InteractiveTextBoxCommand) { oldControlType = "Text Box"; }
+                    if (command is MixPlayButtonCommand) { oldControlType = "Button"; }
+                    if (command is MixPlayJoystickCommand) { oldControlType = "Joystick"; }
+                    if (command is MixPlayTextBoxCommand) { oldControlType = "Text Box"; }
 
                     string newControlType = string.Empty;
                     if (command.Control is MixPlayButtonControlModel) { newControlType = "Button"; }
@@ -442,17 +440,17 @@ namespace MixItUp.WPF.Controls.MainControls
                 }
 
                 CommandWindow window = null;
-                if (command is InteractiveButtonCommand)
+                if (command is MixPlayButtonCommand)
                 {
-                    window = new CommandWindow(new InteractiveButtonCommandDetailsControl(this.selectedGame, this.selectedGameVersion, (InteractiveButtonCommand)command));
+                    window = new CommandWindow(new InteractiveButtonCommandDetailsControl(this.selectedGame, this.selectedGameVersion, (MixPlayButtonCommand)command));
                 }
-                else if (command is InteractiveJoystickCommand)
+                else if (command is MixPlayJoystickCommand)
                 {
-                    window = new CommandWindow(new InteractiveJoystickCommandDetailsControl(this.selectedGame, this.selectedGameVersion, (InteractiveJoystickCommand)command));
+                    window = new CommandWindow(new InteractiveJoystickCommandDetailsControl(this.selectedGame, this.selectedGameVersion, (MixPlayJoystickCommand)command));
                 }
-                else if (command is InteractiveTextBoxCommand)
+                else if (command is MixPlayTextBoxCommand)
                 {
-                    window = new CommandWindow(new InteractiveTextBoxCommandDetailsControl(this.selectedGame, this.selectedGameVersion, (InteractiveTextBoxCommand)command));
+                    window = new CommandWindow(new InteractiveTextBoxCommandDetailsControl(this.selectedGame, this.selectedGameVersion, (MixPlayTextBoxCommand)command));
                 }
 
                 if (window != null)
@@ -465,17 +463,17 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void CommandButtons_DeleteClicked(object sender, RoutedEventArgs e)
         {
-            await this.Window.RunAsyncOperation(async () =>
+            await this.Window.RunAsyncOperation((Func<Task>)(async () =>
             {
                 CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-                InteractiveCommand command = commandButtonsControl.GetCommandFromCommandButtons<InteractiveCommand>(sender);
+                MixPlayCommand command = commandButtonsControl.GetCommandFromCommandButtons<MixPlayCommand>(sender);
                 if (command != null)
                 {
-                    ChannelSession.Settings.InteractiveCommands.Remove(command);
+                    ChannelSession.Settings.MixPlayCommands.Remove(command);
                     await ChannelSession.SaveSettings();
                     this.RefreshSelectedScene();
                 }
-            });
+            }));
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -539,7 +537,7 @@ namespace MixItUp.WPF.Controls.MainControls
             });
         }
 
-        private async void GlobalEvents_OnInteractiveSharedProjectAdded(object sender, InteractiveSharedProjectModel e)
+        private async void GlobalEvents_OnInteractiveSharedProjectAdded(object sender, MixPlaySharedProjectModel e)
         {
             await this.Dispatcher.InvokeAsync(async () =>
             {
@@ -604,11 +602,11 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
-        private bool ValidateCommandMatchesControl(InteractiveCommand command)
+        private bool ValidateCommandMatchesControl(MixPlayCommand command)
         {
-            return (command is InteractiveButtonCommand && command.Control is MixPlayButtonControlModel) ||
-                (command is InteractiveJoystickCommand && command.Control is MixPlayJoystickControlModel) ||
-                (command is InteractiveTextBoxCommand && command.Control is MixPlayTextBoxControlModel);
+            return (command is MixPlayButtonCommand && command.Control is MixPlayButtonControlModel) ||
+                (command is MixPlayJoystickCommand && command.Control is MixPlayJoystickControlModel) ||
+                (command is MixPlayTextBoxCommand&& command.Control is MixPlayTextBoxControlModel);
         }
     }
 }

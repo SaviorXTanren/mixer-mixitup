@@ -3,7 +3,7 @@ using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Favorites;
-using MixItUp.Base.Model.Interactive;
+using MixItUp.Base.Model.MixPlay;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Remote.Authentication;
 using MixItUp.Base.Model.Serial;
@@ -12,14 +12,12 @@ using MixItUp.Base.Model.User;
 using MixItUp.Base.Remote.Models;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Desktop.Database;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Model.OAuth;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -35,7 +33,7 @@ namespace MixItUp.Desktop
     [DataContract]
     public class DesktopSavableChannelSettings : ISavableChannelSettings
     {
-        public const int LatestVersion = 36;
+        public const int LatestVersion = 37;
 
         [JsonProperty]
         public int Version { get; set; } = DesktopChannelSettings.LatestVersion;
@@ -125,13 +123,13 @@ namespace MixItUp.Desktop
         public bool ShowChatMessageTimestamps { get; set; }
 
         [JsonProperty]
-        public uint DefaultInteractiveGame { get; set; }
+        public uint DefaultMixPlayGame { get; set; }
         [JsonProperty]
-        public bool PreventUnknownInteractiveUsers { get; set; }
+        public bool PreventUnknownMixPlayUsers { get; set; }
         [JsonProperty]
-        public bool PreventSmallerCooldowns { get; set; }
+        public bool PreventSmallerMixPlayCooldowns { get; set; }
         [JsonProperty]
-        public List<InteractiveSharedProjectModel> CustomInteractiveProjectIDs { get; set; }
+        public List<MixPlaySharedProjectModel> CustomMixPlayProjectIDs { get; set; }
 
         [JsonProperty]
         public int RegularUserMinimumHours { get; set; }
@@ -282,9 +280,9 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public string ChatEventAlertsColorScheme { get; set; } = ColorSchemes.DefaultColorScheme;
         [JsonProperty]
-        public bool ChatShowInteractiveAlerts { get; set; }
+        public bool ChatShowMixPlayAlerts { get; set; }
         [JsonProperty]
-        public string ChatInteractiveAlertsColorScheme { get; set; } = ColorSchemes.DefaultColorScheme;
+        public string ChatMixPlayAlertsColorScheme { get; set; } = ColorSchemes.DefaultColorScheme;
 
         [JsonProperty]
         public string NotificationChatMessageSoundFilePath { get; set; }
@@ -352,7 +350,7 @@ namespace MixItUp.Desktop
         public CustomCommand SongPlayedCommand { get; set; }
 
         [JsonProperty]
-        public Dictionary<uint, JObject> CustomInteractiveSettings { get; set; }
+        public Dictionary<uint, JObject> CustomMixPlaySettings { get; set; }
 
         [JsonProperty]
         public string TelemetryUserId { get; set; }
@@ -379,7 +377,7 @@ namespace MixItUp.Desktop
         [JsonProperty]
         protected List<EventCommand> eventCommandsInternal { get; set; }
         [JsonProperty]
-        protected List<InteractiveCommand> interactiveCommandsInternal { get; set; }
+        protected List<MixPlayCommand> mixPlayCmmandsInternal { get; set; }
         [JsonProperty]
         protected List<TimerCommand> timerCommandsInternal { get; set; }
         [JsonProperty]
@@ -407,7 +405,7 @@ namespace MixItUp.Desktop
         protected List<string> bannedWordsInternal { get; set; }
 
         [JsonProperty]
-        protected Dictionary<uint, List<InteractiveUserGroupViewModel>> interactiveUserGroupsInternal { get; set; }
+        protected Dictionary<uint, List<MixPlayUserGroupModel>> mixPlayUserGroupsInternal { get; set; }
         [JsonProperty]
         [Obsolete]
         internal Dictionary<string, int> interactiveCooldownGroupsInternal { get; set; }
@@ -417,13 +415,13 @@ namespace MixItUp.Desktop
             this.CommandGroups = new Dictionary<string, CommandGroupSettings>();
             this.HotKeys = new Dictionary<string, HotKeyConfiguration>();
             this.OverlayCustomNameAndPorts = new Dictionary<string, int>();
-            this.CustomInteractiveProjectIDs = new List<InteractiveSharedProjectModel>();
+            this.CustomMixPlayProjectIDs = new List<MixPlaySharedProjectModel>();
             this.UserTitles = new List<UserTitleModel>();
             this.SerialDevices = new List<SerialDeviceModel>();
             this.RemoteClientConnections = new List<RemoteConnectionModel>();
             this.FavoriteGroups = new List<FavoriteGroupModel>();
             this.SongRequestServiceTypes = new HashSet<SongRequestServiceTypeEnum>();
-            this.CustomInteractiveSettings = new Dictionary<uint, JObject>();
+            this.CustomMixPlaySettings = new Dictionary<uint, JObject>();
 
             this.currenciesInternal = new Dictionary<Guid, UserCurrencyViewModel>();
             this.inventoriesInternal = new Dictionary<Guid, UserInventoryViewModel>();
@@ -431,7 +429,7 @@ namespace MixItUp.Desktop
             this.cooldownGroupsInternal = new Dictionary<string, int>();
             this.chatCommandsInternal = new List<ChatCommand>();
             this.eventCommandsInternal = new List<EventCommand>();
-            this.interactiveCommandsInternal = new List<InteractiveCommand>();
+            this.mixPlayCmmandsInternal = new List<MixPlayCommand>();
             this.timerCommandsInternal = new List<TimerCommand>();
             this.actionGroupCommandsInternal = new List<ActionGroupCommand>();
             this.gameCommandsInternal = new List<GameCommandBase>();
@@ -441,7 +439,7 @@ namespace MixItUp.Desktop
             this.overlayWidgetModelsInternal = new List<OverlayWidgetModel>();
             this.filteredWordsInternal = new List<string>();
             this.bannedWordsInternal = new List<string>();
-            this.interactiveUserGroupsInternal = new Dictionary<uint, List<InteractiveUserGroupViewModel>>();
+            this.mixPlayUserGroupsInternal = new Dictionary<uint, List<MixPlayUserGroupModel>>();
 #pragma warning disable CS0612 // Type or member is obsolete
             this.overlayWidgetsInternal = new List<OverlayWidget>();
             this.interactiveCooldownGroupsInternal = new Dictionary<string, int>();
@@ -472,7 +470,7 @@ namespace MixItUp.Desktop
         [JsonIgnore]
         public LockedList<EventCommand> EventCommands { get; set; }
         [JsonIgnore]
-        public LockedList<InteractiveCommand> InteractiveCommands { get; set; }
+        public LockedList<MixPlayCommand> MixPlayCommands { get; set; }
         [JsonIgnore]
         public LockedList<TimerCommand> TimerCommands { get; set; }
         [JsonIgnore]
@@ -499,7 +497,7 @@ namespace MixItUp.Desktop
         public LockedList<string> CommunityFilteredWords { get; set; }
 
         [JsonIgnore]
-        public LockedDictionary<uint, List<InteractiveUserGroupViewModel>> InteractiveUserGroups { get; set; }
+        public LockedDictionary<uint, List<MixPlayUserGroupModel>> MixPlayUserGroups { get; set; }
 
         [JsonIgnore]
         public string DatabasePath { get; set; }
@@ -542,7 +540,7 @@ namespace MixItUp.Desktop
             this.PreMadeChatCommandSettings = new LockedList<PreMadeChatCommandSettings>();
             this.ChatCommands = new LockedList<ChatCommand>();
             this.EventCommands = new LockedList<EventCommand>();
-            this.InteractiveCommands = new LockedList<InteractiveCommand>();
+            this.MixPlayCommands = new LockedList<MixPlayCommand>();
             this.TimerCommands = new LockedList<TimerCommand>();
             this.ActionGroupCommands = new LockedList<ActionGroupCommand>();
             this.GameCommands = new LockedList<GameCommandBase>();
@@ -552,7 +550,7 @@ namespace MixItUp.Desktop
             this.FilteredWords = new LockedList<string>();
             this.BannedWords = new LockedList<string>();
             this.CommunityFilteredWords = new LockedList<string>();
-            this.InteractiveUserGroups = new LockedDictionary<uint, List<InteractiveUserGroupViewModel>>();
+            this.MixPlayUserGroups = new LockedDictionary<uint, List<MixPlayUserGroupModel>>();
         }
 
         public async Task Initialize()
@@ -563,7 +561,7 @@ namespace MixItUp.Desktop
             this.CooldownGroups = new LockedDictionary<string, int>(this.cooldownGroupsInternal);
             this.ChatCommands = new LockedList<ChatCommand>(this.chatCommandsInternal);
             this.EventCommands = new LockedList<EventCommand>(this.eventCommandsInternal);
-            this.InteractiveCommands = new LockedList<InteractiveCommand>(this.interactiveCommandsInternal);
+            this.MixPlayCommands = new LockedList<MixPlayCommand>(this.mixPlayCmmandsInternal);
             this.TimerCommands = new LockedList<TimerCommand>(this.timerCommandsInternal);
             this.ActionGroupCommands = new LockedList<ActionGroupCommand>(this.actionGroupCommandsInternal);
             this.GameCommands = new LockedList<GameCommandBase>(this.gameCommandsInternal);
@@ -573,7 +571,7 @@ namespace MixItUp.Desktop
             this.OverlayWidgets = new LockedList<OverlayWidgetModel>(this.overlayWidgetModelsInternal);
             this.FilteredWords = new LockedList<string>(this.filteredWordsInternal);
             this.BannedWords = new LockedList<string>(this.bannedWordsInternal);
-            this.InteractiveUserGroups = new LockedDictionary<uint, List<InteractiveUserGroupViewModel>>(this.interactiveUserGroupsInternal);
+            this.MixPlayUserGroups = new LockedDictionary<uint, List<MixPlayUserGroupModel>>(this.mixPlayUserGroupsInternal);
 
             if (File.Exists(DesktopChannelSettings.CommunityFilteredWordsFilePath))
             {
@@ -672,7 +670,7 @@ namespace MixItUp.Desktop
             this.cooldownGroupsInternal = this.CooldownGroups.ToDictionary();
             this.chatCommandsInternal = this.ChatCommands.ToList();
             this.eventCommandsInternal = this.EventCommands.ToList();
-            this.interactiveCommandsInternal = this.InteractiveCommands.ToList();
+            this.mixPlayCmmandsInternal = this.MixPlayCommands.ToList();
             this.timerCommandsInternal = this.TimerCommands.ToList();
             this.actionGroupCommandsInternal = this.ActionGroupCommands.ToList();
             this.gameCommandsInternal = this.GameCommands.ToList();
@@ -682,7 +680,7 @@ namespace MixItUp.Desktop
             this.overlayWidgetModelsInternal = this.OverlayWidgets.ToList();
             this.filteredWordsInternal = this.FilteredWords.ToList();
             this.bannedWordsInternal = this.BannedWords.ToList();
-            this.interactiveUserGroupsInternal = this.InteractiveUserGroups.ToDictionary();
+            this.mixPlayUserGroupsInternal = this.MixPlayUserGroups.ToDictionary();
 
             if (this.IsStreamer)
             {
@@ -708,7 +706,7 @@ namespace MixItUp.Desktop
 
             // Clear out unused Cooldown Groups and Command Groups
             var allUsedCooldownGroupNames = 
-                this.InteractiveCommands.Select(c => c.Requirements?.Cooldown?.GroupName)
+                this.MixPlayCommands.Select(c => c.Requirements?.Cooldown?.GroupName)
                 .Union(this.ChatCommands.Select(c => c.Requirements?.Cooldown?.GroupName))
                 .Union(this.GameCommands.Select(c => c.Requirements?.Cooldown?.GroupName))
                 .Distinct();

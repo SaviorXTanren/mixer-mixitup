@@ -12,9 +12,9 @@ namespace MixItUp.WPF.Controls.Dialogs
     /// </summary>
     public partial class InteractiveJoystickSetupTestDialogControl : UserControl
     {
-        private InteractiveJoystickCommand command;
+        private MixPlayJoystickCommand command;
 
-        public InteractiveJoystickSetupTestDialogControl(InteractiveJoystickCommand command)
+        public InteractiveJoystickSetupTestDialogControl(MixPlayJoystickCommand command)
         {
             this.command = command;
 

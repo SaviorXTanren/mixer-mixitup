@@ -36,8 +36,8 @@ namespace MixItUp.WPF.Controls.Settings
             this.UserJoinLeaveColorSchemeComboBox.SelectedItem = this.UserJoinLeaveColorSchemeComboBox.AvailableColorSchemes.FirstOrDefault(c => c.Name.Equals(ChannelSession.Settings.ChatUserJoinLeaveColorScheme));
             this.ShowEventAlertsToggleButton.IsChecked = ChannelSession.Settings.ChatShowEventAlerts;
             this.EventAlertsColorSchemeComboBox.SelectedItem = this.EventAlertsColorSchemeComboBox.AvailableColorSchemes.FirstOrDefault(c => c.Name.Equals(ChannelSession.Settings.ChatEventAlertsColorScheme));
-            this.ShowInteractiveAlertsToggleButton.IsChecked = ChannelSession.Settings.ChatShowInteractiveAlerts;
-            this.InteractiveAlertsColorSchemeComboBox.SelectedItem = this.InteractiveAlertsColorSchemeComboBox.AvailableColorSchemes.FirstOrDefault(c => c.Name.Equals(ChannelSession.Settings.ChatInteractiveAlertsColorScheme));
+            this.ShowInteractiveAlertsToggleButton.IsChecked = ChannelSession.Settings.ChatShowMixPlayAlerts;
+            this.InteractiveAlertsColorSchemeComboBox.SelectedItem = this.InteractiveAlertsColorSchemeComboBox.AvailableColorSchemes.FirstOrDefault(c => c.Name.Equals(ChannelSession.Settings.ChatMixPlayAlertsColorScheme));
             this.WhisperAllAlertsToggleButton.IsChecked = ChannelSession.Settings.WhisperAllAlerts;
             this.LatestChatAtTopToggleButton.IsChecked = ChannelSession.Settings.LatestChatAtTop;
             this.HideViewerAndChatterNumbersToggleButton.IsChecked = ChannelSession.Settings.HideViewerAndChatterNumbers;
@@ -101,8 +101,8 @@ namespace MixItUp.WPF.Controls.Settings
 
         private void ShowInteractiveAlertsToggleButton_Checked(object sender, RoutedEventArgs e)
         {
-            ChannelSession.Settings.ChatShowInteractiveAlerts = this.ShowInteractiveAlertsToggleButton.IsChecked.GetValueOrDefault();
-            this.InteractiveAlertsColorSchemeComboBox.IsEnabled = ChannelSession.Settings.ChatShowInteractiveAlerts;
+            ChannelSession.Settings.ChatShowMixPlayAlerts = this.ShowInteractiveAlertsToggleButton.IsChecked.GetValueOrDefault();
+            this.InteractiveAlertsColorSchemeComboBox.IsEnabled = ChannelSession.Settings.ChatShowMixPlayAlerts;
         }
 
         private void InteractiveAlertsColorSchemeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -110,7 +110,7 @@ namespace MixItUp.WPF.Controls.Settings
             if (this.InteractiveAlertsColorSchemeComboBox.SelectedIndex >= 0)
             {
                 ColorSchemeOption colorScheme = (ColorSchemeOption)this.InteractiveAlertsColorSchemeComboBox.SelectedItem;
-                ChannelSession.Settings.ChatInteractiveAlertsColorScheme = colorScheme.Name;
+                ChannelSession.Settings.ChatMixPlayAlertsColorScheme = colorScheme.Name;
             }
         }
 
