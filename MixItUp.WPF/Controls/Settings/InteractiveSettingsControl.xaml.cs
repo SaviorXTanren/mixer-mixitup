@@ -1,6 +1,6 @@
 ﻿using Mixer.Base.Model.MixPlay;
 using MixItUp.Base;
-using MixItUp.Base.Model.Interactive;
+using MixItUp.Base.Model.MixPlay;
 using MixItUp.Base.Util;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,7 +17,7 @@ namespace MixItUp.WPF.Controls.Settings
     {
         private static readonly MixPlayGameModel NoneInteractiveGame = new MixPlayGameModel() { id = 0, name = "NONE" };
 
-        private ObservableCollection<InteractiveSharedProjectModel> customInteractiveProjects = new ObservableCollection<InteractiveSharedProjectModel>();
+        private ObservableCollection<MixPlaySharedProjectModel> customInteractiveProjects = new ObservableCollection<MixPlaySharedProjectModel>();
 
         public InteractiveSettingsControl()
         {
@@ -31,15 +31,15 @@ namespace MixItUp.WPF.Controls.Settings
             interactiveGames.AddRange(await ChannelSession.Interactive.GetAllConnectableGames());
             this.DefaultInteractiveGameComboBox.ItemsSource = interactiveGames;
 
-            MixPlayGameModel game = interactiveGames.FirstOrDefault(g => g.id.Equals(ChannelSession.Settings.DefaultInteractiveGame));
+            MixPlayGameModel game = interactiveGames.FirstOrDefault(g => g.id.Equals(ChannelSession.Settings.DefaultMixPlayGame));
             if (game == null) { game = InteractiveSettingsControl.NoneInteractiveGame; }
             this.DefaultInteractiveGameComboBox.SelectedItem = game;
 
-            this.PreventUnknownInteractiveUsersToggleButton.IsChecked = ChannelSession.Settings.PreventUnknownInteractiveUsers;
+            this.PreventUnknownInteractiveUsersToggleButton.IsChecked = ChannelSession.Settings.PreventUnknownMixPlayUsers;
 
             this.CustomInteractiveProjectsListView.ItemsSource = this.customInteractiveProjects;
             this.customInteractiveProjects.Clear();
-            foreach (InteractiveSharedProjectModel sharedProject in ChannelSession.Settings.CustomInteractiveProjectIDs)
+            foreach (MixPlaySharedProjectModel sharedProject in ChannelSession.Settings.CustomMixPlayProjectIDs)
             {
                 this.customInteractiveProjects.Add(sharedProject);
             }
@@ -57,18 +57,18 @@ namespace MixItUp.WPF.Controls.Settings
             if (this.DefaultInteractiveGameComboBox.SelectedIndex >= 0)
             {
                 MixPlayGameModel game = (MixPlayGameModel)this.DefaultInteractiveGameComboBox.SelectedItem;
-                ChannelSession.Settings.DefaultInteractiveGame = game.id;
+                ChannelSession.Settings.DefaultMixPlayGame = game.id;
             }
         }
 
         private void PreventUnknownInteractiveUsersToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
         {
-            ChannelSession.Settings.PreventUnknownInteractiveUsers = this.PreventUnknownInteractiveUsersToggleButton.IsChecked.GetValueOrDefault();
+            ChannelSession.Settings.PreventUnknownMixPlayUsers = this.PreventUnknownInteractiveUsersToggleButton.IsChecked.GetValueOrDefault();
         }
 
         private void PreventSmallerCooldownsToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
         {
-            ChannelSession.Settings.PreventSmallerCooldowns = this.PreventSmallerCooldownsToggleButton.IsChecked.GetValueOrDefault();
+            ChannelSession.Settings.PreventSmallerMixPlayCooldowns = this.PreventSmallerCooldownsToggleButton.IsChecked.GetValueOrDefault();
         }
 
         private async void AddCustomInteractiveProjectButton_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -77,10 +77,10 @@ namespace MixItUp.WPF.Controls.Settings
             {
                 if (!string.IsNullOrEmpty(this.CustomInteractiveProjectVersionIDTextBox.Text) && !string.IsNullOrEmpty(this.CustomInteractiveProjectShareCodeTextBox.Text))
                 {
-                    if (uint.TryParse(this.CustomInteractiveProjectVersionIDTextBox.Text, out uint versionID) && !ChannelSession.Settings.CustomInteractiveProjectIDs.Any(p => p.VersionID == versionID))
+                    if (uint.TryParse(this.CustomInteractiveProjectVersionIDTextBox.Text, out uint versionID) && !ChannelSession.Settings.CustomMixPlayProjectIDs.Any(p => p.VersionID == versionID))
                     {
-                        InteractiveSharedProjectModel project = new InteractiveSharedProjectModel(versionID, this.CustomInteractiveProjectShareCodeTextBox.Text);
-                        ChannelSession.Settings.CustomInteractiveProjectIDs.Add(project);
+                        MixPlaySharedProjectModel project = new MixPlaySharedProjectModel(versionID, this.CustomInteractiveProjectShareCodeTextBox.Text);
+                        ChannelSession.Settings.CustomMixPlayProjectIDs.Add(project);
                         this.customInteractiveProjects.Add(project);
 
                         GlobalEvents.InteractiveSharedProjectAdded(project);
@@ -96,8 +96,8 @@ namespace MixItUp.WPF.Controls.Settings
         private void DeleteCustomInteractiveProjectButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            InteractiveSharedProjectModel project = (InteractiveSharedProjectModel)button.DataContext;
-            ChannelSession.Settings.CustomInteractiveProjectIDs.Remove(project);
+            MixPlaySharedProjectModel project = (MixPlaySharedProjectModel)button.DataContext;
+            ChannelSession.Settings.CustomMixPlayProjectIDs.Remove(project);
             this.customInteractiveProjects.Remove(project);
         }
     }

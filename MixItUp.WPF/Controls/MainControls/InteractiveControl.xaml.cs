@@ -2,9 +2,8 @@
 using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.MixerAPI;
-using MixItUp.Base.Model.Interactive;
+using MixItUp.Base.Model.MixPlay;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Controls.Dialogs;
@@ -15,7 +14,6 @@ using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -142,9 +140,9 @@ namespace MixItUp.WPF.Controls.MainControls
 
             await this.RefreshAllInteractiveGames();
 
-            if (ChannelSession.Settings.DefaultInteractiveGame > 0)
+            if (ChannelSession.Settings.DefaultMixPlayGame > 0)
             {
-                MixPlayGameModel game = this.interactiveGames.FirstOrDefault(g => g.id.Equals(ChannelSession.Settings.DefaultInteractiveGame));
+                MixPlayGameModel game = this.interactiveGames.FirstOrDefault(g => g.id.Equals(ChannelSession.Settings.DefaultMixPlayGame));
                 if (game != null)
                 {
                     this.InteractiveGamesComboBox.SelectedItem = game;
@@ -177,16 +175,16 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async Task RefreshSelectedGame()
         {
-            if (!ChannelSession.Settings.InteractiveUserGroups.ContainsKey(this.selectedGame.id))
+            if (!ChannelSession.Settings.MixPlayUserGroups.ContainsKey(this.selectedGame.id))
             {
-                ChannelSession.Settings.InteractiveUserGroups[this.selectedGame.id] = new List<InteractiveUserGroupViewModel>();
+                ChannelSession.Settings.MixPlayUserGroups[this.selectedGame.id] = new List<MixPlayUserGroupModel>();
             }
 
             foreach (MixerRoleEnum role in UserViewModel.SelectableBasicUserRoles())
             {
-                if (!ChannelSession.Settings.InteractiveUserGroups[this.selectedGame.id].Any(ug => ug.AssociatedUserRole == role))
+                if (!ChannelSession.Settings.MixPlayUserGroups[this.selectedGame.id].Any(ug => ug.AssociatedUserRole == role))
                 {
-                    ChannelSession.Settings.InteractiveUserGroups[this.selectedGame.id].Add(new InteractiveUserGroupViewModel(role));
+                    ChannelSession.Settings.MixPlayUserGroups[this.selectedGame.id].Add(new MixPlayUserGroupModel(role));
                 }
             }
 
@@ -201,35 +199,35 @@ namespace MixItUp.WPF.Controls.MainControls
             });
 
             this.GroupsButton.IsEnabled = false;
-            if (this.selectedGame.id == InteractiveSharedProjectModel.FortniteDropMap.GameID)
+            if (this.selectedGame.id == MixPlaySharedProjectModel.FortniteDropMap.GameID)
             {
                 this.SetCustomInteractiveGame(new DropMapInteractiveControl(DropMapTypeEnum.Fortnite, this.selectedGame, this.selectedGameVersion));
             }
-            else if (this.selectedGame.id == InteractiveSharedProjectModel.PUBGDropMap.GameID)
+            else if (this.selectedGame.id == MixPlaySharedProjectModel.PUBGDropMap.GameID)
             {
                 this.SetCustomInteractiveGame(new DropMapInteractiveControl(DropMapTypeEnum.PUBG, this.selectedGame, this.selectedGameVersion));
             }
-            else if (this.selectedGame.id == InteractiveSharedProjectModel.RealmRoyaleDropMap.GameID)
+            else if (this.selectedGame.id == MixPlaySharedProjectModel.RealmRoyaleDropMap.GameID)
             {
                 this.SetCustomInteractiveGame(new DropMapInteractiveControl(DropMapTypeEnum.RealmRoyale, this.selectedGame, this.selectedGameVersion));
             }
-            else if (this.selectedGame.id == InteractiveSharedProjectModel.BlackOps4DropMap.GameID)
+            else if (this.selectedGame.id == MixPlaySharedProjectModel.BlackOps4DropMap.GameID)
             {
                 this.SetCustomInteractiveGame(new DropMapInteractiveControl(DropMapTypeEnum.BlackOps4, this.selectedGame, this.selectedGameVersion));
             }
-            else if (this.selectedGame.id == InteractiveSharedProjectModel.ApexLegendsDropMap.GameID)
+            else if (this.selectedGame.id == MixPlaySharedProjectModel.ApexLegendsDropMap.GameID)
             {
                 this.SetCustomInteractiveGame(new DropMapInteractiveControl(DropMapTypeEnum.ApexLegends, this.selectedGame, this.selectedGameVersion));
             }
-            else if (this.selectedGame.id == InteractiveSharedProjectModel.SuperAnimalRoyaleDropMap.GameID)
+            else if (this.selectedGame.id == MixPlaySharedProjectModel.SuperAnimalRoyaleDropMap.GameID)
             {
                 this.SetCustomInteractiveGame(new DropMapInteractiveControl(DropMapTypeEnum.SuperAnimalRoyale, this.selectedGame, this.selectedGameVersion));
             }
-            else if (this.selectedGame.id == InteractiveSharedProjectModel.MixerPaint.GameID)
+            else if (this.selectedGame.id == MixPlaySharedProjectModel.MixerPaint.GameID)
             {
                 this.SetCustomInteractiveGame(new MixerPaintInteractiveControl(this.selectedGame, this.selectedGameVersion));
             }
-            else if (this.selectedGame.id == InteractiveSharedProjectModel.FlySwatter.GameID)
+            else if (this.selectedGame.id == MixPlaySharedProjectModel.FlySwatter.GameID)
             {
                 this.SetCustomInteractiveGame(new FlySwatterInteractiveControl(this.selectedGame, this.selectedGameVersion));
             }
@@ -539,7 +537,7 @@ namespace MixItUp.WPF.Controls.MainControls
             });
         }
 
-        private async void GlobalEvents_OnInteractiveSharedProjectAdded(object sender, InteractiveSharedProjectModel e)
+        private async void GlobalEvents_OnInteractiveSharedProjectAdded(object sender, MixPlaySharedProjectModel e)
         {
             await this.Dispatcher.InvokeAsync(async () =>
             {

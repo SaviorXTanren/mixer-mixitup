@@ -43,16 +43,16 @@ namespace MixItUp.WPF.Controls.Interactive
 
         protected JObject GetCustomSettings()
         {
-            if (ChannelSession.Settings.CustomInteractiveSettings.ContainsKey(this.Game.id))
+            if (ChannelSession.Settings.CustomMixPlaySettings.ContainsKey(this.Game.id))
             {
-                return ChannelSession.Settings.CustomInteractiveSettings[this.Game.id];
+                return ChannelSession.Settings.CustomMixPlaySettings[this.Game.id];
             }
             return new JObject();
         }
 
         protected void SaveCustomSettings(JObject settings)
         {
-            ChannelSession.Settings.CustomInteractiveSettings[this.Game.id] = settings;
+            ChannelSession.Settings.CustomMixPlaySettings[this.Game.id] = settings;
         }
 
         private async void CustomInteractiveGameControl_Loaded(object sender, System.Windows.RoutedEventArgs e)

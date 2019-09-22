@@ -4,10 +4,10 @@ using Newtonsoft.Json;
 using System;
 using System.Runtime.Serialization;
 
-namespace MixItUp.Base.ViewModel.Interactive
+namespace MixItUp.Base.ViewModel.MixPlay
 {
     [DataContract]
-    public class InteractiveControlViewModel : IEquatable<InteractiveControlViewModel>
+    public class MixPlayControlViewModel : IEquatable<MixPlayControlViewModel>
     {
         [DataMember]
         public MixPlayControlModel Control { get; set; }
@@ -18,12 +18,12 @@ namespace MixItUp.Base.ViewModel.Interactive
         [DataMember]
         public MixPlayCommand Command { get; set; }
 
-        public InteractiveControlViewModel(MixPlayControlModel control)
+        public MixPlayControlViewModel(MixPlayControlModel control)
         {
             this.Control = control;
         }
 
-        public InteractiveControlViewModel() { }
+        public MixPlayControlViewModel() { }
 
         [JsonIgnore]
         public int Cost
@@ -34,14 +34,14 @@ namespace MixItUp.Base.ViewModel.Interactive
 
         public override bool Equals(object obj)
         {
-            if (obj is InteractiveControlViewModel)
+            if (obj is MixPlayControlViewModel)
             {
-                return this.Equals((InteractiveControlViewModel)obj);
+                return this.Equals((MixPlayControlViewModel)obj);
             }
             return false;
         }
 
-        public bool Equals(InteractiveControlViewModel other) { return this.Control.controlID.Equals(other.Control.controlID); }
+        public bool Equals(MixPlayControlViewModel other) { return this.Control.controlID.Equals(other.Control.controlID); }
 
         public override int GetHashCode() { return this.Control.controlID.GetHashCode(); }
     }

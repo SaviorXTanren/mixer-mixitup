@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Services;
 using Newtonsoft.Json;
+using StreamingClient.Base.Util;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -28,28 +29,39 @@ namespace MixItUp.Base.Util
             return JsonConvert.SerializeObject(data, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto });
         }
 
-        public static async Task<T> DeserializeFromFile<T>(string filePath)
+        public static async Task<T> DeserializeFromFile<T>(string filePath, bool ignoreErrors = false)
         {
             if (File.Exists(filePath))
             {
-                return SerializerHelper.DeserializeFromString<T>(await SerializerHelper.fileService.ReadFile(filePath));
+                return SerializerHelper.DeserializeFromString<T>(await SerializerHelper.fileService.ReadFile(filePath), ignoreErrors);
             }
             return default(T);
         }
 
-        public static T DeserializeFromString<T>(string data)
+        public static T DeserializeFromString<T>(string data, bool ignoreErrors = false)
         {
-            return JsonConvert.DeserializeObject<T>(data, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto });
-        }
+            JsonSerializerSettings serializerSettings = new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Auto,
+            };
 
-        public static T DeserializeAbstractFromString<T>(string data)
-        {
-            return (T)JsonConvert.DeserializeObject(data, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto });
+            if (ignoreErrors)
+            {
+                serializerSettings.Error = IgnoreDeserializationError;
+            }
+
+            return JsonConvert.DeserializeObject<T>(data, serializerSettings);
         }
 
         public static T Clone<T>(object data)
         {
             return SerializerHelper.DeserializeFromString<T>(SerializerHelper.SerializeToString(data));
+        }
+
+        private static void IgnoreDeserializationError(object sender, Newtonsoft.Json.Serialization.ErrorEventArgs errorArgs)
+        {
+            Logger.Log(errorArgs.ErrorContext.Error.Message);
+            errorArgs.ErrorContext.Handled = true;
         }
     }
 }

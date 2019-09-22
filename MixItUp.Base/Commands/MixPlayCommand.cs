@@ -38,7 +38,7 @@ namespace MixItUp.Base.Commands
 
     public class MixPlayCommand : PermissionsCommandBase
     {
-        private static SemaphoreSlim interactiveCommandPerformSemaphore = new SemaphoreSlim(1);
+        private static SemaphoreSlim mixPlayCommandPerformSemaphore = new SemaphoreSlim(1);
 
         [JsonProperty]
         public uint GameID { get; set; }
@@ -57,7 +57,7 @@ namespace MixItUp.Base.Commands
         [Obsolete]
         public string CooldownGroup { get; set; }
 
-        protected override SemaphoreSlim AsyncSemaphore { get { return MixPlayCommand.interactiveCommandPerformSemaphore; } }
+        protected override SemaphoreSlim AsyncSemaphore { get { return MixPlayCommand.mixPlayCommandPerformSemaphore; } }
 
         public MixPlayCommand() { }
 
@@ -174,11 +174,11 @@ namespace MixItUp.Base.Commands
 
     public class MixPlayJoystickCommand : MixPlayCommand
     {
-        private class InteractiveJoystickAction : ActionBase
+        private class MixPlayJoystickAction : ActionBase
         {
             private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
-            protected override SemaphoreSlim AsyncSemaphore { get { return InteractiveJoystickAction.asyncSemaphore; } }
+            protected override SemaphoreSlim AsyncSemaphore { get { return MixPlayJoystickAction.asyncSemaphore; } }
 
             private MixPlayJoystickCommand command;
 
@@ -187,7 +187,7 @@ namespace MixItUp.Base.Commands
             private double mouseMovementX = 0;
             private double mouseMovementY = 0;
 
-            public InteractiveJoystickAction(MixPlayJoystickCommand command) { this.command = command; }
+            public MixPlayJoystickAction(MixPlayJoystickCommand command) { this.command = command; }
 
             protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
             {
@@ -355,7 +355,7 @@ namespace MixItUp.Base.Commands
         public void InitializeAction()
         {
             this.Actions.Clear();
-            this.Actions.Add(new InteractiveJoystickAction(this));
+            this.Actions.Add(new MixPlayJoystickAction(this));
         }
 
         [OnDeserialized]

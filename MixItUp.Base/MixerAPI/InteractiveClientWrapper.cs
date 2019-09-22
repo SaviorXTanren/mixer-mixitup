@@ -2,11 +2,9 @@
 using Mixer.Base.Model.MixPlay;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model;
-using MixItUp.Base.Model.Interactive;
-using MixItUp.Base.Services.Mixer;
+using MixItUp.Base.Model.MixPlay;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
-using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
@@ -30,7 +28,7 @@ namespace MixItUp.Base.MixerAPI
     {
         public static void SetCooldownTimestamp(this MixPlayConnectedButtonControlModel button, long cooldown)
         {
-            if (ChannelSession.Settings.PreventSmallerCooldowns)
+            if (ChannelSession.Settings.PreventSmallerMixPlayCooldowns)
             {
                 button.cooldown = Math.Max(button.cooldown, cooldown);
             }
@@ -251,7 +249,7 @@ namespace MixItUp.Base.MixerAPI
 
         public event EventHandler<InteractiveInputEvent> OnInteractiveControlUsed = delegate { };
 
-        public InteractiveSharedProjectModel SharedProject { get; private set; }
+        public MixPlaySharedProjectModel SharedProject { get; private set; }
         public MixPlayGameModel Game { get; private set; }
         public MixPlayGameVersionModel Version { get; private set; }
         public MixPlayClient Client { get; private set; }
@@ -291,7 +289,7 @@ namespace MixItUp.Base.MixerAPI
                     this.games.AddRange(await ChannelSession.MixerStreamerConnection.GetOwnedMixPlayGames(ChannelSession.MixerChannel));
                     games.RemoveAll(g => g.name.Equals("Soundwave Interactive Soundboard"));
 
-                    foreach (InteractiveSharedProjectModel project in ChannelSession.Settings.CustomInteractiveProjectIDs)
+                    foreach (MixPlaySharedProjectModel project in ChannelSession.Settings.CustomMixPlayProjectIDs)
                     {
                         MixPlayGameVersionModel version = await ChannelSession.MixerStreamerConnection.GetMixPlayGameVersion(project.VersionID);
                         if (version != null)
@@ -304,7 +302,7 @@ namespace MixItUp.Base.MixerAPI
                         }
                     }
 
-                    foreach (InteractiveSharedProjectModel project in InteractiveSharedProjectModel.AllMixPlayProjects)
+                    foreach (MixPlaySharedProjectModel project in MixPlaySharedProjectModel.AllMixPlayProjects)
                     {
                         MixPlayGameVersionModel version = await ChannelSession.MixerStreamerConnection.GetMixPlayGameVersion(project.VersionID);
                         if (version != null)
@@ -635,10 +633,10 @@ namespace MixItUp.Base.MixerAPI
         {
             this.connectionResult = MixPlayConnectionResult.Unknown;
             this.ShouldRetry = true;
-            this.SharedProject = ChannelSession.Settings.CustomInteractiveProjectIDs.FirstOrDefault(p => p.VersionID == this.Version.id);
+            this.SharedProject = ChannelSession.Settings.CustomMixPlayProjectIDs.FirstOrDefault(p => p.VersionID == this.Version.id);
             if (this.SharedProject == null)
             {
-                this.SharedProject = InteractiveSharedProjectModel.AllMixPlayProjects.FirstOrDefault(p => p.GameID == this.Game.id && p.VersionID == this.Version.id);
+                this.SharedProject = MixPlaySharedProjectModel.AllMixPlayProjects.FirstOrDefault(p => p.GameID == this.Game.id && p.VersionID == this.Version.id);
             }
 
             if (this.SharedProject != null)
@@ -682,7 +680,7 @@ namespace MixItUp.Base.MixerAPI
                         this.Client.OnParticipantLeave += Client_OnParticipantLeave;
                         this.Client.OnIssueMemoryWarning += Client_OnIssueMemoryWarning;
 
-                        if (this.SharedProject != null && InteractiveSharedProjectModel.AllMixPlayProjects.Contains(this.SharedProject))
+                        if (this.SharedProject != null && MixPlaySharedProjectModel.AllMixPlayProjects.Contains(this.SharedProject))
                         {
                             ChannelSession.Services.Telemetry.TrackInteractiveGame(this.Game);
                         }
@@ -725,11 +723,11 @@ namespace MixItUp.Base.MixerAPI
 
             // Initialize Groups
             List<MixPlayGroupModel> groupsToAdd = new List<MixPlayGroupModel>();
-            if (ChannelSession.Settings.InteractiveUserGroups.ContainsKey(this.Client.Game.id))
+            if (ChannelSession.Settings.MixPlayUserGroups.ContainsKey(this.Client.Game.id))
             {
-                foreach (InteractiveUserGroupViewModel userGroup in ChannelSession.Settings.InteractiveUserGroups[this.Client.Game.id])
+                foreach (MixPlayUserGroupModel userGroup in ChannelSession.Settings.MixPlayUserGroups[this.Client.Game.id])
                 {
-                    if (!userGroup.DefaultScene.Equals(InteractiveUserGroupViewModel.DefaultName))
+                    if (!userGroup.DefaultScene.Equals(MixPlayUserGroupModel.DefaultName))
                     {
                         if (!await this.AddGroup(userGroup.GroupName, userGroup.DefaultScene))
                         {
@@ -778,10 +776,10 @@ namespace MixItUp.Base.MixerAPI
                     await ChannelSession.Services.User.AddOrUpdateUser(participant);
                 }
 
-                List<InteractiveUserGroupViewModel> gameGroups = new List<InteractiveUserGroupViewModel>();
-                if (this.Client != null && this.Client.Game != null && ChannelSession.Settings.InteractiveUserGroups.ContainsKey(this.Client.Game.id))
+                List<MixPlayUserGroupModel> gameGroups = new List<MixPlayUserGroupModel>();
+                if (this.Client != null && this.Client.Game != null && ChannelSession.Settings.MixPlayUserGroups.ContainsKey(this.Client.Game.id))
                 {
-                    gameGroups = new List<InteractiveUserGroupViewModel>(ChannelSession.Settings.InteractiveUserGroups[this.Client.Game.id].OrderByDescending(g => g.AssociatedUserRole));
+                    gameGroups = new List<MixPlayUserGroupModel>(ChannelSession.Settings.MixPlayUserGroups[this.Client.Game.id].OrderByDescending(g => g.AssociatedUserRole));
                 }
 
                 foreach (MixPlayParticipantModel participant in participants)
@@ -793,7 +791,7 @@ namespace MixItUp.Base.MixerAPI
                         UserViewModel user = ChannelSession.Services.User.GetUserByID(participant.userID);
                         if (user != null)
                         {
-                            InteractiveUserGroupViewModel group = gameGroups.FirstOrDefault(g => user.HasPermissionsTo(g.AssociatedUserRole));
+                            MixPlayUserGroupModel group = gameGroups.FirstOrDefault(g => user.HasPermissionsTo(g.AssociatedUserRole));
                             if (group != null && !string.IsNullOrEmpty(group.DefaultScene))
                             {
                                 bool updateParticipant = !group.DefaultScene.Equals(user.InteractiveGroupID);
@@ -940,7 +938,7 @@ namespace MixItUp.Base.MixerAPI
                     }
                     user.UpdateLastActivity();
 
-                    if (ChannelSession.Settings.PreventUnknownInteractiveUsers && user.IsAnonymous)
+                    if (ChannelSession.Settings.PreventUnknownMixPlayUsers && user.IsAnonymous)
                     {
                         return;
                     }
@@ -1012,10 +1010,10 @@ namespace MixItUp.Base.MixerAPI
 
                     this.OnInteractiveControlUsed(this, new InteractiveInputEvent(user, e, connectedControl));
 
-                    if (ChannelSession.Settings.ChatShowInteractiveAlerts)
+                    if (ChannelSession.Settings.ChatShowMixPlayAlerts)
                     {
                         await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer,
-                            string.Format("{0} Used The \"{1}\" Interactive Control", user.UserName, connectedControl.Command.Name), ChannelSession.Settings.ChatInteractiveAlertsColorScheme));
+                            string.Format("{0} Used The \"{1}\" Interactive Control", user.UserName, connectedControl.Command.Name), ChannelSession.Settings.ChatMixPlayAlertsColorScheme));
                     }
                 }
             }

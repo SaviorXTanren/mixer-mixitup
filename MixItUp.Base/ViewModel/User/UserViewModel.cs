@@ -3,10 +3,10 @@ using Mixer.Base.Model.Chat;
 using Mixer.Base.Model.MixPlay;
 using Mixer.Base.Model.User;
 using MixItUp.Base.Model;
+using MixItUp.Base.Model.MixPlay;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Interactive;
 using Newtonsoft.Json;
 using StreamingClient.Base.Util;
 using System;
@@ -456,7 +456,7 @@ namespace MixItUp.Base.ViewModel.User
             this.InteractiveIDs.Remove(participant.sessionID);
             if (this.InteractiveIDs.Count == 0)
             {
-                this.InteractiveGroupID = InteractiveUserGroupViewModel.DefaultName;
+                this.InteractiveGroupID = MixPlayUserGroupModel.DefaultName;
             }
         }
 

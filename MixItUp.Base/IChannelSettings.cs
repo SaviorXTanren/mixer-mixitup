@@ -2,7 +2,7 @@
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Favorites;
-using MixItUp.Base.Model.Interactive;
+using MixItUp.Base.Model.MixPlay;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Remote.Authentication;
 using MixItUp.Base.Model.Serial;
@@ -11,7 +11,6 @@ using MixItUp.Base.Model.User;
 using MixItUp.Base.Remote.Models;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
@@ -73,10 +72,10 @@ namespace MixItUp.Base
         bool ShowMixrElixrEmotes { get; set; }
         bool ShowChatMessageTimestamps { get; set; }
 
-        uint DefaultInteractiveGame { get; set; }
-        bool PreventUnknownInteractiveUsers { get; set; }
-        bool PreventSmallerCooldowns { get; set; }
-        List<InteractiveSharedProjectModel> CustomInteractiveProjectIDs { get; set; }
+        uint DefaultMixPlayGame { get; set; }
+        bool PreventUnknownMixPlayUsers { get; set; }
+        bool PreventSmallerMixPlayCooldowns { get; set; }
+        List<MixPlaySharedProjectModel> CustomMixPlayProjectIDs { get; set; }
 
         int RegularUserMinimumHours { get; set; }
         List<UserTitleModel> UserTitles { get; set; }
@@ -160,8 +159,8 @@ namespace MixItUp.Base
         string ChatUserJoinLeaveColorScheme { get; set; }
         bool ChatShowEventAlerts { get; set; }
         string ChatEventAlertsColorScheme { get; set; }
-        bool ChatShowInteractiveAlerts { get; set; }
-        string ChatInteractiveAlertsColorScheme { get; set; }
+        bool ChatShowMixPlayAlerts { get; set; }
+        string ChatMixPlayAlertsColorScheme { get; set; }
 
         string NotificationChatMessageSoundFilePath { get; set; }
         int NotificationChatMessageSoundVolume { get; set; }
@@ -199,7 +198,7 @@ namespace MixItUp.Base
         CustomCommand SongRemovedCommand { get; set; }
         CustomCommand SongPlayedCommand { get; set; }
 
-        Dictionary<uint, JObject> CustomInteractiveSettings { get; set; }
+        Dictionary<uint, JObject> CustomMixPlaySettings { get; set; }
 
         string TelemetryUserId { get; set; }
 
@@ -239,7 +238,7 @@ namespace MixItUp.Base
         LockedList<string> BannedWords { get; }
         LockedList<string> CommunityFilteredWords { get; }
 
-        LockedDictionary<uint, List<InteractiveUserGroupViewModel>> InteractiveUserGroups { get; }
+        LockedDictionary<uint, List<MixPlayUserGroupModel>> MixPlayUserGroups { get; }
     }
 
     public static class DbDataReaderExtensions
