@@ -379,7 +379,7 @@ namespace MixItUp.Desktop
         [JsonProperty]
         protected List<EventCommand> eventCommandsInternal { get; set; }
         [JsonProperty]
-        protected List<InteractiveCommand> interactiveCommandsInternal { get; set; }
+        protected List<MixPlayCommand> mixPlayCmmandsInternal { get; set; }
         [JsonProperty]
         protected List<TimerCommand> timerCommandsInternal { get; set; }
         [JsonProperty]
@@ -431,7 +431,7 @@ namespace MixItUp.Desktop
             this.cooldownGroupsInternal = new Dictionary<string, int>();
             this.chatCommandsInternal = new List<ChatCommand>();
             this.eventCommandsInternal = new List<EventCommand>();
-            this.interactiveCommandsInternal = new List<InteractiveCommand>();
+            this.mixPlayCmmandsInternal = new List<MixPlayCommand>();
             this.timerCommandsInternal = new List<TimerCommand>();
             this.actionGroupCommandsInternal = new List<ActionGroupCommand>();
             this.gameCommandsInternal = new List<GameCommandBase>();
@@ -472,7 +472,7 @@ namespace MixItUp.Desktop
         [JsonIgnore]
         public LockedList<EventCommand> EventCommands { get; set; }
         [JsonIgnore]
-        public LockedList<InteractiveCommand> InteractiveCommands { get; set; }
+        public LockedList<MixPlayCommand> MixPlayCommands { get; set; }
         [JsonIgnore]
         public LockedList<TimerCommand> TimerCommands { get; set; }
         [JsonIgnore]
@@ -542,7 +542,7 @@ namespace MixItUp.Desktop
             this.PreMadeChatCommandSettings = new LockedList<PreMadeChatCommandSettings>();
             this.ChatCommands = new LockedList<ChatCommand>();
             this.EventCommands = new LockedList<EventCommand>();
-            this.InteractiveCommands = new LockedList<InteractiveCommand>();
+            this.MixPlayCommands = new LockedList<MixPlayCommand>();
             this.TimerCommands = new LockedList<TimerCommand>();
             this.ActionGroupCommands = new LockedList<ActionGroupCommand>();
             this.GameCommands = new LockedList<GameCommandBase>();
@@ -563,7 +563,7 @@ namespace MixItUp.Desktop
             this.CooldownGroups = new LockedDictionary<string, int>(this.cooldownGroupsInternal);
             this.ChatCommands = new LockedList<ChatCommand>(this.chatCommandsInternal);
             this.EventCommands = new LockedList<EventCommand>(this.eventCommandsInternal);
-            this.InteractiveCommands = new LockedList<InteractiveCommand>(this.interactiveCommandsInternal);
+            this.MixPlayCommands = new LockedList<MixPlayCommand>(this.mixPlayCmmandsInternal);
             this.TimerCommands = new LockedList<TimerCommand>(this.timerCommandsInternal);
             this.ActionGroupCommands = new LockedList<ActionGroupCommand>(this.actionGroupCommandsInternal);
             this.GameCommands = new LockedList<GameCommandBase>(this.gameCommandsInternal);
@@ -672,7 +672,7 @@ namespace MixItUp.Desktop
             this.cooldownGroupsInternal = this.CooldownGroups.ToDictionary();
             this.chatCommandsInternal = this.ChatCommands.ToList();
             this.eventCommandsInternal = this.EventCommands.ToList();
-            this.interactiveCommandsInternal = this.InteractiveCommands.ToList();
+            this.mixPlayCmmandsInternal = this.MixPlayCommands.ToList();
             this.timerCommandsInternal = this.TimerCommands.ToList();
             this.actionGroupCommandsInternal = this.ActionGroupCommands.ToList();
             this.gameCommandsInternal = this.GameCommands.ToList();
@@ -708,7 +708,7 @@ namespace MixItUp.Desktop
 
             // Clear out unused Cooldown Groups and Command Groups
             var allUsedCooldownGroupNames = 
-                this.InteractiveCommands.Select(c => c.Requirements?.Cooldown?.GroupName)
+                this.MixPlayCommands.Select(c => c.Requirements?.Cooldown?.GroupName)
                 .Union(this.ChatCommands.Select(c => c.Requirements?.Cooldown?.GroupName))
                 .Union(this.GameCommands.Select(c => c.Requirements?.Cooldown?.GroupName))
                 .Distinct();

@@ -223,7 +223,7 @@ namespace MixItUp.Base
         LockedList<PreMadeChatCommandSettings> PreMadeChatCommandSettings { get; }
         LockedList<ChatCommand> ChatCommands { get; }
         LockedList<EventCommand> EventCommands { get; }
-        LockedList<InteractiveCommand> InteractiveCommands { get; }
+        LockedList<MixPlayCommand> MixPlayCommands { get; }
         LockedList<TimerCommand> TimerCommands { get; }
         LockedList<ActionGroupCommand> ActionGroupCommands { get; }
         LockedList<GameCommandBase> GameCommands { get; }

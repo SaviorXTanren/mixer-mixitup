@@ -90,7 +90,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 return command;
             }
 
-            command = ChannelSession.Settings.InteractiveCommands.SingleOrDefault(c => c.ID == commandId);
+            command = ChannelSession.Settings.MixPlayCommands.SingleOrDefault(c => c.ID == commandId);
             if (command != null)
             {
                 category = "MixPlay";
@@ -139,7 +139,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
         {
             List<Command> allCommands = new List<Command>();
             allCommands.AddRange(CommandsFromCommandBases(ChannelSession.Settings.ChatCommands, "Chat"));
-            allCommands.AddRange(CommandsFromCommandBases(ChannelSession.Settings.InteractiveCommands, "Interactive"));
+            allCommands.AddRange(CommandsFromCommandBases(ChannelSession.Settings.MixPlayCommands, "Interactive"));
             allCommands.AddRange(CommandsFromCommandBases(ChannelSession.Settings.EventCommands, "Event"));
             allCommands.AddRange(CommandsFromCommandBases(ChannelSession.Settings.TimerCommands, "Timer"));
             allCommands.AddRange(CommandsFromCommandBases(ChannelSession.Settings.ActionGroupCommands, "ActionGroup"));

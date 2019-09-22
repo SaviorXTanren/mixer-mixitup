@@ -19,9 +19,9 @@ namespace MixItUp.WPF.Controls.Command
         public MixPlaySceneModel Scene { get; private set; }
         public MixPlayButtonControlModel Control { get; private set; }
 
-        private InteractiveButtonCommand command;
+        private MixPlayButtonCommand command;
 
-        public InteractiveButtonCommandDetailsControl(MixPlayGameModel game, MixPlayGameVersionModel version, InteractiveButtonCommand command)
+        public InteractiveButtonCommandDetailsControl(MixPlayGameModel game, MixPlayGameVersionModel version, MixPlayButtonCommand command)
         {
             this.Game = game;
             this.Version = version;
@@ -45,14 +45,14 @@ namespace MixItUp.WPF.Controls.Command
         {
             this.Requirements.SettingsRequirement.HideDeleteChatCommandWhenRun();
 
-            this.ButtonTriggerComboBox.ItemsSource = EnumHelper.GetEnumNames<InteractiveButtonCommandTriggerType>();
+            this.ButtonTriggerComboBox.ItemsSource = EnumHelper.GetEnumNames<MixPlayButtonCommandTriggerType>();
             this.HeldRateTextBox.Text = "1";
 
             if (this.Control != null)
             {
                 this.NameTextBox.Text = this.Control.controlID;
                 this.ButtonTriggerComboBox.IsEnabled = true;
-                this.ButtonTriggerComboBox.SelectedItem = EnumHelper.GetEnumName(InteractiveButtonCommandTriggerType.MouseKeyDown);
+                this.ButtonTriggerComboBox.SelectedItem = EnumHelper.GetEnumName(MixPlayButtonCommandTriggerType.MouseKeyDown);
                 this.SparkCostTextBox.IsEnabled = true;
                 this.SparkCostTextBox.Text = this.Control.cost.ToString();
             }
@@ -87,8 +87,8 @@ namespace MixItUp.WPF.Controls.Command
                 return false;
             }
 
-            InteractiveButtonCommandTriggerType trigger = EnumHelper.GetEnumValueFromString<InteractiveButtonCommandTriggerType>((string)this.ButtonTriggerComboBox.SelectedItem);
-            if (trigger == InteractiveButtonCommandTriggerType.MouseKeyHeld)
+            MixPlayButtonCommandTriggerType trigger = EnumHelper.GetEnumValueFromString<MixPlayButtonCommandTriggerType>((string)this.ButtonTriggerComboBox.SelectedItem);
+            if (trigger == MixPlayButtonCommandTriggerType.MouseKeyHeld)
             {
                 if (string.IsNullOrEmpty(this.HeldRateTextBox.Text) || !int.TryParse(this.HeldRateTextBox.Text, out int heldRate) || heldRate < 1)
                 {
@@ -117,14 +117,14 @@ namespace MixItUp.WPF.Controls.Command
         {
             if (await this.Validate())
             {
-                InteractiveButtonCommandTriggerType trigger = EnumHelper.GetEnumValueFromString<InteractiveButtonCommandTriggerType>((string)this.ButtonTriggerComboBox.SelectedItem);
+                MixPlayButtonCommandTriggerType trigger = EnumHelper.GetEnumValueFromString<MixPlayButtonCommandTriggerType>((string)this.ButtonTriggerComboBox.SelectedItem);
 
                 RequirementViewModel requirements = this.Requirements.GetRequirements();
 
                 if (this.command == null)
                 {
-                    this.command = new InteractiveButtonCommand(this.Game, this.Scene, this.Control, trigger, requirements);
-                    ChannelSession.Settings.InteractiveCommands.Add(this.command);
+                    this.command = new MixPlayButtonCommand(this.Game, this.Scene, this.Control, trigger, requirements);
+                    ChannelSession.Settings.MixPlayCommands.Add(this.command);
                 }
 
                 this.command.Trigger = trigger;
@@ -132,7 +132,7 @@ namespace MixItUp.WPF.Controls.Command
                 this.command.Unlocked = this.UnlockedControl.Unlocked;
                 this.command.Requirements = requirements;
 
-                if (this.command.Trigger == InteractiveButtonCommandTriggerType.MouseKeyHeld)
+                if (this.command.Trigger == MixPlayButtonCommandTriggerType.MouseKeyHeld)
                 {
                     int.TryParse(this.HeldRateTextBox.Text, out int heldRate);
                     this.command.HeldRate = heldRate;
@@ -148,8 +148,8 @@ namespace MixItUp.WPF.Controls.Command
         {
             if (this.ButtonTriggerComboBox.SelectedIndex >= 0)
             {
-                InteractiveButtonCommandTriggerType trigger = EnumHelper.GetEnumValueFromString<InteractiveButtonCommandTriggerType>((string)this.ButtonTriggerComboBox.SelectedItem);
-                if (trigger == InteractiveButtonCommandTriggerType.MouseKeyHeld)
+                MixPlayButtonCommandTriggerType trigger = EnumHelper.GetEnumValueFromString<MixPlayButtonCommandTriggerType>((string)this.ButtonTriggerComboBox.SelectedItem);
+                if (trigger == MixPlayButtonCommandTriggerType.MouseKeyHeld)
                 {
                     this.HeldRateTextBox.Visibility = System.Windows.Visibility.Visible;
                 }

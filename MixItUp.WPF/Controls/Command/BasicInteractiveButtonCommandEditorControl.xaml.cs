@@ -26,11 +26,11 @@ namespace MixItUp.WPF.Controls.Command
         private MixPlaySceneModel scene;
         private MixPlayButtonControlModel button;
 
-        private InteractiveButtonCommand command;
+        private MixPlayButtonCommand command;
 
         private ActionControlBase actionControl;
 
-        public BasicInteractiveButtonCommandEditorControl(CommandWindow window, MixPlayGameModel game, MixPlayGameVersionModel version, InteractiveButtonCommand command)
+        public BasicInteractiveButtonCommandEditorControl(CommandWindow window, MixPlayGameModel game, MixPlayGameVersionModel version, MixPlayButtonCommand command)
         {
             this.window = window;
             this.game = game;
@@ -117,9 +117,9 @@ namespace MixItUp.WPF.Controls.Command
         {
             if (this.CooldownTypeComboBox.SelectedIndex == 1)
             {
-                if (ChannelSession.Settings.CooldownGroups.ContainsKey(InteractiveButtonCommand.BasicCommandCooldownGroup))
+                if (ChannelSession.Settings.CooldownGroups.ContainsKey(MixPlayButtonCommand.BasicCommandCooldownGroup))
                 {
-                    this.CooldownTextBox.Text = ChannelSession.Settings.CooldownGroups[InteractiveButtonCommand.BasicCommandCooldownGroup].ToString();
+                    this.CooldownTextBox.Text = ChannelSession.Settings.CooldownGroups[MixPlayButtonCommand.BasicCommandCooldownGroup].ToString();
                 }
                 else
                 {
@@ -130,7 +130,7 @@ namespace MixItUp.WPF.Controls.Command
 
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            await this.window.RunAsyncOperation(async () =>
+            await this.window.RunAsyncOperation((System.Func<Task>)(async () =>
             {
                 int sparkCost = 0;
                 if (!int.TryParse(this.SparkCostTextBox.Text, out sparkCost) || sparkCost < 0)
@@ -176,13 +176,13 @@ namespace MixItUp.WPF.Controls.Command
                 }
                 else
                 {
-                    requirements.Cooldown = new CooldownRequirementViewModel(CooldownTypeEnum.Group, InteractiveButtonCommand.BasicCommandCooldownGroup, cooldown);
+                    requirements.Cooldown = new CooldownRequirementViewModel(CooldownTypeEnum.Group, MixPlayButtonCommand.BasicCommandCooldownGroup, cooldown);
                 }
 
                 if (this.command == null)
                 {
-                    this.command = new InteractiveButtonCommand(this.game, this.scene, this.button, InteractiveButtonCommandTriggerType.MouseKeyDown, requirements);
-                    ChannelSession.Settings.InteractiveCommands.Add(this.command);
+                    this.command = new MixPlayButtonCommand(this.game, this.scene, this.button, MixPlayButtonCommandTriggerType.MouseKeyDown, requirements);
+                    ChannelSession.Settings.MixPlayCommands.Add(this.command);
                 }
                 else
                 {
@@ -199,7 +199,7 @@ namespace MixItUp.WPF.Controls.Command
                 await ChannelSession.SaveSettings();
 
                 this.window.Close();
-            });
+            }));
         }
     }
 }

@@ -4,12 +4,11 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
-using System;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Desktop.Services
@@ -229,7 +228,7 @@ namespace MixItUp.Desktop.Services
 
             commands.AddRange(settings.ChatCommands);
             commands.AddRange(settings.EventCommands);
-            commands.AddRange(settings.InteractiveCommands);
+            commands.AddRange(settings.MixPlayCommands);
             commands.AddRange(settings.TimerCommands);
             commands.AddRange(settings.ActionGroupCommands);
             commands.AddRange(settings.GameCommands);
@@ -339,6 +338,8 @@ namespace MixItUp.Desktop.Services
     [DataContract]
     public class LegacyDesktopChannelSettings : DesktopChannelSettings
     {
-
+        [JsonProperty]
+        protected List<MixPlayCommand> interactiveCommandsInternal { get; set; }
     }
 }
+

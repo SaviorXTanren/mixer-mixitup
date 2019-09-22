@@ -252,9 +252,9 @@ namespace MixItUp.WPF.Controls.Command
                             break;
                     }
                 }
-                else if (command is InteractiveCommand)
+                else if (command is MixPlayCommand)
                 {
-                    InteractiveCommand iCommand = (InteractiveCommand)command;
+                    MixPlayCommand iCommand = (MixPlayCommand)command;
 
                     extraSpecialIdentifiers["mixplaycontrolid"] = iCommand.Name;
                     extraSpecialIdentifiers["mixplaycontrolcost"] = "123";
