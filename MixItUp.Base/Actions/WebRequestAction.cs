@@ -3,6 +3,7 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -114,9 +115,9 @@ namespace MixItUp.Base.Actions
                             string decodedWebRequestResult = HttpUtility.HtmlDecode(webRequestResult);
                             if (this.ResponseAction == WebRequestResponseActionTypeEnum.Chat)
                             {
-                                if (ChannelSession.Chat != null)
+                                if (ChannelSession.Services.Chat != null)
                                 {
-                                    await ChannelSession.Chat.SendMessage(await this.ReplaceSpecialIdentifiers(this.ResponseChatText, user, arguments, decodedWebRequestResult));
+                                    await ChannelSession.Services.Chat.SendMessage(await this.ReplaceSpecialIdentifiers(this.ResponseChatText, user, arguments, decodedWebRequestResult));
                                 }
                             }
                             else if (this.ResponseAction == WebRequestResponseActionTypeEnum.Command)
@@ -207,7 +208,7 @@ namespace MixItUp.Base.Actions
                                 }
                                 catch (Exception ex)
                                 {
-                                    MixItUp.Base.Util.Logger.Log(ex);
+                                    Logger.Log(ex);
                                 }
                             }
                         }

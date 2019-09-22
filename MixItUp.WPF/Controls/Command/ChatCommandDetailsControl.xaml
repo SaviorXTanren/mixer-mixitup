@@ -47,25 +47,26 @@
                 <TextBox x:Name="ChatCommandTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
             </Grid>
 
-            <Grid Grid.Row="4">
+            <Grid Grid.Row="4" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Grid Grid.Column="0" HorizontalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="10" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" VerticalAlignment="Center">Auto-Include "!":</TextBlock>
+                <ToggleButton Grid.Column="2" x:Name="IncludeExclamationInCommandsToggleButton" Checked="IncludeExclamationInCommandsToggleButton_Checked" Unchecked="IncludeExclamationInCommandsToggleButton_Checked" />
 
-                    <TextBlock Grid.Column="0" VerticalAlignment="Center">Auto-Include "!" In Triggers:</TextBlock>
-                    <ToggleButton Grid.Column="2" x:Name="IncludeExclamationInCommandsToggleButton" Checked="IncludeExclamationInCommandsToggleButton_Checked" Unchecked="IncludeExclamationInCommandsToggleButton_Checked" />
-                </Grid>
+                <TextBlock Grid.Column="4" VerticalAlignment="Center">Wildcards:</TextBlock>
+                <ToggleButton Grid.Column="6" x:Name="WildcardsToggleButton" Checked="WildcardsToggleButton_Checked" Unchecked="WildcardsToggleButton_Checked" />
 
-                <local:UnlockedCommandControl x:Name="UnlockedControl" Grid.Column="2" HorizontalAlignment="Center" />
+                <local:UnlockedCommandControl x:Name="UnlockedControl" Grid.Column="8" HorizontalAlignment="Center" />
             </Grid>
         </Grid>
 

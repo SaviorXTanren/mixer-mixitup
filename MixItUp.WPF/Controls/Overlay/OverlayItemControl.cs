@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Controls.Overlay;
 using System.Diagnostics;
 using System.Windows.Navigation;
@@ -15,7 +16,7 @@ namespace MixItUp.WPF.Controls.Overlay
 
         protected void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            Process.Start(e.Uri.AbsoluteUri);
+            ProcessHelper.LaunchLink(e.Uri.AbsoluteUri);
             e.Handled = true;
         }
     }

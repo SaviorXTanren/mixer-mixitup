@@ -38,7 +38,6 @@ namespace MixItUp.WPF.Controls.Settings
             this.EventAlertsColorSchemeComboBox.SelectedItem = this.EventAlertsColorSchemeComboBox.AvailableColorSchemes.FirstOrDefault(c => c.Name.Equals(ChannelSession.Settings.ChatEventAlertsColorScheme));
             this.ShowInteractiveAlertsToggleButton.IsChecked = ChannelSession.Settings.ChatShowInteractiveAlerts;
             this.InteractiveAlertsColorSchemeComboBox.SelectedItem = this.InteractiveAlertsColorSchemeComboBox.AvailableColorSchemes.FirstOrDefault(c => c.Name.Equals(ChannelSession.Settings.ChatInteractiveAlertsColorScheme));
-
             this.WhisperAllAlertsToggleButton.IsChecked = ChannelSession.Settings.WhisperAllAlerts;
             this.LatestChatAtTopToggleButton.IsChecked = ChannelSession.Settings.LatestChatAtTop;
             this.HideViewerAndChatterNumbersToggleButton.IsChecked = ChannelSession.Settings.HideViewerAndChatterNumbers;
@@ -49,6 +48,8 @@ namespace MixItUp.WPF.Controls.Settings
             this.IgnoreBotAccountCommandsToggleButton.IsChecked = ChannelSession.Settings.IgnoreBotAccountCommands;
             this.CommandsOnlyInYourStreamToggleButton.IsChecked = ChannelSession.Settings.CommandsOnlyInYourStream;
             this.DeleteChatCommandsWhenRunToggleButton.IsChecked = ChannelSession.Settings.DeleteChatCommandsWhenRun;
+            this.ShowMessageTimestampsToggleButton.IsChecked = ChannelSession.Settings.ShowChatMessageTimestamps;
+            this.ShowMixrElixrEmotesToggleButton.IsChecked = ChannelSession.Settings.ShowMixrElixrEmotes;
 
             await base.InitializeInternal();
         }
@@ -161,6 +162,16 @@ namespace MixItUp.WPF.Controls.Settings
         private void DeleteChatCommandsWhenRunToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             ChannelSession.Settings.DeleteChatCommandsWhenRun = this.DeleteChatCommandsWhenRunToggleButton.IsChecked.GetValueOrDefault();
+        }
+
+        private void ShowMixrElixrEmotesToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            ChannelSession.Settings.ShowMixrElixrEmotes = this.ShowMixrElixrEmotesToggleButton.IsChecked.GetValueOrDefault();
+        }
+
+        private void ShowMessageTimestampsToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            ChannelSession.Settings.ShowChatMessageTimestamps = this.ShowMessageTimestampsToggleButton.IsChecked.GetValueOrDefault();
         }
     }
 }

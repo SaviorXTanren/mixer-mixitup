@@ -3,6 +3,7 @@ using MixItUp.Base.Localization;
 using MixItUp.Base.Util;
 using MixItUp.Desktop.Services;
 using MixItUp.WPF.Util;
+using StreamingClient.Base.Util;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -83,7 +84,7 @@ namespace MixItUp.WPF
             DesktopServicesHandler desktopServicesHandler = new DesktopServicesHandler();
             desktopServicesHandler.Initialize();
 
-            Logger.Initialize(desktopServicesHandler.FileService);
+            FileLoggerHandler.Initialize(desktopServicesHandler.FileService);
             DispatcherHelper.RegisterDispatcher(async (func) =>
             {
                 await this.Dispatcher.Invoke(async () =>
@@ -123,19 +124,10 @@ namespace MixItUp.WPF
                     ChannelSession.Services.Telemetry.TrackException(ex);
                 }
 
-                try
-                {
-                    using (StreamWriter writer = File.AppendText(Logger.CurrentLogFilePath))
-                    {
-                        writer.WriteLine("CRASHING EXCEPTION: " + Environment.NewLine + ex.ToString());
-                    }
-                }
-                catch (Exception) { }
-                Logger.Log(ex, includeFullStackTrace: false, isCrashing: true);
+                Logger.Log("CRASH OCCURRED");
+                Logger.Log(ex, includeStackTrace: true);
 
-                string reporterFilePath = Path.Combine(ChannelSession.Services.FileService.GetApplicationDirectory(), "MixItUp.Reporter.exe");
-                ProcessStartInfo processStartInfo = new ProcessStartInfo(reporterFilePath, string.Format("{0} {1}", (ChannelSession.User != null) ? ChannelSession.User.id : 0, Logger.CurrentLogFilePath));
-                Process.Start(processStartInfo);
+                ProcessHelper.LaunchProgram("MixItUp.Reporter.exe", string.Format("{0} {1}", (ChannelSession.MixerStreamerUser != null) ? ChannelSession.MixerStreamerUser.id : 0, FileLoggerHandler.CurrentLogFilePath));
 
                 Task.Delay(1000).Wait();
             }

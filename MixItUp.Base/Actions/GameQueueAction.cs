@@ -2,6 +2,7 @@
 using Mixer.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
+using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
@@ -65,7 +66,7 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.Chat != null)
+            if (ChannelSession.Services.Chat != null)
             {
                 if (this.GameQueueType == GameQueueActionType.EnableDisableQueue)
                 {
@@ -90,21 +91,21 @@ namespace MixItUp.Base.Actions
                 {
                     if (!ChannelSession.Services.GameQueueService.IsEnabled)
                     {
-                        await ChannelSession.Chat.Whisper(user.UserName, "The game queue is not currently enabled");
+                        await ChannelSession.Services.Chat.Whisper(user.UserName, "The game queue is not currently enabled");
                         return;
                     }
 
                     if (!string.IsNullOrEmpty(this.TargetUsername))
                     {
                         string username = await this.ReplaceStringWithSpecialModifiers(this.TargetUsername, user, arguments);
-                        UserViewModel targetUser = await ChannelSession.ActiveUsers.GetUserByUsername(username);
+                        UserViewModel targetUser = ChannelSession.Services.User.GetUserByUsername(username);
                         if (targetUser != null)
                         {
                             user = targetUser;
                         }
                         else
                         {
-                            await ChannelSession.Chat.Whisper(user.UserName, "The user could not be found");
+                            await ChannelSession.Services.Chat.Whisper(user.UserName, "The user could not be found");
                             return;
                         }
                     }

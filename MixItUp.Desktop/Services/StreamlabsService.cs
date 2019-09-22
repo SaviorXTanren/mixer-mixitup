@@ -1,14 +1,12 @@
 ﻿using Mixer.Base;
-using Mixer.Base.Model.OAuth;
-using Mixer.Base.Model.User;
-using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
-using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Model.OAuth;
+using StreamingClient.Base.Util;
+using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -25,6 +23,8 @@ namespace MixItUp.Desktop.Services
         private const string AuthorizationUrl = "https://www.streamlabs.com/api/v1.0/authorize?client_id={0}&redirect_uri=http://localhost:8919/&response_type=code&scope=donations.read+socket.token+points.read+alerts.create+jar.write+wheel.write+credits.write";
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+
+        private DateTimeOffset startTime;
 
         public StreamlabsService() : base(StreamlabsService.BaseAddress) { }
 
@@ -43,7 +43,7 @@ namespace MixItUp.Desktop.Services
                         return true;
                     }
                 }
-                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
             }
 
             string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(StreamlabsService.AuthorizationUrl, StreamlabsService.ClientID));
@@ -56,7 +56,7 @@ namespace MixItUp.Desktop.Services
                 payload["code"] = authorizationCode;
                 payload["redirect_uri"] = MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL;
 
-                this.token = await this.PostAsync<OAuthTokenModel>("token", this.CreateContentFromObject(payload), autoRefreshToken: false);
+                this.token = await this.PostAsync<OAuthTokenModel>("token", AdvancedHttpClient.CreateContentFromObject(payload), autoRefreshToken: false);
                 if (this.token != null)
                 {
                     token.authorizationCode = authorizationCode;
@@ -90,7 +90,7 @@ namespace MixItUp.Desktop.Services
                     }
 
                     HttpResponseMessage response = await this.GetAsync("donations" + beforeFilter);
-                    JObject jobj = await this.ProcessJObjectResponse(response);
+                    JObject jobj = await response.ProcessJObjectResponse();
                     JArray data = (JArray)jobj["data"];
 
                     if (data.Count == 0)
@@ -106,7 +106,7 @@ namespace MixItUp.Desktop.Services
                     }
                 }
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
             return results;
         }
 
@@ -136,13 +136,15 @@ namespace MixItUp.Desktop.Services
                 payload["refresh_token"] = this.token.refreshToken;
                 payload["redirect_uri"] = MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL;
 
-                this.token = await this.PostAsync<OAuthTokenModel>("token", this.CreateContentFromObject(payload), autoRefreshToken: false);
+                this.token = await this.PostAsync<OAuthTokenModel>("token", AdvancedHttpClient.CreateContentFromObject(payload), autoRefreshToken: false);
             }
         }
 
         private Task<bool> InitializeInternal()
         {
             this.cancellationTokenSource = new CancellationTokenSource();
+
+            this.startTime = DateTimeOffset.Now;
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             Task.Run(this.BackgroundDonationCheck, this.cancellationTokenSource.Token);
@@ -154,12 +156,6 @@ namespace MixItUp.Desktop.Services
         private async Task BackgroundDonationCheck()
         {
             Dictionary<int, StreamlabsDonation> donationsReceived = new Dictionary<int, StreamlabsDonation>();
-
-            foreach (StreamlabsDonation donation in await this.GetDonations())
-            {
-                donationsReceived[donation.ID] = donation;
-            }
-
             while (!this.cancellationTokenSource.Token.IsCancellationRequested)
             {
                 try
@@ -170,11 +166,14 @@ namespace MixItUp.Desktop.Services
                         {
                             donationsReceived[slDonation.ID] = slDonation;
                             UserDonationModel donation = slDonation.ToGenericDonation();
-                            await EventCommand.ProcessDonationEventCommand(donation, OtherEventTypeEnum.StreamlabsDonation);
+                            if (donation.DateTime > this.startTime)
+                            {
+                                await EventCommand.ProcessDonationEventCommand(donation, OtherEventTypeEnum.StreamlabsDonation);
+                            }
                         }
                     }
                 }
-                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
 
                 await Task.Delay(10000);
             }

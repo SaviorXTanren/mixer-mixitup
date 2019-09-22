@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -68,7 +69,7 @@ namespace MixItUp.WPF.Controls.Settings
             this.OptOutTrackingToggleButton.IsChecked = ChannelSession.Settings.OptOutTracking;
             this.FeatureMeToggleButton.IsChecked = ChannelSession.Settings.FeatureMe;
             this.UpdatePreviewProgramToggleButton.IsChecked = App.AppSettings.PreviewProgram;
-            this.AutoLogInAccountToggleButton.IsChecked = (App.AppSettings.AutoLogInAccount == ChannelSession.Channel.user.id);
+            this.AutoLogInAccountToggleButton.IsChecked = (App.AppSettings.AutoLogInAccount == ChannelSession.MixerChannel.user.id);
             this.DefaultStreamingSoftwareComboBox.SelectedItem = EnumHelper.GetEnumName(ChannelSession.Settings.DefaultStreamingSoftware);
             if (!string.IsNullOrEmpty(ChannelSession.Settings.DefaultAudioOutput))
             {
@@ -116,7 +117,7 @@ namespace MixItUp.WPF.Controls.Settings
 
         private void AutoLogInAccountToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
         {
-            App.AppSettings.AutoLogInAccount = ChannelSession.Channel.user.id;
+            App.AppSettings.AutoLogInAccount = ChannelSession.MixerChannel.user.id;
         }
 
         private void AutoLogInAccountToggleButton_Unchecked(object sender, System.Windows.RoutedEventArgs e)

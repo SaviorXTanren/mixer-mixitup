@@ -7,6 +7,7 @@ using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -97,7 +98,7 @@ namespace MixItUp.WPF.Windows.Currency
 
         private void HelpButton_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Currency-&-Rank");
+            ProcessHelper.LaunchLink("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Currency-&-Rank");
         }
 
         private void EditItemButton_Click(object sender, RoutedEventArgs e)

@@ -1,4 +1,4 @@
-﻿using Mixer.Base.Model.Interactive;
+﻿using Mixer.Base.Model.MixPlay;
 using MixItUp.Base;
 using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Util;
@@ -15,7 +15,7 @@ namespace MixItUp.WPF.Controls.Settings
     /// </summary>
     public partial class InteractiveSettingsControl : SettingsControlBase
     {
-        private static readonly InteractiveGameModel NoneInteractiveGame = new InteractiveGameModel() { id = 0, name = "NONE" };
+        private static readonly MixPlayGameModel NoneInteractiveGame = new MixPlayGameModel() { id = 0, name = "NONE" };
 
         private ObservableCollection<InteractiveSharedProjectModel> customInteractiveProjects = new ObservableCollection<InteractiveSharedProjectModel>();
 
@@ -26,12 +26,12 @@ namespace MixItUp.WPF.Controls.Settings
 
         protected override async Task InitializeInternal()
         {
-            List<InteractiveGameModel> interactiveGames = new List<InteractiveGameModel>();
+            List<MixPlayGameModel> interactiveGames = new List<MixPlayGameModel>();
             interactiveGames.Add(InteractiveSettingsControl.NoneInteractiveGame);
             interactiveGames.AddRange(await ChannelSession.Interactive.GetAllConnectableGames());
             this.DefaultInteractiveGameComboBox.ItemsSource = interactiveGames;
 
-            InteractiveGameModel game = interactiveGames.FirstOrDefault(g => g.id.Equals(ChannelSession.Settings.DefaultInteractiveGame));
+            MixPlayGameModel game = interactiveGames.FirstOrDefault(g => g.id.Equals(ChannelSession.Settings.DefaultInteractiveGame));
             if (game == null) { game = InteractiveSettingsControl.NoneInteractiveGame; }
             this.DefaultInteractiveGameComboBox.SelectedItem = game;
 
@@ -56,7 +56,7 @@ namespace MixItUp.WPF.Controls.Settings
         {
             if (this.DefaultInteractiveGameComboBox.SelectedIndex >= 0)
             {
-                InteractiveGameModel game = (InteractiveGameModel)this.DefaultInteractiveGameComboBox.SelectedItem;
+                MixPlayGameModel game = (MixPlayGameModel)this.DefaultInteractiveGameComboBox.SelectedItem;
                 ChannelSession.Settings.DefaultInteractiveGame = game.id;
             }
         }

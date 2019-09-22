@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Util;
 using MixItUp.WPF.Util;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -41,7 +42,7 @@ namespace MixItUp.WPF.Controls.Services
 
         private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            Process.Start("OBS");
+            ProcessHelper.LaunchFolder("OBS");
         }
 
         private async void OBSStudioEnableConnectionButton_Click(object sender, RoutedEventArgs e)

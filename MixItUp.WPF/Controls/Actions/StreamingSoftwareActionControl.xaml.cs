@@ -2,6 +2,7 @@
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.WPF.Util;
+using StreamingClient.Base.Util;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -190,19 +191,11 @@ namespace MixItUp.WPF.Controls.Actions
                 }
                 else if (type == StreamingActionTypeEnum.StartStopStream)
                 {
-                    if (software == StreamingSoftwareTypeEnum.XSplit)
-                    {
-                        this.FeatureNotSupportedGrid.Visibility = Visibility.Visible;
-                        return;
-                    }
-                    else
-                    {
-                        // Do nothing...
-                    }
+                    // Do nothing...
                 }
                 else if (type == StreamingActionTypeEnum.SaveReplayBuffer)
                 {
-                    if (software != StreamingSoftwareTypeEnum.OBSStudio)
+                    if (software == StreamingSoftwareTypeEnum.XSplit)
                     {
                         this.FeatureNotSupportedGrid.Visibility = Visibility.Visible;
                         return;
@@ -212,6 +205,14 @@ namespace MixItUp.WPF.Controls.Actions
                         if (ChannelSession.Services.OBSWebsocket != null)
                         {
                             if (!(await ChannelSession.Services.OBSWebsocket.StartReplayBuffer()))
+                            {
+                                this.ReplayBufferNotEnabledInSettingsGrid.Visibility = Visibility.Visible;
+                                return;
+                            }
+                        }
+                        else if (ChannelSession.Services.StreamlabsOBSService != null)
+                        {
+                            if (!(await ChannelSession.Services.StreamlabsOBSService.StartReplayBuffer()))
                             {
                                 this.ReplayBufferNotEnabledInSettingsGrid.Visibility = Visibility.Visible;
                                 return;

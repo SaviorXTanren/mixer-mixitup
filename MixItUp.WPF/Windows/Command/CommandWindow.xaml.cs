@@ -1,4 +1,4 @@
-﻿using Mixer.Base.Model.Interactive;
+﻿using Mixer.Base.Model.MixPlay;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.WPF.Controls.Command;
@@ -109,13 +109,13 @@ namespace MixItUp.WPF.Windows.Command
             {
                 InteractiveButtonCommandDetailsControl interactiveCommandDetails = (InteractiveButtonCommandDetailsControl)this.commandDetailsControl;
                 this.ShowCommandEditor(new BasicInteractiveButtonCommandEditorControl(this, interactiveCommandDetails.Game, interactiveCommandDetails.Version, interactiveCommandDetails.Scene,
-                    (InteractiveButtonControlModel)interactiveCommandDetails.Control, BasicCommandTypeEnum.Chat));
+                    (MixPlayButtonControlModel)interactiveCommandDetails.Control, BasicCommandTypeEnum.Chat));
             }
             else if (this.commandDetailsControl is InteractiveTextBoxCommandDetailsControl)
             {
                 InteractiveTextBoxCommandDetailsControl interactiveCommandDetails = (InteractiveTextBoxCommandDetailsControl)this.commandDetailsControl;
                 this.ShowCommandEditor(new BasicInteractiveTextBoxCommandEditorControl(this, interactiveCommandDetails.Game, interactiveCommandDetails.Version, interactiveCommandDetails.Scene,
-                    (InteractiveTextBoxControlModel)interactiveCommandDetails.Control, BasicCommandTypeEnum.Chat));
+                    (MixPlayTextBoxControlModel)interactiveCommandDetails.Control, BasicCommandTypeEnum.Chat));
             }
             else if (this.commandDetailsControl is EventCommandDetailsControl)
             {
@@ -145,13 +145,13 @@ namespace MixItUp.WPF.Windows.Command
             {
                 InteractiveButtonCommandDetailsControl interactiveCommandDetails = (InteractiveButtonCommandDetailsControl)this.commandDetailsControl;
                 this.ShowCommandEditor(new BasicInteractiveButtonCommandEditorControl(this, interactiveCommandDetails.Game, interactiveCommandDetails.Version, interactiveCommandDetails.Scene,
-                    (InteractiveButtonControlModel)interactiveCommandDetails.Control, BasicCommandTypeEnum.Sound));
+                    (MixPlayButtonControlModel)interactiveCommandDetails.Control, BasicCommandTypeEnum.Sound));
             }
             if (this.commandDetailsControl is InteractiveTextBoxCommandDetailsControl)
             {
                 InteractiveTextBoxCommandDetailsControl interactiveCommandDetails = (InteractiveTextBoxCommandDetailsControl)this.commandDetailsControl;
                 this.ShowCommandEditor(new BasicInteractiveTextBoxCommandEditorControl(this, interactiveCommandDetails.Game, interactiveCommandDetails.Version, interactiveCommandDetails.Scene,
-                    (InteractiveTextBoxControlModel)interactiveCommandDetails.Control, BasicCommandTypeEnum.Sound));
+                    (MixPlayTextBoxControlModel)interactiveCommandDetails.Control, BasicCommandTypeEnum.Sound));
             }
             else if (this.commandDetailsControl is EventCommandDetailsControl)
             {

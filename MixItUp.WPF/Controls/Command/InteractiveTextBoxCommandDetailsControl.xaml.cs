@@ -1,4 +1,4 @@
-﻿using Mixer.Base.Model.Interactive;
+﻿using Mixer.Base.Model.MixPlay;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
@@ -14,14 +14,14 @@ namespace MixItUp.WPF.Controls.Command
     /// </summary>
     public partial class InteractiveTextBoxCommandDetailsControl : CommandDetailsControlBase
     {
-        public InteractiveGameModel Game { get; private set; }
-        public InteractiveGameVersionModel Version { get; private set; }
-        public InteractiveSceneModel Scene { get; private set; }
-        public InteractiveTextBoxControlModel Control { get; private set; }
+        public MixPlayGameModel Game { get; private set; }
+        public MixPlayGameVersionModel Version { get; private set; }
+        public MixPlaySceneModel Scene { get; private set; }
+        public MixPlayTextBoxControlModel Control { get; private set; }
 
         private InteractiveTextBoxCommand command;
 
-        public InteractiveTextBoxCommandDetailsControl(InteractiveGameModel game, InteractiveGameVersionModel version, InteractiveTextBoxCommand command)
+        public InteractiveTextBoxCommandDetailsControl(MixPlayGameModel game, MixPlayGameVersionModel version, InteractiveTextBoxCommand command)
         {
             this.Game = game;
             this.Version = version;
@@ -31,7 +31,7 @@ namespace MixItUp.WPF.Controls.Command
             InitializeComponent();
         }
 
-        public InteractiveTextBoxCommandDetailsControl(InteractiveGameModel game, InteractiveGameVersionModel version, InteractiveSceneModel scene, InteractiveTextBoxControlModel control)
+        public InteractiveTextBoxCommandDetailsControl(MixPlayGameModel game, MixPlayGameVersionModel version, MixPlaySceneModel scene, MixPlayTextBoxControlModel control)
         {
             this.Game = game;
             this.Version = version;
@@ -110,7 +110,7 @@ namespace MixItUp.WPF.Controls.Command
                 this.command.Unlocked = this.UnlockedControl.Unlocked;
                 this.command.Requirements = requirements;
 
-                await ChannelSession.Connection.UpdateInteractiveGameVersion(this.Version);
+                await ChannelSession.MixerStreamerConnection.UpdateMixPlayGameVersion(this.Version);
                 return this.command;
             }
             return null;

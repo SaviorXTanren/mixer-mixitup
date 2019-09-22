@@ -2,6 +2,7 @@
 using MixItUp.Base.Actions;
 using MixItUp.Base.Model.SongRequests;
 using MixItUp.Base.Services;
+using StreamingClient.Base.Util;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;

@@ -25,6 +25,9 @@ namespace MixItUp.Base.Services
 
     public interface IOverlayService
     {
+        string Name { get; }
+        int Port { get; }
+
         event EventHandler OnWebSocketConnectedOccurred;
         event EventHandler<WebSocketCloseStatus> OnWebSocketDisconnectedOccurred;
 

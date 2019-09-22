@@ -8,6 +8,16 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
 {
+    public enum OverlayListItemAlignmentTypeEnum
+    {
+        Top,
+        Center,
+        Bottom,
+
+
+        None = 100,
+    }
+
     [DataContract]
     public class OverlayListIndividualItemModel
     {
@@ -79,17 +89,30 @@ namespace MixItUp.Base.Model.Overlay
         public int Height { get; set; }
 
         [DataMember]
-        public bool ForceBottomAlign { get { return true; } }
+        public OverlayListItemAlignmentTypeEnum Alignment { get; set; }
+
+        [DataMember]
+        public virtual bool ForceTopAlign { get { return this.Alignment == OverlayListItemAlignmentTypeEnum.Top; } }
+        [DataMember]
+        public virtual bool ForceCenterAlign { get { return this.Alignment == OverlayListItemAlignmentTypeEnum.Center; } }
+        [DataMember]
+        public virtual bool ForceBottomAlign { get { return this.Alignment == OverlayListItemAlignmentTypeEnum.Bottom; } }
 
         [DataMember]
         public List<OverlayListIndividualItemModel> Items = new List<OverlayListIndividualItemModel>();
+        [DataMember]
+        private List<OverlayListIndividualItemModel> cachedItems = new List<OverlayListIndividualItemModel>();
 
         protected SemaphoreSlim listSemaphore = new SemaphoreSlim(1);
 
-        public OverlayListItemModelBase() : base() { }
+        public OverlayListItemModelBase()
+            : base()
+        {
+            this.Alignment = OverlayListItemAlignmentTypeEnum.Top;
+        }
 
         public OverlayListItemModelBase(OverlayItemModelTypeEnum type, string htmlText, int totalToShow, int fadeOut, string textFont, int width, int height, string borderColor,
-            string backgroundColor, string textColor, OverlayItemEffectEntranceAnimationTypeEnum addEventAnimation, OverlayItemEffectExitAnimationTypeEnum removeEventAnimation)
+            string backgroundColor, string textColor, OverlayListItemAlignmentTypeEnum alignment, OverlayItemEffectEntranceAnimationTypeEnum addEventAnimation, OverlayItemEffectExitAnimationTypeEnum removeEventAnimation)
             : base(type, htmlText)
         {
             this.TotalToShow = totalToShow;
@@ -100,6 +123,7 @@ namespace MixItUp.Base.Model.Overlay
             this.BorderColor = borderColor;
             this.BackgroundColor = backgroundColor;
             this.TextColor = textColor;
+            this.Alignment = alignment;
             this.Effects = new OverlayItemEffectsModel(addEventAnimation, OverlayItemEffectVisibleAnimationTypeEnum.None, removeEventAnimation, 0);
         }
 
@@ -109,14 +133,28 @@ namespace MixItUp.Base.Model.Overlay
         public override async Task Disable()
         {
             this.Items.Clear();
+            this.cachedItems.Clear();
             await base.Disable();
         }
 
         public override async Task<JObject> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             JObject jobj = await base.GetProcessedItem(user, arguments, extraSpecialIdentifiers);
+            this.cachedItems.AddRange(this.Items);
+            while (this.cachedItems.Count > this.TotalToShow)
+            {
+                this.cachedItems.RemoveAt(0);
+            }
             this.Items.Clear();
             return jobj;
+        }
+
+        public override Task LoadCachedData()
+        {
+            this.Items.Clear();
+            this.Items.AddRange(this.cachedItems);
+            this.cachedItems.Clear();
+            return Task.FromResult(0);
         }
 
         protected override async Task PerformReplacements(JObject jobj, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)

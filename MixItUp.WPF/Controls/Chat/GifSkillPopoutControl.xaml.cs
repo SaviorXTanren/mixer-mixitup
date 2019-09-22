@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Model.Skill;
+﻿using MixItUp.Base.ViewModel.Chat.Mixer;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,13 +17,9 @@ namespace MixItUp.WPF.Controls.Chat
             this.GifImage.SizeChanged += GifImage_SizeChanged;
         }
 
-        public async Task ShowGif(SkillUsageModel skill)
+        public async Task ShowGif(MixerSkillChatMessageViewModel message)
         {
-            this.DataContext = skill;
-
-            await this.UserAvatar.SetUserAvatarUrl(skill.User);
-            this.UserAvatar.SetSize(16);
-           
+            this.DataContext = message;
             while (this.DataContext != null)
             {
                 await Task.Delay(1000);

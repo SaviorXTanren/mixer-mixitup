@@ -1,5 +1,5 @@
 ﻿using Mixer.Base.Interactive;
-using Mixer.Base.Model.Interactive;
+using Mixer.Base.Model.MixPlay;
 using Mixer.Base.Model.User;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
@@ -11,6 +11,7 @@ using MixItUp.Base.ViewModel.User;
 using MixItUp.Desktop.Database;
 using MixItUp.WPF.Util;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -43,7 +44,7 @@ namespace MixItUp.WPF.Windows.Wizard
 
         private string directoryPath;
 
-        private IEnumerable<InteractiveGameListingModel> interactiveGames;
+        private IEnumerable<MixPlayGameListingModel> interactiveGames;
 
         private ScorpBotData scorpBotData;
 
@@ -65,7 +66,7 @@ namespace MixItUp.WPF.Windows.Wizard
             this.XSplitExtensionPathTextBox.Text = Path.Combine(this.directoryPath, "XSplit\\Mix It Up.html");
             this.IntroPageGrid.Visibility = System.Windows.Visibility.Visible;
 
-            this.interactiveGames = await ChannelSession.Connection.GetOwnedInteractiveGames(ChannelSession.Channel);
+            this.interactiveGames = await ChannelSession.MixerStreamerConnection.GetOwnedMixPlayGames(ChannelSession.MixerChannel);
 
             await this.GatherSoundwaveSettings();
             if (this.soundwaveData != null)
@@ -211,11 +212,11 @@ namespace MixItUp.WPF.Windows.Wizard
 
             if (result)
             {
-                this.BotLoggedInNameTextBlock.Text = ChannelSession.BotUser.username;
-                if (!string.IsNullOrEmpty(ChannelSession.BotUser.avatarUrl))
+                this.BotLoggedInNameTextBlock.Text = ChannelSession.MixerBotUser.username;
+                if (!string.IsNullOrEmpty(ChannelSession.MixerBotUser.avatarUrl))
                 {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    this.BotProfileAvatar.SetUserAvatarUrl(ChannelSession.BotUser.id);
+                    this.BotProfileAvatar.SetUserAvatarUrl(ChannelSession.MixerBotUser.id);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 }
 
@@ -229,7 +230,7 @@ namespace MixItUp.WPF.Windows.Wizard
             string pluginPath = Path.Combine(this.directoryPath, "OBS\\obs-websocket-4.3.3-Windows-Installer.exe");
             if (File.Exists(pluginPath))
             {
-                Process.Start(pluginPath);
+                ProcessHelper.LaunchProgram(pluginPath);
             }
         }
 
@@ -786,7 +787,7 @@ namespace MixItUp.WPF.Windows.Wizard
 
                 foreach (StreamlabsChatBotViewer viewer in this.streamlabsChatBotData.Viewers)
                 {
-                    UserModel user = await ChannelSession.Connection.GetUser(viewer.Name);
+                    UserModel user = await ChannelSession.MixerStreamerConnection.GetUser(viewer.Name);
                     if (user != null)
                     {
                         viewer.ID = user.id;
@@ -831,27 +832,27 @@ namespace MixItUp.WPF.Windows.Wizard
                     ChannelSession.Settings.CooldownGroups[SoundwaveInteractiveCooldownGroupName] = this.soundwaveData.StaticCooldownAmount / 1000;
                 }
 
-                InteractiveGameListingModel soundwaveGame = this.interactiveGames.FirstOrDefault(g => g.name.Equals(SoundwaveInteractiveGameName));
+                MixPlayGameListingModel soundwaveGame = this.interactiveGames.FirstOrDefault(g => g.name.Equals(SoundwaveInteractiveGameName));
                 if (soundwaveGame != null)
                 {
-                    InteractiveGameVersionModel version = soundwaveGame.versions.FirstOrDefault();
+                    MixPlayGameVersionModel version = soundwaveGame.versions.FirstOrDefault();
                     if (version != null)
                     {
-                        InteractiveGameVersionModel soundwaveGameVersion = await ChannelSession.Connection.GetInteractiveGameVersion(version);
+                        MixPlayGameVersionModel soundwaveGameVersion = await ChannelSession.MixerStreamerConnection.GetMixPlayGameVersion(version);
                         if (soundwaveGameVersion != null)
                         {
-                            InteractiveSceneModel soundwaveGameScene = soundwaveGameVersion.controls.scenes.FirstOrDefault();
+                            MixPlaySceneModel soundwaveGameScene = soundwaveGameVersion.controls.scenes.FirstOrDefault();
                             if (soundwaveGameScene != null)
                             {
                                 foreach (string profile in this.soundwaveProfiles.Where(p => p.AddProfile).Select(p => p.Name))
                                 {
                                     // Add code logic to create Interactive Game on Mixer that is a copy of the Soundwave Interactive game, but with buttons filed in with name and not disabled
-                                    InteractiveSceneModel profileScene = InteractiveGameHelper.CreateDefaultScene();
-                                    InteractiveGameListingModel profileGame = await ChannelSession.Connection.CreateInteractiveGame(ChannelSession.Channel, ChannelSession.User, profile, profileScene);
-                                    InteractiveGameVersionModel gameVersion = profileGame.versions.FirstOrDefault();
+                                    MixPlaySceneModel profileScene = MixPlayGameHelper.CreateDefaultScene();
+                                    MixPlayGameListingModel profileGame = await ChannelSession.MixerStreamerConnection.CreateMixPlayGame(ChannelSession.MixerChannel, ChannelSession.MixerStreamerUser, profile, profileScene);
+                                    MixPlayGameVersionModel gameVersion = profileGame.versions.FirstOrDefault();
                                     if (gameVersion != null)
                                     {
-                                        InteractiveGameVersionModel profileGameVersion = await ChannelSession.Connection.GetInteractiveGameVersion(gameVersion);
+                                        MixPlayGameVersionModel profileGameVersion = await ChannelSession.MixerStreamerConnection.GetMixPlayGameVersion(gameVersion);
                                         if (profileGameVersion != null)
                                         {
                                             profileScene = profileGameVersion.controls.scenes.First();
@@ -859,9 +860,9 @@ namespace MixItUp.WPF.Windows.Wizard
                                             for (int i = 0; i < this.soundwaveData.Profiles[profile].Count(); i++)
                                             {
                                                 SoundwaveButton soundwaveButton = this.soundwaveData.Profiles[profile][i];
-                                                InteractiveButtonControlModel soundwaveControl = (InteractiveButtonControlModel)soundwaveGameScene.allControls.FirstOrDefault(c => c.controlID.Equals(i.ToString()));
+                                                MixPlayButtonControlModel soundwaveControl = (MixPlayButtonControlModel)soundwaveGameScene.allControls.FirstOrDefault(c => c.controlID.Equals(i.ToString()));
 
-                                                InteractiveButtonControlModel button = InteractiveGameHelper.CreateButton(soundwaveButton.name, soundwaveButton.name, soundwaveButton.sparks);
+                                                MixPlayButtonControlModel button = MixPlayGameHelper.CreateButton(soundwaveButton.name, soundwaveButton.name, soundwaveButton.sparks);
                                                 button.position = soundwaveControl.position;
 
                                                 RequirementViewModel requirements = new RequirementViewModel();
@@ -880,7 +881,7 @@ namespace MixItUp.WPF.Windows.Wizard
                                                 profileScene.buttons.Add(button);
                                             }
 
-                                            await ChannelSession.Connection.UpdateInteractiveGameVersion(profileGameVersion);
+                                            await ChannelSession.MixerStreamerConnection.UpdateMixPlayGameVersion(profileGameVersion);
                                         }
                                     }
                                 }
@@ -897,7 +898,7 @@ namespace MixItUp.WPF.Windows.Wizard
         {
             try
             {
-                Process.Start(e.Uri.AbsoluteUri);
+                ProcessHelper.LaunchLink(e.Uri.AbsoluteUri);
                 e.Handled = true;
             }
             catch (Exception ex) { Logger.Log(ex); }

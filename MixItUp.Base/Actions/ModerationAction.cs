@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
@@ -59,16 +60,20 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.Chat != null)
+            if (ChannelSession.Services.Chat != null)
             {
                 UserViewModel targetUser = null;
                 if (!string.IsNullOrEmpty(this.UserName))
                 {
                     string username = await this.ReplaceStringWithSpecialModifiers(this.UserName, user, arguments);
-                    UserModel targetUserModel = await ChannelSession.Connection.GetUser(username);
+                    targetUser = ChannelSession.Services.User.GetUserByUsername(username);
                     if (targetUser == null)
                     {
-                        targetUser = new UserViewModel(targetUserModel);
+                        UserModel targetUserModel = await ChannelSession.MixerStreamerConnection.GetUser(username);
+                        if (targetUser == null)
+                        {
+                            targetUser = new UserViewModel(targetUserModel);
+                        }
                     }
                 }
                 else
@@ -78,21 +83,21 @@ namespace MixItUp.Base.Actions
 
                 if (this.ModerationType == ModerationActionTypeEnum.ClearChat)
                 {
-                    await ChannelSession.Chat.ClearMessages();
+                    await ChannelSession.Services.Chat.ClearMessages();
                 }
                 else if (targetUser != null)
                 {
                     if (this.ModerationType == ModerationActionTypeEnum.PurgeUser)
                     {
-                        await ChannelSession.Chat.PurgeUser(targetUser.UserName);
+                        await ChannelSession.Services.Chat.PurgeUser(targetUser);
                     }
                     else if (this.ModerationType == ModerationActionTypeEnum.BanUser)
                     {
-                        await ChannelSession.Chat.BanUser(targetUser);
+                        await ChannelSession.Services.Chat.BanUser(targetUser);
                     }
                     else if (this.ModerationType == ModerationActionTypeEnum.UnbanUser)
                     {
-                        await ChannelSession.Chat.UnBanUser(targetUser);
+                        await ChannelSession.Services.Chat.UnbanUser(targetUser);
                     }
                     else if (this.ModerationType == ModerationActionTypeEnum.AddModerationStrike)
                     {
@@ -114,7 +119,7 @@ namespace MixItUp.Base.Actions
                         {
                             if (this.ModerationType == ModerationActionTypeEnum.ChatTimeout)
                             {
-                                await ChannelSession.Chat.TimeoutUser(targetUser.UserName, timeAmount);
+                                await ChannelSession.Services.Chat.TimeoutUser(targetUser, timeAmount);
                             }
                             else if (this.ModerationType == ModerationActionTypeEnum.InteractiveTimeout)
                             {

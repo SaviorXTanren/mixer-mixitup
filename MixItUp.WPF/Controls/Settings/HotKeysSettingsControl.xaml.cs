@@ -3,6 +3,7 @@ using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Services;
 using MixItUp.WPF.Util;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

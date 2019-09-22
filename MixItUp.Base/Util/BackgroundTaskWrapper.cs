@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StreamingClient.Base.Util;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -6,6 +7,7 @@ namespace MixItUp.Base.Util
 {
     public static class BackgroundTaskWrapper
     {
+        [Obsolete]
         public static async Task RunBackgroundTask(CancellationTokenSource tokenSource, Func<CancellationTokenSource, Task> backgroundTask)
         {
             while (!tokenSource.IsCancellationRequested)

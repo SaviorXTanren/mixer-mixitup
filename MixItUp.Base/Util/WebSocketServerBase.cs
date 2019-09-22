@@ -1,7 +1,8 @@
 ﻿using Mixer.Base.Model.Client;
-using Mixer.Base.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Util;
+using StreamingClient.Base.Web;
 using System;
 using System.Net;
 using System.Net.WebSockets;
@@ -50,7 +51,7 @@ namespace MixItUp.Base.Util
 
             await this.Send(new WebSocketPacket() { type = "test" });
 
-            await this.WaitForResponse(() => this.connectionTestSuccessful);
+            await this.WaitForSuccess(() => this.connectionTestSuccessful);
 
             return this.connectionTestSuccessful;
         }

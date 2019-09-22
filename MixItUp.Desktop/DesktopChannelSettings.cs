@@ -1,5 +1,4 @@
 ﻿using Mixer.Base.Model.Channel;
-using Mixer.Base.Model.OAuth;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
@@ -19,6 +18,8 @@ using MixItUp.Base.ViewModel.User;
 using MixItUp.Desktop.Database;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Model.OAuth;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -78,6 +79,8 @@ namespace MixItUp.Desktop
         public OAuthTokenModel PatreonOAuthToken { get; set; }
         [JsonProperty]
         public OAuthTokenModel IFTTTOAuthToken { get; set; }
+        [JsonProperty]
+        public OAuthTokenModel StreamlootsOAuthToken { get; set; }
 
         [JsonProperty]
         public Dictionary<string, CommandGroupSettings> CommandGroups { get; set; }
@@ -116,6 +119,10 @@ namespace MixItUp.Desktop
         public bool CommandsOnlyInYourStream { get; set; }
         [JsonProperty]
         public bool DeleteChatCommandsWhenRun { get; set; }
+        [JsonProperty]
+        public bool ShowMixrElixrEmotes { get; set; }
+        [JsonProperty]
+        public bool ShowChatMessageTimestamps { get; set; }
 
         [JsonProperty]
         public uint DefaultInteractiveGame { get; set; }
@@ -302,6 +309,8 @@ namespace MixItUp.Desktop
 
         [JsonProperty]
         public int MaxMessagesInChat { get; set; } = 100;
+        [JsonProperty]
+        public int MaxUsersShownInChat { get; set; } = 100;
 
         [JsonProperty]
         public bool AutoExportStatistics { get; set; }
@@ -588,7 +597,7 @@ namespace MixItUp.Desktop
 
             if (string.IsNullOrEmpty(this.TelemetryUserId))
             {
-                if (MixItUp.Base.Util.Logger.IsDebug)
+                if (ChannelSession.IsDebug())
                 {
                     this.TelemetryUserId = "MixItUpDebuggingUser";
                 }
@@ -603,13 +612,13 @@ namespace MixItUp.Desktop
         {
             this.Version = DesktopChannelSettings.LatestVersion;
 
-            if (ChannelSession.Connection != null)
+            if (ChannelSession.MixerStreamerConnection != null)
             {
-                this.OAuthToken = ChannelSession.Connection.Connection.GetOAuthTokenCopy();
+                this.OAuthToken = ChannelSession.MixerStreamerConnection.Connection.GetOAuthTokenCopy();
             }
-            if (ChannelSession.BotConnection != null)
+            if (ChannelSession.MixerBotConnection != null)
             {
-                this.BotOAuthToken = ChannelSession.BotConnection.Connection.GetOAuthTokenCopy();
+                this.BotOAuthToken = ChannelSession.MixerBotConnection.Connection.GetOAuthTokenCopy();
             }
 
             if (ChannelSession.Services.Streamlabs != null)
@@ -652,6 +661,10 @@ namespace MixItUp.Desktop
             {
                 this.IFTTTOAuthToken = ChannelSession.Services.IFTTT.Token;
             }
+            if (ChannelSession.Services.Streamloots != null)
+            {
+                this.StreamlootsOAuthToken = ChannelSession.Services.Streamloots.GetOAuthTokenCopy();
+            }
 
             this.currenciesInternal = this.Currencies.ToDictionary();
             this.inventoriesInternal = this.Inventories.ToDictionary();
@@ -691,6 +704,29 @@ namespace MixItUp.Desktop
                     changedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter("@UserName", value: u.UserName), new SQLiteParameter("@ViewingMinutes", value: u.ViewingMinutes),
                     new SQLiteParameter("@CurrencyAmounts", value: u.GetCurrencyAmountsString()), new SQLiteParameter("@InventoryAmounts", value: u.GetInventoryAmountsString()),
                     new SQLiteParameter("@CustomCommands", value: u.GetCustomCommandsString()), new SQLiteParameter("@Options", value: u.GetOptionsString()), new SQLiteParameter("@ID", value: (int)u.ID) }));
+            }
+
+            // Clear out unused Cooldown Groups and Command Groups
+            var allUsedCooldownGroupNames = 
+                this.InteractiveCommands.Select(c => c.Requirements?.Cooldown?.GroupName)
+                .Union(this.ChatCommands.Select(c => c.Requirements?.Cooldown?.GroupName))
+                .Union(this.GameCommands.Select(c => c.Requirements?.Cooldown?.GroupName))
+                .Distinct();
+            var allUnusedCooldownGroupNames = this.CooldownGroups.ToDictionary().Where(c => !allUsedCooldownGroupNames.Contains(c.Key, StringComparer.InvariantCultureIgnoreCase));
+            foreach(var unused in allUnusedCooldownGroupNames)
+            {
+                this.CooldownGroups.Remove(unused.Key);
+            }
+
+            var allUsedCommandGroupNames = 
+                this.ChatCommands.Select(c => c.GroupName)
+                .Union(this.ActionGroupCommands.Select(a=>a.GroupName))
+                .Union(this.TimerCommands.Select(a => a.GroupName))
+                .Distinct();
+            var allUnusedCommandGroupNames = this.CommandGroups.Where(c => !allUsedCommandGroupNames.Contains(c.Key, StringComparer.InvariantCultureIgnoreCase));
+            foreach (var unused in allUnusedCommandGroupNames)
+            {
+                this.CommandGroups.Remove(unused.Key);
             }
         }
 

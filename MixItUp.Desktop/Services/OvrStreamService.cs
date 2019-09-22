@@ -4,6 +4,7 @@ using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ovrstream_client_csharp;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +39,7 @@ namespace MixItUp.OvrStream
 
                 return true;
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
             return false;
         }
 

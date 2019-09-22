@@ -2,6 +2,7 @@
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
+using StreamingClient.Base.Util;
 using System.Collections.Generic;
 
 namespace MixItUp.Base.ViewModel.Controls.Overlay
@@ -70,7 +71,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
                 this.NotifyPropertyChanged("CanSetStartingAmount");
             }
         }
-        protected bool totalFollowers;
+        protected bool totalFollowers = true;
 
         public string ResetAfterDaysString
         {
@@ -220,9 +221,9 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.ProgressColor = ColorSchemes.GetColorName(item.ProgressColor);
             this.BackgroundColor = ColorSchemes.GetColorName(item.BackgroundColor);
 
-            this.HTML = item.HTML;
-
             this.OnGoalReachedCommand = item.GoalReachedCommand;
+
+            this.HTML = item.HTML;
         }
 
         public override OverlayItemModelBase GetOverlayItem()

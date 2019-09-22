@@ -1,13 +1,13 @@
 ﻿using Mixer.Base;
-using Mixer.Base.Model.OAuth;
 using Mixer.Base.Model.User;
-using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Model.OAuth;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +28,7 @@ namespace MixItUp.Desktop.Services
 
         private PatreonUser user;
 
-        public  PatreonCampaign Campaign { get; private set; }
+        public PatreonCampaign Campaign { get; private set; }
 
         public IEnumerable<PatreonCampaignMember> CampaignMembers { get { return this.members; } }
         private List<PatreonCampaignMember> members = new List<PatreonCampaignMember>();
@@ -51,7 +51,7 @@ namespace MixItUp.Desktop.Services
                         return true;
                     }
                 }
-                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
             }
 
             string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(PatreonService.AuthorizationUrl, PatreonService.ClientID, MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL));
@@ -102,7 +102,7 @@ namespace MixItUp.Desktop.Services
                     }
                 }
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
             return null;
         }
 
@@ -170,7 +170,7 @@ namespace MixItUp.Desktop.Services
             }
             catch (Exception ex)
             {
-                MixItUp.Base.Util.Logger.Log(ex);
+                Logger.Log(ex);
                 return null;
             }
             return campaign;
@@ -288,7 +288,7 @@ namespace MixItUp.Desktop.Services
             }
             catch (Exception ex)
             {
-                MixItUp.Base.Util.Logger.Log(ex);
+                Logger.Log(ex);
                 return null;
             }
             return results;
@@ -340,7 +340,7 @@ namespace MixItUp.Desktop.Services
                     this.currentMembersAndTiers[member.UserID] = member.TierID;
                 }
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
 
             while (!this.cancellationTokenSource.Token.IsCancellationRequested)
             {
@@ -361,10 +361,10 @@ namespace MixItUp.Desktop.Services
                                 {
                                     UserViewModel user = new UserViewModel(0, member.User.LookupName);
 
-                                    UserModel userModel = await ChannelSession.Connection.GetUser(user.UserName);
+                                    UserModel userModel = await ChannelSession.MixerStreamerConnection.GetUser(user.UserName);
                                     if (userModel != null)
                                     {
-                                        user = await ChannelSession.ActiveUsers.GetUserByID(userModel.id);
+                                        user = ChannelSession.Services.User.GetUserByID(userModel.id);
                                         if (user == null)
                                         {
                                             user = new UserViewModel(userModel);
@@ -373,22 +373,19 @@ namespace MixItUp.Desktop.Services
                                         await user.RefreshDetails(force: true);
                                     }
 
-                                    EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.PatreonSubscribed));
-                                    if (command != null)
-                                    {
-                                        Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();
-                                        extraSpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierNameSpecialIdentifier] = tier.Title;
-                                        extraSpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierAmountSpecialIdentifier] = tier.Amount.ToString();
-                                        extraSpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierImageSpecialIdentifier] = tier.ImageUrl;
-                                        await command.Perform(user, arguments: null, extraSpecialIdentifiers: extraSpecialIdentifiers);
-                                    }
+                                    Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();
+                                    extraSpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierNameSpecialIdentifier] = tier.Title;
+                                    extraSpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierAmountSpecialIdentifier] = tier.Amount.ToString();
+                                    extraSpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierImageSpecialIdentifier] = tier.ImageUrl;
+
+                                    await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.PatreonSubscribed), user, arguments: null, extraSpecialIdentifiers: extraSpecialIdentifiers);
                                 }
                             }
                             this.currentMembersAndTiers[member.UserID] = member.TierID;
                         }
                     }
                 }
-                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
             }
         }
 

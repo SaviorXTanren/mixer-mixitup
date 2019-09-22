@@ -3,6 +3,7 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -144,7 +145,7 @@ namespace MixItUp.Base.Model.Overlay
 
             if (this.CurrentBossUserID > 0)
             {
-                UserModel user = await ChannelSession.Connection.GetUser(this.CurrentBossUserID);
+                UserModel user = await ChannelSession.MixerStreamerConnection.GetUser(this.CurrentBossUserID);
                 if (user != null)
                 {
                     this.CurrentBoss = new UserViewModel(user);

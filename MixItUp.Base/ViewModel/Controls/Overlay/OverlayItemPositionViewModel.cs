@@ -33,7 +33,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         {
             get
             {
-                return this.positionType == OverlayItemPositionType.Percentage &&
+                return this.positionType == OverlayItemPositionType.Percentage && this.Layer == 0 &&
                     (this.Horizontal == 25 || this.Horizontal == 50 || this.Horizontal == 75) &&
                     (this.Vertical == 25 || this.Vertical == 50 || this.Vertical == 75);
             }

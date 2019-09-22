@@ -1,14 +1,11 @@
 ﻿using Mixer.Base;
-using Mixer.Base.Model.OAuth;
-using Mixer.Base.Model.User;
-using Mixer.Base.Util;
-using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
-using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Model.OAuth;
+using StreamingClient.Base.Util;
+using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -45,7 +42,7 @@ namespace MixItUp.Desktop.Services
                         return true;
                     }
                 }
-                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
             }
 
             string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(StreamJarService.AuthorizationUrl, StreamJarService.ClientID, MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL));
@@ -57,7 +54,7 @@ namespace MixItUp.Desktop.Services
                 payload["code"] = authorizationCode;
                 payload["redirect_uri"] = MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL;
 
-                this.token = await this.PostAsync<OAuthTokenModel>(StreamJarService.TokenUrl, this.CreateContentFromObject(payload), autoRefreshToken: false);
+                this.token = await this.PostAsync<OAuthTokenModel>(StreamJarService.TokenUrl, AdvancedHttpClient.CreateContentFromObject(payload), autoRefreshToken: false);
                 if (this.token != null)
                 {
                     token.authorizationCode = authorizationCode;
@@ -86,7 +83,7 @@ namespace MixItUp.Desktop.Services
                     return jarray.First.ToObject<StreamJarChannel>();
                 }
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
             return null;
         }
 
@@ -96,7 +93,7 @@ namespace MixItUp.Desktop.Services
             {
                 return await this.GetAsync<IEnumerable<StreamJarDonation>>(string.Format("channels/{0}/tips", this.channel.ID.ToString()));
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
             return new List<StreamJarDonation>();
         }
 
@@ -110,7 +107,7 @@ namespace MixItUp.Desktop.Services
                 payload["refresh_token"] = this.token.refreshToken;
                 payload["redirect_uri"] = MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL;
 
-                this.token = await this.PostAsync<OAuthTokenModel>(StreamJarService.TokenUrl, this.CreateContentFromObject(payload), autoRefreshToken: false);
+                this.token = await this.PostAsync<OAuthTokenModel>(StreamJarService.TokenUrl, AdvancedHttpClient.CreateContentFromObject(payload), autoRefreshToken: false);
             }
         }
 
@@ -153,7 +150,7 @@ namespace MixItUp.Desktop.Services
                         }
                     }
                 }
-                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
 
                 await Task.Delay(10000);
             }

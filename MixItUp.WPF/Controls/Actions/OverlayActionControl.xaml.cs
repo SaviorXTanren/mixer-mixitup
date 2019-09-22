@@ -3,6 +3,7 @@ using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Overlay;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -86,42 +87,51 @@ namespace MixItUp.WPF.Controls.Actions
                     }
 #pragma warning restore CS0612 // Type or member is obsolete
 
-                    this.DurationTextBox.Text = this.action.OverlayItem.Effects.Duration.ToString();
-                    this.EntranceAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.OverlayItem.Effects.EntranceAnimation);
-                    this.VisibleAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.OverlayItem.Effects.VisibleAnimation);
-                    this.ExitAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.OverlayItem.Effects.ExitAnimation);
+                    if (this.action.OverlayItem != null)
+                    {
+                        if (this.action.OverlayItem.Effects != null)
+                        {
+                            this.DurationTextBox.Text = this.action.OverlayItem.Effects.Duration.ToString();
+                            this.EntranceAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.OverlayItem.Effects.EntranceAnimation);
+                            this.VisibleAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.OverlayItem.Effects.VisibleAnimation);
+                            this.ExitAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.OverlayItem.Effects.ExitAnimation);
+                        }
 
-                    this.ItemPosition.SetPosition(this.action.OverlayItem.Position);
+                        if (this.action.OverlayItem.Position != null)
+                        {
+                            this.ItemPosition.SetPosition(this.action.OverlayItem.Position);
+                        }
 
-                    if (this.action.OverlayItem is OverlayImageItemModel)
-                    {
-                        this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayItemModelTypeEnum.Image);
-                        this.ImageItem.SetItem(this.action.OverlayItem);
-                    }
-                    else if (this.action.OverlayItem is OverlayTextItemModel)
-                    {
-                        this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayItemModelTypeEnum.Text);
-                        this.TextItem.SetItem(this.action.OverlayItem);
-                    }
-                    else if (this.action.OverlayItem is OverlayYouTubeItemModel)
-                    {
-                        this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayItemModelTypeEnum.YouTube);
-                        this.YouTubeItem.SetItem(this.action.OverlayItem);
-                    }
-                    else if (this.action.OverlayItem is OverlayVideoItemModel)
-                    {
-                        this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayItemModelTypeEnum.Video);
-                        this.VideoItem.SetItem(this.action.OverlayItem);
-                    }
-                    else if (this.action.OverlayItem is OverlayWebPageItemModel)
-                    {
-                        this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayItemModelTypeEnum.WebPage);
-                        this.WebPageItem.SetItem(this.action.OverlayItem);
-                    }
-                    else if (this.action.OverlayItem is OverlayHTMLItemModel)
-                    {
-                        this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayItemModelTypeEnum.HTML);
-                        this.HTMLItem.SetItem(this.action.OverlayItem);
+                        if (this.action.OverlayItem is OverlayImageItemModel)
+                        {
+                            this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayItemModelTypeEnum.Image);
+                            this.ImageItem.SetItem(this.action.OverlayItem);
+                        }
+                        else if (this.action.OverlayItem is OverlayTextItemModel)
+                        {
+                            this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayItemModelTypeEnum.Text);
+                            this.TextItem.SetItem(this.action.OverlayItem);
+                        }
+                        else if (this.action.OverlayItem is OverlayYouTubeItemModel)
+                        {
+                            this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayItemModelTypeEnum.YouTube);
+                            this.YouTubeItem.SetItem(this.action.OverlayItem);
+                        }
+                        else if (this.action.OverlayItem is OverlayVideoItemModel)
+                        {
+                            this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayItemModelTypeEnum.Video);
+                            this.VideoItem.SetItem(this.action.OverlayItem);
+                        }
+                        else if (this.action.OverlayItem is OverlayWebPageItemModel)
+                        {
+                            this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayItemModelTypeEnum.WebPage);
+                            this.WebPageItem.SetItem(this.action.OverlayItem);
+                        }
+                        else if (this.action.OverlayItem is OverlayHTMLItemModel)
+                        {
+                            this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayItemModelTypeEnum.HTML);
+                            this.HTMLItem.SetItem(this.action.OverlayItem);
+                        }
                     }
                 }
             }

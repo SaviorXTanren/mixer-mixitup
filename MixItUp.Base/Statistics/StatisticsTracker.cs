@@ -70,9 +70,9 @@ namespace MixItUp.Base.Statistics
                 TrackedNumberStatisticDataTracker numberStats = (TrackedNumberStatisticDataTracker)stats;
 
                 int viewersCurrent = 0;
-                if (ChannelSession.Channel != null)
+                if (ChannelSession.MixerChannel != null)
                 {
-                    viewersCurrent = (int)ChannelSession.Channel.viewersCurrent;
+                    viewersCurrent = (int)ChannelSession.MixerChannel.viewersCurrent;
                 }
 
                 numberStats.AddValue(viewersCurrent);
@@ -82,7 +82,7 @@ namespace MixItUp.Base.Statistics
             this.Statistics.Add(new TrackedNumberStatisticDataTracker("Chatters", "MessageTextOutline", true, async (StatisticDataTrackerBase stats) =>
             {
                 TrackedNumberStatisticDataTracker numberStats = (TrackedNumberStatisticDataTracker)stats;
-                numberStats.AddValue(await ChannelSession.ActiveUsers.Count());
+                numberStats.AddValue(ChannelSession.Services.User.Count());
             }));
 
             this.Statistics.Add(this.followTracker);
@@ -99,24 +99,24 @@ namespace MixItUp.Base.Statistics
                 StaticTextStatisticDataTracker staticStats = (StaticTextStatisticDataTracker)stats;
                 staticStats.ClearValues();
 
-                if (ChannelSession.Connection != null && ChannelSession.Channel != null)
+                if (ChannelSession.MixerStreamerConnection != null && ChannelSession.MixerChannel != null)
                 {
-                    PatronageStatusModel patronageStatus = await ChannelSession.Connection.GetPatronageStatus(ChannelSession.Channel);
+                    PatronageStatusModel patronageStatus = await ChannelSession.MixerStreamerConnection.GetPatronageStatus(ChannelSession.MixerChannel);
                     if (patronageStatus != null)
                     {
-                        PatronagePeriodModel patronagePeriod = await ChannelSession.Connection.GetPatronagePeriod(patronageStatus);
+                        PatronagePeriodModel patronagePeriod = await ChannelSession.MixerStreamerConnection.GetPatronagePeriod(patronageStatus);
                         if (patronagePeriod != null)
                         {
                             IEnumerable<PatronageMilestoneModel> patronageMilestones = patronagePeriod.milestoneGroups.SelectMany(mg => mg.milestones);
                             IEnumerable<PatronageMilestoneModel> patronageMilestonesEarned = patronageMilestones.Where(m => m.target <= patronageStatus.patronageEarned);
                             if (patronageMilestonesEarned.Count() > 0)
                             {
-                                PatronageMilestoneModel patronageMilestoneHighestEarned = patronageMilestonesEarned.OrderByDescending(m => m.reward).FirstOrDefault();
+                                PatronageMilestoneModel patronageMilestoneHighestEarned = patronageMilestonesEarned.OrderByDescending(m => m.bonus).FirstOrDefault();
                                 if (patronageMilestoneHighestEarned != null)
                                 {
                                     staticStats.AddValue("Milestone #", patronageStatus.currentMilestoneId.ToString());
                                     staticStats.AddValue("Total Sparks", patronageStatus.patronageEarned.ToString());
-                                    staticStats.AddValue("Total Payout", patronageMilestoneHighestEarned.DollarAmountText());
+                                    staticStats.AddValue("Total Boost", patronageMilestoneHighestEarned.PercentageAmountText());
                                     return;
                                 }
                             }
@@ -126,7 +126,7 @@ namespace MixItUp.Base.Statistics
 
                 staticStats.AddValue("Milestone #", "0");
                 staticStats.AddValue("Total Sparks", "0");
-                staticStats.AddValue("Total Payout", "$0.00");
+                staticStats.AddValue("Total Boost", "0%");
             }));
             this.Statistics.Add(this.embersTracker);
 

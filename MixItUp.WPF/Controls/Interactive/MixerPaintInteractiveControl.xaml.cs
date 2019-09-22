@@ -1,4 +1,4 @@
-﻿using Mixer.Base.Model.Interactive;
+﻿using Mixer.Base.Model.MixPlay;
 using MixItUp.Base;
 using MixItUp.Base.MixerAPI;
 using MixItUp.Base.ViewModel.User;
@@ -39,16 +39,16 @@ namespace MixItUp.WPF.Controls.Interactive
     /// </summary>
     public partial class MixerPaintInteractiveControl : CustomInteractiveGameControl
     {
-        private InteractiveConnectedSceneModel scene;
-        private InteractiveConnectedButtonControlModel sendButton;
-        private InteractiveConnectedButtonControlModel presentButton;
+        private MixPlayConnectedSceneModel scene;
+        private MixPlayConnectedButtonControlModel sendButton;
+        private MixPlayConnectedButtonControlModel presentButton;
 
         private Dictionary<UserViewModel, UserSubmittedImage> userDrawings = new Dictionary<UserViewModel, UserSubmittedImage>();
         private ObservableCollection<UserSubmittedImage> userSubmittedImages = new ObservableCollection<UserSubmittedImage>();
 
         private UserSubmittedImage selectedUserImage = null;
 
-        public MixerPaintInteractiveControl(InteractiveGameModel game, InteractiveGameVersionModel version)
+        public MixerPaintInteractiveControl(MixPlayGameModel game, MixPlayGameVersionModel version)
             : base(game, version)
         {
             InitializeComponent();
@@ -63,7 +63,7 @@ namespace MixItUp.WPF.Controls.Interactive
 
         protected override async Task<bool> GameConnectedInternal()
         {
-            InteractiveConnectedSceneGroupCollectionModel sceneGroups = await ChannelSession.Interactive.GetScenes();
+            MixPlayConnectedSceneGroupCollectionModel sceneGroups = await ChannelSession.Interactive.GetScenes();
             if (sceneGroups != null)
             {
                 this.scene = sceneGroups.scenes.FirstOrDefault();
@@ -80,7 +80,7 @@ namespace MixItUp.WPF.Controls.Interactive
             return false;
         }
 
-        protected override async Task OnInteractiveControlUsed(UserViewModel user, InteractiveGiveInputModel input, InteractiveConnectedControlCommand command)
+        protected override async Task OnInteractiveControlUsed(UserViewModel user, MixPlayGiveInputModel input, InteractiveConnectedControlCommand command)
         {
             if (user != null && !user.IsAnonymous && input.input.meta.ContainsKey("image"))
             {
@@ -122,11 +122,11 @@ namespace MixItUp.WPF.Controls.Interactive
         {
             if (this.selectedUserImage != null)
             {
-                InteractiveConnectedButtonControlModel control = new InteractiveConnectedButtonControlModel() { controlID = this.presentButton.controlID };
+                MixPlayConnectedButtonControlModel control = new MixPlayConnectedButtonControlModel() { controlID = this.presentButton.controlID };
                 control.meta["username"] = this.selectedUserImage.User.UserName;
                 control.meta["useravatar"] = this.selectedUserImage.User.AvatarLink;
                 control.meta["image"] = this.selectedUserImage.ImageData;
-                await ChannelSession.Interactive.UpdateControls(this.scene, new List<InteractiveControlModel>() { control });
+                await ChannelSession.Interactive.UpdateControls(this.scene, new List<MixPlayControlModel>() { control });
 
                 await this.Dispatcher.InvokeAsync(() =>
                 {

@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Commands;
 using MixItUp.Base.ViewModel.User;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,15 +63,15 @@ namespace MixItUp.Base.Actions
         {
             this.ComparisionType = comparisionType;
             this.IgnoreCase = ignoreCase;
-            this.Value1 = value1;
-            this.Value2 = value2;
+            this.Value1 = (value1 == null) ? string.Empty : value1;
+            this.Value2 = (value2 == null) ? string.Empty : value2;
             this.CommandID = command.ID;
         }
 
         public ConditionalAction(ConditionalComparisionTypeEnum comparisionType, bool ignoreCase, string value1, string value2, string value3, CommandBase command)
             : this(comparisionType, ignoreCase, value1, value2, command)
         {
-            this.Value3 = value3;
+            this.Value3 = (value3 == null) ? string.Empty : value3;
         }
 
         public CommandBase GetCommand() { return ChannelSession.AllEnabledCommands.FirstOrDefault(c => c.ID.Equals(this.CommandID)); }

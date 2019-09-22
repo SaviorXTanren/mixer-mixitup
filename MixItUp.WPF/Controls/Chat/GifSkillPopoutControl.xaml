@@ -11,11 +11,11 @@
     <GroupBox x:Name="GroupBox" Visibility="Hidden">
         <GroupBox.Header>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                <UserControls:UserProfileAvatarControl x:Name="UserAvatar" VerticalAlignment="Center" />
+                <UserControls:UserProfileAvatarControl DataContext="{Binding User}" VerticalAlignment="Center" Size="16" />
                 <TextBlock Margin="10,0,0,0" Text="{Binding User.UserName}" Foreground="{StaticResource WhiteColor}" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center" />
             </StackPanel>
         </GroupBox.Header>
-        
-        <Image x:Name="GifImage" Gif:ImageBehavior.AnimatedSource="{Binding SkillInstance.ImageUrl}" Margin="-8,-9,-8,-8" MaxWidth="250" Stretch="Uniform" />
+
+        <Image x:Name="GifImage" Gif:ImageBehavior.AnimatedSource="{Binding Skill.Image}" Margin="-8,-9,-8,-8" MaxWidth="250" Stretch="Uniform" />
     </GroupBox>
 </UserControl>

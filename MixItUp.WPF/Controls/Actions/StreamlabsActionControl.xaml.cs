@@ -2,6 +2,7 @@
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Services;
+using StreamingClient.Base.Util;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;

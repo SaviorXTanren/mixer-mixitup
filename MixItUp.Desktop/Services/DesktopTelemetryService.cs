@@ -1,6 +1,5 @@
 ﻿using Microsoft.ApplicationInsights;
-using Mixer.Base.Model.Interactive;
-using Mixer.Base.Util;
+using Mixer.Base.Model.MixPlay;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
@@ -9,6 +8,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using PlayFab;
 using PlayFab.ClientModels;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -79,7 +79,7 @@ namespace MixItUp.Desktop.Services
             this.SendPlayFabEvent("Action", "Type", EnumHelper.GetEnumName(type));
         }
 
-        public void TrackInteractiveGame(InteractiveGameModel game)
+        public void TrackInteractiveGame(MixPlayGameModel game)
         {
             this.TrySendEvent(() => this.telemetryClient.TrackEvent("InteractiveGame", new Dictionary<string, string> { { "Name", game.name } }));
             this.SendPlayFabEvent("InteractiveGame", "Name", game.name);
@@ -116,7 +116,7 @@ namespace MixItUp.Desktop.Services
         {
             this.telemetryClient.Context.User.Id = userId;
 
-            string playFabUserID = HashHelper.ComputeMD5Hash("Mixer-" + (ChannelSession.IsStreamer ? "Streamer" : "Moderator") + ChannelSession.User.id);
+            string playFabUserID = HashHelper.ComputeMD5Hash("Mixer-" + (ChannelSession.IsStreamer ? "Streamer" : "Moderator") + ChannelSession.MixerStreamerUser.id);
             this.TrySendPlayFabTelemetry(PlayFabClientAPI.LoginWithCustomIDAsync(new LoginWithCustomIDRequest { CustomId = playFabUserID, CreateAccount = true }));
         }
 
@@ -143,7 +143,7 @@ namespace MixItUp.Desktop.Services
                 }
                 catch (Exception ex)
                 {
-                    Mixer.Base.Util.Logger.Log(ex);
+                    Logger.Log(ex);
                 }
             });
         }

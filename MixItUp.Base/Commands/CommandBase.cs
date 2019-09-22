@@ -4,6 +4,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,7 +44,7 @@ namespace MixItUp.Base.Commands
                     CommandBase.commandUses[key] = 0;
                 }
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
 
             return results;
         }
@@ -72,7 +73,7 @@ namespace MixItUp.Base.Commands
         public CommandTypeEnum Type { get; set; }
 
         [DataMember]
-        public List<string> Commands { get; set; }
+        public HashSet<string> Commands { get; set; }
 
         [DataMember]
         public List<ActionBase> Actions { get; set; }
@@ -100,7 +101,7 @@ namespace MixItUp.Base.Commands
         public CommandBase()
         {
             this.ID = Guid.NewGuid();
-            this.Commands = new List<string>();
+            this.Commands = new HashSet<string>();
             this.Actions = new List<ActionBase>();
             this.IsEnabled = true;
         }
@@ -112,7 +113,7 @@ namespace MixItUp.Base.Commands
         {
             this.Name = name;
             this.Type = type;
-            this.Commands.AddRange(commands);
+            this.Commands = new HashSet<string>(commands);
         }
 
         [JsonIgnore]
@@ -139,32 +140,12 @@ namespace MixItUp.Base.Commands
         }
 
         [JsonIgnore]
-        public virtual IEnumerable<string> CommandTriggers { get { return this.Commands; } }
+        public virtual HashSet<string> CommandTriggers { get { return this.Commands; } }
 
         [JsonIgnore]
         protected abstract SemaphoreSlim AsyncSemaphore { get; }
 
         public override string ToString() { return string.Format("{0} - {1}", this.ID, this.Name); }
-
-        public bool MatchesOrContainsCommand(string command) { return this.MatchesCommand(command) || this.ContainsCommand(command); }
-
-        public bool MatchesCommand(string command) { return this.CommandTriggers.Count() > 0 && this.CommandTriggers.Any(c => command.Equals(c, StringComparison.InvariantCultureIgnoreCase)); }
-
-        public bool ContainsCommand(string command) { return this.CommandTriggers.Count() > 0 && this.CommandTriggers.Any(c => command.StartsWith(c + " ", StringComparison.InvariantCultureIgnoreCase)); }
-
-        public IEnumerable<string> GetArgumentsFromText(string text)
-        {
-            string messageText = text;
-            foreach (string commandTrigger in this.CommandTriggers)
-            {
-                if (messageText.StartsWith(commandTrigger, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    messageText = messageText.Substring(commandTrigger.Length);
-                    break;
-                }
-            }
-            return messageText.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-        }
 
         public async Task Perform(IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
         {
@@ -201,7 +182,7 @@ namespace MixItUp.Base.Commands
                         CommandBase.commandUses[this.StoreID]++;
                     }
                 }
-                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
 
                 ChannelSession.Services.Telemetry.TrackCommand(this.Type, this.IsBasic);
 
@@ -221,7 +202,7 @@ namespace MixItUp.Base.Commands
                         await this.PerformInternal(user, arguments, extraSpecialIdentifiers, this.currentCancellationTokenSource.Token);
                     }
                     catch (TaskCanceledException) { }
-                    catch (Exception ex) { Util.Logger.Log(ex); }
+                    catch (Exception ex) { Logger.Log(ex); }
                     finally
                     {
                         if (waitOccurred)
@@ -243,7 +224,7 @@ namespace MixItUp.Base.Commands
                     await this.currentTaskRun;
                 }
             }
-            catch (Exception ex) { Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
         }
 
         public void StopCurrentRun()

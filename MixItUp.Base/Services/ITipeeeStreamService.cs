@@ -1,7 +1,7 @@
-﻿using Mixer.Base.Model.OAuth;
-using MixItUp.Base.Model.User;
+﻿using MixItUp.Base.Model.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Model.OAuth;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -128,6 +128,7 @@ namespace MixItUp.Base.Services
 
         Task<TipeeeStreamUser> GetUser();
         Task<string> GetAPIKey();
+        Task<string> GetSocketAddress();
 
         Task<IEnumerable<TipeeeStreamEvent>> GetDonationEvents();
 

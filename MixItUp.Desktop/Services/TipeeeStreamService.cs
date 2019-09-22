@@ -1,11 +1,13 @@
-﻿using Mixer.Base.Model.OAuth;
-using MixItUp.Base;
+﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Desktop.Util;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Model.OAuth;
+using StreamingClient.Base.Util;
+using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -18,13 +20,15 @@ namespace MixItUp.Desktop.Services
         public bool Connected { get; private set; }
 
         private TipeeeStreamService service;
+        private string socketAddress;
         private string username;
         private string apiKey;
 
-        public TipeeeStreamWebSocketService(TipeeeStreamService service, string username, string apiKey)
-            : base("https://sso.tipeeestream.com:4242")
+        public TipeeeStreamWebSocketService(TipeeeStreamService service, string socketAddress, string username, string apiKey)
+            : base(socketAddress, "access_token=" + apiKey)
         {
             this.service = service;
+            this.socketAddress = socketAddress;
             this.username = username;
             this.apiKey = apiKey;
         }
@@ -35,6 +39,11 @@ namespace MixItUp.Desktop.Services
 
             this.SocketReceiveWrapper("connect", (data) =>
             {
+                JObject joinRoomJObj = new JObject();
+                joinRoomJObj["room"] = this.apiKey;
+                joinRoomJObj["username"] = this.username;
+                this.SocketSendWrapper("join-room", joinRoomJObj);
+
                 this.Connected = true;
             });
 
@@ -55,28 +64,27 @@ namespace MixItUp.Desktop.Services
                 }
             });
 
-            this.SocketReceiveWrapper("error", (errorData) =>
+            this.SocketReceiveWrapper("error", async (errorData) =>
             {
                 if (errorData != null)
                 {
-                    MixItUp.Base.Util.Logger.Log(errorData.ToString());
+                    Logger.Log(errorData.ToString());
                 }
                 this.service.WebSocketDisconnectedOccurred();
+
+                await this.Connect();
             });
 
-            this.SocketReceiveWrapper("disconnect", (errorData) =>
+            this.SocketReceiveWrapper("disconnect", async (errorData) =>
             {
                 if (errorData != null)
                 {
-                    MixItUp.Base.Util.Logger.Log(errorData.ToString());
+                    Logger.Log(errorData.ToString());
                 }
                 this.service.WebSocketDisconnectedOccurred();
-            });
 
-            JObject joinRoomJObj = new JObject();
-            joinRoomJObj["room"] = this.apiKey;
-            joinRoomJObj["username"] = this.username;
-            this.SocketSendWrapper("join-room", joinRoomJObj);
+                await this.Connect();
+            });
 
             for (int i = 0; i < 10 && !this.Connected; i++)
             {
@@ -104,7 +112,7 @@ namespace MixItUp.Desktop.Services
 
     public class TipeeeStreamService : OAuthServiceBase, ITipeeeStreamService
     {
-        private const string BaseAddress = "https://api.tipeeestream.com/v1.0/";
+        private const string BaseAddress = "https://api.tipeeestream.com/";
 
         public const string ClientID = "9611_u5i668t3urk0wcksc84kcgsgckc04wk4ookw0so04kkwgw0cg";
 
@@ -139,7 +147,7 @@ namespace MixItUp.Desktop.Services
                         return true;
                     }
                 }
-                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
             }
 
             this.authorizationToken = await this.ConnectViaOAuthRedirect(string.Format(TipeeeStreamService.AuthorizationURL, TipeeeStreamService.ClientID, TipeeeStreamService.ListeningURL));
@@ -154,7 +162,7 @@ namespace MixItUp.Desktop.Services
                     payload["code"] = this.authorizationToken;
                     payload["redirect_uri"] = TipeeeStreamService.ListeningURL;
 
-                    this.token = await this.PostAsync<OAuthTokenModel>("https://api.tipeeestream.com/oauth/v2/token", this.CreateContentFromObject(payload), autoRefreshToken: false);
+                    this.token = await this.PostAsync<OAuthTokenModel>("https://api.tipeeestream.com/oauth/v2/token", AdvancedHttpClient.CreateContentFromObject(payload), autoRefreshToken: false);
                     if (this.token != null)
                     {
                         token.authorizationCode = this.authorizationToken;
@@ -164,7 +172,7 @@ namespace MixItUp.Desktop.Services
                         return await this.InitializeInternal();
                     }
                 }
-                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
             }
             return false;
         }
@@ -183,9 +191,9 @@ namespace MixItUp.Desktop.Services
         {
             try
             {
-                return await this.GetAsync<TipeeeStreamUser>("me");
+                return await this.GetAsync<TipeeeStreamUser>("v1.0/me");
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
             return null;
         }
 
@@ -193,13 +201,27 @@ namespace MixItUp.Desktop.Services
         {
             try
             {
-                JObject jobj = await this.GetAsync<JObject>("me/api");
+                JObject jobj = await this.GetAsync<JObject>("v1.0/me/api");
                 if (jobj != null)
                 {
                     return jobj["apiKey"].ToString();
                 }
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
+            return null;
+        }
+
+        public async Task<string> GetSocketAddress()
+        {
+            try
+            {
+                JObject jobj = await this.GetAsync<JObject>("v2.0/site/socket");
+                if (jobj != null && jobj.ContainsKey("datas"))
+                {
+                    return string.Format("{0}:{1}", jobj["datas"]["host"], jobj["datas"]["port"]);
+                }
+            }
+            catch (Exception ex) { Logger.Log(ex); }
             return null;
         }
 
@@ -208,7 +230,7 @@ namespace MixItUp.Desktop.Services
             List<TipeeeStreamEvent> results = new List<TipeeeStreamEvent>();
             try
             {
-                JObject jobj = await this.GetAsync<JObject>("events?type[]=donation");
+                JObject jobj = await this.GetAsync<JObject>("v1.0/events?type[]=donation");
                 if (jobj != null && jobj.ContainsKey("datas"))
                 {
                     JObject data = (JObject)jobj["datas"];
@@ -221,7 +243,7 @@ namespace MixItUp.Desktop.Services
                     }
                 }
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
             return results;
         }
 
@@ -234,7 +256,7 @@ namespace MixItUp.Desktop.Services
                 payload["client_secret"] = ChannelSession.SecretManager.GetSecret("TipeeeStreamSecret");
                 payload["refresh_token"] = this.token.refreshToken;
 
-                this.token = await this.PostAsync<OAuthTokenModel>("https://api.tipeeestream.com/oauth/v2/refresh-token", this.CreateContentFromObject(payload), autoRefreshToken: false);
+                this.token = await this.PostAsync<OAuthTokenModel>("https://api.tipeeestream.com/oauth/v2/refresh-token", AdvancedHttpClient.CreateContentFromObject(payload), autoRefreshToken: false);
             }
         }
 
@@ -246,9 +268,13 @@ namespace MixItUp.Desktop.Services
                 string apiKey = await this.GetAPIKey();
                 if (!string.IsNullOrEmpty(apiKey))
                 {
-                    this.socket = new TipeeeStreamWebSocketService(this, user.Username, apiKey);
-                    await this.socket.Connect();
-                    return this.socket.Connected;
+                    string socketAddress = await this.GetSocketAddress();
+                    if (!string.IsNullOrEmpty(socketAddress))
+                    {
+                        this.socket = new TipeeeStreamWebSocketService(this, socketAddress, user.Username, apiKey);
+                        await this.socket.Connect();
+                        return this.socket.Connected;
+                    }
                 }
             }
             return false;
@@ -257,8 +283,8 @@ namespace MixItUp.Desktop.Services
         private new async Task<T> GetAsync<T>(string url)
         {
             HttpResponseMessage response = await this.GetAsync(url);
-            Logger.LogDiagnostic(string.Format("TipeeeStream Log: {0} - {1} - {2}", response.RequestMessage.ToString(), response.StatusCode, await response.Content.ReadAsStringAsync()));
-            return await this.ProcessResponse<T>(response);
+            Logger.Log(LogLevel.Debug, string.Format("TipeeeStream Log: {0} - {1} - {2}", response.RequestMessage.ToString(), response.StatusCode, await response.Content.ReadAsStringAsync()));
+            return await response.ProcessResponse<T>();
         }
 
         public void WebSocketConnectedOccurred()

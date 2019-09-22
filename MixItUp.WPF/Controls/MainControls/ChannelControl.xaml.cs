@@ -2,7 +2,6 @@
 using Mixer.Base.Model.Game;
 using Mixer.Base.Model.Teams;
 using Mixer.Base.Model.User;
-using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Model.Favorites;
 using MixItUp.Base.Util;
@@ -10,12 +9,11 @@ using MixItUp.Base.ViewModel.Favorites;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Favorites;
-using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -31,11 +29,11 @@ namespace MixItUp.WPF.Controls.MainControls
         SameTeam,
         [Name("Same Age Rating")]
         AgeRating,
-        [Name("Small Streamer (> 10)")]
+        [Name("Small Streamer (< 10)")]
         SmallStreamer,
         [Name("Medium Streamer (10-25)")]
         MediumStreamer,
-        [Name("Large Streamer (< 25)")]
+        [Name("Large Streamer (> 25)")]
         LargeStreamer,
         [Name("Partnered Streamer")]
         PartneredStreamer,
@@ -62,12 +60,12 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             this.AgeRatingComboBox.ItemsSource = EnumHelper.GetEnumNames<AgeRatingEnum>();
 
-            this.StreamTitleTextBox.Text = ChannelSession.Channel.name;
+            this.StreamTitleTextBox.Text = ChannelSession.MixerChannel.name;
 
             this.shouldShowIntellisense = false;
-            if (ChannelSession.Channel?.type?.name != null)
+            if (ChannelSession.MixerChannel?.type?.name != null)
             {
-                this.GameNameTextBox.Text = ChannelSession.Channel.type.name;
+                this.GameNameTextBox.Text = ChannelSession.MixerChannel.type.name;
             }
             else
             {
@@ -76,7 +74,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.shouldShowIntellisense = true;
 
             List<string> ageRatingList = EnumHelper.GetEnumNames<AgeRatingEnum>().Select(s => s.ToLower()).ToList();
-            this.AgeRatingComboBox.SelectedIndex = ageRatingList.IndexOf(ChannelSession.Channel.audience);
+            this.AgeRatingComboBox.SelectedIndex = ageRatingList.IndexOf(ChannelSession.MixerChannel.audience);
 
             this.ChannelToRaidSearchCriteriaComboBox.ItemsSource = EnumHelper.GetEnumNames<RaidSearchCriteriaEnum>();
 
@@ -102,7 +100,7 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 if (!string.IsNullOrEmpty(this.GameNameTextBox.Text))
                 {
-                    var games = (await ChannelSession.Connection.GetGameTypes(this.GameNameTextBox.Text, 5))
+                    var games = (await ChannelSession.MixerStreamerConnection.GetGameTypes(this.GameNameTextBox.Text, 5))
                         .Take(5)
                         .ToList();
                     if (games.Count > 0)
@@ -172,7 +170,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             if (!string.IsNullOrEmpty(name))
             {
-                return (await ChannelSession.Connection.GetGameTypes(name, 15)).FirstOrDefault(g => g.name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+                return (await ChannelSession.MixerStreamerConnection.GetGameTypes(name, 15)).FirstOrDefault(g => g.name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
             }
 
             return null;
@@ -223,7 +221,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
             await this.Window.RunAsyncOperation(async () =>
             {
-                await ChannelSession.Connection.UpdateChannel(ChannelSession.Channel.id, this.StreamTitleTextBox.Text, gameType.id, ((string)this.AgeRatingComboBox.SelectedItem).ToLower());
+                await ChannelSession.MixerStreamerConnection.UpdateChannel(ChannelSession.MixerChannel.id, this.StreamTitleTextBox.Text, gameType.id, ((string)this.AgeRatingComboBox.SelectedItem).ToLower());
 
                 await ChannelSession.RefreshChannel();
             });
@@ -245,15 +243,15 @@ namespace MixItUp.WPF.Controls.MainControls
                 RaidSearchCriteriaEnum searchCriteria = EnumHelper.GetEnumValueFromString<RaidSearchCriteriaEnum>((string)this.ChannelToRaidSearchCriteriaComboBox.SelectedItem);
                 if (searchCriteria == RaidSearchCriteriaEnum.SameGame)
                 {
-                    channels = await ChannelSession.Connection.GetChannelsByGameTypes(ChannelSession.Channel.type, 1);
+                    channels = await ChannelSession.MixerStreamerConnection.GetChannelsByGameTypes(ChannelSession.MixerChannel.type, 1);
                 }
                 else if (searchCriteria == RaidSearchCriteriaEnum.SameTeam)
                 {
                     Dictionary<uint, UserWithChannelModel> teamChannels = new Dictionary<uint, UserWithChannelModel>();
-                    foreach (TeamMembershipExpandedModel extendedTeam in await ChannelSession.Connection.GetUserTeams(ChannelSession.User))
+                    foreach (TeamMembershipExpandedModel extendedTeam in await ChannelSession.MixerStreamerConnection.GetUserTeams(ChannelSession.MixerStreamerUser))
                     {
-                        TeamModel team = await ChannelSession.Connection.GetTeam(extendedTeam.id);
-                        IEnumerable<UserWithChannelModel> teamUsers = await ChannelSession.Connection.GetTeamUsers(team);
+                        TeamModel team = await ChannelSession.MixerStreamerConnection.GetTeam(extendedTeam.id);
+                        IEnumerable<UserWithChannelModel> teamUsers = await ChannelSession.MixerStreamerConnection.GetTeamUsers(team);
                         foreach (UserWithChannelModel userChannel in teamUsers.Where(u => u.channel.online))
                         {
                             teamChannels[userChannel.id] = userChannel;
@@ -263,28 +261,28 @@ namespace MixItUp.WPF.Controls.MainControls
                 }
                 else
                 {
-                    string query = "channels";
+                    string filters = string.Empty;
                     if (searchCriteria == RaidSearchCriteriaEnum.AgeRating)
                     {
-                        query += "?where=audience:eq:" + ChannelSession.Channel.audience;
+                        filters = "audience:eq:" + ChannelSession.MixerChannel.audience;
                     }
                     else if (searchCriteria == RaidSearchCriteriaEnum.LargeStreamer)
                     {
-                        query += "?where=viewersCurrent:gte:25";
+                        filters = "viewersCurrent:gte:25";
                     }
                     else if (searchCriteria == RaidSearchCriteriaEnum.MediumStreamer)
                     {
-                        query += "?where=viewersCurrent:gte:10,viewersCurrent:lt:25";
+                        filters = "viewersCurrent:gte:10,viewersCurrent:lt:25";
                     }
                     else if (searchCriteria == RaidSearchCriteriaEnum.SmallStreamer)
                     {
-                        query += "?where=viewersCurrent:gt:0,viewersCurrent:lt:10";
+                        filters = "viewersCurrent:gt:0,viewersCurrent:lt:10";
                     }
                     else if (searchCriteria == RaidSearchCriteriaEnum.PartneredStreamer)
                     {
-                        query += "?where=partnered:eq:true";
+                        filters = "partnered:eq:true";
                     }
-                    channels = await ChannelSession.Connection.Connection.Channels.GetPagedNumberAsync<ChannelModel>(query, 50, linkPagesAvailable: false);
+                    channels = await ChannelSession.MixerStreamerConnection.Connection.Channels.GetChannels(filters, 50);
                 }
 
                 this.ChannelRaidNameTextBox.Clear();
@@ -292,8 +290,8 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     this.channelToRaid = channels.ElementAt(RandomHelper.GenerateRandomNumber(channels.Count()));
 
-                    UserModel user = await ChannelSession.Connection.GetUser(this.channelToRaid.userId);
-                    GameTypeModel game = await ChannelSession.Connection.GetGameType(this.channelToRaid.typeId.GetValueOrDefault());
+                    UserModel user = await ChannelSession.MixerStreamerConnection.GetUser(this.channelToRaid.userId);
+                    GameTypeModel game = await ChannelSession.MixerStreamerConnection.GetGameType(this.channelToRaid.typeId.GetValueOrDefault());
 
                     this.ChannelRaidNameTextBox.Text = user.username;
                     this.ChannelRaidViewersTextBox.Text = this.channelToRaid.viewersCurrent.ToString();
@@ -336,7 +334,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     {
                         if (!string.IsNullOrEmpty(this.AddFavoriteTeamTextBox.Text))
                         {
-                            TeamModel team = await ChannelSession.Connection.GetTeam(this.AddFavoriteTeamTextBox.Text);
+                            TeamModel team = await ChannelSession.MixerStreamerConnection.GetTeam(this.AddFavoriteTeamTextBox.Text);
                             if (team != null)
                             {
                                 if (ChannelSession.Settings.FavoriteGroups.Any(t => t.Team != null && t.Team.id.Equals(team.id)))
@@ -360,7 +358,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     {
                         if (!string.IsNullOrEmpty(this.AddFavoriteUserTextBox.Text) && !string.IsNullOrEmpty(this.AddFavoriteUserGroupNameTextBox.Text))
                         {
-                            UserModel user = await ChannelSession.Connection.GetUser(this.AddFavoriteUserTextBox.Text);
+                            UserModel user = await ChannelSession.MixerStreamerConnection.GetUser(this.AddFavoriteUserTextBox.Text);
                             if (user != null)
                             {
                                 FavoriteGroupModel group = ChannelSession.Settings.FavoriteGroups.FirstOrDefault(t => t.GroupName != null && t.GroupName.Equals(this.AddFavoriteUserGroupNameTextBox.Text));
@@ -446,7 +444,7 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 await this.Window.RunAsyncOperation(async () =>
                 {
-                    await ChannelSession.Connection.SetHostChannel(ChannelSession.Channel, this.channelToRaid);
+                    await ChannelSession.MixerStreamerConnection.SetHostChannel(ChannelSession.MixerChannel, this.channelToRaid);
                 });
             }
         }

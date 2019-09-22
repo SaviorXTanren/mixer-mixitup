@@ -1,4 +1,4 @@
-﻿using Mixer.Base.Model.Interactive;
+﻿using Mixer.Base.Model.MixPlay;
 using MixItUp.Base;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
@@ -14,9 +14,9 @@ namespace MixItUp.WPF.Controls.Dialogs
     public class GroupListItem : NotifyPropertyChangedBase
     {
         public InteractiveUserGroupViewModel Group { get; set; }
-        public InteractiveSceneModel Scene { get; set; }
+        public MixPlaySceneModel Scene { get; set; }
 
-        public GroupListItem(InteractiveUserGroupViewModel group, InteractiveSceneModel scene)
+        public GroupListItem(InteractiveUserGroupViewModel group, MixPlaySceneModel scene)
         {
             this.Group = group;
             this.Scene = scene;
@@ -47,12 +47,12 @@ namespace MixItUp.WPF.Controls.Dialogs
     /// </summary>
     public partial class InteractiveSceneUserGroupsDialogControl : NotifyPropertyChangedUserControl
     {
-        private InteractiveGameModel game;
-        private InteractiveSceneModel scene;
+        private MixPlayGameModel game;
+        private MixPlaySceneModel scene;
 
         private ObservableCollection<GroupListItem> UserGroups;
 
-        public InteractiveSceneUserGroupsDialogControl(InteractiveGameModel game, InteractiveSceneModel scene)
+        public InteractiveSceneUserGroupsDialogControl(MixPlayGameModel game, MixPlaySceneModel scene)
         {
             this.game = game;
             this.scene = scene;

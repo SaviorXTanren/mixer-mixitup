@@ -1,5 +1,4 @@
 ﻿using Mixer.Base.Model.Channel;
-using Mixer.Base.Model.OAuth;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Favorites;
@@ -16,6 +15,7 @@ using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Model.OAuth;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -48,6 +48,7 @@ namespace MixItUp.Base
         OAuthTokenModel StreamJarOAuthToken { get; set; }
         OAuthTokenModel PatreonOAuthToken { get; set; }
         OAuthTokenModel IFTTTOAuthToken { get; set; }
+        OAuthTokenModel StreamlootsOAuthToken { get; set; }
 
         Dictionary<string, CommandGroupSettings> CommandGroups { get; set; }
         Dictionary<string, HotKeyConfiguration> HotKeys { get; set; }
@@ -69,6 +70,8 @@ namespace MixItUp.Base
         bool IgnoreBotAccountCommands { get; set; }
         bool CommandsOnlyInYourStream { get; set; }
         bool DeleteChatCommandsWhenRun { get; set; }
+        bool ShowMixrElixrEmotes { get; set; }
+        bool ShowChatMessageTimestamps { get; set; }
 
         uint DefaultInteractiveGame { get; set; }
         bool PreventUnknownInteractiveUsers { get; set; }
@@ -172,6 +175,7 @@ namespace MixItUp.Base
         int NotificationServiceDisconnectSoundVolume { get; set; }
 
         int MaxMessagesInChat { get; set; }
+        int MaxUsersShownInChat { get; set; }
 
         bool AutoExportStatistics { get; set; }
 

@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Services;
+using MixItUp.Base.Services.Mixer;
 using MixItUp.Desktop.Audio;
 using MixItUp.Desktop.Files;
 using MixItUp.Desktop.Services.DeveloperAPI;
@@ -20,6 +21,9 @@ namespace MixItUp.Desktop.Services
             this.MixItUpService = new MixItUpService();
             this.MixerStatus = new MixerStatusService();
 
+            this.User = new UserService();
+            this.Chat = new ChatService();
+
             this.Settings = new DesktopSettingsService();
             this.FileService = new WindowsFileService();
             this.InputService = new WindowsInputService();
@@ -34,9 +38,9 @@ namespace MixItUp.Desktop.Services
             this.SerialService = new SerialService();
             this.RemoteService = new RemoteService("https://mixitup-remote-server.azurewebsites.net/api/", "https://mixitup-remote-server.azurewebsites.net/RemoteHub");
 
-            this.Scout = new ScoutService();
             this.ExtraLife = new ExtraLifeService();
             this.OverlayServers = new OverlayServiceManager();
+            this.MixrElixr = new MixrElixrService();
         }
 
         public override async Task Close()
@@ -492,6 +496,30 @@ namespace MixItUp.Desktop.Services
                 ChannelSession.Settings.IFTTTOAuthToken = null;
             }
             return Task.FromResult(0);
+        }
+
+        public override async Task<bool> InitializeStreamloots(string streamlootsID = null)
+        {
+            this.Streamloots = (ChannelSession.Settings.StreamlootsOAuthToken != null) ? new StreamlootsService(ChannelSession.Settings.StreamlootsOAuthToken) : new StreamlootsService(streamlootsID);
+            if (await this.Streamloots.Connect())
+            {
+                return true;
+            }
+            else
+            {
+                await this.DisconnectStreamloots();
+            }
+            return false;
+        }
+
+        public override async Task DisconnectStreamloots()
+        {
+            if (this.Streamloots != null)
+            {
+                await this.Streamloots.Disconnect();
+                this.Streamloots = null;
+                ChannelSession.Settings.StreamlootsOAuthToken = null;
+            }
         }
 
         private void OverlayServer_OnWebSocketConnectedOccurred(object sender, System.EventArgs e)

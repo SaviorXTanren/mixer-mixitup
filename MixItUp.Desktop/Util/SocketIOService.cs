@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
 using Quobject.SocketIoClientDotNet.Client;
+using StreamingClient.Base.Util;
 using System;
 using System.Threading.Tasks;
 
@@ -48,7 +49,7 @@ namespace MixItUp.Desktop.Util
                     {
                         processEvent(eventData);
                     }
-                    catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+                    catch (Exception ex) { Logger.Log(ex); }
                 });
             }
         }
@@ -71,7 +72,7 @@ namespace MixItUp.Desktop.Util
             {
                 this.socket.Emit(eventString, data);
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
         }
     }
 }

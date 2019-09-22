@@ -4,8 +4,10 @@ using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Store;
+using MixItUp.Base.Util;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -168,7 +170,7 @@ namespace MixItUp.WPF.Controls.Store
                 {
                     StoreListingReviewModel review = new StoreListingReviewModel(this.currentListing, reviewControl.Rating, reviewControl.ReviewText);
 
-                    StoreListingReviewModel existingReview = this.currentListing.Reviews.FirstOrDefault(r => r.UserID.Equals(ChannelSession.User.id));
+                    StoreListingReviewModel existingReview = this.currentListing.Reviews.FirstOrDefault(r => r.UserID.Equals(ChannelSession.MixerStreamerUser.id));
                     if (existingReview != null)
                     {
                         review.ID = existingReview.ID;
@@ -286,7 +288,7 @@ namespace MixItUp.WPF.Controls.Store
 
         private void HelpButton_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Mix-It-Up-Store");
+            ProcessHelper.LaunchLink("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Mix-It-Up-Store");
         }
     }
 }

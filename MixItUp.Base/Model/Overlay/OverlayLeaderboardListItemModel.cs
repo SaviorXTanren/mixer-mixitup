@@ -1,11 +1,13 @@
 ﻿using Mixer.Base.Model.Leaderboards;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
+using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,6 +54,9 @@ namespace MixItUp.Base.Model.Overlay
         public Guid CurrencyID { get; set; }
 
         [DataMember]
+        public CustomCommand NewLeaderCommand { get; set; }
+
+        [DataMember]
         private List<OverlayListIndividualItemModel> lastItems { get; set; } = new List<OverlayListIndividualItemModel>();
 
         private Dictionary<UserViewModel, DateTimeOffset> userSubDates = new Dictionary<UserViewModel, DateTimeOffset>();
@@ -60,24 +65,27 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayLeaderboardListItemModel() : base() { }
 
         public OverlayLeaderboardListItemModel(string htmlText, OverlayLeaderboardListItemTypeEnum leaderboardType, int totalToShow, string textFont, int width, int height, string borderColor,
-            string backgroundColor, string textColor, OverlayItemEffectEntranceAnimationTypeEnum addEventAnimation, OverlayItemEffectExitAnimationTypeEnum removeEventAnimation, UserCurrencyViewModel currency)
-            : this(htmlText, leaderboardType, totalToShow, textFont, width, height, borderColor, backgroundColor, textColor, addEventAnimation, removeEventAnimation)
+            string backgroundColor, string textColor, OverlayListItemAlignmentTypeEnum alignment, OverlayItemEffectEntranceAnimationTypeEnum addEventAnimation,
+            OverlayItemEffectExitAnimationTypeEnum removeEventAnimation, UserCurrencyViewModel currency, CustomCommand newLeaderCommand)
+            : this(htmlText, leaderboardType, totalToShow, textFont, width, height, borderColor, backgroundColor, textColor, alignment, addEventAnimation, removeEventAnimation, newLeaderCommand)
         {
             this.CurrencyID = currency.ID;
         }
 
         public OverlayLeaderboardListItemModel(string htmlText, OverlayLeaderboardListItemTypeEnum leaderboardType, int totalToShow, string textFont, int width, int height, string borderColor,
-            string backgroundColor, string textColor, OverlayItemEffectEntranceAnimationTypeEnum addEventAnimation, OverlayItemEffectExitAnimationTypeEnum removeEventAnimation, OverlayLeaderboardListItemDateRangeEnum dateRange)
-            : this(htmlText, leaderboardType, totalToShow, textFont, width, height, borderColor, backgroundColor, textColor, addEventAnimation, removeEventAnimation)
+            string backgroundColor, string textColor, OverlayListItemAlignmentTypeEnum alignment, OverlayItemEffectEntranceAnimationTypeEnum addEventAnimation,
+            OverlayItemEffectExitAnimationTypeEnum removeEventAnimation, OverlayLeaderboardListItemDateRangeEnum dateRange, CustomCommand newLeaderCommand)
+            : this(htmlText, leaderboardType, totalToShow, textFont, width, height, borderColor, backgroundColor, textColor, alignment, addEventAnimation, removeEventAnimation, newLeaderCommand)
         {
             this.LeaderboardDateRange = dateRange;
         }
 
         public OverlayLeaderboardListItemModel(string htmlText, OverlayLeaderboardListItemTypeEnum leaderboardType, int totalToShow, string textFont, int width, int height, string borderColor,
-            string backgroundColor, string textColor, OverlayItemEffectEntranceAnimationTypeEnum addEventAnimation, OverlayItemEffectExitAnimationTypeEnum removeEventAnimation)
-            : base(OverlayItemModelTypeEnum.Leaderboard, htmlText, totalToShow, 0, textFont, width, height, borderColor, backgroundColor, textColor, addEventAnimation, removeEventAnimation)
+            string backgroundColor, string textColor, OverlayListItemAlignmentTypeEnum alignment, OverlayItemEffectEntranceAnimationTypeEnum addEventAnimation, OverlayItemEffectExitAnimationTypeEnum removeEventAnimation, CustomCommand newLeaderCommand)
+            : base(OverlayItemModelTypeEnum.Leaderboard, htmlText, totalToShow, 0, textFont, width, height, borderColor, backgroundColor, textColor, alignment, addEventAnimation, removeEventAnimation)
         {
             this.LeaderboardType = leaderboardType;
+            this.NewLeaderCommand = newLeaderCommand;
         }
 
         [JsonIgnore]
@@ -155,16 +163,16 @@ namespace MixItUp.Base.Model.Overlay
                 switch (this.LeaderboardDateRange)
                 {
                     case OverlayLeaderboardListItemDateRangeEnum.Weekly:
-                        sparkLeaderboard = await ChannelSession.Connection.GetWeeklySparksLeaderboard(ChannelSession.Channel, this.TotalToShow);
+                        sparkLeaderboard = await ChannelSession.MixerStreamerConnection.GetWeeklySparksLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                         break;
                     case OverlayLeaderboardListItemDateRangeEnum.Monthly:
-                        sparkLeaderboard = await ChannelSession.Connection.GetMonthlySparksLeaderboard(ChannelSession.Channel, this.TotalToShow);
+                        sparkLeaderboard = await ChannelSession.MixerStreamerConnection.GetMonthlySparksLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                         break;
                     case OverlayLeaderboardListItemDateRangeEnum.Yearly:
-                        sparkLeaderboard = await ChannelSession.Connection.GetYearlySparksLeaderboard(ChannelSession.Channel, this.TotalToShow);
+                        sparkLeaderboard = await ChannelSession.MixerStreamerConnection.GetYearlySparksLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                         break;
                     case OverlayLeaderboardListItemDateRangeEnum.AllTime:
-                        sparkLeaderboard = await ChannelSession.Connection.GetAllTimeSparksLeaderboard(ChannelSession.Channel, this.TotalToShow);
+                        sparkLeaderboard = await ChannelSession.MixerStreamerConnection.GetAllTimeSparksLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                         break;
                 }
 
@@ -186,16 +194,16 @@ namespace MixItUp.Base.Model.Overlay
                 switch (this.LeaderboardDateRange)
                 {
                     case OverlayLeaderboardListItemDateRangeEnum.Weekly:
-                        emberLeaderboard = await ChannelSession.Connection.GetWeeklyEmbersLeaderboard(ChannelSession.Channel, this.TotalToShow);
+                        emberLeaderboard = await ChannelSession.MixerStreamerConnection.GetWeeklyEmbersLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                         break;
                     case OverlayLeaderboardListItemDateRangeEnum.Monthly:
-                        emberLeaderboard = await ChannelSession.Connection.GetMonthlyEmbersLeaderboard(ChannelSession.Channel, this.TotalToShow);
+                        emberLeaderboard = await ChannelSession.MixerStreamerConnection.GetMonthlyEmbersLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                         break;
                     case OverlayLeaderboardListItemDateRangeEnum.Yearly:
-                        emberLeaderboard = await ChannelSession.Connection.GetYearlyEmbersLeaderboard(ChannelSession.Channel, this.TotalToShow);
+                        emberLeaderboard = await ChannelSession.MixerStreamerConnection.GetYearlyEmbersLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                         break;
                     case OverlayLeaderboardListItemDateRangeEnum.AllTime:
-                        emberLeaderboard = await ChannelSession.Connection.GetAllTimeEmbersLeaderboard(ChannelSession.Channel, this.TotalToShow);
+                        emberLeaderboard = await ChannelSession.MixerStreamerConnection.GetAllTimeEmbersLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                         break;
                 }
 
@@ -267,14 +275,18 @@ namespace MixItUp.Base.Model.Overlay
         private async Task UpdateSubscribers()
         {
             this.userSubDates.Clear();
-            foreach (UserWithGroupsModel userWithGroups in await ChannelSession.Connection.GetUsersWithRoles(ChannelSession.Channel, MixerRoleEnum.Subscriber))
+            await ChannelSession.MixerStreamerConnection.GetUsersWithRoles(ChannelSession.MixerChannel, MixerRoleEnum.Subscriber, (collection) =>
             {
-                DateTimeOffset? subDate = userWithGroups.GetSubscriberDate();
-                if (subDate.HasValue)
+                foreach (UserWithGroupsModel userWithGroups in collection)
                 {
-                    this.userSubDates[new UserViewModel(userWithGroups)] = subDate.GetValueOrDefault();
+                    DateTimeOffset? subDate = userWithGroups.GetSubscriberDate();
+                    if (subDate.HasValue)
+                    {
+                        this.userSubDates[new UserViewModel(userWithGroups)] = subDate.GetValueOrDefault();
+                    }
                 }
-            }
+                return Task.FromResult(0);
+            });
 
             List<OverlayListIndividualItemModel> items = new List<OverlayListIndividualItemModel>();
 
@@ -293,7 +305,7 @@ namespace MixItUp.Base.Model.Overlay
 
         private async Task AddLeaderboardItems(IEnumerable<OverlayListIndividualItemModel> items)
         {
-            await this.listSemaphore.WaitAndRelease(() =>
+            await this.listSemaphore.WaitAndRelease(async () =>
             {
                 foreach (OverlayListIndividualItemModel item in this.lastItems)
                 {
@@ -303,7 +315,7 @@ namespace MixItUp.Base.Model.Overlay
                     }
                 }
 
-                for (int i = 0; i < items.Count(); i++)
+                for (int i = 0; i < items.Count() && i < this.TotalToShow; i++)
                 {
                     OverlayListIndividualItemModel item = items.ElementAt(i);
 
@@ -318,8 +330,16 @@ namespace MixItUp.Base.Model.Overlay
                     }
                 }
 
+                if (this.NewLeaderCommand != null)
+                {
+                    // Detect if we had a list before, and we have a list now, and the top user changed, let's trigger the event
+                    if (this.lastItems.Count() > 0 && items.Count() > 0 && !this.lastItems.First().User.ID.Equals(items.First().User.ID))
+                    {
+                        await this.NewLeaderCommand.Perform(items.First().User, new string[] { this.lastItems.First().User.UserName });
+                    }
+                }
+
                 this.lastItems = new List<OverlayListIndividualItemModel>(items);
-                return Task.FromResult(0);
             });
         }
     }

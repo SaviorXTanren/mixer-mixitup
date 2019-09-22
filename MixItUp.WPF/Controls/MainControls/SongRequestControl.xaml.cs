@@ -63,8 +63,11 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.Window.RunAsyncOperation(() =>
             {
                 Button button = (Button)sender;
-                SongRequestModel songRequest = (SongRequestModel)button.DataContext;
-                this.viewModel.MoveUpCommand.Execute(songRequest);
+                if (button != null && button.DataContext != null && button.DataContext is SongRequestModel)
+                {
+                    SongRequestModel songRequest = (SongRequestModel)button.DataContext;
+                    this.viewModel.MoveUpCommand.Execute(songRequest);
+                }
                 return Task.FromResult(0);
             });
         }
@@ -74,8 +77,11 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.Window.RunAsyncOperation(() =>
             {
                 Button button = (Button)sender;
-                SongRequestModel songRequest = (SongRequestModel)button.DataContext;
-                this.viewModel.MoveDownCommand.Execute(songRequest);
+                if (button != null && button.DataContext != null && button.DataContext is SongRequestModel)
+                {
+                    SongRequestModel songRequest = (SongRequestModel)button.DataContext;
+                    this.viewModel.MoveDownCommand.Execute(songRequest);
+                }
                 return Task.FromResult(0);
             });
         }
@@ -85,8 +91,11 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.Window.RunAsyncOperation(() =>
             {
                 Button button = (Button)sender;
-                SongRequestModel songRequest = (SongRequestModel)button.DataContext;
-                this.viewModel.DeleteCommand.Execute(songRequest);
+                if (button != null && button.DataContext != null && button.DataContext is SongRequestModel)
+                {
+                    SongRequestModel songRequest = (SongRequestModel)button.DataContext;
+                    this.viewModel.DeleteCommand.Execute(songRequest);
+                }
                 return Task.FromResult(0);
             });
         }
@@ -96,8 +105,11 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.Window.RunAsyncOperation(() =>
             {
                 Button button = (Button)sender;
-                SongRequestModel songRequest = (SongRequestModel)button.DataContext;
-                this.viewModel.BanCommand.Execute(songRequest);
+                if (button != null && button.DataContext != null && button.DataContext is SongRequestModel)
+                {
+                    SongRequestModel songRequest = (SongRequestModel)button.DataContext;
+                    this.viewModel.BanCommand.Execute(songRequest);
+                }
                 return Task.FromResult(0);
             });
         }

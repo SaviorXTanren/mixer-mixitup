@@ -1,12 +1,11 @@
-﻿using Mixer.Base.Model.Interactive;
-using Mixer.Base.Util;
+﻿using Mixer.Base.Model.MixPlay;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.WPF.Controls.Dialogs;
 using MixItUp.WPF.Util;
-using System.Collections.Generic;
+using StreamingClient.Base.Util;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,14 +17,14 @@ namespace MixItUp.WPF.Controls.Command
     /// </summary>
     public partial class InteractiveJoystickCommandDetailsControl : CommandDetailsControlBase
     {
-        public InteractiveGameModel Game { get; private set; }
-        public InteractiveGameVersionModel Version { get; private set; }
-        public InteractiveSceneModel Scene { get; private set; }
-        public InteractiveJoystickControlModel Control { get; private set; }
+        public MixPlayGameModel Game { get; private set; }
+        public MixPlayGameVersionModel Version { get; private set; }
+        public MixPlaySceneModel Scene { get; private set; }
+        public MixPlayJoystickControlModel Control { get; private set; }
 
         private InteractiveJoystickCommand command;
 
-        public InteractiveJoystickCommandDetailsControl(InteractiveGameModel game, InteractiveGameVersionModel version, InteractiveJoystickCommand command)
+        public InteractiveJoystickCommandDetailsControl(MixPlayGameModel game, MixPlayGameVersionModel version, InteractiveJoystickCommand command)
         {
             this.Game = game;
             this.Version = version;
@@ -35,7 +34,7 @@ namespace MixItUp.WPF.Controls.Command
             InitializeComponent();
         }
 
-        public InteractiveJoystickCommandDetailsControl(InteractiveGameModel game, InteractiveGameVersionModel version, InteractiveSceneModel scene, InteractiveJoystickControlModel control)
+        public InteractiveJoystickCommandDetailsControl(MixPlayGameModel game, MixPlayGameVersionModel version, MixPlaySceneModel scene, MixPlayJoystickControlModel control)
         {
             this.Game = game;
             this.Version = version;
@@ -156,6 +155,16 @@ namespace MixItUp.WPF.Controls.Command
             return null;
         }
 
+        private string GetSelectedIndex(InputKeyEnum? inputKey)
+        {
+            if (inputKey.HasValue)
+            {
+                return EnumHelper.GetEnumName(inputKey.Value);
+            }
+
+            return null;
+        }
+
         private void JoystickSetupComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             if (this.JoystickSetupComboBox.SelectedIndex >= 0)
@@ -164,7 +173,10 @@ namespace MixItUp.WPF.Controls.Command
                 if (setup == InteractiveJoystickSetupType.MapToIndividualKeys)
                 {
                     this.UpKeyComboBox.IsEnabled = this.RightKeyComboBox.IsEnabled = this.DownKeyComboBox.IsEnabled = this.LeftKeyComboBox.IsEnabled = true;
-                    this.UpKeyComboBox.SelectedIndex = this.RightKeyComboBox.SelectedIndex = this.DownKeyComboBox.SelectedIndex = this.LeftKeyComboBox.SelectedIndex = -1;
+                    this.UpKeyComboBox.SelectedItem = GetSelectedIndex(this.command?.MappedKeys.ElementAtOrDefault(0));
+                    this.RightKeyComboBox.SelectedItem = GetSelectedIndex(this.command?.MappedKeys.ElementAtOrDefault(1));
+                    this.DownKeyComboBox.SelectedItem = GetSelectedIndex(this.command?.MappedKeys.ElementAtOrDefault(2));
+                    this.LeftKeyComboBox.SelectedItem = GetSelectedIndex(this.command?.MappedKeys.ElementAtOrDefault(3));
                 }
                 else
                 {

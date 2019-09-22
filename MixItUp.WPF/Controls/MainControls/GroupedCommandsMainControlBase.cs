@@ -14,7 +14,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.viewModel = viewModel;
         }
 
-        protected void Window_CommandSaveSuccessfully(object sender, CommandBase command)
+        protected virtual void Window_CommandSaveSuccessfully(object sender, CommandBase command)
         {
             this.viewModel.RemoveCommand(command);
             this.viewModel.AddCommand(command);

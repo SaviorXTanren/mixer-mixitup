@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.SongRequests;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +32,7 @@ namespace MixItUp.Base.Services
 
     public interface ISongRequestService
     {
-        List<SongRequestModel> RequestSongs { get; }
+        IEnumerable<SongRequestModel> RequestSongs { get; }
 
         SongRequestCurrentlyPlayingModel Status { get; }
 
@@ -74,7 +75,9 @@ namespace MixItUp.Base.Services
 
         private const int backgroundInterval = 1000;
 
-        public List<SongRequestModel> RequestSongs { get; private set; } = new List<SongRequestModel>();
+        public IEnumerable<SongRequestModel> RequestSongs { get { return this.requestSongs.ToList(); } }
+        private List<SongRequestModel> requestSongs = new List<SongRequestModel>();
+
         private List<SongRequestModel> playlistSongs = new List<SongRequestModel>();
 
         public SongRequestCurrentlyPlayingModel Status { get; private set; }
@@ -98,10 +101,10 @@ namespace MixItUp.Base.Services
 
         public Task Initialize()
         {
-            this.RequestSongs.Clear();
+            this.requestSongs.Clear();
             if (ChannelSession.Settings.SongRequestsSaveRequestQueue)
             {
-                this.RequestSongs.AddRange(ChannelSession.Settings.SongRequestsSavedRequestQueue);
+                this.requestSongs.AddRange(ChannelSession.Settings.SongRequestsSavedRequestQueue);
             }
 
             bannedSongsCache.Clear();
@@ -174,7 +177,7 @@ namespace MixItUp.Base.Services
         {
             await SongRequestService.songRequestLock.WaitAndRelease(async () =>
             {
-                this.RequestSongs.Clear();
+                this.requestSongs.Clear();
 
                 foreach (ISongRequestProviderService provider in this.enabledProviders)
                 {
@@ -198,7 +201,7 @@ namespace MixItUp.Base.Services
         {
             if (string.IsNullOrEmpty(identifier))
             {
-                await ChannelSession.Chat.Whisper(user.UserName, "You must specify your request with the command. For details on how to request songs, check out: https://github.com/SaviorXTanren/mixer-mixitup/wiki/Song-Requests#requesting-songs");
+                await ChannelSession.Services.Chat.Whisper(user.UserName, "You must specify your request with the command. For details on how to request songs, check out: https://github.com/SaviorXTanren/mixer-mixitup/wiki/Song-Requests#requesting-songs");
                 return;
             }
 
@@ -209,7 +212,7 @@ namespace MixItUp.Base.Services
             }
             else
             {
-                await ChannelSession.Chat.Whisper(user.UserName, "We were unable to find a song that matched you request. For details on how to request songs, check out: https://github.com/SaviorXTanren/mixer-mixitup/wiki/Song-Requests#requesting-songs");
+                await ChannelSession.Services.Chat.Whisper(user.UserName, "We were unable to find a song that matched you request. For details on how to request songs, check out: https://github.com/SaviorXTanren/mixer-mixitup/wiki/Song-Requests#requesting-songs");
             }
         }
 
@@ -217,7 +220,7 @@ namespace MixItUp.Base.Services
         {
             if (string.IsNullOrEmpty(identifier))
             {
-                await ChannelSession.Chat.Whisper(user.UserName, "You must specify your request with the command. For details on how to request songs, check out: https://github.com/SaviorXTanren/mixer-mixitup/wiki/Song-Requests#requesting-songs");
+                await ChannelSession.Services.Chat.Whisper(user.UserName, "You must specify your request with the command. For details on how to request songs, check out: https://github.com/SaviorXTanren/mixer-mixitup/wiki/Song-Requests#requesting-songs");
                 return;
             }
 
@@ -249,12 +252,12 @@ namespace MixItUp.Base.Services
                         {
                             resultsStrings.Add((i + 1) + ". " + this.lastUserSongSearches[user][i].Name);
                         }
-                        await ChannelSession.Chat.Whisper(user.UserName, "Multiple results found, please re-run this command with a space & the number of the song: " + string.Join(",  ", resultsStrings));
+                        await ChannelSession.Services.Chat.Whisper(user.UserName, "Multiple results found, please re-run this command with a space & the number of the song: " + string.Join(",  ", resultsStrings));
                     }
                 }
                 else
                 {
-                    await ChannelSession.Chat.Whisper(user.UserName, "We were unable to find a song that matched you request. For details on how to request songs, check out: https://github.com/SaviorXTanren/mixer-mixitup/wiki/Song-Requests#requesting-songs");
+                    await ChannelSession.Services.Chat.Whisper(user.UserName, "We were unable to find a song that matched you request. For details on how to request songs, check out: https://github.com/SaviorXTanren/mixer-mixitup/wiki/Song-Requests#requesting-songs");
                 }
             }
         }
@@ -368,9 +371,9 @@ namespace MixItUp.Base.Services
         {
             return await SongRequestService.songRequestLock.WaitAndRelease(() =>
             {
-                if (this.RequestSongs.Count > 0)
+                if (this.requestSongs.Count > 0)
                 {
-                    return Task.FromResult(this.RequestSongs.FirstOrDefault());
+                    return Task.FromResult(this.requestSongs.FirstOrDefault());
                 }
                 else if (this.playlistSongs.Count > 0)
                 {
@@ -387,7 +390,7 @@ namespace MixItUp.Base.Services
         {
             await SongRequestService.songRequestLock.WaitAndRelease(() =>
             {
-                this.RequestSongs.MoveUp(song);
+                this.requestSongs.MoveUp(song);
                 return Task.FromResult(0);
             });
             GlobalEvents.SongRequestsChangedOccurred();
@@ -397,7 +400,7 @@ namespace MixItUp.Base.Services
         {
             await SongRequestService.songRequestLock.WaitAndRelease(() =>
             {
-                this.RequestSongs.MoveDown(song);
+                this.requestSongs.MoveDown(song);
                 return Task.FromResult(0);
             });
             GlobalEvents.SongRequestsChangedOccurred();
@@ -407,7 +410,7 @@ namespace MixItUp.Base.Services
         {
             await SongRequestService.songRequestLock.WaitAndRelease(() =>
             {
-                this.RequestSongs.Remove(song);
+                this.requestSongs.Remove(song);
                 return Task.FromResult(0);
             });
 
@@ -429,7 +432,7 @@ namespace MixItUp.Base.Services
             SongRequestModel song = null;
             await SongRequestService.songRequestLock.WaitAndRelease(() =>
             {
-                song = this.RequestSongs.LastOrDefault();
+                song = this.requestSongs.LastOrDefault();
                 return Task.FromResult(0);
             });
 
@@ -446,7 +449,7 @@ namespace MixItUp.Base.Services
             SongRequestModel song = null;
             await SongRequestService.songRequestLock.WaitAndRelease(() =>
             {
-                song = this.RequestSongs.LastOrDefault(s => s.User.ID == user.ID);
+                song = this.requestSongs.LastOrDefault(s => s.User.ID == user.ID);
                 return Task.FromResult(0);
             });
 
@@ -456,7 +459,7 @@ namespace MixItUp.Base.Services
             }
             else
             {
-                await ChannelSession.Chat.Whisper(user.UserName, string.Format("You have no songs in the queue.", song.Name));
+                await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You have no songs in the queue.", song.Name));
             }
 
             GlobalEvents.SongRequestsChangedOccurred();
@@ -466,7 +469,7 @@ namespace MixItUp.Base.Services
         {
             await SongRequestService.songRequestLock.WaitAndRelease(() =>
             {
-                this.RequestSongs.Clear();
+                this.requestSongs.Clear();
                 return Task.FromResult(0);
             });
             GlobalEvents.SongRequestsChangedOccurred();
@@ -493,7 +496,7 @@ namespace MixItUp.Base.Services
 
             if (bannedSongsCache[song.Type].Contains(song.ID))
             {
-                await ChannelSession.Chat.Whisper(user.UserName, "This song is banned from being requested.");
+                await ChannelSession.Services.Chat.Whisper(user.UserName, "This song is banned from being requested.");
                 return;
             }
 
@@ -504,20 +507,20 @@ namespace MixItUp.Base.Services
 
                 if (ChannelSession.Settings.SongRequestSubPriority && user.IsMixerSubscriber)
                 {
-                    for (int i = 0; i < this.RequestSongs.Count; i++)
+                    for (int i = 0; i < this.requestSongs.Count; i++)
                     {
-                        if (!this.RequestSongs[i].User.IsMixerSubscriber)
+                        if (!this.requestSongs[i].User.IsMixerSubscriber)
                         {
-                            this.RequestSongs.Insert(i, song);
+                            this.requestSongs.Insert(i, song);
                             return Task.FromResult(0);
                         }
                     }
                 }
-                this.RequestSongs.Add(song);
+                this.requestSongs.Add(song);
 
                 if (ChannelSession.Settings.SongRequestsSaveRequestQueue)
                 {
-                    ChannelSession.Settings.SongRequestsSavedRequestQueue = this.RequestSongs.ToList();
+                    ChannelSession.Settings.SongRequestsSavedRequestQueue = this.requestSongs.ToList();
                 }
 
                 return Task.FromResult(0);
@@ -567,14 +570,14 @@ namespace MixItUp.Base.Services
             }
 
             SongRequestModel newSong = null;
-            if (this.RequestSongs.Count > 0)
+            if (this.requestSongs.Count > 0)
             {
-                newSong = this.RequestSongs.First();
-                this.RequestSongs.RemoveAt(0);
+                newSong = this.requestSongs.First();
+                this.requestSongs.RemoveAt(0);
 
                 if (ChannelSession.Settings.SongRequestsSaveRequestQueue)
                 {
-                    ChannelSession.Settings.SongRequestsSavedRequestQueue = this.RequestSongs.ToList();
+                    ChannelSession.Settings.SongRequestsSavedRequestQueue = this.requestSongs.ToList();
                 }
             }
             else
@@ -669,6 +672,7 @@ namespace MixItUp.Base.Services
 
         private async Task BackgroundSongMaintainer(CancellationTokenSource cancellationTokenSource)
         {
+            int totalLoops = 0;
             await BackgroundTaskWrapper.RunBackgroundTask(cancellationTokenSource, async (tokenSource) =>
             {
                 await Task.Delay(backgroundInterval, tokenSource.Token);
@@ -677,9 +681,22 @@ namespace MixItUp.Base.Services
                 {
                     if (this.Status != null && this.Status.Length > 0)
                     {
+                        totalLoops++;
                         if (this.Status.State == SongRequestStateEnum.Playing)
                         {
                             this.Status.Progress += backgroundInterval;
+                            if (totalLoops >= 30)
+                            {
+                                SongRequestCurrentlyPlayingModel newStatus = await this.GetStatus();
+                                if (newStatus != null)
+                                {
+                                    this.Status.State = newStatus.State;
+                                    this.Status.Progress = newStatus.Progress;
+                                    this.Status.Length = newStatus.Length;
+                                    this.Status.Volume = newStatus.Volume;
+                                }
+                                totalLoops = 0;
+                            }
                         }
 
                         if (this.Status.Progress >= this.Status.Length || this.Status.State == SongRequestStateEnum.Ended)

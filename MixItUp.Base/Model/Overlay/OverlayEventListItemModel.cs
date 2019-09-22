@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -39,8 +40,8 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayEventListItemModel() : base() { }
 
         public OverlayEventListItemModel(string htmlText, IEnumerable<OverlayEventListItemTypeEnum> itemTypes, int totalToShow, int fadeOut, string textFont, int width, int height,
-            string borderColor, string backgroundColor, string textColor, OverlayItemEffectEntranceAnimationTypeEnum addEventAnimation, OverlayItemEffectExitAnimationTypeEnum removeEventAnimation)
-            : base(OverlayItemModelTypeEnum.EventList, htmlText, totalToShow, fadeOut, textFont, width, height, borderColor, backgroundColor, textColor, addEventAnimation, removeEventAnimation)
+            string borderColor, string backgroundColor, string textColor, OverlayListItemAlignmentTypeEnum alignment, OverlayItemEffectEntranceAnimationTypeEnum addEventAnimation, OverlayItemEffectExitAnimationTypeEnum removeEventAnimation)
+            : base(OverlayItemModelTypeEnum.EventList, htmlText, totalToShow, fadeOut, textFont, width, height, borderColor, backgroundColor, textColor, alignment, addEventAnimation, removeEventAnimation)
         {
             this.ItemTypes = new List<OverlayEventListItemTypeEnum>(itemTypes);
         }
@@ -155,7 +156,7 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void GlobalEvents_OnEmberUseOccurred(object sender, UserEmberUsageModel emberUsage) { await this.AddEvent(emberUsage.User.UserName, string.Format("{0} Embers", emberUsage.Amount)); }
 
-        private async void GlobalEvents_OnPatronageMilestoneReachedOccurred(object sender, PatronageMilestoneModel patronageMilestone) { await this.AddEvent(string.Format("{0} Milestone", patronageMilestone.DollarAmountText()), string.Format("{0} Sparks", patronageMilestone.target)); }
+        private async void GlobalEvents_OnPatronageMilestoneReachedOccurred(object sender, PatronageMilestoneModel patronageMilestone) { await this.AddEvent(string.Format("{0} Milestone", patronageMilestone.PercentageAmountText()), string.Format("{0} Sparks", patronageMilestone.target)); }
 
         private async Task AddEvent(string name, string details)
         {

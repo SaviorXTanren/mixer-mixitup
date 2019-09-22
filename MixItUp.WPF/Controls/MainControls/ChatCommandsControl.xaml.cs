@@ -39,6 +39,13 @@ namespace MixItUp.WPF.Controls.MainControls
             await base.OnVisibilityChanged();
         }
 
+        protected override void Window_CommandSaveSuccessfully(object sender, CommandBase command)
+        {
+            ChannelSession.Services.Chat.RebuildCommandTriggers();
+
+            base.Window_CommandSaveSuccessfully(sender, command);
+        }
+
         private void NameFilterTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
             this.viewModel.NameFilter = this.NameFilterTextBox.Text;
@@ -67,6 +74,8 @@ namespace MixItUp.WPF.Controls.MainControls
                     ChannelSession.Settings.ChatCommands.Remove(command);
                     await ChannelSession.SaveSettings();
                     this.viewModel.RemoveCommand(command);
+
+                    ChannelSession.Services.Chat.RebuildCommandTriggers();
                 }
             });
         }

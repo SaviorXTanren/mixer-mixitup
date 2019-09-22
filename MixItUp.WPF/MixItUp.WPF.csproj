@@ -146,8 +146,8 @@
     <Reference Include="Microsoft.Owin.Host.HttpListener, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.4.0.1\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
     </Reference>
-    <Reference Include="Mixer.Base, Version=0.8.4.11, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\mixer-client-csharp.0.8.4.11-beta\lib\netstandard2.0\Mixer.Base.dll</HintPath>
+    <Reference Include="Mixer.Base, Version=0.9.0.5, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\mixer-client-csharp.0.9.0.5-beta\lib\netstandard2.0\Mixer.Base.dll</HintPath>
     </Reference>
     <Reference Include="NAudio, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NAudio.1.9.0\lib\net35\NAudio.dll</HintPath>
@@ -177,6 +177,9 @@
     </Reference>
     <Reference Include="SocketIoClientDotNet, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SocketIoClientDotNet.1.0.6\lib\net45\SocketIoClientDotNet.dll</HintPath>
+    </Reference>
+    <Reference Include="StreamingClient.Base, Version=0.1.0.5, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\mixer-client-csharp.0.9.0.5-beta\lib\netstandard2.0\StreamingClient.Base.dll</HintPath>
     </Reference>
     <Reference Include="SuperSocket.ClientEngine, Version=0.10.0.0, Culture=neutral, PublicKeyToken=ee9af13f57f00acc, processorArchitecture=MSIL">
       <HintPath>..\packages\SuperSocket.ClientEngine.Core.0.10.0\lib\net45\SuperSocket.ClientEngine.dll</HintPath>
@@ -433,20 +436,17 @@
     <Compile Include="Controls\Chat\ChatMessageHeaderControl.xaml.cs">
       <DependentUpon>ChatMessageHeaderControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Chat\EmoticonControl.xaml.cs">
-      <DependentUpon>EmoticonControl.xaml</DependentUpon>
+    <Compile Include="Controls\Chat\ChatEmoteControl.xaml.cs">
+      <DependentUpon>ChatEmoteControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Chat\GifSkillControl.xaml.cs">
-      <DependentUpon>GifSkillControl.xaml</DependentUpon>
+    <Compile Include="Controls\Chat\GifImageControl.xaml.cs">
+      <DependentUpon>GifImageControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Chat\GifSkillHoverControl.xaml.cs">
+      <DependentUpon>GifSkillHoverControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Chat\GifSkillPopoutControl.xaml.cs">
       <DependentUpon>GifSkillPopoutControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Chat\SkillControl.xaml.cs">
-      <DependentUpon>SkillControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Chat\StickerControl.xaml.cs">
-      <DependentUpon>StickerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Command\ActionGroupCommandDetailsControl.xaml.cs">
       <DependentUpon>ActionGroupCommandDetailsControl.xaml</DependentUpon>
@@ -588,6 +588,9 @@
     </Compile>
     <Compile Include="Controls\MainControls\AutoHosterControl.xaml.cs">
       <DependentUpon>AutoHosterControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\ChatControl.xaml.cs">
+      <DependentUpon>ChatControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\CurrencyRankInventoryControl.xaml.cs">
       <DependentUpon>CurrencyRankInventoryControl.xaml</DependentUpon>
@@ -842,6 +845,9 @@
     <Compile Include="Controls\Services\StreamlabsServiceControl.xaml.cs">
       <DependentUpon>StreamlabsServiceControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Services\StreamlootsServiceControl.xaml.cs">
+      <DependentUpon>StreamlootsServiceControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Services\TiltifyServiceControl.xaml.cs">
       <DependentUpon>TiltifyServiceControl.xaml</DependentUpon>
     </Compile>
@@ -955,6 +961,7 @@
     <Compile Include="Util\LocalizationConverter.cs" />
     <Compile Include="Util\LogicalTreeHelpers.cs" />
     <Compile Include="Util\MessageBoxHelper.cs" />
+    <Compile Include="Util\ColorBrushConverter.cs" />
     <Compile Include="Util\VisualTreeHelpers.cs" />
     <Compile Include="Util\WPFDialogShower.cs" />
     <Compile Include="Windows\Command\CommandWindow.xaml.cs">
@@ -1128,23 +1135,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Chat\EmoticonControl.xaml">
+    <Page Include="Controls\Chat\ChatEmoteControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\Chat\GifSkillControl.xaml">
+    <Page Include="Controls\Chat\GifImageControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Chat\GifSkillHoverControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Chat\GifSkillPopoutControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Chat\SkillControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Chat\StickerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1329,6 +1332,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MainControls\AutoHosterControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\ChatControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1524,7 +1531,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\MainControls\ChatControl.xaml">
+    <Page Include="Controls\MainControls\OldChatControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1672,6 +1679,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Services\StreamlootsServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Services\TiltifyServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1808,8 +1819,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controls\MainControls\ChatControl.xaml.cs">
-      <DependentUpon>ChatControl.xaml</DependentUpon>
+    <Compile Include="Controls\MainControls\OldChatControl.xaml.cs">
+      <DependentUpon>OldChatControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Chat\ChatMessageControl.xaml.cs">
       <DependentUpon>ChatMessageControl.xaml</DependentUpon>
@@ -1959,7 +1970,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <None Include="README.md" />
     <Page Include="Themes\MixItUpTheme.NibblesCarrotPatch.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -2029,7 +2039,6 @@
     <Resource Include="AutoUpdater.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="LICENSE.txt" />
     <Resource Include="Assets\Images\Discord.png" />
     <Resource Include="Assets\Images\Youtube.png" />
     <Resource Include="Assets\Images\Wiki.png" />

@@ -3,6 +3,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -197,7 +198,7 @@ namespace MixItUp.Base.Services
                         }
                         else
                         {
-                            await ChannelSession.Chat.SendMessage(string.Format("@{0} you've won the giveaway; type \"!claim\" in chat!.", this.Winner.UserName));
+                            await ChannelSession.Services.Chat.SendMessage(string.Format("@{0} you've won the giveaway; type \"!claim\" in chat!.", this.Winner.UserName));
 
                             this.TimeLeft = 60;
                             while (this.TimeLeft > 0)
@@ -217,7 +218,7 @@ namespace MixItUp.Base.Services
                     }
                     else
                     {
-                        await ChannelSession.Chat.SendMessage("There are no users that entered/left in the giveaway");
+                        await ChannelSession.Services.Chat.SendMessage("There are no users that entered/left in the giveaway");
                         await this.End();
                         return;
                     }
@@ -225,7 +226,7 @@ namespace MixItUp.Base.Services
             }
             catch (Exception ex)
             {
-                MixItUp.Base.Util.Logger.Log(ex);
+                Logger.Log(ex);
             }
         }
 
@@ -233,17 +234,16 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                if (this.TimeLeft > 0 && this.Winner == null && this.giveawayCommand.MatchesOrContainsCommand(message.Message))
+                if (this.TimeLeft > 0 && this.Winner == null && this.giveawayCommand.DoesTextMatchCommand(message.PlainTextMessage, out IEnumerable<string> arguments))
                 {
                     int entries = 1;
 
                     if (pastWinners.Contains(message.User.ID))
                     {
-                        await ChannelSession.Chat.Whisper(message.User.UserName, "You have already won a giveaway and can not enter this one");
+                        await ChannelSession.Services.Chat.Whisper(message.User.UserName, "You have already won a giveaway and can not enter this one");
                         return;
                     }
 
-                    IEnumerable<string> arguments = this.giveawayCommand.GetArgumentsFromText(message.Message);
                     if (arguments.Count() > 0)
                     {
                         int.TryParse(arguments.ElementAt(0), out entries);
@@ -257,7 +257,7 @@ namespace MixItUp.Base.Services
 
                     if ((entries + currentEntries) > ChannelSession.Settings.GiveawayMaximumEntries)
                     {
-                        await ChannelSession.Chat.Whisper(message.User.UserName, string.Format("You may only enter {0} time(s), you currently have entered {1} time(s)", ChannelSession.Settings.GiveawayMaximumEntries, currentEntries));
+                        await ChannelSession.Services.Chat.Whisper(message.User.UserName, string.Format("You may only enter {0} time(s), you currently have entered {1} time(s)", ChannelSession.Settings.GiveawayMaximumEntries, currentEntries));
                         return;
                     }
 
@@ -268,7 +268,7 @@ namespace MixItUp.Base.Services
                             int totalAmount = ChannelSession.Settings.GiveawayRequirements.Currency.RequiredAmount * entries;
                             if (!ChannelSession.Settings.GiveawayRequirements.TrySubtractCurrencyAmount(message.User, totalAmount))
                             {
-                                await ChannelSession.Chat.Whisper(message.User.UserName, string.Format("You do not have the required {0} {1} to do this", totalAmount, ChannelSession.Settings.GiveawayRequirements.Currency.GetCurrency().Name));
+                                await ChannelSession.Services.Chat.Whisper(message.User.UserName, string.Format("You do not have the required {0} {1} to do this", totalAmount, ChannelSession.Settings.GiveawayRequirements.Currency.GetCurrency().Name));
                                 return;
                             }
                         }
@@ -278,7 +278,7 @@ namespace MixItUp.Base.Services
                             int totalAmount = ChannelSession.Settings.GiveawayRequirements.Inventory.Amount * entries;
                             if (!ChannelSession.Settings.GiveawayRequirements.TrySubtractInventoryAmount(message.User, totalAmount))
                             {
-                                await ChannelSession.Chat.Whisper(message.User.UserName, string.Format("You do not have the required {0} {1} to do this", totalAmount, ChannelSession.Settings.GiveawayRequirements.Inventory.GetInventory().Name));
+                                await ChannelSession.Services.Chat.Whisper(message.User.UserName, string.Format("You do not have the required {0} {1} to do this", totalAmount, ChannelSession.Settings.GiveawayRequirements.Inventory.GetInventory().Name));
                                 return;
                             }
                         }
@@ -299,7 +299,7 @@ namespace MixItUp.Base.Services
                         }
                     }
                 }
-                else if (this.Winner != null && this.Winner.Equals(message.User) && message.Message.Equals("!claim", StringComparison.InvariantCultureIgnoreCase))
+                else if (this.Winner != null && this.Winner.Equals(message.User) && message.PlainTextMessage.Equals("!claim", StringComparison.InvariantCultureIgnoreCase))
                 {
                     await ChannelSession.Settings.GiveawayWinnerSelectedCommand.Perform(this.Winner, extraSpecialIdentifiers: this.GetSpecialIdentifiers());
                     await this.End();
@@ -307,7 +307,7 @@ namespace MixItUp.Base.Services
             }
             catch (Exception ex)
             {
-                MixItUp.Base.Util.Logger.Log(ex);
+                Logger.Log(ex);
             }
         }
 

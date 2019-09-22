@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.Controls.MainControls;
+﻿using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Controls.MainControls;
 using System.Diagnostics;
 
 namespace MixItUp.WPF.Controls.MainControls
@@ -15,7 +16,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            Process.Start("MixItUp.AutoHoster.exe");
+            ProcessHelper.LaunchProgram("MixItUp.AutoHoster.exe");
         }
     }
 }

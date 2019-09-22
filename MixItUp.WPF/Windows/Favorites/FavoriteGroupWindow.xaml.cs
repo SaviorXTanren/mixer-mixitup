@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Model.Game;
 using Mixer.Base.Model.User;
 using MixItUp.Base;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Favorites;
 using MixItUp.WPF.Util;
 using System.Collections.ObjectModel;
@@ -69,7 +70,7 @@ namespace MixItUp.WPF.Windows.Favorites
         {
             Button button = (Button)sender;
             FavoriteUser user = (FavoriteUser)button.DataContext;
-            Process.Start(user.Link);
+            ProcessHelper.LaunchLink(user.Link);
         }
 
         private async void HostChannelButton_Click(object sender, RoutedEventArgs e)
@@ -78,7 +79,7 @@ namespace MixItUp.WPF.Windows.Favorites
             FavoriteUser user = (FavoriteUser)button.DataContext;
             await this.RunAsyncOperation(async () =>
             {
-                await ChannelSession.Connection.SetHostChannel(ChannelSession.Channel, user.User.channel);
+                await ChannelSession.MixerStreamerConnection.SetHostChannel(ChannelSession.MixerChannel, user.User.channel);
             });
         }
 
@@ -110,7 +111,7 @@ namespace MixItUp.WPF.Windows.Favorites
                     GameTypeSimpleModel game = null;
                     if (user.channel.typeId != null)
                     {
-                        game = await ChannelSession.Connection.GetGameType(user.channel.typeId.GetValueOrDefault());
+                        game = await ChannelSession.MixerStreamerConnection.GetGameType(user.channel.typeId.GetValueOrDefault());
                     }
                     this.groupUsers.Add(new FavoriteUser(user, game, !this.favoriteGroup.IsTeam));
                 }

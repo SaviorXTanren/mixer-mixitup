@@ -2,6 +2,7 @@
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -55,7 +56,7 @@ namespace MixItUp.Base.Model.Overlay
             this.backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            Task.Run(async () => { await this.TimerBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
+            Task.Run(async () => { await this.TimerBackground(this.backgroundThreadCancellationTokenSource.Token); }, this.backgroundThreadCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
             await base.Initialize();
@@ -85,11 +86,11 @@ namespace MixItUp.Base.Model.Overlay
             return replacementSets;
         }
 
-        private async Task TimerBackground()
+        private async Task TimerBackground(CancellationToken token)
         {
             try
             {
-                while (this.timeLeft > 0)
+                while (this.timeLeft > 0 && this.IsInitialized && !token.IsCancellationRequested)
                 {
                     this.SendUpdateRequired();
 
@@ -98,7 +99,7 @@ namespace MixItUp.Base.Model.Overlay
                     this.timeLeft--;
                 }
 
-                if (this.IsInitialized && !this.backgroundThreadCancellationTokenSource.Token.IsCancellationRequested)
+                if (this.IsInitialized && !token.IsCancellationRequested)
                 {
                     if (this.TimerCompleteCommand != null)
                     {

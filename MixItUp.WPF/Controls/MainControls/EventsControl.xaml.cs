@@ -4,7 +4,7 @@ using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Windows.Command;
-using System.Collections.Generic;
+using StreamingClient.Base.Util;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -93,6 +93,10 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     return "Patreon";
                 }
+                else if (this.OtherEventType == OtherEventTypeEnum.StreamlootsCardRedeemed || this.OtherEventType == OtherEventTypeEnum.StreamlootsPackGifted || this.OtherEventType == OtherEventTypeEnum.StreamlootsPackPurchased)
+                {
+                    return "Streamloots";
+                }
                 return "Mixer";
             }
         }
@@ -146,14 +150,16 @@ namespace MixItUp.WPF.Controls.MainControls
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.MixerUserBan));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.MixerChatMessage));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.StreamlabsDonation));
-            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.GawkBoxDonation));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TiltifyDonation));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.ExtraLifeDonation));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TipeeeStreamDonation));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TreatStreamDonation));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.StreamJarDonation));
-            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TwitterStreamTweetRetweet));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.PatreonSubscribed));
+            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.StreamlootsCardRedeemed));
+            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.StreamlootsPackPurchased));
+            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.StreamlootsPackGifted));
+            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TwitterStreamTweetRetweet));
         }
 
         private EventCommandItem GetEventCommand(ConstellationEventTypeEnum eventType)

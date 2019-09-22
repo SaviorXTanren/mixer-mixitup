@@ -1,5 +1,5 @@
-﻿using Mixer.Base.Model.OAuth;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using StreamingClient.Base.Model.OAuth;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +37,7 @@ namespace MixItUp.Base.Services
             this.Links = new List<string>();
         }
 
-        public bool IsStreamTweet { get { return this.Links.Any(l => l.ToLower().Contains(string.Format("mixer.com/{0}", ChannelSession.Channel.token.ToLower()))); } }
+        public bool IsStreamTweet { get { return this.Links.Any(l => l.ToLower().Contains(string.Format("mixer.com/{0}", ChannelSession.MixerChannel.token.ToLower()))); } }
     }
 
     public interface ITwitterService

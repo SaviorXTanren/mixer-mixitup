@@ -1,7 +1,10 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Actions;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Chat;
+using MixItUp.Base.ViewModel.Chat.Mixer;
 using MixItUp.Base.ViewModel.User;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,6 +42,10 @@ namespace MixItUp.Base.Util
         ModeratorOnly = 30,
         [Name("Emotes & Skills Only")]
         EmotesSkillsOnly = 40,
+        [Name("Skills Only")]
+        SkillsOnly = 41,
+        [Name("Ember Skills Only")]
+        EmberSkillsOnly = 42,
     }
 
     public static class ModerationHelper
@@ -56,12 +63,14 @@ namespace MixItUp.Base.Util
 
         public static async Task<string> ShouldBeModerated(UserViewModel user, string text, bool containsLink = false)
         {
-            if (UserContainerViewModel.SpecialUserAccounts.Contains(user.UserName))
+            string reason = null;
+
+            if (user.IgnoreForQueries)
             {
-                return null;
+                return reason;
             }
 
-            string reason = await ShouldBeFilteredWordModerated(user, text);
+            reason = await ShouldBeFilteredWordModerated(user, text);
             if (!string.IsNullOrEmpty(reason))
             {
                 if (ChannelSession.Settings.ModerationFilteredWordsApplyStrikes)
@@ -91,7 +100,7 @@ namespace MixItUp.Base.Util
                 return reason;
             }
 
-            return null;
+            return reason;
         }
 
         public static async Task<string> ShouldBeFilteredWordModerated(UserViewModel user, string text)
@@ -123,7 +132,7 @@ namespace MixItUp.Base.Util
                 {
                     if (Regex.IsMatch(text, string.Format(BannedWordRegexFormat, word), RegexOptions.IgnoreCase))
                     {
-                        await ChannelSession.Chat.BanUser(user);
+                        await ChannelSession.Services.Chat.BanUser(user);
                         return "The following word is banned: " + word;
                     }
                 }
@@ -204,7 +213,7 @@ namespace MixItUp.Base.Util
             return null;
         }
 
-        public static bool MeetsChatInteractiveParticipationRequirement(UserViewModel user)
+        public static bool MeetsChatInteractiveParticipationRequirement(UserViewModel user, ChatMessageViewModel message = null)
         {
             if (ChannelSession.Settings.ModerationChatInteractiveParticipation != ModerationChatInteractiveParticipationEnum.None)
             {
@@ -213,7 +222,7 @@ namespace MixItUp.Base.Util
                     return false;
                 }
 
-                if (UserContainerViewModel.SpecialUserAccounts.Contains(user.UserName))
+                if (user.IgnoreForQueries)
                 {
                     return true;
                 }
@@ -284,19 +293,22 @@ namespace MixItUp.Base.Util
                 {
                     return false;
                 }
-            }
-            return true;
-        }
 
-        public static bool MeetsChatEmoteSkillsOnlyParticipationRequirement(UserViewModel user, ChatMessageViewModel message)
-        {
-            if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.EmotesSkillsOnly)
-            {
-                if (user.HasPermissionsTo(ChannelSession.Settings.ModerationChatInteractiveParticipationExcempt))
+                if (message != null)
                 {
-                    return true;
+                    if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.EmotesSkillsOnly)
+                    {
+                        return message.ContainsOnlyEmotes() || message is MixerSkillChatMessageViewModel;
+                    }
+                    else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.SkillsOnly)
+                    {
+                        return message is MixerSkillChatMessageViewModel;
+                    }
+                    else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.EmberSkillsOnly)
+                    {
+                        return message is MixerSkillChatMessageViewModel && ((MixerSkillChatMessageViewModel)message).Skill.IsEmbersSkill;
+                    }
                 }
-                return message.IsAlert || message.IsChatSkill || message.IsSkill || message.ContainsOnlyEmotes();
             }
             return true;
         }
@@ -321,6 +333,14 @@ namespace MixItUp.Base.Util
                 else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.EmotesSkillsOnly)
                 {
                     reason = "Emotes & Skills";
+                }
+                else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.SkillsOnly)
+                {
+                    reason = "Skills";
+                }
+                else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.EmberSkillsOnly)
+                {
+                    reason = "Ember Skills";
                 }
                 else if(ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountHour)
                 {
@@ -353,11 +373,11 @@ namespace MixItUp.Base.Util
 
                 if (isChat)
                 {
-                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("Your message has been deleted because only {0} can participate currently.", reason));
+                    await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("Your message has been deleted because only {0} can participate currently.", reason));
                 }
                 else if (isInteractive)
                 {
-                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("Your interactive selection has been ignored because only {0} can participate currently.", reason));
+                    await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("Your interactive selection has been ignored because only {0} can participate currently.", reason));
                 }
             }
         }

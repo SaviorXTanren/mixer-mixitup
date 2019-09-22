@@ -4,6 +4,7 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Util;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -119,6 +120,7 @@ namespace MixItUp.WPF.Controls.Games
             this.Requirements.CooldownRequirement.SetCooldownRequirement(this.existingCommand.Requirements.Cooldown);
             this.Requirements.CurrencyRankInventoryRequirement.RankRequirement.SetCurrencyRequirement(this.existingCommand.Requirements.Rank);
             this.Requirements.CurrencyRankInventoryRequirement.InventoryRequirement.SetInventoryRequirement(this.existingCommand.Requirements.Inventory);
+            this.Requirements.SettingsRequirement.SetSettingsRequirement(this.existingCommand.Requirements.Settings);
         }
 
         public async Task<bool> Validate()

@@ -2,6 +2,7 @@
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -102,9 +103,9 @@ namespace MixItUp.Base.Actions
                     {
                         if (this.ResponseAction == TranslationResponseActionTypeEnum.Chat)
                         {
-                            if (ChannelSession.Chat != null)
+                            if (ChannelSession.Services.Chat != null)
                             {
-                                await ChannelSession.Chat.SendMessage(await this.ReplaceSpecialIdentifiers(this.ResponseChatText, user, arguments, translationResult));
+                                await ChannelSession.Services.Chat.SendMessage(await this.ReplaceSpecialIdentifiers(this.ResponseChatText, user, arguments, translationResult));
                             }
                         }
                         else if (this.ResponseAction == TranslationResponseActionTypeEnum.Command)

@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Util;
 using MixItUp.WPF.Util;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -36,7 +37,7 @@ namespace MixItUp.WPF.Controls.Services
 
         private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            Process.Start("XSplit");
+            ProcessHelper.LaunchFolder("XSplit");
         }
 
         private async void EnableXSplitConnectionButton_Click(object sender, RoutedEventArgs e)

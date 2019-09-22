@@ -4,18 +4,19 @@ using Mixer.Base.Model.Constellation;
 using Mixer.Base.Model.Patronage;
 using Mixer.Base.Model.Skills;
 using Mixer.Base.Model.User;
-using Mixer.Base.Util;
 using MixItUp.Base.Commands;
-using MixItUp.Base.Model.Skill;
+using MixItUp.Base.Model;
+using MixItUp.Base.Model.Chat;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
+using MixItUp.Base.ViewModel.Chat.Mixer;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,16 +25,16 @@ namespace MixItUp.Base.MixerAPI
 {
     public class ConstellationClientWrapper : MixerWebSocketWrapper
     {
-        public static ConstellationEventType ChannelUpdateEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__update, ChannelSession.Channel.id); } }
-        public static ConstellationEventType ChannelFollowEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__followed, ChannelSession.Channel.id); } }
-        public static ConstellationEventType ChannelHostedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__hosted, ChannelSession.Channel.id); } }
-        public static ConstellationEventType ChannelSubscribedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__subscribed, ChannelSession.Channel.id); } }
-        public static ConstellationEventType ChannelResubscribedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__resubscribed, ChannelSession.Channel.id); } }
-        public static ConstellationEventType ChannelResubscribedSharedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__resubShared, ChannelSession.Channel.id); } }
-        public static ConstellationEventType ChannelSubscriptionGiftedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__subscriptionGifted, ChannelSession.Channel.id); } }
-        public static ConstellationEventType ChannelSkillEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__skill, ChannelSession.Channel.id); } }
-        public static ConstellationEventType ChannelPatronageUpdateEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__patronageUpdate, ChannelSession.Channel.id); } }
-        public static ConstellationEventType ProgressionLevelupEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.progression__id__levelup, ChannelSession.Channel.id); } }
+        public static ConstellationEventType ChannelUpdateEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__update, ChannelSession.MixerChannel.id); } }
+        public static ConstellationEventType ChannelFollowEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__followed, ChannelSession.MixerChannel.id); } }
+        public static ConstellationEventType ChannelHostedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__hosted, ChannelSession.MixerChannel.id); } }
+        public static ConstellationEventType ChannelSubscribedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__subscribed, ChannelSession.MixerChannel.id); } }
+        public static ConstellationEventType ChannelResubscribedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__resubscribed, ChannelSession.MixerChannel.id); } }
+        public static ConstellationEventType ChannelResubscribedSharedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__resubShared, ChannelSession.MixerChannel.id); } }
+        public static ConstellationEventType ChannelSubscriptionGiftedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__subscriptionGifted, ChannelSession.MixerChannel.id); } }
+        public static ConstellationEventType ChannelSkillEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__skill, ChannelSession.MixerChannel.id); } }
+        public static ConstellationEventType ChannelPatronageUpdateEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__patronageUpdate, ChannelSession.MixerChannel.id); } }
+        public static ConstellationEventType ProgressionLevelupEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.progression__id__levelup, ChannelSession.MixerChannel.id); } }
 
         private static readonly List<ConstellationEventTypeEnum> subscribedEvents = new List<ConstellationEventTypeEnum>()
         {
@@ -45,58 +46,33 @@ namespace MixItUp.Base.MixerAPI
 
         public event EventHandler<ConstellationLiveEventModel> OnEventOccurred;
 
+        public LockedDictionary<Guid, MixerSkillPayloadModel> SkillEventsTriggered { get; private set; } = new LockedDictionary<Guid, MixerSkillPayloadModel>();
+
         public ConstellationClient Client { get; private set; }
-
-        public IReadOnlyDictionary<Guid, SkillModel> AvailableSkills { get { return this.availableSkills; } }
-
-        private LockedDictionary<string, LockedHashSet<uint>> userEventTracking = new LockedDictionary<string, LockedHashSet<uint>>();
 
         private List<PatronageMilestoneModel> allPatronageMilestones = new List<PatronageMilestoneModel>();
         private List<PatronageMilestoneModel> remainingPatronageMilestones = new List<PatronageMilestoneModel>();
         private SemaphoreSlim patronageMilestonesSemaphore = new SemaphoreSlim(1);
-
-        private SkillCatalogModel skillCatalog;
-        private Dictionary<Guid, SkillModel> availableSkills = new Dictionary<Guid, SkillModel>();
 
         public ConstellationClientWrapper()
         {
             GlobalEvents.OnSparkUseOccurred += GlobalEvents_OnSparkUseOccurred;
             GlobalEvents.OnEmberUseOccurred += GlobalEvents_OnEmberUseOccurred;
             GlobalEvents.OnSkillUseOccurred += GlobalEvents_OnSkillUseOccurred;
-            GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
         }
 
         public async Task<bool> Connect()
         {
-            PatronageStatusModel patronageStatus = await ChannelSession.Connection.GetPatronageStatus(ChannelSession.Channel);
+            PatronageStatusModel patronageStatus = await ChannelSession.MixerStreamerConnection.GetPatronageStatus(ChannelSession.MixerChannel);
             if (patronageStatus != null)
             {
-                PatronagePeriodModel patronagePeriod = await ChannelSession.Connection.GetPatronagePeriod(patronageStatus);
+                PatronagePeriodModel patronagePeriod = await ChannelSession.MixerStreamerConnection.GetPatronagePeriod(patronageStatus);
                 if (patronagePeriod != null)
                 {
                     this.allPatronageMilestones = new List<PatronageMilestoneModel>(patronagePeriod.milestoneGroups.SelectMany(mg => mg.milestones));
                     this.remainingPatronageMilestones = new List<PatronageMilestoneModel>(this.allPatronageMilestones.Where(m => m.target > patronageStatus.patronageEarned));
                 }
             }
-
-            // Hacky workaround until auth issue is fixed for Skill Catalog
-            // this.skillCatalog = await ChannelSession.Connection.GetSkillCatalog(ChannelSession.Channel);
-            try
-            {
-                using (HttpClient httpClient = new HttpClient())
-                {
-                    string data = await httpClient.GetStringAsync("https://raw.githubusercontent.com/SaviorXTanren/mixer-mixitup/master/MixItUp.Base/SkillsCatalogData.txt");
-                    if (!string.IsNullOrEmpty(data))
-                    {
-                        this.skillCatalog = SerializerHelper.DeserializeFromString<SkillCatalogModel>(data);
-                        if (this.skillCatalog != null)
-                        {
-                            this.availableSkills = new Dictionary<Guid, SkillModel>(this.skillCatalog.skills.ToDictionary(s => s.id, s => s));
-                        }
-                    }
-                }
-            }
-            catch (Exception ex) { Util.Logger.Log(ex); }
 
             return await this.AttemptConnect();
         }
@@ -129,54 +105,9 @@ namespace MixItUp.Base.MixerAPI
             });
         }
 
-        public bool CanUserRunEvent(UserViewModel user, string eventName)
-        {
-            return (!this.userEventTracking.ContainsKey(eventName) || !this.userEventTracking[eventName].Contains(user.ID));
-        }
-
-        public void LogUserRunEvent(UserViewModel user, string eventName)
-        {
-            if (!this.userEventTracking.ContainsKey(eventName))
-            {
-                this.userEventTracking[eventName] = new LockedHashSet<uint>();
-            }
-
-            if (user != null)
-            {
-                this.userEventTracking[eventName].Add(user.ID);
-            }
-        }
-
-        public EventCommand FindMatchingEventCommand(string eventDetails)
-        {
-            foreach (EventCommand command in ChannelSession.Settings.EventCommands)
-            {
-                if (command.MatchesEvent(eventDetails))
-                {
-                    return command;
-                }
-            }
-            return null;
-        }
-
-        public async Task RunEventCommand(EventCommand command, UserViewModel user, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
-        {
-            if (command != null)
-            {
-                if (user != null)
-                {
-                    await command.Perform(user, arguments: arguments, extraSpecialIdentifiers: extraSpecialIdentifiers);
-                }
-                else
-                {
-                    await command.Perform(await ChannelSession.GetCurrentUser(), arguments: arguments, extraSpecialIdentifiers: extraSpecialIdentifiers);
-                }
-            }
-        }
-
         protected override async Task<bool> ConnectInternal()
         {
-            this.Client = await this.RunAsync(ConstellationClient.Create(ChannelSession.Connection.Connection));
+            this.Client = await this.RunAsync(ConstellationClient.Create(ChannelSession.MixerStreamerConnection.Connection));
             return await this.RunAsync(async () =>
             {
                 if (this.Client != null)
@@ -195,7 +126,7 @@ namespace MixItUp.Base.MixerAPI
                         }
                         this.Client.OnSubscribedEventOccurred += ConstellationClient_OnSubscribedEventOccurred;
 
-                        await this.SubscribeToEvents(ConstellationClientWrapper.subscribedEvents.Select(e => new ConstellationEventType(e, ChannelSession.Channel.id)));
+                        await this.SubscribeToEvents(ConstellationClientWrapper.subscribedEvents.Select(e => new ConstellationEventType(e, ChannelSession.MixerChannel.id)));
 
                         return true;
                     }
@@ -215,7 +146,12 @@ namespace MixItUp.Base.MixerAPI
                 JToken payloadToken;
                 if (e.payload.TryGetValue("user", out payloadToken))
                 {
-                    user = new UserViewModel(payloadToken.ToObject<UserModel>());
+                    UserModel userPayload = payloadToken.ToObject<UserModel>();
+                    user = ChannelSession.Services.User.GetUserByID(userPayload.id.ToString());
+                    if (user == null)
+                    {
+                        user = new UserViewModel(userPayload);
+                    }
 
                     JToken subscribeStartToken;
                     if (e.payload.TryGetValue("since", out subscribeStartToken))
@@ -231,7 +167,23 @@ namespace MixItUp.Base.MixerAPI
                 else if (e.payload.TryGetValue("hoster", out payloadToken))
                 {
                     channel = payloadToken.ToObject<ChannelModel>();
-                    user = new UserViewModel(channel.userId, channel.token);
+                    user = ChannelSession.Services.User.GetUserByID(channel.userId.ToString());
+                    if (user == null)
+                    {
+                        user = new UserViewModel(channel.userId, channel.token);
+                    }
+                }
+                else if (e.payload.TryGetValue("userId", out JToken userID))
+                {
+                    user = ChannelSession.Services.User.GetUserByID(userID.ToObject<uint>().ToString());
+                    if (user == null)
+                    {
+                        UserModel userModel = await ChannelSession.MixerStreamerConnection.GetUser(userID.ToObject<uint>());
+                        if (userModel != null)
+                        {
+                            user = new UserViewModel(userModel);
+                        }
+                    }
                 }
 
                 if (user != null)
@@ -247,18 +199,16 @@ namespace MixItUp.Base.MixerAPI
                         user = await ChannelSession.GetCurrentUser();
                         if (online)
                         {
-                            if (this.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChannelStreamStart)))
+                            if (EventCommand.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChannelStreamStart)))
                             {
-                                this.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChannelStreamStart));
-                                await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChannelStreamStart)), user);
+                                await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChannelStreamStart), user);
                             }
                         }
                         else
                         {
-                            if (this.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChannelStreamStop)))
+                            if (EventCommand.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChannelStreamStop)))
                             {
-                                this.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChannelStreamStop));
-                                await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChannelStreamStop)), user);
+                                await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChannelStreamStop), user);
                             }
                         }
                     }
@@ -267,28 +217,27 @@ namespace MixItUp.Base.MixerAPI
                 {
                     if (followed.GetValueOrDefault())
                     {
-                        if (this.CanUserRunEvent(user, ConstellationClientWrapper.ChannelFollowEvent.ToString()))
+                        if (EventCommand.CanUserRunEvent(user, ConstellationClientWrapper.ChannelFollowEvent.ToString()))
                         {
-                            this.LogUserRunEvent(user, ConstellationClientWrapper.ChannelFollowEvent.ToString());
-
                             foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                             {
                                 user.Data.AddCurrencyAmount(currency, currency.OnFollowBonus);
                             }
 
-                            await this.RunEventCommand(this.FindMatchingEventCommand(e.channel), user);
-                        }
+                            await EventCommand.FindAndRunEventCommand(e.channel, user);
 
+                            await this.AddAlertChatMessage(string.Format("{0} Followed", user.UserName));
+                        }
                         GlobalEvents.FollowOccurred(user);
                     }
                     else
                     {
-                        if (this.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserUnfollow)))
+                        if (EventCommand.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserUnfollow)))
                         {
-                            this.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserUnfollow));
-                            await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserUnfollow)), user);
-                        }
+                            await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserUnfollow), user);
 
+                            await this.AddAlertChatMessage(string.Format("{0} Unfollowed", user.UserName));
+                        }
                         GlobalEvents.UnfollowOccurred(user);
                     }
                 }
@@ -300,38 +249,34 @@ namespace MixItUp.Base.MixerAPI
                         viewerCount = (int)channel.viewersCurrent;
                     }
 
-                    if (this.CanUserRunEvent(user, ConstellationClientWrapper.ChannelHostedEvent.ToString()))
+                    if (EventCommand.CanUserRunEvent(user, ConstellationClientWrapper.ChannelHostedEvent.ToString()))
                     {
-                        this.LogUserRunEvent(user, ConstellationClientWrapper.ChannelHostedEvent.ToString());
-
                         foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                         {
                             user.Data.AddCurrencyAmount(currency, currency.OnHostBonus);
                         }
 
-                        EventCommand command = this.FindMatchingEventCommand(e.channel);
-                        if (command != null)
-                        {
-                            Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>() { { "hostviewercount", viewerCount.ToString() } };
-                            await this.RunEventCommand(command, user, extraSpecialIdentifiers: specialIdentifiers);
-                        }
+                        Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>() { { "hostviewercount", viewerCount.ToString() } };
+                        await EventCommand.FindAndRunEventCommand(e.channel, user, extraSpecialIdentifiers: specialIdentifiers);
+
+                        await this.AddAlertChatMessage(string.Format("{0} Hosted With {1} Viewers", user.UserName, viewerCount));
 
                         GlobalEvents.HostOccurred(new Tuple<UserViewModel, int>(user, viewerCount));
                     }
                 }
                 else if (e.channel.Equals(ConstellationClientWrapper.ChannelSubscribedEvent.ToString()))
                 {
-                    if (this.CanUserRunEvent(user, ConstellationClientWrapper.ChannelSubscribedEvent.ToString()))
+                    if (EventCommand.CanUserRunEvent(user, ConstellationClientWrapper.ChannelSubscribedEvent.ToString()))
                     {
-                        this.LogUserRunEvent(user, ConstellationClientWrapper.ChannelSubscribedEvent.ToString());
-
                         user.MixerSubscribeDate = DateTimeOffset.Now;
                         foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                         {
                             user.Data.AddCurrencyAmount(currency, currency.OnSubscribeBonus);
                         }
 
-                        await this.RunEventCommand(this.FindMatchingEventCommand(e.channel), user);
+                        await EventCommand.FindAndRunEventCommand(e.channel, user);
+
+                        await this.AddAlertChatMessage(string.Format("{0} Subscribed", user.UserName));
                     }
 
                     GlobalEvents.SubscribeOccurred(user);
@@ -344,17 +289,17 @@ namespace MixItUp.Base.MixerAPI
                         resubMonths = (int)resubMonthsToken;
                     }
 
-                    if (this.CanUserRunEvent(user, ConstellationClientWrapper.ChannelResubscribedEvent.ToString()))
+                    if (EventCommand.CanUserRunEvent(user, ConstellationClientWrapper.ChannelResubscribedEvent.ToString()))
                     {
-                        this.LogUserRunEvent(user, ConstellationClientWrapper.ChannelResubscribedEvent.ToString());
-
                         foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                         {
                             user.Data.AddCurrencyAmount(currency, currency.OnSubscribeBonus);
                         }
 
                         Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>() { { "usersubmonths", resubMonths.ToString() } };
-                        await this.RunEventCommand(this.FindMatchingEventCommand(ConstellationClientWrapper.ChannelResubscribedEvent.ToString()), user, extraSpecialIdentifiers: specialIdentifiers);
+                        await EventCommand.FindAndRunEventCommand(ConstellationClientWrapper.ChannelResubscribedEvent.ToString(), user, extraSpecialIdentifiers: specialIdentifiers);
+
+                        await this.AddAlertChatMessage(string.Format("{0} Re-Subscribed For {1} Months", user.UserName, resubMonths));
 
                         GlobalEvents.ResubscribeOccurred(new Tuple<UserViewModel, int>(user, resubMonths));
                     }
@@ -363,18 +308,16 @@ namespace MixItUp.Base.MixerAPI
                 {
                     if (e.payload.TryGetValue("gifterId", out JToken gifterID) && e.payload.TryGetValue("giftReceiverId", out JToken receiverID))
                     {
-                        UserModel gifterUserModel = await ChannelSession.Connection.GetUser(gifterID.ToObject<uint>());
-                        UserModel receiverUserModel = await ChannelSession.Connection.GetUser(receiverID.ToObject<uint>());
+                        UserModel gifterUserModel = await ChannelSession.MixerStreamerConnection.GetUser(gifterID.ToObject<uint>());
+                        UserModel receiverUserModel = await ChannelSession.MixerStreamerConnection.GetUser(receiverID.ToObject<uint>());
                         if (gifterUserModel != null && receiverUserModel != null)
                         {
                             UserViewModel gifterUser = new UserViewModel(gifterUserModel);
                             UserViewModel receiverUser = new UserViewModel(receiverUserModel);
 
-                            EventCommand command = this.FindMatchingEventCommand(e.channel);
-                            if (command != null)
-                            {
-                                await this.RunEventCommand(command, gifterUser, arguments: new List<string>() { receiverUser.UserName });
-                            }
+                            await EventCommand.FindAndRunEventCommand(e.channel, gifterUser, arguments: new List<string>() { receiverUser.UserName });
+
+                            await this.AddAlertChatMessage(string.Format("{0} Gifted A Subscription To {1}", gifterUser.UserName, receiverUser.UserName));
 
                             GlobalEvents.SubscriptionGiftedOccurred(gifterUser, receiverUser);
                         }
@@ -382,91 +325,33 @@ namespace MixItUp.Base.MixerAPI
                 }
                 else if (e.channel.Equals(ConstellationClientWrapper.ProgressionLevelupEvent.ToString()))
                 {
-                    if (e.payload.TryGetValue("userId", out JToken userID))
+                    UserFanProgressionModel fanProgression = e.payload.ToObject<UserFanProgressionModel>();
+                    if (fanProgression != null)
                     {
-                        UserModel userModel = await ChannelSession.Connection.GetUser(userID.ToObject<uint>());
-                        if (userModel != null)
+                        user.FanProgression = fanProgression;
+                        Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
+                                {
+                                    { "userfanprogressionnext", fanProgression.level.nextLevelXp.ToString() },
+                                    { "userfanprogressionrank", fanProgression.level.level.ToString() },
+                                    { "userfanprogressioncolor", fanProgression.level.color.ToString() },
+                                    { "userfanprogressionimage", fanProgression.level.LargeGIFAssetURL.ToString() },
+                                    { "userfanprogression", fanProgression.level.currentXp.ToString() },
+                                };
+
+                        await EventCommand.FindAndRunEventCommand(e.channel, user, extraSpecialIdentifiers: specialIdentifiers);
+
+                        foreach (UserCurrencyViewModel fanProgressionCurrency in ChannelSession.Settings.Currencies.Values.Where(c => c.IsTrackingFanProgression))
                         {
-                            UserViewModel userViewModel = new UserViewModel(userModel);
-                            UserFanProgressionModel fanProgression = e.payload.ToObject<UserFanProgressionModel>();
-                            if (fanProgression != null)
-                            {
-                                userViewModel.FanProgression = fanProgression;
-                                EventCommand command = this.FindMatchingEventCommand(e.channel);
-                                if (command != null)
-                                {
-                                    Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
-                                    {
-                                        { "userfanprogressionnext", fanProgression.level.nextLevelXp.ToString() },
-                                        { "userfanprogressionrank", fanProgression.level.level.ToString() },
-                                        { "userfanprogressioncolor", fanProgression.level.color.ToString() },
-                                        { "userfanprogressionimage", fanProgression.level.LargeGIFAssetURL.ToString() },
-                                        { "userfanprogression", fanProgression.level.currentXp.ToString() },
-                                    };
-                                    await this.RunEventCommand(command, userViewModel, extraSpecialIdentifiers: specialIdentifiers);
-                                }
-
-                                foreach (UserCurrencyViewModel fanProgressionCurrency in ChannelSession.Settings.Currencies.Values.Where(c => c.IsTrackingFanProgression))
-                                {
-                                    userViewModel.Data.SetCurrencyAmount(fanProgressionCurrency, (int)fanProgression.level.level);
-                                }
-
-                                GlobalEvents.ProgressionLevelUpOccurred(userViewModel);
-                            }
+                            user.Data.SetCurrencyAmount(fanProgressionCurrency, (int)fanProgression.level.level);
                         }
+
+                        GlobalEvents.ProgressionLevelUpOccurred(user);
                     }
                 }
                 else if (e.channel.Equals(ConstellationClientWrapper.ChannelSkillEvent.ToString()))
                 {
-                    if (e.payload["triggeringUserId"] != null)
-                    {
-                        uint userID = e.payload["triggeringUserId"].ToObject<uint>();
-                        user = await ChannelSession.ActiveUsers.GetUserByID(userID);
-                        if (user != null)
-                        {
-                            user = new UserViewModel(await ChannelSession.Connection.GetUser(userID));
-                        }
-                    }
-
-                    SkillModel skill = null;
-                    if (e.payload["skillId"] != null)
-                    {
-                        Guid skillID = e.payload["skillId"].ToObject<Guid>();
-                        if (this.availableSkills.ContainsKey(skillID))
-                        {
-                            skill = this.availableSkills[skillID];
-                        }
-                    }
-
-                    if (skill == null)
-                    {
-                        if (e.payload["manifest"] != null && e.payload["manifest"]["name"] != null)
-                        {
-                            string skillName = e.payload["manifest"]["name"].ToString();
-                            if (skillName.Equals("beachball"))
-                            {
-                                skill = this.availableSkills.Values.FirstOrDefault(s => s.name.Equals("Beach Ball"));
-                            }
-                        }
-                    }
-
-                    uint price = e.payload["price"].ToObject<uint>();
-                    if (user != null)
-                    {
-                        if (price > 0)
-                        {
-                            GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, int>(user, (int)price));
-                        }
-
-                        if (skill != null)
-                        {
-                            JObject manifest = (JObject)e.payload["manifest"];
-                            JObject parameters = (JObject)e.payload["parameters"];
-                            SkillInstanceModel skillInstance = new SkillInstanceModel(skill, manifest, parameters);
-
-                            GlobalEvents.SkillUseOccurred(new SkillUsageModel(user, skillInstance));
-                        }
-                    }
+                    MixerSkillPayloadModel skillPayload = e.payload.ToObject<MixerSkillPayloadModel>();
+                    this.SkillEventsTriggered[skillPayload.executionId] = skillPayload;
                 }
                 else if (e.channel.Equals(ConstellationClientWrapper.ChannelPatronageUpdateEvent.ToString()))
                 {
@@ -490,9 +375,9 @@ namespace MixItUp.Base.MixerAPI
                                 Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
                                 {
                                     { SpecialIdentifierStringBuilder.MilestoneSpecialIdentifierHeader + "amount", milestoneReached.target.ToString() },
-                                    { SpecialIdentifierStringBuilder.MilestoneSpecialIdentifierHeader + "reward", milestoneReached.DollarAmountText() },
+                                    { SpecialIdentifierStringBuilder.MilestoneSpecialIdentifierHeader + "reward", milestoneReached.PercentageAmountText() },
                                 };
-                                await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerMilestoneReached)), await ChannelSession.GetCurrentUser(), extraSpecialIdentifiers: specialIdentifiers);
+                                await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerMilestoneReached), await ChannelSession.GetCurrentUser(), extraSpecialIdentifiers: specialIdentifiers);
                             }
                         }
                     }
@@ -503,7 +388,7 @@ namespace MixItUp.Base.MixerAPI
                     this.OnEventOccurred(this, e);
                 }
             }
-            catch (Exception ex) { Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
         }
 
         private async void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, int> sparkUsage)
@@ -518,7 +403,7 @@ namespace MixItUp.Base.MixerAPI
                 { "sparkamount", sparkUsage.Item2.ToString() },
             };
 
-            await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerSparksUsed)), sparkUsage.Item1, extraSpecialIdentifiers: specialIdentifiers);
+            await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerSparksUsed), sparkUsage.Item1, extraSpecialIdentifiers: specialIdentifiers);
         }
 
         private async void GlobalEvents_OnEmberUseOccurred(object sender, UserEmberUsageModel emberUsage)
@@ -533,24 +418,21 @@ namespace MixItUp.Base.MixerAPI
                 { "emberamount", emberUsage.Amount.ToString() },
             };
 
-            await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerEmbersUsed)), emberUsage.User, extraSpecialIdentifiers: specialIdentifiers);
+            await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerEmbersUsed), emberUsage.User, extraSpecialIdentifiers: specialIdentifiers);
         }
 
-        private async void GlobalEvents_OnSkillUseOccurred(object sender, SkillUsageModel skill)
+        private async void GlobalEvents_OnSkillUseOccurred(object sender, MixerSkillChatMessageViewModel skill)
         {
-            await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerSkillUsed)), skill.User, extraSpecialIdentifiers: skill.GetSpecialIdentifiers());
+            Dictionary<string, string> specialIdentifiers = skill.Skill.GetSpecialIdentifiers();
+            specialIdentifiers["skillmessage"] = skill.PlainTextMessage;
+            await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerSkillUsed), skill.User, extraSpecialIdentifiers: specialIdentifiers);
         }
 
-        private async void GlobalEvents_OnChatMessageReceived(object sender, ChatMessageViewModel message)
+        private async Task AddAlertChatMessage(string message)
         {
-            if (!message.IsWhisper && !message.IsAlert)
+            if (ChannelSession.Settings.ChatShowEventAlerts)
             {
-                Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
-                {
-                    { "message", message.Message },
-                };
-
-                await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChatMessage)), message.User, extraSpecialIdentifiers: specialIdentifiers);
+                await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer, message, ChannelSession.Settings.ChatEventAlertsColorScheme));
             }
         }
 

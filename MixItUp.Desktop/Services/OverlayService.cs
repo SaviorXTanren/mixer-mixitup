@@ -1,14 +1,16 @@
 ﻿using Mixer.Base.Model.Client;
-using Mixer.Base.Web;
 using MixItUp.Base;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Util;
+using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.WebSockets;
 using System.Security.Principal;
@@ -125,8 +127,8 @@ namespace MixItUp.Overlay
             this.webSocketServer.OnConnectedOccurred -= WebSocketServer_OnConnectedOccurred;
             this.webSocketServer.OnDisconnectOccurred -= WebSocketServer_OnDisconnectOccurred;
 
-            this.httpListenerServer.End();
-            await this.webSocketServer.End();
+            this.httpListenerServer.Stop();
+            await this.webSocketServer.Stop();
         }
 
         public async Task<int> TestConnection() { return await this.webSocketServer.TestConnection(); }
@@ -141,7 +143,7 @@ namespace MixItUp.Overlay
             this.isBatching = false;
             if (batchPackets.Count > 0)
             {
-                await this.webSocketServer.Send(new OverlayPacket("Batch", JArray.FromObject(this.batchPackets)));
+                await this.webSocketServer.Send(new OverlayPacket("Batch", JArray.FromObject(this.batchPackets.ToList())));
             }
             this.batchPackets.Clear();
         }
@@ -235,7 +237,7 @@ namespace MixItUp.Overlay
         }
     }
 
-    public class OverlayHttpListenerServer : HttpListenerServerBase
+    public class OverlayHttpListenerServer : LocalHttpListenerServer
     {
         private const string OverlayFolderPath = "Overlay\\";
         private const string OverlayWebpageFilePath = OverlayFolderPath + "OverlayPage.html";
@@ -296,7 +298,7 @@ namespace MixItUp.Overlay
                         {
                             await listenerContext.Response.OutputStream.WriteAsync(fileData, 0, fileData.Length);
                         }
-                        catch (HttpListenerException ex) { Logger.LogDiagnostic(ex); }
+                        catch (HttpListenerException ex) { Logger.Log(LogLevel.Debug, ex); }
                         catch (Exception ex) { Logger.Log(ex); }
                     }
                 }

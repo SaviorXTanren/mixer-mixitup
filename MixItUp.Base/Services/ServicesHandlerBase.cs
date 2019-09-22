@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using MixItUp.Base.Services.Mixer;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
@@ -7,6 +8,10 @@ namespace MixItUp.Base.Services
         public IMixItUpService MixItUpService { get; protected set; }
 
         public IMixerStatusService MixerStatus { get; protected set; }
+
+        public IUserService User { get; protected set; }
+
+        public IChatService Chat { get; protected set; }
 
         public ISettingsService Settings { get; protected set; }
         public IFileService FileService { get; protected set; }
@@ -34,13 +39,14 @@ namespace MixItUp.Base.Services
         public ITiltifyService Tiltify { get; protected set; }
         public IExtraLifeService ExtraLife { get; protected set; }
         public ITelemetryService Telemetry { get; protected set; }
-        public IScoutService Scout { get; protected set; }
         public ITipeeeStreamService TipeeeStream { get; protected set; }
         public ITreatStreamService TreatStream { get; protected set; }
         public IStreamJarService StreamJar { get; protected set; }
         public IPatreonService Patreon { get; protected set; }
         public IOvrStreamService OvrStreamWebsocket { get; protected set; }
         public IIFTTTService IFTTT { get; protected set; }
+        public IStreamlootsService Streamloots { get; protected set; }
+        public IMixrElixrService MixrElixr { get; protected set; }
 
         public abstract Task Close();
 
@@ -98,5 +104,8 @@ namespace MixItUp.Base.Services
 
         public abstract Task<bool> InitializeIFTTT(string key = null);
         public abstract Task DisconnectIFTTT();
+
+        public abstract Task<bool> InitializeStreamloots(string streamlootsID = null);
+        public abstract Task DisconnectStreamloots();
     }
 }

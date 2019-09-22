@@ -2,10 +2,11 @@
 using Mixer.Base.Clients;
 using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.User;
-using Mixer.Base.Util;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -147,7 +148,7 @@ namespace MixItUp.AutoHoster
                 {
                     this.connection = await MixerConnection.ConnectViaOAuthToken(this.settings.OAuthToken);
                 }
-                catch (Exception ex) { Base.Util.Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
             }
             else
             {
@@ -160,9 +161,9 @@ namespace MixItUp.AutoHoster
                 {
                     this.connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ClientID,
                         new List<OAuthClientScopeEnum>() { OAuthClientScopeEnum.channel__details__self, OAuthClientScopeEnum.channel__update__self, OAuthClientScopeEnum.chat__connect, OAuthClientScopeEnum.chat__chat, OAuthClientScopeEnum.chat__whisper },
-                        loginSuccessHtmlPageFilePath: "LoginRedirectPage.html");
+                        successResponse: OAuthServiceBase.LoginRedirectPageHTML);
                 }
-                catch (Exception ex) { Base.Util.Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
                 if (this.connection == null)
                 {
                     return false;
@@ -222,6 +223,8 @@ namespace MixItUp.AutoHoster
 
                 if (this.IsAutoHostingEnabled && (this.CurrentlyHosting == null || !this.CurrentlyHosting.IsOnline || (this.settings.MaxHostLength > 0 && this.totalMinutesHosted >= this.settings.MaxHostLength)))
                 {
+                    Logger.Log("Attempting to find new host...");
+
                     if (hostOrder == HostingOrderEnum.Random)
                     {
                         if (this.CurrentlyHosting != null)
@@ -249,6 +252,10 @@ namespace MixItUp.AutoHoster
                                     ChannelModel updatedChannel = await this.connection.Channels.SetHostChannel(currentUser.channel, channelModel);
                                     if (updatedChannel.hosteeId.GetValueOrDefault() == channelModel.id)
                                     {
+                                        Logger.Log("Now hosting " + channelModel.token);
+
+                                        await this.SaveData();
+
                                         this.CurrentlyHosting = channel;
                                         this.totalMinutesHosted = 0;
 
@@ -275,8 +282,6 @@ namespace MixItUp.AutoHoster
             {
                 this.totalMinutesHosted = 0;
             }
-
-            await this.SaveData();
         }
 
         public async Task<PrivatePopulatedUserModel> GetCurrentUser() { return await this.connection.Users.GetCurrentUser(); }
@@ -340,7 +345,7 @@ namespace MixItUp.AutoHoster
             }
             catch (Exception ex)
             {
-                Base.Util.Logger.Log(ex);
+                Logger.Log(ex);
             }
         }
 

@@ -7,6 +7,7 @@ using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Store;
 using MixItUp.WPF.Util;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -85,6 +86,10 @@ namespace MixItUp.WPF.Windows.Store
                     case OtherEventTypeEnum.StreamlabsDonation:
                     case OtherEventTypeEnum.GawkBoxDonation:
                     case OtherEventTypeEnum.TiltifyDonation:
+                    case OtherEventTypeEnum.ExtraLifeDonation:
+                    case OtherEventTypeEnum.StreamJarDonation:
+                    case OtherEventTypeEnum.TipeeeStreamDonation:
+                    case OtherEventTypeEnum.TreatStreamDonation:
                         this.Tag4ComboBox.SelectedItem = StoreListingModel.DonationTag;
                         break;
                 }

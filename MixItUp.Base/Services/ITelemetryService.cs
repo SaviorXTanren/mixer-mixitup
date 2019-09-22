@@ -1,4 +1,4 @@
-﻿using Mixer.Base.Model.Interactive;
+﻿using Mixer.Base.Model.MixPlay;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.SongRequests;
@@ -13,7 +13,7 @@ namespace MixItUp.Base.Services
         void TrackLogin(string userID, bool isStreamer, bool isPartner);
         void TrackCommand(CommandTypeEnum type, bool isBasic);
         void TrackAction(ActionTypeEnum type);
-        void TrackInteractiveGame(InteractiveGameModel game);
+        void TrackInteractiveGame(MixPlayGameModel game);
         void TrackSongRequest(SongRequestServiceTypeEnum songService);
 
         void TrackRemoteAuthentication(Guid clientID);

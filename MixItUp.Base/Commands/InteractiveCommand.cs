@@ -1,11 +1,11 @@
-﻿using Mixer.Base.Model.Interactive;
-using Mixer.Base.Util;
+﻿using Mixer.Base.Model.MixPlay;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,7 +47,7 @@ namespace MixItUp.Base.Commands
         public string SceneID { get; set; }
 
         [JsonProperty]
-        public InteractiveControlModel Control { get; set; }
+        public MixPlayControlModel Control { get; set; }
 
         [JsonProperty]
         [Obsolete]
@@ -61,7 +61,7 @@ namespace MixItUp.Base.Commands
 
         public InteractiveCommand() { }
 
-        protected InteractiveCommand(InteractiveGameModel game, InteractiveSceneModel scene, InteractiveControlModel control, string command, RequirementViewModel requirements)
+        protected InteractiveCommand(MixPlayGameModel game, MixPlaySceneModel scene, MixPlayControlModel control, string command, RequirementViewModel requirements)
             : base(control.controlID, CommandTypeEnum.Interactive, command, requirements)
         {
             this.GameID = game.id;
@@ -72,7 +72,7 @@ namespace MixItUp.Base.Commands
         [JsonIgnore]
         public virtual string EventTypeString { get { return string.Empty; } }
 
-        public void UpdateWithLatestControl(InteractiveControlModel control) { this.Control = control; }
+        public void UpdateWithLatestControl(MixPlayControlModel control) { this.Control = control; }
     }
 
     public class InteractiveButtonCommand : InteractiveCommand
@@ -90,11 +90,11 @@ namespace MixItUp.Base.Commands
 
         public InteractiveButtonCommand() { }
 
-        public InteractiveButtonCommand(InteractiveGameModel game, InteractiveSceneModel scene, InteractiveButtonControlModel control, InteractiveButtonCommandTriggerType eventType, RequirementViewModel requirements)
+        public InteractiveButtonCommand(MixPlayGameModel game, MixPlaySceneModel scene, MixPlayButtonControlModel control, InteractiveButtonCommandTriggerType eventType, RequirementViewModel requirements)
             : this(game, scene, control, eventType, 0, requirements)
         { }
 
-        public InteractiveButtonCommand(InteractiveGameModel game, InteractiveSceneModel scene, InteractiveButtonControlModel control, InteractiveButtonCommandTriggerType eventType, int heldRate, RequirementViewModel requirements)
+        public InteractiveButtonCommand(MixPlayGameModel game, MixPlaySceneModel scene, MixPlayButtonControlModel control, InteractiveButtonCommandTriggerType eventType, int heldRate, RequirementViewModel requirements)
             : base(game, scene, control, EnumHelper.GetEnumName(eventType), requirements)
         {
             this.Trigger = eventType;
@@ -102,7 +102,7 @@ namespace MixItUp.Base.Commands
         }
 
         [JsonIgnore]
-        public InteractiveButtonControlModel Button { get { return (InteractiveButtonControlModel)this.Control; } }
+        public MixPlayButtonControlModel Button { get { return (MixPlayButtonControlModel)this.Control; } }
 
         [JsonIgnore]
         public int CooldownAmount
@@ -166,9 +166,9 @@ namespace MixItUp.Base.Commands
         {
             if (this.Requirements.Cooldown != null && (this.Requirements.Cooldown.Type == CooldownTypeEnum.Individual || this.Requirements.Cooldown.Type == CooldownTypeEnum.Group))
             {
-                return DateTimeHelper.DateTimeOffsetToUnixTimestamp(DateTimeOffset.Now.AddSeconds(this.CooldownAmount));
+                return DateTimeOffset.Now.AddSeconds(this.CooldownAmount).ToUnixTimeMilliseconds();
             }
-            return DateTimeHelper.DateTimeOffsetToUnixTimestamp(DateTimeOffset.Now);
+            return DateTimeOffset.Now.ToUnixTimeMilliseconds();
         }
     }
 
@@ -314,14 +314,14 @@ namespace MixItUp.Base.Commands
             this.MappedKeys = new List<InputKeyEnum?>();
         }
 
-        public InteractiveJoystickCommand(InteractiveGameModel game, InteractiveSceneModel scene, InteractiveJoystickControlModel control, RequirementViewModel requirements)
+        public InteractiveJoystickCommand(MixPlayGameModel game, MixPlaySceneModel scene, MixPlayJoystickControlModel control, RequirementViewModel requirements)
             : base(game, scene, control, string.Empty, requirements)
         {
             this.MappedKeys = new List<InputKeyEnum?>();
         }
 
         [JsonIgnore]
-        public InteractiveJoystickControlModel Joystick { get { return (InteractiveJoystickControlModel)this.Control; } }
+        public MixPlayJoystickControlModel Joystick { get { return (MixPlayJoystickControlModel)this.Control; } }
 
         [JsonIgnore]
         public int CooldownAmount
@@ -369,7 +369,7 @@ namespace MixItUp.Base.Commands
     {
         public InteractiveTextBoxCommand() { }
 
-        public InteractiveTextBoxCommand(InteractiveGameModel game, InteractiveSceneModel scene, InteractiveTextBoxControlModel control, RequirementViewModel requirements)
+        public InteractiveTextBoxCommand(MixPlayGameModel game, MixPlaySceneModel scene, MixPlayTextBoxControlModel control, RequirementViewModel requirements)
             : base(game, scene, control, string.Empty, requirements)
         { }
 
@@ -377,7 +377,7 @@ namespace MixItUp.Base.Commands
         public bool UseChatModeration { get; set; }
 
         [JsonIgnore]
-        public InteractiveTextBoxControlModel TextBox { get { return (InteractiveTextBoxControlModel)this.Control; } }
+        public MixPlayTextBoxControlModel TextBox { get { return (MixPlayTextBoxControlModel)this.Control; } }
 
         [JsonIgnore]
         public int CooldownAmount

@@ -1,9 +1,10 @@
-﻿using Mixer.Base.Model.Interactive;
+﻿using Mixer.Base.Model.MixPlay;
 using MixItUp.Base;
 using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -41,12 +42,12 @@ namespace MixItUp.WPF.Controls.Interactive
     {
         private const string MaxTimeSettingProperty = "MaxTime";
 
-        private InteractiveConnectedSceneModel scene;
-        private InteractiveConnectedButtonControlModel gameStartButton;
-        private InteractiveConnectedButtonControlModel timeLeftButton;
-        private InteractiveConnectedButtonControlModel flyHitButton;
-        private InteractiveConnectedButtonControlModel gameEndButton;
-        private InteractiveConnectedButtonControlModel resultsButton;
+        private MixPlayConnectedSceneModel scene;
+        private MixPlayConnectedButtonControlModel gameStartButton;
+        private MixPlayConnectedButtonControlModel timeLeftButton;
+        private MixPlayConnectedButtonControlModel flyHitButton;
+        private MixPlayConnectedButtonControlModel gameEndButton;
+        private MixPlayConnectedButtonControlModel resultsButton;
 
         private int maxTime = 30;
 
@@ -56,7 +57,7 @@ namespace MixItUp.WPF.Controls.Interactive
 
         private SemaphoreSlim inputLock = new SemaphoreSlim(1);
 
-        public FlySwatterInteractiveControl(InteractiveGameModel game, InteractiveGameVersionModel version)
+        public FlySwatterInteractiveControl(MixPlayGameModel game, MixPlayGameVersionModel version)
             : base(game, version)
         {
             InitializeComponent();
@@ -79,7 +80,7 @@ namespace MixItUp.WPF.Controls.Interactive
 
         protected override async Task<bool> GameConnectedInternal()
         {
-            InteractiveConnectedSceneGroupCollectionModel sceneGroups = await ChannelSession.Interactive.GetScenes();
+            MixPlayConnectedSceneGroupCollectionModel sceneGroups = await ChannelSession.Interactive.GetScenes();
             if (sceneGroups != null)
             {
                 this.scene = sceneGroups.scenes.FirstOrDefault();
@@ -104,12 +105,12 @@ namespace MixItUp.WPF.Controls.Interactive
                                 winner = null;
 
                                 this.gameStartButton.meta["timeLeft"] = this.maxTime;
-                                await ChannelSession.Interactive.UpdateControls(scene, new List<InteractiveControlModel>() { this.gameStartButton });
+                                await ChannelSession.Interactive.UpdateControls(scene, new List<MixPlayControlModel>() { this.gameStartButton });
 
                                 for (int i = this.maxTime; i >= 0; i--)
                                 {
                                     this.timeLeftButton.meta["timeLeft"] = i;
-                                    await ChannelSession.Interactive.UpdateControls(scene, new List<InteractiveControlModel>() { this.timeLeftButton });
+                                    await ChannelSession.Interactive.UpdateControls(scene, new List<MixPlayControlModel>() { this.timeLeftButton });
 
                                     await this.Dispatcher.InvokeAsync(() =>
                                     {
@@ -124,14 +125,14 @@ namespace MixItUp.WPF.Controls.Interactive
                                 if (winner != null && winner.User.GetParticipantModels().Count() > 0)
                                 {
                                     this.resultsButton.meta["winner"] = JObject.FromObject(winner.User.GetParticipantModels().FirstOrDefault());
-                                    await ChannelSession.Interactive.UpdateControls(scene, new List<InteractiveControlModel>() { this.resultsButton });
+                                    await ChannelSession.Interactive.UpdateControls(scene, new List<MixPlayControlModel>() { this.resultsButton });
 
                                     this.Dispatcher.InvokeAsync(() =>
                                     {
                                         this.WinnerGrid.DataContext = this.winner;
                                     });
 
-                                    ChannelSession.Chat.SendMessage(string.Format("Winner: @{0}, Total Flies: {1}", winner.User.UserName, winner.Total));
+                                    ChannelSession.Services.Chat.SendMessage(string.Format("Winner: @{0}, Total Flies: {1}", winner.User.UserName, winner.Total));
                                 }
                             }
                             catch (Exception ex) { Logger.Log(ex.ToString()); }
@@ -145,7 +146,7 @@ namespace MixItUp.WPF.Controls.Interactive
             return false;
         }
 
-        protected override async Task OnInteractiveControlUsed(UserViewModel user, InteractiveGiveInputModel input, InteractiveConnectedControlCommand command)
+        protected override async Task OnInteractiveControlUsed(UserViewModel user, MixPlayGiveInputModel input, InteractiveConnectedControlCommand command)
         {
             if (user != null && !user.IsAnonymous && (input.input.controlID.Equals("gameEnd") || input.input.controlID.Equals("flyHit"))
                 && input.input.meta.TryGetValue("total", out JToken totalToken))

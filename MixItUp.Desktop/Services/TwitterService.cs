@@ -1,9 +1,10 @@
 ﻿using LinqToTwitter;
-using Mixer.Base.Model.OAuth;
 using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using StreamingClient.Base.Model.OAuth;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -77,7 +78,7 @@ namespace MixItUp.Base.Services
                         ConsumerKey = TwitterService.ClientID,
                         ConsumerSecret = ChannelSession.SecretManager.GetSecret("TwitterSecret"),
                     },
-                    GoToTwitterAuthorization = pageLink => Process.Start(pageLink),
+                    GoToTwitterAuthorization = pageLink => ProcessHelper.LaunchLink(pageLink),
                     GetPin = () =>
                     {
                         while (string.IsNullOrEmpty(this.authPin))
@@ -330,11 +331,11 @@ namespace MixItUp.Base.Services
                                         {
                                             existingRetweets.Add(retweet.ID);
 
-                                            IEnumerable<UserViewModel> users = await ChannelSession.ActiveUsers.GetAllUsers();
+                                            IEnumerable<UserViewModel> users = ChannelSession.Services.User.GetAllUsers();
                                             UserViewModel user = users.FirstOrDefault(u => u.TwitterURL != null && u.TwitterURL.Equals(string.Format("https://twitter.com/{0}", retweet.UserName)));
                                             if (user == null)
                                             {
-                                                UserModel userModel = await ChannelSession.Connection.GetUser(retweet.UserName);
+                                                UserModel userModel = await ChannelSession.MixerStreamerConnection.GetUser(retweet.UserName);
                                                 if (userModel != null)
                                                 {
                                                     user = new UserViewModel(userModel);
@@ -353,7 +354,7 @@ namespace MixItUp.Base.Services
                         }
                     }
                 }
-                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
 
                 await Task.Delay(60000);
             }

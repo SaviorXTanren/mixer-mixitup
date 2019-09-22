@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -43,7 +44,7 @@ namespace MixItUp.WPF.Controls.Users
             this.UserProfileAvatarControl_DataContextChanged(sender, new System.Windows.DependencyPropertyChangedEventArgs());
         }
 
-        private void UserProfileAvatarControl_DataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
+        private async void UserProfileAvatarControl_DataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
         {
             if (this.DataContext != null && this.DataContext is UserViewModel)
             {
@@ -52,6 +53,7 @@ namespace MixItUp.WPF.Controls.Users
                 {
                     this.SetSize(this.Size);
                 }
+                await this.SetUserAvatarUrl(user);
             }
         }
 

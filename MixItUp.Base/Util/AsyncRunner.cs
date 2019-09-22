@@ -1,13 +1,14 @@
-﻿using Mixer.Base.Util;
+﻿using StreamingClient.Base.Util;
 using System;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Util
 {
     public static class AsyncRunner
     {
-        public static async Task RunAsync(Task task)
+        public static async Task RunAsync(Task task, bool logNotFoundException = true)
         {
             try
             {
@@ -15,7 +16,15 @@ namespace MixItUp.Base.Util
             }
             catch (Exception ex)
             {
-                Logger.Log(ex, includeFullStackTrace: true);
+                if (!logNotFoundException && ex is HttpRestRequestException)
+                {
+                    HttpRestRequestException restEx = (HttpRestRequestException)ex;
+                    if (restEx.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        return;
+                    }
+                }
+                Logger.Log(ex, includeStackTrace: true);
             }
         }
 
@@ -28,15 +37,15 @@ namespace MixItUp.Base.Util
             }
             catch (Exception ex)
             {
-                if (!logNotFoundException && ex is RestServiceRequestException)
+                if (!logNotFoundException && ex is HttpRestRequestException)
                 {
-                    RestServiceRequestException restEx = (RestServiceRequestException)ex;
+                    HttpRestRequestException restEx = (HttpRestRequestException)ex;
                     if (restEx.StatusCode == HttpStatusCode.NotFound)
                     {
                         return default(T);
                     }
                 }
-                Logger.Log(ex, includeFullStackTrace: true);
+                Logger.Log(ex, includeStackTrace: true);
             }
             return default(T);
         }
@@ -49,7 +58,7 @@ namespace MixItUp.Base.Util
             }
             catch (Exception ex)
             {
-                Logger.Log(ex, includeFullStackTrace: true);
+                Logger.Log(ex, includeStackTrace: true);
             }
         }
 
@@ -61,9 +70,24 @@ namespace MixItUp.Base.Util
             }
             catch (Exception ex)
             {
-                Logger.Log(ex, includeFullStackTrace: true);
+                Logger.Log(ex, includeStackTrace: true);
             }
             return default(T);
+        }
+
+        public static void RunAsyncInBackground(Func<Task> task)
+        {
+            Task.Run(async () =>
+            {
+                try
+                {
+                    await task();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex, includeStackTrace: true);
+                }
+            });
         }
 
         public static async Task RunSyncAsAsync(Action action)
@@ -105,8 +129,32 @@ namespace MixItUp.Base.Util
             }
             catch (Exception ex)
             {
-                Logger.Log(ex, includeFullStackTrace: true);
+                Logger.Log(ex, includeStackTrace: true);
             }
+        }
+
+        public static void RunBackgroundTask(CancellationToken token, Func<CancellationToken, Task> backgroundTask, int delayInSeconds = 0)
+        {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            Task.Run(async () =>
+            {
+                while (!token.IsCancellationRequested)
+                {
+                    try
+                    {
+                        await backgroundTask(token);
+
+                        if (delayInSeconds > 0 && !token.IsCancellationRequested)
+                        {
+                            await Task.Delay(delayInSeconds, token);
+                        }
+                    }
+                    catch (ThreadAbortException) { return; }
+                    catch (OperationCanceledException) { return; }
+                    catch (Exception ex) { Logger.Log(ex); }
+                }
+            });
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
     }
 }

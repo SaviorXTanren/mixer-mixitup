@@ -5,6 +5,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -98,7 +99,7 @@ namespace MixItUp.Base.Model.Store
         public UserModel User { get; set; }
 
         [JsonIgnore]
-        public bool IsCommandOwnedByUser { get { return (this.User != null && this.User.id.Equals(ChannelSession.User.id)); } }
+        public bool IsCommandOwnedByUser { get { return (this.User != null && this.User.id.Equals(ChannelSession.MixerStreamerUser.id)); } }
 
         [JsonIgnore]
         public string UserName { get { return (this.User != null) ? this.User.username : "Unknown"; } }
@@ -147,7 +148,7 @@ namespace MixItUp.Base.Model.Store
         {
             if (this.UserID > 0)
             {
-                this.User = await ChannelSession.Connection.GetUser(this.UserID);
+                this.User = await ChannelSession.MixerStreamerConnection.GetUser(this.UserID);
             }
         }
     }

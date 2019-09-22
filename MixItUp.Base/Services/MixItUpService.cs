@@ -1,9 +1,10 @@
-﻿using Mixer.Base.Model.OAuth;
-using Mixer.Base.Web;
-using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model.API;
 using MixItUp.Base.Model.Store;
 using MixItUp.Base.Util;
+using StreamingClient.Base.Model.OAuth;
+using StreamingClient.Base.Util;
+using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,9 +61,9 @@ namespace MixItUp.Base.Services
 
         public async Task RefreshOAuthToken()
         {
-            if (ChannelSession.User != null)
+            if (ChannelSession.MixerStreamerUser != null)
             {
-                this.token = await this.GetAsync<OAuthTokenModel>("authentication?userID=" + ChannelSession.User.id);
+                this.token = await this.GetAsync<OAuthTokenModel>("authentication?userID=" + ChannelSession.MixerStreamerUser.id);
             }
         }
 
@@ -135,7 +136,7 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                using (HttpClientWrapper client = new HttpClientWrapper(MixItUpAPIEndpoint))
+                using (AdvancedHttpClient client = new AdvancedHttpClient(MixItUpAPIEndpoint))
                 {
                     HttpResponseMessage response = await client.GetAsync(endpoint);
                     if (response.StatusCode == HttpStatusCode.OK)
@@ -157,7 +158,7 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                using (HttpClientWrapper client = new HttpClientWrapper(MixItUpAPIEndpoint))
+                using (AdvancedHttpClient client = new AdvancedHttpClient(MixItUpAPIEndpoint))
                 {
                     string content = SerializerHelper.SerializeToString(data);
                     HttpResponseMessage response = await client.PostAsync(endpoint, new StringContent(content, Encoding.UTF8, "application/json"));
@@ -177,7 +178,7 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                using (HttpClientWrapper client = new HttpClientWrapper(MixItUpAPIEndpoint))
+                using (AdvancedHttpClient client = new AdvancedHttpClient(MixItUpAPIEndpoint))
                 {
                     string content = SerializerHelper.SerializeToString(data);
                     HttpResponseMessage response = await client.PostAsync(endpoint, new StringContent(content, Encoding.UTF8, "application/json"));
@@ -200,7 +201,7 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                using (HttpClientWrapper client = new HttpClientWrapper(MixItUpAPIEndpoint))
+                using (AdvancedHttpClient client = new AdvancedHttpClient(MixItUpAPIEndpoint))
                 {
                     string content = SerializerHelper.SerializeToString(data);
                     HttpResponseMessage response = await client.PutAsync(endpoint, new StringContent(content, Encoding.UTF8, "application/json"));
@@ -214,7 +215,7 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                using (HttpClientWrapper client = new HttpClientWrapper(MixItUpAPIEndpoint))
+                using (AdvancedHttpClient client = new AdvancedHttpClient(MixItUpAPIEndpoint))
                 {
                     string content = SerializerHelper.SerializeToString(data);
                     HttpRequestMessage message = new HttpRequestMessage(new HttpMethod("PATCH"), endpoint);
@@ -230,10 +231,9 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                using (HttpClientWrapper client = new HttpClientWrapper(MixItUpAPIEndpoint))
+                using (AdvancedHttpClient client = new AdvancedHttpClient(MixItUpAPIEndpoint))
                 {
-                    HttpResponseMessage response = await client.DeleteAsync(endpoint);
-                    await this.ProcessResponseIfError(response);
+                    await client.DeleteAsync(endpoint);
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
@@ -263,7 +263,7 @@ namespace MixItUp.Base.Services
                         await Task.Delay(2000);
                     }
                 }
-                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
 
                 await Task.Delay(60000);
             }

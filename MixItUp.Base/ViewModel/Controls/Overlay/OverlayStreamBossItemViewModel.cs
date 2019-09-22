@@ -2,6 +2,7 @@
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
+using StreamingClient.Base.Util;
 
 namespace MixItUp.Base.ViewModel.Controls.Overlay
 {
@@ -266,6 +267,8 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
 
             this.damageAnimation = item.DamageAnimation;
             this.newBossAnimation = item.NewBossAnimation;
+
+            this.NewBossCommand = item.NewStreamBossCommand;
 
             this.HTML = item.HTML;
         }

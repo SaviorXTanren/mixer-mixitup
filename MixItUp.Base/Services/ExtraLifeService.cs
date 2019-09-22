@@ -1,10 +1,10 @@
-﻿using Mixer.Base.Model.OAuth;
-using Mixer.Base.Model.User;
-using Mixer.Base.Util;
+﻿using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using StreamingClient.Base.Model.OAuth;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -190,7 +190,7 @@ namespace MixItUp.Base.Services
             {
                 return await this.GetAsync<ExtraLifeTeam>(string.Format("teams/{0}", teamID));
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
             return null;
         }
 
@@ -202,7 +202,7 @@ namespace MixItUp.Base.Services
             {
                 return await this.GetAsync<IEnumerable<ExtraLifeTeamParticipant>>(string.Format("teams/{0}/participants", teamID));
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
             return new List<ExtraLifeTeamParticipant>();
         }
 
@@ -212,7 +212,7 @@ namespace MixItUp.Base.Services
             {
                 return await this.GetAsync<ExtraLifeTeamParticipant>(string.Format("participants/{0}", participantID));
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
             return null;
         }
 
@@ -222,7 +222,7 @@ namespace MixItUp.Base.Services
             {
                 return await this.GetAsync<IEnumerable<ExtraLifeDonation>>(string.Format("participants/{0}/donations?limit=10", participantID));
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
             return new List<ExtraLifeDonation>();
         }
 
@@ -232,7 +232,7 @@ namespace MixItUp.Base.Services
             {
                 return await this.GetAsync<IEnumerable<ExtraLifeDonation>>(string.Format("teams/{0}/donations?limit=10", teamID));
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
             return new List<ExtraLifeDonation>();
         }
 
@@ -289,21 +289,17 @@ namespace MixItUp.Base.Services
 
                             UserViewModel user = new UserViewModel(0, donation.UserName);
 
-                            UserModel userModel = await ChannelSession.Connection.GetUser(user.UserName);
+                            UserModel userModel = await ChannelSession.MixerStreamerConnection.GetUser(user.UserName);
                             if (userModel != null)
                             {
                                 user = new UserViewModel(userModel);
                             }
 
-                            EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.ExtraLifeDonation));
-                            if (command != null)
-                            {
-                                await command.Perform(user, arguments: null, extraSpecialIdentifiers: donation.GetSpecialIdentifiers());
-                            }
+                            await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.ExtraLifeDonation), user, arguments: null, extraSpecialIdentifiers: donation.GetSpecialIdentifiers());
                         }
                     }
                 }
-                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
 
                 await Task.Delay(20000);
             }

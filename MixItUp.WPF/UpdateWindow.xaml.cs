@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model.API;
 using MixItUp.Base.Util;
 using MixItUp.WPF.Windows;
+using StreamingClient.Base.Util;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -70,8 +71,7 @@ namespace MixItUp.WPF
 
                 if (File.Exists(setupFilePath))
                 {
-                    string applicationDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                    Process.Start(setupFilePath, string.Format("\"{0}\"", applicationDirectory));
+                    ProcessHelper.LaunchProgram(setupFilePath, string.Format("\"{0}\"", Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)));
                     Application.Current.Shutdown();
                 }
             });

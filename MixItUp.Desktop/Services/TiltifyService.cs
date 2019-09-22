@@ -1,13 +1,11 @@
-﻿using Mixer.Base.Model.OAuth;
-using Mixer.Base.Model.User;
-using Mixer.Base.Util;
-using MixItUp.Base;
+﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
-using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Model.OAuth;
+using StreamingClient.Base.Util;
+using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,7 +44,7 @@ namespace MixItUp.Desktop.Services
                         return true;
                     }
                 }
-                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
             }
 
             if (!string.IsNullOrEmpty(this.authorizationToken))
@@ -60,7 +58,7 @@ namespace MixItUp.Desktop.Services
                     payload["code"] = this.authorizationToken;
                     payload["redirect_uri"] = TiltifyService.ListeningURL;
 
-                    this.token = await this.PostAsync<OAuthTokenModel>("https://tiltify.com/oauth/token", this.CreateContentFromObject(payload), autoRefreshToken: false);
+                    this.token = await this.PostAsync<OAuthTokenModel>("https://tiltify.com/oauth/token", AdvancedHttpClient.CreateContentFromObject(payload), autoRefreshToken: false);
                     if (this.token != null)
                     {
                         token.authorizationCode = this.authorizationToken;
@@ -70,7 +68,7 @@ namespace MixItUp.Desktop.Services
                         return await this.InitializeInternal();
                     }
                 }
-                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
             }
             return false;
         }
@@ -89,7 +87,7 @@ namespace MixItUp.Desktop.Services
                 TiltifyResult result = await this.GetAsync<TiltifyResult>("user");
                 return result.Data.ToObject<TiltifyUser>();
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
             return null;
         }
 
@@ -104,7 +102,7 @@ namespace MixItUp.Desktop.Services
                     results.Add(token.ToObject<TiltifyCampaign>());
                 }
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
             return results;
         }
 
@@ -119,7 +117,7 @@ namespace MixItUp.Desktop.Services
                     results.Add(token.ToObject<TiltifyDonation>());
                 }
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
             return results;
         }
 
@@ -183,7 +181,7 @@ namespace MixItUp.Desktop.Services
                         }
                     }
                 }
-                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
 
                 await Task.Delay(10000);
             }

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows;
+using StreamingClient.Base.Util;
 
 namespace MixItUp.WPF.Controls.Command
 {
@@ -69,11 +70,11 @@ namespace MixItUp.WPF.Controls.Command
 
             if (this.EventType.ToString().Contains("channel") || this.EventType.ToString().Contains("progression"))
             {
-                this.EventIDTextBox.Text = ChannelSession.User.channel.id.ToString();
+                this.EventIDTextBox.Text = ChannelSession.MixerStreamerUser.channel.id.ToString();
             }
             else
             {
-                this.EventIDTextBox.Text = ChannelSession.User.id.ToString();
+                this.EventIDTextBox.Text = ChannelSession.MixerStreamerUser.id.ToString();
             }
 
             if (this.command != null)
@@ -117,7 +118,7 @@ namespace MixItUp.WPF.Controls.Command
                 {
                     if (this.OtherEventTypeTextBox.Visibility == Visibility.Visible)
                     {
-                        this.command = new EventCommand(EnumHelper.GetEnumValueFromString<OtherEventTypeEnum>(this.OtherEventTypeTextBox.Text), ChannelSession.Channel.id.ToString());
+                        this.command = new EventCommand(EnumHelper.GetEnumValueFromString<OtherEventTypeEnum>(this.OtherEventTypeTextBox.Text), ChannelSession.MixerChannel.id.ToString());
                     }
                     else if (this.EventTypeComboBox.Visibility == Visibility.Visible)
                     {
@@ -128,7 +129,7 @@ namespace MixItUp.WPF.Controls.Command
 
                         if (eventType.ToString().Contains("channel") || eventType.ToString().Contains("progression"))
                         {
-                            channel = await ChannelSession.Connection.GetChannel(uint.Parse(this.EventIDTextBox.Text));
+                            channel = await ChannelSession.MixerStreamerConnection.GetChannel(uint.Parse(this.EventIDTextBox.Text));
                             if (channel == null)
                             {
                                 await MessageBoxHelper.ShowMessageDialog("Unable to find the channel for the specified username");
@@ -137,7 +138,7 @@ namespace MixItUp.WPF.Controls.Command
                         }
                         else if (eventType.ToString().Contains("user"))
                         {
-                            user = await ChannelSession.Connection.GetUser(uint.Parse(this.EventIDTextBox.Text));
+                            user = await ChannelSession.MixerStreamerConnection.GetUser(uint.Parse(this.EventIDTextBox.Text));
                             if (user == null)
                             {
                                 await MessageBoxHelper.ShowMessageDialog("Unable to find a user for the specified username");

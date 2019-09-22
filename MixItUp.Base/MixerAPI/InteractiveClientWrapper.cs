@@ -1,12 +1,15 @@
 ﻿using Mixer.Base.Clients;
-using Mixer.Base.Model.Interactive;
-using Mixer.Base.Util;
+using Mixer.Base.Model.MixPlay;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.Interactive;
+using MixItUp.Base.Services.Mixer;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +19,16 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.MixerAPI
 {
-    public static class InteractiveConnectedButtonControlModelExtensions
+    public enum MixPlayConnectionResult
     {
-        public static void SetCooldownTimestamp(this InteractiveConnectedButtonControlModel button, long cooldown)
+        Success = 0,
+        DuplicateControlIDs,
+        Unknown,
+    }
+
+    public static class MixPlayConnectedButtonControlModelExtensions
+    {
+        public static void SetCooldownTimestamp(this MixPlayConnectedButtonControlModel button, long cooldown)
         {
             if (ChannelSession.Settings.PreventSmallerCooldowns)
             {
@@ -29,17 +39,22 @@ namespace MixItUp.Base.MixerAPI
                 button.cooldown = cooldown;
             }
         }
+
+        public static void SetProgress(this MixPlayConnectedButtonControlModel button, float value)
+        {
+            button.progress = value;
+        }
     }
 
     public abstract class InteractiveConnectedControlCommand
     {
-        public InteractiveConnectedSceneModel Scene { get; set; }
+        public MixPlayConnectedSceneModel Scene { get; set; }
 
-        public InteractiveControlModel Control { get; set; }
+        public MixPlayControlModel Control { get; set; }
 
         public InteractiveCommand Command { get; set; }
 
-        public InteractiveConnectedControlCommand(InteractiveConnectedSceneModel scene, InteractiveControlModel control, InteractiveCommand command)
+        public InteractiveConnectedControlCommand(MixPlayConnectedSceneModel scene, MixPlayControlModel control, InteractiveCommand command)
         {
             this.Scene = scene;
             this.Control = control;
@@ -54,7 +69,7 @@ namespace MixItUp.Base.MixerAPI
         public abstract bool HasCooldown { get; }
         public abstract long CooldownTimestamp { get; }
 
-        public virtual bool DoesInputMatchCommand(InteractiveGiveInputModel input)
+        public virtual bool DoesInputMatchCommand(MixPlayGiveInputModel input)
         {
             return this.EventTypeString.Equals(input.input.eventType);
         }
@@ -69,17 +84,18 @@ namespace MixItUp.Base.MixerAPI
                 { "mixplaycontrolcost", this.SparkCost.ToString() },
             };
             
-            if (this.Control is InteractiveButtonControlModel)
+            if (this.Control is MixPlayButtonControlModel)
             {
-                extraSpecialIdentifiers.Add("mixplaycontroltext", ((InteractiveButtonControlModel)this.Control).text);
+                extraSpecialIdentifiers.Add("mixplaycontroltext", ((MixPlayButtonControlModel)this.Control).text);
+                extraSpecialIdentifiers.Add("mixplaycontrolprogress", ((MixPlayConnectedButtonControlModel)this.Control).progress.ToString());
             }
-            else if (this.Control is InteractiveTextBoxControlModel)
+            else if (this.Control is MixPlayTextBoxControlModel)
             {
-                extraSpecialIdentifiers.Add("mixplaycontroltext", ((InteractiveTextBoxControlModel)this.Control).placeholder);
+                extraSpecialIdentifiers.Add("mixplaycontroltext", ((MixPlayTextBoxControlModel)this.Control).placeholder);
             }
-            else if (this.Control is InteractiveLabelControlModel)
+            else if (this.Control is MixPlayLabelControlModel)
             {
-                extraSpecialIdentifiers.Add("mixplaycontroltext", ((InteractiveLabelControlModel)this.Control).text);
+                extraSpecialIdentifiers.Add("mixplaycontroltext", ((MixPlayLabelControlModel)this.Control).text);
             }
 
             await this.Command.Perform(user, arguments, extraSpecialIdentifiers);
@@ -88,13 +104,13 @@ namespace MixItUp.Base.MixerAPI
 
     public class InteractiveConnectedButtonCommand : InteractiveConnectedControlCommand
     {
-        public InteractiveConnectedButtonCommand(InteractiveConnectedSceneModel scene, InteractiveConnectedButtonControlModel button, InteractiveCommand command)
+        public InteractiveConnectedButtonCommand(MixPlayConnectedSceneModel scene, MixPlayConnectedButtonControlModel button, InteractiveCommand command)
             : base(scene, button, command)
         {
             this.ButtonCommand.OnCommandStart += ButtonCommand_OnCommandStart;
         }
 
-        public InteractiveConnectedButtonControlModel Button { get { return (InteractiveConnectedButtonControlModel)this.Control; } set { this.Control = value; } }
+        public MixPlayConnectedButtonControlModel Button { get { return (MixPlayConnectedButtonControlModel)this.Control; } set { this.Control = value; } }
 
         public InteractiveButtonCommand ButtonCommand { get { return (InteractiveButtonCommand)this.Command; } }
 
@@ -103,7 +119,7 @@ namespace MixItUp.Base.MixerAPI
         public override bool HasCooldown { get { return this.ButtonCommand.HasCooldown; } }
         public override long CooldownTimestamp { get { return this.ButtonCommand.GetCooldownTimestamp(); } }
 
-        public override bool DoesInputMatchCommand(InteractiveGiveInputModel input)
+        public override bool DoesInputMatchCommand(MixPlayGiveInputModel input)
         {
             string inputEvent = input?.input?.eventType;
             if (!string.IsNullOrEmpty(inputEvent))
@@ -140,7 +156,7 @@ namespace MixItUp.Base.MixerAPI
                 {
                     this.Button.SetCooldownTimestamp(this.CooldownTimestamp);
 
-                    Dictionary<InteractiveConnectedSceneModel, List<InteractiveConnectedButtonCommand>> sceneButtons = new Dictionary<InteractiveConnectedSceneModel, List<InteractiveConnectedButtonCommand>>();
+                    Dictionary<MixPlayConnectedSceneModel, List<InteractiveConnectedButtonCommand>> sceneButtons = new Dictionary<MixPlayConnectedSceneModel, List<InteractiveConnectedButtonCommand>>();
 
                     if (!string.IsNullOrEmpty(this.ButtonCommand.CooldownGroupName))
                     {
@@ -173,93 +189,97 @@ namespace MixItUp.Base.MixerAPI
 
     public class InteractiveConnectedJoystickCommand : InteractiveConnectedControlCommand
     {
-        public InteractiveConnectedJoystickCommand(InteractiveConnectedSceneModel scene, InteractiveConnectedJoystickControlModel joystick, InteractiveCommand command) : base(scene, joystick, command) { }
+        public InteractiveConnectedJoystickCommand(MixPlayConnectedSceneModel scene, MixPlayConnectedJoystickControlModel joystick, InteractiveCommand command) : base(scene, joystick, command) { }
 
-        public InteractiveConnectedJoystickControlModel Joystick { get { return (InteractiveConnectedJoystickControlModel)this.Control; } set { this.Control = value; } }
+        public MixPlayConnectedJoystickControlModel Joystick { get { return (MixPlayConnectedJoystickControlModel)this.Control; } set { this.Control = value; } }
 
         public override int SparkCost { get { return 0; } }
 
         public override bool HasCooldown { get { return false; } }
-        public override long CooldownTimestamp { get { return DateTimeHelper.DateTimeOffsetToUnixTimestamp(DateTimeOffset.Now); } }
+        public override long CooldownTimestamp { get { return DateTimeOffset.Now.ToUnixTimeMilliseconds(); } }
     }
 
     public class InteractiveConnectedTextBoxCommand : InteractiveConnectedControlCommand
     {
-        public InteractiveConnectedTextBoxCommand(InteractiveConnectedSceneModel scene, InteractiveConnectedTextBoxControlModel textBox, InteractiveCommand command) : base(scene, textBox, command) { }
+        public InteractiveConnectedTextBoxCommand(MixPlayConnectedSceneModel scene, MixPlayConnectedTextBoxControlModel textBox, InteractiveCommand command) : base(scene, textBox, command) { }
 
-        public InteractiveConnectedTextBoxControlModel TextBox { get { return (InteractiveConnectedTextBoxControlModel)this.Control; } set { this.Control = value; } }
+        public MixPlayConnectedTextBoxControlModel TextBox { get { return (MixPlayConnectedTextBoxControlModel)this.Control; } set { this.Control = value; } }
 
         public InteractiveTextBoxCommand TextBoxCommand { get { return (InteractiveTextBoxCommand)this.Command; } }
 
         public override int SparkCost { get { return this.TextBox.cost.GetValueOrDefault(); } }
 
         public override bool HasCooldown { get { return false; } }
-        public override long CooldownTimestamp { get { return DateTimeHelper.DateTimeOffsetToUnixTimestamp(DateTimeOffset.Now); } }
+        public override long CooldownTimestamp { get { return DateTimeOffset.Now.ToUnixTimeMilliseconds(); } }
     }
 
     public class InteractiveInputEvent
     {
         public UserViewModel User { get; set; }
-        public InteractiveGiveInputModel Input { get; set; }
+        public MixPlayGiveInputModel Input { get; set; }
         public InteractiveConnectedControlCommand Command { get; set; }
 
-        public InteractiveInputEvent(UserViewModel user, InteractiveGiveInputModel input, InteractiveConnectedControlCommand command)
+        public InteractiveInputEvent(UserViewModel user, MixPlayGiveInputModel input, InteractiveConnectedControlCommand command)
             : this(user, input)
         {
             this.Command = command;
         }
 
-        public InteractiveInputEvent(UserViewModel user, InteractiveGiveInputModel input)
+        public InteractiveInputEvent(UserViewModel user, MixPlayGiveInputModel input)
         {
             this.User = user;
             this.Input = input;
         }
     }
 
-    public class InteractiveClientWrapper : MixerWebSocketWrapper
+    public class MixPlayClientWrapper : MixerWebSocketWrapper
     {
-        public event EventHandler<InteractiveGiveInputModel> OnGiveInput = delegate { };
-        public event EventHandler<InteractiveConnectedSceneModel> OnControlDelete = delegate { };
-        public event EventHandler<InteractiveConnectedSceneModel> OnControlCreate = delegate { };
-        public event EventHandler<InteractiveConnectedSceneModel> OnControlUpdate = delegate { };
-        public event EventHandler<InteractiveConnectedSceneCollectionModel> OnSceneUpdate = delegate { };
-        public event EventHandler<Tuple<InteractiveConnectedSceneModel, InteractiveConnectedSceneModel>> OnSceneDelete = delegate { };
-        public event EventHandler<InteractiveConnectedSceneCollectionModel> OnSceneCreate = delegate { };
-        public event EventHandler<InteractiveGroupCollectionModel> OnGroupUpdate = delegate { };
-        public event EventHandler<Tuple<InteractiveGroupModel, InteractiveGroupModel>> OnGroupDelete = delegate { };
-        public event EventHandler<InteractiveGroupCollectionModel> OnGroupCreate = delegate { };
-        public event EventHandler<InteractiveParticipantCollectionModel> OnParticipantUpdate = delegate { };
-        public event EventHandler<InteractiveParticipantCollectionModel> OnParticipantJoin = delegate { };
-        public event EventHandler<InteractiveParticipantCollectionModel> OnParticipantLeave = delegate { };
-        public event EventHandler<InteractiveIssueMemoryWarningModel> OnIssueMemoryWarning = delegate { };
+        public event EventHandler<MixPlayGiveInputModel> OnGiveInput = delegate { };
+        public event EventHandler<MixPlayConnectedSceneModel> OnControlDelete = delegate { };
+        public event EventHandler<MixPlayConnectedSceneModel> OnControlCreate = delegate { };
+        public event EventHandler<MixPlayConnectedSceneModel> OnControlUpdate = delegate { };
+        public event EventHandler<MixPlayConnectedSceneCollectionModel> OnSceneUpdate = delegate { };
+        public event EventHandler<Tuple<MixPlayConnectedSceneModel, MixPlayConnectedSceneModel>> OnSceneDelete = delegate { };
+        public event EventHandler<MixPlayConnectedSceneCollectionModel> OnSceneCreate = delegate { };
+        public event EventHandler<MixPlayGroupCollectionModel> OnGroupUpdate = delegate { };
+        public event EventHandler<Tuple<MixPlayGroupModel, MixPlayGroupModel>> OnGroupDelete = delegate { };
+        public event EventHandler<MixPlayGroupCollectionModel> OnGroupCreate = delegate { };
+        public event EventHandler<MixPlayParticipantCollectionModel> OnParticipantUpdate = delegate { };
+        public event EventHandler<MixPlayParticipantCollectionModel> OnParticipantJoin = delegate { };
+        public event EventHandler<MixPlayParticipantCollectionModel> OnParticipantLeave = delegate { };
+        public event EventHandler<MixPlayIssueMemoryWarningModel> OnIssueMemoryWarning = delegate { };
 
         public event EventHandler<InteractiveInputEvent> OnInteractiveControlUsed = delegate { };
 
         public InteractiveSharedProjectModel SharedProject { get; private set; }
-        public InteractiveGameModel Game { get; private set; }
-        public InteractiveGameVersionModel Version { get; private set; }
-        public InteractiveClient Client { get; private set; }
+        public MixPlayGameModel Game { get; private set; }
+        public MixPlayGameVersionModel Version { get; private set; }
+        public MixPlayClient Client { get; private set; }
 
-        public List<InteractiveConnectedSceneModel> Scenes { get; private set; }
-        public Dictionary<string, InteractiveControlModel> Controls { get; private set; }
-        public Dictionary<string, InteractiveConnectedControlCommand> ControlCommands { get; private set; }
-        public LockedDictionary<string, InteractiveParticipantModel> Participants { get; private set; }
+        public List<string> DuplicatedControls { get; private set; } = new List<string>();
+        public List<MixPlayConnectedSceneModel> Scenes { get; private set; } = new List<MixPlayConnectedSceneModel>();
+        public Dictionary<string, MixPlayControlModel> Controls { get; private set; } = new Dictionary<string, MixPlayControlModel>(StringComparer.InvariantCultureIgnoreCase);
+        public Dictionary<string, MixPlayConnectedSceneModel> ControlScenes { get; private set; } = new Dictionary<string, MixPlayConnectedSceneModel>(StringComparer.InvariantCultureIgnoreCase);
+        public Dictionary<string, InteractiveConnectedControlCommand> ControlCommands { get; private set; } = new Dictionary<string, InteractiveConnectedControlCommand>(StringComparer.InvariantCultureIgnoreCase);
+        public LockedDictionary<string, MixPlayParticipantModel> Participants { get; private set; } = new LockedDictionary<string, MixPlayParticipantModel>(StringComparer.InvariantCultureIgnoreCase);
 
-        private List<InteractiveGameModel> games = new List<InteractiveGameModel>();
+        private List<MixPlayGameModel> games = new List<MixPlayGameModel>();
         private DateTimeOffset lastRefresh = DateTimeOffset.MinValue;
         private SemaphoreSlim refreshLock = new SemaphoreSlim(1);
 
         private SemaphoreSlim giveInputLock = new SemaphoreSlim(1);
 
-        public InteractiveClientWrapper()
+        private MixPlayConnectionResult connectionResult = MixPlayConnectionResult.Unknown;
+
+        public MixPlayClientWrapper()
         {
-            this.Scenes = new List<InteractiveConnectedSceneModel>();
-            this.Controls = new Dictionary<string, InteractiveControlModel>();
+            this.Scenes = new List<MixPlayConnectedSceneModel>();
+            this.Controls = new Dictionary<string, MixPlayControlModel>();
             this.ControlCommands = new Dictionary<string, InteractiveConnectedControlCommand>();
-            this.Participants = new LockedDictionary<string, InteractiveParticipantModel>();
+            this.Participants = new LockedDictionary<string, MixPlayParticipantModel>();
         }
 
-        public async Task<IEnumerable<InteractiveGameModel>> GetAllConnectableGames(bool forceRefresh = false)
+        public async Task<IEnumerable<MixPlayGameModel>> GetAllConnectableGames(bool forceRefresh = false)
         {
             await this.refreshLock.WaitAndRelease(async () =>
             {
@@ -268,15 +288,15 @@ namespace MixItUp.Base.MixerAPI
                     this.lastRefresh = DateTimeOffset.Now.AddMinutes(1);
                     this.games.Clear();
 
-                    this.games.AddRange(await ChannelSession.Connection.GetOwnedInteractiveGames(ChannelSession.Channel));
+                    this.games.AddRange(await ChannelSession.MixerStreamerConnection.GetOwnedMixPlayGames(ChannelSession.MixerChannel));
                     games.RemoveAll(g => g.name.Equals("Soundwave Interactive Soundboard"));
 
                     foreach (InteractiveSharedProjectModel project in ChannelSession.Settings.CustomInteractiveProjectIDs)
                     {
-                        InteractiveGameVersionModel version = await ChannelSession.Connection.GetInteractiveGameVersion(project.VersionID);
+                        MixPlayGameVersionModel version = await ChannelSession.MixerStreamerConnection.GetMixPlayGameVersion(project.VersionID);
                         if (version != null)
                         {
-                            InteractiveGameModel game = await ChannelSession.Connection.GetInteractiveGame(version.gameId);
+                            MixPlayGameModel game = await ChannelSession.MixerStreamerConnection.GetMixPlayGame(version.gameId);
                             if (game != null)
                             {
                                 games.Add(game);
@@ -286,10 +306,10 @@ namespace MixItUp.Base.MixerAPI
 
                     foreach (InteractiveSharedProjectModel project in InteractiveSharedProjectModel.AllMixPlayProjects)
                     {
-                        InteractiveGameVersionModel version = await ChannelSession.Connection.GetInteractiveGameVersion(project.VersionID);
+                        MixPlayGameVersionModel version = await ChannelSession.MixerStreamerConnection.GetMixPlayGameVersion(project.VersionID);
                         if (version != null)
                         {
-                            InteractiveGameModel game = await ChannelSession.Connection.GetInteractiveGame(version.gameId);
+                            MixPlayGameModel game = await ChannelSession.MixerStreamerConnection.GetMixPlayGame(version.gameId);
                             if (game != null)
                             {
                                 game.name += " (MixPlay)";
@@ -302,18 +322,18 @@ namespace MixItUp.Base.MixerAPI
             return games;
         }
 
-        public async Task<bool> Connect(InteractiveGameListingModel game)
+        public async Task<MixPlayConnectionResult> Connect(MixPlayGameListingModel game)
         {
             return await this.Connect(game, game.versions.First());
         }
 
-        public async Task<bool> Connect(InteractiveGameModel game)
+        public async Task<MixPlayConnectionResult> Connect(MixPlayGameModel game)
         {
-            IEnumerable<InteractiveGameVersionModel> versions = await ChannelSession.Connection.GetInteractiveGameVersions(game);
+            IEnumerable<MixPlayGameVersionModel> versions = await ChannelSession.MixerStreamerConnection.GetMixPlayGameVersions(game);
             return await this.Connect(game, versions.First());
         }
 
-        public async Task<bool> Connect(InteractiveGameModel game, InteractiveGameVersionModel version)
+        public async Task<MixPlayConnectionResult> Connect(MixPlayGameModel game, MixPlayGameVersionModel version)
         {
             this.Game = game;
             this.Version = version;
@@ -323,7 +343,8 @@ namespace MixItUp.Base.MixerAPI
             this.ControlCommands.Clear();
             this.Participants.Clear();
 
-            return await this.AttemptConnect();
+            await this.AttemptConnect();
+            return connectionResult;
         }
 
         public async Task Disconnect()
@@ -332,7 +353,7 @@ namespace MixItUp.Base.MixerAPI
             {
                 if (this.Client != null)
                 {
-                    this.Client.OnDisconnectOccurred -= InteractiveClient_OnDisconnectOccurred;
+                    this.Client.OnDisconnectOccurred -= MixPlayClient_OnDisconnectOccurred;
                     if (ChannelSession.Settings.DiagnosticLogging)
                     {
                         this.Client.OnPacketSentOccurred -= WebSocketClient_OnPacketSentOccurred;
@@ -366,27 +387,28 @@ namespace MixItUp.Base.MixerAPI
                 this.Controls.Clear();
                 this.ControlCommands.Clear();
                 this.Participants.Clear();
+                this.connectionResult = MixPlayConnectionResult.Unknown;
             });
         }
 
         public bool IsConnected()
         {
-            InteractiveClient client = this.Client;
+            MixPlayClient client = this.Client;
             return client != null && client.Authenticated;
         }
 
-        public async Task<InteractiveConnectedSceneGroupCollectionModel> GetScenes() { return await this.RunAsync(this.Client.GetScenes()); }
+        public async Task<MixPlayConnectedSceneGroupCollectionModel> GetScenes() { return await this.RunAsync(this.Client.GetScenes()); }
 
         public async Task<bool> AddGroup(string groupName, string sceneID)
         {
             if (!string.IsNullOrEmpty(groupName) && !string.IsNullOrEmpty(sceneID))
             {
-                InteractiveGroupCollectionModel groups = await ChannelSession.Interactive.GetGroups();
+                MixPlayGroupCollectionModel groups = await ChannelSession.Interactive.GetGroups();
                 if (groups != null && groups.groups != null)
                 {
                     if (!groups.groups.Any(g => g.groupID.Equals(groupName)))
                     {
-                        return await this.RunAsync(this.Client.CreateGroupsWithResponse(new List<InteractiveGroupModel>() { new InteractiveGroupModel() { groupID = groupName, sceneID = sceneID } }));
+                        return await this.RunAsync(this.Client.CreateGroupsWithResponse(new List<MixPlayGroupModel>() { new MixPlayGroupModel() { groupID = groupName, sceneID = sceneID } }));
                     }
                     return true;
                 }
@@ -394,30 +416,30 @@ namespace MixItUp.Base.MixerAPI
             return false;
         }
 
-        public async Task<InteractiveGroupCollectionModel> GetGroups() { return await this.RunAsync(this.Client.GetGroups()); }
+        public async Task<MixPlayGroupCollectionModel> GetGroups() { return await this.RunAsync(this.Client.GetGroups()); }
 
         public async Task UpdateGroup(string groupName, string sceneID)
         {
-            InteractiveGroupCollectionModel groups = await ChannelSession.Interactive.GetGroups();
+            MixPlayGroupCollectionModel groups = await ChannelSession.Interactive.GetGroups();
             if (groups != null && groups.groups != null)
             {
-                InteractiveGroupModel group = groups.groups.FirstOrDefault(g => g.groupID.Equals(groupName));
+                MixPlayGroupModel group = groups.groups.FirstOrDefault(g => g.groupID.Equals(groupName));
                 if (group != null)
                 {
                     group.sceneID = sceneID;
-                    await this.RunAsync(this.Client.UpdateGroups(new List<InteractiveGroupModel>() { group }));
+                    await this.RunAsync(this.Client.UpdateGroups(new List<MixPlayGroupModel>() { group }));
                 }
             }
         }
 
-        public async Task DeleteGroup(InteractiveGroupModel groupToDelete, InteractiveGroupModel groupToReplace) { await this.RunAsync(this.Client.DeleteGroup(groupToDelete, groupToReplace)); }
+        public async Task DeleteGroup(MixPlayGroupModel groupToDelete, MixPlayGroupModel groupToReplace) { await this.RunAsync(this.Client.DeleteGroup(groupToDelete, groupToReplace)); }
 
-        public async Task<IEnumerable<InteractiveParticipantModel>> GetRecentParticipants()
+        public async Task<IEnumerable<MixPlayParticipantModel>> GetRecentParticipants()
         {
-            Dictionary<uint, InteractiveParticipantModel> participants = new Dictionary<uint, InteractiveParticipantModel>();
+            Dictionary<uint, MixPlayParticipantModel> participants = new Dictionary<uint, MixPlayParticipantModel>();
 
             DateTimeOffset startTime = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(10));
-            InteractiveParticipantCollectionModel collection = null;
+            MixPlayParticipantCollectionModel collection = null;
             await this.RunAsync(async () =>
             {
                 do
@@ -430,14 +452,14 @@ namespace MixItUp.Base.MixerAPI
                     collection = await this.Client.GetAllParticipants(startTime);
                     if (collection != null && collection.participants != null)
                     {
-                        foreach (InteractiveParticipantModel participant in collection.participants)
+                        foreach (MixPlayParticipantModel participant in collection.participants)
                         {
                             participants[participant.userID] = participant;
                         }
 
                         if (collection.participants.Count() > 0)
                         {
-                            startTime = DateTimeHelper.UnixTimestampToDateTimeOffset(collection.participants.Last().connectedAt);
+                            startTime = StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCUnixTimeMilliseconds(collection.participants.Last().connectedAt);
                         }
                     }
                 } while (collection != null && collection.participants.Count > 0 && collection.hasMore);
@@ -446,39 +468,39 @@ namespace MixItUp.Base.MixerAPI
             return participants.Values;
         }
 
-        public async Task UpdateParticipant(InteractiveParticipantModel participant) { await this.UpdateParticipants(new List<InteractiveParticipantModel>() { participant }); }
-        public async Task UpdateParticipants(IEnumerable<InteractiveParticipantModel> participants) { await this.RunAsync(this.Client.UpdateParticipantsWithResponse(participants)); }
+        public async Task UpdateParticipant(MixPlayParticipantModel participant) { await this.UpdateParticipants(new List<MixPlayParticipantModel>() { participant }); }
+        public async Task UpdateParticipants(IEnumerable<MixPlayParticipantModel> participants) { await this.RunAsync(this.Client.UpdateParticipantsWithResponse(participants)); }
 
         public async Task AddUserToGroup(UserViewModel user, string groupName)
         {
             if (!string.IsNullOrEmpty(groupName) && user.IsInteractiveParticipant)
             {
                 user.InteractiveGroupID = groupName;
-                foreach (InteractiveParticipantModel participant in user.GetParticipantModels())
+                foreach (MixPlayParticipantModel participant in user.GetParticipantModels())
                 {
                     await ChannelSession.Interactive.UpdateParticipant(participant);
                 }
             }
         }
 
-        public async Task UpdateControls(InteractiveConnectedSceneModel scene, IEnumerable<InteractiveControlModel> controls)
+        public async Task UpdateControls(MixPlayConnectedSceneModel scene, IEnumerable<MixPlayControlModel> controls)
         {
-            List<InteractiveControlModel> updatedControls = new List<InteractiveControlModel>();
+            List<MixPlayControlModel> updatedControls = new List<MixPlayControlModel>();
 
-            foreach (InteractiveControlModel control in controls)
+            foreach (MixPlayControlModel control in controls)
             {
-                if (control is InteractiveConnectedButtonControlModel) { updatedControls.Add(SerializerHelper.Clone<InteractiveConnectedButtonControlModel>(control)); }
-                else if (control is InteractiveConnectedJoystickControlModel) { updatedControls.Add(SerializerHelper.Clone<InteractiveConnectedJoystickControlModel>(control)); }
-                else if (control is InteractiveConnectedTextBoxControlModel) { updatedControls.Add(SerializerHelper.Clone<InteractiveConnectedTextBoxControlModel>(control)); }
-                else if (control is InteractiveConnectedLabelControlModel) { updatedControls.Add(SerializerHelper.Clone<InteractiveConnectedLabelControlModel>(control)); }
-                else if (control is InteractiveButtonControlModel) { updatedControls.Add(SerializerHelper.Clone<InteractiveButtonControlModel>(control)); }
-                else if (control is InteractiveJoystickControlModel) { updatedControls.Add(SerializerHelper.Clone<InteractiveJoystickControlModel>(control)); }
-                else if (control is InteractiveTextBoxControlModel) { updatedControls.Add(SerializerHelper.Clone<InteractiveTextBoxControlModel>(control)); }
-                else if (control is InteractiveLabelControlModel) { updatedControls.Add(SerializerHelper.Clone<InteractiveLabelControlModel>(control)); }
-                else { updatedControls.Add(SerializerHelper.Clone<InteractiveControlModel>(control)); }
+                if (control is MixPlayConnectedButtonControlModel) { updatedControls.Add(SerializerHelper.Clone<MixPlayConnectedButtonControlModel>(control)); }
+                else if (control is MixPlayConnectedJoystickControlModel) { updatedControls.Add(SerializerHelper.Clone<MixPlayConnectedJoystickControlModel>(control)); }
+                else if (control is MixPlayConnectedTextBoxControlModel) { updatedControls.Add(SerializerHelper.Clone<MixPlayConnectedTextBoxControlModel>(control)); }
+                else if (control is MixPlayConnectedLabelControlModel) { updatedControls.Add(SerializerHelper.Clone<MixPlayConnectedLabelControlModel>(control)); }
+                else if (control is MixPlayButtonControlModel) { updatedControls.Add(SerializerHelper.Clone<MixPlayButtonControlModel>(control)); }
+                else if (control is MixPlayJoystickControlModel) { updatedControls.Add(SerializerHelper.Clone<MixPlayJoystickControlModel>(control)); }
+                else if (control is MixPlayTextBoxControlModel) { updatedControls.Add(SerializerHelper.Clone<MixPlayTextBoxControlModel>(control)); }
+                else if (control is MixPlayLabelControlModel) { updatedControls.Add(SerializerHelper.Clone<MixPlayLabelControlModel>(control)); }
+                else { updatedControls.Add(SerializerHelper.Clone<MixPlayControlModel>(control)); }
             }
 
-            foreach (InteractiveControlModel control in updatedControls)
+            foreach (MixPlayControlModel control in updatedControls)
             {
                 control.position = null;
             }
@@ -490,18 +512,18 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task BroadcastEvent(IEnumerable<string> scopes, JObject data) { await this.RunAsync(this.Client.BroadcastEvent(scopes, data)); }
 
-        public async Task DisableAllControlsWithoutCommands(InteractiveGameVersionModel version)
+        public async Task DisableAllControlsWithoutCommands(MixPlayGameVersionModel version)
         {
             // Disable all controls that do not have an associated Interactive Command or the Interactive Command is disabled
-            foreach (InteractiveSceneModel scene in version.controls.scenes)
+            foreach (MixPlaySceneModel scene in version.controls.scenes)
             {
-                foreach (InteractiveControlModel control in scene.allControls)
+                foreach (MixPlayControlModel control in scene.allControls)
                 {
                     InteractiveCommand command = this.GetInteractiveCommandForControl(version.gameId, control);
                     control.disabled = (command == null || !command.IsEnabled);
                 }
             }
-            await ChannelSession.Connection.UpdateInteractiveGameVersion(version);
+            await ChannelSession.MixerStreamerConnection.UpdateMixPlayGameVersion(version);
         }
 
         public async Task TimeoutUser(UserViewModel user, int amountInSeconds)
@@ -518,7 +540,7 @@ namespace MixItUp.Base.MixerAPI
                         await ChannelSession.Interactive.SetUserDisabledState(user, disabled: false);
                     }
                 }
-                catch (Exception ex) { Util.Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
             });
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
@@ -528,7 +550,7 @@ namespace MixItUp.Base.MixerAPI
             if (user != null && user.IsInteractiveParticipant)
             {
                 user.IsInInteractiveTimeout = disabled;
-                foreach (InteractiveParticipantModel participant in user.GetParticipantModels())
+                foreach (MixPlayParticipantModel participant in user.GetParticipantModels())
                 {
                     await ChannelSession.Interactive.UpdateParticipant(participant);
                 }
@@ -537,25 +559,26 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task RefreshCachedControls()
         {
+            this.DuplicatedControls.Clear();
             this.Scenes.Clear();
             this.Controls.Clear();
             this.ControlCommands.Clear();
 
             // Initialize Scenes
-            InteractiveConnectedSceneGroupCollectionModel scenes = await this.GetScenes();
+            MixPlayConnectedSceneGroupCollectionModel scenes = await this.GetScenes();
             if (scenes != null)
             {
-                foreach (InteractiveConnectedSceneModel scene in scenes.scenes)
+                foreach (MixPlayConnectedSceneModel scene in scenes.scenes)
                 {
                     this.Scenes.Add(scene);
 
-                    InteractiveSceneModel dataScene = this.Version.controls.scenes.FirstOrDefault(s => s.sceneID.Equals(scene.sceneID));
+                    MixPlaySceneModel dataScene = this.Version.controls.scenes.FirstOrDefault(s => s.sceneID.Equals(scene.sceneID));
 
-                    foreach (InteractiveConnectedButtonControlModel button in scene.buttons)
+                    foreach (MixPlayConnectedButtonControlModel button in scene.buttons)
                     {
                         if (dataScene != null)
                         {
-                            InteractiveButtonControlModel dataButton = dataScene.buttons.FirstOrDefault(b => b.controlID.Equals(button.controlID));
+                            MixPlayButtonControlModel dataButton = dataScene.buttons.FirstOrDefault(b => b.controlID.Equals(button.controlID));
                             if (dataButton != null)
                             {
                                 button.text = dataButton.text;
@@ -563,23 +586,25 @@ namespace MixItUp.Base.MixerAPI
                             }
                         }
 
+                        CheckDuplicatedControls(scene.sceneID, button.controlID);
                         this.Controls[button.controlID] = button;
-
+                        this.ControlScenes[button.controlID] = scene;
                         this.AddConnectedControl(scene, button);
                     }
 
-                    foreach (InteractiveConnectedJoystickControlModel joystick in scene.joysticks)
+                    foreach (MixPlayConnectedJoystickControlModel joystick in scene.joysticks)
                     {
+                        CheckDuplicatedControls(scene.sceneID, joystick.controlID);
                         this.Controls[joystick.controlID] = joystick;
-
+                        this.ControlScenes[joystick.controlID] = scene;
                         this.AddConnectedControl(scene, joystick);
                     }
 
-                    foreach (InteractiveConnectedTextBoxControlModel textBox in scene.textBoxes)
+                    foreach (MixPlayConnectedTextBoxControlModel textBox in scene.textBoxes)
                     {
                         if (dataScene != null)
                         {
-                            InteractiveTextBoxControlModel dataTextBox = dataScene.textBoxes.FirstOrDefault(b => b.controlID.Equals(textBox.controlID));
+                            MixPlayTextBoxControlModel dataTextBox = dataScene.textBoxes.FirstOrDefault(b => b.controlID.Equals(textBox.controlID));
                             if (dataTextBox != null)
                             {
                                 textBox.placeholder = dataTextBox.placeholder;
@@ -587,16 +612,29 @@ namespace MixItUp.Base.MixerAPI
                             }
                         }
 
+                        CheckDuplicatedControls(scene.sceneID, textBox.controlID);
                         this.Controls[textBox.controlID] = textBox;
-
+                        this.ControlScenes[textBox.controlID] = scene;
                         this.AddConnectedControl(scene, textBox);
                     }
                 }
             }
         }
 
+        private void CheckDuplicatedControls(string sceneID, string controlID)
+        {
+            if (this.Controls.ContainsKey(controlID))
+            {
+                this.DuplicatedControls.Add($"Scene: {this.ControlScenes[controlID].sceneID}  Control: {controlID}");
+                this.DuplicatedControls.Add($"Scene: {sceneID}  Control: {controlID}");
+                this.connectionResult = MixPlayConnectionResult.DuplicateControlIDs;
+            }
+        }
+
         protected override async Task<bool> ConnectInternal()
         {
+            this.connectionResult = MixPlayConnectionResult.Unknown;
+            this.ShouldRetry = true;
             this.SharedProject = ChannelSession.Settings.CustomInteractiveProjectIDs.FirstOrDefault(p => p.VersionID == this.Version.id);
             if (this.SharedProject == null)
             {
@@ -605,11 +643,11 @@ namespace MixItUp.Base.MixerAPI
 
             if (this.SharedProject != null)
             {
-                this.Client = await this.RunAsync(InteractiveClient.CreateFromChannel(ChannelSession.Connection.Connection, ChannelSession.Channel, this.Game, this.Version, this.SharedProject.ShareCode));
+                this.Client = await this.RunAsync(MixPlayClient.CreateFromChannel(ChannelSession.MixerStreamerConnection.Connection, ChannelSession.MixerChannel, this.Game, this.Version, this.SharedProject.ShareCode));
             }
             else
             {
-                this.Client = await this.RunAsync(InteractiveClient.CreateFromChannel(ChannelSession.Connection.Connection, ChannelSession.Channel, this.Game, this.Version));
+                this.Client = await this.RunAsync(MixPlayClient.CreateFromChannel(ChannelSession.MixerStreamerConnection.Connection, ChannelSession.MixerChannel, this.Game, this.Version));
             }
 
             return await this.RunAsync(async () =>
@@ -620,7 +658,7 @@ namespace MixItUp.Base.MixerAPI
 
                     if (await this.RunAsync(this.Client.Connect()) && await this.RunAsync(this.Client.Ready()))
                     {
-                        this.Client.OnDisconnectOccurred += InteractiveClient_OnDisconnectOccurred;
+                        this.Client.OnDisconnectOccurred += MixPlayClient_OnDisconnectOccurred;
                         if (ChannelSession.Settings.DiagnosticLogging)
                         {
                             this.Client.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
@@ -663,26 +701,33 @@ namespace MixItUp.Base.MixerAPI
             this.Scenes.Clear();
             this.ControlCommands.Clear();
 
-            this.Version = await ChannelSession.Connection.GetInteractiveGameVersion(this.Version);
-            foreach (InteractiveSceneModel scene in this.Version.controls.scenes)
+            this.Version = await ChannelSession.MixerStreamerConnection.GetMixPlayGameVersion(this.Version);
+            foreach (MixPlaySceneModel scene in this.Version.controls.scenes)
             {
                 if (scene.allControls.Count() > 0)
                 {
-                    await this.UpdateControls(new InteractiveConnectedSceneModel() { sceneID = scene.sceneID }, scene.allControls);
+                    await this.UpdateControls(new MixPlayConnectedSceneModel() { sceneID = scene.sceneID }, scene.allControls);
                 }
             }
 
             await this.RefreshCachedControls();
             if (this.Scenes.Count == 0)
             {
+                this.ShouldRetry = false;
+                return false;
+            }
+
+            if (this.DuplicatedControls.Count > 0)
+            {
+                this.ShouldRetry = false;
                 return false;
             }
 
             // Initialize Groups
-            List<InteractiveGroupModel> groupsToAdd = new List<InteractiveGroupModel>();
-            if (ChannelSession.Settings.InteractiveUserGroups.ContainsKey(this.Client.InteractiveGame.id))
+            List<MixPlayGroupModel> groupsToAdd = new List<MixPlayGroupModel>();
+            if (ChannelSession.Settings.InteractiveUserGroups.ContainsKey(this.Client.Game.id))
             {
-                foreach (InteractiveUserGroupViewModel userGroup in ChannelSession.Settings.InteractiveUserGroups[this.Client.InteractiveGame.id])
+                foreach (InteractiveUserGroupViewModel userGroup in ChannelSession.Settings.InteractiveUserGroups[this.Client.Game.id])
                 {
                     if (!userGroup.DefaultScene.Equals(InteractiveUserGroupViewModel.DefaultName))
                     {
@@ -697,51 +742,55 @@ namespace MixItUp.Base.MixerAPI
             // Initialize Participants
             await this.AddParticipants(await this.GetRecentParticipants());
 
+            this.connectionResult = MixPlayConnectionResult.Success;
             return true;
         }
 
-        private void AddConnectedControl(InteractiveConnectedSceneModel scene, InteractiveControlModel control)
+        private void AddConnectedControl(MixPlayConnectedSceneModel scene, MixPlayControlModel control)
         {
-            InteractiveCommand command = this.GetInteractiveCommandForControl(this.Client.InteractiveGame.id, control);
+            InteractiveCommand command = this.GetInteractiveCommandForControl(this.Client.Game.id, control);
             if (command != null)
             {
                 command.UpdateWithLatestControl(control);
-                if (control is InteractiveConnectedButtonControlModel)
+                if (control is MixPlayConnectedButtonControlModel)
                 {
-                    this.ControlCommands[control.controlID] = new InteractiveConnectedButtonCommand(scene, (InteractiveConnectedButtonControlModel)control, command);
+                    this.ControlCommands[control.controlID] = new InteractiveConnectedButtonCommand(scene, (MixPlayConnectedButtonControlModel)control, command);
                 }
-                else if (control is InteractiveConnectedJoystickControlModel)
+                else if (control is MixPlayConnectedJoystickControlModel)
                 {
-                    this.ControlCommands[control.controlID] = new InteractiveConnectedJoystickCommand(scene, (InteractiveConnectedJoystickControlModel)control, command);
+                    this.ControlCommands[control.controlID] = new InteractiveConnectedJoystickCommand(scene, (MixPlayConnectedJoystickControlModel)control, command);
                 }
-                else if (control is InteractiveConnectedTextBoxControlModel)
+                else if (control is MixPlayConnectedTextBoxControlModel)
                 {
-                    this.ControlCommands[control.controlID] = new InteractiveConnectedTextBoxCommand(scene, (InteractiveConnectedTextBoxControlModel)control, command);
+                    this.ControlCommands[control.controlID] = new InteractiveConnectedTextBoxCommand(scene, (MixPlayConnectedTextBoxControlModel)control, command);
                 }
             }
         }
 
-        private async Task AddParticipants(IEnumerable<InteractiveParticipantModel> participants)
+        private async Task AddParticipants(IEnumerable<MixPlayParticipantModel> participants)
         {
             if (participants != null && participants.Count() > 0)
             {
-                List<InteractiveParticipantModel> participantsToUpdate = new List<InteractiveParticipantModel>();
+                List<MixPlayParticipantModel> participantsToUpdate = new List<MixPlayParticipantModel>();
 
-                await ChannelSession.ActiveUsers.AddOrUpdateUsers(participants);
-
-                List<InteractiveUserGroupViewModel> gameGroups = new List<InteractiveUserGroupViewModel>();
-                if (this.Client != null && this.Client.InteractiveGame != null && ChannelSession.Settings.InteractiveUserGroups.ContainsKey(this.Client.InteractiveGame.id))
+                foreach (MixPlayParticipantModel participant in participants)
                 {
-                    gameGroups = new List<InteractiveUserGroupViewModel>(ChannelSession.Settings.InteractiveUserGroups[this.Client.InteractiveGame.id].OrderByDescending(g => g.AssociatedUserRole));
+                    await ChannelSession.Services.User.AddOrUpdateUser(participant);
                 }
 
-                foreach (InteractiveParticipantModel participant in participants)
+                List<InteractiveUserGroupViewModel> gameGroups = new List<InteractiveUserGroupViewModel>();
+                if (this.Client != null && this.Client.Game != null && ChannelSession.Settings.InteractiveUserGroups.ContainsKey(this.Client.Game.id))
+                {
+                    gameGroups = new List<InteractiveUserGroupViewModel>(ChannelSession.Settings.InteractiveUserGroups[this.Client.Game.id].OrderByDescending(g => g.AssociatedUserRole));
+                }
+
+                foreach (MixPlayParticipantModel participant in participants)
                 {
                     if (participant != null && !string.IsNullOrEmpty(participant.sessionID))
                     {
                         this.Participants[participant.sessionID] = participant;
 
-                        UserViewModel user = await ChannelSession.ActiveUsers.GetUserByID(participant.userID);
+                        UserViewModel user = ChannelSession.Services.User.GetUserByID(participant.userID);
                         if (user != null)
                         {
                             InteractiveUserGroupViewModel group = gameGroups.FirstOrDefault(g => user.HasPermissionsTo(g.AssociatedUserRole));
@@ -765,7 +814,7 @@ namespace MixItUp.Base.MixerAPI
             }
         }
 
-        private InteractiveCommand GetInteractiveCommandForControl(uint gameID, InteractiveControlModel control)
+        private InteractiveCommand GetInteractiveCommandForControl(uint gameID, MixPlayControlModel control)
         {
             return ChannelSession.Settings.InteractiveCommands.FirstOrDefault(c => c.GameID.Equals(gameID) && c.Control.controlID.Equals(control.controlID));
         }
@@ -774,35 +823,35 @@ namespace MixItUp.Base.MixerAPI
 
         #region Interactive Event Handlers
 
-        private void Client_OnIssueMemoryWarning(object sender, InteractiveIssueMemoryWarningModel e) { this.OnIssueMemoryWarning(this, e); }
+        private void Client_OnIssueMemoryWarning(object sender, MixPlayIssueMemoryWarningModel e) { this.OnIssueMemoryWarning(this, e); }
 
-        private void Client_OnGroupCreate(object sender, InteractiveGroupCollectionModel e) { this.OnGroupCreate(this, e); }
+        private void Client_OnGroupCreate(object sender, MixPlayGroupCollectionModel e) { this.OnGroupCreate(this, e); }
 
-        private void Client_OnGroupDelete(object sender, Tuple<InteractiveGroupModel, InteractiveGroupModel> e) { this.OnGroupDelete(this, e); }
+        private void Client_OnGroupDelete(object sender, Tuple<MixPlayGroupModel, MixPlayGroupModel> e) { this.OnGroupDelete(this, e); }
 
-        private void Client_OnGroupUpdate(object sender, InteractiveGroupCollectionModel e) { this.OnGroupUpdate(this, e); }
+        private void Client_OnGroupUpdate(object sender, MixPlayGroupCollectionModel e) { this.OnGroupUpdate(this, e); }
 
-        private void Client_OnSceneCreate(object sender, InteractiveConnectedSceneCollectionModel e) { this.OnSceneCreate(this, e); }
+        private void Client_OnSceneCreate(object sender, MixPlayConnectedSceneCollectionModel e) { this.OnSceneCreate(this, e); }
 
-        private void Client_OnSceneDelete(object sender, Tuple<InteractiveConnectedSceneModel, InteractiveConnectedSceneModel> e) { this.OnSceneDelete(this, e); }
+        private void Client_OnSceneDelete(object sender, Tuple<MixPlayConnectedSceneModel, MixPlayConnectedSceneModel> e) { this.OnSceneDelete(this, e); }
 
-        private void Client_OnSceneUpdate(object sender, InteractiveConnectedSceneCollectionModel e) { this.OnSceneUpdate(this, e); }
+        private void Client_OnSceneUpdate(object sender, MixPlayConnectedSceneCollectionModel e) { this.OnSceneUpdate(this, e); }
 
-        private void Client_OnControlCreate(object sender, InteractiveConnectedSceneModel e) { this.OnControlCreate(this, e); }
+        private void Client_OnControlCreate(object sender, MixPlayConnectedSceneModel e) { this.OnControlCreate(this, e); }
 
-        private void Client_OnControlDelete(object sender, InteractiveConnectedSceneModel e) { this.OnControlDelete(this, e); }
+        private void Client_OnControlDelete(object sender, MixPlayConnectedSceneModel e) { this.OnControlDelete(this, e); }
 
-        private void Client_OnControlUpdate(object sender, InteractiveConnectedSceneModel e) { this.OnControlUpdate(this, e); }
+        private void Client_OnControlUpdate(object sender, MixPlayConnectedSceneModel e) { this.OnControlUpdate(this, e); }
 
-        private async void Client_OnParticipantLeave(object sender, InteractiveParticipantCollectionModel e)
+        private async void Client_OnParticipantLeave(object sender, MixPlayParticipantCollectionModel e)
         {
             if (e != null)
             {
-                foreach (InteractiveParticipantModel participant in e.participants)
+                foreach (MixPlayParticipantModel participant in e.participants)
                 {
                     if (!string.IsNullOrEmpty(participant.sessionID))
                     {
-                        await ChannelSession.ActiveUsers.RemoveInteractiveUser(participant);
+                        await ChannelSession.Services.User.RemoveUser(participant);
                         this.Participants.Remove(participant.sessionID);
                     }
                 }
@@ -810,7 +859,7 @@ namespace MixItUp.Base.MixerAPI
             this.OnParticipantLeave(this, e);
         }
 
-        private async void Client_OnParticipantJoin(object sender, InteractiveParticipantCollectionModel e)
+        private async void Client_OnParticipantJoin(object sender, MixPlayParticipantCollectionModel e)
         {
             if (e != null)
             {
@@ -819,11 +868,11 @@ namespace MixItUp.Base.MixerAPI
             this.OnParticipantJoin(this, e);
         }
 
-        private void Client_OnParticipantUpdate(object sender, InteractiveParticipantCollectionModel e)
+        private void Client_OnParticipantUpdate(object sender, MixPlayParticipantCollectionModel e)
         {
             if (e.participants != null)
             {
-                foreach (InteractiveParticipantModel participant in e.participants)
+                foreach (MixPlayParticipantModel participant in e.participants)
                 {
                     if (!string.IsNullOrEmpty(participant.sessionID))
                     {
@@ -834,13 +883,13 @@ namespace MixItUp.Base.MixerAPI
             this.OnParticipantUpdate(this, e);
         }
 
-        private async void Client_OnGiveInput(object sender, InteractiveGiveInputModel e)
+        private async void Client_OnGiveInput(object sender, MixPlayGiveInputModel e)
         {
             try
             {
                 if (e != null && e.input != null)
                 {
-                    InteractiveControlModel control = this.Controls[e.input.controlID];
+                    MixPlayControlModel control = this.Controls[e.input.controlID];
                     InteractiveConnectedControlCommand connectedControl = null;
                     if (this.ControlCommands.ContainsKey(e.input.controlID))
                     {
@@ -860,21 +909,21 @@ namespace MixItUp.Base.MixerAPI
                     UserViewModel user = null;
                     if (!string.IsNullOrEmpty(e.participantID))
                     {
-                        user = await ChannelSession.ActiveUsers.GetUserByParticipantID(e.participantID);
+                        user = ChannelSession.Services.User.GetUserByMixPlayID(e.participantID);
                         if (user == null)
                         {
-                            InteractiveParticipantModel participant = null;
+                            MixPlayParticipantModel participant = null;
                             if (this.Participants.TryGetValue(e.participantID, out participant))
                             {
                                 user = new UserViewModel(participant);
                             }
                             else
                             {
-                                IEnumerable<InteractiveParticipantModel> recentParticipants = await this.GetRecentParticipants();
+                                IEnumerable<MixPlayParticipantModel> recentParticipants = await this.GetRecentParticipants();
                                 participant = recentParticipants.FirstOrDefault(p => p.sessionID.Equals(e.participantID));
                                 if (participant != null)
                                 {
-                                    user = await ChannelSession.ActiveUsers.AddOrUpdateUser(participant);
+                                    user = await ChannelSession.Services.User.AddOrUpdateUser(participant);
                                 }
                             }
                         }
@@ -883,7 +932,7 @@ namespace MixItUp.Base.MixerAPI
                     if (user == null)
                     {
                         user = new UserViewModel(0, "Unknown User");
-                        user.InteractiveIDs[e.participantID] = new InteractiveParticipantModel() { sessionID = e.participantID, anonymous = true };
+                        user.InteractiveIDs[e.participantID] = new MixPlayParticipantModel() { sessionID = e.participantID, anonymous = true };
                     }
                     else
                     {
@@ -898,6 +947,7 @@ namespace MixItUp.Base.MixerAPI
 
                     if (user.IsInInteractiveTimeout)
                     {
+                        await ChannelSession.Services.Chat.Whisper(user.UserName, "You currently timed out from MixPlay.");
                         return;
                     }
 
@@ -922,17 +972,17 @@ namespace MixItUp.Base.MixerAPI
                             {
                                 if (!string.IsNullOrEmpty(e.transactionID) && !user.Data.IsSparkExempt)
                                 {
-                                    Util.Logger.LogDiagnostic("Sending Spark Transaction Capture - " + e.transactionID);
+                                    Logger.Log(LogLevel.Debug, "Sending Spark Transaction Capture - " + e.transactionID);
 
                                     await this.CaptureSparkTransaction(e.transactionID);
 
-                                    if (control is InteractiveButtonControlModel)
+                                    if (control is MixPlayButtonControlModel)
                                     {
-                                        sparkCost = ((InteractiveButtonControlModel)control).cost.GetValueOrDefault();
+                                        sparkCost = ((MixPlayButtonControlModel)control).cost.GetValueOrDefault();
                                     }
-                                    else if (control is InteractiveTextBoxControlModel)
+                                    else if (control is MixPlayTextBoxControlModel)
                                     {
-                                        sparkCost = ((InteractiveTextBoxControlModel)control).cost.GetValueOrDefault();
+                                        sparkCost = ((MixPlayTextBoxControlModel)control).cost.GetValueOrDefault();
                                     }
                                 }
 
@@ -961,12 +1011,18 @@ namespace MixItUp.Base.MixerAPI
                     this.OnGiveInput(this, e);
 
                     this.OnInteractiveControlUsed(this, new InteractiveInputEvent(user, e, connectedControl));
+
+                    if (ChannelSession.Settings.ChatShowInteractiveAlerts)
+                    {
+                        await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer,
+                            string.Format("{0} Used The \"{1}\" Interactive Control", user.UserName, connectedControl.Command.Name), ChannelSession.Settings.ChatInteractiveAlertsColorScheme));
+                    }
                 }
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
         }
 
-        private async void InteractiveClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
+        private async void MixPlayClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
             ChannelSession.DisconnectionOccurred("Interactive");
 
@@ -974,7 +1030,7 @@ namespace MixItUp.Base.MixerAPI
             {
                 await Task.Delay(2500);
             }
-            while (!await this.Connect(this.Game, this.Version));
+            while (await this.Connect(this.Game, this.Version) != MixPlayConnectionResult.Success);
 
             ChannelSession.ReconnectionOccurred("Interactive");
         }

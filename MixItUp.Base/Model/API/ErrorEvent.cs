@@ -21,7 +21,7 @@ namespace MixItUp.Base.Model.API
 
         public ErrorEvent(string details, bool isCrash)
         {
-            this.MixerUserID = (int)ChannelSession.User.id;
+            this.MixerUserID = (int)ChannelSession.MixerStreamerUser.id;
             this.AppVersion = Assembly.GetEntryAssembly().GetName().Version.ToString();
             this.Details = details;
             this.IsCrash = isCrash;

@@ -5,29 +5,28 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Chat"
              xmlns:UsersControls="clr-namespace:MixItUp.WPF.Controls.Users"
+             xmlns:Util="clr-namespace:MixItUp.WPF.Util"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <Util:ColorBrushConverter x:Key="ColorBrushConverter" />
     </UserControl.Resources>
 
-    <Grid VerticalAlignment="Center" Margin="0,0,10,0">
+    <Grid Margin="0,0,7,0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="10" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <UsersControls:UserProfileAvatarControl x:Name="UserAvatar" Grid.Column="0" />
+        <local:ChatUserControl DataContext="{Binding User}" Grid.Column="0" />
 
-        <Image x:Name="SubscriberImage" Grid.Column="1" Margin="5,0,0,0" VerticalAlignment="Center" Visibility="Collapsed" />
+        <Image Grid.Column="1" Source="{Binding User.MixerChannelBadgeLink}" Visibility="{Binding User.HasMixerChannelBadgeLink, Converter={StaticResource BooleanToVisibilityConverter}}" Height="20" Width="20" Margin="0,-2" VerticalAlignment="Center" />
 
-        <TextBlock x:Name="UserTextBlock" Grid.Column="3" Text="{Binding User.UserName}" VerticalAlignment="Center" />
-
-        <Grid x:Name="WhisperTargetGrid" Grid.Column="4" Visibility="{Binding IsWhisper, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}">
+        <Grid Grid.Column="2" Visibility="{Binding IsWhisper, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" VerticalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3" />
                 <ColumnDefinition Width="Auto" />
@@ -37,15 +36,16 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock x:Name="WhispererNumber" Grid.Column="1" Text="{Binding User.WhispererNumber, StringFormat=[Whisperer #{0}]}" VerticalAlignment="Center" />
-            
-            <TextBlock Grid.Column="3" Text="&#x2794;" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1" Visibility="{Binding User.HasWhisperNumber, Converter={StaticResource BooleanToVisibilityConverter}}" Text="{Binding User.WhispererNumber, StringFormat=[Whisperer #{0}]}" />
 
-            <TextBlock Grid.Column="5" x:Name="TargetUserTextBlock" Text="{Binding TargetUsername}" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="3" Text="&#x2794;" />
+
+            <TextBlock Grid.Column="5" Text="{Binding TargetUsername}" />
 
         </Grid>
 
-        <TextBlock Grid.Column="5" VerticalAlignment="Center">:</TextBlock>
+        <TextBlock Grid.Column="3" VerticalAlignment="Center" Margin="3,0,0,0" Visibility="{Binding ShowTimestamp, Converter={StaticResource BooleanToVisibilityConverter}}" Text="{Binding TimestampDisplay}" />
 
+        <TextBlock Grid.Column="4" VerticalAlignment="Center">:</TextBlock>
     </Grid>
 </UserControl>

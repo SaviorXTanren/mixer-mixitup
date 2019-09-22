@@ -1,14 +1,15 @@
-﻿using Mixer.Base.Model.OAuth;
-using MixItUp.Base;
+﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Desktop.Util;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Model.OAuth;
+using StreamingClient.Base.Util;
+using StreamingClient.Base.Web;
 using System;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace MixItUp.Desktop.Services
@@ -55,13 +56,13 @@ namespace MixItUp.Desktop.Services
 
             this.SocketReceiveWrapper("error", (errorData) =>
             {
-                MixItUp.Base.Util.Logger.Log(errorData.ToString());
+                Logger.Log(errorData.ToString());
                 this.service.WebSocketDisconnectedOccurred();
             });
 
             this.SocketReceiveWrapper("disconnect", (errorData) =>
             {
-                MixItUp.Base.Util.Logger.Log(errorData.ToString());
+                Logger.Log(errorData.ToString());
                 this.service.WebSocketDisconnectedOccurred();
             });
 
@@ -127,7 +128,7 @@ namespace MixItUp.Desktop.Services
                         return true;
                     }
                 }
-                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
             }
 
             this.authorizationToken = await this.ConnectViaOAuthRedirect(string.Format(TreatStreamService.AuthorizationURL, TreatStreamService.ClientID, TreatStreamService.ListeningURL));
@@ -143,7 +144,7 @@ namespace MixItUp.Desktop.Services
                     payload["redirect_uri"] = TreatStreamService.ListeningURL;
                     payload["scope"] = "userinfo";
 
-                    this.token = await this.PostAsync<OAuthTokenModel>(TreatStreamService.OAuthTokenURL, this.CreateContentFromObject(payload), autoRefreshToken: false);
+                    this.token = await this.PostAsync<OAuthTokenModel>(TreatStreamService.OAuthTokenURL, AdvancedHttpClient.CreateContentFromObject(payload), autoRefreshToken: false);
                     if (this.token != null)
                     {
                         token.authorizationCode = this.authorizationToken;
@@ -153,7 +154,7 @@ namespace MixItUp.Desktop.Services
                         return await this.InitializeInternal();
                     }
                 }
-                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
             }
             return false;
         }
@@ -176,7 +177,7 @@ namespace MixItUp.Desktop.Services
                 payload["client_id"] = TreatStreamService.ClientID;
                 payload["access_token"] = this.token.accessToken;
 
-                HttpContent content = this.CreateContentFromObject(payload);
+                HttpContent content = AdvancedHttpClient.CreateContentFromObject(payload);
                 content.Headers.Clear();
                 content.Headers.Add("Content-Type", "application/json");
                 JObject jobj = await this.PostAsync<JObject>("https://treatstream.com/Oauth2/Authorize/socketToken", content);
@@ -185,7 +186,7 @@ namespace MixItUp.Desktop.Services
                     return jobj["socket_token"].ToString();
                 }
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
             return null;
         }
 
@@ -195,7 +196,7 @@ namespace MixItUp.Desktop.Services
             {
                 string result = await this.GetStringAsync(string.Format("getMonthTreats/{0}", this.token.accessToken));
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
         }
 
         public void WebSocketConnectedOccurred()
@@ -223,7 +224,7 @@ namespace MixItUp.Desktop.Services
                 payload["refresh_token"] = this.token.refreshToken;
                 payload["grant_type"] = "refresh_token";
 
-                this.token = await this.PostAsync<OAuthTokenModel>(TreatStreamService.RefreshTokenURL, this.CreateContentFromObject(payload), autoRefreshToken: false);
+                this.token = await this.PostAsync<OAuthTokenModel>(TreatStreamService.RefreshTokenURL, AdvancedHttpClient.CreateContentFromObject(payload), autoRefreshToken: false);
             }
         }
 

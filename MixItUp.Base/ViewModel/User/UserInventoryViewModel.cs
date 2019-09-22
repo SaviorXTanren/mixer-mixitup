@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -152,13 +153,19 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         [JsonIgnore]
-        public string UserAmountSpecialIdentifierExample { get { return string.Format("{0}{1}<ITEM>", SpecialIdentifierStringBuilder.UserSpecialIdentifierHeader, this.SpecialIdentifier); } }
+        public string RandomItemSpecialIdentifier { get { return string.Format("{0}randomitem", this.SpecialIdentifier); } }
 
         [JsonIgnore]
         public string UserAmountSpecialIdentifierHeader { get { return string.Format("{0}{1}", SpecialIdentifierStringBuilder.UserSpecialIdentifierHeader, this.SpecialIdentifier); } }
 
         [JsonIgnore]
-        public string UserAllAmountSpecialIdentifier { get { return string.Format("{0}{1}all", SpecialIdentifierStringBuilder.UserSpecialIdentifierHeader, this.SpecialIdentifier); } }
+        public string UserAmountSpecialIdentifierExample { get { return string.Format("{0}<ITEM>", this.UserAmountSpecialIdentifierHeader); } }
+
+        [JsonIgnore]
+        public string UserAllAmountSpecialIdentifier { get { return string.Format("{0}all", this.UserAmountSpecialIdentifierHeader); } }
+
+        [JsonIgnore]
+        public string UserRandomItemSpecialIdentifier { get { return string.Format("{0}randomitem", this.UserAmountSpecialIdentifierHeader); } }
 
         public async Task Reset()
         {
@@ -174,7 +181,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             try
             {
-                if (ChannelSession.Chat != null && ChannelSession.Settings.Currencies.ContainsKey(this.ShopCurrencyID))
+                if (ChannelSession.Services.Chat != null && ChannelSession.Settings.Currencies.ContainsKey(this.ShopCurrencyID))
                 {
                     UserCurrencyViewModel currency = ChannelSession.Settings.Currencies[this.ShopCurrencyID];
 
@@ -191,7 +198,7 @@ namespace MixItUp.Base.ViewModel.User
                                     items.Add(item.Name);
                                 }
                             }
-                            await ChannelSession.Chat.Whisper(user.UserName, "Items Available to Buy/Sell: " + string.Join(", ", items));
+                            await ChannelSession.Services.Chat.Whisper(user.UserName, "Items Available to Buy/Sell: " + string.Join(", ", items));
                             return;
                         }
                         else if (arguments.Count() >= 2 &&
@@ -209,7 +216,7 @@ namespace MixItUp.Base.ViewModel.User
                                 {
                                     if (!int.TryParse(arguments.Last(), out amount) || amount <= 0)
                                     {
-                                        await ChannelSession.Chat.Whisper(user.UserName, "A valid amount greater than 0 must be specified");
+                                        await ChannelSession.Services.Chat.Whisper(user.UserName, "A valid amount greater than 0 must be specified");
                                         return;
                                     }
                                 }
@@ -217,7 +224,7 @@ namespace MixItUp.Base.ViewModel.User
 
                             if (item == null)
                             {
-                                await ChannelSession.Chat.Whisper(user.UserName, "The item you specified does not exist");
+                                await ChannelSession.Services.Chat.Whisper(user.UserName, "The item you specified does not exist");
                                 return;
                             }
 
@@ -239,17 +246,17 @@ namespace MixItUp.Base.ViewModel.User
                                         }
                                         else
                                         {
-                                            await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to purchase this item", totalcost, currency.Name));
+                                            await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to purchase this item", totalcost, currency.Name));
                                         }
                                     }
                                     else
                                     {
-                                        await ChannelSession.Chat.Whisper(user.UserName, string.Format("You can only have {0} {1} in total", itemMaxAmount, item.Name));
+                                        await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You can only have {0} {1} in total", itemMaxAmount, item.Name));
                                     }
                                 }
                                 else
                                 {
-                                    await ChannelSession.Chat.Whisper(user.UserName, "This item is not available for buying");
+                                    await ChannelSession.Services.Chat.Whisper(user.UserName, "This item is not available for buying");
                                 }
                             }
                             else if (arg1.Equals("sell", StringComparison.InvariantCultureIgnoreCase))
@@ -265,17 +272,17 @@ namespace MixItUp.Base.ViewModel.User
                                     }
                                     else
                                     {
-                                        await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to sell", amount, item.Name));
+                                        await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to sell", amount, item.Name));
                                     }
                                 }
                                 else
                                 {
-                                    await ChannelSession.Chat.Whisper(user.UserName, "This item is not available for selling");
+                                    await ChannelSession.Services.Chat.Whisper(user.UserName, "This item is not available for selling");
                                 }
                             }
                             else
                             {
-                                await ChannelSession.Chat.Whisper(user.UserName, "You must specify either \"buy\" & \"sell\"");
+                                await ChannelSession.Services.Chat.Whisper(user.UserName, "You must specify either \"buy\" & \"sell\"");
                             }
 
                             if (command != null)
@@ -311,16 +318,16 @@ namespace MixItUp.Base.ViewModel.User
                                         itemInfo.Append(string.Format("Sell = {0} {1}", item.SellAmount, currency.Name));
                                     }
 
-                                    await ChannelSession.Chat.Whisper(user.UserName, itemInfo.ToString());
+                                    await ChannelSession.Services.Chat.Whisper(user.UserName, itemInfo.ToString());
                                 }
                                 else
                                 {
-                                    await ChannelSession.Chat.Whisper(user.UserName, "This item is not available to buy/sell");
+                                    await ChannelSession.Services.Chat.Whisper(user.UserName, "This item is not available to buy/sell");
                                 }
                             }
                             else
                             {
-                                await ChannelSession.Chat.Whisper(user.UserName, "The item you specified does not exist");
+                                await ChannelSession.Services.Chat.Whisper(user.UserName, "The item you specified does not exist");
                             }
                             return;
                         }
@@ -331,7 +338,7 @@ namespace MixItUp.Base.ViewModel.User
                     storeHelp.Append(this.ShopCommand + " <ITEM NAME> = Lists the buying/selling price for the item ** ");
                     storeHelp.Append(this.ShopCommand + " buy <ITEM NAME> [AMOUNT] = Buys 1 or the amount specified of the item ** ");
                     storeHelp.Append(this.ShopCommand + " sell <ITEM NAME> [AMOUNT] = Sells 1 or the amount specified of the item");
-                    await ChannelSession.Chat.Whisper(user.UserName, storeHelp.ToString());
+                    await ChannelSession.Services.Chat.Whisper(user.UserName, storeHelp.ToString());
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }

@@ -4,6 +4,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Overlay;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -159,10 +160,26 @@ namespace MixItUp.Desktop.Services
             });
         }
 
-        private void Overlay_OnWebSocketConnectedOccurred(object sender, EventArgs e)
+        private async void Overlay_OnWebSocketConnectedOccurred(object sender, EventArgs e)
         {
             IOverlayService overlay = (IOverlayService)sender;
             this.OnOverlayConnectedOccurred(overlay, new EventArgs());
+
+            overlay.StartBatching();
+            foreach (OverlayWidgetModel widget in ChannelSession.Settings.OverlayWidgets.Where(ow => ow.OverlayName.Equals(overlay.Name)))
+            {
+                try
+                {
+                    if (widget.IsEnabled)
+                    {
+                        await widget.ShowItem();
+                        await widget.LoadCachedData();
+                        await widget.UpdateItem();
+                    }
+                }
+                catch (Exception ex) { Logger.Log(ex); }
+            }
+            await overlay.EndBatching();
         }
 
         private void Overlay_OnWebSocketDisconnectedOccurred(object sender, WebSocketCloseStatus closeStatus)

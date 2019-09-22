@@ -1,5 +1,4 @@
 ﻿using Mixer.Base.Model.User;
-using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
@@ -10,6 +9,7 @@ using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Controls.Dialogs;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -191,7 +191,7 @@ namespace MixItUp.WPF.Windows.Currency
 
         private void HelpButton_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Currency-&-Rank");
+            ProcessHelper.LaunchLink("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Currency-&-Rank");
         }
 
         private void IsRankToggleButton_Checked(object sender, RoutedEventArgs e)
@@ -388,17 +388,17 @@ namespace MixItUp.WPF.Windows.Currency
                         await this.currency.Reset();
 
                         HashSet<uint> subscriberIDs = new HashSet<uint>();
-                        foreach (UserWithGroupsModel user in await ChannelSession.Connection.GetUsersWithRoles(ChannelSession.Channel, MixerRoleEnum.Subscriber))
+                        foreach (UserWithGroupsModel user in await ChannelSession.MixerStreamerConnection.GetUsersWithRoles(ChannelSession.MixerChannel, MixerRoleEnum.Subscriber))
                         {
                             subscriberIDs.Add(user.id);
                         }
 
                         HashSet<uint> modIDs = new HashSet<uint>();
-                        foreach (UserWithGroupsModel user in await ChannelSession.Connection.GetUsersWithRoles(ChannelSession.Channel, MixerRoleEnum.Mod))
+                        foreach (UserWithGroupsModel user in await ChannelSession.MixerStreamerConnection.GetUsersWithRoles(ChannelSession.MixerChannel, MixerRoleEnum.Mod))
                         {
                             modIDs.Add(user.id);
                         }
-                        foreach (UserWithGroupsModel user in await ChannelSession.Connection.GetUsersWithRoles(ChannelSession.Channel, MixerRoleEnum.ChannelEditor))
+                        foreach (UserWithGroupsModel user in await ChannelSession.MixerStreamerConnection.GetUsersWithRoles(ChannelSession.MixerChannel, MixerRoleEnum.ChannelEditor))
                         {
                             modIDs.Add(user.id);
                         }
@@ -481,11 +481,11 @@ namespace MixItUp.WPF.Windows.Currency
                                     {
                                         if (id > 0)
                                         {
-                                            user = await ChannelSession.Connection.GetUser(id);
+                                            user = await ChannelSession.MixerStreamerConnection.GetUser(id);
                                         }
                                         else if (!string.IsNullOrEmpty(username))
                                         {
-                                            user = await ChannelSession.Connection.GetUser(username);
+                                            user = await ChannelSession.MixerStreamerConnection.GetUser(username);
                                         }
                                     }
 
@@ -513,7 +513,7 @@ namespace MixItUp.WPF.Windows.Currency
                     }
                     catch (Exception ex)
                     {
-                        Base.Util.Logger.Log(ex);
+                        Logger.Log(ex);
                     }
 
                     await MessageBoxHelper.ShowMessageDialog("We were unable to import the data. Please ensure your file is in one of the following formats:" +
@@ -805,6 +805,7 @@ namespace MixItUp.WPF.Windows.Currency
                                 ChannelSession.Settings.ChatCommands.Add(command.Command);
                             }
                         }
+                        ChannelSession.Services.Chat.RebuildCommandTriggers();
                     }
                 }
 

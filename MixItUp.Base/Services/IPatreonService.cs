@@ -1,5 +1,5 @@
-﻿using Mixer.Base.Model.OAuth;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using StreamingClient.Base.Model.OAuth;
 using System;
 using System.Collections.Generic;
 using System.Linq;

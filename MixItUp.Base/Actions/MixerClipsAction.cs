@@ -2,6 +2,7 @@
 using Mixer.Base.Model.Clips;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -63,11 +64,11 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.Chat != null)
+            if (ChannelSession.Services.Chat != null)
             {
                 if (this.ShowClipInfoInChat)
                 {
-                    await ChannelSession.Chat.SendMessage("Sending clip creation request to Mixer...");
+                    await ChannelSession.Services.Chat.SendMessage("Sending clip creation request to Mixer...");
                 }
 
                 string clipName = await this.ReplaceStringWithSpecialModifiers(this.ClipName, user, arguments);
@@ -76,18 +77,15 @@ namespace MixItUp.Base.Actions
                     ClipModel clip = null;
                     DateTimeOffset clipCreationTime = DateTimeOffset.Now;
 
-                    BroadcastModel broadcast = await ChannelSession.Connection.GetCurrentBroadcast();
+                    BroadcastModel broadcast = await ChannelSession.MixerStreamerConnection.GetCurrentBroadcast();
                     if (broadcast != null)
                     {
-                        if (await ChannelSession.Connection.CanClipBeMade(broadcast))
+                        clip = await ChannelSession.MixerStreamerConnection.CreateClip(new ClipRequestModel()
                         {
-                            clip = await ChannelSession.Connection.CreateClip(new ClipRequestModel()
-                            {
-                                broadcastId = broadcast.id.ToString(),
-                                highlightTitle = clipName,
-                                clipDurationInSeconds = this.ClipLength
-                            });
-                        }
+                            broadcastId = broadcast.id.ToString(),
+                            highlightTitle = clipName,
+                            clipDurationInSeconds = this.ClipLength
+                        });
                     }
 
                     if (clip == null)
@@ -96,7 +94,7 @@ namespace MixItUp.Base.Actions
                         {
                             await Task.Delay(2000);
 
-                            IEnumerable<ClipModel> clips = await ChannelSession.Connection.GetChannelClips(ChannelSession.Channel);
+                            IEnumerable<ClipModel> clips = await ChannelSession.MixerStreamerConnection.GetChannelClips(ChannelSession.MixerChannel);
                             clip = clips.OrderByDescending(c => c.uploadDate).FirstOrDefault();
                             if (clip != null && clip.uploadDate.ToLocalTime() >= clipCreationTime && clip.title.Equals(clipName))
                             {
@@ -104,7 +102,7 @@ namespace MixItUp.Base.Actions
                                 return;
                             }
                         }
-                        await ChannelSession.Chat.SendMessage("ERROR: Unable to create clip or could not find clip, please verify that clips can be created by ensuring the Clips button on your stream is not grayed out.");
+                        await ChannelSession.Services.Chat.SendMessage("ERROR: Unable to create clip or could not find clip, please verify that clips can be created by ensuring the Clips button on your stream is not grayed out.");
                     }
                     else
                     {
@@ -118,11 +116,11 @@ namespace MixItUp.Base.Actions
         {
             GlobalEvents.MixerClipCreated(clip);
 
-            string clipUrl = string.Format("https://mixer.com/{0}?clip={1}", ChannelSession.Channel.token, clip.shareableId);
+            string clipUrl = string.Format("https://mixer.com/{0}?clip={1}", ChannelSession.MixerChannel.token, clip.shareableId);
 
             if (this.ShowClipInfoInChat)
             {
-                await ChannelSession.Chat.SendMessage("Clip Created: " + clipUrl);
+                await ChannelSession.Services.Chat.SendMessage("Clip Created: " + clipUrl);
             }
 
             this.extraSpecialIdentifiers[MixerClipURLSpecialIdentifier] = clipUrl;
@@ -133,7 +131,7 @@ namespace MixItUp.Base.Actions
                 {
                     string error = "ERROR: The download folder specified for Mixer Clips does not exist";
                     Logger.Log(error);
-                    await ChannelSession.Chat.Whisper(ChannelSession.User.username, error);
+                    await ChannelSession.Services.Chat.Whisper(ChannelSession.MixerStreamerUser.username, error);
                     return;
                 }
 
@@ -141,7 +139,7 @@ namespace MixItUp.Base.Actions
                 {
                     string error = "ERROR: FFMPEG could not be found and the Mixer Clip can not be converted without it";
                     Logger.Log(error);
-                    await ChannelSession.Chat.Whisper(ChannelSession.User.username, error);
+                    await ChannelSession.Services.Chat.Whisper(ChannelSession.MixerStreamerUser.username, error);
                     return;
                 }
 

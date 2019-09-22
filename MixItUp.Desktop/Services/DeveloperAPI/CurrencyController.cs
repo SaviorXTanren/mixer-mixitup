@@ -72,7 +72,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             UserCurrencyViewModel currency = ChannelSession.Settings.Currencies[currencyID];
 
             Dictionary<uint, UserDataViewModel> allUsersDictionary = ChannelSession.Settings.UserData.ToDictionary();
-            allUsersDictionary.Remove(ChannelSession.Channel.user.id);
+            allUsersDictionary.Remove(ChannelSession.MixerChannel.user.id);
 
             IEnumerable<UserDataViewModel> allUsers = allUsersDictionary.Select(kvp => kvp.Value);
             allUsers = allUsers.Where(u => !u.IsCurrencyRankExempt);

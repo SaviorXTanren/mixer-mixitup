@@ -1,13 +1,12 @@
 ﻿using Mixer.Base;
-using Mixer.Base.Model.OAuth;
-using Mixer.Base.Web;
 using MixItUp.Base.Model.Spotify;
 using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Model.OAuth;
+using StreamingClient.Base.Util;
+using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -127,7 +126,7 @@ namespace MixItUp.Base.Services
             List<SpotifySongModel> songs = new List<SpotifySongModel>();
             try
             {
-                JObject result = await this.GetJObjectAsync(string.Format("search?q={0}&type=track", this.EncodeString(songName)));
+                JObject result = await this.GetJObjectAsync(string.Format("search?q={0}&type=track", AdvancedHttpClient.EncodeString(songName)));
                 if (result != null)
                 {
                     JArray results = (JArray)result["tracks"]["items"];
@@ -220,7 +219,7 @@ namespace MixItUp.Base.Services
             JObject payload = new JObject();
             payload["uris"] = songArray;
 
-            return await this.PutAsync("me/player/play", this.CreateContentFromObject(payload));
+            return await this.PutAsync("me/player/play", AdvancedHttpClient.CreateContentFromObject(payload));
         }
 
         public async Task SetVolume(int volume)
@@ -283,7 +282,7 @@ namespace MixItUp.Base.Services
         {
             HttpResponseMessage response = await this.GetAsync(url);
             await this.LogSpotifyDiagnostic(response);
-            return await this.ProcessJObjectResponse(response);
+            return await response.ProcessJObjectResponse();
         }
 
         private async Task<bool> PostAsync(string url, HttpContent content = null)
@@ -327,7 +326,7 @@ namespace MixItUp.Base.Services
 
         private async Task LogSpotifyDiagnostic(HttpResponseMessage response)
         {
-            Logger.LogDiagnostic(string.Format("Spotify Log: {0} - {1} - {2}", response.RequestMessage.ToString(), response.StatusCode, await response.Content.ReadAsStringAsync()));
+            Logger.Log(LogLevel.Debug, string.Format("Spotify Log: {0} - {1} - {2}", response.RequestMessage.ToString(), response.StatusCode, await response.Content.ReadAsStringAsync()));
         }
 
         #region IDisposable Support

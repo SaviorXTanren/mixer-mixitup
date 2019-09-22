@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base.Util;
+using StreamingClient.Base.Util;
 using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 

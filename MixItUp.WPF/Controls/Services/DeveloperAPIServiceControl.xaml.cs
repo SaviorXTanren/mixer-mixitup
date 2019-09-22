@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Util;
 using MixItUp.WPF.Util;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -34,7 +35,7 @@ namespace MixItUp.WPF.Controls.Services
 
         private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Developer-API");
+            ProcessHelper.LaunchLink("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Developer-API");
         }
 
         private async void EnableDeveloperAPIButton_Click(object sender, RoutedEventArgs e)

@@ -1,8 +1,9 @@
 ﻿using Mixer.Base;
-using Mixer.Base.Model.OAuth;
-using Mixer.Base.Services;
-using Mixer.Base.Web;
 using MixItUp.Base.Util;
+using StreamingClient.Base.Model.OAuth;
+using StreamingClient.Base.Services;
+using StreamingClient.Base.Util;
+using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,9 +12,29 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
-    public abstract class OAuthServiceBase : RestServiceBase
+    public abstract class OAuthServiceBase : OAuthRestServiceBase
     {
-        public const string LoginRedirectPageFileName = "LoginRedirectPage.html";
+        public const string LoginRedirectPageHTML = @"<!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset=""utf-8"" />
+                <title>Mix It Up - Logged In</title>
+                <link rel=""shortcut icon"" type=""image/x-icon"" href=""https://github.com/SaviorXTanren/mixer-mixitup/raw/master/Branding/MixItUp-Logo-Base-TransparentSM.png"" />
+                <style>
+                    body {
+                        background: #0e162a
+                    }
+                </style>
+            </head>
+            <body>
+                <img src=""https://github.com/SaviorXTanren/mixer-mixitup/raw/master/Branding/MixItUp-Logo-Base-WhiteSM.png"" width=""150"" height=""150"" style=""position: absolute; left: 50%; top: 25%; transform: translate(-50%, -50%);"" />
+                <div style='background-color:#232841; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); padding: 20px'>
+                    <h1 style=""text-align:center;color:white;margin-top:10px"">Mix It Up</h1>
+                    <h3 style=""text-align:center;color:white;"">Logged In Successfully</h3>
+                    <p style=""text-align:center;color:white;"">You have been logged in, you may now close this webpage</p>
+                </div>
+            </body>
+            </html>";
 
         protected OAuthTokenModel token;
 
@@ -43,14 +64,13 @@ namespace MixItUp.Base.Services
 
         protected virtual async Task<string> ConnectViaOAuthRedirect(string oauthPageURL, string listeningAddress)
         {
-            OAuthHttpListenerServer oauthServer = new OAuthHttpListenerServer(listeningAddress, loginSuccessHtmlPageFilePath: OAuthServiceBase.LoginRedirectPageFileName);
+            LocalOAuthHttpListenerServer oauthServer = new LocalOAuthHttpListenerServer(listeningAddress, MixerConnection.DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER, successResponse: OAuthServiceBase.LoginRedirectPageHTML);
             oauthServer.Start();
 
-            ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = oauthPageURL, UseShellExecute = true };
-            Process.Start(startInfo);
+            ProcessHelper.LaunchProgram(oauthPageURL);
 
             string authorizationCode = await oauthServer.WaitForAuthorizationCode();
-            oauthServer.End();
+            oauthServer.Stop();
 
             return authorizationCode;
         }
@@ -83,7 +103,7 @@ namespace MixItUp.Base.Services
                         content.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
 
                         HttpResponseMessage response = await client.PostAsync(endpoint, content);
-                        return await this.ProcessResponse<OAuthTokenModel>(response);
+                        return await response.ProcessResponse<OAuthTokenModel>();
                     }
                 }
             }

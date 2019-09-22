@@ -12,7 +12,7 @@ namespace MixItUp.Base.Util
         {
             Guid guid = Guid.NewGuid();
             int number = Math.Abs(guid.GetHashCode());
-            return (number % (maxValue - minValue)) + minValue;
+            return (number % (Math.Max(maxValue - minValue, 1))) + minValue;
         }
     }
 }

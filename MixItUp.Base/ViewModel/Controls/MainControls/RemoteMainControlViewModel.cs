@@ -172,7 +172,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             {
                 if (ChannelSession.Settings.RemoteHostConnection == null || (!await ChannelSession.Services.RemoteService.ValidateConnection(ChannelSession.Settings.RemoteHostConnection)))
                 {
-                    ChannelSession.Settings.RemoteHostConnection = await ChannelSession.Services.RemoteService.NewHost(ChannelSession.Channel.token);
+                    ChannelSession.Settings.RemoteHostConnection = await ChannelSession.Services.RemoteService.NewHost(ChannelSession.MixerChannel.token);
                     ChannelSession.Settings.RemoteClientConnections.Clear();
                 }
 
@@ -221,13 +221,13 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
             this.DownloadAppleCommand = this.CreateCommand((x) =>
             {
-                Process.Start("https://itunes.apple.com/us/app/mix-it-up-remote/id1459364145");
+                ProcessHelper.LaunchLink("https://itunes.apple.com/us/app/mix-it-up-remote/id1459364145");
                 return Task.FromResult(0);
             });
 
             this.DownloadAndroidCommand = this.CreateCommand((x) =>
             {
-                Process.Start("https://play.google.com/store/apps/details?id=com.MixItUpApp.Remote.Beta");
+                ProcessHelper.LaunchLink("https://play.google.com/store/apps/details?id=com.MixItUpApp.Remote.Beta");
                 return Task.FromResult(0);
             });
 

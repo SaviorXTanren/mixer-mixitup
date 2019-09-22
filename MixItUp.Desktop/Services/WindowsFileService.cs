@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -73,9 +74,17 @@ namespace MixItUp.Desktop.Files
         {
             try
             {
+                string safeFilePath = filePath.ToFilePathString();
                 if (File.Exists(filePath))
                 {
                     using (StreamReader reader = new StreamReader(File.OpenRead(filePath)))
+                    {
+                        return await reader.ReadToEndAsync();
+                    }
+                }
+                else if (File.Exists(safeFilePath))
+                {
+                    using (StreamReader reader = new StreamReader(File.OpenRead(safeFilePath)))
                     {
                         return await reader.ReadToEndAsync();
                     }

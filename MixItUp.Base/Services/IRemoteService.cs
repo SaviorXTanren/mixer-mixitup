@@ -1,9 +1,10 @@
-﻿using Mixer.Base.Model.OAuth;
-using Mixer.Base.Services;
-using MixItUp.Base.Model.Remote.Authentication;
+﻿using MixItUp.Base.Model.Remote.Authentication;
 using MixItUp.Base.Remote.Models;
 using MixItUp.Base.Util;
 using MixItUp.SignalR.Client;
+using StreamingClient.Base.Model.OAuth;
+using StreamingClient.Base.Services;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
-    public abstract class LocalRemoteServiceBase : RestServiceBase, IRemoteService
+    public abstract class LocalRemoteServiceBase : OAuthRestServiceBase, IRemoteService
     {
         public const string AuthenticateMethodName = "Authenticate";
         public const string RequestProfilesMethodName = "RequestProfiles";

@@ -1,4 +1,4 @@
-﻿using Mixer.Base.Model.Interactive;
+﻿using Mixer.Base.Model.MixPlay;
 using MixItUp.Base.Commands;
 using Newtonsoft.Json;
 using System;
@@ -10,7 +10,7 @@ namespace MixItUp.Base.ViewModel.Interactive
     public class InteractiveControlViewModel : IEquatable<InteractiveControlViewModel>
     {
         [DataMember]
-        public InteractiveControlModel Control { get; set; }
+        public MixPlayControlModel Control { get; set; }
 
         [DataMember]
         public int Cooldown { get; set; }
@@ -18,7 +18,7 @@ namespace MixItUp.Base.ViewModel.Interactive
         [DataMember]
         public InteractiveCommand Command { get; set; }
 
-        public InteractiveControlViewModel(InteractiveControlModel control)
+        public InteractiveControlViewModel(MixPlayControlModel control)
         {
             this.Control = control;
         }
@@ -28,8 +28,8 @@ namespace MixItUp.Base.ViewModel.Interactive
         [JsonIgnore]
         public int Cost
         {
-            get { return (this.Control is InteractiveButtonControlModel) ? ((InteractiveButtonControlModel)this.Control).cost.GetValueOrDefault() : 0; }
-            set { if (this.Control is InteractiveButtonControlModel) { ((InteractiveButtonControlModel)this.Control).cost = value; } }
+            get { return (this.Control is MixPlayButtonControlModel) ? ((MixPlayButtonControlModel)this.Control).cost.GetValueOrDefault() : 0; }
+            set { if (this.Control is MixPlayButtonControlModel) { ((MixPlayButtonControlModel)this.Control).cost = value; } }
         }
 
         public override bool Equals(object obj)

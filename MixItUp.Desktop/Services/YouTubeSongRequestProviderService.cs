@@ -1,9 +1,10 @@
-﻿using Mixer.Base.Web;
-using MixItUp.Base;
+﻿using MixItUp.Base;
 using MixItUp.Base.Model.SongRequests;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Util;
+using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -98,7 +99,7 @@ namespace MixItUp.Desktop.Services
                     NameValueCollection queryParameteters = HttpUtility.ParseQueryString(uri.Query);
                     if (!string.IsNullOrEmpty(queryParameteters["list"]))
                     {
-                        using (HttpClientWrapper client = new HttpClientWrapper("https://www.googleapis.com/"))
+                        using (AdvancedHttpClient client = new AdvancedHttpClient("https://www.googleapis.com/"))
                         {
                             string pageToken = null;
                             do
@@ -169,7 +170,7 @@ namespace MixItUp.Desktop.Services
                         identifier = identifier.Substring(0, identifier.IndexOf("&"));
                     }
 
-                    using (HttpClientWrapper client = new HttpClientWrapper("https://www.googleapis.com/"))
+                    using (AdvancedHttpClient client = new AdvancedHttpClient("https://www.googleapis.com/"))
                     {
                         HttpResponseMessage response = await client.GetAsync(string.Format("youtube/v3/videos?id={0}&part=snippet,contentDetails&key={1}", HttpUtility.UrlEncode(identifier), ChannelSession.SecretManager.GetSecret("YouTubeKey")));
                         if (response.StatusCode == HttpStatusCode.OK)
@@ -201,7 +202,7 @@ namespace MixItUp.Desktop.Services
                 }
                 else
                 {
-                    using (HttpClientWrapper client = new HttpClientWrapper("https://www.googleapis.com/"))
+                    using (AdvancedHttpClient client = new AdvancedHttpClient("https://www.googleapis.com/"))
                     {
                         HttpResponseMessage response = await client.GetAsync(string.Format("youtube/v3/search?q={0}&maxResults=5&type=video&part=snippet&key={1}", HttpUtility.UrlEncode(identifier), ChannelSession.SecretManager.GetSecret("YouTubeKey")));
                         if (response.StatusCode == HttpStatusCode.OK)
@@ -310,7 +311,7 @@ namespace MixItUp.Desktop.Services
         }
     }
 
-    public class YouTubeSongRequestHttpListenerServer : HttpListenerServerBase
+    public class YouTubeSongRequestHttpListenerServer : LocalHttpListenerServer
     {
         private const string OverlayFolderPath = "Overlay\\";
         private const string OverlayWebpageFilePath = OverlayFolderPath + "YouTubePage.html";

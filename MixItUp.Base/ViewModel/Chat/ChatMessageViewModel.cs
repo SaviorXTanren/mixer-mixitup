@@ -1,140 +1,107 @@
-﻿using Mixer.Base.Model.Chat;
-using MixItUp.Base.Model.Skill;
+﻿using MixItUp.Base.Model;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.Base.ViewModels;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Chat
 {
-    public class ChatMessageViewModel : IEquatable<ChatMessageViewModel>
+    public class ChatMessageViewModel : ViewModelBase, IEquatable<ChatMessageViewModel>
     {
         private const string TaggingRegexFormat = "(^|\\s+)@{0}(\\s+|$)";
 
-        public Guid ID { get; private set; }
+        public string ID { get; private set; }
 
-        public UserViewModel User { get; private set; }
+        public StreamingPlatformTypeEnum Platform { get; private set; }
 
-        public string Message { get; private set; }
+        public List<object> MessageParts { get; protected set; } = new List<object>();
 
-        public string TargetUsername { get; private set; }
+        public string PlainTextMessage { get; protected set; } = string.Empty;
 
-        public DateTimeOffset Timestamp { get; private set; } = DateTimeOffset.Now;
+        public string TargetUsername { get; protected set; }
 
-        public bool ContainsLink { get; private set; }
+        public bool IsInUsersChannel { get; protected set; } = true;
 
-        public bool IsInUsersChannel { get; private set; }
+        public bool ContainsLink { get; protected set; } = false;
 
-        public bool IsAlert { get; private set; }
+        public DateTimeOffset Timestamp { get; protected set; } = DateTimeOffset.Now;
 
-        public Dictionary<string, string> Images { get; set; } = new Dictionary<string, string>();
+        public bool IsDeleted { get; private set; }
 
-        public ChatSkillModel ChatSkill { get; private set; }
+        public string DeletedBy { get; private set; }
 
-        public SkillInstanceModel Skill { get; private set; }
+        public string ModerationReason { get; private set; }
 
-        public bool IsDeleted { get; set; }
+        public UserViewModel User { get; set; }
 
-        public string DeletedBy { get; set; }
+        public event EventHandler OnDeleted = delegate { };
 
-        public string ModerationReason { get; set; }
-
-        public ChatMessageEventModel ChatMessageEvent { get; private set; }
-
-        public List<ChatMessageDataModel> MessageComponents = new List<ChatMessageDataModel>();
-
-        public ChatMessageViewModel(ChatMessageEventModel chatMessageEvent, UserViewModel user = null)
-            : this(chatMessageEvent.message, user)
+        public ChatMessageViewModel(string id, StreamingPlatformTypeEnum platform, UserViewModel user)
         {
-            this.ChatMessageEvent = chatMessageEvent;
-            this.ID = this.ChatMessageEvent.id;
-
-            this.User = (user != null) ? user : new UserViewModel(this.ChatMessageEvent);
-            this.IsInUsersChannel = ChannelSession.Channel.id.Equals(this.ChatMessageEvent.channel);
-            this.TargetUsername = this.ChatMessageEvent.target;
-
-            if (this.ChatMessageEvent.message.ContainsSkill)
-            {
-                this.ChatSkill = this.ChatMessageEvent.message.Skill;
-            }
-        }
-
-        public ChatMessageViewModel(ChatMessageContentsModel chatMessageContents, UserViewModel user = null)
-        {
+            this.ID = id;
+            this.Platform = platform;
             this.User = user;
-
-            this.Message = string.Empty;
-            this.SetMessageContents(chatMessageContents);
         }
-
-        public ChatMessageViewModel(string alertText, UserViewModel user = null, string foregroundBrush = null)
-        {
-            this.User = user;
-            this.IsInUsersChannel = true;
-            this.IsAlert = true;
-            this.Message = "---  " + alertText + "  ---";
-            this.MessageComponents.Add(new ChatMessageDataModel() { type = "text", text = this.Message });
-
-            string color = ColorSchemes.GetColorCode(foregroundBrush);
-            this.AlertMessageBrush = (!string.IsNullOrEmpty(color)) ? color : "#000000";
-        }
-
-        public ChatMessageViewModel(SkillInstanceModel skill, UserViewModel user)
-        {
-            this.User = user;
-            this.IsAlert = true;
-            this.IsInUsersChannel = true;
-            this.Message = "---  \"" + skill.Skill.name + "\" Skill Used  ---";
-            this.Skill = skill;
-        }
-
-        public string AlertMessageBrush { get; private set; }
 
         public bool IsWhisper { get { return !string.IsNullOrEmpty(this.TargetUsername); } }
 
-        public bool IsUserTagged { get { return Regex.IsMatch(this.Message, string.Format(TaggingRegexFormat, ChannelSession.User.username)); } }
+        public bool IsUserTagged { get { return Regex.IsMatch(this.PlainTextMessage, string.Format(TaggingRegexFormat, ChannelSession.MixerStreamerUser.username)); } }
 
-        public bool ContainsImage { get { return this.Images.Count > 0; } }
+        public bool IsStreamerOrBot { get { return this.User != null && this.User.ID.Equals(ChannelSession.MixerStreamerUser.id) || (ChannelSession.MixerBotUser != null && this.User.ID.Equals(ChannelSession.MixerBotUser.id)); } }
 
-        public bool IsChatSkill { get { return this.ChatSkill != null; } }
+        public bool ShowTimestamp { get { return ChannelSession.Settings.ShowChatMessageTimestamps; } }
 
-        public bool IsSkill { get { return this.Skill != null; } }
+        public string TimestampDisplay { get { return string.Format("({0})", this.Timestamp.ToString("t")); } }
 
-        public async Task<string> ShouldBeModerated()
+        public virtual bool ContainsOnlyEmotes() { return false; }
+
+        public async Task<bool> CheckForModeration()
         {
-            if (this.IsWhisper)
+            if (!ModerationHelper.MeetsChatInteractiveParticipationRequirement(this.User, this))
             {
-                return string.Empty;
+                Logger.Log(LogLevel.Debug, string.Format("Deleting Message As User does not meet requirement - {0} - {1}", ChannelSession.Settings.ModerationChatInteractiveParticipation, this.PlainTextMessage));
+                this.Delete(reason: "Chat/MixPlay Participation");
+                await ModerationHelper.SendChatInteractiveParticipationWhisper(this.User, isChat: true);
+                return true;
             }
 
-            if ((this.IsSkill || this.IsChatSkill) && string.IsNullOrEmpty(this.Message))
+            string moderationReason = await ModerationHelper.ShouldBeModerated(this.User, this.PlainTextMessage, this.ContainsLink);
+            if (!string.IsNullOrEmpty(moderationReason))
             {
-                return string.Empty;
+                Logger.Log(LogLevel.Debug, string.Format("Moderation Being Performed - {0}", this.ToString()));
+                this.Delete(reason: moderationReason);
+                return true;
             }
-
-            return await ModerationHelper.ShouldBeModerated(this.User, this.Message, this.ContainsLink);
+            return false;
         }
 
-        public bool IsStreamerOrBot()
+        public void Delete(UserViewModel user = null, string reason = null)
         {
-            return this.User.ID.Equals(ChannelSession.User.id) || (ChannelSession.BotUser != null && this.User.ID.Equals(ChannelSession.BotUser.id));
-        }
-
-        public void AddToMessage(string text)
-        {
-            this.Message += text;
-        }
-
-        public bool ContainsOnlyEmotes()
-        {
-            if (this.MessageComponents.Count > 0)
+            if (!this.IsDeleted)
             {
-                return this.MessageComponents.All(m => m.type.Equals("emoticon") || (m.type.Equals("text") && string.IsNullOrWhiteSpace(m.text)));
+                this.IsDeleted = true;
+                if (user != null)
+                {
+                    this.DeletedBy = user.UserName;
+                }
+                this.ModerationReason = reason;
+
+                this.NotifyPropertyChanged("IsDeleted");
+                this.NotifyPropertyChanged("DeletedBy");
+                this.NotifyPropertyChanged("ModerationReason");
+
+                this.OnDeleted(this, new EventArgs());
             }
-            return true;
+        }
+
+        protected internal virtual void AddStringMessagePart(string str)
+        {
+            this.MessageParts.Add(str);
+            this.PlainTextMessage += str + " ";
         }
 
         public override bool Equals(object obj)
@@ -152,47 +119,14 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public override string ToString()
         {
-            if (this.IsAlert)
+            if (this.IsWhisper)
             {
-                return this.Message;
-            }
-            else if (this.IsWhisper)
-            {
-                return string.Format("{0} -> {1}: {2}", this.User, this.TargetUsername, this.Message);
+                return string.Format("{0} -> {1}: {2}", this.User, this.TargetUsername, this.PlainTextMessage);
             }
             else
             {
-                return string.Format("{0}: {1}", this.User, this.Message);
+                return string.Format("{0}: {1}", this.User, this.PlainTextMessage);
             }
-        }
-
-        private void SetMessageContents(ChatMessageContentsModel chatMessageContents)
-        {
-            foreach (ChatMessageDataModel message in chatMessageContents.message)
-            {
-                this.MessageComponents.Add(message);
-                switch (message.type)
-                {
-                    case "emoticon":
-                        // Special code here to process emoticons
-                        ChannelSession.EnsureEmoticonForMessage(message);
-                        this.Message += message.text;
-                        break;
-                    case "link":
-                        this.ContainsLink = true;
-                        this.Message += message.text;
-                        break;
-                    case "image":
-                        this.Images[message.text] = message.url;
-                        break;
-                    case "text":
-                    case "tag":
-                    default:
-                        this.Message += message.text;
-                        break;
-                }
-            }
-            this.Message = this.Message.Trim().Replace(Environment.NewLine, string.Empty).Replace("\n", string.Empty);
         }
     }
 }

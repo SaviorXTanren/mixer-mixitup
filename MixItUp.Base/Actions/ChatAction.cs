@@ -42,7 +42,7 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.Chat != null)
+            if (ChannelSession.Services.Chat != null)
             {
                 string message = await this.ReplaceStringWithSpecialModifiers(this.ChatText, user, arguments);
                 if (this.IsWhisper)
@@ -52,11 +52,11 @@ namespace MixItUp.Base.Actions
                     {
                         whisperUserName = await this.ReplaceStringWithSpecialModifiers(this.WhisperUserName, user, arguments);
                     }
-                    await ChannelSession.Chat.Whisper(whisperUserName, message, this.SendAsStreamer);
+                    await ChannelSession.Services.Chat.Whisper(whisperUserName, message, this.SendAsStreamer);
                 }
                 else
                 {
-                    await ChannelSession.Chat.SendMessage(message, this.SendAsStreamer);
+                    await ChannelSession.Services.Chat.SendMessage(message, this.SendAsStreamer);
                 }
             }
         }

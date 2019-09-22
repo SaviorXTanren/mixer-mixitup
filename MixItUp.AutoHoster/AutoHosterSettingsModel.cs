@@ -1,5 +1,5 @@
-﻿using Mixer.Base.Model.OAuth;
-using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.ViewModel.User;
+using StreamingClient.Base.Model.OAuth;
 using System.Collections.Generic;
 
 namespace MixItUp.AutoHoster

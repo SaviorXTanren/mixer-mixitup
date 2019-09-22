@@ -82,9 +82,9 @@ namespace MixItUp.Base.ViewModel.Requirement
 
         public async Task SendNotMetWhisper(UserViewModel user)
         {
-            if (ChannelSession.Chat != null && ChannelSession.Settings.Inventories.ContainsKey(this.InventoryID))
+            if (ChannelSession.Services.Chat != null && ChannelSession.Settings.Inventories.ContainsKey(this.InventoryID))
             {
-                await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to do this", this.Amount, this.ItemName));
+                await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to do this", this.Amount, this.ItemName));
             }
         }
 

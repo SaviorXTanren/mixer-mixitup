@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
+using StreamingClient.Base.Util;
 using System;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -192,16 +193,16 @@ namespace MixItUp.Base.ViewModel.Requirement
 
         public async Task SendCurrencyNotMetWhisper(UserViewModel user)
         {
-            if (ChannelSession.Chat != null && ChannelSession.Settings.Currencies.ContainsKey(this.CurrencyID))
+            if (ChannelSession.Services.Chat != null && ChannelSession.Settings.Currencies.ContainsKey(this.CurrencyID))
             {
                 if (this.RequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum)
                 {
-                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0}-{1} {2} to do this",
+                    await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You do not have the required {0}-{1} {2} to do this",
                         this.RequiredAmount, this.MaximumAmount, ChannelSession.Settings.Currencies[this.CurrencyID].Name));
                 }
                 else
                 {
-                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to do this",
+                    await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to do this",
                         this.RequiredAmount, ChannelSession.Settings.Currencies[this.CurrencyID].Name));
                 }
             }
@@ -209,16 +210,16 @@ namespace MixItUp.Base.ViewModel.Requirement
 
         public async Task SendCurrencyNotMetWhisper(UserViewModel user, int amount)
         {
-            if (ChannelSession.Chat != null && ChannelSession.Settings.Currencies.ContainsKey(this.CurrencyID))
+            if (ChannelSession.Services.Chat != null && ChannelSession.Settings.Currencies.ContainsKey(this.CurrencyID))
             {
                 if (this.RequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum)
                 {
-                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0}-{1} {2} to do this",
+                    await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You do not have the required {0}-{1} {2} to do this",
                         this.RequiredAmount, this.MaximumAmount, ChannelSession.Settings.Currencies[this.CurrencyID].Name));
                 }
                 else
                 {
-                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to do this",
+                    await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to do this",
                         this.RequiredAmount, ChannelSession.Settings.Currencies[this.CurrencyID].Name));
                 }
             }
@@ -226,9 +227,9 @@ namespace MixItUp.Base.ViewModel.Requirement
 
         public async Task SendRankNotMetWhisper(UserViewModel user)
         {
-            if (ChannelSession.Chat != null && ChannelSession.Settings.Currencies.ContainsKey(this.CurrencyID))
+            if (ChannelSession.Services.Chat != null && ChannelSession.Settings.Currencies.ContainsKey(this.CurrencyID))
             {
-                await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required rank of {0} ({1} {2}) to do this",
+                await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You do not have the required rank of {0} ({1} {2}) to do this",
                     this.RequiredRank.Name, this.RequiredRank.MinimumPoints, ChannelSession.Settings.Currencies[this.CurrencyID].Name));
             }
         }

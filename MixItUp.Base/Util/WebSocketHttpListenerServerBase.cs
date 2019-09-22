@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.Client;
-using Mixer.Base.Web;
+using StreamingClient.Base.Util;
+using StreamingClient.Base.Web;
 using System;
 using System.Net;
 using System.Net.WebSockets;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Util
 {
-    public abstract class WebSocketHttpListenerServerBase : HttpListenerServerBase
+    public abstract class WebSocketHttpListenerServerBase : LocalHttpListenerServer
     {
         public event EventHandler OnConnectedOccurred = delegate { };
         public event EventHandler<WebSocketCloseStatus> OnDisconnectOccurred = delegate { };
@@ -18,14 +19,14 @@ namespace MixItUp.Base.Util
 
         public int TotalConnectedClients { get { return this.webSocketServers.Count; } }
 
-        public new async Task End()
+        public new async Task Stop()
         {
             foreach (WebSocketServerBase webSocketServer in this.webSocketServers)
             {
                 await webSocketServer.Disconnect();
             }
             this.webSocketServers.Clear();
-            base.End();
+            base.Stop();
         }
 
         public async Task Send(WebSocketPacket packet)

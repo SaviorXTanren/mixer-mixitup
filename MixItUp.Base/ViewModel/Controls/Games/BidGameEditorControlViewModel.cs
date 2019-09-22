@@ -3,6 +3,7 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
+using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

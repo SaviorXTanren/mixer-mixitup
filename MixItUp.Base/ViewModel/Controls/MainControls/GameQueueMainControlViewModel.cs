@@ -2,6 +2,7 @@
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModel.Window;
+using StreamingClient.Base.Util;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;

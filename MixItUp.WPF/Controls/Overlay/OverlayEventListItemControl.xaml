@@ -17,6 +17,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" HorizontalAlignment="Center">
@@ -146,10 +148,6 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="15" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="15" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="15" />
-                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <ComboBox ItemsSource="{Binding ColorNames}" Text="{Binding BorderColor}" Grid.Column="0" MaterialDesign:HintAssist.Hint="Border Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120" />
@@ -157,12 +155,24 @@
             <ComboBox ItemsSource="{Binding ColorNames}" Text="{Binding BackgroundColor}" Grid.Column="2" MaterialDesign:HintAssist.Hint="Background Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="130" />
 
             <ComboBox ItemsSource="{Binding ColorNames}" Text="{Binding TextColor}" Grid.Column="4" MaterialDesign:HintAssist.Hint="Text Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120" />
-
-            <ComboBox ItemsSource="{Binding EntranceAnimationStrings}" SelectedItem="{Binding EntranceAnimationString}" Grid.Column="6" MaterialDesign:HintAssist.Hint="Add Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
-
-            <ComboBox ItemsSource="{Binding ExitAnimationStrings}" SelectedItem="{Binding ExitAnimationString}" Grid.Column="8" MaterialDesign:HintAssist.Hint="Remove Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
         </Grid>
 
-        <TextBox Text="{Binding HTML}" Grid.Row="6" MaterialDesign:HintAssist.Hint="HTML Style" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="700" Height="150" VerticalAlignment="Top" HorizontalAlignment="Center" />
+        <Grid Grid.Row="6" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox ItemsSource="{Binding AlignmentStrings}" SelectedItem="{Binding AlignmentString}" Grid.Column="0" MaterialDesign:HintAssist.Hint="List Alignment" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="100" />
+
+            <ComboBox ItemsSource="{Binding EntranceAnimationStrings}" SelectedItem="{Binding EntranceAnimationString}" Grid.Column="2" MaterialDesign:HintAssist.Hint="Add Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
+
+            <ComboBox ItemsSource="{Binding ExitAnimationStrings}" SelectedItem="{Binding ExitAnimationString}" Grid.Column="4" MaterialDesign:HintAssist.Hint="Remove Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
+        </Grid>
+
+        <TextBox Text="{Binding HTML}" Grid.Row="8" MaterialDesign:HintAssist.Hint="HTML Style" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="700" Height="150" VerticalAlignment="Top" HorizontalAlignment="Center" />
     </Grid>
 </local:OverlayItemControl>

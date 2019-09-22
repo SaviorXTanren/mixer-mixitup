@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Model.Patronage;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -186,12 +187,12 @@ namespace MixItUp.Base.Model.Overlay
 
         private async Task RefreshPatronageData()
         {
-            this.status = await ChannelSession.Connection.GetPatronageStatus(ChannelSession.Channel);
+            this.status = await ChannelSession.MixerStreamerConnection.GetPatronageStatus(ChannelSession.MixerChannel);
             if (status != null)
             {
                 this.Amount = status.patronageEarned;
 
-                this.period = await ChannelSession.Connection.GetPatronagePeriod(status);
+                this.period = await ChannelSession.MixerStreamerConnection.GetPatronagePeriod(status);
                 if (this.period != null)
                 {
                     this.RefreshPatronageMilestoneData();
@@ -211,7 +212,7 @@ namespace MixItUp.Base.Model.Overlay
                 if (this.milestone != null)
                 {
                     this.Goal = milestone.target;
-                    this.Reward = milestone.DollarAmountText();
+                    this.Reward = milestone.PercentageAmountText();
                 }
 
                 this.Start = 0;

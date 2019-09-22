@@ -5,22 +5,122 @@
     <body>
         <h1 style="color: #5e9ca0;">Changelog</h1>
 
-        <h2 style="color: #2e6c80;">v0.5.1.701:</h2>
+        <h2 style="color: #2e6c80;">v0.5.2.1100:</h2>
         <ul>
-            <li>Fixing bug with Stream Clip Playback Overlay Widget not playing video properly</li>
             <li>Various quality of life &amp; bug fixes</li>
         </ul>
 
-        <h2 style="color: #2e6c80;">v0.5.1.700:</h2>
+        <h2 style="color: #2e6c80;">v0.5.2.11:</h2>
         <ul>
+            <li>Fixing bug with Song Requests buttons not working</li>
+            <li>Fixing bug with MixPlay timeout not correctly identifying the right participant</li>
+            <li>Fixing various bugs to XSplit connectivity</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v0.5.2.10:</h2>
+        <ul>
+            <li>Adding Streamloots Pack Purchased &amp; Pack Gifted event commands</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v0.5.2.9:</h2>
+        <ul>
+            <li>Adding support for longMessage field on Streamloots card if message field doesn't exist</li>
+            <li>Adding Streaming Action Start/Stop Stream support for XSplit</li>
+            <li>Fixing bug with Overlay Timer Widget counting down faster when it's disabled before it's completed</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v0.5.2.8:</h2>
+        <ul>
+            <li>Adding $userisfollower &amp; $userissubscriber Special Identifiers</li>
+            <li>Tweaking Clips creation logic to work around broken Mixer API</li>
+            <li>Adding logic to remove unused cooldown &amp; command groups on start up</li>
+            <li>Fixing bug with Overlay Follower Goal/Progress Bar not counting correctly</li>
+            <li>Adding the ability to specifiy the number ID of a game when running !setgame command</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v0.5.2.7:</h2>
+        <ul>
+            <li>Adding $streamlootscardvideo &amp; $streamlootscardhasvideo Special Identifiers</li>
+            <li>Updating Sound Action to support web-based sound files</li>
+            <li>Adding blocking, error message if the MixPlay project contained controls with the same ID when trying to connect</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v0.5.2.6:</h2>
+        <ul>
+            <li>Fixing bug with Streamloots Card Redemption where TTS-enabled cards would fail to trigger correctly</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v0.5.2.5:</h2>
+        <ul>
+            <li>Fixing possible bug with Streamloots Card Redemption where full card data isn't acquired correctly</li>
+            <li>Adding $streamlootscardsound Special Identifier</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v0.5.2.4:</h2>
+        <ul>
+            <li>Adding Streamloots integration &amp; Streamloots Card Redeemed event command</li>
+            <li>Adding support for Streaming Software action's Save Replay Buffer option for Streamlabs OBS</li>
+            <li>Updating TipeeeStream connection logic for new servers</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v0.5.2.3:</h2>
+        <ul>
+            <li>Adding tolower(), toupper(), and removespaces() functions into Special Identifier action for text-based replacements</li>
+            <li>Fixing bug with Channel Milestone Reached event command trigger when it shouldn't</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v0.5.2.2:</h2>
+        <ul>
+            <li>Updates to support new Spark Patronage changes. All Special Identifiers have remained the same, but anything that showed money amounts now show percentage boosts</li>
+            <li>Adding "New Leader" command to Overlay Leaderboard Widget</li>
+            <li>Adding option to Song Requests Overlay Widget for whether to include the currently playing song</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v0.5.2.1:</h2>
+        <ul>
+            <li>Adding list vertical alignment option to list-based Overlay Widgets</li>
+            <li>Updating Fortnite drop map to Season 10</li>
+            <li>Various bug fixes to Overlay Widgets</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v0.5.2.0:</h2>
+        <ul>
+            <li>BREAKING CHANGE: Chat User Purged event command now specifies the moderator who performed the purging as $username, while the user that was purged is not $targetusername</li>
             <li>BREAKING CHANGE: All random user Special Identifiers will always give a new user every time they are used instead of saving them for the entire command. If you need to use the same user multiple times, use it inside of a Special Identifier action.</li>
-            <li>Removing Action Group Action &amp; replacing with Command Action</li>
+            <li>Large-scale overhaul of Overlay system; more Overlay Widgets handle updating dynamically</li>
+            <li>Adding IFTTT action to support firing of triggers for IFTTT events</li>
+            <li>Adding Streaming Platform action to support streaming website-specific actions such as hosting &amp; polls</li>
+            <li>Adding Ticker Tape &amp; Spark Crystal Overlay Widgets</li>
+            <li>Adding Healing &amp; Overkill bonus settings to Stream Boss Overlay Widget</li>
+            <li>Adding Fade Out options to Chat Messages &amp; Event List Overlay Widgets</li>
+            <li>Adding the ability to specify the layer that an Overlay item is positioned at</li>
+            <li>Moving Overlay Widget refresh timer into individual Overlay Widgets to allow for greater flexibility</li>
+            <li>Adding Bet, Word Scramble, Treasure Defense, Hot Potato, Beach Ball, &amp; Hangman game types</li>
+            <li>Adding "Not Enough Players" &amp; "Not Accepted" command to appropriate games</li>
+            <li>Changing setup for Bet game type and removing all past instances of it</li>
+            <li>Adding the ability to specify a message to whisper to Streamer when auto-hosted</li>
+            <li>Adding Song Removed trigger command for Song Requests</li>
+            <li>Adding Chat User Joined &amp; Left event commands</li>
+            <li>Adding "!startgiveaway" pre-made chat command</li>
+            <li>Adding $usergamequeueposition, $dateyear, $datemonth, $dateday, $timehour, &amp; $timeminute Special Identifiers</li>
             <li>Adding Set option to Counter action</li>
+            <li>Adding volume level adjustment for notifications</li>
+            <li>Adding automatic rounding up Special Identifiers that are used in Currency/Rank/Inventory actions to prevent the need for an additional Special Identifier action</li>
+            <li>Changing File Action to create local instead of global Special Identifiers</li>
+            <li>Removing Action Group Action &amp; replacing with Command Action</li>
             <li>Removing GawkBox service</li>
             <li>Various quality of life &amp; bug fixes</li>
         </ul>
 
-        <h2 style="color: #2e6c80;">v0.5.1.600:</h2>
+        <h2 style="color: #2e6c80;">v0.5.1.6-7:</h2>
         <ul>
             <li>Fixing updating of channel title, game, &amp; description due to Mixer issue</li>
             <li>Adding Gifted Subs to be counted towards Overlay Widgets &amp; Statistics</li>

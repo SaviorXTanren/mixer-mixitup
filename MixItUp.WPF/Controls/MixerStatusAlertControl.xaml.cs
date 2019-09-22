@@ -1,5 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Services;
+using MixItUp.Base.Util;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -30,7 +32,7 @@ namespace MixItUp.WPF.Controls
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
-        private void MixerStatusAlertButton_Click(object sender, RoutedEventArgs e) { Process.Start("https://status.mixer.com/"); }
+        private void MixerStatusAlertButton_Click(object sender, RoutedEventArgs e) { ProcessHelper.LaunchLink("https://status.mixer.com/"); }
 
         private async Task CheckMixerStatus()
         {
@@ -62,7 +64,7 @@ namespace MixItUp.WPF.Controls
 
                     await Task.Delay(60000);
                 }
-                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
             }
         }
     }

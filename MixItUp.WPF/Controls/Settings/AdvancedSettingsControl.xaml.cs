@@ -2,9 +2,11 @@
 using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Desktop;
 using MixItUp.WPF.Util;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -58,7 +60,7 @@ namespace MixItUp.WPF.Controls.Settings
 
         private void InstallationDirectoryButton_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
+            ProcessHelper.LaunchFolder(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
         }
 
         private async void BackupSettingsButton_Click(object sender, RoutedEventArgs e)
@@ -80,6 +82,54 @@ namespace MixItUp.WPF.Controls.Settings
                 string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog("Mix It Up Settings (*.mixitup)|*.mixitup|All files (*.*)|*.*");
                 if (!string.IsNullOrEmpty(filePath))
                 {
+                    string tempFilePath = ChannelSession.Services.FileService.GetTempFolder();
+                    string tempFolder = Path.GetDirectoryName(tempFilePath);
+
+                    string settingsFile = null;
+                    try
+                    {
+                        using (ZipArchive zipFile = ZipFile.Open(filePath, ZipArchiveMode.Read))
+                        {
+                            foreach (ZipArchiveEntry entry in zipFile.Entries)
+                            {
+                                string extractedFilePath = Path.Combine(tempFolder, entry.Name);
+                                if (File.Exists(extractedFilePath))
+                                {
+                                    File.Delete(extractedFilePath);
+                                }
+
+                                if (extractedFilePath.EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    settingsFile = extractedFilePath;
+                                }
+                            }
+                            zipFile.ExtractToDirectory(tempFolder);
+                        }
+                    }
+                    catch(Exception ex) { Logger.Log(ex); }
+
+                    int currentVersion = -1;
+                    if (!string.IsNullOrEmpty(settingsFile))
+                    {
+                        currentVersion = await ChannelSession.Services.Settings.GetSettingsVersion(settingsFile);
+                    }
+
+                    if (currentVersion == -1)
+                    {
+                        // Unable to load settings file to get version
+                        await MessageBoxHelper.ShowMessageDialog("The backup file selected does not appear to contain Mix It Up settings.");
+                        return;
+                    }
+
+                    if (currentVersion > ChannelSession.Services.Settings.GetLatestVersion())
+                    {
+                        // Version is newer than this build, probably a settings from a preview build
+                        await MessageBoxHelper.ShowMessageDialog("The backup file is valid, but is from a newer version of Mix It Up.  Be sure to upgrade to the latest version." +
+                            Environment.NewLine + Environment.NewLine +
+                            "NOTE: This may require you to opt-in to the preview build from the General tab in Settings.");
+                        return;
+                    }
+
                     ((MainWindow)this.Window).RestoredSettingsFilePath = filePath;
                     ((MainWindow)this.Window).Restart();
                 }
@@ -157,10 +207,13 @@ namespace MixItUp.WPF.Controls.Settings
                 {
                     if (await MessageBoxHelper.ShowConfirmationDialog("This will unban all currently banned users from your channel. This will take some time to complete, are you sure you wish to do this?"))
                     {
-                        foreach (UserWithGroupsModel user in await ChannelSession.Connection.GetUsersWithRoles(ChannelSession.Channel, MixerRoleEnum.Banned))
+                        await ChannelSession.MixerStreamerConnection.GetUsersWithRoles(ChannelSession.MixerChannel, MixerRoleEnum.Banned, async (collection) =>
                         {
-                            await ChannelSession.Connection.RemoveUserRoles(ChannelSession.Channel, user, new List<MixerRoleEnum>() { MixerRoleEnum.Banned });
-                        }
+                            foreach (UserWithGroupsModel user in collection)
+                            {
+                                await ChannelSession.MixerStreamerConnection.RemoveUserRoles(ChannelSession.MixerChannel, user, new List<MixerRoleEnum>() { MixerRoleEnum.Banned });
+                            }
+                        });
                     }
                 }
                 else

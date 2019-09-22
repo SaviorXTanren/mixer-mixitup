@@ -1,23 +1,22 @@
 ﻿using Mixer.Base;
 using Mixer.Base.Model.Channel;
-using Mixer.Base.Model.Chat;
-using Mixer.Base.Model.Interactive;
+using Mixer.Base.Model.MixPlay;
 using Mixer.Base.Model.User;
-using Mixer.Base.Util;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Model.API;
+using MixItUp.Base.Model.Chat;
+using MixItUp.Base.Model.Chat.Mixer;
 using MixItUp.Base.Services;
+using MixItUp.Base.Services.Mixer;
 using MixItUp.Base.Statistics;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
-using Newtonsoft.Json;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
@@ -31,14 +30,6 @@ namespace MixItUp.Base
 
         public const string DefaultOBSStudioConnection = "ws://127.0.0.1:4444";
         public const string DefaultOvrStreamConnection = "ws://127.0.0.1:8023";
-
-        private const string DefaultEmoticonsManifest = "https://mixer.com/_latest/assets/emoticons/manifest.json";
-        private const string DefaultEmoticonsLinkFormat = "https://mixer.com/_latest/assets/emoticons/{0}.png";
-
-        private static readonly LockedDictionary<string, LockedDictionary<string, EmoticonImage>> builtinEmoticons = new LockedDictionary<string, LockedDictionary<string, EmoticonImage>>();
-        private static readonly LockedDictionary<string, LockedDictionary<string, EmoticonImage>> externalEmoticons = new LockedDictionary<string, LockedDictionary<string, EmoticonImage>>();
-        private static readonly LockedDictionary<string, LockedDictionary<string, EmoticonImage>> userEmoticons = new LockedDictionary<string, LockedDictionary<string, EmoticonImage>>();
-        private static readonly LockedDictionary<string, LockedDictionary<string, EmoticonImage>> botEmoticons = new LockedDictionary<string, LockedDictionary<string, EmoticonImage>>();
 
         public static readonly List<OAuthClientScopeEnum> StreamerScopes = new List<OAuthClientScopeEnum>()
         {
@@ -116,19 +107,16 @@ namespace MixItUp.Base
 
         public static SecretManagerService SecretManager { get; internal set; }
 
-        public static MixerConnectionWrapper Connection { get; private set; }
-        public static MixerConnectionWrapper BotConnection { get; private set; }
+        public static MixerConnectionService MixerStreamerConnection { get; private set; }
+        public static MixerConnectionService MixerBotConnection { get; private set; }
 
-        public static PrivatePopulatedUserModel User { get; private set; }
-        public static PrivatePopulatedUserModel BotUser { get; private set; }
-        public static ExpandedChannelModel Channel { get; private set; }
-
-        public static UserContainerViewModel ActiveUsers { get; private set; }
+        public static PrivatePopulatedUserModel MixerStreamerUser { get; private set; }
+        public static PrivatePopulatedUserModel MixerBotUser { get; private set; }
+        public static ExpandedChannelModel MixerChannel { get; private set; }
 
         public static IChannelSettings Settings { get; private set; }
 
-        public static ChatClientWrapper Chat { get; private set; }
-        public static InteractiveClientWrapper Interactive { get; private set; }
+        public static MixPlayClientWrapper Interactive { get; private set; }
         public static ConstellationClientWrapper Constellation { get; private set; }
 
         public static StatisticsTracker Statistics { get; private set; }
@@ -138,6 +126,15 @@ namespace MixItUp.Base
         public static List<PreMadeChatCommand> PreMadeChatCommands { get; private set; }
 
         public static LockedDictionary<string, double> Counters { get; private set; }
+
+        public static bool IsDebug()
+        {
+            #if DEBUG
+                return true;
+            #else
+                return false;
+            #endif
+        }
 
         public static IEnumerable<PermissionsCommandBase> AllEnabledChatCommands
         {
@@ -195,9 +192,9 @@ namespace MixItUp.Base
         {
             get
             {
-                if (ChannelSession.User != null && ChannelSession.Channel != null)
+                if (ChannelSession.MixerStreamerUser != null && ChannelSession.MixerChannel != null)
                 {
-                    return ChannelSession.User.id == ChannelSession.Channel.user.id;
+                    return ChannelSession.MixerStreamerUser.id == ChannelSession.MixerChannel.user.id;
                 }
                 return false;
             }
@@ -213,14 +210,12 @@ namespace MixItUp.Base
                     ChannelSession.SecretManager = (SecretManagerService)Activator.CreateInstance(mixItUpSecretsType);
                 }
             }
-            catch (Exception ex) { Util.Logger.Log(ex); }
+            catch (Exception ex) { Logger.Log(ex); }
 
             if (ChannelSession.SecretManager == null)
             {
                 ChannelSession.SecretManager = new SecretManagerService();
             }
-
-            ChannelSession.ActiveUsers = new UserContainerViewModel();
 
             ChannelSession.PreMadeChatCommands = new List<PreMadeChatCommand>();
 
@@ -228,9 +223,8 @@ namespace MixItUp.Base
 
             ChannelSession.Services = serviceHandler;
 
-            ChannelSession.Chat = new ChatClientWrapper();
             ChannelSession.Constellation = new ConstellationClientWrapper();
-            ChannelSession.Interactive = new InteractiveClientWrapper();
+            ChannelSession.Interactive = new MixPlayClientWrapper();
 
             ChannelSession.Statistics = new StatisticsTracker();
         }
@@ -239,16 +233,16 @@ namespace MixItUp.Base
         {
             try
             {
-                MixerConnection connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ChannelSession.ClientID, scopes, false, loginSuccessHtmlPageFilePath: OAuthServiceBase.LoginRedirectPageFileName);
+                MixerConnection connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ChannelSession.ClientID, scopes, false, successResponse: OAuthServiceBase.LoginRedirectPageHTML);
                 if (connection != null)
                 {
-                    ChannelSession.Connection = new MixerConnectionWrapper(connection);
+                    ChannelSession.MixerStreamerConnection = new MixerConnectionService(connection);
                     return await ChannelSession.InitializeInternal((channelName == null), channelName);
                 }
             }
             catch (Exception ex)
             {
-                Util.Logger.Log(ex);
+                Logger.Log(ex);
             }
             return false;
         }
@@ -264,18 +258,18 @@ namespace MixItUp.Base
                 MixerConnection connection = await MixerConnection.ConnectViaOAuthToken(ChannelSession.Settings.OAuthToken);
                 if (connection != null)
                 {
-                    ChannelSession.Connection = new MixerConnectionWrapper(connection);
+                    ChannelSession.MixerStreamerConnection = new MixerConnectionService(connection);
                     result = await ChannelSession.InitializeInternal(ChannelSession.Settings.IsStreamer, ChannelSession.Settings.IsStreamer ? null : ChannelSession.Settings.Channel.token);
                 }
             }
-            catch (RestServiceRequestException ex)
+            catch (HttpRestRequestException ex)
             {
-                Util.Logger.Log(ex);
+                Logger.Log(ex);
                 result = await ChannelSession.ConnectUser(ChannelSession.StreamerScopes, ChannelSession.Settings.IsStreamer ? null : ChannelSession.Settings.Channel.token);
             }
             catch (Exception ex)
             {
-                Util.Logger.Log(ex);
+                Logger.Log(ex);
             }
 
             return result;
@@ -285,16 +279,16 @@ namespace MixItUp.Base
         {
             try
             {
-                MixerConnection connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ChannelSession.ClientID, ChannelSession.BotScopes, false, loginSuccessHtmlPageFilePath: OAuthServiceBase.LoginRedirectPageFileName);
+                MixerConnection connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ChannelSession.ClientID, ChannelSession.BotScopes, false, successResponse: OAuthServiceBase.LoginRedirectPageHTML);
                 if (connection != null)
                 {
-                    ChannelSession.BotConnection = new MixerConnectionWrapper(connection);
+                    ChannelSession.MixerBotConnection = new MixerConnectionService(connection);
                     return await ChannelSession.InitializeBotInternal();
                 }
             }
             catch (Exception ex)
             {
-                Util.Logger.Log(ex);
+                Logger.Log(ex);
             }
             return false;
         }
@@ -310,11 +304,11 @@ namespace MixItUp.Base
                     MixerConnection connection = await MixerConnection.ConnectViaOAuthToken(settings.BotOAuthToken);
                     if (connection != null)
                     {
-                        ChannelSession.BotConnection = new MixerConnectionWrapper(connection);
+                        ChannelSession.MixerBotConnection = new MixerConnectionService(connection);
                         result = await ChannelSession.InitializeBotInternal();
                     }
                 }
-                catch (RestServiceRequestException)
+                catch (HttpRestRequestException)
                 {
                     settings.BotOAuthToken = null;
                     return false;
@@ -326,15 +320,15 @@ namespace MixItUp.Base
 
         public static async Task DisconnectBot()
         {
-            ChannelSession.BotConnection = null;
-            await ChannelSession.Chat.DisconnectBot();
+            ChannelSession.MixerBotConnection = null;
+            await ChannelSession.Services.Chat.MixerChatService.DisconnectBot();
         }
 
         public static async Task Close()
         {
             await ChannelSession.Services.Close();
 
-            await ChannelSession.Chat.Disconnect();
+            await ChannelSession.Services.Chat.MixerChatService.DisconnectStreamer();
             await ChannelSession.DisconnectBot();
 
             await ChannelSession.Constellation.Disconnect();
@@ -347,154 +341,71 @@ namespace MixItUp.Base
 
         public static async Task RefreshUser()
         {
-            if (ChannelSession.User != null)
+            if (ChannelSession.MixerStreamerUser != null)
             {
-                PrivatePopulatedUserModel user = await ChannelSession.Connection.GetCurrentUser();
+                PrivatePopulatedUserModel user = await ChannelSession.MixerStreamerConnection.GetCurrentUser();
                 if (user != null)
                 {
-                    ChannelSession.User = user;
+                    ChannelSession.MixerStreamerUser = user;
                 }
             }
         }
 
         public static async Task RefreshChannel()
         {
-            if (ChannelSession.Channel != null)
+            if (ChannelSession.MixerChannel != null)
             {
-                ExpandedChannelModel channel = await ChannelSession.Connection.GetChannel(ChannelSession.Channel.id);
+                ExpandedChannelModel channel = await ChannelSession.MixerStreamerConnection.GetChannel(ChannelSession.MixerChannel.id);
                 if (channel != null)
                 {
-                    ChannelSession.Channel = channel;
+                    ChannelSession.MixerChannel = channel;
                 }
             }
         }
 
         public static async Task<UserViewModel> GetCurrentUser()
         {
-            UserViewModel user = await ChannelSession.ActiveUsers.GetUserByID(ChannelSession.User.id);
+            UserViewModel user = ChannelSession.Services.User.GetUserByID(ChannelSession.MixerStreamerUser.id);
             if (user == null)
             {
-                user = new UserViewModel(ChannelSession.User);
+                user = new UserViewModel(ChannelSession.MixerStreamerUser);
             }
             return user;
         }
 
         public static void DisconnectionOccurred(string serviceName)
         {
-            Util.Logger.Log(serviceName + " Service disconnection occurred");
+            Logger.Log(serviceName + " Service disconnection occurred");
             GlobalEvents.ServiceDisconnect(serviceName);
         }
 
         public static void ReconnectionOccurred(string serviceName)
         {
-            Util.Logger.Log(serviceName + " Service reconnection successful");
+            Logger.Log(serviceName + " Service reconnection successful");
             GlobalEvents.ServiceReconnect(serviceName);
-        }
-
-        public static void EnsureEmoticonForMessage(ChatMessageDataModel message)
-        {
-            if (!string.IsNullOrEmpty(message.pack) && !string.IsNullOrEmpty(message.text) && !string.IsNullOrEmpty(message.source) && message.coords != null && message.source.Equals("external") && Uri.IsWellFormedUriString(message.pack, UriKind.Absolute))
-            {
-                if (!externalEmoticons.ContainsKey(message.pack))
-                {
-                    externalEmoticons[message.pack] = new LockedDictionary<string, EmoticonImage>();
-                }
-
-                if (!externalEmoticons[message.pack].ContainsKey(message.text))
-                {
-                    externalEmoticons[message.pack][message.text] = new EmoticonImage
-                    {
-                        Name = message.text,
-                        Uri = message.pack,
-                        X = message.coords.x,
-                        Y = message.coords.y,
-                        Width = message.coords.width,
-                        Height = message.coords.height,
-                    };
-                }
-            }
-        }
-
-        public static EmoticonImage GetEmoticonForMessage(ChatMessageDataModel message)
-        {
-            if (message.type.Equals("emoticon", StringComparison.InvariantCultureIgnoreCase))
-            {
-                LockedDictionary<string, LockedDictionary<string, EmoticonImage>> emoticons = null;
-                switch (message.source.ToLower())
-                {
-                    case "external":
-                        emoticons = externalEmoticons;
-                        break;
-                    case "builtin":
-                        emoticons = builtinEmoticons;
-                        break;
-                }
-
-                if (emoticons != null && emoticons.ContainsKey(message.pack) && emoticons[message.pack].ContainsKey(message.text))
-                {
-                    return emoticons[message.pack][message.text];
-                }
-            }
-            return null;
-        }
-
-        public static IEnumerable<EmoticonImage> FindMatchingEmoticonsForUser(string text)
-        {
-            return FindMatchingEmoticons(text, userEmoticons);
-        }
-
-        public static IEnumerable<EmoticonImage> FindMatchingEmoticonsForBot(string text)
-        {
-            return FindMatchingEmoticons(text, botEmoticons);
-        }
-
-        private static IEnumerable<EmoticonImage> FindMatchingEmoticons(string text, LockedDictionary<string, LockedDictionary<string, EmoticonImage>> storage)
-        {
-            List<EmoticonImage> matchedImages = new List<EmoticonImage>();
-            if (text.Length == 1 && char.IsLetterOrDigit(text[0]))
-            {
-                // Short circuit for very short searches that start with letters or digits
-                return matchedImages;
-            }
-
-            // User specific emoticons
-            foreach (var kvp in storage)
-            {
-                var values = kvp.Value.ToDictionary();
-                matchedImages.AddRange(values.Where(v => v.Key.StartsWith(text, StringComparison.InvariantCultureIgnoreCase)).Select(v => v.Value));
-            }
-
-            // Builtin emoticons (added last to put them at the end)
-            foreach (var kvp in builtinEmoticons)
-            {
-                var values = kvp.Value.ToDictionary();
-                matchedImages.AddRange(values.Where(v => v.Key.StartsWith(text, StringComparison.InvariantCultureIgnoreCase)).Select(v => v.Value));
-            }
-
-            return matchedImages.Distinct();
         }
 
         private static async Task<bool> InitializeInternal(bool isStreamer, string channelName = null)
         {
             await ChannelSession.Services.InitializeTelemetryService();
 
-            PrivatePopulatedUserModel user = await ChannelSession.Connection.GetCurrentUser();
+            PrivatePopulatedUserModel user = await ChannelSession.MixerStreamerConnection.GetCurrentUser();
             if (user != null)
             {
                 ExpandedChannelModel channel = null;
                 if (channelName == null || isStreamer)
                 {
-                    channel = await ChannelSession.Connection.GetChannel(user.channel.id);
+                    channel = await ChannelSession.MixerStreamerConnection.GetChannel(user.channel.id);
                 }
                 else
                 {
-                    channel = await ChannelSession.Connection.GetChannel(channelName);
+                    channel = await ChannelSession.MixerStreamerConnection.GetChannel(channelName);
                 }
                 
                 if (channel != null)
                 {
-                    ChannelSession.User = user;
-                    ChannelSession.Channel = channel;
+                    ChannelSession.MixerStreamerUser = user;
+                    ChannelSession.MixerChannel = channel;
 
                     if (ChannelSession.Settings == null)
                     {
@@ -504,7 +415,7 @@ namespace MixItUp.Base
 
                     ChannelSession.Settings.LicenseAccepted = true;
 
-                    if (isStreamer && ChannelSession.Settings.Channel != null && ChannelSession.User.id != ChannelSession.Settings.Channel.userId)
+                    if (isStreamer && ChannelSession.Settings.Channel != null && ChannelSession.MixerStreamerUser.id != ChannelSession.Settings.Channel.userId)
                     {
                         GlobalEvents.ShowMessageBox("The account you are logged in as on Mixer does not match the account for this settings. Please log in as the correct account on Mixer.");
                         ChannelSession.Settings.OAuthToken.accessToken = string.Empty;
@@ -517,11 +428,39 @@ namespace MixItUp.Base
 
                     ChannelSession.Services.Telemetry.SetUserId(ChannelSession.Settings.TelemetryUserId);
 
-                    ChannelSession.Connection.Initialize();
+                    ChannelSession.MixerStreamerConnection.Initialize();
+                    await MixerChatEmoteModel.InitializeEmoteCache();
 
-                    if (!await ChannelSession.Chat.Connect() || !await ChannelSession.Constellation.Connect())
+                    MixerChatService mixerChatService = new MixerChatService();
+
+                    if (!await mixerChatService.ConnectStreamer() || !await ChannelSession.Constellation.Connect())
                     {
                         return false;
+                    }
+
+                    await ChannelSession.Services.Chat.Initialize(mixerChatService);
+
+                    if (ChannelSession.IsStreamer)
+                    {
+                        ChannelSession.PreMadeChatCommands.Clear();
+                        foreach (PreMadeChatCommand command in ReflectionHelper.CreateInstancesOfImplementingType<PreMadeChatCommand>())
+                        {
+#pragma warning disable CS0612 // Type or member is obsolete
+                            if (!(command is ObsoletePreMadeCommand))
+                            {
+                                ChannelSession.PreMadeChatCommands.Add(command);
+                            }
+#pragma warning restore CS0612 // Type or member is obsolete
+                        }
+
+                        foreach (PreMadeChatCommandSettings commandSetting in ChannelSession.Settings.PreMadeChatCommandSettings)
+                        {
+                            PreMadeChatCommand command = ChannelSession.PreMadeChatCommands.FirstOrDefault(c => c.Name.Equals(commandSetting.Name));
+                            if (command != null)
+                            {
+                                command.UpdateFromSettings(commandSetting);
+                            }
+                        }
                     }
 
                     if (!string.IsNullOrEmpty(ChannelSession.Settings.OBSStudioServerIP))
@@ -591,6 +530,10 @@ namespace MixItUp.Base
                     {
                         await ChannelSession.Services.InitializeIFTTT();
                     }
+                    if (ChannelSession.Settings.StreamlootsOAuthToken != null)
+                    {
+                        await ChannelSession.Services.InitializeStreamloots();
+                    }
 
                     if (ChannelSession.Settings.RemoteHostConnection != null)
                     {
@@ -610,11 +553,11 @@ namespace MixItUp.Base
 
                     if (ChannelSession.Settings.DefaultInteractiveGame > 0)
                     {
-                        IEnumerable<InteractiveGameListingModel> games = await ChannelSession.Connection.GetOwnedInteractiveGames(ChannelSession.Channel);
-                        InteractiveGameListingModel game = games.FirstOrDefault(g => g.id.Equals(ChannelSession.Settings.DefaultInteractiveGame));
+                        IEnumerable<MixPlayGameListingModel> games = await ChannelSession.MixerStreamerConnection.GetOwnedMixPlayGames(ChannelSession.MixerChannel);
+                        MixPlayGameListingModel game = games.FirstOrDefault(g => g.id.Equals(ChannelSession.Settings.DefaultInteractiveGame));
                         if (game != null)
                         {
-                            if (!await ChannelSession.Interactive.Connect(game))
+                            if (await ChannelSession.Interactive.Connect(game) != MixPlayConnectionResult.Success)
                             {
                                 await ChannelSession.Interactive.Disconnect();
                             }
@@ -646,19 +589,17 @@ namespace MixItUp.Base
 
                     ChannelSession.Services.InputService.HotKeyPressed += InputService_HotKeyPressed;
 
-                    await ChannelSession.LoadUserEmoticons();
-
                     await ChannelSession.SaveSettings();
 
                     await ChannelSession.Services.Settings.SaveBackup(ChannelSession.Settings);
 
                     await ChannelSession.Services.Settings.PerformBackupIfApplicable(ChannelSession.Settings);
 
-                    ChannelSession.Services.Telemetry.TrackLogin(ChannelSession.User.id.ToString(), ChannelSession.IsStreamer, ChannelSession.Channel.partnered);
+                    ChannelSession.Services.Telemetry.TrackLogin(ChannelSession.MixerStreamerUser.id.ToString(), ChannelSession.IsStreamer, ChannelSession.MixerChannel.partnered);
                     if (ChannelSession.Settings.IsStreamer)
                     {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        Task.Run(async () => { await ChannelSession.Services.MixItUpService.SendUserFeatureEvent(new UserFeatureEvent(ChannelSession.User.id)); });
+                        Task.Run(async () => { await ChannelSession.Services.MixItUpService.SendUserFeatureEvent(new UserFeatureEvent(ChannelSession.MixerStreamerUser.id)); });
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     }
 
@@ -672,16 +613,14 @@ namespace MixItUp.Base
 
         private static async Task<bool> InitializeBotInternal()
         {
-            PrivatePopulatedUserModel user = await ChannelSession.BotConnection.GetCurrentUser();
+            PrivatePopulatedUserModel user = await ChannelSession.MixerBotConnection.GetCurrentUser();
             if (user != null)
             {
-                ChannelSession.BotUser = user;
+                ChannelSession.MixerBotUser = user;
 
-                ChannelSession.BotConnection.Initialize();
+                ChannelSession.MixerBotConnection.Initialize();
 
-                await ChannelSession.Chat.ConnectBot();
-
-                await ChannelSession.LoadBotEmoticons();
+                await ChannelSession.Services.Chat.MixerChatService.ConnectBot();
 
                 await ChannelSession.SaveSettings();
 
@@ -694,7 +633,7 @@ namespace MixItUp.Base
         {
             if (currency.Currency.RankChangedCommand != null)
             {
-                UserViewModel user = await ChannelSession.ActiveUsers.GetUserByID(currency.User.ID);
+                UserViewModel user = ChannelSession.Services.User.GetUserByID(currency.User.ID);
                 if (user != null)
                 {
                     await currency.Currency.RankChangedCommand.Perform(user);
@@ -711,87 +650,6 @@ namespace MixItUp.Base
                 if (command != null)
                 {
                     await command.Perform();
-                }
-            }
-        }
-
-        private static async Task LoadUserEmoticons()
-        {
-            // Read Manifest (built in)
-            using (HttpClient httpClient = new HttpClient())
-            {
-                httpClient.DefaultRequestHeaders.Add("User-Agent", $"MixItUp/{System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString()} (Web call from Mix It Up; https://mixitupapp.com; support@mixitupapp.com)");
-
-                using (HttpResponseMessage response = await httpClient.GetAsync(ChannelSession.DefaultEmoticonsManifest))
-                {
-                    if (response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        Dictionary<string, BuiltinEmoticonPack> manifest = JsonConvert.DeserializeObject<Dictionary<string, BuiltinEmoticonPack>>(await response.Content.ReadAsStringAsync());
-
-                        foreach (KeyValuePair<string, BuiltinEmoticonPack> pack in manifest)
-                        {
-                            if (!builtinEmoticons.ContainsKey(pack.Key))
-                            {
-                                builtinEmoticons.Add(pack.Key, new LockedDictionary<string, EmoticonImage>());
-                            }
-
-                            string imageLink = string.Format(ChannelSession.DefaultEmoticonsLinkFormat, pack.Key);
-                            foreach (KeyValuePair<string, EmoticonGroupModel> emoticon in pack.Value.emoticons)
-                            {
-
-                                builtinEmoticons[pack.Key][emoticon.Key] = new EmoticonImage
-                                {
-                                    Name = emoticon.Key,
-                                    Uri = imageLink,
-                                    X = emoticon.Value.x,
-                                    Y = emoticon.Value.y,
-                                    Width = emoticon.Value.width,
-                                    Height = emoticon.Value.height,
-                                };
-                            }
-                        }
-                    }
-                }
-            }
-
-            await LoadEmoticons(ChannelSession.User, userEmoticons);
-        }
-
-        private static async Task LoadBotEmoticons()
-        {
-            await LoadEmoticons(ChannelSession.BotUser, botEmoticons);
-        }
-
-        private class BuiltinEmoticonPack
-        {
-            public string[] authors = null;
-            public bool @default = false;
-            public string name = null;
-            public Dictionary<string, EmoticonGroupModel> emoticons = new Dictionary<string, EmoticonGroupModel>();
-        }
-
-        private static async Task LoadEmoticons(UserModel user, LockedDictionary<string, LockedDictionary<string, EmoticonImage>> storage)
-        {
-            List<EmoticonPackModel> userPacks = (await ChannelSession.Connection.GetEmoticons(ChannelSession.Channel, user)).ToList();
-            foreach (EmoticonPackModel userPack in userPacks)
-            {
-                if (!storage.ContainsKey(userPack.channelId.ToString()))
-                {
-                    storage.Add(userPack.channelId.ToString(), new LockedDictionary<string, EmoticonImage>());
-                }
-
-                foreach (KeyValuePair<string, EmoticonGroupModel> emoticon in userPack.emoticons)
-                {
-
-                    storage[userPack.channelId.ToString()][emoticon.Key] = new EmoticonImage
-                    {
-                        Name = emoticon.Key,
-                        Uri = userPack.url,
-                        X = emoticon.Value.x,
-                        Y = emoticon.Value.y,
-                        Width = emoticon.Value.width,
-                        Height = emoticon.Value.height,
-                    };
                 }
             }
         }

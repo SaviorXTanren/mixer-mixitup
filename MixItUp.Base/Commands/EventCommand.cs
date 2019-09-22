@@ -5,6 +5,7 @@ using Mixer.Base.Util;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -78,35 +79,77 @@ namespace MixItUp.Base.Commands
         MixerSparksUsed = 52,
         [Name("Channel Embers Spent")]
         MixerEmbersUsed = 53,
+
+        [Name("Streamloots Card Redeemed")]
+        StreamlootsCardRedeemed = 60,
+        [Name("Streamloots Pack Purchased")]
+        StreamlootsPackPurchased = 61,
+        [Name("Streamloots Pack Gifted")]
+        StreamlootsPackGifted = 62,
     }
 
     public class EventCommand : CommandBase, IEquatable<EventCommand>
     {
+        private static LockedDictionary<string, LockedHashSet<uint>> userEventTracking = new LockedDictionary<string, LockedHashSet<uint>>();
+
+        public static bool CanUserRunEvent(UserViewModel user, string eventType)
+        {
+            if ((!EventCommand.userEventTracking.ContainsKey(eventType) || !EventCommand.userEventTracking[eventType].Contains(user.ID)))
+            {
+                if (!EventCommand.userEventTracking.ContainsKey(eventType))
+                {
+                    EventCommand.userEventTracking[eventType] = new LockedHashSet<uint>();
+                }
+
+                if (user != null)
+                {
+                    EventCommand.userEventTracking[eventType].Add(user.ID);
+                }
+                return true;
+            }
+            return false;
+        }
+
+        public static async Task FindAndRunEventCommand(string eventDetails, UserViewModel user, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
+        {
+            foreach (EventCommand command in ChannelSession.Settings.EventCommands)
+            {
+                if (command.MatchesEvent(eventDetails))
+                {
+                    if (user != null)
+                    {
+                        await command.Perform(user, arguments: arguments, extraSpecialIdentifiers: extraSpecialIdentifiers);
+                    }
+                    else
+                    {
+                        await command.Perform(await ChannelSession.GetCurrentUser(), arguments: arguments, extraSpecialIdentifiers: extraSpecialIdentifiers);
+                    }
+                }
+            }
+        }
+
         public static async Task ProcessDonationEventCommand(UserDonationModel donation, OtherEventTypeEnum eventType, Dictionary<string, string> additionalSpecialIdentifiers = null)
         {
             GlobalEvents.DonationOccurred(donation);
 
             UserViewModel user = new UserViewModel(0, donation.UserName);
 
-            UserModel userModel = await ChannelSession.Connection.GetUser(user.UserName);
+            UserModel userModel = await ChannelSession.MixerStreamerConnection.GetUser(user.UserName);
             if (userModel != null)
             {
                 user = new UserViewModel(userModel);
             }
 
-            EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(eventType));
-            if (command != null)
+            Dictionary<string, string> specialIdentifiers = donation.GetSpecialIdentifiers();
+            if (additionalSpecialIdentifiers != null)
             {
-                Dictionary<string, string> specialIdentifiers = donation.GetSpecialIdentifiers();
-                if (additionalSpecialIdentifiers != null)
+                foreach (var kvp in additionalSpecialIdentifiers)
                 {
-                    foreach (var kvp in additionalSpecialIdentifiers)
-                    {
-                        specialIdentifiers[kvp.Key] = kvp.Value;
-                    }
+                    specialIdentifiers[kvp.Key] = kvp.Value;
                 }
-                await command.Perform(user, arguments: null, extraSpecialIdentifiers: specialIdentifiers);
             }
+
+            await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(eventType), user, arguments: null, extraSpecialIdentifiers: specialIdentifiers);
         }
 
         private static SemaphoreSlim eventCommandPerformSemaphore = new SemaphoreSlim(1);
