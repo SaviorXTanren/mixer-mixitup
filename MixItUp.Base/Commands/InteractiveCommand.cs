@@ -36,7 +36,7 @@ namespace MixItUp.Base.Commands
         MapToIndividualKeys,
     }
 
-    public class MixPlayCommand : PermissionsCommandBase
+    public class InteractiveCommand : PermissionsCommandBase
     {
         private static SemaphoreSlim interactiveCommandPerformSemaphore = new SemaphoreSlim(1);
 
@@ -57,11 +57,11 @@ namespace MixItUp.Base.Commands
         [Obsolete]
         public string CooldownGroup { get; set; }
 
-        protected override SemaphoreSlim AsyncSemaphore { get { return MixPlayCommand.interactiveCommandPerformSemaphore; } }
+        protected override SemaphoreSlim AsyncSemaphore { get { return InteractiveCommand.interactiveCommandPerformSemaphore; } }
 
-        public MixPlayCommand() { }
+        public InteractiveCommand() { }
 
-        protected MixPlayCommand(MixPlayGameModel game, MixPlaySceneModel scene, MixPlayControlModel control, string command, RequirementViewModel requirements)
+        protected InteractiveCommand(MixPlayGameModel game, MixPlaySceneModel scene, MixPlayControlModel control, string command, RequirementViewModel requirements)
             : base(control.controlID, CommandTypeEnum.Interactive, command, requirements)
         {
             this.GameID = game.id;
@@ -75,7 +75,7 @@ namespace MixItUp.Base.Commands
         public void UpdateWithLatestControl(MixPlayControlModel control) { this.Control = control; }
     }
 
-    public class InteractiveButtonCommand : MixPlayCommand
+    public class InteractiveButtonCommand : InteractiveCommand
     {
         public const string BasicCommandCooldownGroup = "All Buttons";
 
@@ -172,7 +172,7 @@ namespace MixItUp.Base.Commands
         }
     }
 
-    public class InteractiveJoystickCommand : MixPlayCommand
+    public class InteractiveJoystickCommand : InteractiveCommand
     {
         private class InteractiveJoystickAction : ActionBase
         {
@@ -365,7 +365,7 @@ namespace MixItUp.Base.Commands
         }
     }
 
-    public class InteractiveTextBoxCommand : MixPlayCommand
+    public class InteractiveTextBoxCommand : InteractiveCommand
     {
         public InteractiveTextBoxCommand() { }
 

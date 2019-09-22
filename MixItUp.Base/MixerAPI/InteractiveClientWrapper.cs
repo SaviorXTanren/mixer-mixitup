@@ -52,9 +52,9 @@ namespace MixItUp.Base.MixerAPI
 
         public MixPlayControlModel Control { get; set; }
 
-        public MixPlayCommand Command { get; set; }
+        public InteractiveCommand Command { get; set; }
 
-        public InteractiveConnectedControlCommand(MixPlayConnectedSceneModel scene, MixPlayControlModel control, MixPlayCommand command)
+        public InteractiveConnectedControlCommand(MixPlayConnectedSceneModel scene, MixPlayControlModel control, InteractiveCommand command)
         {
             this.Scene = scene;
             this.Control = control;
@@ -104,7 +104,7 @@ namespace MixItUp.Base.MixerAPI
 
     public class InteractiveConnectedButtonCommand : InteractiveConnectedControlCommand
     {
-        public InteractiveConnectedButtonCommand(MixPlayConnectedSceneModel scene, MixPlayConnectedButtonControlModel button, MixPlayCommand command)
+        public InteractiveConnectedButtonCommand(MixPlayConnectedSceneModel scene, MixPlayConnectedButtonControlModel button, InteractiveCommand command)
             : base(scene, button, command)
         {
             this.ButtonCommand.OnCommandStart += ButtonCommand_OnCommandStart;
@@ -189,7 +189,7 @@ namespace MixItUp.Base.MixerAPI
 
     public class InteractiveConnectedJoystickCommand : InteractiveConnectedControlCommand
     {
-        public InteractiveConnectedJoystickCommand(MixPlayConnectedSceneModel scene, MixPlayConnectedJoystickControlModel joystick, MixPlayCommand command) : base(scene, joystick, command) { }
+        public InteractiveConnectedJoystickCommand(MixPlayConnectedSceneModel scene, MixPlayConnectedJoystickControlModel joystick, InteractiveCommand command) : base(scene, joystick, command) { }
 
         public MixPlayConnectedJoystickControlModel Joystick { get { return (MixPlayConnectedJoystickControlModel)this.Control; } set { this.Control = value; } }
 
@@ -201,7 +201,7 @@ namespace MixItUp.Base.MixerAPI
 
     public class InteractiveConnectedTextBoxCommand : InteractiveConnectedControlCommand
     {
-        public InteractiveConnectedTextBoxCommand(MixPlayConnectedSceneModel scene, MixPlayConnectedTextBoxControlModel textBox, MixPlayCommand command) : base(scene, textBox, command) { }
+        public InteractiveConnectedTextBoxCommand(MixPlayConnectedSceneModel scene, MixPlayConnectedTextBoxControlModel textBox, InteractiveCommand command) : base(scene, textBox, command) { }
 
         public MixPlayConnectedTextBoxControlModel TextBox { get { return (MixPlayConnectedTextBoxControlModel)this.Control; } set { this.Control = value; } }
 
@@ -519,7 +519,7 @@ namespace MixItUp.Base.MixerAPI
             {
                 foreach (MixPlayControlModel control in scene.allControls)
                 {
-                    MixPlayCommand command = this.GetInteractiveCommandForControl(version.gameId, control);
+                    InteractiveCommand command = this.GetInteractiveCommandForControl(version.gameId, control);
                     control.disabled = (command == null || !command.IsEnabled);
                 }
             }
@@ -748,7 +748,7 @@ namespace MixItUp.Base.MixerAPI
 
         private void AddConnectedControl(MixPlayConnectedSceneModel scene, MixPlayControlModel control)
         {
-            MixPlayCommand command = this.GetInteractiveCommandForControl(this.Client.Game.id, control);
+            InteractiveCommand command = this.GetInteractiveCommandForControl(this.Client.Game.id, control);
             if (command != null)
             {
                 command.UpdateWithLatestControl(control);
@@ -814,9 +814,9 @@ namespace MixItUp.Base.MixerAPI
             }
         }
 
-        private MixPlayCommand GetInteractiveCommandForControl(uint gameID, MixPlayControlModel control)
+        private InteractiveCommand GetInteractiveCommandForControl(uint gameID, MixPlayControlModel control)
         {
-            return ChannelSession.Settings.MixPlayCommands.FirstOrDefault(c => c.GameID.Equals(gameID) && c.Control.controlID.Equals(control.controlID));
+            return ChannelSession.Settings.InteractiveCommands.FirstOrDefault(c => c.GameID.Equals(gameID) && c.Control.controlID.Equals(control.controlID));
         }
 
         #endregion Interactive Update Methods

@@ -16,7 +16,7 @@ namespace MixItUp.Base.ViewModel.Interactive
         public int Cooldown { get; set; }
 
         [DataMember]
-        public MixPlayCommand Command { get; set; }
+        public InteractiveCommand Command { get; set; }
 
         public InteractiveControlViewModel(MixPlayControlModel control)
         {
