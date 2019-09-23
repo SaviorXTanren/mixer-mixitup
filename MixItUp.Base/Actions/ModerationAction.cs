@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.User;
 using Mixer.Base.Util;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
@@ -83,7 +84,10 @@ namespace MixItUp.Base.Actions
 
                 if (this.ModerationType == ModerationActionTypeEnum.ClearChat)
                 {
-                    await ChannelSession.Services.Chat.ClearMessages();
+                    await DispatcherHelper.InvokeDispatcher(async () =>
+                    {
+                        await ChannelSession.Services.Chat.ClearMessages();
+                    });
                 }
                 else if (targetUser != null)
                 {
