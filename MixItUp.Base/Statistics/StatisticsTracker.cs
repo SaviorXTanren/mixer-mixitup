@@ -176,7 +176,7 @@ namespace MixItUp.Base.Statistics
             this.donationsTracker.OnStatisticEventOccurred(e.ID, e.Amount);
         }
 
-        private void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, int> e)
+        private void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, uint> e)
         {
             this.sparksTracker.OnStatisticEventOccurred(e.Item1.UserName, e.Item2);
         }
