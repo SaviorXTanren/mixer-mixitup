@@ -535,7 +535,7 @@ namespace MixItUp.Base.Services
             {
                 if (this.AllUsers.Remove(user.ID.ToString()))
                 {
-                    this.displayUsers.Remove(user.UserName);
+                    this.displayUsers.Remove(user.SortableID);
 
                     if (ChannelSession.Settings.ChatShowUserJoinLeave && users.Count() < 5)
                     {
