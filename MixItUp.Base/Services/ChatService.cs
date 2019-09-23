@@ -299,6 +299,14 @@ namespace MixItUp.Base.Services
                     this.chatCommandTriggers[trigger] = command;
                 }
             }
+
+            foreach (PreMadeChatCommand command in ChannelSession.PreMadeChatCommands)
+            {
+                foreach (string trigger in command.CommandTriggers)
+                {
+                    this.chatCommandTriggers[trigger] = command;
+                }
+            }
         }
 
         public async Task AddMessage(ChatMessageViewModel message)
