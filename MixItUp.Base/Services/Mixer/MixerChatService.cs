@@ -2,6 +2,8 @@
 using Mixer.Base.Model.Chat;
 using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Chat;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Mixer;
@@ -559,6 +561,17 @@ namespace MixItUp.Base.Services.Mixer
                     MixerSkillChatMessageViewModel message = new MixerSkillChatMessageViewModel(e);
                     this.OnMessageOccurred(sender, message);
                     GlobalEvents.SkillUseOccurred(message);
+                    if (message.Skill.Cost > 0)
+                    {
+                        if (message.Skill.CostType == MixerSkillCostTypeEnum.Sparks)
+                        {
+                            GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, uint>(message.User, message.Skill.Cost));
+                        }
+                        else if (message.Skill.CostType == MixerSkillCostTypeEnum.Embers)
+                        {
+                            GlobalEvents.EmberUseOccurred(new UserEmberUsageModel(message));
+                        }
+                    }
                 }
                 else
                 {
@@ -664,6 +677,17 @@ namespace MixItUp.Base.Services.Mixer
 
             this.OnMessageOccurred(sender, message);
             GlobalEvents.SkillUseOccurred(message);
+            if (message.Skill.Cost > 0)
+            {
+                if (message.Skill.CostType == MixerSkillCostTypeEnum.Sparks)
+                {
+                    GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, uint>(message.User, message.Skill.Cost));
+                }
+                else if (message.Skill.CostType == MixerSkillCostTypeEnum.Embers)
+                {
+                    GlobalEvents.EmberUseOccurred(new UserEmberUsageModel(message));
+                }
+            }
         }
 
         private async void StreamerClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)

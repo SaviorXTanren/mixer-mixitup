@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.ViewModel.Chat.Mixer;
+using MixItUp.Base.ViewModel.User;
 
 namespace MixItUp.Base.Model.User
 {
@@ -6,11 +7,15 @@ namespace MixItUp.Base.Model.User
     {
         public UserViewModel User { get; set; }
 
-        public int Amount { get; set; }
+        public uint Amount { get; set; }
 
         public string Message { get; set; }
 
-        public UserEmberUsageModel(UserViewModel user, int amount, string message)
+        public UserEmberUsageModel(MixerSkillChatMessageViewModel skillMessage)
+            : this(skillMessage.User, skillMessage.Skill.Cost, skillMessage.PlainTextMessage)
+        { }
+
+        public UserEmberUsageModel(UserViewModel user, uint amount, string message)
         {
             this.User = user;
             this.Amount = amount;
