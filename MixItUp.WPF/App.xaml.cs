@@ -85,6 +85,7 @@ namespace MixItUp.WPF
             desktopServicesHandler.Initialize();
 
             FileLoggerHandler.Initialize(desktopServicesHandler.FileService);
+
             DispatcherHelper.RegisterDispatcher(async (func) =>
             {
                 await this.Dispatcher.Invoke(async () =>
@@ -100,7 +101,9 @@ namespace MixItUp.WPF
 
             ChannelSession.Initialize(desktopServicesHandler);
 
-            Logger.Log("Application Version: " + ChannelSession.Services.FileService.GetApplicationVersion());
+            Logger.SetLogLevel(LogLevel.Information);
+            Logger.Log(LogLevel.Information, "Application Version: " + ChannelSession.Services.FileService.GetApplicationVersion());
+            Logger.SetLogLevel(LogLevel.Error);
 
             base.OnStartup(e);
         }

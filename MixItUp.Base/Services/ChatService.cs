@@ -299,6 +299,14 @@ namespace MixItUp.Base.Services
                     this.chatCommandTriggers[trigger] = command;
                 }
             }
+
+            foreach (PreMadeChatCommand command in ChannelSession.PreMadeChatCommands)
+            {
+                foreach (string trigger in command.CommandTriggers)
+                {
+                    this.chatCommandTriggers[trigger] = command;
+                }
+            }
         }
 
         public async Task AddMessage(ChatMessageViewModel message)
@@ -527,7 +535,7 @@ namespace MixItUp.Base.Services
             {
                 if (this.AllUsers.Remove(user.ID.ToString()))
                 {
-                    this.displayUsers.Remove(user.UserName);
+                    this.displayUsers.Remove(user.SortableID);
 
                     if (ChannelSession.Settings.ChatShowUserJoinLeave && users.Count() < 5)
                     {

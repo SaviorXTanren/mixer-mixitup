@@ -66,15 +66,6 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler<ChatMessageViewModel> OnChatCommandMessageReceived;
-        public static void ChatCommandMessageReceived(ChatMessageViewModel chatMessage)
-        {
-            if (GlobalEvents.OnChatCommandMessageReceived != null)
-            {
-                GlobalEvents.OnChatCommandMessageReceived(null, chatMessage);
-            }
-        }
-
         public static event EventHandler<MixPlaySharedProjectModel> OnInteractiveSharedProjectAdded;
         public static void InteractiveSharedProjectAdded(MixPlaySharedProjectModel sharedProject)
         {

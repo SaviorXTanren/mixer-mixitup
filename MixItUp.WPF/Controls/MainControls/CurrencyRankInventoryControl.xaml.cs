@@ -95,7 +95,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
             this.MainDataGrid.ItemsSource = this.items;
 
-            GlobalEvents.OnChatCommandMessageReceived += GlobalEvents_OnChatCommandMessageReceived;
+            GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatCommandMessageReceived;
         }
 
         public void RefreshList()

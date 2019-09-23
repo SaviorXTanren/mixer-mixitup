@@ -413,6 +413,11 @@ namespace MixItUp.Base
                     }
                     await ChannelSession.Services.Settings.Initialize(ChannelSession.Settings);
 
+                    if (ChannelSession.Settings.DiagnosticLogging)
+                    {
+                        Logger.SetLogLevel(LogLevel.Debug);
+                    }
+
                     ChannelSession.Settings.LicenseAccepted = true;
 
                     if (isStreamer && ChannelSession.Settings.Channel != null && ChannelSession.MixerStreamerUser.id != ChannelSession.Settings.Channel.userId)
@@ -430,15 +435,6 @@ namespace MixItUp.Base
 
                     ChannelSession.MixerStreamerConnection.Initialize();
                     await MixerChatEmoteModel.InitializeEmoteCache();
-
-                    MixerChatService mixerChatService = new MixerChatService();
-
-                    if (!await mixerChatService.ConnectStreamer() || !await ChannelSession.Constellation.Connect())
-                    {
-                        return false;
-                    }
-
-                    await ChannelSession.Services.Chat.Initialize(mixerChatService);
 
                     if (ChannelSession.IsStreamer)
                     {
@@ -462,6 +458,15 @@ namespace MixItUp.Base
                             }
                         }
                     }
+
+                    MixerChatService mixerChatService = new MixerChatService();
+
+                    if (!await mixerChatService.ConnectStreamer() || !await ChannelSession.Constellation.Connect())
+                    {
+                        return false;
+                    }
+
+                    await ChannelSession.Services.Chat.Initialize(mixerChatService);
 
                     if (!string.IsNullOrEmpty(ChannelSession.Settings.OBSStudioServerIP))
                     {

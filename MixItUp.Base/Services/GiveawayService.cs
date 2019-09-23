@@ -132,14 +132,14 @@ namespace MixItUp.Base.Services
 
             GlobalEvents.GiveawaysChangedOccurred(usersUpdated: true);
 
-            GlobalEvents.OnChatCommandMessageReceived -= GlobalEvents_OnChatCommandMessageReceived;
+            GlobalEvents.OnChatMessageReceived -= GlobalEvents_OnChatCommandMessageReceived;
 
             return Task.FromResult(0);
         }
 
         private async Task GiveawayTimerBackground()
         {
-            GlobalEvents.OnChatCommandMessageReceived += GlobalEvents_OnChatCommandMessageReceived;
+            GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatCommandMessageReceived;
 
             int totalTime = ChannelSession.Settings.GiveawayTimer * 60;
             int reminderTime = ChannelSession.Settings.GiveawayReminderInterval * 60;
