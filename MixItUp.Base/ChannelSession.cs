@@ -436,15 +436,6 @@ namespace MixItUp.Base
                     ChannelSession.MixerStreamerConnection.Initialize();
                     await MixerChatEmoteModel.InitializeEmoteCache();
 
-                    MixerChatService mixerChatService = new MixerChatService();
-
-                    if (!await mixerChatService.ConnectStreamer() || !await ChannelSession.Constellation.Connect())
-                    {
-                        return false;
-                    }
-
-                    await ChannelSession.Services.Chat.Initialize(mixerChatService);
-
                     if (ChannelSession.IsStreamer)
                     {
                         ChannelSession.PreMadeChatCommands.Clear();
@@ -467,6 +458,15 @@ namespace MixItUp.Base
                             }
                         }
                     }
+
+                    MixerChatService mixerChatService = new MixerChatService();
+
+                    if (!await mixerChatService.ConnectStreamer() || !await ChannelSession.Constellation.Connect())
+                    {
+                        return false;
+                    }
+
+                    await ChannelSession.Services.Chat.Initialize(mixerChatService);
 
                     if (!string.IsNullOrEmpty(ChannelSession.Settings.OBSStudioServerIP))
                     {
