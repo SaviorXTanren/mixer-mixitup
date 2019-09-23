@@ -67,7 +67,7 @@ namespace MixItUp.Base.Services
             LocalOAuthHttpListenerServer oauthServer = new LocalOAuthHttpListenerServer(listeningAddress, MixerConnection.DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER, successResponse: OAuthServiceBase.LoginRedirectPageHTML);
             oauthServer.Start();
 
-            ProcessHelper.LaunchProgram(oauthPageURL);
+            ProcessHelper.LaunchLink(oauthPageURL);
 
             string authorizationCode = await oauthServer.WaitForAuthorizationCode();
             oauthServer.Stop();
