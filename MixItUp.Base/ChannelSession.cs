@@ -413,6 +413,11 @@ namespace MixItUp.Base
                     }
                     await ChannelSession.Services.Settings.Initialize(ChannelSession.Settings);
 
+                    if (ChannelSession.Settings.DiagnosticLogging)
+                    {
+                        Logger.SetLogLevel(LogLevel.Debug);
+                    }
+
                     ChannelSession.Settings.LicenseAccepted = true;
 
                     if (isStreamer && ChannelSession.Settings.Channel != null && ChannelSession.MixerStreamerUser.id != ChannelSession.Settings.Channel.userId)
