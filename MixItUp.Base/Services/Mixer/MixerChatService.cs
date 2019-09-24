@@ -505,14 +505,18 @@ namespace MixItUp.Base.Services.Mixer
             }, uint.MaxValue);
 
             chatUsers = chatUsers.Where(u => u.userId.HasValue).ToList();
-            HashSet<uint> chatUserIDs = new HashSet<uint>(chatUsers.Select(u => u.userId.GetValueOrDefault()));
+            List<uint> chatUserIDs = new List<uint>(chatUsers.Select(u => u.userId.GetValueOrDefault()));
 
             IEnumerable<UserViewModel> existingUsers = ChannelSession.Services.User.GetAllUsers();
-            HashSet<uint> existingUsersIDs = new HashSet<uint>(existingUsers.Select(u => u.ID));
+            List<uint> existingUsersIDs = new List<uint>(existingUsers.Select(u => u.ID));
 
-            Dictionary<uint, ChatUserModel> usersToAdd = chatUsers.ToDictionary(u => u.userId.GetValueOrDefault(), u => u);
+            Dictionary<uint, ChatUserModel> usersToAdd = new Dictionary<uint, ChatUserModel>();
+            foreach (ChatUserModel user in chatUsers)
+            {
+                usersToAdd[user.userId.GetValueOrDefault()] = user;
+            }
+
             List<uint> usersToRemove = new List<uint>();
-
             foreach (uint userID in existingUsersIDs)
             {
                 usersToAdd.Remove(userID);
