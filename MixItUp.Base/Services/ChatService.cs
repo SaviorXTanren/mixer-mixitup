@@ -100,6 +100,8 @@ namespace MixItUp.Base.Services
         private SemaphoreSlim whisperNumberLock = new SemaphoreSlim(1);
         private Dictionary<string, int> whisperMap = new Dictionary<string, int>();
 
+        private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+
         private string currentChatEventLogFilePath;
 
         public ChatService() { }
@@ -165,6 +167,8 @@ namespace MixItUp.Base.Services
                 }, int.MaxValue);
             });
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+            AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, this.ProcessHoursCurrency, 60000);
         }
 
         public async Task SendMessage(string message, bool sendAsStreamer = false)
@@ -561,6 +565,21 @@ namespace MixItUp.Base.Services
             {
                 await this.AddMessage(alert);
             }
+        }
+
+        private Task ProcessHoursCurrency(CancellationToken cancellationToken)
+        {
+            foreach (UserViewModel user in ChannelSession.Services.User.GetAllWorkableUsers())
+            {
+                user.UpdateMinuteData();
+            }
+
+            foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+            {
+                currency.UpdateUserData();
+            }
+
+            return Task.FromResult(0);
         }
 
         #region Mixer Events
