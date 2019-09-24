@@ -465,12 +465,7 @@ namespace MixItUp.Base.Services.Mixer
                         processedUsers.Add(user);
                     }
                 }
-
-                await DispatcherHelper.InvokeDispatcher(() =>
-                {
-                    this.OnUsersJoinOccurred(this, processedUsers);
-                    return Task.FromResult(0);
-                });
+                this.OnUsersJoinOccurred(this, processedUsers);
             }
 
             List<ChatUserEventModel> leavesToProcess = new List<ChatUserEventModel>();
@@ -496,12 +491,7 @@ namespace MixItUp.Base.Services.Mixer
                         processedUsers.Add(user);
                     }
                 }
-
-                await DispatcherHelper.InvokeDispatcher(() =>
-                {
-                    this.OnUsersLeaveOccurred(this, processedUsers);
-                    return Task.FromResult(0);
-                });
+                this.OnUsersLeaveOccurred(this, processedUsers);
             }
         }
 

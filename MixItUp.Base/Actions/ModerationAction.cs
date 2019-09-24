@@ -84,10 +84,7 @@ namespace MixItUp.Base.Actions
 
                 if (this.ModerationType == ModerationActionTypeEnum.ClearChat)
                 {
-                    await DispatcherHelper.InvokeDispatcher(async () =>
-                    {
-                        await ChannelSession.Services.Chat.ClearMessages();
-                    });
+                    await ChannelSession.Services.Chat.ClearMessages();
                 }
                 else if (targetUser != null)
                 {
