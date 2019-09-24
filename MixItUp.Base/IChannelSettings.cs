@@ -149,6 +149,9 @@ namespace MixItUp.Base
         bool ExtraLifeIncludeTeamDonations { get; set; }
 
         string DiscordServer { get; set; }
+        string DiscordCustomClientID { get; set; }
+        string DiscordCustomClientSecret { get; set; }
+        string DiscordCustomBotToken { get; set; }
 
         string PatreonTierMixerSubscriberEquivalent { get; set; }
 
