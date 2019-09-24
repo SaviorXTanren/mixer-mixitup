@@ -108,7 +108,7 @@ namespace MixItUp.Base.Services
         public async Task<UserViewModel> AddOrUpdateUser(ChatUserModel chatUser)
         {
             UserViewModel user = new UserViewModel(chatUser);
-            if (chatUser.userId.HasValue)
+            if (chatUser.userId.HasValue && chatUser.userId.GetValueOrDefault() > 0)
             {
                 if (this.usersByID.ContainsKey(chatUser.userId.GetValueOrDefault().ToString()))
                 {
@@ -123,7 +123,7 @@ namespace MixItUp.Base.Services
         public async Task<UserViewModel> AddOrUpdateUser(MixPlayParticipantModel mixplayUser)
         {
             UserViewModel user = new UserViewModel(mixplayUser);
-            if (mixplayUser.userID > 0)
+            if (mixplayUser.userID > 0 && !string.IsNullOrEmpty(mixplayUser.sessionID))
             {
                 if (this.usersByID.ContainsKey(mixplayUser.userID.ToString()))
                 {
@@ -138,7 +138,7 @@ namespace MixItUp.Base.Services
 
         private async Task AddOrUpdateUser(UserViewModel user)
         {
-            if (!user.IsAnonymous)
+            if (!user.IsAnonymous && user.ID > 0 && !string.IsNullOrEmpty(user.UserName))
             {
                 this.usersByID[user.ID.ToString()] = user;
                 this.usersByUsername[user.UserName] = user;
