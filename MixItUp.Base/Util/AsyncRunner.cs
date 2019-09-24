@@ -133,7 +133,7 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static void RunBackgroundTask(CancellationToken token, Func<CancellationToken, Task> backgroundTask, int delayInSeconds = 0)
+        public static void RunBackgroundTask(CancellationToken token, Func<CancellationToken, Task> backgroundTask, int delayInMilliseconds = 0)
         {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             Task.Run(async () =>
@@ -144,9 +144,9 @@ namespace MixItUp.Base.Util
                     {
                         await backgroundTask(token);
 
-                        if (delayInSeconds > 0 && !token.IsCancellationRequested)
+                        if (delayInMilliseconds > 0 && !token.IsCancellationRequested)
                         {
-                            await Task.Delay(delayInSeconds, token);
+                            await Task.Delay(delayInMilliseconds, token);
                         }
                     }
                     catch (ThreadAbortException) { return; }

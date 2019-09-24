@@ -76,7 +76,7 @@ namespace MixItUp.Base.Commands
                 Match match = Regex.Match(text, string.Format(CommandMatchingRegexFormat, command));
                 if (match != null && match.Success)
                 {
-                    arguments = text.Substring(match.Index, match.Length).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    arguments = text.Substring(match.Index + match.Length).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     return true;
                 }
             }

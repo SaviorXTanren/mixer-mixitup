@@ -8,7 +8,6 @@ using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -21,8 +20,8 @@ namespace MixItUp.Desktop.Services
 {
     public class DiscordOAuthServer : LocalOAuthHttpListenerServer
     {
-        private const string ServerIDIdentifier = "guild_id=";
-        private const string BotPermissionsIdentifier = "permissions=";
+        private const string ServerIDIdentifier = "guild_id";
+        private const string BotPermissionsIdentifier = "permissions";
 
         public string ServerID { get; private set; }
         public string BotPermissions { get; private set; }
@@ -348,6 +347,8 @@ namespace MixItUp.Desktop.Services
 
         public string BotPermissions { get; private set; }
 
+        private DateTimeOffset lastCommand = DateTimeOffset.MinValue;
+
         public DiscordService() : base(DiscordService.BaseAddress) { }
 
         public DiscordService(OAuthTokenModel token) : base(DiscordService.BaseAddress, token) { }
@@ -444,28 +445,31 @@ namespace MixItUp.Desktop.Services
 
         public async Task<DiscordMessage> CreateMessage(DiscordChannel channel, string message)
         {
-            if (this.Emojis != null)
+            if (await this.IsWithinRateLimiting())
             {
-                foreach (DiscordEmoji emoji in this.Emojis)
+                if (this.Emojis != null)
                 {
-                    string findString = emoji.Name;
-                    if (emoji.RequireColons.GetValueOrDefault())
+                    foreach (DiscordEmoji emoji in this.Emojis)
                     {
-                        findString = ":" + findString + ":";
-                    }
+                        string findString = emoji.Name;
+                        if (emoji.RequireColons.GetValueOrDefault())
+                        {
+                            findString = ":" + findString + ":";
+                        }
 
-                    string replacementString = ":" + emoji.Name + ":";
-                    if (emoji.Animated.GetValueOrDefault())
-                    {
-                        replacementString = "a" + replacementString;
-                    }
-                    replacementString = "<" + replacementString + emoji.ID + ">";
+                        string replacementString = ":" + emoji.Name + ":";
+                        if (emoji.Animated.GetValueOrDefault())
+                        {
+                            replacementString = "a" + replacementString;
+                        }
+                        replacementString = "<" + replacementString + emoji.ID + ">";
 
-                    message = message.Replace(findString, replacementString);
+                        message = message.Replace(findString, replacementString);
+                    }
                 }
+                return await this.botService.CreateMessage(channel, message);
             }
-
-            return await this.botService.CreateMessage(channel, message);
+            return null;
         }
 
         public async Task<DiscordChannelInvite> CreateChannelInvite(DiscordChannel channel, bool isTemporary = false) { return await this.botService.CreateChannelInvite(channel, isTemporary); }
@@ -521,6 +525,17 @@ namespace MixItUp.Desktop.Services
                     return true;
                 }
             }
+            return false;
+        }
+
+        private async Task<bool> IsWithinRateLimiting()
+        {
+            if (this.lastCommand.TotalSecondsFromNow() > 30)
+            {
+                this.lastCommand = DateTimeOffset.Now;
+                return true;
+            }
+            await ChannelSession.Services.Chat.Whisper(ChannelSession.MixerStreamerUser.username, "The Discord action you were trying to perform was blocked due to too many requests. Please ensure you are only performing 1 Discord action every 30 seconds.");
             return false;
         }
 

@@ -277,7 +277,7 @@ namespace MixItUp.Base.Model.Overlay
 
         private void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { this.AddAmount(donation.Amount); }
 
-        private void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, int> user) { this.AddAmount(user.Item2); }
+        private void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, uint> user) { this.AddAmount(user.Item2); }
 
         private void GlobalEvents_OnEmberUseOccurred(object sender, UserEmberUsageModel emberUsage) { this.AddAmount(emberUsage.Amount); }
 

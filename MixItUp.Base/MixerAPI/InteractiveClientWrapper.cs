@@ -962,7 +962,7 @@ namespace MixItUp.Base.MixerAPI
 
                     if (connectedControl != null)
                     {
-                        int sparkCost = 0;
+                        uint sparkCost = 0;
 
                         await this.giveInputLock.WaitAndRelease(async () =>
                         {
@@ -976,11 +976,11 @@ namespace MixItUp.Base.MixerAPI
 
                                     if (control is MixPlayButtonControlModel)
                                     {
-                                        sparkCost = ((MixPlayButtonControlModel)control).cost.GetValueOrDefault();
+                                        sparkCost = (uint)((MixPlayButtonControlModel)control).cost.GetValueOrDefault();
                                     }
                                     else if (control is MixPlayTextBoxControlModel)
                                     {
-                                        sparkCost = ((MixPlayTextBoxControlModel)control).cost.GetValueOrDefault();
+                                        sparkCost = (uint)((MixPlayTextBoxControlModel)control).cost.GetValueOrDefault();
                                     }
                                 }
 
@@ -1002,7 +1002,7 @@ namespace MixItUp.Base.MixerAPI
 
                         if (sparkCost > 0)
                         {
-                            GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, int>(user, sparkCost));
+                            GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, uint>(user, sparkCost));
                         }
                     }
 

@@ -163,7 +163,7 @@ namespace MixItUp.Base.ViewModel.User
             return rank;
         }
 
-        public async Task UpdateUserData()
+        public void UpdateUserData()
         {
             if (this.IsActive)
             {

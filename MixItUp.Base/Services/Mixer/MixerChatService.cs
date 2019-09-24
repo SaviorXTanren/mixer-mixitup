@@ -2,6 +2,8 @@
 using Mixer.Base.Model.Chat;
 using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Chat;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Mixer;
@@ -463,12 +465,7 @@ namespace MixItUp.Base.Services.Mixer
                         processedUsers.Add(user);
                     }
                 }
-
-                await DispatcherHelper.InvokeDispatcher(() =>
-                {
-                    this.OnUsersJoinOccurred(this, processedUsers);
-                    return Task.FromResult(0);
-                });
+                this.OnUsersJoinOccurred(this, processedUsers);
             }
 
             List<ChatUserEventModel> leavesToProcess = new List<ChatUserEventModel>();
@@ -494,12 +491,7 @@ namespace MixItUp.Base.Services.Mixer
                         processedUsers.Add(user);
                     }
                 }
-
-                await DispatcherHelper.InvokeDispatcher(() =>
-                {
-                    this.OnUsersLeaveOccurred(this, processedUsers);
-                    return Task.FromResult(0);
-                });
+                this.OnUsersLeaveOccurred(this, processedUsers);
             }
         }
 
@@ -513,14 +505,18 @@ namespace MixItUp.Base.Services.Mixer
             }, uint.MaxValue);
 
             chatUsers = chatUsers.Where(u => u.userId.HasValue).ToList();
-            HashSet<uint> chatUserIDs = new HashSet<uint>(chatUsers.Select(u => u.userId.GetValueOrDefault()));
+            List<uint> chatUserIDs = new List<uint>(chatUsers.Select(u => u.userId.GetValueOrDefault()));
 
             IEnumerable<UserViewModel> existingUsers = ChannelSession.Services.User.GetAllUsers();
-            HashSet<uint> existingUsersIDs = new HashSet<uint>(existingUsers.Select(u => u.ID));
+            List<uint> existingUsersIDs = new List<uint>(existingUsers.Select(u => u.ID));
 
-            Dictionary<uint, ChatUserModel> usersToAdd = chatUsers.ToDictionary(u => u.userId.GetValueOrDefault(), u => u);
+            Dictionary<uint, ChatUserModel> usersToAdd = new Dictionary<uint, ChatUserModel>();
+            foreach (ChatUserModel user in chatUsers)
+            {
+                usersToAdd[user.userId.GetValueOrDefault()] = user;
+            }
+
             List<uint> usersToRemove = new List<uint>();
-
             foreach (uint userID in existingUsersIDs)
             {
                 usersToAdd.Remove(userID);
@@ -559,6 +555,17 @@ namespace MixItUp.Base.Services.Mixer
                     MixerSkillChatMessageViewModel message = new MixerSkillChatMessageViewModel(e);
                     this.OnMessageOccurred(sender, message);
                     GlobalEvents.SkillUseOccurred(message);
+                    if (message.Skill.Cost > 0)
+                    {
+                        if (message.Skill.CostType == MixerSkillCostTypeEnum.Sparks)
+                        {
+                            GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, uint>(message.User, message.Skill.Cost));
+                        }
+                        else if (message.Skill.CostType == MixerSkillCostTypeEnum.Embers)
+                        {
+                            GlobalEvents.EmberUseOccurred(new UserEmberUsageModel(message));
+                        }
+                    }
                 }
                 else
                 {
@@ -664,6 +671,17 @@ namespace MixItUp.Base.Services.Mixer
 
             this.OnMessageOccurred(sender, message);
             GlobalEvents.SkillUseOccurred(message);
+            if (message.Skill.Cost > 0)
+            {
+                if (message.Skill.CostType == MixerSkillCostTypeEnum.Sparks)
+                {
+                    GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, uint>(message.User, message.Skill.Cost));
+                }
+                else if (message.Skill.CostType == MixerSkillCostTypeEnum.Embers)
+                {
+                    GlobalEvents.EmberUseOccurred(new UserEmberUsageModel(message));
+                }
+            }
         }
 
         private async void StreamerClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)

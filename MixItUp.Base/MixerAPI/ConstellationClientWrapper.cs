@@ -391,11 +391,11 @@ namespace MixItUp.Base.MixerAPI
             catch (Exception ex) { Logger.Log(ex); }
         }
 
-        private async void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, int> sparkUsage)
+        private async void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, uint> sparkUsage)
         {
             foreach (UserCurrencyViewModel sparkCurrency in ChannelSession.Settings.Currencies.Values.Where(c => c.IsTrackingSparks))
             {
-                sparkUsage.Item1.Data.AddCurrencyAmount(sparkCurrency, sparkUsage.Item2);
+                sparkUsage.Item1.Data.AddCurrencyAmount(sparkCurrency, (int)sparkUsage.Item2);
             }
 
             Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
@@ -410,7 +410,7 @@ namespace MixItUp.Base.MixerAPI
         {
             foreach (UserCurrencyViewModel emberCurrency in ChannelSession.Settings.Currencies.Values.Where(c => c.IsTrackingEmbers))
             {
-                emberUsage.User.Data.AddCurrencyAmount(emberCurrency, emberUsage.Amount);
+                emberUsage.User.Data.AddCurrencyAmount(emberCurrency, (int)emberUsage.Amount);
             }
 
             Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()

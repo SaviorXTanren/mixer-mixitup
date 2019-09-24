@@ -106,25 +106,35 @@ namespace MixItUp.WPF.Controls.Command
             CommandBase command = this.GetCommandFromCommandButtons<CommandBase>(this);
             if (command != null)
             {
-                this.EnableDisableToggleSwitch.IsChecked = command.IsEnabled;
-                if (!command.IsEditable)
+                if (this.EditButton != null)
                 {
-                    this.EditButton.IsEnabled = false;
+                    if (!command.IsEditable)
+                    {
+                        this.EditButton.IsEnabled = false;
+                    }
+
+                    if (this.RemoveEditingButton)
+                    {
+                        this.EditButton.Visibility = Visibility.Collapsed;
+                    }
                 }
 
-                if (this.RemoveEditingButton)
+                if (this.DeleteButton != null)
                 {
-                    this.EditButton.Visibility = Visibility.Collapsed;
+                    if (this.RemoveDeleteButton)
+                    {
+                        this.DeleteButton.Visibility = Visibility.Collapsed;
+                    }
                 }
 
-                if (this.RemoveDeleteButton)
+                if (this.EnableDisableToggleSwitch != null)
                 {
-                    this.DeleteButton.Visibility = Visibility.Collapsed;
-                }
+                    this.EnableDisableToggleSwitch.IsChecked = command.IsEnabled;
 
-                if (this.RemoveEnableDisableToggle)
-                {
-                    this.EnableDisableToggleSwitch.Visibility = Visibility.Collapsed;
+                    if (this.RemoveEnableDisableToggle)
+                    {
+                        this.EnableDisableToggleSwitch.Visibility = Visibility.Collapsed;
+                    }
                 }
             }
         }

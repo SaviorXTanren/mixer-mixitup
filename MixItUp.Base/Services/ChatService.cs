@@ -100,6 +100,8 @@ namespace MixItUp.Base.Services
         private SemaphoreSlim whisperNumberLock = new SemaphoreSlim(1);
         private Dictionary<string, int> whisperMap = new Dictionary<string, int>();
 
+        private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+
         private string currentChatEventLogFilePath;
 
         public ChatService() { }
@@ -134,19 +136,22 @@ namespace MixItUp.Base.Services
                 }
             }
 
-            foreach (ChatMessageEventModel messageEvent in await this.MixerChatService.GetChatHistory(50))
+            await DispatcherHelper.InvokeDispatcher(async () =>
             {
-                MixerChatMessageViewModel message = new MixerChatMessageViewModel(messageEvent);
-                this.messagesLookup[message.ID] = message;
-                if (ChannelSession.Settings.LatestChatAtTop)
+                foreach (ChatMessageEventModel messageEvent in await this.MixerChatService.GetChatHistory(50))
                 {
-                    this.Messages.Insert(0, message);
+                    MixerChatMessageViewModel message = new MixerChatMessageViewModel(messageEvent);
+                    this.messagesLookup[message.ID] = message;
+                    if (ChannelSession.Settings.LatestChatAtTop)
+                    {
+                        this.Messages.Insert(0, message);
+                    }
+                    else
+                    {
+                        this.Messages.Add(message);
+                    }
                 }
-                else
-                {
-                    this.Messages.Add(message);
-                }
-            }
+            });
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             Task.Run(async () =>
@@ -162,6 +167,8 @@ namespace MixItUp.Base.Services
                 }, int.MaxValue);
             });
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+            AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, this.ProcessHoursCurrency, 60000);
         }
 
         public async Task SendMessage(string message, bool sendAsStreamer = false)
@@ -205,8 +212,12 @@ namespace MixItUp.Base.Services
 
         public async Task ClearMessages()
         {
-            this.messagesLookup.Clear();
-            this.Messages.Clear();
+            await DispatcherHelper.InvokeDispatcher(() =>
+            {
+                this.messagesLookup.Clear();
+                this.Messages.Clear();
+                return Task.FromResult(0);
+            });
             await this.MixerChatService.ClearMessages();
         }
 
@@ -319,22 +330,27 @@ namespace MixItUp.Base.Services
                 message.User = activeUser;
             }
 
-            this.messagesLookup[message.ID] = message;
-            if (ChannelSession.Settings.LatestChatAtTop)
+            await DispatcherHelper.InvokeDispatcher(() =>
             {
-                this.Messages.Insert(0, message);
-            }
-            else
-            {
-                this.Messages.Add(message);
-            }
+                this.messagesLookup[message.ID] = message;
+                if (ChannelSession.Settings.LatestChatAtTop)
+                {
+                    this.Messages.Insert(0, message);
+                }
+                else
+                {
+                    this.Messages.Add(message);
+                }
 
-            if (this.Messages.Count > ChannelSession.Settings.MaxMessagesInChat)
-            {
-                ChatMessageViewModel removedMessage = (ChannelSession.Settings.LatestChatAtTop) ? this.Messages.Last() : this.Messages.First();
-                this.messagesLookup.Remove(removedMessage.ID);
-                this.Messages.Remove(removedMessage);
-            }
+                if (this.Messages.Count > ChannelSession.Settings.MaxMessagesInChat)
+                {
+                    ChatMessageViewModel removedMessage = (ChannelSession.Settings.LatestChatAtTop) ? this.Messages.Last() : this.Messages.First();
+                    this.messagesLookup.Remove(removedMessage.ID);
+                    this.Messages.Remove(removedMessage);
+                }
+
+                return Task.FromResult(0);
+            });
 
             if (message is MixerChatMessageViewModel)
             {
@@ -551,6 +567,21 @@ namespace MixItUp.Base.Services
             }
         }
 
+        private Task ProcessHoursCurrency(CancellationToken cancellationToken)
+        {
+            foreach (UserViewModel user in ChannelSession.Services.User.GetAllWorkableUsers())
+            {
+                user.UpdateMinuteData();
+            }
+
+            foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+            {
+                currency.UpdateUserData();
+            }
+
+            return Task.FromResult(0);
+        }
+
         #region Mixer Events
 
         private async void MixerChatService_OnMessageOccurred(object sender, ChatMessageViewModel message)
@@ -576,10 +607,14 @@ namespace MixItUp.Base.Services
             }
         }
 
-        private void MixerChatService_OnClearMessagesOccurred(object sender, EventArgs e)
+        private async void MixerChatService_OnClearMessagesOccurred(object sender, EventArgs e)
         {
-            this.messagesLookup.Clear();
-            this.Messages.Clear();
+            await DispatcherHelper.InvokeDispatcher(() =>
+            {
+                this.messagesLookup.Clear();
+                this.Messages.Clear();
+                return Task.FromResult(0);
+            });
         }
 
         private async void MixerChatService_OnUsersJoinOccurred(object sender, IEnumerable<UserViewModel> users)
