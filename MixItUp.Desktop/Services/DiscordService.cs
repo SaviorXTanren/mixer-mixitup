@@ -332,7 +332,7 @@ namespace MixItUp.Desktop.Services
 
         private const string BaseAddress = "https://discordapp.com/api/";
 
-        private const string ClientID = "422657136510631936";
+        private const string DefaultClientID = "422657136510631936";
 
         private const string AuthorizationUrl = "https://discordapp.com/api/oauth2/authorize?client_id={0}&permissions={1}&redirect_uri=http%3A%2F%2Flocalhost%3A8919%2F&response_type=code&scope=bot%20guilds%20identify%20connections%20messages.read%20guilds.join%20email%20gdm.join";
 
@@ -353,6 +353,10 @@ namespace MixItUp.Desktop.Services
 
         public DiscordService(OAuthTokenModel token) : base(DiscordService.BaseAddress, token) { }
 
+        public string ClientID { get { return (!string.IsNullOrEmpty(ChannelSession.Settings.DiscordCustomClientID)) ? ChannelSession.Settings.DiscordCustomClientID : DiscordService.DefaultClientID; } }
+        public string ClientSecret { get { return (!string.IsNullOrEmpty(ChannelSession.Settings.DiscordCustomClientSecret)) ? ChannelSession.Settings.DiscordCustomClientSecret : ChannelSession.SecretManager.GetSecret("DiscordSecret"); } }
+        public string BotToken { get { return (!string.IsNullOrEmpty(ChannelSession.Settings.DiscordCustomBotToken)) ? ChannelSession.Settings.DiscordCustomBotToken : ChannelSession.SecretManager.GetSecret("DiscordBotToken"); } }
+
         public async Task<bool> Connect()
         {
             if (this.token != null)
@@ -369,7 +373,7 @@ namespace MixItUp.Desktop.Services
                 catch (Exception ex) { Logger.Log(ex); }
             }
 
-            string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(DiscordService.AuthorizationUrl, DiscordService.ClientID, DiscordService.ClientBotPermissions));
+            string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(DiscordService.AuthorizationUrl, this.ClientID, DiscordService.ClientBotPermissions));
             if (!string.IsNullOrEmpty(authorizationCode))
             {
                 var body = new List<KeyValuePair<string, string>>
@@ -378,7 +382,7 @@ namespace MixItUp.Desktop.Services
                     new KeyValuePair<string, string>("redirect_uri", MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL),
                     new KeyValuePair<string, string>("code", authorizationCode),
                 };
-                this.token = await this.GetWWWFormUrlEncodedOAuthToken("https://discordapp.com/api/oauth2/token", DiscordService.ClientID, ChannelSession.SecretManager.GetSecret("DiscordSecret"), body);
+                this.token = await this.GetWWWFormUrlEncodedOAuthToken("https://discordapp.com/api/oauth2/token", this.ClientID, this.ClientSecret, body);
 
                 if (this.token != null)
                 {
@@ -506,13 +510,13 @@ namespace MixItUp.Desktop.Services
                     new KeyValuePair<string, string>("redirect_uri", MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL),
                     new KeyValuePair<string, string>("refresh_token", this.token.refreshToken),
                 };
-                this.token = await this.GetWWWFormUrlEncodedOAuthToken("https://discordapp.com/api/oauth2/token", DiscordService.ClientID, ChannelSession.SecretManager.GetSecret("DiscordSecret"), body);
+                this.token = await this.GetWWWFormUrlEncodedOAuthToken("https://discordapp.com/api/oauth2/token", this.ClientID, this.ClientSecret, body);
             }
         }
 
         private async Task<bool> InitializeInternal()
         {
-            this.botService = new DiscordBotService(this.baseAddress, ChannelSession.SecretManager.GetSecret("DiscordBotToken"));
+            this.botService = new DiscordBotService(this.baseAddress, this.BotToken);
 
             this.User = await this.GetCurrentUser();
             if (!string.IsNullOrEmpty(ChannelSession.Settings.DiscordServer))
@@ -522,6 +526,15 @@ namespace MixItUp.Desktop.Services
                 {
                     this.Emojis = await this.GetEmojis(this.Server);
 
+                    if (!string.IsNullOrEmpty(ChannelSession.Settings.DiscordCustomBotToken))
+                    {
+                        DiscordGateway gateway = await this.GetBotGateway();
+                        if (gateway != null)
+                        {
+                            DiscordWebSocket webSocket = new DiscordWebSocket();
+                            return await webSocket.Connect(gateway.WebSocketURL, gateway.Shards, this.BotToken);
+                        }
+                    }
                     return true;
                 }
             }

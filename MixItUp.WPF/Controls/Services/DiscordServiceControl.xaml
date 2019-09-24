@@ -4,32 +4,69 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Services"
-             xmlns:UsersControls="clr-namespace:MixItUp.WPF.Controls.Users"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid Margin="10" HorizontalAlignment="Center">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="500" />
-            <ColumnDefinition Width="10" />
-            <ColumnDefinition Width="150" />
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-        <Grid Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="500" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="150" />
+            </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Row="0" TextWrapping="Wrap">Discord service connectivity allows you to get information about your Discord account and control your channels. When you log in, an authentication webpage will open asking you to log in to Discord and approve Mix It Up to access your information.</TextBlock>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" TextWrapping="Wrap">Discord service connectivity allows you to get information about your Discord account and control your channels. When you log in, an authentication webpage will open asking you to log in to Discord and approve Mix It Up to access your information.</TextBlock>
+
+                <Grid Grid.Row="2" HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0">Use Custom Application</TextBlock>
+
+                    <ToggleButton x:Name="UseCustomApplicationToggleButton" Grid.Column="2" Checked="UseCustomApplicationToggleButton_Checked" Unchecked="UseCustomApplicationToggleButton_Checked" />
+                </Grid>
+            </Grid>
+
+            <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid x:Name="ExistingAccountGrid" Visibility="Collapsed">
+                    <Button x:Name="LogOutButton" Click="LogOutButton_Click" HorizontalAlignment="Center" Width="90">Log Out</Button>
+                </Grid>
+
+                <Grid x:Name="NewLoginGrid" Visibility="Collapsed">
+                    <Button x:Name="LogInButton" Click="LogInButton_Click" HorizontalAlignment="Center" Width="90">Log In</Button>
+                </Grid>
+            </Grid>
         </Grid>
 
-        <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Grid x:Name="ExistingAccountGrid" Visibility="Collapsed">
-                <Button x:Name="LogOutButton" Click="LogOutButton_Click" HorizontalAlignment="Center" Width="90">Log Out</Button>
-            </Grid>
+        <Grid x:Name="CustomApplicationGrid" Grid.Row="1" Margin="0,20,0,0" Visibility="Collapsed" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="200" />
+            </Grid.ColumnDefinitions>
 
-            <Grid x:Name="NewLoginGrid" Visibility="Collapsed">
-                <Button x:Name="LogInButton" Click="LogInButton_Click" HorizontalAlignment="Center" Width="90">Log In</Button>
-            </Grid>
+            <TextBox x:Name="CustomClientIDTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Application Client ID" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <TextBox x:Name="CustomClientSecretTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Application Client Secret" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <TextBox x:Name="CustomBotTokenTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Application Bot Token" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
     </Grid>
 </local:ServicesControlBase>

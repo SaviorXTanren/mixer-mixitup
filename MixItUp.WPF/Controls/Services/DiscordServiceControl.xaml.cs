@@ -31,11 +31,36 @@ namespace MixItUp.WPF.Controls.Services
                 this.NewLoginGrid.Visibility = Visibility.Visible;
             }
 
+            this.UseCustomApplicationToggleButton.IsChecked = !string.IsNullOrEmpty(ChannelSession.Settings.DiscordCustomClientID);
+            if (this.UseCustomApplicationToggleButton.IsChecked.GetValueOrDefault())
+            {
+                this.CustomClientIDTextBox.Text = ChannelSession.Settings.DiscordCustomClientID;
+                this.CustomClientSecretTextBox.Text = ChannelSession.Settings.DiscordCustomClientSecret;
+                this.CustomBotTokenTextBox.Text = ChannelSession.Settings.DiscordCustomBotToken;
+            }
+
             return base.OnLoaded();
         }
 
         private async void LogInButton_Click(object sender, RoutedEventArgs e)
         {
+            ChannelSession.Settings.DiscordCustomClientID = null;
+            ChannelSession.Settings.DiscordCustomClientSecret = null;
+            ChannelSession.Settings.DiscordCustomBotToken = null;
+
+            if (this.UseCustomApplicationToggleButton.IsChecked.GetValueOrDefault())
+            {
+                if (string.IsNullOrEmpty(this.CustomClientIDTextBox.Text) || string.IsNullOrEmpty(this.CustomClientSecretTextBox.Text) || string.IsNullOrEmpty(this.CustomBotTokenTextBox.Text))
+                {
+                    await MessageBoxHelper.ShowMessageDialog("A Client ID, Client Secret, and Bot Token must be specified if using a custom Discord application.");
+                    return;
+                }
+
+                ChannelSession.Settings.DiscordCustomClientID = this.CustomClientIDTextBox.Text;
+                ChannelSession.Settings.DiscordCustomClientSecret = this.CustomClientSecretTextBox.Text;
+                ChannelSession.Settings.DiscordCustomBotToken = this.CustomBotTokenTextBox.Text;
+            }
+
             bool result = await this.groupBoxControl.window.RunAsyncOperation(async () =>
             {
                 return await ChannelSession.Services.InitializeDiscord();
@@ -78,6 +103,11 @@ namespace MixItUp.WPF.Controls.Services
             this.NewLoginGrid.Visibility = Visibility.Visible;
 
             this.SetCompletedIcon(visible: false);
+        }
+
+        private void UseCustomApplicationToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            this.CustomApplicationGrid.Visibility = (this.UseCustomApplicationToggleButton.IsChecked.GetValueOrDefault()) ? Visibility.Visible : Visibility.Collapsed;
         }
     }
 }

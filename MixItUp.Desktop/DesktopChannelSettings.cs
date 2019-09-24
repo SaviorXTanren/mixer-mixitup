@@ -262,6 +262,12 @@ namespace MixItUp.Desktop
 
         [JsonProperty]
         public string DiscordServer { get; set; }
+        [JsonProperty]
+        public string DiscordCustomClientID { get; set; }
+        [JsonProperty]
+        public string DiscordCustomClientSecret { get; set; }
+        [JsonProperty]
+        public string DiscordCustomBotToken { get; set; }
 
         [JsonProperty]
         public string PatreonTierMixerSubscriberEquivalent { get; set; }
