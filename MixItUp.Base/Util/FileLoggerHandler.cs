@@ -25,11 +25,11 @@ namespace MixItUp.Base.Util
             Logger.LogOccurred += Logger_LogOccurred;
         }
 
-        private static void Logger_LogOccurred(object sender, Log log)
+        private static async void Logger_LogOccurred(object sender, Log log)
         {
             try
             {
-                FileLoggerHandler.fileService.AppendFile(FileLoggerHandler.CurrentLogFilePath, string.Format("{0} - {1} - {2} " + Environment.NewLine + Environment.NewLine,
+                await FileLoggerHandler.fileService.AppendFile(FileLoggerHandler.CurrentLogFilePath, string.Format("{0} - {1} - {2} " + Environment.NewLine + Environment.NewLine,
                     DateTimeOffset.Now.ToString(), EnumHelper.GetEnumName(log.Level), log.Message));
             }
             catch (Exception) { }

@@ -127,12 +127,18 @@ namespace MixItUp.WPF
                     ChannelSession.Services.Telemetry.TrackException(ex);
                 }
 
-                Logger.Log("CRASH OCCURRED");
-                Logger.Log(ex, includeStackTrace: true);
+                try
+                {
+                    using (StreamWriter writer = File.AppendText(FileLoggerHandler.CurrentLogFilePath))
+                    {
+                        writer.WriteLine("CRASHING EXCEPTION: " + Environment.NewLine + ex.ToString() + Environment.NewLine + Environment.StackTrace);
+                    }
+                }
+                catch (Exception) { }
 
                 ProcessHelper.LaunchProgram("MixItUp.Reporter.exe", string.Format("{0} {1}", (ChannelSession.MixerStreamerUser != null) ? ChannelSession.MixerStreamerUser.id : 0, FileLoggerHandler.CurrentLogFilePath));
 
-                Task.Delay(1000).Wait();
+                Task.Delay(3000).Wait();
             }
         }
     }
