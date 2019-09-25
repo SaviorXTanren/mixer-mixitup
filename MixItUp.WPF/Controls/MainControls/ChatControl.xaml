@@ -63,7 +63,7 @@
 
                     </Grid>
 
-                    <Grid x:Name="ViewerChatterNumbersGrid" Grid.Column="2" HorizontalAlignment="Center" Height="20">
+                    <Grid Grid.Column="2" Visibility="{Binding ShowViewerAndChatterNumbers, Converter={StaticResource BoolToVisibilityConverter}}" HorizontalAlignment="Center" Height="20">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="5" />
@@ -126,6 +126,7 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="10" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="10" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
@@ -133,15 +134,15 @@
 
                         <TextBox x:Name="ChatMessageTextBox" Grid.Column="3" Text="{Binding SendMessageText}" TextChanged="ChatMessageTextBox_TextChanged" PreviewKeyDown="ChatMessageTextBox_PreviewKeyDown" KeyDown="ChatMessageTextBox_KeyDown" MaterialDesign:HintAssist.Hint="Chat Message" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                        <Button Grid.Column="4" Command="{Binding SendMessageCommand}" Width="70">Send</Button>
+                        <Button Grid.Column="5" Command="{Binding SendMessageCommand}" Width="70">Send</Button>
                     </Grid>
 
                     <ChatControls:GifSkillPopoutControl x:Name="GifSkillPopout" HorizontalAlignment="Right" VerticalAlignment="Top" />
                 </Grid>
 
-                <GridSplitter x:Name="ChatSplitter" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="5" />
+                <GridSplitter x:Name="ChatSplitter" Visibility="{Binding ShowChatUserList, Converter={StaticResource BoolToVisibilityConverter}}" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="5" />
 
-                <ListView x:Name="UserList" ItemsSource="{Binding DisplayUsers}" Grid.Column="2" VirtualizingPanel.VirtualizationMode="Recycling" ScrollViewer.IsDeferredScrollingEnabled="True" ScrollViewer.VerticalScrollBarVisibility="Visible" HorizontalContentAlignment="Stretch" SelectionChanged="UserList_SelectionChanged" MinWidth="200">
+                <ListView x:Name="UserList" ItemsSource="{Binding DisplayUsers}" Visibility="{Binding ShowChatUserList, Converter={StaticResource BoolToVisibilityConverter}}" Grid.Column="2" VirtualizingPanel.VirtualizationMode="Recycling" ScrollViewer.IsDeferredScrollingEnabled="True" ScrollViewer.VerticalScrollBarVisibility="Visible" HorizontalContentAlignment="Stretch" SelectionChanged="UserList_SelectionChanged" MinWidth="200">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ChatControls:ChatUserControl DataContext="{Binding}" Grid.Column="0" />

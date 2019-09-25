@@ -601,12 +601,21 @@ namespace MixItUp.Base.Services
             }
         }
 
-        private void MixerChatService_OnDeleteMessageOccurred(object sender, Guid id)
+        private async void MixerChatService_OnDeleteMessageOccurred(object sender, Guid id)
         {
             if (this.messagesLookup.TryGetValue(id.ToString(), out ChatMessageViewModel message))
             {
                 message.Delete();
                 GlobalEvents.ChatMessageDeleted(id);
+                if (ChannelSession.Settings.HideDeletedMessages)
+                {
+                    await DispatcherHelper.InvokeDispatcher(() =>
+                    {
+                        this.messagesLookup.Remove(id.ToString());
+                        this.Messages.Remove(message);
+                        return Task.FromResult(0);
+                    });
+                }
             }
         }
 
