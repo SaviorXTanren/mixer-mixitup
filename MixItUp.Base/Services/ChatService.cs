@@ -495,7 +495,10 @@ namespace MixItUp.Base.Services
             }
             else if (message is AlertChatMessageViewModel)
             {
-
+                if (ChannelSession.Settings.WhisperAllAlerts)
+                {
+                    await ChannelSession.Services.Chat.Whisper(ChannelSession.MixerStreamerUser.username, message.PlainTextMessage, false);
+                }
             }
         }
 

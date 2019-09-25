@@ -72,6 +72,7 @@ namespace MixItUp.WPF.Controls.Chat
                         }
                     }
                     this.AddStringMessage(alert.PlainTextMessage, foreground: foreground);
+                    this.MessageWrapPanel.HorizontalAlignment = HorizontalAlignment.Center;
                 }
                 else
                 {
