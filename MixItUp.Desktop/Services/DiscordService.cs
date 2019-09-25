@@ -353,6 +353,7 @@ namespace MixItUp.Desktop.Services
 
         public DiscordService(OAuthTokenModel token) : base(DiscordService.BaseAddress, token) { }
 
+        public bool IsUsingCustomApplication { get { return !string.IsNullOrEmpty(ChannelSession.Settings.DiscordCustomClientID); } }
         public string ClientID { get { return (!string.IsNullOrEmpty(ChannelSession.Settings.DiscordCustomClientID)) ? ChannelSession.Settings.DiscordCustomClientID : DiscordService.DefaultClientID; } }
         public string ClientSecret { get { return (!string.IsNullOrEmpty(ChannelSession.Settings.DiscordCustomClientSecret)) ? ChannelSession.Settings.DiscordCustomClientSecret : ChannelSession.SecretManager.GetSecret("DiscordSecret"); } }
         public string BotToken { get { return (!string.IsNullOrEmpty(ChannelSession.Settings.DiscordCustomBotToken)) ? ChannelSession.Settings.DiscordCustomBotToken : ChannelSession.SecretManager.GetSecret("DiscordBotToken"); } }
@@ -526,7 +527,7 @@ namespace MixItUp.Desktop.Services
                 {
                     this.Emojis = await this.GetEmojis(this.Server);
 
-                    if (!string.IsNullOrEmpty(ChannelSession.Settings.DiscordCustomBotToken))
+                    if (this.IsUsingCustomApplication)
                     {
                         DiscordGateway gateway = await this.GetBotGateway();
                         if (gateway != null)
@@ -543,7 +544,7 @@ namespace MixItUp.Desktop.Services
 
         private async Task<bool> IsWithinRateLimiting()
         {
-            if (this.lastCommand.TotalSecondsFromNow() > 30)
+            if (this.IsUsingCustomApplication || this.lastCommand.TotalSecondsFromNow() > 30)
             {
                 this.lastCommand = DateTimeOffset.Now;
                 return true;
