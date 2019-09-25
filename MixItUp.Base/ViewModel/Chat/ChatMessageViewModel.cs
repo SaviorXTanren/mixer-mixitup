@@ -101,7 +101,14 @@ namespace MixItUp.Base.ViewModel.Chat
         protected internal virtual void AddStringMessagePart(string str)
         {
             this.MessageParts.Add(str);
-            this.PlainTextMessage += str + " ";
+            if (string.IsNullOrEmpty(this.PlainTextMessage))
+            {
+                this.PlainTextMessage = str;
+            }
+            else
+            {
+                this.PlainTextMessage += " " + str;
+            }
         }
 
         public override bool Equals(object obj)
