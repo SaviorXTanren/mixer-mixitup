@@ -67,7 +67,7 @@ namespace MixItUp.WPF.Controls.Chat
                         }
                         catch (Exception ex)
                         {
-                            Logger.Log("Bad Alert Color: " + alert.Color);
+                            Logger.Log(LogLevel.Warning, "Bad Alert Color: " + alert.Color);
                             Logger.Log(ex);
                         }
                     }
