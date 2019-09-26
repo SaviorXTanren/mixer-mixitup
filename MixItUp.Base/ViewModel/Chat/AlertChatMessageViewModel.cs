@@ -7,8 +7,8 @@ namespace MixItUp.Base.ViewModel.Chat
     {
         public string Color { get; private set; }
 
-        public AlertChatMessageViewModel(StreamingPlatformTypeEnum platform, string message, string color = null)
-            : base(string.Empty, platform, new UserViewModel(ChannelSession.MixerStreamerUser))
+        public AlertChatMessageViewModel(StreamingPlatformTypeEnum platform, UserViewModel user, string message, string color = null)
+            : base(string.Empty, platform, user)
         {
             this.Color = color;
 

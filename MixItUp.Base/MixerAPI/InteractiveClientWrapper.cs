@@ -1012,7 +1012,7 @@ namespace MixItUp.Base.MixerAPI
 
                     if (ChannelSession.Settings.ChatShowMixPlayAlerts)
                     {
-                        await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer,
+                        await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer, user,
                             string.Format("{0} Used The \"{1}\" Interactive Control", user.UserName, connectedControl.Command.Name), ChannelSession.Settings.ChatMixPlayAlertsColorScheme));
                     }
                 }
