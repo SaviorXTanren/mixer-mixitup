@@ -283,7 +283,7 @@ namespace MixItUp.Base.Services
         {
             this.chatCommandTriggers.Clear();
             this.chatCommandWildcardTriggers.Clear();
-            foreach (ChatCommand command in ChannelSession.Settings.ChatCommands)
+            foreach (ChatCommand command in ChannelSession.Settings.ChatCommands.Where(c => c.IsEnabled))
             {
                 if (command.Wildcards)
                 {
@@ -303,7 +303,7 @@ namespace MixItUp.Base.Services
                 }
             }
 
-            foreach (GameCommandBase command in ChannelSession.Settings.GameCommands)
+            foreach (GameCommandBase command in ChannelSession.Settings.GameCommands.Where(c => c.IsEnabled))
             {
                 foreach (string trigger in command.CommandTriggers)
                 {
@@ -311,7 +311,7 @@ namespace MixItUp.Base.Services
                 }
             }
 
-            foreach (PreMadeChatCommand command in ChannelSession.PreMadeChatCommands)
+            foreach (PreMadeChatCommand command in ChannelSession.PreMadeChatCommands.Where(c => c.IsEnabled))
             {
                 foreach (string trigger in command.CommandTriggers)
                 {
