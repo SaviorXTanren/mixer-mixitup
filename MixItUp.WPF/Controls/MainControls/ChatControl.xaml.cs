@@ -18,6 +18,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
@@ -37,6 +38,7 @@ namespace MixItUp.WPF.Controls.MainControls
         private int indexOfLastIntellisenseText;
 
         private SemaphoreSlim gifSkillPopoutLock = new SemaphoreSlim(1);
+        private object itemsLock = new object();
 
         public ChatControl()
         {
@@ -53,6 +55,9 @@ namespace MixItUp.WPF.Controls.MainControls
 
             await this.viewModel.OnLoaded();
             this.DataContext = this.viewModel;
+
+            BindingOperations.EnableCollectionSynchronization(this.viewModel.Messages, itemsLock);
+            this.viewModel.Messages.CollectionChanged += Messages_CollectionChanged;
         }
 
         protected override async Task OnVisibilityChanged()
@@ -460,6 +465,11 @@ namespace MixItUp.WPF.Controls.MainControls
                     }
                 }
             }
+        }
+
+        private void Messages_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            this.ChatList.Items.Refresh();
         }
     }
 }
