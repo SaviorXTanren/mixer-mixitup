@@ -68,7 +68,7 @@ namespace MixItUp.WPF.Controls.Chat
                         }
                         catch (Exception ex)
                         {
-                            Logger.Log(LogLevel.Warning, "Bad Alert Color: " + alert.Color);
+                            Logger.Log(LogLevel.Error, "Bad Alert Color: " + alert.Color);
                             Logger.Log(ex);
                         }
                     }
@@ -93,7 +93,7 @@ namespace MixItUp.WPF.Controls.Chat
                         }
                         else
                         {
-                            this.AddImage(BitmapImageLoader.Load(new Uri(skillMessage.Skill.Image)), ChannelSession.Settings.ChatFontSize * 3, skillMessage.Skill.Name);
+                            this.MessageWrapPanel.Children.Add(new ChatImageControl(skillMessage.Skill));
                         }
 
                         if (skillMessage.Skill.Type == MixerSkillTypeEnum.Other)
@@ -129,11 +129,11 @@ namespace MixItUp.WPF.Controls.Chat
                             }
                             else if (messagePart is MixerChatEmoteModel)
                             {
-                                this.MessageWrapPanel.Children.Add(new ChatEmoteControl((MixerChatEmoteModel)messagePart));
+                                this.MessageWrapPanel.Children.Add(new ChatImageControl((MixerChatEmoteModel)messagePart));
                             }
                             else if (messagePart is MixrElixrEmoteModel)
                             {
-                                this.MessageWrapPanel.Children.Add(new ChatEmoteControl((MixrElixrEmoteModel)messagePart));
+                                this.MessageWrapPanel.Children.Add(new ChatImageControl((MixrElixrEmoteModel)messagePart));
                             }
                         }
                     }
