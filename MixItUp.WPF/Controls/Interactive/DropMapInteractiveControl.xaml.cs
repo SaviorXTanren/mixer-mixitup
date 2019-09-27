@@ -450,7 +450,7 @@ namespace MixItUp.WPF.Controls.Interactive
 
         private void ChangeMapImage(string path)
         {
-            this.MapImage.Source = BitmapImageLoader.Load(new Uri("pack://application:,,," + path));
+            this.MapImage.Source = BitmapImageLoader.LoadLocal(new Uri("pack://application:,,," + path));
         }
     }
 }
