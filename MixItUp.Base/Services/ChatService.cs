@@ -283,7 +283,7 @@ namespace MixItUp.Base.Services
         {
             this.chatCommandTriggers.Clear();
             this.chatCommandWildcardTriggers.Clear();
-            foreach (ChatCommand command in ChannelSession.Settings.ChatCommands)
+            foreach (ChatCommand command in ChannelSession.Settings.ChatCommands.Where(c => c.IsEnabled))
             {
                 if (command.Wildcards)
                 {
@@ -303,7 +303,7 @@ namespace MixItUp.Base.Services
                 }
             }
 
-            foreach (GameCommandBase command in ChannelSession.Settings.GameCommands)
+            foreach (GameCommandBase command in ChannelSession.Settings.GameCommands.Where(c => c.IsEnabled))
             {
                 foreach (string trigger in command.CommandTriggers)
                 {
@@ -311,7 +311,7 @@ namespace MixItUp.Base.Services
                 }
             }
 
-            foreach (PreMadeChatCommand command in ChannelSession.PreMadeChatCommands)
+            foreach (PreMadeChatCommand command in ChannelSession.PreMadeChatCommands.Where(c => c.IsEnabled))
             {
                 foreach (string trigger in command.CommandTriggers)
                 {
@@ -529,7 +529,7 @@ namespace MixItUp.Base.Services
 
                 if (ChannelSession.Settings.ChatShowUserJoinLeave && users.Count() < 5)
                 {
-                    alerts.Add(new AlertChatMessageViewModel(user.Platform, string.Format("{0} Joined Chat", user.UserName), ChannelSession.Settings.ChatUserJoinLeaveColorScheme));
+                    alerts.Add(new AlertChatMessageViewModel(user.Platform, user, string.Format("{0} Joined Chat", user.UserName), ChannelSession.Settings.ChatUserJoinLeaveColorScheme));
                 }
             }
             this.DisplayUsersUpdated(this, new EventArgs());
@@ -558,7 +558,7 @@ namespace MixItUp.Base.Services
 
                     if (ChannelSession.Settings.ChatShowUserJoinLeave && users.Count() < 5)
                     {
-                        alerts.Add(new AlertChatMessageViewModel(user.Platform, string.Format("{0} Left Chat", user.UserName), ChannelSession.Settings.ChatUserJoinLeaveColorScheme));
+                        alerts.Add(new AlertChatMessageViewModel(user.Platform, user, string.Format("{0} Left Chat", user.UserName), ChannelSession.Settings.ChatUserJoinLeaveColorScheme));
                     }
                 }
             }
@@ -601,12 +601,21 @@ namespace MixItUp.Base.Services
             }
         }
 
-        private void MixerChatService_OnDeleteMessageOccurred(object sender, Guid id)
+        private async void MixerChatService_OnDeleteMessageOccurred(object sender, Guid id)
         {
             if (this.messagesLookup.TryGetValue(id.ToString(), out ChatMessageViewModel message))
             {
                 message.Delete();
                 GlobalEvents.ChatMessageDeleted(id);
+                if (ChannelSession.Settings.HideDeletedMessages)
+                {
+                    await DispatcherHelper.InvokeDispatcher(() =>
+                    {
+                        this.messagesLookup.Remove(id.ToString());
+                        this.Messages.Remove(message);
+                        return Task.FromResult(0);
+                    });
+                }
             }
         }
 

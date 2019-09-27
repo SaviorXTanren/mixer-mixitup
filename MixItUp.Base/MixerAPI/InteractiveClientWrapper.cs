@@ -1010,9 +1010,9 @@ namespace MixItUp.Base.MixerAPI
 
                     this.OnInteractiveControlUsed(this, new InteractiveInputEvent(user, e, connectedControl));
 
-                    if (ChannelSession.Settings.ChatShowMixPlayAlerts)
+                    if (ChannelSession.Settings.ChatShowMixPlayAlerts && user != null && !user.IsAnonymous)
                     {
-                        await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer,
+                        await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer, user,
                             string.Format("{0} Used The \"{1}\" Interactive Control", user.UserName, connectedControl.Command.Name), ChannelSession.Settings.ChatMixPlayAlertsColorScheme));
                     }
                 }

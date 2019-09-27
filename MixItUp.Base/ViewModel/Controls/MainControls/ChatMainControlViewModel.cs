@@ -23,6 +23,10 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         public ObservableCollection<ChatMessageViewModel> Messages { get; private set; }
         public IEnumerable<UserViewModel> DisplayUsers { get; private set; }
 
+        public bool ShowViewerAndChatterNumbers { get { return !ChannelSession.Settings.HideViewerAndChatterNumbers; } }
+
+        public bool ShowChatUserList { get { return !ChannelSession.Settings.HideChatUserList; } }
+
         public uint ViewersCount
         {
             get { return this.viewersCount; }
@@ -246,6 +250,8 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         protected override async Task OnVisibleInternal()
         {
             this.NotifyPropertyChanged("SendAsOptions");
+            this.NotifyPropertyChanged("ShowViewerAndChatterNumbers");
+            this.NotifyPropertyChanged("ShowChatUserList");
             await base.OnVisibleInternal();
         }
 
