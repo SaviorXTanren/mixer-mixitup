@@ -25,5 +25,10 @@ namespace MixItUp.WPF.Util
             bitmap.EndInit();
             return bitmap;
         }
+
+        public static BitmapImage LoadLocal(Uri uri)
+        {
+            return new BitmapImage(uri);
+        }
     }
 }

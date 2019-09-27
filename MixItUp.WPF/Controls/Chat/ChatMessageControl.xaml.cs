@@ -93,7 +93,7 @@ namespace MixItUp.WPF.Controls.Chat
                         }
                         else
                         {
-                            this.AddImage(new Uri(skillMessage.Skill.Image), ChannelSession.Settings.ChatFontSize * 3, skillMessage.Skill.Name);
+                            this.AddImage(BitmapImageLoader.Load(new Uri(skillMessage.Skill.Image)), ChannelSession.Settings.ChatFontSize * 3, skillMessage.Skill.Name);
                         }
 
                         if (skillMessage.Skill.Type == MixerSkillTypeEnum.Other)
@@ -103,11 +103,11 @@ namespace MixItUp.WPF.Controls.Chat
 
                         if (skillMessage.Skill.IsEmbersSkill)
                         {
-                            this.AddImage(new Uri("/Assets/Images/Embers.png", UriKind.Relative), ChannelSession.Settings.ChatFontSize + 2, MixerSkillModel.EmbersCurrencyName);
+                            this.AddImage(BitmapImageLoader.LoadLocal(new Uri("/Assets/Images/Embers.png", UriKind.Relative)), ChannelSession.Settings.ChatFontSize + 2, MixerSkillModel.EmbersCurrencyName);
                         }
                         else
                         {
-                            this.AddImage(new Uri("/Assets/Images/Sparks.png", UriKind.Relative), ChannelSession.Settings.ChatFontSize + 2, MixerSkillModel.SparksCurrencyName);
+                            this.AddImage(BitmapImageLoader.LoadLocal(new Uri("/Assets/Images/Sparks.png", UriKind.Relative)), ChannelSession.Settings.ChatFontSize + 2, MixerSkillModel.SparksCurrencyName);
                             showMessage = false;
                         }
 
@@ -166,10 +166,10 @@ namespace MixItUp.WPF.Controls.Chat
             }
         }
 
-        private void AddImage(Uri uri, int size, string tooltip = "")
+        private void AddImage(BitmapImage bitmap, int size, string tooltip = "")
         {
             Image image = new Image();
-            image.Source = BitmapImageLoader.Load(uri);
+            image.Source = bitmap;
             image.Width = size;
             image.Height = size;
             image.ToolTip = tooltip;
