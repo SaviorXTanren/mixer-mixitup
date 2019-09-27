@@ -4,6 +4,7 @@ using MixItUp.Base.Model.Chat.Mixer;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Mixer;
+using MixItUp.WPF.Util;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -168,13 +169,14 @@ namespace MixItUp.WPF.Controls.Chat
         private void AddImage(Uri uri, int size, string tooltip = "")
         {
             Image image = new Image();
-            image.Source = new BitmapImage(uri);
+            image.Source = BitmapImageLoader.Load(uri);
             image.Width = size;
             image.Height = size;
             image.ToolTip = tooltip;
             image.VerticalAlignment = VerticalAlignment.Center;
             image.HorizontalAlignment = HorizontalAlignment.Center;
             image.Margin = new Thickness(5, 0, 5, 0);
+
             this.MessageWrapPanel.Children.Add(image);
         }
 

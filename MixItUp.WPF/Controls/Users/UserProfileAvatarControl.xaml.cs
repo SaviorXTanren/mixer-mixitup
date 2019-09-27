@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.WPF.Util;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -76,11 +77,7 @@ namespace MixItUp.WPF.Controls.Users
                     using (WebClient client = new WebClient())
                     {
                         var bytes = await Task.Run<byte[]>(async () => { return await client.DownloadDataTaskAsync(user.AvatarLink); });
-
-                        bitmap.BeginInit();
-                        bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                        bitmap.StreamSource = new MemoryStream(bytes);
-                        bitmap.EndInit();
+                        bitmap = BitmapImageLoader.Load(bytes);
                     }
                     userAvatarCache[user.ID] = bitmap;
                 }

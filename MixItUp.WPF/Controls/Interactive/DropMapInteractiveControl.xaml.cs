@@ -5,6 +5,7 @@ using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Users;
+using MixItUp.WPF.Util;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
 using System;
@@ -449,11 +450,7 @@ namespace MixItUp.WPF.Controls.Interactive
 
         private void ChangeMapImage(string path)
         {
-            BitmapImage bitmapMapImage = new BitmapImage();
-            bitmapMapImage.BeginInit();
-            bitmapMapImage.UriSource = new Uri("pack://application:,,," + path);
-            bitmapMapImage.EndInit();
-            this.MapImage.Source = bitmapMapImage;
+            this.MapImage.Source = BitmapImageLoader.Load(new Uri("pack://application:,,," + path));
         }
     }
 }
