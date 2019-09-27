@@ -171,7 +171,7 @@
                     <ListBox x:Name="EmoticonIntellisenseListBox" ItemContainerStyle="{StaticResource BorderedListBoxItem}" SelectionMode="Single" PreviewMouseUp="EmoticonIntellisenseListBox_PreviewMouseUp">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <ChatControls:ChatEmoteControl ShowText="True" />
+                                <ChatControls:ChatImageControl ShowText="True" />
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>

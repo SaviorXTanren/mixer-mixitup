@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="MixItUp.WPF.Controls.Chat.ChatEmoteControl"
+﻿<UserControl x:Class="MixItUp.WPF.Controls.Chat.ChatImageControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -11,8 +11,8 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Image x:Name="EmoteImage" Grid.Column="0" Margin="5,0,5,0" />
-        <local:GifImageControl x:Name="EmoteGifImage" Grid.Column="0" Margin="5,0,5,0" />
-        <TextBlock x:Name="EmoticonText" Grid.Column="1" Visibility="Collapsed" Margin="5,0,5,0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+        <Image x:Name="Image" Grid.Column="0" Margin="5,0,5,0" />
+        <local:GifImageControl x:Name="GifImage" Grid.Column="0" Margin="5,0,5,0" />
+        <TextBlock x:Name="AltText" Grid.Column="1" Visibility="Collapsed" Margin="5,0,5,0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
     </Grid>
 </UserControl>

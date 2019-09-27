@@ -446,7 +446,7 @@ namespace MixItUp.Base.Services
                     Logger.Log(LogLevel.Debug, string.Format("Checking Message For Command - {0}", message.ToString()));
 
                     Dictionary<string, PermissionsCommandBase> commandsToCheck = this.chatCommandTriggers.ToDictionary();
-                    foreach (PermissionsCommandBase command in message.User.Data.CustomCommands)
+                    foreach (PermissionsCommandBase command in message.User.Data.CustomCommands.Where(c => c.IsEnabled))
                     {
                         foreach (string trigger in command.CommandTriggers)
                         {
