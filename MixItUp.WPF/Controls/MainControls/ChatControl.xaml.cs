@@ -57,7 +57,6 @@ namespace MixItUp.WPF.Controls.MainControls
             this.DataContext = this.viewModel;
 
             BindingOperations.EnableCollectionSynchronization(this.viewModel.Messages, itemsLock);
-            this.viewModel.Messages.CollectionChanged += Messages_CollectionChanged;
         }
 
         protected override async Task OnVisibilityChanged()
