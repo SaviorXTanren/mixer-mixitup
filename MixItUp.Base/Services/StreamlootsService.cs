@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Model.OAuth;
@@ -276,6 +277,7 @@ namespace MixItUp.Base.Services
                 {
                     await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.StreamlootsPackGifted), user, arguments: new List<string>() { giftee.UserName }, extraSpecialIdentifiers: specialIdentifiers);
                 }
+                GlobalEvents.StreamlootsPurchaseOccurred(new Tuple<UserViewModel, int>(user, purchase.data.Quantity));
             }
         }
 

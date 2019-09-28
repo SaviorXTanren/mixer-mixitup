@@ -73,6 +73,7 @@ namespace MixItUp.Base.Model.Overlay
             if (this.ItemTypes.Contains(OverlayEventListItemTypeEnum.Donations))
             {
                 GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
+                GlobalEvents.OnStreamlootsPurchaseOccurred += GlobalEvents_OnStreamlootsPurchaseOccurred;
             }
             if (this.ItemTypes.Contains(OverlayEventListItemTypeEnum.Sparks))
             {
@@ -98,6 +99,7 @@ namespace MixItUp.Base.Model.Overlay
             GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
             GlobalEvents.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;
             GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
+            GlobalEvents.OnStreamlootsPurchaseOccurred -= GlobalEvents_OnStreamlootsPurchaseOccurred;
             GlobalEvents.OnSparkUseOccurred -= GlobalEvents_OnSparkUseOccurred;
             GlobalEvents.OnEmberUseOccurred -= GlobalEvents_OnEmberUseOccurred;
             GlobalEvents.OnPatronageMilestoneReachedOccurred -= GlobalEvents_OnPatronageMilestoneReachedOccurred;
@@ -151,6 +153,8 @@ namespace MixItUp.Base.Model.Overlay
         }
 
         private async void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { await this.AddEvent(donation.UserName, string.Format("Donated {0}", donation.AmountText)); }
+
+        private async void GlobalEvents_OnStreamlootsPurchaseOccurred(object sender, Tuple<UserViewModel, int> purchase) { await this.AddEvent(purchase.Item1.UserName, string.Format("Purchased {0} Packs", purchase.Item2)); }
 
         private async void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, uint> sparkUsage) { await this.AddEvent(sparkUsage.Item1.UserName, string.Format("{0} Sparks", sparkUsage.Item2)); }
 
