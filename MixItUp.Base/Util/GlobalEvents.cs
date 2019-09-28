@@ -192,6 +192,15 @@ namespace MixItUp.Base.Util
             }
         }
 
+        public static event EventHandler<Tuple<UserViewModel, int>> OnStreamlootsPurchaseOccurred;
+        public static void StreamlootsPurchaseOccurred(Tuple<UserViewModel, int> purchase)
+        {
+            if (GlobalEvents.OnStreamlootsPurchaseOccurred != null)
+            {
+                GlobalEvents.OnStreamlootsPurchaseOccurred(null, purchase);
+            }
+        }
+
         public static event EventHandler OnSongRequestsChangedOccurred;
         public static void SongRequestsChangedOccurred()
         {
