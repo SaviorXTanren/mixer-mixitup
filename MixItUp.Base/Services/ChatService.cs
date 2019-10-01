@@ -446,7 +446,7 @@ namespace MixItUp.Base.Services
                     Logger.Log(LogLevel.Debug, string.Format("Checking Message For Command - {0}", message.ToString()));
 
                     Dictionary<string, PermissionsCommandBase> commandsToCheck = this.chatCommandTriggers.ToDictionary();
-                    foreach (PermissionsCommandBase command in message.User.Data.CustomCommands)
+                    foreach (PermissionsCommandBase command in message.User.Data.CustomCommands.Where(c => c.IsEnabled))
                     {
                         foreach (string trigger in command.CommandTriggers)
                         {
@@ -570,8 +570,10 @@ namespace MixItUp.Base.Services
             }
         }
 
-        private Task ProcessHoursCurrency(CancellationToken cancellationToken)
+        private async Task ProcessHoursCurrency(CancellationToken cancellationToken)
         {
+            await ChannelSession.RefreshChannel();
+
             foreach (UserViewModel user in ChannelSession.Services.User.GetAllWorkableUsers())
             {
                 user.UpdateMinuteData();
@@ -581,8 +583,6 @@ namespace MixItUp.Base.Services
             {
                 currency.UpdateUserData();
             }
-
-            return Task.FromResult(0);
         }
 
         #region Mixer Events

@@ -124,6 +124,8 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task Disable()
         {
+            this.lastItems.Clear();
+
             GlobalEvents.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
             GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
             GlobalEvents.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;

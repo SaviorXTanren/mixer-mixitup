@@ -436,8 +436,8 @@
     <Compile Include="Controls\Chat\ChatMessageHeaderControl.xaml.cs">
       <DependentUpon>ChatMessageHeaderControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Chat\ChatEmoteControl.xaml.cs">
-      <DependentUpon>ChatEmoteControl.xaml</DependentUpon>
+    <Compile Include="Controls\Chat\ChatImageControl.xaml.cs">
+      <DependentUpon>ChatImageControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Chat\GifImageControl.xaml.cs">
       <DependentUpon>GifImageControl.xaml</DependentUpon>
@@ -1136,7 +1136,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Chat\ChatEmoteControl.xaml">
+    <Page Include="Controls\Chat\ChatImageControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -46,6 +46,8 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task Disable()
         {
+            this.lastUsers.Clear();
+
             GlobalEvents.OnGameQueueUpdated -= GlobalEvents_OnGameQueueUpdated;
 
             await base.Disable();

@@ -47,6 +47,7 @@ namespace MixItUp.Base.ViewModel.Controls.Chat
                 this.command.IsEnabled = value;
                 this.UpdateSetting();
                 this.NotifyPropertyChanged();
+                ChannelSession.Services.Chat.RebuildCommandTriggers();
             }
         }
 
