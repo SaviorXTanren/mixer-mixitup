@@ -60,6 +60,8 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task Disable()
         {
+            this.lastItems.Clear();
+
             GlobalEvents.OnSongRequestsChangedOccurred -= GlobalEvents_OnSongRequestsChangedOccurred;
 
             await base.Disable();
