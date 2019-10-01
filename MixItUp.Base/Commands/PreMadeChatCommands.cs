@@ -774,7 +774,7 @@ namespace MixItUp.Base.Commands
                         else
                         {
                             string newGameName = string.Join(" ", arguments);
-                            IEnumerable<GameTypeModel> games = await ChannelSession.MixerStreamerConnection.GetGameTypes(newGameName);
+                            IEnumerable<GameTypeModel> games = await ChannelSession.MixerStreamerConnection.GetGameTypes(newGameName, 25);
 
                             newGame = games.FirstOrDefault(g => g.name.Equals(newGameName, StringComparison.CurrentCultureIgnoreCase));
                         }
