@@ -203,7 +203,11 @@ namespace MixItUp.Base.Actions
                 url = await this.ReplaceStringWithSpecialModifiers(this.SourceURL, user, arguments);
             }
 
-            string sceneName = !string.IsNullOrEmpty(this.SceneName) ? this.SceneName : null;
+            string sceneName = null;
+            if (!string.IsNullOrEmpty(this.SceneName))
+            {
+                sceneName = await this.ReplaceStringWithSpecialModifiers(this.SceneName, user, arguments);
+            }
 
             IStreamingSoftwareService ssService = null;
             if (this.SelectedStreamingSoftware == StreamingSoftwareTypeEnum.OBSStudio)
