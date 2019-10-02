@@ -62,13 +62,18 @@ namespace MixItUp.WPF.Controls.Chat
                     SolidColorBrush foreground = null;
                     if (!string.IsNullOrEmpty(alert.Color) && !alert.Color.Equals(ColorSchemes.DefaultColorScheme))
                     {
+                        string color = alert.Color;
                         try
                         {
-                            foreground = (SolidColorBrush)(new BrushConverter().ConvertFrom(alert.Color));
+                            if (ColorSchemes.HTMLColorSchemeDictionary.ContainsKey(color))
+                            {
+                                color = ColorSchemes.HTMLColorSchemeDictionary[color];
+                            }
+                            foreground = (SolidColorBrush)(new BrushConverter().ConvertFrom(color));
                         }
                         catch (Exception ex)
                         {
-                            Logger.Log(LogLevel.Error, "Bad Alert Color: " + alert.Color);
+                            Logger.Log(LogLevel.Error, "Bad Alert Color: " + color);
                             Logger.Log(ex);
                         }
                     }
