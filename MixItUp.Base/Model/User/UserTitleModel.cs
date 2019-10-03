@@ -56,6 +56,10 @@ namespace MixItUp.Base.Model.User
                     {
                         return user.MixerSubscribeDate.GetValueOrDefault().TotalMonthsFromNow() >= this.Months;
                     }
+                    else if (user.IsEquivalentToMixerSubscriber() && this.Months == 1)
+                    {
+                        return true;
+                    }
                     else if (!user.ExceedsPermissions(this.Role))
                     {
                         return false;
