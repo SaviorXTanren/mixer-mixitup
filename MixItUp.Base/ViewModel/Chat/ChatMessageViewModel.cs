@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model;
+﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
@@ -64,7 +65,7 @@ namespace MixItUp.Base.ViewModel.Chat
             if (!ModerationHelper.MeetsChatInteractiveParticipationRequirement(this.User, this))
             {
                 Logger.Log(LogLevel.Debug, string.Format("Deleting Message As User does not meet requirement - {0} - {1}", ChannelSession.Settings.ModerationChatInteractiveParticipation, this.PlainTextMessage));
-                this.Delete(reason: "Chat/MixPlay Participation");
+                await this.Delete(reason: "Chat/MixPlay Participation");
                 await ModerationHelper.SendChatInteractiveParticipationWhisper(this.User, isChat: true);
                 return true;
             }
@@ -73,13 +74,13 @@ namespace MixItUp.Base.ViewModel.Chat
             if (!string.IsNullOrEmpty(moderationReason))
             {
                 Logger.Log(LogLevel.Debug, string.Format("Moderation Being Performed - {0}", this.ToString()));
-                this.Delete(reason: moderationReason);
+                await this.Delete(reason: moderationReason);
                 return true;
             }
             return false;
         }
 
-        public void Delete(UserViewModel user = null, string reason = null)
+        public async Task Delete(UserViewModel user = null, string reason = null)
         {
             if (!this.IsDeleted)
             {
@@ -95,6 +96,16 @@ namespace MixItUp.Base.ViewModel.Chat
                 this.NotifyPropertyChanged("ModerationReason");
 
                 this.OnDeleted(this, new EventArgs());
+
+                if (this.User != null && !string.IsNullOrEmpty(this.PlainTextMessage))
+                {
+                    Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
+                    {
+                        { "message", this.PlainTextMessage },
+                        { "reason", (!string.IsNullOrEmpty(this.ModerationReason)) ? this.ModerationReason : "Manual Deletion" }
+                    };
+                    await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.ChatMessageDeleted), this.User, extraSpecialIdentifiers: specialIdentifiers);
+                }
             }
         }
 

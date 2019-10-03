@@ -422,7 +422,7 @@ namespace MixItUp.Base.Services
                         {
                             { "message", message.PlainTextMessage },
                         };
-                        await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChatMessage), message.User, extraSpecialIdentifiers: specialIdentifiers);
+                        await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.ChatMessageReceived), message.User, extraSpecialIdentifiers: specialIdentifiers);
                     }
                 }
 
@@ -620,8 +620,9 @@ namespace MixItUp.Base.Services
         {
             if (this.messagesLookup.TryGetValue(id.ToString(), out ChatMessageViewModel message))
             {
-                message.Delete();
+                await message.Delete();
                 GlobalEvents.ChatMessageDeleted(id);
+
                 if (ChannelSession.Settings.HideDeletedMessages)
                 {
                     await DispatcherHelper.InvokeDispatcher(() =>
@@ -665,11 +666,11 @@ namespace MixItUp.Base.Services
             {
                 if (message.Platform == StreamingPlatformTypeEnum.Mixer && message.User.Equals(e.Item1))
                 {
-                    message.Delete(user: e.Item2, reason: "Purged");
+                    await message.Delete(user: e.Item2, reason: "Purged");
                 }
             }
 
-            if (EventCommand.CanUserRunEvent(e.Item1, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserPurge)))
+            if (EventCommand.CanUserRunEvent(e.Item1, EnumHelper.GetEnumName(OtherEventTypeEnum.ChatUserPurge)))
             {
                 UserViewModel targetUser = e.Item1;
                 UserViewModel modUser = e.Item2;
@@ -677,15 +678,15 @@ namespace MixItUp.Base.Services
                 {
                     modUser = new UserViewModel(ChannelSession.MixerStreamerUser);
                 }
-                await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserPurge), modUser, arguments: new List<string>() { targetUser.UserName });
+                await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.ChatUserPurge), modUser, arguments: new List<string>() { targetUser.UserName });
             }
         }
 
         private async void MixerChatService_OnUserBanOccurred(object sender, UserViewModel user)
         {
-            if (EventCommand.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserBan)))
+            if (EventCommand.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.ChatUserBan)))
             {
-                await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserBan), user);
+                await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.ChatUserBan), user);
             }
         }
 

@@ -133,7 +133,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.MixerChannelStreamStart));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.MixerChannelStreamStop));
             this.eventCommands.Add(this.GetEventCommand(ConstellationEventTypeEnum.channel__id__followed));
-            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.MixerUserUnfollow));
+            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.ChatUserUnfollow));
             this.eventCommands.Add(this.GetEventCommand(ConstellationEventTypeEnum.channel__id__hosted));
             this.eventCommands.Add(this.GetEventCommand(ConstellationEventTypeEnum.channel__id__subscribed));
             this.eventCommands.Add(this.GetEventCommand(ConstellationEventTypeEnum.channel__id__resubscribed));
@@ -143,12 +143,13 @@ namespace MixItUp.WPF.Controls.MainControls
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.MixerEmbersUsed));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.MixerSkillUsed));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.MixerMilestoneReached));
-            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.MixerUserFirstJoin));
-            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.MixerUserJoined));
-            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.MixerUserLeft));
-            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.MixerUserPurge));
-            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.MixerUserBan));
-            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.MixerChatMessage));
+            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.ChatUserFirstJoin));
+            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.ChatUserJoined));
+            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.ChatUserLeft));
+            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.ChatUserPurge));
+            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.ChatUserBan));
+            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.ChatMessageReceived));
+            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.ChatMessageDeleted));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.StreamlabsDonation));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TiltifyDonation));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.ExtraLifeDonation));

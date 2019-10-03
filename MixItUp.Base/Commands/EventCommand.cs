@@ -1,7 +1,6 @@
 ﻿using Mixer.Base.Clients;
 using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.User;
-using Mixer.Base.Util;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -49,22 +48,25 @@ namespace MixItUp.Base.Commands
         TwitterStreamTweetRetweet = 20,
 
         [Name("Chat New User Joined")]
-        MixerUserFirstJoin = 30,
+        ChatUserFirstJoin = 30,
         [Name("Channel Unfollowed")]
-        MixerUserUnfollow = 31,
+        ChatUserUnfollow = 31,
         [Name("Chat User Purged")]
-        MixerUserPurge = 32,
+        ChatUserPurge = 32,
         [Name("Chat User Timed Out")]
         [Obsolete]
-        MixerUserTimeout = 33,
+        ChatUserTimeout = 33,
         [Name("Chat User Banned")]
-        MixerUserBan = 34,
+        ChatUserBan = 34,
         [Name("Chat Message Received")]
-        MixerChatMessage = 35,
+        ChatMessageReceived = 35,
         [Name("Chat User Joined")]
-        MixerUserJoined = 36,
+        ChatUserJoined = 36,
         [Name("Chat User Left")]
-        MixerUserLeft = 37,
+        ChatUserLeft = 37,
+        [Name("Chat Message Deleted")]
+        ChatMessageDeleted = 38,
+
 
         [Name("Channel Stream Start")]
         MixerChannelStreamStart = 40,
