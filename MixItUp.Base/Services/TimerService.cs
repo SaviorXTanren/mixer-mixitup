@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Chat;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,97 +22,92 @@ namespace MixItUp.Base.Services
 
         private CancellationTokenSource backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 
+        private int totalMessages = 0;
+
+        private int groupTotalTime = 0;
+        private int nonGroupTotalTime = 0;
+
         public void Initialize()
         {
             if (!this.isInitialized)
             {
                 this.isInitialized = true;
 
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                Task.Run(async () => { await this.TimerCommandsBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
+
+                timerCommandIndexes[string.Empty] = 0;
+
+                AsyncRunner.RunBackgroundTask(this.backgroundThreadCancellationTokenSource.Token, 60000, this.TimerCommandsBackground);
             }
         }
 
-        private async Task TimerCommandsBackground()
+        private void GlobalEvents_OnChatMessageReceived(object sender, ChatMessageViewModel message)
         {
-            this.timerCommandIndexes = new Dictionary<string, int>();
-
-            int groupTotalTime = 0;
-            int nonGroupTotalTime = 0;
-
-            int startTotalMessages = ChannelSession.Services.Chat.Messages.Count;
-            timerCommandIndexes[string.Empty] = 0;
-
-            await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
+            if (!(message is AlertChatMessageViewModel))
             {
-                tokenSource.Token.ThrowIfCancellationRequested();
+                totalMessages++;
+            }
+        }
 
-                await Task.Delay(1000 * 60, tokenSource.Token);
-
-                tokenSource.Token.ThrowIfCancellationRequested();
-
-                if (!ChannelSession.Settings.DisableAllTimers)
+        private async Task TimerCommandsBackground(CancellationToken cancellationToken)
+        {
+            if (!ChannelSession.Settings.DisableAllTimers)
+            {
+                Dictionary<string, List<TimerCommand>> commandGroups = new Dictionary<string, List<TimerCommand>>();
+                commandGroups[string.Empty] = new List<TimerCommand>();
+                foreach (var kvp in ChannelSession.Settings.CommandGroups)
                 {
-                    Dictionary<string, List<TimerCommand>> commandGroups = new Dictionary<string, List<TimerCommand>>();
-                    commandGroups[string.Empty] = new List<TimerCommand>();
-                    foreach (var kvp in ChannelSession.Settings.CommandGroups)
-                    {
-                        commandGroups[kvp.Key] = new List<TimerCommand>();
-                    }
+                    commandGroups[kvp.Key] = new List<TimerCommand>();
+                }
 
-                    foreach (TimerCommand command in ChannelSession.Settings.TimerCommands)
+                foreach (TimerCommand command in ChannelSession.Settings.TimerCommands)
+                {
+                    if (string.IsNullOrEmpty(command.GroupName))
                     {
-                        if (string.IsNullOrEmpty(command.GroupName))
+                        commandGroups[string.Empty].Add(command);
+                    }
+                    else if (ChannelSession.Settings.CommandGroups.ContainsKey(command.GroupName))
+                    {
+                        if (ChannelSession.Settings.CommandGroups[command.GroupName].TimerInterval == 0)
                         {
                             commandGroups[string.Empty].Add(command);
                         }
-                        else if (ChannelSession.Settings.CommandGroups.ContainsKey(command.GroupName))
+                        else
                         {
-                            if (ChannelSession.Settings.CommandGroups[command.GroupName].TimerInterval == 0)
-                            {
-                                commandGroups[string.Empty].Add(command);
-                            }
-                            else
-                            {
-                                commandGroups[command.GroupName].Add(command);
-                            }
+                            commandGroups[command.GroupName].Add(command);
                         }
-                    }
-
-                    groupTotalTime++;
-                    foreach (var kvp in ChannelSession.Settings.CommandGroups)
-                    {
-                        if (kvp.Value.TimerInterval > 0 && groupTotalTime % kvp.Value.TimerInterval == 0)
-                        {
-                            if (!timerCommandIndexes.ContainsKey(kvp.Key))
-                            {
-                                timerCommandIndexes[kvp.Key] = 0;
-                            }
-
-                            if (commandGroups.ContainsKey(kvp.Key))
-                            {
-                                await this.RunTimerFromGroup(kvp.Key, commandGroups[kvp.Key]);
-                            }
-                        }
-                    }
-
-                    if (nonGroupTotalTime >= ChannelSession.Settings.TimerCommandsInterval)
-                    {
-                        if ((ChannelSession.Services.Chat.Messages.Count - startTotalMessages) >= ChannelSession.Settings.TimerCommandsMinimumMessages)
-                        {
-                            await this.RunTimerFromGroup(string.Empty, commandGroups[string.Empty]);
-
-                            startTotalMessages = ChannelSession.Services.Chat.Messages.Count;
-                            nonGroupTotalTime = 0;
-                        }
-                    }
-                    else
-                    {
-                        nonGroupTotalTime++;
                     }
                 }
-            });
+
+                groupTotalTime++;
+                foreach (var kvp in ChannelSession.Settings.CommandGroups)
+                {
+                    if (kvp.Value.TimerInterval > 0 && groupTotalTime % kvp.Value.TimerInterval == 0)
+                    {
+                        if (!timerCommandIndexes.ContainsKey(kvp.Key))
+                        {
+                            timerCommandIndexes[kvp.Key] = 0;
+                        }
+
+                        if (commandGroups.ContainsKey(kvp.Key))
+                        {
+                            await this.RunTimerFromGroup(kvp.Key, commandGroups[kvp.Key]);
+                        }
+                    }
+                }
+
+                nonGroupTotalTime++;
+                if (nonGroupTotalTime >= ChannelSession.Settings.TimerCommandsInterval)
+                {
+                    if (totalMessages >= ChannelSession.Settings.TimerCommandsMinimumMessages)
+                    {
+                        await this.RunTimerFromGroup(string.Empty, commandGroups[string.Empty]);
+
+                        totalMessages = 0;
+                        nonGroupTotalTime = 0;
+                    }
+                }
+            }
         }
 
         private async Task RunTimerFromGroup(string groupName, IEnumerable<TimerCommand> timers)

@@ -137,9 +137,9 @@ namespace MixItUp.Base.Services.Mixer
                                 return Task.FromResult(0);
                             }, uint.MaxValue);
 
-                            AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, this.ChatterRefreshBackground, 300000);
+                            AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 300000, this.ChatterRefreshBackground);
                         });
-                        AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, this.ChatterJoinLeaveBackground, 2500);
+                        AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 2500, this.ChatterJoinLeaveBackground);
 
                         return true;
                     }

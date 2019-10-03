@@ -168,7 +168,7 @@ namespace MixItUp.Base.Services
             });
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-            AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, this.ProcessHoursCurrency, 60000);
+            AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.ProcessHoursCurrency);
         }
 
         public async Task SendMessage(string message, bool sendAsStreamer = false)
