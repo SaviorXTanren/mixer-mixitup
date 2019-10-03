@@ -133,7 +133,7 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static void RunBackgroundTask(CancellationToken token, Func<CancellationToken, Task> backgroundTask, int delayInMilliseconds = 0)
+        public static void RunBackgroundTask(CancellationToken token, int delayInMilliseconds, Func<CancellationToken, Task> backgroundTask)
         {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             Task.Run(async () =>

@@ -16,7 +16,9 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
+            <RowDefinition Height="15" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="15" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
@@ -42,7 +44,19 @@
 
             <ToggleButton Grid.Column="0" x:Name="EnableDisablePatreonBenefitToggleSwitch" IsEnabled="False" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" Checked="EnableDisablePatreonBenefitToggleSwitch_Checked" Unchecked="EnableDisablePatreonBenefitToggleSwitch_Checked" />
 
-            <ComboBox x:Name="PatreonBenefitComboBox" Grid.Column="2" IsEnabled="False" MaterialDesign:HintAssist.Hint="Patreon Benefit Requirement" DisplayMemberPath="Title" Width="200" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox x:Name="PatreonBenefitComboBox" Grid.Column="2" IsEnabled="False" VerticalAlignment="Center" Margin="0,0,0,10" MaterialDesign:HintAssist.Hint="Patreon Benefit Requirement" DisplayMemberPath="Title" Width="200" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+        </Grid>
+
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0">Show On Chat List Context Menu:</TextBlock>
+
+            <ToggleButton Grid.Column="2" x:Name="ShowOnChatMenuToggleSwitch" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" />
         </Grid>
 
     </Grid>

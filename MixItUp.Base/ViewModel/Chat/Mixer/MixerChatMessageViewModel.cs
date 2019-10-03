@@ -51,7 +51,14 @@ namespace MixItUp.Base.ViewModel.Chat.Mixer
                             if (emote != null)
                             {
                                 this.MessageParts.Add(emote);
-                                this.PlainTextMessage += message.text + " ";
+                                if (this.PlainTextMessage.Length == 0)
+                                {
+                                    this.PlainTextMessage = message.text;
+                                }
+                                else
+                                {
+                                    this.PlainTextMessage = " " + message.text;
+                                }
                             }
                             else
                             {

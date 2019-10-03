@@ -2,6 +2,8 @@
 using MixItUp.Base.Util;
 using MixItUp.WPF.Controls.Dialogs;
 using MixItUp.WPF.Windows;
+using StreamingClient.Base.Util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -111,7 +113,14 @@ namespace MixItUp.WPF.Util
                 WPFDialogShower.isDialogShown = true;
                 if (onDialogClose != null) { dialogHost.DialogClosing += onDialogClose; }
 
-                await dialogHost.ShowDialog(dialog);
+                try
+                {
+                    await dialogHost.ShowDialog(dialog);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
 
                 if (onDialogClose != null) { dialogHost.DialogClosing -= onDialogClose; }
                 WPFDialogShower.isDialogShown = false;

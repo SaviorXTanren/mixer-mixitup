@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Actions;
+using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Chat;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
@@ -114,9 +115,12 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
         public string LockIconColor { get { return (this.IsScrollingLocked) ? "Green" : "Red"; } }
 
+        public IEnumerable<ChatCommand> ContextMenuChatCommands { get { return ChannelSession.Services.Chat.ChatMenuCommands; } }
+
         public event EventHandler<MixerSkillChatMessageViewModel> GifSkillOccured = delegate { };
         public event EventHandler MessageSentOccurred = delegate { };
         public event EventHandler ScrollingLockChanged = delegate { };
+        public event EventHandler ContextMenuCommandsChanged = delegate { };
 
         public ICommand ClearChatCommand { get; private set; }
         public ICommand EnableDisableChatCommand { get; private set; }
@@ -196,6 +200,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 return Task.FromResult(0);
             });
 
+            ChannelSession.Services.Chat.ChatCommandsReprocessed += Chat_ChatCommandsReprocessed;
             GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
         }
 
@@ -270,6 +275,11 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         {
             this.DisplayUsers = ChannelSession.Services.Chat.DisplayUsers;
             this.NotifyPropertyChanged("DisplayUsers");
+        }
+
+        private void Chat_ChatCommandsReprocessed(object sender, EventArgs e)
+        {
+            this.ContextMenuCommandsChanged(this, new EventArgs());
         }
 
         private void GlobalEvents_OnChatMessageReceived(object sender, ChatMessageViewModel message)

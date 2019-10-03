@@ -232,9 +232,9 @@ namespace MixItUp.Base.MixerAPI
                     }
                     else
                     {
-                        if (EventCommand.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserUnfollow)))
+                        if (EventCommand.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.ChatUserUnfollow)))
                         {
-                            await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserUnfollow), user);
+                            await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.ChatUserUnfollow), user);
 
                             await this.AddAlertChatMessage(user, string.Format("{0} Unfollowed", user.UserName));
                         }

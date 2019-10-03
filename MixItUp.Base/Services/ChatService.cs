@@ -37,6 +37,9 @@ namespace MixItUp.Base.Services
         IEnumerable<UserViewModel> DisplayUsers { get; }
         event EventHandler DisplayUsersUpdated;
 
+        event EventHandler ChatCommandsReprocessed;
+        IEnumerable<ChatCommand> ChatMenuCommands { get; }
+
         event EventHandler<Dictionary<string, uint>> OnPollEndOccurred;
 
         Task SendMessage(string message, bool sendAsStreamer = false);
@@ -89,6 +92,10 @@ namespace MixItUp.Base.Services
         }
         public event EventHandler DisplayUsersUpdated = delegate { };
         private SortedList<string, UserViewModel> displayUsers = new SortedList<string, UserViewModel>();
+
+        public event EventHandler ChatCommandsReprocessed = delegate { };
+        public IEnumerable<ChatCommand> ChatMenuCommands { get { return this.chatMenuCommands; } }
+        private List<ChatCommand> chatMenuCommands = new List<ChatCommand>();
 
         public event EventHandler<Dictionary<string, uint>> OnPollEndOccurred = delegate { };
 
@@ -168,7 +175,7 @@ namespace MixItUp.Base.Services
             });
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-            AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, this.ProcessHoursCurrency, 60000);
+            AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.ProcessHoursCurrency);
         }
 
         public async Task SendMessage(string message, bool sendAsStreamer = false)
@@ -283,6 +290,7 @@ namespace MixItUp.Base.Services
         {
             this.chatCommandTriggers.Clear();
             this.chatCommandWildcardTriggers.Clear();
+            this.chatMenuCommands.Clear();
             foreach (ChatCommand command in ChannelSession.Settings.ChatCommands.Where(c => c.IsEnabled))
             {
                 if (command.Wildcards)
@@ -301,6 +309,11 @@ namespace MixItUp.Base.Services
                         this.chatCommandTriggers[trigger] = command;
                     }
                 }
+
+                if (command.Requirements.Settings.ShowOnChatMenu)
+                {
+                    this.chatMenuCommands.Add(command);
+                }
             }
 
             foreach (GameCommandBase command in ChannelSession.Settings.GameCommands.Where(c => c.IsEnabled))
@@ -318,6 +331,8 @@ namespace MixItUp.Base.Services
                     this.chatCommandTriggers[trigger] = command;
                 }
             }
+
+            this.ChatCommandsReprocessed(this, new EventArgs());
         }
 
         public async Task AddMessage(ChatMessageViewModel message)
@@ -407,7 +422,7 @@ namespace MixItUp.Base.Services
                         {
                             { "message", message.PlainTextMessage },
                         };
-                        await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChatMessage), message.User, extraSpecialIdentifiers: specialIdentifiers);
+                        await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.ChatMessageReceived), message.User, extraSpecialIdentifiers: specialIdentifiers);
                     }
                 }
 
@@ -605,8 +620,9 @@ namespace MixItUp.Base.Services
         {
             if (this.messagesLookup.TryGetValue(id.ToString(), out ChatMessageViewModel message))
             {
-                message.Delete();
+                await message.Delete();
                 GlobalEvents.ChatMessageDeleted(id);
+
                 if (ChannelSession.Settings.HideDeletedMessages)
                 {
                     await DispatcherHelper.InvokeDispatcher(() =>
@@ -650,11 +666,11 @@ namespace MixItUp.Base.Services
             {
                 if (message.Platform == StreamingPlatformTypeEnum.Mixer && message.User.Equals(e.Item1))
                 {
-                    message.Delete(user: e.Item2, reason: "Purged");
+                    await message.Delete(user: e.Item2, reason: "Purged");
                 }
             }
 
-            if (EventCommand.CanUserRunEvent(e.Item1, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserPurge)))
+            if (EventCommand.CanUserRunEvent(e.Item1, EnumHelper.GetEnumName(OtherEventTypeEnum.ChatUserPurge)))
             {
                 UserViewModel targetUser = e.Item1;
                 UserViewModel modUser = e.Item2;
@@ -662,15 +678,15 @@ namespace MixItUp.Base.Services
                 {
                     modUser = new UserViewModel(ChannelSession.MixerStreamerUser);
                 }
-                await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserPurge), modUser, arguments: new List<string>() { targetUser.UserName });
+                await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.ChatUserPurge), modUser, arguments: new List<string>() { targetUser.UserName });
             }
         }
 
         private async void MixerChatService_OnUserBanOccurred(object sender, UserViewModel user)
         {
-            if (EventCommand.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserBan)))
+            if (EventCommand.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.ChatUserBan)))
             {
-                await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserBan), user);
+                await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.ChatUserBan), user);
             }
         }
 

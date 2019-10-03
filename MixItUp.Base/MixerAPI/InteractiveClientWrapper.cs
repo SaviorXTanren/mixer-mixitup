@@ -885,7 +885,7 @@ namespace MixItUp.Base.MixerAPI
         {
             try
             {
-                if (e != null && e.input != null)
+                if (e != null && e.input != null && this.Controls.ContainsKey(e.input.controlID))
                 {
                     MixPlayControlModel control = this.Controls[e.input.controlID];
                     InteractiveConnectedControlCommand connectedControl = null;
