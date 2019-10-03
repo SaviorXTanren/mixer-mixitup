@@ -1,6 +1,7 @@
 ﻿using MaterialDesignThemes.Wpf;
 using Mixer.Base.Model.Channel;
 using MixItUp.Base;
+using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Chat.Mixer;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
@@ -40,6 +41,8 @@ namespace MixItUp.WPF.Controls.MainControls
         private SemaphoreSlim gifSkillPopoutLock = new SemaphoreSlim(1);
         private object itemsLock = new object();
 
+        private List<object> defaultContextMenuItems = new List<object>();
+
         public ChatControl()
         {
             InitializeComponent();
@@ -52,17 +55,28 @@ namespace MixItUp.WPF.Controls.MainControls
             this.viewModel.GifSkillOccured += ViewModel_GifSkillOccured;
             this.viewModel.MessageSentOccurred += ViewModel_MessageSentOccurred;
             this.viewModel.ScrollingLockChanged += ViewModel_ScrollingLockChanged;
+            this.viewModel.ContextMenuCommandsChanged += ViewModel_ContextMenuCommandsChanged;
 
             await this.viewModel.OnLoaded();
             this.DataContext = this.viewModel;
 
             BindingOperations.EnableCollectionSynchronization(this.viewModel.Messages, itemsLock);
+
+            foreach (object item in this.ChatList.ContextMenu.Items)
+            {
+                this.defaultContextMenuItems.Add(item);
+            }
         }
 
         protected override async Task OnVisibilityChanged()
         {
             await this.viewModel.OnVisible();
             await base.OnVisibilityChanged();
+        }
+
+        private void Messages_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            this.ChatList.Items.Refresh();
         }
 
         private void ViewModel_GifSkillOccured(object sender, MixerSkillChatMessageViewModel skillMessage)
@@ -104,6 +118,28 @@ namespace MixItUp.WPF.Controls.MainControls
                     {
                         this.chatListScrollViewer.ScrollToBottom();
                     }
+                }
+            }
+        }
+
+        private void ViewModel_ContextMenuCommandsChanged(object sender, EventArgs e)
+        {
+            this.ChatList.ContextMenu.Items.Clear();
+            foreach (var item in this.defaultContextMenuItems)
+            {
+                this.ChatList.ContextMenu.Items.Add(item);
+            }
+
+            if (viewModel.ContextMenuChatCommands.Count() > 0)
+            {
+                this.ChatList.ContextMenu.Items.Add(new Separator());
+                foreach (ChatCommand command in viewModel.ContextMenuChatCommands)
+                {
+                    MenuItem menuItem = new MenuItem();
+                    menuItem.Header = command.Name;
+                    menuItem.DataContext = command;
+                    menuItem.Click += this.ContextMenuChatCommand_Click;
+                    this.ChatList.ContextMenu.Items.Add(menuItem);
                 }
             }
         }
@@ -309,6 +345,26 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
+        private async void ContextMenuChatCommand_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.ChatList.SelectedItem != null && this.ChatList.SelectedItem is ChatMessageViewModel)
+            {
+                ChatMessageViewModel message = (ChatMessageViewModel)this.ChatList.SelectedItem;
+                if (message.User != null)
+                {
+                    if (e.Source is MenuItem)
+                    {
+                        MenuItem menuItem = (MenuItem)e.Source;
+                        if (menuItem.DataContext != null && menuItem.DataContext is ChatCommand)
+                        {
+                            ChatCommand command = (ChatCommand)menuItem.DataContext;
+                            await command.Perform(message.User);
+                        }
+                    }
+                }
+            }
+        }
+
         private async void UserList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             if (this.UserList.SelectedItem != null && this.UserList.SelectedItem is UserViewModel)
@@ -464,11 +520,6 @@ namespace MixItUp.WPF.Controls.MainControls
                     }
                 }
             }
-        }
-
-        private void Messages_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            this.ChatList.Items.Refresh();
         }
     }
 }

@@ -37,6 +37,9 @@ namespace MixItUp.Base.Services
         IEnumerable<UserViewModel> DisplayUsers { get; }
         event EventHandler DisplayUsersUpdated;
 
+        event EventHandler ChatCommandsReprocessed;
+        IEnumerable<ChatCommand> ChatMenuCommands { get; }
+
         event EventHandler<Dictionary<string, uint>> OnPollEndOccurred;
 
         Task SendMessage(string message, bool sendAsStreamer = false);
@@ -89,6 +92,10 @@ namespace MixItUp.Base.Services
         }
         public event EventHandler DisplayUsersUpdated = delegate { };
         private SortedList<string, UserViewModel> displayUsers = new SortedList<string, UserViewModel>();
+
+        public event EventHandler ChatCommandsReprocessed = delegate { };
+        public IEnumerable<ChatCommand> ChatMenuCommands { get { return this.chatMenuCommands; } }
+        private List<ChatCommand> chatMenuCommands = new List<ChatCommand>();
 
         public event EventHandler<Dictionary<string, uint>> OnPollEndOccurred = delegate { };
 
@@ -283,6 +290,7 @@ namespace MixItUp.Base.Services
         {
             this.chatCommandTriggers.Clear();
             this.chatCommandWildcardTriggers.Clear();
+            this.chatMenuCommands.Clear();
             foreach (ChatCommand command in ChannelSession.Settings.ChatCommands.Where(c => c.IsEnabled))
             {
                 if (command.Wildcards)
@@ -301,6 +309,11 @@ namespace MixItUp.Base.Services
                         this.chatCommandTriggers[trigger] = command;
                     }
                 }
+
+                if (command.Requirements.Settings.ShowOnChatMenu)
+                {
+                    this.chatMenuCommands.Add(command);
+                }
             }
 
             foreach (GameCommandBase command in ChannelSession.Settings.GameCommands.Where(c => c.IsEnabled))
@@ -318,6 +331,8 @@ namespace MixItUp.Base.Services
                     this.chatCommandTriggers[trigger] = command;
                 }
             }
+
+            this.ChatCommandsReprocessed(this, new EventArgs());
         }
 
         public async Task AddMessage(ChatMessageViewModel message)

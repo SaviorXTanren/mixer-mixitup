@@ -68,6 +68,9 @@ namespace MixItUp.WPF.Controls.Requirement
                 PatreonBenefit benefit = (PatreonBenefit)this.PatreonBenefitComboBox.SelectedItem;
                 settings.PatreonBenefitIDRequirement = benefit.ID;
             }
+
+            settings.ShowOnChatMenu = this.ShowOnChatMenuToggleSwitch.IsChecked.GetValueOrDefault();
+
             return settings;
         }
 
@@ -90,6 +93,8 @@ namespace MixItUp.WPF.Controls.Requirement
                     this.PatreonBenefitComboBox.SelectedItem = ChannelSession.Services.Patreon.Campaign.Benefits[settings.PatreonBenefitIDRequirement];
                 }
             }
+
+            this.ShowOnChatMenuToggleSwitch.IsChecked = settings.ShowOnChatMenu;
         }
 
         public async Task<bool> Validate()

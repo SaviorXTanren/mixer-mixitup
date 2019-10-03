@@ -16,6 +16,9 @@ namespace MixItUp.Base.ViewModel.Requirement
         [DataMember]
         public string PatreonBenefitIDRequirement { get; set; }
 
+        [DataMember]
+        public bool ShowOnChatMenu { get; set; }
+
         public SettingsRequirementViewModel() { }
 
         public bool DoesMeetRequirement(UserViewModel user)
