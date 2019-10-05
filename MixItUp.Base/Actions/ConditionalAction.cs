@@ -33,18 +33,19 @@ namespace MixItUp.Base.Actions
         Between
     }
 
-    [DataContract]
-    public class ConditionalAction : ActionBase
+    public enum ConditionalOperatorTypeEnum
     {
-        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
+        [Name("AND")]
+        And,
+        [Name("OR")]
+        Or
+    }
 
-        protected override SemaphoreSlim AsyncSemaphore { get { return ConditionalAction.asyncSemaphore; } }
-
+    [DataContract]
+    public class ConditionalClauseModel
+    {
         [DataMember]
         public ConditionalComparisionTypeEnum ComparisionType { get; set; }
-
-        [DataMember]
-        public bool IgnoreCase { get; set; }
 
         [DataMember]
         public string Value1 { get; set; }
@@ -53,47 +54,117 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public string Value3 { get; set; }
 
+        public ConditionalClauseModel()
+        {
+            this.ComparisionType = ConditionalComparisionTypeEnum.Equals;
+        }
+
+        public ConditionalClauseModel(ConditionalComparisionTypeEnum comparisionType, string value1, string value2, string value3)
+        {
+            this.ComparisionType = comparisionType;
+            this.Value1 = (value1 == null) ? string.Empty : value1;
+            this.Value2 = (value2 == null) ? string.Empty : value2;
+            this.Value3 = (value3 == null) ? string.Empty : value3;
+        }
+    }
+
+    [DataContract]
+    public class ConditionalAction : ActionBase
+    {
+        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
+
+        protected override SemaphoreSlim AsyncSemaphore { get { return ConditionalAction.asyncSemaphore; } }
+
+        [DataMember]
+        public bool IgnoreCase { get; set; }
+
+        [DataMember]
+        public ConditionalOperatorTypeEnum Operator { get; set; }
+
+        [Obsolete]
+        [DataMember]
+        public ConditionalComparisionTypeEnum ComparisionType { get; set; }
+
+        [Obsolete]
+        [DataMember]
+        public string Value1 { get; set; }
+        [Obsolete]
+        [DataMember]
+        public string Value2 { get; set; }
+        [Obsolete]
+        [DataMember]
+        public string Value3 { get; set; }
+
+        [DataMember]
+        public List<ConditionalClauseModel> Clauses { get; set; } = new List<ConditionalClauseModel>();
+
         [DataMember]
         public Guid CommandID { get; set; }
 
         public ConditionalAction() : base(ActionTypeEnum.Conditional) { }
 
-        public ConditionalAction(ConditionalComparisionTypeEnum comparisionType, bool ignoreCase, string value1, string value2, CommandBase command)
+        public ConditionalAction(bool ignoreCase, ConditionalOperatorTypeEnum op, IEnumerable<ConditionalClauseModel> clauses, CommandBase command)
             : this()
         {
-            this.ComparisionType = comparisionType;
             this.IgnoreCase = ignoreCase;
-            this.Value1 = (value1 == null) ? string.Empty : value1;
-            this.Value2 = (value2 == null) ? string.Empty : value2;
+            this.Operator = op;
+            this.Clauses = new List<ConditionalClauseModel>(clauses);
             this.CommandID = command.ID;
-        }
-
-        public ConditionalAction(ConditionalComparisionTypeEnum comparisionType, bool ignoreCase, string value1, string value2, string value3, CommandBase command)
-            : this(comparisionType, ignoreCase, value1, value2, command)
-        {
-            this.Value3 = (value3 == null) ? string.Empty : value3;
         }
 
         public CommandBase GetCommand() { return ChannelSession.AllEnabledCommands.FirstOrDefault(c => c.ID.Equals(this.CommandID)); }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            string v1 = await this.ReplaceStringWithSpecialModifiers(this.Value1, user, arguments);
-            string v2 = await this.ReplaceStringWithSpecialModifiers(this.Value2, user, arguments);
+#pragma warning disable CS0612 // Type or member is obsolete
+            if (this.Clauses.Count == 0 && !string.IsNullOrEmpty(this.Value1))
+            {
+                StoreCommandUpgrader.UpdateConditionalAction(new List<ActionBase>() { this });
+            }
+#pragma warning restore CS0612 // Type or member is obsolete
 
-            bool result = false;
-            if (this.ComparisionType == ConditionalComparisionTypeEnum.Contains || this.ComparisionType == ConditionalComparisionTypeEnum.DoesNotContain)
+            List<bool> results = new List<bool>();
+            foreach (ConditionalClauseModel clause in this.Clauses)
+            {
+                results.Add(await this.Check(clause, user, arguments));
+            }
+
+            bool finalResult = false;
+            if (this.Operator == ConditionalOperatorTypeEnum.And)
+            {
+                finalResult = results.All(r => r);
+            }
+            else if (this.Operator == ConditionalOperatorTypeEnum.Or)
+            {
+                finalResult = results.Any(r => r);
+            }
+
+            if (finalResult)
+            {
+                CommandBase command = this.GetCommand();
+                if (command != null)
+                {
+                    await command.Perform(user, arguments, this.GetExtraSpecialIdentifiers());
+                }
+            }
+        }
+
+        private async Task<bool> Check(ConditionalClauseModel clause, UserViewModel user, IEnumerable<string> arguments)
+        {
+            string v1 = await this.ReplaceStringWithSpecialModifiers(clause.Value1, user, arguments);
+            string v2 = await this.ReplaceStringWithSpecialModifiers(clause.Value2, user, arguments);
+
+            if (clause.ComparisionType == ConditionalComparisionTypeEnum.Contains || clause.ComparisionType == ConditionalComparisionTypeEnum.DoesNotContain)
             {
                 bool contains = v1.IndexOf(v2, this.IgnoreCase ? StringComparison.InvariantCultureIgnoreCase : StringComparison.InvariantCulture) >= 0;
-                result = ((this.ComparisionType == ConditionalComparisionTypeEnum.Contains && contains) ||
-                    (this.ComparisionType == ConditionalComparisionTypeEnum.DoesNotContain && !contains));
+                return ((clause.ComparisionType == ConditionalComparisionTypeEnum.Contains && contains) || (clause.ComparisionType == ConditionalComparisionTypeEnum.DoesNotContain && !contains));
             }
-            else if (this.ComparisionType == ConditionalComparisionTypeEnum.Between)
+            else if (clause.ComparisionType == ConditionalComparisionTypeEnum.Between)
             {
-                string v3 = await this.ReplaceStringWithSpecialModifiers(this.Value3, user, arguments);
+                string v3 = await this.ReplaceStringWithSpecialModifiers(clause.Value3, user, arguments);
                 if (double.TryParse(v1, out double v1num) && double.TryParse(v2, out double v2num) && double.TryParse(v3, out double v3num))
                 {
-                    result = (v2num <= v1num && v1num <= v3num);
+                    return (v2num <= v1num && v1num <= v3num);
                 }
             }
             else
@@ -115,31 +186,23 @@ namespace MixItUp.Base.Actions
                     compareResult = string.Compare(v1, v2, this.IgnoreCase);
                 }
 
-                if (compareResult == 0 && (this.ComparisionType == ConditionalComparisionTypeEnum.Equals || this.ComparisionType == ConditionalComparisionTypeEnum.GreaterThanOrEqual ||
-                    this.ComparisionType == ConditionalComparisionTypeEnum.LessThanOrEqual))
+                if (compareResult == 0 && (clause.ComparisionType == ConditionalComparisionTypeEnum.Equals || clause.ComparisionType == ConditionalComparisionTypeEnum.GreaterThanOrEqual ||
+                    clause.ComparisionType == ConditionalComparisionTypeEnum.LessThanOrEqual))
                 {
-                    result = true;
+                    return true;
                 }
-                else if (compareResult < 0 && (this.ComparisionType == ConditionalComparisionTypeEnum.NotEquals || this.ComparisionType == ConditionalComparisionTypeEnum.LessThan ||
-                    this.ComparisionType == ConditionalComparisionTypeEnum.LessThanOrEqual))
+                else if (compareResult < 0 && (clause.ComparisionType == ConditionalComparisionTypeEnum.NotEquals || clause.ComparisionType == ConditionalComparisionTypeEnum.LessThan ||
+                    clause.ComparisionType == ConditionalComparisionTypeEnum.LessThanOrEqual))
                 {
-                    result = true;
+                    return true;
                 }
-                else if (compareResult > 0 && (this.ComparisionType == ConditionalComparisionTypeEnum.NotEquals || this.ComparisionType == ConditionalComparisionTypeEnum.GreaterThan ||
-                    this.ComparisionType == ConditionalComparisionTypeEnum.GreaterThanOrEqual))
+                else if (compareResult > 0 && (clause.ComparisionType == ConditionalComparisionTypeEnum.NotEquals || clause.ComparisionType == ConditionalComparisionTypeEnum.GreaterThan ||
+                    clause.ComparisionType == ConditionalComparisionTypeEnum.GreaterThanOrEqual))
                 {
-                    result = true;
-                }
-            }
-
-            if (result)
-            {
-                CommandBase command = this.GetCommand();
-                if (command != null)
-                {
-                    await command.Perform(user, arguments, this.GetExtraSpecialIdentifiers());
+                    return true;
                 }
             }
+            return false;
         }
     }
 }

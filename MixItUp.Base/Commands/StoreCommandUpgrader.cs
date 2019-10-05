@@ -18,24 +18,10 @@ namespace MixItUp.Base.Commands
             {
                 StoreCommandUpgrader.ReplaceActionGroupAction(actions);
             }
-        }
 
-        public static void ReplaceActionGroupAction(List<ActionBase> actions)
-        {
-            for (int i = 0; i < actions.Count; i++)
+            if (StoreCommandUpgrader.IsVersionLessThan(version, "0.5.2.1110"))
             {
-                ActionBase action = actions[i];
-#pragma warning disable CS0612 // Type or member is obsolete
-                if (action is ActionGroupAction)
-                {
-                    ActionGroupAction aaction = (ActionGroupAction)action;
-                    actions[i] = new CommandAction()
-                    {
-                        CommandActionType = CommandActionTypeEnum.RunCommand,
-                        CommandID = aaction.ActionGroupID
-                    };
-                }
-#pragma warning restore CS0612 // Type or member is obsolete
+                StoreCommandUpgrader.UpdateConditionalAction(actions);
             }
         }
 
@@ -173,6 +159,46 @@ namespace MixItUp.Base.Commands
             return null;
         }
 #pragma warning restore CS0612 // Type or member is obsolete
+
+        public static void ReplaceActionGroupAction(List<ActionBase> actions)
+        {
+            for (int i = 0; i < actions.Count; i++)
+            {
+                ActionBase action = actions[i];
+#pragma warning disable CS0612 // Type or member is obsolete
+                if (action is ActionGroupAction)
+                {
+                    ActionGroupAction aaction = (ActionGroupAction)action;
+                    actions[i] = new CommandAction()
+                    {
+                        CommandActionType = CommandActionTypeEnum.RunCommand,
+                        CommandID = aaction.ActionGroupID
+                    };
+                }
+#pragma warning restore CS0612 // Type or member is obsolete
+            }
+        }
+
+        public static void UpdateConditionalAction(List<ActionBase> actions)
+        {
+            for (int i = 0; i < actions.Count; i++)
+            {
+                ActionBase action = actions[i];
+#pragma warning disable CS0612 // Type or member is obsolete
+                if (action is ConditionalAction)
+                {
+                    ConditionalAction caction = (ConditionalAction)action;
+                    if (caction.Clauses.Count == 0 && !string.IsNullOrEmpty(caction.Value1))
+                    {
+                        caction.Clauses.Add(new ConditionalClauseModel(caction.ComparisionType, caction.Value1, caction.Value2, caction.Value3));
+                        caction.Value1 = null;
+                        caction.Value2 = null;
+                        caction.Value3 = null;
+                    }
+                }
+#pragma warning restore CS0612 // Type or member is obsolete
+            }
+        }
 
         private static bool IsVersionLessThan(string currentVersion, string checkVersion)
         {

@@ -43,6 +43,7 @@ namespace MixItUp.Desktop.Services
             await DesktopSettingsUpgrader.Version35Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version36Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version37Upgrade(version, filePath);
+            await DesktopSettingsUpgrader.Version38Upgrade(version, filePath);
 
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath, ignoreErrors: true);
             settings.InitializeDB = false;
@@ -359,6 +360,22 @@ namespace MixItUp.Desktop.Services
                             GroupName = group.GroupName
                         });
                     }
+                }
+
+                await ChannelSession.Services.Settings.Save(settings);
+            }
+        }
+
+        private static async Task Version38Upgrade(int version, string filePath)
+        {
+            if (version < 38)
+            {
+                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath, ignoreErrors: true);
+                await ChannelSession.Services.Settings.Initialize(settings);
+
+                foreach (CommandBase command in GetAllCommands(settings))
+                {
+                    StoreCommandUpgrader.UpdateConditionalAction(command.Actions);
                 }
 
                 await ChannelSession.Services.Settings.Save(settings);
