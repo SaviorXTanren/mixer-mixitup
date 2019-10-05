@@ -1,5 +1,4 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base;
+﻿using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
@@ -11,7 +10,6 @@ using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -26,6 +24,7 @@ namespace MixItUp.WPF.Windows.Currency
     {
         public const string ItemsBoughtCommandName = "Shop Items Bought";
         public const string ItemsSoldCommandName = "Shop Items Sold";
+        public const string ItemsTradedCommandName = "Items Traded";
 
         private UserInventoryViewModel inventory;
 
@@ -68,6 +67,12 @@ namespace MixItUp.WPF.Windows.Currency
             sellCommand.Actions.Add(new ChatAction("You sold $itemtotal $itemname for $itemcost $currencyname", sendAsStreamer: false, isWhisper: true));
             this.ShopItemsSoldCommandButtonsControl.DataContext = sellCommand;
 
+            this.TradeCommandTextBox.Text = "!trade";
+
+            CustomCommand tradeCommand = new CustomCommand(InventoryWindow.ItemsTradedCommandName);
+            tradeCommand.Actions.Add(new ChatAction("@$username traded $itemtotal $itemname to @$targetusername for $targetitemtotal $targetitemname", sendAsStreamer: false));
+            this.TradeItemsBoughtCommandButtonsControl.DataContext = tradeCommand;
+
             this.AutomaticResetComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyResetRateEnum.Never);
 
             if (this.inventory != null)
@@ -91,6 +96,10 @@ namespace MixItUp.WPF.Windows.Currency
                 }
                 this.ShopItemsBoughtCommandButtonsControl.DataContext = this.inventory.ItemsBoughtCommand;
                 this.ShopItemsSoldCommandButtonsControl.DataContext = this.inventory.ItemsSoldCommand;
+
+                this.TradeEnableDisableToggleButton.IsChecked = this.inventory.TradeEnabled;
+                this.TradeCommandTextBox.Text = this.inventory.TradeCommand;
+                this.TradeItemsBoughtCommandButtonsControl.DataContext = this.inventory.ItemsTradedCommand;
             }
 
             await base.OnLoaded();
@@ -233,6 +242,15 @@ namespace MixItUp.WPF.Windows.Currency
                     }
                 }
 
+                if (this.TradeEnableDisableToggleButton.IsChecked.GetValueOrDefault())
+                {
+                    if (string.IsNullOrEmpty(this.TradeCommandTextBox.Text))
+                    {
+                        await MessageBoxHelper.ShowMessageDialog("A command name must be specified for trading");
+                        return;
+                    }
+                }
+
                 if (this.inventory == null)
                 {
                     this.inventory = new UserInventoryViewModel();
@@ -256,6 +274,10 @@ namespace MixItUp.WPF.Windows.Currency
                 }
                 this.inventory.ItemsBoughtCommand = (CustomCommand)this.ShopItemsBoughtCommandButtonsControl.DataContext;
                 this.inventory.ItemsSoldCommand = (CustomCommand)this.ShopItemsSoldCommandButtonsControl.DataContext;
+
+                this.inventory.TradeEnabled = this.TradeEnableDisableToggleButton.IsChecked.GetValueOrDefault();
+                this.inventory.TradeCommand = this.TradeCommandTextBox.Text;
+                this.inventory.ItemsTradedCommand = (CustomCommand)this.TradeItemsBoughtCommandButtonsControl.DataContext;
 
                 await ChannelSession.SaveSettings();
 

@@ -133,6 +133,22 @@ namespace MixItUp.Base.Util
             }
         }
 
+        public static void RunBackgroundTask(CancellationToken token, Func<CancellationToken, Task> backgroundTask)
+        {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            Task.Run(async () =>
+            {
+                try
+                {
+                    await backgroundTask(token);
+                }
+                catch (ThreadAbortException) { return; }
+                catch (OperationCanceledException) { return; }
+                catch (Exception ex) { Logger.Log(ex); }
+            });
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        }
+
         public static void RunBackgroundTask(CancellationToken token, int delayInMilliseconds, Func<CancellationToken, Task> backgroundTask)
         {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed

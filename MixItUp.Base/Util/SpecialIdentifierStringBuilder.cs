@@ -215,6 +215,17 @@ namespace MixItUp.Base.Util
             return text;
         }
 
+        public static async Task<UserViewModel> GetUserFromArgument(string argument)
+        {
+            string username = argument.Replace("@", "");
+            UserModel argUserModel = await ChannelSession.MixerStreamerConnection.GetUser(username);
+            if (argUserModel != null)
+            {
+                return new UserViewModel(argUserModel);
+            }
+            return null;
+        }
+
         private string text;
         private bool encode;
 
@@ -534,7 +545,7 @@ namespace MixItUp.Base.Util
                     string currentArgumentSpecialIdentifierHeader = ArgSpecialIdentifierHeader + (i + 1);
                     if (this.ContainsSpecialIdentifier(currentArgumentSpecialIdentifierHeader))
                     {
-                        UserViewModel argUser = await this.GetUserFromArgument(arguments.ElementAt(i));
+                        UserViewModel argUser = await SpecialIdentifierStringBuilder.GetUserFromArgument(arguments.ElementAt(i));
                         if (argUser != null)
                         {
                             await this.HandleUserSpecialIdentifiers(argUser, currentArgumentSpecialIdentifierHeader);
@@ -569,7 +580,7 @@ namespace MixItUp.Base.Util
                 UserViewModel targetUser = null;
                 if (arguments != null && arguments.Count() > 0)
                 {
-                    targetUser = await this.GetUserFromArgument(arguments.ElementAt(0));
+                    targetUser = await SpecialIdentifierStringBuilder.GetUserFromArgument(arguments.ElementAt(0));
                 }
 
                 if (targetUser == null)
@@ -892,17 +903,6 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier(header + "albumimage", string.Empty);
                 this.ReplaceSpecialIdentifier(header + "username", "Nobody");
             }
-        }
-
-        private async Task<UserViewModel> GetUserFromArgument(string argument)
-        {
-            string username = argument.Replace("@", "");
-            UserModel argUserModel = await ChannelSession.MixerStreamerConnection.GetUser(username);
-            if (argUserModel != null)
-            {
-                return new UserViewModel(argUserModel);
-            }
-            return null;
         }
 
         private async Task ReplaceNumberBasedRegexSpecialIdentifier(string regex, Func<int, Task<string>> replacer)

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.User
@@ -105,6 +106,13 @@ namespace MixItUp.Base.ViewModel.User
         }
     }
 
+    public class UserInventoryTradeViewModel
+    {
+        public UserViewModel User { get; set; }
+        public UserInventoryItemViewModel Item { get; set; }
+        public int Amount { get; set; }
+    }
+
     [DataContract]
     public class UserInventoryViewModel : IEquatable<UserInventoryViewModel>
     {
@@ -130,16 +138,28 @@ namespace MixItUp.Base.ViewModel.User
 
         [DataMember]
         public bool ShopEnabled { get; set; }
-
         [DataMember]
         public string ShopCommand { get; set; }
         [DataMember]
         public Guid ShopCurrencyID { get; set; }
-
         [DataMember]
         public CustomCommand ItemsBoughtCommand { get; set; }
         [DataMember]
         public CustomCommand ItemsSoldCommand { get; set; }
+
+        [DataMember]
+        public bool TradeEnabled { get; set; }
+        [DataMember]
+        public string TradeCommand { get; set; }
+        [DataMember]
+        public CustomCommand ItemsTradedCommand { get; set; }
+
+        [JsonIgnore]
+        private UserInventoryTradeViewModel tradeSender = null;
+        [JsonIgnore]
+        private UserInventoryTradeViewModel tradeReceiver = null;
+        [JsonIgnore]
+        private CancellationTokenSource tradeTimeCheckToken = null;
 
         public UserInventoryViewModel()
         {
@@ -340,6 +360,167 @@ namespace MixItUp.Base.ViewModel.User
                     storeHelp.Append(this.ShopCommand + " sell <ITEM NAME> [AMOUNT] = Sells 1 or the amount specified of the item");
                     await ChannelSession.Services.Chat.Whisper(user.UserName, storeHelp.ToString());
                 }
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+        }
+
+        public async Task PerformTradeCommand(UserViewModel user, IEnumerable<string> arguments = null)
+        {
+            try
+            {
+                if (ChannelSession.Services.Chat != null && arguments != null)
+                {
+                    if (this.tradeReceiver == null && arguments.Count() >= 2)
+                    {
+                        UserViewModel targetUser = await SpecialIdentifierStringBuilder.GetUserFromArgument(arguments.First());
+                        if (targetUser == null)
+                        {
+                            await ChannelSession.Services.Chat.Whisper(user.UserName, "The specified user does not exist");
+                            return;
+                        }
+
+                        int amount = 1;
+                        IEnumerable<string> itemArgs = arguments.Skip(1);
+                        UserInventoryItemViewModel item = this.GetItem(string.Join(" ", itemArgs));
+
+                        if (item == null && itemArgs.Count() > 1)
+                        {
+                            itemArgs = itemArgs.Take(itemArgs.Count() - 1);
+                            item = this.GetItem(string.Join(" ", itemArgs));
+                            if (item != null)
+                            {
+                                if (!int.TryParse(arguments.Last(), out amount) || amount <= 0)
+                                {
+                                    await ChannelSession.Services.Chat.Whisper(user.UserName, "A valid amount greater than 0 must be specified");
+                                    return;
+                                }
+                            }
+                        }
+
+                        if (item == null)
+                        {
+                            await ChannelSession.Services.Chat.Whisper(user.UserName, "The item you specified does not exist");
+                            return;
+                        }
+
+                        if (!user.Data.HasInventoryAmount(this, item.Name, amount))
+                        {
+                            await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to trade", amount, item.Name));
+                            return;
+                        }
+
+                        this.tradeSender = new UserInventoryTradeViewModel()
+                        {
+                            User = user,
+                            Item = item,
+                            Amount = amount
+                        };
+
+                        this.tradeReceiver = new UserInventoryTradeViewModel()
+                        {
+                            User = targetUser
+                        };
+
+                        this.tradeTimeCheckToken = new CancellationTokenSource();
+                        AsyncRunner.RunBackgroundTask(this.tradeTimeCheckToken.Token, async (token) =>
+                        {
+                            await Task.Delay(60000);
+                            if (!token.IsCancellationRequested)
+                            {
+                                this.tradeSender = null;
+                                this.tradeReceiver = null;
+                                this.tradeTimeCheckToken = null;
+                                await ChannelSession.Services.Chat.SendMessage("The trade could not be completed in time and was cancelled...");
+                            }
+                        });
+
+                        await ChannelSession.Services.Chat.SendMessage(string.Format("@{0} has started a trade with @{1} for {2} {3}. Type {4} <ITEM NAME> [AMOUNT] in chat to reply back with your offer in the next 60 seconds.", this.tradeSender.User.UserName, this.tradeReceiver.User.UserName, this.tradeSender.Amount, this.tradeSender.Item.Name, this.TradeCommand));
+                        return;
+                    }
+                    else if (this.tradeSender != null && this.tradeReceiver != null && this.tradeReceiver.User.Equals(user) && this.tradeReceiver.Amount == 0 && arguments.Count() >= 1)
+                    {
+                        int amount = 1;
+                        IEnumerable<string> itemArgs = arguments.ToList();
+                        UserInventoryItemViewModel item = this.GetItem(string.Join(" ", itemArgs));
+
+                        if (item == null && itemArgs.Count() > 1)
+                        {
+                            itemArgs = itemArgs.Take(itemArgs.Count() - 1);
+                            item = this.GetItem(string.Join(" ", itemArgs));
+                            if (item != null)
+                            {
+                                if (!int.TryParse(arguments.Last(), out amount) || amount <= 0)
+                                {
+                                    await ChannelSession.Services.Chat.Whisper(user.UserName, "A valid amount greater than 0 must be specified");
+                                    return;
+                                }
+                            }
+                        }
+
+                        if (item == null)
+                        {
+                            await ChannelSession.Services.Chat.Whisper(user.UserName, "The item you specified does not exist");
+                            return;
+                        }
+
+                        if (!user.Data.HasInventoryAmount(this, item.Name, amount))
+                        {
+                            await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to trade", amount, item.Name));
+                            return;
+                        }
+
+                        this.tradeReceiver.Item = item;
+                        this.tradeReceiver.Amount = amount;
+
+                        await ChannelSession.Services.Chat.SendMessage(string.Format("@{0} has replied back to the offer by @{1} with {2} {3}. Type {4} in chat to accept the trade.", this.tradeReceiver.User.UserName, this.tradeSender.User.UserName, this.tradeReceiver.Amount, this.tradeReceiver.Item.Name, this.TradeCommand));
+                        return;
+                    }
+                    else if (this.tradeSender != null && this.tradeReceiver != null && this.tradeReceiver.Amount > 0 && this.tradeSender.User.Equals(user))
+                    {
+                        int senderItemMaxAmount = (this.tradeReceiver.Item.HasMaxAmount) ? this.tradeReceiver.Item.MaxAmount : this.DefaultMaxAmount;
+                        if ((this.tradeSender.User.Data.GetInventoryAmount(this, this.tradeReceiver.Item.Name) + this.tradeReceiver.Amount) > senderItemMaxAmount)
+                        {
+                            await ChannelSession.Services.Chat.Whisper(this.tradeSender.User.UserName, string.Format("You can only have {0} {1} in total", senderItemMaxAmount, this.tradeReceiver.Item.Name));
+                            return;
+                        }
+
+                        int receiverItemMaxAmount = (this.tradeSender.Item.HasMaxAmount) ? this.tradeSender.Item.MaxAmount : this.DefaultMaxAmount;
+                        if ((this.tradeReceiver.User.Data.GetInventoryAmount(this, this.tradeSender.Item.Name) + this.tradeSender.Amount) > receiverItemMaxAmount)
+                        {
+                            await ChannelSession.Services.Chat.Whisper(this.tradeReceiver.User.UserName, string.Format("You can only have {0} {1} in total", receiverItemMaxAmount, this.tradeSender.Item.Name));
+                            return;
+                        }
+
+                        this.tradeSender.User.Data.SubtractInventoryAmount(this, this.tradeSender.Item.Name, this.tradeSender.Amount);
+                        this.tradeReceiver.User.Data.AddInventoryAmount(this, this.tradeSender.Item.Name, this.tradeSender.Amount);
+
+                        this.tradeReceiver.User.Data.SubtractInventoryAmount(this, this.tradeReceiver.Item.Name, this.tradeReceiver.Amount);
+                        this.tradeSender.User.Data.AddInventoryAmount(this, this.tradeReceiver.Item.Name, this.tradeReceiver.Amount);
+
+                        if (this.ItemsTradedCommand != null)
+                        {
+                            Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
+                            specialIdentifiers["itemtotal"] = this.tradeSender.Amount.ToString();
+                            specialIdentifiers["itemname"] = this.tradeSender.Item.Name;
+                            specialIdentifiers["targetitemtotal"] = this.tradeReceiver.Amount.ToString();
+                            specialIdentifiers["targetitemname"] = this.tradeReceiver.Item.Name;
+                            await this.ItemsTradedCommand.Perform(user, arguments: new string[] { this.tradeReceiver.User.UserName }, extraSpecialIdentifiers: specialIdentifiers);
+                        }
+
+                        this.tradeSender = null;
+                        this.tradeReceiver = null;
+                        this.tradeTimeCheckToken.Cancel();
+                        this.tradeTimeCheckToken = null;
+
+                        return;
+                    }
+                    else if (this.tradeSender != null && this.tradeReceiver != null && !this.tradeReceiver.User.Equals(user))
+                    {
+                        await ChannelSession.Services.Chat.Whisper(user.UserName, "A trade is already underway, please wait until it is completed");
+                        return;
+                    }
+                }
+                await ChannelSession.Services.Chat.Whisper(user.UserName, this.TradeCommand + " <USERNAME> <ITEM NAME> [AMOUNT] = Trades 1 or the amount specified of the item to the specified user");
             }
             catch (Exception ex) { Logger.Log(ex); }
         }
