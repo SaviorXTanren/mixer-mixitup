@@ -38,7 +38,9 @@ namespace MixItUp.Base.Actions
         [Name("AND")]
         And,
         [Name("OR")]
-        Or
+        Or,
+        [Name("XOR")]
+        ExclusiveOr,
     }
 
     [DataContract]
@@ -137,6 +139,10 @@ namespace MixItUp.Base.Actions
             else if (this.Operator == ConditionalOperatorTypeEnum.Or)
             {
                 finalResult = results.Any(r => r);
+            }
+            else if (this.Operator == ConditionalOperatorTypeEnum.ExclusiveOr)
+            {
+                finalResult = results.Count(r => r) == 1;
             }
 
             if (finalResult)
