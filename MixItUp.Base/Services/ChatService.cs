@@ -99,8 +99,7 @@ namespace MixItUp.Base.Services
 
         public event EventHandler<Dictionary<string, uint>> OnPollEndOccurred = delegate { };
 
-        private LockedDictionary<string, PermissionsCommandBase> chatCommandTriggers = new LockedDictionary<string, PermissionsCommandBase>();
-        private LockedDictionary<string, PermissionsCommandBase> chatCommandWildcardTriggers = new LockedDictionary<string, PermissionsCommandBase>();
+        private LockedList<PermissionsCommandBase> chatCommand = new LockedList<PermissionsCommandBase>();
 
         private HashSet<string> userEntranceCommands = new HashSet<string>();
 
@@ -288,28 +287,11 @@ namespace MixItUp.Base.Services
 
         public void RebuildCommandTriggers()
         {
-            this.chatCommandTriggers.Clear();
-            this.chatCommandWildcardTriggers.Clear();
+            this.chatCommand.Clear();
             this.chatMenuCommands.Clear();
             foreach (ChatCommand command in ChannelSession.Settings.ChatCommands.Where(c => c.IsEnabled))
             {
-                if (command.Wildcards)
-                {
-                    foreach (string trigger in command.CommandTriggers)
-                    {
-                        string t = Regex.Escape(trigger);
-                        t = t.Replace("\\*", "*");
-                        this.chatCommandWildcardTriggers[t] = command;
-                    }
-                }
-                else
-                {
-                    foreach (string trigger in command.CommandTriggers)
-                    {
-                        this.chatCommandTriggers[trigger] = command;
-                    }
-                }
-
+                this.chatCommand.Add(command);
                 if (command.Requirements.Settings.ShowOnChatMenu)
                 {
                     this.chatMenuCommands.Add(command);
@@ -318,18 +300,12 @@ namespace MixItUp.Base.Services
 
             foreach (GameCommandBase command in ChannelSession.Settings.GameCommands.Where(c => c.IsEnabled))
             {
-                foreach (string trigger in command.CommandTriggers)
-                {
-                    this.chatCommandTriggers[trigger] = command;
-                }
+                this.chatCommand.Add(command);
             }
 
             foreach (PreMadeChatCommand command in ChannelSession.PreMadeChatCommands.Where(c => c.IsEnabled))
             {
-                foreach (string trigger in command.CommandTriggers)
-                {
-                    this.chatCommandTriggers[trigger] = command;
-                }
+                this.chatCommand.Add(command);
             }
 
             this.ChatCommandsReprocessed(this, new EventArgs());
@@ -458,51 +434,22 @@ namespace MixItUp.Base.Services
                         return;
                     }
 
-                    Logger.Log(LogLevel.Debug, string.Format("Checking Message For Command - {0}", message.ToString()));
-
-                    Dictionary<string, PermissionsCommandBase> commandsToCheck = this.chatCommandTriggers.ToDictionary();
-                    foreach (PermissionsCommandBase command in message.User.Data.CustomCommands.Where(c => c.IsEnabled))
+                    if (this.chatCommand.Count > 0)
                     {
-                        foreach (string trigger in command.CommandTriggers)
+                        Logger.Log(LogLevel.Debug, string.Format("Checking Message For Command - {0}", message.ToString()));
+
+                        List<PermissionsCommandBase> commands = this.chatCommand.ToList();
+                        foreach (PermissionsCommandBase command in message.User.Data.CustomCommands.Where(c => c.IsEnabled))
                         {
-                            commandsToCheck[trigger] = command;
+                            commands.Add(command);
                         }
-                    }
 
-                    if (commandsToCheck.Keys.Count() > 0)
-                    {
-                        bool commandTriggered = false;
-
-                        int maxTriggerLength = commandsToCheck.Keys.Max(t => t.Length);
-                        IEnumerable<string> messageParts = message.PlainTextMessage.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                        for (int i = 0; i < messageParts.Count(); i++)
+                        foreach (PermissionsCommandBase command in commands)
                         {
-                            string commandTriggerCheck = string.Join(" ", messageParts.Take(i + 1));
-                            if (commandTriggerCheck.Length > maxTriggerLength)
+                            if (command.DoesTextMatchCommand(message.PlainTextMessage, out IEnumerable<string> arguments))
                             {
-                                break;  // Early shorting logic
-                            }
-
-                            if (commandsToCheck.ContainsKey(commandTriggerCheck))
-                            {
-                                await this.RunCommand(message, commandsToCheck[commandTriggerCheck], messageParts.Skip(i + 1));
-                                commandTriggered = true;
+                                await this.RunCommand(message, command, arguments);
                                 break;
-                            }
-                        }
-
-                        if (!commandTriggered && this.chatCommandWildcardTriggers.Count > 0)
-                        {
-                            foreach (var commandToCheck in this.chatCommandWildcardTriggers.Keys.ToList())
-                            {
-                                Match match = Regex.Match(message.PlainTextMessage, commandToCheck);
-                                if (match != null && match.Success)
-                                {
-                                    IEnumerable<string> arguments = message.PlainTextMessage.Substring(match.Index, match.Length).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                                    await this.RunCommand(message, this.chatCommandWildcardTriggers[commandToCheck], arguments);
-                                    commandTriggered = true;
-                                    break;
-                                }
                             }
                         }
                     }

@@ -17,7 +17,6 @@ namespace MixItUp.WPF.Controls.Command
     {
         private const string ChatTriggersNoExclamationHintAssist = "Chat Trigger(s) (No \"!\" needed, space seperated, semi-colon for multi-word)";
         private const string ChatTriggersHintAssist = "Chat Trigger(s) (Space seperated, semi-colon for multi-word)";
-        private const string ChatTriggersWildcardHintAssist = "Chat Trigger(s) (\"*\" for wildcards, semi-colon for multi-word)";
 
         private ChatCommand command;
 
@@ -44,6 +43,7 @@ namespace MixItUp.WPF.Controls.Command
                 this.CommandGroupComboBox.Text = this.command.GroupName;
                 this.ChatCommandTextBox.Text = this.command.CommandsString;
                 this.IncludeExclamationInCommandsToggleButton.IsChecked = this.command.IncludeExclamationInCommands;
+                this.WildcardsToggleButton.IsChecked = this.command.Wildcards;
                 this.UnlockedControl.Unlocked = this.command.Unlocked;
                 this.Requirements.SetRequirements(this.command.Requirements);
             }
@@ -164,11 +164,11 @@ namespace MixItUp.WPF.Controls.Command
 
             if (commandStrings.Contains(";"))
             {
-                return new List<string>(commandStrings.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries));
+                return commandStrings.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
             }
             else
             {
-                return new List<string>(commandStrings.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
+                return commandStrings.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
             }
         }
 
@@ -189,7 +189,7 @@ namespace MixItUp.WPF.Controls.Command
             if (this.WildcardsToggleButton.IsChecked.GetValueOrDefault())
             {
                 this.IncludeExclamationInCommandsToggleButton.IsChecked = this.IncludeExclamationInCommandsToggleButton.IsEnabled = false;
-                HintAssist.SetHint(this.ChatCommandTextBox, ChatTriggersWildcardHintAssist);
+                HintAssist.SetHint(this.ChatCommandTextBox, ChatTriggersHintAssist);
             }
             else
             {
