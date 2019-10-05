@@ -68,7 +68,7 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <Button Grid.Column="0" Visibility="{Binding CanBeRemoved, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" />
+                        <Button Grid.Column="0" Visibility="{Binding CanBeRemoved, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Command="{Binding DeleteCommand}" />
 
                         <TextBox Grid.Column="2" Text="{Binding Value1}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="First Value" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 

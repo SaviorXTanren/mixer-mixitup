@@ -22,6 +22,7 @@ namespace MixItUp.WPF.Controls.Actions
         public ConditionalClauseViewModel(ConditionalClauseModel clause, ConditionalActionControl actionControl)
         {
             this.Clause = clause;
+            this.actionControl = actionControl;
 
             this.DeleteCommand = this.CreateCommand((parameter) =>
             {
