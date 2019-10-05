@@ -15,13 +15,15 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Card.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         </ResourceDictionary>
     </local:ActionControlBase.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
+            <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
@@ -32,44 +34,62 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            
+
             <TextBlock Grid.Column="0" VerticalAlignment="Center">Disable Case Sensitivity:</TextBlock>
             <ToggleButton Grid.Column="2" x:Name="IgnoreCasingToggleButton" />
 
-            <TextBlock Grid.Column="4">
+            <ComboBox Grid.Column="4" x:Name="OperatorTypeComboBox" MaterialDesign:HintAssist.Hint="Operator" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="80" />
+
+            <Button Grid.Column="6" x:Name="AddClauseButton" Click="AddClauseButton_Click">Add Clause</Button>
+
+            <TextBlock Grid.Column="8">
                 <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">Special Identifiers Reference</Hyperlink>
             </TextBlock>
         </Grid>
 
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+        <ItemsControl x:Name="ClausesItemsControl" Grid.Row="2" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="0,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="30" />
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" x:Name="Value1TextBox" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="First Value" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <Button Grid.Column="0" Visibility="{Binding CanBeRemoved, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" />
 
-            <ComboBox x:Name="ComparisionTypeComboBox" SelectionChanged="ComparisionTypeComboBox_SelectionChanged" Grid.Column="2" MaterialDesign:HintAssist.Hint="Compare" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="80" />
+                        <TextBox Grid.Column="2" Text="{Binding Value1}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="First Value" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox Grid.Column="4" x:Name="Value2TextBox" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Second Value" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <ComboBox Grid.Column="4" ItemsSource="{Binding ComparisonTypes}" SelectedItem="{Binding ComparisionTypeString}" MaterialDesign:HintAssist.Hint="Compare" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="80" />
 
-            <Grid x:Name="BetweenValuesGrid" Grid.Column="4" Visibility="Collapsed">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                
-                <TextBox Grid.Column="0" x:Name="MinValue2TextBox" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Min Value" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                <TextBox Grid.Column="2" x:Name="MaxValue3TextBox" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Max Value" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-            </Grid>
-        </Grid>
+                        <TextBox Grid.Column="6" Text="{Binding Value2}" Visibility="{Binding IsBetweenOperatorNotSelected, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Second Value" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                        <Grid Grid.Column="6" Visibility="{Binding IsBetweenOperatorSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox Grid.Column="0" Text="{Binding Value2}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Min Value" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                            <TextBox Grid.Column="2" Text="{Binding Value3}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Max Value" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        </Grid>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
 
         <CommandControls:CommandReferenceControl x:Name="CommandReference" Grid.Row="4" />
 

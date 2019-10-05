@@ -198,6 +198,11 @@ namespace MixItUp.WPF.Controls.MainControls
                     string args = message.PlainTextMessage.Replace(inventory.ShopCommand, "");
                     await inventory.PerformShopCommand(message.User, args.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
                 }
+                else if (inventory.TradeEnabled && message.PlainTextMessage.StartsWith(inventory.TradeCommand))
+                {
+                    string args = message.PlainTextMessage.Replace(inventory.TradeCommand, "");
+                    await inventory.PerformTradeCommand(message.User, args.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
+                }
             }
         }
     }

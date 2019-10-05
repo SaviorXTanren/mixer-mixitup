@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -30,6 +31,8 @@ namespace MixItUp.Base.Commands
     [DataContract]
     public abstract class CommandBase : IComparable, IComparable<CommandBase>, IEquatable<CommandBase>
     {
+        public const string CommandMatchingRegexFormat = "^({0})(\\s|$)";
+
         private static Dictionary<Guid, long> commandUses = new Dictionary<Guid, long>();
 
         public static Dictionary<Guid, long> GetCommandUses()
@@ -123,21 +126,7 @@ namespace MixItUp.Base.Commands
         public virtual bool IsEditable { get { return true; } }
 
         [JsonIgnore]
-        public string CommandsString
-        {
-            get
-            {
-                if (this.Commands.Count > 0 && this.Commands.Any(s => s.Contains(" ")))
-                {
-                    if (this.Commands.Count > 1)
-                    {
-                        return string.Join(";", this.Commands);
-                    }
-                    return this.Commands.First() + ";";
-                }
-                return string.Join(" ", this.Commands);
-            }
-        }
+        public virtual string CommandsString { get { return string.Join(" ", this.Commands); } }
 
         [JsonIgnore]
         public virtual HashSet<string> CommandTriggers { get { return this.Commands; } }
@@ -242,6 +231,27 @@ namespace MixItUp.Base.Commands
                 return ChannelSession.Settings.CommandGroups[this.GroupName];
             }
             return null;
+        }
+
+        public virtual bool DoesTextMatchCommand(string text, out IEnumerable<string> arguments)
+        {
+            return this.DoesTextMatchCommand(text, CommandBase.CommandMatchingRegexFormat, out arguments);
+        }
+
+        public bool DoesTextMatchCommand(string text, string commandMatchingRegexFormat, out IEnumerable<string> arguments)
+        {
+            arguments = null;
+            foreach (string command in this.CommandTriggers)
+            {
+                string regex = string.Format(commandMatchingRegexFormat, Regex.Escape(command));
+                Match match = Regex.Match(text, regex);
+                if (match != null && match.Success)
+                {
+                    arguments = text.Substring(match.Index + match.Length).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    return true;
+                }
+            }
+            return false;
         }
 
         protected virtual Task<bool> PerformPreChecks(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)

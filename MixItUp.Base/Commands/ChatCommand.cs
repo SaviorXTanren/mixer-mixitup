@@ -1,12 +1,9 @@
 ﻿using MixItUp.Base.Model.Import;
-using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Requirement;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace MixItUp.Base.Commands
@@ -14,9 +11,9 @@ namespace MixItUp.Base.Commands
     [DataContract]
     public class ChatCommand : PermissionsCommandBase
     {
-        private static SemaphoreSlim chatCommandPerformSemaphore = new SemaphoreSlim(1);
+        public const string CommandWildcardMatchingRegexFormat = "\\s?{0}\\s?";
 
-        private const string CommandMatchingRegexFormat = "^{0}*";
+        private static SemaphoreSlim chatCommandPerformSemaphore = new SemaphoreSlim(1);
 
         [DataMember]
         public bool IncludeExclamationInCommands { get; set; }
@@ -53,6 +50,23 @@ namespace MixItUp.Base.Commands
         }
 
         [JsonIgnore]
+        public override string CommandsString
+        {
+            get
+            {
+                if (this.Commands.Any(s => s.Contains(" ")))
+                {
+                    if (this.Commands.Count > 1)
+                    {
+                        return string.Join(";", this.Commands);
+                    }
+                    return this.Commands.First() + ";";
+                }
+                return base.CommandsString;
+            }
+        }
+
+        [JsonIgnore]
         public override HashSet<string> CommandTriggers
         {
             get
@@ -66,21 +80,18 @@ namespace MixItUp.Base.Commands
             }
         }
 
-        protected override SemaphoreSlim AsyncSemaphore { get { return ChatCommand.chatCommandPerformSemaphore; } }
-
-        public bool DoesTextMatchCommand(string text, out IEnumerable<string> arguments)
+        public override bool DoesTextMatchCommand(string text, out IEnumerable<string> arguments)
         {
-            arguments = null;
-            foreach (string command in this.CommandTriggers)
+            if (this.Wildcards)
             {
-                Match match = Regex.Match(text, string.Format(CommandMatchingRegexFormat, command));
-                if (match != null && match.Success)
-                {
-                    arguments = text.Substring(match.Index + match.Length).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                    return true;
-                }
+                return this.DoesTextMatchCommand(text, ChatCommand.CommandWildcardMatchingRegexFormat, out arguments);
             }
-            return false;
+            else
+            {
+                return base.DoesTextMatchCommand(text, out arguments);
+            }
         }
+
+        protected override SemaphoreSlim AsyncSemaphore { get { return ChatCommand.chatCommandPerformSemaphore; } }
     }
 }
