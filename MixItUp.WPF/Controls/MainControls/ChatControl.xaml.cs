@@ -66,6 +66,7 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 this.defaultContextMenuItems.Add(item);
             }
+            this.ViewModel_ContextMenuCommandsChanged(this, new EventArgs());
         }
 
         protected override async Task OnVisibilityChanged()
