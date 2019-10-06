@@ -57,7 +57,7 @@ namespace MixItUp.Base.Services
 
                 Amount = Math.Round(this.Amount, 2),
 
-                DateTime = DateTimeOffsetExtensions.FromUTCUnixTimeMilliseconds(this.CreatedAt),
+                DateTime = DateTimeOffsetExtensions.FromUTCUnixTimeSeconds(this.CreatedAt),
             };
         }
     }
