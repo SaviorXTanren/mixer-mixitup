@@ -21,6 +21,31 @@ namespace MixItUp.Base.Services
 
         [JsonProperty("slug")]
         public string Slug { get; set; }
+
+        [JsonProperty("url")]
+        public string URL { get; set; }
+    }
+
+    [DataContract]
+    public class TiltifyTeam
+    {
+        [JsonProperty("id")]
+        public int ID { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("slug")]
+        public string Slug { get; set; }
+
+        [JsonProperty("url")]
+        public string URL { get; set; }
+
+        [JsonProperty("totalAmountRaised")]
+        public double TotalAmountRaised { get; set; }
+
+        [JsonProperty("role")]
+        public string Role { get; set; }
     }
 
     [DataContract]
@@ -35,6 +60,15 @@ namespace MixItUp.Base.Services
         [JsonProperty("slug")]
         public string Slug { get; set; }
 
+        [JsonProperty("startsAt")]
+        public long StartsAtMilliseconds { get; set; }
+
+        [JsonProperty("endsAt")]
+        public long EndsAtMilliseconds { get; set; }
+
+        [JsonProperty("description")]
+        public string Description { get; set; }
+
         [JsonProperty("fundraiserGoalAmount")]
         public double FundraiserGoalAmount { get; set; }
 
@@ -44,20 +78,41 @@ namespace MixItUp.Base.Services
         [JsonProperty("supportingAmountRaised")]
         public double SupportingAmountRaised { get; set; }
 
+        [JsonProperty("amountRaised")]
+        public double AmountRaised { get; set; }
+
         [JsonProperty("totalAmountRaised")]
         public double TotalAmountRaised { get; set; }
 
         [JsonProperty("supportable")]
         public bool Supportable { get; set; }
 
+        [JsonProperty("status")]
+        public string Status { get; set; }
+
+        [JsonProperty("type")]
+        public string Type { get; set; }
+
         [JsonProperty("user")]
         public TiltifyUser User { get; set; }
+
+        [JsonProperty("teamId")]
+        public int TeamID { get; set; }
+
+        [JsonProperty("team")]
+        public TiltifyTeam Team { get; set; }
 
         [JsonIgnore]
         public string CampaignURL { get { return string.Format("https://tiltify.com/@{0}/{1}", this.User.Slug, this.Slug); } }
 
         [JsonIgnore]
         public string DonateURL { get { return string.Format("{0}/donate", this.CampaignURL); } }
+
+        [JsonIgnore]
+        public DateTimeOffset Starts { get { return DateTimeOffsetExtensions.FromUTCUnixTimeMilliseconds(this.StartsAtMilliseconds); } }
+
+        [JsonIgnore]
+        public DateTimeOffset Ends { get { return DateTimeOffsetExtensions.FromUTCUnixTimeMilliseconds(this.EndsAtMilliseconds); } }
     }
 
     [DataContract]
@@ -133,7 +188,11 @@ namespace MixItUp.Base.Services
 
         Task<TiltifyUser> GetUser();
 
-        Task<IEnumerable<TiltifyCampaign>> GetCampaigns(TiltifyUser user);
+        Task<IEnumerable<TiltifyCampaign>> GetUserCampaigns(TiltifyUser user);
+
+        Task<IEnumerable<TiltifyTeam>> GetUserTeams(TiltifyUser user);
+
+        Task<IEnumerable<TiltifyCampaign>> GetTeamCampaigns(TiltifyTeam team);
 
         Task<IEnumerable<TiltifyDonation>> GetCampaignDonations(TiltifyCampaign campaign);
 

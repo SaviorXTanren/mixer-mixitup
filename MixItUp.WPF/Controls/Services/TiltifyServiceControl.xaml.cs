@@ -3,6 +3,7 @@ using MixItUp.Base.Services;
 using MixItUp.Desktop.Services;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.OAuth;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -109,10 +110,30 @@ namespace MixItUp.WPF.Controls.Services
         private async Task RefreshCampaigns()
         {
             this.campaigns.Clear();
-            IEnumerable<TiltifyCampaign> campaigns = await ChannelSession.Services.Tiltify.GetCampaigns(await ChannelSession.Services.Tiltify.GetUser());
-            foreach (TiltifyCampaign campaign in campaigns)
+
+            TiltifyUser user = await ChannelSession.Services.Tiltify.GetUser();
+
+            Dictionary<int, TiltifyCampaign> campaignDictionary = new Dictionary<int, TiltifyCampaign>();
+
+            foreach (TiltifyCampaign campaign in await ChannelSession.Services.Tiltify.GetUserCampaigns(user))
             {
-                this.campaigns.Add(campaign);
+                campaignDictionary[campaign.ID] = campaign;
+            }
+
+            foreach (TiltifyTeam team in await ChannelSession.Services.Tiltify.GetUserTeams(user))
+            {
+                foreach (TiltifyCampaign campaign in await ChannelSession.Services.Tiltify.GetTeamCampaigns(team))
+                {
+                    campaignDictionary[campaign.ID] = campaign;
+                }
+            }
+
+            foreach (TiltifyCampaign campaign in campaignDictionary.Values)
+            {
+                if (campaign.Ends > DateTimeOffset.Now)
+                {
+                    this.campaigns.Add(campaign);
+                }
             }
         }
 
