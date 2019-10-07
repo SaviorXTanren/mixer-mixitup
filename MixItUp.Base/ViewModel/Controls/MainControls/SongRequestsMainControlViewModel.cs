@@ -41,7 +41,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         public ICommand BanCommand { get; private set; }
         public ICommand ClearQueueCommand { get; private set; }
 
-        public SongRequestsMainControlViewModel(MainWindowViewModel windowViewModel)
+        public SongRequestsMainControlViewModel(WindowViewModelBase windowViewModel)
             : base(windowViewModel)
         {
             GlobalEvents.OnSongRequestsChangedOccurred += GlobalEvents_OnSongRequestsChangedOccurred;

@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.ViewModel.Controls.MainControls;
-using MixItUp.Base.ViewModel.Window.Dashboard;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
@@ -19,7 +18,7 @@ namespace MixItUp.WPF.Controls.Dashboard
 
         protected override async Task InitializeInternal()
         {
-            this.DataContext = this.viewModel = new GameQueueMainControlViewModel((DashboardWindowViewModel)this.Window.ViewModel);
+            this.DataContext = this.viewModel = new GameQueueMainControlViewModel(this.Window.ViewModel);
             await this.viewModel.OnLoaded();
         }
 
