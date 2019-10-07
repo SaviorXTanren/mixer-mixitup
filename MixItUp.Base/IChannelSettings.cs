@@ -206,6 +206,7 @@ namespace MixItUp.Base
 
         DashboardLayoutTypeEnum DashboardLayout { get; set; }
         List<DashboardItemTypeEnum> DashboardItems { get; set; }
+        List<Guid> DashboardQuickCommands { get; set; }
 
         string TelemetryUserId { get; set; }
 

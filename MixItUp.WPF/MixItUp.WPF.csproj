@@ -522,6 +522,9 @@
     <Compile Include="Controls\Dialogs\ClockDialogControl.xaml.cs">
       <DependentUpon>ClockDialogControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Dialogs\CommandSelectorDialogControl.xaml.cs">
+      <DependentUpon>CommandSelectorDialogControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Dialogs\InteractiveJoystickSetupTestDialogControl.xaml.cs">
       <DependentUpon>InteractiveJoystickSetupTestDialogControl.xaml</DependentUpon>
     </Compile>
@@ -1267,6 +1270,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Dialogs\ClockDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dialogs\CommandSelectorDialogControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

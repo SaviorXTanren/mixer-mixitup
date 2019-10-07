@@ -363,6 +363,8 @@ namespace MixItUp.Desktop
         public DashboardLayoutTypeEnum DashboardLayout { get; set; }
         [JsonProperty]
         public List<DashboardItemTypeEnum> DashboardItems { get; set; } = new List<DashboardItemTypeEnum>();
+        [JsonProperty]
+        public List<Guid> DashboardQuickCommands { get; set; } = new List<Guid>();
 
         [JsonProperty]
         public string TelemetryUserId { get; set; }
@@ -584,9 +586,8 @@ namespace MixItUp.Desktop
             this.FilteredWords = new LockedList<string>(this.filteredWordsInternal);
             this.BannedWords = new LockedList<string>(this.bannedWordsInternal);
             this.MixPlayUserGroups = new LockedDictionary<uint, List<MixPlayUserGroupModel>>(this.mixPlayUserGroupsInternal);
-            #pragma warning disable CS0612 // Type or member is obsolete
             this.DashboardItems = new List<DashboardItemTypeEnum>() { DashboardItemTypeEnum.None, DashboardItemTypeEnum.None, DashboardItemTypeEnum.None, DashboardItemTypeEnum.None };
-            #pragma warning restore CS0612 // Type or member is obsolete
+            this.DashboardQuickCommands = new List<Guid>() { Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty };
 
             if (File.Exists(DesktopChannelSettings.CommunityFilteredWordsFilePath))
             {
