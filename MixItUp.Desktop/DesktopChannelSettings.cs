@@ -14,6 +14,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.Base.ViewModel.Window.Dashboard;
 using MixItUp.Desktop.Database;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -359,6 +360,11 @@ namespace MixItUp.Desktop
         public Dictionary<uint, JObject> CustomMixPlaySettings { get; set; }
 
         [JsonProperty]
+        public DashboardLayoutTypeEnum DashboardLayout { get; set; }
+        [JsonProperty]
+        public List<DashboardItemTypeEnum> DashboardItems { get; set; } = new List<DashboardItemTypeEnum>();
+
+        [JsonProperty]
         public string TelemetryUserId { get; set; }
 
         [JsonProperty]
@@ -578,6 +584,9 @@ namespace MixItUp.Desktop
             this.FilteredWords = new LockedList<string>(this.filteredWordsInternal);
             this.BannedWords = new LockedList<string>(this.bannedWordsInternal);
             this.MixPlayUserGroups = new LockedDictionary<uint, List<MixPlayUserGroupModel>>(this.mixPlayUserGroupsInternal);
+            #pragma warning disable CS0612 // Type or member is obsolete
+            this.DashboardItems = new List<DashboardItemTypeEnum>() { DashboardItemTypeEnum.None, DashboardItemTypeEnum.None, DashboardItemTypeEnum.None, DashboardItemTypeEnum.None };
+            #pragma warning restore CS0612 // Type or member is obsolete
 
             if (File.Exists(DesktopChannelSettings.CommunityFilteredWordsFilePath))
             {

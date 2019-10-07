@@ -494,6 +494,18 @@
     <Compile Include="Controls\Currency\UserInventoryEditorControl.xaml.cs">
       <DependentUpon>UserInventoryEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Dashboard\ChatDashboardControl.xaml.cs">
+      <DependentUpon>ChatDashboardControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Dashboard\GameQueueDashboardControl.xaml.cs">
+      <DependentUpon>GameQueueDashboardControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Dashboard\NotificationsDashboardControl.xaml.cs">
+      <DependentUpon>NotificationsDashboardControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Dashboard\SongRequestsDashboardControl.xaml.cs">
+      <DependentUpon>SongRequestsDashboardControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Dialogs\BasicTextEntryDialogControl.xaml.cs">
       <DependentUpon>BasicTextEntryDialogControl.xaml</DependentUpon>
     </Compile>
@@ -977,6 +989,9 @@
     <Compile Include="Windows\Currency\InventoryWindow.xaml.cs">
       <DependentUpon>InventoryWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\Dashboard\DashboardWindow.xaml.cs">
+      <DependentUpon>DashboardWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Favorites\FavoriteGroupWindow.xaml.cs">
       <DependentUpon>FavoriteGroupWindow.xaml</DependentUpon>
     </Compile>
@@ -1211,6 +1226,22 @@
     <Page Include="Controls\Currency\UserInventoryEditorControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Dashboard\ChatDashboardControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dashboard\GameQueueDashboardControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dashboard\NotificationsDashboardControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dashboard\SongRequestsDashboardControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Dialogs\BasicTextEntryDialogControl.xaml">
       <SubType>Designer</SubType>
@@ -1900,6 +1931,10 @@
     <Page Include="Windows\Currency\InventoryWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\Dashboard\DashboardWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\Favorites\FavoriteGroupWindow.xaml">
       <SubType>Designer</SubType>

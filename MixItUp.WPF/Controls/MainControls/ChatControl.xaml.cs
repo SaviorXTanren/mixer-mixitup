@@ -10,6 +10,7 @@ using MixItUp.Base.ViewModel.Controls.MainControls;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModel.Window;
 using MixItUp.WPF.Controls.Dialogs;
+using MixItUp.WPF.Windows.Dashboard;
 using MixItUp.WPF.Windows.Users;
 using StreamingClient.Base.Util;
 using System;
@@ -78,6 +79,12 @@ namespace MixItUp.WPF.Controls.MainControls
         private void Messages_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             this.ChatList.Items.Refresh();
+        }
+
+        private void DashboardButton_Click(object sender, RoutedEventArgs e)
+        {
+            DashboardWindow window = new DashboardWindow();
+            window.Show();
         }
 
         private void ViewModel_GifSkillOccured(object sender, MixerSkillChatMessageViewModel skillMessage)

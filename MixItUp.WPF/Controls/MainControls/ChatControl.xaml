@@ -57,6 +57,8 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
+                        <Button x:Name="DashboardButton" Grid.Column="0" Width="100" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" Click="DashboardButton_Click">Dashboard</Button>
+                        
                         <Button Command="{Binding ClearChatCommand}" Grid.Column="2" Width="100" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}">Clear Chat</Button>
 
                         <Button Command="{Binding EnableDisableChatCommand}" Content="{Binding EnableDisableButtonText}" Grid.Column="4" Width="115" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" />
