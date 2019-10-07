@@ -1,6 +1,7 @@
 ﻿using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Window.Dashboard
 {
@@ -153,6 +154,13 @@ namespace MixItUp.Base.ViewModel.Window.Dashboard
         }
         public object ItemFour { get { return this.GetItemForType(this.ItemTypeFour); } }
 
+        protected override async Task OnLoadedInternal()
+        {
+            this.NotifyPropertiesChanged();
+
+            await base.OnLoadedInternal();
+        }
+
         private void AssignType(DashboardItemTypeEnum type, int index)
         {
             for (int i = 0; i < ChannelSession.Settings.DashboardItems.Count; i++)
@@ -164,18 +172,7 @@ namespace MixItUp.Base.ViewModel.Window.Dashboard
             }
             ChannelSession.Settings.DashboardItems[index] = type;
 
-            this.NotifyPropertyChanged("ItemOne");
-            this.NotifyPropertyChanged("ItemTypeOne");
-            this.NotifyPropertyChanged("ItemTypeOneString");
-            this.NotifyPropertyChanged("ItemTwo");
-            this.NotifyPropertyChanged("ItemTypeTwo");
-            this.NotifyPropertyChanged("ItemTypeTwoString");
-            this.NotifyPropertyChanged("ItemThree");
-            this.NotifyPropertyChanged("ItemTypeThree");
-            this.NotifyPropertyChanged("ItemTypeThreeString");
-            this.NotifyPropertyChanged("ItemFour");
-            this.NotifyPropertyChanged("ItemTypeFour");
-            this.NotifyPropertyChanged("ItemTypeFourString");
+            this.NotifyPropertiesChanged();
         }
 
         private object GetItemForType(DashboardItemTypeEnum type)
@@ -188,6 +185,22 @@ namespace MixItUp.Base.ViewModel.Window.Dashboard
                 case DashboardItemTypeEnum.SongRequests: return this.SongRequestsControl;
             }
             return null;
+        }
+
+        private void NotifyPropertiesChanged()
+        {
+            this.NotifyPropertyChanged("ItemOne");
+            this.NotifyPropertyChanged("ItemTypeOne");
+            this.NotifyPropertyChanged("ItemTypeOneString");
+            this.NotifyPropertyChanged("ItemTwo");
+            this.NotifyPropertyChanged("ItemTypeTwo");
+            this.NotifyPropertyChanged("ItemTypeTwoString");
+            this.NotifyPropertyChanged("ItemThree");
+            this.NotifyPropertyChanged("ItemTypeThree");
+            this.NotifyPropertyChanged("ItemTypeThreeString");
+            this.NotifyPropertyChanged("ItemFour");
+            this.NotifyPropertyChanged("ItemTypeFour");
+            this.NotifyPropertyChanged("ItemTypeFourString");
         }
     }
 }

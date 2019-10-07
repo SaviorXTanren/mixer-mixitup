@@ -77,9 +77,9 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <ContentControl Grid.Column="0" Content="{Binding ItemOne}" />
-            <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" Width="5" />
-            <ContentControl Grid.Column="2" Content="{Binding ItemTwo}" />
+            <ContentControl Grid.Column="0" Content="{Binding ItemOne}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+            <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" Width="5" ResizeDirection="Columns" ResizeBehavior="PreviousAndNext" />
+            <ContentControl Grid.Column="2" Content="{Binding ItemTwo}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
         </Grid>
 
         <Grid Grid.Row="1" Visibility="{Binding IsLayoutThreeRight, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -89,8 +89,8 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <ContentControl Grid.Column="0" Content="{Binding ItemOne}" />
-            <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" Width="5" />
+            <ContentControl Grid.Column="0" Content="{Binding ItemOne}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+            <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" Width="5" ResizeDirection="Columns" ResizeBehavior="PreviousAndNext" />
 
             <Grid Grid.Column="2">
                 <Grid.RowDefinitions>
@@ -98,10 +98,10 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                
-                <ContentControl Grid.Row="0" Content="{Binding ItemTwo}" />
+
+                <ContentControl Grid.Row="0" Content="{Binding ItemTwo}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
                 <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Height="5" />
-                <ContentControl Grid.Row="2" Content="{Binding ItemThree}" />
+                <ContentControl Grid.Row="2" Content="{Binding ItemThree}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
             </Grid>
         </Grid>
 
@@ -119,13 +119,13 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <ContentControl Grid.Row="0" Content="{Binding ItemTwo}" />
-                <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Height="5" />
-                <ContentControl Grid.Row="2" Content="{Binding ItemThree}" />
+                <ContentControl Grid.Row="0" Content="{Binding ItemTwo}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+                <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Height="5" ResizeDirection="Rows" ResizeBehavior="PreviousAndNext" />
+                <ContentControl Grid.Row="2" Content="{Binding ItemThree}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
             </Grid>
 
-            <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" Width="5" />
-            <ContentControl Grid.Column="2" Content="{Binding ItemOne}" />
+            <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" Width="5" ResizeDirection="Columns" ResizeBehavior="PreviousAndNext" />
+            <ContentControl Grid.Column="2" Content="{Binding ItemOne}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
         </Grid>
 
         <Grid Grid.Row="1" Visibility="{Binding IsLayoutFour, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -142,12 +142,12 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <ContentControl Grid.Row="0" Content="{Binding ItemOne}" />
-                <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Height="5" />
-                <ContentControl Grid.Row="2" Content="{Binding ItemThree}" />
+                <ContentControl Grid.Row="0" Content="{Binding ItemOne}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+                <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Height="5" ResizeDirection="Rows" ResizeBehavior="PreviousAndNext" />
+                <ContentControl Grid.Row="2" Content="{Binding ItemThree}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
             </Grid>
 
-            <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" Width="5" />
+            <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" Width="5" ResizeDirection="Columns" ResizeBehavior="PreviousAndNext" />
 
             <Grid Grid.Column="2">
                 <Grid.RowDefinitions>
@@ -156,9 +156,9 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <ContentControl Grid.Row="0" Content="{Binding ItemTwo}" />
-                <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Height="5" />
-                <ContentControl Grid.Row="2" Content="{Binding ItemFour}" />
+                <ContentControl Grid.Row="0" Content="{Binding ItemTwo}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+                <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Height="5" ResizeDirection="Rows" ResizeBehavior="PreviousAndNext" />
+                <ContentControl Grid.Row="2" Content="{Binding ItemFour}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
             </Grid>
         </Grid>
 
