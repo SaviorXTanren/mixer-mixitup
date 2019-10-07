@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Controls.MainControls
 {
-    public class GamesMainControlViewModel : MainControlViewModelBase
+    public class GamesMainControlViewModel : WindowControlViewModelBase
     {
         public bool CurrenciesExist { get { return ChannelSession.Settings.Currencies.Values.Any(c => !c.IsRank); } }
         public bool NoCurrenciesMade { get { return !this.CurrenciesExist; } }

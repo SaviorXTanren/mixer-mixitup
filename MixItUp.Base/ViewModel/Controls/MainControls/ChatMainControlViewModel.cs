@@ -17,7 +17,7 @@ using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Controls.MainControls
 {
-    public class ChatMainControlViewModel : MainControlViewModelBase
+    public class ChatMainControlViewModel : WindowControlViewModelBase
     {
         public byte[] SubscriberBadgeBytes { get; private set; }
 

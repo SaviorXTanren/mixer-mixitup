@@ -9,7 +9,7 @@ using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Controls.MainControls
 {
-    public class SongRequestsMainControlViewModel : MainControlViewModelBase
+    public class SongRequestsMainControlViewModel : WindowControlViewModelBase
     {
         public bool IsEnabled { get { return ChannelSession.Services.SongRequestService.IsEnabled; } }
 

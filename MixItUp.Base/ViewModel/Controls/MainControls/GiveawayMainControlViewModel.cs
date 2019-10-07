@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Controls.MainControls
 {
-    public class GiveawayMainControlViewModel : MainControlViewModelBase
+    public class GiveawayMainControlViewModel : WindowControlViewModelBase
     {
         public string Item { get; set; }
 

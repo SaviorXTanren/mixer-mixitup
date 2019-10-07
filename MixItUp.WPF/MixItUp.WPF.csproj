@@ -497,6 +497,7 @@
     <Compile Include="Controls\Dashboard\ChatDashboardControl.xaml.cs">
       <DependentUpon>ChatDashboardControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Dashboard\DashboardControlBase.cs" />
     <Compile Include="Controls\Dashboard\GameQueueDashboardControl.xaml.cs">
       <DependentUpon>GameQueueDashboardControl.xaml</DependentUpon>
     </Compile>
