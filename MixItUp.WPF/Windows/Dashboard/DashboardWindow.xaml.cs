@@ -12,7 +12,7 @@ namespace MixItUp.WPF.Windows.Dashboard
         private DashboardWindowViewModel viewModel;
 
         private ChatDashboardControl chatControl = new ChatDashboardControl();
-        private NotificationsDashboardControl notificationsControl = new NotificationsDashboardControl();
+        private AlertsDashboardControl alertsControl = new AlertsDashboardControl();
         private GameQueueDashboardControl gameQueueControl = new GameQueueDashboardControl();
         private SongRequestsDashboardControl songRequestsControl = new SongRequestsDashboardControl();
 
@@ -29,12 +29,12 @@ namespace MixItUp.WPF.Windows.Dashboard
         protected override async Task OnLoaded()
         {
             await this.chatControl.Initialize(this);
-            await this.notificationsControl.Initialize(this);
+            await this.alertsControl.Initialize(this);
             await this.gameQueueControl.Initialize(this);
             await this.songRequestsControl.Initialize(this);
 
             this.viewModel.ChatControl = this.chatControl;
-            this.viewModel.NotificationsControl = this.notificationsControl;
+            this.viewModel.AlertsControl = this.alertsControl;
             this.viewModel.GameQueueControl = this.gameQueueControl;
             this.viewModel.SongRequestsControl = this.songRequestsControl;
 

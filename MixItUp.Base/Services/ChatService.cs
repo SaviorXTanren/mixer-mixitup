@@ -461,6 +461,8 @@ namespace MixItUp.Base.Services
                 {
                     await ChannelSession.Services.Chat.Whisper(ChannelSession.MixerStreamerUser.username, message.PlainTextMessage, false);
                 }
+
+                GlobalEvents.AlertMessageReceived((AlertChatMessageViewModel)message);
             }
         }
 

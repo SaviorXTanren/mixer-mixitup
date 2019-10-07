@@ -501,8 +501,8 @@
     <Compile Include="Controls\Dashboard\GameQueueDashboardControl.xaml.cs">
       <DependentUpon>GameQueueDashboardControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Dashboard\NotificationsDashboardControl.xaml.cs">
-      <DependentUpon>NotificationsDashboardControl.xaml</DependentUpon>
+    <Compile Include="Controls\Dashboard\AlertsDashboardControl.xaml.cs">
+      <DependentUpon>AlertsDashboardControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Dashboard\SongRequestsDashboardControl.xaml.cs">
       <DependentUpon>SongRequestsDashboardControl.xaml</DependentUpon>
@@ -1236,7 +1236,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Dashboard\NotificationsDashboardControl.xaml">
+    <Page Include="Controls\Dashboard\AlertsDashboardControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

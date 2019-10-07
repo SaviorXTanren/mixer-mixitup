@@ -20,8 +20,7 @@ namespace MixItUp.Base.ViewModel.Window.Dashboard
     {
         None,
         Chat,
-        [Name("Notifications")]
-        Notifications,
+        Alerts,
         [Name("Game Queue")]
         GameQueue,
         [Name("Song Requests")]
@@ -36,7 +35,7 @@ namespace MixItUp.Base.ViewModel.Window.Dashboard
         }
 
         public object ChatControl { get; set; }
-        public object NotificationsControl { get; set; }
+        public object AlertsControl { get; set; }
         public object GameQueueControl { get; set; }
         public object SongRequestsControl { get; set; }
 
@@ -180,7 +179,7 @@ namespace MixItUp.Base.ViewModel.Window.Dashboard
             switch (type)
             {
                 case DashboardItemTypeEnum.Chat: return this.ChatControl;
-                case DashboardItemTypeEnum.Notifications: return this.NotificationsControl;
+                case DashboardItemTypeEnum.Alerts: return this.AlertsControl;
                 case DashboardItemTypeEnum.GameQueue: return this.GameQueueControl;
                 case DashboardItemTypeEnum.SongRequests: return this.SongRequestsControl;
             }
