@@ -433,6 +433,10 @@
     <Compile Include="Controls\Actions\WebRequestAction.xaml.cs">
       <DependentUpon>WebRequestAction.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Chat\ChatListControl.xaml.cs">
+      <DependentUpon>ChatListControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Chat\ChatUserDialogControl.cs" />
     <Compile Include="Controls\Chat\ChatMessageHeaderControl.xaml.cs">
       <DependentUpon>ChatMessageHeaderControl.xaml</DependentUpon>
     </Compile>
@@ -608,6 +612,7 @@
     <Compile Include="Controls\LicenseControl.xaml.cs">
       <DependentUpon>LicenseControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\LoadingWindowControlBase.cs" />
     <Compile Include="Controls\MainControls\AutoHosterControl.xaml.cs">
       <DependentUpon>AutoHosterControl.xaml</DependentUpon>
     </Compile>
@@ -1154,6 +1159,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\WebRequestAction.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Chat\ChatListControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,4 +1,6 @@
-﻿namespace MixItUp.WPF.Controls.Dashboard
+﻿using System.Threading.Tasks;
+
+namespace MixItUp.WPF.Controls.Dashboard
 {
     /// <summary>
     /// Interaction logic for ChatDashboardControl.xaml
@@ -8,6 +10,13 @@
         public ChatDashboardControl()
         {
             InitializeComponent();
+        }
+
+        protected override async Task InitializeInternal()
+        {
+            await base.InitializeInternal();
+
+            await this.ChatList.Initialize(this.Window);
         }
     }
 }
