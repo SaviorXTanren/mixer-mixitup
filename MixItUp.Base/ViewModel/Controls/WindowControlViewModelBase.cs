@@ -1,12 +1,12 @@
 ﻿using MixItUp.Base.ViewModel.Window;
 
-namespace MixItUp.Base.ViewModel.Controls.MainControls
+namespace MixItUp.Base.ViewModel.Controls
 {
-    public class MainControlViewModelBase : ControlViewModelBase
+    public class WindowControlViewModelBase : ControlViewModelBase
     {
-        public MainWindowViewModel WindowViewModel { get; private set; }
+        public WindowViewModelBase WindowViewModel { get; private set; }
 
-        public MainControlViewModelBase(MainWindowViewModel windowViewModel)
+        public WindowControlViewModelBase(WindowViewModelBase windowViewModel)
         {
             this.WindowViewModel = windowViewModel;
         }

@@ -91,12 +91,42 @@ namespace MixItUp.Desktop.Services
             return null;
         }
 
-        public async Task<IEnumerable<TiltifyCampaign>> GetCampaigns(TiltifyUser user)
+        public async Task<IEnumerable<TiltifyCampaign>> GetUserCampaigns(TiltifyUser user)
         {
             List<TiltifyCampaign> results = new List<TiltifyCampaign>();
             try
             {
                 TiltifyResultArray result = await this.GetAsync<TiltifyResultArray>("users/" + user.ID.ToString() + "/campaigns");
+                foreach (JToken token in result.Data)
+                {
+                    results.Add(token.ToObject<TiltifyCampaign>());
+                }
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+            return results;
+        }
+
+        public async Task<IEnumerable<TiltifyTeam>> GetUserTeams(TiltifyUser user)
+        {
+            List<TiltifyTeam> results = new List<TiltifyTeam>();
+            try
+            {
+                TiltifyResultArray result = await this.GetAsync<TiltifyResultArray>("users/" + user.ID.ToString() + "/teams");
+                foreach (JToken token in result.Data)
+                {
+                    results.Add(token.ToObject<TiltifyTeam>());
+                }
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+            return results;
+        }
+
+        public async Task<IEnumerable<TiltifyCampaign>> GetTeamCampaigns(TiltifyTeam team)
+        {
+            List<TiltifyCampaign> results = new List<TiltifyCampaign>();
+            try
+            {
+                TiltifyResultArray result = await this.GetAsync<TiltifyResultArray>("teams/" + team.ID.ToString() + "/campaigns");
                 foreach (JToken token in result.Data)
                 {
                     results.Add(token.ToObject<TiltifyCampaign>());
@@ -157,7 +187,7 @@ namespace MixItUp.Desktop.Services
                         currentCampaign = ChannelSession.Settings.TiltifyCampaign;
                         donationsReceived.Clear();
 
-                        IEnumerable<TiltifyCampaign> campaigns = await this.GetCampaigns(this.user);
+                        IEnumerable<TiltifyCampaign> campaigns = await this.GetUserCampaigns(this.user);
                         campaign = campaigns.FirstOrDefault(c => c.ID.Equals(currentCampaign));
                         if (campaign != null)
                         {

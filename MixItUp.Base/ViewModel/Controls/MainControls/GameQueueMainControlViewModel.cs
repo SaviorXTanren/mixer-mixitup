@@ -1,5 +1,4 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base.Util;
+﻿using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModel.Window;
 using StreamingClient.Base.Util;
@@ -26,7 +25,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         }
     }
 
-    public class GameQueueMainControlViewModel : MainControlViewModelBase
+    public class GameQueueMainControlViewModel : WindowControlViewModelBase
     {
         public bool IsEnabled { get { return ChannelSession.Services.GameQueueService.IsEnabled; } }
 
@@ -50,7 +49,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         public ICommand DeleteCommand { get; private set; }
         public ICommand ClearQueueCommand { get; private set; }
 
-        public GameQueueMainControlViewModel(MainWindowViewModel windowViewModel)
+        public GameQueueMainControlViewModel(WindowViewModelBase windowViewModel)
             : base(windowViewModel)
         {
             GlobalEvents.OnGameQueueUpdated += GlobalEvents_OnGameQueueUpdated;

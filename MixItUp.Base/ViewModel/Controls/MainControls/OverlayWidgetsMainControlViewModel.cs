@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Controls.MainControls
 {
-    public class OverlayWidgetsMainControlViewModel : MainControlViewModelBase
+    public class OverlayWidgetsMainControlViewModel : WindowControlViewModelBase
     {
         public bool OverlayEnabled { get { return ChannelSession.Settings.EnableOverlay; } }
         public bool OverlayNotEnabled { get { return !this.OverlayEnabled; } }

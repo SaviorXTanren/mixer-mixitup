@@ -14,6 +14,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.Base.ViewModel.Window.Dashboard;
 using MixItUp.Desktop.Database;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -359,6 +360,13 @@ namespace MixItUp.Desktop
         public Dictionary<uint, JObject> CustomMixPlaySettings { get; set; }
 
         [JsonProperty]
+        public DashboardLayoutTypeEnum DashboardLayout { get; set; }
+        [JsonProperty]
+        public List<DashboardItemTypeEnum> DashboardItems { get; set; } = new List<DashboardItemTypeEnum>();
+        [JsonProperty]
+        public List<Guid> DashboardQuickCommands { get; set; } = new List<Guid>();
+
+        [JsonProperty]
         public string TelemetryUserId { get; set; }
 
         [JsonProperty]
@@ -578,6 +586,8 @@ namespace MixItUp.Desktop
             this.FilteredWords = new LockedList<string>(this.filteredWordsInternal);
             this.BannedWords = new LockedList<string>(this.bannedWordsInternal);
             this.MixPlayUserGroups = new LockedDictionary<uint, List<MixPlayUserGroupModel>>(this.mixPlayUserGroupsInternal);
+            this.DashboardItems = new List<DashboardItemTypeEnum>() { DashboardItemTypeEnum.None, DashboardItemTypeEnum.None, DashboardItemTypeEnum.None, DashboardItemTypeEnum.None };
+            this.DashboardQuickCommands = new List<Guid>() { Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty };
 
             if (File.Exists(DesktopChannelSettings.CommunityFilteredWordsFilePath))
             {

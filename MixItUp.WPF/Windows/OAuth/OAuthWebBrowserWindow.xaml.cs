@@ -47,11 +47,12 @@ namespace MixItUp.WPF.Windows.OAuth
             {
                 this.Browser.NavigateToString(this.redirectPageText);
 
-                if (e.Uri.AbsoluteUri.Contains(MixerConnection.DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER))
+                string codeParameter = MixerConnection.DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER + "=";
+                if (e.Uri.AbsoluteUri.Contains(codeParameter))
                 {
-                    int startIndex = e.Uri.AbsoluteUri.IndexOf(MixerConnection.DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER);
+                    int startIndex = e.Uri.AbsoluteUri.IndexOf(codeParameter);
 
-                    string token = e.Uri.AbsoluteUri.Substring(startIndex + MixerConnection.DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER.Length);
+                    string token = e.Uri.AbsoluteUri.Substring(startIndex + codeParameter.Length);
 
                     int endIndex = token.IndexOf("&");
                     if (endIndex > 0)

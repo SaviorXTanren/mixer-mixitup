@@ -1,9 +1,9 @@
 ﻿using MaterialDesignThemes.Wpf;
-using Mixer.Base.Util;
 using MixItUp.Base.Statistics;
 using StreamingClient.Base.Util;
 using System;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace MixItUp.WPF.Controls.Statistics
 {
@@ -21,6 +21,8 @@ namespace MixItUp.WPF.Controls.Statistics
 
             this.DataContext = this.dataTracker = dataTracker;
         }
+
+        public void HideName() { this.StatisticNameTextBlock.Visibility = Visibility.Collapsed; }
 
         protected override Task OnLoaded()
         {

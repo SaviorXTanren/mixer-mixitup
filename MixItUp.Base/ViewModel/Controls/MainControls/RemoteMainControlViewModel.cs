@@ -15,7 +15,7 @@ using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Controls.MainControls
 {
-    public class RemoteMainControlViewModel : MainControlViewModelBase
+    public class RemoteMainControlViewModel : WindowControlViewModelBase
     {
         public const string StreamerProfileType = "Streamer";
         public const string NormalProfileType = "Normal";

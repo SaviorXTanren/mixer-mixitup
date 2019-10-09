@@ -924,6 +924,8 @@ namespace MixItUp.Base.Commands
                     if (ChannelSession.Services.Chat != null)
                     {
                         await ChannelSession.Services.Chat.SendMessage("Added New Command: !" + commandTrigger);
+
+                        ChannelSession.Services.Chat.RebuildCommandTriggers();
                     }
                 }
                 else
@@ -978,6 +980,8 @@ namespace MixItUp.Base.Commands
                     if (ChannelSession.Services.Chat != null)
                     {
                         await ChannelSession.Services.Chat.SendMessage("Updated Command: !" + commandTrigger);
+
+                        ChannelSession.Services.Chat.RebuildCommandTriggers();
                     }
                 }
                 else
@@ -1011,6 +1015,8 @@ namespace MixItUp.Base.Commands
                     if (ChannelSession.Services.Chat != null)
                     {
                         await ChannelSession.Services.Chat.SendMessage("Disabled Command: !" + commandTrigger);
+
+                        ChannelSession.Services.Chat.RebuildCommandTriggers();
                     }
                 }
                 else

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Controls.MainControls
 {
-    public abstract class GroupedCommandsMainControlViewModelBase : MainControlViewModelBase
+    public abstract class GroupedCommandsMainControlViewModelBase : WindowControlViewModelBase
     {
         public ObservableCollection<CommandGroupControlViewModel> CommandGroups { get; private set; } = new ObservableCollection<CommandGroupControlViewModel>();
 

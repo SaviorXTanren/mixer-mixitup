@@ -113,7 +113,7 @@
                     <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
                     <DataGridTextColumn Header="User" Binding="{Binding User.UserName}" IsReadOnly="True" Width="125" />
                     <DataGridTextColumn Header="Source" Binding="{Binding Type}" IsReadOnly="True" Width="100" />
-                    <DataGridTemplateColumn Width="200">
+                    <DataGridTemplateColumn Header="Actions" Width="200">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid HorizontalAlignment="Center">

@@ -2,7 +2,6 @@
 using MixItUp.Base.Util;
 using MixItUp.WPF.Windows;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;

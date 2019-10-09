@@ -9,7 +9,7 @@ using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Controls.MainControls
 {
-    public class SongRequestsMainControlViewModel : MainControlViewModelBase
+    public class SongRequestsMainControlViewModel : WindowControlViewModelBase
     {
         public bool IsEnabled { get { return ChannelSession.Services.SongRequestService.IsEnabled; } }
 
@@ -41,7 +41,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         public ICommand BanCommand { get; private set; }
         public ICommand ClearQueueCommand { get; private set; }
 
-        public SongRequestsMainControlViewModel(MainWindowViewModel windowViewModel)
+        public SongRequestsMainControlViewModel(WindowViewModelBase windowViewModel)
             : base(windowViewModel)
         {
             GlobalEvents.OnSongRequestsChangedOccurred += GlobalEvents_OnSongRequestsChangedOccurred;

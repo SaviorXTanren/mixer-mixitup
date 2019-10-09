@@ -17,8 +17,7 @@
 
         <TextBlock Grid.Row="0" TextWrapping="Wrap" Text="{Binding}" />
 
-        <Button Grid.Row="2" IsDefault="True" Style="{DynamicResource MaterialDesignFlatButton}"
-                    Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
+        <Button Grid.Row="2" IsDefault="True" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
             <Button.CommandParameter>
                 <system:Boolean>True</system:Boolean>
             </Button.CommandParameter>

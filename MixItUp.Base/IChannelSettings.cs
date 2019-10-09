@@ -13,6 +13,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.Base.ViewModel.Window.Dashboard;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Model.OAuth;
 using System;
@@ -202,6 +203,10 @@ namespace MixItUp.Base
         CustomCommand SongPlayedCommand { get; set; }
 
         Dictionary<uint, JObject> CustomMixPlaySettings { get; set; }
+
+        DashboardLayoutTypeEnum DashboardLayout { get; set; }
+        List<DashboardItemTypeEnum> DashboardItems { get; set; }
+        List<Guid> DashboardQuickCommands { get; set; }
 
         string TelemetryUserId { get; set; }
 

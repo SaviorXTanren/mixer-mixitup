@@ -99,7 +99,7 @@ namespace MixItUp.Base.Services
 
         public event EventHandler<Dictionary<string, uint>> OnPollEndOccurred = delegate { };
 
-        private LockedList<PermissionsCommandBase> chatCommand = new LockedList<PermissionsCommandBase>();
+        private LockedList<PermissionsCommandBase> chatCommands = new LockedList<PermissionsCommandBase>();
 
         private HashSet<string> userEntranceCommands = new HashSet<string>();
 
@@ -287,11 +287,11 @@ namespace MixItUp.Base.Services
 
         public void RebuildCommandTriggers()
         {
-            this.chatCommand.Clear();
+            this.chatCommands.Clear();
             this.chatMenuCommands.Clear();
             foreach (ChatCommand command in ChannelSession.Settings.ChatCommands.Where(c => c.IsEnabled))
             {
-                this.chatCommand.Add(command);
+                this.chatCommands.Add(command);
                 if (command.Requirements.Settings.ShowOnChatMenu)
                 {
                     this.chatMenuCommands.Add(command);
@@ -300,12 +300,12 @@ namespace MixItUp.Base.Services
 
             foreach (GameCommandBase command in ChannelSession.Settings.GameCommands.Where(c => c.IsEnabled))
             {
-                this.chatCommand.Add(command);
+                this.chatCommands.Add(command);
             }
 
             foreach (PreMadeChatCommand command in ChannelSession.PreMadeChatCommands.Where(c => c.IsEnabled))
             {
-                this.chatCommand.Add(command);
+                this.chatCommands.Add(command);
             }
 
             this.ChatCommandsReprocessed(this, new EventArgs());
@@ -434,11 +434,11 @@ namespace MixItUp.Base.Services
                         return;
                     }
 
-                    if (this.chatCommand.Count > 0)
+                    if (this.chatCommands.Count > 0)
                     {
                         Logger.Log(LogLevel.Debug, string.Format("Checking Message For Command - {0}", message.ToString()));
 
-                        List<PermissionsCommandBase> commands = this.chatCommand.ToList();
+                        List<PermissionsCommandBase> commands = this.chatCommands.ToList();
                         foreach (PermissionsCommandBase command in message.User.Data.CustomCommands.Where(c => c.IsEnabled))
                         {
                             commands.Add(command);
@@ -461,6 +461,8 @@ namespace MixItUp.Base.Services
                 {
                     await ChannelSession.Services.Chat.Whisper(ChannelSession.MixerStreamerUser.username, message.PlainTextMessage, false);
                 }
+
+                GlobalEvents.AlertMessageReceived((AlertChatMessageViewModel)message);
             }
         }
 

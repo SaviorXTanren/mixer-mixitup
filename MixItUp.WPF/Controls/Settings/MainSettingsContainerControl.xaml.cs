@@ -46,14 +46,17 @@ namespace MixItUp.WPF.Controls.Settings
 
         protected override async Task InitializeInternal()
         {
-            foreach (SettingsOption settings in this.settingsGroups)
+            if (this.Window != null)
             {
-                await settings.Control.Initialize(this.Window);
-            }
+                foreach (SettingsOption settings in this.settingsGroups)
+                {
+                    await settings.Control.Initialize(this.Window);
+                }
 
-            if (this.SettingsItemsListBox.SelectedIndex < 0)
-            {
-                this.SettingsItemsListBox.SelectedIndex = 0;
+                if (this.SettingsItemsListBox.SelectedIndex < 0)
+                {
+                    this.SettingsItemsListBox.SelectedIndex = 0;
+                }
             }
         }
 

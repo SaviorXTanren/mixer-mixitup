@@ -1,0 +1,89 @@
+﻿<local:DashboardControlBase x:Class="MixItUp.WPF.Controls.Dashboard.SongRequestsDashboardControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Dashboard"
+             xmlns:Util="clr-namespace:MixItUp.WPF.Util"
+             xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+
+             d:DesignHeight="500" d:DesignWidth="600">
+    <local:DashboardControlBase.Resources>
+        <Util:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+    </local:DashboardControlBase.Resources>
+
+    <Grid Margin="10" IsEnabled="{Binding IsEnabled}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="10,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="{Binding SongName}" VerticalAlignment="Center" />
+        </Grid>
+
+        <Grid Grid.Row="2" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Command="{Binding PauseResumeCommand}" Content="{MaterialDesign:PackIcon PlayPause}" MaterialDesign:HintAssist.Hint="Pause/Resume" />
+            <Button Grid.Column="2" Command="{Binding NextCommand}" Content="{MaterialDesign:PackIcon SkipNext}" MaterialDesign:HintAssist.Hint="Next Song" />
+            
+            <TextBlock Grid.Column="4" VerticalAlignment="Center">Volume:</TextBlock>
+            <Slider Value="{Binding Volume}" VerticalAlignment="Center" Grid.Column="6" Minimum="0" Maximum="100" Width="100" PreviewMouseLeftButtonUp="VolumeSlider_PreviewMouseLeftButtonUp" />
+            <TextBlock Grid.Column="8" Text="{Binding Volume}" VerticalAlignment="Center" Width="30" HorizontalAlignment="Center" />
+        </Grid>
+
+        <DataGrid Grid.Row="4" ItemsSource="{Binding RequestSongs}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                <DataGridTemplateColumn Header="Actions" Width="160">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid HorizontalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="5" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="5" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Button x:Name="MoveUpButton" Grid.Column="0" Click="MoveUpButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Move Up">
+                                    <MaterialDesign:PackIcon Kind="ArrowUp" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                </Button>
+
+                                <Button x:Name="MoveDownButton" Grid.Column="2" Click="MoveDownButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Move Down">
+                                    <MaterialDesign:PackIcon Kind="ArrowDown" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                </Button>
+
+                                <Button x:Name="DeleteQueueButton" Grid.Column="4" Click="DeleteQueueButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Delete">
+                                    <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                </Button>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+    </Grid>
+</local:DashboardControlBase>
