@@ -162,6 +162,13 @@ namespace MixItUp.Base.ViewModel.Window.Dashboard
             await base.OnLoadedInternal();
         }
 
+        protected override async Task OnVisibleInternal()
+        {
+            this.NotifyPropertiesChanged();
+
+            await base.OnVisibleInternal();
+        }
+
         private void AssignType(DashboardItemTypeEnum type, int index)
         {
             for (int i = 0; i < ChannelSession.Settings.DashboardItems.Count; i++)
