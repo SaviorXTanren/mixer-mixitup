@@ -20,27 +20,30 @@ namespace MixItUp.Base.ViewModel.Controls.Dashboard
 
         private void GlobalEvents_OnAlertMessageReceived(object sender, AlertChatMessageViewModel message)
         {
-            try
+            DispatcherHelper.InvokeDispatcher(() =>
             {
-                if (ChannelSession.Settings.LatestChatAtTop)
+                try
                 {
-                    this.Messages.Insert(0, message);
-                }
-                else
-                {
-                    this.Messages.Add(message);
-                }
+                    if (ChannelSession.Settings.LatestChatAtTop)
+                    {
+                        this.Messages.Insert(0, message);
+                    }
+                    else
+                    {
+                        this.Messages.Add(message);
+                    }
 
-                if (this.Messages.Count > ChannelSession.Settings.MaxMessagesInChat)
-                {
-                    ChatMessageViewModel removedMessage = (ChannelSession.Settings.LatestChatAtTop) ? this.Messages.Last() : this.Messages.First();
-                    this.Messages.Remove(removedMessage);
+                    if (this.Messages.Count > ChannelSession.Settings.MaxMessagesInChat)
+                    {
+                        ChatMessageViewModel removedMessage = (ChannelSession.Settings.LatestChatAtTop) ? this.Messages.Last() : this.Messages.First();
+                        this.Messages.Remove(removedMessage);
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+            });
         }
     }
 }
