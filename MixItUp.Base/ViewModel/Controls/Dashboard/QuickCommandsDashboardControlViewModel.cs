@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Window;
 using System;
 using System.Linq;
@@ -98,6 +99,16 @@ namespace MixItUp.Base.ViewModel.Controls.Dashboard
             this.CommandThreeCommand = this.CreateCommand(async (parameter) => { await this.RunCommand(this.commandThree); });
             this.CommandFourCommand = this.CreateCommand(async (parameter) => { await this.RunCommand(this.commandFour); });
             this.CommandFiveCommand = this.CreateCommand(async (parameter) => { await this.RunCommand(this.commandFive); });
+        }
+
+        public async Task<bool> CanSelectCommands()
+        {
+            if (!ChannelSession.AllCommands.Any(c => !(c is PreMadeChatCommand)))
+            {
+                await DialogHelper.ShowMessage("You must create at least one command first to use this feature.");
+                return false;
+            }
+            return true;
         }
 
         private CommandBase GetCommand(int index)
