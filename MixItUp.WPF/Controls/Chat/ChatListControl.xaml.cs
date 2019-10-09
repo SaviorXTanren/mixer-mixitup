@@ -116,26 +116,31 @@ namespace MixItUp.WPF.Controls.Chat
             }
         }
 
-        private void ViewModel_ContextMenuCommandsChanged(object sender, EventArgs e)
+        private async void ViewModel_ContextMenuCommandsChanged(object sender, EventArgs e)
         {
-            this.ChatList.ContextMenu.Items.Clear();
-            foreach (var item in this.defaultContextMenuItems)
+            await DispatcherHelper.InvokeDispatcher(() =>
             {
-                this.ChatList.ContextMenu.Items.Add(item);
-            }
-
-            if (viewModel.ContextMenuChatCommands.Count() > 0)
-            {
-                this.ChatList.ContextMenu.Items.Add(new Separator());
-                foreach (ChatCommand command in viewModel.ContextMenuChatCommands)
+                this.ChatList.ContextMenu.Items.Clear();
+                foreach (var item in this.defaultContextMenuItems)
                 {
-                    MenuItem menuItem = new MenuItem();
-                    menuItem.Header = command.Name;
-                    menuItem.DataContext = command;
-                    menuItem.Click += this.ContextMenuChatCommand_Click;
-                    this.ChatList.ContextMenu.Items.Add(menuItem);
+                    this.ChatList.ContextMenu.Items.Add(item);
                 }
-            }
+
+                if (viewModel.ContextMenuChatCommands.Count() > 0)
+                {
+                    this.ChatList.ContextMenu.Items.Add(new Separator());
+                    foreach (ChatCommand command in viewModel.ContextMenuChatCommands)
+                    {
+                        MenuItem menuItem = new MenuItem();
+                        menuItem.Header = command.Name;
+                        menuItem.DataContext = command;
+                        menuItem.Click += this.ContextMenuChatCommand_Click;
+                        this.ChatList.ContextMenu.Items.Add(menuItem);
+                    }
+                }
+
+                return Task.FromResult(0);
+            });
         }
 
         private void ChatMessageTextBox_KeyDown(object sender, KeyEventArgs e)
