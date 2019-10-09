@@ -5,6 +5,7 @@ using StreamingClient.Base.Util;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Controls.Dashboard
 {
@@ -18,9 +19,9 @@ namespace MixItUp.Base.ViewModel.Controls.Dashboard
             GlobalEvents.OnAlertMessageReceived += GlobalEvents_OnAlertMessageReceived;
         }
 
-        private void GlobalEvents_OnAlertMessageReceived(object sender, AlertChatMessageViewModel message)
+        private async void GlobalEvents_OnAlertMessageReceived(object sender, AlertChatMessageViewModel message)
         {
-            DispatcherHelper.InvokeDispatcher(() =>
+            await DispatcherHelper.InvokeDispatcher(() =>
             {
                 try
                 {
@@ -43,6 +44,7 @@ namespace MixItUp.Base.ViewModel.Controls.Dashboard
                 {
                     Logger.Log(ex);
                 }
+                return Task.FromResult(0);
             });
         }
     }
