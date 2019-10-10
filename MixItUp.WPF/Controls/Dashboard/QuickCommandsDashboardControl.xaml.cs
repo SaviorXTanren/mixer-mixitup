@@ -38,9 +38,13 @@ namespace MixItUp.WPF.Controls.Dashboard
 
         private async Task<CommandBase> ShowCommandSelector()
         {
-            CommandSelectorDialogControl dialogControl = new CommandSelectorDialogControl();
-            await DialogHelper.ShowCustom(dialogControl);
-            return dialogControl.Command;
+            if (await this.viewModel.CanSelectCommands())
+            {
+                CommandSelectorDialogControl dialogControl = new CommandSelectorDialogControl();
+                await DialogHelper.ShowCustom(dialogControl);
+                return dialogControl.Command;
+            }
+            return null;
         }
     }
 }

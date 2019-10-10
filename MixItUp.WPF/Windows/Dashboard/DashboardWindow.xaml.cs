@@ -44,6 +44,8 @@ namespace MixItUp.WPF.Windows.Dashboard
             this.viewModel.SongRequestsControl = this.songRequestsControl;
             this.viewModel.QuickCommandsControl = this.quickCommandsControl;
 
+            await this.viewModel.OnLoaded();
+
             await base.OnLoaded();
         }
     }

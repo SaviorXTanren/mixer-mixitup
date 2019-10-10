@@ -1,4 +1,5 @@
-﻿using StreamingClient.Base.Util;
+﻿using MixItUp.Base.ViewModels;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -30,6 +31,69 @@ namespace MixItUp.Base.ViewModel.Window.Dashboard
         QuickCommands
     }
 
+    public class LayoutItemsViewModel : UIViewModelBase
+    {
+        public object ItemOne
+        {
+            get { return this.itemOne; }
+            set
+            {
+                this.itemOne = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private object itemOne;
+
+        public object ItemTwo
+        {
+            get { return this.itemTwo; }
+            set
+            {
+                this.itemTwo = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private object itemTwo;
+
+        public object ItemThree
+        {
+            get { return this.itemThree; }
+            set
+            {
+                this.itemThree = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private object itemThree;
+
+        public object ItemFour
+        {
+            get { return this.itemFour; }
+            set
+            {
+                this.itemFour = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private object itemFour;
+
+        public void ClearItems()
+        {
+            this.ItemOne = null;
+            this.ItemTwo = null;
+            this.ItemThree = null;
+            this.ItemFour = null;
+        }
+
+        public void NotifyItemPropertiesChanged()
+        {
+            this.NotifyPropertyChanged("ItemOne");
+            this.NotifyPropertyChanged("ItemTwo");
+            this.NotifyPropertyChanged("ItemThree");
+            this.NotifyPropertyChanged("ItemFour");
+        }
+    }
+
     public class DashboardWindowViewModel : WindowViewModelBase
     {
         public DashboardWindowViewModel() { }
@@ -49,6 +113,7 @@ namespace MixItUp.Base.ViewModel.Window.Dashboard
             set
             {
                 this.LayoutType = EnumHelper.GetEnumValueFromString<DashboardLayoutTypeEnum>(value);
+
                 this.NotifyPropertyChanged();
             }
         }
@@ -58,12 +123,15 @@ namespace MixItUp.Base.ViewModel.Window.Dashboard
             set
             {
                 ChannelSession.Settings.DashboardLayout = value;
+
                 this.NotifyPropertyChanged();
                 this.NotifyPropertyChanged("IsLayoutOne");
                 this.NotifyPropertyChanged("IsLayoutTwo");
                 this.NotifyPropertyChanged("IsLayoutThreeRight");
                 this.NotifyPropertyChanged("IsLayoutThreeLeft");
                 this.NotifyPropertyChanged("IsLayoutFour");
+
+                this.NotifyItemPropertiesChanged();
             }
         }
 
@@ -72,8 +140,6 @@ namespace MixItUp.Base.ViewModel.Window.Dashboard
         public bool IsLayoutThreeRight { get { return this.LayoutType == DashboardLayoutTypeEnum.ThreeRight; } }
         public bool IsLayoutThreeLeft { get { return this.LayoutType == DashboardLayoutTypeEnum.ThreeLeft; } }
         public bool IsLayoutFour { get { return this.LayoutType == DashboardLayoutTypeEnum.Four; } }
-
-        public IEnumerable<string> ItemTypes { get { return EnumHelper.GetEnumNames<DashboardItemTypeEnum>(); } }
 
         public string ItemTypeOneString
         {
@@ -93,7 +159,6 @@ namespace MixItUp.Base.ViewModel.Window.Dashboard
                 this.NotifyPropertyChanged();
             }
         }
-        public object ItemOne { get { return this.GetItemForType(this.ItemTypeOne); } }
 
         public string ItemTypeTwoString
         {
@@ -113,7 +178,6 @@ namespace MixItUp.Base.ViewModel.Window.Dashboard
                 this.NotifyPropertyChanged();
             }
         }
-        public object ItemTwo { get { return this.GetItemForType(this.ItemTypeTwo); } }
 
         public string ItemTypeThreeString
         {
@@ -133,7 +197,6 @@ namespace MixItUp.Base.ViewModel.Window.Dashboard
                 this.NotifyPropertyChanged();
             }
         }
-        public object ItemThree { get { return this.GetItemForType(this.ItemTypeThree); } }
 
         public string ItemTypeFourString
         {
@@ -153,13 +216,72 @@ namespace MixItUp.Base.ViewModel.Window.Dashboard
                 this.NotifyPropertyChanged();
             }
         }
-        public object ItemFour { get { return this.GetItemForType(this.ItemTypeFour); } }
+
+        public LayoutItemsViewModel LayoutOne { get; set; } = new LayoutItemsViewModel();
+        public LayoutItemsViewModel LayoutTwo { get; set; } = new LayoutItemsViewModel();
+        public LayoutItemsViewModel LayoutThreeRight { get; set; } = new LayoutItemsViewModel();
+        public LayoutItemsViewModel LayoutThreeLeft { get; set; } = new LayoutItemsViewModel();
+        public LayoutItemsViewModel LayoutFour { get; set; } = new LayoutItemsViewModel();
+
+        public IEnumerable<string> ItemTypes { get { return EnumHelper.GetEnumNames<DashboardItemTypeEnum>(); } }
 
         protected override async Task OnLoadedInternal()
         {
-            this.NotifyPropertiesChanged();
+            this.NotifyItemPropertiesChanged();
 
             await base.OnLoadedInternal();
+        }
+
+        protected override async Task OnVisibleInternal()
+        {
+            this.NotifyItemPropertiesChanged();
+
+            await base.OnVisibleInternal();
+        }
+
+        private void NotifyItemPropertiesChanged()
+        {
+            this.NotifyPropertyChanged("ItemTypeOne");
+            this.NotifyPropertyChanged("ItemTypeOneString");
+            this.NotifyPropertyChanged("ItemTypeTwo");
+            this.NotifyPropertyChanged("ItemTypeTwoString");
+            this.NotifyPropertyChanged("ItemTypeThree");
+            this.NotifyPropertyChanged("ItemTypeThreeString");
+            this.NotifyPropertyChanged("ItemTypeFour");
+            this.NotifyPropertyChanged("ItemTypeFourString");
+
+            this.LayoutOne.ClearItems();
+            this.LayoutTwo.ClearItems();
+            this.LayoutThreeLeft.ClearItems();
+            this.LayoutThreeRight.ClearItems();
+            this.LayoutFour.ClearItems();
+
+            if (this.LayoutType == DashboardLayoutTypeEnum.One)
+            {
+                this.AssignItemsToLayout(this.LayoutOne);
+            }
+            else if (this.LayoutType == DashboardLayoutTypeEnum.Two)
+            {
+                this.AssignItemsToLayout(this.LayoutTwo);
+            }
+            else if (this.LayoutType == DashboardLayoutTypeEnum.ThreeLeft)
+            {
+                this.AssignItemsToLayout(this.LayoutThreeLeft);
+            }
+            else if (this.LayoutType == DashboardLayoutTypeEnum.ThreeRight)
+            {
+                this.AssignItemsToLayout(this.LayoutThreeRight);
+            }
+            else if (this.LayoutType == DashboardLayoutTypeEnum.Four)
+            {
+                this.AssignItemsToLayout(this.LayoutFour);
+            }
+
+            this.LayoutOne.NotifyItemPropertiesChanged();
+            this.LayoutTwo.NotifyItemPropertiesChanged();
+            this.LayoutThreeLeft.NotifyItemPropertiesChanged();
+            this.LayoutThreeRight.NotifyItemPropertiesChanged();
+            this.LayoutFour.NotifyItemPropertiesChanged();
         }
 
         private void AssignType(DashboardItemTypeEnum type, int index)
@@ -173,7 +295,15 @@ namespace MixItUp.Base.ViewModel.Window.Dashboard
             }
             ChannelSession.Settings.DashboardItems[index] = type;
 
-            this.NotifyPropertiesChanged();
+            this.NotifyItemPropertiesChanged();
+        }
+
+        private void AssignItemsToLayout(LayoutItemsViewModel layout)
+        {
+            layout.ItemOne = this.GetItemForType(this.ItemTypeOne);
+            layout.ItemTwo = this.GetItemForType(this.ItemTypeTwo);
+            layout.ItemThree = this.GetItemForType(this.ItemTypeThree);
+            layout.ItemFour = this.GetItemForType(this.ItemTypeFour);
         }
 
         private object GetItemForType(DashboardItemTypeEnum type)
@@ -188,22 +318,6 @@ namespace MixItUp.Base.ViewModel.Window.Dashboard
                 case DashboardItemTypeEnum.QuickCommands: return this.QuickCommandsControl;
             }
             return null;
-        }
-
-        private void NotifyPropertiesChanged()
-        {
-            this.NotifyPropertyChanged("ItemOne");
-            this.NotifyPropertyChanged("ItemTypeOne");
-            this.NotifyPropertyChanged("ItemTypeOneString");
-            this.NotifyPropertyChanged("ItemTwo");
-            this.NotifyPropertyChanged("ItemTypeTwo");
-            this.NotifyPropertyChanged("ItemTypeTwoString");
-            this.NotifyPropertyChanged("ItemThree");
-            this.NotifyPropertyChanged("ItemTypeThree");
-            this.NotifyPropertyChanged("ItemTypeThreeString");
-            this.NotifyPropertyChanged("ItemFour");
-            this.NotifyPropertyChanged("ItemTypeFour");
-            this.NotifyPropertyChanged("ItemTypeFourString");
         }
     }
 }
