@@ -2,6 +2,7 @@
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Window;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -88,6 +89,11 @@ namespace MixItUp.Base.ViewModel.Controls.Dashboard
         public QuickCommandsDashboardControlViewModel(WindowViewModelBase windowViewModel)
             : base(windowViewModel)
         {
+            if (ChannelSession.Settings.DashboardQuickCommands.Count < 5)
+            {
+                ChannelSession.Settings.DashboardQuickCommands = new List<Guid>() { Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty };
+            }
+
             this.commandOne = this.GetCommand(0);
             this.commandTwo = this.GetCommand(1);
             this.commandThree = this.GetCommand(2);
