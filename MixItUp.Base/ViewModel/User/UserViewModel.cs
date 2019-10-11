@@ -274,6 +274,9 @@ namespace MixItUp.Base.ViewModel.User
         public bool IsMixerSubscriber { get { return this.MixerRoles.Contains(MixerRoleEnum.Subscriber); } }
 
         [JsonIgnore]
+        public bool ShowMixerSubscriberBadge { get { return this.IsMixerSubscriber && !string.IsNullOrEmpty(this.SubscriberBadgeLink); } }
+
+        [JsonIgnore]
         public string MixerSubscribeAgeString { get { return (this.MixerSubscribeDate != null) ? this.MixerSubscribeDate.GetValueOrDefault().GetAge() : "Not Subscribed"; } }
 
         [JsonIgnore]

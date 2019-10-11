@@ -22,9 +22,9 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <local:ChatUserControl DataContext="{Binding User}" Grid.Column="0" />
+        <local:ChatUserControl x:Name="UserAvatar" DataContext="{Binding User}" Grid.Column="0" />
 
-        <Image Grid.Column="1" Source="{Binding User.MixerChannelBadgeLink}" Visibility="{Binding User.HasMixerChannelBadgeLink, Converter={StaticResource BooleanToVisibilityConverter}}" Height="20" Width="20" Margin="0,-2" VerticalAlignment="Center" />
+        <Image Grid.Column="1" Source="{Binding User.MixerChannelBadgeLink}" Visibility="{Binding User.HasMixerChannelBadgeLink, Converter={StaticResource BooleanToVisibilityConverter}}" Height="{Binding FontSize}" Width="{Binding FontSize}" Margin="0,-2" VerticalAlignment="Center" />
 
         <Grid Grid.Column="2" Visibility="{Binding IsWhisper, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" VerticalAlignment="Center">
             <Grid.ColumnDefinitions>
@@ -36,16 +36,16 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="1" Visibility="{Binding User.HasWhisperNumber, Converter={StaticResource BooleanToVisibilityConverter}}" Text="{Binding User.WhispererNumber, StringFormat=[Whisperer #{0}]}" />
+            <TextBlock Grid.Column="1" Visibility="{Binding User.HasWhisperNumber, Converter={StaticResource BooleanToVisibilityConverter}}" Text="{Binding User.WhispererNumber, StringFormat=[Whisperer #{0}]}" FontSize="{Binding FontSize}" />
 
-            <TextBlock Grid.Column="3" Text="&#x2794;" />
+            <TextBlock Grid.Column="3" Text="&#x2794;" FontSize="{Binding FontSize}" />
 
-            <TextBlock Grid.Column="5" Text="{Binding TargetUsername}" />
+            <TextBlock Grid.Column="5" Text="{Binding TargetUsername}" FontSize="{Binding FontSize}" />
 
         </Grid>
 
-        <TextBlock Grid.Column="3" VerticalAlignment="Center" Margin="3,0,0,0" Visibility="{Binding ShowTimestamp, Converter={StaticResource BooleanToVisibilityConverter}}" Text="{Binding TimestampDisplay}" />
+        <TextBlock Grid.Column="3" FontSize="{Binding FontSize}" VerticalAlignment="Center" Margin="3,0,0,0" Visibility="{Binding ShowTimestamp, Converter={StaticResource BooleanToVisibilityConverter}}" Text="{Binding TimestampDisplay}" />
 
-        <TextBlock Grid.Column="4" VerticalAlignment="Center">:</TextBlock>
+        <TextBlock Grid.Column="4" FontSize="{Binding FontSize}" VerticalAlignment="Center">:</TextBlock>
     </Grid>
 </UserControl>
