@@ -89,11 +89,6 @@ namespace MixItUp.Base.ViewModel.Controls.Dashboard
         public QuickCommandsDashboardControlViewModel(WindowViewModelBase windowViewModel)
             : base(windowViewModel)
         {
-            if (ChannelSession.Settings.DashboardQuickCommands.Count < 5)
-            {
-                ChannelSession.Settings.DashboardQuickCommands = new List<Guid>() { Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty };
-            }
-
             this.commandOne = this.GetCommand(0);
             this.commandTwo = this.GetCommand(1);
             this.commandThree = this.GetCommand(2);

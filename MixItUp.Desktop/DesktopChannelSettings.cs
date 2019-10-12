@@ -590,6 +590,15 @@ namespace MixItUp.Desktop
             this.BannedWords = new LockedList<string>(this.bannedWordsInternal);
             this.MixPlayUserGroups = new LockedDictionary<uint, List<MixPlayUserGroupModel>>(this.mixPlayUserGroupsInternal);
 
+            if (this.DashboardItems.Count < 4)
+            {
+                this.DashboardItems = new List<DashboardItemTypeEnum>() { DashboardItemTypeEnum.None, DashboardItemTypeEnum.None, DashboardItemTypeEnum.None, DashboardItemTypeEnum.None };
+            }
+            if (this.DashboardQuickCommands.Count < 5)
+            {
+                this.DashboardQuickCommands = new List<Guid>() { Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty };
+            }
+
             if (File.Exists(DesktopChannelSettings.CommunityFilteredWordsFilePath))
             {
                 this.CommunityFilteredWords = new LockedList<string>(File.ReadAllLines(DesktopChannelSettings.CommunityFilteredWordsFilePath));
