@@ -58,6 +58,8 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public string TimestampDisplay { get { return string.Format("({0})", this.Timestamp.ToString("t")); } }
 
+        public int FontSize { get { return ChannelSession.Settings.ChatFontSize; } }
+
         public virtual bool ContainsOnlyEmotes() { return false; }
 
         public async Task<bool> CheckForModeration()
