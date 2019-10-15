@@ -88,7 +88,7 @@ namespace MixItUp.WPF.Windows
             }
             catch (Exception ex)
             {
-                Logger.Log(ex)
+                Logger.Log(ex);
             }
         }
 
