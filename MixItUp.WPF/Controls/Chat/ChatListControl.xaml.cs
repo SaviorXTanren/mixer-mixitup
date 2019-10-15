@@ -357,7 +357,7 @@ namespace MixItUp.WPF.Controls.Chat
                         if (menuItem.DataContext != null && menuItem.DataContext is ChatCommand)
                         {
                             ChatCommand command = (ChatCommand)menuItem.DataContext;
-                            await command.Perform(message.User);
+                            await command.Perform(arguments: new List<string>() { message.User.UserName });
                         }
                     }
                 }
