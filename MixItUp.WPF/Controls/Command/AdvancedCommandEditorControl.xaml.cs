@@ -92,7 +92,9 @@ namespace MixItUp.WPF.Controls.Command
 
         public override void DuplicateAction(ActionContainerControl actionContainer)
         {
-            this.AddActionControlContainer(new ActionContainerControl(this.window, this, actionContainer.GetAction()));
+            List<ActionBase> actions = new List<ActionBase>() { actionContainer.GetAction() };
+            actions = JSONSerializerHelper.Clone<List<ActionBase>>(actions);
+            this.AddActionControlContainer(new ActionContainerControl(this.window, this, actions.First()));
         }
 
         public override void DeleteAction(ActionContainerControl control)
