@@ -331,11 +331,11 @@ namespace MixItUp.Base.MixerAPI
                         user.FanProgression = fanProgression;
                         Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
                         {
-                            { "userfanprogressionnext", fanProgression.level.nextLevelXp.ToString() },
+                            { "userfanprogressionnext", fanProgression.level.nextLevelXp.GetValueOrDefault().ToString() },
                             { "userfanprogressionrank", fanProgression.level.level.ToString() },
                             { "userfanprogressioncolor", fanProgression.level.color.ToString() },
                             { "userfanprogressionimage", fanProgression.level.LargeGIFAssetURL.ToString() },
-                            { "userfanprogression", fanProgression.level.currentXp.ToString() },
+                            { "userfanprogression", fanProgression.level.currentXp.GetValueOrDefault().ToString() },
                         };
 
                         await EventCommand.FindAndRunEventCommand(e.channel, user, extraSpecialIdentifiers: specialIdentifiers);
