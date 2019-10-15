@@ -101,7 +101,7 @@
         <ToggleButton Grid.Row="12" Grid.Column="2" x:Name="LatestChatAtTopToggleButton" Checked="LatestChatAtTopToggleButton_Checked" Unchecked="LatestChatAtTopToggleButton_Checked" />
 
         <TextBlock Grid.Row="14" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Hide viewer &amp; chatter numbers:</TextBlock>
-        <ToggleButton Grid.Row="1412" Grid.Column="2" x:Name="HideViewerAndChatterNumbersToggleButton" Checked="HideViewerAndChatterNumbersToggleButton_Checked" Unchecked="HideViewerAndChatterNumbersToggleButton_Checked" />
+        <ToggleButton Grid.Row="14" Grid.Column="2" x:Name="HideViewerAndChatterNumbersToggleButton" Checked="HideViewerAndChatterNumbersToggleButton_Checked" Unchecked="HideViewerAndChatterNumbersToggleButton_Checked" />
 
         <TextBlock Grid.Row="16" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Hide chat user list:</TextBlock>
         <ToggleButton Grid.Row="16" Grid.Column="2" x:Name="HideChatUserListToggleButton" Checked="HideChatUserListToggleButton_Checked" Unchecked="HideChatUserListToggleButton_Checked" />
