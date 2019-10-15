@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.ViewModel.Window;
 using MixItUp.WPF.Controls;
 using MixItUp.WPF.Util;
+using StreamingClient.Base.Util;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
@@ -62,18 +63,32 @@ namespace MixItUp.WPF.Windows
 
         protected void StartAsyncOperation()
         {
-            this.asyncOperationCount++;
-            this.IsEnabled = false;
-            this.statusBar.ShowProgressBar();
+            try
+            {
+                this.asyncOperationCount++;
+                this.IsEnabled = false;
+                this.statusBar.ShowProgressBar();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
         }
 
         protected void EndAsyncOperation()
         {
-            this.asyncOperationCount--;
-            if (this.asyncOperationCount == 0)
+            try
             {
-                this.statusBar.HideProgressBar();
-                this.IsEnabled = true;
+                this.asyncOperationCount--;
+                if (this.asyncOperationCount == 0)
+                {
+                    this.statusBar.HideProgressBar();
+                    this.IsEnabled = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex)
             }
         }
 
