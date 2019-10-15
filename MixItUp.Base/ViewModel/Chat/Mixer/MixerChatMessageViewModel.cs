@@ -47,22 +47,11 @@ namespace MixItUp.Base.ViewModel.Chat.Mixer
                     switch (message.type)
                     {
                         case "emoticon":
+                            this.AddStringMessagePart(message.text);
                             MixerChatEmoteModel emote = MixerChatEmoteModel.GetEmoteForMessageData(message);
                             if (emote != null)
                             {
-                                this.MessageParts.Add(emote);
-                                if (this.PlainTextMessage.Length == 0)
-                                {
-                                    this.PlainTextMessage = message.text;
-                                }
-                                else
-                                {
-                                    this.PlainTextMessage = " " + message.text;
-                                }
-                            }
-                            else
-                            {
-                                this.AddStringMessagePart(message.text);
+                                this.MessageParts[this.MessageParts.Count - 1] = emote;
                             }
                             break;
                         case "link":

@@ -50,6 +50,7 @@ namespace MixItUp.WPF.Controls.Settings
             this.DeleteChatCommandsWhenRunToggleButton.IsChecked = ChannelSession.Settings.DeleteChatCommandsWhenRun;
             this.ShowMessageTimestampsToggleButton.IsChecked = ChannelSession.Settings.ShowChatMessageTimestamps;
             this.ShowMixrElixrEmotesToggleButton.IsChecked = ChannelSession.Settings.ShowMixrElixrEmotes;
+            this.OnlyShowAlertsInDashboardToggleButton.IsChecked = ChannelSession.Settings.OnlyShowAlertsInDashboard;
 
             await base.InitializeInternal();
         }
@@ -172,6 +173,11 @@ namespace MixItUp.WPF.Controls.Settings
         private void ShowMessageTimestampsToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             ChannelSession.Settings.ShowChatMessageTimestamps = this.ShowMessageTimestampsToggleButton.IsChecked.GetValueOrDefault();
+        }
+
+        private void OnlyShowAlertsInDashboardToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            ChannelSession.Settings.OnlyShowAlertsInDashboard = this.OnlyShowAlertsInDashboardToggleButton.IsChecked.GetValueOrDefault();
         }
     }
 }
