@@ -321,27 +321,30 @@ namespace MixItUp.Base.Services
                 message.User = activeUser;
             }
 
-            await DispatcherHelper.InvokeDispatcher(() =>
+            if (!(message is AlertChatMessageViewModel) || !ChannelSession.Settings.OnlyShowAlertsInDashboard)
             {
-                this.messagesLookup[message.ID] = message;
-                if (ChannelSession.Settings.LatestChatAtTop)
+                await DispatcherHelper.InvokeDispatcher(() =>
                 {
-                    this.Messages.Insert(0, message);
-                }
-                else
-                {
-                    this.Messages.Add(message);
-                }
+                    this.messagesLookup[message.ID] = message;
+                    if (ChannelSession.Settings.LatestChatAtTop)
+                    {
+                        this.Messages.Insert(0, message);
+                    }
+                    else
+                    {
+                        this.Messages.Add(message);
+                    }
 
-                if (this.Messages.Count > ChannelSession.Settings.MaxMessagesInChat)
-                {
-                    ChatMessageViewModel removedMessage = (ChannelSession.Settings.LatestChatAtTop) ? this.Messages.Last() : this.Messages.First();
-                    this.messagesLookup.Remove(removedMessage.ID);
-                    this.Messages.Remove(removedMessage);
-                }
+                    if (this.Messages.Count > ChannelSession.Settings.MaxMessagesInChat)
+                    {
+                        ChatMessageViewModel removedMessage = (ChannelSession.Settings.LatestChatAtTop) ? this.Messages.Last() : this.Messages.First();
+                        this.messagesLookup.Remove(removedMessage.ID);
+                        this.Messages.Remove(removedMessage);
+                    }
 
-                return Task.FromResult(0);
-            });
+                    return Task.FromResult(0);
+                });
+            }
 
             if (message is MixerChatMessageViewModel)
             {

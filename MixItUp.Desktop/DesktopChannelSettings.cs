@@ -101,6 +101,8 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public bool WhisperAllAlerts { get; set; }
         [JsonProperty]
+        public bool OnlyShowAlertsInDashboard { get; set; }
+        [JsonProperty]
         public bool LatestChatAtTop { get; set; }
         [JsonProperty]
         public bool HideViewerAndChatterNumbers { get; set; }
