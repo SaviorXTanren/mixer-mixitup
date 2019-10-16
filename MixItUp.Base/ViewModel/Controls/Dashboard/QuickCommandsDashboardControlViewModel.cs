@@ -2,7 +2,6 @@
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Window;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -18,8 +17,7 @@ namespace MixItUp.Base.ViewModel.Controls.Dashboard
             {
                 this.commandOne = value;
                 this.AssignCommand(0, value);
-                this.NotifyPropertyChanged();
-                this.NotifyPropertyChanged("CommandOneName");
+                this.NotifyPropertiesChanged();
             }
         }
         private CommandBase commandOne;
@@ -33,8 +31,7 @@ namespace MixItUp.Base.ViewModel.Controls.Dashboard
             {
                 this.commandTwo = value;
                 this.AssignCommand(1, value);
-                this.NotifyPropertyChanged();
-                this.NotifyPropertyChanged("CommandTwoName");
+                this.NotifyPropertiesChanged();
             }
         }
         private CommandBase commandTwo;
@@ -48,8 +45,7 @@ namespace MixItUp.Base.ViewModel.Controls.Dashboard
             {
                 this.commandThree = value;
                 this.AssignCommand(2, value);
-                this.NotifyPropertyChanged();
-                this.NotifyPropertyChanged("CommandThreeName");
+                this.NotifyPropertiesChanged();
             }
         }
         private CommandBase commandThree;
@@ -63,8 +59,7 @@ namespace MixItUp.Base.ViewModel.Controls.Dashboard
             {
                 this.commandFour = value;
                 this.AssignCommand(3, value);
-                this.NotifyPropertyChanged();
-                this.NotifyPropertyChanged("CommandFourName");
+                this.NotifyPropertiesChanged();
             }
         }
         private CommandBase commandFour;
@@ -78,8 +73,7 @@ namespace MixItUp.Base.ViewModel.Controls.Dashboard
             {
                 this.commandFive = value;
                 this.AssignCommand(4, value);
-                this.NotifyPropertyChanged();
-                this.NotifyPropertyChanged("CommandFiveName");
+                this.NotifyPropertiesChanged();
             }
         }
         private CommandBase commandFive;
@@ -95,11 +89,13 @@ namespace MixItUp.Base.ViewModel.Controls.Dashboard
             this.commandFour = this.GetCommand(3);
             this.commandFive = this.GetCommand(4);
 
-            this.CommandOneCommand = this.CreateCommand(async (parameter) => { await this.RunCommand(this.commandOne); });
-            this.CommandTwoCommand = this.CreateCommand(async (parameter) => { await this.RunCommand(this.commandTwo); });
-            this.CommandThreeCommand = this.CreateCommand(async (parameter) => { await this.RunCommand(this.commandThree); });
-            this.CommandFourCommand = this.CreateCommand(async (parameter) => { await this.RunCommand(this.commandFour); });
-            this.CommandFiveCommand = this.CreateCommand(async (parameter) => { await this.RunCommand(this.commandFive); });
+            this.CommandOneCommand = this.CreateCommand(async (parameter) => { await this.RunCommand(this.CommandOne); });
+            this.CommandTwoCommand = this.CreateCommand(async (parameter) => { await this.RunCommand(this.CommandTwo); });
+            this.CommandThreeCommand = this.CreateCommand(async (parameter) => { await this.RunCommand(this.CommandThree); });
+            this.CommandFourCommand = this.CreateCommand(async (parameter) => { await this.RunCommand(this.CommandFour); });
+            this.CommandFiveCommand = this.CreateCommand(async (parameter) => { await this.RunCommand(this.CommandFive); });
+
+            this.NotifyPropertiesChanged();
         }
 
         public async Task<bool> CanSelectCommands()
@@ -142,6 +138,20 @@ namespace MixItUp.Base.ViewModel.Controls.Dashboard
             {
                 await command.Perform();
             }
+        }
+
+        private void NotifyPropertiesChanged()
+        {
+            this.NotifyPropertyChanged("CommandOne");
+            this.NotifyPropertyChanged("CommandTwo");
+            this.NotifyPropertyChanged("CommandThree");
+            this.NotifyPropertyChanged("CommandFour");
+            this.NotifyPropertyChanged("CommandFive");
+            this.NotifyPropertyChanged("CommandOneName");
+            this.NotifyPropertyChanged("CommandTwoName");
+            this.NotifyPropertyChanged("CommandThreeName");
+            this.NotifyPropertyChanged("CommandFourName");
+            this.NotifyPropertyChanged("CommandFiveName");
         }
     }
 }
