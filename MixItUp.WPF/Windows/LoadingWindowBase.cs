@@ -80,8 +80,9 @@ namespace MixItUp.WPF.Windows
             try
             {
                 this.asyncOperationCount--;
-                if (this.asyncOperationCount == 0)
+                if (this.asyncOperationCount <= 0)
                 {
+                    this.asyncOperationCount = 0;
                     this.statusBar.HideProgressBar();
                     this.IsEnabled = true;
                 }
