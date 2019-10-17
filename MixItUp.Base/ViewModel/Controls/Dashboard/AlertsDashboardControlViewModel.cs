@@ -1,8 +1,10 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Window;
 using StreamingClient.Base.Util;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,10 +15,21 @@ namespace MixItUp.Base.ViewModel.Controls.Dashboard
     {
         public ObservableCollection<ChatMessageViewModel> Messages { get; private set; } = new ObservableCollection<ChatMessageViewModel>();
 
+        public IEnumerable<ChatCommand> ContextMenuChatCommands { get { return ChannelSession.Services.Chat.ChatMenuCommands; } }
+
+        public event EventHandler ContextMenuCommandsChanged = delegate { };
+
         public AlertsDashboardControlViewModel(WindowViewModelBase windowViewModel)
             : base(windowViewModel)
         {
             GlobalEvents.OnAlertMessageReceived += GlobalEvents_OnAlertMessageReceived;
+        }
+
+        protected override async Task OnLoadedInternal()
+        {
+            await base.OnLoadedInternal();
+
+            ChannelSession.Services.Chat.ChatCommandsReprocessed += Chat_ChatCommandsReprocessed;
         }
 
         private async void GlobalEvents_OnAlertMessageReceived(object sender, AlertChatMessageViewModel message)
@@ -46,6 +59,11 @@ namespace MixItUp.Base.ViewModel.Controls.Dashboard
                 }
                 return Task.FromResult(0);
             });
+        }
+
+        private void Chat_ChatCommandsReprocessed(object sender, EventArgs e)
+        {
+            this.ContextMenuCommandsChanged(this, new EventArgs());
         }
     }
 }
