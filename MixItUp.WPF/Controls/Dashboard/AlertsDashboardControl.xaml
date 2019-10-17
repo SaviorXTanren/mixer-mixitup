@@ -7,8 +7,17 @@
              xmlns:ChatControls="clr-namespace:MixItUp.WPF.Controls.Chat"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <local:DashboardControlBase.Resources>
+        <ResourceDictionary>
+            <ContextMenu x:Key="AlertListContextMenu">
+                <MenuItem x:Name="UserInformationMenuItem" Header="User Info" Click="UserInformationMenuItem_Click" />
+            </ContextMenu>
+
+        </ResourceDictionary>
+    </local:DashboardControlBase.Resources>
+
     <Grid Margin="10">
-        <ListView x:Name="NotificationsListView" ItemsSource="{Binding Messages}" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch" ScrollViewer.ScrollChanged="NotificationsListView_ScrollChanged">
+        <ListView x:Name="AlertsListView" ItemsSource="{Binding Messages}" ContextMenu="{StaticResource AlertListContextMenu}" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch" ScrollViewer.ScrollChanged="NotificationsListView_ScrollChanged">
             <ListView.Resources>
                 <Style TargetType="ListViewItem">
                     <Setter Property="Width" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ScrollContentPresenter}, Path=ActualWidth}" />
