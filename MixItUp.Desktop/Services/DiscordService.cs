@@ -527,16 +527,17 @@ namespace MixItUp.Desktop.Services
                 {
                     this.Emojis = await this.GetEmojis(this.Server);
 
-                    if (this.IsUsingCustomApplication)
+                    if (!this.IsUsingCustomApplication)
                     {
-                        DiscordGateway gateway = await this.GetBotGateway();
-                        if (gateway != null)
-                        {
-                            DiscordWebSocket webSocket = new DiscordWebSocket();
-                            return await webSocket.Connect(gateway.WebSocketURL, gateway.Shards, this.BotToken);
-                        }
+                        return true;
                     }
-                    return true;
+
+                    DiscordGateway gateway = await this.GetBotGateway();
+                    if (gateway != null)
+                    {
+                        DiscordWebSocket webSocket = new DiscordWebSocket();
+                        return await webSocket.Connect(gateway.WebSocketURL, gateway.Shards, this.BotToken);
+                    }
                 }
             }
             return false;
