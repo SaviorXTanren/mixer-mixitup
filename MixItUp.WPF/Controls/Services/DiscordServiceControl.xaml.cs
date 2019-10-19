@@ -20,7 +20,7 @@ namespace MixItUp.WPF.Controls.Services
         {
             this.SetHeaderText("Discord");
 
-            if (ChannelSession.Settings.DiscordOAuthToken != null)
+            if (ChannelSession.Services.Discord != null && ChannelSession.Services.Discord.IsConnected)
             {
                 this.ExistingAccountGrid.Visibility = Visibility.Visible;
 

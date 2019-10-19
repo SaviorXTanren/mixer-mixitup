@@ -256,6 +256,10 @@ namespace MixItUp.Base.Services
 
     public interface IDiscordService
     {
+        bool IsConnected { get; }
+
+        bool IsUsingCustomApplication { get; }
+
         DiscordUser User { get; }
         DiscordServer Server { get; }
 
