@@ -22,7 +22,7 @@ namespace MixItUp.Base.Services.Mixer
     {
         event EventHandler<MixerChatMessageViewModel> OnMessageOccurred;
         event EventHandler<MixerSkillChatMessageViewModel> OnSkillOccurred;
-        event EventHandler<Guid> OnDeleteMessageOccurred;
+        event EventHandler<Tuple<Guid, UserViewModel>> OnDeleteMessageOccurred;
         event EventHandler OnClearMessagesOccurred;
 
         event EventHandler<IEnumerable<UserViewModel>> OnUsersJoinOccurred;
@@ -64,7 +64,7 @@ namespace MixItUp.Base.Services.Mixer
     {
         public event EventHandler<MixerChatMessageViewModel> OnMessageOccurred = delegate { };
         public event EventHandler<MixerSkillChatMessageViewModel> OnSkillOccurred = delegate { };
-        public event EventHandler<Guid> OnDeleteMessageOccurred = delegate { };
+        public event EventHandler<Tuple<Guid, UserViewModel>> OnDeleteMessageOccurred = delegate { };
         public event EventHandler OnClearMessagesOccurred = delegate { };
 
         public event EventHandler<IEnumerable<UserViewModel>> OnUsersJoinOccurred = delegate { };
@@ -584,7 +584,7 @@ namespace MixItUp.Base.Services.Mixer
 
         private void ChatClient_OnDeleteMessageOccurred(object sender, ChatDeleteMessageEventModel e)
         {
-            this.OnDeleteMessageOccurred(sender, e.id);
+            this.OnDeleteMessageOccurred(sender, new Tuple<Guid, UserViewModel>(e.id, new UserViewModel(e.moderator)));
         }
 
         private void ChatClient_OnPurgeMessageOccurred(object sender, ChatPurgeMessageEventModel e)

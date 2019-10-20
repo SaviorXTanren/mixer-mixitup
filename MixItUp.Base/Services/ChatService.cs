@@ -568,18 +568,18 @@ namespace MixItUp.Base.Services
             }
         }
 
-        private async void MixerChatService_OnDeleteMessageOccurred(object sender, Guid id)
+        private async void MixerChatService_OnDeleteMessageOccurred(object sender, Tuple<Guid, UserViewModel> messageDeletion)
         {
-            if (this.messagesLookup.TryGetValue(id.ToString(), out ChatMessageViewModel message))
+            if (this.messagesLookup.TryGetValue(messageDeletion.Item1.ToString(), out ChatMessageViewModel message))
             {
-                await message.Delete();
-                GlobalEvents.ChatMessageDeleted(id);
+                await message.Delete(messageDeletion.Item2);
+                GlobalEvents.ChatMessageDeleted(messageDeletion.Item1);
 
                 if (ChannelSession.Settings.HideDeletedMessages)
                 {
                     await DispatcherHelper.InvokeDispatcher(() =>
                     {
-                        this.messagesLookup.Remove(id.ToString());
+                        this.messagesLookup.Remove(messageDeletion.Item1.ToString());
                         this.Messages.Remove(message);
                         return Task.FromResult(0);
                     });
