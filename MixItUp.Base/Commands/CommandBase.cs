@@ -244,7 +244,7 @@ namespace MixItUp.Base.Commands
             foreach (string command in this.CommandTriggers)
             {
                 string regex = string.Format(commandMatchingRegexFormat, Regex.Escape(command));
-                Match match = Regex.Match(text, regex);
+                Match match = Regex.Match(text, regex, RegexOptions.IgnoreCase);
                 if (match != null && match.Success)
                 {
                     arguments = text.Substring(match.Index + match.Length).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
