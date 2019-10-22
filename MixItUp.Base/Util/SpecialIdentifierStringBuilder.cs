@@ -798,9 +798,14 @@ namespace MixItUp.Base.Util
 
                             foreach (UserInventoryItemViewModel item in inventory.Items.Values.OrderByDescending(i => i.Name))
                             {
-                                userItems[item.Name] = inventoryData.GetAmount(item);
+                                var quantity = inventoryData.GetAmount(item);
+                                if (quantity > 0)
+                                {
+                                    userItems[item.Name] = quantity;
+                                }
+
                                 string itemSpecialIdentifier = identifierHeader + inventory.UserAmountSpecialIdentifierHeader + item.SpecialIdentifier;
-                                this.ReplaceSpecialIdentifier(itemSpecialIdentifier, userItems[item.Name].ToString());
+                                this.ReplaceSpecialIdentifier(itemSpecialIdentifier, quantity.ToString());
                             }
 
                             if (userItems.Count > 0)
@@ -814,13 +819,13 @@ namespace MixItUp.Base.Util
                                     }
                                 }
                                 this.ReplaceSpecialIdentifier(identifierHeader + inventory.UserAllAmountSpecialIdentifier, string.Join(", ", userAllItems));
+                                this.ReplaceSpecialIdentifier(identifierHeader + inventory.UserRandomItemSpecialIdentifier, userItems.Keys.Random());
                             }
                             else
                             {
                                 this.ReplaceSpecialIdentifier(identifierHeader + inventory.UserAllAmountSpecialIdentifier, "Nothing");
+                                this.ReplaceSpecialIdentifier(identifierHeader + inventory.UserRandomItemSpecialIdentifier, "Nothing");
                             }
-
-                            this.ReplaceSpecialIdentifier(inventory.UserRandomItemSpecialIdentifier, userItems.Keys.Random());
                         }
                     }
 
