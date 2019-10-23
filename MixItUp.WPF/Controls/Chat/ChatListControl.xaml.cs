@@ -156,6 +156,8 @@ namespace MixItUp.WPF.Controls.Chat
         {
             try
             {
+                this.viewModel.SendMessageText = this.ChatMessageTextBox.Text;
+
                 this.HideIntellisense();
 
                 string tag = this.ChatMessageTextBox.Text.Split(' ').LastOrDefault();
