@@ -31,7 +31,7 @@ namespace MixItUp.AutoHoster
             Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
-            Logger.Log("Auto Hoster Application Version: " + App.FileService.GetApplicationVersion());
+            Logger.Log(LogLevel.Fatal, "Auto Hoster Application Version: " + App.FileService.GetApplicationVersion());
 
             base.OnStartup(e);
         }
