@@ -554,18 +554,7 @@ namespace MixItUp.Base.Services.Mixer
                 {
                     MixerSkillChatMessageViewModel message = new MixerSkillChatMessageViewModel(e);
                     this.OnMessageOccurred(sender, message);
-                    GlobalEvents.SkillUseOccurred(message);
-                    if (message.Skill.Cost > 0)
-                    {
-                        if (message.Skill.CostType == MixerSkillCostTypeEnum.Sparks)
-                        {
-                            GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, uint>(message.User, message.Skill.Cost));
-                        }
-                        else if (message.Skill.CostType == MixerSkillCostTypeEnum.Embers)
-                        {
-                            GlobalEvents.EmberUseOccurred(new UserEmberUsageModel(message));
-                        }
-                    }
+                    this.ProcessSkill(message);
                 }
                 else
                 {
@@ -670,16 +659,25 @@ namespace MixItUp.Base.Services.Mixer
             }
 
             this.OnMessageOccurred(sender, message);
-            GlobalEvents.SkillUseOccurred(message);
-            if (message.Skill.Cost > 0)
+
+            this.ProcessSkill(message);
+        }
+
+        private void ProcessSkill(MixerSkillChatMessageViewModel message)
+        {
+            if (message.IsInUsersChannel)
             {
-                if (message.Skill.CostType == MixerSkillCostTypeEnum.Sparks)
+                GlobalEvents.SkillUseOccurred(message);
+                if (message.Skill.Cost > 0)
                 {
-                    GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, uint>(message.User, message.Skill.Cost));
-                }
-                else if (message.Skill.CostType == MixerSkillCostTypeEnum.Embers)
-                {
-                    GlobalEvents.EmberUseOccurred(new UserEmberUsageModel(message));
+                    if (message.Skill.CostType == MixerSkillCostTypeEnum.Sparks)
+                    {
+                        GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, uint>(message.User, message.Skill.Cost));
+                    }
+                    else if (message.Skill.CostType == MixerSkillCostTypeEnum.Embers)
+                    {
+                        GlobalEvents.EmberUseOccurred(new UserEmberUsageModel(message));
+                    }
                 }
             }
         }
