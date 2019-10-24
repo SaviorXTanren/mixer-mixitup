@@ -29,7 +29,7 @@ namespace MixItUp.Base.Services
 
     public class MixerStatusService : IMixerStatusService
     {
-        private const string MixerStatusRSSFeedLink = "https://status.mixer.com/history.rss";
+        private const string MixerStatusFeedLink = "https://status.mixer.com/api/v2/status.json";
 
         public async Task<IEnumerable<MixerIncident>> GetCurrentIncidents()
         {
@@ -38,7 +38,7 @@ namespace MixItUp.Base.Services
             {
                 try
                 {
-                    rssData = await client.GetStringAsync(MixerStatusService.MixerStatusRSSFeedLink);
+                    //rssData = await client.GetStringAsync(MixerStatusService.MixerStatusRSSFeedLink);
                 }
                 catch (Exception ex) { Logger.Log(ex); }
             }
