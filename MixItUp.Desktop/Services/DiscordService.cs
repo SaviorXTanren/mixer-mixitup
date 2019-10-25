@@ -283,12 +283,28 @@ namespace MixItUp.Desktop.Services
             return null;
         }
 
-        public async Task<DiscordMessage> CreateMessage(DiscordChannel channel, string message)
+        public async Task<DiscordMessage> CreateMessage(DiscordChannel channel, string message, string filePath)
         {
             try
             {
                 DiscordMessage messageObj = new DiscordMessage() { Content = message };
-                return await this.PostAsync<DiscordMessage>("channels/" + channel.ID + "/messages", AdvancedHttpClient.CreateContentFromObject(messageObj));
+                var messageContent = AdvancedHttpClient.CreateContentFromObject(messageObj);
+
+                var multiPart = new MultipartFormDataContent();
+                multiPart.Add(messageContent, "\"payload_json\"");
+
+                if (!string.IsNullOrEmpty(filePath))
+                {
+                    byte[] bytes = await ChannelSession.Services.FileService.ReadFileAsBytes(filePath);
+                    if (bytes != null && bytes.Length > 0)
+                    {
+                        var fileContent = new ByteArrayContent(bytes);
+                        string fileName = System.IO.Path.GetFileName(filePath);
+                        multiPart.Add(fileContent, "\"file\"", $"\"{fileName}\"");
+                    }
+                }
+
+                return await this.PostAsync<DiscordMessage>("channels/" + channel.ID + "/messages", multiPart);
             }
             catch (Exception ex) { Logger.Log(ex); }
             return null;
@@ -328,7 +344,10 @@ namespace MixItUp.Desktop.Services
 
     public class DiscordService : OAuthServiceBase, IDiscordService, IDisposable
     {
-        public const string ClientBotPermissions = "14026752";
+        /// <summary>
+        /// View Channels, Send Messages, Send TTS Messages, Embed Links, Attach Files, Mention Everyone, Use External Emojis, Connect, Mute Members, Deafen Members
+        /// </summary>
+        public const string ClientBotPermissions = "14081024";
 
         private const string BaseAddress = "https://discordapp.com/api/";
 
@@ -448,7 +467,7 @@ namespace MixItUp.Desktop.Services
 
         public async Task<IEnumerable<DiscordEmoji>> GetEmojis(DiscordServer server) { return await this.botService.GetEmojis(server); }
 
-        public async Task<DiscordMessage> CreateMessage(DiscordChannel channel, string message)
+        public async Task<DiscordMessage> CreateMessage(DiscordChannel channel, string message, string filePath)
         {
             if (await this.IsWithinRateLimiting())
             {
@@ -472,7 +491,7 @@ namespace MixItUp.Desktop.Services
                         message = message.Replace(findString, replacementString);
                     }
                 }
-                return await this.botService.CreateMessage(channel, message);
+                return await this.botService.CreateMessage(channel, message, filePath);
             }
             return null;
         }
