@@ -362,7 +362,7 @@ namespace MixItUp.Base.Services.Mixer
             await this.RunAsync(async () =>
             {
                 await ChannelSession.MixerStreamerConnection.AddUserRoles(ChannelSession.MixerChannel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Banned });
-                await user.RefreshDetails(true);
+                await user.RefreshDetails(force: true);
             });
         }
 
@@ -371,7 +371,7 @@ namespace MixItUp.Base.Services.Mixer
             await this.RunAsync(async () =>
             {
                 await ChannelSession.MixerStreamerConnection.RemoveUserRoles(ChannelSession.MixerChannel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Banned });
-                await user.RefreshDetails(true);
+                await user.RefreshDetails(force: true);
             });
         }
 
@@ -380,7 +380,7 @@ namespace MixItUp.Base.Services.Mixer
             await this.RunAsync(async () =>
             {
                 await ChannelSession.MixerStreamerConnection.AddUserRoles(ChannelSession.MixerChannel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Mod });
-                await user.RefreshDetails(true);
+                await user.RefreshDetails(force: true);
             });
         }
 
@@ -389,7 +389,7 @@ namespace MixItUp.Base.Services.Mixer
             await this.RunAsync(async () =>
             {
                 await ChannelSession.MixerStreamerConnection.RemoveUserRoles(ChannelSession.MixerChannel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Mod });
-                await user.RefreshDetails(true);
+                await user.RefreshDetails(force: true);
             });
         }
 

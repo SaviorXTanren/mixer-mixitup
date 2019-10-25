@@ -112,21 +112,36 @@ namespace MixItUp.Base.Commands
             return false;
         }
 
-        public static async Task FindAndRunEventCommand(string eventDetails, UserViewModel user, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
+        public static EventCommand FindEventCommand(string eventDetails)
         {
             foreach (EventCommand command in ChannelSession.Settings.EventCommands)
             {
                 if (command.MatchesEvent(eventDetails))
                 {
-                    if (user != null)
-                    {
-                        await command.Perform(user, arguments: arguments, extraSpecialIdentifiers: extraSpecialIdentifiers);
-                    }
-                    else
-                    {
-                        await command.Perform(await ChannelSession.GetCurrentUser(), arguments: arguments, extraSpecialIdentifiers: extraSpecialIdentifiers);
-                    }
+                    return command;
                 }
+            }
+            return null;
+        }
+
+        public static async Task RunEventCommand(EventCommand command, UserViewModel user, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
+        {
+            if (user != null)
+            {
+                await command.Perform(user, arguments: arguments, extraSpecialIdentifiers: extraSpecialIdentifiers);
+            }
+            else
+            {
+                await command.Perform(await ChannelSession.GetCurrentUser(), arguments: arguments, extraSpecialIdentifiers: extraSpecialIdentifiers);
+            }
+        }
+
+        public static async Task FindAndRunEventCommand(string eventDetails, UserViewModel user, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
+        {
+            EventCommand command = EventCommand.FindEventCommand(eventDetails);
+            if (command != null)
+            {
+                await EventCommand.RunEventCommand(command, user, arguments, extraSpecialIdentifiers);
             }
         }
 

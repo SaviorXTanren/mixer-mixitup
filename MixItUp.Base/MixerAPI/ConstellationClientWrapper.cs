@@ -139,6 +139,7 @@ namespace MixItUp.Base.MixerAPI
         {
             try
             {
+                uint userID = 0;
                 UserViewModel user = null;
                 bool? followed = null;
                 ChannelModel channel = null;
@@ -173,17 +174,9 @@ namespace MixItUp.Base.MixerAPI
                         user = new UserViewModel(channel.userId, channel.token);
                     }
                 }
-                else if (e.payload.TryGetValue("userId", out JToken userID))
+                else if (e.payload.TryGetValue("userId", out JToken id))
                 {
-                    user = ChannelSession.Services.User.GetUserByID(userID.ToObject<uint>().ToString());
-                    if (user == null)
-                    {
-                        UserModel userModel = await ChannelSession.MixerStreamerConnection.GetUser(userID.ToObject<uint>());
-                        if (userModel != null)
-                        {
-                            user = new UserViewModel(userModel);
-                        }
-                    }
+                    userID = id.ToObject<uint>();
                 }
 
                 if (user != null)
@@ -338,26 +331,46 @@ namespace MixItUp.Base.MixerAPI
                 else if (e.channel.Equals(ConstellationClientWrapper.ProgressionLevelupEvent.ToString()))
                 {
                     UserFanProgressionModel fanProgression = e.payload.ToObject<UserFanProgressionModel>();
-                    if (user != null && fanProgression != null)
+                    if (fanProgression != null)
                     {
-                        user.FanProgression = fanProgression;
-                        Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
+                        user = ChannelSession.Services.User.GetUserByID(userID);
+                        if (user == null)
                         {
-                            { "userfanprogressionnext", fanProgression.level.nextLevelXp.GetValueOrDefault().ToString() },
-                            { "userfanprogressionrank", fanProgression.level.level.ToString() },
-                            { "userfanprogressioncolor", fanProgression.level.color.ToString() },
-                            { "userfanprogressionimage", fanProgression.level.LargeGIFAssetURL.ToString() },
-                            { "userfanprogression", fanProgression.level.currentXp.GetValueOrDefault().ToString() },
-                        };
+                            user = new UserViewModel(userID, string.Empty);
+                        }
 
-                        await EventCommand.FindAndRunEventCommand(e.channel, user, extraSpecialIdentifiers: specialIdentifiers);
+                        EventCommand command = EventCommand.FindEventCommand(e.channel);
+                        if (command != null)
+                        {
+                            Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
+                            {
+                                { "userfanprogressionnext", fanProgression.level.nextLevelXp.GetValueOrDefault().ToString() },
+                                { "userfanprogressionrank", fanProgression.level.level.ToString() },
+                                { "userfanprogressioncolor", fanProgression.level.color.ToString() },
+                                { "userfanprogressionimage", fanProgression.level.LargeGIFAssetURL.ToString() },
+                                { "userfanprogression", fanProgression.level.currentXp.GetValueOrDefault().ToString() },
+                            };
+
+                            if (string.IsNullOrEmpty(user.UserName))
+                            {
+                                UserModel userModel = await ChannelSession.MixerStreamerConnection.GetUser(userID);
+                                if (userModel != null)
+                                {
+                                    user = new UserViewModel(userModel);
+                                }
+                            }
+
+                            await EventCommand.RunEventCommand(command, user, extraSpecialIdentifiers: specialIdentifiers);
+                        }
+
+                        user.FanProgression = fanProgression;
+
+                        GlobalEvents.ProgressionLevelUpOccurred(user);
 
                         foreach (UserCurrencyViewModel fanProgressionCurrency in ChannelSession.Settings.Currencies.Values.Where(c => c.IsTrackingFanProgression))
                         {
                             user.Data.SetCurrencyAmount(fanProgressionCurrency, (int)fanProgression.level.level);
                         }
-
-                        GlobalEvents.ProgressionLevelUpOccurred(user);
                     }
                 }
                 else if (e.channel.Equals(ConstellationClientWrapper.ChannelSkillEvent.ToString()))

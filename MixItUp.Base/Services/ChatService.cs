@@ -84,14 +84,15 @@ namespace MixItUp.Base.Services
         {
             get
             {
-                IEnumerable<UserViewModel> users = this.displayUsers.Values;
-                users = users.ToList();
-                users = users.Take(ChannelSession.Settings.MaxUsersShownInChat);
-                return users;
+                lock (displayUsersLock)
+                {
+                    return this.displayUsers.Values.ToList().Take(ChannelSession.Settings.MaxUsersShownInChat);
+                }
             }
         }
         public event EventHandler DisplayUsersUpdated = delegate { };
         private SortedList<string, UserViewModel> displayUsers = new SortedList<string, UserViewModel>();
+        private object displayUsersLock = new object();
 
         public event EventHandler ChatCommandsReprocessed = delegate { };
         public IEnumerable<ChatCommand> ChatMenuCommands { get { return this.chatMenuCommands; } }
@@ -492,7 +493,10 @@ namespace MixItUp.Base.Services
             foreach (UserViewModel user in users)
             {
                 this.AllUsers[user.ID.ToString()] = user;
-                this.displayUsers[user.SortableID] = user;
+                lock (displayUsersLock)
+                {
+                    this.displayUsers[user.SortableID] = user;
+                }
 
                 if (ChannelSession.Settings.ChatShowUserJoinLeave && users.Count() < 5)
                 {
@@ -521,7 +525,10 @@ namespace MixItUp.Base.Services
             {
                 if (this.AllUsers.Remove(user.ID.ToString()))
                 {
-                    this.displayUsers.Remove(user.SortableID);
+                    lock (displayUsersLock)
+                    {
+                        this.displayUsers.Remove(user.SortableID);
+                    }
 
                     if (ChannelSession.Settings.ChatShowUserJoinLeave && users.Count() < 5)
                     {
