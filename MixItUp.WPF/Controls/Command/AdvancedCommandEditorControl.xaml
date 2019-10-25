@@ -41,17 +41,19 @@
         <Grid Grid.Row="4" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="30" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="30" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="30" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
@@ -60,25 +62,31 @@
 
             <Button x:Name="AddActionButton" Content="{MaterialDesign:PackIcon Plus}" Click="AddActionButton_Click" Grid.Column="4" ToolTip="Add Action" />
 
-            <Button x:Name="SaveButton" Click="SaveButton_Click" Grid.Column="6" ToolTip="Save">Save</Button>
+            <Button x:Name="SaveButton" Click="SaveButton_Click" Grid.Column="6" ToolTip="Save" Width="40" HorizontalAlignment="Center">
+                <MaterialDesign:PackIcon Kind="ContentSave" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+            </Button>
 
-            <Button x:Name="ExportButton" Click="ExportButton_Click" Grid.Column="8" ToolTip="Export Actions To File" Content="{MaterialDesign:PackIcon Export}" />
+            <Button x:Name="PlayButton" Grid.Column="8" Click="PlayButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Test Command">
+                <MaterialDesign:PackIcon Kind="Play" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+            </Button>
+            <Button x:Name="StopButton" Grid.Column="8" Visibility="Collapsed" Click="StopButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Stop Command">
+                <MaterialDesign:PackIcon Kind="Stop" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+            </Button>
 
-            <Button x:Name="ImportButton" Click="ImportButton_Click" Grid.Column="10" ToolTip="Import Actions From File" Content="{MaterialDesign:PackIcon Import}" />
+            <Button x:Name="ExportButton" Click="ExportButton_Click" Grid.Column="10" ToolTip="Export Actions To File" Content="{MaterialDesign:PackIcon Export}" />
 
-            <Button x:Name="UploadToMixItUpStoreButton" Click="UploadToMixItUpStoreButton_Click" Grid.Column="12" ToolTip="Upload to Mix It Up Store">
+            <Button x:Name="ImportButton" Click="ImportButton_Click" Grid.Column="12" ToolTip="Import Actions From File" Content="{MaterialDesign:PackIcon Import}" />
+
+            <Button x:Name="UploadToMixItUpStoreButton" Click="UploadToMixItUpStoreButton_Click" Grid.Column="14" ToolTip="Upload to Mix It Up Store">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="5" />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="5" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Column="0" VerticalAlignment="Center">Upload To</TextBlock>
-                    <Image Grid.Column="2" Source="..\..\Logo.png" />
-                    <MaterialDesign:PackIcon Grid.Column="4" Kind="Store" VerticalAlignment="Center" Width="24" Height="24" />
+                    <MaterialDesign:PackIcon Grid.Column="2" Kind="Store" VerticalAlignment="Center" Width="24" Height="24" />
                 </Grid>
             </Button>
 
