@@ -28,10 +28,17 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             return command;
         }
 
-        protected CustomCommand CreateBasicCurrencyCommand(string message, UserCurrencyViewModel currency, int amount)
+        protected CustomCommand CreateBasicCurrencyCommand(string message, UserCurrencyViewModel currency, int amount, bool whisper = false)
         {
-            CustomCommand command = this.CreateBasicChatCommand(message);
+            CustomCommand command = this.CreateBasicChatCommand(message, whisper);
             command.Actions.Add(new CurrencyAction(currency, CurrencyActionTypeEnum.AddToUser, amount.ToString()));
+            return command;
+        }
+
+        protected CustomCommand CreateBasicCurrencyCommand(string message, UserCurrencyViewModel currency, string amount, bool whisper = false)
+        {
+            CustomCommand command = this.CreateBasicChatCommand(message, whisper);
+            command.Actions.Add(new CurrencyAction(currency, CurrencyActionTypeEnum.AddToUser, amount));
             return command;
         }
     }
