@@ -105,11 +105,31 @@ namespace MixItUp.Desktop.Files
         {
             try
             {
-                using (FileStream reader = File.OpenRead(filePath))
+                string safeFilePath = filePath.ToFilePathString();
+                if (File.Exists(filePath))
                 {
-                    byte[] data = new byte[reader.Length];
-                    await reader.ReadAsync(data, 0, data.Length);
-                    return data;
+                    using (FileStream reader = File.OpenRead(filePath))
+                    {
+                        byte[] data = new byte[reader.Length];
+                        await reader.ReadAsync(data, 0, data.Length);
+                        return data;
+                    }
+                }
+                else if (File.Exists(safeFilePath))
+                {
+                    using (FileStream reader = File.OpenRead(safeFilePath))
+                    {
+                        byte[] data = new byte[reader.Length];
+                        await reader.ReadAsync(data, 0, data.Length);
+                        return data;
+                    }
+                }
+                else if (webPathPrefixes.Any(p => filePath.StartsWith(p, StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    using (WebClient client = new WebClient())
+                    {
+                        return await Task.Run(async () => { return await client.DownloadDataTaskAsync(filePath); });
+                    }
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }

@@ -295,14 +295,13 @@ namespace MixItUp.Desktop.Services
 
                 if (!string.IsNullOrEmpty(filePath))
                 {
-                    string processedFilePath = filePath.ToFilePathString();
-                    if (System.IO.File.Exists(processedFilePath))
+                    byte[] bytes = await ChannelSession.Services.FileService.ReadFileAsBytes(filePath);
+                    if (bytes != null && bytes.Length > 0)
                     {
-                        var fileContent = new ByteArrayContent(System.IO.File.ReadAllBytes(processedFilePath));
-                        string fileName = System.IO.Path.GetFileName(processedFilePath);
+                        var fileContent = new ByteArrayContent(bytes);
+                        string fileName = System.IO.Path.GetFileName(filePath);
                         multiPart.Add(fileContent, "\"file\"", $"\"{fileName}\"");
                     }
-
                 }
 
                 return await this.PostAsync<DiscordMessage>("channels/" + channel.ID + "/messages", multiPart);

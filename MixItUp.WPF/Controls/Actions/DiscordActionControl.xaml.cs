@@ -1,5 +1,4 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base;
+﻿using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Services;
 using StreamingClient.Base.Util;
@@ -103,6 +102,15 @@ namespace MixItUp.WPF.Controls.Actions
                     this.MuteDeafenOptionGrid.Visibility = Visibility.Visible;
                     this.MuteDeafenOptionTextBlock.Text = "Deafen";
                 }
+            }
+        }
+
+        private void FilePathBrowseButton_Click(object sender, RoutedEventArgs e)
+        {
+            string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog("");
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                this.FilePath.Text = filePath;
             }
         }
     }

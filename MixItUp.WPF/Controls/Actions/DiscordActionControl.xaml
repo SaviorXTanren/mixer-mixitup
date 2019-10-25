@@ -27,12 +27,7 @@
         </Grid>
 
         <Grid Grid.Row="2">
-            <Grid x:Name="SendMessageGrid" Visibility="Collapsed">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
+            <Grid x:Name="SendMessageGrid" Visibility="Collapsed" Margin="0,-25,0,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="10" />
@@ -41,15 +36,33 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Center">
+                <TextBlock Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center">
                     <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">Special Identifiers Reference</Hyperlink>
                 </TextBlock>
 
-                <ComboBox x:Name="SendMessageChannelComboBox" Grid.Row="2" Grid.Column="0" MaterialDesign:HintAssist.Hint="Chat Channel" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="Name" Width="200" />
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
 
-                <TextBox x:Name="SendMessageTextBox" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Message" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <ComboBox x:Name="SendMessageChannelComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Chat Channel" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="Name" Width="200" />
 
-                <TextBox x:Name="FilePath" Grid.Row="4" Grid.Column="2" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Upload File Path (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox x:Name="SendMessageTextBox" Grid.Column="2" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Message" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                </Grid>
+
+                <Grid Grid.Row="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox x:Name="FilePath" Grid.Column="0" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Upload File Path (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                    <Button x:Name="FilePathBrowseButton" Grid.Column="2" Click="FilePathBrowseButton_Click">Browse</Button>
+                </Grid>
             </Grid>
 
             <Grid x:Name="MuteDeafenOptionGrid" Visibility="Collapsed">
