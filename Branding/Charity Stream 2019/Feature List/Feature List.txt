@@ -1,8 +1,1 @@
-1) Add Rock-Paper-Scissors Game Type = $24.50
-
-2) Add Twitter On Follow event = $18.00
-
-3) Last Stream Special Identifiers = $12.00
-
-4) Add Per-Person Group Cooldowns = $5.75
-
+1) Discord "Send Message" file upload - $30
