@@ -287,8 +287,19 @@ namespace MixItUp.Desktop.Services
         {
             try
             {
-                DiscordMessage messageObj = new DiscordMessage() { Content = message };
-                return await this.PostAsync<DiscordMessage>("channels/" + channel.ID + "/messages", AdvancedHttpClient.CreateContentFromObject(messageObj));
+                using (HttpClient client = await this.GetHttpClient())
+                {
+                    MultipartFormDataContent multiPartContent = new MultipartFormDataContent();
+                    multiPartContent.Headers.ContentType = new MediaTypeHeaderValue("multipart/form-data");
+
+                    multiPartContent.Add(new StringContent(message), "content");
+
+                    StringContent fileContents = new StringContent(await ChannelSession.Services.FileService.ReadFile("X:\\HelloWorld.txt"));
+                    fileContents.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+                    multiPartContent.Add(fileContents, "\"file\"", "\"test.txt\"");
+
+                    HttpResponseMessage response = await client.PostAsync("channels/" + channel.ID + "/messages", multiPartContent);
+                }
             }
             catch (Exception ex) { Logger.Log(ex); }
             return null;
@@ -328,7 +339,10 @@ namespace MixItUp.Desktop.Services
 
     public class DiscordService : OAuthServiceBase, IDiscordService, IDisposable
     {
-        public const string ClientBotPermissions = "14026752";
+        /// <summary>
+        /// View Channels, Send Messages, Send TTS Messages, Embed Links, Attach Files, Mention Everyone, Use External Emojis, Connect, Mute Members, Deafen Members
+        /// </summary>
+        public const string ClientBotPermissions = "14081024";
 
         private const string BaseAddress = "https://discordapp.com/api/";
 

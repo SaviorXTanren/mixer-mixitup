@@ -178,6 +178,12 @@ namespace MixItUp.Base.Services
         [JsonProperty("timestamp")]
         public string Timestamp { get; set; }
 
+        [JsonProperty("file")]
+        public string File { get; set; }
+
+        [JsonProperty("payload_json")]
+        public string PayloadJSON { get; set; }
+
         public DiscordMessage() { }
     }
 
