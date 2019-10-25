@@ -295,7 +295,7 @@ namespace MixItUp.Base.Services
 
         Task<IEnumerable<DiscordEmoji>> GetEmojis(DiscordServer server);
 
-        Task<DiscordMessage> CreateMessage(DiscordChannel channel, string message);
+        Task<DiscordMessage> CreateMessage(DiscordChannel channel, string message, string filePath);
 
         Task<DiscordChannelInvite> CreateChannelInvite(DiscordChannel channel, bool isTemporary = false);
 

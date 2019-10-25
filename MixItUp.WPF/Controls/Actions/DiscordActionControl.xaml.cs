@@ -51,6 +51,7 @@ namespace MixItUp.WPF.Controls.Actions
 
                 this.SendMessageChannelComboBox.SelectedItem = action.SendMessageChannel;
                 this.SendMessageTextBox.Text = action.SendMessageText;
+                this.FilePath.Text = action.FilePath;
 
                 this.MuteDeafenOptionCheckBox.IsChecked = action.ShouldMuteDeafen;
             }
@@ -66,7 +67,7 @@ namespace MixItUp.WPF.Controls.Actions
                     if (this.SendMessageChannelComboBox.SelectedIndex >= 0 && !string.IsNullOrEmpty(this.SendMessageTextBox.Text))
                     {
                         DiscordChannel channel = (DiscordChannel)this.SendMessageChannelComboBox.SelectedItem;
-                        return DiscordAction.CreateForChatMessage(channel, this.SendMessageTextBox.Text);
+                        return DiscordAction.CreateForChatMessage(channel, this.SendMessageTextBox.Text, this.FilePath.Text);
                     }
                 }
                 else if (actionType == DiscordActionTypeEnum.MuteSelf)

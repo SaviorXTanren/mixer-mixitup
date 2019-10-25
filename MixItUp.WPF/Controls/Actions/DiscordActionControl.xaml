@@ -37,6 +37,8 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="10" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Center">
@@ -47,6 +49,7 @@
 
                 <TextBox x:Name="SendMessageTextBox" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Message" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
+                <TextBox x:Name="FilePath" Grid.Row="4" Grid.Column="2" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Upload File Path (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
             </Grid>
 
             <Grid x:Name="MuteDeafenOptionGrid" Visibility="Collapsed">

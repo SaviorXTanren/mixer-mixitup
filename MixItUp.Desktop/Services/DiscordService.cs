@@ -283,23 +283,29 @@ namespace MixItUp.Desktop.Services
             return null;
         }
 
-        public async Task<DiscordMessage> CreateMessage(DiscordChannel channel, string message)
+        public async Task<DiscordMessage> CreateMessage(DiscordChannel channel, string message, string filePath)
         {
             try
             {
-                using (HttpClient client = await this.GetHttpClient())
+                DiscordMessage messageObj = new DiscordMessage() { Content = message };
+                var messageContent = AdvancedHttpClient.CreateContentFromObject(messageObj);
+
+                var multiPart = new MultipartFormDataContent();
+                multiPart.Add(messageContent, "\"payload_json\"");
+
+                if (!string.IsNullOrEmpty(filePath))
                 {
-                    MultipartFormDataContent multiPartContent = new MultipartFormDataContent();
-                    multiPartContent.Headers.ContentType = new MediaTypeHeaderValue("multipart/form-data");
+                    string processedFilePath = filePath.ToFilePathString();
+                    if (System.IO.File.Exists(processedFilePath))
+                    {
+                        var fileContent = new ByteArrayContent(System.IO.File.ReadAllBytes(processedFilePath));
+                        string fileName = System.IO.Path.GetFileName(processedFilePath);
+                        multiPart.Add(fileContent, "\"file\"", $"\"{fileName}\"");
+                    }
 
-                    multiPartContent.Add(new StringContent(message), "content");
-
-                    StringContent fileContents = new StringContent(await ChannelSession.Services.FileService.ReadFile("X:\\HelloWorld.txt"));
-                    fileContents.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
-                    multiPartContent.Add(fileContents, "\"file\"", "\"test.txt\"");
-
-                    HttpResponseMessage response = await client.PostAsync("channels/" + channel.ID + "/messages", multiPartContent);
                 }
+
+                return await this.PostAsync<DiscordMessage>("channels/" + channel.ID + "/messages", multiPart);
             }
             catch (Exception ex) { Logger.Log(ex); }
             return null;
@@ -462,7 +468,7 @@ namespace MixItUp.Desktop.Services
 
         public async Task<IEnumerable<DiscordEmoji>> GetEmojis(DiscordServer server) { return await this.botService.GetEmojis(server); }
 
-        public async Task<DiscordMessage> CreateMessage(DiscordChannel channel, string message)
+        public async Task<DiscordMessage> CreateMessage(DiscordChannel channel, string message, string filePath)
         {
             if (await this.IsWithinRateLimiting())
             {
@@ -486,7 +492,7 @@ namespace MixItUp.Desktop.Services
                         message = message.Replace(findString, replacementString);
                     }
                 }
-                return await this.botService.CreateMessage(channel, message);
+                return await this.botService.CreateMessage(channel, message, filePath);
             }
             return null;
         }
