@@ -60,6 +60,23 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public int FontSize { get { return ChannelSession.Settings.ChatFontSize; } }
 
+        public string PrimaryTaggedUsername
+        {
+            get
+            {
+                if (this.PlainTextMessage.StartsWith("@"))
+                {
+                    int endIndex = this.PlainTextMessage.IndexOf(' ');
+                    if (endIndex > 0)
+                    {
+                        return this.PlainTextMessage.Substring(1, endIndex - 1);
+                    }
+                    return this.PlainTextMessage.Substring(1);
+                }
+                return null;
+            }
+        }
+
         public virtual bool ContainsOnlyEmotes() { return false; }
 
         public async Task<bool> CheckForModeration()

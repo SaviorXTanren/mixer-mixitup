@@ -174,6 +174,10 @@ namespace MixItUp.Base.Commands
                 catch (Exception ex) { Logger.Log(ex); }
 
                 ChannelSession.Services.Telemetry.TrackCommand(this.Type, this.IsBasic);
+                if (user != null)
+                {
+                    user.Data.TotalCommandsRun++;
+                }
 
                 this.OnCommandStart(this, new EventArgs());
 

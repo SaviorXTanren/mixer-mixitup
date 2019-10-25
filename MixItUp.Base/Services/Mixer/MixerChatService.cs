@@ -21,7 +21,6 @@ namespace MixItUp.Base.Services.Mixer
     public interface IMixerChatService
     {
         event EventHandler<MixerChatMessageViewModel> OnMessageOccurred;
-        event EventHandler<MixerSkillChatMessageViewModel> OnSkillOccurred;
         event EventHandler<Tuple<Guid, UserViewModel>> OnDeleteMessageOccurred;
         event EventHandler OnClearMessagesOccurred;
 
@@ -63,7 +62,6 @@ namespace MixItUp.Base.Services.Mixer
     public class MixerChatService : MixerWebSocketServiceBase, IMixerChatService
     {
         public event EventHandler<MixerChatMessageViewModel> OnMessageOccurred = delegate { };
-        public event EventHandler<MixerSkillChatMessageViewModel> OnSkillOccurred = delegate { };
         public event EventHandler<Tuple<Guid, UserViewModel>> OnDeleteMessageOccurred = delegate { };
         public event EventHandler OnClearMessagesOccurred = delegate { };
 

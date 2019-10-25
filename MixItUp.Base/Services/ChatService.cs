@@ -359,8 +359,9 @@ namespace MixItUp.Base.Services
                 if (message.User != null)
                 {
                     await message.User.RefreshDetails();
+                    message.User.UpdateLastActivity();
+                    message.User.Data.TotalChatMessageSent++;
                 }
-                message.User.UpdateLastActivity();
 
                 if (message.IsWhisper)
                 {
@@ -394,6 +395,16 @@ namespace MixItUp.Base.Services
                     {
                         await this.DeleteMessage(message);
                         return;
+                    }
+
+                    string primaryTaggedUsername = message.PrimaryTaggedUsername;
+                    if (!string.IsNullOrEmpty(primaryTaggedUsername))
+                    {
+                        UserViewModel primaryTaggedUser = ChannelSession.Services.User.GetUserByUsername(primaryTaggedUsername);
+                        if (primaryTaggedUser != null)
+                        {
+                            primaryTaggedUser.Data.TotalTimesTagged++;
+                        }
                     }
 
                     if (!string.IsNullOrEmpty(message.PlainTextMessage))

@@ -157,6 +157,8 @@ namespace MixItUp.Base.Commands
                 user = new UserViewModel(userModel);
             }
 
+            user.Data.TotalAmountDonated += donation.Amount;
+
             Dictionary<string, string> specialIdentifiers = donation.GetSpecialIdentifiers();
             if (additionalSpecialIdentifiers != null)
             {

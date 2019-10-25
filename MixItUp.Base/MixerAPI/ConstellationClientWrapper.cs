@@ -274,6 +274,7 @@ namespace MixItUp.Base.MixerAPI
                             {
                                 user.Data.AddCurrencyAmount(currency, currency.OnSubscribeBonus);
                             }
+                            user.Data.TotalMonthsSubbed++;
 
                             await EventCommand.FindAndRunEventCommand(e.channel, user);
 
@@ -299,6 +300,7 @@ namespace MixItUp.Base.MixerAPI
                             {
                                 user.Data.AddCurrencyAmount(currency, currency.OnSubscribeBonus);
                             }
+                            user.Data.TotalMonthsSubbed++;
 
                             Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>() { { "usersubmonths", resubMonths.ToString() } };
                             await EventCommand.FindAndRunEventCommand(ConstellationClientWrapper.ChannelResubscribedEvent.ToString(), user, extraSpecialIdentifiers: specialIdentifiers);
@@ -319,6 +321,10 @@ namespace MixItUp.Base.MixerAPI
                         {
                             UserViewModel gifterUser = new UserViewModel(gifterUserModel);
                             UserViewModel receiverUser = new UserViewModel(receiverUserModel);
+
+                            gifterUser.Data.TotalSubsGifted++;
+                            receiverUser.Data.TotalSubsReceived++;
+                            receiverUser.Data.TotalMonthsSubbed++;
 
                             await EventCommand.FindAndRunEventCommand(e.channel, gifterUser, arguments: new List<string>() { receiverUser.UserName });
 
@@ -418,6 +424,8 @@ namespace MixItUp.Base.MixerAPI
 
         private async void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, uint> sparkUsage)
         {
+            sparkUsage.Item1.Data.TotalSparksSpent += (uint)sparkUsage.Item2;
+
             foreach (UserCurrencyViewModel sparkCurrency in ChannelSession.Settings.Currencies.Values.Where(c => c.IsTrackingSparks))
             {
                 sparkUsage.Item1.Data.AddCurrencyAmount(sparkCurrency, (int)sparkUsage.Item2);
@@ -433,6 +441,8 @@ namespace MixItUp.Base.MixerAPI
 
         private async void GlobalEvents_OnEmberUseOccurred(object sender, UserEmberUsageModel emberUsage)
         {
+            emberUsage.User.Data.TotalEmbersSpent += (uint)emberUsage.Amount;
+
             foreach (UserCurrencyViewModel emberCurrency in ChannelSession.Settings.Currencies.Values.Where(c => c.IsTrackingEmbers))
             {
                 emberUsage.User.Data.AddCurrencyAmount(emberCurrency, (int)emberUsage.Amount);
@@ -448,6 +458,8 @@ namespace MixItUp.Base.MixerAPI
 
         private async void GlobalEvents_OnSkillUseOccurred(object sender, MixerSkillChatMessageViewModel skill)
         {
+            skill.User.Data.TotalSkillsUsed++;
+
             Dictionary<string, string> specialIdentifiers = skill.Skill.GetSpecialIdentifiers();
             specialIdentifiers["skillmessage"] = skill.PlainTextMessage;
             await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerSkillUsed), skill.User, extraSpecialIdentifiers: specialIdentifiers);
