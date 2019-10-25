@@ -326,7 +326,7 @@ namespace MixItUp.Base.MixerAPI
                 else if (e.channel.Equals(ConstellationClientWrapper.ProgressionLevelupEvent.ToString()))
                 {
                     UserFanProgressionModel fanProgression = e.payload.ToObject<UserFanProgressionModel>();
-                    if (fanProgression != null)
+                    if (user != null && fanProgression != null)
                     {
                         user.FanProgression = fanProgression;
                         Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
