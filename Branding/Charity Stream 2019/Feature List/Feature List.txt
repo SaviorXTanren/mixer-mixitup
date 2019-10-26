@@ -1,1 +1,17 @@
-1) Discord "Send Message" file upload - $30
+COMPLETED - Single Action on Conditional - $30
+
+COMPLETED - Add Additional User Metrics - $156.42
+
+COMPLETED - Discord "Send Message" file upload - $130
+
+COMPLETED - Add Trivia game type - $126
+
+COMPLETED - Add End Credits Overlay Widget - $125
+
+COMPLETED - Play Button To Test Command - $50
+
+COMPLETED - Analog Joystick Support - $10
+
+BUMPED - Just Giving service - $120
+
+1) Recent Stream Titles/Games - $15
