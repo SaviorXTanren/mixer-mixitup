@@ -185,6 +185,39 @@ namespace MixItUp.Base.ViewModel.User
         [DataMember]
         public uint ModerationStrikes { get; set; }
 
+        [DataMember]
+        public uint TotalStreamsWatched { get; set; }
+
+        [DataMember]
+        public double TotalAmountDonated { get; set; }
+        
+        [DataMember]
+        public uint TotalSparksSpent { get; set; }
+
+        [DataMember]
+        public uint TotalEmbersSpent { get; set; }
+
+        [DataMember]
+        public uint TotalSubsGifted { get; set; }
+
+        [DataMember]
+        public uint TotalSubsReceived { get; set; }
+
+        [DataMember]
+        public uint TotalChatMessageSent { get; set; }
+
+        [DataMember]
+        public uint TotalTimesTagged { get; set; }
+
+        [DataMember]
+        public uint TotalSkillsUsed { get; set; }
+
+        [DataMember]
+        public uint TotalCommandsRun { get; set; }
+
+        [DataMember]
+        public uint TotalMonthsSubbed { get; set; }
+
         public UserDataViewModel() { }
 
         public UserDataViewModel(uint id, string username)
@@ -264,6 +297,17 @@ namespace MixItUp.Base.ViewModel.User
                 this.PatreonUserID = this.GetOptionValue<string>(optionsJObj, "PatreonUserID");
                 this.ModerationStrikes = this.GetOptionValue<uint>(optionsJObj, "ModerationStrikes");
                 this.CustomTitle = this.GetOptionValue<string>(optionsJObj, "CustomTitle");
+                this.TotalStreamsWatched = this.GetOptionValue<uint>(optionsJObj, "TotalStreamsWatched");
+                this.TotalAmountDonated = this.GetOptionValue<double>(optionsJObj, "TotalAmountDonated");
+                this.TotalSparksSpent = this.GetOptionValue<uint>(optionsJObj, "TotalSparksSpent");
+                this.TotalEmbersSpent = this.GetOptionValue<uint>(optionsJObj, "TotalEmbersSpent");
+                this.TotalSubsGifted = this.GetOptionValue<uint>(optionsJObj, "TotalSubsGifted");
+                this.TotalSubsReceived = this.GetOptionValue<uint>(optionsJObj, "TotalSubsReceived");
+                this.TotalChatMessageSent = this.GetOptionValue<uint>(optionsJObj, "TotalChatMessageSent");
+                this.TotalTimesTagged = this.GetOptionValue<uint>(optionsJObj, "TotalTimesTagged");
+                this.TotalSkillsUsed = this.GetOptionValue<uint>(optionsJObj, "TotalSkillsUsed");
+                this.TotalCommandsRun = this.GetOptionValue<uint>(optionsJObj, "TotalCommandsRun");
+                this.TotalMonthsSubbed = this.GetOptionValue<uint>(optionsJObj, "TotalMonthsSubbed");
             }
         }
 
@@ -554,6 +598,17 @@ namespace MixItUp.Base.ViewModel.User
             options["PatreonUserID"] = this.PatreonUserID;
             options["ModerationStrikes"] = this.ModerationStrikes;
             options["CustomTitle"] = this.CustomTitle;
+            options["TotalStreamsWatched"] = this.TotalStreamsWatched.ToString();
+            options["TotalAmountDonated"] = this.TotalAmountDonated.ToString();
+            options["TotalSparksSpent"] = this.TotalSparksSpent.ToString();
+            options["TotalEmbersSpent"] = this.TotalEmbersSpent.ToString();
+            options["TotalSubsGifted"] = this.TotalSubsGifted.ToString();
+            options["TotalSubsReceived"] = this.TotalSubsReceived.ToString();
+            options["TotalChatMessageSent"] = this.TotalChatMessageSent.ToString();
+            options["TotalTimesTagged"] = this.TotalTimesTagged.ToString();
+            options["TotalSkillsUsed"] = this.TotalSkillsUsed.ToString();
+            options["TotalCommandsRun"] = this.TotalCommandsRun.ToString();
+            options["TotalMonthsSubbed"] = this.TotalMonthsSubbed.ToString();
             return options.ToString();
         }
 

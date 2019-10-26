@@ -18,9 +18,9 @@ namespace MixItUp.WPF.Controls.Actions
     {
         private FileAction action;
 
-        public FileActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
+        public FileActionControl() : base() { InitializeComponent(); }
 
-        public FileActionControl(ActionContainerControl containerControl, FileAction action) : this(containerControl) { this.action = action; }
+        public FileActionControl(FileAction action) : this() { this.action = action; }
 
         public override Task OnLoaded()
         {

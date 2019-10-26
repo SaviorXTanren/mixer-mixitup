@@ -1,5 +1,4 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base;
+﻿using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Services;
 using StreamingClient.Base.Util;
@@ -18,9 +17,9 @@ namespace MixItUp.WPF.Controls.Actions
 
         private DiscordAction action;
 
-        public DiscordActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
+        public DiscordActionControl() : base() { InitializeComponent(); }
 
-        public DiscordActionControl(ActionContainerControl containerControl, DiscordAction action) : this(containerControl) { this.action = action; }
+        public DiscordActionControl(DiscordAction action) : this() { this.action = action; }
 
         public override async Task OnLoaded()
         {
@@ -51,6 +50,7 @@ namespace MixItUp.WPF.Controls.Actions
 
                 this.SendMessageChannelComboBox.SelectedItem = action.SendMessageChannel;
                 this.SendMessageTextBox.Text = action.SendMessageText;
+                this.FilePath.Text = action.FilePath;
 
                 this.MuteDeafenOptionCheckBox.IsChecked = action.ShouldMuteDeafen;
             }
@@ -66,7 +66,7 @@ namespace MixItUp.WPF.Controls.Actions
                     if (this.SendMessageChannelComboBox.SelectedIndex >= 0 && !string.IsNullOrEmpty(this.SendMessageTextBox.Text))
                     {
                         DiscordChannel channel = (DiscordChannel)this.SendMessageChannelComboBox.SelectedItem;
-                        return DiscordAction.CreateForChatMessage(channel, this.SendMessageTextBox.Text);
+                        return DiscordAction.CreateForChatMessage(channel, this.SendMessageTextBox.Text, this.FilePath.Text);
                     }
                 }
                 else if (actionType == DiscordActionTypeEnum.MuteSelf)
@@ -102,6 +102,15 @@ namespace MixItUp.WPF.Controls.Actions
                     this.MuteDeafenOptionGrid.Visibility = Visibility.Visible;
                     this.MuteDeafenOptionTextBlock.Text = "Deafen";
                 }
+            }
+        }
+
+        private void FilePathBrowseButton_Click(object sender, RoutedEventArgs e)
+        {
+            string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog("");
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                this.FilePath.Text = filePath;
             }
         }
     }

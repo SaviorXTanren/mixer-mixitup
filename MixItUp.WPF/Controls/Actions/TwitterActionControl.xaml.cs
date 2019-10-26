@@ -14,9 +14,9 @@ namespace MixItUp.WPF.Controls.Actions
     {
         private TwitterAction action;
 
-        public TwitterActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
+        public TwitterActionControl() : base() { InitializeComponent(); }
 
-        public TwitterActionControl(ActionContainerControl containerControl, TwitterAction action) : this(containerControl) { this.action = action; }
+        public TwitterActionControl(TwitterAction action) : this() { this.action = action; }
 
         public override Task OnLoaded()
         {

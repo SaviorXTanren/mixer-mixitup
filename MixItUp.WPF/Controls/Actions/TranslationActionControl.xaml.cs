@@ -19,9 +19,9 @@ namespace MixItUp.WPF.Controls.Actions
     {
         private TranslationAction action;
 
-        public TranslationActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
+        public TranslationActionControl() : base() { InitializeComponent(); }
 
-        public TranslationActionControl(ActionContainerControl containerControl, TranslationAction action) : this(containerControl) { this.action = action; }
+        public TranslationActionControl(TranslationAction action) : this() { this.action = action; }
 
         public override async Task OnLoaded()
         {

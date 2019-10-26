@@ -14,9 +14,9 @@ namespace MixItUp.WPF.Controls.Actions
     {
         private ModerationAction action;
 
-        public ModerationActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
+        public ModerationActionControl() : base() { InitializeComponent(); }
 
-        public ModerationActionControl(ActionContainerControl containerControl, ModerationAction action) : this(containerControl) { this.action = action; }
+        public ModerationActionControl(ModerationAction action) : this() { this.action = action; }
 
         public override Task OnLoaded()
         {

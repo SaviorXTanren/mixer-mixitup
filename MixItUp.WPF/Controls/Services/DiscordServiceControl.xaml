@@ -29,7 +29,7 @@
 
                 <TextBlock Grid.Row="0" TextWrapping="Wrap">Discord service connectivity allows you to get information about your Discord account and control your channels. When you log in, an authentication webpage will open asking you to log in to Discord and approve Mix It Up to access your information.</TextBlock>
 
-                <Grid Grid.Row="2" HorizontalAlignment="Center">
+                <Grid x:Name="CustomApplicationToggleButtonGrid" Grid.Row="2" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="10" />

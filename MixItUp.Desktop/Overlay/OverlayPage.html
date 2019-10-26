@@ -16,6 +16,9 @@
 
     <link rel="stylesheet" type="text/css" href="https://daneden.github.io/animate.css/animate.min.css">
 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://gist.githubusercontent.com/hellt/bc4fc51d6f1b9584605517f5c8d6a5a0/raw/1541916ad019f8b5349d7353489b6fd2d36513dd/jumbotron-narrow.css">
+
     <style>
         .slidedown-animation {
             animation: slidedownAnimationFrames ease-in-out 2s;
@@ -103,6 +106,98 @@
             100% {
                 transform: translateY(100%);
             }
+        }
+
+        /* End Credits Overlay Widget Styles */
+
+        #titles {
+            overflow: hidden;
+            background-color: #000;
+            font-family: Arial, Helvetica, sans-serif;
+            display: none;
+            position: absolute;
+            z-index: 99999;
+            left: 0;
+            top: 0;
+        }
+
+            #titles div#the-end {
+                font-size: 60px;
+                font-weight: bold;
+                color: #ffffff;
+                text-shadow: 0 0 12px #ffffff;
+                width: 100%;
+                text-align: center;
+            }
+
+            #credits {
+                color: #ffffff;
+            }
+
+            #credits h1 {
+                color: #888888;
+                width: 100%;
+                height: 100%;
+                margin: 50px 0 0 50px;
+                text-align: center;
+                font-size: 16px;
+                font-family: monospace;
+                text-transform: uppercase;
+                letter-spacing: 10px;
+            }
+
+            #credits dl {
+                margin: 0px auto;
+            }
+
+            #credits dt {
+                float: left;
+                width: 260px;
+                margin: 0;
+                padding: 13px 0 0 0;
+                text-align: right;
+                font-family: "Arial Narrow", sans-serif;
+                font-size: 20px;
+                clear: left;
+            }
+
+            #credits dd {
+                width: 100%;
+                margin: 0 0 0 280px;
+                padding: 13px 0 0 0;
+                font-family: "Arial Black", sans-serif;
+                font-weight: bold;
+                font-size: 20px;
+            }
+
+            #credits p {
+                width: 508px;
+                margin: 10px 0px 10px 60px;
+                text-align: center;
+                font-family: Arial, sans-serif;
+                font-size: 20px;
+            }
+
+            #credits .fineprint {
+                color: #888888;
+                width: 100%;
+                margin: 80px 0 0 50px;
+                text-align: center;
+                font-size: 10px;
+                font-family: sans-serif;
+            }
+
+        .clearfix: after {
+            visibility: hidden;
+            display: block;
+            font-size: 0;
+            content: " ";
+            clear: both;
+            height: 0;
+        }
+
+        .clearfix {
+            display: inline-block;
         }
     </style>
 </head>
@@ -250,6 +345,9 @@
                             }
                             else if (packet.data.ItemTypeName === "ProgressBar") {
                                 customPacket(packet.data);
+                            }
+                            else if (packet.data.ItemTypeName === "EndCredits") {
+                                endCreditsPacket(packet.data);
                             }
                         }
                         else if (packet.type == "Hide") {
@@ -590,6 +688,52 @@
                         $(divContainer).animateCss(data.ProgressAnimationName, function () { });
                     }
                 }
+            }
+
+            function endCreditsPacket(data) {
+
+                var divContainer = document.createElement('div');
+                divContainer.innerHTML = data.HTML;
+                mainOverlayDiv.appendChild(divContainer);
+
+                var maskHeight = $(document).height();
+                var maskWidth = $(window).width();
+
+                var titles = $('#titles');
+                var titlesHeight = titles.height();
+                titlesHeight = Math.max(titlesHeight, maskHeight);
+
+                $('#titles').css({
+                    'width': maskWidth,
+                    'height': titlesHeight
+                });
+
+                $('#credits').css({
+                    'position': 'absolute'
+                });
+
+                $('#titles').fadeIn(1000);
+                $('#titles').fadeTo("fast");
+                $('#titles').fadeIn();
+                $('#credits').css("left", (($('#credits').parent().width() - $('#credits').outerWidth()) / 2) + "px");
+                $('#credits').css("bottom", "-" + maskHeight + "px");
+                $('#credits').show('fast');
+
+                $('#credits').animate(
+                    {
+                        bottom: titlesHeight + "px"
+                    },
+                    {
+                        duration: titlesHeight * data.SpeedNumber,
+                        easing: 'linear',
+                        complete: function () {
+                            $('#titles').fadeOut();
+                            $('.window').fadeOut();
+
+                            mainOverlayDiv.removeChild(divContainer);
+                        }
+                    }
+                );
             }
 
             function getCreatePersistentElement(data) {

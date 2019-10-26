@@ -16,9 +16,9 @@ namespace MixItUp.WPF.Controls.Actions
     {
         private StreamlabsAction action;
 
-        public StreamlabsActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
+        public StreamlabsActionControl() : base() { InitializeComponent(); }
 
-        public StreamlabsActionControl(ActionContainerControl containerControl, StreamlabsAction action) : this(containerControl) { this.action = action; }
+        public StreamlabsActionControl(StreamlabsAction action) : this() { this.action = action; }
 
         public override Task OnLoaded()
         {

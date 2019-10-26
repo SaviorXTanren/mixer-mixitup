@@ -10,9 +10,9 @@ namespace MixItUp.WPF.Controls.Actions
     {
         private WaitAction action;
 
-        public WaitActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
+        public WaitActionControl() : base() { InitializeComponent(); }
 
-        public WaitActionControl(ActionContainerControl containerControl, WaitAction action) : this(containerControl) { this.action = action; }
+        public WaitActionControl(WaitAction action) : this() { this.action = action; }
 
         public override Task OnLoaded()
         {

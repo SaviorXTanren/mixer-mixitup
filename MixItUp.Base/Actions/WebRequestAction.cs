@@ -104,6 +104,7 @@ namespace MixItUp.Base.Actions
             using (HttpClient httpClient = new HttpClient())
             {
                 httpClient.DefaultRequestHeaders.Add("User-Agent", $"MixItUp/{Assembly.GetEntryAssembly().GetName().Version.ToString()} (Web call from Mix It Up; https://mixitupapp.com; support@mixitupapp.com)");
+                httpClient.DefaultRequestHeaders.Add("Mixer-User", (ChannelSession.MixerChannel != null) ? ChannelSession.MixerChannel.token : string.Empty);
 
                 using (HttpResponseMessage response = await httpClient.GetAsync(await this.ReplaceStringWithSpecialModifiers(this.Url, user, arguments, encode: true)))
                 {

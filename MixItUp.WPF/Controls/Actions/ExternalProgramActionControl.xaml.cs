@@ -12,9 +12,9 @@ namespace MixItUp.WPF.Controls.Actions
     {
         private ExternalProgramAction action;
 
-        public ExternalProgramActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
+        public ExternalProgramActionControl() : base() { InitializeComponent(); }
 
-        public ExternalProgramActionControl(ActionContainerControl containerControl, ExternalProgramAction action) : this(containerControl) { this.action = action; }
+        public ExternalProgramActionControl(ExternalProgramAction action) : this() { this.action = action; }
 
         public override Task OnLoaded()
         {

@@ -178,6 +178,12 @@ namespace MixItUp.Base.Services
         [JsonProperty("timestamp")]
         public string Timestamp { get; set; }
 
+        [JsonProperty("file")]
+        public string File { get; set; }
+
+        [JsonProperty("payload_json")]
+        public string PayloadJSON { get; set; }
+
         public DiscordMessage() { }
     }
 
@@ -256,6 +262,10 @@ namespace MixItUp.Base.Services
 
     public interface IDiscordService
     {
+        bool IsConnected { get; }
+
+        bool IsUsingCustomApplication { get; }
+
         DiscordUser User { get; }
         DiscordServer Server { get; }
 
@@ -285,7 +295,7 @@ namespace MixItUp.Base.Services
 
         Task<IEnumerable<DiscordEmoji>> GetEmojis(DiscordServer server);
 
-        Task<DiscordMessage> CreateMessage(DiscordChannel channel, string message);
+        Task<DiscordMessage> CreateMessage(DiscordChannel channel, string message, string filePath);
 
         Task<DiscordChannelInvite> CreateChannelInvite(DiscordChannel channel, bool isTemporary = false);
 

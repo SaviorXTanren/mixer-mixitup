@@ -1,0 +1,111 @@
+﻿<local:OverlayItemControl x:Class="MixItUp.WPF.Controls.Overlay.OverlayEndCreditsItemControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Overlay"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox Grid.Column="0" ItemsSource="{Binding SpeedStrings}" Text="{Binding SpeedString}" MaterialDesign:HintAssist.Hint="Scroll Speed" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="100" />
+
+            <ComboBox Grid.Column="2" ItemsSource="{Binding ColorNames}" Text="{Binding BackgroundColor}" MaterialDesign:HintAssist.Hint="Background Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="130" />
+        </Grid>
+
+        <Grid Grid.Row="2" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            
+            <ComboBox Grid.Column="0" ItemsSource="{Binding ColorNames}" Text="{Binding SectionTextColor}" MaterialDesign:HintAssist.Hint="Section Text Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="130" />
+
+            <ComboBox Grid.Column="2" x:Name="SectionTextFontComboBox" Text="{Binding SectionTextFont}" MaterialDesign:HintAssist.Hint="Section Text Font" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="150" />
+
+            <ComboBox Grid.Column="4" ItemsSource="{Binding SampleFontSizesStrings}" Text="{Binding SectionTextSizeString}" MaterialDesign:HintAssist.Hint="Section Text Size (Pixels)" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="145" />
+        </Grid>
+
+        <Grid Grid.Row="4" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox Grid.Column="0" ItemsSource="{Binding ColorNames}" Text="{Binding ItemTextColor}" MaterialDesign:HintAssist.Hint="Item Text Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="130" />
+
+            <ComboBox Grid.Column="2" x:Name="ItemTextFontComboBox" Text="{Binding ItemTextFont}" MaterialDesign:HintAssist.Hint="Item Text Font" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="150" />
+
+            <ComboBox Grid.Column="4" ItemsSource="{Binding SampleFontSizesStrings}" Text="{Binding ItemTextSizeString}" MaterialDesign:HintAssist.Hint="Item Text Size (Pixels)" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="145" />
+        </Grid>
+
+        <TextBox Text="{Binding HTML}" Grid.Row="6" MaterialDesign:HintAssist.Hint="Title HTML Style" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="550" Height="75" HorizontalAlignment="Center" />
+
+        <Grid Grid.Row="8" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox Grid.Column="0" ItemsSource="{Binding ItemTypeStrings}" Text="{Binding ItemTypeString}" MaterialDesign:HintAssist.Hint="Section Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="145" />
+            <Button Grid.Column="2" Command="{Binding AddItemCommand}" Content="{MaterialDesign:PackIcon Plus}" />
+        </Grid>
+
+        <GroupBox Grid.Row="10" Width="700" Header="Sections">
+            <ItemsControl ItemsSource="{Binding SectionItems}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="150" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="300" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding SectionTypeName}" />
+
+                            <TextBox Text="{Binding SectionHTML}" Grid.Column="2" MaterialDesign:HintAssist.Hint="Section HTML Style" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="150" Height="75" VerticalAlignment="Top" HorizontalAlignment="Center" />
+
+                            <TextBox Text="{Binding UserHTML}" Grid.Column="4" MaterialDesign:HintAssist.Hint="User HTML Style" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="300" Height="75" VerticalAlignment="Top" HorizontalAlignment="Center" />
+
+                            <Button Grid.Column="6" VerticalAlignment="Center" Command="{Binding DeleteItemCommand}" Content="{MaterialDesign:PackIcon Trash}" />
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </GroupBox>
+
+    </Grid>
+</local:OverlayItemControl>

@@ -1,8 +1,17 @@
-1) Add Rock-Paper-Scissors Game Type = $24.50
+COMPLETED - Single Action on Conditional - $30
 
-2) Add Twitter On Follow event = $18.00
+COMPLETED - Add Additional User Metrics - $156.42
 
-3) Last Stream Special Identifiers = $12.00
+COMPLETED - Discord "Send Message" file upload - $130
 
-4) Add Per-Person Group Cooldowns = $5.75
+COMPLETED - Add Trivia game type - $126
 
+COMPLETED - Add End Credits Overlay Widget - $125
+
+COMPLETED - Play Button To Test Command - $50
+
+COMPLETED - Analog Joystick Support - $10
+
+BUMPED - Just Giving service - $120
+
+1) Recent Stream Titles/Games - $15

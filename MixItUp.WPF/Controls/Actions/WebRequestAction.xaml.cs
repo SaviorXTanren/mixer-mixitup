@@ -27,9 +27,9 @@ namespace MixItUp.WPF.Controls.Actions
 
         private ObservableCollection<JSONToSpecialIdentifierPair> jsonToSpecialIdentifierPairs = new ObservableCollection<JSONToSpecialIdentifierPair>();
 
-        public WebRequestActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
+        public WebRequestActionControl() : base() { InitializeComponent(); }
 
-        public WebRequestActionControl(ActionContainerControl containerControl, WebRequestAction action) : this(containerControl) { this.action = action; }
+        public WebRequestActionControl(WebRequestAction action) : this() { this.action = action; }
 
         public override Task OnLoaded()
         {

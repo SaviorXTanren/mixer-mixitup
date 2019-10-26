@@ -16,9 +16,9 @@ namespace MixItUp.WPF.Controls.Actions
     {
         private InputAction action;
 
-        public InputActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
+        public InputActionControl() : base() { InitializeComponent(); }
 
-        public InputActionControl(ActionContainerControl containerControl, InputAction action) : this(containerControl) { this.action = action; }
+        public InputActionControl(InputAction action) : this() { this.action = action; }
 
         public override Task OnLoaded()
         {

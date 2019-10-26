@@ -260,6 +260,34 @@ namespace MixItUp.WPF.Controls.Command
             return actions;
         }
 
+        private async void PlayButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.PlayButton.Visibility = Visibility.Collapsed;
+            this.StopButton.Visibility = Visibility.Visible;
+
+            this.newCommand = await this.GetNewCommand();
+            if (this.newCommand != null)
+            {
+                await CommandButtonsControl.TestCommand(this.newCommand);
+            }
+            this.SwitchToPlay();
+        }
+
+        private void StopButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.newCommand != null)
+            {
+                this.newCommand.StopCurrentRun();
+            }
+            this.SwitchToPlay();
+        }
+
+        public void SwitchToPlay()
+        {
+            this.PlayButton.Visibility = Visibility.Visible;
+            this.StopButton.Visibility = Visibility.Collapsed;
+        }
+
         private void AddActionControlContainer(ActionContainerControl actionControl)
         {
             foreach (ActionContainerControl control in this.actionControls)

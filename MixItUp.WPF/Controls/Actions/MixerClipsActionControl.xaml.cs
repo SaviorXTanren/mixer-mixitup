@@ -13,9 +13,9 @@ namespace MixItUp.WPF.Controls.Actions
     {
         private MixerClipsAction action;
 
-        public MixerClipsActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
+        public MixerClipsActionControl() : base() { InitializeComponent(); }
 
-        public MixerClipsActionControl(ActionContainerControl containerControl, MixerClipsAction action) : this(containerControl) { this.action = action; }
+        public MixerClipsActionControl(MixerClipsAction action) : this() { this.action = action; }
 
         public override Task OnLoaded()
         {

@@ -1,9 +1,7 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base.Actions;
+﻿using MixItUp.Base.Actions;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -174,6 +172,10 @@ namespace MixItUp.Base.Commands
                 catch (Exception ex) { Logger.Log(ex); }
 
                 ChannelSession.Services.Telemetry.TrackCommand(this.Type, this.IsBasic);
+                if (user != null)
+                {
+                    user.Data.TotalCommandsRun++;
+                }
 
                 this.OnCommandStart(this, new EventArgs());
 
@@ -244,7 +246,7 @@ namespace MixItUp.Base.Commands
             foreach (string command in this.CommandTriggers)
             {
                 string regex = string.Format(commandMatchingRegexFormat, Regex.Escape(command));
-                Match match = Regex.Match(text, regex);
+                Match match = Regex.Match(text, regex, RegexOptions.IgnoreCase);
                 if (match != null && match.Success)
                 {
                     arguments = text.Substring(match.Index + match.Length).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);

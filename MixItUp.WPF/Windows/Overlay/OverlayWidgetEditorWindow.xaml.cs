@@ -63,6 +63,7 @@ namespace MixItUp.WPF.Windows.Overlay
                 else if (this.viewModel.OverlayWidget.Item is OverlayVideoItemModel) { this.SetGameEditorControl(new OverlayVideoItemControl((OverlayVideoItemModel)this.viewModel.OverlayWidget.Item)); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayWebPageItemModel) { this.SetGameEditorControl(new OverlayWebPageItemControl((OverlayWebPageItemModel)this.viewModel.OverlayWidget.Item)); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayYouTubeItemModel) { this.SetGameEditorControl(new OverlayYouTubeItemControl((OverlayYouTubeItemModel)this.viewModel.OverlayWidget.Item)); }
+                else if (this.viewModel.OverlayWidget.Item is OverlayEndCreditsItemModel) { this.SetGameEditorControl(new OverlayEndCreditsItemControl((OverlayEndCreditsItemModel)this.viewModel.OverlayWidget.Item)); }
             }
             else
             {
@@ -84,6 +85,7 @@ namespace MixItUp.WPF.Windows.Overlay
                 this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.Video, new OverlayVideoItemControl());
                 this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.WebPage, new OverlayWebPageItemControl());
                 this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.YouTube, new OverlayYouTubeItemControl());
+                this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.EndCredits, new OverlayEndCreditsItemControl());
             }
         }
 
@@ -121,6 +123,12 @@ namespace MixItUp.WPF.Windows.Overlay
                         ChannelSession.Settings.OverlayWidgets.Remove(this.viewModel.OverlayWidget);
                         overlayItem.ID = this.viewModel.OverlayWidget.Item.ID;
                     }
+
+                    if (widget.Item is OverlayEndCreditsItemModel)
+                    {
+                        widget.IsEnabled = false;
+                    }
+
                     ChannelSession.Settings.OverlayWidgets.Add(widget);
 
                     this.Close();

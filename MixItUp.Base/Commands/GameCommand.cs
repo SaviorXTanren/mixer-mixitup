@@ -3,14 +3,18 @@ using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
+using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace MixItUp.Base.Commands
 {
@@ -3326,6 +3330,185 @@ namespace MixItUp.Base.Commands
             this.TotalAmount = this.InitialAmount;
 
             this.ResetData(await ChannelSession.GetCurrentUser());
+        }
+    }
+
+    [DataContract]
+    public class TriviaGameQuestion
+    {
+        [DataMember]
+        public string Question { get; set; }
+
+        [DataMember]
+        public string CorrectAnswer { get; set; }
+        [DataMember]
+        public List<string> WrongAnswers { get; set; }
+
+        public uint TotalAnswers { get { return (uint)this.WrongAnswers.Count + 1; } }
+    }
+
+    [DataContract]
+    public class TriviaGameCommand : GroupGameCommand
+    {
+        private class OpenTDBResults
+        {
+            public int response_code { get; set; }
+            public List<OpenTDBQuestion> results { get; set; }
+        }
+
+        private class OpenTDBQuestion
+        {
+            public string category { get; set; }
+            public string type { get; set; }
+            public string difficulty { get; set; }
+            public string question { get; set; }
+            public string correct_answer { get; set; }
+            public List<string> incorrect_answers { get; set; }
+        }
+
+        public const string GameQuestion = "gamequestion";
+        public const string GameAnswers = "gameanswers";
+        public const string GameCorrectAnswer = "gamecorrectanswer";
+
+        private const string OpenTDBUrl = "https://opentdb.com/api.php?amount=1&type=multiple";
+
+        [DataMember]
+        public List<TriviaGameQuestion> CustomQuestions { get; set; } = new List<TriviaGameQuestion>();
+
+        [DataMember]
+        public int WinAmount { get; set; }
+
+        [DataMember]
+        public CustomCommand CorrectAnswerCommand { get; set; }
+
+        [JsonIgnore]
+        private TriviaGameQuestion currentQuestion = null;
+        [JsonIgnore]
+        private Dictionary<uint, string> answerNumbersToQuestions = new Dictionary<uint, string>();
+        [JsonIgnore]
+        private uint correctAnswerNumber = 0;
+        [JsonIgnore]
+        private Dictionary<UserViewModel, uint> userChoices = new Dictionary<UserViewModel, uint>();
+
+        public TriviaGameCommand() { }
+
+        public TriviaGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int timeLimit, CustomCommand startedCommand, CustomCommand userJoinCommand,
+            GameOutcome userSuccessOutcome, List<TriviaGameQuestion> customCommands, int winAmount, CustomCommand correctAnswerCommand)
+            : base(name, commands, requirements, 1, timeLimit, startedCommand, userJoinCommand, userSuccessOutcome, null, null)
+        {
+            this.CustomQuestions = customCommands;
+            this.WinAmount = winAmount;
+            this.CorrectAnswerCommand = correctAnswerCommand;
+        }
+
+        public override IEnumerable<CommandBase> GetAllInnerCommands()
+        {
+            List<CommandBase> commands = new List<CommandBase>(base.GetAllInnerCommands());
+            commands.Add(this.CorrectAnswerCommand);
+            return commands;
+        }
+
+        protected override async Task<bool> PerformUsageChecks(UserViewModel user, IEnumerable<string> arguments)
+        {
+            if (this.timeLimitTask != null)
+            {
+                if (arguments.Count() != 0)
+                {
+                    await ChannelSession.Services.Chat.Whisper(user.UserName, "The game is already underway, type the number for your answer in chat to join!");
+                    return false;
+                }
+                return true;
+            }
+            return await base.PerformUsageChecks(user, arguments);
+        }
+
+        protected override Task<int> GetBetAmount(UserViewModel user, string betAmountText) { return Task.FromResult(0); }
+
+        protected override async Task GameStarted(UserViewModel user, IEnumerable<string> arguments, int betAmount)
+        {
+            this.answerNumbersToQuestions.Clear();
+            this.userChoices.Clear();
+
+            using (AdvancedHttpClient client = new AdvancedHttpClient())
+            {
+                OpenTDBResults openTDBResults = await client.GetAsync<OpenTDBResults>(OpenTDBUrl);
+                if (openTDBResults != null && openTDBResults.results != null && openTDBResults.results.Count > 0)
+                {
+                    this.currentQuestion = new TriviaGameQuestion()
+                    {
+                        Question = HttpUtility.HtmlDecode(openTDBResults.results[0].question),
+                        CorrectAnswer = HttpUtility.HtmlDecode(openTDBResults.results[0].correct_answer),
+                        WrongAnswers = openTDBResults.results[0].incorrect_answers.Select(a => HttpUtility.HtmlDecode(a)).ToList(),
+                    };
+                }
+            }
+
+            List<uint> answerNumbers = new List<uint>() { 1 };
+            for (uint i = 0; i < this.currentQuestion.WrongAnswers.Count; i++)
+            {
+                answerNumbers.Add(i + 2);
+            }
+            answerNumbers = answerNumbers.Shuffle().ToList();
+
+            this.correctAnswerNumber = answerNumbers[0];
+            this.answerNumbersToQuestions[this.correctAnswerNumber] = this.currentQuestion.CorrectAnswer;
+            for (int i = 0; i < this.currentQuestion.WrongAnswers.Count; i++)
+            {
+                this.answerNumbersToQuestions[answerNumbers[i + 1]] = this.currentQuestion.WrongAnswers[i];
+            }
+
+            GlobalEvents.OnChatMessageReceived += Chat_OnMessageOccurred;
+
+            await base.GameStarted(user, arguments, betAmount);
+        }
+
+        protected override async Task SelectWinners()
+        {
+            GlobalEvents.OnChatMessageReceived -= Chat_OnMessageOccurred;
+
+            foreach (var kvp in this.userChoices)
+            {
+                if (kvp.Value == this.correctAnswerNumber)
+                {
+                    this.winners.Add(kvp.Key);
+                }
+            }
+
+            if (this.winners.Count > 0)
+            {
+                this.totalPayout = this.WinAmount;
+                foreach (UserViewModel user in this.winners)
+                {
+                    await this.PerformCommand(this.UserSuccessOutcome.Command, user, new List<string>(), 0, this.totalPayout);
+                }
+            }
+
+            await this.PerformCommand(this.CorrectAnswerCommand, await ChannelSession.GetCurrentUser(), new List<string>(), 0, this.totalPayout);
+        }
+
+        protected override void AddAdditionalSpecialIdentifiers(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        {
+            specialIdentifiers[GameQuestion] = this.currentQuestion.Question;
+            specialIdentifiers[GameCorrectAnswer] = this.currentQuestion.CorrectAnswer;
+
+            List<string> gameAnswersText = new List<string>();
+            foreach (var kvp in this.answerNumbersToQuestions.OrderBy(a => a.Key))
+            {
+                gameAnswersText.Add($"{kvp.Key}) {kvp.Value}");
+            }
+            specialIdentifiers[GameAnswers] = string.Join(", ", gameAnswersText);
+        }
+
+        private async void Chat_OnMessageOccurred(object sender, ChatMessageViewModel message)
+        {
+            if (!this.userChoices.ContainsKey(message.User))
+            {
+                if (!string.IsNullOrEmpty(message.PlainTextMessage) && uint.TryParse(message.PlainTextMessage, out uint choice) && choice <= this.currentQuestion.TotalAnswers)
+                {
+                    this.userChoices[message.User] = choice;
+                    await this.PerformCommand(this.UserJoinCommand, message.User, new List<string>(), 0, 0);
+                }
+            }
         }
     }
 }

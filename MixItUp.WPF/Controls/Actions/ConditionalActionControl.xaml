@@ -27,6 +27,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
@@ -41,9 +42,9 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-
-            <TextBlock Grid.Column="0" VerticalAlignment="Center">Disable Case Sensitivity:</TextBlock>
-            <ToggleButton Grid.Column="2" x:Name="IgnoreCasingToggleButton" />
+            
+            <TextBlock Grid.Column="0" VerticalAlignment="Center">Case Sensitive:</TextBlock>
+            <ToggleButton Grid.Column="2" x:Name="CaseSensitiveToggleButton" />
 
             <ComboBox Grid.Column="4" x:Name="OperatorTypeComboBox" MaterialDesign:HintAssist.Hint="Operator" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="80" />
 
@@ -91,7 +92,19 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <CommandControls:CommandReferenceControl x:Name="CommandReference" Grid.Row="4" />
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox x:Name="CommandTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="CommandTypeComboBox_SelectionChanged" />
+
+            <ComboBox x:Name="CommandNameComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEnabled="False" SelectionChanged="CommandNameComboBox_SelectionChanged" />
+        </Grid>
+
+        <local:ActionContentContainerControl x:Uid="ActionControlContentControl" Grid.Row="5" Margin="0,20,0,0" Visibility="Collapsed" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" />
 
     </Grid>
 </local:ActionControlBase>

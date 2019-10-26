@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base.Actions;
 using MixItUp.Base.Util;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,14 +9,10 @@ namespace MixItUp.WPF.Controls.Actions
 {
     public abstract class ActionControlBase : UserControl
     {
-        protected ActionContainerControl containerControl;
-
         private bool alreadyLoaded = false;
 
-        public ActionControlBase(ActionContainerControl containerControl)
+        public ActionControlBase()
         {
-            this.containerControl = containerControl;
-
             this.Loaded += ActionControlBase_Loaded;
         }
 

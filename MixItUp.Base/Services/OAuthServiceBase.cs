@@ -44,6 +44,8 @@ namespace MixItUp.Base.Services
 
         protected OAuthServiceBase(string baseAddress, OAuthTokenModel token) : this(baseAddress) { this.token = token; }
 
+        public bool IsConnected { get { return this.token != null; } }
+
         public OAuthTokenModel GetOAuthTokenCopy()
         {
             if (this.token != null)

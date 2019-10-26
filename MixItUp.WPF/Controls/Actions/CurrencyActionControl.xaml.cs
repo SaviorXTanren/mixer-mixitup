@@ -20,9 +20,9 @@ namespace MixItUp.WPF.Controls.Actions
     {
         private CurrencyAction action;
 
-        public CurrencyActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
+        public CurrencyActionControl() : base() { InitializeComponent(); }
 
-        public CurrencyActionControl(ActionContainerControl containerControl, CurrencyAction action) : this(containerControl) { this.action = action; }
+        public CurrencyActionControl(CurrencyAction action) : this() { this.action = action; }
 
         public override Task OnLoaded()
         {

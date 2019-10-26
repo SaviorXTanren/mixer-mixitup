@@ -18,9 +18,9 @@ namespace MixItUp.WPF.Controls.Actions
     {
         private StreamingPlatformAction action;
 
-        public StreamingPlatformActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
+        public StreamingPlatformActionControl() : base() { InitializeComponent(); }
 
-        public StreamingPlatformActionControl(ActionContainerControl containerControl, StreamingPlatformAction action) : this(containerControl) { this.action = action; }
+        public StreamingPlatformActionControl(StreamingPlatformAction action) : this() { this.action = action; }
 
         public override Task OnLoaded()
         {

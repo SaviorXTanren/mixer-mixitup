@@ -10,6 +10,7 @@ using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Currency;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace MixItUp.WPF.Controls.Command
@@ -149,6 +150,14 @@ namespace MixItUp.WPF.Controls.Command
             this.EnableDisableToggleSwitch.IsEnabled = false;
 
             CommandBase command = this.GetCommandFromCommandButtons<CommandBase>(this);
+            await CommandButtonsControl.TestCommand(command);
+            this.SwitchToPlay();
+
+            this.RaiseEvent(new RoutedEventArgs(CommandButtonsControl.PlayClickedEvent, this));
+        }
+
+        public static async Task TestCommand(CommandBase command)
+        {
             if (command != null)
             {
                 UserViewModel currentUser = await ChannelSession.GetCurrentUser();
@@ -300,10 +309,7 @@ namespace MixItUp.WPF.Controls.Command
                     PermissionsCommandBase permissionCommand = (PermissionsCommandBase)command;
                     permissionCommand.ResetCooldown(await ChannelSession.GetCurrentUser());
                 }
-                this.SwitchToPlay();
             }
-
-            this.RaiseEvent(new RoutedEventArgs(CommandButtonsControl.PlayClickedEvent, this));
         }
 
         private void StopButton_Click(object sender, RoutedEventArgs e)

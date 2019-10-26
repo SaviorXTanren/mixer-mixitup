@@ -5,6 +5,8 @@ using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Controls.Currency;
 using MixItUp.WPF.Windows.Command;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -91,6 +93,23 @@ namespace MixItUp.WPF.Windows.Users
                 this.PatreonUserComboBox.ItemsSource = ChannelSession.Services.Patreon.CampaignMembers;
                 this.PatreonUserComboBox.SelectedItem = this.user.PatreonUser;
             }
+
+            List<Tuple<string, string>> userMetricsList1 = new List<Tuple<string, string>>();
+            userMetricsList1.Add(new Tuple<string, string>("Streams Watched:", user.Data.TotalStreamsWatched.ToString()));
+            userMetricsList1.Add(new Tuple<string, string>("Tagged In Chat:", user.Data.TotalTimesTagged.ToString()));
+            userMetricsList1.Add(new Tuple<string, string>("Sparks Spent:", user.Data.TotalSparksSpent.ToString()));
+            userMetricsList1.Add(new Tuple<string, string>("Skills Used:", user.Data.TotalSkillsUsed.ToString()));
+            userMetricsList1.Add(new Tuple<string, string>("Subs Gifted:", user.Data.TotalSubsGifted.ToString()));
+            userMetricsList1.Add(new Tuple<string, string>("Cumulative Months Subbed:", user.Data.TotalMonthsSubbed.ToString()));
+            this.UserMetricsItemsControl1.ItemsSource = userMetricsList1;
+
+            List<Tuple<string, string>> userMetricsList2 = new List<Tuple<string, string>>();
+            userMetricsList2.Add(new Tuple<string, string>("Chat Messages Sent:", user.Data.TotalChatMessageSent.ToString()));
+            userMetricsList2.Add(new Tuple<string, string>("Commands Run:", user.Data.TotalCommandsRun.ToString()));
+            userMetricsList2.Add(new Tuple<string, string>("Embers Spent:", user.Data.TotalEmbersSpent.ToString()));
+            userMetricsList2.Add(new Tuple<string, string>("Amount Donated:", string.Format("{0:C}", Math.Round(user.Data.TotalAmountDonated, 2))));
+            userMetricsList2.Add(new Tuple<string, string>("Subs Received:", user.Data.TotalSubsReceived.ToString()));
+            this.UserMetricsItemsControl2.ItemsSource = userMetricsList2;
 
             this.DataContext = this.user;
         }

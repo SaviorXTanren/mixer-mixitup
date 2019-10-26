@@ -15,9 +15,9 @@ namespace MixItUp.WPF.Controls.Actions
 
         private ObservableCollection<string> voices = new ObservableCollection<string>();
 
-        public TextToSpeechActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
+        public TextToSpeechActionControl() : base() { InitializeComponent(); }
 
-        public TextToSpeechActionControl(ActionContainerControl containerControl, TextToSpeechAction action) : this(containerControl) { this.action = action; }
+        public TextToSpeechActionControl(TextToSpeechAction action) : this() { this.action = action; }
 
         public override Task OnLoaded()
         {

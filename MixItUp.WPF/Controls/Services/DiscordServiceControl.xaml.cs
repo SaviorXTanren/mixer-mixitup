@@ -20,19 +20,22 @@ namespace MixItUp.WPF.Controls.Services
         {
             this.SetHeaderText("Discord");
 
-            if (ChannelSession.Settings.DiscordOAuthToken != null)
+            if (ChannelSession.Services.Discord != null && ChannelSession.Services.Discord.IsConnected)
             {
                 this.ExistingAccountGrid.Visibility = Visibility.Visible;
+                this.CustomApplicationToggleButtonGrid.Visibility = Visibility.Collapsed;
+                this.CustomApplicationGrid.Visibility = Visibility.Collapsed;
 
                 this.SetCompletedIcon(visible: true);
             }
             else
             {
                 this.NewLoginGrid.Visibility = Visibility.Visible;
+                this.CustomApplicationToggleButtonGrid.Visibility = Visibility.Visible;
             }
 
             this.UseCustomApplicationToggleButton.IsChecked = !string.IsNullOrEmpty(ChannelSession.Settings.DiscordCustomClientID);
-            if (this.UseCustomApplicationToggleButton.IsChecked.GetValueOrDefault())
+            if (this.UseCustomApplicationToggleButton.IsChecked.GetValueOrDefault() && this.CustomApplicationToggleButtonGrid.Visibility == Visibility.Visible)
             {
                 this.CustomClientIDTextBox.Text = ChannelSession.Settings.DiscordCustomClientID;
                 this.CustomClientSecretTextBox.Text = ChannelSession.Settings.DiscordCustomClientSecret;
@@ -78,6 +81,8 @@ namespace MixItUp.WPF.Controls.Services
                         DiscordService.ClientBotPermissions.Equals(ChannelSession.Services.Discord.BotPermissions))
                     {
                         this.NewLoginGrid.Visibility = Visibility.Collapsed;
+                        this.CustomApplicationToggleButtonGrid.Visibility = Visibility.Collapsed;
+                        this.CustomApplicationGrid.Visibility = Visibility.Collapsed;
                         this.ExistingAccountGrid.Visibility = Visibility.Visible;
 
                         this.SetCompletedIcon(visible: true);
@@ -101,6 +106,9 @@ namespace MixItUp.WPF.Controls.Services
 
             this.ExistingAccountGrid.Visibility = Visibility.Collapsed;
             this.NewLoginGrid.Visibility = Visibility.Visible;
+
+            this.UseCustomApplicationToggleButton.IsChecked = false;
+            this.CustomApplicationToggleButtonGrid.Visibility = Visibility.Collapsed;
 
             this.SetCompletedIcon(visible: false);
         }

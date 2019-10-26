@@ -17,9 +17,9 @@ namespace MixItUp.WPF.Controls.Actions
 
         private CommandAction command;
 
-        public CommandActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
+        public CommandActionControl() : base() { InitializeComponent(); }
 
-        public CommandActionControl(ActionContainerControl containerControl, CommandAction action) : this(containerControl) { this.command = action; }
+        public CommandActionControl(CommandAction action) : this() { this.command = action; }
 
         public override Task OnLoaded()
         {

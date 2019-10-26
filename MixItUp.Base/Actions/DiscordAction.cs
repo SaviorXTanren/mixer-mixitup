@@ -23,7 +23,7 @@ namespace MixItUp.Base.Actions
     [DataContract]
     public class DiscordAction : ActionBase
     {
-        public static DiscordAction CreateForChatMessage(DiscordChannel channel, string message) { return new DiscordAction(DiscordActionTypeEnum.SendMessage) { SendMessageChannel = channel, SendMessageText = message }; }
+        public static DiscordAction CreateForChatMessage(DiscordChannel channel, string message, string filePath) { return new DiscordAction(DiscordActionTypeEnum.SendMessage) { SendMessageChannel = channel, SendMessageText = message, FilePath = filePath }; }
 
         public static DiscordAction CreateForMuteSelf(bool mute) { return new DiscordAction(DiscordActionTypeEnum.MuteSelf) { ShouldMuteDeafen = mute }; }
 
@@ -44,6 +44,9 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public bool ShouldMuteDeafen { get; set; }
 
+        [DataMember]
+        public string FilePath { get; set; }
+
         public DiscordAction() : base(ActionTypeEnum.Discord) { }
 
         public DiscordAction(DiscordActionTypeEnum type)
@@ -59,7 +62,7 @@ namespace MixItUp.Base.Actions
                 if (this.DiscordType == DiscordActionTypeEnum.SendMessage)
                 {
                     string message = await this.ReplaceStringWithSpecialModifiers(this.SendMessageText, user, arguments);
-                    await ChannelSession.Services.Discord.CreateMessage(this.SendMessageChannel, message);
+                    await ChannelSession.Services.Discord.CreateMessage(this.SendMessageChannel, message, this.FilePath);
                 }
                 else if (this.DiscordType == DiscordActionTypeEnum.MuteSelf)
                 {

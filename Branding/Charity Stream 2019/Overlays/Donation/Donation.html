@@ -1,0 +1,163 @@
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<style type="text/css">
+		img.images {
+			position: absolute;
+			margin-right: -50%;
+			transform: translate(-50%, -50%)
+		}
+		
+		h1.textElements {
+			color: blue;
+			white-space: nowrap;
+			text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+			position: absolute;
+			transform: translate(-50%, -50%);
+			font-family: "Gravedigger";
+		}
+	</style>
+	<script>
+		
+		var mixItUpLogoImage;
+		
+		var usernameText;
+		var donatedText;
+
+		var imagePosY = -180;
+		
+		var usernameTextPosX = 150;
+		var donatedTextPosX = 150;
+	
+		function init()
+		{
+			var username = gup("username", window.location.href);
+			var amount = gup("amount", window.location.href);
+		
+			mixItUpLogoImage = document.getElementById('mixItUpLogoImage');
+			
+			usernameText = document.getElementById('usernameText');
+			donatedText = document.getElementById('donatedText');
+			
+			usernameText.innerHTML = username;
+			donatedText.innerHTML = "Donated &nbsp;&nbsp; " + amount + "!";
+		
+			var audio = new Audio('MegaManXStageClear.mp3');
+			audio.play();
+			
+			setTimeout(function() { startMoveDown(); }, 2500);
+		}
+		
+		function startMoveDown()
+		{
+			mixItUpLogoImage.style.cssText += 'left: 250px; top: -200px;';
+			mixItUpLogoImage.style.visibility = 'visible';
+		
+			moveDown();
+		}
+		
+		function moveDown()
+		{
+			imagePosY += 10;
+			mixItUpLogoImage.style.top = imagePosY + 'px'
+			if (imagePosY < 305)
+			{
+				setTimeout(function() { moveDown(); }, 15);
+			}
+			else
+			{
+				setTimeout(function() { switchToStationary(); }, 50);
+			}
+		}
+		
+		function switchToStationary()
+		{
+			setTimeout(function() { moveUp(); }, 4100);
+			
+			setTimeout(function() { slideInUsername(); }, 50);
+		}
+		
+		function moveUp()
+		{
+			imagePosY -= 10;
+			mixItUpLogoImage.style.top = imagePosY + 'px'
+			if (imagePosY > -250)
+			{
+				setTimeout(function() { moveUp(); }, 10);
+			}
+			else
+			{
+				mixItUpLogoImage.style.visibility = 'hidden';
+			}
+		}
+		
+		function slideInUsername()
+		{
+			usernameText.style.visibility = 'visible';
+			
+			usernameTextPosX--;		
+			usernameText.style.left = usernameTextPosX + '%'
+			if (usernameTextPosX > 55)
+			{
+				setTimeout(function() { slideInUsername(); }, 10);
+			}
+			else
+			{
+				setTimeout(function() { slideInAmount(); }, 150);
+			}
+		}
+		
+		function slideInAmount()
+		{
+			donatedText.style.visibility = 'visible';
+			
+			donatedTextPosX--;		
+			donatedText.style.left = donatedTextPosX + '%'
+			if (donatedTextPosX > 55)
+			{
+				setTimeout(function() { slideInAmount(); }, 10);
+			}
+			else
+			{
+				setTimeout(function() { slideOutText(); }, 1700);
+			}
+		}
+		
+		function slideOutText()
+		{
+			usernameTextPosX++;
+			donatedTextPosX++;
+			
+			usernameText.style.left = usernameTextPosX + '%'
+			donatedText.style.left = donatedTextPosX + '%'
+			
+			if (usernameTextPosX < 155)
+			{
+				setTimeout(function() { slideOutText(); }, 10);
+			}
+			else
+			{
+				usernameText.style.visibility = 'hidden';
+				donatedText.style.visibility = 'hidden';
+			}		
+		}
+
+		function gup( name, url ) {
+			if (!url) url = location.href;
+			name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+			var regexS = "[\\?&]"+name+"=([^&#]*)";
+			var regex = new RegExp( regexS );
+			var results = regex.exec( url );
+			return results == null ? null : results[1];
+		}
+		
+		window.onload = function() { setTimeout(function() { init(); }, 500); };
+	</script>
+</head>
+	<body>
+		<img id="mixItUpLogoImage" src="MixItUpLogo.png" class="images" style="visibility:hidden" />
+		
+		<h1 id="usernameText" class="textElements" style="font-size: 100px; top: 15%; left: 155%" />
+		<h1 id="donatedText" class="textElements" style="font-size: 100px; top: 30%; left: 155%" />
+	</body>
+</html>

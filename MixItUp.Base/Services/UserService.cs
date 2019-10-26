@@ -158,6 +158,7 @@ namespace MixItUp.Base.Services
 
                     if (EventCommand.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.ChatUserJoined)))
                     {
+                        user.Data.TotalStreamsWatched++;
                         await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.ChatUserJoined), user);
                     }
                 }

@@ -60,6 +60,7 @@ namespace MixItUp.WPF.Windows.Command
                 else if (this.viewModel.GameCommand is TreasureDefenseGameCommand) { this.SetGameEditorControl(new TreasureDefenseGameEditorControl((TreasureDefenseGameCommand)this.viewModel.GameCommand)); }
                 else if (this.viewModel.GameCommand is HotPotatoGameCommand) { this.SetGameEditorControl(new HotPotatoGameEditorControl((HotPotatoGameCommand)this.viewModel.GameCommand)); }
                 else if (this.viewModel.GameCommand is BeachBallGameCommand) { this.SetGameEditorControl(new BeachBallGameEditorControl((BeachBallGameCommand)this.viewModel.GameCommand)); }
+                else if (this.viewModel.GameCommand is TriviaGameCommand) { this.SetGameEditorControl(new TriviaGameEditorControl((TriviaGameCommand)this.viewModel.GameCommand)); }
             }
             else
             {
@@ -83,6 +84,7 @@ namespace MixItUp.WPF.Windows.Command
                 this.gameEditors.Add("Treasure Defense", new TreasureDefenseGameEditorControl(this.viewModel.DefaultCurrency));
                 this.gameEditors.Add("Hot Potato", new HotPotatoGameEditorControl(this.viewModel.DefaultCurrency));
                 this.gameEditors.Add("Beach Ball", new BeachBallGameEditorControl(this.viewModel.DefaultCurrency));
+                this.gameEditors.Add("Trivia", new TriviaGameEditorControl(this.viewModel.DefaultCurrency));
             }
         }
 

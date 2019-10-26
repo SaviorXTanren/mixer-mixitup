@@ -14,9 +14,9 @@ namespace MixItUp.WPF.Controls.Actions
     {
         private GameQueueAction action;
 
-        public GameQueueActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
+        public GameQueueActionControl() : base() { InitializeComponent(); }
 
-        public GameQueueActionControl(ActionContainerControl containerControl, GameQueueAction action) : this(containerControl) { this.action = action; }
+        public GameQueueActionControl(GameQueueAction action) : this() { this.action = action; }
 
         public override Task OnLoaded()
         {

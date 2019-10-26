@@ -60,7 +60,7 @@
                 </Grid>
             </Controls:AccordianGroupBoxControl.Header>
 
-            <ContentControl x:Uid="ActionControlContentControl" Margin="10" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" />
+            <local:ActionContentContainerControl x:Uid="ActionControlContentControl" Margin="10" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" />
 
         </Controls:AccordianGroupBoxControl>
     </Border>

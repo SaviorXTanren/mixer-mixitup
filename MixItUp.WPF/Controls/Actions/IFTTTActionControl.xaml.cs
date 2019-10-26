@@ -26,9 +26,9 @@ namespace MixItUp.WPF.Controls.Actions
     {
         private IFTTTAction action;
 
-        public IFTTTActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
+        public IFTTTActionControl() : base() { InitializeComponent(); }
 
-        public IFTTTActionControl(ActionContainerControl containerControl, IFTTTAction action) : this(containerControl) { this.action = action; }
+        public IFTTTActionControl(IFTTTAction action) : this() { this.action = action; }
 
         public override Task OnLoaded()
         {
