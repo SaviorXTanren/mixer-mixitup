@@ -522,6 +522,29 @@ namespace MixItUp.Desktop.Services
             }
         }
 
+        public override async Task<bool> InitializeJustGiving()
+        {
+            this.JustGiving = (ChannelSession.Settings.PatreonOAuthToken != null) ? new JustGivingService(ChannelSession.Settings.PatreonOAuthToken) : new JustGivingService();
+            if (await this.JustGiving.Connect())
+            {
+                return true;
+            }
+            else
+            {
+                await this.DisconnectJustGiving();
+            }
+            return false;
+        }
+
+        public override async Task DisconnectJustGiving()
+        {
+            if (this.JustGiving != null)
+            {
+                await this.JustGiving.Disconnect();
+                this.JustGiving = null;
+            }
+        }
+
         private void OverlayServer_OnWebSocketConnectedOccurred(object sender, System.EventArgs e)
         {
             ChannelSession.ReconnectionOccurred("Overlay");

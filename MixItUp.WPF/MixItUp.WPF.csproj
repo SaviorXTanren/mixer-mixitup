@@ -832,6 +832,9 @@
     <Compile Include="Controls\Services\IFITTServiceControl.xaml.cs">
       <DependentUpon>IFITTServiceControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Services\JustGivingServiceControl.xaml.cs">
+      <DependentUpon>JustGivingServiceControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Services\OvrStreamServiceControl.xaml.cs">
       <DependentUpon>OvrStreamServiceControl.xaml</DependentUpon>
     </Compile>
@@ -1693,6 +1696,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Services\IFITTServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\JustGivingServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
