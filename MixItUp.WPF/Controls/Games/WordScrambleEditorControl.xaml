@@ -63,7 +63,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Text="{Binding WordScrambleTimeLimitString}" Grid.Column="0" Width="100" MaterialDesign:HintAssist.Hint="Hitman Time Limit" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Text="{Binding WordScrambleTimeLimitString}" Grid.Column="0" Width="100" MaterialDesign:HintAssist.Hint="Time Limit" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <GroupBox Grid.Column="2" Header="Word Scramble Prepare">
                 <CommandControls:CommandButtonsControl DataContext="{Binding WordScramblePrepareCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
