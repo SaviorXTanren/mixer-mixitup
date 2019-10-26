@@ -29,9 +29,9 @@ namespace MixItUp.WPF.Controls.Actions
 
         private ObservableCollection<CustomMetadataPair> customMetadataPairs = new ObservableCollection<CustomMetadataPair>();
 
-        public InteractiveActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
+        public InteractiveActionControl() : base() { InitializeComponent(); }
 
-        public InteractiveActionControl(ActionContainerControl containerControl, InteractiveAction action) : this(containerControl) { this.action = action; }
+        public InteractiveActionControl(InteractiveAction action) : this() { this.action = action; }
 
         public override async Task OnLoaded()
         {

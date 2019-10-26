@@ -345,6 +345,9 @@
     <Compile Include="Controls\Actions\ActionContainerControl.xaml.cs">
       <DependentUpon>ActionContainerControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\ActionContentContainerControl.xaml.cs">
+      <DependentUpon>ActionContentContainerControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\ActionControlBase.cs" />
     <Compile Include="Controls\Actions\ChatActionControl.xaml.cs">
       <DependentUpon>ChatActionControl.xaml</DependentUpon>
@@ -474,9 +477,6 @@
       <DependentUpon>BasicTimerCommandEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Command\CommandEditorControlBase.cs" />
-    <Compile Include="Controls\Command\CommandReferenceControl.xaml.cs">
-      <DependentUpon>CommandReferenceControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Command\CustomCommandDetailsControl.xaml.cs">
       <DependentUpon>CustomCommandDetailsControl.xaml</DependentUpon>
     </Compile>
@@ -1052,6 +1052,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Actions\ActionContentContainerControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Actions\ChatActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1217,10 +1221,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Command\BasicTimerCommandEditorControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Command\CommandReferenceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

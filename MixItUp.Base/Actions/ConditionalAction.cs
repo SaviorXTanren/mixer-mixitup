@@ -1,5 +1,5 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
@@ -103,15 +103,29 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public Guid CommandID { get; set; }
 
+        [DataMember]
+        public ActionBase Action { get; set; }
+
         public ConditionalAction() : base(ActionTypeEnum.Conditional) { }
 
         public ConditionalAction(bool ignoreCase, ConditionalOperatorTypeEnum op, IEnumerable<ConditionalClauseModel> clauses, CommandBase command)
+            : this(ignoreCase, op, clauses)
+        {
+            this.CommandID = command.ID;
+        }
+
+        public ConditionalAction(bool ignoreCase, ConditionalOperatorTypeEnum op, IEnumerable<ConditionalClauseModel> clauses, ActionBase action)
+            : this(ignoreCase, op, clauses)
+        {
+            this.Action = action;
+        }
+
+        private ConditionalAction(bool ignoreCase, ConditionalOperatorTypeEnum op, IEnumerable<ConditionalClauseModel> clauses)
             : this()
         {
             this.IgnoreCase = ignoreCase;
             this.Operator = op;
             this.Clauses = new List<ConditionalClauseModel>(clauses);
-            this.CommandID = command.ID;
         }
 
         public CommandBase GetCommand() { return ChannelSession.AllEnabledCommands.FirstOrDefault(c => c.ID.Equals(this.CommandID)); }
@@ -147,10 +161,19 @@ namespace MixItUp.Base.Actions
 
             if (finalResult)
             {
-                CommandBase command = this.GetCommand();
-                if (command != null)
+                if (this.CommandID != Guid.Empty)
                 {
-                    await command.Perform(user, arguments, this.GetExtraSpecialIdentifiers());
+                    CommandBase command = this.GetCommand();
+                    if (command != null)
+                    {
+                        await command.Perform(user, arguments, this.GetExtraSpecialIdentifiers());
+                    }
+                }
+                else if (this.Action != null)
+                {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    AsyncRunner.RunAsync(this.Action.Perform(user, arguments, this.GetExtraSpecialIdentifiers()));
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 }
             }
         }

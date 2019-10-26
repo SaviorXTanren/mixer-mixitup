@@ -10,9 +10,9 @@ namespace MixItUp.WPF.Controls.Actions
     {
         private ChatAction action;
 
-        public ChatActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
+        public ChatActionControl() : base() { InitializeComponent(); }
 
-        public ChatActionControl(ActionContainerControl containerControl, ChatAction action) : this(containerControl) { this.action = action; }
+        public ChatActionControl(ChatAction action) : this() { this.action = action; }
 
         public override Task OnLoaded()
         {

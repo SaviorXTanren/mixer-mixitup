@@ -15,9 +15,9 @@ namespace MixItUp.WPF.Controls.Actions
 
         private ObservableCollection<string> serialDevices = new ObservableCollection<string>();
 
-        public SerialActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
+        public SerialActionControl() : base() { InitializeComponent(); }
 
-        public SerialActionControl(ActionContainerControl containerControl, SerialAction action) : this(containerControl) { this.action = action; }
+        public SerialActionControl(SerialAction action) : this() { this.action = action; }
 
         public override Task OnLoaded()
         {

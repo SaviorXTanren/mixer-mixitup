@@ -13,9 +13,9 @@ namespace MixItUp.WPF.Controls.Actions
     {
         private SpotifyAction action;
 
-        public SpotifyActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
+        public SpotifyActionControl() : base() { InitializeComponent(); }
 
-        public SpotifyActionControl(ActionContainerControl containerControl, SpotifyAction action) : this(containerControl) { this.action = action; }
+        public SpotifyActionControl(SpotifyAction action) : this() { this.action = action; }
 
         public override Task OnLoaded()
         {

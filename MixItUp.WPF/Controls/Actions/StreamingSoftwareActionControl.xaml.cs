@@ -16,9 +16,9 @@ namespace MixItUp.WPF.Controls.Actions
     {
         private StreamingSoftwareAction action;
 
-        public StreamingSoftwareActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
+        public StreamingSoftwareActionControl() : base() { InitializeComponent(); }
 
-        public StreamingSoftwareActionControl(ActionContainerControl containerControl, StreamingSoftwareAction action) : this(containerControl) { this.action = action; }
+        public StreamingSoftwareActionControl(StreamingSoftwareAction action) : this() { this.action = action; }
 
         public override Task OnLoaded()
         {
@@ -286,43 +286,40 @@ namespace MixItUp.WPF.Controls.Actions
         {
             if (this.StreamingSoftwareComboBox.SelectedIndex >= 0 && !string.IsNullOrEmpty(this.SourceNameTextBox.Text))
             {
-                await this.containerControl.RunAsyncOperation(async () =>
+                StreamingSourceDimensions dimensions = null;
+
+                StreamingSoftwareTypeEnum software = this.GetSelectedSoftware();
+                if (software == StreamingSoftwareTypeEnum.OBSStudio)
                 {
-                    StreamingSourceDimensions dimensions = null;
+                    if (ChannelSession.Services.OBSWebsocket != null || await ChannelSession.Services.InitializeOBSWebsocket())
+                    {
+                        dimensions = await ChannelSession.Services.OBSWebsocket.GetSourceDimensions(this.SourceSceneNameTextBox.Text, this.SourceNameTextBox.Text);
+                    }
+                    else
+                    {
+                        await MessageBoxHelper.ShowMessageDialog("Could not connect to OBS Studio. Please try establishing connection with it in the Services area.");
+                    }
+                }
+                else if (software == StreamingSoftwareTypeEnum.StreamlabsOBS)
+                {
+                    if (ChannelSession.Services.StreamlabsOBSService != null || await ChannelSession.Services.InitializeStreamlabsOBSService())
+                    {
+                        dimensions = await ChannelSession.Services.StreamlabsOBSService.GetSourceDimensions(this.SourceSceneNameTextBox.Text, this.SourceNameTextBox.Text);
+                    }
+                    else
+                    {
+                        await MessageBoxHelper.ShowMessageDialog("Could not connect to OBS Studio. Please try establishing connection with it in the Services area.");
+                    }
+                }
 
-                    StreamingSoftwareTypeEnum software = this.GetSelectedSoftware();
-                    if (software == StreamingSoftwareTypeEnum.OBSStudio)
-                    {
-                        if (ChannelSession.Services.OBSWebsocket != null || await ChannelSession.Services.InitializeOBSWebsocket())
-                        {
-                            dimensions = await ChannelSession.Services.OBSWebsocket.GetSourceDimensions(this.SourceSceneNameTextBox.Text, this.SourceNameTextBox.Text);
-                        }
-                        else
-                        {
-                            await MessageBoxHelper.ShowMessageDialog("Could not connect to OBS Studio. Please try establishing connection with it in the Services area.");
-                        }
-                    }
-                    else if (software == StreamingSoftwareTypeEnum.StreamlabsOBS)
-                    {
-                        if (ChannelSession.Services.StreamlabsOBSService != null || await ChannelSession.Services.InitializeStreamlabsOBSService())
-                        {
-                            dimensions = await ChannelSession.Services.StreamlabsOBSService.GetSourceDimensions(this.SourceSceneNameTextBox.Text, this.SourceNameTextBox.Text);
-                        }
-                        else
-                        {
-                            await MessageBoxHelper.ShowMessageDialog("Could not connect to OBS Studio. Please try establishing connection with it in the Services area.");
-                        }
-                    }
-
-                    if (dimensions != null)
-                    {
-                        this.SourceDimensionsXPositionTextBox.Text = dimensions.X.ToString();
-                        this.SourceDimensionsYPositionTextBox.Text = dimensions.Y.ToString();
-                        this.SourceDimensionsRotationTextBox.Text = dimensions.Rotation.ToString();
-                        this.SourceDimensionsXScaleTextBox.Text = dimensions.XScale.ToString();
-                        this.SourceDimensionsYScaleTextBox.Text = dimensions.YScale.ToString();
-                    }
-                });
+                if (dimensions != null)
+                {
+                    this.SourceDimensionsXPositionTextBox.Text = dimensions.X.ToString();
+                    this.SourceDimensionsYPositionTextBox.Text = dimensions.Y.ToString();
+                    this.SourceDimensionsRotationTextBox.Text = dimensions.Rotation.ToString();
+                    this.SourceDimensionsXScaleTextBox.Text = dimensions.XScale.ToString();
+                    this.SourceDimensionsYScaleTextBox.Text = dimensions.YScale.ToString();
+                }
             }
         }
 

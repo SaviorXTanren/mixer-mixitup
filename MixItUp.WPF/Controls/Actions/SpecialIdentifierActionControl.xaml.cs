@@ -11,9 +11,9 @@ namespace MixItUp.WPF.Controls.Actions
     {
         private SpecialIdentifierAction action;
 
-        public SpecialIdentifierActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
+        public SpecialIdentifierActionControl() : base() { InitializeComponent(); }
 
-        public SpecialIdentifierActionControl(ActionContainerControl containerControl, SpecialIdentifierAction action) : this(containerControl) { this.action = action; }
+        public SpecialIdentifierActionControl(SpecialIdentifierAction action) : this() { this.action = action; }
 
         public override Task OnLoaded()
         {

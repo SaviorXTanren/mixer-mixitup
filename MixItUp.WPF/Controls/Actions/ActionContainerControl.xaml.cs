@@ -1,5 +1,4 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base;
+﻿using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -7,10 +6,7 @@ using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
 using StreamingClient.Base.Util;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -26,9 +22,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         private TextBlock GroupBoxHeaderTextBlock;
         private TextBox GroupBoxHeaderTextBox;
-        private ContentControl ActionControlContentControl;
-
-        private ActionControlBase actionControl;
+        private ActionContentContainerControl ActionControlContentControl;
 
         private ActionBase action;
         private ActionTypeEnum type;
@@ -50,123 +44,20 @@ namespace MixItUp.WPF.Controls.Actions
         {
             this.GroupBoxHeaderTextBlock = (TextBlock)this.GetByUid("GroupBoxHeaderTextBlock");
             this.GroupBoxHeaderTextBox = (TextBox)this.GetByUid("GroupBoxHeaderTextBox");
-            this.ActionControlContentControl = (ContentControl)this.GetByUid("ActionControlContentControl");
+            this.ActionControlContentControl = (ActionContentContainerControl)this.GetByUid("ActionControlContentControl");
 
-            if (this.actionControl == null)
+            if (this.action != null)
             {
-                switch (this.type)
-                {
-                    case ActionTypeEnum.Chat:
-                        this.actionControl = (this.action != null) ? new ChatActionControl(this, (ChatAction)this.action) : new ChatActionControl(this);
-                        break;
-                    case ActionTypeEnum.Currency:
-                        this.actionControl = (this.action != null) ? new CurrencyActionControl(this, (CurrencyAction)this.action) : new CurrencyActionControl(this);
-                        break;
-                    case ActionTypeEnum.ExternalProgram:
-                        this.actionControl = (this.action != null) ? new ExternalProgramActionControl(this, (ExternalProgramAction)this.action) : new ExternalProgramActionControl(this);
-                        break;
-                    case ActionTypeEnum.Input:
-                        this.actionControl = (this.action != null) ? new InputActionControl(this, (InputAction)this.action) : new InputActionControl(this);
-                        break;
-                    case ActionTypeEnum.Overlay:
-                        this.actionControl = (this.action != null) ? new OverlayActionControl(this, (OverlayAction)this.action) : new OverlayActionControl(this);
-                        break;
-                    case ActionTypeEnum.Sound:
-                        this.actionControl = (this.action != null) ? new SoundActionControl(this, (SoundAction)this.action) : new SoundActionControl(this);
-                        break;
-                    case ActionTypeEnum.Wait:
-                        this.actionControl = (this.action != null) ? new WaitActionControl(this, (WaitAction)this.action) : new WaitActionControl(this);
-                        break;
-                    case ActionTypeEnum.Counter:
-                        this.actionControl = (this.action != null) ? new CounterActionControl(this, (CounterAction)this.action) : new CounterActionControl(this);
-                        break;
-                    case ActionTypeEnum.GameQueue:
-                        this.actionControl = (this.action != null) ? new GameQueueActionControl(this, (GameQueueAction)this.action) : new GameQueueActionControl(this);
-                        break;
-                    case ActionTypeEnum.Interactive:
-                        this.actionControl = (this.action != null) ? new InteractiveActionControl(this, (InteractiveAction)this.action) : new InteractiveActionControl(this);
-                        break;
-                    case ActionTypeEnum.TextToSpeech:
-                        this.actionControl = (this.action != null) ? new TextToSpeechActionControl(this, (TextToSpeechAction)this.action) : new TextToSpeechActionControl(this);
-                        break;
-                    case ActionTypeEnum.WebRequest:
-                        this.actionControl = (this.action != null) ? new WebRequestActionControl(this, (WebRequestAction)this.action) : new WebRequestActionControl(this);
-                        break;
-#pragma warning disable CS0612 // Type or member is obsolete
-                    case ActionTypeEnum.ActionGroup:
-                        if (this.action != null)
-                        {
-                            ActionGroupAction aaction = (ActionGroupAction)this.action;
-                            this.actionControl = new CommandActionControl(this, new CommandAction()
-                            {
-                                CommandActionType = CommandActionTypeEnum.RunCommand,
-                                CommandID = aaction.ActionGroupID
-                            });
-                        }
-#pragma warning restore CS0612 // Type or member is obsolete
-                        break;
-                    case ActionTypeEnum.SpecialIdentifier:
-                        this.actionControl = (this.action != null) ? new SpecialIdentifierActionControl(this, (SpecialIdentifierAction)this.action) : new SpecialIdentifierActionControl(this);
-                        break;
-                    case ActionTypeEnum.File:
-                        this.actionControl = (this.action != null) ? new FileActionControl(this, (FileAction)this.action) : new FileActionControl(this);
-                        break;
-                    case ActionTypeEnum.SongRequest:
-                        this.actionControl = (this.action != null) ? new SongRequestActionControl(this, (SongRequestAction)this.action) : new SongRequestActionControl(this);
-                        break;
-                    case ActionTypeEnum.Spotify:
-                        this.actionControl = (this.action != null) ? new SpotifyActionControl(this, (SpotifyAction)this.action) : new SpotifyActionControl(this);
-                        break;
-                    case ActionTypeEnum.Discord:
-                        this.actionControl = (this.action != null) ? new DiscordActionControl(this, (DiscordAction)this.action) : new DiscordActionControl(this);
-                        break;
-                    case ActionTypeEnum.Translation:
-                        this.actionControl = (this.action != null) ? new TranslationActionControl(this, (TranslationAction)this.action) : new TranslationActionControl(this);
-                        break;
-                    case ActionTypeEnum.Twitter:
-                        this.actionControl = (this.action != null) ? new TwitterActionControl(this, (TwitterAction)this.action) : new TwitterActionControl(this);
-                        break;
-                    case ActionTypeEnum.Conditional:
-                        this.actionControl = (this.action != null) ? new ConditionalActionControl(this, (ConditionalAction)this.action) : new ConditionalActionControl(this);
-                        break;
-                    case ActionTypeEnum.StreamingSoftware:
-                        this.actionControl = (this.action != null) ? new StreamingSoftwareActionControl(this, (StreamingSoftwareAction)this.action) : new StreamingSoftwareActionControl(this);
-                        break;
-                    case ActionTypeEnum.Streamlabs:
-                        this.actionControl = (this.action != null) ? new StreamlabsActionControl(this, (StreamlabsAction)this.action) : new StreamlabsActionControl(this);
-                        break;
-                    case ActionTypeEnum.MixerClips:
-                        this.actionControl = (this.action != null) ? new MixerClipsActionControl(this, (MixerClipsAction)this.action) : new MixerClipsActionControl(this);
-                        break;
-                    case ActionTypeEnum.Command:
-                        this.actionControl = (this.action != null) ? new CommandActionControl(this, (CommandAction)this.action) : new CommandActionControl(this);
-                        break;
-                    case ActionTypeEnum.Serial:
-                        this.actionControl = (this.action != null) ? new SerialActionControl(this, (SerialAction)this.action) : new SerialActionControl(this);
-                        break;
-                    case ActionTypeEnum.Moderation:
-                        this.actionControl = (this.action != null) ? new ModerationActionControl(this, (ModerationAction)this.action) : new ModerationActionControl(this);
-                        break;
-                    case ActionTypeEnum.OvrStream:
-                        this.actionControl = (this.action != null) ? new OvrStreamActionControl(this, (OvrStreamAction)this.action) : new OvrStreamActionControl(this);
-                        break;
-                    case ActionTypeEnum.StreamingPlatform:
-                        this.actionControl = (this.action != null) ? new StreamingPlatformActionControl(this, (StreamingPlatformAction)this.action) : new StreamingPlatformActionControl(this);
-                        break;
-                    case ActionTypeEnum.IFTTT:
-                        this.actionControl = (this.action != null) ? new IFTTTActionControl(this, (IFTTTAction)this.action) : new IFTTTActionControl(this);
-                        break;
-                }
+                this.ActionControlContentControl.AssignAction(this.action);
+            }
+            else
+            {
+                this.ActionControlContentControl.AssignAction(this.type);
             }
 
             if (this.action != null && !string.IsNullOrEmpty(this.action.Label))
             {
                 this.GroupBoxHeaderTextBox.Text = this.GroupBoxHeaderTextBlock.Text = this.action.Label;
-            }
-
-            if (this.actionControl != null)
-            {
-                this.ActionControlContentControl.Content = this.actionControl;
             }
 
             if (string.IsNullOrEmpty(this.GroupBoxHeaderTextBox.Text))
@@ -182,19 +73,13 @@ namespace MixItUp.WPF.Controls.Actions
 
         public ActionBase GetAction()
         {
-            ActionBase action = null;
-            if (this.actionControl != null)
+            ActionBase action = this.ActionControlContentControl.GetAction();
+            if (action != null && !string.IsNullOrEmpty(this.GroupBoxHeaderTextBox.Text))
             {
-                action = this.actionControl.GetAction();
-                if (action != null && !string.IsNullOrEmpty(this.GroupBoxHeaderTextBox.Text))
-                {
-                    action.Label = this.GroupBoxHeaderTextBox.Text;
-                }
+                action.Label = this.GroupBoxHeaderTextBox.Text;
             }
             return action;
         }
-
-        public async Task RunAsyncOperation(Func<Task> function) { await this.Window.RunAsyncOperation(function); }
 
         public void Minimize()
         {

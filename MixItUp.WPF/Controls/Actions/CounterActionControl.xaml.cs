@@ -15,9 +15,9 @@ namespace MixItUp.WPF.Controls.Actions
     {
         private CounterAction action;
 
-        public CounterActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
+        public CounterActionControl() : base() { InitializeComponent(); }
 
-        public CounterActionControl(ActionContainerControl containerControl, CounterAction action) : this(containerControl) { this.action = action; }
+        public CounterActionControl(CounterAction action) : this() { this.action = action; }
 
         public override Task OnLoaded()
         {

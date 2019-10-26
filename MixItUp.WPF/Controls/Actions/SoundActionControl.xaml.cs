@@ -15,9 +15,9 @@ namespace MixItUp.WPF.Controls.Actions
 
         private Dictionary<int, string> audioOutputDevices = new Dictionary<int, string>();
 
-        public SoundActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
+        public SoundActionControl() : base() { InitializeComponent(); }
 
-        public SoundActionControl(ActionContainerControl containerControl, SoundAction action) : this(containerControl) { this.action = action; }
+        public SoundActionControl(SoundAction action) : this() { this.action = action; }
 
         public override async Task OnLoaded()
         {

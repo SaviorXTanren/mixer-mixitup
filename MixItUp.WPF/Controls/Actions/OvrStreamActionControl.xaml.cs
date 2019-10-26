@@ -31,9 +31,9 @@ namespace MixItUp.WPF.Controls.Actions
         private VariablePair activeVariablePair = null;
         private TextBox activeVariableNameTextBox = null;
 
-        public OvrStreamActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
+        public OvrStreamActionControl() : base() { InitializeComponent(); }
 
-        public OvrStreamActionControl(ActionContainerControl containerControl, OvrStreamAction action) : this(containerControl) { this.action = action; }
+        public OvrStreamActionControl(OvrStreamAction action) : this() { this.action = action; }
 
         public override Task OnLoaded()
         {

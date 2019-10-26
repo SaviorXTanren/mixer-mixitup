@@ -17,9 +17,9 @@ namespace MixItUp.WPF.Controls.Actions
 
         private DiscordAction action;
 
-        public DiscordActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
+        public DiscordActionControl() : base() { InitializeComponent(); }
 
-        public DiscordActionControl(ActionContainerControl containerControl, DiscordAction action) : this(containerControl) { this.action = action; }
+        public DiscordActionControl(DiscordAction action) : this() { this.action = action; }
 
         public override async Task OnLoaded()
         {

@@ -72,11 +72,11 @@ namespace MixItUp.WPF.Controls.Command
 
                 if (this.command.Actions.First() is ChatAction)
                 {
-                    this.actionControl = new ChatActionControl(null, (ChatAction)this.command.Actions.First());
+                    this.actionControl = new ChatActionControl((ChatAction)this.command.Actions.First());
                 }
                 else if (this.command.Actions.First() is SoundAction)
                 {
-                    this.actionControl = new SoundActionControl(null, (SoundAction)this.command.Actions.First());
+                    this.actionControl = new SoundActionControl((SoundAction)this.command.Actions.First());
                 }
             }
             else

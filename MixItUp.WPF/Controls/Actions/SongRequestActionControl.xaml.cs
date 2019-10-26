@@ -16,9 +16,9 @@ namespace MixItUp.WPF.Controls.Actions
     {
         private SongRequestAction action;
 
-        public SongRequestActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
+        public SongRequestActionControl() : base() { InitializeComponent(); }
 
-        public SongRequestActionControl(ActionContainerControl containerControl, SongRequestAction action) : this(containerControl) { this.action = action; }
+        public SongRequestActionControl(SongRequestAction action) : this() { this.action = action; }
 
         public override Task OnLoaded()
         {
