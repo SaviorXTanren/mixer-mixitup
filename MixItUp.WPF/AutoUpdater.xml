@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <item>
-  <version>0.5.3.2</version>
-  <url>https://mixitup.blob.core.windows.net/update/public/MixItUp.zip</url>
-  <changelog>https://mixitup.blob.core.windows.net/update/public/Changelog.html</changelog>
+  <version>0.5.3.2001</version>
+  <url>https://mixitup.blob.core.windows.net/update/preview/MixItUp.zip</url>
+  <changelog>https://mixitup.blob.core.windows.net/update/preview/Changelog.html</changelog>
   <mandatory>false</mandatory>
 </item>
