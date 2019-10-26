@@ -113,6 +113,7 @@ namespace MixItUp.Base.ViewModel.Window.Overlay
             this.Initialize();
 
             this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.ChatMessages, "Shows the last X many chat messages from your channel. Chat messages are added as they occur."));
+            this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.EndCredits, "Shows a scrolling list of text like movie credits based on user interactions throughout the stream. Showing the widget triggers the credits, hiding resets it."));
             this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.EventList, "Shows the last X many events that have occurred in your channel. Events are added as they occur."));
             this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.GameQueue, "Shows a block of text. Events are added as they occur."));
             this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.ProgressBar, "Shows a progress bar for a specified goal. Progress is updated as events occur or on user-defined refresh Interval."));
