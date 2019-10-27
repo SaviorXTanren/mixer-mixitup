@@ -386,6 +386,13 @@ namespace MixItUp.Base.ViewModel.User
                         if (userGroups != null)
                         {
                             this.MixerSubscribeDate = userGroups.GetSubscriberDate();
+                            if (this.MixerSubscribeDate != null)
+                            {
+                                if (this.Data.TotalMonthsSubbed < this.MixerSubscribeDate.GetValueOrDefault().TotalMonthsFromNow())
+                                {
+                                    this.Data.TotalMonthsSubbed = (uint)this.MixerSubscribeDate.GetValueOrDefault().TotalMonthsFromNow();
+                                }
+                            }
                         }
                     }
 

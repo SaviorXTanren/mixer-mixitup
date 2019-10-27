@@ -124,7 +124,6 @@ namespace MixItUp.WPF.Controls.Actions
 
         private ConditionalAction action;
 
-
         public CommandBase Command
         {
             get { return this.command; }
@@ -140,21 +139,19 @@ namespace MixItUp.WPF.Controls.Actions
         }
         private CommandBase command;
 
-        private ActionBase singleAction;
-
-        private ActionContentContainerControl ActionControlContentControl;
+        private ContentControl ActionControlContentControl;
+        private ActionContentContainerControl actionContentContainerControl;
 
         public ConditionalActionControl() : base() { InitializeComponent(); }
 
         public ConditionalActionControl(ConditionalAction action) : this()
         {
             this.action = action;
-            this.singleAction = this.action.Action;
         }
 
         public override Task OnLoaded()
         {
-            this.ActionControlContentControl = (ActionContentContainerControl)this.GetByUid("ActionControlContentControl");
+            this.ActionControlContentControl = (ContentControl)this.GetByUid("ActionControlContentControl");
 
             List<CommandTypeEnum> commandTypes = EnumHelper.GetEnumList<CommandTypeEnum>().ToList();
             commandTypes.Remove(CommandTypeEnum.Game);
@@ -164,6 +161,8 @@ namespace MixItUp.WPF.Controls.Actions
             List<string> commandTypeStrings = EnumHelper.GetEnumNames(commandTypes).ToList();
             commandTypeStrings.Add(SingleActionCommandType);
             this.CommandTypeComboBox.ItemsSource = commandTypeStrings;
+
+            this.SingleActionNameComboBox.ItemsSource = EnumHelper.GetEnumNames<ActionTypeEnum>().OrderBy(c => c);
 
             this.OperatorTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<ConditionalOperatorTypeEnum>();
             if (this.action != null)
@@ -184,13 +183,12 @@ namespace MixItUp.WPF.Controls.Actions
                 this.Clauses.First().CanBeRemoved = false;
                 this.Command = this.action.GetCommand();
 
-                if (this.singleAction != null)
+                if (this.action.Action != null)
                 {
                     this.CommandTypeComboBox.SelectedItem = SingleActionCommandType;
-                    this.CommandNameComboBox.SelectedItem = EnumHelper.GetEnumName(this.singleAction.Type);
-                    this.ActionControlContentControl.ResetAction();
-                    this.ActionControlContentControl.AssignAction(this.singleAction);
-                    this.singleAction = null;
+                    this.SingleActionNameComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.Action.Type);
+                    this.ActionControlContentControl.Visibility = Visibility.Visible;
+                    this.ActionControlContentControl.Content = this.actionContentContainerControl = new ActionContentContainerControl(this.action.Action);
                 }
             }
             else
@@ -216,10 +214,13 @@ namespace MixItUp.WPF.Controls.Actions
                     }
                     else
                     {
-                        ActionBase action = this.ActionControlContentControl.GetAction();
-                        if (action != null)
+                        if (this.actionContentContainerControl != null)
                         {
-                            return new ConditionalAction(!this.CaseSensitiveToggleButton.IsChecked.GetValueOrDefault(), op, this.Clauses.Select(c => c.Clause), action);
+                            ActionBase action = this.actionContentContainerControl.GetAction();
+                            if (action != null)
+                            {
+                                return new ConditionalAction(!this.CaseSensitiveToggleButton.IsChecked.GetValueOrDefault(), op, this.Clauses.Select(c => c.Clause), action);
+                            }
                         }
                     }
                 }
@@ -234,56 +235,53 @@ namespace MixItUp.WPF.Controls.Actions
 
         private void CommandTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            this.CommandNameComboBox.Visibility = Visibility.Collapsed;
+            this.SingleActionNameComboBox.Visibility = Visibility.Collapsed;
+            this.ActionControlContentControl.Visibility = Visibility.Collapsed;
+
             if (this.CommandTypeComboBox.SelectedIndex >= 0)
             {
                 string selection = (string)this.CommandTypeComboBox.SelectedItem;
-                List<string> names = new List<string>();
                 if (selection.Equals(SingleActionCommandType))
                 {
-                    names.AddRange(EnumHelper.GetEnumNames<ActionTypeEnum>());
+                    this.Command = null;
+
+                    this.SingleActionNameComboBox.SelectedIndex = -1;
+                    this.SingleActionNameComboBox.Visibility = Visibility.Visible;
                 }
                 else
                 {
-                    IEnumerable<CommandBase> commands = this.GetCommandsForType(selection);
-                    names.AddRange(commands.Select(c => c.Name));
+                    this.SingleActionNameComboBox.SelectedIndex = -1;
+                    this.ActionControlContentControl.Content = this.actionContentContainerControl = null;
+
+                    CommandTypeEnum commandType = EnumHelper.GetEnumValueFromString<CommandTypeEnum>((string)this.CommandTypeComboBox.SelectedItem);
+                    IEnumerable<CommandBase> commands = ChannelSession.AllEnabledCommands.Where(c => c.Type == commandType);
+                    if (commandType == CommandTypeEnum.Chat)
+                    {
+                        commands = commands.Where(c => !(c is PreMadeChatCommand));
+                    }
+                    this.CommandNameComboBox.ItemsSource = commands.OrderBy(c => c.Name);
+                    this.CommandNameComboBox.Visibility = Visibility.Visible;
                 }
-                this.CommandNameComboBox.ItemsSource = names.OrderBy(c => c);
-                this.CommandNameComboBox.SelectedIndex = -1;
-                this.CommandNameComboBox.IsEnabled = true;
             }
         }
 
         private void CommandNameComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (this.CommandTypeComboBox.SelectedIndex >= 0 && this.CommandNameComboBox.SelectedIndex >= 0)
+            if (this.CommandNameComboBox.SelectedIndex >= 0 && this.Command != this.CommandNameComboBox.SelectedItem)
             {
-                string selection = (string)this.CommandTypeComboBox.SelectedItem;
-                string name = (string)this.CommandNameComboBox.SelectedItem;
-
-                this.ActionControlContentControl.Visibility = Visibility.Collapsed;
-                if (selection.Equals(SingleActionCommandType))
-                {
-                    ActionTypeEnum actionType = EnumHelper.GetEnumValueFromString<ActionTypeEnum>(name);
-                    this.ActionControlContentControl.AssignAction(actionType);
-                    this.ActionControlContentControl.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    IEnumerable<CommandBase> commands = this.GetCommandsForType(selection);
-                    this.Command = commands.FirstOrDefault(c => c.Name.Equals(name));
-                }
+                this.Command = (CommandBase)this.CommandNameComboBox.SelectedItem;
             }
         }
 
-        private IEnumerable<CommandBase> GetCommandsForType(string selection)
+        private void SingleActionNameComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            CommandTypeEnum commandType = EnumHelper.GetEnumValueFromString<CommandTypeEnum>(selection);
-            IEnumerable<CommandBase> commands = ChannelSession.AllEnabledCommands.Where(c => c.Type == commandType);
-            if (commandType == CommandTypeEnum.Chat)
+            if (this.SingleActionNameComboBox.SelectedIndex >= 0)
             {
-                commands = commands.Where(c => !(c is PreMadeChatCommand));
+                ActionTypeEnum actionType = EnumHelper.GetEnumValueFromString<ActionTypeEnum>((string)this.SingleActionNameComboBox.SelectedItem);
+                this.ActionControlContentControl.Visibility = Visibility.Visible;
+                this.ActionControlContentControl.Content = this.actionContentContainerControl = new ActionContentContainerControl(actionType);
             }
-            return commands;
         }
     }
 }

@@ -22,7 +22,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         private TextBlock GroupBoxHeaderTextBlock;
         private TextBox GroupBoxHeaderTextBox;
-        private ActionContentContainerControl ActionControlContentControl;
+        private ActionContentContainerControl ActionContentContainerControl;
 
         private ActionBase action;
         private ActionTypeEnum type;
@@ -35,25 +35,23 @@ namespace MixItUp.WPF.Controls.Actions
 
             InitializeComponent();
 
+            this.ActionContentContainerControl = (ActionContentContainerControl)this.GetByUid("ActionContentContainerControl");
+            this.ActionContentContainerControl.AssignAction(this.type);
+
             this.Loaded += ActionContainerControl_Loaded;
         }
 
-        public ActionContainerControl(CommandWindow window, CommandEditorControlBase editorControl, ActionBase action) : this(window, editorControl, action.Type) { this.action = action; }
+        public ActionContainerControl(CommandWindow window, CommandEditorControlBase editorControl, ActionBase action)
+            : this(window, editorControl, action.Type)
+        {
+            this.action = action;
+            this.ActionContentContainerControl.AssignAction(this.action);
+        }
 
         private void ActionContainerControl_Loaded(object sender, RoutedEventArgs e)
         {
             this.GroupBoxHeaderTextBlock = (TextBlock)this.GetByUid("GroupBoxHeaderTextBlock");
             this.GroupBoxHeaderTextBox = (TextBox)this.GetByUid("GroupBoxHeaderTextBox");
-            this.ActionControlContentControl = (ActionContentContainerControl)this.GetByUid("ActionControlContentControl");
-
-            if (this.action != null)
-            {
-                this.ActionControlContentControl.AssignAction(this.action);
-            }
-            else
-            {
-                this.ActionControlContentControl.AssignAction(this.type);
-            }
 
             if (this.action != null && !string.IsNullOrEmpty(this.action.Label))
             {
@@ -73,7 +71,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         public ActionBase GetAction()
         {
-            ActionBase action = this.ActionControlContentControl.GetAction();
+            ActionBase action = this.ActionContentContainerControl.GetAction();
             if (action != null && !string.IsNullOrEmpty(this.GroupBoxHeaderTextBox.Text))
             {
                 action.Label = this.GroupBoxHeaderTextBox.Text;
