@@ -228,10 +228,6 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
                 Dictionary<OverlayEndCreditsSectionTypeEnum, OverlayEndCreditsSectionModel> sections = new Dictionary<OverlayEndCreditsSectionTypeEnum, OverlayEndCreditsSectionModel>();
                 foreach (OverlayEndCreditsSectionItemViewModel section in this.SectionItems)
                 {
-                    if (sections.ContainsKey(section.SectionType))
-                    {
-                        return null;
-                    }
                     sections[section.SectionType] = section.GetItem();
                 }
 
