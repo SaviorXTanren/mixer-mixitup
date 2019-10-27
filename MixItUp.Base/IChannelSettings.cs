@@ -209,6 +209,8 @@ namespace MixItUp.Base
         List<DashboardItemTypeEnum> DashboardItems { get; set; }
         List<Guid> DashboardQuickCommands { get; set; }
 
+        List<string> RecentStreamTitles { get; set; }
+
         string TelemetryUserId { get; set; }
 
         string SettingsBackupLocation { get; set; }

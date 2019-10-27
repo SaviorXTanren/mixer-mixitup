@@ -42,7 +42,7 @@
                         </Grid.ColumnDefinitions>
 
                         <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Stream Title:</TextBlock>
-                        <TextBox Grid.Row="0" Grid.Column="2" x:Name="StreamTitleTextBox" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <ComboBox Grid.Row="0" Grid.Column="2" x:Name="StreamTitleComboBox" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
                     </Grid>
 
                     <Grid Grid.Row="2">
