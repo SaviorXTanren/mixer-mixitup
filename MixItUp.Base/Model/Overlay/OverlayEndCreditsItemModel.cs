@@ -37,10 +37,11 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayEndCreditsSectionModel
     {
+        [DataMember]
         public OverlayEndCreditsSectionTypeEnum SectionType { get; set; }
-
+        [DataMember]
         public string SectionHTML { get; set; }
-
+        [DataMember]
         public string UserHTML { get; set; }
     }
 
