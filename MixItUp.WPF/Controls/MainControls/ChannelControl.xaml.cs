@@ -60,7 +60,9 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             this.AgeRatingComboBox.ItemsSource = EnumHelper.GetEnumNames<AgeRatingEnum>();
 
-            this.StreamTitleTextBox.Text = ChannelSession.MixerChannel.name;
+            this.StreamTitleComboBox.Text = ChannelSession.MixerChannel.name;
+            List<string> streamTitles = new List<string>(ChannelSession.Settings.RecentStreamTitles);
+            this.StreamTitleComboBox.ItemsSource = streamTitles;
 
             this.shouldShowIntellisense = false;
             if (ChannelSession.MixerChannel?.type?.name != null)
@@ -200,7 +202,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void UpdateChannelDataButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(this.StreamTitleTextBox.Text))
+            if (string.IsNullOrWhiteSpace(this.StreamTitleComboBox.Text))
             {
                 await MessageBoxHelper.ShowMessageDialog("A stream title must be specified");
                 return;
@@ -221,9 +223,12 @@ namespace MixItUp.WPF.Controls.MainControls
 
             await this.Window.RunAsyncOperation(async () =>
             {
-                await ChannelSession.MixerStreamerConnection.UpdateChannel(ChannelSession.MixerChannel.id, this.StreamTitleTextBox.Text, gameType.id, ((string)this.AgeRatingComboBox.SelectedItem).ToLower());
+                await ChannelSession.MixerStreamerConnection.UpdateChannel(ChannelSession.MixerChannel.id, this.StreamTitleComboBox.Text, gameType.id, ((string)this.AgeRatingComboBox.SelectedItem).ToLower());
 
                 await ChannelSession.RefreshChannel();
+
+                List<string> streamTitles = new List<string>(ChannelSession.Settings.RecentStreamTitles);
+                this.StreamTitleComboBox.ItemsSource = streamTitles;
             });
         }
 

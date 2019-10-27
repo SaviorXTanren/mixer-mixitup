@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Model.Channel;
+using Mixer.Base.Model.Game;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
@@ -367,6 +368,9 @@ namespace MixItUp.Desktop
         public List<DashboardItemTypeEnum> DashboardItems { get; set; } = new List<DashboardItemTypeEnum>();
         [JsonProperty]
         public List<Guid> DashboardQuickCommands { get; set; } = new List<Guid>();
+
+        [JsonProperty]
+        public List<string> RecentStreamTitles { get; set; } = new List<string>();
 
         [JsonProperty]
         public string TelemetryUserId { get; set; }

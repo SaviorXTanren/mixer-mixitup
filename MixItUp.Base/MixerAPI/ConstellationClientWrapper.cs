@@ -205,6 +205,19 @@ namespace MixItUp.Base.MixerAPI
                             }
                         }
                     }
+
+                    if (e.payload["name"] != null)
+                    {
+                        string streamTitle = e.payload["name"].ToObject<string>();
+                        if (!ChannelSession.Settings.RecentStreamTitles.Contains(streamTitle))
+                        {
+                            ChannelSession.Settings.RecentStreamTitles.Add(streamTitle);
+                            if (ChannelSession.Settings.RecentStreamTitles.Count > 5)
+                            {
+                                ChannelSession.Settings.RecentStreamTitles.RemoveAt(0);
+                            }
+                        }
+                    }
                 }
                 else if (e.channel.Equals(ConstellationClientWrapper.ChannelFollowEvent.ToString()))
                 {
