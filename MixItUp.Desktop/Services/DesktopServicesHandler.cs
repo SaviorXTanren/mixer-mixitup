@@ -524,7 +524,7 @@ namespace MixItUp.Desktop.Services
 
         public override async Task<bool> InitializeJustGiving()
         {
-            this.JustGiving = (ChannelSession.Settings.PatreonOAuthToken != null) ? new JustGivingService(ChannelSession.Settings.PatreonOAuthToken) : new JustGivingService();
+            this.JustGiving = (ChannelSession.Settings.JustGivingOAuthToken != null) ? new JustGivingService(ChannelSession.Settings.JustGivingOAuthToken) : new JustGivingService();
             if (await this.JustGiving.Connect())
             {
                 return true;
@@ -542,6 +542,7 @@ namespace MixItUp.Desktop.Services
             {
                 await this.JustGiving.Disconnect();
                 this.JustGiving = null;
+                ChannelSession.Settings.JustGivingOAuthToken = null;
             }
         }
 

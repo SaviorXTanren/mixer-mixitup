@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using StreamingClient.Base.Model.OAuth;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
@@ -7,5 +8,7 @@ namespace MixItUp.Base.Services
         Task<bool> Connect();
 
         Task Disconnect();
+
+        OAuthTokenModel GetOAuthTokenCopy();
     }
 }
