@@ -47,17 +47,17 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayEndCreditsItemModel : OverlayHTMLTemplateItemModelBase
     {
-        public const string CreditsWrapperHTML = "<div id=\"titles\"><div id=\"credits\">{0}</div></div>";
+        public const string CreditsWrapperHTML = @"<div id=""titles"" style=""background-color: {0}""><div id=""credits"">{1}</div></div>";
 
-        public const string TitleHTMLTemplate = "<div id=\"the-end\">Stream Credits</div>";
+        public const string TitleHTMLTemplate = @"<div id=""the-end"">Stream Credits</div>";
 
-        public const string SectionHTMLTemplate = @"<h1>{NAME}</h1>";
+        public const string SectionHTMLTemplate = @"<h1 style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; color: {TEXT_COLOR};"">{NAME}</h1>";
 
-        public const string UserHTMLTemplate = @"<p>{NAME}</p>";
+        public const string UserHTMLTemplate = @"<p style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; color: {TEXT_COLOR};"">{NAME}</p>";
 
-        public const string UserDetailsHTMLTemplate = @"<dt>{NAME}</dt><dd>{DETAILS}</dd>";
+        public const string UserDetailsHTMLTemplate = @"<dt style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; color: {TEXT_COLOR};"">{NAME}</dt><dd style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; color: {TEXT_COLOR};"">{DETAILS}</dd>";
 
-        public const string SectionSeparatorHTML = "<div class=\"clearfix\"></div>";
+        public const string SectionSeparatorHTML = @"<div class=""clearfix""></div>";
 
         [DataMember]
         public string TitleTemplate { get; set; }
@@ -251,7 +251,7 @@ namespace MixItUp.Base.Model.Overlay
                 await this.PerformSectionTemplateReplacement(htmlBuilder, kvp.Key, items);
             }
 
-            jobj["HTML"] = string.Format(CreditsWrapperHTML, htmlBuilder.ToString());
+            jobj["HTML"] = string.Format(CreditsWrapperHTML, this.BackgroundColor, htmlBuilder.ToString());
         }
 
         private void GlobalEvents_OnChatMessageReceived(object sender, ChatMessageViewModel message)
@@ -385,7 +385,13 @@ namespace MixItUp.Base.Model.Overlay
             {
                 OverlayEndCreditsSectionModel sectionTemplate = this.SectionTemplates[itemType];
 
-                string sectionHTML = this.PerformTemplateReplacements(sectionTemplate.SectionHTML, new Dictionary<string, string>() { { "NAME", EnumHelper.GetEnumName(itemType) } });
+                string sectionHTML = this.PerformTemplateReplacements(sectionTemplate.SectionHTML, new Dictionary<string, string>()
+                {
+                    { "NAME", EnumHelper.GetEnumName(itemType) },
+                    { "TEXT_FONT", this.SectionTextFont },
+                    { "TEXT_SIZE", this.SectionTextSize.ToString() },
+                    { "TEXT_COLOR", this.SectionTextColor }
+                });
                 sectionHTML = await this.ReplaceStringWithSpecialModifiers(sectionHTML, await ChannelSession.GetCurrentUser(), new List<string>(), new Dictionary<string, string>());
 
                 List<string> userHTMLs = new List<string>();
@@ -393,11 +399,14 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     if (!string.IsNullOrEmpty(kvp.Key.UserName))
                     {
-                        Dictionary<string, string> templateReplacements = new Dictionary<string, string>();
-                        templateReplacements["NAME"] = kvp.Key.UserName;
-                        templateReplacements["DETAILS"] = kvp.Value;
-                        string userHTML = this.PerformTemplateReplacements(sectionTemplate.UserHTML, templateReplacements);
-
+                        string userHTML = this.PerformTemplateReplacements(sectionTemplate.UserHTML, new Dictionary<string, string>()
+                        {
+                            { "NAME", kvp.Key.UserName },
+                            { "DETAILS", kvp.Value },
+                            { "TEXT_FONT", this.ItemTextFont },
+                            { "TEXT_SIZE", this.ItemTextSize.ToString() },
+                            { "TEXT_COLOR", this.ItemTextColor }
+                        });
                         userHTML = await this.ReplaceStringWithSpecialModifiers(userHTML, kvp.Key, new List<string>(), new Dictionary<string, string>());
                         userHTMLs.Add(userHTML);
                     }

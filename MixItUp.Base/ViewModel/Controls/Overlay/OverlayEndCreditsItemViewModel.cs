@@ -180,10 +180,10 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             this.speed = OverlayEndCreditsSpeedEnum.Medium;
             this.BackgroundColor = "Black";
             this.SectionTextFont = "Arial";
-            this.SectionTextColor = "Black";
-            this.sectionTextSize = 24;
+            this.SectionTextColor = "White";
+            this.sectionTextSize = 48;
             this.ItemTextFont = "Arial";
-            this.ItemTextColor = "Black";
+            this.ItemTextColor = "White";
             this.itemTextSize = 24;
 
             this.HTML = OverlayEndCreditsItemModel.TitleHTMLTemplate;
