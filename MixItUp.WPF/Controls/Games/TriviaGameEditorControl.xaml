@@ -17,6 +17,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <local:GameCommandDetailsControl x:Name="CommandDetailsControl" Grid.Row="0" HorizontalAlignment="Center" />
@@ -50,6 +52,10 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <GroupBox Grid.Column="0" Header="User Wins">
@@ -59,6 +65,64 @@
             <GroupBox Grid.Column="2" Header="Correct Answer">
                 <CommandControls:CommandButtonsControl DataContext="{Binding CorrectAnswerCommand}" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
+
+            <TextBlock Grid.Column="4" VerticalAlignment="Center">Random Online Questions:</TextBlock>
+            <ToggleButton Grid.Column="6" IsChecked="{Binding UseRandomOnlineQuestions}" />
         </Grid>
+
+        <GroupBox Grid.Row="6" Width="700">
+            <GroupBox.Header>
+                <Grid>
+                    <TextBlock VerticalAlignment="Center" Foreground="{StaticResource WhiteColor}" Style="{StaticResource HeaderTextBlock}">Custom Questions</TextBlock>
+
+                    <Button HorizontalAlignment="Right" Content="{MaterialDesign:PackIcon Plus}" Command="{Binding AddCustomQuestionCommand}" />
+                </Grid>
+            </GroupBox.Header>
+            <ItemsControl ItemsSource="{Binding CustomQuestions}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="10" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox Grid.Column="0" Text="{Binding Question}" MaterialDesign:HintAssist.Hint="Question" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                                <Button Grid.Column="2" Content="{MaterialDesign:PackIcon Trash}" Command="{Binding DeleteCustomQuestionCommand}" />
+                            </Grid>
+
+                            <Grid Grid.Row="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox Grid.Column="0" Text="{Binding CorrectAnswer}" MaterialDesign:HintAssist.Hint="Correct Answer" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                                <TextBox Grid.Column="2" Text="{Binding WrongAnswer1}" MaterialDesign:HintAssist.Hint="Wrong Answer 1" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                                <TextBox Grid.Column="4" Text="{Binding WrongAnswer2}" MaterialDesign:HintAssist.Hint="Wrong Answer 2" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                                <TextBox Grid.Column="6" Text="{Binding WrongAnswer3}" MaterialDesign:HintAssist.Hint="Wrong Answer 3" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                            </Grid>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </GroupBox>
     </Grid>
 </local:GameEditorControlBase>

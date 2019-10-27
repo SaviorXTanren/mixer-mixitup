@@ -3342,7 +3342,7 @@ namespace MixItUp.Base.Commands
         [DataMember]
         public string CorrectAnswer { get; set; }
         [DataMember]
-        public List<string> WrongAnswers { get; set; }
+        public List<string> WrongAnswers { get; set; } = new List<string>();
 
         public uint TotalAnswers { get { return (uint)this.WrongAnswers.Count + 1; } }
     }
@@ -3372,6 +3372,13 @@ namespace MixItUp.Base.Commands
 
         private const string OpenTDBUrl = "https://opentdb.com/api.php?amount=1&type=multiple";
 
+        private static readonly TriviaGameQuestion FallbackQuestion = new TriviaGameQuestion()
+        {
+            Question = "Looks like we failed to get a question, who's to blame?",
+            CorrectAnswer = "SaviorXTanren",
+            WrongAnswers = new List<string>() { "SaviorXTanren", "SaviorXTanren", "SaviorXTanren" }
+        };
+
         [DataMember]
         public List<TriviaGameQuestion> CustomQuestions { get; set; } = new List<TriviaGameQuestion>();
 
@@ -3380,6 +3387,9 @@ namespace MixItUp.Base.Commands
 
         [DataMember]
         public CustomCommand CorrectAnswerCommand { get; set; }
+
+        [DataMember]
+        public bool UseRandomOnlineQuestions { get; set; }
 
         [JsonIgnore]
         private TriviaGameQuestion currentQuestion = null;
@@ -3393,12 +3403,13 @@ namespace MixItUp.Base.Commands
         public TriviaGameCommand() { }
 
         public TriviaGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int timeLimit, CustomCommand startedCommand, CustomCommand userJoinCommand,
-            GameOutcome userSuccessOutcome, List<TriviaGameQuestion> customCommands, int winAmount, CustomCommand correctAnswerCommand)
+            GameOutcome userSuccessOutcome, IEnumerable<TriviaGameQuestion> customQuestions, int winAmount, CustomCommand correctAnswerCommand, bool useRandomOnlineQuestions)
             : base(name, commands, requirements, 1, timeLimit, startedCommand, userJoinCommand, userSuccessOutcome, null, null)
         {
-            this.CustomQuestions = customCommands;
+            this.CustomQuestions = new List<TriviaGameQuestion>(customQuestions);
             this.WinAmount = winAmount;
             this.CorrectAnswerCommand = correctAnswerCommand;
+            this.UseRandomOnlineQuestions = useRandomOnlineQuestions;
         }
 
         public override IEnumerable<CommandBase> GetAllInnerCommands()
@@ -3429,18 +3440,40 @@ namespace MixItUp.Base.Commands
             this.answerNumbersToQuestions.Clear();
             this.userChoices.Clear();
 
-            using (AdvancedHttpClient client = new AdvancedHttpClient())
+            bool useCustomQuestion = (RandomHelper.GenerateProbability() >= 50);
+            if (this.CustomQuestions.Count > 0 && !this.UseRandomOnlineQuestions)
             {
-                OpenTDBResults openTDBResults = await client.GetAsync<OpenTDBResults>(OpenTDBUrl);
-                if (openTDBResults != null && openTDBResults.results != null && openTDBResults.results.Count > 0)
+                useCustomQuestion = true;
+            }
+            else if (this.CustomQuestions.Count == 0 && this.UseRandomOnlineQuestions)
+            {
+                useCustomQuestion = false;
+            }
+
+            if (useCustomQuestion)
+            {
+                this.currentQuestion = this.CustomQuestions.Random();
+            }
+            else
+            {
+                using (AdvancedHttpClient client = new AdvancedHttpClient())
                 {
-                    this.currentQuestion = new TriviaGameQuestion()
+                    OpenTDBResults openTDBResults = await client.GetAsync<OpenTDBResults>(OpenTDBUrl);
+                    if (openTDBResults != null && openTDBResults.results != null && openTDBResults.results.Count > 0)
                     {
-                        Question = HttpUtility.HtmlDecode(openTDBResults.results[0].question),
-                        CorrectAnswer = HttpUtility.HtmlDecode(openTDBResults.results[0].correct_answer),
-                        WrongAnswers = openTDBResults.results[0].incorrect_answers.Select(a => HttpUtility.HtmlDecode(a)).ToList(),
-                    };
+                        this.currentQuestion = new TriviaGameQuestion()
+                        {
+                            Question = HttpUtility.HtmlDecode(openTDBResults.results[0].question),
+                            CorrectAnswer = HttpUtility.HtmlDecode(openTDBResults.results[0].correct_answer),
+                            WrongAnswers = openTDBResults.results[0].incorrect_answers.Select(a => HttpUtility.HtmlDecode(a)).ToList(),
+                        };
+                    }
                 }
+            }
+
+            if (this.currentQuestion == null)
+            {
+                this.currentQuestion = FallbackQuestion;
             }
 
             List<uint> answerNumbers = new List<uint>() { 1 };
