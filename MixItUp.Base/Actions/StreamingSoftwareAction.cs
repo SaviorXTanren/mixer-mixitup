@@ -209,6 +209,12 @@ namespace MixItUp.Base.Actions
                 sceneName = await this.ReplaceStringWithSpecialModifiers(this.SceneName, user, arguments);
             }
 
+            string sourceName = null;
+            if (!string.IsNullOrEmpty(this.SourceName))
+            {
+                sourceName = await this.ReplaceStringWithSpecialModifiers(this.SourceName, user, arguments);
+            }
+
             IStreamingSoftwareService ssService = null;
             if (this.SelectedStreamingSoftware == StreamingSoftwareTypeEnum.OBSStudio)
             {
@@ -249,17 +255,17 @@ namespace MixItUp.Base.Actions
                 {
                     await ssService.ShowScene(sceneName);
                 }
-                else if (!string.IsNullOrEmpty(this.SourceName))
+                else if (!string.IsNullOrEmpty(sourceName))
                 {
                     if (this.ActionType == StreamingActionTypeEnum.WebBrowserSource && !string.IsNullOrEmpty(this.SourceURL))
                     {
-                        await ssService.SetWebBrowserSourceURL(sceneName, this.SourceName, url);
+                        await ssService.SetWebBrowserSourceURL(sceneName, sourceName, url);
                     }
                     else if (this.ActionType == StreamingActionTypeEnum.SourceDimensions && this.SourceDimensions != null)
                     {
-                        await ssService.SetSourceDimensions(sceneName, this.SourceName, this.SourceDimensions);
+                        await ssService.SetSourceDimensions(sceneName, sourceName, this.SourceDimensions);
                     }
-                    await ssService.SetSourceVisibility(sceneName, this.SourceName, this.SourceVisible);
+                    await ssService.SetSourceVisibility(sceneName, sourceName, this.SourceVisible);
                 }
                 else if (this.ActionType == StreamingActionTypeEnum.SceneCollection && !string.IsNullOrEmpty(this.SceneCollectionName))
                 {
