@@ -101,10 +101,11 @@
 
             <ComboBox x:Name="CommandTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="CommandTypeComboBox_SelectionChanged" />
 
-            <ComboBox x:Name="CommandNameComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEnabled="False" SelectionChanged="CommandNameComboBox_SelectionChanged" />
+            <ComboBox x:Name="CommandNameComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Command Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="CommandNameComboBox_SelectionChanged" DisplayMemberPath="Name" />
+            <ComboBox x:Name="SingleActionNameComboBox" Grid.Column="2" Visibility="Collapsed" MaterialDesign:HintAssist.Hint="Action Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="SingleActionNameComboBox_SelectionChanged" />
         </Grid>
 
-        <local:ActionContentContainerControl x:Uid="ActionControlContentControl" Grid.Row="5" Margin="0,20,0,0" Visibility="Collapsed" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" />
+        <ContentControl x:Uid="ActionControlContentControl" Grid.Row="5" Margin="0,20,0,0" Visibility="Collapsed" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" />
 
     </Grid>
 </local:ActionControlBase>
