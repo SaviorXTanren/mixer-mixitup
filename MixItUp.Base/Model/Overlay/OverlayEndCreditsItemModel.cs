@@ -15,8 +15,9 @@ namespace MixItUp.Base.Model.Overlay
 {
     public enum OverlayEndCreditsSectionTypeEnum
     {
-        Chatters,
-        Followers,
+        Viewers,
+        [Name("New Followers")]
+        NewFollowers,
         Hosts,
         [Name("New Subscribers")]
         NewSubscribers,
@@ -90,7 +91,7 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public int SpeedNumber { get { return (int)this.Speed; } }
 
-        private HashSet<uint> chat = new HashSet<uint>();
+        private HashSet<uint> viewers = new HashSet<uint>();
         private HashSet<uint> subs = new HashSet<uint>();
         private HashSet<uint> mods = new HashSet<uint>();
         private HashSet<uint> follows = new HashSet<uint>();
@@ -127,11 +128,19 @@ namespace MixItUp.Base.Model.Overlay
         public override async Task LoadTestData()
         {
             UserViewModel user = await ChannelSession.GetCurrentUser();
-            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Chatters))
+            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Viewers))
             {
-                this.chat.Add(user.ID);
+                this.viewers.Add(user.ID);
             }
-            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Followers))
+            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Subscribers))
+            {
+                this.subs.Add(user.ID);
+            }
+            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Moderators))
+            {
+                this.mods.Add(user.ID);
+            }
+            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.NewFollowers))
             {
                 this.follows.Add(user.ID);
             }
@@ -171,7 +180,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
             }
-            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Followers))
+            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.NewFollowers))
             {
                 GlobalEvents.OnFollowOccurred += GlobalEvents_OnFollowOccurred;
             }
@@ -219,7 +228,7 @@ namespace MixItUp.Base.Model.Overlay
             GlobalEvents.OnSparkUseOccurred -= GlobalEvents_OnSparkUseOccurred;
             GlobalEvents.OnEmberUseOccurred -= GlobalEvents_OnEmberUseOccurred;
 
-            this.chat.Clear();
+            this.viewers.Clear();
             this.subs.Clear();
             this.mods.Clear();
             this.follows.Clear();
@@ -246,10 +255,10 @@ namespace MixItUp.Base.Model.Overlay
                 Dictionary<UserViewModel, string> items = new Dictionary<UserViewModel, string>();
                 switch (kvp.Key)
                 {
-                    case OverlayEndCreditsSectionTypeEnum.Chatters: items = this.GetUsersDictionary(this.chat); break;
+                    case OverlayEndCreditsSectionTypeEnum.Viewers: items = this.GetUsersDictionary(this.viewers); break;
                     case OverlayEndCreditsSectionTypeEnum.Subscribers: items = this.GetUsersDictionary(this.subs); break;
                     case OverlayEndCreditsSectionTypeEnum.Moderators: items = this.GetUsersDictionary(this.mods); break;
-                    case OverlayEndCreditsSectionTypeEnum.Followers: items = this.GetUsersDictionary(this.follows); break;
+                    case OverlayEndCreditsSectionTypeEnum.NewFollowers: items = this.GetUsersDictionary(this.follows); break;
                     case OverlayEndCreditsSectionTypeEnum.Hosts: items = this.GetUsersDictionary(this.hosts); break;
                     case OverlayEndCreditsSectionTypeEnum.NewSubscribers: items = this.GetUsersDictionary(this.newSubs); break;
                     case OverlayEndCreditsSectionTypeEnum.Resubscribers: items = this.GetUsersDictionary(this.resubs); break;
@@ -266,19 +275,25 @@ namespace MixItUp.Base.Model.Overlay
 
         private void GlobalEvents_OnChatMessageReceived(object sender, ChatMessageViewModel message)
         {
-            if (message.User != null && !this.chat.Contains(message.User.ID))
+            if (message.User != null && !message.User.IgnoreForQueries)
             {
-                this.chat.Add(message.User.ID);
-                if (message.User.IsEquivalentToMixerSubscriber())
+                if (message.User.ID.Equals(ChannelSession.MixerStreamerUser.id))
+                {
+                    return;
+                }
+                if (ChannelSession.MixerBotUser != null && message.User.ID.Equals(ChannelSession.MixerBotUser.id))
+                {
+                    return;
+                }
+
+                this.viewers.Add(message.User.ID);
+                if (message.User.MixerRoles.Contains(MixerRoleEnum.Subscriber) || message.User.IsEquivalentToMixerSubscriber())
                 {
                     this.subs.Add(message.User.ID);
                 }
                 if (message.User.MixerRoles.Contains(MixerRoleEnum.Mod) || message.User.MixerRoles.Contains(MixerRoleEnum.ChannelEditor))
                 {
-                    if (ChannelSession.MixerBotUser == null || !(ChannelSession.MixerBotUser.id.Equals(message.User.ID)))
-                    {
-                        this.mods.Add(message.User.ID);
-                    }
+                    this.mods.Add(message.User.ID);
                 }
             }
         }

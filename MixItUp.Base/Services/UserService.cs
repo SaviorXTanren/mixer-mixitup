@@ -53,7 +53,7 @@ namespace MixItUp.Base.Services
 
     public class UserService : IUserService
     {
-        public static readonly HashSet<string> SpecialUserAccounts = new HashSet<string>() { "HypeBot", "boomtvmod", "StreamJar", "PretzelRocks", "ScottyBot" };
+        public static readonly HashSet<string> SpecialUserAccounts = new HashSet<string>() { "HypeBot", "boomtvmod", "StreamJar", "PretzelRocks", "ScottyBot", "Streamlabs", "StreamElements" };
 
         private LockedDictionary<string, UserViewModel> usersByID = new LockedDictionary<string, UserViewModel>();
         private LockedDictionary<string, UserViewModel> usersByUsername = new LockedDictionary<string, UserViewModel>();
