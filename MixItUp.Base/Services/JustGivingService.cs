@@ -1,6 +1,4 @@
 ﻿using Mixer.Base;
-using MixItUp.Base;
-using MixItUp.Base.Services;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
@@ -10,8 +8,17 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MixItUp.Desktop.Services
+namespace MixItUp.Base.Services
 {
+    public interface IJustGivingService
+    {
+        Task<bool> Connect();
+
+        Task Disconnect();
+
+        OAuthTokenModel GetOAuthTokenCopy();
+    }
+
     public class JustGivingService : OAuthServiceBase, IJustGivingService, IDisposable
     {
         private const string BaseAddress = "https://api.justgiving.com/v1/";
