@@ -18,13 +18,16 @@ namespace MixItUp.Base.Model.Overlay
         Chatters,
         Followers,
         Hosts,
-        Subscribers,
+        [Name("New Subscribers")]
+        NewSubscribers,
         Resubscribers,
         [Name("Gifted Subs")]
         GiftedSubs,
         Donations,
         Sparks,
         Embers,
+        Subscribers,
+        Moderators,
     }
 
     public enum OverlayEndCreditsSpeedEnum
@@ -88,9 +91,11 @@ namespace MixItUp.Base.Model.Overlay
         public int SpeedNumber { get { return (int)this.Speed; } }
 
         private HashSet<uint> chat = new HashSet<uint>();
+        private HashSet<uint> subs = new HashSet<uint>();
+        private HashSet<uint> mods = new HashSet<uint>();
         private HashSet<uint> follows = new HashSet<uint>();
         private HashSet<uint> hosts = new HashSet<uint>();
-        private HashSet<uint> subs = new HashSet<uint>();
+        private HashSet<uint> newSubs = new HashSet<uint>();
         private Dictionary<uint, uint> resubs = new Dictionary<uint, uint>();
         private Dictionary<uint, uint> giftedSubs = new Dictionary<uint, uint>();
         private Dictionary<uint, double> donations = new Dictionary<uint, double>();
@@ -134,9 +139,9 @@ namespace MixItUp.Base.Model.Overlay
             {
                 this.hosts.Add(user.ID);
             }
-            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Subscribers))
+            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.NewSubscribers))
             {
-                this.subs.Add(user.ID);
+                this.newSubs.Add(user.ID);
             }
             if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Resubscribers))
             {
@@ -174,7 +179,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 GlobalEvents.OnHostOccurred += GlobalEvents_OnHostOccurred;
             }
-            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Subscribers))
+            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.NewSubscribers))
             {
                 GlobalEvents.OnSubscribeOccurred += GlobalEvents_OnSubscribeOccurred;
             }
@@ -215,9 +220,11 @@ namespace MixItUp.Base.Model.Overlay
             GlobalEvents.OnEmberUseOccurred -= GlobalEvents_OnEmberUseOccurred;
 
             this.chat.Clear();
+            this.subs.Clear();
+            this.mods.Clear();
             this.follows.Clear();
             this.hosts.Clear();
-            this.subs.Clear();
+            this.newSubs.Clear();
             this.resubs.Clear();
             this.giftedSubs.Clear();
             this.donations.Clear();
@@ -240,9 +247,11 @@ namespace MixItUp.Base.Model.Overlay
                 switch (kvp.Key)
                 {
                     case OverlayEndCreditsSectionTypeEnum.Chatters: items = this.GetUsersDictionary(this.chat); break;
+                    case OverlayEndCreditsSectionTypeEnum.Subscribers: items = this.GetUsersDictionary(this.subs); break;
+                    case OverlayEndCreditsSectionTypeEnum.Moderators: items = this.GetUsersDictionary(this.mods); break;
                     case OverlayEndCreditsSectionTypeEnum.Followers: items = this.GetUsersDictionary(this.follows); break;
                     case OverlayEndCreditsSectionTypeEnum.Hosts: items = this.GetUsersDictionary(this.hosts); break;
-                    case OverlayEndCreditsSectionTypeEnum.Subscribers: items = this.GetUsersDictionary(this.subs); break;
+                    case OverlayEndCreditsSectionTypeEnum.NewSubscribers: items = this.GetUsersDictionary(this.newSubs); break;
                     case OverlayEndCreditsSectionTypeEnum.Resubscribers: items = this.GetUsersDictionary(this.resubs); break;
                     case OverlayEndCreditsSectionTypeEnum.GiftedSubs: items = this.GetUsersDictionary(this.giftedSubs); break;
                     case OverlayEndCreditsSectionTypeEnum.Donations: items = this.GetUsersDictionary(this.donations); break;
@@ -260,6 +269,17 @@ namespace MixItUp.Base.Model.Overlay
             if (message.User != null && !this.chat.Contains(message.User.ID))
             {
                 this.chat.Add(message.User.ID);
+                if (message.User.IsEquivalentToMixerSubscriber())
+                {
+                    this.subs.Add(message.User.ID);
+                }
+                if (message.User.MixerRoles.Contains(MixerRoleEnum.Mod) || message.User.MixerRoles.Contains(MixerRoleEnum.ChannelEditor))
+                {
+                    if (ChannelSession.MixerBotUser == null || !(ChannelSession.MixerBotUser.id.Equals(message.User.ID)))
+                    {
+                        this.mods.Add(message.User.ID);
+                    }
+                }
             }
         }
 
@@ -281,9 +301,9 @@ namespace MixItUp.Base.Model.Overlay
 
         private void GlobalEvents_OnSubscribeOccurred(object sender, UserViewModel user)
         {
-            if (!this.subs.Contains(user.ID))
+            if (!this.newSubs.Contains(user.ID))
             {
-                this.subs.Add(user.ID);
+                this.newSubs.Add(user.ID);
             }
         }
 
@@ -297,9 +317,9 @@ namespace MixItUp.Base.Model.Overlay
 
         private void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserViewModel, UserViewModel> e)
         {
-            if (!this.subs.Contains(e.Item2.ID))
+            if (!this.newSubs.Contains(e.Item2.ID))
             {
-                this.subs.Add(e.Item2.ID);
+                this.newSubs.Add(e.Item2.ID);
             }
 
             if (!this.giftedSubs.ContainsKey(e.Item1.ID))
