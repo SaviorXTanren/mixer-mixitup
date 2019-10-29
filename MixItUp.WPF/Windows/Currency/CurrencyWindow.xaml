@@ -284,7 +284,9 @@
                     </GroupBox>
                 </Grid>
 
-                <Button x:Name="SaveButton" Grid.Row="10" HorizontalAlignment="Center" Click="SaveButton_Click" Width="80">Save</Button>
+                <Button x:Name="SaveButton" Grid.Row="10" HorizontalAlignment="Center" Click="SaveButton_Click" Width="80">
+                    <MaterialDesign:PackIcon Kind="ContentSave" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                </Button>
             </Grid>
         </ScrollViewer>
 
