@@ -27,7 +27,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         {
             this.SectionType = sectionType;
             this.SectionHTML = OverlayEndCreditsItemModel.SectionHTMLTemplate;
-            if (sectionType == OverlayEndCreditsSectionTypeEnum.Viewers || sectionType == OverlayEndCreditsSectionTypeEnum.NewFollowers ||
+            if (sectionType == OverlayEndCreditsSectionTypeEnum.Chatters || sectionType == OverlayEndCreditsSectionTypeEnum.Followers ||
                 sectionType == OverlayEndCreditsSectionTypeEnum.Hosts || sectionType == OverlayEndCreditsSectionTypeEnum.NewSubscribers ||
                 sectionType == OverlayEndCreditsSectionTypeEnum.Subscribers || sectionType == OverlayEndCreditsSectionTypeEnum.Moderators)
             {
