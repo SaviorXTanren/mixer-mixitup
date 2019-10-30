@@ -69,7 +69,9 @@
                 <ContentControl Margin="10" x:Name="MainContentControl" />
             </ScrollViewer>
 
-            <Button x:Name="SaveButton" Grid.Row="2" Margin="0,0,0,10" Click="SaveButton_Click" Width="80">Save</Button>
+            <Button x:Name="SaveButton" Grid.Row="2" Margin="0,0,0,10" Click="SaveButton_Click" Width="80">
+                <MaterialDesign:PackIcon Kind="ContentSave" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+            </Button>
         </Grid>
 
         <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="1" />

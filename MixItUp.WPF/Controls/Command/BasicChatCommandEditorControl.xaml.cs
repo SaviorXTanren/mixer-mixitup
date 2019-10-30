@@ -83,7 +83,17 @@ namespace MixItUp.WPF.Controls.Command
             await base.OnLoaded();
         }
 
+        private async void ConvertButton_Click(object sender, RoutedEventArgs e)
+        {
+            await SaveAndClose(false);
+        }
+
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            await SaveAndClose(true);
+        }
+
+        private async Task SaveAndClose(bool isBasic)
         {
             await this.window.RunAsyncOperation(async () =>
             {
@@ -157,7 +167,7 @@ namespace MixItUp.WPF.Controls.Command
                 RequirementViewModel requirement = new RequirementViewModel(EnumHelper.GetEnumValueFromString<MixerRoleEnum>((string)this.LowestRoleAllowedComboBox.SelectedItem), cooldown: cooldown);
 
                 ChatCommand newCommand = new ChatCommand(commandStrings.First(), commandStrings, requirement);
-                newCommand.IsBasic = true;
+                newCommand.IsBasic = isBasic;
                 newCommand.Actions.Add(action);
 
                 if (this.autoAddToChatCommands)
@@ -175,6 +185,14 @@ namespace MixItUp.WPF.Controls.Command
                 await ChannelSession.SaveSettings();
 
                 this.window.Close();
+
+                if (!isBasic)
+                {
+                    await Task.Delay(250);
+                    CommandWindow window = new CommandWindow(new ChatCommandDetailsControl(newCommand));
+                    window.CommandSaveSuccessfully += (sender, cmd) => this.CommandSavedSuccessfully(cmd);
+                    window.Show();
+                }
             });
         }
     }

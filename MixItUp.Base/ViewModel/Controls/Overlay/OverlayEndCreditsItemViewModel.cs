@@ -4,6 +4,7 @@ using MixItUp.Base.ViewModels;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -26,8 +27,9 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         {
             this.SectionType = sectionType;
             this.SectionHTML = OverlayEndCreditsItemModel.SectionHTMLTemplate;
-            if (sectionType == OverlayEndCreditsSectionTypeEnum.Chatters || sectionType == OverlayEndCreditsSectionTypeEnum.Followers ||
-                sectionType == OverlayEndCreditsSectionTypeEnum.Hosts || sectionType == OverlayEndCreditsSectionTypeEnum.Subscribers)
+            if (sectionType == OverlayEndCreditsSectionTypeEnum.Viewers || sectionType == OverlayEndCreditsSectionTypeEnum.NewFollowers ||
+                sectionType == OverlayEndCreditsSectionTypeEnum.Hosts || sectionType == OverlayEndCreditsSectionTypeEnum.NewSubscribers ||
+                sectionType == OverlayEndCreditsSectionTypeEnum.Subscribers || sectionType == OverlayEndCreditsSectionTypeEnum.Moderators)
             {
                 this.UserHTML = OverlayEndCreditsItemModel.UserHTMLTemplate;
             }
@@ -70,7 +72,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
 
     public class OverlayEndCreditsItemViewModel : OverlayHTMLTemplateItemViewModelBase
     {
-        public IEnumerable<string> ItemTypeStrings { get; set; } = EnumHelper.GetEnumNames<OverlayEndCreditsSectionTypeEnum>();
+        public IEnumerable<string> ItemTypeStrings { get; set; } = EnumHelper.GetEnumNames<OverlayEndCreditsSectionTypeEnum>().OrderBy(s => s);
         public string ItemTypeString
         {
             get { return EnumHelper.GetEnumName(this.itemType); }
@@ -228,10 +230,6 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
                 Dictionary<OverlayEndCreditsSectionTypeEnum, OverlayEndCreditsSectionModel> sections = new Dictionary<OverlayEndCreditsSectionTypeEnum, OverlayEndCreditsSectionModel>();
                 foreach (OverlayEndCreditsSectionItemViewModel section in this.SectionItems)
                 {
-                    if (sections.ContainsKey(section.SectionType))
-                    {
-                        return null;
-                    }
                     sections[section.SectionType] = section.GetItem();
                 }
 

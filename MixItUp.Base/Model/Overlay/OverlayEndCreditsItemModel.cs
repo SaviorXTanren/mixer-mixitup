@@ -15,16 +15,20 @@ namespace MixItUp.Base.Model.Overlay
 {
     public enum OverlayEndCreditsSectionTypeEnum
     {
-        Chatters,
-        Followers,
+        Viewers,
+        [Name("New Followers")]
+        NewFollowers,
         Hosts,
-        Subscribers,
+        [Name("New Subscribers")]
+        NewSubscribers,
         Resubscribers,
         [Name("Gifted Subs")]
         GiftedSubs,
         Donations,
         Sparks,
         Embers,
+        Subscribers,
+        Moderators,
     }
 
     public enum OverlayEndCreditsSpeedEnum
@@ -87,10 +91,12 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public int SpeedNumber { get { return (int)this.Speed; } }
 
-        private HashSet<uint> chat = new HashSet<uint>();
+        private HashSet<uint> viewers = new HashSet<uint>();
+        private HashSet<uint> subs = new HashSet<uint>();
+        private HashSet<uint> mods = new HashSet<uint>();
         private HashSet<uint> follows = new HashSet<uint>();
         private HashSet<uint> hosts = new HashSet<uint>();
-        private HashSet<uint> subs = new HashSet<uint>();
+        private HashSet<uint> newSubs = new HashSet<uint>();
         private Dictionary<uint, uint> resubs = new Dictionary<uint, uint>();
         private Dictionary<uint, uint> giftedSubs = new Dictionary<uint, uint>();
         private Dictionary<uint, double> donations = new Dictionary<uint, double>();
@@ -122,11 +128,19 @@ namespace MixItUp.Base.Model.Overlay
         public override async Task LoadTestData()
         {
             UserViewModel user = await ChannelSession.GetCurrentUser();
-            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Chatters))
+            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Viewers))
             {
-                this.chat.Add(user.ID);
+                this.viewers.Add(user.ID);
             }
-            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Followers))
+            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Subscribers))
+            {
+                this.subs.Add(user.ID);
+            }
+            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Moderators))
+            {
+                this.mods.Add(user.ID);
+            }
+            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.NewFollowers))
             {
                 this.follows.Add(user.ID);
             }
@@ -134,9 +148,9 @@ namespace MixItUp.Base.Model.Overlay
             {
                 this.hosts.Add(user.ID);
             }
-            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Subscribers))
+            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.NewSubscribers))
             {
-                this.subs.Add(user.ID);
+                this.newSubs.Add(user.ID);
             }
             if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Resubscribers))
             {
@@ -166,7 +180,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
             }
-            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Followers))
+            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.NewFollowers))
             {
                 GlobalEvents.OnFollowOccurred += GlobalEvents_OnFollowOccurred;
             }
@@ -174,7 +188,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 GlobalEvents.OnHostOccurred += GlobalEvents_OnHostOccurred;
             }
-            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Subscribers))
+            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.NewSubscribers))
             {
                 GlobalEvents.OnSubscribeOccurred += GlobalEvents_OnSubscribeOccurred;
             }
@@ -214,10 +228,12 @@ namespace MixItUp.Base.Model.Overlay
             GlobalEvents.OnSparkUseOccurred -= GlobalEvents_OnSparkUseOccurred;
             GlobalEvents.OnEmberUseOccurred -= GlobalEvents_OnEmberUseOccurred;
 
-            this.chat.Clear();
+            this.viewers.Clear();
+            this.subs.Clear();
+            this.mods.Clear();
             this.follows.Clear();
             this.hosts.Clear();
-            this.subs.Clear();
+            this.newSubs.Clear();
             this.resubs.Clear();
             this.giftedSubs.Clear();
             this.donations.Clear();
@@ -239,10 +255,12 @@ namespace MixItUp.Base.Model.Overlay
                 Dictionary<UserViewModel, string> items = new Dictionary<UserViewModel, string>();
                 switch (kvp.Key)
                 {
-                    case OverlayEndCreditsSectionTypeEnum.Chatters: items = this.GetUsersDictionary(this.chat); break;
-                    case OverlayEndCreditsSectionTypeEnum.Followers: items = this.GetUsersDictionary(this.follows); break;
-                    case OverlayEndCreditsSectionTypeEnum.Hosts: items = this.GetUsersDictionary(this.hosts); break;
+                    case OverlayEndCreditsSectionTypeEnum.Viewers: items = this.GetUsersDictionary(this.viewers); break;
                     case OverlayEndCreditsSectionTypeEnum.Subscribers: items = this.GetUsersDictionary(this.subs); break;
+                    case OverlayEndCreditsSectionTypeEnum.Moderators: items = this.GetUsersDictionary(this.mods); break;
+                    case OverlayEndCreditsSectionTypeEnum.NewFollowers: items = this.GetUsersDictionary(this.follows); break;
+                    case OverlayEndCreditsSectionTypeEnum.Hosts: items = this.GetUsersDictionary(this.hosts); break;
+                    case OverlayEndCreditsSectionTypeEnum.NewSubscribers: items = this.GetUsersDictionary(this.newSubs); break;
                     case OverlayEndCreditsSectionTypeEnum.Resubscribers: items = this.GetUsersDictionary(this.resubs); break;
                     case OverlayEndCreditsSectionTypeEnum.GiftedSubs: items = this.GetUsersDictionary(this.giftedSubs); break;
                     case OverlayEndCreditsSectionTypeEnum.Donations: items = this.GetUsersDictionary(this.donations); break;
@@ -257,9 +275,26 @@ namespace MixItUp.Base.Model.Overlay
 
         private void GlobalEvents_OnChatMessageReceived(object sender, ChatMessageViewModel message)
         {
-            if (message.User != null && !this.chat.Contains(message.User.ID))
+            if (message.User != null && !message.User.IgnoreForQueries)
             {
-                this.chat.Add(message.User.ID);
+                if (message.User.ID.Equals(ChannelSession.MixerStreamerUser.id))
+                {
+                    return;
+                }
+                if (ChannelSession.MixerBotUser != null && message.User.ID.Equals(ChannelSession.MixerBotUser.id))
+                {
+                    return;
+                }
+
+                this.viewers.Add(message.User.ID);
+                if (message.User.MixerRoles.Contains(MixerRoleEnum.Subscriber) || message.User.IsEquivalentToMixerSubscriber())
+                {
+                    this.subs.Add(message.User.ID);
+                }
+                if (message.User.MixerRoles.Contains(MixerRoleEnum.Mod) || message.User.MixerRoles.Contains(MixerRoleEnum.ChannelEditor))
+                {
+                    this.mods.Add(message.User.ID);
+                }
             }
         }
 
@@ -281,9 +316,9 @@ namespace MixItUp.Base.Model.Overlay
 
         private void GlobalEvents_OnSubscribeOccurred(object sender, UserViewModel user)
         {
-            if (!this.subs.Contains(user.ID))
+            if (!this.newSubs.Contains(user.ID))
             {
-                this.subs.Add(user.ID);
+                this.newSubs.Add(user.ID);
             }
         }
 
@@ -297,9 +332,9 @@ namespace MixItUp.Base.Model.Overlay
 
         private void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserViewModel, UserViewModel> e)
         {
-            if (!this.subs.Contains(e.Item2.ID))
+            if (!this.newSubs.Contains(e.Item2.ID))
             {
-                this.subs.Add(e.Item2.ID);
+                this.newSubs.Add(e.Item2.ID);
             }
 
             if (!this.giftedSubs.ContainsKey(e.Item1.ID))
