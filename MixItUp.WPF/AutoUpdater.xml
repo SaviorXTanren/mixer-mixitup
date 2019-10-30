@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <item>
   <version>0.5.3.3003</version>
-  <url>https://mixitup.blob.core.windows.net/update/preview/MixItUp.zip</url>
-  <changelog>https://mixitup.blob.core.windows.net/update/preview/Changelog.html</changelog>
+  <url>https://github.com/SaviorXTanren/mixer-mixitup/releases/download/0.5.3-preview/MixItUp.zip</url>
+  <changelog>https://github.com/SaviorXTanren/mixer-mixitup/releases/download/0.5.3-preview/Changelog.html</changelog>
   <mandatory>false</mandatory>
 </item>
