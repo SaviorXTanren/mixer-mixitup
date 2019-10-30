@@ -98,7 +98,17 @@ namespace MixItUp.WPF.Controls.Command
             await base.OnLoaded();
         }
 
+        private async void ConvertButton_Click(object sender, RoutedEventArgs e)
+        {
+            await SaveAndClose(false);
+        }
+
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            await SaveAndClose(true);
+        }
+
+        private async Task SaveAndClose(bool isBasic)
         {
             await this.window.RunAsyncOperation((System.Func<Task>)(async () =>
             {
@@ -135,13 +145,21 @@ namespace MixItUp.WPF.Controls.Command
                 await ChannelSession.MixerStreamerConnection.UpdateMixPlayGameVersion(this.version);
 
                 this.command.UseChatModeration = this.UseChatModerationCheckBox.IsChecked.GetValueOrDefault();
-                this.command.IsBasic = true;
+                this.command.IsBasic = isBasic;
                 this.command.Actions.Clear();
                 this.command.Actions.Add(action);
 
                 await ChannelSession.SaveSettings();
 
                 this.window.Close();
+
+                if (!isBasic)
+                {
+                    await Task.Delay(250);
+                    CommandWindow window = new CommandWindow(new InteractiveTextBoxCommandDetailsControl(this.game, this.version, this.command));
+                    window.CommandSaveSuccessfully += (sender, cmd) => this.CommandSavedSuccessfully(cmd);
+                    window.Show();
+                }
             }));
         }
     }

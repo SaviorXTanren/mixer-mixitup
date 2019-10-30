@@ -33,6 +33,8 @@
 
         <ContentControl x:Name="MainContent" Grid.Row="0" />
 
-        <Button x:Name="SaveButton" Click="SaveButton_Click" Grid.Row="1" ToolTip="Save" Width="80">Save</Button>
+        <Button x:Name="SaveButton" Click="SaveButton_Click" Grid.Row="1" ToolTip="Save" Width="80">
+            <MaterialDesign:PackIcon Kind="ContentSave" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+        </Button>
     </Grid>
 </local:CommandEditorControlBase>

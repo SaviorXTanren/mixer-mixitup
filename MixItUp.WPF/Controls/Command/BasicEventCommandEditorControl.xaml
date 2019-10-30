@@ -48,6 +48,21 @@
 
         <ContentControl x:Name="ActionControlControl" Grid.Row="2" Margin="20" />
 
-        <Button x:Name="SaveButton" Click="SaveButton_Click" Grid.Row="4" ToolTip="Save" Width="80">Save</Button>
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="140"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="20"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="SaveButton" Click="SaveButton_Click" ToolTip="Save" Width="80" Grid.Column="1">
+                <MaterialDesign:PackIcon Kind="ContentSave" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+            </Button>
+
+            <Button x:Name="ConvertButton" Click="ConvertButton_Click" ToolTip="Save" Width="180" Grid.Column="3">
+                Convert to Advanced
+            </Button>
+        </Grid>
     </Grid>
 </local:CommandEditorControlBase>

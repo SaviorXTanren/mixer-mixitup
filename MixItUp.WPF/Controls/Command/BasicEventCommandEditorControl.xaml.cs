@@ -105,7 +105,17 @@ namespace MixItUp.WPF.Controls.Command
             await base.OnLoaded();
         }
 
+        private async void ConvertButton_Click(object sender, RoutedEventArgs e)
+        {
+            await SaveAndClose(false);
+        }
+
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            await SaveAndClose(true);
+        }
+
+        private async Task SaveAndClose(bool isBasic)
         {
             await this.window.RunAsyncOperation(async () =>
             {
@@ -133,7 +143,7 @@ namespace MixItUp.WPF.Controls.Command
                     newCommand = new EventCommand(this.eventType, ChannelSession.MixerChannel);
                 }
 
-                newCommand.IsBasic = true;
+                newCommand.IsBasic = isBasic;
                 newCommand.Actions.Add(action);
 
                 if (this.command != null)
@@ -145,6 +155,14 @@ namespace MixItUp.WPF.Controls.Command
                 await ChannelSession.SaveSettings();
 
                 this.window.Close();
+
+                if (!isBasic)
+                {
+                    await Task.Delay(250);
+                    CommandWindow window = new CommandWindow(new EventCommandDetailsControl(newCommand));
+                    window.CommandSaveSuccessfully += (sender, cmd) => this.CommandSavedSuccessfully(cmd);
+                    window.Show();
+                }
             });
         }
     }
