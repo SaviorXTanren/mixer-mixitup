@@ -56,13 +56,19 @@ namespace MixItUp.Desktop.Services
 
             this.SocketReceiveWrapper("error", (errorData) =>
             {
-                Logger.Log(errorData.ToString());
+                if (errorData != null)
+                {
+                    Logger.Log(errorData.ToString());
+                }
                 this.service.WebSocketDisconnectedOccurred();
             });
 
             this.SocketReceiveWrapper("disconnect", (errorData) =>
             {
-                Logger.Log(errorData.ToString());
+                if (errorData != null)
+                {
+                    Logger.Log(errorData.ToString());
+                }
                 this.service.WebSocketDisconnectedOccurred();
             });
 
