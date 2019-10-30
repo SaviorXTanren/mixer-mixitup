@@ -15,9 +15,10 @@ namespace MixItUp.Base.Model.Overlay
 {
     public enum OverlayEndCreditsSectionTypeEnum
     {
-        Viewers,
+        [Name("Viewers")]
+        Chatters,
         [Name("New Followers")]
-        NewFollowers,
+        Followers,
         Hosts,
         [Name("New Subscribers")]
         NewSubscribers,
@@ -128,7 +129,7 @@ namespace MixItUp.Base.Model.Overlay
         public override async Task LoadTestData()
         {
             UserViewModel user = await ChannelSession.GetCurrentUser();
-            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Viewers))
+            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Chatters))
             {
                 this.viewers.Add(user.ID);
             }
@@ -140,7 +141,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 this.mods.Add(user.ID);
             }
-            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.NewFollowers))
+            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Followers))
             {
                 this.follows.Add(user.ID);
             }
@@ -180,7 +181,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
             }
-            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.NewFollowers))
+            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Followers))
             {
                 GlobalEvents.OnFollowOccurred += GlobalEvents_OnFollowOccurred;
             }
@@ -255,10 +256,10 @@ namespace MixItUp.Base.Model.Overlay
                 Dictionary<UserViewModel, string> items = new Dictionary<UserViewModel, string>();
                 switch (kvp.Key)
                 {
-                    case OverlayEndCreditsSectionTypeEnum.Viewers: items = this.GetUsersDictionary(this.viewers); break;
+                    case OverlayEndCreditsSectionTypeEnum.Chatters: items = this.GetUsersDictionary(this.viewers); break;
                     case OverlayEndCreditsSectionTypeEnum.Subscribers: items = this.GetUsersDictionary(this.subs); break;
                     case OverlayEndCreditsSectionTypeEnum.Moderators: items = this.GetUsersDictionary(this.mods); break;
-                    case OverlayEndCreditsSectionTypeEnum.NewFollowers: items = this.GetUsersDictionary(this.follows); break;
+                    case OverlayEndCreditsSectionTypeEnum.Followers: items = this.GetUsersDictionary(this.follows); break;
                     case OverlayEndCreditsSectionTypeEnum.Hosts: items = this.GetUsersDictionary(this.hosts); break;
                     case OverlayEndCreditsSectionTypeEnum.NewSubscribers: items = this.GetUsersDictionary(this.newSubs); break;
                     case OverlayEndCreditsSectionTypeEnum.Resubscribers: items = this.GetUsersDictionary(this.resubs); break;
