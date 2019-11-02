@@ -1022,7 +1022,7 @@ namespace MixItUp.Base.MixerAPI
 
         private async void MixPlayClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
-            ChannelSession.DisconnectionOccurred("Interactive");
+            ChannelSession.DisconnectionOccurred("MixPlay");
 
             do
             {
@@ -1030,7 +1030,7 @@ namespace MixItUp.Base.MixerAPI
             }
             while (await this.Connect(this.Game, this.Version) != MixPlayConnectionResult.Success);
 
-            ChannelSession.ReconnectionOccurred("Interactive");
+            ChannelSession.ReconnectionOccurred("MixPlay");
         }
 
         #endregion Interactive Event Handlers
