@@ -41,6 +41,7 @@ namespace MixItUp.Base.Util
         public const string RandomSpecialIdentifierHeader = "random";
         public const string RandomFollowerSpecialIdentifierHeader = RandomSpecialIdentifierHeader + "follower";
         public const string RandomSubscriberSpecialIdentifierHeader = RandomSpecialIdentifierHeader + "sub";
+        public const string RandomActiveSpecialIdentifierHeader = RandomSpecialIdentifierHeader + "active";
         public const string RandomNumberRegexSpecialIdentifier = RandomSpecialIdentifierHeader + "number";
 
         public const string FeaturedChannelsSpecialIdentifer = "featuredchannels";
@@ -642,6 +643,15 @@ namespace MixItUp.Base.Util
                     if (users != null && users.Count() > 0)
                     {
                         await this.HandleUserSpecialIdentifiers(users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count())), RandomSubscriberSpecialIdentifierHeader);
+                    }
+                }
+
+                if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomActiveSpecialIdentifierHeader + "user"))
+                {
+                    IEnumerable<UserViewModel> users = workableUsers.Where(u => u.LastActivity > DateTimeOffset.MinValue);
+                    if (users != null && users.Count() > 0)
+                    {
+                        await this.HandleUserSpecialIdentifiers(users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count())), RandomActiveSpecialIdentifierHeader);
                     }
                 }
 
