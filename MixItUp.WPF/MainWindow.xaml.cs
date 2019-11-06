@@ -64,7 +64,7 @@ namespace MixItUp.WPF
 
                 var rect = new System.Drawing.Rectangle((int)this.Left, (int)this.Top, (int)this.Width, (int)this.Height);
                 var screen = System.Windows.Forms.Screen.FromRectangle(rect);
-                if (!rect.IntersectsWith(screen.Bounds))
+                if (!screen.Bounds.Contains(rect))
                 {
                     // Off the bottom of the screen?
                     if (this.Top + this.Height > screen.Bounds.Top + screen.Bounds.Height)
