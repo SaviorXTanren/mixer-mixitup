@@ -33,6 +33,11 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
             {
                 this.UserHTML = OverlayEndCreditsItemModel.UserHTMLTemplate;
             }
+            else if (sectionType == OverlayEndCreditsSectionTypeEnum.FreeFormHTML)
+            {
+                this.SectionHTML = OverlayEndCreditsItemModel.FreeFormSectionHTMLTemplate;
+                this.UserHTML = OverlayEndCreditsItemModel.FreeFormUserHTMLTemplate;
+            }
             else
             {
                 this.UserHTML = OverlayEndCreditsItemModel.UserDetailsHTMLTemplate;
