@@ -212,7 +212,7 @@ namespace MixItUp.Base.Services
             }
             else
             {
-                await ChannelSession.Services.Chat.Whisper(user.UserName, "We were unable to find a song that matched you request. For details on how to request songs, check out: https://github.com/SaviorXTanren/mixer-mixitup/wiki/Song-Requests#requesting-songs");
+                await ChannelSession.Services.Chat.Whisper(user.UserName, "We were unable to find a song that matched your request. For details on how to request songs, check out: https://github.com/SaviorXTanren/mixer-mixitup/wiki/Song-Requests#requesting-songs");
             }
         }
 
@@ -257,7 +257,7 @@ namespace MixItUp.Base.Services
                 }
                 else
                 {
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, "We were unable to find a song that matched you request. For details on how to request songs, check out: https://github.com/SaviorXTanren/mixer-mixitup/wiki/Song-Requests#requesting-songs");
+                    await ChannelSession.Services.Chat.Whisper(user.UserName, "We were unable to find a song that matched your request. For details on how to request songs, check out: https://github.com/SaviorXTanren/mixer-mixitup/wiki/Song-Requests#requesting-songs");
                 }
             }
         }

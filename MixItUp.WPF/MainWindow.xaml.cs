@@ -62,6 +62,35 @@ namespace MixItUp.WPF
                 this.Top = App.AppSettings.Top;
                 this.Left = App.AppSettings.Left;
 
+                var rect = new System.Drawing.Rectangle((int)this.Left, (int)this.Top, (int)this.Width, (int)this.Height);
+                var screen = System.Windows.Forms.Screen.FromRectangle(rect);
+                if (!screen.Bounds.Contains(rect))
+                {
+                    // Off the bottom of the screen?
+                    if (this.Top + this.Height > screen.Bounds.Top + screen.Bounds.Height)
+                    {
+                        this.Top = screen.Bounds.Top + screen.Bounds.Height - this.Height;
+                    }
+
+                    // Off the right side of the screen?
+                    if (this.Left + this.Width > screen.Bounds.Left + screen.Bounds.Width)
+                    {
+                        this.Left = screen.Bounds.Left + screen.Bounds.Width - this.Width;
+                    }
+
+                    // Off the top of the screen?
+                    if (this.Top < screen.Bounds.Top)
+                    {
+                        this.Top = screen.Bounds.Top;
+                    }
+
+                    // Off the left side of the screen?
+                    if (this.Left < screen.Bounds.Left)
+                    {
+                        this.Left = screen.Bounds.Left;
+                    }
+                }
+
                 if (App.AppSettings.IsMaximized)
                 {
                     WindowState = WindowState.Maximized;
