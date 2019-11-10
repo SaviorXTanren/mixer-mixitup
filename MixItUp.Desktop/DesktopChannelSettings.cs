@@ -81,6 +81,8 @@ namespace MixItUp.Desktop
         public OAuthTokenModel IFTTTOAuthToken { get; set; }
         [JsonProperty]
         public OAuthTokenModel StreamlootsOAuthToken { get; set; }
+        [JsonProperty]
+        public OAuthTokenModel JustGivingOAuthToken { get; set; }
 
         [JsonProperty]
         public Dictionary<string, CommandGroupSettings> CommandGroups { get; set; }
@@ -263,6 +265,9 @@ namespace MixItUp.Desktop
         public int ExtraLifeParticipantID { get; set; }
         [JsonProperty]
         public bool ExtraLifeIncludeTeamDonations { get; set; }
+
+        [JsonProperty]
+        public string JustGivingPageShortName { get; set; }
 
         [JsonProperty]
         public string DiscordServer { get; set; }
@@ -694,6 +699,10 @@ namespace MixItUp.Desktop
             if (ChannelSession.Services.Streamloots != null)
             {
                 this.StreamlootsOAuthToken = ChannelSession.Services.Streamloots.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.JustGiving != null)
+            {
+                this.JustGivingOAuthToken = ChannelSession.Services.JustGiving.GetOAuthTokenCopy();
             }
 
             this.currenciesInternal = this.Currencies.ToDictionary();

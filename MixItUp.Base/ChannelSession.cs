@@ -539,6 +539,10 @@ namespace MixItUp.Base
                     {
                         await ChannelSession.Services.InitializeStreamloots();
                     }
+                    if (ChannelSession.Settings.JustGivingOAuthToken != null)
+                    {
+                        await ChannelSession.Services.InitializeJustGiving();
+                    }
 
                     if (ChannelSession.Settings.RemoteHostConnection != null)
                     {

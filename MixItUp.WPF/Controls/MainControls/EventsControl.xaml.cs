@@ -93,6 +93,10 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     return "Patreon";
                 }
+                else if (this.OtherEventType == OtherEventTypeEnum.JustGivingDonation)
+                {
+                    return "JustGiving";
+                }
                 else if (this.OtherEventType == OtherEventTypeEnum.StreamlootsCardRedeemed || this.OtherEventType == OtherEventTypeEnum.StreamlootsPackGifted || this.OtherEventType == OtherEventTypeEnum.StreamlootsPackPurchased)
                 {
                     return "Streamloots";
@@ -151,11 +155,12 @@ namespace MixItUp.WPF.Controls.MainControls
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.ChatMessageReceived));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.ChatMessageDeleted));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.StreamlabsDonation));
-            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TiltifyDonation));
-            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.ExtraLifeDonation));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TipeeeStreamDonation));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TreatStreamDonation));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.StreamJarDonation));
+            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TiltifyDonation));
+            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.ExtraLifeDonation));
+            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.JustGivingDonation));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.PatreonSubscribed));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.StreamlootsCardRedeemed));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.StreamlootsPackPurchased));
