@@ -266,6 +266,9 @@ namespace MixItUp.Desktop
         public bool ExtraLifeIncludeTeamDonations { get; set; }
 
         [JsonProperty]
+        public string JustGivingPageShortName { get; set; }
+
+        [JsonProperty]
         public string DiscordServer { get; set; }
         [JsonProperty]
         public string DiscordCustomClientID { get; set; }

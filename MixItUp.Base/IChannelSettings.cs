@@ -151,6 +151,8 @@ namespace MixItUp.Base
         int ExtraLifeParticipantID { get; set; }
         bool ExtraLifeIncludeTeamDonations { get; set; }
 
+        string JustGivingPageShortName { get; set; }
+
         string DiscordServer { get; set; }
         string DiscordCustomClientID { get; set; }
         string DiscordCustomClientSecret { get; set; }

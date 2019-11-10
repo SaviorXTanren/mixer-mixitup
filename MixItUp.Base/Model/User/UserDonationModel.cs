@@ -20,6 +20,7 @@ namespace MixItUp.Base.Model.User
         TipeeeStream,
         TreatStream,
         StreamJar,
+        JustGiving,
     }
 
     [DataContract]
