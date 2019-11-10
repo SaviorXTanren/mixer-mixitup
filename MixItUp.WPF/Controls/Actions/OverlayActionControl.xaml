@@ -81,15 +81,28 @@
                     <TextBox x:Name="DurationTextBox" Grid.Row="0" MaterialDesign:HintAssist.Hint="Duration (Sec)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
 
                     <Grid Grid.Row="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="30" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <ComboBox x:Name="EntranceAnimationComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Entrance Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
+                        <StackPanel x:Name="AnimationsMayNotWork" Grid.Row="0" Grid.ColumnSpan="3" Margin="0,0,0,10" Orientation="Vertical">
+                            <TextBlock Foreground="Red" HorizontalAlignment="Center">WARNING: Animations may not work correctly.</TextBlock>
+                            <TextBlock Foreground="Red" HorizontalAlignment="Center">For more information:</TextBlock>
+                            <TextBlock>
+                                <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Windows-Settings:-Overlay-Animation-Issue" RequestNavigate="Hyperlink_RequestNavigate">Windows Settings: Overlay Animation Issue</Hyperlink>
+                            </TextBlock>
+                        </StackPanel>
+                        
 
-                        <ComboBox x:Name="ExitAnimationComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Exit Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
+                        <ComboBox x:Name="EntranceAnimationComboBox" Grid.Row="1" Grid.Column="0" MaterialDesign:HintAssist.Hint="Entrance Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
+
+                        <ComboBox x:Name="ExitAnimationComboBox" Grid.Row="1" Grid.Column="2" MaterialDesign:HintAssist.Hint="Exit Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
                     </Grid>
 
                     <ComboBox x:Name="VisibleAnimationComboBox" Grid.Row="4" MaterialDesign:HintAssist.Hint="Visible Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
