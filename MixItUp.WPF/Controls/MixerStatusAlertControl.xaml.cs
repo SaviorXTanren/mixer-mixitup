@@ -48,11 +48,14 @@ namespace MixItUp.WPF.Controls
                         {
                             this.MixerStatusAlertButton.Visibility = Visibility.Visible;
                             StringBuilder tooltip = new StringBuilder();
-                            tooltip.AppendLine("Mixer Status Alert:");
+                            tooltip.Append("Mixer Status Alert:");
                             foreach (MixerIncident incident in incidents)
                             {
                                 tooltip.AppendLine();
-                                tooltip.AppendLine(string.Format("{0} - Last Updated: {1}", incident.Title, incident.LastUpdate.ToString("G")));
+                                tooltip.AppendLine();
+
+                                tooltip.AppendLine(string.Format("{0} ({1}):", incident.Title, incident.LastUpdate.ToString("G")));
+                                tooltip.Append(incident.Description.AddNewLineEveryXCharacters(70));
                             }
                             this.MixerStatusAlertButton.ToolTip = tooltip.ToString();
                         }
