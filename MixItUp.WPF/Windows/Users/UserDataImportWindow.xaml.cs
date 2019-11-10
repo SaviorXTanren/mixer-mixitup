@@ -82,14 +82,14 @@ namespace MixItUp.WPF.Windows.Users
 
                 if (string.IsNullOrEmpty(this.UserDataFilePathTextBox.Text) || !File.Exists(this.UserDataFilePathTextBox.Text))
                 {
-                    await MessageBoxHelper.ShowMessageDialog("A valid data file must be specified");
+                    await DialogHelper.ShowMessage("A valid data file must be specified");
                     return;
                 }
 
                 if ((string.IsNullOrEmpty(this.dataColumns[0].ColumnNumber) || this.dataColumns[0].GetColumnNumber() <= 0) &&
                     (string.IsNullOrEmpty(this.dataColumns[1].ColumnNumber) || this.dataColumns[1].GetColumnNumber() <= 0))
                 {
-                    await MessageBoxHelper.ShowMessageDialog("Your data file must include at least either" + Environment.NewLine + "the User ID or User Name columns.");
+                    await DialogHelper.ShowMessage("Your data file must include at least either" + Environment.NewLine + "the User ID or User Name columns.");
                     return;
                 }
 
@@ -97,7 +97,7 @@ namespace MixItUp.WPF.Windows.Users
                 {
                     if (!string.IsNullOrEmpty(dataColumn.ColumnNumber) && dataColumn.GetColumnNumber() <= 0)
                     {
-                        await MessageBoxHelper.ShowMessageDialog("A number 0 or greater must be specified for" + Environment.NewLine + "each column that you want to include.");
+                        await DialogHelper.ShowMessage("A number 0 or greater must be specified for" + Environment.NewLine + "each column that you want to include.");
                         return;
                     }
                 }
@@ -119,7 +119,7 @@ namespace MixItUp.WPF.Windows.Users
                     }
                     else
                     {
-                        await MessageBoxHelper.ShowMessageDialog("We were unable to read data from the file. Please make sure it is not already opened in another program.");
+                        await DialogHelper.ShowMessage("We were unable to read data from the file. Please make sure it is not already opened in another program.");
                     }
                 }
                 else if (extension.Equals(".xls") || extension.Equals(".xlsx"))
@@ -164,7 +164,7 @@ namespace MixItUp.WPF.Windows.Users
                         catch (Exception ex)
                         {
                             Logger.Log(ex);
-                            await this.Dispatcher.InvokeAsync(async () => { await MessageBoxHelper.ShowMessageDialog("We were unable to read data from the file. Please make sure it is not already opened in another program."); });
+                            await this.Dispatcher.InvokeAsync(async () => { await DialogHelper.ShowMessage("We were unable to read data from the file. Please make sure it is not already opened in another program."); });
                         }
                     });
                 }

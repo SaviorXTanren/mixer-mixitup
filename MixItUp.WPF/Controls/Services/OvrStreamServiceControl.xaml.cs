@@ -55,7 +55,7 @@ namespace MixItUp.WPF.Controls.Services
                 else
                 {
                     ChannelSession.Settings.OvrStreamServerIP = null;
-                    await MessageBoxHelper.ShowMessageDialog("Could not connect to OvrStream. Please make sure OvrStream is running.");
+                    await DialogHelper.ShowMessage("Could not connect to OvrStream. Please make sure OvrStream is running.");
                 }
             });
         }

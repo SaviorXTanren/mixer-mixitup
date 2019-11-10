@@ -5,6 +5,7 @@ using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Store;
+using MixItUp.Base.Util;
 using MixItUp.WPF.Util;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
@@ -90,6 +91,7 @@ namespace MixItUp.WPF.Windows.Store
                     case OtherEventTypeEnum.StreamJarDonation:
                     case OtherEventTypeEnum.TipeeeStreamDonation:
                     case OtherEventTypeEnum.TreatStreamDonation:
+                    case OtherEventTypeEnum.JustGivingDonation:
                         this.Tag4ComboBox.SelectedItem = StoreListingModel.DonationTag;
                         break;
                 }
@@ -113,19 +115,19 @@ namespace MixItUp.WPF.Windows.Store
             {
                 if (string.IsNullOrEmpty(this.NameTextBox.Text))
                 {
-                    await MessageBoxHelper.ShowMessageDialog("A name must be specified");
+                    await DialogHelper.ShowMessage("A name must be specified");
                     return;
                 }
 
                 if (this.NameTextBox.Text.Length >= 50)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("A name must be 50 characters or less");
+                    await DialogHelper.ShowMessage("A name must be 50 characters or less");
                     return;
                 }
 
                 if (string.IsNullOrEmpty(this.DescriptionTextBox.Text))
                 {
-                    await MessageBoxHelper.ShowMessageDialog("A description must be specified");
+                    await DialogHelper.ShowMessage("A description must be specified");
                     return;
                 }
 
@@ -133,14 +135,14 @@ namespace MixItUp.WPF.Windows.Store
                 {
                     if (!File.Exists(this.DisplayImagePathTextBox.Text))
                     {
-                        await MessageBoxHelper.ShowMessageDialog("The specified display image does not exist");
+                        await DialogHelper.ShowMessage("The specified display image does not exist");
                         return;
                     }
 
                     FileInfo info = new FileInfo(this.DisplayImagePathTextBox.Text);
                     if (info.Length >= 1000000)
                     {
-                        await MessageBoxHelper.ShowMessageDialog("Display image must be smaller than 1 MB");
+                        await DialogHelper.ShowMessage("Display image must be smaller than 1 MB");
                         return;
                     }
                 }
@@ -155,7 +157,7 @@ namespace MixItUp.WPF.Windows.Store
 
                 if (tags.Count == 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("At least 1 tag must be selected");
+                    await DialogHelper.ShowMessage("At least 1 tag must be selected");
                     return;
                 }
 
@@ -202,7 +204,7 @@ namespace MixItUp.WPF.Windows.Store
                             FileInfo info = new FileInfo(assetFile);
                             if (info.Length >= 1000000)
                             {
-                                await MessageBoxHelper.ShowMessageDialog("All asset files must be smaller than 1 MB");
+                                await DialogHelper.ShowMessage("All asset files must be smaller than 1 MB");
                                 return;
                             }
                         }

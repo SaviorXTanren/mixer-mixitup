@@ -42,7 +42,7 @@ namespace MixItUp.WPF.Controls.Services
 
             if (string.IsNullOrEmpty(this.IFTTTWebHookKeyTextBox.Text))
             {
-                await MessageBoxHelper.ShowMessageDialog("No IFTTT Web Hook key was specified.");
+                await DialogHelper.ShowMessage("No IFTTT Web Hook key was specified.");
             }
             else
             {
@@ -50,7 +50,7 @@ namespace MixItUp.WPF.Controls.Services
                 {
                     if (!await ChannelSession.Services.InitializeIFTTT(this.IFTTTWebHookKeyTextBox.Text))
                     {
-                        await MessageBoxHelper.ShowMessageDialog("Unable to authenticate with IFTTT. Please ensure you correctly input your IFTTT Web Hook key.");
+                        await DialogHelper.ShowMessage("Unable to authenticate with IFTTT. Please ensure you correctly input your IFTTT Web Hook key.");
                     }
                     else
                     {

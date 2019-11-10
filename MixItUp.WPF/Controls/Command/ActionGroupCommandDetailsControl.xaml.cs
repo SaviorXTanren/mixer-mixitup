@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using MixItUp.WPF.Util;
 using System;
 using System.Threading.Tasks;
@@ -44,7 +45,7 @@ namespace MixItUp.WPF.Controls.Command
         {
             if (string.IsNullOrEmpty(this.NameTextBox.Text))
             {
-                await MessageBoxHelper.ShowMessageDialog("Name is missing");
+                await DialogHelper.ShowMessage("Name is missing");
                 return false;
             }
 

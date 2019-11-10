@@ -1,25 +1,18 @@
 ﻿using StreamingClient.Base.Util;
+using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
-using System.Xml;
 
 namespace MixItUp.Base.Services
 {
     public class MixerIncident
     {
-        private const string IncidentDescriptionResolvedIndicator = "<strong>Resolved</strong>";
-        private const string IncidentDescriptionCompletedIndicator = "<strong>Completed</strong>";
-
         public string Title { get; set; }
         public string Description { get; set; }
         public DateTimeOffset LastUpdate { get; set; }
         public string Link { get; set; }
-
-        public bool IsResolved { get { return this.Description.Contains(IncidentDescriptionResolvedIndicator) || this.Description.Contains(IncidentDescriptionCompletedIndicator); } }
     }
 
     public interface IMixerStatusService
@@ -29,41 +22,80 @@ namespace MixItUp.Base.Services
 
     public class MixerStatusService : IMixerStatusService
     {
-        private const string MixerStatusFeedLink = "https://status.mixer.com/api/v2/status.json";
+        private class MixerUnresolvedIncidents
+        {
+            public List<MixerUnresolvedIncident> incidents { get; set; }
+        }
+
+        private class MixerUnresolvedIncident
+        {
+            public string id { get; set; }
+            public string name { get; set; }
+            public string status { get; set; }
+            public DateTimeOffset created_at { get; set; }
+            public DateTimeOffset updated_at { get; set; }
+            public object monitoring_at { get; set; }
+            public object resolved_at { get; set; }
+            public string impact { get; set; }
+            public string shortlink { get; set; }
+            public DateTimeOffset started_at { get; set; }
+            public string page_id { get; set; }
+            public List<MixerUnresolvedIncidentUpdate> incident_updates { get; set; }
+        }
+
+        private class MixerUnresolvedIncidentUpdate
+        {
+            public string id { get; set; }
+            public string status { get; set; }
+            public string body { get; set; }
+            public string incident_id { get; set; }
+            public DateTimeOffset created_at { get; set; }
+            public DateTimeOffset updated_at { get; set; }
+            public DateTimeOffset display_at { get; set; }
+            public bool deliver_notifications { get; set; }
+            public object custom_tweet { get; set; }
+            public object tweet_id { get; set; }
+        }
+
+        private const string MixerStatusFeedLink = "https://status.mixer.com/api/v2/incidents/unresolved.json";
 
         public async Task<IEnumerable<MixerIncident>> GetCurrentIncidents()
         {
-            string rssData = null;
-            using (HttpClient client = new HttpClient())
+            try
             {
-                try
+                MixerUnresolvedIncidents unresolvedIncidents = null;
+                using (AdvancedHttpClient client = new AdvancedHttpClient())
                 {
-                    //rssData = await client.GetStringAsync(MixerStatusService.MixerStatusRSSFeedLink);
+                    unresolvedIncidents = await client.GetAsync<MixerUnresolvedIncidents>(MixerStatusService.MixerStatusFeedLink);
                 }
-                catch (Exception ex) { Logger.Log(ex); }
-            }
 
-            List<MixerIncident> incidents = new List<MixerIncident>();
-            if (!string.IsNullOrEmpty(rssData))
-            {
-                try
+                List<MixerIncident> incidents = new List<MixerIncident>();
+                if (unresolvedIncidents != null && unresolvedIncidents.incidents != null && unresolvedIncidents.incidents.Count > 0)
                 {
-                    XmlDocument xmlDocument = new XmlDocument();
-                    xmlDocument.LoadXml(rssData);
-                    foreach (XmlNode node in xmlDocument.SelectNodes("rss/channel/item"))
+                    foreach (MixerUnresolvedIncident incident in unresolvedIncidents.incidents)
                     {
-                        incidents.Add(new MixerIncident()
+                        if (incident.incident_updates != null && incident.incident_updates.Count > 0)
                         {
-                            Title = node.SelectSingleNode("title").InnerText,
-                            Description = HttpUtility.HtmlDecode(node.SelectSingleNode("description").InnerText),
-                            LastUpdate = DateTimeOffset.Parse(node.SelectSingleNode("pubDate").InnerText),
-                            Link = node.SelectSingleNode("link").InnerText,
-                        });
+                            MixerUnresolvedIncidentUpdate latestUpdate = incident.incident_updates.OrderByDescending(i => i.updated_at).FirstOrDefault();
+                            if (latestUpdate != null)
+                            {
+
+                            }
+
+                            incidents.Add(new MixerIncident()
+                            {
+                                Title = incident.name,
+                                Description = latestUpdate.body,
+                                LastUpdate = latestUpdate.updated_at,
+                                Link = incident.shortlink
+                            });
+                        }
                     }
                 }
-                catch (Exception ex) { Logger.Log(ex); }
+                return incidents;
             }
-            return incidents.Where(i => !i.IsResolved);
+            catch (Exception ex) { Logger.Log(ex); }
+            return new List<MixerIncident>();
         }
     }
 }

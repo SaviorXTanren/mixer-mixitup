@@ -6,12 +6,22 @@ using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
+    public static class AdvancedHttpClientExtensions
+    {
+        public static void SetBasicClientIDClientSecretAuthorizationHeader(this AdvancedHttpClient client, string clientID, string clientSecret)
+        {
+            string authorizationValue = string.Format("{0}:{1}", clientID, clientSecret);
+            byte[] authorizationBytes = System.Text.Encoding.UTF8.GetBytes(authorizationValue);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authorizationBytes));
+        }
+    }
+
     public abstract class OAuthServiceBase : OAuthRestServiceBase
     {
         public const string LoginRedirectPageHTML = @"<!DOCTYPE html>
@@ -92,13 +102,9 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                string authorizationValue = string.Format("{0}:{1}", clientID, clientSecret);
-                byte[] authorizationBytes = System.Text.Encoding.UTF8.GetBytes(authorizationValue);
-                authorizationValue = Convert.ToBase64String(authorizationBytes);
-
-                using (HttpClient client = new HttpClient())
+                using (AdvancedHttpClient client = new AdvancedHttpClient())
                 {
-                    client.DefaultRequestHeaders.Add("Authorization", "Basic " + authorizationValue);
+                    client.SetBasicClientIDClientSecretAuthorizationHeader(clientID, clientSecret);
                     using (var content = new FormUrlEncodedContent(bodyContent))
                     {
                         content.Headers.Clear();

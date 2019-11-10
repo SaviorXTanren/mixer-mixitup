@@ -55,7 +55,7 @@ namespace MixItUp.WPF.Controls.Services
             {
                 if (!await this.ConnectOverlayService())
                 {
-                    await MessageBoxHelper.ShowMessageDialog("Failed to start Overlay Connection, this sometimes means our connection got wonky. If this continues to happen, please try restarting Mix It Up.");
+                    await DialogHelper.ShowMessage("Failed to start Overlay Connection, this sometimes means our connection got wonky. If this continues to happen, please try restarting Mix It Up.");
                 }
                 await ChannelSession.SaveSettings();
             });
@@ -79,14 +79,14 @@ namespace MixItUp.WPF.Controls.Services
                     int total = await ChannelSession.Services.OverlayServers.TestConnections();
                     if (total > 0)
                     {
-                        await MessageBoxHelper.ShowMessageDialog("Overlay connection test successful!" + Environment.NewLine + Environment.NewLine + total + " overlays connected in total");
+                        await DialogHelper.ShowMessage("Overlay connection test successful!" + Environment.NewLine + Environment.NewLine + total + " overlays connected in total");
                     }
                     else
                     {
                         string message = "Overlay connection test failed, please ensure you have the Mix It Up Overlay page visible and running in your streaming software.";
                         message += Environment.NewLine + Environment.NewLine;
                         message += "If you launched your streaming software before Mix It Up, try refreshing the webpage source in your streaming software.";
-                        await MessageBoxHelper.ShowMessageDialog(message);
+                        await DialogHelper.ShowMessage(message);
                     }
                 });
             }

@@ -47,6 +47,8 @@ namespace MixItUp.WPF.Controls.Actions
                 this.OverlayNotEnabledWarningTextBlock.Visibility = Visibility.Visible;
             }
 
+            this.AnimationsMayNotWork.Visibility = System.Windows.SystemParameters.ClientAreaAnimation ? Visibility.Collapsed : Visibility.Visible;
+
             List<string> typeOptions = new List<string>(EnumHelper.GetEnumNames<OverlayItemModelTypeEnum>(new List<OverlayItemModelTypeEnum>()
             {
                 OverlayItemModelTypeEnum.Text, OverlayItemModelTypeEnum.Image, OverlayItemModelTypeEnum.Video,

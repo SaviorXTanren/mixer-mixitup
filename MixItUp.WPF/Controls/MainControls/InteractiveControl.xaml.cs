@@ -361,7 +361,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 InteractiveSceneUserGroupsDialogControl dialogControl = new InteractiveSceneUserGroupsDialogControl(this.selectedGame, this.selectedScene);
                 await this.Window.RunAsyncOperation(async () =>
                 {
-                    await MessageBoxHelper.ShowCustomDialog(dialogControl);
+                    await DialogHelper.ShowCustom(dialogControl);
                 });
             }
         }
@@ -434,7 +434,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
                     await this.Window.RunAsyncOperation(async () =>
                     {
-                        await MessageBoxHelper.ShowMessageDialog(string.Format("The control you are trying to edit has been changed from a {0} to a {1} and can not be edited. You must either change this control back to its previous type, change the control ID to something different, or delete the command to start fresh.", oldControlType, newControlType));
+                        await DialogHelper.ShowMessage(string.Format("The control you are trying to edit has been changed from a {0} to a {1} and can not be edited. You must either change this control back to its previous type, change the control ID to something different, or delete the command to start fresh.", oldControlType, newControlType));
                     });
                     return;
                 }
@@ -506,7 +506,7 @@ namespace MixItUp.WPF.Controls.MainControls
                             await ChannelSession.Interactive.Disconnect();
                         });
 
-                        await MessageBoxHelper.ShowMessageDialog("This MixPlay game configuration is invalid. It has multiple controls with the same control ID on different scenes.  Please visit the interactive lab and correct this problem."
+                        await DialogHelper.ShowMessage("This MixPlay game configuration is invalid. It has multiple controls with the same control ID on different scenes.  Please visit the interactive lab and correct this problem."
                             + Environment.NewLine
                             + Environment.NewLine
                             + string.Join(Environment.NewLine, ChannelSession.Interactive.DuplicatedControls));
@@ -524,7 +524,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 Logger.Log(ex);
             }
 
-            await MessageBoxHelper.ShowMessageDialog("Failed to connect to MixPlay with selected game. Please try again.");
+            await DialogHelper.ShowMessage("Failed to connect to MixPlay with selected game. Please try again.");
         }
 
         private async void DisconnectButton_Click(object sender, RoutedEventArgs e)

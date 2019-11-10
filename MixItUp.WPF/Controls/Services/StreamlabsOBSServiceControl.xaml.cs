@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Util;
 using MixItUp.WPF.Util;
 using System.Diagnostics;
 using System.Linq;
@@ -50,7 +51,7 @@ namespace MixItUp.WPF.Controls.Services
                 }
                 else
                 {
-                    await MessageBoxHelper.ShowMessageDialog("Streamlabs OBS service failed to start, please ensure Streamlabs OBS is currently running. If it continues to fail to connect, try running Mix It Up as Administrator.");
+                    await DialogHelper.ShowMessage("Streamlabs OBS service failed to start, please ensure Streamlabs OBS is currently running. If it continues to fail to connect, try running Mix It Up as Administrator.");
                 }
             });
         }
@@ -77,11 +78,11 @@ namespace MixItUp.WPF.Controls.Services
                 {
                     if (await ChannelSession.Services.StreamlabsOBSService.TestConnection())
                     {
-                        await MessageBoxHelper.ShowMessageDialog("Streamlabs OBS connection test successful!");
+                        await DialogHelper.ShowMessage("Streamlabs OBS connection test successful!");
                     }
                     else
                     {
-                        await MessageBoxHelper.ShowMessageDialog("Streamlabs OBS connection test failed, please ensure that Streamlabs OBS is running.");
+                        await DialogHelper.ShowMessage("Streamlabs OBS connection test failed, please ensure that Streamlabs OBS is running.");
                     }
                 });
             }

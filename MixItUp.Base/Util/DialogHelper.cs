@@ -12,6 +12,8 @@ namespace MixItUp.Base.Util
 
         Task<object> ShowCustom(object dialog);
 
+        Task<object> ShowCustomTimed(object dialog, int timeout);
+
         void CloseCurrent();
     }
 
@@ -31,6 +33,8 @@ namespace MixItUp.Base.Util
         public static async Task<string> ShowTextEntry(string message, string defaultValue = null) { return await DialogHelper.dialogShower.ShowTextEntry(message, defaultValue); }
 
         public static async Task<object> ShowCustom(object dialog) { return await DialogHelper.dialogShower.ShowCustom(dialog); }
+
+        public static async Task<object> ShowCustomTimed(object dialog, int timeout) { return await DialogHelper.dialogShower.ShowCustomTimed(dialog, timeout); }
 
         public static void CloseCurrent() { DialogHelper.dialogShower.CloseCurrent(); }
     }

@@ -151,7 +151,7 @@ namespace MixItUp.WPF
                     }
                     else
                     {
-                        await MessageBoxHelper.ShowMessageDialog("You must select a Streamer account to log in to");
+                        await DialogHelper.ShowMessage("You must select a Streamer account to log in to");
                     }
                 }
                 else
@@ -178,7 +178,7 @@ namespace MixItUp.WPF
             {
                 if (string.IsNullOrEmpty(this.ModeratorChannelComboBox.Text))
                 {
-                    await MessageBoxHelper.ShowMessageDialog("A channel name must be entered");
+                    await DialogHelper.ShowMessage("A channel name must be entered");
                     return;
                 }
 
@@ -207,12 +207,12 @@ namespace MixItUp.WPF
                     }
                     else
                     {
-                        await MessageBoxHelper.ShowMessageDialog("You are not a moderator for this channel.");
+                        await DialogHelper.ShowMessage("You are not a moderator for this channel.");
                     }
                 }
                 else
                 {
-                    await MessageBoxHelper.ShowMessageDialog("Unable to authenticate with Mixer, please try again");
+                    await DialogHelper.ShowMessage("Unable to authenticate with Mixer, please try again");
                 }
             });
         }
@@ -249,12 +249,12 @@ namespace MixItUp.WPF
                 {
                     if (!await ChannelSession.ConnectBot(setting))
                     {
-                        await MessageBoxHelper.ShowMessageDialog("Bot Account failed to authenticate, please re-connect it from the Services section.");
+                        await DialogHelper.ShowMessage("Bot Account failed to authenticate, please re-connect it from the Services section.");
                     }
                 }
                 else
                 {
-                    await MessageBoxHelper.ShowMessageDialog("Unable to authenticate with Mixer, please try again");
+                    await DialogHelper.ShowMessage("Unable to authenticate with Mixer, please try again");
                 }
                 return result;
             }
@@ -272,7 +272,7 @@ namespace MixItUp.WPF
             }
             else
             {
-                await MessageBoxHelper.ShowMessageDialog("Unable to authenticate with Mixer, please try again");
+                await DialogHelper.ShowMessage("Unable to authenticate with Mixer, please try again");
             }
             return false;
         }
@@ -286,7 +286,7 @@ namespace MixItUp.WPF
         {
             await this.RunAsyncOperation(async () =>
             {
-                await MessageBoxHelper.ShowMessageDialog(message);
+                await DialogHelper.ShowMessage(message);
             });
         }
 

@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using MixItUp.WPF.Util;
 using System.Threading.Tasks;
 
@@ -39,7 +40,7 @@ namespace MixItUp.WPF.Controls.Command
         {
             if (string.IsNullOrEmpty(this.NameTextBox.Text))
             {
-                await MessageBoxHelper.ShowMessageDialog("Name is missing");
+                await DialogHelper.ShowMessage("Name is missing");
                 return false;
             }
 
@@ -47,7 +48,7 @@ namespace MixItUp.WPF.Controls.Command
             {
                 if (!string.IsNullOrEmpty(this.GroupTimerTextBox.Text) && (!int.TryParse(this.GroupTimerTextBox.Text, out int timerInterval) || timerInterval < 1))
                 {
-                    await MessageBoxHelper.ShowMessageDialog("All timer group intervals must be greater than 0 or left blank");
+                    await DialogHelper.ShowMessage("All timer group intervals must be greater than 0 or left blank");
                     return false;
                 }
             }

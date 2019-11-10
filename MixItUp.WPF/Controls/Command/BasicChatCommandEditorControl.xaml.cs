@@ -2,6 +2,7 @@
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Actions;
@@ -99,7 +100,7 @@ namespace MixItUp.WPF.Controls.Command
             {
                 if (this.LowestRoleAllowedComboBox.SelectedIndex < 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("A permission level must be selected");
+                    await DialogHelper.ShowMessage("A permission level must be selected");
                     return;
                 }
 
@@ -108,33 +109,33 @@ namespace MixItUp.WPF.Controls.Command
                 {
                     if (!int.TryParse(this.CooldownTextBox.Text, out cooldown) || cooldown < 0)
                     {
-                        await MessageBoxHelper.ShowMessageDialog("Cooldown must be 0 or greater");
+                        await DialogHelper.ShowMessage("Cooldown must be 0 or greater");
                         return;
                     }
                 }
 
                 if (string.IsNullOrEmpty(this.ChatCommandTextBox.Text))
                 {
-                    await MessageBoxHelper.ShowMessageDialog("Commands is missing");
+                    await DialogHelper.ShowMessage("Commands is missing");
                     return;
                 }
 
                 if (!CommandBase.IsValidCommandString(this.ChatCommandTextBox.Text))
                 {
-                    await MessageBoxHelper.ShowMessageDialog("Triggers contain an invalid character");
+                    await DialogHelper.ShowMessage("Triggers contain an invalid character");
                     return;
                 }
 
                 IEnumerable<string> commandStrings = new List<string>(this.ChatCommandTextBox.Text.Replace("!", "").Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
                 if (commandStrings.Count() == 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("At least 1 chat trigger must be specified");
+                    await DialogHelper.ShowMessage("At least 1 chat trigger must be specified");
                     return;
                 }
 
                 if (commandStrings.GroupBy(c => c).Where(g => g.Count() > 1).Count() > 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("Each chat trigger must be unique");
+                    await DialogHelper.ShowMessage("Each chat trigger must be unique");
                     return;
                 }
 
@@ -144,7 +145,7 @@ namespace MixItUp.WPF.Controls.Command
                     {
                         if (commandStrings.Any(c => command.Commands.Contains(c, StringComparer.InvariantCultureIgnoreCase)))
                         {
-                            await MessageBoxHelper.ShowMessageDialog("There already exists an enabled, chat command that uses one of the command strings you have specified");
+                            await DialogHelper.ShowMessage("There already exists an enabled, chat command that uses one of the command strings you have specified");
                             return;
                         }
                     }
@@ -155,11 +156,11 @@ namespace MixItUp.WPF.Controls.Command
                 {
                     if (this.actionControl is ChatActionControl)
                     {
-                        await MessageBoxHelper.ShowMessageDialog("The chat message must not be empty");
+                        await DialogHelper.ShowMessage("The chat message must not be empty");
                     }
                     else if (this.actionControl is SoundActionControl)
                     {
-                        await MessageBoxHelper.ShowMessageDialog("The sound file path must not be empty");
+                        await DialogHelper.ShowMessage("The sound file path must not be empty");
                     }
                     return;
                 }

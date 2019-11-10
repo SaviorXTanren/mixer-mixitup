@@ -79,7 +79,7 @@ namespace MixItUp.WPF.Controls.Command
         {
             if (!int.TryParse(this.SparkCostTextBox.Text, out int sparkCost) || sparkCost < 0)
             {
-                await MessageBoxHelper.ShowMessageDialog("A valid spark cost must be entered");
+                await DialogHelper.ShowMessage("A valid spark cost must be entered");
                 return false;
             }
 

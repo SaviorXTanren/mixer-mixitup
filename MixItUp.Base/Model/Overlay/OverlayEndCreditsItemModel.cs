@@ -30,6 +30,8 @@ namespace MixItUp.Base.Model.Overlay
         Embers,
         Subscribers,
         Moderators,
+        [Name("Free Form HTML")]
+        FreeFormHTML
     }
 
     public enum OverlayEndCreditsSpeedEnum
@@ -58,10 +60,11 @@ namespace MixItUp.Base.Model.Overlay
         public const string TitleHTMLTemplate = @"<div id=""the-end"">Stream Credits</div>";
 
         public const string SectionHTMLTemplate = @"<h1 style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; color: {TEXT_COLOR};"">{NAME}</h1>";
+        public const string FreeFormSectionHTMLTemplate = @"<h1 style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; color: {TEXT_COLOR};"">FREE FORM</h1>";
 
         public const string UserHTMLTemplate = @"<p style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; color: {TEXT_COLOR};"">{NAME}</p>";
-
         public const string UserDetailsHTMLTemplate = @"<dt style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; color: {TEXT_COLOR};"">{NAME}</dt><dd style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; color: {TEXT_COLOR};"">{DETAILS}</dd>";
+        public const string FreeFormUserHTMLTemplate = @"<p style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; color: {TEXT_COLOR};"">FREE FORM</p>";
 
         public const string SectionSeparatorHTML = @"<div class=""clearfix""></div>";
 
@@ -253,22 +256,39 @@ namespace MixItUp.Base.Model.Overlay
 
             foreach (var kvp in this.SectionTemplates)
             {
-                Dictionary<UserViewModel, string> items = new Dictionary<UserViewModel, string>();
-                switch (kvp.Key)
+                if (kvp.Key == OverlayEndCreditsSectionTypeEnum.FreeFormHTML)
                 {
-                    case OverlayEndCreditsSectionTypeEnum.Chatters: items = this.GetUsersDictionary(this.viewers); break;
-                    case OverlayEndCreditsSectionTypeEnum.Subscribers: items = this.GetUsersDictionary(this.subs); break;
-                    case OverlayEndCreditsSectionTypeEnum.Moderators: items = this.GetUsersDictionary(this.mods); break;
-                    case OverlayEndCreditsSectionTypeEnum.Followers: items = this.GetUsersDictionary(this.follows); break;
-                    case OverlayEndCreditsSectionTypeEnum.Hosts: items = this.GetUsersDictionary(this.hosts); break;
-                    case OverlayEndCreditsSectionTypeEnum.NewSubscribers: items = this.GetUsersDictionary(this.newSubs); break;
-                    case OverlayEndCreditsSectionTypeEnum.Resubscribers: items = this.GetUsersDictionary(this.resubs); break;
-                    case OverlayEndCreditsSectionTypeEnum.GiftedSubs: items = this.GetUsersDictionary(this.giftedSubs); break;
-                    case OverlayEndCreditsSectionTypeEnum.Donations: items = this.GetUsersDictionary(this.donations); break;
-                    case OverlayEndCreditsSectionTypeEnum.Sparks: items = this.GetUsersDictionary(this.sparks); break;
-                    case OverlayEndCreditsSectionTypeEnum.Embers: items = this.GetUsersDictionary(this.embers); break;
+                    OverlayEndCreditsSectionModel sectionTemplate = this.SectionTemplates[kvp.Key];
+
+                    string sectionHTML = this.PerformTemplateReplacements(sectionTemplate.SectionHTML, new Dictionary<string, string>());
+                    sectionHTML = await this.ReplaceStringWithSpecialModifiers(sectionHTML, await ChannelSession.GetCurrentUser(), new List<string>(), new Dictionary<string, string>());
+
+                    string userHTML = this.PerformTemplateReplacements(sectionTemplate.UserHTML, new Dictionary<string, string>());
+                    userHTML = await this.ReplaceStringWithSpecialModifiers(userHTML, user, new List<string>(), new Dictionary<string, string>());
+
+                    htmlBuilder.AppendLine(SectionSeparatorHTML);
+                    htmlBuilder.AppendLine(sectionHTML);
+                    htmlBuilder.AppendLine(userHTML);
                 }
-                await this.PerformSectionTemplateReplacement(htmlBuilder, kvp.Key, items);
+                else
+                {
+                    Dictionary<UserViewModel, string> items = new Dictionary<UserViewModel, string>();
+                    switch (kvp.Key)
+                    {
+                        case OverlayEndCreditsSectionTypeEnum.Chatters: items = this.GetUsersDictionary(this.viewers); break;
+                        case OverlayEndCreditsSectionTypeEnum.Subscribers: items = this.GetUsersDictionary(this.subs); break;
+                        case OverlayEndCreditsSectionTypeEnum.Moderators: items = this.GetUsersDictionary(this.mods); break;
+                        case OverlayEndCreditsSectionTypeEnum.Followers: items = this.GetUsersDictionary(this.follows); break;
+                        case OverlayEndCreditsSectionTypeEnum.Hosts: items = this.GetUsersDictionary(this.hosts); break;
+                        case OverlayEndCreditsSectionTypeEnum.NewSubscribers: items = this.GetUsersDictionary(this.newSubs); break;
+                        case OverlayEndCreditsSectionTypeEnum.Resubscribers: items = this.GetUsersDictionary(this.resubs); break;
+                        case OverlayEndCreditsSectionTypeEnum.GiftedSubs: items = this.GetUsersDictionary(this.giftedSubs); break;
+                        case OverlayEndCreditsSectionTypeEnum.Donations: items = this.GetUsersDictionary(this.donations); break;
+                        case OverlayEndCreditsSectionTypeEnum.Sparks: items = this.GetUsersDictionary(this.sparks); break;
+                        case OverlayEndCreditsSectionTypeEnum.Embers: items = this.GetUsersDictionary(this.embers); break;
+                    }
+                    await this.PerformSectionTemplateReplacement(htmlBuilder, kvp.Key, items);
+                }
             }
 
             jobj["HTML"] = string.Format(CreditsWrapperHTML, this.BackgroundColor, htmlBuilder.ToString());

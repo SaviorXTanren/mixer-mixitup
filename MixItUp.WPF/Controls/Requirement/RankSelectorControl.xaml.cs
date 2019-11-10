@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Util;
@@ -61,13 +62,13 @@ namespace MixItUp.WPF.Controls.Requirement
             {
                 if (this.GetRankType() == null)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("A Rank must be specified when a Rank requirement is set");
+                    await DialogHelper.ShowMessage("A Rank must be specified when a Rank requirement is set");
                     return false;
                 }
 
                 if (this.GetRankMinimum() == null)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("A Minimum Rank must be specified when a Rank Requirement is set");
+                    await DialogHelper.ShowMessage("A Minimum Rank must be specified when a Rank Requirement is set");
                     return false;
                 }
             }

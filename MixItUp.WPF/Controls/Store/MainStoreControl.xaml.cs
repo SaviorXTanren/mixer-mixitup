@@ -98,7 +98,7 @@ namespace MixItUp.WPF.Controls.Store
                 StoreDetailListingModel listingDetails = await ChannelSession.Services.MixItUpService.GetStoreListing(this.currentListing.ID);
                 if (listingDetails == null)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("Failed to download command, please try again");
+                    await DialogHelper.ShowMessage("Failed to download command, please try again");
                     return;
                 }
 
@@ -107,7 +107,7 @@ namespace MixItUp.WPF.Controls.Store
                 Version commandVersion = new Version(listingDetails.AppVersion);
                 if (assemblyVersion < commandVersion)
                 {
-                    await MessageBoxHelper.ShowMessageDialog(string.Format("You can not download this command as it was created on version ({0}) of Mix It Up ", commandVersion));
+                    await DialogHelper.ShowMessage(string.Format("You can not download this command as it was created on version ({0}) of Mix It Up ", commandVersion));
                     return;
                 }
 
@@ -119,7 +119,7 @@ namespace MixItUp.WPF.Controls.Store
 
                 if (listingDetails.AssetsIncluded && listingDetails.AssetData != null && listingDetails.AssetData.Length > 0)
                 {
-                    if (await MessageBoxHelper.ShowConfirmationDialog("This command contains included assets." + Environment.NewLine + "Would you like to download them?"))
+                    if (await DialogHelper.ShowConfirmation("This command contains included assets." + Environment.NewLine + "Would you like to download them?"))
                     {
                         string folderLocation = ChannelSession.Services.FileService.ShowOpenFolderDialog();
                         if (!string.IsNullOrEmpty(folderLocation))
@@ -165,7 +165,7 @@ namespace MixItUp.WPF.Controls.Store
             await this.window.RunAsyncOperation(async () =>
             {
                 ListingReviewDialogControl reviewControl = new ListingReviewDialogControl();
-                string result = await MessageBoxHelper.ShowCustomDialog(reviewControl);
+                string result = (string)(await DialogHelper.ShowCustom(reviewControl));
                 if (!string.IsNullOrEmpty(result) && result.Equals("True") && reviewControl.Rating > 0 && !string.IsNullOrEmpty(reviewControl.ReviewText))
                 {
                     StoreListingReviewModel review = new StoreListingReviewModel(this.currentListing, reviewControl.Rating, reviewControl.ReviewText);
@@ -190,12 +190,12 @@ namespace MixItUp.WPF.Controls.Store
         {
             await this.window.RunAsyncOperation(async () =>
             {
-                string report = await MessageBoxHelper.ShowTextEntryDialog("Report Reason");
+                string report = await DialogHelper.ShowTextEntry("Report Reason");
                 if (!string.IsNullOrEmpty(report))
                 {
                     await ChannelSession.Services.MixItUpService.AddStoreListingReport(new StoreListingReportModel(this.currentListing, report));
 
-                    await MessageBoxHelper.ShowMessageDialog("Thank you for submitting this report." + Environment.NewLine + "We will review it shortly.");
+                    await DialogHelper.ShowMessage("Thank you for submitting this report." + Environment.NewLine + "We will review it shortly.");
                 }
             });
         }
@@ -204,7 +204,7 @@ namespace MixItUp.WPF.Controls.Store
         {
             await this.window.RunAsyncOperation(async () =>
             {
-                if (await MessageBoxHelper.ShowConfirmationDialog("This will remove your command from the Mix It Up store." + Environment.NewLine + "Are you sure you wish to do this?"))
+                if (await DialogHelper.ShowConfirmation("This will remove your command from the Mix It Up store." + Environment.NewLine + "Are you sure you wish to do this?"))
                 {
                     await ChannelSession.Services.MixItUpService.DeleteStoreListing(this.currentListing.ID);
                     this.window.Close();
@@ -235,7 +235,7 @@ namespace MixItUp.WPF.Controls.Store
         {
             if (search.Length > 50)
             {
-                await MessageBoxHelper.ShowMessageDialog("Searches must be 50 characters or less");
+                await DialogHelper.ShowMessage("Searches must be 50 characters or less");
                 return;
             }
 

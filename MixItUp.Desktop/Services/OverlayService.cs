@@ -162,7 +162,6 @@ namespace MixItUp.Overlay
                             OverlayFileItemModelBase fileItem = (OverlayFileItemModelBase)item;
                             string filePath = jobj["FilePath"].ToString();
                             this.SetLocalFile(fileItem.FileID, filePath);
-                            jobj["FullLink"] = fileItem.GetFileFullLink(fileItem.FileID, fileItem.FileType, filePath);
                         }
                         else if (item is OverlaySparkCrystalItemModel)
                         {

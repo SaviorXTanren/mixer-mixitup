@@ -84,7 +84,7 @@ namespace MixItUp.Base.ViewModel.Window.Overlay
             }
         }
 
-        public int RefreshTime = 1;
+        public int RefreshTime = 0;
 
         public bool SupportsRefreshUpdating
         {

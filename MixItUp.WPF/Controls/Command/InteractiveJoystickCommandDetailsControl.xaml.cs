@@ -2,6 +2,7 @@
 using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.WPF.Controls.Dialogs;
 using MixItUp.WPF.Util;
@@ -86,14 +87,14 @@ namespace MixItUp.WPF.Controls.Command
         {
             if (this.JoystickSetupComboBox.SelectedIndex < 0)
             {
-                await MessageBoxHelper.ShowMessageDialog("A Joystick Setup must be selected");
+                await DialogHelper.ShowMessage("A Joystick Setup must be selected");
                 return false;
             }
             MixPlayJoystickSetupType setup = EnumHelper.GetEnumValueFromString<MixPlayJoystickSetupType>((string)this.JoystickSetupComboBox.SelectedItem);
 
             if (!int.TryParse(this.JoystickDeadZoneTextBox.Text, out int deadzone) || deadzone < 0 || deadzone > 100)
             {
-                await MessageBoxHelper.ShowMessageDialog("A valid Joystick Dead Zone must be entered between 0 & 100");
+                await DialogHelper.ShowMessage("A valid Joystick Dead Zone must be entered between 0 & 100");
                 return false;
             }
 
@@ -101,7 +102,7 @@ namespace MixItUp.WPF.Controls.Command
             {
                 if (!double.TryParse(this.MouseMovementMultiplierTextBox.Text, out double mouseMultiplier) || mouseMultiplier < 1.0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("A valid Movement Multiplier must be entered that is 1.0 or greater");
+                    await DialogHelper.ShowMessage("A valid Movement Multiplier must be entered that is 1.0 or greater");
                     return false;
                 }
             }
@@ -206,7 +207,7 @@ namespace MixItUp.WPF.Controls.Command
             CommandBase command = await this.GetNewCommand();
             if (command != null)
             {
-                await MessageBoxHelper.ShowTimedCustomDialog(new InteractiveJoystickSetupTestDialogControl((MixPlayJoystickCommand)command), 16000);
+                await DialogHelper.ShowCustomTimed(new InteractiveJoystickSetupTestDialogControl((MixPlayJoystickCommand)command), 16000);
             }
         }
     }

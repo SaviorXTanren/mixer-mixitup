@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace MixItUp.Base.Util
 {
@@ -44,6 +45,26 @@ namespace MixItUp.Base.Util
                 list.Add(random.Next(), c);
             }
             return new string(list.Values.ToArray());
+        }
+
+        public static string AddNewLineEveryXCharacters(this string str, int lineLength)
+        {
+            string newString = string.Empty;
+            int x = 0;
+            for (int i = 0; i < str.Length; i++)
+            {
+                x++;
+                if (x >= lineLength && str[i] == ' ')
+                {
+                    newString += Environment.NewLine;
+                    x = 0;
+                }
+                else
+                {
+                    newString += str[i];
+                }
+            }
+            return newString;
         }
     }
 }

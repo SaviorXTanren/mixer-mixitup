@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Util;
 using MixItUp.WPF.Util;
 using System.Threading.Tasks;
 using System.Windows;
@@ -42,7 +43,7 @@ namespace MixItUp.WPF.Controls.Services
 
             if (!result)
             {
-                await MessageBoxHelper.ShowMessageDialog("Unable to authenticate with Spotify. Please ensure you approved access for the application in a timely manner.");
+                await DialogHelper.ShowMessage("Unable to authenticate with Spotify. Please ensure you approved access for the application in a timely manner.");
             }
             else
             {
@@ -50,12 +51,12 @@ namespace MixItUp.WPF.Controls.Services
                 {
                     if (ChannelSession.Services.Spotify.Profile == null)
                     {
-                        await MessageBoxHelper.ShowMessageDialog("We were unable to get your user data, please try to authenticate again with Spotify.");
+                        await DialogHelper.ShowMessage("We were unable to get your user data, please try to authenticate again with Spotify.");
                         await ChannelSession.Services.DisconnectSpotify();
                     }
                     else if (!ChannelSession.Services.Spotify.Profile.IsPremium)
                     {
-                        await MessageBoxHelper.ShowMessageDialog("You do not have Spotify Premium, which is required for this feature.");
+                        await DialogHelper.ShowMessage("You do not have Spotify Premium, which is required for this feature.");
                         await ChannelSession.Services.DisconnectSpotify();
                     }
                     else

@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Util;
@@ -63,13 +64,13 @@ namespace MixItUp.WPF.Controls.Requirement
             {
                 if (this.GetCurrencyRequirement() == null)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("A Currency must be specified when a Currency requirement is set");
+                    await DialogHelper.ShowMessage("A Currency must be specified when a Currency requirement is set");
                     return false;
                 }
 
                 if (this.GetCurrencyAmount() <= 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("A valid Currency Amount must be specified when a Currency requirement is set");
+                    await DialogHelper.ShowMessage("A valid Currency Amount must be specified when a Currency requirement is set");
                     return false;
                 }
             }

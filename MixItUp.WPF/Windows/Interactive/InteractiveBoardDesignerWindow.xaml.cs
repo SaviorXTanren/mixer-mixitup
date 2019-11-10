@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Interactive;
 using Mixer.Base.Model.MixPlay;
 using MixItUp.Base;
+using MixItUp.Base.Util;
 using MixItUp.WPF.Util;
 using System;
 using System.Collections.Generic;
@@ -101,7 +102,7 @@ namespace MixItUp.WPF.Windows.Interactive
         {
             if (string.IsNullOrEmpty(this.GameNameTextBox.Text))
             {
-                await MessageBoxHelper.ShowMessageDialog("A name must be specified for the game");
+                await DialogHelper.ShowMessage("A name must be specified for the game");
                 return;
             }
 
@@ -113,7 +114,7 @@ namespace MixItUp.WPF.Windows.Interactive
 
             if (game == null)
             {
-                await MessageBoxHelper.ShowMessageDialog("Failed to create game");
+                await DialogHelper.ShowMessage("Failed to create game");
                 return;
             }
         }

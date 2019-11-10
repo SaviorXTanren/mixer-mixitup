@@ -135,28 +135,28 @@ namespace MixItUp.WPF.Windows.Currency
             {
                 if (string.IsNullOrEmpty(this.ItemNameTextBox.Text))
                 {
-                    await MessageBoxHelper.ShowMessageDialog("You must specify a name for the item");
+                    await DialogHelper.ShowMessage("You must specify a name for the item");
                     return;
                 }
 
                 int maxAmount = -1;
                 if (!string.IsNullOrEmpty(this.ItemMaxAmountTextBox.Text) && (!int.TryParse(this.ItemMaxAmountTextBox.Text, out maxAmount) || maxAmount <= 0))
                 {
-                    await MessageBoxHelper.ShowMessageDialog("The item max amount must be either blank or a number greater than 0");
+                    await DialogHelper.ShowMessage("The item max amount must be either blank or a number greater than 0");
                     return;
                 }
 
                 int buyAmount = -1;
                 if (!string.IsNullOrEmpty(this.ItemBuyAmountTextBox.Text) && (!int.TryParse(this.ItemBuyAmountTextBox.Text, out buyAmount) || buyAmount < 0))
                 {
-                    await MessageBoxHelper.ShowMessageDialog("The item buy amount must be either blank or a number greater than 0");
+                    await DialogHelper.ShowMessage("The item buy amount must be either blank or a number greater than 0");
                     return;
                 }
 
                 int sellAmount = -1;
                 if (!string.IsNullOrEmpty(this.ItemSellAmountTextBox.Text) && (!int.TryParse(this.ItemSellAmountTextBox.Text, out sellAmount) || sellAmount < 0))
                 {
-                    await MessageBoxHelper.ShowMessageDialog("The item sell amount must be either blank or a number greater than 0");
+                    await DialogHelper.ShowMessage("The item sell amount must be either blank or a number greater than 0");
                     return;
                 }
 
@@ -181,7 +181,7 @@ namespace MixItUp.WPF.Windows.Currency
         {
             await this.RunAsyncOperation(async () =>
             {
-                if (await MessageBoxHelper.ShowConfirmationDialog(string.Format("Do you want to reset all items?")))
+                if (await DialogHelper.ShowConfirmation(string.Format("Do you want to reset all items?")))
                 {
                     if (this.inventory != null)
                     {
@@ -197,33 +197,33 @@ namespace MixItUp.WPF.Windows.Currency
             {
                 if (string.IsNullOrEmpty(this.NameTextBox.Text))
                 {
-                    await MessageBoxHelper.ShowMessageDialog("An inventory name must be specified");
+                    await DialogHelper.ShowMessage("An inventory name must be specified");
                     return;
                 }
 
                 UserInventoryViewModel dupeInventory = ChannelSession.Settings.Inventories.Values.FirstOrDefault(c => c.Name.Equals(this.NameTextBox.Text));
                 if (dupeInventory != null && (this.inventory == null || !this.inventory.ID.Equals(dupeInventory.ID)))
                 {
-                    await MessageBoxHelper.ShowMessageDialog("There already exists an inventory with this name");
+                    await DialogHelper.ShowMessage("There already exists an inventory with this name");
                     return;
                 }
 
                 UserCurrencyViewModel dupeCurrency = ChannelSession.Settings.Currencies.Values.FirstOrDefault(c => c.Name.Equals(this.NameTextBox.Text));
                 if (dupeCurrency != null)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("There already exists a currency or rank system with this name");
+                    await DialogHelper.ShowMessage("There already exists a currency or rank system with this name");
                     return;
                 }
 
                 if (string.IsNullOrEmpty(this.DefaultMaxAmountTextBox.Text) || !int.TryParse(this.DefaultMaxAmountTextBox.Text, out int maxAmount) || maxAmount <= 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("The default max amount must be greater than 0");
+                    await DialogHelper.ShowMessage("The default max amount must be greater than 0");
                     return;
                 }
 
                 if (this.items.Count == 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("At least 1 item must be added");
+                    await DialogHelper.ShowMessage("At least 1 item must be added");
                     return;
                 }
 
@@ -231,13 +231,13 @@ namespace MixItUp.WPF.Windows.Currency
                 {
                     if (string.IsNullOrEmpty(this.ShopCommandTextBox.Text))
                     {
-                        await MessageBoxHelper.ShowMessageDialog("A command name must be specified for the shop");
+                        await DialogHelper.ShowMessage("A command name must be specified for the shop");
                         return;
                     }
 
                     if (this.ShopCurrencyComboBox.SelectedIndex < 0)
                     {
-                        await MessageBoxHelper.ShowMessageDialog("A currency must be specified for the shop");
+                        await DialogHelper.ShowMessage("A currency must be specified for the shop");
                         return;
                     }
                 }
@@ -246,7 +246,7 @@ namespace MixItUp.WPF.Windows.Currency
                 {
                     if (string.IsNullOrEmpty(this.TradeCommandTextBox.Text))
                     {
-                        await MessageBoxHelper.ShowMessageDialog("A command name must be specified for trading");
+                        await DialogHelper.ShowMessage("A command name must be specified for trading");
                         return;
                     }
                 }

@@ -255,7 +255,7 @@ namespace MixItUp.Base.Actions
                 }
                 else if (ChannelSession.Interactive.IsConnected())
                 {
-                    if (!user.HasPermissionsTo(this.RoleRequirement))
+                    if (user != null && !user.HasPermissionsTo(this.RoleRequirement))
                     {
                         if (ChannelSession.Services.Chat != null)
                         {

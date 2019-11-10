@@ -53,7 +53,7 @@ namespace MixItUp.WPF.Controls.Services
                 }
                 else
                 {
-                    await MessageBoxHelper.ShowMessageDialog("Could not enable the Developer APIs. Consider rebooting and trying again.");
+                    await DialogHelper.ShowMessage("Could not enable the Developer APIs. Consider rebooting and trying again.");
                 }
             });
         }

@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Util;
 using MixItUp.Desktop.Services;
 using MixItUp.WPF.Util;
 using System.Threading.Tasks;
@@ -55,7 +56,7 @@ namespace MixItUp.WPF.Controls.Services
             {
                 if (string.IsNullOrEmpty(this.CustomClientIDTextBox.Text) || string.IsNullOrEmpty(this.CustomClientSecretTextBox.Text) || string.IsNullOrEmpty(this.CustomBotTokenTextBox.Text))
                 {
-                    await MessageBoxHelper.ShowMessageDialog("A Client ID, Client Secret, and Bot Token must be specified if using a custom Discord application.");
+                    await DialogHelper.ShowMessage("A Client ID, Client Secret, and Bot Token must be specified if using a custom Discord application.");
                     return;
                 }
 
@@ -71,7 +72,7 @@ namespace MixItUp.WPF.Controls.Services
 
             if (!result)
             {
-                await MessageBoxHelper.ShowMessageDialog("Unable to authenticate with Discord. Please ensure you approved access for the application in a timely manner.");
+                await DialogHelper.ShowMessage("Unable to authenticate with Discord. Please ensure you approved access for the application in a timely manner.");
             }
             else
             {
@@ -89,7 +90,7 @@ namespace MixItUp.WPF.Controls.Services
                     }
                     else
                     {
-                        await MessageBoxHelper.ShowMessageDialog("We were unable to complete the authentication with Discord. Please ensure you do not change any options on the approval webpage and correctly select the Discord server you would like us to connect to.");
+                        await DialogHelper.ShowMessage("We were unable to complete the authentication with Discord. Please ensure you do not change any options on the approval webpage and correctly select the Discord server you would like us to connect to.");
                         await ChannelSession.Services.DisconnectDiscord();
                     }
                 });

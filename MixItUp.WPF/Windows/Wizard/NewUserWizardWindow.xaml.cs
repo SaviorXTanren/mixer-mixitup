@@ -154,7 +154,7 @@ namespace MixItUp.WPF.Windows.Wizard
                         this.scorpBotData = await this.GatherScorpBotData(this.ScorpBotDirectoryTextBox.Text);
                         if (this.scorpBotData == null)
                         {
-                            await MessageBoxHelper.ShowMessageDialog("Failed to import ScorpBot data, please ensure that you have selected the correct directory. If this continues to fail, please contact Mix it Up support for assitance.");
+                            await DialogHelper.ShowMessage("Failed to import ScorpBot data, please ensure that you have selected the correct directory. If this continues to fail, please contact Mix it Up support for assitance.");
                             return;
                         }
                     }
@@ -170,7 +170,7 @@ namespace MixItUp.WPF.Windows.Wizard
                         this.streamlabsChatBotData = await this.GatherStreamlabsChatBotSettings(this.StreamlabsChatBotDataFilePathTextBox.Text);
                         if (this.streamlabsChatBotData == null)
                         {
-                            await MessageBoxHelper.ShowMessageDialog("Failed to import Streamlabs Chat Bot data, please ensure that you have selected the correct data file & have Microsoft Excel installed. If this continues to fail, please contact Mix it Up support for assitance.");
+                            await DialogHelper.ShowMessage("Failed to import Streamlabs Chat Bot data, please ensure that you have selected the correct data file & have Microsoft Excel installed. If this continues to fail, please contact Mix it Up support for assitance.");
                             return;
                         }
                     }
@@ -249,7 +249,7 @@ namespace MixItUp.WPF.Windows.Wizard
             }
             else
             {
-                await MessageBoxHelper.ShowMessageDialog("Could not connect to OBS Studio. Please make sure OBS Studio is running, the obs-websocket plugin is installed, and the connection and password are set to their default settings. If you wish to connect with a specific port and password, you'll need to do this out of the wizard.");
+                await DialogHelper.ShowMessage("Could not connect to OBS Studio. Please make sure OBS Studio is running, the obs-websocket plugin is installed, and the connection and password are set to their default settings. If you wish to connect with a specific port and password, you'll need to do this out of the wizard.");
             }
         }
 
@@ -272,7 +272,7 @@ namespace MixItUp.WPF.Windows.Wizard
                 {
                     await ChannelSession.Services.DisconnectXSplitServer();
                 });
-                await MessageBoxHelper.ShowMessageDialog("Could not connect to XSplit. Please make sure XSplit is running, the Mix It Up plugin is installed, and is running");
+                await DialogHelper.ShowMessage("Could not connect to XSplit. Please make sure XSplit is running, the Mix It Up plugin is installed, and is running");
             }
         }
 
@@ -291,7 +291,7 @@ namespace MixItUp.WPF.Windows.Wizard
             }
             else
             {
-                await MessageBoxHelper.ShowMessageDialog("Could not connect to Streamlabs OBS, please make sure Streamlabs OBS is running.");
+                await DialogHelper.ShowMessage("Could not connect to Streamlabs OBS, please make sure Streamlabs OBS is running.");
             }
         }
 
