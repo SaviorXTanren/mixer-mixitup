@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Controls.MainControls;
 using MixItUp.Base.ViewModel.Window;
 using MixItUp.WPF.Util;
@@ -69,7 +70,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                if (await MessageBoxHelper.ShowConfirmationDialog("Are you sure you want to delete this widget?"))
+                if (await DialogHelper.ShowConfirmation("Are you sure you want to delete this widget?"))
                 {
                     Button button = (Button)sender;
                     OverlayWidgetModel widget = (OverlayWidgetModel)button.DataContext;

@@ -122,7 +122,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                if (await MessageBoxHelper.ShowConfirmationDialog("Are you sure you wish to delete this?"))
+                if (await DialogHelper.ShowConfirmation("Are you sure you wish to delete this?"))
                 {
                     if (item.Inventory != null)
                     {

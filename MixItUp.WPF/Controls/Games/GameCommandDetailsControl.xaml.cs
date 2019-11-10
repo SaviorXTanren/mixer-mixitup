@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Util;
@@ -127,26 +128,26 @@ namespace MixItUp.WPF.Controls.Games
         {
             if (string.IsNullOrEmpty(this.NameTextBox.Text))
             {
-                await MessageBoxHelper.ShowMessageDialog("A Game Name is required");
+                await DialogHelper.ShowMessage("A Game Name is required");
                 return false;
             }
 
             if (string.IsNullOrEmpty(this.ChatCommandTextBox.Text))
             {
-                await MessageBoxHelper.ShowMessageDialog("At least 1 chat trigger must be specified");
+                await DialogHelper.ShowMessage("At least 1 chat trigger must be specified");
                 return false;
             }
 
             if (!CommandBase.IsValidCommandString(this.ChatCommandTextBox.Text))
             {
-                await MessageBoxHelper.ShowMessageDialog("The chat triggers contain an invalid character");
+                await DialogHelper.ShowMessage("The chat triggers contain an invalid character");
                 return false;
             }
 
             IEnumerable<string> commandStrings = this.ChatTriggers;
             if (commandStrings.GroupBy(c => c).Where(g => g.Count() > 1).Count() > 0)
             {
-                await MessageBoxHelper.ShowMessageDialog("Each chat trigger must be unique");
+                await DialogHelper.ShowMessage("Each chat trigger must be unique");
                 return false;
             }
 
@@ -157,13 +158,13 @@ namespace MixItUp.WPF.Controls.Games
 
             if (this.CurrencyTypeComboBox.SelectedIndex < 0)
             {
-                await MessageBoxHelper.ShowMessageDialog("A currency must be selected");
+                await DialogHelper.ShowMessage("A currency must be selected");
                 return false;
             }
 
             if (this.CurrencyRequirementComboBox.SelectedIndex < 0)
             {
-                await MessageBoxHelper.ShowMessageDialog("A currency usage must be selected");
+                await DialogHelper.ShowMessage("A currency usage must be selected");
                 return false;
             }
             CurrencyRequirementTypeEnum requirement = this.CurrencyUsage;
@@ -175,7 +176,7 @@ namespace MixItUp.WPF.Controls.Games
             {
                 if (string.IsNullOrEmpty(this.MinimumAmountTextBox.Text) || !int.TryParse(this.MinimumAmountTextBox.Text, out minimum) || minimum <= 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("A valid minimum amount must be specified");
+                    await DialogHelper.ShowMessage("A valid minimum amount must be specified");
                     return false;
                 }
             }
@@ -184,13 +185,13 @@ namespace MixItUp.WPF.Controls.Games
             {
                 if (string.IsNullOrEmpty(this.MaximumAmountTextBox.Text) || !int.TryParse(this.MaximumAmountTextBox.Text, out maximum) || maximum <= 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("A valid maximum amount must be specified");
+                    await DialogHelper.ShowMessage("A valid maximum amount must be specified");
                     return false;
                 }
 
                 if (maximum > 0 && maximum < minimum)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("Maximum amount must be greater than or equal to minimum amount");
+                    await DialogHelper.ShowMessage("Maximum amount must be greater than or equal to minimum amount");
                     return false;
                 }
             }
@@ -199,7 +200,7 @@ namespace MixItUp.WPF.Controls.Games
             {
                 if (string.IsNullOrEmpty(this.RequiredAmountTextBox.Text) || !int.TryParse(this.RequiredAmountTextBox.Text, out minimum) || minimum <= 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("A valid required amount must be specified");
+                    await DialogHelper.ShowMessage("A valid required amount must be specified");
                     return false;
                 }
             }
@@ -210,7 +211,7 @@ namespace MixItUp.WPF.Controls.Games
                 {
                     if (commandStrings.Any(c => command.Commands.Contains(c, StringComparer.InvariantCultureIgnoreCase)))
                     {
-                        await MessageBoxHelper.ShowMessageDialog("There already exists a command that uses one of the chat triggers you have specified");
+                        await DialogHelper.ShowMessage("There already exists a command that uses one of the chat triggers you have specified");
                         return false;
                     }
                 }

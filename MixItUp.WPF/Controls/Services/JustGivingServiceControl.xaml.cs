@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.WPF.Util;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,7 +56,7 @@ namespace MixItUp.WPF.Controls.Services
 
             if (!result)
             {
-                await MessageBoxHelper.ShowMessageDialog("Unable to authenticate with JustGiving. Please ensure you approved access for the application in a timely manner.");
+                await DialogHelper.ShowMessage("Unable to authenticate with JustGiving. Please ensure you approved access for the application in a timely manner.");
             }
             else
             {

@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.WPF.Util;
 using System.Threading.Tasks;
@@ -103,7 +104,7 @@ namespace MixItUp.WPF.Controls.Requirement
             {
                 if (this.PatreonBenefitComboBox.SelectedIndex < 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("A Patreon Benefit must be specified when Patreon Benefit requirement is set");
+                    await DialogHelper.ShowMessage("A Patreon Benefit must be specified when Patreon Benefit requirement is set");
                     return false;
                 }
             }

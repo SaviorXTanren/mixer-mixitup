@@ -115,7 +115,7 @@ namespace MixItUp.WPF.Controls.Command
                 int sparkCost = 0;
                 if (!int.TryParse(this.SparkCostTextBox.Text, out sparkCost) || sparkCost < 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("Spark cost must be 0 or greater");
+                    await DialogHelper.ShowMessage("Spark cost must be 0 or greater");
                     return;
                 }
 
@@ -124,11 +124,11 @@ namespace MixItUp.WPF.Controls.Command
                 {
                     if (this.actionControl is ChatActionControl)
                     {
-                        await MessageBoxHelper.ShowMessageDialog("The chat message must not be empty");
+                        await DialogHelper.ShowMessage("The chat message must not be empty");
                     }
                     else if (this.actionControl is SoundActionControl)
                     {
-                        await MessageBoxHelper.ShowMessageDialog("The sound file path must not be empty");
+                        await DialogHelper.ShowMessage("The sound file path must not be empty");
                     }
                     return;
                 }

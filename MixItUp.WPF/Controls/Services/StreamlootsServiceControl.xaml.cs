@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Util;
 using MixItUp.WPF.Util;
 using System.Threading.Tasks;
 using System.Windows;
@@ -41,7 +42,7 @@ namespace MixItUp.WPF.Controls.Services
 
             if (string.IsNullOrEmpty(this.StreamlootsURLTextBox.Text) && (!this.StreamlootsURLTextBox.Text.StartsWith(StreamlootsStreamURLFormat) || !int.TryParse(this.StreamlootsURLTextBox.Text, out int ID)))
             {
-                await MessageBoxHelper.ShowMessageDialog("Please enter a valid Streamloots URL (" + StreamlootsStreamURLFormat + ").");
+                await DialogHelper.ShowMessage("Please enter a valid Streamloots URL (" + StreamlootsStreamURLFormat + ").");
             }
             else
             {
@@ -52,7 +53,7 @@ namespace MixItUp.WPF.Controls.Services
                 {
                     if (!await ChannelSession.Services.InitializeStreamloots(streamlootsID))
                     {
-                        await MessageBoxHelper.ShowMessageDialog("Unable to authenticate with Streamloots. Please ensure you correctly input your Streamloots URL.");
+                        await DialogHelper.ShowMessage("Unable to authenticate with Streamloots. Please ensure you correctly input your Streamloots URL.");
                     }
                     else
                     {

@@ -237,7 +237,7 @@ namespace MixItUp.WPF
             if (!this.shutdownStarted)
             {
                 e.Cancel = true;
-                if (await MessageBoxHelper.ShowConfirmationDialog("Are you sure you wish to exit Mix It Up?"))
+                if (await DialogHelper.ShowConfirmation("Are you sure you wish to exit Mix It Up?"))
                 {
                     this.shutdownStarted = true;
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed

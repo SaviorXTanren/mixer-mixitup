@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Util;
@@ -66,19 +67,19 @@ namespace MixItUp.WPF.Controls.Requirement
             {
                 if (this.GetInventoryType() == null)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("An Inventory must be specified when an Inventory requirement is set");
+                    await DialogHelper.ShowMessage("An Inventory must be specified when an Inventory requirement is set");
                     return false;
                 }
 
                 if (this.GetInventoryItem() == null)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("An item must be specified when an Inventory requirement is set");
+                    await DialogHelper.ShowMessage("An item must be specified when an Inventory requirement is set");
                     return false;
                 }
 
                 if (this.GetItemAmount() <= 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("A valid item amount must be specified when an Inventory requirement is set");
+                    await DialogHelper.ShowMessage("A valid item amount must be specified when an Inventory requirement is set");
                     return false;
                 }
             }

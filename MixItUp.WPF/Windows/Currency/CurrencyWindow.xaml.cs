@@ -288,20 +288,20 @@ namespace MixItUp.WPF.Windows.Currency
         {
             if (string.IsNullOrEmpty(this.RankNameTextBox.Text))
             {
-                await MessageBoxHelper.ShowMessageDialog("A rank name must be specified");
+                await DialogHelper.ShowMessage("A rank name must be specified");
                 return;
             }
 
             int rankAmount = 0;
             if (string.IsNullOrEmpty(this.RankAmountTextBox.Text) || !int.TryParse(this.RankAmountTextBox.Text, out rankAmount) || rankAmount < 0)
             {
-                await MessageBoxHelper.ShowMessageDialog("A minimum amount must be specified");
+                await DialogHelper.ShowMessage("A minimum amount must be specified");
                 return;
             }
 
             if (this.ranks.Any(r => r.Name.Equals(this.RankNameTextBox.Text) || r.MinimumPoints == rankAmount))
             {
-                await MessageBoxHelper.ShowMessageDialog("Every rank must have a unique name and minimum amount");
+                await DialogHelper.ShowMessage("Every rank must have a unique name and minimum amount");
                 return;
             }
 
@@ -359,7 +359,7 @@ namespace MixItUp.WPF.Windows.Currency
         {
             await this.RunAsyncOperation(async () =>
             {
-                if (await MessageBoxHelper.ShowConfirmationDialog(string.Format("Do you want to reset all {0} points?", this.CurrencyRankIdentifierString)))
+                if (await DialogHelper.ShowConfirmation(string.Format("Do you want to reset all {0} points?", this.CurrencyRankIdentifierString)))
                 {
                     if (this.currency != null)
                     {
@@ -373,7 +373,7 @@ namespace MixItUp.WPF.Windows.Currency
         {
             await this.RunAsyncOperation(async () =>
             {
-                if (await MessageBoxHelper.ShowConfirmationDialog(string.Format("This option will reset all {0} points for this {0} & assign an amount to each user that directly equals the SAVED online rate, not the currently edited online rate. Before using this option, please save all edits to this {0}, re-edit it, then select this option." +
+                if (await DialogHelper.ShowConfirmation(string.Format("This option will reset all {0} points for this {0} & assign an amount to each user that directly equals the SAVED online rate, not the currently edited online rate. Before using this option, please save all edits to this {0}, re-edit it, then select this option." +
                     Environment.NewLine + Environment.NewLine + "EX: If the Online Rate is \"1 Per Hour\" and a user has 16 viewing hours, then that user's {0} points will be set to 16." +
                     Environment.NewLine + Environment.NewLine + "This process may take some time; are you sure you wish to do this?", this.CurrencyRankIdentifierString)))
                 {
@@ -381,7 +381,7 @@ namespace MixItUp.WPF.Windows.Currency
                     {
                         if (this.currency.IsTrackingSparks || this.currency.IsTrackingEmbers || this.currency.IsTrackingFanProgression)
                         {
-                            await MessageBoxHelper.ShowMessageDialog("The rate type for this currency does not support retroactively giving points.");
+                            await DialogHelper.ShowMessage("The rate type for this currency does not support retroactively giving points.");
                             return;
                         }
 
@@ -428,7 +428,7 @@ namespace MixItUp.WPF.Windows.Currency
             {
                 this.userImportData.Clear();
 
-                if (await MessageBoxHelper.ShowConfirmationDialog(string.Format("This will allow you to import the total amounts that each user had, assign them to this {0}, and will overwrite any amounts that each user has." +
+                if (await DialogHelper.ShowConfirmation(string.Format("This will allow you to import the total amounts that each user had, assign them to this {0}, and will overwrite any amounts that each user has." +
                     Environment.NewLine + Environment.NewLine + "This process may take some time; are you sure you wish to do this?", this.CurrencyRankIdentifierString)))
                 {
                     try
@@ -516,7 +516,7 @@ namespace MixItUp.WPF.Windows.Currency
                         Logger.Log(ex);
                     }
 
-                    await MessageBoxHelper.ShowMessageDialog("We were unable to import the data. Please ensure your file is in one of the following formats:" +
+                    await DialogHelper.ShowMessage("We were unable to import the data. Please ensure your file is in one of the following formats:" +
                         Environment.NewLine + Environment.NewLine + "<USERNAME> <AMOUNT>" +
                         Environment.NewLine + Environment.NewLine + "<USER ID> <AMOUNT>" +
                         Environment.NewLine + Environment.NewLine + "<USER ID> <USERNAME> <AMOUNT>");
@@ -550,40 +550,40 @@ namespace MixItUp.WPF.Windows.Currency
             {
                 if (string.IsNullOrEmpty(this.NameTextBox.Text))
                 {
-                    await MessageBoxHelper.ShowMessageDialog(string.Format("A {0} name must be specified", this.CurrencyRankIdentifierString));
+                    await DialogHelper.ShowMessage(string.Format("A {0} name must be specified", this.CurrencyRankIdentifierString));
                     return;
                 }
 
                 if (this.NameTextBox.Text.Any(c => char.IsDigit(c)))
                 {
-                    await MessageBoxHelper.ShowMessageDialog("The name can not contain any number digits in it");
+                    await DialogHelper.ShowMessage("The name can not contain any number digits in it");
                     return;
                 }
 
                 UserCurrencyViewModel dupeCurrency = ChannelSession.Settings.Currencies.Values.FirstOrDefault(c => c.Name.Equals(this.NameTextBox.Text));
                 if (dupeCurrency != null && (this.currency == null || !this.currency.ID.Equals(dupeCurrency.ID)))
                 {
-                    await MessageBoxHelper.ShowMessageDialog("There already exists a currency or rank system with this name");
+                    await DialogHelper.ShowMessage("There already exists a currency or rank system with this name");
                     return;
                 }
 
                 UserInventoryViewModel dupeInventory = ChannelSession.Settings.Inventories.Values.FirstOrDefault(c => c.Name.Equals(this.NameTextBox.Text));
                 if (dupeInventory != null)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("There already exists an inventory with this name");
+                    await DialogHelper.ShowMessage("There already exists an inventory with this name");
                     return;
                 }
 
                 string siName = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(this.NameTextBox.Text);
                 if (siName.Equals("time") || siName.Equals("hours") || siName.Equals("mins") || siName.Equals("sparks") || siName.Equals("embers") || siName.Equals("fanprogression"))
                 {
-                    await MessageBoxHelper.ShowMessageDialog("This name is reserved and can not be used");
+                    await DialogHelper.ShowMessage("This name is reserved and can not be used");
                     return;
                 }
 
                 if (string.IsNullOrEmpty(siName))
                 {
-                    await MessageBoxHelper.ShowMessageDialog("The name must have at least 1 letter in it");
+                    await DialogHelper.ShowMessage("The name must have at least 1 letter in it");
                     return;
                 }
 
@@ -592,79 +592,79 @@ namespace MixItUp.WPF.Windows.Currency
                 {
                     if (!int.TryParse(this.MaxAmountTextBox.Text, out maxAmount) || maxAmount <= 0)
                     {
-                        await MessageBoxHelper.ShowMessageDialog("The max amount must be greater than 0 or can be left empty for no max amount");
+                        await DialogHelper.ShowMessage("The max amount must be greater than 0 or can be left empty for no max amount");
                         return;
                     }
                 }
 
                 if (string.IsNullOrEmpty(this.OnlineAmountRateTextBox.Text) || !int.TryParse(this.OnlineAmountRateTextBox.Text, out int onlineAmount) || onlineAmount < 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("The online amount must be 0 or greater");
+                    await DialogHelper.ShowMessage("The online amount must be 0 or greater");
                     return;
                 }
 
                 if (string.IsNullOrEmpty(this.OnlineTimeRateTextBox.Text) || !int.TryParse(this.OnlineTimeRateTextBox.Text, out int onlineTime) || onlineTime < 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("The online minutes must be 0 or greater");
+                    await DialogHelper.ShowMessage("The online minutes must be 0 or greater");
                     return;
                 }
 
                 if (string.IsNullOrEmpty(this.OfflineAmountRateTextBox.Text) || !int.TryParse(this.OfflineAmountRateTextBox.Text, out int offlineAmount) || offlineAmount < 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("The offline amount must be 0 or greater");
+                    await DialogHelper.ShowMessage("The offline amount must be 0 or greater");
                     return;
                 }
 
                 if (string.IsNullOrEmpty(this.OfflineTimeRateTextBox.Text) || !int.TryParse(this.OfflineTimeRateTextBox.Text, out int offlineTime) || offlineTime < 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("The offline minutes must be 0 or greater");
+                    await DialogHelper.ShowMessage("The offline minutes must be 0 or greater");
                     return;
                 }
 
                 if (onlineAmount > 0 && onlineTime == 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("The online time can not be 0 if the online amount is greater than 0");
+                    await DialogHelper.ShowMessage("The online time can not be 0 if the online amount is greater than 0");
                     return;
                 }
 
                 if (offlineAmount > 0 && offlineTime == 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("The offline time can not be 0 if the offline amount is greater than 0");
+                    await DialogHelper.ShowMessage("The offline time can not be 0 if the offline amount is greater than 0");
                     return;
                 }
 
                 int subscriberBonus = 0;
                 if (string.IsNullOrEmpty(this.SubscriberBonusTextBox.Text) || !int.TryParse(this.SubscriberBonusTextBox.Text, out subscriberBonus) || subscriberBonus < 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("The Subscriber bonus must be 0 or greater");
+                    await DialogHelper.ShowMessage("The Subscriber bonus must be 0 or greater");
                     return;
                 }
 
                 int modBonus = 0;
                 if (string.IsNullOrEmpty(this.ModeratorBonusTextBox.Text) || !int.TryParse(this.ModeratorBonusTextBox.Text, out modBonus) || modBonus < 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("The Moderator bonus must be 0 or greater");
+                    await DialogHelper.ShowMessage("The Moderator bonus must be 0 or greater");
                     return;
                 }
 
                 int onFollowBonus = 0;
                 if (string.IsNullOrEmpty(this.OnFollowBonusTextBox.Text) || !int.TryParse(this.OnFollowBonusTextBox.Text, out onFollowBonus) || onFollowBonus < 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("The On Follow bonus must be 0 or greater");
+                    await DialogHelper.ShowMessage("The On Follow bonus must be 0 or greater");
                     return;
                 }
 
                 int onHostBonus = 0;
                 if (string.IsNullOrEmpty(this.OnHostBonusTextBox.Text) || !int.TryParse(this.OnHostBonusTextBox.Text, out onHostBonus) || onHostBonus < 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("The On Host bonus must be 0 or greater");
+                    await DialogHelper.ShowMessage("The On Host bonus must be 0 or greater");
                     return;
                 }
 
                 int onSubscribeBonus = 0;
                 if (string.IsNullOrEmpty(this.OnSubscribeBonusTextBox.Text) || !int.TryParse(this.OnSubscribeBonusTextBox.Text, out onSubscribeBonus) || onSubscribeBonus < 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("The On Subscribe bonus must be 0 or greater");
+                    await DialogHelper.ShowMessage("The On Subscribe bonus must be 0 or greater");
                     return;
                 }
 
@@ -672,7 +672,7 @@ namespace MixItUp.WPF.Windows.Currency
                 {
                     if (this.ranks.Count() < 1)
                     {
-                        await MessageBoxHelper.ShowMessageDialog("At least one rank must be created");
+                        await DialogHelper.ShowMessage("At least one rank must be created");
                         return;
                     }
                 }
@@ -680,7 +680,7 @@ namespace MixItUp.WPF.Windows.Currency
                 int minActivityRate = 0;
                 if (string.IsNullOrEmpty(this.MinimumActivityRateTextBox.Text) || !int.TryParse(this.MinimumActivityRateTextBox.Text, out minActivityRate) || minActivityRate < 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("The Minimum Activity Rate must be 0 or greater");
+                    await DialogHelper.ShowMessage("The Minimum Activity Rate must be 0 or greater");
                     return;
                 }
 
@@ -795,7 +795,7 @@ namespace MixItUp.WPF.Windows.Currency
                     }
 
                     NewCurrencyRankCommandsDialogControl dControl = new NewCurrencyRankCommandsDialogControl(this.currency, commandsToAdd);
-                    string result = await MessageBoxHelper.ShowCustomDialog(dControl);
+                    string result = (string)(await DialogHelper.ShowCustom(dControl));
                     if (!string.IsNullOrEmpty(result) && result.Equals("True"))
                     {
                         foreach (NewCurrencyRankCommand command in dControl.commands)

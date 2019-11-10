@@ -306,7 +306,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             if (user != null && !user.IsAnonymous)
             {
-                UserDialogResult result = await MessageBoxHelper.ShowUserDialog(user);
+                UserDialogResult result = (UserDialogResult)(await DialogHelper.ShowCustom(new UserDialogControl(user)));
 
                 switch (result)
                 {
@@ -320,7 +320,7 @@ namespace MixItUp.WPF.Controls.MainControls
                         
                         break;
                     case UserDialogResult.Ban:
-                        if (await MessageBoxHelper.ShowConfirmationDialog(string.Format("This will ban the user {0} from this channel. Are you sure?", user.UserName)))
+                        if (await DialogHelper.ShowConfirmation(string.Format("This will ban the user {0} from this channel. Are you sure?", user.UserName)))
                         {
                             
                         }
@@ -337,13 +337,13 @@ namespace MixItUp.WPF.Controls.MainControls
                         await ChannelSession.MixerStreamerConnection.Unfollow(channelToUnfollow, ChannelSession.MixerStreamerUser);
                         break;
                     case UserDialogResult.PromoteToMod:
-                        if (await MessageBoxHelper.ShowConfirmationDialog(string.Format("This will promote the user {0} to a moderator of this channel. Are you sure?", user.UserName)))
+                        if (await DialogHelper.ShowConfirmation(string.Format("This will promote the user {0} to a moderator of this channel. Are you sure?", user.UserName)))
                         {
                             
                         }
                         break;
                     case UserDialogResult.DemoteFromMod:
-                        if (await MessageBoxHelper.ShowConfirmationDialog(string.Format("This will demote the user {0} from a moderator of this channel. Are you sure?", user.UserName)))
+                        if (await DialogHelper.ShowConfirmation(string.Format("This will demote the user {0} from a moderator of this channel. Are you sure?", user.UserName)))
                         {
                             
                         }
@@ -378,7 +378,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void ChatClearMessagesButton_Click(object sender, RoutedEventArgs e)
         {
-            if (await MessageBoxHelper.ShowConfirmationDialog("This will clear all Chat for the stream. Are you sure?"))
+            if (await DialogHelper.ShowConfirmation("This will clear all Chat for the stream. Are you sure?"))
             {
                 await ChannelSession.Services.Chat.ClearMessages();
                 this.MessageControls.Clear();
@@ -387,7 +387,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void DisableChatButton_Click(object sender, RoutedEventArgs e)
         {
-            if (await MessageBoxHelper.ShowConfirmationDialog("This will disable chat for all users. Are you sure?"))
+            if (await DialogHelper.ShowConfirmation("This will disable chat for all users. Are you sure?"))
             {
                 ChannelSession.Services.Chat.DisableChat = true;
                 this.DisableChatButton.Visibility = Visibility.Collapsed;

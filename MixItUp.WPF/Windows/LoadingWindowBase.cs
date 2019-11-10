@@ -115,7 +115,6 @@ namespace MixItUp.WPF.Windows
 
         private void LoadingWindowBase_Activated(object sender, EventArgs e)
         {
-            MessageBoxHelper.SetLastActiveWindow(this);
             WPFDialogShower.SetLastActiveWindow(this);
         }
     }

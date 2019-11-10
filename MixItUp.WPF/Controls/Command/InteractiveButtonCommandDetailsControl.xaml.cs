@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Model.MixPlay;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.WPF.Util;
 using StreamingClient.Base.Util;
@@ -83,7 +84,7 @@ namespace MixItUp.WPF.Controls.Command
         {
             if (this.ButtonTriggerComboBox.SelectedIndex < 0)
             {
-                await MessageBoxHelper.ShowMessageDialog("An trigger type must be selected");
+                await DialogHelper.ShowMessage("An trigger type must be selected");
                 return false;
             }
 
@@ -92,14 +93,14 @@ namespace MixItUp.WPF.Controls.Command
             {
                 if (string.IsNullOrEmpty(this.HeldRateTextBox.Text) || !int.TryParse(this.HeldRateTextBox.Text, out int heldRate) || heldRate < 1)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("A valid held rate of 1 or greater must be entered");
+                    await DialogHelper.ShowMessage("A valid held rate of 1 or greater must be entered");
                     return false;
                 }
             }
 
             if (!int.TryParse(this.SparkCostTextBox.Text, out int sparkCost) || sparkCost < 0)
             {
-                await MessageBoxHelper.ShowMessageDialog("A valid spark cost must be entered");
+                await DialogHelper.ShowMessage("A valid spark cost must be entered");
                 return false;
             }
 

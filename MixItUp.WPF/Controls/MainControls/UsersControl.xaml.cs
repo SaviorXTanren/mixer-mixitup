@@ -115,7 +115,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             Button button = (Button)sender;
             UserDataViewModel userData = (UserDataViewModel)button.DataContext;
-            if (await MessageBoxHelper.ShowConfirmationDialog("This will delete this user's data, which includes their Hours, Currency, Rank, & Custom User Commands. Are you sure you want to do this?"))
+            if (await DialogHelper.ShowConfirmation("This will delete this user's data, which includes their Hours, Currency, Rank, & Custom User Commands. Are you sure you want to do this?"))
             {
                 ChannelSession.Settings.UserData.Remove(userData.ID);
             }

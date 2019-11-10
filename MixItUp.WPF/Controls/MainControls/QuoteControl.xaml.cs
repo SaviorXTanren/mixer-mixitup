@@ -121,7 +121,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 QuoteListing quote = (QuoteListing)button.DataContext;
 
                 CalendarDialogControl calendarControl = new CalendarDialogControl(quote.Quote.DateTime);
-                string result = await MessageBoxHelper.ShowCustomDialog(calendarControl);
+                string result = (string)(await DialogHelper.ShowCustom(calendarControl));
                 if (!string.IsNullOrEmpty(result) && result.Equals("True"))
                 {
                     quote.Quote.DateTime = calendarControl.SelectedDate.Date + quote.Quote.DateTime.TimeOfDay;
@@ -137,7 +137,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 QuoteListing quote = (QuoteListing)button.DataContext;
 
                 ClockDialogControl calendarControl = new ClockDialogControl(quote.Quote.DateTime);
-                string result = await MessageBoxHelper.ShowCustomDialog(calendarControl);
+                string result = (string)(await DialogHelper.ShowCustom(calendarControl));
                 if (!string.IsNullOrEmpty(result) && result.Equals("True"))
                 {
                     quote.Quote.DateTime = quote.Quote.DateTime.Date + calendarControl.SelectedTime.TimeOfDay;

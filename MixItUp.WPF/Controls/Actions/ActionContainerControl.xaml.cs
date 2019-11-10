@@ -119,7 +119,7 @@ namespace MixItUp.WPF.Controls.Actions
                 }
                 else
                 {
-                    await MessageBoxHelper.ShowMessageDialog("Required action information is missing");
+                    await DialogHelper.ShowMessage("Required action information is missing");
                 }
             });
         }
@@ -144,7 +144,7 @@ namespace MixItUp.WPF.Controls.Actions
             {
                 await this.Window.RunAsyncOperation(async () =>
                 {
-                    await MessageBoxHelper.ShowMessageDialog("Required action information is missing");
+                    await DialogHelper.ShowMessage("Required action information is missing");
                 });
             }
             else

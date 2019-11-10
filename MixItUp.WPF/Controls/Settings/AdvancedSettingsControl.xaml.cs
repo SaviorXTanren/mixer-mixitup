@@ -77,7 +77,7 @@ namespace MixItUp.WPF.Controls.Settings
 
         private async void RestoreSettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            if (await MessageBoxHelper.ShowConfirmationDialog("This will overwrite your current settings and close Mix It Up. Are you sure you wish to do this?"))
+            if (await DialogHelper.ShowConfirmation("This will overwrite your current settings and close Mix It Up. Are you sure you wish to do this?"))
             {
                 string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog("Mix It Up Settings (*.mixitup)|*.mixitup|All files (*.*)|*.*");
                 if (!string.IsNullOrEmpty(filePath))
@@ -117,14 +117,14 @@ namespace MixItUp.WPF.Controls.Settings
                     if (currentVersion == -1)
                     {
                         // Unable to load settings file to get version
-                        await MessageBoxHelper.ShowMessageDialog("The backup file selected does not appear to contain Mix It Up settings.");
+                        await DialogHelper.ShowMessage("The backup file selected does not appear to contain Mix It Up settings.");
                         return;
                     }
 
                     if (currentVersion > ChannelSession.Services.Settings.GetLatestVersion())
                     {
                         // Version is newer than this build, probably a settings from a preview build
-                        await MessageBoxHelper.ShowMessageDialog("The backup file is valid, but is from a newer version of Mix It Up.  Be sure to upgrade to the latest version." +
+                        await DialogHelper.ShowMessage("The backup file is valid, but is from a newer version of Mix It Up.  Be sure to upgrade to the latest version." +
                             Environment.NewLine + Environment.NewLine +
                             "NOTE: This may require you to opt-in to the preview build from the General tab in Settings.");
                         return;
@@ -156,7 +156,7 @@ namespace MixItUp.WPF.Controls.Settings
 
         private async void ReRunWizardSettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            if (await MessageBoxHelper.ShowConfirmationDialog("Mix It Up will restart and the New User Wizard will be re-run when you log in. This will allow you to re-import your data, which could duplicate and overwrite your Commands & User data. Are you sure you wish to do this?"))
+            if (await DialogHelper.ShowConfirmation("Mix It Up will restart and the New User Wizard will be re-run when you log in. This will allow you to re-import your data, which could duplicate and overwrite your Commands & User data. Are you sure you wish to do this?"))
             {
                 MainWindow mainWindow = (MainWindow)this.Window;
                 mainWindow.ReRunWizard();
@@ -165,7 +165,7 @@ namespace MixItUp.WPF.Controls.Settings
 
         private async void EnableDiagnosticLogsButton_Click(object sender, RoutedEventArgs e)
         {
-            if (await MessageBoxHelper.ShowConfirmationDialog("This will enable diagnostic logging and restart Mix It Up. This should only be done with advised by a Mix It Up developer. Are you sure you wish to do this?"))
+            if (await DialogHelper.ShowConfirmation("This will enable diagnostic logging and restart Mix It Up. This should only be done with advised by a Mix It Up developer. Are you sure you wish to do this?"))
             {
                 ChannelSession.Settings.DiagnosticLogging = true;
                 ((MainWindow)this.Window).Restart();
@@ -174,7 +174,7 @@ namespace MixItUp.WPF.Controls.Settings
 
         private async void DisableDiagnosticLogsButton_Click(object sender, RoutedEventArgs e)
         {
-            if (await MessageBoxHelper.ShowConfirmationDialog("This will disable diagnostic logging and restart Mix It Up. Are you sure you wish to do this?"))
+            if (await DialogHelper.ShowConfirmation("This will disable diagnostic logging and restart Mix It Up. Are you sure you wish to do this?"))
             {
                 ChannelSession.Settings.DiagnosticLogging = false;
                 ((MainWindow)this.Window).Restart();
@@ -188,7 +188,7 @@ namespace MixItUp.WPF.Controls.Settings
 
         private async void ClearAllUserDataButton_Click(object sender, RoutedEventArgs e)
         {
-            if (await MessageBoxHelper.ShowConfirmationDialog("This will clear all data for your Users, which includes their Hours, Currency, Rank, & Custom User Commands, then restart Mix It Up." +
+            if (await DialogHelper.ShowConfirmation("This will clear all data for your Users, which includes their Hours, Currency, Rank, & Custom User Commands, then restart Mix It Up." +
                 Environment.NewLine + Environment.NewLine + "This CAN NOT be un-done! Are you sure you wish to do this?"))
             {
                 await this.Window.RunAsyncOperation(async () =>
@@ -205,7 +205,7 @@ namespace MixItUp.WPF.Controls.Settings
             {
                 if (ChannelSession.IsStreamer)
                 {
-                    if (await MessageBoxHelper.ShowConfirmationDialog("This will unban all currently banned users from your channel. This will take some time to complete, are you sure you wish to do this?"))
+                    if (await DialogHelper.ShowConfirmation("This will unban all currently banned users from your channel. This will take some time to complete, are you sure you wish to do this?"))
                     {
                         await ChannelSession.MixerStreamerConnection.GetUsersWithRoles(ChannelSession.MixerChannel, MixerRoleEnum.Banned, async (collection) =>
                         {
@@ -218,7 +218,7 @@ namespace MixItUp.WPF.Controls.Settings
                 }
                 else
                 {
-                    await MessageBoxHelper.ShowMessageDialog("This can only be run by the channel owner");
+                    await DialogHelper.ShowMessage("This can only be run by the channel owner");
                 }
             });
         }

@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
+using MixItUp.Base.Util;
 using MixItUp.WPF.Util;
 using StreamingClient.Base.Util;
 using System.Threading.Tasks;
@@ -297,7 +298,7 @@ namespace MixItUp.WPF.Controls.Actions
                     }
                     else
                     {
-                        await MessageBoxHelper.ShowMessageDialog("Could not connect to OBS Studio. Please try establishing connection with it in the Services area.");
+                        await DialogHelper.ShowMessage("Could not connect to OBS Studio. Please try establishing connection with it in the Services area.");
                     }
                 }
                 else if (software == StreamingSoftwareTypeEnum.StreamlabsOBS)
@@ -308,7 +309,7 @@ namespace MixItUp.WPF.Controls.Actions
                     }
                     else
                     {
-                        await MessageBoxHelper.ShowMessageDialog("Could not connect to OBS Studio. Please try establishing connection with it in the Services area.");
+                        await DialogHelper.ShowMessage("Could not connect to OBS Studio. Please try establishing connection with it in the Services area.");
                     }
                 }
 

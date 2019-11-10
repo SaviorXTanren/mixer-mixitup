@@ -334,7 +334,7 @@ namespace MixItUp.WPF.Controls.Command
 
         private async void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            if (await MessageBoxHelper.ShowConfirmationDialog("Are you sure you want to delete this command?"))
+            if (await DialogHelper.ShowConfirmation("Are you sure you want to delete this command?"))
             {
                 this.RaiseEvent(new RoutedEventArgs(CommandButtonsControl.DeleteClickedEvent, this));
             }

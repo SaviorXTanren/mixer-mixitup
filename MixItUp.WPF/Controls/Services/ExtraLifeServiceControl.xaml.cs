@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.WPF.Util;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -49,11 +50,11 @@ namespace MixItUp.WPF.Controls.Services
 
             if (string.IsNullOrEmpty(this.TeamIDTextBox.Text) || !int.TryParse(this.TeamIDTextBox.Text, out int teamID))
             {
-                await MessageBoxHelper.ShowMessageDialog("Please enter a valid Extra Life team ID");
+                await DialogHelper.ShowMessage("Please enter a valid Extra Life team ID");
             }
             else if (this.TeamParticipantComboBox.SelectedIndex < 0)
             {
-                await MessageBoxHelper.ShowMessageDialog("Please select yourself from the Extra Life team participants");
+                await DialogHelper.ShowMessage("Please select yourself from the Extra Life team participants");
             }
             else
             {
@@ -67,7 +68,7 @@ namespace MixItUp.WPF.Controls.Services
 
                     if (!await ChannelSession.Services.InitializeExtraLife())
                     {
-                        await MessageBoxHelper.ShowMessageDialog("Unable to authenticate with Extra Life. Please ensure you correctly input your Extra Life team & participant.");
+                        await DialogHelper.ShowMessage("Unable to authenticate with Extra Life. Please ensure you correctly input your Extra Life team & participant.");
                     }
                     else
                     {
@@ -105,7 +106,7 @@ namespace MixItUp.WPF.Controls.Services
             {
                 if (string.IsNullOrEmpty(this.TeamIDTextBox.Text) || !int.TryParse(this.TeamIDTextBox.Text, out int teamID))
                 {
-                    await MessageBoxHelper.ShowMessageDialog("Please enter a valid Extra Life team ID");
+                    await DialogHelper.ShowMessage("Please enter a valid Extra Life team ID");
                 }
                 else
                 {
@@ -122,7 +123,7 @@ namespace MixItUp.WPF.Controls.Services
                     }
                     else
                     {
-                        await MessageBoxHelper.ShowMessageDialog("The Extra Life team ID you entered could not be found");
+                        await DialogHelper.ShowMessage("The Extra Life team ID you entered could not be found");
                     }
                 }
             });

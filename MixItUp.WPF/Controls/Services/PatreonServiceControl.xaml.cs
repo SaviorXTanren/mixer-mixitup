@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.WPF.Util;
 using System.Threading.Tasks;
 using System.Windows;
@@ -49,7 +50,7 @@ namespace MixItUp.WPF.Controls.Services
 
             if (!result)
             {
-                await MessageBoxHelper.ShowMessageDialog("Unable to authenticate with Patreon. Please ensure you approved access for the application in a timely manner.");
+                await DialogHelper.ShowMessage("Unable to authenticate with Patreon. Please ensure you approved access for the application in a timely manner.");
             }
             else
             {

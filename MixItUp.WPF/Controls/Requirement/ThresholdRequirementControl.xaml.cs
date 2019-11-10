@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.Requirement;
+﻿using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.WPF.Util;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -60,13 +61,13 @@ namespace MixItUp.WPF.Controls.Requirement
         {
             if (this.GetAmount() < 0)
             {
-                await MessageBoxHelper.ShowMessageDialog("The Threshold required user amount must be greater than or equal to 0");
+                await DialogHelper.ShowMessage("The Threshold required user amount must be greater than or equal to 0");
                 return false;
             }
 
             if (this.GetTimeSpan() < 0)
             {
-                await MessageBoxHelper.ShowMessageDialog("The Threshold time span must be greater than or equal to 0");
+                await DialogHelper.ShowMessage("The Threshold time span must be greater than or equal to 0");
                 return false;
             }
 

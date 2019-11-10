@@ -64,7 +64,7 @@ namespace MixItUp.WPF.Controls.Services
                     ChannelSession.Settings.OBSStudioServerIP = null;
                     ChannelSession.Settings.OBSStudioServerPassword = null;
 
-                    await MessageBoxHelper.ShowMessageDialog("Could not connect to OBS Studio. Please make sure OBS Studio is running, the obs-websocket plugin is installed, and the connection and password match your settings in OBS Studio");
+                    await DialogHelper.ShowMessage("Could not connect to OBS Studio. Please make sure OBS Studio is running, the obs-websocket plugin is installed, and the connection and password match your settings in OBS Studio");
                 }
             });
         }

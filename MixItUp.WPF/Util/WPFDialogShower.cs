@@ -50,6 +50,11 @@ namespace MixItUp.WPF.Util
             return await this.ShowDialogWrapper(dialog);
         }
 
+        public async Task<object> ShowCustomTimed(object dialog, int timeout)
+        {
+            return await this.ShowDialogWrapper(dialog, timeout);
+        }
+
         public void CloseCurrent()
         {
             DialogHost dialogHost = WPFDialogShower.GetActiveWindowDialogHost();
@@ -102,7 +107,7 @@ namespace MixItUp.WPF.Util
             WPFDialogShower.lastCustomResult = (eventArgs.Parameter != null) ? eventArgs.Parameter.ToString() : null;
         }
 
-        private async Task<object> ShowDialogWrapper(object dialog)
+        private async Task<object> ShowDialogWrapper(object dialog, int timeout = 0)
         {
             object result = null;
             DialogHost dialogHost = WPFDialogShower.GetActiveWindowDialogHost();
@@ -115,7 +120,18 @@ namespace MixItUp.WPF.Util
 
                 try
                 {
-                    await dialogHost.ShowDialog(dialog);
+                    if (timeout > 0)
+                    {
+                        await dialogHost.ShowDialog(dialog, async delegate (object sender, DialogOpenedEventArgs args)
+                        {
+                            await Task.Delay(timeout);
+                            args.Session.Close(false);
+                        });
+                    }
+                    else
+                    {
+                        await dialogHost.ShowDialog(dialog);
+                    }
                 }
                 catch (Exception ex)
                 {

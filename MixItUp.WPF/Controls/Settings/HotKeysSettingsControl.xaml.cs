@@ -2,6 +2,7 @@
 using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.WPF.Util;
 using StreamingClient.Base.Util;
 using System;
@@ -121,7 +122,7 @@ namespace MixItUp.WPF.Controls.Settings
             {
                 if (this.CommandNameComboBox.SelectedIndex < 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("A command must be selected");
+                    await DialogHelper.ShowMessage("A command must be selected");
                     return;
                 }
 
@@ -129,7 +130,7 @@ namespace MixItUp.WPF.Controls.Settings
 
                 if (this.KeyComboBox.SelectedIndex < 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("A hot key configuration must be set");
+                    await DialogHelper.ShowMessage("A hot key configuration must be set");
                     return;
                 }
 

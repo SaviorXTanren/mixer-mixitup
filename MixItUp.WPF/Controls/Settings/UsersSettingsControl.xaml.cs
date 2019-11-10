@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Util;
 using StreamingClient.Base.Util;
@@ -76,13 +77,13 @@ namespace MixItUp.WPF.Controls.Settings
             {
                 if (string.IsNullOrEmpty(this.TitleNameTextBox.Text))
                 {
-                    await MessageBoxHelper.ShowMessageDialog("A name for the title must be specified");
+                    await DialogHelper.ShowMessage("A name for the title must be specified");
                     return;
                 }
 
                 if (this.TitleRoleComboBox.SelectedIndex < 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("A role for the title must be specified");
+                    await DialogHelper.ShowMessage("A role for the title must be specified");
                     return;
                 }
 
@@ -93,14 +94,14 @@ namespace MixItUp.WPF.Controls.Settings
                 {
                     if (!int.TryParse(this.TitleMinimumMonthsTextBox.Text, out months) || months < 0)
                     {
-                        await MessageBoxHelper.ShowMessageDialog("A valid amount of months for the title must be specified");
+                        await DialogHelper.ShowMessage("A valid amount of months for the title must be specified");
                         return;
                     }
                 }
 
                 if (this.titles.Any(t => t.Name.Equals(this.TitleNameTextBox.Text)))
                 {
-                    await MessageBoxHelper.ShowMessageDialog("A title with the same name already exists");
+                    await DialogHelper.ShowMessage("A title with the same name already exists");
                     return;
                 }
 
@@ -111,13 +112,13 @@ namespace MixItUp.WPF.Controls.Settings
                     {
                         if (existingTitle.Months == months)
                         {
-                            await MessageBoxHelper.ShowMessageDialog("A title with the same role & months already exists");
+                            await DialogHelper.ShowMessage("A title with the same role & months already exists");
                             return;
                         }
                     }
                     else
                     {
-                        await MessageBoxHelper.ShowMessageDialog("A title with the same role already exists");
+                        await DialogHelper.ShowMessage("A title with the same role already exists");
                         return;
                     }
                 }

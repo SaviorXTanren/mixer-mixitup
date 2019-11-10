@@ -3,6 +3,7 @@ using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using MixItUp.WPF.Controls.Actions;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
@@ -124,11 +125,11 @@ namespace MixItUp.WPF.Controls.Command
                 {
                     if (this.actionControl is ChatActionControl)
                     {
-                        await MessageBoxHelper.ShowMessageDialog("The chat message must not be empty");
+                        await DialogHelper.ShowMessage("The chat message must not be empty");
                     }
                     else if (this.actionControl is SoundActionControl)
                     {
-                        await MessageBoxHelper.ShowMessageDialog("The sound file path must not be empty");
+                        await DialogHelper.ShowMessage("The sound file path must not be empty");
                     }
                     return;
                 }

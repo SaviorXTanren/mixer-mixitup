@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.WPF.Util;
 using StreamingClient.Base.Util;
@@ -82,14 +83,14 @@ namespace MixItUp.WPF.Controls.Requirement
         {
             if (this.GetCooldownAmount() < 0)
             {
-                await MessageBoxHelper.ShowMessageDialog("Cooldown must be 0 or greater");
+                await DialogHelper.ShowMessage("Cooldown must be 0 or greater");
                 return false;
             }
 
             CooldownTypeEnum type = EnumHelper.GetEnumValueFromString<CooldownTypeEnum>((string)this.CooldownTypeComboBox.SelectedItem);
             if (type == CooldownTypeEnum.Group && string.IsNullOrEmpty(this.CooldownGroupsComboBox.Text))
             {
-                await MessageBoxHelper.ShowMessageDialog("A Cooldown Group must be specified");
+                await DialogHelper.ShowMessage("A Cooldown Group must be specified");
                 return false;
             }
 

@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.Desktop.Services;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.OAuth;
@@ -76,7 +77,7 @@ namespace MixItUp.WPF.Controls.Services
 
             if (ChannelSession.Services.Tiltify == null)
             {
-                await MessageBoxHelper.ShowMessageDialog("Unable to authenticate with Tiltify. Please ensure you approved access for the application in a timely manner.");
+                await DialogHelper.ShowMessage("Unable to authenticate with Tiltify. Please ensure you approved access for the application in a timely manner.");
             }
             else
             {

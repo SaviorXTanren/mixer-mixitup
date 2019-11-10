@@ -1,6 +1,7 @@
 ﻿using MaterialDesignThemes.Wpf;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.WPF.Util;
 using System;
@@ -54,7 +55,7 @@ namespace MixItUp.WPF.Controls.Command
         {
             if (string.IsNullOrEmpty(this.NameTextBox.Text))
             {
-                await MessageBoxHelper.ShowMessageDialog("Name is missing");
+                await DialogHelper.ShowMessage("Name is missing");
                 return false;
             }
 
@@ -65,7 +66,7 @@ namespace MixItUp.WPF.Controls.Command
 
             if (string.IsNullOrEmpty(this.ChatCommandTextBox.Text))
             {
-                await MessageBoxHelper.ShowMessageDialog("Commands is missing");
+                await DialogHelper.ShowMessage("Commands is missing");
                 return false;
             }
 
@@ -74,7 +75,7 @@ namespace MixItUp.WPF.Controls.Command
             {
                 if (!CommandBase.IsValidCommandString(trigger))
                 {
-                    await MessageBoxHelper.ShowMessageDialog("Triggers contain an invalid character");
+                    await DialogHelper.ShowMessage("Triggers contain an invalid character");
                     return false;
                 }
             }
@@ -83,7 +84,7 @@ namespace MixItUp.WPF.Controls.Command
             {
                 if (this.GetExistingCommand() != command && this.NameTextBox.Text.Equals(command.Name))
                 {
-                    await MessageBoxHelper.ShowMessageDialog("There already exists a command with the same name");
+                    await DialogHelper.ShowMessage("There already exists a command with the same name");
                     return false;
                 }
             }
@@ -91,7 +92,7 @@ namespace MixItUp.WPF.Controls.Command
             IEnumerable<string> commandStrings = this.GetCommandStrings();
             if (commandStrings.GroupBy(c => c).Where(g => g.Count() > 1).Count() > 0)
             {
-                await MessageBoxHelper.ShowMessageDialog("Each chat triggers must be unique");
+                await DialogHelper.ShowMessage("Each chat triggers must be unique");
                 return false;
             }
 
@@ -101,7 +102,7 @@ namespace MixItUp.WPF.Controls.Command
                 {
                     if (commandStrings.Any(c => command.Commands.Contains(c, StringComparer.InvariantCultureIgnoreCase)))
                     {
-                        await MessageBoxHelper.ShowMessageDialog("There already exists a command that uses one of the chat triggers you have specified");
+                        await DialogHelper.ShowMessage("There already exists a command that uses one of the chat triggers you have specified");
                         return false;
                     }
                 }

@@ -46,7 +46,7 @@ namespace MixItUp.WPF.Controls.Services
             {
                 if (!await this.ConnectXSplitService())
                 {
-                    await MessageBoxHelper.ShowMessageDialog("Failed to start XSplit Connection, this sometimes means our connection got wonky. If this continues to happen, please try restarting Mix It Up.");
+                    await DialogHelper.ShowMessage("Failed to start XSplit Connection, this sometimes means our connection got wonky. If this continues to happen, please try restarting Mix It Up.");
                 }
                 await ChannelSession.SaveSettings();
             });
@@ -69,11 +69,11 @@ namespace MixItUp.WPF.Controls.Services
                 {
                     if (await ChannelSession.Services.XSplitServer.TestConnection())
                     {
-                        await MessageBoxHelper.ShowMessageDialog("XSplit connection test successful!");
+                        await DialogHelper.ShowMessage("XSplit connection test successful!");
                     }
                     else
                     {
-                        await MessageBoxHelper.ShowMessageDialog("XSplit connection test failed, please ensure you have the Mix It Up XSplit extension added and open in XSplit.");
+                        await DialogHelper.ShowMessage("XSplit connection test failed, please ensure you have the Mix It Up XSplit extension added and open in XSplit.");
                     }
                 });
             }

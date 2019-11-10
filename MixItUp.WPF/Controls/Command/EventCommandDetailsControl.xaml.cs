@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows;
 using StreamingClient.Base.Util;
+using MixItUp.Base.Util;
 
 namespace MixItUp.WPF.Controls.Command
 {
@@ -89,19 +90,19 @@ namespace MixItUp.WPF.Controls.Command
         {
             if (this.OtherEventTypeTextBox.Visibility == Visibility.Visible && string.IsNullOrEmpty(this.OtherEventTypeTextBox.Text))
             {
-                await MessageBoxHelper.ShowMessageDialog("An event type must be specified");
+                await DialogHelper.ShowMessage("An event type must be specified");
                 return false;
             }
 
             if (this.EventTypeComboBox.Visibility == Visibility.Visible && this.EventTypeComboBox.SelectedIndex < 0)
             {
-                await MessageBoxHelper.ShowMessageDialog("An event type must be selected");
+                await DialogHelper.ShowMessage("An event type must be selected");
                 return false;
             }
 
             if (this.EventIDTextBox.IsEnabled && string.IsNullOrEmpty(this.EventIDTextBox.Text))
             {
-                await MessageBoxHelper.ShowMessageDialog("A name must be specified for this event type");
+                await DialogHelper.ShowMessage("A name must be specified for this event type");
                 return false;
             }
 
@@ -132,7 +133,7 @@ namespace MixItUp.WPF.Controls.Command
                             channel = await ChannelSession.MixerStreamerConnection.GetChannel(uint.Parse(this.EventIDTextBox.Text));
                             if (channel == null)
                             {
-                                await MessageBoxHelper.ShowMessageDialog("Unable to find the channel for the specified username");
+                                await DialogHelper.ShowMessage("Unable to find the channel for the specified username");
                                 return null;
                             }
                         }
@@ -141,7 +142,7 @@ namespace MixItUp.WPF.Controls.Command
                             user = await ChannelSession.MixerStreamerConnection.GetUser(uint.Parse(this.EventIDTextBox.Text));
                             if (user == null)
                             {
-                                await MessageBoxHelper.ShowMessageDialog("Unable to find a user for the specified username");
+                                await DialogHelper.ShowMessage("Unable to find a user for the specified username");
                                 return null;
                             }
                         }
@@ -162,7 +163,7 @@ namespace MixItUp.WPF.Controls.Command
 
                     if (ChannelSession.Settings.EventCommands.Any(se => se.UniqueEventID.Equals(this.command.UniqueEventID)))
                     {
-                        await MessageBoxHelper.ShowMessageDialog("This event already exists");
+                        await DialogHelper.ShowMessage("This event already exists");
                         return null;
                     }
 
