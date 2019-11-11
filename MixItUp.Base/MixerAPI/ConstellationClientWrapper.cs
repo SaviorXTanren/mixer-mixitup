@@ -233,20 +233,18 @@ namespace MixItUp.Base.MixerAPI
                                 }
 
                                 await EventCommand.FindAndRunEventCommand(e.channel, user);
-
-                                await this.AddAlertChatMessage(user, string.Format("{0} Followed", user.UserName));
+                                GlobalEvents.FollowOccurred(user);
                             }
-                            GlobalEvents.FollowOccurred(user);
+                            await this.AddAlertChatMessage(user, string.Format("{0} Followed", user.UserName));
                         }
                         else
                         {
                             if (EventCommand.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.ChatUserUnfollow)))
                             {
                                 await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.ChatUserUnfollow), user);
-
-                                await this.AddAlertChatMessage(user, string.Format("{0} Unfollowed", user.UserName));
+                                GlobalEvents.UnfollowOccurred(user);
                             }
-                            GlobalEvents.UnfollowOccurred(user);
+                            await this.AddAlertChatMessage(user, string.Format("{0} Unfollowed", user.UserName));
                         }
                     }
                 }
@@ -270,10 +268,9 @@ namespace MixItUp.Base.MixerAPI
                             Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>() { { "hostviewercount", viewerCount.ToString() } };
                             await EventCommand.FindAndRunEventCommand(e.channel, user, extraSpecialIdentifiers: specialIdentifiers);
 
-                            await this.AddAlertChatMessage(user, string.Format("{0} Hosted With {1} Viewers", user.UserName, viewerCount));
-
                             GlobalEvents.HostOccurred(new Tuple<UserViewModel, int>(user, viewerCount));
                         }
+                        await this.AddAlertChatMessage(user, string.Format("{0} Hosted With {1} Viewers", user.UserName, viewerCount));
                     }
                 }
                 else if (e.channel.Equals(ConstellationClientWrapper.ChannelSubscribedEvent.ToString()))
@@ -290,11 +287,9 @@ namespace MixItUp.Base.MixerAPI
                             user.Data.TotalMonthsSubbed++;
 
                             await EventCommand.FindAndRunEventCommand(e.channel, user);
-
-                            await this.AddAlertChatMessage(user, string.Format("{0} Subscribed", user.UserName));
+                            GlobalEvents.SubscribeOccurred(user);
                         }
-
-                        GlobalEvents.SubscribeOccurred(user);
+                        await this.AddAlertChatMessage(user, string.Format("{0} Subscribed", user.UserName));
                     }
                 }
                 else if (e.channel.Equals(ConstellationClientWrapper.ChannelResubscribedEvent.ToString()) || e.channel.Equals(ConstellationClientWrapper.ChannelResubscribedSharedEvent.ToString()))
@@ -318,10 +313,9 @@ namespace MixItUp.Base.MixerAPI
                             Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>() { { "usersubmonths", resubMonths.ToString() } };
                             await EventCommand.FindAndRunEventCommand(ConstellationClientWrapper.ChannelResubscribedEvent.ToString(), user, extraSpecialIdentifiers: specialIdentifiers);
 
-                            await this.AddAlertChatMessage(user, string.Format("{0} Re-Subscribed For {1} Months", user.UserName, resubMonths));
-
                             GlobalEvents.ResubscribeOccurred(new Tuple<UserViewModel, int>(user, resubMonths));
                         }
+                        await this.AddAlertChatMessage(user, string.Format("{0} Re-Subscribed For {1} Months", user.UserName, resubMonths));
                     }
                 }
                 else if (e.channel.Equals(ConstellationClientWrapper.ChannelSubscriptionGiftedEvent.ToString()))
