@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using StreamingClient.Base.Util;
+using System;
+using System.Diagnostics;
 using System.IO;
 
 namespace MixItUp.Base.Util
@@ -7,29 +9,41 @@ namespace MixItUp.Base.Util
     {
         public static void LaunchLink(string url)
         {
-            ProcessStartInfo processInfo = new ProcessStartInfo(url)
+            try
             {
-                UseShellExecute = true
-            };
-            Process.Start(processInfo);
+                ProcessStartInfo processInfo = new ProcessStartInfo(url)
+                {
+                    UseShellExecute = true
+                };
+                Process.Start(processInfo);
+            }
+            catch (Exception ex) { Logger.Log(ex); }
         }
 
         public static void LaunchFolder(string folderPath)
         {
-            ProcessStartInfo processInfo = new ProcessStartInfo(ProcessHelper.GetRootedPath(folderPath))
+            try
             {
-                UseShellExecute = true
-            };
-            Process.Start(processInfo);
+                ProcessStartInfo processInfo = new ProcessStartInfo(ProcessHelper.GetRootedPath(folderPath))
+                {
+                    UseShellExecute = true
+                };
+                Process.Start(processInfo);
+            }
+            catch (Exception ex) { Logger.Log(ex); }
         }
 
         public static void LaunchProgram(string filePath, string arguments = "")
         {
-            ProcessStartInfo processInfo = new ProcessStartInfo(ProcessHelper.GetRootedPath(filePath), arguments)
+            try
             {
-                UseShellExecute = true,
-            };
-            Process.Start(processInfo);
+                ProcessStartInfo processInfo = new ProcessStartInfo(ProcessHelper.GetRootedPath(filePath), arguments)
+                {
+                    UseShellExecute = true,
+                };
+                Process.Start(processInfo);
+            }
+            catch (Exception ex) { Logger.Log(ex); }
         }
 
         private static string GetRootedPath(string path)
