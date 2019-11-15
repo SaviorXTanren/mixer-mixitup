@@ -794,11 +794,10 @@ namespace MixItUp.WPF.Windows.Currency
                         }
                     }
 
-                    NewCurrencyRankCommandsDialogControl dControl = new NewCurrencyRankCommandsDialogControl(this.currency, commandsToAdd);
-                    string result = (string)(await DialogHelper.ShowCustom(dControl));
-                    if (!string.IsNullOrEmpty(result) && result.Equals("True"))
+                    NewCurrencyRankCommandsDialogControl customDialogControl = new NewCurrencyRankCommandsDialogControl(this.currency, commandsToAdd);
+                    if (bool.Equals(await DialogHelper.ShowCustom(customDialogControl), true))
                     {
-                        foreach (NewCurrencyRankCommand command in dControl.commands)
+                        foreach (NewCurrencyRankCommand command in customDialogControl.commands)
                         {
                             if (command.AddCommand)
                             {

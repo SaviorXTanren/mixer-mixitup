@@ -165,8 +165,7 @@ namespace MixItUp.WPF.Controls.Store
             await this.window.RunAsyncOperation(async () =>
             {
                 ListingReviewDialogControl reviewControl = new ListingReviewDialogControl();
-                string result = (string)(await DialogHelper.ShowCustom(reviewControl));
-                if (!string.IsNullOrEmpty(result) && result.Equals("True") && reviewControl.Rating > 0 && !string.IsNullOrEmpty(reviewControl.ReviewText))
+                if (bool.Equals(await DialogHelper.ShowCustom(reviewControl), true) && reviewControl.Rating > 0 && !string.IsNullOrEmpty(reviewControl.ReviewText))
                 {
                     StoreListingReviewModel review = new StoreListingReviewModel(this.currentListing, reviewControl.Rating, reviewControl.ReviewText);
 

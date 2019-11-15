@@ -1,10 +1,9 @@
-﻿using MixItUp.Base.ViewModel.User;
-using System.Windows.Controls;
-using System.Windows;
-using MixItUp.Base.Commands;
-using System.Collections.ObjectModel;
+﻿using MixItUp.Base.Commands;
+using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
-using System.Linq;
+using System.Collections.ObjectModel;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.Dialogs
 {
