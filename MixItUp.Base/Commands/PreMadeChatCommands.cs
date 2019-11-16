@@ -468,6 +468,37 @@ namespace MixItUp.Base.Commands
         }
     }
 
+    public class LastQuoteChatCommand : PreMadeChatCommand
+    {
+        public LastQuoteChatCommand()
+            : base("Last Quote", new List<string>() { "lastquote" }, 5, MixerRoleEnum.User)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (ChannelSession.Services.Chat != null)
+                {
+                    if (ChannelSession.Settings.QuotesEnabled)
+                    {
+                        if (ChannelSession.Settings.UserQuotes.Count > 0)
+                        {
+                            UserQuoteViewModel quote = ChannelSession.Settings.UserQuotes.LastOrDefault();
+                            if (quote != null)
+                            {
+                                await ChannelSession.Services.Chat.SendMessage(quote.ToString());
+                                return;
+                            }
+                        }
+                        await ChannelSession.Services.Chat.SendMessage("At least 1 quote must be added for this feature to work");
+                    }
+                    else
+                    {
+                        await ChannelSession.Services.Chat.SendMessage("Quotes must be enabled for this feature to work");
+                    }
+                }
+            }));
+        }
+    }
+
     public class AddQuoteChatCommand : PreMadeChatCommand
     {
         public AddQuoteChatCommand()
