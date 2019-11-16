@@ -59,7 +59,7 @@
 
                 <TextBlock Grid.Column="2" Text="{Binding CurrentlyHostingName}" VerticalAlignment="Center" />
 
-                <Button Grid.Column="4" Content="Force Logout" HorizontalAlignment="Right" Width="120" Click="Logout_Click"/>
+                <Button Grid.Column="4" Content="Logout" HorizontalAlignment="Right" Width="100" Click="Logout_Click"/>
             </Grid>
 
             <Border Grid.Row="2" BorderThickness="1" BorderBrush="DarkBlue">
