@@ -46,16 +46,20 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" HorizontalAlignment="Center">
+            <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0">Currently Hosting:</TextBlock>
+                <TextBlock Grid.Column="0" VerticalAlignment="Center">Currently Hosting:</TextBlock>
 
-                <TextBlock Grid.Column="2" Text="{Binding CurrentlyHostingName}" />
+                <TextBlock Grid.Column="2" Text="{Binding CurrentlyHostingName}" VerticalAlignment="Center" />
+
+                <Button Grid.Column="4" Content="Logout" HorizontalAlignment="Right" Width="100" Click="Logout_Click"/>
             </Grid>
 
             <Border Grid.Row="2" BorderThickness="1" BorderBrush="DarkBlue">
