@@ -4,8 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
-             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:util="clr-namespace:MixItUp.WPF.Util"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+            xmlns:System="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d"
                           
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -14,6 +16,10 @@
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
 
              d:DesignHeight="500" d:DesignWidth="600">
+    <local:MainControlBase.Resources>
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+        <util:LocalizationConverter x:Key="LocalizationConverter"/>
+    </local:MainControlBase.Resources>
     <ScrollViewer>
         <Grid Margin="10" x:Name="MainGrid">
             <Grid.RowDefinitions>
@@ -24,7 +30,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <GroupBox Header="Channel Info" Grid.Row="0">
+            <GroupBox Header="{x:Static resx:Resources.ChannelInfo}" Grid.Row="0">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -41,7 +47,7 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Stream Title:</TextBlock>
+                        <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.StreamTitle}, StringFormat={StaticResource ColumnHeaderFormat}}" />
                         <ComboBox Grid.Row="0" Grid.Column="2" x:Name="StreamTitleComboBox" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
                     </Grid>
 
@@ -56,18 +62,24 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="0" VerticalAlignment="Center">Game Name:</TextBlock>
+                        <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.GameName}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
                         <TextBox Grid.Column="2" x:Name="GameNameTextBox" TextChanged="GameNameTextBox_TextChanged" PreviewKeyDown="GameNameTextBox_PreviewKeyDown" />
 
-                        <TextBlock Grid.Column="4" VerticalAlignment="Center">Age Rating:</TextBlock>
-                        <ComboBox Grid.Column="6" x:Name="AgeRatingComboBox" Width="60" HorizontalAlignment="Left" />
+                        <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.AgeRating}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
+                        <ComboBox Grid.Column="6" x:Name="AgeRatingComboBox" Width="60" HorizontalAlignment="Left">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
                     </Grid>
 
-                    <Button Grid.Row="4" x:Name="UpdateChannelDataButton" HorizontalAlignment="Center" Click="UpdateChannelDataButton_Click">Update Channel</Button>
+                    <Button Grid.Row="4" x:Name="UpdateChannelDataButton" HorizontalAlignment="Center" Click="UpdateChannelDataButton_Click" Content="{x:Static resx:Resources.UpdateChannel}"/>
                 </Grid>
             </GroupBox>
 
-            <GroupBox Header="Find Channel To Raid" Grid.Row="2">
+            <GroupBox Header="{x:Static resx:Resources.FindChannelToRaid}" Grid.Row="2">
                 <Grid HorizontalAlignment="Center" Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -82,9 +94,15 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <ComboBox Grid.Column="0" x:Name="ChannelToRaidSearchCriteriaComboBox" MaterialDesign:HintAssist.Hint="Search Criteria" Width="200" HorizontalAlignment="Left" />
+                        <ComboBox Grid.Column="0" x:Name="ChannelToRaidSearchCriteriaComboBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SearchCriteria}" Width="200" HorizontalAlignment="Left">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
 
-                        <Button Grid.Column="2" x:Name="FindChannelToRaidButton" Click="FindChannelToRaidButton_Click">Search</Button>
+                        <Button Grid.Column="2" x:Name="FindChannelToRaidButton" Click="FindChannelToRaidButton_Click" Content="{x:Static resx:Resources.Search}"/>
 
                     </Grid>
 
@@ -101,15 +119,15 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBox Grid.Column="0" x:Name="ChannelRaidNameTextBox" MaterialDesign:HintAssist.Hint="Username" Width="130" Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsReadOnly="True" />
+                        <TextBox Grid.Column="0" x:Name="ChannelRaidNameTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Streamer}" Width="130" Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsReadOnly="True" />
 
-                        <TextBox Grid.Column="2" x:Name="ChannelRaidViewersTextBox" MaterialDesign:HintAssist.Hint="Viewers" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsEnabled="False" />
+                        <TextBox Grid.Column="2" x:Name="ChannelRaidViewersTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Viewers}" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsEnabled="False" />
 
-                        <TextBox Grid.Column="4" x:Name="ChannelRaidAudienceTextBox" MaterialDesign:HintAssist.Hint="Audience" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsEnabled="False" />
+                        <TextBox Grid.Column="4" x:Name="ChannelRaidAudienceTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Audience}" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsEnabled="False" />
 
-                        <TextBox Grid.Column="6" x:Name="ChannelRaidGameTextBox" MaterialDesign:HintAssist.Hint="Game" Width="300" Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsEnabled="False" />
+                        <TextBox Grid.Column="6" x:Name="ChannelRaidGameTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Game}" Width="300" Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsEnabled="False" />
 
-                        <Button x:Name="HostChannelButton" Grid.Column="8" Click="HostChannelButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Host Channel">
+                        <Button x:Name="HostChannelButton" Grid.Column="8" Click="HostChannelButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.HostChannel}">
                             <MaterialDesign:PackIcon Kind="Satellite" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" />
                         </Button>
 
@@ -117,7 +135,7 @@
                 </Grid>
             </GroupBox>
 
-            <GroupBox Header="Favorited Users/Teams" Grid.Row="4">
+            <GroupBox Header="{x:Static resx:Resources.FavoritedUsersTeams}" Grid.Row="4">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -134,10 +152,10 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <ComboBox Grid.Column="0" x:Name="AddFavoriteTypeComboBox" MaterialDesign:HintAssist.Hint="Type To Add" Width="100" SelectionChanged="AddFavoriteTypeComboBox_SelectionChanged" />
+                        <ComboBox Grid.Column="0" x:Name="AddFavoriteTypeComboBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TypeToAdd}" Width="100" SelectionChanged="AddFavoriteTypeComboBox_SelectionChanged" />
 
                         <Grid x:Name="AddFavoriteTeamGrid" Grid.Column="2" Visibility="Collapsed">
-                            <TextBox x:Name="AddFavoriteTeamTextBox" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="Team Name" />
+                            <TextBox x:Name="AddFavoriteTeamTextBox" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TeamName}" />
                         </Grid>
 
                         <Grid x:Name="AddFavoriteUserGrid" Grid.Column="2" Visibility="Collapsed">
@@ -147,21 +165,21 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBox x:Name="AddFavoriteUserTextBox" Grid.Column="0" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="Username" />
+                            <TextBox x:Name="AddFavoriteUserTextBox" Grid.Column="0" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Streamer}" />
 
-                            <TextBox x:Name="AddFavoriteUserGroupNameTextBox" Grid.Column="2" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="Group Name" />
+                            <TextBox x:Name="AddFavoriteUserGroupNameTextBox" Grid.Column="2" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GroupName}" />
                         </Grid>
 
-                        <Button Grid.Column="4" x:Name="AddFavoriteButton" Click="AddFavoriteButton_Click">Add</Button>
+                        <Button Grid.Column="4" x:Name="AddFavoriteButton" Click="AddFavoriteButton_Click" Content="{x:Static resx:Resources.Add}"/>
                     </Grid>
 
                     <Grid Grid.Row="2" Height="250">
                         <DataGrid x:Name="FavoriteGroupsDataGrid" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="2*" />
-                                <DataGridTextColumn Header="Total Users" Binding="{Binding TotalUsers}" IsReadOnly="True" Width="*" />
-                                <DataGridTextColumn Header="Live Users" Binding="{Binding LiveUsers}" IsReadOnly="True" Width="*" />
-                                <DataGridTextColumn Header="Live Viewers" Binding="{Binding LiveViewers}" IsReadOnly="True" Width="*" />
+                                <DataGridTextColumn Header="{x:Static resx:Resources.Streamer}" Binding="{Binding Name}" IsReadOnly="True" Width="2*" />
+                                <DataGridTextColumn Header="{x:Static resx:Resources.TotalUsers}" Binding="{Binding TotalUsers}" IsReadOnly="True" Width="*" />
+                                <DataGridTextColumn Header="{x:Static resx:Resources.Users}" Binding="{Binding LiveUsers}" IsReadOnly="True" Width="*" />
+                                <DataGridTextColumn Header="{x:Static resx:Resources.Viewers}" Binding="{Binding LiveViewers}" IsReadOnly="True" Width="*" />
                                 <DataGridTemplateColumn Width="120">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>

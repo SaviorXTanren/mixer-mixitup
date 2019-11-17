@@ -1,0 +1,408 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="About" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="Accept" xml:space="preserve">
+    <value>Accept</value>
+  </data>
+  <data name="ActionGroups" xml:space="preserve">
+    <value>Action Groups</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="AddFavoriteStreamerAlreadyDone" xml:space="preserve">
+    <value>This user already exists in this group.</value>
+  </data>
+  <data name="AddFavoriteStreamerNotFound" xml:space="preserve">
+    <value>Could not find a user by that name.</value>
+  </data>
+  <data name="AddFavoriteTeamAlreadyDone" xml:space="preserve">
+    <value>You have already favorited this team.</value>
+  </data>
+  <data name="AddFavoriteTeamNotFound" xml:space="preserve">
+    <value>Could not find a team by that name.</value>
+  </data>
+  <data name="AgeRating" xml:space="preserve">
+    <value>Age Rating</value>
+  </data>
+  <data name="Audience" xml:space="preserve">
+    <value>Audience</value>
+  </data>
+  <data name="AutoHoster" xml:space="preserve">
+    <value>Auto-Hoster</value>
+  </data>
+  <data name="Bot" xml:space="preserve">
+    <value>Bot</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Channel" xml:space="preserve">
+    <value>Channel</value>
+  </data>
+  <data name="ChannelErrorInvalidAgeRating" xml:space="preserve">
+    <value>A valid age rating must be selected.</value>
+  </data>
+  <data name="ChannelErrorInvalidGame" xml:space="preserve">
+    <value>A valid &amp; existing game name must be selected.</value>
+  </data>
+  <data name="ChannelErrorNoStreamTitle" xml:space="preserve">
+    <value>A stream title must be specified.</value>
+  </data>
+  <data name="ChannelInfo" xml:space="preserve">
+    <value>Channel Info</value>
+  </data>
+  <data name="ChannelName" xml:space="preserve">
+    <value>Channel Name</value>
+  </data>
+  <data name="Chat" xml:space="preserve">
+    <value>Chat</value>
+  </data>
+  <data name="ChatMessage" xml:space="preserve">
+    <value>Chat Message</value>
+  </data>
+  <data name="ClearChat" xml:space="preserve">
+    <value>Clear Chat</value>
+  </data>
+  <data name="ClearChatConfirmation" xml:space="preserve">
+    <value>This will clear all chat messages for the stream. Are you sure?</value>
+  </data>
+  <data name="ClosingPleaseWait" xml:space="preserve">
+    <value>Please wait while Mix It Up saves your settings and shuts down...</value>
+  </data>
+  <data name="Commands" xml:space="preserve">
+    <value>Commands</value>
+  </data>
+  <data name="CurrencyRankInventory" xml:space="preserve">
+    <value>Currency/Rank/Inventory</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="DeleteFavoriteGroupConfirmation" xml:space="preserve">
+    <value>Are you sure you wish to remove this group?</value>
+  </data>
+  <data name="DisableChat" xml:space="preserve">
+    <value>Disable Chat</value>
+  </data>
+  <data name="DisableChatConfirmation" xml:space="preserve">
+    <value>This will disable chat for all users. Are you sure?</value>
+  </data>
+  <data name="EnableChat" xml:space="preserve">
+    <value>Enable Chat</value>
+  </data>
+  <data name="Events" xml:space="preserve">
+    <value>Events</value>
+  </data>
+  <data name="ExitConfirmation" xml:space="preserve">
+    <value>Are you sure you wish to exit Mix It Up?</value>
+  </data>
+  <data name="Family" xml:space="preserve">
+    <value>Family</value>
+  </data>
+  <data name="FavoritedUsersTeams" xml:space="preserve">
+    <value>Favorited Users/Teams</value>
+  </data>
+  <data name="FavoriteStreamers" xml:space="preserve">
+    <value>Favorite Streamers</value>
+  </data>
+  <data name="FindChannelToRaid" xml:space="preserve">
+    <value>Find Channel To Raid</value>
+  </data>
+  <data name="FindRaidErrorNoCriteria" xml:space="preserve">
+    <value>Must select a search criteria for finding a channel to raid.</value>
+  </data>
+  <data name="FindRaidErrorNoneFound" xml:space="preserve">
+    <value>Unable to find a channel that met your search critera, please try selecting a different option.</value>
+  </data>
+  <data name="Game" xml:space="preserve">
+    <value>Game</value>
+  </data>
+  <data name="GameName" xml:space="preserve">
+    <value>Game Name</value>
+  </data>
+  <data name="GameQueue" xml:space="preserve">
+    <value>Game Queue</value>
+  </data>
+  <data name="Games" xml:space="preserve">
+    <value>Games</value>
+  </data>
+  <data name="Giveaway" xml:space="preserve">
+    <value>Giveaway</value>
+  </data>
+  <data name="GroupName" xml:space="preserve">
+    <value>Group Name</value>
+  </data>
+  <data name="Help" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="HostChannel" xml:space="preserve">
+    <value>Host Channel</value>
+  </data>
+  <data name="LargeStreamer" xml:space="preserve">
+    <value>Large Streamer (&gt;25)</value>
+  </data>
+  <data name="LicenseAgreement" xml:space="preserve">
+    <value>License Agreement</value>
+  </data>
+  <data name="LockChatScrolling" xml:space="preserve">
+    <value>Lock/Unlock Chat Scrolling</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="LoginErrorBotAccountFailed" xml:space="preserve">
+    <value>Bot Account failed to authenticate, please re-connect it from the Services section.</value>
+  </data>
+  <data name="LoginErrorFailedToAuthenticate" xml:space="preserve">
+    <value>Unable to authenticate with Mixer, please try again.</value>
+  </data>
+  <data name="LoginErrorNoChannelName" xml:space="preserve">
+    <value>A channel name must be entered.</value>
+  </data>
+  <data name="LoginErrorNoStreamerAccount" xml:space="preserve">
+    <value>You must select a Streamer account to log in to.</value>
+  </data>
+  <data name="LoginErrorNotModerator" xml:space="preserve">
+    <value>You are not a moderator for this channel.</value>
+  </data>
+  <data name="MediumStreamer" xml:space="preserve">
+    <value>Medium Streamer (10-25)</value>
+  </data>
+  <data name="MixPlay" xml:space="preserve">
+    <value>MixPlay</value>
+  </data>
+  <data name="Moderation" xml:space="preserve">
+    <value>Moderation</value>
+  </data>
+  <data name="Moderator" xml:space="preserve">
+    <value>Moderator</value>
+  </data>
+  <data name="NewStreamer" xml:space="preserve">
+    <value>New Streamer</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Ok" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="OverlayWidgets" xml:space="preserve">
+    <value>Overlay Widgets</value>
+  </data>
+  <data name="PartneredStreamer" xml:space="preserve">
+    <value>Partnered Streamer</value>
+  </data>
+  <data name="Quotes" xml:space="preserve">
+    <value>Quotes</value>
+  </data>
+  <data name="RandomStreamer" xml:space="preserve">
+    <value>Random Streamer</value>
+  </data>
+  <data name="Remote" xml:space="preserve">
+    <value>Remote</value>
+  </data>
+  <data name="SameAgeRating" xml:space="preserve">
+    <value>Same Age Rating</value>
+  </data>
+  <data name="SameGame" xml:space="preserve">
+    <value>Same Game</value>
+  </data>
+  <data name="SameTeam" xml:space="preserve">
+    <value>SameTeam</value>
+  </data>
+  <data name="SaveFailed" xml:space="preserve">
+    <value>Save failed, attempting one more time...</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="SearchCriteria" xml:space="preserve">
+    <value>Search Criteria</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Send</value>
+  </data>
+  <data name="Services" xml:space="preserve">
+    <value>Services</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="SmallStreamer" xml:space="preserve">
+    <value>Small Streamer (&lt;10)</value>
+  </data>
+  <data name="Statistics" xml:space="preserve">
+    <value>Statistics</value>
+  </data>
+  <data name="Streamer" xml:space="preserve">
+    <value>Streamer</value>
+  </data>
+  <data name="StreamerAccount" xml:space="preserve">
+    <value>Streamer Account</value>
+  </data>
+  <data name="StreamTitle" xml:space="preserve">
+    <value>Stream Title</value>
+  </data>
+  <data name="Team" xml:space="preserve">
+    <value>Team</value>
+  </data>
+  <data name="TeamName" xml:space="preserve">
+    <value>Team Name</value>
+  </data>
+  <data name="Teen" xml:space="preserve">
+    <value>Teen</value>
+  </data>
+  <data name="Timers" xml:space="preserve">
+    <value>Timers</value>
+  </data>
+  <data name="TotalUsers" xml:space="preserve">
+    <value>Total Users</value>
+  </data>
+  <data name="TypeToAdd" xml:space="preserve">
+    <value>Type To Add</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="UpdateChannel" xml:space="preserve">
+    <value>Update Channel</value>
+  </data>
+  <data name="UserJoinedChat" xml:space="preserve">
+    <value>{0} Joined Chat</value>
+  </data>
+  <data name="UserLeftChat" xml:space="preserve">
+    <value>{0} Left Chat</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>Users</value>
+  </data>
+  <data name="Viewers" xml:space="preserve">
+    <value>Viewers</value>
+  </data>
+  <data name="WebShow" xml:space="preserve">
+    <value>Web Show</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+</root>

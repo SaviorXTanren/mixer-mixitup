@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MixItUp.WPF.Windows.Wizard"
+        xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -337,7 +337,7 @@
 
                         <TextBlock Grid.Column="0" TextWrapping="Wrap" Width="450">Don't know how a feature works or want more info? Simply click on the Help icon on the top bar of the main window to find out more!</TextBlock>
 
-                        <Button Grid.Column="2" Width="40" HorizontalAlignment="Center" ToolTip="Help">
+                        <Button Grid.Column="2" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Help}">
                             <MaterialDesign:PackIcon Kind="Help" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                         </Button>
                     </Grid>

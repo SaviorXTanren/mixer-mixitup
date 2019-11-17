@@ -4,9 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
-             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:ChatControls="clr-namespace:MixItUp.WPF.Controls.Chat"
-             xmlns:UsersControls="clr-namespace:MixItUp.WPF.Controls.Users"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Util="clr-namespace:MixItUp.WPF.Util"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
@@ -49,11 +48,11 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <Button x:Name="DashboardButton" Grid.Column="0" Width="100" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" Click="DashboardButton_Click">Dashboard</Button>
+                        <Button x:Name="DashboardButton" Grid.Column="0" MinWidth="100" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" Click="DashboardButton_Click" Content="{x:Static resx:Resources.Dashboard}" />
 
-                        <Button Command="{Binding ClearChatCommand}" Grid.Column="2" Width="100" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}">Clear Chat</Button>
+                        <Button Command="{Binding ClearChatCommand}" Grid.Column="2" MinWidth="100" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" Content="{x:Static resx:Resources.ClearChat}" />
 
-                        <Button Command="{Binding EnableDisableChatCommand}" Content="{Binding EnableDisableButtonText}" Grid.Column="4" Width="115" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" />
+                        <Button Command="{Binding EnableDisableChatCommand}" Content="{Binding EnableDisableButtonText}" Grid.Column="4" MinWidth="115" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" />
 
                     </Grid>
 

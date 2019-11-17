@@ -229,11 +229,11 @@ namespace MixItUp.Base
             ChannelSession.Statistics = new StatisticsTracker();
         }
 
-        public static async Task<bool> ConnectUser(IEnumerable<OAuthClientScopeEnum> scopes, string channelName = null)
+        public static async Task<bool> ConnectUser(IEnumerable<OAuthClientScopeEnum> scopes, string channelName = null, bool forceApproval = false)
         {
             try
             {
-                MixerConnection connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ChannelSession.ClientID, scopes, false, successResponse: OAuthServiceBase.LoginRedirectPageHTML);
+                MixerConnection connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ChannelSession.ClientID, scopes, forceApproval, successResponse: OAuthServiceBase.LoginRedirectPageHTML);
                 if (connection != null)
                 {
                     ChannelSession.MixerStreamerConnection = new MixerConnectionService(connection);

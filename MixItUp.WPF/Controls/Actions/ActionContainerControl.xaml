@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
@@ -54,7 +55,7 @@
 
                     <Button Grid.Column="8" Margin="-10" Content="{MaterialDesign:PackIcon ContentCopy}" Click="ActionDuplicateButton_Click" ToolTip="Duplicate" />
 
-                    <Button Grid.Column="10" Margin="-10" Content="{MaterialDesign:PackIcon Help}" Click="ActionHelpButton_Click" ToolTip="Help" />
+                    <Button Grid.Column="10" Margin="-10" Content="{MaterialDesign:PackIcon Help}" Click="ActionHelpButton_Click" ToolTip="{x:Static resx:Resources.Help}" />
 
                     <Button Grid.Column="12" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteActionButton_Click" ToolTip="Delete" />
                 </Grid>

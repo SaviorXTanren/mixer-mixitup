@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MixItUp.WPF.Windows.Currency"
+        xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
         xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
@@ -50,7 +50,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Button x:Name="HelpButton" HorizontalAlignment="Right" VerticalAlignment="Top" Content="{MaterialDesign:PackIcon Help}" Click="HelpButton_Click" ToolTip="Help" />
+                <Button x:Name="HelpButton" HorizontalAlignment="Right" VerticalAlignment="Top" Content="{MaterialDesign:PackIcon Help}" Click="HelpButton_Click" ToolTip="{x:Static resx:Resources.Help}" />
 
                 <Grid Grid.Row="0" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
@@ -196,7 +196,7 @@
                         </Grid>
                     </GroupBox>
 
-                    <GroupBox Header="Settings" Grid.Column="2">
+                    <GroupBox Header="{x:Static resx:Resources.Settings}" Grid.Column="2">
                         <Grid Margin="10" VerticalAlignment="Center">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />

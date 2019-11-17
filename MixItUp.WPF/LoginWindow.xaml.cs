@@ -6,10 +6,8 @@ using MixItUp.Base.Model.API;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Desktop;
-using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows;
 using MixItUp.WPF.Windows.Wizard;
-using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -64,7 +62,7 @@ namespace MixItUp.WPF
             if (this.streamerSettings.Count > 0)
             {
                 this.ExistingStreamerComboBox.Visibility = Visibility.Visible;
-                this.streamerSettings.Add(new DesktopChannelSettings() { Channel = new ExpandedChannelModel() { id = 0, user = new UserWithGroupsModel() { username = "NEW STREAMER" }, token = "NEW STREAMER" } });
+                this.streamerSettings.Add(new DesktopChannelSettings() { Channel = new ExpandedChannelModel() { id = 0, user = new UserWithGroupsModel() { username = MixItUp.Base.Resources.NewStreamer }, token = MixItUp.Base.Resources.NewStreamer } });
                 if (this.streamerSettings.Count() == 2)
                 {
                     this.ExistingStreamerComboBox.SelectedIndex = 0;
@@ -151,7 +149,7 @@ namespace MixItUp.WPF
                     }
                     else
                     {
-                        await DialogHelper.ShowMessage("You must select a Streamer account to log in to");
+                        await DialogHelper.ShowMessage(MixItUp.Base.Resources.LoginErrorNoStreamerAccount);
                     }
                 }
                 else
@@ -178,7 +176,7 @@ namespace MixItUp.WPF
             {
                 if (string.IsNullOrEmpty(this.ModeratorChannelComboBox.Text))
                 {
-                    await DialogHelper.ShowMessage("A channel name must be entered");
+                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.LoginErrorNoChannelName);
                     return;
                 }
 
@@ -207,12 +205,12 @@ namespace MixItUp.WPF
                     }
                     else
                     {
-                        await DialogHelper.ShowMessage("You are not a moderator for this channel.");
+                        await DialogHelper.ShowMessage(MixItUp.Base.Resources.LoginErrorNotModerator);
                     }
                 }
                 else
                 {
-                    await DialogHelper.ShowMessage("Unable to authenticate with Mixer, please try again");
+                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.LoginErrorFailedToAuthenticate);
                 }
             });
         }
@@ -249,12 +247,12 @@ namespace MixItUp.WPF
                 {
                     if (!await ChannelSession.ConnectBot(setting))
                     {
-                        await DialogHelper.ShowMessage("Bot Account failed to authenticate, please re-connect it from the Services section.");
+                        await DialogHelper.ShowMessage(MixItUp.Base.Resources.LoginErrorBotAccountFailed);
                     }
                 }
                 else
                 {
-                    await DialogHelper.ShowMessage("Unable to authenticate with Mixer, please try again");
+                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.LoginErrorFailedToAuthenticate);
                 }
                 return result;
             }
@@ -263,7 +261,7 @@ namespace MixItUp.WPF
 
         private async Task<bool> NewStreamerLogin()
         {
-            if (await this.EstablishConnection(ChannelSession.StreamerScopes, channelName: null))
+            if (await this.EstablishConnection(ChannelSession.StreamerScopes, channelName: null, forceApproval: true))
             {
                 ShowMainWindow(new NewUserWizardWindow());
                 this.Hide();
@@ -272,14 +270,14 @@ namespace MixItUp.WPF
             }
             else
             {
-                await DialogHelper.ShowMessage("Unable to authenticate with Mixer, please try again");
+                await DialogHelper.ShowMessage(MixItUp.Base.Resources.LoginErrorFailedToAuthenticate);
             }
             return false;
         }
 
-        private async Task<bool> EstablishConnection(IEnumerable<OAuthClientScopeEnum> scopes, string channelName = null)
+        private async Task<bool> EstablishConnection(IEnumerable<OAuthClientScopeEnum> scopes, string channelName = null, bool forceApproval = false)
         {
-            return await ChannelSession.ConnectUser(scopes, channelName);
+            return await ChannelSession.ConnectUser(scopes, channelName, forceApproval);
         }
 
         private async void GlobalEvents_OnShowMessageBox(object sender, string message)

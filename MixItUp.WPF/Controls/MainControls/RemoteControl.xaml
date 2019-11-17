@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
-             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:RemoteItemsControls="clr-namespace:MixItUp.WPF.Controls.Remote.Items"
              xmlns:RemoteDetailsControls="clr-namespace:MixItUp.WPF.Controls.Remote.Details"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -92,7 +92,7 @@
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0" Margin="40,0">
-                <Button x:Name="ProfileBoardSettingsButton" IsEnabled="{Binding IsProfileSelected}" Click="ProfileBoardSettingsButton_Click" Width="40" ToolTip="Profile/Board Settings" HorizontalAlignment="Left">
+                <Button x:Name="ProfileBoardSettingsButton" IsEnabled="{Binding IsProfileSelected}" Click="ProfileBoardSettingsButton_Click" Width="40" ToolTip="{x:Static resx:Resources.Settings}" HorizontalAlignment="Left">
                     <MaterialDesign:PackIcon Kind="Settings" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                 </Button>
 

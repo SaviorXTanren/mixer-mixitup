@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Localization;
 using MixItUp.Base.Util;
 using MixItUp.Desktop.Services;
 using MixItUp.WPF.Util;
@@ -24,6 +23,14 @@ namespace MixItUp.WPF
         public static ApplicationSettings AppSettings;
 
         private bool crashObtained = false;
+
+        public App()
+        {
+            // NOTE: Uncomment the lines below to test other cultures
+            //System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo("de-DE");
+            //System.Threading.Thread.CurrentThread.CurrentCulture = ci;
+            //System.Threading.Thread.CurrentThread.CurrentUICulture = ci;
+        }
 
         public void SwitchTheme(string colorScheme, string backgroundColorName, string fullThemeName)
         {
@@ -78,8 +85,6 @@ namespace MixItUp.WPF
         {
             App.AppSettings = ApplicationSettings.Load();
             this.SwitchTheme(App.AppSettings.ColorScheme, App.AppSettings.BackgroundColor, App.AppSettings.FullThemeName);
-
-            LocalizationHandler.SetCurrentLanguage(App.AppSettings.Language);
 
             DesktopServicesHandler desktopServicesHandler = new DesktopServicesHandler();
             desktopServicesHandler.Initialize();

@@ -21,46 +21,32 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Localization\English.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>English.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Localization\Japanese.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Japanese.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Localization\Spanish.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Spanish.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="SkillsCatalogData.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Localization\English.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>English.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Localization\Japanese.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Japanese.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Localization\Spanish.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Spanish.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <ProjectReference Include="..\MixItUp.SignalR.Client\MixItUp.SignalR.Client.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MixItUp.SignalR.Client\MixItUp.SignalR.Client.csproj" />
+    <Compile Update="Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+
+    <EmbeddedResource Update="Resources.de-DE.resx">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>
