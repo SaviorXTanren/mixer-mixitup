@@ -75,25 +75,24 @@ namespace MixItUp.Base.Services
     public class ExtraLifeDonation
     {
         [DataMember]
-        public string displayName { get; set; }
+        public string donationID { get; set; }
         [DataMember]
-        public string message { get; set; }
-        [DataMember]
-        public bool isFulfilled { get; set; }
+        public int teamID { get; set; }
+
+
         [DataMember]
         public int? participantID { get; set; }
         [DataMember]
+        public string displayName { get; set; }
+
+        [DataMember]
+        public string message { get; set; }
+
+        [DataMember]
         public double? amount { get; set; }
-        [DataMember]
-        public string donorID { get; set; }
-        [DataMember]
-        public string avatarImageURL { get; set; }
+
         [DataMember]
         public string createdDateUTC { get; set; }
-        [DataMember]
-        public int teamID { get; set; }
-        [DataMember]
-        public string thankYouSent { get; set; }
 
         public UserDonationModel ToGenericDonation()
         {
@@ -113,10 +112,9 @@ namespace MixItUp.Base.Services
             {
                 Source = UserDonationSourceEnum.ExtraLife,
 
-                ID = this.donorID,
+                ID = this.donationID,
                 UserName = this.displayName,
                 Message = this.message,
-                ImageLink = this.avatarImageURL,
 
                 Amount = Math.Round(amount, 2),
 
@@ -267,9 +265,9 @@ namespace MixItUp.Base.Services
             IEnumerable<ExtraLifeDonation> donations = (this.includeTeamDonations) ? await this.GetTeamDonations() : await this.GetParticipantDonations();
             foreach (ExtraLifeDonation donation in donations)
             {
-                if (!string.IsNullOrEmpty(donation.donorID))
+                if (!string.IsNullOrEmpty(donation.donationID))
                 {
-                    donationsReceived[donation.donorID] = donation;
+                    donationsReceived[donation.donationID] = donation;
                 }
             }
 
@@ -280,9 +278,9 @@ namespace MixItUp.Base.Services
                     donations = (this.includeTeamDonations) ? await this.GetTeamDonations() : await this.GetParticipantDonations();
                     foreach (ExtraLifeDonation elDonation in donations)
                     {
-                        if (!string.IsNullOrEmpty(elDonation.donorID) && !donationsReceived.ContainsKey(elDonation.donorID))
+                        if (!string.IsNullOrEmpty(elDonation.donationID) && !donationsReceived.ContainsKey(elDonation.donationID))
                         {
-                            donationsReceived[elDonation.donorID] = elDonation;
+                            donationsReceived[elDonation.donationID] = elDonation;
 
                             UserDonationModel donation = elDonation.ToGenericDonation();
                             GlobalEvents.DonationOccurred(donation);
