@@ -539,6 +539,10 @@ namespace MixItUp.Base
                     {
                         await ChannelSession.Services.InitializeStreamloots();
                     }
+                    if (ChannelSession.Settings.ExtraLifeTeamID > 0)
+                    {
+                        await ChannelSession.Services.InitializeExtraLife();
+                    }
                     if (ChannelSession.Settings.JustGivingOAuthToken != null)
                     {
                         await ChannelSession.Services.InitializeJustGiving();
