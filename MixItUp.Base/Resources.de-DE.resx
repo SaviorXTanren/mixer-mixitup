@@ -150,6 +150,9 @@
   <data name="AgeRating" xml:space="preserve">
     <value>Alterseinstufung</value>
   </data>
+  <data name="AmountDonated" xml:space="preserve">
+    <value>Gespendeter Betrag</value>
+  </data>
   <data name="Audience" xml:space="preserve">
     <value>Publikum</value>
   </data>
@@ -195,6 +198,9 @@
   <data name="Chat Message" xml:space="preserve">
     <value>Nachricht an den Chat</value>
   </data>
+  <data name="ChatMessagesSent" xml:space="preserve">
+    <value>Chatnachrichten gesendet</value>
+  </data>
   <data name="ClearChat" xml:space="preserve">
     <value>Chat leeren</value>
   </data>
@@ -207,14 +213,23 @@
   <data name="Commands" xml:space="preserve">
     <value>Befehle</value>
   </data>
+  <data name="CommandsRun" xml:space="preserve">
+    <value>Befehle ausgeführt</value>
+  </data>
   <data name="Connect" xml:space="preserve">
     <value>Verbinden</value>
   </data>
   <data name="ConnectDevices" xml:space="preserve">
     <value>Gerät verbinden</value>
   </data>
+  <data name="CumulativeMonthsSubbed" xml:space="preserve">
+    <value>Kumulative Monate untergubbed</value>
+  </data>
   <data name="CurrencyRankInventory" xml:space="preserve">
     <value>Währung/Rang/Inventar</value>
+  </data>
+  <data name="CurrencyRankInventoryExempt" xml:space="preserve">
+    <value>Währung/Rang/Inventory Ausnahme</value>
   </data>
   <data name="Custom" xml:space="preserve">
     <value>Benutzerdefiniert</value>
@@ -222,8 +237,14 @@
   <data name="CustomCommands" xml:space="preserve">
     <value>Benutzerdefinierte Befehle</value>
   </data>
+  <data name="CustomEntranceCommand" xml:space="preserve">
+    <value>Benutzerdefinierter Willkommensbefehl</value>
+  </data>
   <data name="CustomizeCommand" xml:space="preserve">
     <value>Befehl anpassen</value>
+  </data>
+  <data name="CustomTitle" xml:space="preserve">
+    <value>Benutzerdefinierter Titel</value>
   </data>
   <data name="Dashboard" xml:space="preserve">
     <value>Dashboard</value>
@@ -254,6 +275,9 @@
   </data>
   <data name="EditCommand" xml:space="preserve">
     <value>Befehl anpassen</value>
+  </data>
+  <data name="EmbersSpent" xml:space="preserve">
+    <value>Embers ausgegeben</value>
   </data>
   <data name="Enable Chat" xml:space="preserve">
     <value>Chat aktivieren</value>
@@ -300,6 +324,9 @@
   <data name="FindRaidErrorNoneFound" xml:space="preserve">
     <value>Es ist nicht möglich, einen Kanal zu finden, der Ihre Suchkriterium erfüllt, bitte versuchen Sie, eine andere Wahl zu wählen.</value>
   </data>
+  <data name="FollowAge" xml:space="preserve">
+    <value>Follow-Alter</value>
+  </data>
   <data name="Follower" xml:space="preserve">
     <value>Follower</value>
   </data>
@@ -329,6 +356,9 @@
   </data>
   <data name="HostChannel" xml:space="preserve">
     <value>Kanal hosten</value>
+  </data>
+  <data name="Hours" xml:space="preserve">
+    <value>Stunden</value>
   </data>
   <data name="ImportData" xml:space="preserve">
     <value>Daten importieren</value>
@@ -368,6 +398,12 @@
   </data>
   <data name="MinMessages" xml:space="preserve">
     <value>Min. Nachrichten</value>
+  </data>
+  <data name="Minutes" xml:space="preserve">
+    <value>Minuten</value>
+  </data>
+  <data name="MixerData" xml:space="preserve">
+    <value>Mixer-Daten</value>
   </data>
   <data name="MixerLabs" xml:space="preserve">
     <value>Mixer Labs</value>
@@ -423,6 +459,9 @@
   <data name="PartneredStreamer" xml:space="preserve">
     <value>Gepartnerte Streamer</value>
   </data>
+  <data name="PatreonUser" xml:space="preserve">
+    <value>Patreon Benutzer</value>
+  </data>
   <data name="Permissions" xml:space="preserve">
     <value>Berechtigungen</value>
   </data>
@@ -462,6 +501,9 @@
   <data name="RoleErrorInsufficientRole" xml:space="preserve">
     <value>Dazu müssen Sie ein {0} sein.</value>
   </data>
+  <data name="Roles" xml:space="preserve">
+    <value>Rolle</value>
+  </data>
   <data name="SameAgeRating" xml:space="preserve">
     <value>Gleiche Alterseinstufung</value>
   </data>
@@ -498,11 +540,20 @@
   <data name="Settings" xml:space="preserve">
     <value>Einstellungen</value>
   </data>
+  <data name="SkillsUsed" xml:space="preserve">
+    <value>Verwendete Fähigkeiten</value>
+  </data>
   <data name="SmallStreamer" xml:space="preserve">
     <value>Kleiner Streamer (&lt;10)</value>
   </data>
   <data name="Source" xml:space="preserve">
     <value>Quelle</value>
+  </data>
+  <data name="SparkExempt" xml:space="preserve">
+    <value>Spark Ausnahme</value>
+  </data>
+  <data name="SparksSpent" xml:space="preserve">
+    <value>Spark ausgegeben</value>
   </data>
   <data name="Staff" xml:space="preserve">
     <value>Mitarbeiter</value>
@@ -516,11 +567,26 @@
   <data name="StreamerAccount" xml:space="preserve">
     <value>Streamaccount</value>
   </data>
+  <data name="StreamsWatched" xml:space="preserve">
+    <value>Streams angesehen</value>
+  </data>
   <data name="StreamTitle" xml:space="preserve">
     <value>Stream-Titel</value>
   </data>
+  <data name="SubAge" xml:space="preserve">
+    <value>Sub-Alter</value>
+  </data>
   <data name="Subscriber" xml:space="preserve">
     <value>Subscriber</value>
+  </data>
+  <data name="SubsGifted" xml:space="preserve">
+    <value>Subs verschenkt</value>
+  </data>
+  <data name="SubsReceived" xml:space="preserve">
+    <value>Subs erhalten</value>
+  </data>
+  <data name="TaggedInChat" xml:space="preserve">
+    <value>Im Chat getaggt</value>
   </data>
   <data name="Team" xml:space="preserve">
     <value>Team</value>
@@ -573,11 +639,20 @@
   <data name="UserLeftChat" xml:space="preserve">
     <value>{0} verließ chat</value>
   </data>
+  <data name="UserMetrics" xml:space="preserve">
+    <value>Benutzerkennzahlen</value>
+  </data>
+  <data name="UserOnlyChatCommands" xml:space="preserve">
+    <value>Nur-Benutzer-Chat-Befehle</value>
+  </data>
   <data name="Users" xml:space="preserve">
     <value>Benutzer</value>
   </data>
   <data name="Viewers" xml:space="preserve">
     <value>Zuschauer</value>
+  </data>
+  <data name="WatchTime" xml:space="preserve">
+    <value>Zuschau-Zeit</value>
   </data>
   <data name="WebShow" xml:space="preserve">
     <value>WebShow</value>

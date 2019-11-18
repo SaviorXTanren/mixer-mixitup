@@ -87,7 +87,7 @@
                         <DataTemplate>
                             <Grid>
                                 <Grid Visibility="{Binding NewCommandButtonVisibility}">
-                                    <Button x:Name="NewInteractiveCommandButton" HorizontalAlignment="Center" Click="NewInteractiveCommandButton_Click">Add Command</Button>
+                                    <Button x:Name="NewInteractiveCommandButton" HorizontalAlignment="Center" Click="NewInteractiveCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}"/>
                                 </Grid>
 
                                 <Grid Visibility="{Binding ExistingCommandButtonVisibility}">

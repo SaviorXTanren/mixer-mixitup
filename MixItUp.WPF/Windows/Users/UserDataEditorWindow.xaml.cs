@@ -95,20 +95,20 @@ namespace MixItUp.WPF.Windows.Users
             }
 
             List<Tuple<string, string>> userMetricsList1 = new List<Tuple<string, string>>();
-            userMetricsList1.Add(new Tuple<string, string>("Streams Watched:", user.Data.TotalStreamsWatched.ToString()));
-            userMetricsList1.Add(new Tuple<string, string>("Tagged In Chat:", user.Data.TotalTimesTagged.ToString()));
-            userMetricsList1.Add(new Tuple<string, string>("Sparks Spent:", user.Data.TotalSparksSpent.ToString()));
-            userMetricsList1.Add(new Tuple<string, string>("Skills Used:", user.Data.TotalSkillsUsed.ToString()));
-            userMetricsList1.Add(new Tuple<string, string>("Subs Gifted:", user.Data.TotalSubsGifted.ToString()));
-            userMetricsList1.Add(new Tuple<string, string>("Cumulative Months Subbed:", user.Data.TotalMonthsSubbed.ToString()));
+            userMetricsList1.Add(new Tuple<string, string>($"{MixItUp.Base.Resources.StreamsWatched}:", user.Data.TotalStreamsWatched.ToString()));
+            userMetricsList1.Add(new Tuple<string, string>($"{MixItUp.Base.Resources.TaggedInChat}:", user.Data.TotalTimesTagged.ToString()));
+            userMetricsList1.Add(new Tuple<string, string>($"{MixItUp.Base.Resources.SparksSpent}:", user.Data.TotalSparksSpent.ToString()));
+            userMetricsList1.Add(new Tuple<string, string>($"{MixItUp.Base.Resources.SkillsUsed}:", user.Data.TotalSkillsUsed.ToString()));
+            userMetricsList1.Add(new Tuple<string, string>($"{MixItUp.Base.Resources.SubsGifted}:", user.Data.TotalSubsGifted.ToString()));
+            userMetricsList1.Add(new Tuple<string, string>($"{MixItUp.Base.Resources.CumulativeMonthsSubbed}:", user.Data.TotalMonthsSubbed.ToString()));
             this.UserMetricsItemsControl1.ItemsSource = userMetricsList1;
 
             List<Tuple<string, string>> userMetricsList2 = new List<Tuple<string, string>>();
-            userMetricsList2.Add(new Tuple<string, string>("Chat Messages Sent:", user.Data.TotalChatMessageSent.ToString()));
-            userMetricsList2.Add(new Tuple<string, string>("Commands Run:", user.Data.TotalCommandsRun.ToString()));
-            userMetricsList2.Add(new Tuple<string, string>("Embers Spent:", user.Data.TotalEmbersSpent.ToString()));
-            userMetricsList2.Add(new Tuple<string, string>("Amount Donated:", string.Format("{0:C}", Math.Round(user.Data.TotalAmountDonated, 2))));
-            userMetricsList2.Add(new Tuple<string, string>("Subs Received:", user.Data.TotalSubsReceived.ToString()));
+            userMetricsList2.Add(new Tuple<string, string>($"{MixItUp.Base.Resources.ChatMessagesSent}:", user.Data.TotalChatMessageSent.ToString()));
+            userMetricsList2.Add(new Tuple<string, string>($"{MixItUp.Base.Resources.CommandsRun}:", user.Data.TotalCommandsRun.ToString()));
+            userMetricsList2.Add(new Tuple<string, string>($"{MixItUp.Base.Resources.EmbersSpent}:", user.Data.TotalEmbersSpent.ToString()));
+            userMetricsList2.Add(new Tuple<string, string>($"{MixItUp.Base.Resources.AmountDonated}:", string.Format("{0:C}", Math.Round(user.Data.TotalAmountDonated, 2))));
+            userMetricsList2.Add(new Tuple<string, string>($"{MixItUp.Base.Resources.SubsReceived}:", user.Data.TotalSubsReceived.ToString()));
             this.UserMetricsItemsControl2.ItemsSource = userMetricsList2;
 
             this.DataContext = this.user;

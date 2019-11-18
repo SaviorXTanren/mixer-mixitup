@@ -153,6 +153,9 @@
   <data name="AgeRating" xml:space="preserve">
     <value>Age Rating</value>
   </data>
+  <data name="AmountDonated" xml:space="preserve">
+    <value>Amount Donated</value>
+  </data>
   <data name="Audience" xml:space="preserve">
     <value>Audience</value>
   </data>
@@ -198,6 +201,9 @@
   <data name="ChatMessage" xml:space="preserve">
     <value>Chat Message</value>
   </data>
+  <data name="ChatMessagesSent" xml:space="preserve">
+    <value>Chat Messages Sent</value>
+  </data>
   <data name="ClearChat" xml:space="preserve">
     <value>Clear Chat</value>
   </data>
@@ -210,14 +216,23 @@
   <data name="Commands" xml:space="preserve">
     <value>Commands</value>
   </data>
+  <data name="CommandsRun" xml:space="preserve">
+    <value>Commands Run</value>
+  </data>
   <data name="Connect" xml:space="preserve">
     <value>Connect</value>
   </data>
   <data name="ConnectDevices" xml:space="preserve">
     <value>Connect Devices</value>
   </data>
+  <data name="CumulativeMonthsSubbed" xml:space="preserve">
+    <value>Cumulative Months Subbed</value>
+  </data>
   <data name="CurrencyRankInventory" xml:space="preserve">
     <value>Currency/Rank/Inventory</value>
+  </data>
+  <data name="CurrencyRankInventoryExempt" xml:space="preserve">
+    <value>Currency/Rank/Inventory Exempt</value>
   </data>
   <data name="Custom" xml:space="preserve">
     <value>Custom</value>
@@ -225,8 +240,14 @@
   <data name="CustomCommands" xml:space="preserve">
     <value>Custom Commands</value>
   </data>
+  <data name="CustomEntranceCommand" xml:space="preserve">
+    <value>Custom Entrance Command</value>
+  </data>
   <data name="CustomizeCommand" xml:space="preserve">
     <value>Customize Command</value>
+  </data>
+  <data name="CustomTitle" xml:space="preserve">
+    <value>Custom Title</value>
   </data>
   <data name="Dashboard" xml:space="preserve">
     <value>Dashboard</value>
@@ -257,6 +278,9 @@
   </data>
   <data name="EditCommand" xml:space="preserve">
     <value>Edit Command</value>
+  </data>
+  <data name="EmbersSpent" xml:space="preserve">
+    <value>Embers Spent</value>
   </data>
   <data name="EnableChat" xml:space="preserve">
     <value>Enable Chat</value>
@@ -300,6 +324,9 @@
   <data name="FindRaidErrorNoneFound" xml:space="preserve">
     <value>Unable to find a channel that met your search critera, please try selecting a different option.</value>
   </data>
+  <data name="FollowAge" xml:space="preserve">
+    <value>Follow Age</value>
+  </data>
   <data name="Follower" xml:space="preserve">
     <value>Follower</value>
   </data>
@@ -329,6 +356,9 @@
   </data>
   <data name="HostChannel" xml:space="preserve">
     <value>Host Channel</value>
+  </data>
+  <data name="Hours" xml:space="preserve">
+    <value>Hours</value>
   </data>
   <data name="ImportData" xml:space="preserve">
     <value>Import Data</value>
@@ -368,6 +398,12 @@
   </data>
   <data name="MinMessages" xml:space="preserve">
     <value>Min Messages</value>
+  </data>
+  <data name="Minutes" xml:space="preserve">
+    <value>Minutes</value>
+  </data>
+  <data name="MixerData" xml:space="preserve">
+    <value>Mixer Data</value>
   </data>
   <data name="MixerLabs" xml:space="preserve">
     <value>Mixer Labs</value>
@@ -423,6 +459,9 @@
   <data name="PartneredStreamer" xml:space="preserve">
     <value>Partnered Streamer</value>
   </data>
+  <data name="PatreonUser" xml:space="preserve">
+    <value>Patreon User</value>
+  </data>
   <data name="Permissions" xml:space="preserve">
     <value>Permissions</value>
   </data>
@@ -462,6 +501,9 @@
   <data name="RoleErrorInsufficientRole" xml:space="preserve">
     <value>You must be a {0} to do this.</value>
   </data>
+  <data name="Roles" xml:space="preserve">
+    <value>Roles</value>
+  </data>
   <data name="SameAgeRating" xml:space="preserve">
     <value>Same Age Rating</value>
   </data>
@@ -498,11 +540,20 @@
   <data name="Settings" xml:space="preserve">
     <value>Settings</value>
   </data>
+  <data name="SkillsUsed" xml:space="preserve">
+    <value>Skills Used</value>
+  </data>
   <data name="SmallStreamer" xml:space="preserve">
     <value>Small Streamer (&lt;10)</value>
   </data>
   <data name="Source" xml:space="preserve">
     <value>Source</value>
+  </data>
+  <data name="SparkExempt" xml:space="preserve">
+    <value>Spark Exempt</value>
+  </data>
+  <data name="SparksSpent" xml:space="preserve">
+    <value>Sparks Spent</value>
   </data>
   <data name="Staff" xml:space="preserve">
     <value>Staff</value>
@@ -516,11 +567,26 @@
   <data name="StreamerAccount" xml:space="preserve">
     <value>Streamer Account</value>
   </data>
+  <data name="StreamsWatched" xml:space="preserve">
+    <value>Streams Watched</value>
+  </data>
   <data name="StreamTitle" xml:space="preserve">
     <value>Stream Title</value>
   </data>
+  <data name="SubAge" xml:space="preserve">
+    <value>Sub Age</value>
+  </data>
   <data name="Subscriber" xml:space="preserve">
     <value>Subscriber</value>
+  </data>
+  <data name="SubsGifted" xml:space="preserve">
+    <value>Subs Gifted</value>
+  </data>
+  <data name="SubsReceived" xml:space="preserve">
+    <value>Subs Received</value>
+  </data>
+  <data name="TaggedInChat" xml:space="preserve">
+    <value>Tagged In Chat</value>
   </data>
   <data name="Team" xml:space="preserve">
     <value>Team</value>
@@ -573,11 +639,20 @@
   <data name="UserLeftChat" xml:space="preserve">
     <value>{0} Left Chat</value>
   </data>
+  <data name="UserMetrics" xml:space="preserve">
+    <value>User Metrics</value>
+  </data>
+  <data name="UserOnlyChatCommands" xml:space="preserve">
+    <value>User-Only Chat Commands</value>
+  </data>
   <data name="Users" xml:space="preserve">
     <value>Users</value>
   </data>
   <data name="Viewers" xml:space="preserve">
     <value>Viewers</value>
+  </data>
+  <data name="WatchTime" xml:space="preserve">
+    <value>Watch Time</value>
   </data>
   <data name="WebShow" xml:space="preserve">
     <value>Web Show</value>

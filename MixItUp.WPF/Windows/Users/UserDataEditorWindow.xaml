@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MixItUp.WPF.Windows.Currency"
         xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
         xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
@@ -19,6 +20,9 @@
                   
         Icon="./../../Logo.ico"
         Title="User Editing" Height="600" Width="600">
+    <Windows:LoadingWindowBase.Resources>
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+    </Windows:LoadingWindowBase.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -41,7 +45,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <GroupBox Header="Mixer Data" Grid.Row="0">
+                <GroupBox Header="{x:Static resx:Resources.MixerData}" Grid.Row="0">
                     <Grid Margin="10">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -77,19 +81,19 @@
                             <TextBlock Grid.Column="4" Text="{Binding FanProgression.level.level}" VerticalAlignment="Center" />
                         </Grid>
 
-                        <TextBlock Grid.Row="0" Grid.Column="6">Roles:</TextBlock>
+                        <TextBlock Grid.Row="0" Grid.Column="6" Text="{Binding Source={x:Static resx:Resources.Roles}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
                         <TextBlock x:Name="RolesTextBlock" Grid.Row="0" Grid.Column="8" Text="{Binding RolesDisplayString}" />
 
-                        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Watch Time:</TextBlock>
-                        <TextBox x:Name="ViewingHoursTextBox" Grid.Row="2" Grid.Column="2" Width="50" Text="{Binding Data.ViewingHoursPart}" MaterialDesign:HintAssist.Hint="Hours" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
-                        <TextBox x:Name="ViewingMinutesTextBox" Grid.Row="2" Grid.Column="4" Width="50" Text="{Binding Data.ViewingMinutesPart}" MaterialDesign:HintAssist.Hint="Minutes" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+                        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.WatchTime}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
+                        <TextBox x:Name="ViewingHoursTextBox" Grid.Row="2" Grid.Column="2" Width="50" Text="{Binding Data.ViewingHoursPart}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Hours}" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+                        <TextBox x:Name="ViewingMinutesTextBox" Grid.Row="2" Grid.Column="4" Width="50" Text="{Binding Data.ViewingMinutesPart}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Minutes}" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
 
-                        <TextBlock Grid.Row="2" Grid.Column="6" VerticalAlignment="Center">Follow Age:</TextBlock>
+                        <TextBlock Grid.Row="2" Grid.Column="6" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.FollowAge}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
                         <TextBlock x:Name="FollowAgeTextBlock" VerticalAlignment="Center" Grid.Row="2" Grid.Column="8" Text="{Binding FollowAgeString}" />
 
-                        <TextBox x:Name="CustomTitleTextBox" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="5" Width="200" Text="{Binding Data.CustomTitle}" MaterialDesign:HintAssist.Hint="Custom Title" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+                        <TextBox x:Name="CustomTitleTextBox" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="5" Width="200" Text="{Binding Data.CustomTitle}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CustomTitle}" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
 
-                        <TextBlock Grid.Row="4" Grid.Column="6" VerticalAlignment="Center">Sub Age:</TextBlock>
+                        <TextBlock Grid.Row="4" Grid.Column="6" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.SubAge}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
                         <TextBlock x:Name="SubAgeTextBlock" VerticalAlignment="Center" Grid.Row="4" Grid.Column="8" Text="{Binding MixerSubscribeAgeString}" />
                     </Grid>
                 </GroupBox>
@@ -112,7 +116,7 @@
                     </GroupBox>
                 </Grid>
 
-                <GroupBox Header="User-Only Chat Commands" Grid.Row="4">
+                <GroupBox Header="{x:Static resx:Resources.UserOnlyChatCommands}" Grid.Row="4">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
@@ -133,7 +137,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
 
-                        <Button x:Name="AddUserOnlyCommandButton" Grid.Row="1" HorizontalAlignment="Center" Click="AddUserOnlyCommandButton_Click">Add Command</Button>
+                        <Button x:Name="AddUserOnlyCommandButton" Grid.Row="1" HorizontalAlignment="Center" Click="AddUserOnlyCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}"/>
                     </Grid>
                 </GroupBox>
 
@@ -154,9 +158,9 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0" VerticalAlignment="Center">Custom Entrance Command:</TextBlock>
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.CustomEntranceCommand}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
 
-                            <Button x:Name="NewEntranceCommandButton" Grid.Column="2" HorizontalAlignment="Center" Click="NewEntranceCommandButton_Click">Add Command</Button>
+                            <Button x:Name="NewEntranceCommandButton" Grid.Column="2" HorizontalAlignment="Center" Click="NewEntranceCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}" />
                             <CommandControls:CommandButtonsControl x:Name="ExistingEntranceCommandButtons" Grid.Column="2" HorizontalAlignment="Center" EditClicked="ExistingEntranceCommandButtons_EditClicked" DeleteClicked="ExistingEntranceCommandButtons_DeleteClicked" Visibility="Collapsed" />
 
                         </Grid>
@@ -172,20 +176,20 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0" VerticalAlignment="Center">Currency/Rank/Inventory Exempt:</TextBlock>
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.CurrencyRankInventoryExempt}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
                             <ToggleButton Grid.Column="2" x:Name="CurrencyRankExemptToggleButton" Checked="CurrencyRankExemptToggleButton_Checked" Unchecked="CurrencyRankExemptToggleButton_Checked" />
 
-                            <TextBlock Grid.Column="4" VerticalAlignment="Center">Spark Exempt:</TextBlock>
+                            <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.SparkExempt}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
                             <ToggleButton Grid.Column="6" x:Name="SparkExemptToggleButton" Checked="SparkExemptToggleButton_Checked" Unchecked="SparkExemptToggleButton_Checked" />
 
                         </Grid>
 
-                        <ComboBox x:Name="PatreonUserComboBox" Grid.Row="4" IsEnabled="False" IsEditable="True" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="Patreon User" SelectionChanged="PatreonUserComboBox_SelectionChanged" DisplayMemberPath="User.LookupName" Width="200" />
+                        <ComboBox x:Name="PatreonUserComboBox" Grid.Row="4" IsEnabled="False" IsEditable="True" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.PatreonUser}" SelectionChanged="PatreonUserComboBox_SelectionChanged" DisplayMemberPath="User.LookupName" Width="200" />
 
                     </Grid>
                 </GroupBox>
 
-                <GroupBox Header="User Metrics" Grid.Row="8">
+                <GroupBox Header="{x:Static resx:Resources.UserMetrics}" Grid.Row="8">
                     <Grid Margin="10,5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
