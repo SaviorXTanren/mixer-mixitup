@@ -27,9 +27,9 @@ namespace MixItUp.WPF
         public App()
         {
             // NOTE: Uncomment the lines below to test other cultures
-            System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo("de-DE");
-            System.Threading.Thread.CurrentThread.CurrentCulture = ci;
-            System.Threading.Thread.CurrentThread.CurrentUICulture = ci;
+            //System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo("de-DE");
+            //System.Threading.Thread.CurrentThread.CurrentCulture = ci;
+            //System.Threading.Thread.CurrentThread.CurrentUICulture = ci;
         }
 
         public void SwitchTheme(string colorScheme, string backgroundColorName, string fullThemeName)
