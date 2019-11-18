@@ -205,6 +205,9 @@ namespace MixItUp.Base.ViewModel.User
         public UserDataViewModel Data { get { return ChannelSession.Settings.UserData.GetValueIfExists(this.ID, new UserDataViewModel(this)); } }
 
         [JsonIgnore]
+        public string RolesDisplayString { get; private set; }
+
+        [JsonIgnore]
         public bool IsAnonymous { get { return this.ID == 0 || this.InteractiveIDs.Values.Any(i => i.anonymous.GetValueOrDefault()); } }
 
         [JsonIgnore]
@@ -679,6 +682,9 @@ namespace MixItUp.Base.ViewModel.User
                         mixerDisplayRoles.Remove(MixerRoleEnum.Subscriber);
                     }
                 }
+
+                List<string> displayRoles = new List<string>(mixerDisplayRoles.Select(r => EnumLocalizationHelper.GetLocalizedName(r)));
+                this.RolesDisplayString = string.Join(", ", displayRoles.OrderByDescending(r => r));
             }
         }
     }
