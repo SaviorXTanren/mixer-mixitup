@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -157,7 +157,7 @@
     <value>Dieser Benutzer ist bereits in dieser Gruppe vorhanden.</value>
   </data>
   <data name="AddFavoriteTeamAlreadyDone" xml:space="preserve">
-    <value>Sie haben dieses Team bereits als Favorit bezeichnet.</value>
+    <value>Du hast dieses Team bereits als Favorit bezeichnet.</value>
   </data>
   <data name="AddFavoriteTeamNotFound" xml:space="preserve">
     <value>Es konnte kein Team mit diesem Namen gefunden werden.</value>
@@ -217,13 +217,13 @@
     <value>Kanaleditor</value>
   </data>
   <data name="ChannelErrorInvalidAgeRating" xml:space="preserve">
-    <value>Es muss eine gültige Altersfreigabe gewählt werden.</value>
+    <value>Es muss eine gültige Alterseinstufung gewählt werden.</value>
   </data>
   <data name="ChannelErrorInvalidGame" xml:space="preserve">
     <value>Es muss ein gültiger &amp; vorhandener Spielname ausgewählt werden.</value>
   </data>
   <data name="ChannelErrorNoStreamTitle" xml:space="preserve">
-    <value>Ein Streamtitel muss angegeben werden.</value>
+    <value>Es muss ein Streamtitel angegeben werden.</value>
   </data>
   <data name="ChannelInfo" xml:space="preserve">
     <value>Kanalinformationen</value>
@@ -247,10 +247,10 @@
     <value>Chat leeren</value>
   </data>
   <data name="ClearChatConfirmation" xml:space="preserve">
-    <value>Dadurch werden alle Chat-Nachrichten für den Stream gelöschen. Bist du sicher?</value>
+    <value>Dadurch werden alle Chat-Nachrichten für den Stream gelöschen. Bist Du sicher?</value>
   </data>
   <data name="ClosingPleaseWait" xml:space="preserve">
-    <value>Bitte warten Sie, während Mix It Up speichert und ihre Einstellungen herunterfährt...</value>
+    <value>Bitte warte einen Moment, während Mix It Up deine Einstellungen speichert und herunterfährt...</value>
   </data>
   <data name="Commands" xml:space="preserve">
     <value>Befehle</value>
@@ -265,7 +265,7 @@
     <value>Gerät verbinden</value>
   </data>
   <data name="CumulativeMonthsSubbed" xml:space="preserve">
-    <value>Kumulative Monate untergubbed</value>
+    <value>Gesamte Anzahl der gesubten Monate</value>
   </data>
   <data name="CurrenciesRanksInventories" xml:space="preserve">
     <value>Währungen/Ränge/Inventare</value>
@@ -319,7 +319,7 @@
     <value>Befehl löschen</value>
   </data>
   <data name="DeleteFavoriteGroupConfirmation" xml:space="preserve">
-    <value>Möchten Sie diese Gruppe wirklich entfernen?</value>
+    <value>Möchtest Du diese Gruppe wirklich entfernen?</value>
   </data>
   <data name="DisableAllTimers" xml:space="preserve">
     <value>Alle Hinweise deaktivieren</value>
@@ -328,7 +328,7 @@
     <value>Chat ausschalten</value>
   </data>
   <data name="DisableChatConfirmation" xml:space="preserve">
-    <value>Dadurch wird der Chat für alle Benutzer deaktiviert. Bist du sicher?</value>
+    <value>Dadurch wird der Chat für alle Benutzer deaktiviert. Bist Du sicher?</value>
   </data>
   <data name="Disabled" xml:space="preserve">
     <value>Deaktiviert</value>
@@ -376,7 +376,7 @@
     <value>Events</value>
   </data>
   <data name="ExitConfirmation" xml:space="preserve">
-    <value>Bist du sicher dass, du Mix It Up schließen möchtest?</value>
+    <value>Bist Du sicher dass, du Mix It Up schließen möchtest?</value>
   </data>
   <data name="ExportData" xml:space="preserve">
     <value>Daten exportieren</value>
@@ -397,13 +397,13 @@
     <value>Nach Namen filtern</value>
   </data>
   <data name="FindChannelToRaid" xml:space="preserve">
-    <value>Kanal zum raiden finden</value>
+    <value>Raidkanal finden</value>
   </data>
   <data name="FindRaidErrorNoCriteria" xml:space="preserve">
-    <value>Muss ein Suchkriterium für die Suche nach einem Kanal zum Überfallssuchen auswählen</value>
+    <value>Es muss ein Suchkriterium für die Suche nach einem Kanal zum Raiden ausgewählt werden</value>
   </data>
   <data name="FindRaidErrorNoneFound" xml:space="preserve">
-    <value>Es ist nicht möglich, einen Kanal zu finden, der Ihre Suchkriterium erfüllt, bitte versuchen Sie, eine andere Wahl zu wählen.</value>
+    <value>Es ist nicht möglich, einen Kanal zu finden, der dein Suchkriterium erfüllt, bitte versuche ein anderes Suchkriterium aus.</value>
   </data>
   <data name="FollowAge" xml:space="preserve">
     <value>Follow-Alter</value>
@@ -424,7 +424,7 @@
     <value>Mini-Spiele</value>
   </data>
   <data name="Giveaway" xml:space="preserve">
-    <value>Werbegeschenk</value>
+    <value>Giveaway</value>
   </data>
   <data name="GroupName" xml:space="preserve">
     <value>Gruppenname</value>
@@ -505,7 +505,7 @@
     <value>Ein Kanalname wird benötigt.</value>
   </data>
   <data name="LoginErrorNoStreamerAccount" xml:space="preserve">
-    <value>Du must ein Streamer-Konto auswählen, um dich anzumelden.</value>
+    <value>Du musst ein Streamer-Konto auswählen, um dich anzumelden.</value>
   </data>
   <data name="LoginErrorNotModerator" xml:space="preserve">
     <value>Du bist kein Moderator auf diesem Kanal.</value>
@@ -601,7 +601,7 @@
     <value>Online Rate</value>
   </data>
   <data name="OnSubscribe" xml:space="preserve">
-    <value>Beim Subsciben</value>
+    <value>Beim Subscriben</value>
   </data>
   <data name="OnUserRankChanged" xml:space="preserve">
     <value>Auf Benutzerrang geändert</value>
@@ -634,7 +634,7 @@
     <value>Berechtigungen</value>
   </data>
   <data name="Position" xml:space="preserve">
-    <value>Pos</value>
+    <value>Position</value>
   </data>
   <data name="PreMadeCommands" xml:space="preserve">
     <value>Vorgefertigte Befehle</value>
@@ -664,7 +664,7 @@
     <value>Rangname</value>
   </data>
   <data name="RefreshTimeSecs" xml:space="preserve">
-    <value>Aktualisierungszeit (Sec)</value>
+    <value>Aktualisierungszeit (Sek)</value>
   </data>
   <data name="Regular" xml:space="preserve">
     <value>Regulär</value>
@@ -682,7 +682,7 @@
     <value>Rollen Bonusse</value>
   </data>
   <data name="RoleErrorInsufficientRole" xml:space="preserve">
-    <value>Dazu müssen Sie ein {0} sein.</value>
+    <value>Dazu musst Du ein {0} sein.</value>
   </data>
   <data name="Roles" xml:space="preserve">
     <value>Rolle</value>
@@ -697,7 +697,7 @@
     <value>Gleiches Team</value>
   </data>
   <data name="SaveFailed" xml:space="preserve">
-    <value>Speichern fehlgeschlagen, versucht ein anderes Mal...</value>
+    <value>Speichern fehlgeschlagen, versuche es erneut...</value>
   </data>
   <data name="Scene" xml:space="preserve">
     <value>Szene</value>
@@ -766,7 +766,7 @@
     <value>Referenz für Spezielle Bezeichner</value>
   </data>
   <data name="Staff" xml:space="preserve">
-    <value>Mitarbeiter</value>
+    <value>Mixer-Mitarbeiter</value>
   </data>
   <data name="Statistics" xml:space="preserve">
     <value>Statistik</value>
@@ -811,7 +811,7 @@
     <value>Team</value>
   </data>
   <data name="TeamName" xml:space="preserve">
-    <value>Teamp-Name</value>
+    <value>Team-Name</value>
   </data>
   <data name="Teen" xml:space="preserve">
     <value>Jugendlich</value>
@@ -877,7 +877,7 @@
     <value>{0} ist dem Chat beigetreten</value>
   </data>
   <data name="UserLeftChat" xml:space="preserve">
-    <value>{0} verließ chat</value>
+    <value>{0} hat den Chat verlassen</value>
   </data>
   <data name="UserMetrics" xml:space="preserve">
     <value>Benutzerkennzahlen</value>
