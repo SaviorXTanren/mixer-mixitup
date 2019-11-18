@@ -31,7 +31,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Currencies / Ranks / Inventories</TextBlock>
+            <TextBlock Grid.Row="0" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{x:Static resx:Resources.CurrenciesRanksInventories}"/>
 
             <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="2" BorderThickness="1">
                 <DataGrid x:Name="MainDataGrid" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
@@ -64,11 +64,11 @@
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
 
-                                        <Button x:Name="EditButton" Grid.Column="0" Click="EditButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Edit">
+                                        <Button x:Name="EditButton" Grid.Column="0" Click="EditButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Edit}">
                                             <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                         </Button>
 
-                                        <Button x:Name="DeleteButton" Grid.Column="2" Click="DeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Delete">
+                                        <Button x:Name="DeleteButton" Grid.Column="2" Click="DeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Delete}">
                                             <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                         </Button>
                                     </Grid>
@@ -87,9 +87,9 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Button x:Name="AddNewCurrencyRankButton" Grid.Column="0" Click="AddNewCurrencyRankButton_Click" ToolTip="Add Currency/Rank System">Add Currency/Rank</Button>
+            <Button x:Name="AddNewCurrencyRankButton" Grid.Column="0" Click="AddNewCurrencyRankButton_Click" ToolTip="{x:Static resx:Resources.AddCurrencyRank}" Content="{x:Static resx:Resources.AddCurrencyRank}" />
 
-            <Button x:Name="AddNewInventoryButton" Grid.Column="2" Click="AddNewInventoryButton_Click" ToolTip="Add Inventory System">Add Inventory</Button>
+            <Button x:Name="AddNewInventoryButton" Grid.Column="2" Click="AddNewInventoryButton_Click" ToolTip="{x:Static resx:Resources.AddInventory}" Content="{x:Static resx:Resources.AddInventory}" />
         </Grid>
     </Grid>
 </local:MainControlBase>

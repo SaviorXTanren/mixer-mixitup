@@ -115,6 +115,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Currency/Rank.
+        /// </summary>
+        public static string AddCurrencyRank {
+            get {
+                return ResourceManager.GetString("AddCurrencyRank", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This user already exists in this group..
         /// </summary>
         public static string AddFavoriteStreamerAlreadyDone {
@@ -147,6 +156,15 @@ namespace MixItUp.Base {
         public static string AddFavoriteTeamNotFound {
             get {
                 return ResourceManager.GetString("AddFavoriteTeamNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Inventory.
+        /// </summary>
+        public static string AddInventory {
+            get {
+                return ResourceManager.GetString("AddInventory", resourceCulture);
             }
         }
         
@@ -390,6 +408,15 @@ namespace MixItUp.Base {
         public static string CumulativeMonthsSubbed {
             get {
                 return ResourceManager.GetString("CumulativeMonthsSubbed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Currencies/Ranks/Inventories.
+        /// </summary>
+        public static string CurrenciesRanksInventories {
+            get {
+                return ResourceManager.GetString("CurrenciesRanksInventories", resourceCulture);
             }
         }
         

@@ -135,6 +135,9 @@
   <data name="AddCommand" xml:space="preserve">
     <value>Add Command</value>
   </data>
+  <data name="AddCurrencyRank" xml:space="preserve">
+    <value>Add Currency/Rank</value>
+  </data>
   <data name="AddFavoriteStreamerAlreadyDone" xml:space="preserve">
     <value>This user already exists in this group.</value>
   </data>
@@ -146,6 +149,9 @@
   </data>
   <data name="AddFavoriteTeamNotFound" xml:space="preserve">
     <value>Could not find a team by that name.</value>
+  </data>
+  <data name="AddInventory" xml:space="preserve">
+    <value>Add Inventory</value>
   </data>
   <data name="AdvancedCommand" xml:space="preserve">
     <value>Advanced Command</value>
@@ -227,6 +233,9 @@
   </data>
   <data name="CumulativeMonthsSubbed" xml:space="preserve">
     <value>Cumulative Months Subbed</value>
+  </data>
+  <data name="CurrenciesRanksInventories" xml:space="preserve">
+    <value>Currencies/Ranks/Inventories</value>
   </data>
   <data name="CurrencyRank" xml:space="preserve">
     <value>Currency/Rank</value>
