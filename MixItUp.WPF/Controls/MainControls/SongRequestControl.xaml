@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Util="clr-namespace:MixItUp.WPF.Util"
              xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -109,11 +110,11 @@
 
             <DataGrid Grid.Row="2" ItemsSource="{Binding RequestSongs}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Pos" Binding="{Binding Position}" IsReadOnly="True" Width="70" />
-                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
-                    <DataGridTextColumn Header="User" Binding="{Binding User.UserName}" IsReadOnly="True" Width="125" />
-                    <DataGridTextColumn Header="Source" Binding="{Binding Type}" IsReadOnly="True" Width="100" />
-                    <DataGridTemplateColumn Header="Actions" Width="200">
+                    <DataGridTextColumn Header="{x:Static resx:Resources.Position}" Binding="{Binding Position}" IsReadOnly="True" Width="70" />
+                    <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                    <DataGridTextColumn Header="{x:Static resx:Resources.User}" Binding="{Binding User.UserName}" IsReadOnly="True" Width="125" />
+                    <DataGridTextColumn Header="{x:Static resx:Resources.Source}" Binding="{Binding Type}" IsReadOnly="True" Width="100" />
+                    <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="200">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid HorizontalAlignment="Center">

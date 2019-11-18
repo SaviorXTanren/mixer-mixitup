@@ -35,9 +35,9 @@
 
             <DataGrid ItemsSource="{Binding OverlayWidgets}" Grid.Row="0" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
-                    <DataGridTextColumn Header="Overlay" Binding="{Binding OverlayName}" IsReadOnly="True" Width="*" />
-                    <DataGridTemplateColumn Header="Actions" Width="240">
+                    <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                    <DataGridTextColumn Header="{x:Static resx:Resources.Overlay}" Binding="{Binding OverlayName}" IsReadOnly="True" Width="*" />
+                    <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="240">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid HorizontalAlignment="Right" Margin="0,0,15,0">

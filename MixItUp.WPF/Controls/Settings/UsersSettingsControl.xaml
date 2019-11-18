@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Settings"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:MainControls="clr-namespace:MixItUp.WPF.Controls.MainControls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
@@ -39,13 +40,13 @@
         <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="6" BorderThickness="1" Width="450">
             <DataGrid x:Name="UserTitlesDataGrid" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
-                    <DataGridTextColumn Header="Role" Binding="{Binding RoleString}" IsReadOnly="True" Width="125" />
-                    <DataGridTextColumn Header="Months" Binding="{Binding MonthsString}" IsReadOnly="True" Width="100" />
+                    <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                    <DataGridTextColumn Header="{x:Static resx:Resources.Role}" Binding="{Binding RoleString}" IsReadOnly="True" Width="125" />
+                    <DataGridTextColumn Header="{x:Static resx:Resources.Months}" Binding="{Binding MonthsString}" IsReadOnly="True" Width="100" />
                     <DataGridTemplateColumn Width="65">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Grid.Column="6" x:Name="DeleteTitleButton" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteTitleButton_Click" Width="50" ToolTip="Delete" />
+                                <Button Grid.Column="6" x:Name="DeleteTitleButton" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteTitleButton_Click" Width="50" ToolTip="{x:Static resx:Resources.Delete}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

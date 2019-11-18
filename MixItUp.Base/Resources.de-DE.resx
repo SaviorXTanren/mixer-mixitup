@@ -225,8 +225,17 @@
   <data name="Dashboard" xml:space="preserve">
     <value>Dashboard</value>
   </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="DeleteCommand" xml:space="preserve">
+    <value>Befehl löschen</value>
+  </data>
   <data name="DeleteFavoriteGroupConfirmation" xml:space="preserve">
     <value>Möchten Sie diese Gruppe wirklich entfernen?</value>
+  </data>
+  <data name="DisableAllTimers" xml:space="preserve">
+    <value>Alle Hinweise deaktivieren</value>
   </data>
   <data name="DisableChat" xml:space="preserve">
     <value>Chat ausschalten</value>
@@ -236,6 +245,9 @@
   </data>
   <data name="DownloadFrom" xml:space="preserve">
     <value>Herunterladen von</value>
+  </data>
+  <data name="EditCommand" xml:space="preserve">
+    <value>Befehl anpassen</value>
   </data>
   <data name="Enable Chat" xml:space="preserve">
     <value>Chat aktivieren</value>
@@ -315,6 +327,9 @@
   <data name="LicenseAgreement" xml:space="preserve">
     <value>Lizenzvertrag</value>
   </data>
+  <data name="Live" xml:space="preserve">
+    <value>Live</value>
+  </data>
   <data name="LockChatScrolling" xml:space="preserve">
     <value>Chat-Bildlauf sperren/entsperren</value>
   </data>
@@ -339,6 +354,9 @@
   <data name="MediumStreamer" xml:space="preserve">
     <value>Mittlerer Streamer (10-25)</value>
   </data>
+  <data name="MinMessages" xml:space="preserve">
+    <value>Min. Nachrichten</value>
+  </data>
   <data name="MixerLabs" xml:space="preserve">
     <value>Mixer Labs</value>
   </data>
@@ -354,8 +372,14 @@
   <data name="Moderator" xml:space="preserve">
     <value>Moderator</value>
   </data>
+  <data name="Months" xml:space="preserve">
+    <value>Monate</value>
+  </data>
   <data name="Name" xml:space="preserve">
     <value>Name</value>
+  </data>
+  <data name="NewActionGroup" xml:space="preserve">
+    <value>Neue Aktionsgruppe</value>
   </data>
   <data name="NewCommand" xml:space="preserve">
     <value>Neuer Befehl</value>
@@ -369,6 +393,12 @@
   <data name="Ok" xml:space="preserve">
     <value>Okay</value>
   </data>
+  <data name="OnlineMinutes" xml:space="preserve">
+    <value>Online-Minuten</value>
+  </data>
+  <data name="Overlay" xml:space="preserve">
+    <value>Overlay</value>
+  </data>
   <data name="OverlayWidgets" xml:space="preserve">
     <value>Overlay Widgets</value>
   </data>
@@ -380,6 +410,9 @@
   </data>
   <data name="Permissions" xml:space="preserve">
     <value>Berechtigungen</value>
+  </data>
+  <data name="Position" xml:space="preserve">
+    <value>Pos</value>
   </data>
   <data name="PreMadeCommands" xml:space="preserve">
     <value>Vorgefertigte Befehle</value>
@@ -398,6 +431,9 @@
   </data>
   <data name="Remote" xml:space="preserve">
     <value>Remote</value>
+  </data>
+  <data name="Role" xml:space="preserve">
+    <value>Rolle</value>
   </data>
   <data name="RoleErrorInsufficientRole" xml:space="preserve">
     <value>Dazu müssen Sie ein {0} sein.</value>
@@ -441,6 +477,9 @@
   <data name="SmallStreamer" xml:space="preserve">
     <value>Kleiner Streamer (&lt;10)</value>
   </data>
+  <data name="Source" xml:space="preserve">
+    <value>Quelle</value>
+  </data>
   <data name="Staff" xml:space="preserve">
     <value>Mitarbeiter</value>
   </data>
@@ -471,8 +510,14 @@
   <data name="TestCommand" xml:space="preserve">
     <value>Befehl testen</value>
   </data>
+  <data name="TimerInterval" xml:space="preserve">
+    <value>Interval (Minuten)</value>
+  </data>
   <data name="Timers" xml:space="preserve">
     <value>Hinweise</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>Totale</value>
   </data>
   <data name="TotalUsers" xml:space="preserve">
     <value>Totale Zuschauer</value>
@@ -485,6 +530,9 @@
   </data>
   <data name="TypeToAdd" xml:space="preserve">
     <value>Typ</value>
+  </data>
+  <data name="Ungrouped" xml:space="preserve">
+    <value>Nicht gruppiert</value>
   </data>
   <data name="Unknown" xml:space="preserve">
     <value>Unbekannt</value>

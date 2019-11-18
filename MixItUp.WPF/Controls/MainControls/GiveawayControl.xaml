@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
              xmlns:RequirementControls="clr-namespace:MixItUp.WPF.Controls.Requirement"
@@ -163,8 +164,8 @@
 
             <DataGrid ItemsSource="{Binding EnteredUsers}" Grid.Row="2" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Name" Binding="{Binding User.UserName}" IsReadOnly="True" Width="*" />
-                    <DataGridTextColumn Header="Total" Binding="{Binding Entries}" IsReadOnly="True" Width="75" />
+                    <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding User.UserName}" IsReadOnly="True" Width="*" />
+                    <DataGridTextColumn Header="{x:Static resx:Resources.Total}" Binding="{Binding Entries}" IsReadOnly="True" Width="75" />
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
