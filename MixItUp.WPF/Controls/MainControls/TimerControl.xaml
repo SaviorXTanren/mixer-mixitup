@@ -4,9 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d"
                           
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -17,6 +19,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <local:GroupedCommandsMainControlBase.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
     </local:GroupedCommandsMainControlBase.Resources>
 
     <Grid Margin="10">
@@ -35,7 +38,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="Filter By Name:" />
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.FilterByName}, StringFormat={StaticResource ColumnHeaderFormat}}" />
 
             <TextBox Grid.Column="2" x:Name="NameFilterTextBox" Width="150" TextChanged="NameFilterTextBox_TextChanged" />
         </Grid>
@@ -56,8 +59,8 @@
 
                                 <DataGrid ItemsSource="{Binding Commands}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" PreviewMouseWheel="DataGrid_PreviewMouseWheel">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" MinWidth="500" Width="*" />
-                                        <DataGridTemplateColumn Header="Actions" MinWidth="240" Width="240">
+                                        <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" MinWidth="500" Width="*" />
+                                        <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" MinWidth="240" Width="240">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <CommandControls:CommandButtonsControl HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
@@ -86,13 +89,13 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Button x:Name="AddCommandButton" Grid.Column="0" Click="AddCommandButton_Click">New Command</Button>
+            <Button x:Name="AddCommandButton" Grid.Column="0" Click="AddCommandButton_Click" Content="{x:Static resx:Resources.NewCommand}"/>
 
-            <TextBox Grid.Column="2" Text="{Binding TimeIntervalString}" MaterialDesign:HintAssist.Hint="Interval (Minutes)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="2" Text="{Binding TimeIntervalString}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TimerInterval}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox Grid.Column="4" Text="{Binding MinimumMessagesString}" MaterialDesign:HintAssist.Hint="Min Messages" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="4" Text="{Binding MinimumMessagesString}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MinMessages}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBlock Grid.Column="6" Text="Disable All Timers:" VerticalAlignment="Center"/>
+            <TextBlock Grid.Column="6" Text="{Binding Source={x:Static resx:Resources.DisableAllTimers}, StringFormat={StaticResource ColumnHeaderFormat}}" VerticalAlignment="Center"/>
             <ToggleButton Grid.Column="8" IsChecked="{Binding DisableAllTimers}" />
 
         </Grid>
