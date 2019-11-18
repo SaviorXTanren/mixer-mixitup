@@ -38,7 +38,7 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
                         <DataGridTextColumn Header="{x:Static resx:Resources.Type}" Binding="{Binding Type}" IsReadOnly="True" Width="125" />
-                        <DataGridTemplateColumn Header="Special Identifiers" IsReadOnly="True" Width="2*">
+                        <DataGridTemplateColumn Header="{x:Static resx:Resources.SpecialIdentifiers}" IsReadOnly="True" Width="2*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Grid>

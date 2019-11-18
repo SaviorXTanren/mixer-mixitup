@@ -1402,6 +1402,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Special Identifiers.
+        /// </summary>
+        public static string SpecialIdentifiers {
+            get {
+                return ResourceManager.GetString("SpecialIdentifiers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Special Identifiers Reference.
+        /// </summary>
+        public static string SpecialIdentifiersReference {
+            get {
+                return ResourceManager.GetString("SpecialIdentifiersReference", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Staff.
         /// </summary>
         public static string Staff {

@@ -564,6 +564,12 @@
   <data name="SparksSpent" xml:space="preserve">
     <value>Sparks Spent</value>
   </data>
+  <data name="SpecialIdentifiers" xml:space="preserve">
+    <value>Special Identifiers</value>
+  </data>
+  <data name="SpecialIdentifiersReference" xml:space="preserve">
+    <value>Special Identifiers Reference</value>
+  </data>
   <data name="Staff" xml:space="preserve">
     <value>Staff</value>
   </data>
