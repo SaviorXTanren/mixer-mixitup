@@ -210,6 +210,9 @@
   <data name="Connect" xml:space="preserve">
     <value>Verbinden</value>
   </data>
+  <data name="ConnectDevices" xml:space="preserve">
+    <value>Gerät verbinden</value>
+  </data>
   <data name="CurrencyRankInventory" xml:space="preserve">
     <value>Währung/Rang/Inventar</value>
   </data>
@@ -378,6 +381,9 @@
   <data name="Name" xml:space="preserve">
     <value>Name</value>
   </data>
+  <data name="NameOfProfile" xml:space="preserve">
+    <value>Profilname</value>
+  </data>
   <data name="NewActionGroup" xml:space="preserve">
     <value>Neue Aktionsgruppe</value>
   </data>
@@ -419,6 +425,9 @@
   </data>
   <data name="Pro" xml:space="preserve">
     <value>Pro</value>
+  </data>
+  <data name="Profiles" xml:space="preserve">
+    <value>Profile</value>
   </data>
   <data name="Quotes" xml:space="preserve">
     <value>Zitate</value>

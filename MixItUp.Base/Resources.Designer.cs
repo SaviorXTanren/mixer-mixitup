@@ -349,6 +349,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Connect Devices.
+        /// </summary>
+        public static string ConnectDevices {
+            get {
+                return ResourceManager.GetString("ConnectDevices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Currency/Rank/Inventory.
         /// </summary>
         public static string CurrencyRankInventory {
@@ -844,6 +853,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Name of Profile.
+        /// </summary>
+        public static string NameOfProfile {
+            get {
+                return ResourceManager.GetString("NameOfProfile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to NewActionGroup.
         /// </summary>
         public static string NewActionGroup {
@@ -966,6 +984,15 @@ namespace MixItUp.Base {
         public static string Pro {
             get {
                 return ResourceManager.GetString("Pro", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Profiles.
+        /// </summary>
+        public static string Profiles {
+            get {
+                return ResourceManager.GetString("Profiles", resourceCulture);
             }
         }
         
