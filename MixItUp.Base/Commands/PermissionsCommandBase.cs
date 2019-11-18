@@ -35,15 +35,15 @@ namespace MixItUp.Base.Commands
         }
 
         [JsonIgnore]
-        public string UserRoleRequirementString
+        public MixerRoleEnum UserRoleRequirement
         {
             get
             {
                 if (this.Requirements.Role != null)
                 {
-                    return this.Requirements.Role.RoleNameString;
+                    return this.Requirements.Role.MixerRole;
                 }
-                return string.Empty;
+                return MixerRoleEnum.User;
             }
         }
 

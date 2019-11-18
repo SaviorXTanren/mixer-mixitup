@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.ViewModel.Requirement;
+using MixItUp.Base.ViewModel.User;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -29,7 +30,7 @@ namespace MixItUp.WPF.Controls.Requirement
             {
                 this.tempRole = role;
                 this.RoleComboBox.ItemsSource = RoleRequirementViewModel.AdvancedUserRoleAllowedValues;
-                this.RoleComboBox.SelectedItem = role.RoleNameString;
+                this.RoleComboBox.SelectedItem = role.MixerRole;
             }
         }
 
@@ -40,7 +41,7 @@ namespace MixItUp.WPF.Controls.Requirement
 
         private void RoleComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            this.tempRole.SetRoleBasedOnString((string)this.RoleComboBox.SelectedItem);
+            this.tempRole.MixerRole = (MixerRoleEnum)this.RoleComboBox.SelectedItem;
         }
     }
 }

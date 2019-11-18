@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -50,7 +51,7 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
 
-                                    <Button x:Name="PlayButton" Grid.Column="0" Click="PlayButton_Click" Width="40" HorizontalAlignment="Center" Visibility="{Binding SupportsTestData, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Hidden}" ToolTip="Test Command">
+                                    <Button x:Name="PlayButton" Grid.Column="0" Click="PlayButton_Click" Width="40" HorizontalAlignment="Center" Visibility="{Binding SupportsTestData, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Hidden}" ToolTip="{x:Static resx:Resources.TestCommand}">
                                         <MaterialDesign:PackIcon Kind="Play" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                     </Button>
 
@@ -62,7 +63,7 @@
                                         <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                     </Button>
 
-                                    <ToggleButton x:Name="EnableDisableToggleSwitch" Grid.Column="6" IsChecked="{Binding IsEnabled}" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Enable/Disable Command" Checked="EnableDisableToggleSwitch_Checked" Unchecked="EnableDisableToggleSwitch_Unchecked" />
+                                    <ToggleButton x:Name="EnableDisableToggleSwitch" Grid.Column="6" IsChecked="{Binding IsEnabled}" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.EnableDisableCommand}" Checked="EnableDisableToggleSwitch_Checked" Unchecked="EnableDisableToggleSwitch_Unchecked" />
                                 </Grid>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>

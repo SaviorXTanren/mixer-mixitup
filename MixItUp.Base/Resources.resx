@@ -141,6 +141,9 @@
   <data name="AddFavoriteTeamNotFound" xml:space="preserve">
     <value>Could not find a team by that name.</value>
   </data>
+  <data name="AdvancedCommand" xml:space="preserve">
+    <value>Advanced Command</value>
+  </data>
   <data name="AgeRating" xml:space="preserve">
     <value>Age Rating</value>
   </data>
@@ -150,6 +153,12 @@
   <data name="AutoHoster" xml:space="preserve">
     <value>Auto-Hoster</value>
   </data>
+  <data name="BasicChatCommand" xml:space="preserve">
+    <value>Basic Chat Command</value>
+  </data>
+  <data name="BasicSoundCommand" xml:space="preserve">
+    <value>Basic Sound Command</value>
+  </data>
   <data name="Bot" xml:space="preserve">
     <value>Bot</value>
   </data>
@@ -158,6 +167,9 @@
   </data>
   <data name="Channel" xml:space="preserve">
     <value>Channel</value>
+  </data>
+  <data name="ChannelEditor" xml:space="preserve">
+    <value>Channel Editor</value>
   </data>
   <data name="ChannelErrorInvalidAgeRating" xml:space="preserve">
     <value>A valid age rating must be selected.</value>
@@ -195,6 +207,15 @@
   <data name="CurrencyRankInventory" xml:space="preserve">
     <value>Currency/Rank/Inventory</value>
   </data>
+  <data name="Custom" xml:space="preserve">
+    <value>Custom</value>
+  </data>
+  <data name="CustomCommands" xml:space="preserve">
+    <value>Custom Commands</value>
+  </data>
+  <data name="CustomizeCommand" xml:space="preserve">
+    <value>Customize Command</value>
+  </data>
   <data name="Dashboard" xml:space="preserve">
     <value>Dashboard</value>
   </data>
@@ -207,8 +228,20 @@
   <data name="DisableChatConfirmation" xml:space="preserve">
     <value>This will disable chat for all users. Are you sure?</value>
   </data>
+  <data name="DownloadFrom" xml:space="preserve">
+    <value>DownloadFrom</value>
+  </data>
   <data name="EnableChat" xml:space="preserve">
     <value>Enable Chat</value>
+  </data>
+  <data name="EnableDisableCommand" xml:space="preserve">
+    <value>Enable/Disable Command</value>
+  </data>
+  <data name="ErrorGamePickInsufficientRole" xml:space="preserve">
+    <value>You must be a {0} to pick the answer.</value>
+  </data>
+  <data name="ErrorGameStartInsufficentRole" xml:space="preserve">
+    <value>You must be a {0} to start this game.</value>
   </data>
   <data name="Events" xml:space="preserve">
     <value>Events</value>
@@ -225,6 +258,9 @@
   <data name="FavoriteStreamers" xml:space="preserve">
     <value>Favorite Streamers</value>
   </data>
+  <data name="FilterByName" xml:space="preserve">
+    <value>Filter By Name</value>
+  </data>
   <data name="FindChannelToRaid" xml:space="preserve">
     <value>Find Channel To Raid</value>
   </data>
@@ -233,6 +269,9 @@
   </data>
   <data name="FindRaidErrorNoneFound" xml:space="preserve">
     <value>Unable to find a channel that met your search critera, please try selecting a different option.</value>
+  </data>
+  <data name="Follower" xml:space="preserve">
+    <value>Follower</value>
   </data>
   <data name="Game" xml:space="preserve">
     <value>Game</value>
@@ -291,11 +330,20 @@
   <data name="MixPlay" xml:space="preserve">
     <value>MixPlay</value>
   </data>
+  <data name="Mod" xml:space="preserve">
+    <value>Mod</value>
+  </data>
   <data name="Moderation" xml:space="preserve">
     <value>Moderation</value>
   </data>
   <data name="Moderator" xml:space="preserve">
     <value>Moderator</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="NewCommand" xml:space="preserve">
+    <value>New Command</value>
   </data>
   <data name="NewStreamer" xml:space="preserve">
     <value>New Streamer</value>
@@ -309,8 +357,20 @@
   <data name="OverlayWidgets" xml:space="preserve">
     <value>Overlay Widgets</value>
   </data>
+  <data name="Partner" xml:space="preserve">
+    <value>Partner</value>
+  </data>
   <data name="PartneredStreamer" xml:space="preserve">
     <value>Partnered Streamer</value>
+  </data>
+  <data name="Permissions" xml:space="preserve">
+    <value>Permissions</value>
+  </data>
+  <data name="PreMadeCommands" xml:space="preserve">
+    <value>Pre-Made Commands</value>
+  </data>
+  <data name="Pro" xml:space="preserve">
+    <value>Pro</value>
   </data>
   <data name="Quotes" xml:space="preserve">
     <value>Quotes</value>
@@ -318,8 +378,14 @@
   <data name="RandomStreamer" xml:space="preserve">
     <value>Random Streamer</value>
   </data>
+  <data name="Regular" xml:space="preserve">
+    <value>Regular</value>
+  </data>
   <data name="Remote" xml:space="preserve">
     <value>Remote</value>
+  </data>
+  <data name="RoleErrorInsufficientRole" xml:space="preserve">
+    <value>You must be a {0} to do this.</value>
   </data>
   <data name="SameAgeRating" xml:space="preserve">
     <value>Same Age Rating</value>
@@ -339,6 +405,9 @@
   <data name="SearchCriteria" xml:space="preserve">
     <value>Search Criteria</value>
   </data>
+  <data name="SelectTypeOfCommand" xml:space="preserve">
+    <value>Select the type of command you would like to build:</value>
+  </data>
   <data name="Send" xml:space="preserve">
     <value>Send</value>
   </data>
@@ -350,6 +419,9 @@
   </data>
   <data name="SmallStreamer" xml:space="preserve">
     <value>Small Streamer (&lt;10)</value>
+  </data>
+  <data name="Staff" xml:space="preserve">
+    <value>Staff</value>
   </data>
   <data name="Statistics" xml:space="preserve">
     <value>Statistics</value>
@@ -363,6 +435,9 @@
   <data name="StreamTitle" xml:space="preserve">
     <value>Stream Title</value>
   </data>
+  <data name="Subscriber" xml:space="preserve">
+    <value>Subscriber</value>
+  </data>
   <data name="Team" xml:space="preserve">
     <value>Team</value>
   </data>
@@ -371,6 +446,9 @@
   </data>
   <data name="Teen" xml:space="preserve">
     <value>Teen</value>
+  </data>
+  <data name="TestCommand" xml:space="preserve">
+    <value>Test Command</value>
   </data>
   <data name="Timers" xml:space="preserve">
     <value>Timers</value>
@@ -386,6 +464,9 @@
   </data>
   <data name="UpdateChannel" xml:space="preserve">
     <value>Update Channel</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>User</value>
   </data>
   <data name="UserJoinedChat" xml:space="preserve">
     <value>{0} Joined Chat</value>

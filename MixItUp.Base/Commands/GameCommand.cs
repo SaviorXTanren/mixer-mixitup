@@ -1930,7 +1930,8 @@ namespace MixItUp.Base.Commands
             {
                 if (!this.GameStarterRequirement.DoesMeetRequirement(user))
                 {
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You must be a {0} to start this game", this.GameStarterRequirement.RoleNameString));
+                    string role = EnumLocalizationHelper.GetLocalizedName(this.GameStarterRequirement.MixerRole);
+                    await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format(MixItUp.Base.Resources.ErrorGameStartInsufficentRole, role));
                     return false;
                 }
             }
@@ -2059,7 +2060,8 @@ namespace MixItUp.Base.Commands
                 {
                     if (!this.GameStarterRequirement.DoesMeetRequirement(user))
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You must be a {0} to pick the answer", this.GameStarterRequirement.RoleNameString));
+                        string role = EnumLocalizationHelper.GetLocalizedName(this.GameStarterRequirement.MixerRole);
+                        await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format(MixItUp.Base.Resources.ErrorGamePickInsufficientRole, role));
                         return;
                     }
                     this.winningOption = option;
@@ -2071,7 +2073,8 @@ namespace MixItUp.Base.Commands
             {
                 if (this.timeLimitTask == null && !this.GameStarterRequirement.DoesMeetRequirement(user))
                 {
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You must be a {0} to start this game", this.GameStarterRequirement.RoleNameString));
+                    string role = EnumLocalizationHelper.GetLocalizedName(this.GameStarterRequirement.MixerRole);
+                    await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format(MixItUp.Base.Resources.ErrorGameStartInsufficentRole, role));
                     return;
                 }
 

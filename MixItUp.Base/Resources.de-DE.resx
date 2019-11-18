@@ -138,6 +138,9 @@
   <data name="AddFavoriteTeamNotFound" xml:space="preserve">
     <value>Es konnte kein Team mit diesem Namen gefunden werden.</value>
   </data>
+  <data name="AdvancedCommand" xml:space="preserve">
+    <value>Erweiterter Befehl</value>
+  </data>
   <data name="AgeRating" xml:space="preserve">
     <value>Alterseinstufung</value>
   </data>
@@ -147,6 +150,12 @@
   <data name="AutoHoster" xml:space="preserve">
     <value>Auto-Hoster</value>
   </data>
+  <data name="BasicChatCommand" xml:space="preserve">
+    <value>Einfacher Chat-Befehl</value>
+  </data>
+  <data name="BasicSoundCommand" xml:space="preserve">
+    <value>Einfacher Sound-Befehl</value>
+  </data>
   <data name="Bot" xml:space="preserve">
     <value>Bot</value>
   </data>
@@ -155,6 +164,9 @@
   </data>
   <data name="Channel" xml:space="preserve">
     <value>Kanal</value>
+  </data>
+  <data name="ChannelEditor" xml:space="preserve">
+    <value>Kanaleditor</value>
   </data>
   <data name="ChannelErrorInvalidAgeRating" xml:space="preserve">
     <value>Es muss eine gültige Altersfreigabe gewählt werden.</value>
@@ -192,6 +204,15 @@
   <data name="CurrencyRankInventory" xml:space="preserve">
     <value>Währung/Rang/Inventar</value>
   </data>
+  <data name="Custom" xml:space="preserve">
+    <value>Benutzerdefiniert</value>
+  </data>
+  <data name="CustomCommands" xml:space="preserve">
+    <value>Benutzerdefinierte Befehle</value>
+  </data>
+  <data name="CustomizeCommand" xml:space="preserve">
+    <value>Befehl anpassen</value>
+  </data>
   <data name="Dashboard" xml:space="preserve">
     <value>Dashboard</value>
   </data>
@@ -204,8 +225,20 @@
   <data name="DisableChatConfirmation" xml:space="preserve">
     <value>Dadurch wird der Chat für alle Benutzer deaktiviert. Bist du sicher?</value>
   </data>
+  <data name="DownloadFrom" xml:space="preserve">
+    <value>Herunterladen von</value>
+  </data>
   <data name="Enable Chat" xml:space="preserve">
     <value>Chat aktivieren</value>
+  </data>
+  <data name="EnableDisableCommand" xml:space="preserve">
+    <value>Befehl aktivieren/deaktivieren</value>
+  </data>
+  <data name="ErrorGamePickInsufficientRole" xml:space="preserve">
+    <value>Sie müssen ein {0} sein, um die Antwort auszuwählen.</value>
+  </data>
+  <data name="ErrorGameStartInsufficentRole" xml:space="preserve">
+    <value>Sie müssen ein {0} sein, um dieses Spiel zu starten.</value>
   </data>
   <data name="Es konnte kein Streamer mit diesem Namen gefunden werden." xml:space="preserve">
     <value>Es konnte kein Streamer mit diesem Namen gefunden werden.</value>
@@ -225,6 +258,9 @@
   <data name="FavoriteStreamers" xml:space="preserve">
     <value>Bevorzugte Streamer</value>
   </data>
+  <data name="FilterByName" xml:space="preserve">
+    <value>Nach Namen filtern</value>
+  </data>
   <data name="FindChannelToRaid" xml:space="preserve">
     <value>Kanal zum raiden finden</value>
   </data>
@@ -233,6 +269,9 @@
   </data>
   <data name="FindRaidErrorNoneFound" xml:space="preserve">
     <value>Es ist nicht möglich, einen Kanal zu finden, der Ihre Suchkriterium erfüllt, bitte versuchen Sie, eine andere Wahl zu wählen.</value>
+  </data>
+  <data name="Follower" xml:space="preserve">
+    <value>Follower</value>
   </data>
   <data name="Game" xml:space="preserve">
     <value>Spiel</value>
@@ -291,11 +330,20 @@
   <data name="MixPlay" xml:space="preserve">
     <value>MixPlay</value>
   </data>
+  <data name="Mod" xml:space="preserve">
+    <value>Mod</value>
+  </data>
   <data name="Moderation" xml:space="preserve">
     <value>Moderation</value>
   </data>
   <data name="Moderator" xml:space="preserve">
     <value>Moderator</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="NewCommand" xml:space="preserve">
+    <value>Neuer Befehl</value>
   </data>
   <data name="NewStreamer" xml:space="preserve">
     <value>Neuer Streamer</value>
@@ -309,8 +357,20 @@
   <data name="OverlayWidgets" xml:space="preserve">
     <value>Overlay Widgets</value>
   </data>
+  <data name="Partner" xml:space="preserve">
+    <value>Partner</value>
+  </data>
   <data name="PartneredStreamer" xml:space="preserve">
     <value>Gepartnerte Streamer</value>
+  </data>
+  <data name="Permissions" xml:space="preserve">
+    <value>Berechtigungen</value>
+  </data>
+  <data name="PreMadeCommands" xml:space="preserve">
+    <value>Vorgefertigte Befehle</value>
+  </data>
+  <data name="Pro" xml:space="preserve">
+    <value>Pro</value>
   </data>
   <data name="Quotes" xml:space="preserve">
     <value>Zitate</value>
@@ -318,8 +378,14 @@
   <data name="RandomStreamer" xml:space="preserve">
     <value>Zufälliger Streamer</value>
   </data>
+  <data name="Regular" xml:space="preserve">
+    <value>Regulär</value>
+  </data>
   <data name="Remote" xml:space="preserve">
     <value>Remote</value>
+  </data>
+  <data name="RoleErrorInsufficientRole" xml:space="preserve">
+    <value>Dazu müssen Sie ein {0} sein.</value>
   </data>
   <data name="SameAgeRating" xml:space="preserve">
     <value>Gleiche Alterseinstufung</value>
@@ -339,6 +405,9 @@
   <data name="SearchCriteria" xml:space="preserve">
     <value>Suchkriterium</value>
   </data>
+  <data name="SelectTypeOfCommand" xml:space="preserve">
+    <value>Wähle die Art des Befehls aus, den Du erstellen möchtest:</value>
+  </data>
   <data name="Send" xml:space="preserve">
     <value>Senden</value>
   </data>
@@ -350,6 +419,9 @@
   </data>
   <data name="SmallStreamer" xml:space="preserve">
     <value>Kleiner Streamer (&lt;10)</value>
+  </data>
+  <data name="Staff" xml:space="preserve">
+    <value>Mitarbeiter</value>
   </data>
   <data name="Statistics" xml:space="preserve">
     <value>Statistik</value>
@@ -363,6 +435,9 @@
   <data name="StreamTitle" xml:space="preserve">
     <value>Stream-Titel</value>
   </data>
+  <data name="Subscriber" xml:space="preserve">
+    <value>Subscriber</value>
+  </data>
   <data name="Team" xml:space="preserve">
     <value>Team</value>
   </data>
@@ -371,6 +446,9 @@
   </data>
   <data name="Teen" xml:space="preserve">
     <value>Jugendlich</value>
+  </data>
+  <data name="TestCommand" xml:space="preserve">
+    <value>Befehl testen</value>
   </data>
   <data name="Timers" xml:space="preserve">
     <value>Hinweise</value>
@@ -386,6 +464,9 @@
   </data>
   <data name="UpdateChannel" xml:space="preserve">
     <value>Kanal aktualisieren</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>Zuschauer</value>
   </data>
   <data name="UserJoinedChat" xml:space="preserve">
     <value>{0} ist dem Chat beigetreten</value>

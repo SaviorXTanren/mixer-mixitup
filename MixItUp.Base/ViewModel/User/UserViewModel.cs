@@ -33,12 +33,10 @@ namespace MixItUp.Base.ViewModel.User
 
         Subscriber = 40,
 
-        [Name("Global Mod")]
         GlobalMod = 48,
 
         Mod = 50,
 
-        [Name("Channel Editor")]
         ChannelEditor = 55,
 
         Staff = 60,
@@ -79,10 +77,9 @@ namespace MixItUp.Base.ViewModel.User
             return roles;
         }
 
-        public static IEnumerable<string> SelectableAdvancedUserRoles()
+        public static IEnumerable<MixerRoleEnum> SelectableAdvancedUserRoles()
         {
-            List<string> roles = new List<string>(UserViewModel.SelectableBasicUserRoles().Select(r => EnumHelper.GetEnumName(r)));
-            return roles;
+            return UserViewModel.SelectableBasicUserRoles();
         }
 
         [DataMember]
@@ -105,9 +102,6 @@ namespace MixItUp.Base.ViewModel.User
 
         [DataMember]
         public DateTimeOffset? MixerSubscribeDate { get; set; }
-
-        [DataMember]
-        public HashSet<string> CustomRoles { get; set; }
 
         [DataMember]
         public int ChatOffenses { get; set; }
@@ -144,7 +138,6 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserViewModel()
         {
-            this.CustomRoles = new HashSet<string>();
             this.InteractiveIDs = new LockedDictionary<string, MixPlayParticipantModel>();
         }
 
@@ -210,9 +203,6 @@ namespace MixItUp.Base.ViewModel.User
 
         [JsonIgnore]
         public UserDataViewModel Data { get { return ChannelSession.Settings.UserData.GetValueIfExists(this.ID, new UserDataViewModel(this)); } }
-
-        [JsonIgnore]
-        public string RolesDisplayString { get; private set; }
 
         [JsonIgnore]
         public bool IsAnonymous { get { return this.ID == 0 || this.InteractiveIDs.Values.Any(i => i.anonymous.GetValueOrDefault()); } }
@@ -426,8 +416,6 @@ namespace MixItUp.Base.ViewModel.User
         {
             if (!this.IsAnonymous)
             {
-                this.CustomRoles.Clear();
-
                 if (ChannelSession.Services.Patreon != null)
                 {
                     if (this.PatreonUser == null)
@@ -691,11 +679,6 @@ namespace MixItUp.Base.ViewModel.User
                         mixerDisplayRoles.Remove(MixerRoleEnum.Subscriber);
                     }
                 }
-
-                List<string> displayRoles = new List<string>(mixerDisplayRoles.Select(r => EnumHelper.GetEnumName(r)));
-                displayRoles.AddRange(this.CustomRoles);
-
-                this.RolesDisplayString = string.Join(", ", displayRoles.OrderByDescending(r => r));
             }
         }
     }

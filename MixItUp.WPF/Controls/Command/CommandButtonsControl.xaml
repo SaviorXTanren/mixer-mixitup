@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Command"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
@@ -17,7 +18,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <StackPanel Orientation="Horizontal" Margin="5,0">
         
-        <Button x:Name="PlayButton" Click="PlayButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Test Command">
+        <Button x:Name="PlayButton" Click="PlayButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.TestCommand}">
             <MaterialDesign:PackIcon Kind="Play" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
         </Button>
         <Button x:Name="StopButton" Visibility="Collapsed" Click="StopButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Stop Command">
@@ -32,7 +33,7 @@
             <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
         </Button>
 
-        <ToggleButton x:Name="EnableDisableToggleSwitch" Margin="5,0,0,0" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Enable/Disable Command" Checked="EnableDisableToggleSwitch_Checked" Unchecked="EnableDisableToggleSwitch_Checked" />
+        <ToggleButton x:Name="EnableDisableToggleSwitch" Margin="5,0,0,0" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.EnableDisableCommand}" Checked="EnableDisableToggleSwitch_Checked" Unchecked="EnableDisableToggleSwitch_Checked" />
 
     </StackPanel>
 </Controls:NotifyPropertyChangedUserControl>

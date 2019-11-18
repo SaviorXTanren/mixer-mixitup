@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Command"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
@@ -66,7 +67,7 @@
                 <MaterialDesign:PackIcon Kind="ContentSave" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
             </Button>
 
-            <Button x:Name="PlayButton" Grid.Column="8" Click="PlayButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Test Command">
+            <Button x:Name="PlayButton" Grid.Column="8" Click="PlayButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.TestCommand}">
                 <MaterialDesign:PackIcon Kind="Play" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
             </Button>
             <Button x:Name="StopButton" Grid.Column="8" Visibility="Collapsed" Click="StopButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Stop Command">
