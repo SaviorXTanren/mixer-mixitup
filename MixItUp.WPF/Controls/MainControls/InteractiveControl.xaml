@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -46,17 +47,17 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Column="0" VerticalAlignment="Center">Mixer Labs</TextBlock>
-                    
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{x:Static resx:Resources.MixerLabs}"/>
+
                     <MaterialDesign:PackIcon Grid.Column="2" Kind="Launch" Height="24" Width="24" VerticalAlignment="Center" Foreground="{StaticResource WhiteColor}" />
                 </Grid>
             </Button>
 
-            <ComboBox Grid.Column="2" x:Name="InteractiveGamesComboBox" Width="200" SelectionChanged="InteractiveGamesComboBox_SelectionChanged" DisplayMemberPath="name" MaterialDesign:HintAssist.Hint="Game" />
+            <ComboBox Grid.Column="2" x:Name="InteractiveGamesComboBox" Width="200" SelectionChanged="InteractiveGamesComboBox_SelectionChanged" DisplayMemberPath="name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Game}" />
 
-            <ComboBox Grid.Column="4" x:Name="InteractiveScenesComboBox" Width="200" SelectionChanged="InteractiveScenesComboBox_SelectionChanged" DisplayMemberPath="sceneID" MaterialDesign:HintAssist.Hint="Scene" />
+            <ComboBox Grid.Column="4" x:Name="InteractiveScenesComboBox" Width="200" SelectionChanged="InteractiveScenesComboBox_SelectionChanged" DisplayMemberPath="sceneID" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Scene}" />
 
-            <Button Grid.Column="6" x:Name="GroupsButton" Click="GroupsButton_Click" IsEnabled="False">Groups</Button>
+            <Button Grid.Column="6" x:Name="GroupsButton" Click="GroupsButton_Click" IsEnabled="False" Content="{x:Static resx:Resources.Groups}"/>
 
             <Button Grid.Column="8" x:Name="RefreshButton" Click="RefreshButton_Click" Content="{MaterialDesign:PackIcon Refresh}" />
         </Grid>
@@ -65,8 +66,8 @@
 
         <DataGrid x:Name="InteractiveControlsGridView" Grid.Row="2" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
-                <DataGridTextColumn Header="Type" Binding="{Binding Type}" IsReadOnly="True" Width="80" />
+                <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                <DataGridTextColumn Header="{x:Static resx:Resources.Type}" Binding="{Binding Type}" IsReadOnly="True" Width="80" />
                 <DataGridTextColumn Binding="{Binding SparkCost}" IsReadOnly="True" Width="70">
                     <DataGridTextColumn.Header>
                         <Grid HorizontalAlignment="Center" Margin="6,0,0,0">
@@ -81,7 +82,7 @@
                         </Grid>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
-                <DataGridTemplateColumn Header="Actions" Width="240">
+                <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="240">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>
@@ -104,7 +105,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" x:Name="ConnectButton" Click="ConnectButton_Click" Width="110" IsEnabled="False">Connect</Button>
+            <Button Grid.Column="0" x:Name="ConnectButton" Click="ConnectButton_Click" Width="110" IsEnabled="False" Content="{x:Static resx:Resources.Connect}"/>
             <Button Grid.Column="0" x:Name="DisconnectButton" Click="DisconnectButton_Click" Width="110" Visibility="Collapsed">Disconnect</Button>
         </Grid>
     </Grid>

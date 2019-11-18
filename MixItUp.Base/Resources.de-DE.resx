@@ -126,6 +126,9 @@
   <data name="ActionGroups" xml:space="preserve">
     <value>Aktionsgruppen</value>
   </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Aktionen</value>
+  </data>
   <data name="Add" xml:space="preserve">
     <value>Hinzufügen</value>
   </data>
@@ -200,6 +203,9 @@
   </data>
   <data name="Commands" xml:space="preserve">
     <value>Befehle</value>
+  </data>
+  <data name="Connect" xml:space="preserve">
+    <value>Verbinden</value>
   </data>
   <data name="CurrencyRankInventory" xml:space="preserve">
     <value>Währung/Rang/Inventar</value>
@@ -291,6 +297,9 @@
   <data name="GroupName" xml:space="preserve">
     <value>Gruppenname</value>
   </data>
+  <data name="Groups" xml:space="preserve">
+    <value>Gruppe</value>
+  </data>
   <data name="Help" xml:space="preserve">
     <value>Hilfe</value>
   </data>
@@ -326,6 +335,9 @@
   </data>
   <data name="MediumStreamer" xml:space="preserve">
     <value>Mittlerer Streamer (10-25)</value>
+  </data>
+  <data name="MixerLabs" xml:space="preserve">
+    <value>Mixer Labs</value>
   </data>
   <data name="MixPlay" xml:space="preserve">
     <value>MixPlay</value>
@@ -399,6 +411,9 @@
   <data name="SaveFailed" xml:space="preserve">
     <value>Speichern fehlgeschlagen, versucht ein anderes Mal...</value>
   </data>
+  <data name="Scene" xml:space="preserve">
+    <value>Szene</value>
+  </data>
   <data name="Search" xml:space="preserve">
     <value>Suchen</value>
   </data>
@@ -455,6 +470,9 @@
   </data>
   <data name="TotalUsers" xml:space="preserve">
     <value>Totale Zuschauer</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Typ</value>
   </data>
   <data name="TypeToAdd" xml:space="preserve">
     <value>Typ</value>

@@ -47,15 +47,21 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" TextWrapping="Wrap" MinWidth="200" TextAlignment="Center" Text="{x:Static resx:Resources.SelectTypeOfCommand}"/>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
 
-            <Button x:Name="BasicChatCommandButton" Grid.Row="1" Margin="0,20,0,0" Click="BasicChatCommandButton_Click" Content="{x:Static resx:Resources.BasicChatCommand}"/>
+            <TextBlock Grid.Row="0" Grid.ColumnSpan="3" TextWrapping="Wrap" MinWidth="200" TextAlignment="Center" Text="{x:Static resx:Resources.SelectTypeOfCommand}"/>
 
-            <Button x:Name="BasicSoundCommandButton" Grid.Row="2" Margin="0,20,0,0" Click="BasicSoundCommandButton_Click" Content="{x:Static resx:Resources.BasicSoundCommand}"/>
+            <Button x:Name="BasicChatCommandButton" Grid.Row="1" Grid.Column="1" Margin="0,20,0,0" Click="BasicChatCommandButton_Click" Content="{x:Static resx:Resources.BasicChatCommand}"/>
 
-            <Button x:Name="AdvancedCommandButton" Grid.Row="3" Margin="0,20,0,0" Click="AdvancedCommandButton_Click" Content="{x:Static resx:Resources.AdvancedCommand}"/>
+            <Button x:Name="BasicSoundCommandButton" Grid.Row="2" Grid.Column="1" Margin="0,20,0,0" Click="BasicSoundCommandButton_Click" Content="{x:Static resx:Resources.BasicSoundCommand}"/>
 
-                <Button x:Name="DownloadFromStoreButton" Grid.Row="4" Margin="0,20,0,0" Click="DownloadFromStoreButton_Click">
+            <Button x:Name="AdvancedCommandButton" Grid.Row="3" Grid.Column="1" Margin="0,20,0,0" Click="AdvancedCommandButton_Click" Content="{x:Static resx:Resources.AdvancedCommand}"/>
+
+            <Button x:Name="DownloadFromStoreButton" Grid.Row="4" Grid.Column="1" Margin="0,20,0,0" Click="DownloadFromStoreButton_Click">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
