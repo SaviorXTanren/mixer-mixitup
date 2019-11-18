@@ -252,6 +252,9 @@
   <data name="DownloadFrom" xml:space="preserve">
     <value>DownloadFrom</value>
   </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
   <data name="EditCommand" xml:space="preserve">
     <value>Edit Command</value>
   </data>
@@ -272,6 +275,9 @@
   </data>
   <data name="ExitConfirmation" xml:space="preserve">
     <value>Are you sure you wish to exit Mix It Up?</value>
+  </data>
+  <data name="ExportData" xml:space="preserve">
+    <value>Export Data</value>
   </data>
   <data name="Family" xml:space="preserve">
     <value>Family</value>
@@ -323,6 +329,9 @@
   </data>
   <data name="HostChannel" xml:space="preserve">
     <value>Host Channel</value>
+  </data>
+  <data name="ImportData" xml:space="preserve">
+    <value>Import Data</value>
   </data>
   <data name="LargeStreamer" xml:space="preserve">
     <value>Large Streamer (&gt;25)</value>
@@ -422,6 +431,12 @@
   </data>
   <data name="PreMadeCommands" xml:space="preserve">
     <value>Pre-Made Commands</value>
+  </data>
+  <data name="PrimaryCurrency" xml:space="preserve">
+    <value>Primary Currency</value>
+  </data>
+  <data name="PrimaryRank" xml:space="preserve">
+    <value>Primary Rank</value>
   </data>
   <data name="Pro" xml:space="preserve">
     <value>Pro</value>

@@ -466,6 +466,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Edit.
+        /// </summary>
+        public static string Edit {
+            get {
+                return ResourceManager.GetString("Edit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Edit Command.
         /// </summary>
         public static string EditCommand {
@@ -525,6 +534,15 @@ namespace MixItUp.Base {
         public static string ExitConfirmation {
             get {
                 return ResourceManager.GetString("ExitConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Export Data.
+        /// </summary>
+        public static string ExportData {
+            get {
+                return ResourceManager.GetString("ExportData", resourceCulture);
             }
         }
         
@@ -678,6 +696,15 @@ namespace MixItUp.Base {
         public static string HostChannel {
             get {
                 return ResourceManager.GetString("HostChannel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import Data.
+        /// </summary>
+        public static string ImportData {
+            get {
+                return ResourceManager.GetString("ImportData", resourceCulture);
             }
         }
         
@@ -975,6 +1002,24 @@ namespace MixItUp.Base {
         public static string PreMadeCommands {
             get {
                 return ResourceManager.GetString("PreMadeCommands", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Primary Currency.
+        /// </summary>
+        public static string PrimaryCurrency {
+            get {
+                return ResourceManager.GetString("PrimaryCurrency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Primary Rank.
+        /// </summary>
+        public static string PrimaryRank {
+            get {
+                return ResourceManager.GetString("PrimaryRank", resourceCulture);
             }
         }
         

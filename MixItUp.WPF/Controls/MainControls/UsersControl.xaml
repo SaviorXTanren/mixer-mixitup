@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -17,6 +18,9 @@
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
                           
              d:DesignHeight="700" d:DesignWidth="600">
+    <local:MainControlBase.Resources>
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+    </local:MainControlBase.Resources>
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -33,7 +37,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="Filter By Username:" />
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.FilterByName}, StringFormat={StaticResource ColumnHeaderFormat}}" />
 
             <TextBox Grid.Column="2" x:Name="UsernameFilterTextBox" Width="150" TextChanged="UsernameFilterTextBox_TextChanged" />
 
@@ -61,7 +65,7 @@
                             </DataGridTextColumn.Header>
                             <DataGridTextColumn.CellStyle>
                                 <Style TargetType="DataGridCell" BasedOn="{StaticResource StandardDataGridCell}">
-                                    <Setter Property="ToolTip" Value="Primary Currency" />
+                                    <Setter Property="ToolTip" Value="{x:Static resx:Resources.PrimaryCurrency}" />
                                 </Style>
                             </DataGridTextColumn.CellStyle>
                         </DataGridTextColumn>
@@ -73,7 +77,7 @@
                             </DataGridTextColumn.Header>
                             <DataGridTextColumn.CellStyle>
                                 <Style TargetType="DataGridCell" BasedOn="{StaticResource StandardDataGridCell}">
-                                    <Setter Property="ToolTip" Value="Primary Rank" />
+                                    <Setter Property="ToolTip" Value="{x:Static resx:Resources.PrimaryRank}" />
                                 </Style>
                             </DataGridTextColumn.CellStyle>
                         </DataGridTextColumn>
@@ -87,11 +91,11 @@
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
 
-                                        <Button x:Name="UserEditButton" Grid.Column="0" Click="UserEditButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Edit">
+                                        <Button x:Name="UserEditButton" Grid.Column="0" Click="UserEditButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Edit}">
                                             <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                         </Button>
 
-                                        <Button x:Name="UserDeleteButton" Grid.Column="2" Click="UserDeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Delete">
+                                        <Button x:Name="UserDeleteButton" Grid.Column="2" Click="UserDeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Delete}">
                                             <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                         </Button>
                                     </Grid>
@@ -110,9 +114,9 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Button x:Name="ImportUserDataButton" Grid.Column="0" Width="120" Click="ImportUserDataButton_Click">Import Data</Button>
+            <Button x:Name="ImportUserDataButton" Grid.Column="0" MinWidth="120" Click="ImportUserDataButton_Click" Content="{x:Static resx:Resources.ImportData}"/>
 
-            <Button x:Name="ExportUserDataButton" Grid.Column="2" Width="120" Click="ExportUserDataButton_Click">Export Data</Button>
+            <Button x:Name="ExportUserDataButton" Grid.Column="2" MinWidth="120" Click="ExportUserDataButton_Click" Content="{x:Static resx:Resources.ExportData}"/>
         </Grid>
     </Grid>
 </local:MainControlBase>

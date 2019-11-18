@@ -249,6 +249,9 @@
   <data name="DownloadFrom" xml:space="preserve">
     <value>Herunterladen von</value>
   </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Editieren</value>
+  </data>
   <data name="EditCommand" xml:space="preserve">
     <value>Befehl anpassen</value>
   </data>
@@ -272,6 +275,9 @@
   </data>
   <data name="ExitConfirmation" xml:space="preserve">
     <value>Bist du sicher dass, du Mix It Up schließen möchtest?</value>
+  </data>
+  <data name="ExportData" xml:space="preserve">
+    <value>Daten exportieren</value>
   </data>
   <data name="Family" xml:space="preserve">
     <value>Familienfreundlich</value>
@@ -323,6 +329,9 @@
   </data>
   <data name="HostChannel" xml:space="preserve">
     <value>Kanal hosten</value>
+  </data>
+  <data name="ImportData" xml:space="preserve">
+    <value>Daten importieren</value>
   </data>
   <data name="LargeStreamer" xml:space="preserve">
     <value>Große Streamer (&gt;25)</value>
@@ -422,6 +431,12 @@
   </data>
   <data name="PreMadeCommands" xml:space="preserve">
     <value>Vorgefertigte Befehle</value>
+  </data>
+  <data name="PrimaryCurrency" xml:space="preserve">
+    <value>Primäre Währung</value>
+  </data>
+  <data name="PrimaryRank" xml:space="preserve">
+    <value>Primärer Rang</value>
   </data>
   <data name="Pro" xml:space="preserve">
     <value>Pro</value>
