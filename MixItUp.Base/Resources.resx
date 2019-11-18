@@ -168,6 +168,9 @@
   <data name="AddInventory" xml:space="preserve">
     <value>Add Inventory</value>
   </data>
+  <data name="AddItem" xml:space="preserve">
+    <value>Add Item</value>
+  </data>
   <data name="AddNewRank" xml:space="preserve">
     <value>Add New Rank</value>
   </data>
@@ -200,6 +203,9 @@
   </data>
   <data name="Bot" xml:space="preserve">
     <value>Bot</value>
+  </data>
+  <data name="BuyPrice" xml:space="preserve">
+    <value>Buy Price</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
@@ -288,6 +294,9 @@
   <data name="CustomizeCurrencyRank" xml:space="preserve">
     <value>Customize Currency/Rank</value>
   </data>
+  <data name="CustomizeInventory" xml:space="preserve">
+    <value>Customize Inventory</value>
+  </data>
   <data name="CustomTitle" xml:space="preserve">
     <value>Custom Title</value>
   </data>
@@ -296,6 +305,9 @@
   </data>
   <data name="Dashboard" xml:space="preserve">
     <value>Dashboard</value>
+  </data>
+  <data name="DefaultMaxAmount" xml:space="preserve">
+    <value>Default Max Amount</value>
   </data>
   <data name="Delete" xml:space="preserve">
     <value>Delete</value>
@@ -329,6 +341,9 @@
   </data>
   <data name="EmbersSpent" xml:space="preserve">
     <value>Embers Spent</value>
+  </data>
+  <data name="Enable" xml:space="preserve">
+    <value>Enable</value>
   </data>
   <data name="EnableChat" xml:space="preserve">
     <value>Enable Chat</value>
@@ -420,11 +435,29 @@
   <data name="Inventory" xml:space="preserve">
     <value>Inventory</value>
   </data>
+  <data name="InventoryName" xml:space="preserve">
+    <value>Inventory Name</value>
+  </data>
   <data name="IsPrimary" xml:space="preserve">
     <value>Is Primary</value>
   </data>
   <data name="IsRankSystem" xml:space="preserve">
     <value>Is Rank System</value>
+  </data>
+  <data name="ItemList" xml:space="preserve">
+    <value>Item List</value>
+  </data>
+  <data name="ItemName" xml:space="preserve">
+    <value>Item Name</value>
+  </data>
+  <data name="ItemsBought" xml:space="preserve">
+    <value>Items Bought</value>
+  </data>
+  <data name="ItemsSold" xml:space="preserve">
+    <value>Items Sold</value>
+  </data>
+  <data name="ItemsTraded" xml:space="preserve">
+    <value>Items Traded</value>
   </data>
   <data name="LargeStreamer" xml:space="preserve">
     <value>Large Streamer (&gt;25)</value>
@@ -642,6 +675,9 @@
   <data name="SelectTypeOfCommand" xml:space="preserve">
     <value>Select the type of command you would like to build:</value>
   </data>
+  <data name="SellPrice" xml:space="preserve">
+    <value>Sell Price</value>
+  </data>
   <data name="Send" xml:space="preserve">
     <value>Send</value>
   </data>
@@ -653,6 +689,15 @@
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Settings</value>
+  </data>
+  <data name="Shop" xml:space="preserve">
+    <value>Shop</value>
+  </data>
+  <data name="ShopCommand" xml:space="preserve">
+    <value>Shop Command</value>
+  </data>
+  <data name="ShopCurrency" xml:space="preserve">
+    <value>Shop Currency</value>
   </data>
   <data name="SkillsUsed" xml:space="preserve">
     <value>Skills Used</value>
@@ -668,6 +713,9 @@
   </data>
   <data name="SparksSpent" xml:space="preserve">
     <value>Sparks Spent</value>
+  </data>
+  <data name="SpecialIdentifierName" xml:space="preserve">
+    <value>Special Identifier Name</value>
   </data>
   <data name="SpecialIdentifiers" xml:space="preserve">
     <value>Special Identifiers</value>
@@ -735,6 +783,12 @@
   <data name="TotalUsers" xml:space="preserve">
     <value>Total Users</value>
   </data>
+  <data name="Trade" xml:space="preserve">
+    <value>Trade</value>
+  </data>
+  <data name="TradeCommand" xml:space="preserve">
+    <value>Trade Command</value>
+  </data>
   <data name="TranslationBy" xml:space="preserve">
     <value />
   </data>
@@ -749,6 +803,9 @@
   </data>
   <data name="Unknown" xml:space="preserve">
     <value>Unknown</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Update</value>
   </data>
   <data name="UpdateChannel" xml:space="preserve">
     <value>Update Channel</value>

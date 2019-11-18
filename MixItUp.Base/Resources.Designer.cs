@@ -214,6 +214,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Item.
+        /// </summary>
+        public static string AddItem {
+            get {
+                return ResourceManager.GetString("AddItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add New Rank.
         /// </summary>
         public static string AddNewRank {
@@ -309,6 +318,15 @@ namespace MixItUp.Base {
         public static string Bot {
             get {
                 return ResourceManager.GetString("Bot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Buy Price.
+        /// </summary>
+        public static string BuyPrice {
+            get {
+                return ResourceManager.GetString("BuyPrice", resourceCulture);
             }
         }
         
@@ -574,6 +592,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Customize Inventory.
+        /// </summary>
+        public static string CustomizeInventory {
+            get {
+                return ResourceManager.GetString("CustomizeInventory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Custom Title.
         /// </summary>
         public static string CustomTitle {
@@ -597,6 +624,15 @@ namespace MixItUp.Base {
         public static string Dashboard {
             get {
                 return ResourceManager.GetString("Dashboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Default Max Amount.
+        /// </summary>
+        public static string DefaultMaxAmount {
+            get {
+                return ResourceManager.GetString("DefaultMaxAmount", resourceCulture);
             }
         }
         
@@ -696,6 +732,15 @@ namespace MixItUp.Base {
         public static string EmbersSpent {
             get {
                 return ResourceManager.GetString("EmbersSpent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable.
+        /// </summary>
+        public static string Enable {
+            get {
+                return ResourceManager.GetString("Enable", resourceCulture);
             }
         }
         
@@ -970,6 +1015,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Inventory Name.
+        /// </summary>
+        public static string InventoryName {
+            get {
+                return ResourceManager.GetString("InventoryName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Is Primary.
         /// </summary>
         public static string IsPrimary {
@@ -984,6 +1038,51 @@ namespace MixItUp.Base {
         public static string IsRankSystem {
             get {
                 return ResourceManager.GetString("IsRankSystem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Item List.
+        /// </summary>
+        public static string ItemList {
+            get {
+                return ResourceManager.GetString("ItemList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Item Name.
+        /// </summary>
+        public static string ItemName {
+            get {
+                return ResourceManager.GetString("ItemName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Items Bought.
+        /// </summary>
+        public static string ItemsBought {
+            get {
+                return ResourceManager.GetString("ItemsBought", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Items Sold.
+        /// </summary>
+        public static string ItemsSold {
+            get {
+                return ResourceManager.GetString("ItemsSold", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Items Traded.
+        /// </summary>
+        public static string ItemsTraded {
+            get {
+                return ResourceManager.GetString("ItemsTraded", resourceCulture);
             }
         }
         
@@ -1636,6 +1735,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sell Price.
+        /// </summary>
+        public static string SellPrice {
+            get {
+                return ResourceManager.GetString("SellPrice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Send.
         /// </summary>
         public static string Send {
@@ -1668,6 +1776,33 @@ namespace MixItUp.Base {
         public static string Settings {
             get {
                 return ResourceManager.GetString("Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shop.
+        /// </summary>
+        public static string Shop {
+            get {
+                return ResourceManager.GetString("Shop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shop Command.
+        /// </summary>
+        public static string ShopCommand {
+            get {
+                return ResourceManager.GetString("ShopCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shop Currency.
+        /// </summary>
+        public static string ShopCurrency {
+            get {
+                return ResourceManager.GetString("ShopCurrency", resourceCulture);
             }
         }
         
@@ -1713,6 +1848,15 @@ namespace MixItUp.Base {
         public static string SparksSpent {
             get {
                 return ResourceManager.GetString("SparksSpent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Special Identifier Name.
+        /// </summary>
+        public static string SpecialIdentifierName {
+            get {
+                return ResourceManager.GetString("SpecialIdentifierName", resourceCulture);
             }
         }
         
@@ -1915,6 +2059,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Trade.
+        /// </summary>
+        public static string Trade {
+            get {
+                return ResourceManager.GetString("Trade", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trade Command.
+        /// </summary>
+        public static string TradeCommand {
+            get {
+                return ResourceManager.GetString("TradeCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
         public static string TranslationBy {
@@ -1956,6 +2118,15 @@ namespace MixItUp.Base {
         public static string Unknown {
             get {
                 return ResourceManager.GetString("Unknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update.
+        /// </summary>
+        public static string Update {
+            get {
+                return ResourceManager.GetString("Update", resourceCulture);
             }
         }
         

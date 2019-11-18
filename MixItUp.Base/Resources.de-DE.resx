@@ -165,6 +165,9 @@
   <data name="AddInventory" xml:space="preserve">
     <value>Inventar hinzufügen</value>
   </data>
+  <data name="AddItem" xml:space="preserve">
+    <value>Gegenstände hinzufügen</value>
+  </data>
   <data name="AddNewRank" xml:space="preserve">
     <value>Rang hinzufügen</value>
   </data>
@@ -197,6 +200,9 @@
   </data>
   <data name="Bot" xml:space="preserve">
     <value>Bot</value>
+  </data>
+  <data name="BuyPrice" xml:space="preserve">
+    <value>Kaufpreis</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Abbrechen</value>
@@ -285,6 +291,9 @@
   <data name="CustomizeCurrencyRank" xml:space="preserve">
     <value>Währung/Rang anpassen</value>
   </data>
+  <data name="CustomizeInventory" xml:space="preserve">
+    <value>Inventar anpassen</value>
+  </data>
   <data name="CustomTitle" xml:space="preserve">
     <value>Benutzerdefinierter Titel</value>
   </data>
@@ -293,6 +302,9 @@
   </data>
   <data name="Dashboard" xml:space="preserve">
     <value>Dashboard</value>
+  </data>
+  <data name="DefaultMaxAmount" xml:space="preserve">
+    <value>Standard-Maximalbetrag</value>
   </data>
   <data name="Delete" xml:space="preserve">
     <value>Löschen</value>
@@ -326,6 +338,9 @@
   </data>
   <data name="EmbersSpent" xml:space="preserve">
     <value>Embers ausgegeben</value>
+  </data>
+  <data name="Enable" xml:space="preserve">
+    <value>Aktivieren</value>
   </data>
   <data name="Enable Chat" xml:space="preserve">
     <value>Chat aktivieren</value>
@@ -420,11 +435,29 @@
   <data name="Inventory" xml:space="preserve">
     <value>Inventar</value>
   </data>
+  <data name="InventoryName" xml:space="preserve">
+    <value>Inventarname</value>
+  </data>
   <data name="IsPrimary" xml:space="preserve">
     <value>Ist primär</value>
   </data>
   <data name="IsRankSystem" xml:space="preserve">
     <value>Ist Rangsystem</value>
+  </data>
+  <data name="ItemList" xml:space="preserve">
+    <value>Gegenstandsliste</value>
+  </data>
+  <data name="ItemName" xml:space="preserve">
+    <value>Gegenstandsname</value>
+  </data>
+  <data name="ItemsBought" xml:space="preserve">
+    <value>Gekaufte Gegenstände</value>
+  </data>
+  <data name="ItemsSold" xml:space="preserve">
+    <value>Verkaufte Gegenstände</value>
+  </data>
+  <data name="ItemsTraded" xml:space="preserve">
+    <value>Gegenstände gehandelt</value>
   </data>
   <data name="LargeStreamer" xml:space="preserve">
     <value>Große Streamer (&gt;25)</value>
@@ -642,6 +675,9 @@
   <data name="SelectTypeOfCommand" xml:space="preserve">
     <value>Wähle die Art des Befehls aus, den Du erstellen möchtest:</value>
   </data>
+  <data name="SellPrice" xml:space="preserve">
+    <value>Verkaufspreis</value>
+  </data>
   <data name="Send" xml:space="preserve">
     <value>Senden</value>
   </data>
@@ -653,6 +689,15 @@
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Einstellungen</value>
+  </data>
+  <data name="Shop" xml:space="preserve">
+    <value>Shop</value>
+  </data>
+  <data name="ShopCommand" xml:space="preserve">
+    <value>Shop-Befehl</value>
+  </data>
+  <data name="ShopCurrency" xml:space="preserve">
+    <value>Shop-Währung</value>
   </data>
   <data name="SkillsUsed" xml:space="preserve">
     <value>Verwendete Fähigkeiten</value>
@@ -668,6 +713,9 @@
   </data>
   <data name="SparksSpent" xml:space="preserve">
     <value>Spark ausgegeben</value>
+  </data>
+  <data name="SpecialIdentifierName" xml:space="preserve">
+    <value>Spezielle Bezeichner</value>
   </data>
   <data name="SpecialIdentifiers" xml:space="preserve">
     <value>Spezielle Bezeichner</value>
@@ -735,6 +783,12 @@
   <data name="TotalUsers" xml:space="preserve">
     <value>Totale Zuschauer</value>
   </data>
+  <data name="Trade" xml:space="preserve">
+    <value>Handel</value>
+  </data>
+  <data name="TradeCommand" xml:space="preserve">
+    <value>Handels-Befehl</value>
+  </data>
   <data name="TranslationBy" xml:space="preserve">
     <value>Deutsche Übersetzung von: DerWashbr (https://mixer.com/DerWashbr)</value>
   </data>
@@ -749,6 +803,9 @@
   </data>
   <data name="Unknown" xml:space="preserve">
     <value>Unbekannt</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Aktualisieren</value>
   </data>
   <data name="UpdateChannel" xml:space="preserve">
     <value>Kanal aktualisieren</value>
