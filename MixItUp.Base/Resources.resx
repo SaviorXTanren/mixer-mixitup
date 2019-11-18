@@ -117,11 +117,26 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="1PerEmber" xml:space="preserve">
+    <value>1 Per Ember</value>
+  </data>
+  <data name="1PerHour" xml:space="preserve">
+    <value>1 Per Hour</value>
+  </data>
+  <data name="1PerMinute" xml:space="preserve">
+    <value>1 Per Minute</value>
+  </data>
+  <data name="1PerSpark" xml:space="preserve">
+    <value>1 Per Spark</value>
+  </data>
   <data name="About" xml:space="preserve">
     <value>About</value>
   </data>
   <data name="Accept" xml:space="preserve">
     <value>Accept</value>
+  </data>
+  <data name="AcquireRate" xml:space="preserve">
+    <value>Acquire Rate</value>
   </data>
   <data name="ActionGroups" xml:space="preserve">
     <value>Action Groups</value>
@@ -153,11 +168,17 @@
   <data name="AddInventory" xml:space="preserve">
     <value>Add Inventory</value>
   </data>
+  <data name="AddNewRank" xml:space="preserve">
+    <value>Add New Rank</value>
+  </data>
   <data name="AdvancedCommand" xml:space="preserve">
     <value>Advanced Command</value>
   </data>
   <data name="AgeRating" xml:space="preserve">
     <value>Age Rating</value>
+  </data>
+  <data name="Amount" xml:space="preserve">
+    <value>Amount</value>
   </data>
   <data name="AmountDonated" xml:space="preserve">
     <value>Amount Donated</value>
@@ -167,6 +188,9 @@
   </data>
   <data name="AutoHoster" xml:space="preserve">
     <value>Auto-Hoster</value>
+  </data>
+  <data name="AutomaticReset" xml:space="preserve">
+    <value>Automatic Reset</value>
   </data>
   <data name="BasicChatCommand" xml:space="preserve">
     <value>Basic Chat Command</value>
@@ -246,6 +270,9 @@
   <data name="CurrencyRankInventoryExempt" xml:space="preserve">
     <value>Currency/Rank/Inventory Exempt</value>
   </data>
+  <data name="CurrencyRankName" xml:space="preserve">
+    <value>Currency/Rank Name</value>
+  </data>
   <data name="Custom" xml:space="preserve">
     <value>Custom</value>
   </data>
@@ -258,8 +285,14 @@
   <data name="CustomizeCommand" xml:space="preserve">
     <value>Customize Command</value>
   </data>
+  <data name="CustomizeCurrencyRank" xml:space="preserve">
+    <value>Customize Currency/Rank</value>
+  </data>
   <data name="CustomTitle" xml:space="preserve">
     <value>Custom Title</value>
+  </data>
+  <data name="Daily" xml:space="preserve">
+    <value>Daily</value>
   </data>
   <data name="Dashboard" xml:space="preserve">
     <value>Dashboard</value>
@@ -281,6 +314,9 @@
   </data>
   <data name="DisableChatConfirmation" xml:space="preserve">
     <value>This will disable chat for all users. Are you sure?</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>Disabled</value>
   </data>
   <data name="DownloadFrom" xml:space="preserve">
     <value>DownloadFrom</value>
@@ -306,6 +342,9 @@
   <data name="ErrorGameStartInsufficentRole" xml:space="preserve">
     <value>You must be a {0} to start this game.</value>
   </data>
+  <data name="EventBonuses" xml:space="preserve">
+    <value>Event Bonuses</value>
+  </data>
   <data name="Events" xml:space="preserve">
     <value>Events</value>
   </data>
@@ -317,6 +356,9 @@
   </data>
   <data name="Family" xml:space="preserve">
     <value>Family</value>
+  </data>
+  <data name="FanProgression" xml:space="preserve">
+    <value>Fan Progression</value>
   </data>
   <data name="FavoritedUsersTeams" xml:space="preserve">
     <value>Favorited Users/Teams</value>
@@ -378,6 +420,12 @@
   <data name="Inventory" xml:space="preserve">
     <value>Inventory</value>
   </data>
+  <data name="IsPrimary" xml:space="preserve">
+    <value>Is Primary</value>
+  </data>
+  <data name="IsRankSystem" xml:space="preserve">
+    <value>Is Rank System</value>
+  </data>
   <data name="LargeStreamer" xml:space="preserve">
     <value>Large Streamer (&gt;25)</value>
   </data>
@@ -408,11 +456,23 @@
   <data name="LoginErrorNotModerator" xml:space="preserve">
     <value>You are not a moderator for this channel.</value>
   </data>
+  <data name="ManualReset" xml:space="preserve">
+    <value>Manual Reset</value>
+  </data>
+  <data name="MaxAmount" xml:space="preserve">
+    <value>Max Amount</value>
+  </data>
   <data name="MediumStreamer" xml:space="preserve">
     <value>Medium Streamer (10-25)</value>
   </data>
+  <data name="MinimumChannelActivityMins" xml:space="preserve">
+    <value>Minimum Channel Activity (Mins)</value>
+  </data>
   <data name="MinMessages" xml:space="preserve">
     <value>Min Messages</value>
+  </data>
+  <data name="MinPoints" xml:space="preserve">
+    <value>Min Points</value>
   </data>
   <data name="Minutes" xml:space="preserve">
     <value>Minutes</value>
@@ -429,11 +489,17 @@
   <data name="Mod" xml:space="preserve">
     <value>Mod</value>
   </data>
+  <data name="ModBonus" xml:space="preserve">
+    <value>Mod Bonus</value>
+  </data>
   <data name="Moderation" xml:space="preserve">
     <value>Moderation</value>
   </data>
   <data name="Moderator" xml:space="preserve">
     <value>Moderator</value>
+  </data>
+  <data name="Monthly" xml:space="preserve">
+    <value>Monthly</value>
   </data>
   <data name="Months" xml:space="preserve">
     <value>Months</value>
@@ -443,6 +509,9 @@
   </data>
   <data name="NameOfProfile" xml:space="preserve">
     <value>Name of Profile</value>
+  </data>
+  <data name="Never" xml:space="preserve">
+    <value>Never</value>
   </data>
   <data name="NewActionGroup" xml:space="preserve">
     <value>NewActionGroup</value>
@@ -456,11 +525,29 @@
   <data name="No" xml:space="preserve">
     <value>No</value>
   </data>
+  <data name="OfflineRate" xml:space="preserve">
+    <value>Offline Rate</value>
+  </data>
   <data name="Ok" xml:space="preserve">
     <value>Ok</value>
   </data>
+  <data name="OnFollow" xml:space="preserve">
+    <value>On Follow</value>
+  </data>
+  <data name="OnHost" xml:space="preserve">
+    <value>On Host</value>
+  </data>
   <data name="OnlineMinutes" xml:space="preserve">
     <value>Online Minutes</value>
+  </data>
+  <data name="OnlineRate" xml:space="preserve">
+    <value>Online Rate</value>
+  </data>
+  <data name="OnSubscribe" xml:space="preserve">
+    <value>On Subscribe</value>
+  </data>
+  <data name="OnUserRankChanged" xml:space="preserve">
+    <value>On User Rank Changed</value>
   </data>
   <data name="Options" xml:space="preserve">
     <value>Options</value>
@@ -507,14 +594,23 @@
   <data name="RandomStreamer" xml:space="preserve">
     <value>Random Streamer</value>
   </data>
+  <data name="RankName" xml:space="preserve">
+    <value>Rank Name</value>
+  </data>
   <data name="Regular" xml:space="preserve">
     <value>Regular</value>
   </data>
   <data name="Remote" xml:space="preserve">
     <value>Remote</value>
   </data>
+  <data name="RetroactivelyGivePoints" xml:space="preserve">
+    <value>Retroactively Give Points</value>
+  </data>
   <data name="Role" xml:space="preserve">
     <value>Role</value>
+  </data>
+  <data name="RoleBonuses" xml:space="preserve">
+    <value>Role Bonuses</value>
   </data>
   <data name="RoleErrorInsufficientRole" xml:space="preserve">
     <value>You must be a {0} to do this.</value>
@@ -600,6 +696,9 @@
   <data name="SubAge" xml:space="preserve">
     <value>Sub Age</value>
   </data>
+  <data name="SubBonus" xml:space="preserve">
+    <value>Sub Bonus</value>
+  </data>
   <data name="Subscriber" xml:space="preserve">
     <value>Subscriber</value>
   </data>
@@ -669,6 +768,12 @@
   <data name="UserOnlyChatCommands" xml:space="preserve">
     <value>User-Only Chat Commands</value>
   </data>
+  <data name="UserRankChanged" xml:space="preserve">
+    <value>User Rank Changed</value>
+  </data>
+  <data name="UserRanks" xml:space="preserve">
+    <value>User Ranks</value>
+  </data>
   <data name="Users" xml:space="preserve">
     <value>Users</value>
   </data>
@@ -680,6 +785,12 @@
   </data>
   <data name="WebShow" xml:space="preserve">
     <value>Web Show</value>
+  </data>
+  <data name="Weekly" xml:space="preserve">
+    <value>Weekly</value>
+  </data>
+  <data name="Yearly" xml:space="preserve">
+    <value>Yearly</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Yes</value>
