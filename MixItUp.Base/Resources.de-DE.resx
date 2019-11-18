@@ -225,6 +225,9 @@
   <data name="CumulativeMonthsSubbed" xml:space="preserve">
     <value>Kumulative Monate untergubbed</value>
   </data>
+  <data name="CurrencyRank" xml:space="preserve">
+    <value>Währung / Rang</value>
+  </data>
   <data name="CurrencyRankInventory" xml:space="preserve">
     <value>Währung/Rang/Inventar</value>
   </data>
@@ -363,6 +366,9 @@
   <data name="ImportData" xml:space="preserve">
     <value>Daten importieren</value>
   </data>
+  <data name="Inventory" xml:space="preserve">
+    <value>Inventar</value>
+  </data>
   <data name="LargeStreamer" xml:space="preserve">
     <value>Große Streamer (&gt;25)</value>
   </data>
@@ -446,6 +452,9 @@
   </data>
   <data name="OnlineMinutes" xml:space="preserve">
     <value>Online-Minuten</value>
+  </data>
+  <data name="Options" xml:space="preserve">
+    <value>Optionen</value>
   </data>
   <data name="Overlay" xml:space="preserve">
     <value>Overlay</value>

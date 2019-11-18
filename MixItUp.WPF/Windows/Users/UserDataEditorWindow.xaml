@@ -105,11 +105,11 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <GroupBox Header="Currency / Rank" Grid.Column="0">
+                    <GroupBox Header="{x:Static resx:Resources.CurrencyRank}" Grid.Column="0">
                         <StackPanel x:Name="CurrencyRankStackPanel" />
                     </GroupBox>
 
-                    <GroupBox Header="Inventory" Grid.Column="2">
+                    <GroupBox Header="{x:Static resx:Resources.Inventory}" Grid.Column="2">
                         <ScrollViewer VerticalScrollBarVisibility="Visible" MaxHeight="200">
                             <StackPanel x:Name="InventoryStackPanel" />
                         </ScrollViewer>
@@ -141,7 +141,7 @@
                     </Grid>
                 </GroupBox>
 
-                <GroupBox Header="Options" Grid.Row="6">
+                <GroupBox Header="{x:Static resx:Resources.Options}" Grid.Row="6">
                     <Grid Margin="10">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />

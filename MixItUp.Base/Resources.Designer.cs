@@ -394,6 +394,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Currency/Rank.
+        /// </summary>
+        public static string CurrencyRank {
+            get {
+                return ResourceManager.GetString("CurrencyRank", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Currency/Rank/Inventory.
         /// </summary>
         public static string CurrencyRankInventory {
@@ -799,6 +808,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Inventory.
+        /// </summary>
+        public static string Inventory {
+            get {
+                return ResourceManager.GetString("Inventory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Large Streamer (&gt;25).
         /// </summary>
         public static string LargeStreamer {
@@ -1047,6 +1065,15 @@ namespace MixItUp.Base {
         public static string OnlineMinutes {
             get {
                 return ResourceManager.GetString("OnlineMinutes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Options.
+        /// </summary>
+        public static string Options {
+            get {
+                return ResourceManager.GetString("Options", resourceCulture);
             }
         }
         
