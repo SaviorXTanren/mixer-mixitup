@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Command"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:RequirementControls="clr-namespace:MixItUp.WPF.Controls.Requirement"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -15,6 +17,10 @@
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
                    
              d:DesignHeight="300" d:DesignWidth="600">
+    <local:CommandDetailsControlBase.Resources>
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+    </local:CommandDetailsControlBase.Resources>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" />
@@ -38,9 +44,9 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBox x:Name="NameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Command Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox x:Name="NameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                <ComboBox x:Name="CommandGroupComboBox" Grid.Column="2" IsEditable="True" MaterialDesign:HintAssist.Hint="Command Group" Width="150" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+                <ComboBox x:Name="CommandGroupComboBox" Grid.Column="2" IsEditable="True" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CommandGroup}" Width="150" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
             </Grid>
 
             <Grid Grid.Row="2">
@@ -60,10 +66,10 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" VerticalAlignment="Center">Auto-Include "!":</TextBlock>
+                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.AutoIncludeBang}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
                 <ToggleButton Grid.Column="2" x:Name="IncludeExclamationInCommandsToggleButton" Checked="IncludeExclamationInCommandsToggleButton_Checked" Unchecked="IncludeExclamationInCommandsToggleButton_Checked" />
 
-                <TextBlock Grid.Column="4" VerticalAlignment="Center">Wildcards:</TextBlock>
+                <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Wildcards}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
                 <ToggleButton Grid.Column="6" x:Name="WildcardsToggleButton" Checked="WildcardsToggleButton_Checked" Unchecked="WildcardsToggleButton_Checked" />
 
                 <local:UnlockedCommandControl x:Name="UnlockedControl" Grid.Column="8" HorizontalAlignment="Center" />

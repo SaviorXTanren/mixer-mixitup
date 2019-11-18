@@ -22,7 +22,7 @@
 
     <Grid>
         <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding OverlayNotEnabled, Converter={StaticResource BoolToVisibilityConverter}}">
-            <TextBlock Style="{StaticResource HeaderTextBlock}" TextWrapping="Wrap">The Overlay must be enabled in the Services menu to use Overlay Widgets</TextBlock>
+            <TextBlock Style="{StaticResource HeaderTextBlock}" TextWrapping="Wrap" Text="{x:Static resx:Resources.OverlayWidgetsRequireOverlay}"/>
         </Grid>
 
         <Grid Visibility="{Binding OverlayEnabled, Converter={StaticResource BoolToVisibilityConverter}}">

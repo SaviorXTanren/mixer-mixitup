@@ -16,7 +16,7 @@ namespace MixItUp.WPF.Util
             }
             else if (value is string)
             {
-                key = parameter as string;
+                key = value as string;
             }
 
             if (!string.IsNullOrEmpty(key))
