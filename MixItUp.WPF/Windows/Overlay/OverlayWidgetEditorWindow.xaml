@@ -4,6 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MixItUp.WPF.Windows.Overlay"
+        xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+        xmlns:util="clr-namespace:MixItUp.WPF.Util"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
         xmlns:OverlayControls="clr-namespace:MixItUp.WPF.Controls.Overlay"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
@@ -17,9 +19,10 @@
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
                   
         Icon="./../../Logo.ico"
-        Title="Overlay Widget - Editor" Height="600" Width="800">
+        Title="{x:Static resx:Resources.OverlayWidgetEditor}" Height="600" Width="800">
     <Windows:LoadingWindowBase.Resources>
-        <ResourceDictionary>
+        <util:LocalizationConverter x:Key="LocalizationConverter"/>
+        <ResourceDictionary x:Key="Themes">
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Card.xaml" />
@@ -48,14 +51,20 @@
                     <RowDefinition Height="300" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" HorizontalAlignment="Center">Select the Overlay Type you would like to create:</TextBlock>
+                <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{x:Static resx:Resources.OverlayWidgetEditorInstructions}"/>
 
-                <ComboBox Grid.Row="2" ItemsSource="{Binding OverlayTypeListings}" SelectedItem="{Binding SelectedOverlayType}" HorizontalAlignment="Center" Width="200" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="Overlay Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+                <ComboBox Grid.Row="2" ItemsSource="{Binding OverlayTypeListings}" SelectedItem="{Binding SelectedOverlayType}" HorizontalAlignment="Center" Width="200" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Type, Converter={StaticResource LocalizationConverter}}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
 
                 <TextBlock Grid.Row="4" Text="{Binding SelectedOverlayType.Description}" HorizontalAlignment="Center" Width="500" TextWrapping="Wrap" />
             </Grid>
 
-            <Button Command="{Binding OverlayTypeSelectedCommand}" Width="80" Margin="0,0,40,20" IsEnabled="{Binding OverlayTypeSelected}" HorizontalAlignment="Right" VerticalAlignment="Bottom">Next</Button>
+            <Button Command="{Binding OverlayTypeSelectedCommand}" Width="80" Margin="0,0,40,20" IsEnabled="{Binding OverlayTypeSelected}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Content="{x:Static resx:Resources.Next}"/>
         </Grid>
 
         <Grid Visibility="{Binding OverlayTypeIsSelected, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Row="0">
@@ -81,7 +90,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <TextBox Grid.Column="0" Text="{Binding Name}" MaterialDesign:HintAssist.Hint="Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Grid.Column="0" Text="{Binding Type, Converter={StaticResource LocalizationConverter}}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                     <Grid Grid.Row="2">
                         <Grid.ColumnDefinitions>
@@ -90,9 +99,9 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <ComboBox ItemsSource="{Binding OverlayEndpoints}" SelectedItem="{Binding SelectedOverlayEndpoint}" Grid.Column="0" Width="200" MaterialDesign:HintAssist.Hint="Overlay To Use" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+                        <ComboBox ItemsSource="{Binding OverlayEndpoints}" SelectedItem="{Binding SelectedOverlayEndpoint}" Grid.Column="0" Width="200" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Overlay}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-                        <TextBox x:Name="RefreshTimeTextBox" Grid.Column="2" Text="{Binding RefreshTimeString}" IsEnabled="{Binding SupportsRefreshUpdating}" MaterialDesign:HintAssist.Hint="Refresh Time (Secs)" Width="130" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <TextBox x:Name="RefreshTimeTextBox" Grid.Column="2" Text="{Binding RefreshTimeString}" IsEnabled="{Binding SupportsRefreshUpdating}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.RefreshTimeSecs}" Width="130" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                     </Grid>
                 </Grid>
 

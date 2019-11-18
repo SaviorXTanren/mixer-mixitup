@@ -71,7 +71,7 @@
                 </DataGrid.Columns>
             </DataGrid>
 
-            <Button x:Name="AddOverlayWidgetButton" Grid.Row="2" HorizontalAlignment="Center" Width="180" Click="AddOverlayWidgetButton_Click">Add Overlay Widget</Button>
+            <Button x:Name="AddOverlayWidgetButton" Grid.Row="2" HorizontalAlignment="Center" MinWidth="180" Click="AddOverlayWidgetButton_Click" Content="{x:Static resx:Resources.AddOverlayWidget}"/>
 
         </Grid>
     </Grid>

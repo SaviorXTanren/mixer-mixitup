@@ -174,6 +174,9 @@
   <data name="AddNewRank" xml:space="preserve">
     <value>Add New Rank</value>
   </data>
+  <data name="AddOverlayWidget" xml:space="preserve">
+    <value>Add Overlay Widget</value>
+  </data>
   <data name="AdvancedCommand" xml:space="preserve">
     <value>Advanced Command</value>
   </data>
@@ -236,6 +239,9 @@
   </data>
   <data name="ChatMessage" xml:space="preserve">
     <value>Chat Message</value>
+  </data>
+  <data name="ChatMessages" xml:space="preserve">
+    <value>Chat Messages</value>
   </data>
   <data name="ChatMessagesSent" xml:space="preserve">
     <value>Chat Messages Sent</value>
@@ -351,6 +357,9 @@
   <data name="EnableDisableCommand" xml:space="preserve">
     <value>Enable/Disable Command</value>
   </data>
+  <data name="EndCredits" xml:space="preserve">
+    <value>End Credits</value>
+  </data>
   <data name="ErrorGamePickInsufficientRole" xml:space="preserve">
     <value>You must be a {0} to pick the answer.</value>
   </data>
@@ -359,6 +368,9 @@
   </data>
   <data name="EventBonuses" xml:space="preserve">
     <value>Event Bonuses</value>
+  </data>
+  <data name="EventList" xml:space="preserve">
+    <value>Event List</value>
   </data>
   <data name="Events" xml:space="preserve">
     <value>Events</value>
@@ -429,6 +441,12 @@
   <data name="Hours" xml:space="preserve">
     <value>Hours</value>
   </data>
+  <data name="HTML" xml:space="preserve">
+    <value>HTML</value>
+  </data>
+  <data name="Image" xml:space="preserve">
+    <value>Image</value>
+  </data>
   <data name="ImportData" xml:space="preserve">
     <value>Import Data</value>
   </data>
@@ -461,6 +479,9 @@
   </data>
   <data name="LargeStreamer" xml:space="preserve">
     <value>Large Streamer (&gt;25)</value>
+  </data>
+  <data name="Leaderboard" xml:space="preserve">
+    <value>Leaderboard</value>
   </data>
   <data name="LicenseAgreement" xml:space="preserve">
     <value>License Agreement</value>
@@ -555,6 +576,9 @@
   <data name="NewStreamer" xml:space="preserve">
     <value>New Streamer</value>
   </data>
+  <data name="Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
   <data name="No" xml:space="preserve">
     <value>No</value>
   </data>
@@ -587,6 +611,12 @@
   </data>
   <data name="Overlay" xml:space="preserve">
     <value>Overlay</value>
+  </data>
+  <data name="OverlayWidgetEditor" xml:space="preserve">
+    <value>Overlay Widget - Editor</value>
+  </data>
+  <data name="OverlayWidgetEditorInstructions" xml:space="preserve">
+    <value>Select the Overlay Type you would like to create:</value>
   </data>
   <data name="OverlayWidgets" xml:space="preserve">
     <value>Overlay Widgets</value>
@@ -621,6 +651,9 @@
   <data name="Profiles" xml:space="preserve">
     <value>Profiles</value>
   </data>
+  <data name="ProgressBar" xml:space="preserve">
+    <value>Goal/Progress Bar</value>
+  </data>
   <data name="Quotes" xml:space="preserve">
     <value>Quotes</value>
   </data>
@@ -629,6 +662,9 @@
   </data>
   <data name="RankName" xml:space="preserve">
     <value>Rank Name</value>
+  </data>
+  <data name="RefreshTimeSecs" xml:space="preserve">
+    <value>Refresh Time (Secs)</value>
   </data>
   <data name="Regular" xml:space="preserve">
     <value>Regular</value>
@@ -705,8 +741,14 @@
   <data name="SmallStreamer" xml:space="preserve">
     <value>Small Streamer (&lt;10)</value>
   </data>
+  <data name="SongRequests" xml:space="preserve">
+    <value>Song Requests</value>
+  </data>
   <data name="Source" xml:space="preserve">
     <value>Source</value>
+  </data>
+  <data name="SparkCrystal" xml:space="preserve">
+    <value>Spark Crystal</value>
   </data>
   <data name="SparkExempt" xml:space="preserve">
     <value>Spark Exempt</value>
@@ -728,6 +770,12 @@
   </data>
   <data name="Statistics" xml:space="preserve">
     <value>Statistics</value>
+  </data>
+  <data name="StreamBoss" xml:space="preserve">
+    <value>Stream Boss</value>
+  </data>
+  <data name="StreamClip" xml:space="preserve">
+    <value>Stream Clip Playback</value>
   </data>
   <data name="Streamer" xml:space="preserve">
     <value>Streamer</value>
@@ -771,11 +819,23 @@
   <data name="TestCommand" xml:space="preserve">
     <value>Test Command</value>
   </data>
+  <data name="Text" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="TickerTape" xml:space="preserve">
+    <value>Ticker Tape</value>
+  </data>
+  <data name="Timer" xml:space="preserve">
+    <value>Timer</value>
+  </data>
   <data name="TimerInterval" xml:space="preserve">
     <value>Interval (Minutes)</value>
   </data>
   <data name="Timers" xml:space="preserve">
     <value>Timers</value>
+  </data>
+  <data name="TimerTrain" xml:space="preserve">
+    <value>Timer Train</value>
   </data>
   <data name="Total" xml:space="preserve">
     <value>Total</value>
@@ -834,11 +894,17 @@
   <data name="Users" xml:space="preserve">
     <value>Users</value>
   </data>
+  <data name="Video" xml:space="preserve">
+    <value>Video</value>
+  </data>
   <data name="Viewers" xml:space="preserve">
     <value>Viewers</value>
   </data>
   <data name="WatchTime" xml:space="preserve">
     <value>Watch Time</value>
+  </data>
+  <data name="WebPage" xml:space="preserve">
+    <value>Web Page</value>
   </data>
   <data name="WebShow" xml:space="preserve">
     <value>Web Show</value>
