@@ -132,6 +132,9 @@
   <data name="Add" xml:space="preserve">
     <value>Add</value>
   </data>
+  <data name="AddCommand" xml:space="preserve">
+    <value>Add Command</value>
+  </data>
   <data name="AddFavoriteStreamerAlreadyDone" xml:space="preserve">
     <value>This user already exists in this group.</value>
   </data>
@@ -426,6 +429,9 @@
   <data name="Send" xml:space="preserve">
     <value>Send</value>
   </data>
+  <data name="Service" xml:space="preserve">
+    <value>Service</value>
+  </data>
   <data name="Services" xml:space="preserve">
     <value>Services</value>
   </data>
@@ -470,6 +476,9 @@
   </data>
   <data name="TotalUsers" xml:space="preserve">
     <value>Total Users</value>
+  </data>
+  <data name="TranslationBy" xml:space="preserve">
+    <value />
   </data>
   <data name="Type" xml:space="preserve">
     <value>Type</value>

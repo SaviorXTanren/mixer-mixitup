@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
              mc:Ignorable="d" 
@@ -11,14 +12,14 @@
     <Grid Margin="10">
         <DataGrid x:Name="EventsCommandsDataGrid" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Service" Binding="{Binding Service}" IsReadOnly="True" Width="*" />
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
-                <DataGridTemplateColumn Header="Actions" Width="240">
+                <DataGridTextColumn Header="{x:Static resx:Resources.Service}" Binding="{Binding Service}" IsReadOnly="True" Width="*" />
+                <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="240">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid HorizontalAlignment="Center">
                                 <Grid Visibility="{Binding NewCommandButtonVisibility}">
-                                    <Button x:Name="NewInteractiveCommandButton" Click="NewInteractiveCommandButton_Click">Add Command</Button>
+                                    <Button x:Name="NewInteractiveCommandButton" Click="NewInteractiveCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}"/>
                                 </Grid>
                                 <Grid Visibility="{Binding ExistingCommandButtonsVisibility}">
                                     <CommandControls:CommandButtonsControl x:Name="CommandButtons" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />

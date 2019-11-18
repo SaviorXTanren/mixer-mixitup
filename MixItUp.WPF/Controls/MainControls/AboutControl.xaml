@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
@@ -36,6 +37,8 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="15" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="15" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <Grid Grid.Row="0" HorizontalAlignment="Center">
@@ -64,6 +67,8 @@
                             <Hyperlink x:Name="IssueReportHyperlink" Click="IssueReportHyperlink_Click">Submit a Bug</Hyperlink>
                         </TextBlock>
                     </Grid>
+
+                    <TextBlock Grid.Row="4" HorizontalAlignment="Center" TextWrapping="Wrap" Text="{x:Static resx:Resources.TranslationBy}"/>
                 </Grid>
             </GroupBox>
 

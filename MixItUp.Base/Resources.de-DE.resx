@@ -132,6 +132,9 @@
   <data name="Add" xml:space="preserve">
     <value>Hinzufügen</value>
   </data>
+  <data name="AddCommand" xml:space="preserve">
+    <value>Befehl hinzufügen</value>
+  </data>
   <data name="AddFavoriteStreamerAlreadyDone" xml:space="preserve">
     <value>Dieser Benutzer ist bereits in dieser Gruppe vorhanden.</value>
   </data>
@@ -426,6 +429,9 @@
   <data name="Send" xml:space="preserve">
     <value>Senden</value>
   </data>
+  <data name="Service" xml:space="preserve">
+    <value>Dienste</value>
+  </data>
   <data name="Services" xml:space="preserve">
     <value>Dienste</value>
   </data>
@@ -470,6 +476,9 @@
   </data>
   <data name="TotalUsers" xml:space="preserve">
     <value>Totale Zuschauer</value>
+  </data>
+  <data name="TranslationBy" xml:space="preserve">
+    <value>Deutsche Übersetzung von: DerWashbr (https://mixer.com/DerWashbr)</value>
   </data>
   <data name="Type" xml:space="preserve">
     <value>Typ</value>

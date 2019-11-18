@@ -106,6 +106,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Command.
+        /// </summary>
+        public static string AddCommand {
+            get {
+                return ResourceManager.GetString("AddCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This user already exists in this group..
         /// </summary>
         public static string AddFavoriteStreamerAlreadyDone {
@@ -988,6 +997,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Service.
+        /// </summary>
+        public static string Service {
+            get {
+                return ResourceManager.GetString("Service", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Services.
         /// </summary>
         public static string Services {
@@ -1119,6 +1137,15 @@ namespace MixItUp.Base {
         public static string TotalUsers {
             get {
                 return ResourceManager.GetString("TotalUsers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string TranslationBy {
+            get {
+                return ResourceManager.GetString("TranslationBy", resourceCulture);
             }
         }
         
