@@ -3382,6 +3382,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Title Name.
+        /// </summary>
+        public static string TitleName {
+            get {
+                return ResourceManager.GetString("TitleName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Total.
         /// </summary>
         public static string Total {

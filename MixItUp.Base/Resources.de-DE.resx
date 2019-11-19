@@ -1226,6 +1226,9 @@
   <data name="TimerTrain" xml:space="preserve">
     <value>Timer-Zug</value>
   </data>
+  <data name="TitleName" xml:space="preserve">
+    <value>Titelname</value>
+  </data>
   <data name="Total" xml:space="preserve">
     <value>Totale</value>
   </data>

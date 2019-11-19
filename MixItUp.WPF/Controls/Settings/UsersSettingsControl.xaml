@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Settings"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:util="clr-namespace:MixItUp.WPF.Util"
              xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:MainControls="clr-namespace:MixItUp.WPF.Controls.MainControls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -12,6 +13,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <local:SettingsControlBase.Resources>
         <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+        <util:LocalizationConverter x:Key="LocalizationConverter"/>
     </local:SettingsControlBase.Resources>
     <Grid Margin="20">
         <Grid.RowDefinitions>
@@ -34,7 +36,7 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center" Margin="0,15,0,0" Text="{Binding Source={x:Static resx:Resources.RegularStatusOnlineViewingTime}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-            <TextBox x:Name="RegularUserMinimumHoursTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.RequiredHours}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" TextChanged="RegularUserMinimumHoursTextBox_TextChanged" />
+            <TextBox x:Name="RegularUserMinimumHoursTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.RequiredHours}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MinWidth="100" TextChanged="RegularUserMinimumHoursTextBox_TextChanged" />
         </Grid>
 
         <Border Grid.Row="2" Style="{StaticResource DefaultBorder}" />
@@ -69,11 +71,17 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="TitleNameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Title Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
+            <TextBox x:Name="TitleNameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TitleName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
 
-            <ComboBox x:Name="TitleRoleComboBox" Grid.Column="2" Width="120" MaterialDesign:HintAssist.Hint="Role" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="TitleRoleComboBox_SelectionChanged" />
+            <ComboBox x:Name="TitleRoleComboBox" Grid.Column="2" Width="120" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Role}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="TitleRoleComboBox_SelectionChanged">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
-            <TextBox x:Name="TitleMinimumMonthsTextBox" Grid.Column="4" IsEnabled="False" MaterialDesign:HintAssist.Hint="Total Months" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
+            <TextBox x:Name="TitleMinimumMonthsTextBox" Grid.Column="4" IsEnabled="False" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Months}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
 
             <Button x:Name="AddTitleButton" Grid.Column="6" Click="AddTitleButton_Click" Content="{x:Static resx:Resources.Add}"/>
         </Grid>
