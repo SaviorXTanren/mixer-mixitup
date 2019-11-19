@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
@@ -464,7 +465,7 @@ namespace MixItUp.Base.Model.Overlay
                 sectionHTML = await this.ReplaceStringWithSpecialModifiers(sectionHTML, await ChannelSession.GetCurrentUser(), new List<string>(), new Dictionary<string, string>());
 
                 List<string> userHTMLs = new List<string>();
-                foreach (var kvp in replacers)
+                foreach (var kvp in replacers.OrderBy(kvp => kvp.Key.UserName))
                 {
                     if (!string.IsNullOrEmpty(kvp.Key.UserName))
                     {
