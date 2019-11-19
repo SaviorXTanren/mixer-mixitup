@@ -192,6 +192,9 @@
   <data name="AddToUser" xml:space="preserve">
     <value>Zu allen Benutzern hinzufügen</value>
   </data>
+  <data name="Advanced" xml:space="preserve">
+    <value>Erweiterte Einstellung</value>
+  </data>
   <data name="AdvancedCommand" xml:space="preserve">
     <value>Erweiterter Befehl</value>
   </data>
@@ -200,6 +203,9 @@
   </data>
   <data name="AllowPastWinners" xml:space="preserve">
     <value>Vergangene Gewinner zulassen</value>
+  </data>
+  <data name="AlreadyInstalled" xml:space="preserve">
+    <value>Already Installed</value>
   </data>
   <data name="Amount" xml:space="preserve">
     <value>Menge</value>
@@ -218,6 +224,9 @@
   </data>
   <data name="AutoIncludeBang" xml:space="preserve">
     <value>Auto-Include "!"</value>
+  </data>
+  <data name="AutoLogInCurrentAccount" xml:space="preserve">
+    <value>Auto-Einloggen in aktuellen Account</value>
   </data>
   <data name="AutomaticReset" xml:space="preserve">
     <value>Automatisches Resetten</value>
@@ -393,8 +402,14 @@
   <data name="DeductFromUserRunningCommand" xml:space="preserve">
     <value>Deduct From User Running Command</value>
   </data>
+  <data name="DefaultAudioOutput" xml:space="preserve">
+    <value>Standard-Audio-Ausgang</value>
+  </data>
   <data name="DefaultMaxAmount" xml:space="preserve">
     <value>Standard-Maximalbetrag</value>
+  </data>
+  <data name="DefaultStreamingSoftware" xml:space="preserve">
+    <value>Standard-Streaming-Software</value>
   </data>
   <data name="Delete" xml:space="preserve">
     <value>Löschen</value>
@@ -422,6 +437,12 @@
   </data>
   <data name="DoesNotContain" xml:space="preserve">
     <value>&lt;&gt; enthält</value>
+  </data>
+  <data name="DownloadAndInstall" xml:space="preserve">
+    <value>Herunterladen &amp; Installieren</value>
+  </data>
+  <data name="DownloadAndInstallffmpeg" xml:space="preserve">
+    <value>ffmpeg herunterladen &amp; installieren</value>
   </data>
   <data name="DownloadFrom" xml:space="preserve">
     <value>Herunterladen von</value>
@@ -501,6 +522,9 @@
   <data name="FavoriteStreamers" xml:space="preserve">
     <value>Bevorzugte Streamer</value>
   </data>
+  <data name="FeatureMixItUpStreamer" xml:space="preserve">
+    <value>Nimm mich als Mix It Up Streamer auf</value>
+  </data>
   <data name="FileReadAndWrite" xml:space="preserve">
     <value>Datei (Lesen &amp; Schreiben)</value>
   </data>
@@ -537,6 +561,9 @@
   <data name="Games" xml:space="preserve">
     <value>Mini-Spiele</value>
   </data>
+  <data name="General" xml:space="preserve">
+    <value>Allgemein</value>
+  </data>
   <data name="Giveaway" xml:space="preserve">
     <value>Giveaway</value>
   </data>
@@ -563,6 +590,9 @@
   </data>
   <data name="HostChannel" xml:space="preserve">
     <value>Kanal hosten</value>
+  </data>
+  <data name="HotKeys" xml:space="preserve">
+    <value>Hotkeys</value>
   </data>
   <data name="Hours" xml:space="preserve">
     <value>Stunden</value>
@@ -738,6 +768,9 @@
   <data name="NotEquals" xml:space="preserve">
     <value>&lt;&gt;</value>
   </data>
+  <data name="Notifications" xml:space="preserve">
+    <value>Benachrichtigungen</value>
+  </data>
   <data name="OfflineRate" xml:space="preserve">
     <value>Offline Rate</value>
   </data>
@@ -768,11 +801,17 @@
   <data name="Options" xml:space="preserve">
     <value>Optionen</value>
   </data>
+  <data name="OptOutofDataTracking" xml:space="preserve">
+    <value>Datentracking*</value>
+  </data>
   <data name="Overlay" xml:space="preserve">
     <value>Overlay</value>
   </data>
   <data name="OverlayImagesAndVideos" xml:space="preserve">
     <value>Overlay (Bilder &amp; Videos)</value>
+  </data>
+  <data name="Overlays" xml:space="preserve">
+    <value>Overlays</value>
   </data>
   <data name="OverlayWidgetEditor" xml:space="preserve">
     <value>Overlay Widget - Editor</value>
@@ -889,6 +928,9 @@
   <data name="Save" xml:space="preserve">
     <value>Speichern</value>
   </data>
+  <data name="SaveChatEventLogs" xml:space="preserve">
+    <value>Chat-/Eventprotokolle speichern</value>
+  </data>
   <data name="SaveFailed" xml:space="preserve">
     <value>Speichern fehlgeschlagen, versuche es erneut...</value>
   </data>
@@ -924,6 +966,9 @@
   </data>
   <data name="Serial" xml:space="preserve">
     <value>Angeschlossene Geräte</value>
+  </data>
+  <data name="SerialDevices" xml:space="preserve">
+    <value>Serielle Geräte</value>
   </data>
   <data name="Service" xml:space="preserve">
     <value>Dienste</value>
@@ -1079,6 +1124,9 @@
   <data name="TextToSpeech" xml:space="preserve">
     <value>Text zu Sprache</value>
   </data>
+  <data name="ThemesAndColors" xml:space="preserve">
+    <value>Themen &amp; Farben</value>
+  </data>
   <data name="TickerTape" xml:space="preserve">
     <value>Laufband</value>
   </data>
@@ -1141,6 +1189,9 @@
   </data>
   <data name="UpdateChannel" xml:space="preserve">
     <value>Kanal aktualisieren</value>
+  </data>
+  <data name="UpdatePreviewProgram" xml:space="preserve">
+    <value>Als Preview-Programm aktualisieren</value>
   </data>
   <data name="UploadTo" xml:space="preserve">
     <value>Hochladen auf</value>

@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
@@ -30,7 +31,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" x:Name="ExportStatsButton" Width="130" Click="ExportStatsButton_Click">Export To File</Button>
+            <Button Grid.Column="0" x:Name="ExportStatsButton" Width="130" Click="ExportStatsButton_Click" Content="{x:Static resx:Resources.ExportData}"/>
         </Grid>
     </Grid>
 </local:MainControlBase>
