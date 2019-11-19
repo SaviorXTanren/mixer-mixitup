@@ -201,6 +201,9 @@
   <data name="AgeRating" xml:space="preserve">
     <value>Age Rating</value>
   </data>
+  <data name="AllowPastWinners" xml:space="preserve">
+    <value>Allow Past Winners</value>
+  </data>
   <data name="Amount" xml:space="preserve">
     <value>Amount</value>
   </data>
@@ -251,6 +254,9 @@
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
+  </data>
+  <data name="CancelGiveaway" xml:space="preserve">
+    <value>Cancel Giveaway</value>
   </data>
   <data name="CaseSensitive" xml:space="preserve">
     <value>Case Sensitive</value>
@@ -305,6 +311,9 @@
   </data>
   <data name="CommandGroup" xml:space="preserve">
     <value>Command Group</value>
+  </data>
+  <data name="CommandNoBang" xml:space="preserve">
+    <value>Command (No '!' needed)</value>
   </data>
   <data name="Commands" xml:space="preserve">
     <value>Commands</value>
@@ -444,6 +453,9 @@
   <data name="EndCredits" xml:space="preserve">
     <value>End Credits</value>
   </data>
+  <data name="EnteredUsers" xml:space="preserve">
+    <value>Entered Users</value>
+  </data>
   <data name="EqualsCompare" xml:space="preserve">
     <value>=</value>
   </data>
@@ -527,6 +539,9 @@
   </data>
   <data name="Giveaway" xml:space="preserve">
     <value>Giveaway</value>
+  </data>
+  <data name="GiveawayItem" xml:space="preserve">
+    <value>Giveaway Item</value>
   </data>
   <data name="GreaterThan" xml:space="preserve">
     <value>&gt;</value>
@@ -641,6 +656,9 @@
   </data>
   <data name="MaxAmount" xml:space="preserve">
     <value>Max Amount</value>
+  </data>
+  <data name="MaxEntries" xml:space="preserve">
+    <value>Max Entries</value>
   </data>
   <data name="MediumStreamer" xml:space="preserve">
     <value>Medium Streamer (10-25)</value>
@@ -822,8 +840,14 @@
   <data name="Regular" xml:space="preserve">
     <value>Regular</value>
   </data>
+  <data name="ReminderMins" xml:space="preserve">
+    <value>Reminder (Mins)</value>
+  </data>
   <data name="Remote" xml:space="preserve">
     <value>Remote</value>
+  </data>
+  <data name="RequireClaim" xml:space="preserve">
+    <value>Require "!claim"</value>
   </data>
   <data name="Reset" xml:space="preserve">
     <value>Reset</value>
@@ -878,6 +902,9 @@
   </data>
   <data name="SearchCriteria" xml:space="preserve">
     <value>Search Criteria</value>
+  </data>
+  <data name="Seconds" xml:space="preserve">
+    <value>Seconds</value>
   </data>
   <data name="SecondValue" xml:space="preserve">
     <value>Second Value</value>
@@ -963,6 +990,12 @@
   <data name="Staff" xml:space="preserve">
     <value>Staff</value>
   </data>
+  <data name="StartGiveaway" xml:space="preserve">
+    <value>Start Giveaway</value>
+  </data>
+  <data name="StartReminder" xml:space="preserve">
+    <value>Start/Reminder</value>
+  </data>
   <data name="Statistics" xml:space="preserve">
     <value>Statistics</value>
   </data>
@@ -1047,6 +1080,9 @@
   <data name="TickerTape" xml:space="preserve">
     <value>Ticker Tape</value>
   </data>
+  <data name="TimeLeft" xml:space="preserve">
+    <value>Time Left</value>
+  </data>
   <data name="Timer" xml:space="preserve">
     <value>Timer</value>
   </data>
@@ -1061,6 +1097,9 @@
   </data>
   <data name="Total" xml:space="preserve">
     <value>Total</value>
+  </data>
+  <data name="TotalTimeMins" xml:space="preserve">
+    <value>Total Time (Mins)</value>
   </data>
   <data name="TotalUsers" xml:space="preserve">
     <value>Total Users</value>
@@ -1104,8 +1143,14 @@
   <data name="UploadTo" xml:space="preserve">
     <value>Upload To</value>
   </data>
+  <data name="UsageRequirements" xml:space="preserve">
+    <value>Usage Requirements</value>
+  </data>
   <data name="User" xml:space="preserve">
     <value>User</value>
+  </data>
+  <data name="UserJoined" xml:space="preserve">
+    <value>User Joined</value>
   </data>
   <data name="UserJoinedChat" xml:space="preserve">
     <value>{0} Joined Chat</value>
@@ -1124,6 +1169,9 @@
   </data>
   <data name="UserRanks" xml:space="preserve">
     <value>User Ranks</value>
+  </data>
+  <data name="UserRole" xml:space="preserve">
+    <value>User Role</value>
   </data>
   <data name="Users" xml:space="preserve">
     <value>Users</value>
@@ -1163,6 +1211,12 @@
   </data>
   <data name="Wildcards" xml:space="preserve">
     <value>Wildcards</value>
+  </data>
+  <data name="Winner" xml:space="preserve">
+    <value>Winner</value>
+  </data>
+  <data name="WinnerSelected" xml:space="preserve">
+    <value>Winner Selected</value>
   </data>
   <data name="Yearly" xml:space="preserve">
     <value>Yearly</value>

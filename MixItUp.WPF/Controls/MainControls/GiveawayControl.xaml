@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
              xmlns:RequirementControls="clr-namespace:MixItUp.WPF.Controls.Requirement"
@@ -18,6 +19,7 @@
 
              d:DesignHeight="500" d:DesignWidth="600">
     <local:MainControlBase.Resources>
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </local:MainControlBase.Resources>
     
@@ -52,7 +54,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBox Grid.Row="0" Text="{Binding Item}" HorizontalAlignment="Center" Width="300" MaterialDesign:HintAssist.Hint="Giveaway Item" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Grid.Row="0" Text="{Binding Item}" HorizontalAlignment="Center" Width="300" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GiveawayItem}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                 <Grid Grid.Row="2" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
@@ -63,11 +65,11 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Grid.Column="0" Text="{Binding TotalTime}" Width="100" MaterialDesign:HintAssist.Hint="Total Time (Mins)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Grid.Column="0" Text="{Binding TotalTime}" Width="100" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TotalTimeMins}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                    <TextBox Grid.Column="2" Text="{Binding ReminderTime}" Width="100" MaterialDesign:HintAssist.Hint="Reminder (Mins)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Grid.Column="2" Text="{Binding ReminderTime}" Width="100" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ReminderMins}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                    <TextBox Grid.Column="4" Text="{Binding MaxEntries}" Width="80" MaterialDesign:HintAssist.Hint="Max Entries" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Grid.Column="4" Text="{Binding MaxEntries}" Width="80" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MaxEntries}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                 </Grid>
 
                 <Grid Grid.Row="4" HorizontalAlignment="Center">
@@ -81,10 +83,10 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Column="0" VerticalAlignment="Center">Require "!claim":</TextBlock>
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.RequireClaim}, StringFormat={StaticResource ColumnHeaderFormat}}" />
                     <CheckBox Grid.Column="2" IsChecked="{Binding RequireClaim}" />
 
-                    <TextBlock Grid.Column="4" VerticalAlignment="Center">Allow Past Winners:</TextBlock>
+                    <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.AllowPastWinners}, StringFormat={StaticResource ColumnHeaderFormat}}" />
                     <CheckBox Grid.Column="6" IsChecked="{Binding AllowPastWinners}" />
                 </Grid>
 
@@ -95,7 +97,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Grid.Column="0" Text="{Binding Command}" Width="120" MaterialDesign:HintAssist.Hint="Command (No '!' needed)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+                    <TextBox Grid.Column="0" Text="{Binding Command}" Width="120" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CommandNoBang}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
 
                     <RequirementControls:RequirementControl x:Name="Requirements" Grid.Column="2" />
                 </Grid>
@@ -109,23 +111,23 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <GroupBox Grid.Column="0" Header="Start/Reminder" Width="125">
+                    <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.StartReminder}" Width="125">
                         <CommandControls:CommandButtonsControl x:Name="GiveawayStartReminderCommand" HorizontalAlignment="Center" EditClicked="GiveawayCommand_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
                     </GroupBox>
 
-                    <GroupBox Grid.Column="2" Header="User Joined" Width="125">
+                    <GroupBox Grid.Column="2" Header="{x:Static resx:Resources.UserJoined}" Width="125">
                         <CommandControls:CommandButtonsControl x:Name="GiveawayUserJoinedCommand" HorizontalAlignment="Center" EditClicked="GiveawayCommand_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
                     </GroupBox>
 
-                    <GroupBox Grid.Column="4" Header="Winner Selected" Width="125">
+                    <GroupBox Grid.Column="4" Header="{x:Static resx:Resources.WinnerSelected}" Width="125">
                         <CommandControls:CommandButtonsControl x:Name="GiveawayWinnerSelectedCommand" HorizontalAlignment="Center" EditClicked="GiveawayCommand_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
                     </GroupBox>
                 </Grid>
             </Grid>
 
             <Grid Grid.Row="2" HorizontalAlignment="Center">
-                <Button x:Name="StartGiveawayButton" Click="StartGiveawayButton_Click" Visibility="{Binding IsNotRunning, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" Width="150">Start Giveaway</Button>
-                <Button Command="{Binding EndGiveawayCommand}" Visibility="{Binding IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" Width="150">Cancel Giveaway</Button>
+                <Button x:Name="StartGiveawayButton" Click="StartGiveawayButton_Click" Visibility="{Binding IsNotRunning, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" Width="150" Content="{x:Static resx:Resources.StartGiveaway}"/>
+                <Button Command="{Binding EndGiveawayCommand}" Visibility="{Binding IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" Width="150" Content="{x:Static resx:Resources.CancelGiveaway}"/>
             </Grid>
 
             <Grid Grid.Row="4" HorizontalAlignment="Center">
@@ -135,7 +137,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" VerticalAlignment="Center">Time Left:</TextBlock>
+                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.TimeLeft}, StringFormat={StaticResource ColumnHeaderFormat}}" />
 
                 <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding TimeLeft}" />
             </Grid>
@@ -147,7 +149,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" VerticalAlignment="Center">Winner:</TextBlock>
+                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Winner}, StringFormat={StaticResource ColumnHeaderFormat}}" />
 
                 <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding WinnerUsername}" />
             </Grid>
@@ -160,7 +162,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" HorizontalAlignment="Center">Entered Users:</TextBlock>
+            <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.EnteredUsers}, StringFormat={StaticResource ColumnHeaderFormat}}" />
 
             <DataGrid ItemsSource="{Binding EnteredUsers}" Grid.Row="2" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
                 <DataGrid.Columns>

@@ -99,10 +99,10 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         {
             get
             {
-                string result = (ChannelSession.Services.GiveawayService.TimeLeft % 60).ToString() + " Seconds";
+                string result = (ChannelSession.Services.GiveawayService.TimeLeft % 60).ToString() + " " + MixItUp.Base.Resources.Seconds;
                 if (ChannelSession.Services.GiveawayService.TimeLeft > 60)
                 {
-                    result = (ChannelSession.Services.GiveawayService.TimeLeft / 60).ToString() + " Minutes " + result;
+                    result = (ChannelSession.Services.GiveawayService.TimeLeft / 60).ToString() + " " +  MixItUp.Base.Resources.Minutes +" " + result;
                 }
                 return result;
             }

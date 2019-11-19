@@ -16,11 +16,11 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
 
-        <MaterialDesign:PackIcon Kind="AccountKey" x:Key="UserRolePopupBoxIcon" Style="{StaticResource DefaultPackIcon}" x:Shared="False" Width="24" Height="24" ToolTip="User Role" />
+        <MaterialDesign:PackIcon Kind="AccountKey" x:Key="UserRolePopupBoxIcon" Style="{StaticResource DefaultPackIcon}" x:Shared="False" Width="24" Height="24" ToolTip="{x:Static resx:Resources.UserRole}" />
 
         <MaterialDesign:PackIcon Kind="Timer" x:Key="CooldownPopupBoxIcon" Style="{StaticResource DefaultPackIcon}" x:Shared="False" Width="24" Height="24" ToolTip="Cooldown" />
 
-        <Grid x:Key="CurrencyRankPopupBoxIcon" ToolTip="Currency/Rank">
+        <Grid x:Key="CurrencyRankPopupBoxIcon" ToolTip="{x:Static resx:Resources.CurrencyRank}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
@@ -50,7 +50,7 @@
                     <ColumnDefinition Width="5" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" x:Name="GroupBoxHeaderTextBox" Foreground="{StaticResource WhiteColor}" Style="{StaticResource HeaderTextBlock}">Usage Requirements</TextBlock>
+                <TextBlock Grid.Column="0" x:Name="GroupBoxHeaderTextBox" Foreground="{StaticResource WhiteColor}" Style="{StaticResource HeaderTextBlock}" Text="{x:Static resx:Resources.UsageRequirements}"/>
 
                 <Button Grid.Column="2" x:Name="UsageRequirementsHelpButton" Margin="-10" Content="{MaterialDesign:PackIcon Help}" Click="UsageRequirementsHelpButton_Click" />
             </Grid>
