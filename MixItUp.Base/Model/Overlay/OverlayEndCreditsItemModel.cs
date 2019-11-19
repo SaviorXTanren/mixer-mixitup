@@ -398,7 +398,10 @@ namespace MixItUp.Base.Model.Overlay
             foreach (uint userID in data)
             {
                 UserViewModel user = this.GetUser(userID);
-                results[user] = string.Empty;
+                if (user != null)
+                {
+                    results[user] = string.Empty;
+                }
             }
             return results;
         }
@@ -409,7 +412,10 @@ namespace MixItUp.Base.Model.Overlay
             foreach (var kvp in data)
             {
                 UserViewModel user = this.GetUser(kvp.Key);
-                results[user] = kvp.Value.ToString();
+                if (user != null)
+                {
+                    results[user] = kvp.Value.ToString();
+                }
             }
             return results;
         }
@@ -420,7 +426,10 @@ namespace MixItUp.Base.Model.Overlay
             foreach (var kvp in data)
             {
                 UserViewModel user = this.GetUser(kvp.Key);
-                results[user] = string.Format("{0:C}", Math.Round(kvp.Value, 2));
+                if (user != null)
+                {
+                    results[user] = string.Format("{0:C}", Math.Round(kvp.Value, 2));
+                }
             }
             return results;
         }
@@ -430,8 +439,11 @@ namespace MixItUp.Base.Model.Overlay
             UserViewModel user = ChannelSession.Services.User.GetUserByID(userID);
             if (user == null)
             {
-                user = new UserViewModel(userID, string.Empty);
-                user = new UserViewModel(userID, user.Data.UserName);
+                if (ChannelSession.Settings.UserData.ContainsKey(userID))
+                {
+                    return new UserViewModel(ChannelSession.Settings.UserData[userID]);
+                }
+                return null;
             }
             return user;
         }
