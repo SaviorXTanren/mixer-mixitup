@@ -15,7 +15,7 @@ namespace MixItUp.WPF.Controls.Settings
     /// </summary>
     public partial class InteractiveSettingsControl : SettingsControlBase
     {
-        private static readonly MixPlayGameModel NoneInteractiveGame = new MixPlayGameModel() { id = 0, name = "NONE" };
+        private static readonly MixPlayGameModel NoneInteractiveGame = new MixPlayGameModel() { id = 0, name = MixItUp.Base.Resources.None };
 
         private ObservableCollection<MixPlaySharedProjectModel> customInteractiveProjects = new ObservableCollection<MixPlaySharedProjectModel>();
 

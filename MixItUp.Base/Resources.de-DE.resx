@@ -408,6 +408,9 @@
   <data name="CustomizeInventory" xml:space="preserve">
     <value>Inventar anpassen</value>
   </data>
+  <data name="CustomMixPlayProjects" xml:space="preserve">
+    <value>Benutzerdefinierte MixPlay-Projekte</value>
+  </data>
   <data name="CustomTitle" xml:space="preserve">
     <value>Benutzerdefinierter Titel</value>
   </data>
@@ -425,6 +428,9 @@
   </data>
   <data name="DefaultMaxAmount" xml:space="preserve">
     <value>Standard-Maximalbetrag</value>
+  </data>
+  <data name="DefaultMixPlayGameToConnect" xml:space="preserve">
+    <value>Zu verbindendes Standard-MixPlay-Spiel</value>
   </data>
   <data name="DefaultStreamingSoftware" xml:space="preserve">
     <value>Standard-Streaming-Software</value>
@@ -900,6 +906,12 @@
   <data name="PreMadeCommands" xml:space="preserve">
     <value>Vorgefertigte Befehle</value>
   </data>
+  <data name="PreventSmallerCooldownsFromOverwriting" xml:space="preserve">
+    <value>Verhindere dass, kleinere Abklingzeiten überschrieben werden</value>
+  </data>
+  <data name="PreventUnknownMixPlayUsers" xml:space="preserve">
+    <value>Verhindere unbekannte MixPlay-Benutzer</value>
+  </data>
   <data name="PrimaryCurrency" xml:space="preserve">
     <value>Primäre Währung</value>
   </data>
@@ -1045,6 +1057,9 @@
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Einstellungen</value>
+  </data>
+  <data name="ShareCode" xml:space="preserve">
+    <value>Share Code</value>
   </data>
   <data name="Shop" xml:space="preserve">
     <value>Shop</value>
@@ -1321,6 +1336,9 @@
   </data>
   <data name="UserTitles" xml:space="preserve">
     <value>Benutzertitel</value>
+  </data>
+  <data name="VersionID" xml:space="preserve">
+    <value>Version ID</value>
   </data>
   <data name="Video" xml:space="preserve">
     <value>Video</value>

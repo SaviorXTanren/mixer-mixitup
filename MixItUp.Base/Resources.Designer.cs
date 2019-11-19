@@ -943,6 +943,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Custom MixPlay Projects.
+        /// </summary>
+        public static string CustomMixPlayProjects {
+            get {
+                return ResourceManager.GetString("CustomMixPlayProjects", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Custom Title.
         /// </summary>
         public static string CustomTitle {
@@ -993,6 +1002,15 @@ namespace MixItUp.Base {
         public static string DefaultMaxAmount {
             get {
                 return ResourceManager.GetString("DefaultMaxAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Default MixPlay Game to Connect.
+        /// </summary>
+        public static string DefaultMixPlayGameToConnect {
+            get {
+                return ResourceManager.GetString("DefaultMixPlayGameToConnect", resourceCulture);
             }
         }
         
@@ -2410,6 +2428,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Prevent Smaller Cooldowns from Overwriting.
+        /// </summary>
+        public static string PreventSmallerCooldownsFromOverwriting {
+            get {
+                return ResourceManager.GetString("PreventSmallerCooldownsFromOverwriting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prevent Unknown MixPlay Users.
+        /// </summary>
+        public static string PreventUnknownMixPlayUsers {
+            get {
+                return ResourceManager.GetString("PreventUnknownMixPlayUsers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Primary Currency.
         /// </summary>
         public static string PrimaryCurrency {
@@ -2838,6 +2874,15 @@ namespace MixItUp.Base {
         public static string Settings {
             get {
                 return ResourceManager.GetString("Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Share Code.
+        /// </summary>
+        public static string ShareCode {
+            get {
+                return ResourceManager.GetString("ShareCode", resourceCulture);
             }
         }
         
@@ -3666,6 +3711,15 @@ namespace MixItUp.Base {
         public static string UserTitles {
             get {
                 return ResourceManager.GetString("UserTitles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version ID.
+        /// </summary>
+        public static string VersionID {
+            get {
+                return ResourceManager.GetString("VersionID", resourceCulture);
             }
         }
         
