@@ -394,6 +394,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Approved Devices.
+        /// </summary>
+        public static string ApprovedDevices {
+            get {
+                return ResourceManager.GetString("ApprovedDevices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Audience.
         /// </summary>
         public static string Audience {

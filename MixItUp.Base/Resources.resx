@@ -228,6 +228,9 @@
   <data name="AnyChatMessageSound" xml:space="preserve">
     <value>Any Chat Message Sound</value>
   </data>
+  <data name="ApprovedDevices" xml:space="preserve">
+    <value>Approved Devices</value>
+  </data>
   <data name="Audience" xml:space="preserve">
     <value>Audience</value>
   </data>
