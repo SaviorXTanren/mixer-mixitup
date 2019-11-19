@@ -24,13 +24,20 @@ namespace MixItUp.Desktop.Database
         {
             await this.AsyncWrapper(async () =>
             {
-                if (File.Exists(this.DatabaseFilePath))
+                try
                 {
-                    using (SQLiteConnection connection = new SQLiteConnection("Data Source=" + this.DatabaseFilePath))
+                    if (File.Exists(this.DatabaseFilePath))
                     {
-                        await connection.OpenAsync();
-                        await databaseQuery(connection);
+                        using (SQLiteConnection connection = new SQLiteConnection("Data Source=" + this.DatabaseFilePath))
+                        {
+                            await connection.OpenAsync();
+                            await databaseQuery(connection);
+                        }
                     }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
                 }
             });
         }
@@ -59,25 +66,12 @@ namespace MixItUp.Desktop.Database
 
         public async Task RunWriteCommand(string commandString)
         {
-            await this.EstablishConnection(async (connection) =>
-            {
-                using (SQLiteCommand command = new SQLiteCommand(commandString, connection))
-                {
-                    await command.ExecuteNonQueryAsync();
-                }
-            });
-        }
+            Logger.Log(LogLevel.Debug, string.Format("SQLite Query: {0}", commandString));
 
-        public async Task RunWriteCommand(string commandString, IEnumerable<object> parameters)
-        {
             await this.EstablishConnection(async (connection) =>
             {
                 using (SQLiteCommand command = new SQLiteCommand(commandString, connection))
                 {
-                    foreach (object parameter in parameters)
-                    {
-                        command.Parameters.Add(parameter);
-                    }
                     await command.ExecuteNonQueryAsync();
                 }
             });
@@ -103,6 +97,9 @@ namespace MixItUp.Desktop.Database
                                     {
                                         command.Parameters.Add(rowParam);
                                     }
+
+                                    Logger.Log(LogLevel.Debug, string.Format("SQLite Query: {0} - {1}", commandString, SerializerHelper.SerializeToString(rowParameters)));
+
                                     await command.ExecuteNonQueryAsync();
                                     command.Parameters.Clear();
                                 }
