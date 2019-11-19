@@ -4,9 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Settings"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:MainControls="clr-namespace:MixItUp.WPF.Controls.MainControls"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <local:SettingsControlBase.Resources>
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+    </local:SettingsControlBase.Resources>
     <Grid Margin="20">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -24,15 +29,15 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Color Scheme:</TextBlock>
+        <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.ColorScheme}, StringFormat={StaticResource ColumnHeaderFormat}}" />
         <local:ColorSchemeComboBox x:Name="ColorSchemeComboBox" Grid.Row="0" Grid.Column="2" SelectionChanged="ColorSchemeComboBox_SelectionChanged" />
 
-        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Background Color:</TextBlock>
+        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.BackgroundColor}, StringFormat={StaticResource ColumnHeaderFormat}}" />
         <ComboBox x:Name="BackgroundColorComboBox" Grid.Row="2" Grid.Column="2" SelectionChanged="BackgroundColorComboBox_SelectionChanged" />
 
         <Separator Grid.Row="4" Grid.ColumnSpan="3" />
 
-        <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Full Theme:</TextBlock>
+        <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.FullTheme}, StringFormat={StaticResource ColumnHeaderFormat}}" />
         <ComboBox x:Name="FullThemeComboBox" Grid.Row="6" Grid.Column="2" SelectionChanged="FullThemeComboBox_SelectionChanged" DisplayMemberPath="Key" />
 
     </Grid>
