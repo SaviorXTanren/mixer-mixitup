@@ -268,6 +268,33 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add to all chat users.
+        /// </summary>
+        public static string AddToAllChatUsers {
+            get {
+                return ResourceManager.GetString("AddToAllChatUsers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add to specific user.
+        /// </summary>
+        public static string AddToSpecificUser {
+            get {
+                return ResourceManager.GetString("AddToSpecificUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add to user.
+        /// </summary>
+        public static string AddToUser {
+            get {
+                return ResourceManager.GetString("AddToUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Advanced Command.
         /// </summary>
         public static string AdvancedCommand {
@@ -831,6 +858,15 @@ namespace MixItUp.Base {
         public static string Dashboard {
             get {
                 return ResourceManager.GetString("Dashboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deduct From User Running Command.
+        /// </summary>
+        public static string DeductFromUserRunningCommand {
+            get {
+                return ResourceManager.GetString("DeductFromUserRunningCommand", resourceCulture);
             }
         }
         
@@ -2158,6 +2194,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reset for all users.
+        /// </summary>
+        public static string ResetForAllUsers {
+            get {
+                return ResourceManager.GetString("ResetForAllUsers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset for user.
+        /// </summary>
+        public static string ResetForUser {
+            get {
+                return ResourceManager.GetString("ResetForUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reset On Load.
         /// </summary>
         public static string ResetOnLoad {
@@ -2680,11 +2734,47 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Subtract from all chat users.
+        /// </summary>
+        public static string SubtractFromAllChatUsers {
+            get {
+                return ResourceManager.GetString("SubtractFromAllChatUsers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Subtract from specific user.
+        /// </summary>
+        public static string SubtractFromSpecificUser {
+            get {
+                return ResourceManager.GetString("SubtractFromSpecificUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Subtract from user.
+        /// </summary>
+        public static string SubtractFromUser {
+            get {
+                return ResourceManager.GetString("SubtractFromUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tagged In Chat.
         /// </summary>
         public static string TaggedInChat {
             get {
                 return ResourceManager.GetString("TaggedInChat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target User.
+        /// </summary>
+        public static string TargetUser {
+            get {
+                return ResourceManager.GetString("TargetUser", resourceCulture);
             }
         }
         
@@ -3000,6 +3090,15 @@ namespace MixItUp.Base {
         public static string Users {
             get {
                 return ResourceManager.GetString("Users", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Users To Apply To.
+        /// </summary>
+        public static string UsersToApplyTo {
+            get {
+                return ResourceManager.GetString("UsersToApplyTo", resourceCulture);
             }
         }
         

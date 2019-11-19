@@ -186,6 +186,15 @@
   <data name="AddOverlayWidget" xml:space="preserve">
     <value>Add Overlay Widget</value>
   </data>
+  <data name="AddToAllChatUsers" xml:space="preserve">
+    <value>Add to all chat users</value>
+  </data>
+  <data name="AddToSpecificUser" xml:space="preserve">
+    <value>Add to specific user</value>
+  </data>
+  <data name="AddToUser" xml:space="preserve">
+    <value>Add to user</value>
+  </data>
   <data name="AdvancedCommand" xml:space="preserve">
     <value>Advanced Command</value>
   </data>
@@ -374,6 +383,9 @@
   </data>
   <data name="Dashboard" xml:space="preserve">
     <value>Dashboard</value>
+  </data>
+  <data name="DeductFromUserRunningCommand" xml:space="preserve">
+    <value>Deduct From User Running Command</value>
   </data>
   <data name="DefaultMaxAmount" xml:space="preserve">
     <value>Default Max Amount</value>
@@ -816,6 +828,12 @@
   <data name="Reset" xml:space="preserve">
     <value>Reset</value>
   </data>
+  <data name="ResetForAllUsers" xml:space="preserve">
+    <value>Reset for all users</value>
+  </data>
+  <data name="ResetForUser" xml:space="preserve">
+    <value>Reset for user</value>
+  </data>
   <data name="ResetOnLoad" xml:space="preserve">
     <value>Reset On Load</value>
   </data>
@@ -990,8 +1008,20 @@
   <data name="SubsReceived" xml:space="preserve">
     <value>Subs Received</value>
   </data>
+  <data name="SubtractFromAllChatUsers" xml:space="preserve">
+    <value>Subtract from all chat users</value>
+  </data>
+  <data name="SubtractFromSpecificUser" xml:space="preserve">
+    <value>Subtract from specific user</value>
+  </data>
+  <data name="SubtractFromUser" xml:space="preserve">
+    <value>Subtract from user</value>
+  </data>
   <data name="TaggedInChat" xml:space="preserve">
     <value>Tagged In Chat</value>
+  </data>
+  <data name="TargetUser" xml:space="preserve">
+    <value>Target User</value>
   </data>
   <data name="Team" xml:space="preserve">
     <value>Team</value>
@@ -1097,6 +1127,9 @@
   </data>
   <data name="Users" xml:space="preserve">
     <value>Users</value>
+  </data>
+  <data name="UsersToApplyTo" xml:space="preserve">
+    <value>Users To Apply To</value>
   </data>
   <data name="Video" xml:space="preserve">
     <value>Video</value>
