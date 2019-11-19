@@ -150,6 +150,9 @@
   <data name="Add" xml:space="preserve">
     <value>Hinzufügen</value>
   </data>
+  <data name="AddClause" xml:space="preserve">
+    <value>Klausel hinzufügen</value>
+  </data>
   <data name="AddCommand" xml:space="preserve">
     <value>Befehl hinzufügen</value>
   </data>
@@ -216,6 +219,9 @@
   <data name="BasicTimerNameHint" xml:space="preserve">
     <value>Name (Bsp: "Folge mir")</value>
   </data>
+  <data name="Between" xml:space="preserve">
+    <value>zwischen</value>
+  </data>
   <data name="Bot" xml:space="preserve">
     <value>Bot</value>
   </data>
@@ -227,6 +233,9 @@
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Abbrechen</value>
+  </data>
+  <data name="CaseSensitive" xml:space="preserve">
+    <value>Case Sensitive</value>
   </data>
   <data name="Channel" xml:space="preserve">
     <value>Kanal</value>
@@ -285,6 +294,9 @@
   <data name="CommandsRun" xml:space="preserve">
     <value>Befehle ausgeführt</value>
   </data>
+  <data name="Compare" xml:space="preserve">
+    <value>Compare</value>
+  </data>
   <data name="Conditional" xml:space="preserve">
     <value>Bedingungen</value>
   </data>
@@ -293,6 +305,9 @@
   </data>
   <data name="ConnectDevices" xml:space="preserve">
     <value>Gerät verbinden</value>
+  </data>
+  <data name="Contains" xml:space="preserve">
+    <value>Enthält</value>
   </data>
   <data name="ConvertToAdvanced" xml:space="preserve">
     <value>In Erweitert konventieren</value>
@@ -372,6 +387,9 @@
   <data name="Discord" xml:space="preserve">
     <value>Discord</value>
   </data>
+  <data name="DoesNotContain" xml:space="preserve">
+    <value>&lt;&gt; enthält</value>
+  </data>
   <data name="DownloadFrom" xml:space="preserve">
     <value>Herunterladen von</value>
   </data>
@@ -398,6 +416,9 @@
   </data>
   <data name="EndCredits" xml:space="preserve">
     <value>Abspann</value>
+  </data>
+  <data name="EqualsCompare" xml:space="preserve">
+    <value>=</value>
   </data>
   <data name="ErrorGamePickInsufficientRole" xml:space="preserve">
     <value>Sie müssen ein {0} sein, um die Antwort auszuwählen.</value>
@@ -459,6 +480,9 @@
   <data name="FindRaidErrorNoneFound" xml:space="preserve">
     <value>Es ist nicht möglich, einen Kanal zu finden, der dein Suchkriterium erfüllt, bitte versuche ein anderes Suchkriterium aus.</value>
   </data>
+  <data name="FirstValue" xml:space="preserve">
+    <value>Erster Wert</value>
+  </data>
   <data name="FollowAge" xml:space="preserve">
     <value>Follow-Alter</value>
   </data>
@@ -479,6 +503,12 @@
   </data>
   <data name="Giveaway" xml:space="preserve">
     <value>Giveaway</value>
+  </data>
+  <data name="GreaterThan" xml:space="preserve">
+    <value>&gt;</value>
+  </data>
+  <data name="GreaterThanOrEqual" xml:space="preserve">
+    <value>&gt;=</value>
   </data>
   <data name="GroupIntervalMin" xml:space="preserve">
     <value>Gruppeninternval (Min)</value>
@@ -548,6 +578,12 @@
   </data>
   <data name="Leaderboard" xml:space="preserve">
     <value>Bestenliste</value>
+  </data>
+  <data name="LessThan" xml:space="preserve">
+    <value>&lt;</value>
+  </data>
+  <data name="LessThanOrEqual" xml:space="preserve">
+    <value>&lt;=</value>
   </data>
   <data name="LicenseAgreement" xml:space="preserve">
     <value>Lizenzvertrag</value>
@@ -657,6 +693,9 @@
   <data name="No" xml:space="preserve">
     <value>Nein</value>
   </data>
+  <data name="NotEquals" xml:space="preserve">
+    <value>&lt;&gt;</value>
+  </data>
   <data name="OfflineRate" xml:space="preserve">
     <value>Offline Rate</value>
   </data>
@@ -680,6 +719,9 @@
   </data>
   <data name="OnUserRankChanged" xml:space="preserve">
     <value>Auf Benutzerrang geändert</value>
+  </data>
+  <data name="Operator" xml:space="preserve">
+    <value>Operator</value>
   </data>
   <data name="Options" xml:space="preserve">
     <value>Optionen</value>
@@ -797,6 +839,9 @@
   </data>
   <data name="SearchCriteria" xml:space="preserve">
     <value>Suchkriterium</value>
+  </data>
+  <data name="SecondValue" xml:space="preserve">
+    <value>Zweiter Wert</value>
   </data>
   <data name="SelectTypeOfCommand" xml:space="preserve">
     <value>Wähle die Art des Befehls aus, den Du erstellen möchtest:</value>

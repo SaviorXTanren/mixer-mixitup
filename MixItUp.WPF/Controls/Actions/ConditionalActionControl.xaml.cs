@@ -213,7 +213,7 @@ namespace MixItUp.WPF.Controls.Actions
         {
             if (this.OperatorTypeComboBox.SelectedIndex >= 0 && this.Clauses.Count >= 0)
             {
-                ConditionalOperatorTypeEnum op = EnumHelper.GetEnumValueFromString<ConditionalOperatorTypeEnum>((string)this.OperatorTypeComboBox.SelectedItem);
+                ConditionalOperatorTypeEnum op = (ConditionalOperatorTypeEnum)this.OperatorTypeComboBox.SelectedItem;
                 if (this.Clauses.All(c => c.Validate()))
                 {
                     if (this.Command != null)
@@ -286,7 +286,7 @@ namespace MixItUp.WPF.Controls.Actions
         {
             if (this.SingleActionNameComboBox.SelectedIndex >= 0)
             {
-                ActionTypeEnum actionType = EnumHelper.GetEnumValueFromString<ActionTypeEnum>((string)this.SingleActionNameComboBox.SelectedItem);
+                ActionTypeEnum actionType = (ActionTypeEnum)this.SingleActionNameComboBox.SelectedItem;
                 this.ActionControlContentControl.Visibility = Visibility.Visible;
                 this.ActionControlContentControl.Content = this.actionContentContainerControl = new ActionContentContainerControl(actionType);
             }
