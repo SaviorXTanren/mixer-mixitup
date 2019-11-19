@@ -639,6 +639,9 @@
   <data name="HostChannel" xml:space="preserve">
     <value>Kanal hosten</value>
   </data>
+  <data name="HotKey" xml:space="preserve">
+    <value>Hot Key</value>
+  </data>
   <data name="HotKeys" xml:space="preserve">
     <value>Hotkeys</value>
   </data>
@@ -692,6 +695,9 @@
   </data>
   <data name="ItemsTraded" xml:space="preserve">
     <value>Gegenstände gehandelt</value>
+  </data>
+  <data name="KeyboardKey" xml:space="preserve">
+    <value>Tastaturtaste</value>
   </data>
   <data name="Large" xml:space="preserve">
     <value>Groß</value>

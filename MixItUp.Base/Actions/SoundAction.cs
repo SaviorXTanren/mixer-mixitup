@@ -12,7 +12,7 @@ namespace MixItUp.Base.Actions
     [DataContract]
     public class SoundAction : ActionBase
     {
-        public readonly string DefaultAudioDevice = MixItUp.Base.Resources.DefaultOutput;
+        public static readonly string DefaultAudioDevice = MixItUp.Base.Resources.DefaultOutput;
 
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 

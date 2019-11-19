@@ -1627,6 +1627,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hot Key.
+        /// </summary>
+        public static string HotKey {
+            get {
+                return ResourceManager.GetString("HotKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hot Keys.
         /// </summary>
         public static string HotKeys {
@@ -1785,6 +1794,15 @@ namespace MixItUp.Base {
         public static string ItemsTraded {
             get {
                 return ResourceManager.GetString("ItemsTraded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keyboard Key.
+        /// </summary>
+        public static string KeyboardKey {
+            get {
+                return ResourceManager.GetString("KeyboardKey", resourceCulture);
             }
         }
         
