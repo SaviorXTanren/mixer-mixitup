@@ -426,6 +426,9 @@
   <data name="DeductFromUserRunningCommand" xml:space="preserve">
     <value>Deduct From User Running Command</value>
   </data>
+  <data name="Default" xml:space="preserve">
+    <value>Default</value>
+  </data>
   <data name="DefaultAudioOutput" xml:space="preserve">
     <value>Default Audio Output</value>
   </data>
@@ -863,6 +866,9 @@
   </data>
   <data name="Overlay" xml:space="preserve">
     <value>Overlay</value>
+  </data>
+  <data name="OverlayEndpoints" xml:space="preserve">
+    <value>Overlay Endpoints</value>
   </data>
   <data name="OverlayImagesAndVideos" xml:space="preserve">
     <value>Overlay (Images &amp; Videos)</value>

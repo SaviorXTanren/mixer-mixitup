@@ -988,6 +988,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Default.
+        /// </summary>
+        public static string Default {
+            get {
+                return ResourceManager.GetString("Default", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Default Audio Output.
         /// </summary>
         public static string DefaultAudioOutput {
@@ -2298,6 +2307,15 @@ namespace MixItUp.Base {
         public static string Overlay {
             get {
                 return ResourceManager.GetString("Overlay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Overlay Endpoints.
+        /// </summary>
+        public static string OverlayEndpoints {
+            get {
+                return ResourceManager.GetString("OverlayEndpoints", resourceCulture);
             }
         }
         
