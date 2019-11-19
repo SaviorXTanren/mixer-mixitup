@@ -435,6 +435,9 @@
   <data name="DefaultMixPlayGameToConnect" xml:space="preserve">
     <value>Zu verbindendes Standard-MixPlay-Spiel</value>
   </data>
+  <data name="DefaultOutput" xml:space="preserve">
+    <value>Standardausgabe</value>
+  </data>
   <data name="DefaultStreamingSoftware" xml:space="preserve">
     <value>Standard-Streaming-Software</value>
   </data>

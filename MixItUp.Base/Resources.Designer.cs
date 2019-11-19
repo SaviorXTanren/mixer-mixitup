@@ -1024,6 +1024,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Default Output.
+        /// </summary>
+        public static string DefaultOutput {
+            get {
+                return ResourceManager.GetString("DefaultOutput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Default Streaming Software.
         /// </summary>
         public static string DefaultStreamingSoftware {
