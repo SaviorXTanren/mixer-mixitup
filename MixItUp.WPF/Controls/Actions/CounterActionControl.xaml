@@ -5,9 +5,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:util="clr-namespace:MixItUp.WPF.Util"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <local:ActionControlBase.Resources>
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+        <util:LocalizationConverter x:Key="LocalizationConverter"/>
+    </local:ActionControlBase.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -30,14 +36,16 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0">Save To File:</TextBlock>
-            <ToggleButton Grid.Column="2" x:Name="SaveToFileToggleButton" Checked="SaveToFileToggleButton_Checked" Unchecked="SaveToFileToggleButton_Checked" ToolTip="Save To File" />
+            <TextBlock Grid.Column="0" Text="{Binding Source={x:Static resx:Resources.SaveToFile}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+            <ToggleButton Grid.Column="2" x:Name="SaveToFileToggleButton" Checked="SaveToFileToggleButton_Checked" Unchecked="SaveToFileToggleButton_Checked" ToolTip="{x:Static resx:Resources.SaveToFile}" />
 
-            <TextBlock Grid.Column="4">Reset On Load:</TextBlock>
-            <ToggleButton Grid.Column="6" x:Name="ResetOnLoadToggleButton" ToolTip="Reset On Load" IsChecked="True" IsEnabled="False" />
+            <TextBlock Grid.Column="4" Text="{Binding Source={x:Static resx:Resources.ResetOnLoad}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+            <ToggleButton Grid.Column="6" x:Name="ResetOnLoadToggleButton" ToolTip="{x:Static resx:Resources.ResetOnLoad}" IsChecked="True" IsEnabled="False" />
 
             <TextBlock Grid.Column="8" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Hyperlink x:Name="CountersFolderHyperlink" Click="CountersFolderHyperlink_Click">Counters Folder</Hyperlink>
+                <Hyperlink x:Name="CountersFolderHyperlink" Click="CountersFolderHyperlink_Click">
+                    <TextBlock Text="{x:Static resx:Resources.CountersFolder}"/>
+                </Hyperlink>
             </TextBlock>
 
             <TextBlock Grid.Column="10" VerticalAlignment="Center">
@@ -57,11 +65,17 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" x:Name="CounterNameTextBox" MaterialDesign:HintAssist.Hint="Counter Name (Only Letters &amp; Numbers Allowed, no $)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="0" x:Name="CounterNameTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CounterNameWithTips}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <ComboBox Grid.Column="2" x:Name="CounterActionTypeComboBox"  MaterialDesign:HintAssist.Hint="Action" SelectionChanged="CounterActionTypeComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox Grid.Column="2" x:Name="CounterActionTypeComboBox"  MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Action}" SelectionChanged="CounterActionTypeComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
-            <TextBox Grid.Column="4" x:Name="CounterAmountTextBox" MaterialDesign:HintAssist.Hint="Amount (+/-)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="4" x:Name="CounterAmountTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.AmountPlusMinus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
     </Grid>

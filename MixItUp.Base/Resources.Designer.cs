@@ -124,6 +124,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Action.
+        /// </summary>
+        public static string Action {
+            get {
+                return ResourceManager.GetString("Action", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Action Group.
         /// </summary>
         public static string ActionGroup {
@@ -291,6 +300,15 @@ namespace MixItUp.Base {
         public static string AmountDonated {
             get {
                 return ResourceManager.GetString("AmountDonated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Amount (+/-).
+        /// </summary>
+        public static string AmountPlusMinus {
+            get {
+                return ResourceManager.GetString("AmountPlusMinus", resourceCulture);
             }
         }
         
@@ -660,6 +678,24 @@ namespace MixItUp.Base {
         public static string CounterCreateAndUpdate {
             get {
                 return ResourceManager.GetString("CounterCreateAndUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Counter Name (Only Letters &amp; Numbers Allowed, no $).
+        /// </summary>
+        public static string CounterNameWithTips {
+            get {
+                return ResourceManager.GetString("CounterNameWithTips", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Counters Folder.
+        /// </summary>
+        public static string CountersFolder {
+            get {
+                return ResourceManager.GetString("CountersFolder", resourceCulture);
             }
         }
         
@@ -2113,6 +2149,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reset.
+        /// </summary>
+        public static string Reset {
+            get {
+                return ResourceManager.GetString("Reset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset On Load.
+        /// </summary>
+        public static string ResetOnLoad {
+            get {
+                return ResourceManager.GetString("ResetOnLoad", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Retroactively Give Points.
         /// </summary>
         public static string RetroactivelyGivePoints {
@@ -2199,6 +2253,15 @@ namespace MixItUp.Base {
         public static string SaveFailed {
             get {
                 return ResourceManager.GetString("SaveFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save To File.
+        /// </summary>
+        public static string SaveToFile {
+            get {
+                return ResourceManager.GetString("SaveToFile", resourceCulture);
             }
         }
         
@@ -2298,6 +2361,15 @@ namespace MixItUp.Base {
         public static string Services {
             get {
                 return ResourceManager.GetString("Services", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set.
+        /// </summary>
+        public static string Set {
+            get {
+                return ResourceManager.GetString("Set", resourceCulture);
             }
         }
         

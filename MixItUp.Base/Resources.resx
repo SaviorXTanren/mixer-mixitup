@@ -138,6 +138,9 @@
   <data name="AcquireRate" xml:space="preserve">
     <value>Acquire Rate</value>
   </data>
+  <data name="Action" xml:space="preserve">
+    <value>Action</value>
+  </data>
   <data name="ActionGroup" xml:space="preserve">
     <value>Action Group</value>
   </data>
@@ -194,6 +197,9 @@
   </data>
   <data name="AmountDonated" xml:space="preserve">
     <value>Amount Donated</value>
+  </data>
+  <data name="AmountPlusMinus" xml:space="preserve">
+    <value>Amount (+/-)</value>
   </data>
   <data name="Audience" xml:space="preserve">
     <value>Audience</value>
@@ -317,6 +323,12 @@
   </data>
   <data name="CounterCreateAndUpdate" xml:space="preserve">
     <value>Counter (Create &amp; Update)</value>
+  </data>
+  <data name="CounterNameWithTips" xml:space="preserve">
+    <value>Counter Name (Only Letters &amp; Numbers Allowed, no $)</value>
+  </data>
+  <data name="CountersFolder" xml:space="preserve">
+    <value>Counters Folder</value>
   </data>
   <data name="CumulativeMonthsSubbed" xml:space="preserve">
     <value>Cumulative Months Subbed</value>
@@ -801,6 +813,12 @@
   <data name="Remote" xml:space="preserve">
     <value>Remote</value>
   </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="ResetOnLoad" xml:space="preserve">
+    <value>Reset On Load</value>
+  </data>
   <data name="RetroactivelyGivePoints" xml:space="preserve">
     <value>Retroactively Give Points</value>
   </data>
@@ -830,6 +848,9 @@
   </data>
   <data name="SaveFailed" xml:space="preserve">
     <value>Save failed, attempting one more time...</value>
+  </data>
+  <data name="SaveToFile" xml:space="preserve">
+    <value>Save To File</value>
   </data>
   <data name="Scene" xml:space="preserve">
     <value>Scene</value>
@@ -863,6 +884,9 @@
   </data>
   <data name="Services" xml:space="preserve">
     <value>Services</value>
+  </data>
+  <data name="Set" xml:space="preserve">
+    <value>Set</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Settings</value>

@@ -138,6 +138,9 @@
   <data name="AcquireRate" xml:space="preserve">
     <value>Erhaltene Rate</value>
   </data>
+  <data name="Action" xml:space="preserve">
+    <value>Aktion</value>
+  </data>
   <data name="ActionGroup" xml:space="preserve">
     <value>Aktionsgruppen</value>
   </data>
@@ -191,6 +194,9 @@
   </data>
   <data name="AmountDonated" xml:space="preserve">
     <value>Gespendeter Betrag</value>
+  </data>
+  <data name="AmountPlusMinus" xml:space="preserve">
+    <value>Menge (+/-)</value>
   </data>
   <data name="Audience" xml:space="preserve">
     <value>Publikum</value>
@@ -314,6 +320,12 @@
   </data>
   <data name="CounterCreateAndUpdate" xml:space="preserve">
     <value>Zähler (Erstellen &amp; Aktualisieren)</value>
+  </data>
+  <data name="CounterNameWithTips" xml:space="preserve">
+    <value>Zählername (nur Buchstaben &amp; Zahlen zulässig, kein $)</value>
+  </data>
+  <data name="CountersFolder" xml:space="preserve">
+    <value>Zähler Ordner</value>
   </data>
   <data name="CumulativeMonthsSubbed" xml:space="preserve">
     <value>Gesamte Anzahl der gesubten Monate</value>
@@ -801,6 +813,13 @@
   <data name="Remote" xml:space="preserve">
     <value>Remote</value>
   </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reset</value>
+    <comment>Used to reset a counter to zero</comment>
+  </data>
+  <data name="ResetOnLoad" xml:space="preserve">
+    <value>Beim Laden zurücksetzen</value>
+  </data>
   <data name="RetroactivelyGivePoints" xml:space="preserve">
     <value>Nachträglich Punkte geben</value>
   </data>
@@ -830,6 +849,9 @@
   </data>
   <data name="SaveFailed" xml:space="preserve">
     <value>Speichern fehlgeschlagen, versuche es erneut...</value>
+  </data>
+  <data name="SaveToFile" xml:space="preserve">
+    <value>In Datei speichern</value>
   </data>
   <data name="Scene" xml:space="preserve">
     <value>Szene</value>
@@ -863,6 +885,10 @@
   </data>
   <data name="Services" xml:space="preserve">
     <value>Dienste</value>
+  </data>
+  <data name="Set" xml:space="preserve">
+    <value>Set</value>
+    <comment>Used to set a counter to a specific value</comment>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Einstellungen</value>
