@@ -97,7 +97,7 @@ namespace MixItUp.Base.Commands
     public class CommandsChatCommand : PreMadeChatCommand
     {
         public CommandsChatCommand()
-            : base("Commands", "commands", 0, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.Commands, "commands", 0, MixerRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -136,7 +136,7 @@ namespace MixItUp.Base.Commands
     public class GamesChatCommand : PreMadeChatCommand
     {
         public GamesChatCommand()
-            : base("Games", "games", 0, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.Games, "games", 0, MixerRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -168,7 +168,7 @@ namespace MixItUp.Base.Commands
     public class MixItUpCommandsChatCommand : PreMadeChatCommand
     {
         public MixItUpCommandsChatCommand()
-            : base("Mix It Up Commands", "mixitupcommands", 5, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.MixItUpCommands, "mixitupcommands", 5, MixerRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -195,7 +195,7 @@ namespace MixItUp.Base.Commands
     public class GameChatCommand : PreMadeChatCommand
     {
         public GameChatCommand()
-            : base("Game", new List<string>() { "game" }, 5, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.Game, new List<string>() { "game" }, 5, MixerRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -225,7 +225,7 @@ namespace MixItUp.Base.Commands
     public class TitleChatCommand : PreMadeChatCommand
     {
         public TitleChatCommand()
-            : base("Title", new List<string>() { "title", "stream" }, 5, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.Title, new List<string>() { "title", "stream" }, 5, MixerRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -256,7 +256,7 @@ namespace MixItUp.Base.Commands
         }
 
         public UptimeChatCommand()
-            : base("Uptime", "uptime", 5, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.Uptime, "uptime", 5, MixerRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -303,7 +303,7 @@ namespace MixItUp.Base.Commands
         }
 
         public CostreamChatCommand()
-            : base("Costream", "costream", 5, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.Costream, "costream", 5, MixerRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -318,7 +318,7 @@ namespace MixItUp.Base.Commands
     public class MixerAgeChatCommand : PreMadeChatCommand
     {
         public MixerAgeChatCommand()
-            : base("Mixer Age", "mixerage", 5, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.MixerAge, "mixerage", 5, MixerRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -334,7 +334,7 @@ namespace MixItUp.Base.Commands
     public class FollowAgeChatCommand : PreMadeChatCommand
     {
         public FollowAgeChatCommand()
-            : base("Follow Age", "followage", 5, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.FollowAge, "followage", 5, MixerRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -350,7 +350,7 @@ namespace MixItUp.Base.Commands
     public class SubscribeAgeChatCommand : PreMadeChatCommand
     {
         public SubscribeAgeChatCommand()
-            : base("Subscribe Age", new List<string>() { "subage", "subscribeage" }, 5, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.SubscribeAge, new List<string>() { "subage", "subscribeage" }, 5, MixerRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -366,7 +366,7 @@ namespace MixItUp.Base.Commands
     public class StreamerAgeChatCommand : PreMadeChatCommand
     {
         public StreamerAgeChatCommand()
-            : base("Streamer Age", new List<string>() { "streamerage", "age" }, 5, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.StreamerAge, new List<string>() { "streamerage", "age" }, 5, MixerRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -382,7 +382,7 @@ namespace MixItUp.Base.Commands
     public class SparksChatCommand : PreMadeChatCommand
     {
         public SparksChatCommand()
-            : base("Sparks", "sparks", 5, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.Sparks, "sparks", 5, MixerRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -413,7 +413,7 @@ namespace MixItUp.Base.Commands
     public class QuoteChatCommand : PreMadeChatCommand
     {
         public QuoteChatCommand()
-            : base("Quote", new List<string>() { "quote", "quotes" }, 5, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.Quote, new List<string>() { "quote", "quotes" }, 5, MixerRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -471,7 +471,7 @@ namespace MixItUp.Base.Commands
     public class LastQuoteChatCommand : PreMadeChatCommand
     {
         public LastQuoteChatCommand()
-            : base("Last Quote", new List<string>() { "lastquote" }, 5, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.LastQuote, new List<string>() { "lastquote" }, 5, MixerRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -502,7 +502,7 @@ namespace MixItUp.Base.Commands
     public class AddQuoteChatCommand : PreMadeChatCommand
     {
         public AddQuoteChatCommand()
-            : base("Add Quote", new List<string>() { "addquote", "quoteadd" }, 5, MixerRoleEnum.Mod)
+            : base(MixItUp.Base.Resources.AddQuote, new List<string>() { "addquote", "quoteadd" }, 5, MixerRoleEnum.Mod)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -576,7 +576,7 @@ namespace MixItUp.Base.Commands
         };
 
         public Magic8BallChatCommand()
-            : base("Magic 8 Ball", new List<string>() { "magic8ball", "8ball" }, 5, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.MagicEightBall, new List<string>() { "magic8ball", "8ball" }, 5, MixerRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -627,7 +627,7 @@ namespace MixItUp.Base.Commands
         }
 
         public XboxGameChatCommand()
-            : base("Xbox Game", new List<string>() { "xboxgame" }, 5, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.XboxGame, new List<string>() { "xboxgame" }, 5, MixerRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -730,7 +730,7 @@ namespace MixItUp.Base.Commands
         }
 
         public SteamGameChatCommand()
-            : base("Steam Game", new List<string>() { "steamgame", "steam" }, 5, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.SteamGame, new List<string>() { "steamgame", "steam" }, 5, MixerRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -766,7 +766,7 @@ namespace MixItUp.Base.Commands
         private Dictionary<string, int> steamGameList = new Dictionary<string, int>();
 
         public SetTitleChatCommand()
-            : base("Set Title", "settitle", 5, MixerRoleEnum.Mod)
+            : base(MixItUp.Base.Resources.SetTitle, "settitle", 5, MixerRoleEnum.Mod)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -789,7 +789,7 @@ namespace MixItUp.Base.Commands
     public class SetGameChatCommand : PreMadeChatCommand
     {
         public SetGameChatCommand()
-            : base("Set Game", "setgame", 5, MixerRoleEnum.Mod)
+            : base(MixItUp.Base.Resources.SetGame, "setgame", 5, MixerRoleEnum.Mod)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -841,7 +841,7 @@ namespace MixItUp.Base.Commands
         private Dictionary<string, int> steamGameList = new Dictionary<string, int>();
 
         public SetAudienceChatCommand()
-            : base("Set Audience", "setaudience", 5, MixerRoleEnum.Mod)
+            : base(MixItUp.Base.Resources.SetAudience, "setaudience", 5, MixerRoleEnum.Mod)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -869,7 +869,7 @@ namespace MixItUp.Base.Commands
     public class SetUserTitleChatCommand : PreMadeChatCommand
     {
         public SetUserTitleChatCommand()
-            : base("Set User Title", "setusertitle", 5, MixerRoleEnum.Mod)
+            : base(MixItUp.Base.Resources.SetUserTitle, "setusertitle", 5, MixerRoleEnum.Mod)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -906,7 +906,7 @@ namespace MixItUp.Base.Commands
     public class AddCommandChatCommand : PreMadeChatCommand
     {
         public AddCommandChatCommand()
-            : base("Add Command", new List<string>() { "addcommand" }, 5, MixerRoleEnum.Mod)
+            : base(MixItUp.Base.Resources.AddCommand, new List<string>() { "addcommand" }, 5, MixerRoleEnum.Mod)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -970,7 +970,7 @@ namespace MixItUp.Base.Commands
     public class UpdateCommandChatCommand : PreMadeChatCommand
     {
         public UpdateCommandChatCommand()
-            : base("Update Command", new List<string>() { "updatecommand" }, 5, MixerRoleEnum.Mod)
+            : base(MixItUp.Base.Resources.UpdateCommand, new List<string>() { "updatecommand" }, 5, MixerRoleEnum.Mod)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -1026,7 +1026,7 @@ namespace MixItUp.Base.Commands
     public class DisableCommandChatCommand : PreMadeChatCommand
     {
         public DisableCommandChatCommand()
-            : base("Disable Command", new List<string>() { "disablecommand" }, 5, MixerRoleEnum.Mod)
+            : base(MixItUp.Base.Resources.DisableCommand, new List<string>() { "disablecommand" }, 5, MixerRoleEnum.Mod)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -1061,7 +1061,7 @@ namespace MixItUp.Base.Commands
     public class StartGiveawayChatCommand : PreMadeChatCommand
     {
         public StartGiveawayChatCommand()
-            : base("Start Giveaway", "startgiveaway", 5, MixerRoleEnum.Streamer)
+            : base(MixItUp.Base.Resources.StartGiveaway, "startgiveaway", 5, MixerRoleEnum.Streamer)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {

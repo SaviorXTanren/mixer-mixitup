@@ -186,6 +186,9 @@
   <data name="AddOverlayWidget" xml:space="preserve">
     <value>Overlay Widget hinzufügen</value>
   </data>
+  <data name="AddQuote" xml:space="preserve">
+    <value>Zitat hinzufügen</value>
+  </data>
   <data name="AddToAllChatUsers" xml:space="preserve">
     <value>Zu allen Benutzern hinzufügen (im Chat)</value>
   </data>
@@ -405,6 +408,9 @@
   <data name="ConvertToAdvanced" xml:space="preserve">
     <value>In Erweitert konventieren</value>
   </data>
+  <data name="Costream" xml:space="preserve">
+    <value>Co-Stream</value>
+  </data>
   <data name="CounterCreateAndUpdate" xml:space="preserve">
     <value>Zähler (Erstellen &amp; Aktualisieren)</value>
   </data>
@@ -515,6 +521,9 @@
   </data>
   <data name="DisableChatConfirmation" xml:space="preserve">
     <value>Dadurch wird der Chat für alle Benutzer deaktiviert. Bist Du sicher?</value>
+  </data>
+  <data name="DisableCommand" xml:space="preserve">
+    <value>Befehle deaktivieren</value>
   </data>
   <data name="Disabled" xml:space="preserve">
     <value>Deaktiviert</value>
@@ -783,6 +792,9 @@
   <data name="LargeStreamer" xml:space="preserve">
     <value>Große Streamer (&gt;25)</value>
   </data>
+  <data name="LastQuote" xml:space="preserve">
+    <value>Letztes Zitat</value>
+  </data>
   <data name="Leaderboard" xml:space="preserve">
     <value>Bestenliste</value>
   </data>
@@ -831,6 +843,9 @@
   <data name="LoginErrorNotModerator" xml:space="preserve">
     <value>Du bist kein Moderator auf diesem Kanal.</value>
   </data>
+  <data name="MagicEightBall" xml:space="preserve">
+    <value>Magic 8 Ball</value>
+  </data>
   <data name="ManualReset" xml:space="preserve">
     <value>Manueller Reset</value>
   </data>
@@ -855,6 +870,9 @@
   <data name="Minutes" xml:space="preserve">
     <value>Minuten</value>
   </data>
+  <data name="MixerAge" xml:space="preserve">
+    <value>Mixer-Alter</value>
+  </data>
   <data name="MixerClips" xml:space="preserve">
     <value>Mixer Clips</value>
   </data>
@@ -863,6 +881,9 @@
   </data>
   <data name="MixerLabs" xml:space="preserve">
     <value>Mixer Labs</value>
+  </data>
+  <data name="MixItUpCommands" xml:space="preserve">
+    <value>Mix It Up Befehle</value>
   </data>
   <data name="MixPlay" xml:space="preserve">
     <value>MixPlay</value>
@@ -1047,6 +1068,9 @@
   <data name="Purple" xml:space="preserve">
     <value>Lila</value>
   </data>
+  <data name="Quote" xml:space="preserve">
+    <value>Zitate</value>
+  </data>
   <data name="Quotes" xml:space="preserve">
     <value>Zitate</value>
   </data>
@@ -1190,11 +1214,23 @@
     <value>Set</value>
     <comment>Used to set a counter to a specific value</comment>
   </data>
+  <data name="SetAudience" xml:space="preserve">
+    <value>Zielgruppe einstellen</value>
+  </data>
+  <data name="SetGame" xml:space="preserve">
+    <value>Spielname einstellen</value>
+  </data>
   <data name="SetLocation" xml:space="preserve">
     <value>Speicherort festlegen</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Einstellungen</value>
+  </data>
+  <data name="SetTitle" xml:space="preserve">
+    <value>Stream-Titel einstellen</value>
+  </data>
+  <data name="SetUserTitle" xml:space="preserve">
+    <value>Benutzer-Titel einstellen</value>
   </data>
   <data name="ShareCode" xml:space="preserve">
     <value>Share Code</value>
@@ -1253,6 +1289,9 @@
   <data name="SparkExempt" xml:space="preserve">
     <value>Spark Ausnahme</value>
   </data>
+  <data name="Sparks" xml:space="preserve">
+    <value>Sparks</value>
+  </data>
   <data name="SparksSpent" xml:space="preserve">
     <value>Spark ausgegeben</value>
   </data>
@@ -1280,6 +1319,9 @@
   <data name="Statistics" xml:space="preserve">
     <value>Statistik</value>
   </data>
+  <data name="SteamGame" xml:space="preserve">
+    <value>Steamspiel</value>
+  </data>
   <data name="StreamBoss" xml:space="preserve">
     <value>Stream Boss</value>
   </data>
@@ -1291,6 +1333,9 @@
   </data>
   <data name="StreamerAccount" xml:space="preserve">
     <value>Streamaccount</value>
+  </data>
+  <data name="StreamerAge" xml:space="preserve">
+    <value>Streamer-Alter</value>
   </data>
   <data name="StreamingPlatform" xml:space="preserve">
     <value>Streaming-Plattform</value>
@@ -1312,6 +1357,9 @@
   </data>
   <data name="SubBonus" xml:space="preserve">
     <value>Sub Bonus</value>
+  </data>
+  <data name="SubscribeAge" xml:space="preserve">
+    <value>Subscriber-Alter</value>
   </data>
   <data name="Subscriber" xml:space="preserve">
     <value>Subscriber</value>
@@ -1382,6 +1430,9 @@
   <data name="TimerTrain" xml:space="preserve">
     <value>Timer-Zug</value>
   </data>
+  <data name="Title" xml:space="preserve">
+    <value>Titel</value>
+  </data>
   <data name="TitleName" xml:space="preserve">
     <value>Titelname</value>
   </data>
@@ -1442,11 +1493,17 @@
   <data name="UpdateChannel" xml:space="preserve">
     <value>Kanal aktualisieren</value>
   </data>
+  <data name="UpdateCommand" xml:space="preserve">
+    <value>Befehl aktualisieren</value>
+  </data>
   <data name="UpdatePreviewProgram" xml:space="preserve">
     <value>Als Preview-Programm aktualisieren</value>
   </data>
   <data name="UploadTo" xml:space="preserve">
     <value>Hochladen auf</value>
+  </data>
+  <data name="Uptime" xml:space="preserve">
+    <value>Uptime</value>
   </data>
   <data name="UsageRequirements" xml:space="preserve">
     <value>Verwendungsanforderungen</value>
@@ -1534,6 +1591,9 @@
   </data>
   <data name="WinnerSelected" xml:space="preserve">
     <value>Gewinner ausgewählt</value>
+  </data>
+  <data name="XboxGame" xml:space="preserve">
+    <value>Xbox Spiel</value>
   </data>
   <data name="XLarge" xml:space="preserve">
     <value>Größer</value>
