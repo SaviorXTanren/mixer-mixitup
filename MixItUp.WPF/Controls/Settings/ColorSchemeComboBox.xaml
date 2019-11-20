@@ -5,8 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Settings"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:util="clr-namespace:MixItUp.WPF.Util"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <util:LocalizationConverter x:Key="LocalizationConverter"/>
+    </UserControl.Resources>
     <ComboBox x:Name="ColorComboBox">
         <ComboBox.ItemTemplate>
             <DataTemplate>
@@ -19,7 +23,7 @@
 
                     <Rectangle Grid.Column="0" Fill="{Binding ColorBrush}" Height="15" Width="15" VerticalAlignment="Center" />
 
-                    <TextBlock Grid.Column="2" Text="{Binding Name}" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="2" Text="{Binding Name, Converter={StaticResource LocalizationConverter}}" VerticalAlignment="Center" />
                 </Grid>
             </DataTemplate>
         </ComboBox.ItemTemplate>

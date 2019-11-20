@@ -36,11 +36,11 @@ namespace MixItUp.WPF.Controls.Settings
 
         protected override async Task InitializeInternal()
         {
-            this.SettingsBackupRateComboBox.ItemsSource = EnumHelper.GetEnumNames<SettingsBackupRateEnum>();
+            this.SettingsBackupRateComboBox.ItemsSource = Enum.GetValues(typeof(SettingsBackupRateEnum));
             this.UnlockAllCommandsTextBlock.ToolTip = UnlockedAllTooltip;
             this.UnlockAllCommandsToggleButton.ToolTip = UnlockedAllTooltip;
 
-            this.SettingsBackupRateComboBox.SelectedItem = EnumHelper.GetEnumName(ChannelSession.Settings.SettingsBackupRate);
+            this.SettingsBackupRateComboBox.SelectedItem = ChannelSession.Settings.SettingsBackupRate;
             if (!string.IsNullOrEmpty(ChannelSession.Settings.SettingsBackupLocation))
             {
                 this.SettingsBackupRateComboBox.IsEnabled = true;
@@ -150,7 +150,7 @@ namespace MixItUp.WPF.Controls.Settings
         {
             if (this.SettingsBackupRateComboBox.SelectedIndex >= 0)
             {
-                ChannelSession.Settings.SettingsBackupRate = EnumHelper.GetEnumValueFromString<SettingsBackupRateEnum>((string)this.SettingsBackupRateComboBox.SelectedItem);
+                ChannelSession.Settings.SettingsBackupRate = (SettingsBackupRateEnum)this.SettingsBackupRateComboBox.SelectedItem;
             }
         }
 

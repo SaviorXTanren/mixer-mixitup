@@ -135,6 +135,9 @@
   <data name="Accept" xml:space="preserve">
     <value>Akzeptieren</value>
   </data>
+  <data name="AccessTheFolderWhereMixItUpIsInstalled" xml:space="preserve">
+    <value>Auf den Ordner zugreifen, in dem Mix it Up installiert ist</value>
+  </data>
   <data name="AcquireRate" xml:space="preserve">
     <value>Erhaltene Rate</value>
   </data>
@@ -213,6 +216,9 @@
   <data name="AlreadyInstalled" xml:space="preserve">
     <value>Already Installed</value>
   </data>
+  <data name="Amber" xml:space="preserve">
+    <value>Bernstein</value>
+  </data>
   <data name="Amount" xml:space="preserve">
     <value>Menge</value>
   </data>
@@ -240,11 +246,23 @@
   <data name="AutoLogInCurrentAccount" xml:space="preserve">
     <value>Auto-Einloggen in aktuellen Account</value>
   </data>
+  <data name="AutomatedSettingsBackup" xml:space="preserve">
+    <value>Automatische Sicherung der Einstellungen</value>
+  </data>
   <data name="AutomaticReset" xml:space="preserve">
     <value>Automatisches Resetten</value>
   </data>
   <data name="BackgroundColor" xml:space="preserve">
     <value>Hintergrundfarbe</value>
+  </data>
+  <data name="BackupRate" xml:space="preserve">
+    <value>Sicherungsrate</value>
+  </data>
+  <data name="BackupSettings" xml:space="preserve">
+    <value>Einstellungen sichern</value>
+  </data>
+  <data name="BackupYourSettingsToAZipFile" xml:space="preserve">
+    <value>Deine Einstellungen in eine Zip-Datei sichern</value>
   </data>
   <data name="BasicChatCommand" xml:space="preserve">
     <value>Einfacher Chat-Befehl</value>
@@ -264,8 +282,20 @@
   <data name="Between" xml:space="preserve">
     <value>zwischen</value>
   </data>
+  <data name="Black" xml:space="preserve">
+    <value>Schwarz</value>
+  </data>
+  <data name="Blue" xml:space="preserve">
+    <value>Blau</value>
+  </data>
+  <data name="Blue Grey" xml:space="preserve">
+    <value>Blaugrau</value>
+  </data>
   <data name="Bot" xml:space="preserve">
     <value>Bot</value>
+  </data>
+  <data name="Brown" xml:space="preserve">
+    <value>Braun</value>
   </data>
   <data name="ButtonName" xml:space="preserve">
     <value>Button Name</value>
@@ -321,11 +351,17 @@
   <data name="ChatWhisperSound" xml:space="preserve">
     <value>Chat-Flüsterton</value>
   </data>
+  <data name="ClearAllUserDataHeader" xml:space="preserve">
+    <value>Alle Benutzerdaten löschen (Stunden, Währung, Rang usw.)</value>
+  </data>
   <data name="ClearChat" xml:space="preserve">
     <value>Chat leeren</value>
   </data>
   <data name="ClearChatConfirmation" xml:space="preserve">
     <value>Dadurch werden alle Chat-Nachrichten für den Stream gelöschen. Bist Du sicher?</value>
+  </data>
+  <data name="ClearUserData" xml:space="preserve">
+    <value>Benutzerdaten löschen</value>
   </data>
   <data name="Close" xml:space="preserve">
     <value>Schließen</value>
@@ -420,14 +456,26 @@
   <data name="CustomTitle" xml:space="preserve">
     <value>Benutzerdefinierter Titel</value>
   </data>
+  <data name="Cyan" xml:space="preserve">
+    <value>Cyan</value>
+  </data>
   <data name="Daily" xml:space="preserve">
     <value>Täglich</value>
+  </data>
+  <data name="Dark" xml:space="preserve">
+    <value>Dunkel</value>
   </data>
   <data name="Dashboard" xml:space="preserve">
     <value>Dashboard</value>
   </data>
   <data name="DeductFromUserRunningCommand" xml:space="preserve">
     <value>Deduct From User Running Command</value>
+  </data>
+  <data name="Deep Orange" xml:space="preserve">
+    <value>Dunkelorange</value>
+  </data>
+  <data name="Deep Purple" xml:space="preserve">
+    <value>Dunkellila</value>
   </data>
   <data name="Default" xml:space="preserve">
     <value>Standard</value>
@@ -471,6 +519,9 @@
   <data name="Disabled" xml:space="preserve">
     <value>Deaktiviert</value>
   </data>
+  <data name="DisableDiagnostics" xml:space="preserve">
+    <value>Disable Diagnostics</value>
+  </data>
   <data name="Discord" xml:space="preserve">
     <value>Discord</value>
   </data>
@@ -507,8 +558,14 @@
   <data name="Enable Chat" xml:space="preserve">
     <value>Chat aktivieren</value>
   </data>
+  <data name="EnableDiagnostics" xml:space="preserve">
+    <value>Diagnose aktivieren</value>
+  </data>
   <data name="EnableDisableCommand" xml:space="preserve">
     <value>Befehl aktivieren/deaktivieren</value>
+  </data>
+  <data name="EnableDisableDiagnosticsHeader" xml:space="preserve">
+    <value>Aktivieren/Deaktivieren der Diagnoseprotokollierung zum auffinden von Problemen</value>
   </data>
   <data name="EndCredits" xml:space="preserve">
     <value>Abspann</value>
@@ -624,6 +681,12 @@
   <data name="GreaterThanOrEqual" xml:space="preserve">
     <value>&gt;=</value>
   </data>
+  <data name="Green" xml:space="preserve">
+    <value>Grün</value>
+  </data>
+  <data name="Grey" xml:space="preserve">
+    <value>Grau</value>
+  </data>
   <data name="GroupIntervalMin" xml:space="preserve">
     <value>Gruppeninternval (Min)</value>
   </data>
@@ -675,8 +738,14 @@
   <data name="ImportData" xml:space="preserve">
     <value>Daten importieren</value>
   </data>
+  <data name="Indigo" xml:space="preserve">
+    <value>Indigo</value>
+  </data>
   <data name="InputKeyboardAndMouse" xml:space="preserve">
     <value>Eingabe (Tastatur &amp; Maus)</value>
+  </data>
+  <data name="InstallationFolder" xml:space="preserve">
+    <value>Installationsordner</value>
   </data>
   <data name="Inventory" xml:space="preserve">
     <value>Inventar</value>
@@ -725,6 +794,18 @@
   </data>
   <data name="LicenseAgreement" xml:space="preserve">
     <value>Lizenzvertrag</value>
+  </data>
+  <data name="Light" xml:space="preserve">
+    <value>Hell</value>
+  </data>
+  <data name="Light Blue" xml:space="preserve">
+    <value>Hellblau</value>
+  </data>
+  <data name="Light Green" xml:space="preserve">
+    <value>Hellgrün</value>
+  </data>
+  <data name="Lime" xml:space="preserve">
+    <value>Limonengrün</value>
   </data>
   <data name="Live" xml:space="preserve">
     <value>Live</value>
@@ -828,6 +909,9 @@
   <data name="NewStreamer" xml:space="preserve">
     <value>Neuer Streamer</value>
   </data>
+  <data name="NewUserWizard" xml:space="preserve">
+    <value>Assistent für neue Benutzer</value>
+  </data>
   <data name="Next" xml:space="preserve">
     <value>Weiter</value>
   </data>
@@ -882,6 +966,9 @@
   <data name="OptOutofDataTracking" xml:space="preserve">
     <value>Datentracking*</value>
   </data>
+  <data name="Orange" xml:space="preserve">
+    <value>Orange</value>
+  </data>
   <data name="Overlay" xml:space="preserve">
     <value>Overlay</value>
   </data>
@@ -921,6 +1008,9 @@
   <data name="Permissions" xml:space="preserve">
     <value>Berechtigungen</value>
   </data>
+  <data name="Pink" xml:space="preserve">
+    <value>Rose</value>
+  </data>
   <data name="Play" xml:space="preserve">
     <value>Abspielen</value>
   </data>
@@ -954,6 +1044,9 @@
   <data name="ProgressBar" xml:space="preserve">
     <value>Ziel-/Fortschrittsbalken</value>
   </data>
+  <data name="Purple" xml:space="preserve">
+    <value>Lila</value>
+  </data>
   <data name="Quotes" xml:space="preserve">
     <value>Zitate</value>
   </data>
@@ -962,6 +1055,9 @@
   </data>
   <data name="RankName" xml:space="preserve">
     <value>Rangname</value>
+  </data>
+  <data name="Red" xml:space="preserve">
+    <value>Rot</value>
   </data>
   <data name="RefreshTimeSecs" xml:space="preserve">
     <value>Aktualisierungszeit (Sek)</value>
@@ -984,6 +1080,9 @@
   <data name="RequiredHours" xml:space="preserve">
     <value>Erforderliche Stunden</value>
   </data>
+  <data name="ReRunWizardHeader" xml:space="preserve">
+    <value>Führe den Assistenten für neue Benutzer erneut aus, um deine Daten erneut zu importieren</value>
+  </data>
   <data name="Reset" xml:space="preserve">
     <value>Reset</value>
     <comment>Used to reset a counter to zero</comment>
@@ -996,6 +1095,12 @@
   </data>
   <data name="ResetOnLoad" xml:space="preserve">
     <value>Beim Laden zurücksetzen</value>
+  </data>
+  <data name="RestoreSettings" xml:space="preserve">
+    <value>Einstellungen wiederherstellen</value>
+  </data>
+  <data name="RestoreYourSettingsFromAZipFile" xml:space="preserve">
+    <value>Deine Einstellungen in eine Zip-Datei wiederherstellen</value>
   </data>
   <data name="RetroactivelyGivePoints" xml:space="preserve">
     <value>Nachträglich Punkte geben</value>
@@ -1084,6 +1189,9 @@
   <data name="Set" xml:space="preserve">
     <value>Set</value>
     <comment>Used to set a counter to a specific value</comment>
+  </data>
+  <data name="SetLocation" xml:space="preserve">
+    <value>Speicherort festlegen</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Einstellungen</value>
@@ -1229,6 +1337,9 @@
   <data name="TargetUser" xml:space="preserve">
     <value>Target User</value>
   </data>
+  <data name="Teal" xml:space="preserve">
+    <value>Blaugrün</value>
+  </data>
   <data name="Team" xml:space="preserve">
     <value>Team</value>
   </data>
@@ -1307,11 +1418,20 @@
   <data name="TypeToAdd" xml:space="preserve">
     <value>Typ</value>
   </data>
+  <data name="UnbanAllUsers" xml:space="preserve">
+    <value>Alle Benutzer entbannen</value>
+  </data>
+  <data name="UnbanAllUsersHeader" xml:space="preserve">
+    <value>Entbanne alle Benutzer von deinem Kanal</value>
+  </data>
   <data name="Ungrouped" xml:space="preserve">
     <value>Nicht gruppiert</value>
   </data>
   <data name="Unknown" xml:space="preserve">
     <value>Unbekannt</value>
+  </data>
+  <data name="UnlockAllCommandsHeader" xml:space="preserve">
+    <value>Alle Befehlstypen entsperren</value>
   </data>
   <data name="UnlockCommand" xml:space="preserve">
     <value>Befehl entsperren</value>
@@ -1403,6 +1523,9 @@
   <data name="WhisperUserOptional" xml:space="preserve">
     <value>Flüstern an (Optional)</value>
   </data>
+  <data name="White" xml:space="preserve">
+    <value>Weiß</value>
+  </data>
   <data name="Wildcards" xml:space="preserve">
     <value>Wildcards</value>
   </data>
@@ -1420,6 +1543,9 @@
   </data>
   <data name="Yearly" xml:space="preserve">
     <value>Jährlich</value>
+  </data>
+  <data name="Yellow" xml:space="preserve">
+    <value>Gelb</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Ja</value>

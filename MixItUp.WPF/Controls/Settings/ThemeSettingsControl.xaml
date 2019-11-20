@@ -5,12 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Settings"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:util="clr-namespace:MixItUp.WPF.Util"
              xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:MainControls="clr-namespace:MixItUp.WPF.Controls.MainControls"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <local:SettingsControlBase.Resources>
         <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+        <util:LocalizationConverter x:Key="LocalizationConverter"/>
     </local:SettingsControlBase.Resources>
     <Grid Margin="20">
         <Grid.ColumnDefinitions>
@@ -33,7 +35,13 @@
         <local:ColorSchemeComboBox x:Name="ColorSchemeComboBox" Grid.Row="0" Grid.Column="2" SelectionChanged="ColorSchemeComboBox_SelectionChanged" />
 
         <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.BackgroundColor}, StringFormat={StaticResource ColumnHeaderFormat}}" />
-        <ComboBox x:Name="BackgroundColorComboBox" Grid.Row="2" Grid.Column="2" SelectionChanged="BackgroundColorComboBox_SelectionChanged" />
+        <ComboBox x:Name="BackgroundColorComboBox" Grid.Row="2" Grid.Column="2" SelectionChanged="BackgroundColorComboBox_SelectionChanged">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
 
         <Separator Grid.Row="4" Grid.ColumnSpan="3" />
 
