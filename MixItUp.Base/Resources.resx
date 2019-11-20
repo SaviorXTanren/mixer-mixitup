@@ -249,6 +249,9 @@
   <data name="AnyChatMessageSound" xml:space="preserve">
     <value>Any Chat Message Sound</value>
   </data>
+  <data name="ApplicationInfo" xml:space="preserve">
+    <value>Application Info</value>
+  </data>
   <data name="ApplyStrikes" xml:space="preserve">
     <value>Apply Strikes</value>
   </data>
@@ -434,6 +437,9 @@
   </data>
   <data name="ConnectDevices" xml:space="preserve">
     <value>Connect Devices</value>
+  </data>
+  <data name="ContactAndResources" xml:space="preserve">
+    <value>Contact &amp; Resources</value>
   </data>
   <data name="Contains" xml:space="preserve">
     <value>Contains</value>
@@ -765,6 +771,9 @@
   <data name="Help" xml:space="preserve">
     <value>Help</value>
   </data>
+  <data name="HelpfulLinks" xml:space="preserve">
+    <value>Helpful Links</value>
+  </data>
   <data name="HideChatUserList" xml:space="preserve">
     <value>Hide Chat User List</value>
   </data>
@@ -852,6 +861,9 @@
   <data name="LastQuote" xml:space="preserve">
     <value>Last Quote</value>
   </data>
+  <data name="LatestRelease" xml:space="preserve">
+    <value>LatestRelease</value>
+  </data>
   <data name="LaunchAutoHoster" xml:space="preserve">
     <value>Launch Auto-Hoster</value>
   </data>
@@ -863,6 +875,9 @@
   </data>
   <data name="LessThanOrEqual" xml:space="preserve">
     <value>&lt;=</value>
+  </data>
+  <data name="License" xml:space="preserve">
+    <value>License</value>
   </data>
   <data name="LicenseAgreement" xml:space="preserve">
     <value>License Agreement</value>
@@ -927,6 +942,9 @@
   <data name="MediumStreamer" xml:space="preserve">
     <value>Medium Streamer (10-25)</value>
   </data>
+  <data name="MeetTheTeam" xml:space="preserve">
+    <value>Meet The Team</value>
+  </data>
   <data name="Min" xml:space="preserve">
     <value>Min</value>
   </data>
@@ -956,6 +974,12 @@
   </data>
   <data name="MixerLabs" xml:space="preserve">
     <value>Mixer Labs</value>
+  </data>
+  <data name="MixerStatus" xml:space="preserve">
+    <value>Mixer Status</value>
+  </data>
+  <data name="MixerSupport" xml:space="preserve">
+    <value>Mixer Support</value>
   </data>
   <data name="MixItUpCommands" xml:space="preserve">
     <value>Mix It Up Commands</value>
@@ -1452,6 +1476,9 @@
   <data name="SubBonus" xml:space="preserve">
     <value>Sub Bonus</value>
   </data>
+  <data name="SubmitABug" xml:space="preserve">
+    <value>Submit a Bug</value>
+  </data>
   <data name="SubscribeAge" xml:space="preserve">
     <value>Subscribe Age</value>
   </data>
@@ -1652,6 +1679,9 @@
   </data>
   <data name="UserTitles" xml:space="preserve">
     <value>User Titles</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Version</value>
   </data>
   <data name="VersionID" xml:space="preserve">
     <value>Version ID</value>

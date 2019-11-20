@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
@@ -15,6 +16,9 @@
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
                           
              d:DesignHeight="700" d:DesignWidth="600">
+    <local:MainControlBase.Resources>
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+    </local:MainControlBase.Resources>
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -31,9 +35,11 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             
-            <GroupBox Grid.Row="0" Header="Application Info">
+            <GroupBox Grid.Row="0" Header="{x:Static resx:Resources.ApplicationInfo}">
                 <Grid>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="15" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="15" />
                         <RowDefinition Height="Auto" />
@@ -48,31 +54,27 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="0">Version:</TextBlock>
+                        <TextBlock Grid.Column="0" Text="{Binding Source={x:Static resx:Resources.Version}, StringFormat={StaticResource ColumnHeaderFormat}}" />
                         <TextBlock Grid.Column="2" x:Name="VersionTextBlock" />
                     </Grid>
 
-                    <Grid Grid.Row="2" HorizontalAlignment="Center">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="15" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-
-                        <TextBlock Grid.Column="0" HorizontalAlignment="Center">
-                            <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/releases" RequestNavigate="Hyperlink_RequestNavigate">Latest Release</Hyperlink>
+                    <TextBlock Grid.Row="2" HorizontalAlignment="Center">
+                            <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/releases" RequestNavigate="Hyperlink_RequestNavigate">
+                                <TextBlock Text="{x:Static resx:Resources.LatestRelease}"/>
+                            </Hyperlink>
                         </TextBlock>
 
-                        <TextBlock Grid.Column="2" HorizontalAlignment="Center">
-                            <Hyperlink x:Name="IssueReportHyperlink" Click="IssueReportHyperlink_Click">Submit a Bug</Hyperlink>
-                        </TextBlock>
-                    </Grid>
+                    <TextBlock Grid.Row="4" HorizontalAlignment="Center">
+                        <Hyperlink x:Name="IssueReportHyperlink" Click="IssueReportHyperlink_Click">
+                            <TextBlock Text="{x:Static resx:Resources.SubmitABug}"/>
+                        </Hyperlink>
+                    </TextBlock>
 
-                    <TextBlock Grid.Row="4" HorizontalAlignment="Center" TextWrapping="Wrap" Text="{x:Static resx:Resources.TranslationBy}"/>
+                    <TextBlock Grid.Row="6" HorizontalAlignment="Center" TextWrapping="Wrap" Text="{x:Static resx:Resources.TranslationBy}"/>
                 </Grid>
             </GroupBox>
 
-            <GroupBox Grid.Row="2" Header="Contact &amp; Resources">
+            <GroupBox Grid.Row="2" Header="{x:Static resx:Resources.ContactAndResources}">
                 <Grid HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -113,7 +115,7 @@
                 </Grid>
             </GroupBox>
 
-            <GroupBox Grid.Row="4" Header="Helpful Links">
+            <GroupBox Grid.Row="4" Header="{x:Static resx:Resources.HelpfulLinks}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -127,11 +129,15 @@
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.Row="0" Grid.Column="0">
-                        <Hyperlink NavigateUri="https://status.mixer.com/" RequestNavigate="Hyperlink_RequestNavigate">Mixer Status</Hyperlink>
+                        <Hyperlink NavigateUri="https://status.mixer.com/" RequestNavigate="Hyperlink_RequestNavigate">
+                            <TextBlock Text="{x:Static resx:Resources.MixerStatus}"/>
+                        </Hyperlink>
                     </TextBlock>
 
                     <TextBlock Grid.Row="0" Grid.Column="2">
-                        <Hyperlink NavigateUri="https://watchbeam.zendesk.com/hc/en-us" RequestNavigate="Hyperlink_RequestNavigate">Mixer Support</Hyperlink>
+                        <Hyperlink NavigateUri="https://watchbeam.zendesk.com/hc/en-us" RequestNavigate="Hyperlink_RequestNavigate">
+                            <TextBlock Text="{x:Static resx:Resources.MixerSupport}"/>
+                        </Hyperlink>
                     </TextBlock>
 
                     <TextBlock Grid.Row="2" Grid.Column="0">
@@ -151,14 +157,14 @@
                 <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            
-            <GroupBox Header="License" Grid.Row="0">
+
+            <GroupBox Header="{x:Static resx:Resources.License}" Grid.Row="0">
                 <ScrollViewer>
                     <Controls:LicenseControl />
                 </ScrollViewer>
             </GroupBox>
 
-            <GroupBox Header="Meet The Team" Grid.Row="2">
+            <GroupBox Header="{x:Static resx:Resources.MeetTheTeam}" Grid.Row="2">
                 <Grid Height="100" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />

@@ -118,24 +118,24 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Abbrechen</value>
   </data>
   <data name="DialogDescription" xml:space="preserve">
-    <value>Whoops! Looks like Mix It Up ran into an issue. Would you like to submit a bug to help us improve?</value>
+    <value>Hoppla! Anscheinend ist Mix It Up auf ein Problem gestoßen. Möchtest Du einen Fehler melden, der uns bei der Verbesserung hilft? (In Englisch)</value>
   </data>
   <data name="Email" xml:space="preserve">
-    <value>Your E-Mail for Follow-Up</value>
+    <value>Deine Emailadresse</value>
   </data>
   <data name="IssueDescription" xml:space="preserve">
-    <value>Issue Description (What Happened?)</value>
+    <value>Problembeschreibung (Was ist passiert?)</value>
   </data>
   <data name="Ok" xml:space="preserve">
-    <value>Ok</value>
+    <value>Okay</value>
   </data>
   <data name="ReportIssue" xml:space="preserve">
-    <value>Report Issue</value>
+    <value>Problem melden</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Mix It Up - Error Reporter</value>
+    <value>Mix It Up - Fehler-Reporter</value>
   </data>
 </root>
