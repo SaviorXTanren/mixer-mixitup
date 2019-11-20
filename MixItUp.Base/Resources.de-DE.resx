@@ -258,6 +258,12 @@
   <data name="AutoHoster" xml:space="preserve">
     <value>Auto-Hoster</value>
   </data>
+  <data name="AutoHosterDescription" xml:space="preserve">
+    <value>Der Mix It Up Auto-Hoster ist eine eigenständige Anwendung, die das Hosting anderer Kanäle übernimmt, wenn Du nicht streamst. Der Auto-Hoster kann ohne Mix It Up ausgeführt werden.</value>
+  </data>
+  <data name="AutoHosterLaunchHeader" xml:space="preserve">
+    <value>Der Auto-Hoster kann durch die folgende Taste gestartet werden</value>
+  </data>
   <data name="AutoIncludeBang" xml:space="preserve">
     <value>Auto-Include "!"</value>
   </data>
@@ -845,6 +851,9 @@
   </data>
   <data name="LastQuote" xml:space="preserve">
     <value>Letztes Zitat</value>
+  </data>
+  <data name="LaunchAutoHoster" xml:space="preserve">
+    <value>Auto-Hoster starten</value>
   </data>
   <data name="Leaderboard" xml:space="preserve">
     <value>Bestenliste</value>

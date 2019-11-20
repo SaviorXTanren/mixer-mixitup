@@ -493,6 +493,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The Mix It Up Auto-Hoster is a stand-alone application that handles the hosting of other channels when you are not streaming. The Auto-Hoster must be running, but you do not have to have Mix It Up running to use it..
+        /// </summary>
+        public static string AutoHosterDescription {
+            get {
+                return ResourceManager.GetString("AutoHosterDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Auto-Hoster can be launched by clicking the button below.
+        /// </summary>
+        public static string AutoHosterLaunchHeader {
+            get {
+                return ResourceManager.GetString("AutoHosterLaunchHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Auto-Include &quot;!&quot;.
         /// </summary>
         public static string AutoIncludeBang {
@@ -2244,6 +2262,15 @@ namespace MixItUp.Base {
         public static string LastQuote {
             get {
                 return ResourceManager.GetString("LastQuote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Launch Auto-Hoster.
+        /// </summary>
+        public static string LaunchAutoHoster {
+            get {
+                return ResourceManager.GetString("LaunchAutoHoster", resourceCulture);
             }
         }
         
