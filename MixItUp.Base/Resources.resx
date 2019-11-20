@@ -501,6 +501,12 @@
   <data name="Dashboard" xml:space="preserve">
     <value>Dashboard</value>
   </data>
+  <data name="Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="DateTime" xml:space="preserve">
+    <value>Date/Time</value>
+  </data>
   <data name="DeductFromUserRunningCommand" xml:space="preserve">
     <value>Deduct From User Running Command</value>
   </data>
@@ -1140,6 +1146,9 @@
   <data name="Quote" xml:space="preserve">
     <value>Quote</value>
   </data>
+  <data name="QuoteFormatting" xml:space="preserve">
+    <value>Quote Formatting ($quotenumber, $quotetext, $quotegame, $quotedatetime)</value>
+  </data>
   <data name="Quotes" xml:space="preserve">
     <value>Quotes</value>
   </data>
@@ -1496,6 +1505,9 @@
   </data>
   <data name="TickerTape" xml:space="preserve">
     <value>Ticker Tape</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>Time</value>
   </data>
   <data name="TimeLeft" xml:space="preserve">
     <value>Time Left</value>

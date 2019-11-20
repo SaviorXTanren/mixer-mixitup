@@ -1213,6 +1213,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Date.
+        /// </summary>
+        public static string Date {
+            get {
+                return ResourceManager.GetString("Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Date/Time.
+        /// </summary>
+        public static string DateTime {
+            get {
+                return ResourceManager.GetString("DateTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Deduct From User Running Command.
         /// </summary>
         public static string DeductFromUserRunningCommand {
@@ -3130,6 +3148,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Quote Formatting ($quotenumber, $quotetext, $quotegame, $quotedatetime).
+        /// </summary>
+        public static string QuoteFormatting {
+            get {
+                return ResourceManager.GetString("QuoteFormatting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Quotes.
         /// </summary>
         public static string Quotes {
@@ -4197,6 +4224,15 @@ namespace MixItUp.Base {
         public static string TickerTape {
             get {
                 return ResourceManager.GetString("TickerTape", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time.
+        /// </summary>
+        public static string Time {
+            get {
+                return ResourceManager.GetString("Time", resourceCulture);
             }
         }
         
