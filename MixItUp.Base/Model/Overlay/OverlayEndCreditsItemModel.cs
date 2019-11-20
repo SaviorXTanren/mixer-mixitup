@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
@@ -398,7 +399,10 @@ namespace MixItUp.Base.Model.Overlay
             foreach (uint userID in data)
             {
                 UserViewModel user = this.GetUser(userID);
-                results[user] = string.Empty;
+                if (user != null)
+                {
+                    results[user] = string.Empty;
+                }
             }
             return results;
         }
@@ -409,7 +413,10 @@ namespace MixItUp.Base.Model.Overlay
             foreach (var kvp in data)
             {
                 UserViewModel user = this.GetUser(kvp.Key);
-                results[user] = kvp.Value.ToString();
+                if (user != null)
+                {
+                    results[user] = kvp.Value.ToString();
+                }
             }
             return results;
         }
@@ -420,7 +427,10 @@ namespace MixItUp.Base.Model.Overlay
             foreach (var kvp in data)
             {
                 UserViewModel user = this.GetUser(kvp.Key);
-                results[user] = string.Format("{0:C}", Math.Round(kvp.Value, 2));
+                if (user != null)
+                {
+                    results[user] = string.Format("{0:C}", Math.Round(kvp.Value, 2));
+                }
             }
             return results;
         }
@@ -430,8 +440,11 @@ namespace MixItUp.Base.Model.Overlay
             UserViewModel user = ChannelSession.Services.User.GetUserByID(userID);
             if (user == null)
             {
-                user = new UserViewModel(userID, string.Empty);
-                user = new UserViewModel(userID, user.Data.UserName);
+                if (ChannelSession.Settings.UserData.ContainsKey(userID))
+                {
+                    return new UserViewModel(ChannelSession.Settings.UserData[userID]);
+                }
+                return null;
             }
             return user;
         }
@@ -452,7 +465,7 @@ namespace MixItUp.Base.Model.Overlay
                 sectionHTML = await this.ReplaceStringWithSpecialModifiers(sectionHTML, await ChannelSession.GetCurrentUser(), new List<string>(), new Dictionary<string, string>());
 
                 List<string> userHTMLs = new List<string>();
-                foreach (var kvp in replacers)
+                foreach (var kvp in replacers.OrderBy(kvp => kvp.Key.UserName))
                 {
                     if (!string.IsNullOrEmpty(kvp.Key.UserName))
                     {
