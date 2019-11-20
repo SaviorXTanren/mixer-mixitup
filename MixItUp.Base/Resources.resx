@@ -261,6 +261,9 @@
   <data name="BasicTimerNameHint" xml:space="preserve">
     <value>Name (EX: "Follow Me")</value>
   </data>
+  <data name="BaudRate" xml:space="preserve">
+    <value>Baud Rate</value>
+  </data>
   <data name="Between" xml:space="preserve">
     <value>Between</value>
   </data>
@@ -485,6 +488,9 @@
   </data>
   <data name="DownloadFrom" xml:space="preserve">
     <value>DownloadFrom</value>
+  </data>
+  <data name="DTR" xml:space="preserve">
+    <value>DTR</value>
   </data>
   <data name="Duplicate" xml:space="preserve">
     <value>Duplicate</value>
@@ -918,6 +924,9 @@
   <data name="Play" xml:space="preserve">
     <value>Play</value>
   </data>
+  <data name="PortName" xml:space="preserve">
+    <value>Port Name</value>
+  </data>
   <data name="Position" xml:space="preserve">
     <value>Pos</value>
   </data>
@@ -1001,6 +1010,9 @@
   </data>
   <data name="Roles" xml:space="preserve">
     <value>Roles</value>
+  </data>
+  <data name="RTS" xml:space="preserve">
+    <value>RTS</value>
   </data>
   <data name="SameAgeRating" xml:space="preserve">
     <value>Same Age Rating</value>

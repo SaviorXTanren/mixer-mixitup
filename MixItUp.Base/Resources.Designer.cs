@@ -493,6 +493,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Baud Rate.
+        /// </summary>
+        public static string BaudRate {
+            get {
+                return ResourceManager.GetString("BaudRate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Between.
         /// </summary>
         public static string Between {
@@ -1164,6 +1173,15 @@ namespace MixItUp.Base {
         public static string DownloadFrom {
             get {
                 return ResourceManager.GetString("DownloadFrom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DTR.
+        /// </summary>
+        public static string DTR {
+            get {
+                return ResourceManager.GetString("DTR", resourceCulture);
             }
         }
         
@@ -2464,6 +2482,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Port Name.
+        /// </summary>
+        public static string PortName {
+            get {
+                return ResourceManager.GetString("PortName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pos.
         /// </summary>
         public static string Position {
@@ -2712,6 +2739,15 @@ namespace MixItUp.Base {
         public static string Roles {
             get {
                 return ResourceManager.GetString("Roles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RTS.
+        /// </summary>
+        public static string RTS {
+            get {
+                return ResourceManager.GetString("RTS", resourceCulture);
             }
         }
         
