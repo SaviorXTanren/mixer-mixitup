@@ -88,7 +88,7 @@ namespace MixItUp.Base.Actions
             : this()
         {
             this.Type = type;
-            this.Label = EnumHelper.GetEnumName(this.Type);
+            this.Label = EnumLocalizationHelper.GetLocalizedName(this.Type);
         }
 
         public async Task Perform(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)

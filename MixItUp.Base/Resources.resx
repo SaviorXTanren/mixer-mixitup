@@ -138,6 +138,18 @@
   <data name="AccessTheFolderWhereMixItUpIsInstalled" xml:space="preserve">
     <value>Access the folder where Mix It Up is installed</value>
   </data>
+  <data name="AccountDay" xml:space="preserve">
+    <value>Account Is 1 Day Old</value>
+  </data>
+  <data name="AccountHour" xml:space="preserve">
+    <value>Account Is 1 Hour Old</value>
+  </data>
+  <data name="AccountMonth" xml:space="preserve">
+    <value>Account Is 1 Month Old</value>
+  </data>
+  <data name="AccountWeek" xml:space="preserve">
+    <value>Account Is 1 Week Old</value>
+  </data>
   <data name="AcquireRate" xml:space="preserve">
     <value>Acquire Rate</value>
   </data>
@@ -237,6 +249,9 @@
   <data name="AnyChatMessageSound" xml:space="preserve">
     <value>Any Chat Message Sound</value>
   </data>
+  <data name="ApplyStrikes" xml:space="preserve">
+    <value>Apply Strikes</value>
+  </data>
   <data name="ApprovedDevices" xml:space="preserve">
     <value>Approved Devices</value>
   </data>
@@ -321,6 +336,9 @@
   <data name="Channel" xml:space="preserve">
     <value>Channel</value>
   </data>
+  <data name="ChannelBanWords" xml:space="preserve">
+    <value>Channel Ban Words (One Per Line) ( * = Wild Card)</value>
+  </data>
   <data name="ChannelEditor" xml:space="preserve">
     <value>Channel Editor</value>
   </data>
@@ -351,8 +369,14 @@
   <data name="ChatMessagesSent" xml:space="preserve">
     <value>Chat Messages Sent</value>
   </data>
+  <data name="ChatMixPlayParticipation" xml:space="preserve">
+    <value>Chat / MixPlay Participation</value>
+  </data>
   <data name="ChatTaggedSound" xml:space="preserve">
     <value>Chat Tagged Sound</value>
+  </data>
+  <data name="ChatTextModeration" xml:space="preserve">
+    <value>Chat Text Moderation</value>
   </data>
   <data name="ChatWhisperSound" xml:space="preserve">
     <value>Chat Whisper Sound</value>
@@ -561,8 +585,14 @@
   <data name="EditCommand" xml:space="preserve">
     <value>Edit Command</value>
   </data>
+  <data name="EmberSkillsOnly" xml:space="preserve">
+    <value>Ember Skills Only</value>
+  </data>
   <data name="EmbersSpent" xml:space="preserve">
     <value>Embers Spent</value>
+  </data>
+  <data name="EmotesSkillsOnly" xml:space="preserve">
+    <value>Emotes &amp; Skills Only</value>
   </data>
   <data name="Enable" xml:space="preserve">
     <value>Enable</value>
@@ -606,6 +636,12 @@
   <data name="Events" xml:space="preserve">
     <value>Events</value>
   </data>
+  <data name="ExemptFromRule" xml:space="preserve">
+    <value>Exempt From Rule</value>
+  </data>
+  <data name="ExemptFromRuleAndStrikes" xml:space="preserve">
+    <value>Exempt From Rule &amp; Strikes</value>
+  </data>
   <data name="ExitConfirmation" xml:space="preserve">
     <value>Are you sure you wish to exit Mix It Up?</value>
   </data>
@@ -639,6 +675,12 @@
   <data name="FilterByName" xml:space="preserve">
     <value>Filter By Name</value>
   </data>
+  <data name="FilteredBannedWords" xml:space="preserve">
+    <value>Filtered / Banned Words</value>
+  </data>
+  <data name="FilteredWordsHeader" xml:space="preserve">
+    <value>Filtered Words (One Per Line) ( * = Wild Card)</value>
+  </data>
   <data name="FindChannelToRaid" xml:space="preserve">
     <value>Find Channel To Raid</value>
   </data>
@@ -656,6 +698,9 @@
   </data>
   <data name="Follower" xml:space="preserve">
     <value>Follower</value>
+  </data>
+  <data name="FollowerOnly" xml:space="preserve">
+    <value>Follower Only</value>
   </data>
   <data name="FontSize" xml:space="preserve">
     <value>FontSize</value>
@@ -819,6 +864,9 @@
   <data name="Lime" xml:space="preserve">
     <value>Lime</value>
   </data>
+  <data name="LinkBlocking" xml:space="preserve">
+    <value>Link Blocking</value>
+  </data>
   <data name="Live" xml:space="preserve">
     <value>Live</value>
   </data>
@@ -852,14 +900,26 @@
   <data name="MaxAmount" xml:space="preserve">
     <value>Max Amount</value>
   </data>
+  <data name="MaxCaps" xml:space="preserve">
+    <value>Max Caps</value>
+  </data>
   <data name="MaxEntries" xml:space="preserve">
     <value>Max Entries</value>
+  </data>
+  <data name="MaxPunctSymbolsEmotes" xml:space="preserve">
+    <value>Max Punct. / Symbols / Emotes</value>
   </data>
   <data name="MediumStreamer" xml:space="preserve">
     <value>Medium Streamer (10-25)</value>
   </data>
+  <data name="Min" xml:space="preserve">
+    <value>Min</value>
+  </data>
   <data name="MinimumChannelActivityMins" xml:space="preserve">
     <value>Minimum Channel Activity (Mins)</value>
+  </data>
+  <data name="MinimumRequirement" xml:space="preserve">
+    <value>Minimum Requirement</value>
   </data>
   <data name="MinMessages" xml:space="preserve">
     <value>Min Messages</value>
@@ -899,6 +959,9 @@
   </data>
   <data name="Moderator" xml:space="preserve">
     <value>Moderator</value>
+  </data>
+  <data name="ModeratorOnly" xml:space="preserve">
+    <value>Moderator Only</value>
   </data>
   <data name="Monthly" xml:space="preserve">
     <value>Monthly</value>
@@ -956,6 +1019,9 @@
   </data>
   <data name="Ok" xml:space="preserve">
     <value>Ok</value>
+  </data>
+  <data name="OneStrikeCommand" xml:space="preserve">
+    <value>1 Strike Command</value>
   </data>
   <data name="OnFollow" xml:space="preserve">
     <value>On Follow</value>
@@ -1025,6 +1091,9 @@
   </data>
   <data name="PatreonUser" xml:space="preserve">
     <value>Patreon User</value>
+  </data>
+  <data name="Percent" xml:space="preserve">
+    <value>%</value>
   </data>
   <data name="Permissions" xml:space="preserve">
     <value>Permissions</value>
@@ -1118,6 +1187,9 @@
   </data>
   <data name="ResetOnLoad" xml:space="preserve">
     <value>Reset On Load</value>
+  </data>
+  <data name="ResetStrikesOnLaunch" xml:space="preserve">
+    <value>Reset Strikes on Launch</value>
   </data>
   <data name="RestoreSettings" xml:space="preserve">
     <value>Restore Settings</value>
@@ -1263,6 +1335,9 @@
   <data name="SingleAction" xml:space="preserve">
     <value>Single Action</value>
   </data>
+  <data name="SkillsOnly" xml:space="preserve">
+    <value>Skills Only</value>
+  </data>
   <data name="SkillsUsed" xml:space="preserve">
     <value>Skills Used</value>
   </data>
@@ -1350,6 +1425,9 @@
   <data name="StreamTitle" xml:space="preserve">
     <value>Stream Title</value>
   </data>
+  <data name="StrikeCommands" xml:space="preserve">
+    <value>Strike Commands</value>
+  </data>
   <data name="SubAge" xml:space="preserve">
     <value>Sub Age</value>
   </data>
@@ -1361,6 +1439,9 @@
   </data>
   <data name="Subscriber" xml:space="preserve">
     <value>Subscriber</value>
+  </data>
+  <data name="SubscriberOnly" xml:space="preserve">
+    <value>Subscriber Only</value>
   </data>
   <data name="SubsGifted" xml:space="preserve">
     <value>Subs Gifted</value>
@@ -1409,6 +1490,9 @@
   </data>
   <data name="ThemesAndColors" xml:space="preserve">
     <value>Themes &amp; Colors</value>
+  </data>
+  <data name="ThreeOrMoreStrikesCommand" xml:space="preserve">
+    <value>3+ Strikes Command</value>
   </data>
   <data name="TickerTape" xml:space="preserve">
     <value>Ticker Tape</value>
@@ -1461,6 +1545,9 @@
   <data name="Twitter" xml:space="preserve">
     <value>Twitter</value>
   </data>
+  <data name="TwoStrikesCommand" xml:space="preserve">
+    <value>2 Strikes Command</value>
+  </data>
   <data name="Type" xml:space="preserve">
     <value>Type</value>
   </data>
@@ -1506,6 +1593,9 @@
   <data name="UsageRequirements" xml:space="preserve">
     <value>Usage Requirements</value>
   </data>
+  <data name="UseCommunityList" xml:space="preserve">
+    <value>Use Community List (VERY STRICT)</value>
+  </data>
   <data name="User" xml:space="preserve">
     <value>User</value>
   </data>
@@ -1550,6 +1640,21 @@
   </data>
   <data name="Viewers" xml:space="preserve">
     <value>Viewers</value>
+  </data>
+  <data name="ViewingOneHour" xml:space="preserve">
+    <value>Watched For 1 Hour</value>
+  </data>
+  <data name="ViewingTenHours" xml:space="preserve">
+    <value>Watched For 10 Hours</value>
+  </data>
+  <data name="ViewingTenMinutes" xml:space="preserve">
+    <value>Watched For 10 Minutes</value>
+  </data>
+  <data name="ViewingThirtyMinutes" xml:space="preserve">
+    <value>Watched For 30 Minutes</value>
+  </data>
+  <data name="ViewingTwoHours" xml:space="preserve">
+    <value>Watched For 2 Hours</value>
   </data>
   <data name="Wait" xml:space="preserve">
     <value>Wait</value>
