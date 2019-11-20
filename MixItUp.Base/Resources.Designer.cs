@@ -2473,7 +2473,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to NewActionGroup.
+        ///   Looks up a localized string similar to New Action Group.
         /// </summary>
         public static string NewActionGroup {
             get {
