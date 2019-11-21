@@ -6,6 +6,8 @@
                            
         xmlns:local="clr-namespace:MixItUp.WPF.Windows.Store"
         xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
+        xmlns:util="clr-namespace:MixItUp.WPF.Util"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"                         
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -14,7 +16,9 @@
         Icon="..\..\Logo.png"
         Title="Upload To Mix It Up Store" Height="600" Width="600">
     <Windows:LoadingWindowBase.Resources>
-        <ResourceDictionary>
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+        <util:LocalizationConverter x:Key="LocalizationConverter"/>
+        <ResourceDictionary x:Key="Themes   ">
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Card.xaml" />
@@ -60,9 +64,9 @@
                 <TextBlock Style="{StaticResource HeaderTextBlock}" Grid.Column="2" VerticalAlignment="Center" FontSize="40">Mix It Up Store</TextBlock>
             </Grid>
 
-            <TextBox x:Name="NameTextBox" Grid.Row="2" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="Name" Width="400" />
+            <TextBox x:Name="NameTextBox" Grid.Row="2" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Width="400" />
 
-            <TextBox x:Name="DescriptionTextBox" Grid.Row="4" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="Description" Width="400" Height="150" TextWrapping="Wrap" AcceptsReturn="True" />
+            <TextBox x:Name="DescriptionTextBox" Grid.Row="4" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Description}" Width="400" Height="150" TextWrapping="Wrap" AcceptsReturn="True" />
 
             <Grid Grid.Row="6" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
@@ -71,7 +75,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBox x:Name="DisplayImagePathTextBox" Grid.Column="0" Width="300" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="Display Image (Optional)" />
+                <TextBox x:Name="DisplayImagePathTextBox" Grid.Column="0" Width="300" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DisplayImage}" />
                 <Button x:Name="DisplayImageBrowseButton" Grid.Column="2" Click="DisplayImageBrowseButton_Click" Content="{x:Static resx:Resources.Browse}"/>
             </Grid>
 
@@ -82,7 +86,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center" FontSize="20">Tags:</TextBlock>
+                <TextBlock Grid.Column="0" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center" FontSize="20" Text="{Binding Source={x:Static resx:Resources.Tags}, StringFormat={StaticResource ColumnHeaderFormat}}" />
 
                 <Grid Grid.Column="2" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
@@ -117,11 +121,11 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock x:Name="IncludeAssetsTextBlock" Grid.Column="0" Style="{StaticResource HeaderTextBlock}">Include Command Assets:</TextBlock>
+                <TextBlock x:Name="IncludeAssetsTextBlock" Grid.Column="0" Style="{StaticResource HeaderTextBlock}" Text="{Binding Source={x:Static resx:Resources.IncludeCommandAssets}, StringFormat={StaticResource ColumnHeaderFormat}}" />
                 <ToggleButton x:Name="IncludeAssetsToggleButton" Grid.Column="2" />
             </Grid>
 
-            <Button x:Name="UploadButton" Grid.Row="12" Width="100" Click="UploadButton_Click">Upload</Button>
+            <Button x:Name="UploadButton" Grid.Row="12" Width="100" Click="UploadButton_Click" Content="{x:Static resx:Resources.Upload}"/>
         </Grid>
 
         <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="1" />

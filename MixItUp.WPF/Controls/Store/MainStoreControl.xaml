@@ -5,13 +5,17 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Store"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:util="clr-namespace:MixItUp.WPF.Util"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"              
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:UsersControls="clr-namespace:MixItUp.WPF.Controls.Users"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
     <Controls:LoadingControlBase.Resources>
-        <ResourceDictionary>
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+        <util:LocalizationConverter x:Key="LocalizationConverter"/>
+        <ResourceDictionary x:Key="Themes">
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopupBox.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -44,7 +48,7 @@
 
                     <Image Source="../../Logo.png" Grid.Column="0" Width="50" />
 
-                    <TextBlock Style="{StaticResource HeaderTextBlock}" Grid.Column="2" VerticalAlignment="Center" FontSize="40">Mix It Up Store</TextBlock>
+                    <TextBlock Style="{StaticResource HeaderTextBlock}" Grid.Column="2" VerticalAlignment="Center" FontSize="40" Text="{x:Static resx:Resources.MixItUpStore}"/>
                 </Grid>
 
                 <Grid Grid.Row="2" HorizontalAlignment="Center">
@@ -54,9 +58,9 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBox x:Name="LandingSearchTextBox" Grid.Column="0" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="Search Terms" Width="250" KeyDown="LandingSearchTextBox_KeyDown" />
+                    <TextBox x:Name="LandingSearchTextBox" Grid.Column="0" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SearchTerms}" Width="250" KeyDown="LandingSearchTextBox_KeyDown" />
 
-                    <Button x:Name="LandingSearchButton" Grid.Column="2" Click="LandingSearchButton_Click">Search</Button>
+                    <Button x:Name="LandingSearchButton" Grid.Column="2" Click="LandingSearchButton_Click" Content="{x:Static resx:Resources.Search}"/>
                 </Grid>
 
                 <Grid x:Name="LandingGrid" Grid.Row="4">
@@ -78,7 +82,7 @@
                 </Grid>
 
                 <Grid x:Name="SearchGrid" Grid.Row="4" Visibility="Collapsed">
-                    <TextBlock x:Name="NoResultsFoundTextBlock" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Margin="0,30,0,0" Visibility="Collapsed">No Results Found</TextBlock>
+                    <TextBlock x:Name="NoResultsFoundTextBlock" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Margin="0,30,0,0" Visibility="Collapsed" Text="{x:Static resx:Resources.NoResultsFound}"/>
                     <StackPanel x:Name="SearchStackPanel" Margin="20,0,20,0" HorizontalAlignment="Stretch">
                         <StackPanel.Resources>
                             <Style TargetType="{x:Type local:LargeCommandListingControl}">
@@ -138,7 +142,7 @@
 
                             <local:CommandListingRatingDownloadsControl Grid.Row="0" HorizontalAlignment="Right" Margin="0,0,2,0" DataContext="{Binding}" />
 
-                            <TextBlock Grid.Column="2" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">Assets:</TextBlock>
+                            <TextBlock Grid.Column="2" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Assets}, StringFormat={StaticResource ColumnHeaderFormat}}" />
                             <TextBlock Grid.Column="4" Text="{Binding AssetsIncludedString}" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center" />
                         </Grid>
 
@@ -149,7 +153,7 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">Tags:</TextBlock>
+                            <TextBlock Grid.Column="0" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Tags}, StringFormat={StaticResource ColumnHeaderFormat}}" />
                             <TextBlock Grid.Column="2" Text="{Binding TagsDisplayString}" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center" />
                         </Grid>
 
@@ -162,7 +166,7 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">Created By:</TextBlock>
+                            <TextBlock Grid.Column="0" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.CreatedBy}, StringFormat={StaticResource ColumnHeaderFormat}}" />
                             <UsersControls:UserProfileAvatarControl x:Name="DetailsUserAvatar" Grid.Column="2" VerticalAlignment="Center" Width="25" Height="25"  />
                             <TextBlock Grid.Column="4" Text="{Binding UserName}" VerticalAlignment="Center" />
                         </Grid>
@@ -174,7 +178,7 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Bottom">Last Updated:</TextBlock>
+                            <TextBlock Grid.Column="0" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Bottom" Text="{Binding Source={x:Static resx:Resources.LastUpdated}, StringFormat={StaticResource ColumnHeaderFormat}}" />
                             <TextBlock Grid.Column="2" Text="{Binding LastUpdatedString}" />
                         </Grid>
 
@@ -186,20 +190,20 @@
                                 <ColumnDefinition Width="20" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            
-                            <Button x:Name="DownloadButton" Grid.Column="0" Click="DownloadButton_Click">Download</Button>
 
-                            <Button x:Name="RateReviewButton" Grid.Column="2" Click="RateReviewButton_Click">Rate/Review</Button>
-                            <Button x:Name="RemoveButton" Grid.Column="2" Click="RemoveButton_Click">Remove</Button>
+                            <Button x:Name="DownloadButton" Grid.Column="0" Click="DownloadButton_Click" Content="{x:Static resx:Resources.Download}"/>
 
-                            <Button x:Name="ReportButton" Grid.Column="4" Click="ReportButton_Click">Report</Button>
+                            <Button x:Name="RateReviewButton" Grid.Column="2" Click="RateReviewButton_Click" Content="{x:Static resx:Resources.RateReview}"/>
+                            <Button x:Name="RemoveButton" Grid.Column="2" Click="RemoveButton_Click" Content="{x:Static resx:Resources.Remove}"/>
+
+                            <Button x:Name="ReportButton" Grid.Column="4" Click="ReportButton_Click" Content="{x:Static resx:Resources.Report}"/>
                         </Grid>
                     </Grid>
                 </Grid>
 
                 <TextBlock Grid.Row="2" Text="{Binding Description}" TextWrapping="Wrap" />
 
-                <TextBlock Grid.Row="4" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center" FontSize="20">Reviews:</TextBlock>
+                <TextBlock Grid.Row="4" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center" FontSize="20" Text="{Binding Source={x:Static resx:Resources.Reviews}, StringFormat={StaticResource ColumnHeaderFormat}}" />
 
                 <ItemsControl x:Name="ReviewsItemsControl" Grid.Row="6" HorizontalAlignment="Center" />
             </Grid>

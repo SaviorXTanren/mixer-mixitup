@@ -168,6 +168,9 @@
   <data name="ActionToPeform" xml:space="preserve">
     <value>Action To Peform</value>
   </data>
+  <data name="ActionToPerformWithTranslation" xml:space="preserve">
+    <value>Action To Perform With Translation</value>
+  </data>
   <data name="Add" xml:space="preserve">
     <value>Add</value>
   </data>
@@ -240,6 +243,9 @@
   <data name="AllowPastWinners" xml:space="preserve">
     <value>Allow Past Winners</value>
   </data>
+  <data name="AllowProfanity" xml:space="preserve">
+    <value>Allow Profanity</value>
+  </data>
   <data name="AlreadyInstalled" xml:space="preserve">
     <value>Already Installed</value>
   </data>
@@ -287,6 +293,12 @@
   </data>
   <data name="ApprovedDevices" xml:space="preserve">
     <value>Approved Devices</value>
+  </data>
+  <data name="ArgumentsTranslatedText" xml:space="preserve">
+    <value>Arguments ($translationresult = Translated Text)</value>
+  </data>
+  <data name="Assets" xml:space="preserve">
+    <value>Assets</value>
   </data>
   <data name="Audience" xml:space="preserve">
     <value>Audience</value>
@@ -414,6 +426,9 @@
   <data name="ChatMessagesSent" xml:space="preserve">
     <value>Chat Messages Sent</value>
   </data>
+  <data name="ChatMessageTranslatedText" xml:space="preserve">
+    <value>Chat Message ($translationresult = Translated Text)</value>
+  </data>
   <data name="ChatMixPlayParticipation" xml:space="preserve">
     <value>Chat / MixPlay Participation</value>
   </data>
@@ -464,6 +479,9 @@
   </data>
   <data name="ColorScheme" xml:space="preserve">
     <value>Color Scheme</value>
+  </data>
+  <data name="ColumnNumber" xml:space="preserve">
+    <value>Column #</value>
   </data>
   <data name="Command" xml:space="preserve">
     <value>Command</value>
@@ -522,6 +540,9 @@
   <data name="CountersFolder" xml:space="preserve">
     <value>Counters Folder</value>
   </data>
+  <data name="CreatedBy" xml:space="preserve">
+    <value>Created By</value>
+  </data>
   <data name="CumulativeMonthsSubbed" xml:space="preserve">
     <value>Cumulative Months Subbed</value>
   </data>
@@ -554,6 +575,9 @@
   </data>
   <data name="CustomizeCurrencyRank" xml:space="preserve">
     <value>Customize Currency/Rank</value>
+  </data>
+  <data name="CustomizeGame" xml:space="preserve">
+    <value>Customize Game</value>
   </data>
   <data name="CustomizeInventory" xml:space="preserve">
     <value>Customize Inventory</value>
@@ -627,6 +651,9 @@
   <data name="DeleteFavoriteGroupConfirmation" xml:space="preserve">
     <value>Are you sure you wish to remove this group?</value>
   </data>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
   <data name="DisableAllTimers" xml:space="preserve">
     <value>Disable All Timers</value>
   </data>
@@ -654,8 +681,14 @@
   <data name="Discord" xml:space="preserve">
     <value>Discord</value>
   </data>
+  <data name="DisplayImage" xml:space="preserve">
+    <value>Display Image (Optional)</value>
+  </data>
   <data name="DoesNotContain" xml:space="preserve">
     <value>&lt;&gt; Contains</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Download</value>
   </data>
   <data name="DownloadAndInstall" xml:space="preserve">
     <value>Download &amp; Install</value>
@@ -969,6 +1002,9 @@
   <data name="ImportData" xml:space="preserve">
     <value>Import Data</value>
   </data>
+  <data name="IncludeCommandAssets" xml:space="preserve">
+    <value>Include Command Assets</value>
+  </data>
   <data name="Indigo" xml:space="preserve">
     <value>Indigo</value>
   </data>
@@ -984,11 +1020,26 @@
   <data name="InventoryName" xml:space="preserve">
     <value>Inventory Name</value>
   </data>
+  <data name="IsMathExpression" xml:space="preserve">
+    <value>Is Math Expression</value>
+  </data>
   <data name="IsPrimary" xml:space="preserve">
     <value>Is Primary</value>
   </data>
   <data name="IsRankSystem" xml:space="preserve">
     <value>Is Rank System</value>
+  </data>
+  <data name="Item1" xml:space="preserve">
+    <value>Item 1</value>
+  </data>
+  <data name="Item2" xml:space="preserve">
+    <value>Item 2</value>
+  </data>
+  <data name="Item3" xml:space="preserve">
+    <value>Item 3</value>
+  </data>
+  <data name="Item4" xml:space="preserve">
+    <value>Item 4</value>
   </data>
   <data name="ItemList" xml:space="preserve">
     <value>Item List</value>
@@ -1017,6 +1068,9 @@
   <data name="KeyboardKey" xml:space="preserve">
     <value>Keyboard Key</value>
   </data>
+  <data name="LanguageToTranslateTo" xml:space="preserve">
+    <value>Language To Translate To</value>
+  </data>
   <data name="Large" xml:space="preserve">
     <value>Large</value>
   </data>
@@ -1026,11 +1080,17 @@
   <data name="LastQuote" xml:space="preserve">
     <value>Last Quote</value>
   </data>
+  <data name="LastUpdated" xml:space="preserve">
+    <value>Last Updated</value>
+  </data>
   <data name="LatestRelease" xml:space="preserve">
     <value>LatestRelease</value>
   </data>
   <data name="LaunchAutoHoster" xml:space="preserve">
     <value>Launch Auto-Hoster</value>
+  </data>
+  <data name="Layout" xml:space="preserve">
+    <value>Layout</value>
   </data>
   <data name="Leaderboard" xml:space="preserve">
     <value>Leaderboard</value>
@@ -1100,6 +1160,9 @@
   </data>
   <data name="MagicEightBall" xml:space="preserve">
     <value>Magic 8 Ball</value>
+  </data>
+  <data name="MakeGloballyUsable" xml:space="preserve">
+    <value>Make Globally Usable</value>
   </data>
   <data name="ManualReset" xml:space="preserve">
     <value>Manual Reset</value>
@@ -1179,6 +1242,12 @@
   <data name="MixItUpCommands" xml:space="preserve">
     <value>Mix It Up Commands</value>
   </data>
+  <data name="MixItUpDashboard" xml:space="preserve">
+    <value>Mix It Up - Dashboard</value>
+  </data>
+  <data name="MixItUpStore" xml:space="preserve">
+    <value>Mix It Up Store</value>
+  </data>
   <data name="MixPlay" xml:space="preserve">
     <value>MixPlay</value>
   </data>
@@ -1256,6 +1325,9 @@
   </data>
   <data name="None" xml:space="preserve">
     <value>None</value>
+  </data>
+  <data name="NoResultsFound" xml:space="preserve">
+    <value>No Results Found</value>
   </data>
   <data name="Normal" xml:space="preserve">
     <value>Normal</value>
@@ -1458,6 +1530,12 @@
   <data name="Rate" xml:space="preserve">
     <value>Rate (0% - 150%)</value>
   </data>
+  <data name="RateReview" xml:space="preserve">
+    <value>Rate/Review</value>
+  </data>
+  <data name="Rating" xml:space="preserve">
+    <value>Rating</value>
+  </data>
   <data name="ReadFromFile" xml:space="preserve">
     <value>Read From File</value>
   </data>
@@ -1488,11 +1566,20 @@
   <data name="Remote" xml:space="preserve">
     <value>Remote</value>
   </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
   <data name="RemoveRandomLineFromFile" xml:space="preserve">
     <value>Remove Random Line From File</value>
   </data>
   <data name="RemoveSpecificLineFromFile" xml:space="preserve">
     <value>Remove Specific Line From File</value>
+  </data>
+  <data name="ReplacementText" xml:space="preserve">
+    <value>Replacement Text</value>
+  </data>
+  <data name="Report" xml:space="preserve">
+    <value>Report</value>
   </data>
   <data name="RequireClaim" xml:space="preserve">
     <value>Require "!claim"</value>
@@ -1526,6 +1613,12 @@
   </data>
   <data name="RetroactivelyGivePoints" xml:space="preserve">
     <value>Retroactively Give Points</value>
+  </data>
+  <data name="Review" xml:space="preserve">
+    <value>Review</value>
+  </data>
+  <data name="Reviews" xml:space="preserve">
+    <value>Reviews</value>
   </data>
   <data name="RightButton" xml:space="preserve">
     <value>Right Button</value>
@@ -1590,6 +1683,9 @@
   <data name="SearchCriteria" xml:space="preserve">
     <value>Search Criteria</value>
   </data>
+  <data name="SearchTerms" xml:space="preserve">
+    <value>Search Terms</value>
+  </data>
   <data name="Seconds" xml:space="preserve">
     <value>Seconds</value>
   </data>
@@ -1602,6 +1698,9 @@
   <data name="SelectFirstType" xml:space="preserve">
     <value>Select First User of Type in Queue</value>
   </data>
+  <data name="SelectGameHeader" xml:space="preserve">
+    <value>Select the Game Type you would like to create</value>
+  </data>
   <data name="SelectRandom" xml:space="preserve">
     <value>Select Random User in Queue</value>
   </data>
@@ -1613,6 +1712,9 @@
   </data>
   <data name="Send" xml:space="preserve">
     <value>Send</value>
+  </data>
+  <data name="SendAs" xml:space="preserve">
+    <value>Send As</value>
   </data>
   <data name="SendAsStreamer" xml:space="preserve">
     <value>Send as Streamer</value>
@@ -1750,7 +1852,7 @@
     <value>Special Identifier</value>
   </data>
   <data name="SpecialIdentifierHint" xml:space="preserve">
-    <value>Special Identifier Name To Save To (Letters &amp;amp; Numbers Only, no $)</value>
+    <value>Special Identifier Name (Letters &amp; Numbers Only, no $)</value>
   </data>
   <data name="SpecialIdentifierName" xml:space="preserve">
     <value>Special Identifier Name</value>
@@ -1848,6 +1950,9 @@
   <data name="TaggedInChat" xml:space="preserve">
     <value>Tagged In Chat</value>
   </data>
+  <data name="Tags" xml:space="preserve">
+    <value>Tags</value>
+  </data>
   <data name="TargetUser" xml:space="preserve">
     <value>Target User</value>
   </data>
@@ -1880,6 +1985,9 @@
   </data>
   <data name="TextToSpeech" xml:space="preserve">
     <value>Text To Speech</value>
+  </data>
+  <data name="TextToTranslate" xml:space="preserve">
+    <value>Text To Translate</value>
   </data>
   <data name="ThemesAndColors" xml:space="preserve">
     <value>Themes &amp; Colors</value>
@@ -1986,6 +2094,9 @@
   <data name="UpdatePreviewProgram" xml:space="preserve">
     <value>Update Preview Program</value>
   </data>
+  <data name="Upload" xml:space="preserve">
+    <value>Upload</value>
+  </data>
   <data name="UploadFilePath" xml:space="preserve">
     <value>Upload File Path (Optional)</value>
   </data>
@@ -2003,6 +2114,15 @@
   </data>
   <data name="User" xml:space="preserve">
     <value>User</value>
+  </data>
+  <data name="UserDataImport" xml:space="preserve">
+    <value>User Data Import</value>
+  </data>
+  <data name="UserDataStep1" xml:space="preserve">
+    <value>This will allow you to import your channel's user data from either a plain-text or spreadsheet file. To import a spreadsheet file, you must have some form of Microsoft Excel installed. Note that this WILL OVERWRITE existing user data in Mix It Up. First, specify the file that you want to import the User data from:</value>
+  </data>
+  <data name="UserDataStep2" xml:space="preserve">
+    <value>Next, you'll need to specify the column number for each value in your data file or leave it blank if that value is not present. Note that the data file is required to have at least either the username and/or user ID:</value>
   </data>
   <data name="UserJoined" xml:space="preserve">
     <value>User Joined</value>

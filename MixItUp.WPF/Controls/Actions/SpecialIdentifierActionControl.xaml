@@ -5,9 +5,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:util="clr-namespace:MixItUp.WPF.Util"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <local:ActionControlBase.Resources>
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+        <util:LocalizationConverter x:Key="LocalizationConverter"/>
+    </local:ActionControlBase.Resources>
     <Grid Grid.Row="0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -30,9 +36,9 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" x:Name="SpecialIdentifierNameTextBox" MaterialDesign:HintAssist.Hint="Special Identifier Name (Letters &amp; Numbers Only, no $)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="0" x:Name="SpecialIdentifierNameTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SpecialIdentifierHint}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox Grid.Column="2" x:Name="SpecialIdentifierReplacementTextBox" MaterialDesign:HintAssist.Hint="Replacement Text" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="2" x:Name="SpecialIdentifierReplacementTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ReplacementText}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid Grid.Row="4">
@@ -47,10 +53,10 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="1" VerticalAlignment="Center">Make Globally Usable:</TextBlock>
+            <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.MakeGloballyUsable}, StringFormat={StaticResource ColumnHeaderFormat}}" />
             <ToggleButton Grid.Column="3" x:Name="MakeGloballyUsableCheckBox"/>
 
-            <TextBlock Grid.Column="5" VerticalAlignment="Center">Is Math Expression:</TextBlock>
+            <TextBlock Grid.Column="5" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.IsMathExpression}, StringFormat={StaticResource ColumnHeaderFormat}}" />
             <ToggleButton Grid.Column="7" x:Name="SpecialIdentifierShouldProcessMathCheckBox"/>
         </Grid>
     </Grid>
