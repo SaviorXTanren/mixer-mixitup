@@ -249,6 +249,9 @@
   <data name="AnyChatMessageSound" xml:space="preserve">
     <value>[Åñýẋ Çĥåţẋẋ Ṁéššåĝéẋẋẋ Šöûñðẋẋ]</value>
   </data>
+  <data name="AppendToFile" xml:space="preserve">
+    <value>[Åþþéñðẋẋ Ţöẋ Ƒîļéẋẋ]</value>
+  </data>
   <data name="ApplicationInfo" xml:space="preserve">
     <value>[Åþþļîçåţîöñẋẋẋẋ Îñƒöẋẋ]</value>
   </data>
@@ -723,6 +726,9 @@
   <data name="FeatureMixItUpStreamer" xml:space="preserve">
     <value>[Ƒéåţûŕéẋẋẋ ɱéẋ åšẋ åẋ Ṁîẋẋ Îţẋ Ûþẋ Šţŕéåɱéŕẋẋẋ]</value>
   </data>
+  <data name="FilePath" xml:space="preserve">
+    <value>[Ƒîļéẋẋ Þåţĥẋẋ]</value>
+  </data>
   <data name="FileReadAndWrite" xml:space="preserve">
     <value>[Ƒîļéẋẋ (Ŕéåðẋẋ ⅋ẋ Ŵŕîţé)ẋẋ]</value>
   </data>
@@ -932,6 +938,9 @@
   </data>
   <data name="Lime" xml:space="preserve">
     <value>[Ļîɱéẋẋ]</value>
+  </data>
+  <data name="LineNumberToRead" xml:space="preserve">
+    <value>[Ļîñéẋẋ ♯ẋ Ţöẋ Ŕéåðẋẋ]</value>
   </data>
   <data name="LinkBlocking" xml:space="preserve">
     <value>[Ļîñķẋẋ Ɓļöçķîñĝẋẋẋ]</value>
@@ -1248,6 +1257,15 @@
   <data name="RankName" xml:space="preserve">
     <value>[Ŕåñķẋẋ Ñåɱéẋẋ]</value>
   </data>
+  <data name="ReadFromFile" xml:space="preserve">
+    <value>[Ŕéåðẋẋ Ƒŕöɱẋẋ Ƒîļéẋẋ]</value>
+  </data>
+  <data name="ReadRandomLineFromFile" xml:space="preserve">
+    <value>[Ŕéåðẋẋ Ŕåñðöɱẋẋ Ļîñéẋẋ Ƒŕöɱẋẋ Ƒîļéẋẋ]</value>
+  </data>
+  <data name="ReadSpecificLineFromFile" xml:space="preserve">
+    <value>[Ŕéåðẋẋ Šþéçîƒîçẋẋẋ Ļîñéẋẋ Ƒŕöɱẋẋ Ƒîļéẋẋ]</value>
+  </data>
   <data name="Red" xml:space="preserve">
     <value>[Ŕéðẋ]</value>
   </data>
@@ -1265,6 +1283,12 @@
   </data>
   <data name="Remote" xml:space="preserve">
     <value>[Ŕéɱöţéẋẋ]</value>
+  </data>
+  <data name="RemoveRandomLineFromFile" xml:space="preserve">
+    <value>[Ŕéɱöṽéẋẋ Ŕåñðöɱẋẋ Ļîñéẋẋ Ƒŕöɱẋẋ Ƒîļéẋẋ]</value>
+  </data>
+  <data name="RemoveSpecificLineFromFile" xml:space="preserve">
+    <value>[Ŕéɱöṽéẋẋ Šþéçîƒîçẋẋẋ Ļîñéẋẋ Ƒŕöɱẋẋ Ƒîļéẋẋ]</value>
   </data>
   <data name="RequireClaim" xml:space="preserve">
     <value>[Ŕéǫûîŕéẋẋẋ ″¡çļåîɱ″ẋẋẋ]</value>
@@ -1482,6 +1506,9 @@
   <data name="SpecialIdentifier" xml:space="preserve">
     <value>[Šþéçîåļẋẋẋ Îðéñţîƒîéŕẋẋẋẋ]</value>
   </data>
+  <data name="SpecialIdentifierHint" xml:space="preserve">
+    <value>[Šþéçîåļẋẋẋ Îðéñţîƒîéŕẋẋẋẋ Ñåɱéẋẋ Ţöẋ Šåṽéẋẋ Ţöẋ (Ļéţţéŕšẋẋẋ ⅋åɱþ⁏ẋẋ Ñûɱƀéŕšẋẋẋ Öñļý،ẋẋ ñöẋ €)ẋ]</value>
+  </data>
   <data name="SpecialIdentifierName" xml:space="preserve">
     <value>[Šþéçîåļẋẋẋ Îðéñţîƒîéŕẋẋẋẋ Ñåɱéẋẋ]</value>
   </data>
@@ -1598,6 +1625,9 @@
   </data>
   <data name="TextColor" xml:space="preserve">
     <value>[Ţéẋţẋẋ Çöļöŕẋẋ]</value>
+  </data>
+  <data name="TextToSave" xml:space="preserve">
+    <value>[Ţéẋţẋẋ Ţöẋ Šåṽéẋẋ]</value>
   </data>
   <data name="TextToSpeech" xml:space="preserve">
     <value>[Ţéẋţẋẋ Ţöẋ Šþééçĥẋẋ]</value>

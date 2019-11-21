@@ -457,6 +457,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Append To File.
+        /// </summary>
+        public static string AppendToFile {
+            get {
+                return ResourceManager.GetString("AppendToFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Application Info.
         /// </summary>
         public static string ApplicationInfo {
@@ -1879,6 +1888,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File Path.
+        /// </summary>
+        public static string FilePath {
+            get {
+                return ResourceManager.GetString("FilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File (Read &amp; Write).
         /// </summary>
         public static string FileReadAndWrite {
@@ -2505,6 +2523,15 @@ namespace MixItUp.Base {
         public static string Lime {
             get {
                 return ResourceManager.GetString("Lime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Line # To Read.
+        /// </summary>
+        public static string LineNumberToRead {
+            get {
+                return ResourceManager.GetString("LineNumberToRead", resourceCulture);
             }
         }
         
@@ -3454,6 +3481,33 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Read From File.
+        /// </summary>
+        public static string ReadFromFile {
+            get {
+                return ResourceManager.GetString("ReadFromFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Read Random Line From File.
+        /// </summary>
+        public static string ReadRandomLineFromFile {
+            get {
+                return ResourceManager.GetString("ReadRandomLineFromFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Read Specific Line From File.
+        /// </summary>
+        public static string ReadSpecificLineFromFile {
+            get {
+                return ResourceManager.GetString("ReadSpecificLineFromFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Red.
         /// </summary>
         public static string Red {
@@ -3504,6 +3558,24 @@ namespace MixItUp.Base {
         public static string Remote {
             get {
                 return ResourceManager.GetString("Remote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove Random Line From File.
+        /// </summary>
+        public static string RemoveRandomLineFromFile {
+            get {
+                return ResourceManager.GetString("RemoveRandomLineFromFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove Specific Line From File.
+        /// </summary>
+        public static string RemoveSpecificLineFromFile {
+            get {
+                return ResourceManager.GetString("RemoveSpecificLineFromFile", resourceCulture);
             }
         }
         
@@ -4156,6 +4228,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Special Identifier Name To Save To (Letters &amp;amp; Numbers Only, no $).
+        /// </summary>
+        public static string SpecialIdentifierHint {
+            get {
+                return ResourceManager.GetString("SpecialIdentifierHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Special Identifier Name.
         /// </summary>
         public static string SpecialIdentifierName {
@@ -4503,6 +4584,15 @@ namespace MixItUp.Base {
         public static string TextColor {
             get {
                 return ResourceManager.GetString("TextColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text To Save.
+        /// </summary>
+        public static string TextToSave {
+            get {
+                return ResourceManager.GetString("TextToSave", resourceCulture);
             }
         }
         

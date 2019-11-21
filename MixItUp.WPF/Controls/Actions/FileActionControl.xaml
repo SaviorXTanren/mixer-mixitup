@@ -5,9 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:util="clr-namespace:MixItUp.WPF.Util"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <local:ActionControlBase.Resources>
+        <util:LocalizationConverter x:Key="LocalizationConverter"/>
+    </local:ActionControlBase.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -18,7 +22,13 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
-            <ComboBox x:Name="FileActionTypeComboBox" SelectionChanged="FileActionTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox x:Name="FileActionTypeComboBox" SelectionChanged="FileActionTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
         </Grid>
 
         <Grid x:Name="FileGrid" Visibility="Collapsed" Grid.Row="2">
@@ -28,7 +38,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             
-            <TextBox Grid.Column="0" x:Name="FilePathTextBox" MaterialDesign:HintAssist.Hint="File Path" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="0" x:Name="FilePathTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FilePath}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
             <Button Grid.Column="2" x:Name="FileBrowseButton" VerticalAlignment="Bottom" Click="FileBrowseButton_Click" Content="{x:Static resx:Resources.Browse}"/>
         </Grid>
 
@@ -45,7 +55,7 @@
                 </Hyperlink>
             </TextBlock>
 
-            <TextBox Grid.Row="2" x:Name="SaveToFileTextTextBox" MaterialDesign:HintAssist.Hint="Text To Save" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Row="2" x:Name="SaveToFileTextTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TextToSave}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid x:Name="ReadFromFileGrid" Visibility="Collapsed" Grid.Row="4">
@@ -54,9 +64,9 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" x:Name="SpecificLineTextBox" MaterialDesign:HintAssist.Hint="Line # To Read" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Visibility="Collapsed" Width="100" Margin="0,0,10,0" />
+            <TextBox Grid.Column="0" x:Name="SpecificLineTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.LineNumberToRead}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Visibility="Collapsed" Width="100" Margin="0,0,10,0" />
 
-            <TextBox Grid.Column="1" x:Name="SpecialIdentifierNameTextBox" MaterialDesign:HintAssist.Hint="Special Identifier Name To Save To (Letters &amp; Numbers Only, no $)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="1" x:Name="SpecialIdentifierNameTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SpecialIdentifierHint}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
     </Grid>
 </local:ActionControlBase>
