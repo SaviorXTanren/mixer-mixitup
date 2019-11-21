@@ -175,7 +175,7 @@ namespace MixItUp.WPF.Controls.Command
                     }
                     else if (this.actionControl is SoundActionControl)
                     {
-                        await DialogHelper.ShowMessage("The sound file path must not be empty");
+                        await DialogHelper.ShowMessage(MixItUp.Base.Resources.EmptySoundFilePath);
                     }
                     return;
                 }

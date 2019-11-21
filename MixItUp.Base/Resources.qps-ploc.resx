@@ -1,0 +1,1815 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="1PerEmber" xml:space="preserve">
+    <value>[①ẋ Þéŕẋ Éɱƀéŕẋẋ]</value>
+  </data>
+  <data name="1PerHour" xml:space="preserve">
+    <value>[①ẋ Þéŕẋ Ĥöûŕẋẋ]</value>
+  </data>
+  <data name="1PerMinute" xml:space="preserve">
+    <value>[①ẋ Þéŕẋ Ṁîñûţéẋẋ]</value>
+  </data>
+  <data name="1PerSpark" xml:space="preserve">
+    <value>[①ẋ Þéŕẋ Šþåŕķẋẋ]</value>
+  </data>
+  <data name="About" xml:space="preserve">
+    <value>[Åƀöûţẋẋ]</value>
+  </data>
+  <data name="Accept" xml:space="preserve">
+    <value>[Åççéþţẋẋ]</value>
+  </data>
+  <data name="AccessTheFolderWhereMixItUpIsInstalled" xml:space="preserve">
+    <value>[Åççéššẋẋ ţĥéẋ ƒöļðéŕẋẋ ŵĥéŕéẋẋ Ṁîẋẋ Îţẋ Ûþẋ îšẋ îñšţåļļéðẋẋẋ]</value>
+  </data>
+  <data name="AccountDay" xml:space="preserve">
+    <value>[Åççöûñţẋẋẋ Îšẋ ①ẋ Ðåýẋ Öļðẋ]</value>
+  </data>
+  <data name="AccountHour" xml:space="preserve">
+    <value>[Åççöûñţẋẋẋ Îšẋ ①ẋ Ĥöûŕẋẋ Öļðẋ]</value>
+  </data>
+  <data name="AccountMonth" xml:space="preserve">
+    <value>[Åççöûñţẋẋẋ Îšẋ ①ẋ Ṁöñţĥẋẋ Öļðẋ]</value>
+  </data>
+  <data name="AccountWeek" xml:space="preserve">
+    <value>[Åççöûñţẋẋẋ Îšẋ ①ẋ Ŵééķẋẋ Öļðẋ]</value>
+  </data>
+  <data name="AcquireRate" xml:space="preserve">
+    <value>[Åçǫûîŕéẋẋẋ Ŕåţéẋẋ]</value>
+  </data>
+  <data name="Action" xml:space="preserve">
+    <value>[Åçţîöñẋẋ]</value>
+  </data>
+  <data name="ActionGroup" xml:space="preserve">
+    <value>[Åçţîöñẋẋ Ĝŕöûþẋẋ]</value>
+  </data>
+  <data name="ActionGroups" xml:space="preserve">
+    <value>[Åçţîöñẋẋ Ĝŕöûþšẋẋ]</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>[Åçţîöñšẋẋẋ]</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>[Åððẋ]</value>
+  </data>
+  <data name="AddClause" xml:space="preserve">
+    <value>[Åððẋ Çļåûšéẋẋ]</value>
+  </data>
+  <data name="AddCommand" xml:space="preserve">
+    <value>[Åððẋ Çöɱɱåñðẋẋẋ]</value>
+  </data>
+  <data name="AddCurrencyRank" xml:space="preserve">
+    <value>[Åððẋ Çûŕŕéñçý⁄Ŕåñķẋẋẋẋẋ]</value>
+  </data>
+  <data name="AddFavoriteStreamerAlreadyDone" xml:space="preserve">
+    <value>[Ţĥîšẋẋ ûšéŕẋẋ åļŕéåðýẋẋẋ éẋîšţšẋẋ îñẋ ţĥîšẋẋ ĝŕöûþ·ẋẋ]</value>
+  </data>
+  <data name="AddFavoriteStreamerNotFound" xml:space="preserve">
+    <value>[Çöûļðẋẋ ñöţẋ ƒîñðẋẋ åẋ ûšéŕẋẋ ƀýẋ ţĥåţẋẋ ñåɱé·ẋẋ]</value>
+  </data>
+  <data name="AddFavoriteTeamAlreadyDone" xml:space="preserve">
+    <value>[Ýöûẋ ĥåṽéẋẋ åļŕéåðýẋẋẋ ƒåṽöŕîţéðẋẋẋ ţĥîšẋẋ ţéåɱ·ẋẋ]</value>
+  </data>
+  <data name="AddFavoriteTeamNotFound" xml:space="preserve">
+    <value>[Çöûļðẋẋ ñöţẋ ƒîñðẋẋ åẋ ţéåɱẋẋ ƀýẋ ţĥåţẋẋ ñåɱé·ẋẋ]</value>
+  </data>
+  <data name="AddInventory" xml:space="preserve">
+    <value>[Åððẋ Îñṽéñţöŕýẋẋẋ]</value>
+  </data>
+  <data name="AddItem" xml:space="preserve">
+    <value>[Åððẋ Îţéɱẋẋ]</value>
+  </data>
+  <data name="AddNewRank" xml:space="preserve">
+    <value>[Åððẋ Ñéŵẋ Ŕåñķẋẋ]</value>
+  </data>
+  <data name="AddOverlayWidget" xml:space="preserve">
+    <value>[Åððẋ Öṽéŕļåýẋẋẋ Ŵîðĝéţẋẋ]</value>
+  </data>
+  <data name="AddQuote" xml:space="preserve">
+    <value>[Åððẋ Ǫûöţéẋẋ]</value>
+  </data>
+  <data name="AddToAllChatUsers" xml:space="preserve">
+    <value>[Åððẋ ţöẋ åļļẋ çĥåţẋẋ ûšéŕšẋẋ]</value>
+  </data>
+  <data name="AddToSpecificUser" xml:space="preserve">
+    <value>[Åððẋ ţöẋ šþéçîƒîçẋẋẋ ûšéŕẋẋ]</value>
+  </data>
+  <data name="AddToUser" xml:space="preserve">
+    <value>[Åððẋ ţöẋ ûšéŕẋẋ]</value>
+  </data>
+  <data name="Advanced" xml:space="preserve">
+    <value>[Åðṽåñçéðẋẋẋ]</value>
+  </data>
+  <data name="AdvancedCommand" xml:space="preserve">
+    <value>[Åðṽåñçéðẋẋẋ Çöɱɱåñðẋẋẋ]</value>
+  </data>
+  <data name="AgeRating" xml:space="preserve">
+    <value>[Åĝéẋ Ŕåţîñĝẋẋ]</value>
+  </data>
+  <data name="AllowCommandsOnlyInYourChannelDuringACoStream" xml:space="preserve">
+    <value>[Åļļöŵẋẋ Çöɱɱåñðšẋẋẋ Öñļýẋẋ îñẋ Ýöûŕẋẋ Çĥåññéļẋẋẋ Ðûŕîñĝẋẋ åẋ Çö‐Šţŕéåɱẋẋẋ]</value>
+  </data>
+  <data name="AllowCommandsToBeWhispered" xml:space="preserve">
+    <value>[Åļļöŵẋẋ Çöɱɱåñðšẋẋẋ ţöẋ ƀéẋ Ŵĥîšþéŕéðẋẋẋ]</value>
+  </data>
+  <data name="AllowPastWinners" xml:space="preserve">
+    <value>[Åļļöŵẋẋ Þåšţẋẋ Ŵîññéŕšẋẋẋ]</value>
+  </data>
+  <data name="AlreadyInstalled" xml:space="preserve">
+    <value>[Åļŕéåðýẋẋẋ Îñšţåļļéðẋẋẋ]</value>
+  </data>
+  <data name="Amber" xml:space="preserve">
+    <value>[Åɱƀéŕẋẋ]</value>
+  </data>
+  <data name="Amount" xml:space="preserve">
+    <value>[Åɱöûñţẋẋ]</value>
+  </data>
+  <data name="AmountDonated" xml:space="preserve">
+    <value>[Åɱöûñţẋẋ Ðöñåţéðẋẋẋ]</value>
+  </data>
+  <data name="AmountPlusMinus" xml:space="preserve">
+    <value>[Åɱöûñţẋẋ (⁺⁄‐)ẋẋ]</value>
+  </data>
+  <data name="AnyChatMessageSound" xml:space="preserve">
+    <value>[Åñýẋ Çĥåţẋẋ Ṁéššåĝéẋẋẋ Šöûñðẋẋ]</value>
+  </data>
+  <data name="ApplicationInfo" xml:space="preserve">
+    <value>[Åþþļîçåţîöñẋẋẋẋ Îñƒöẋẋ]</value>
+  </data>
+  <data name="ApplyStrikes" xml:space="preserve">
+    <value>[Åþþļýẋẋ Šţŕîķéšẋẋẋ]</value>
+  </data>
+  <data name="ApprovedDevices" xml:space="preserve">
+    <value>[Åþþŕöṽéðẋẋẋ Ðéṽîçéšẋẋẋ]</value>
+  </data>
+  <data name="Audience" xml:space="preserve">
+    <value>[Åûðîéñçéẋẋẋ]</value>
+  </data>
+  <data name="AudioOutputDevice" xml:space="preserve">
+    <value>[Åûðîöẋẋ Öûţþûţẋẋ Ðéṽîçéẋẋ]</value>
+  </data>
+  <data name="AutoHoster" xml:space="preserve">
+    <value>[Åûţö‐Ĥöšţéŕẋẋẋẋ]</value>
+  </data>
+  <data name="AutoHosterDescription" xml:space="preserve">
+    <value>[Ţĥéẋ Ṁîẋẋ Îţẋ Ûþẋ Åûţö‐Ĥöšţéŕẋẋẋẋ îšẋ åẋ šţåñð‐åļöñéẋẋẋẋ åþþļîçåţîöñẋẋẋẋ ţĥåţẋẋ ĥåñðļéšẋẋẋ ţĥéẋ ĥöšţîñĝẋẋẋ öƒẋ öţĥéŕẋẋ çĥåññéļšẋẋẋ ŵĥéñẋẋ ýöûẋ åŕéẋ ñöţẋ šţŕéåɱîñĝ·ẋẋẋẋ Ţĥéẋ Åûţö‐Ĥöšţéŕẋẋẋẋ ɱûšţẋẋ ƀéẋ ŕûññîñĝ،ẋẋẋ ƀûţẋ ýöûẋ ðöẋ ñöţẋ ĥåṽéẋẋ ţöẋ ĥåṽéẋẋ Ṁîẋẋ Îţẋ Ûþẋ ŕûññîñĝẋẋẋ ţöẋ ûšéẋ îţ·ẋ]</value>
+  </data>
+  <data name="AutoHosterLaunchHeader" xml:space="preserve">
+    <value>[Ţĥéẋ Åûţö‐Ĥöšţéŕẋẋẋẋ çåñẋ ƀéẋ ļåûñçĥéðẋẋẋ ƀýẋ çļîçķîñĝẋẋẋ ţĥéẋ ƀûţţöñẋẋ ƀéļöŵẋẋ]</value>
+  </data>
+  <data name="AutoIncludeBang" xml:space="preserve">
+    <value>[Åûţö‐Îñçļûðéẋẋẋẋ ″¡″ẋ]</value>
+  </data>
+  <data name="AutoLogInCurrentAccount" xml:space="preserve">
+    <value>[Åûţöẋẋ Ļöĝ‐Îñẋẋ Çûŕŕéñţẋẋẋ Åççöûñţẋẋẋ]</value>
+  </data>
+  <data name="AutomatedSettingsBackup" xml:space="preserve">
+    <value>[Åûţöɱåţéðẋẋẋ Šéţţîñĝšẋẋẋ Ɓåçķûþẋẋ]</value>
+  </data>
+  <data name="AutomaticReset" xml:space="preserve">
+    <value>[Åûţöɱåţîçẋẋẋ Ŕéšéţẋẋ]</value>
+  </data>
+  <data name="BackgroundColor" xml:space="preserve">
+    <value>[Ɓåçķĝŕöûñðẋẋẋẋ Çöļöŕẋẋ]</value>
+  </data>
+  <data name="BackupRate" xml:space="preserve">
+    <value>[Ɓåçķûþẋẋ Ŕåţéẋẋ]</value>
+  </data>
+  <data name="BackupSettings" xml:space="preserve">
+    <value>[Ɓåçķûþẋẋ Šéţţîñĝšẋẋẋ]</value>
+  </data>
+  <data name="BackupYourSettingsToAZipFile" xml:space="preserve">
+    <value>[Ɓåçķûþẋẋ ýöûŕẋẋ šéţţîñĝšẋẋẋ ţöẋ åẋ žîþẋ ƒîļéẋẋ]</value>
+  </data>
+  <data name="BasicChatCommand" xml:space="preserve">
+    <value>[Ɓåšîçẋẋ Çĥåţẋẋ Çöɱɱåñðẋẋẋ]</value>
+  </data>
+  <data name="BasicSoundCommand" xml:space="preserve">
+    <value>[Ɓåšîçẋẋ Šöûñðẋẋ Çöɱɱåñðẋẋẋ]</value>
+  </data>
+  <data name="BasicTimerDescription" xml:space="preserve">
+    <value>[Ŵĥåţẋẋ šĥöûļðẋẋ ŵéẋ çåļļẋẋ ţĥîšẋẋ Ţîɱéŕẋẋ çöɱɱåñð¿ẋẋẋ]</value>
+  </data>
+  <data name="BasicTimerNameHint" xml:space="preserve">
+    <value>[Ñåɱéẋẋ (ÉẊ∶ẋẋ ″Ƒöļļöŵẋẋẋ Ṁé″)ẋẋ]</value>
+  </data>
+  <data name="BaudRate" xml:space="preserve">
+    <value>[Ɓåûðẋẋ Ŕåţéẋẋ]</value>
+  </data>
+  <data name="Between" xml:space="preserve">
+    <value>[Ɓéţŵééñẋẋẋ]</value>
+  </data>
+  <data name="Black" xml:space="preserve">
+    <value>[Ɓļåçķẋẋ]</value>
+  </data>
+  <data name="Blue" xml:space="preserve">
+    <value>[Ɓļûéẋẋ]</value>
+  </data>
+  <data name="Blue Grey" xml:space="preserve">
+    <value>[Ɓļûéẋẋ Ĝŕéýẋẋ]</value>
+  </data>
+  <data name="Bot" xml:space="preserve">
+    <value>[Ɓöţẋ]</value>
+  </data>
+  <data name="Brown" xml:space="preserve">
+    <value>[Ɓŕöŵñẋẋ]</value>
+  </data>
+  <data name="Browse" xml:space="preserve">
+    <value>[Ɓŕöŵšéẋẋ]</value>
+  </data>
+  <data name="ButtonName" xml:space="preserve">
+    <value>[Ɓûţţöñẋẋ Ñåɱéẋẋ]</value>
+  </data>
+  <data name="BuyPrice" xml:space="preserve">
+    <value>[Ɓûýẋ Þŕîçéẋẋ]</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>[Çåñçéļẋẋ]</value>
+  </data>
+  <data name="CancelGiveaway" xml:space="preserve">
+    <value>[Çåñçéļẋẋ Ĝîṽéåŵåýẋẋẋ]</value>
+  </data>
+  <data name="CaseSensitive" xml:space="preserve">
+    <value>[Çåšéẋẋ Šéñšîţîṽéẋẋẋ]</value>
+  </data>
+  <data name="Channel" xml:space="preserve">
+    <value>[Çĥåññéļẋẋẋ]</value>
+  </data>
+  <data name="ChannelBanWords" xml:space="preserve">
+    <value>[Çĥåññéļẋẋẋ Ɓåñẋ Ŵöŕðšẋẋ (Öñéẋẋ Þéŕẋ Ļîñé)ẋẋ (ẋ ⁎ẋ ≂ẋ Ŵîļðẋẋ Çåŕð)ẋẋ]</value>
+  </data>
+  <data name="ChannelEditor" xml:space="preserve">
+    <value>[Çĥåññéļẋẋẋ Éðîţöŕẋẋ]</value>
+  </data>
+  <data name="ChannelErrorInvalidAgeRating" xml:space="preserve">
+    <value>[Åẋ ṽåļîðẋẋ åĝéẋ ŕåţîñĝẋẋ ɱûšţẋẋ ƀéẋ šéļéçţéð·ẋẋẋ]</value>
+  </data>
+  <data name="ChannelErrorInvalidGame" xml:space="preserve">
+    <value>[Åẋ ṽåļîðẋẋ ⅋ẋ éẋîšţîñĝẋẋẋ ĝåɱéẋẋ ñåɱéẋẋ ɱûšţẋẋ ƀéẋ šéļéçţéð·ẋẋẋ]</value>
+  </data>
+  <data name="ChannelErrorNoStreamTitle" xml:space="preserve">
+    <value>[Åẋ šţŕéåɱẋẋ ţîţļéẋẋ ɱûšţẋẋ ƀéẋ šþéçîƒîéð·ẋẋẋẋ]</value>
+  </data>
+  <data name="ChannelInfo" xml:space="preserve">
+    <value>[Çĥåññéļẋẋẋ Îñƒöẋẋ]</value>
+  </data>
+  <data name="ChannelName" xml:space="preserve">
+    <value>[Çĥåññéļẋẋẋ Ñåɱéẋẋ]</value>
+  </data>
+  <data name="Chat" xml:space="preserve">
+    <value>[Çĥåţẋẋ]</value>
+  </data>
+  <data name="ChatMessage" xml:space="preserve">
+    <value>[Çĥåţẋẋ Ṁéššåĝéẋẋẋ]</value>
+  </data>
+  <data name="ChatMessages" xml:space="preserve">
+    <value>[Çĥåţẋẋ Ṁéššåĝéšẋẋẋ]</value>
+  </data>
+  <data name="ChatMessagesSent" xml:space="preserve">
+    <value>[Çĥåţẋẋ Ṁéššåĝéšẋẋẋ Šéñţẋẋ]</value>
+  </data>
+  <data name="ChatMixPlayParticipation" xml:space="preserve">
+    <value>[Çĥåţẋẋ ⁄ẋ ṀîẋÞļåýẋẋẋ Þåŕţîçîþåţîöñẋẋẋẋẋ]</value>
+  </data>
+  <data name="ChatTaggedSound" xml:space="preserve">
+    <value>[Çĥåţẋẋ Ţåĝĝéðẋẋ Šöûñðẋẋ]</value>
+  </data>
+  <data name="ChatTextModeration" xml:space="preserve">
+    <value>[Çĥåţẋẋ Ţéẋţẋẋ Ṁöðéŕåţîöñẋẋẋẋ]</value>
+  </data>
+  <data name="ChatWhisperSound" xml:space="preserve">
+    <value>[Çĥåţẋẋ Ŵĥîšþéŕẋẋẋ Šöûñðẋẋ]</value>
+  </data>
+  <data name="ClearAllUserDataHeader" xml:space="preserve">
+    <value>[Çļéåŕẋẋ åļļẋ Ûšéŕẋẋ ðåţåẋẋ (Ĥöûŕš،ẋẋẋ Çûŕŕéñçý،ẋẋẋ Ŕåñķ،ẋẋ éţç)ẋẋ]</value>
+  </data>
+  <data name="ClearChat" xml:space="preserve">
+    <value>[Çļéåŕẋẋ Çĥåţẋẋ]</value>
+  </data>
+  <data name="ClearChatConfirmation" xml:space="preserve">
+    <value>[Ţĥîšẋẋ ŵîļļẋẋ çļéåŕẋẋ åļļẋ çĥåţẋẋ ɱéššåĝéšẋẋẋ ƒöŕẋ ţĥéẋ šţŕéåɱ·ẋẋẋ Åŕéẋ ýöûẋ šûŕé¿ẋẋ]</value>
+  </data>
+  <data name="ClearUserData" xml:space="preserve">
+    <value>[Çļéåŕẋẋ Ûšéŕẋẋ Ðåţåẋẋ]</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>[Çļöšéẋẋ]</value>
+  </data>
+  <data name="ClosingPleaseWait" xml:space="preserve">
+    <value>[Þļéåšéẋẋ ŵåîţẋẋ ŵĥîļéẋẋ Ṁîẋẋ Îţẋ Ûþẋ šåṽéšẋẋ ýöûŕẋẋ šéţţîñĝšẋẋẋ åñðẋ šĥûţšẋẋ ðöŵñ···ẋẋẋ]</value>
+  </data>
+  <data name="ColorScheme" xml:space="preserve">
+    <value>[Çöļöŕẋẋ Šçĥéɱéẋẋ]</value>
+  </data>
+  <data name="Command" xml:space="preserve">
+    <value>[Çöɱɱåñðẋẋẋ]</value>
+  </data>
+  <data name="CommandGroup" xml:space="preserve">
+    <value>[Çöɱɱåñðẋẋẋ Ĝŕöûþẋẋ]</value>
+  </data>
+  <data name="CommandNoBang" xml:space="preserve">
+    <value>[Çöɱɱåñðẋẋẋ (Ñöẋ ´¡´ẋ ñééðéð)ẋẋẋ]</value>
+  </data>
+  <data name="Commands" xml:space="preserve">
+    <value>[Çöɱɱåñðšẋẋẋ]</value>
+  </data>
+  <data name="CommandsRun" xml:space="preserve">
+    <value>[Çöɱɱåñðšẋẋẋ Ŕûñẋ]</value>
+  </data>
+  <data name="Compare" xml:space="preserve">
+    <value>[Çöɱþåŕéẋẋẋ]</value>
+  </data>
+  <data name="Conditional" xml:space="preserve">
+    <value>[Çöñðîţîöñåļẋẋẋẋ]</value>
+  </data>
+  <data name="Connect" xml:space="preserve">
+    <value>[Çöññéçţẋẋẋ]</value>
+  </data>
+  <data name="ConnectDevices" xml:space="preserve">
+    <value>[Çöññéçţẋẋẋ Ðéṽîçéšẋẋẋ]</value>
+  </data>
+  <data name="ContactAndResources" xml:space="preserve">
+    <value>[Çöñţåçţẋẋẋ ⅋ẋ Ŕéšöûŕçéšẋẋẋ]</value>
+  </data>
+  <data name="Contains" xml:space="preserve">
+    <value>[Çöñţåîñšẋẋẋ]</value>
+  </data>
+  <data name="ConvertToAdvanced" xml:space="preserve">
+    <value>[Çöñṽéŕţẋẋẋ Ţöẋ Åðṽåñçéðẋẋẋ]</value>
+  </data>
+  <data name="Cooldown" xml:space="preserve">
+    <value>[Çööļðöŵñẋẋẋ]</value>
+  </data>
+  <data name="Costream" xml:space="preserve">
+    <value>[Çöšţŕéåɱẋẋẋ]</value>
+  </data>
+  <data name="CounterCreateAndUpdate" xml:space="preserve">
+    <value>[Çöûñţéŕẋẋẋ (Çŕéåţéẋẋẋ ⅋ẋ Ûþðåţé)ẋẋẋ]</value>
+  </data>
+  <data name="CounterNameWithTips" xml:space="preserve">
+    <value>[Çöûñţéŕẋẋẋ Ñåɱéẋẋ (Öñļýẋẋ Ļéţţéŕšẋẋẋ ⅋ẋ Ñûɱƀéŕšẋẋẋ Åļļöŵéð،ẋẋẋ ñöẋ €)ẋ]</value>
+  </data>
+  <data name="CountersFolder" xml:space="preserve">
+    <value>[Çöûñţéŕšẋẋẋ Ƒöļðéŕẋẋ]</value>
+  </data>
+  <data name="CumulativeMonthsSubbed" xml:space="preserve">
+    <value>[Çûɱûļåţîṽéẋẋẋẋ Ṁöñţĥšẋẋ Šûƀƀéðẋẋ]</value>
+  </data>
+  <data name="CurrenciesRanksInventories" xml:space="preserve">
+    <value>[Çûŕŕéñçîéš⁄Ŕåñķš⁄Îñṽéñţöŕîéšẋẋẋẋẋẋẋẋẋẋ]</value>
+  </data>
+  <data name="CurrencyRank" xml:space="preserve">
+    <value>[Çûŕŕéñçý⁄Ŕåñķẋẋẋẋẋ]</value>
+  </data>
+  <data name="CurrencyRankInventory" xml:space="preserve">
+    <value>[Çûŕŕéñçý⁄Ŕåñķ⁄Îñṽéñţöŕýẋẋẋẋẋẋẋẋ]</value>
+  </data>
+  <data name="CurrencyRankInventoryExempt" xml:space="preserve">
+    <value>[Çûŕŕéñçý⁄Ŕåñķ⁄Îñṽéñţöŕýẋẋẋẋẋẋẋẋ Éẋéɱþţẋẋ]</value>
+  </data>
+  <data name="CurrencyRankName" xml:space="preserve">
+    <value>[Çûŕŕéñçý⁄Ŕåñķẋẋẋẋẋ Ñåɱéẋẋ]</value>
+  </data>
+  <data name="Custom" xml:space="preserve">
+    <value>[Çûšţöɱẋẋ]</value>
+  </data>
+  <data name="CustomCommands" xml:space="preserve">
+    <value>[Çûšţöɱẋẋ Çöɱɱåñðšẋẋẋ]</value>
+  </data>
+  <data name="CustomEntranceCommand" xml:space="preserve">
+    <value>[Çûšţöɱẋẋ Éñţŕåñçéẋẋẋ Çöɱɱåñðẋẋẋ]</value>
+  </data>
+  <data name="CustomizeCommand" xml:space="preserve">
+    <value>[Çûšţöɱîžéẋẋẋ Çöɱɱåñðẋẋẋ]</value>
+  </data>
+  <data name="CustomizeCurrencyRank" xml:space="preserve">
+    <value>[Çûšţöɱîžéẋẋẋ Çûŕŕéñçý⁄Ŕåñķẋẋẋẋẋ]</value>
+  </data>
+  <data name="CustomizeInventory" xml:space="preserve">
+    <value>[Çûšţöɱîžéẋẋẋ Îñṽéñţöŕýẋẋẋ]</value>
+  </data>
+  <data name="CustomMixPlayProjects" xml:space="preserve">
+    <value>[Çûšţöɱẋẋ ṀîẋÞļåýẋẋẋ Þŕöĵéçţšẋẋẋ]</value>
+  </data>
+  <data name="CustomTitle" xml:space="preserve">
+    <value>[Çûšţöɱẋẋ Ţîţļéẋẋ]</value>
+  </data>
+  <data name="Cyan" xml:space="preserve">
+    <value>[Çýåñẋẋ]</value>
+  </data>
+  <data name="Daily" xml:space="preserve">
+    <value>[Ðåîļýẋẋ]</value>
+  </data>
+  <data name="Dark" xml:space="preserve">
+    <value>[Ðåŕķẋẋ]</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>[Ðåšĥƀöåŕðẋẋẋ]</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>[Ðåţéẋẋ]</value>
+  </data>
+  <data name="DateTime" xml:space="preserve">
+    <value>[Ðåţé⁄Ţîɱéẋẋẋ]</value>
+  </data>
+  <data name="DeductFromUserRunningCommand" xml:space="preserve">
+    <value>[Ðéðûçţẋẋ Ƒŕöɱẋẋ Ûšéŕẋẋ Ŕûññîñĝẋẋẋ Çöɱɱåñðẋẋẋ]</value>
+  </data>
+  <data name="Deep Orange" xml:space="preserve">
+    <value>[Ðééþẋẋ Öŕåñĝéẋẋ]</value>
+  </data>
+  <data name="Deep Purple" xml:space="preserve">
+    <value>[Ðééþẋẋ Þûŕþļéẋẋ]</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>[Ðéƒåûļţẋẋẋ]</value>
+  </data>
+  <data name="DefaultAudioOutput" xml:space="preserve">
+    <value>[Ðéƒåûļţẋẋẋ Åûðîöẋẋ Öûţþûţẋẋ]</value>
+  </data>
+  <data name="DefaultMaxAmount" xml:space="preserve">
+    <value>[Ðéƒåûļţẋẋẋ Ṁåẋẋ Åɱöûñţẋẋ]</value>
+  </data>
+  <data name="DefaultMixPlayGameToConnect" xml:space="preserve">
+    <value>[Ðéƒåûļţẋẋẋ ṀîẋÞļåýẋẋẋ Ĝåɱéẋẋ ţöẋ Çöññéçţẋẋẋ]</value>
+  </data>
+  <data name="DefaultOutput" xml:space="preserve">
+    <value>[Ðéƒåûļţẋẋẋ Öûţþûţẋẋ]</value>
+  </data>
+  <data name="DefaultStreamingSoftware" xml:space="preserve">
+    <value>[Ðéƒåûļţẋẋẋ Šţŕéåɱîñĝẋẋẋ Šöƒţŵåŕéẋẋẋ]</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>[Ðéļéţéẋẋ]</value>
+  </data>
+  <data name="DeleteAllChatCommandsWhenTheyAreRun" xml:space="preserve">
+    <value>[Ðéļéţéẋẋ Åļļẋ Çĥåţẋẋ Çöɱɱåñðšẋẋẋ Ŵĥéñẋẋ Ţĥéýẋẋ Åŕéẋ Ŕûñẋ]</value>
+  </data>
+  <data name="DeleteCommand" xml:space="preserve">
+    <value>[Ðéļéţéẋẋ Çöɱɱåñðẋẋẋ]</value>
+  </data>
+  <data name="DeleteFavoriteGroupConfirmation" xml:space="preserve">
+    <value>[Åŕéẋ ýöûẋ šûŕéẋẋ ýöûẋ ŵîšĥẋẋ ţöẋ ŕéɱöṽéẋẋ ţĥîšẋẋ ĝŕöûþ¿ẋẋ]</value>
+  </data>
+  <data name="DisableAllTimers" xml:space="preserve">
+    <value>[Ðîšåƀļéẋẋẋ Åļļẋ Ţîɱéŕšẋẋ]</value>
+  </data>
+  <data name="DisableChat" xml:space="preserve">
+    <value>[Ðîšåƀļéẋẋẋ Çĥåţẋẋ]</value>
+  </data>
+  <data name="DisableChatConfirmation" xml:space="preserve">
+    <value>[Ţĥîšẋẋ ŵîļļẋẋ ðîšåƀļéẋẋẋ çĥåţẋẋ ƒöŕẋ åļļẋ ûšéŕš·ẋẋ Åŕéẋ ýöûẋ šûŕé¿ẋẋ]</value>
+  </data>
+  <data name="DisableCommand" xml:space="preserve">
+    <value>[Ðîšåƀļéẋẋẋ Çöɱɱåñðẋẋẋ]</value>
+  </data>
+  <data name="DisableCommandGroup" xml:space="preserve">
+    <value>[Ðîšåƀļéẋẋẋ Çöɱɱåñðẋẋẋ Ĝŕöûþẋẋ]</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>[Ðîšåƀļéðẋẋẋ]</value>
+  </data>
+  <data name="DisableDiagnostics" xml:space="preserve">
+    <value>[Ðîšåƀļéẋẋẋ Ðîåĝñöšţîçšẋẋẋẋ]</value>
+  </data>
+  <data name="Discord" xml:space="preserve">
+    <value>[Ðîšçöŕðẋẋẋ]</value>
+  </data>
+  <data name="DoesNotContain" xml:space="preserve">
+    <value>[≤≥ẋ Çöñţåîñšẋẋẋ]</value>
+  </data>
+  <data name="DownloadAndInstall" xml:space="preserve">
+    <value>[Ðöŵñļöåðẋẋẋ ⅋ẋ Îñšţåļļẋẋẋ]</value>
+  </data>
+  <data name="DownloadAndInstallffmpeg" xml:space="preserve">
+    <value>[Ðöŵñļöåðẋẋẋ ⅋ẋ Îñšţåļļẋẋẋ ƒƒɱþéĝẋẋ]</value>
+  </data>
+  <data name="DownloadFrom" xml:space="preserve">
+    <value>[ÐöŵñļöåðƑŕöɱẋẋẋẋ]</value>
+  </data>
+  <data name="DTR" xml:space="preserve">
+    <value>[ÐŢŔẋ]</value>
+  </data>
+  <data name="Duplicate" xml:space="preserve">
+    <value>[Ðûþļîçåţéẋẋẋ]</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>[Éðîţẋẋ]</value>
+  </data>
+  <data name="EditCommand" xml:space="preserve">
+    <value>[Éðîţẋẋ Çöɱɱåñðẋẋẋ]</value>
+  </data>
+  <data name="EmberSkillsOnly" xml:space="preserve">
+    <value>[Éɱƀéŕẋẋ Šķîļļšẋẋ Öñļýẋẋ]</value>
+  </data>
+  <data name="EmbersSpent" xml:space="preserve">
+    <value>[Éɱƀéŕšẋẋ Šþéñţẋẋ]</value>
+  </data>
+  <data name="EmotesSkillsOnly" xml:space="preserve">
+    <value>[Éɱöţéšẋẋ ⅋ẋ Šķîļļšẋẋ Öñļýẋẋ]</value>
+  </data>
+  <data name="EmptySoundFilePath" xml:space="preserve">
+    <value>[Ţĥéẋ šöûñðẋẋ ƒîļéẋẋ þåţĥẋẋ ɱûšţẋẋ ñöţẋ ƀéẋ éɱþţý·ẋẋ]</value>
+  </data>
+  <data name="Enable" xml:space="preserve">
+    <value>[Éñåƀļéẋẋ]</value>
+  </data>
+  <data name="EnableChat" xml:space="preserve">
+    <value>[Éñåƀļéẋẋ Çĥåţẋẋ]</value>
+  </data>
+  <data name="EnableCommand" xml:space="preserve">
+    <value>[Éñåƀļéẋẋ Çöɱɱåñðẋẋẋ]</value>
+  </data>
+  <data name="EnableCommandGroup" xml:space="preserve">
+    <value>[Éñåƀļéẋẋ Çöɱɱåñðẋẋẋ Ĝŕöûþẋẋ]</value>
+  </data>
+  <data name="EnableDiagnostics" xml:space="preserve">
+    <value>[Éñåƀļéẋẋ Ðîåĝñöšţîçšẋẋẋẋ]</value>
+  </data>
+  <data name="EnableDisableCommand" xml:space="preserve">
+    <value>[Éñåƀļé⁄Ðîšåƀļéẋẋẋẋẋ Çöɱɱåñðẋẋẋ]</value>
+  </data>
+  <data name="EnableDisableDiagnosticsHeader" xml:space="preserve">
+    <value>[Éñåƀļé⁄Ðîšåƀļéẋẋẋẋẋ Ðîåĝñöšţîçẋẋẋẋ ļöĝĝîñĝẋẋẋ ƒöŕẋ ƒîñðîñĝẋẋẋ îššûéšẋẋ]</value>
+  </data>
+  <data name="EndCredits" xml:space="preserve">
+    <value>[Éñðẋ Çŕéðîţšẋẋẋ]</value>
+  </data>
+  <data name="EnteredUsers" xml:space="preserve">
+    <value>[Éñţéŕéðẋẋẋ Ûšéŕšẋẋ]</value>
+  </data>
+  <data name="EqualsCompare" xml:space="preserve">
+    <value>[≂ẋ]</value>
+  </data>
+  <data name="ErrorGamePickInsufficientRole" xml:space="preserve">
+    <value>[Ýöûẋ ɱûšţẋẋ ƀéẋ åẋ {⓪}ẋ ţöẋ þîçķẋẋ ţĥéẋ åñšŵéŕ·ẋẋẋ]</value>
+  </data>
+  <data name="ErrorGameStartInsufficentRole" xml:space="preserve">
+    <value>[Ýöûẋ ɱûšţẋẋ ƀéẋ åẋ {⓪}ẋ ţöẋ šţåŕţẋẋ ţĥîšẋẋ ĝåɱé·ẋẋ]</value>
+  </data>
+  <data name="Event" xml:space="preserve">
+    <value>[Éṽéñţẋẋ]</value>
+  </data>
+  <data name="EventBonuses" xml:space="preserve">
+    <value>[Éṽéñţẋẋ Ɓöñûšéšẋẋẋ]</value>
+  </data>
+  <data name="EventList" xml:space="preserve">
+    <value>[Éṽéñţẋẋ Ļîšţẋẋ]</value>
+  </data>
+  <data name="Events" xml:space="preserve">
+    <value>[Éṽéñţšẋẋ]</value>
+  </data>
+  <data name="ExemptFromRule" xml:space="preserve">
+    <value>[Éẋéɱþţẋẋ Ƒŕöɱẋẋ Ŕûļéẋẋ]</value>
+  </data>
+  <data name="ExemptFromRuleAndStrikes" xml:space="preserve">
+    <value>[Éẋéɱþţẋẋ Ƒŕöɱẋẋ Ŕûļéẋẋ ⅋ẋ Šţŕîķéšẋẋẋ]</value>
+  </data>
+  <data name="ExitConfirmation" xml:space="preserve">
+    <value>[Åŕéẋ ýöûẋ šûŕéẋẋ ýöûẋ ŵîšĥẋẋ ţöẋ éẋîţẋẋ Ṁîẋẋ Îţẋ Ûþ¿ẋ]</value>
+  </data>
+  <data name="ExportActions" xml:space="preserve">
+    <value>[Éẋþöŕţẋẋ Åçţîöñšẋẋẋ ţöẋ Ƒîļéẋẋ]</value>
+  </data>
+  <data name="ExportData" xml:space="preserve">
+    <value>[Éẋþöŕţẋẋ Ðåţåẋẋ]</value>
+  </data>
+  <data name="ExternalProgram" xml:space="preserve">
+    <value>[Éẋţéŕñåļẋẋẋ Þŕöĝŕåɱẋẋẋ]</value>
+  </data>
+  <data name="Family" xml:space="preserve">
+    <value>[Ƒåɱîļýẋẋ]</value>
+  </data>
+  <data name="FanProgression" xml:space="preserve">
+    <value>[Ƒåñẋ Þŕöĝŕéššîöñẋẋẋẋ]</value>
+  </data>
+  <data name="FavoritedUsersTeams" xml:space="preserve">
+    <value>[Ƒåṽöŕîţéðẋẋẋ Ûšéŕš⁄Ţéåɱšẋẋẋẋ]</value>
+  </data>
+  <data name="FavoriteStreamers" xml:space="preserve">
+    <value>[Ƒåṽöŕîţéẋẋẋ Šţŕéåɱéŕšẋẋẋ]</value>
+  </data>
+  <data name="FeatureMixItUpStreamer" xml:space="preserve">
+    <value>[Ƒéåţûŕéẋẋẋ ɱéẋ åšẋ åẋ Ṁîẋẋ Îţẋ Ûþẋ Šţŕéåɱéŕẋẋẋ]</value>
+  </data>
+  <data name="FileReadAndWrite" xml:space="preserve">
+    <value>[Ƒîļéẋẋ (Ŕéåðẋẋ ⅋ẋ Ŵŕîţé)ẋẋ]</value>
+  </data>
+  <data name="FilterByName" xml:space="preserve">
+    <value>[Ƒîļţéŕẋẋ Ɓýẋ Ñåɱéẋẋ]</value>
+  </data>
+  <data name="FilteredBannedWords" xml:space="preserve">
+    <value>[Ƒîļţéŕéðẋẋẋ ⁄ẋ Ɓåññéðẋẋ Ŵöŕðšẋẋ]</value>
+  </data>
+  <data name="FilteredWordsHeader" xml:space="preserve">
+    <value>[Ƒîļţéŕéðẋẋẋ Ŵöŕðšẋẋ (Öñéẋẋ Þéŕẋ Ļîñé)ẋẋ (ẋ ⁎ẋ ≂ẋ Ŵîļðẋẋ Çåŕð)ẋẋ]</value>
+  </data>
+  <data name="FindChannelToRaid" xml:space="preserve">
+    <value>[Ƒîñðẋẋ Çĥåññéļẋẋẋ Ţöẋ Ŕåîðẋẋ]</value>
+  </data>
+  <data name="FindRaidErrorNoCriteria" xml:space="preserve">
+    <value>[Ṁûšţẋẋ šéļéçţẋẋ åẋ šéåŕçĥẋẋ çŕîţéŕîåẋẋẋ ƒöŕẋ ƒîñðîñĝẋẋẋ åẋ çĥåññéļẋẋẋ ţöẋ ŕåîð·ẋẋ]</value>
+  </data>
+  <data name="FindRaidErrorNoneFound" xml:space="preserve">
+    <value>[Ûñåƀļéẋẋ ţöẋ ƒîñðẋẋ åẋ çĥåññéļẋẋẋ ţĥåţẋẋ ɱéţẋ ýöûŕẋẋ šéåŕçĥẋẋ çŕîţéŕå،ẋẋẋ þļéåšéẋẋ ţŕýẋ šéļéçţîñĝẋẋẋ åẋ ðîƒƒéŕéñţẋẋẋ öþţîöñ·ẋẋẋ]</value>
+  </data>
+  <data name="FirstValue" xml:space="preserve">
+    <value>[Ƒîŕšţẋẋ Ṽåļûéẋẋ]</value>
+  </data>
+  <data name="FollowAge" xml:space="preserve">
+    <value>[Ƒöļļöŵẋẋ Åĝéẋ]</value>
+  </data>
+  <data name="Follower" xml:space="preserve">
+    <value>[Ƒöļļöŵéŕẋẋẋ]</value>
+  </data>
+  <data name="FollowerOnly" xml:space="preserve">
+    <value>[Ƒöļļöŵéŕẋẋẋ Öñļýẋẋ]</value>
+  </data>
+  <data name="FontSize" xml:space="preserve">
+    <value>[ƑöñţŠîžéẋẋẋ]</value>
+  </data>
+  <data name="FullTheme" xml:space="preserve">
+    <value>[Ƒûļļẋẋ Ţĥéɱéẋẋ]</value>
+  </data>
+  <data name="Game" xml:space="preserve">
+    <value>[Ĝåɱéẋẋ]</value>
+  </data>
+  <data name="GameName" xml:space="preserve">
+    <value>[Ĝåɱéẋẋ Ñåɱéẋẋ]</value>
+  </data>
+  <data name="GameQueue" xml:space="preserve">
+    <value>[Ĝåɱéẋẋ Ǫûéûéẋẋ]</value>
+  </data>
+  <data name="Games" xml:space="preserve">
+    <value>[Ĝåɱéšẋẋ]</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>[Ĝéñéŕåļẋẋẋ]</value>
+  </data>
+  <data name="Giveaway" xml:space="preserve">
+    <value>[Ĝîṽéåŵåýẋẋẋ]</value>
+  </data>
+  <data name="GiveawayItem" xml:space="preserve">
+    <value>[Ĝîṽéåŵåýẋẋẋ Îţéɱẋẋ]</value>
+  </data>
+  <data name="GreaterThan" xml:space="preserve">
+    <value>[≥ẋ]</value>
+  </data>
+  <data name="GreaterThanOrEqual" xml:space="preserve">
+    <value>[≥≂ẋ]</value>
+  </data>
+  <data name="Green" xml:space="preserve">
+    <value>[Ĝŕééñẋẋ]</value>
+  </data>
+  <data name="Grey" xml:space="preserve">
+    <value>[Ĝŕéýẋẋ]</value>
+  </data>
+  <data name="GroupIntervalMin" xml:space="preserve">
+    <value>[Ĝŕöûþẋẋ Îñţéŕṽåļẋẋẋ (Ṁîñ)ẋẋ]</value>
+  </data>
+  <data name="GroupName" xml:space="preserve">
+    <value>[Ĝŕöûþẋẋ Ñåɱéẋẋ]</value>
+  </data>
+  <data name="Groups" xml:space="preserve">
+    <value>[Ĝŕöûþšẋẋ]</value>
+  </data>
+  <data name="Help" xml:space="preserve">
+    <value>[Ĥéļþẋẋ]</value>
+  </data>
+  <data name="HelpfulLinks" xml:space="preserve">
+    <value>[Ĥéļþƒûļẋẋẋ Ļîñķšẋẋ]</value>
+  </data>
+  <data name="HideChatUserList" xml:space="preserve">
+    <value>[Ĥîðéẋẋ Çĥåţẋẋ Ûšéŕẋẋ Ļîšţẋẋ]</value>
+  </data>
+  <data name="HideDeletedMessages" xml:space="preserve">
+    <value>[Ĥîðéẋẋ Ðéļéţéðẋẋẋ Ṁéššåĝéšẋẋẋ]</value>
+  </data>
+  <data name="HideViewerAndChatterNumbers" xml:space="preserve">
+    <value>[Ĥîðéẋẋ Ṽîéŵéŕẋẋ ⅋ẋ Çĥåţţéŕẋẋẋ Ñûɱƀéŕšẋẋẋ]</value>
+  </data>
+  <data name="HostChannel" xml:space="preserve">
+    <value>[Ĥöšţẋẋ Çĥåññéļẋẋẋ]</value>
+  </data>
+  <data name="HotKey" xml:space="preserve">
+    <value>[Ĥöţẋ Ķéýẋ]</value>
+  </data>
+  <data name="HotKeys" xml:space="preserve">
+    <value>[Ĥöţẋ Ķéýšẋẋ]</value>
+  </data>
+  <data name="Hours" xml:space="preserve">
+    <value>[Ĥöûŕšẋẋ]</value>
+  </data>
+  <data name="HowLongBeforeRun" xml:space="preserve">
+    <value>[Ĥöŵẋ ļöñĝẋẋ ƀéƒöŕéẋẋ ţĥîšẋẋ çöɱɱåñðẋẋẋ çåñẋ ƀéẋ ŕûñẋ åĝåîñẋẋ (îñẋ šéçöñðš)¿ẋẋẋ]</value>
+  </data>
+  <data name="HTML" xml:space="preserve">
+    <value>[ĤŢṀĻẋẋ]</value>
+  </data>
+  <data name="IFTTT" xml:space="preserve">
+    <value>[ÎƑŢŢŢẋẋ]</value>
+  </data>
+  <data name="IgnoreYourBotAccountForCommands" xml:space="preserve">
+    <value>[Îĝñöŕéẋẋ Ýöûŕẋẋ Ɓöţẋ Åççöûñţẋẋẋ ƒöŕẋ Çöɱɱåñðšẋẋẋ]</value>
+  </data>
+  <data name="Image" xml:space="preserve">
+    <value>[Îɱåĝéẋẋ]</value>
+  </data>
+  <data name="ImportActions" xml:space="preserve">
+    <value>[Îɱþöŕţẋẋ Åçţîöñšẋẋẋ ţöẋ Ƒîļéẋẋ]</value>
+  </data>
+  <data name="ImportData" xml:space="preserve">
+    <value>[Îɱþöŕţẋẋ Ðåţåẋẋ]</value>
+  </data>
+  <data name="Indigo" xml:space="preserve">
+    <value>[Îñðîĝöẋẋ]</value>
+  </data>
+  <data name="InputKeyboardAndMouse" xml:space="preserve">
+    <value>[Îñþûţẋẋ (Ķéýƀöåŕðẋẋẋ ⅋ẋ Ṁöûšé)ẋẋ]</value>
+  </data>
+  <data name="InstallationFolder" xml:space="preserve">
+    <value>[Îñšţåļļåţîöñẋẋẋẋ Ƒöļðéŕẋẋ]</value>
+  </data>
+  <data name="Inventory" xml:space="preserve">
+    <value>[Îñṽéñţöŕýẋẋẋ]</value>
+  </data>
+  <data name="InventoryName" xml:space="preserve">
+    <value>[Îñṽéñţöŕýẋẋẋ Ñåɱéẋẋ]</value>
+  </data>
+  <data name="IsPrimary" xml:space="preserve">
+    <value>[Îšẋ Þŕîɱåŕýẋẋẋ]</value>
+  </data>
+  <data name="IsRankSystem" xml:space="preserve">
+    <value>[Îšẋ Ŕåñķẋẋ Šýšţéɱẋẋ]</value>
+  </data>
+  <data name="ItemList" xml:space="preserve">
+    <value>[Îţéɱẋẋ Ļîšţẋẋ]</value>
+  </data>
+  <data name="ItemName" xml:space="preserve">
+    <value>[Îţéɱẋẋ Ñåɱéẋẋ]</value>
+  </data>
+  <data name="ItemsBought" xml:space="preserve">
+    <value>[Îţéɱšẋẋ Ɓöûĝĥţẋẋ]</value>
+  </data>
+  <data name="ItemsSold" xml:space="preserve">
+    <value>[Îţéɱšẋẋ Šöļðẋẋ]</value>
+  </data>
+  <data name="ItemsTraded" xml:space="preserve">
+    <value>[Îţéɱšẋẋ Ţŕåðéðẋẋ]</value>
+  </data>
+  <data name="KeyboardKey" xml:space="preserve">
+    <value>[Ķéýƀöåŕðẋẋẋ Ķéýẋ]</value>
+  </data>
+  <data name="Large" xml:space="preserve">
+    <value>[Ļåŕĝéẋẋ]</value>
+  </data>
+  <data name="LargeStreamer" xml:space="preserve">
+    <value>[Ļåŕĝéẋẋ Šţŕéåɱéŕẋẋẋ (≥②⑤)ẋẋ]</value>
+  </data>
+  <data name="LastQuote" xml:space="preserve">
+    <value>[Ļåšţẋẋ Ǫûöţéẋẋ]</value>
+  </data>
+  <data name="LatestRelease" xml:space="preserve">
+    <value>[ĻåţéšţŔéļéåšéẋẋẋẋẋ]</value>
+  </data>
+  <data name="LaunchAutoHoster" xml:space="preserve">
+    <value>[Ļåûñçĥẋẋ Åûţö‐Ĥöšţéŕẋẋẋẋ]</value>
+  </data>
+  <data name="Leaderboard" xml:space="preserve">
+    <value>[Ļéåðéŕƀöåŕðẋẋẋẋ]</value>
+  </data>
+  <data name="LessThan" xml:space="preserve">
+    <value>[≤ẋ]</value>
+  </data>
+  <data name="LessThanOrEqual" xml:space="preserve">
+    <value>[≤≂ẋ]</value>
+  </data>
+  <data name="License" xml:space="preserve">
+    <value>[Ļîçéñšéẋẋẋ]</value>
+  </data>
+  <data name="LicenseAgreement" xml:space="preserve">
+    <value>[Ļîçéñšéẋẋẋ Åĝŕééɱéñţẋẋẋ]</value>
+  </data>
+  <data name="Light" xml:space="preserve">
+    <value>[Ļîĝĥţẋẋ]</value>
+  </data>
+  <data name="Light Blue" xml:space="preserve">
+    <value>[Ļîĝĥţẋẋ Ɓļûéẋẋ]</value>
+  </data>
+  <data name="Light Green" xml:space="preserve">
+    <value>[Ļîĝĥţẋẋ Ĝŕééñẋẋ]</value>
+  </data>
+  <data name="Lime" xml:space="preserve">
+    <value>[Ļîɱéẋẋ]</value>
+  </data>
+  <data name="LinkBlocking" xml:space="preserve">
+    <value>[Ļîñķẋẋ Ɓļöçķîñĝẋẋẋ]</value>
+  </data>
+  <data name="Live" xml:space="preserve">
+    <value>[Ļîṽéẋẋ]</value>
+  </data>
+  <data name="LockChatScrolling" xml:space="preserve">
+    <value>[Ļöçķ⁄Ûñļöçķẋẋẋẋ Çĥåţẋẋ Šçŕöļļîñĝẋẋẋ]</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>[Ļöĝîñẋẋ]</value>
+  </data>
+  <data name="LoginErrorBotAccountFailed" xml:space="preserve">
+    <value>[Ɓöţẋ Åççöûñţẋẋẋ ƒåîļéðẋẋ ţöẋ åûţĥéñţîçåţé،ẋẋẋẋẋ þļéåšéẋẋ ŕé‐çöññéçţẋẋẋẋ îţẋ ƒŕöɱẋẋ ţĥéẋ Šéŕṽîçéšẋẋẋ šéçţîöñ·ẋẋẋ]</value>
+  </data>
+  <data name="LoginErrorFailedToAuthenticate" xml:space="preserve">
+    <value>[Ûñåƀļéẋẋ ţöẋ åûţĥéñţîçåţéẋẋẋẋ ŵîţĥẋẋ Ṁîẋéŕ،ẋẋ þļéåšéẋẋ ţŕýẋ åĝåîñ·ẋẋ]</value>
+  </data>
+  <data name="LoginErrorNoChannelName" xml:space="preserve">
+    <value>[Åẋ çĥåññéļẋẋẋ ñåɱéẋẋ ɱûšţẋẋ ƀéẋ éñţéŕéð·ẋẋẋ]</value>
+  </data>
+  <data name="LoginErrorNoStreamerAccount" xml:space="preserve">
+    <value>[Ýöûẋ ɱûšţẋẋ šéļéçţẋẋ åẋ Šţŕéåɱéŕẋẋẋ åççöûñţẋẋẋ ţöẋ ļöĝẋ îñẋ ţö·ẋ]</value>
+  </data>
+  <data name="LoginErrorNotModerator" xml:space="preserve">
+    <value>[Ýöûẋ åŕéẋ ñöţẋ åẋ ɱöðéŕåţöŕẋẋẋ ƒöŕẋ ţĥîšẋẋ çĥåññéļ·ẋẋẋ]</value>
+  </data>
+  <data name="MagicEightBall" xml:space="preserve">
+    <value>[Ṁåĝîçẋẋ ⑧ẋ Ɓåļļẋẋ]</value>
+  </data>
+  <data name="ManualReset" xml:space="preserve">
+    <value>[Ṁåñûåļẋẋ Ŕéšéţẋẋ]</value>
+  </data>
+  <data name="MaxAmount" xml:space="preserve">
+    <value>[Ṁåẋẋ Åɱöûñţẋẋ]</value>
+  </data>
+  <data name="MaxCaps" xml:space="preserve">
+    <value>[Ṁåẋẋ Çåþšẋẋ]</value>
+  </data>
+  <data name="MaxEntries" xml:space="preserve">
+    <value>[Ṁåẋẋ Éñţŕîéšẋẋẋ]</value>
+  </data>
+  <data name="MaxPunctSymbolsEmotes" xml:space="preserve">
+    <value>[Ṁåẋẋ Þûñçţ·ẋẋ ⁄ẋ Šýɱƀöļšẋẋẋ ⁄ẋ Éɱöţéšẋẋ]</value>
+  </data>
+  <data name="MediumStreamer" xml:space="preserve">
+    <value>[Ṁéðîûɱẋẋ Šţŕéåɱéŕẋẋẋ (①⓪‐②⑤)ẋẋẋ]</value>
+  </data>
+  <data name="MeetTheTeam" xml:space="preserve">
+    <value>[Ṁééţẋẋ Ţĥéẋ Ţéåɱẋẋ]</value>
+  </data>
+  <data name="Min" xml:space="preserve">
+    <value>[Ṁîñẋ]</value>
+  </data>
+  <data name="MinimumChannelActivityMins" xml:space="preserve">
+    <value>[Ṁîñîɱûɱẋẋẋ Çĥåññéļẋẋẋ Åçţîṽîţýẋẋẋ (Ṁîñš)ẋẋ]</value>
+  </data>
+  <data name="MinimumRequirement" xml:space="preserve">
+    <value>[Ṁîñîɱûɱẋẋẋ Ŕéǫûîŕéɱéñţẋẋẋẋ]</value>
+  </data>
+  <data name="MinMessages" xml:space="preserve">
+    <value>[Ṁîñẋ Ṁéššåĝéšẋẋẋ]</value>
+  </data>
+  <data name="MinPoints" xml:space="preserve">
+    <value>[Ṁîñẋ Þöîñţšẋẋ]</value>
+  </data>
+  <data name="Minutes" xml:space="preserve">
+    <value>[Ṁîñûţéšẋẋẋ]</value>
+  </data>
+  <data name="MixerAge" xml:space="preserve">
+    <value>[Ṁîẋéŕẋẋ Åĝéẋ]</value>
+  </data>
+  <data name="MixerClips" xml:space="preserve">
+    <value>[Ṁîẋéŕẋẋ Çļîþšẋẋ]</value>
+  </data>
+  <data name="MixerData" xml:space="preserve">
+    <value>[Ṁîẋéŕẋẋ Ðåţåẋẋ]</value>
+  </data>
+  <data name="MixerLabs" xml:space="preserve">
+    <value>[Ṁîẋéŕẋẋ Ļåƀšẋẋ]</value>
+  </data>
+  <data name="MixerStatus" xml:space="preserve">
+    <value>[Ṁîẋéŕẋẋ Šţåţûšẋẋ]</value>
+  </data>
+  <data name="MixerSupport" xml:space="preserve">
+    <value>[Ṁîẋéŕẋẋ Šûþþöŕţẋẋẋ]</value>
+  </data>
+  <data name="MixItUpCommands" xml:space="preserve">
+    <value>[Ṁîẋẋ Îţẋ Ûþẋ Çöɱɱåñðšẋẋẋ]</value>
+  </data>
+  <data name="MixPlay" xml:space="preserve">
+    <value>[ṀîẋÞļåýẋẋẋ]</value>
+  </data>
+  <data name="Mod" xml:space="preserve">
+    <value>[Ṁöðẋ]</value>
+  </data>
+  <data name="ModBonus" xml:space="preserve">
+    <value>[Ṁöðẋ Ɓöñûšẋẋ]</value>
+  </data>
+  <data name="Moderation" xml:space="preserve">
+    <value>[Ṁöðéŕåţîöñẋẋẋẋ]</value>
+  </data>
+  <data name="Moderator" xml:space="preserve">
+    <value>[Ṁöðéŕåţöŕẋẋẋ]</value>
+  </data>
+  <data name="ModeratorOnly" xml:space="preserve">
+    <value>[Ṁöðéŕåţöŕẋẋẋ Öñļýẋẋ]</value>
+  </data>
+  <data name="Monthly" xml:space="preserve">
+    <value>[Ṁöñţĥļýẋẋẋ]</value>
+  </data>
+  <data name="Months" xml:space="preserve">
+    <value>[Ṁöñţĥšẋẋ]</value>
+  </data>
+  <data name="MoveDown" xml:space="preserve">
+    <value>[Ṁöṽéẋẋ Ðöŵñẋẋ]</value>
+  </data>
+  <data name="MoveUp" xml:space="preserve">
+    <value>[Ṁöṽéẋẋ Ûþẋ]</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>[Ñåɱéẋẋ]</value>
+  </data>
+  <data name="NameOfProfile" xml:space="preserve">
+    <value>[Ñåɱéẋẋ öƒẋ Þŕöƒîļéẋẋẋ]</value>
+  </data>
+  <data name="Never" xml:space="preserve">
+    <value>[Ñéṽéŕẋẋ]</value>
+  </data>
+  <data name="NewActionGroup" xml:space="preserve">
+    <value>[Ñéŵẋ Åçţîöñẋẋ Ĝŕöûþẋẋ]</value>
+  </data>
+  <data name="NewCommand" xml:space="preserve">
+    <value>[Ñéŵẋ Çöɱɱåñðẋẋẋ]</value>
+  </data>
+  <data name="NewStreamer" xml:space="preserve">
+    <value>[Ñéŵẋ Šţŕéåɱéŕẋẋẋ]</value>
+  </data>
+  <data name="NewUserWizard" xml:space="preserve">
+    <value>[Ñéŵẋ Ûšéŕẋẋ Ŵîžåŕðẋẋ]</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>[Ñéẋţẋẋ]</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>[Ñöẋ]</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>[Ñöñéẋẋ]</value>
+  </data>
+  <data name="Normal" xml:space="preserve">
+    <value>[Ñöŕɱåļẋẋ]</value>
+  </data>
+  <data name="NotEquals" xml:space="preserve">
+    <value>[≤≥ẋ]</value>
+  </data>
+  <data name="Notifications" xml:space="preserve">
+    <value>[Ñöţîƒîçåţîöñšẋẋẋẋẋ]</value>
+  </data>
+  <data name="OfflineRate" xml:space="preserve">
+    <value>[Öƒƒļîñéẋẋẋ Ŕåţéẋẋ]</value>
+  </data>
+  <data name="Ok" xml:space="preserve">
+    <value>[Öķẋ]</value>
+  </data>
+  <data name="OneStrikeCommand" xml:space="preserve">
+    <value>[①ẋ Šţŕîķéẋẋ Çöɱɱåñðẋẋẋ]</value>
+  </data>
+  <data name="OnFollow" xml:space="preserve">
+    <value>[Öñẋ Ƒöļļöŵẋẋ]</value>
+  </data>
+  <data name="OnHost" xml:space="preserve">
+    <value>[Öñẋ Ĥöšţẋẋ]</value>
+  </data>
+  <data name="OnlineMinutes" xml:space="preserve">
+    <value>[Öñļîñéẋẋ Ṁîñûţéšẋẋẋ]</value>
+  </data>
+  <data name="OnlineRate" xml:space="preserve">
+    <value>[Öñļîñéẋẋ Ŕåţéẋẋ]</value>
+  </data>
+  <data name="OnlyShowAlertsInDashboard" xml:space="preserve">
+    <value>[Öñļýẋẋ Šĥöŵẋẋ Åļéŕţšẋẋ îñẋ Ðåšĥƀöåŕðẋẋẋ]</value>
+  </data>
+  <data name="OnSubscribe" xml:space="preserve">
+    <value>[Öñẋ Šûƀšçŕîƀéẋẋẋ]</value>
+  </data>
+  <data name="OnUserRankChanged" xml:space="preserve">
+    <value>[Öñẋ Ûšéŕẋẋ Ŕåñķẋẋ Çĥåñĝéðẋẋẋ]</value>
+  </data>
+  <data name="Operator" xml:space="preserve">
+    <value>[Öþéŕåţöŕẋẋẋ]</value>
+  </data>
+  <data name="OptionalCommandArguments" xml:space="preserve">
+    <value>[(Öþţîöñåļ)ẋẋẋẋ Çöɱɱåñðẋẋẋ Åŕĝûɱéñţšẋẋẋ]</value>
+  </data>
+  <data name="Options" xml:space="preserve">
+    <value>[Öþţîöñšẋẋẋ]</value>
+  </data>
+  <data name="OptOutofDataTracking" xml:space="preserve">
+    <value>[Öþţ‐Öûţẋẋẋ öƒẋ Ðåţåẋẋ Ţŕåçķîñĝ⁎ẋẋẋ]</value>
+  </data>
+  <data name="Orange" xml:space="preserve">
+    <value>[Öŕåñĝéẋẋ]</value>
+  </data>
+  <data name="Overlay" xml:space="preserve">
+    <value>[Öṽéŕļåýẋẋẋ]</value>
+  </data>
+  <data name="OverlayEndpoints" xml:space="preserve">
+    <value>[Öṽéŕļåýẋẋẋ Éñðþöîñţšẋẋẋ]</value>
+  </data>
+  <data name="OverlayImagesAndVideos" xml:space="preserve">
+    <value>[Öṽéŕļåýẋẋẋ (Îɱåĝéšẋẋẋ ⅋ẋ Ṽîðéöš)ẋẋẋ]</value>
+  </data>
+  <data name="Overlays" xml:space="preserve">
+    <value>[Öṽéŕļåýšẋẋẋ]</value>
+  </data>
+  <data name="OverlayWidgetEditor" xml:space="preserve">
+    <value>[Öṽéŕļåýẋẋẋ Ŵîðĝéţẋẋ ‐ẋ Éðîţöŕẋẋ]</value>
+  </data>
+  <data name="OverlayWidgetEditorInstructions" xml:space="preserve">
+    <value>[Šéļéçţẋẋ ţĥéẋ Öṽéŕļåýẋẋẋ Ţýþéẋẋ ýöûẋ ŵöûļðẋẋ ļîķéẋẋ ţöẋ çŕéåţé∶ẋẋẋ]</value>
+  </data>
+  <data name="OverlayWidgets" xml:space="preserve">
+    <value>[Öṽéŕļåýẋẋẋ Ŵîðĝéţšẋẋẋ]</value>
+  </data>
+  <data name="OverlayWidgetsRequireOverlay" xml:space="preserve">
+    <value>[Ţĥéẋ Öṽéŕļåýẋẋẋ ɱûšţẋẋ ƀéẋ éñåƀļéðẋẋẋ îñẋ ţĥéẋ Šéŕṽîçéšẋẋẋ ɱéñûẋẋ ţöẋ ûšéẋ Öṽéŕļåýẋẋẋ Ŵîðĝéţš·ẋẋẋ]</value>
+  </data>
+  <data name="OvrStream" xml:space="preserve">
+    <value>[ÖṽŕŠţŕéåɱẋẋẋ]</value>
+  </data>
+  <data name="Partner" xml:space="preserve">
+    <value>[Þåŕţñéŕẋẋẋ]</value>
+  </data>
+  <data name="PartneredStreamer" xml:space="preserve">
+    <value>[Þåŕţñéŕéðẋẋẋ Šţŕéåɱéŕẋẋẋ]</value>
+  </data>
+  <data name="PatreonUser" xml:space="preserve">
+    <value>[Þåţŕéöñẋẋẋ Ûšéŕẋẋ]</value>
+  </data>
+  <data name="Percent" xml:space="preserve">
+    <value>[‰ẋ]</value>
+  </data>
+  <data name="Permissions" xml:space="preserve">
+    <value>[Þéŕɱîššîöñšẋẋẋẋ]</value>
+  </data>
+  <data name="Pink" xml:space="preserve">
+    <value>[Þîñķẋẋ]</value>
+  </data>
+  <data name="Play" xml:space="preserve">
+    <value>[Þļåýẋẋ]</value>
+  </data>
+  <data name="PortName" xml:space="preserve">
+    <value>[Þöŕţẋẋ Ñåɱéẋẋ]</value>
+  </data>
+  <data name="Position" xml:space="preserve">
+    <value>[Þöšẋ]</value>
+  </data>
+  <data name="PreMade" xml:space="preserve">
+    <value>[Þŕé‐Ṁåðéẋẋẋ]</value>
+  </data>
+  <data name="PreMadeCommands" xml:space="preserve">
+    <value>[Þŕé‐Ṁåðéẋẋẋ Çöɱɱåñðšẋẋẋ]</value>
+  </data>
+  <data name="PreventSmallerCooldownsFromOverwriting" xml:space="preserve">
+    <value>[Þŕéṽéñţẋẋẋ Šɱåļļéŕẋẋẋ Çööļðöŵñšẋẋẋ ƒŕöɱẋẋ Öṽéŕŵŕîţîñĝẋẋẋẋ]</value>
+  </data>
+  <data name="PreventUnknownMixPlayUsers" xml:space="preserve">
+    <value>[Þŕéṽéñţẋẋẋ Ûñķñöŵñẋẋẋ ṀîẋÞļåýẋẋẋ Ûšéŕšẋẋ]</value>
+  </data>
+  <data name="PrimaryCurrency" xml:space="preserve">
+    <value>[Þŕîɱåŕýẋẋẋ Çûŕŕéñçýẋẋẋ]</value>
+  </data>
+  <data name="PrimaryRank" xml:space="preserve">
+    <value>[Þŕîɱåŕýẋẋẋ Ŕåñķẋẋ]</value>
+  </data>
+  <data name="Pro" xml:space="preserve">
+    <value>[Þŕöẋ]</value>
+  </data>
+  <data name="Profiles" xml:space="preserve">
+    <value>[Þŕöƒîļéšẋẋẋ]</value>
+  </data>
+  <data name="ProgressBar" xml:space="preserve">
+    <value>[Ĝöåļ⁄Þŕöĝŕéššẋẋẋẋẋ Ɓåŕẋ]</value>
+  </data>
+  <data name="Purple" xml:space="preserve">
+    <value>[Þûŕþļéẋẋ]</value>
+  </data>
+  <data name="Quote" xml:space="preserve">
+    <value>[Ǫûöţéẋẋ]</value>
+  </data>
+  <data name="QuoteFormatting" xml:space="preserve">
+    <value>[Ǫûöţéẋẋ Ƒöŕɱåţţîñĝẋẋẋẋ (€ǫûöţéñûɱƀéŕ،ẋẋẋẋẋ €ǫûöţéţéẋţ،ẋẋẋẋ €ǫûöţéĝåɱé،ẋẋẋẋ €ǫûöţéðåţéţîɱé)ẋẋẋẋẋ]</value>
+  </data>
+  <data name="Quotes" xml:space="preserve">
+    <value>[Ǫûöţéšẋẋ]</value>
+  </data>
+  <data name="RandomStreamer" xml:space="preserve">
+    <value>[Ŕåñðöɱẋẋ Šţŕéåɱéŕẋẋẋ]</value>
+  </data>
+  <data name="RankName" xml:space="preserve">
+    <value>[Ŕåñķẋẋ Ñåɱéẋẋ]</value>
+  </data>
+  <data name="Red" xml:space="preserve">
+    <value>[Ŕéðẋ]</value>
+  </data>
+  <data name="RefreshTimeSecs" xml:space="preserve">
+    <value>[Ŕéƒŕéšĥẋẋẋ Ţîɱéẋẋ (Šéçš)ẋẋ]</value>
+  </data>
+  <data name="Regular" xml:space="preserve">
+    <value>[Ŕéĝûļåŕẋẋẋ]</value>
+  </data>
+  <data name="RegularStatusOnlineViewingTime" xml:space="preserve">
+    <value>[″Ŕéĝûļåŕ″ẋẋẋ Šţåţûšẋẋ Öñļîñéẋẋ Ṽîéŵîñĝẋẋẋ Ţîɱéẋẋ]</value>
+  </data>
+  <data name="ReminderMins" xml:space="preserve">
+    <value>[Ŕéɱîñðéŕẋẋẋ (Ṁîñš)ẋẋ]</value>
+  </data>
+  <data name="Remote" xml:space="preserve">
+    <value>[Ŕéɱöţéẋẋ]</value>
+  </data>
+  <data name="RequireClaim" xml:space="preserve">
+    <value>[Ŕéǫûîŕéẋẋẋ ″¡çļåîɱ″ẋẋẋ]</value>
+  </data>
+  <data name="RequiredHours" xml:space="preserve">
+    <value>[Ŕéǫûîŕéðẋẋẋ Ĥöûŕšẋẋ]</value>
+  </data>
+  <data name="ReRunWizardHeader" xml:space="preserve">
+    <value>[Ŕé‐ŕûñẋẋ ţĥéẋ Ñéŵẋ Ûšéŕẋẋ Ŵîžåŕðẋẋ ţöẋ ŕé‐îɱþöŕţẋẋẋ ýöûŕẋẋ ðåţåẋẋ]</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>[Ŕéšéţẋẋ]</value>
+  </data>
+  <data name="ResetForAllUsers" xml:space="preserve">
+    <value>[Ŕéšéţẋẋ ƒöŕẋ åļļẋ ûšéŕšẋẋ]</value>
+  </data>
+  <data name="ResetForUser" xml:space="preserve">
+    <value>[Ŕéšéţẋẋ ƒöŕẋ ûšéŕẋẋ]</value>
+  </data>
+  <data name="ResetOnLoad" xml:space="preserve">
+    <value>[Ŕéšéţẋẋ Öñẋ Ļöåðẋẋ]</value>
+  </data>
+  <data name="ResetStrikesOnLaunch" xml:space="preserve">
+    <value>[Ŕéšéţẋẋ Šţŕîķéšẋẋẋ öñẋ Ļåûñçĥẋẋ]</value>
+  </data>
+  <data name="RestoreSettings" xml:space="preserve">
+    <value>[Ŕéšţöŕéẋẋẋ Šéţţîñĝšẋẋẋ]</value>
+  </data>
+  <data name="RestoreYourSettingsFromAZipFile" xml:space="preserve">
+    <value>[Ŕéšţöŕéẋẋẋ ýöûŕẋẋ šéţţîñĝšẋẋẋ ƒŕöɱẋẋ åẋ žîþẋ ƒîļéẋẋ]</value>
+  </data>
+  <data name="RetroactivelyGivePoints" xml:space="preserve">
+    <value>[Ŕéţŕöåçţîṽéļýẋẋẋẋẋ Ĝîṽéẋẋ Þöîñţšẋẋ]</value>
+  </data>
+  <data name="Role" xml:space="preserve">
+    <value>[Ŕöļéẋẋ]</value>
+  </data>
+  <data name="RoleBonuses" xml:space="preserve">
+    <value>[Ŕöļéẋẋ Ɓöñûšéšẋẋẋ]</value>
+  </data>
+  <data name="RoleErrorInsufficientRole" xml:space="preserve">
+    <value>[Ýöûẋ ɱûšţẋẋ ƀéẋ åẋ {⓪}ẋ ţöẋ ðöẋ ţĥîš·ẋẋ]</value>
+  </data>
+  <data name="Roles" xml:space="preserve">
+    <value>[Ŕöļéšẋẋ]</value>
+  </data>
+  <data name="RTS" xml:space="preserve">
+    <value>[ŔŢŠẋ]</value>
+  </data>
+  <data name="RunCommand" xml:space="preserve">
+    <value>[Ŕûñẋ Çöɱɱåñðẋẋẋ]</value>
+  </data>
+  <data name="SameAgeRating" xml:space="preserve">
+    <value>[Šåɱéẋẋ Åĝéẋ Ŕåţîñĝẋẋ]</value>
+  </data>
+  <data name="SameGame" xml:space="preserve">
+    <value>[Šåɱéẋẋ Ĝåɱéẋẋ]</value>
+  </data>
+  <data name="SameTeam" xml:space="preserve">
+    <value>[Šåɱéẋẋ Ţéåɱẋẋ]</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>[Šåṽéẋẋ]</value>
+  </data>
+  <data name="SaveChatEventLogs" xml:space="preserve">
+    <value>[Šåṽéẋẋ Çĥåţ⁄Éṽéñţẋẋẋẋ Ļöĝšẋẋ]</value>
+  </data>
+  <data name="SaveFailed" xml:space="preserve">
+    <value>[Šåṽéẋẋ ƒåîļéð،ẋẋẋ åţţéɱþţîñĝẋẋẋẋ öñéẋ ɱöŕéẋẋ ţîɱé···ẋẋẋ]</value>
+  </data>
+  <data name="SaveToFile" xml:space="preserve">
+    <value>[Šåṽéẋẋ Ţöẋ Ƒîļéẋẋ]</value>
+  </data>
+  <data name="Scene" xml:space="preserve">
+    <value>[Šçéñéẋẋ]</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>[Šéåŕçĥẋẋ]</value>
+  </data>
+  <data name="SearchCriteria" xml:space="preserve">
+    <value>[Šéåŕçĥẋẋ Çŕîţéŕîåẋẋẋ]</value>
+  </data>
+  <data name="Seconds" xml:space="preserve">
+    <value>[Šéçöñðšẋẋẋ]</value>
+  </data>
+  <data name="SecondValue" xml:space="preserve">
+    <value>[Šéçöñðẋẋ Ṽåļûéẋẋ]</value>
+  </data>
+  <data name="SelectTypeOfCommand" xml:space="preserve">
+    <value>[Šéļéçţẋẋ ţĥéẋ ţýþéẋẋ öƒẋ çöɱɱåñðẋẋẋ ýöûẋ ŵöûļðẋẋ ļîķéẋẋ ţöẋ ƀûîļð∶ẋẋ]</value>
+  </data>
+  <data name="SellPrice" xml:space="preserve">
+    <value>[Šéļļẋẋ Þŕîçéẋẋ]</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>[Šéñðẋẋ]</value>
+  </data>
+  <data name="SendAsStreamer" xml:space="preserve">
+    <value>[Šéñðẋẋ åšẋ Šţŕéåɱéŕẋẋẋ]</value>
+  </data>
+  <data name="Serial" xml:space="preserve">
+    <value>[Šéŕîåļẋẋ]</value>
+  </data>
+  <data name="SerialDevices" xml:space="preserve">
+    <value>[Šéŕîåļẋẋ Ðéṽîçéšẋẋẋ]</value>
+  </data>
+  <data name="Service" xml:space="preserve">
+    <value>[Šéŕṽîçéẋẋẋ]</value>
+  </data>
+  <data name="ServiceConnectSound" xml:space="preserve">
+    <value>[Šéŕṽîçéẋẋẋ Çöññéçţẋẋẋ Šöûñðẋẋ]</value>
+  </data>
+  <data name="ServiceDisconnectSound" xml:space="preserve">
+    <value>[Šéŕṽîçéẋẋẋ Ðîšçöññéçţẋẋẋẋ Šöûñðẋẋ]</value>
+  </data>
+  <data name="Services" xml:space="preserve">
+    <value>[Šéŕṽîçéšẋẋẋ]</value>
+  </data>
+  <data name="Set" xml:space="preserve">
+    <value>[Šéţẋ]</value>
+  </data>
+  <data name="SetAudience" xml:space="preserve">
+    <value>[Šéţẋ Åûðîéñçéẋẋẋ]</value>
+  </data>
+  <data name="SetGame" xml:space="preserve">
+    <value>[Šéţẋ Ĝåɱéẋẋ]</value>
+  </data>
+  <data name="SetLocation" xml:space="preserve">
+    <value>[Šéţẋ Ļöçåţîöñẋẋẋ]</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>[Šéţţîñĝšẋẋẋ]</value>
+  </data>
+  <data name="SetTitle" xml:space="preserve">
+    <value>[Šéţẋ Ţîţļéẋẋ]</value>
+  </data>
+  <data name="SetUserTitle" xml:space="preserve">
+    <value>[Šéţẋ Ûšéŕẋẋ Ţîţļéẋẋ]</value>
+  </data>
+  <data name="ShareCode" xml:space="preserve">
+    <value>[Šĥåŕéẋẋ Çöðéẋẋ]</value>
+  </data>
+  <data name="Shop" xml:space="preserve">
+    <value>[Šĥöþẋẋ]</value>
+  </data>
+  <data name="ShopCommand" xml:space="preserve">
+    <value>[Šĥöþẋẋ Çöɱɱåñðẋẋẋ]</value>
+  </data>
+  <data name="ShopCurrency" xml:space="preserve">
+    <value>[Šĥöþẋẋ Çûŕŕéñçýẋẋẋ]</value>
+  </data>
+  <data name="ShowEventAlerts" xml:space="preserve">
+    <value>[Šĥöŵẋẋ Éṽéñţẋẋ Åļéŕţšẋẋ]</value>
+  </data>
+  <data name="ShowLatestChatMessagesAtTopInsteadOfBottom" xml:space="preserve">
+    <value>[Šĥöŵẋẋ Ļåţéšţẋẋ Çĥåţẋẋ Ṁéššåĝéšẋẋẋ åţẋ Ţöþẋ Îñšţéåðẋẋẋ öƒẋ Ɓöţţöɱẋẋ]</value>
+  </data>
+  <data name="ShowMessageTimestamp" xml:space="preserve">
+    <value>[Šĥöŵẋẋ Ṁéššåĝéẋẋẋ Ţîɱéšţåɱþẋẋẋ]</value>
+  </data>
+  <data name="ShowMixPlayAlerts" xml:space="preserve">
+    <value>[Šĥöŵẋẋ ṀîẋÞļåýẋẋẋ Åļéŕţšẋẋ]</value>
+  </data>
+  <data name="ShowMixrElixrEmotes" xml:space="preserve">
+    <value>[Šĥöŵẋẋ ṀîẋŕÉļîẋŕẋẋẋ Éɱöţéšẋẋ (Ŕéǫûîŕéšẋẋẋ Ŕéšţåŕţ)ẋẋẋ]</value>
+  </data>
+  <data name="ShowUserJoinLeave" xml:space="preserve">
+    <value>[Šĥöŵẋẋ Ûšéŕẋẋ Ĵöîñ⁄Ļéåṽéẋẋẋẋ]</value>
+  </data>
+  <data name="SingleAction" xml:space="preserve">
+    <value>[Šîñĝļéẋẋ Åçţîöñẋẋ]</value>
+  </data>
+  <data name="SkillsOnly" xml:space="preserve">
+    <value>[Šķîļļšẋẋ Öñļýẋẋ]</value>
+  </data>
+  <data name="SkillsUsed" xml:space="preserve">
+    <value>[Šķîļļšẋẋ Ûšéðẋẋ]</value>
+  </data>
+  <data name="SmallStreamer" xml:space="preserve">
+    <value>[Šɱåļļẋẋ Šţŕéåɱéŕẋẋẋ (≤①⓪)ẋẋ]</value>
+  </data>
+  <data name="SongRequest" xml:space="preserve">
+    <value>[Šöñĝẋẋ Ŕéǫûéšţẋẋẋ]</value>
+  </data>
+  <data name="SongRequests" xml:space="preserve">
+    <value>[Šöñĝẋẋ Ŕéǫûéšţšẋẋẋ]</value>
+  </data>
+  <data name="Sound" xml:space="preserve">
+    <value>[Šöûñðẋẋ]</value>
+  </data>
+  <data name="SoundFilePath" xml:space="preserve">
+    <value>[Šöûñðẋẋ Ƒîļéẋẋ Þåţĥẋẋ]</value>
+  </data>
+  <data name="Source" xml:space="preserve">
+    <value>[Šöûŕçéẋẋ]</value>
+  </data>
+  <data name="SparkCrystal" xml:space="preserve">
+    <value>[Šþåŕķẋẋ Çŕýšţåļẋẋẋ]</value>
+  </data>
+  <data name="SparkExempt" xml:space="preserve">
+    <value>[Šþåŕķẋẋ Éẋéɱþţẋẋ]</value>
+  </data>
+  <data name="Sparks" xml:space="preserve">
+    <value>[Šþåŕķšẋẋ]</value>
+  </data>
+  <data name="SparksSpent" xml:space="preserve">
+    <value>[Šþåŕķšẋẋ Šþéñţẋẋ]</value>
+  </data>
+  <data name="SpecialIdentifier" xml:space="preserve">
+    <value>[Šþéçîåļẋẋẋ Îðéñţîƒîéŕẋẋẋẋ]</value>
+  </data>
+  <data name="SpecialIdentifierName" xml:space="preserve">
+    <value>[Šþéçîåļẋẋẋ Îðéñţîƒîéŕẋẋẋẋ Ñåɱéẋẋ]</value>
+  </data>
+  <data name="SpecialIdentifiers" xml:space="preserve">
+    <value>[Šþéçîåļẋẋẋ Îðéñţîƒîéŕšẋẋẋẋ]</value>
+  </data>
+  <data name="SpecialIdentifiersReference" xml:space="preserve">
+    <value>[Šþéçîåļẋẋẋ Îðéñţîƒîéŕšẋẋẋẋ Ŕéƒéŕéñçéẋẋẋ]</value>
+  </data>
+  <data name="Staff" xml:space="preserve">
+    <value>[Šţåƒƒẋẋ]</value>
+  </data>
+  <data name="StartGiveaway" xml:space="preserve">
+    <value>[Šţåŕţẋẋ Ĝîṽéåŵåýẋẋẋ]</value>
+  </data>
+  <data name="StartReminder" xml:space="preserve">
+    <value>[Šţåŕţ⁄Ŕéɱîñðéŕẋẋẋẋẋ]</value>
+  </data>
+  <data name="Statistics" xml:space="preserve">
+    <value>[Šţåţîšţîçšẋẋẋẋ]</value>
+  </data>
+  <data name="SteamGame" xml:space="preserve">
+    <value>[Šţéåɱẋẋ Ĝåɱéẋẋ]</value>
+  </data>
+  <data name="StreamBoss" xml:space="preserve">
+    <value>[Šţŕéåɱẋẋ Ɓöššẋẋ]</value>
+  </data>
+  <data name="StreamClip" xml:space="preserve">
+    <value>[Šţŕéåɱẋẋ Çļîþẋẋ Þļåýƀåçķẋẋẋ]</value>
+  </data>
+  <data name="Streamer" xml:space="preserve">
+    <value>[Šţŕéåɱéŕẋẋẋ]</value>
+  </data>
+  <data name="StreamerAccount" xml:space="preserve">
+    <value>[Šţŕéåɱéŕẋẋẋ Åççöûñţẋẋẋ]</value>
+  </data>
+  <data name="StreamerAge" xml:space="preserve">
+    <value>[Šţŕéåɱéŕẋẋẋ Åĝéẋ]</value>
+  </data>
+  <data name="StreamingPlatform" xml:space="preserve">
+    <value>[Šţŕéåɱîñĝẋẋẋ Þļåţƒöŕɱẋẋẋ]</value>
+  </data>
+  <data name="StreamingSoftware" xml:space="preserve">
+    <value>[Šţŕéåɱîñĝẋẋẋ Šöƒţŵåŕéẋẋẋ]</value>
+  </data>
+  <data name="Streamlabs" xml:space="preserve">
+    <value>[Šţŕéåɱļåƀšẋẋẋẋ]</value>
+  </data>
+  <data name="StreamsWatched" xml:space="preserve">
+    <value>[Šţŕéåɱšẋẋẋ Ŵåţçĥéðẋẋẋ]</value>
+  </data>
+  <data name="StreamTitle" xml:space="preserve">
+    <value>[Šţŕéåɱẋẋ Ţîţļéẋẋ]</value>
+  </data>
+  <data name="StrikeCommands" xml:space="preserve">
+    <value>[Šţŕîķéẋẋ Çöɱɱåñðšẋẋẋ]</value>
+  </data>
+  <data name="SubAge" xml:space="preserve">
+    <value>[Šûƀẋ Åĝéẋ]</value>
+  </data>
+  <data name="SubBonus" xml:space="preserve">
+    <value>[Šûƀẋ Ɓöñûšẋẋ]</value>
+  </data>
+  <data name="SubmitABug" xml:space="preserve">
+    <value>[Šûƀɱîţẋẋ åẋ Ɓûĝẋ]</value>
+  </data>
+  <data name="SubscribeAge" xml:space="preserve">
+    <value>[Šûƀšçŕîƀéẋẋẋ Åĝéẋ]</value>
+  </data>
+  <data name="Subscriber" xml:space="preserve">
+    <value>[Šûƀšçŕîƀéŕẋẋẋẋ]</value>
+  </data>
+  <data name="SubscriberOnly" xml:space="preserve">
+    <value>[Šûƀšçŕîƀéŕẋẋẋẋ Öñļýẋẋ]</value>
+  </data>
+  <data name="SubsGifted" xml:space="preserve">
+    <value>[Šûƀšẋẋ Ĝîƒţéðẋẋ]</value>
+  </data>
+  <data name="SubsReceived" xml:space="preserve">
+    <value>[Šûƀšẋẋ Ŕéçéîṽéðẋẋẋ]</value>
+  </data>
+  <data name="SubtractFromAllChatUsers" xml:space="preserve">
+    <value>[Šûƀţŕåçţẋẋẋ ƒŕöɱẋẋ åļļẋ çĥåţẋẋ ûšéŕšẋẋ]</value>
+  </data>
+  <data name="SubtractFromSpecificUser" xml:space="preserve">
+    <value>[Šûƀţŕåçţẋẋẋ ƒŕöɱẋẋ šþéçîƒîçẋẋẋ ûšéŕẋẋ]</value>
+  </data>
+  <data name="SubtractFromUser" xml:space="preserve">
+    <value>[Šûƀţŕåçţẋẋẋ ƒŕöɱẋẋ ûšéŕẋẋ]</value>
+  </data>
+  <data name="TaggedInChat" xml:space="preserve">
+    <value>[Ţåĝĝéðẋẋ Îñẋ Çĥåţẋẋ]</value>
+  </data>
+  <data name="TargetUser" xml:space="preserve">
+    <value>[Ţåŕĝéţẋẋ Ûšéŕẋẋ]</value>
+  </data>
+  <data name="Teal" xml:space="preserve">
+    <value>[Ţéåļẋẋ]</value>
+  </data>
+  <data name="Team" xml:space="preserve">
+    <value>[Ţéåɱẋẋ]</value>
+  </data>
+  <data name="TeamName" xml:space="preserve">
+    <value>[Ţéåɱẋẋ Ñåɱéẋẋ]</value>
+  </data>
+  <data name="Teen" xml:space="preserve">
+    <value>[Ţééñẋẋ]</value>
+  </data>
+  <data name="TestCommand" xml:space="preserve">
+    <value>[Ţéšţẋẋ Çöɱɱåñðẋẋẋ]</value>
+  </data>
+  <data name="Text" xml:space="preserve">
+    <value>[Ţéẋţẋẋ]</value>
+  </data>
+  <data name="TextColor" xml:space="preserve">
+    <value>[Ţéẋţẋẋ Çöļöŕẋẋ]</value>
+  </data>
+  <data name="TextToSpeech" xml:space="preserve">
+    <value>[Ţéẋţẋẋ Ţöẋ Šþééçĥẋẋ]</value>
+  </data>
+  <data name="ThemesAndColors" xml:space="preserve">
+    <value>[Ţĥéɱéšẋẋ ⅋ẋ Çöļöŕšẋẋ]</value>
+  </data>
+  <data name="ThreeOrMoreStrikesCommand" xml:space="preserve">
+    <value>[③⁺ẋ Šţŕîķéšẋẋẋ Çöɱɱåñðẋẋẋ]</value>
+  </data>
+  <data name="TickerTape" xml:space="preserve">
+    <value>[Ţîçķéŕẋẋ Ţåþéẋẋ]</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>[Ţîɱéẋẋ]</value>
+  </data>
+  <data name="TimeLeft" xml:space="preserve">
+    <value>[Ţîɱéẋẋ Ļéƒţẋẋ]</value>
+  </data>
+  <data name="Timer" xml:space="preserve">
+    <value>[Ţîɱéŕẋẋ]</value>
+  </data>
+  <data name="TimerInterval" xml:space="preserve">
+    <value>[Îñţéŕṽåļẋẋẋ (Ṁîñûţéš)ẋẋẋ]</value>
+  </data>
+  <data name="Timers" xml:space="preserve">
+    <value>[Ţîɱéŕšẋẋ]</value>
+  </data>
+  <data name="TimerTrain" xml:space="preserve">
+    <value>[Ţîɱéŕẋẋ Ţŕåîñẋẋ]</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>[Ţîţļéẋẋ]</value>
+  </data>
+  <data name="TitleName" xml:space="preserve">
+    <value>[Ţîţļéẋẋ Ñåɱéẋẋ]</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>[Ţöţåļẋẋ]</value>
+  </data>
+  <data name="TotalTimeMins" xml:space="preserve">
+    <value>[Ţöţåļẋẋ Ţîɱéẋẋ (Ṁîñš)ẋẋ]</value>
+  </data>
+  <data name="TotalUsers" xml:space="preserve">
+    <value>[Ţöţåļẋẋ Ûšéŕšẋẋ]</value>
+  </data>
+  <data name="TrackWhispererNumbers" xml:space="preserve">
+    <value>[Ţŕåçķẋẋ Ŵĥîšþéŕéŕẋẋẋ Ñûɱƀéŕšẋẋẋ]</value>
+  </data>
+  <data name="Trade" xml:space="preserve">
+    <value>[Ţŕåðéẋẋ]</value>
+  </data>
+  <data name="TradeCommand" xml:space="preserve">
+    <value>[Ţŕåðéẋẋ Çöɱɱåñðẋẋẋ]</value>
+  </data>
+  <data name="Translation" xml:space="preserve">
+    <value>[Ţŕåñšļåţîöñẋẋẋẋ]</value>
+  </data>
+  <data name="TranslationBy" xml:space="preserve">
+    <value />
+  </data>
+  <data name="TriggerHint" xml:space="preserve">
+    <value>[Ţŕîĝĝéŕ(š)ẋẋẋẋ îñẋ Çĥåţẋẋ (Ñöẋ ″¡″ẋ ñééðéð)ẋẋẋ]</value>
+  </data>
+  <data name="Twitter" xml:space="preserve">
+    <value>[Ţŵîţţéŕẋẋẋ]</value>
+  </data>
+  <data name="TwoStrikesCommand" xml:space="preserve">
+    <value>[②ẋ Šţŕîķéšẋẋẋ Çöɱɱåñðẋẋẋ]</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>[Ţýþéẋẋ]</value>
+  </data>
+  <data name="TypeToAdd" xml:space="preserve">
+    <value>[Ţýþéẋẋ Ţöẋ Åððẋ]</value>
+  </data>
+  <data name="UnbanAllUsers" xml:space="preserve">
+    <value>[Ûñƀåñẋẋ Åļļẋ Ûšéŕšẋẋ]</value>
+  </data>
+  <data name="UnbanAllUsersHeader" xml:space="preserve">
+    <value>[Ûñ‐ƀåñẋẋ åļļẋ ûšéŕšẋẋ ƒŕöɱẋẋ ýöûŕẋẋ çĥåññéļẋẋẋ]</value>
+  </data>
+  <data name="Ungrouped" xml:space="preserve">
+    <value>[Ûñĝŕöûþéðẋẋẋ]</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>[Ûñķñöŵñẋẋẋ]</value>
+  </data>
+  <data name="UnlockAllCommandsHeader" xml:space="preserve">
+    <value>[Ûñļöçķẋẋ åļļẋ çöɱɱåñðšẋẋẋ ţýþéšẋẋ]</value>
+  </data>
+  <data name="UnlockCommand" xml:space="preserve">
+    <value>[Ûñļöçķẋẋ Çöɱɱåñðẋẋẋ]</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>[Ûþðåţéẋẋ]</value>
+  </data>
+  <data name="UpdateChannel" xml:space="preserve">
+    <value>[Ûþðåţéẋẋ Çĥåññéļẋẋẋ]</value>
+  </data>
+  <data name="UpdateCommand" xml:space="preserve">
+    <value>[Ûþðåţéẋẋ Çöɱɱåñðẋẋẋ]</value>
+  </data>
+  <data name="UpdatePreviewProgram" xml:space="preserve">
+    <value>[Ûþðåţéẋẋ Þŕéṽîéŵẋẋẋ Þŕöĝŕåɱẋẋẋ]</value>
+  </data>
+  <data name="UploadTo" xml:space="preserve">
+    <value>[Ûþļöåðẋẋ Ţöẋ]</value>
+  </data>
+  <data name="Uptime" xml:space="preserve">
+    <value>[Ûþţîɱéẋẋ]</value>
+  </data>
+  <data name="UsageRequirements" xml:space="preserve">
+    <value>[Ûšåĝéẋẋ Ŕéǫûîŕéɱéñţšẋẋẋẋ]</value>
+  </data>
+  <data name="UseCommunityList" xml:space="preserve">
+    <value>[Ûšéẋ Çöɱɱûñîţýẋẋẋ Ļîšţẋẋ (ṼÉŔÝẋẋ ŠŢŔÎÇŢ)ẋẋẋ]</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>[Ûšéŕẋẋ]</value>
+  </data>
+  <data name="UserJoined" xml:space="preserve">
+    <value>[Ûšéŕẋẋ Ĵöîñéðẋẋ]</value>
+  </data>
+  <data name="UserJoinedChat" xml:space="preserve">
+    <value>[{⓪}ẋ Ĵöîñéðẋẋ Çĥåţẋẋ]</value>
+  </data>
+  <data name="UserLeftChat" xml:space="preserve">
+    <value>[{⓪}ẋ Ļéƒţẋẋ Çĥåţẋẋ]</value>
+  </data>
+  <data name="UserMetrics" xml:space="preserve">
+    <value>[Ûšéŕẋẋ Ṁéţŕîçšẋẋẋ]</value>
+  </data>
+  <data name="UserOnlyChatCommands" xml:space="preserve">
+    <value>[Ûšéŕ‐Öñļýẋẋẋ Çĥåţẋẋ Çöɱɱåñðšẋẋẋ]</value>
+  </data>
+  <data name="UserRankChanged" xml:space="preserve">
+    <value>[Ûšéŕẋẋ Ŕåñķẋẋ Çĥåñĝéðẋẋẋ]</value>
+  </data>
+  <data name="UserRanks" xml:space="preserve">
+    <value>[Ûšéŕẋẋ Ŕåñķšẋẋ]</value>
+  </data>
+  <data name="UserRole" xml:space="preserve">
+    <value>[Ûšéŕẋẋ Ŕöļéẋẋ]</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>[Ûšéŕšẋẋ]</value>
+  </data>
+  <data name="UsersToApplyTo" xml:space="preserve">
+    <value>[Ûšéŕšẋẋ Ţöẋ Åþþļýẋẋ Ţöẋ]</value>
+  </data>
+  <data name="UserTitles" xml:space="preserve">
+    <value>[Ûšéŕẋẋ Ţîţļéšẋẋ]</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>[Ṽéŕšîöñẋẋẋ]</value>
+  </data>
+  <data name="VersionID" xml:space="preserve">
+    <value>[Ṽéŕšîöñẋẋẋ ÎÐẋ]</value>
+  </data>
+  <data name="Video" xml:space="preserve">
+    <value>[Ṽîðéöẋẋ]</value>
+  </data>
+  <data name="Viewers" xml:space="preserve">
+    <value>[Ṽîéŵéŕšẋẋẋ]</value>
+  </data>
+  <data name="ViewingOneHour" xml:space="preserve">
+    <value>[Ŵåţçĥéðẋẋẋ Ƒöŕẋ ①ẋ Ĥöûŕẋẋ]</value>
+  </data>
+  <data name="ViewingTenHours" xml:space="preserve">
+    <value>[Ŵåţçĥéðẋẋẋ Ƒöŕẋ ①⓪ẋ Ĥöûŕšẋẋ]</value>
+  </data>
+  <data name="ViewingTenMinutes" xml:space="preserve">
+    <value>[Ŵåţçĥéðẋẋẋ Ƒöŕẋ ①⓪ẋ Ṁîñûţéšẋẋẋ]</value>
+  </data>
+  <data name="ViewingThirtyMinutes" xml:space="preserve">
+    <value>[Ŵåţçĥéðẋẋẋ Ƒöŕẋ ③⓪ẋ Ṁîñûţéšẋẋẋ]</value>
+  </data>
+  <data name="ViewingTwoHours" xml:space="preserve">
+    <value>[Ŵåţçĥéðẋẋẋ Ƒöŕẋ ②ẋ Ĥöûŕšẋẋ]</value>
+  </data>
+  <data name="Volume" xml:space="preserve">
+    <value>[Ṽöļûɱéẋẋ]</value>
+  </data>
+  <data name="Wait" xml:space="preserve">
+    <value>[Ŵåîţẋẋ]</value>
+  </data>
+  <data name="WatchTime" xml:space="preserve">
+    <value>[Ŵåţçĥẋẋ Ţîɱéẋẋ]</value>
+  </data>
+  <data name="WebPage" xml:space="preserve">
+    <value>[Ŵéƀẋ Þåĝéẋẋ]</value>
+  </data>
+  <data name="WebRequest" xml:space="preserve">
+    <value>[Ŵéƀẋ Ŕéǫûéšţẋẋẋ]</value>
+  </data>
+  <data name="WebShow" xml:space="preserve">
+    <value>[Ŵéƀẋ Šĥöŵẋẋ]</value>
+  </data>
+  <data name="Weekly" xml:space="preserve">
+    <value>[Ŵééķļýẋẋ]</value>
+  </data>
+  <data name="WhatIsTrigger" xml:space="preserve">
+    <value>[Ŵĥåţẋẋ ţéẋţẋẋ îñẋ çĥåţẋẋ ŵîļļẋẋ ţŕîĝĝéŕẋẋẋ ţĥîšẋẋ çöɱɱåñðẋẋẋ (ÉẊ∶ẋẋ ″¡ƒöļļöŵ″)¿ẋẋẋẋ]</value>
+  </data>
+  <data name="Whisper" xml:space="preserve">
+    <value>[Ŵĥîšþéŕẋẋẋ]</value>
+  </data>
+  <data name="WhisperAllAlertsToStreamerAccount" xml:space="preserve">
+    <value>[Ŵĥîšþéŕẋẋẋ Åļļẋ Åļéŕţšẋẋ ţöẋ Šţŕéåɱéŕẋẋẋ Åççöûñţẋẋẋ]</value>
+  </data>
+  <data name="WhisperUserOptional" xml:space="preserve">
+    <value>[Ŵĥîšþéŕẋẋẋ Ûšéŕẋẋ (Öþţîöñåļ)ẋẋẋẋ]</value>
+  </data>
+  <data name="White" xml:space="preserve">
+    <value>[Ŵĥîţéẋẋ]</value>
+  </data>
+  <data name="WhoCanRun" xml:space="preserve">
+    <value>[Ŵĥöẋ šĥöûļðẋẋ ƀéẋ åļļöŵéðẋẋẋ ţöẋ ŕûñẋ ţĥîšẋẋ çöɱɱåñð¿ẋẋẋ]</value>
+  </data>
+  <data name="Wildcards" xml:space="preserve">
+    <value>[Ŵîļðçåŕðšẋẋẋ]</value>
+  </data>
+  <data name="Winner" xml:space="preserve">
+    <value>[Ŵîññéŕẋẋ]</value>
+  </data>
+  <data name="WinnerSelected" xml:space="preserve">
+    <value>[Ŵîññéŕẋẋ Šéļéçţéðẋẋẋ]</value>
+  </data>
+  <data name="XboxGame" xml:space="preserve">
+    <value>[Ẋƀöẋẋẋ Ĝåɱéẋẋ]</value>
+  </data>
+  <data name="XLarge" xml:space="preserve">
+    <value>[Ẋ‐Ļåŕĝéẋẋẋ]</value>
+  </data>
+  <data name="XXLarge" xml:space="preserve">
+    <value>[ẊẊ‐Ļåŕĝéẋẋẋ]</value>
+  </data>
+  <data name="Yearly" xml:space="preserve">
+    <value>[Ýéåŕļýẋẋ]</value>
+  </data>
+  <data name="Yellow" xml:space="preserve">
+    <value>[Ýéļļöŵẋẋ]</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>[Ýéšẋ]</value>
+  </data>
+</root>

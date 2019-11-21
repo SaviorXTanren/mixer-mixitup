@@ -13,15 +13,10 @@ namespace MixItUp.Base.Actions
 {
     public enum CommandActionTypeEnum
     {
-        [Name("Run Command")]
         RunCommand,
-        [Name("Disable Command")]
         DisableCommand,
-        [Name("Enable Command")]
         EnableCommand,
-        [Name("Disable Command Group")]
         DisableCommandGroup,
-        [Name("Enable Command Group")]
         EnableCommandGroup,
     }
 

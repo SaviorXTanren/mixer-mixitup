@@ -1,8 +1,9 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base;
+﻿using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace MixItUp.WPF.Controls.Actions
 {
     public partial class CommandActionControl : ActionControlBase
     {
-        private const string PreMadeCommandType = "Pre-Made";
+        private readonly string PreMadeCommandType = MixItUp.Base.Resources.PreMade;
 
         private CommandAction command;
 
@@ -23,9 +24,11 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override Task OnLoaded()
         {
-            this.TypeComboBox.ItemsSource = EnumHelper.GetEnumNames<CommandActionTypeEnum>().OrderBy(s => s);
+            this.TypeComboBox.ItemsSource = Enum.GetValues(typeof(CommandActionTypeEnum))
+                .Cast<CommandActionTypeEnum>()
+                .OrderBy(s => EnumLocalizationHelper.GetLocalizedName(s));
 
-            List<string> types = new List<string>(EnumHelper.GetEnumNames(ChannelSession.AllCommands.Select(c => c.Type).Distinct()));
+            List<string> types = new List<string>(ChannelSession.AllCommands.Select(c => EnumLocalizationHelper.GetLocalizedName(c.Type)).Distinct());
             types.Add(PreMadeCommandType);
             this.CommandTypeComboBox.ItemsSource = types.OrderBy(s => s);
 
@@ -35,10 +38,10 @@ namespace MixItUp.WPF.Controls.Actions
             if (this.command != null)
             {
                 CommandBase chosenCommand = this.command.Command;
-                this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.CommandActionType);
+                this.TypeComboBox.SelectedItem = this.command.CommandActionType;
                 if (chosenCommand != null)
                 {
-                    string type = EnumHelper.GetEnumName(chosenCommand.Type);
+                    string type = EnumLocalizationHelper.GetLocalizedName(chosenCommand.Type);
                     if (chosenCommand is PreMadeChatCommand)
                     {
                         type = PreMadeCommandType;
@@ -54,7 +57,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override ActionBase GetAction()
         {
-            CommandActionTypeEnum type = EnumHelper.GetEnumValueFromString<CommandActionTypeEnum>((string)this.TypeComboBox.SelectedItem);
+            CommandActionTypeEnum type = (CommandActionTypeEnum)this.TypeComboBox.SelectedItem;
             if (type == CommandActionTypeEnum.DisableCommandGroup || type == CommandActionTypeEnum.EnableCommandGroup)
             {
                 if (this.CommandGroupNameComboBox.SelectedIndex >= 0)
@@ -81,7 +84,7 @@ namespace MixItUp.WPF.Controls.Actions
 
             if (this.TypeComboBox.SelectedIndex >= 0)
             {
-                CommandActionTypeEnum type = EnumHelper.GetEnumValueFromString<CommandActionTypeEnum>((string)this.TypeComboBox.SelectedItem);
+                CommandActionTypeEnum type = (CommandActionTypeEnum)this.TypeComboBox.SelectedItem;
                 switch (type)
                 {
                     case CommandActionTypeEnum.RunCommand:
@@ -105,25 +108,18 @@ namespace MixItUp.WPF.Controls.Actions
             if (this.CommandTypeComboBox.SelectedIndex >= 0)
             {
                 string typeString = (string)this.CommandTypeComboBox.SelectedItem;
-                CommandTypeEnum type = EnumHelper.GetEnumValueFromString<CommandTypeEnum>(typeString);
                 if (typeString.Equals(PreMadeCommandType))
                 {
-                    type = CommandTypeEnum.Chat;
+                    this.CommandNameComboBox.ItemsSource = ChannelSession.AllCommands.Where(c => c is PreMadeChatCommand && c.Type == CommandTypeEnum.Chat).OrderBy(c => c.Name);
                 }
-
-                IEnumerable<CommandBase> commands = ChannelSession.AllCommands.Where(c => c.Type == type).OrderBy(c => c.Name);
-                if (type == CommandTypeEnum.Chat)
+                else if (typeString.Equals(EnumLocalizationHelper.GetLocalizedName(CommandTypeEnum.Chat)))
                 {
-                    if (typeString.Equals(PreMadeCommandType))
-                    {
-                        commands = commands.Where(c => c is PreMadeChatCommand);
-                    }
-                    else
-                    {
-                        commands = commands.Where(c => !(c is PreMadeChatCommand));
-                    }
+                    this.CommandNameComboBox.ItemsSource = ChannelSession.AllCommands.Where(c => !(c is PreMadeChatCommand) && c.Type == CommandTypeEnum.Chat).OrderBy(c => c.Name);
                 }
-                this.CommandNameComboBox.ItemsSource = commands;
+                else
+                {
+                    this.CommandNameComboBox.ItemsSource = ChannelSession.AllCommands.Where(c => typeString.Equals(EnumLocalizationHelper.GetLocalizedName(c.Type))).OrderBy(c => c.Name);
+                }
             }
         }
     }

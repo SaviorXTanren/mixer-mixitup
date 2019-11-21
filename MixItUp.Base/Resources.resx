@@ -261,6 +261,9 @@
   <data name="Audience" xml:space="preserve">
     <value>Audience</value>
   </data>
+  <data name="AudioOutputDevice" xml:space="preserve">
+    <value>Audio Output Device</value>
+  </data>
   <data name="AutoHoster" xml:space="preserve">
     <value>Auto-Hoster</value>
   </data>
@@ -326,6 +329,9 @@
   </data>
   <data name="Brown" xml:space="preserve">
     <value>Brown</value>
+  </data>
+  <data name="Browse" xml:space="preserve">
+    <value>Browse</value>
   </data>
   <data name="ButtonName" xml:space="preserve">
     <value>Button Name</value>
@@ -446,6 +452,9 @@
   </data>
   <data name="ConvertToAdvanced" xml:space="preserve">
     <value>Convert To Advanced</value>
+  </data>
+  <data name="Cooldown" xml:space="preserve">
+    <value>Cooldown</value>
   </data>
   <data name="Costream" xml:space="preserve">
     <value>Costream</value>
@@ -570,6 +579,9 @@
   <data name="DisableCommand" xml:space="preserve">
     <value>Disable Command</value>
   </data>
+  <data name="DisableCommandGroup" xml:space="preserve">
+    <value>Disable Command Group</value>
+  </data>
   <data name="Disabled" xml:space="preserve">
     <value>Disabled</value>
   </data>
@@ -612,11 +624,20 @@
   <data name="EmotesSkillsOnly" xml:space="preserve">
     <value>Emotes &amp; Skills Only</value>
   </data>
+  <data name="EmptySoundFilePath" xml:space="preserve">
+    <value>The sound file path must not be empty.</value>
+  </data>
   <data name="Enable" xml:space="preserve">
     <value>Enable</value>
   </data>
   <data name="EnableChat" xml:space="preserve">
     <value>Enable Chat</value>
+  </data>
+  <data name="EnableCommand" xml:space="preserve">
+    <value>Enable Command</value>
+  </data>
+  <data name="EnableCommandGroup" xml:space="preserve">
+    <value>Enable Command Group</value>
   </data>
   <data name="EnableDiagnostics" xml:space="preserve">
     <value>Enable Diagnostics</value>
@@ -794,6 +815,9 @@
   </data>
   <data name="Hours" xml:space="preserve">
     <value>Hours</value>
+  </data>
+  <data name="HowLongBeforeRun" xml:space="preserve">
+    <value>How long before this command can be run again (in seconds)?</value>
   </data>
   <data name="HTML" xml:space="preserve">
     <value>HTML</value>
@@ -1086,6 +1110,9 @@
   <data name="Operator" xml:space="preserve">
     <value>Operator</value>
   </data>
+  <data name="OptionalCommandArguments" xml:space="preserve">
+    <value>(Optional) Command Arguments</value>
+  </data>
   <data name="Options" xml:space="preserve">
     <value>Options</value>
   </data>
@@ -1148,6 +1175,9 @@
   </data>
   <data name="Position" xml:space="preserve">
     <value>Pos</value>
+  </data>
+  <data name="PreMade" xml:space="preserve">
+    <value>Pre-Made</value>
   </data>
   <data name="PreMadeCommands" xml:space="preserve">
     <value>Pre-Made Commands</value>
@@ -1257,6 +1287,9 @@
   <data name="RTS" xml:space="preserve">
     <value>RTS</value>
   </data>
+  <data name="RunCommand" xml:space="preserve">
+    <value>Run Command</value>
+  </data>
   <data name="SameAgeRating" xml:space="preserve">
     <value>Same Age Rating</value>
   </data>
@@ -1264,7 +1297,7 @@
     <value>Same Game</value>
   </data>
   <data name="SameTeam" xml:space="preserve">
-    <value>SameTeam</value>
+    <value>Same Team</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Save</value>
@@ -1394,6 +1427,9 @@
   </data>
   <data name="Sound" xml:space="preserve">
     <value>Sound</value>
+  </data>
+  <data name="SoundFilePath" xml:space="preserve">
+    <value>Sound File Path</value>
   </data>
   <data name="Source" xml:space="preserve">
     <value>Source</value>
@@ -1590,6 +1626,9 @@
   <data name="TranslationBy" xml:space="preserve">
     <value />
   </data>
+  <data name="TriggerHint" xml:space="preserve">
+    <value>Trigger(s) in Chat (No "!" needed)</value>
+  </data>
   <data name="Twitter" xml:space="preserve">
     <value>Twitter</value>
   </data>
@@ -1707,6 +1746,9 @@
   <data name="ViewingTwoHours" xml:space="preserve">
     <value>Watched For 2 Hours</value>
   </data>
+  <data name="Volume" xml:space="preserve">
+    <value>Volume</value>
+  </data>
   <data name="Wait" xml:space="preserve">
     <value>Wait</value>
   </data>
@@ -1725,6 +1767,9 @@
   <data name="Weekly" xml:space="preserve">
     <value>Weekly</value>
   </data>
+  <data name="WhatIsTrigger" xml:space="preserve">
+    <value>What text in chat will trigger this command (EX: "!follow")?</value>
+  </data>
   <data name="Whisper" xml:space="preserve">
     <value>Whisper</value>
   </data>
@@ -1736,6 +1781,9 @@
   </data>
   <data name="White" xml:space="preserve">
     <value>White</value>
+  </data>
+  <data name="WhoCanRun" xml:space="preserve">
+    <value>Who should be allowed to run this command?</value>
   </data>
   <data name="Wildcards" xml:space="preserve">
     <value>Wildcards</value>

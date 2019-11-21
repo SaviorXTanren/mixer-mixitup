@@ -47,6 +47,10 @@
     <EmbeddedResource Update="Resources.de-DE.resx">
       <DependentUpon>Resources.resx</DependentUpon>
     </EmbeddedResource>
+
+    <EmbeddedResource Update="Resources.qps-ploc.resx">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

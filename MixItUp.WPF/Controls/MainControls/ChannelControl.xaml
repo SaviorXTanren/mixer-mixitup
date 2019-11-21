@@ -152,7 +152,7 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <ComboBox Grid.Column="0" x:Name="AddFavoriteTypeComboBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TypeToAdd}" Width="100" SelectionChanged="AddFavoriteTypeComboBox_SelectionChanged" />
+                        <ComboBox Grid.Column="0" x:Name="AddFavoriteTypeComboBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TypeToAdd}" MinWidth="100" SelectionChanged="AddFavoriteTypeComboBox_SelectionChanged" />
 
                         <Grid x:Name="AddFavoriteTeamGrid" Grid.Column="2" Visibility="Collapsed">
                             <TextBox x:Name="AddFavoriteTeamTextBox" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TeamName}" />

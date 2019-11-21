@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -180,6 +180,9 @@
   <data name="AddFavoriteStreamerAlreadyDone" xml:space="preserve">
     <value>Dieser Benutzer ist bereits in dieser Gruppe vorhanden.</value>
   </data>
+  <data name="AddFavoriteStreamerNotFound" xml:space="preserve">
+    <value>Es konnte kein Streamer mit diesem Namen gefunden werden.</value>
+  </data>
   <data name="AddFavoriteTeamAlreadyDone" xml:space="preserve">
     <value>Du hast dieses Team bereits als Favorit bezeichnet.</value>
   </data>
@@ -258,6 +261,9 @@
   <data name="Audience" xml:space="preserve">
     <value>Publikum</value>
   </data>
+  <data name="AudioOutputDevice" xml:space="preserve">
+    <value>Audio Output Device</value>
+  </data>
   <data name="AutoHoster" xml:space="preserve">
     <value>Auto-Hoster</value>
   </data>
@@ -323,6 +329,9 @@
   </data>
   <data name="Brown" xml:space="preserve">
     <value>Braun</value>
+  </data>
+  <data name="Browse" xml:space="preserve">
+    <value>Browse</value>
   </data>
   <data name="ButtonName" xml:space="preserve">
     <value>Button Name</value>
@@ -443,6 +452,9 @@
   </data>
   <data name="ConvertToAdvanced" xml:space="preserve">
     <value>In Erweitert konventieren</value>
+  </data>
+  <data name="Cooldown" xml:space="preserve">
+    <value>Cooldown</value>
   </data>
   <data name="Costream" xml:space="preserve">
     <value>Co-Stream</value>
@@ -567,6 +579,9 @@
   <data name="DisableCommand" xml:space="preserve">
     <value>Befehle deaktivieren</value>
   </data>
+  <data name="DisableCommandGroup" xml:space="preserve">
+    <value>Disable Command Group</value>
+  </data>
   <data name="Disabled" xml:space="preserve">
     <value>Deaktiviert</value>
   </data>
@@ -609,11 +624,20 @@
   <data name="EmotesSkillsOnly" xml:space="preserve">
     <value>Nur Emotes &amp; Fähigkeiten</value>
   </data>
+  <data name="EmptySoundFilePath" xml:space="preserve">
+    <value>The sound file path must not be empty.</value>
+  </data>
   <data name="Enable" xml:space="preserve">
     <value>Aktivieren</value>
   </data>
-  <data name="Enable Chat" xml:space="preserve">
+  <data name="EnableChat" xml:space="preserve">
     <value>Chat aktivieren</value>
+  </data>
+  <data name="EnableCommand" xml:space="preserve">
+    <value>Enable Command</value>
+  </data>
+  <data name="EnableCommandGroup" xml:space="preserve">
+    <value>Enable Command Group</value>
   </data>
   <data name="EnableDiagnostics" xml:space="preserve">
     <value>Diagnose aktivieren</value>
@@ -638,9 +662,6 @@
   </data>
   <data name="ErrorGameStartInsufficentRole" xml:space="preserve">
     <value>Sie müssen ein {0} sein, um dieses Spiel zu starten.</value>
-  </data>
-  <data name="Es konnte kein Streamer mit diesem Namen gefunden werden." xml:space="preserve">
-    <value>Es konnte kein Streamer mit diesem Namen gefunden werden.</value>
   </data>
   <data name="Event" xml:space="preserve">
     <value>Event</value>
@@ -794,6 +815,9 @@
   </data>
   <data name="Hours" xml:space="preserve">
     <value>Stunden</value>
+  </data>
+  <data name="HowLongBeforeRun" xml:space="preserve">
+    <value>How long before this command can be run again (in seconds)?</value>
   </data>
   <data name="HTML" xml:space="preserve">
     <value>HTML</value>
@@ -1086,6 +1110,9 @@
   <data name="Operator" xml:space="preserve">
     <value>Operator</value>
   </data>
+  <data name="OptionalCommandArguments" xml:space="preserve">
+    <value>(Optional) Command Arguments</value>
+  </data>
   <data name="Options" xml:space="preserve">
     <value>Optionen</value>
   </data>
@@ -1148,6 +1175,9 @@
   </data>
   <data name="Position" xml:space="preserve">
     <value>Position</value>
+  </data>
+  <data name="PreMade" xml:space="preserve">
+    <value>Pre-Made</value>
   </data>
   <data name="PreMadeCommands" xml:space="preserve">
     <value>Vorgefertigte Befehle</value>
@@ -1257,6 +1287,9 @@
   </data>
   <data name="RTS" xml:space="preserve">
     <value>RTS</value>
+  </data>
+  <data name="RunCommand" xml:space="preserve">
+    <value>Run Command</value>
   </data>
   <data name="SameAgeRating" xml:space="preserve">
     <value>Gleiche Alterseinstufung</value>
@@ -1396,6 +1429,9 @@
   </data>
   <data name="Sound" xml:space="preserve">
     <value>Sound</value>
+  </data>
+  <data name="SoundFilePath" xml:space="preserve">
+    <value>Sound File Path</value>
   </data>
   <data name="Source" xml:space="preserve">
     <value>Quelle</value>
@@ -1592,6 +1628,9 @@
   <data name="TranslationBy" xml:space="preserve">
     <value>Deutsche Übersetzung von: DerWashbr (https://mixer.com/DerWashbr)</value>
   </data>
+  <data name="TriggerHint" xml:space="preserve">
+    <value>Trigger(s) in Chat (No "!" needed)</value>
+  </data>
   <data name="Twitter" xml:space="preserve">
     <value>Twitter</value>
   </data>
@@ -1709,6 +1748,9 @@
   <data name="ViewingTwoHours" xml:space="preserve">
     <value>2 Stunden lang zugeschaut</value>
   </data>
+  <data name="Volume" xml:space="preserve">
+    <value>Volume</value>
+  </data>
   <data name="Wait" xml:space="preserve">
     <value>Wartend</value>
   </data>
@@ -1727,6 +1769,9 @@
   <data name="Weekly" xml:space="preserve">
     <value>Wöchentlich</value>
   </data>
+  <data name="WhatIsTrigger" xml:space="preserve">
+    <value>What text in chat will trigger this command (EX: "!follow")?</value>
+  </data>
   <data name="Whisper" xml:space="preserve">
     <value>Flüstern</value>
   </data>
@@ -1738,6 +1783,9 @@
   </data>
   <data name="White" xml:space="preserve">
     <value>Weiß</value>
+  </data>
+  <data name="WhoCanRun" xml:space="preserve">
+    <value>Who should be allowed to run this command?</value>
   </data>
   <data name="Wildcards" xml:space="preserve">
     <value>Wildcards</value>
