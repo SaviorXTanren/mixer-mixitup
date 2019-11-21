@@ -234,6 +234,9 @@
   <data name="AlreadyInstalled" xml:space="preserve">
     <value>[Åļŕéåðýẋẋẋ Îñšţåļļéðẋẋẋ]</value>
   </data>
+  <data name="Alt" xml:space="preserve">
+    <value>[Åļţẋ]</value>
+  </data>
   <data name="Amber" xml:space="preserve">
     <value>[Åɱƀéŕẋẋ]</value>
   </data>
@@ -420,6 +423,9 @@
   <data name="ClearUserData" xml:space="preserve">
     <value>[Çļéåŕẋẋ Ûšéŕẋẋ Ðåţåẋẋ]</value>
   </data>
+  <data name="Click" xml:space="preserve">
+    <value>[Çļîçķẋẋ]</value>
+  </data>
   <data name="Close" xml:space="preserve">
     <value>[Çļöšéẋẋ]</value>
   </data>
@@ -461,6 +467,9 @@
   </data>
   <data name="Contains" xml:space="preserve">
     <value>[Çöñţåîñšẋẋẋ]</value>
+  </data>
+  <data name="Control" xml:space="preserve">
+    <value>[Çöñţŕöļẋẋẋ]</value>
   </data>
   <data name="ConvertToAdvanced" xml:space="preserve">
     <value>[Çöñṽéŕţẋẋẋ Ţöẋ Åðṽåñçéðẋẋẋ]</value>
@@ -918,6 +927,9 @@
   <data name="JoinQueue" xml:space="preserve">
     <value>[Ûšéŕẋẋ Ĵöîñẋẋ Ǫûéûéẋẋ]</value>
   </data>
+  <data name="Keyboard" xml:space="preserve">
+    <value>[Ķéýƀöåŕðẋẋẋ]</value>
+  </data>
   <data name="KeyboardKey" xml:space="preserve">
     <value>[Ķéýƀöåŕðẋẋẋ Ķéýẋ]</value>
   </data>
@@ -941,6 +953,9 @@
   </data>
   <data name="LeaveQueue" xml:space="preserve">
     <value>[Ûšéŕẋẋ Ļéåṽéẋẋ Ǫûéûéẋẋ]</value>
+  </data>
+  <data name="LeftButton" xml:space="preserve">
+    <value>[Ļéƒţẋẋ Ɓûţţöñẋẋ]</value>
   </data>
   <data name="LessThan" xml:space="preserve">
     <value>[≤ẋ]</value>
@@ -1020,6 +1035,9 @@
   <data name="MeetTheTeam" xml:space="preserve">
     <value>[Ṁééţẋẋ Ţĥéẋ Ţéåɱẋẋ]</value>
   </data>
+  <data name="MiddleButton" xml:space="preserve">
+    <value>[Ṁîððļéẋẋ Ɓûţţöñẋẋ]</value>
+  </data>
   <data name="Min" xml:space="preserve">
     <value>[Ṁîñẋ]</value>
   </data>
@@ -1082,6 +1100,12 @@
   </data>
   <data name="Months" xml:space="preserve">
     <value>[Ṁöñţĥšẋẋ]</value>
+  </data>
+  <data name="Mouse" xml:space="preserve">
+    <value>[Ṁöûšéẋẋ]</value>
+  </data>
+  <data name="MouseButton" xml:space="preserve">
+    <value>[Ṁöûšéẋẋ Ɓûţţöñẋẋ]</value>
   </data>
   <data name="MoveDown" xml:space="preserve">
     <value>[Ṁöṽéẋẋ Ðöŵñẋẋ]</value>
@@ -1239,6 +1263,9 @@
   <data name="PreMadeCommands" xml:space="preserve">
     <value>[Þŕé‐Ṁåðéẋẋẋ Çöɱɱåñðšẋẋẋ]</value>
   </data>
+  <data name="Press" xml:space="preserve">
+    <value>[Þŕéššẋẋ]</value>
+  </data>
   <data name="PreventSmallerCooldownsFromOverwriting" xml:space="preserve">
     <value>[Þŕéṽéñţẋẋẋ Šɱåļļéŕẋẋẋ Çööļðöŵñšẋẋẋ ƒŕöɱẋẋ Öṽéŕŵŕîţîñĝẋẋẋẋ]</value>
   </data>
@@ -1311,6 +1338,9 @@
   <data name="RegularStatusOnlineViewingTime" xml:space="preserve">
     <value>[″Ŕéĝûļåŕ″ẋẋẋ Šţåţûšẋẋ Öñļîñéẋẋ Ṽîéŵîñĝẋẋẋ Ţîɱéẋẋ]</value>
   </data>
+  <data name="Release" xml:space="preserve">
+    <value>[Ŕéļéåšéẋẋẋ]</value>
+  </data>
   <data name="ReminderMins" xml:space="preserve">
     <value>[Ŕéɱîñðéŕẋẋẋ (Ṁîñš)ẋẋ]</value>
   </data>
@@ -1355,6 +1385,9 @@
   </data>
   <data name="RetroactivelyGivePoints" xml:space="preserve">
     <value>[Ŕéţŕöåçţîṽéļýẋẋẋẋẋ Ĝîṽéẋẋ Þöîñţšẋẋ]</value>
+  </data>
+  <data name="RightButton" xml:space="preserve">
+    <value>[Ŕîĝĥţẋẋ Ɓûţţöñẋẋ]</value>
   </data>
   <data name="Role" xml:space="preserve">
     <value>[Ŕöļéẋẋ]</value>
@@ -1475,6 +1508,9 @@
   </data>
   <data name="ShareCode" xml:space="preserve">
     <value>[Šĥåŕéẋẋ Çöðéẋẋ]</value>
+  </data>
+  <data name="Shift" xml:space="preserve">
+    <value>[Šĥîƒţẋẋ]</value>
   </data>
   <data name="Shop" xml:space="preserve">
     <value>[Šĥöþẋẋ]</value>

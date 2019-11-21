@@ -412,6 +412,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Alt.
+        /// </summary>
+        public static string Alt {
+            get {
+                return ResourceManager.GetString("Alt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Amber.
         /// </summary>
         public static string Amber {
@@ -970,6 +979,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Click.
+        /// </summary>
+        public static string Click {
+            get {
+                return ResourceManager.GetString("Click", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Close.
         /// </summary>
         public static string Close {
@@ -1092,6 +1110,15 @@ namespace MixItUp.Base {
         public static string Contains {
             get {
                 return ResourceManager.GetString("Contains", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Control.
+        /// </summary>
+        public static string Control {
+            get {
+                return ResourceManager.GetString("Control", resourceCulture);
             }
         }
         
@@ -2464,6 +2491,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Keyboard.
+        /// </summary>
+        public static string Keyboard {
+            get {
+                return ResourceManager.GetString("Keyboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Keyboard Key.
         /// </summary>
         public static string KeyboardKey {
@@ -2532,6 +2568,15 @@ namespace MixItUp.Base {
         public static string LeaveQueue {
             get {
                 return ResourceManager.GetString("LeaveQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Left Button.
+        /// </summary>
+        public static string LeftButton {
+            get {
+                return ResourceManager.GetString("LeftButton", resourceCulture);
             }
         }
         
@@ -2770,6 +2815,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Middle Button.
+        /// </summary>
+        public static string MiddleButton {
+            get {
+                return ResourceManager.GetString("MiddleButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Min.
         /// </summary>
         public static string Min {
@@ -2955,6 +3009,24 @@ namespace MixItUp.Base {
         public static string Months {
             get {
                 return ResourceManager.GetString("Months", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mouse.
+        /// </summary>
+        public static string Mouse {
+            get {
+                return ResourceManager.GetString("Mouse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mouse Button.
+        /// </summary>
+        public static string MouseButton {
+            get {
+                return ResourceManager.GetString("MouseButton", resourceCulture);
             }
         }
         
@@ -3427,6 +3499,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Press.
+        /// </summary>
+        public static string Press {
+            get {
+                return ResourceManager.GetString("Press", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Prevent Smaller Cooldowns from Overwriting.
         /// </summary>
         public static string PreventSmallerCooldownsFromOverwriting {
@@ -3643,6 +3724,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Release.
+        /// </summary>
+        public static string Release {
+            get {
+                return ResourceManager.GetString("Release", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reminder (Mins).
         /// </summary>
         public static string ReminderMins {
@@ -3774,6 +3864,15 @@ namespace MixItUp.Base {
         public static string RetroactivelyGivePoints {
             get {
                 return ResourceManager.GetString("RetroactivelyGivePoints", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Right Button.
+        /// </summary>
+        public static string RightButton {
+            get {
+                return ResourceManager.GetString("RightButton", resourceCulture);
             }
         }
         
@@ -4134,6 +4233,15 @@ namespace MixItUp.Base {
         public static string ShareCode {
             get {
                 return ResourceManager.GetString("ShareCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shift.
+        /// </summary>
+        public static string Shift {
+            get {
+                return ResourceManager.GetString("Shift", resourceCulture);
             }
         }
         

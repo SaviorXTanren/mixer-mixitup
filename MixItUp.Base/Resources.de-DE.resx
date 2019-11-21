@@ -234,6 +234,9 @@
   <data name="AlreadyInstalled" xml:space="preserve">
     <value>Already Installed</value>
   </data>
+  <data name="Alt" xml:space="preserve">
+    <value>Alt</value>
+  </data>
   <data name="Amber" xml:space="preserve">
     <value>Bernstein</value>
   </data>
@@ -420,6 +423,9 @@
   <data name="ClearUserData" xml:space="preserve">
     <value>Benutzerdaten löschen</value>
   </data>
+  <data name="Click" xml:space="preserve">
+    <value>Click</value>
+  </data>
   <data name="Close" xml:space="preserve">
     <value>Schließen</value>
   </data>
@@ -461,6 +467,9 @@
   </data>
   <data name="Contains" xml:space="preserve">
     <value>Enthält</value>
+  </data>
+  <data name="Control" xml:space="preserve">
+    <value>Control</value>
   </data>
   <data name="ConvertToAdvanced" xml:space="preserve">
     <value>In Erweitert konventieren</value>
@@ -918,6 +927,9 @@
   <data name="JoinQueue" xml:space="preserve">
     <value>User Join Queue</value>
   </data>
+  <data name="Keyboard" xml:space="preserve">
+    <value>Keyboard</value>
+  </data>
   <data name="KeyboardKey" xml:space="preserve">
     <value>Tastaturtaste</value>
   </data>
@@ -941,6 +953,9 @@
   </data>
   <data name="LeaveQueue" xml:space="preserve">
     <value>User Leave Queue</value>
+  </data>
+  <data name="LeftButton" xml:space="preserve">
+    <value>Left Button</value>
   </data>
   <data name="LessThan" xml:space="preserve">
     <value>&lt;</value>
@@ -1020,6 +1035,9 @@
   <data name="MeetTheTeam" xml:space="preserve">
     <value>Triff das Team</value>
   </data>
+  <data name="MiddleButton" xml:space="preserve">
+    <value>Middle Button</value>
+  </data>
   <data name="Min" xml:space="preserve">
     <value>Min</value>
   </data>
@@ -1082,6 +1100,12 @@
   </data>
   <data name="Months" xml:space="preserve">
     <value>Monate</value>
+  </data>
+  <data name="Mouse" xml:space="preserve">
+    <value>Mouse</value>
+  </data>
+  <data name="MouseButton" xml:space="preserve">
+    <value>Mouse Button</value>
   </data>
   <data name="MoveDown" xml:space="preserve">
     <value>Nach unten bewegen</value>
@@ -1239,6 +1263,9 @@
   <data name="PreMadeCommands" xml:space="preserve">
     <value>Vorgefertigte Befehle</value>
   </data>
+  <data name="Press" xml:space="preserve">
+    <value>Press</value>
+  </data>
   <data name="PreventSmallerCooldownsFromOverwriting" xml:space="preserve">
     <value>Verhindere dass, kleinere Abklingzeiten überschrieben werden</value>
   </data>
@@ -1311,6 +1338,9 @@
   <data name="RegularStatusOnlineViewingTime" xml:space="preserve">
     <value>"Regular" Status Online Anzeigezeit</value>
   </data>
+  <data name="Release" xml:space="preserve">
+    <value>Release</value>
+  </data>
   <data name="ReminderMins" xml:space="preserve">
     <value>Erinnerung (Minuten)</value>
   </data>
@@ -1356,6 +1386,9 @@
   </data>
   <data name="RetroactivelyGivePoints" xml:space="preserve">
     <value>Nachträglich Punkte geben</value>
+  </data>
+  <data name="RightButton" xml:space="preserve">
+    <value>Right Button</value>
   </data>
   <data name="Role" xml:space="preserve">
     <value>Rolle</value>
@@ -1477,6 +1510,9 @@
   </data>
   <data name="ShareCode" xml:space="preserve">
     <value>Share Code</value>
+  </data>
+  <data name="Shift" xml:space="preserve">
+    <value>Shift</value>
   </data>
   <data name="Shop" xml:space="preserve">
     <value>Shop</value>
