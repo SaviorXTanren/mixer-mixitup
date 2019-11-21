@@ -952,6 +952,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clear Queue.
+        /// </summary>
+        public static string ClearQueue {
+            get {
+                return ResourceManager.GetString("ClearQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Clear User Data.
         /// </summary>
         public static string ClearUserData {
@@ -1519,6 +1528,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disable Queue.
+        /// </summary>
+        public static string DisableQueue {
+            get {
+                return ResourceManager.GetString("DisableQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Discord.
         /// </summary>
         public static string Discord {
@@ -1699,11 +1717,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enable/Disable Queue.
+        /// </summary>
+        public static string EnableDisableQueue {
+            get {
+                return ResourceManager.GetString("EnableDisableQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please enable Discord connection on the Services page!.
         /// </summary>
         public static string EnableDiscord {
             get {
                 return ResourceManager.GetString("EnableDiscord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable Queue.
+        /// </summary>
+        public static string EnableQueue {
+            get {
+                return ResourceManager.GetString("EnableQueue", resourceCulture);
             }
         }
         
@@ -2037,6 +2073,15 @@ namespace MixItUp.Base {
         public static string GameQueue {
             get {
                 return ResourceManager.GetString("GameQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Game Queue Action.
+        /// </summary>
+        public static string GameQueueAction {
+            get {
+                return ResourceManager.GetString("GameQueueAction", resourceCulture);
             }
         }
         
@@ -2392,6 +2437,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to User Join Front of Queue.
+        /// </summary>
+        public static string JoinFrontOfQueue {
+            get {
+                return ResourceManager.GetString("JoinFrontOfQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User Join Queue.
+        /// </summary>
+        public static string JoinQueue {
+            get {
+                return ResourceManager.GetString("JoinQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Keyboard Key.
         /// </summary>
         public static string KeyboardKey {
@@ -2451,6 +2514,15 @@ namespace MixItUp.Base {
         public static string Leaderboard {
             get {
                 return ResourceManager.GetString("Leaderboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User Leave Queue.
+        /// </summary>
+        public static string LeaveQueue {
+            get {
+                return ResourceManager.GetString("LeaveQueue", resourceCulture);
             }
         }
         
@@ -3436,6 +3508,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to User&apos;s Queue Position.
+        /// </summary>
+        public static string QueuePosition {
+            get {
+                return ResourceManager.GetString("QueuePosition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Queue Status.
+        /// </summary>
+        public static string QueueStatus {
+            get {
+                return ResourceManager.GetString("QueueStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Quote.
         /// </summary>
         public static string Quote {
@@ -3837,6 +3927,33 @@ namespace MixItUp.Base {
         public static string SecondValue {
             get {
                 return ResourceManager.GetString("SecondValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select User at Front of Queue.
+        /// </summary>
+        public static string SelectFirst {
+            get {
+                return ResourceManager.GetString("SelectFirst", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select First User of Type in Queue.
+        /// </summary>
+        public static string SelectFirstType {
+            get {
+                return ResourceManager.GetString("SelectFirstType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Random User in Queue.
+        /// </summary>
+        public static string SelectRandom {
+            get {
+                return ResourceManager.GetString("SelectRandom", resourceCulture);
             }
         }
         
@@ -4521,6 +4638,15 @@ namespace MixItUp.Base {
         public static string TargetUser {
             get {
                 return ResourceManager.GetString("TargetUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target User (Optional).
+        /// </summary>
+        public static string TargetUserOptional {
+            get {
+                return ResourceManager.GetString("TargetUserOptional", resourceCulture);
             }
         }
         

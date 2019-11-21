@@ -414,6 +414,9 @@
   <data name="ClearChatConfirmation" xml:space="preserve">
     <value>This will clear all chat messages for the stream. Are you sure?</value>
   </data>
+  <data name="ClearQueue" xml:space="preserve">
+    <value>Clear Queue</value>
+  </data>
   <data name="ClearUserData" xml:space="preserve">
     <value>Clear User Data</value>
   </data>
@@ -603,6 +606,9 @@
   <data name="DisableDiagnostics" xml:space="preserve">
     <value>Disable Diagnostics</value>
   </data>
+  <data name="DisableQueue" xml:space="preserve">
+    <value>Disable Queue</value>
+  </data>
   <data name="Discord" xml:space="preserve">
     <value>Discord</value>
   </data>
@@ -663,8 +669,14 @@
   <data name="EnableDisableDiagnosticsHeader" xml:space="preserve">
     <value>Enable/Disable Diagnostic logging for finding issues</value>
   </data>
+  <data name="EnableDisableQueue" xml:space="preserve">
+    <value>Enable/Disable Queue</value>
+  </data>
   <data name="EnableDiscord" xml:space="preserve">
     <value>Please enable Discord connection on the Services page!</value>
+  </data>
+  <data name="EnableQueue" xml:space="preserve">
+    <value>Enable Queue</value>
   </data>
   <data name="EndCredits" xml:space="preserve">
     <value>End Credits</value>
@@ -776,6 +788,9 @@
   </data>
   <data name="GameQueue" xml:space="preserve">
     <value>Game Queue</value>
+  </data>
+  <data name="GameQueueAction" xml:space="preserve">
+    <value>Game Queue Action</value>
   </data>
   <data name="Games" xml:space="preserve">
     <value>Games</value>
@@ -894,6 +909,12 @@
   <data name="ItemsTraded" xml:space="preserve">
     <value>Items Traded</value>
   </data>
+  <data name="JoinFrontOfQueue" xml:space="preserve">
+    <value>User Join Front of Queue</value>
+  </data>
+  <data name="JoinQueue" xml:space="preserve">
+    <value>User Join Queue</value>
+  </data>
   <data name="KeyboardKey" xml:space="preserve">
     <value>Keyboard Key</value>
   </data>
@@ -914,6 +935,9 @@
   </data>
   <data name="Leaderboard" xml:space="preserve">
     <value>Leaderboard</value>
+  </data>
+  <data name="LeaveQueue" xml:space="preserve">
+    <value>User Leave Queue</value>
   </data>
   <data name="LessThan" xml:space="preserve">
     <value>&lt;</value>
@@ -1242,6 +1266,12 @@
   <data name="Purple" xml:space="preserve">
     <value>Purple</value>
   </data>
+  <data name="QueuePosition" xml:space="preserve">
+    <value>User's Queue Position</value>
+  </data>
+  <data name="QueueStatus" xml:space="preserve">
+    <value>Queue Status</value>
+  </data>
   <data name="Quote" xml:space="preserve">
     <value>Quote</value>
   </data>
@@ -1376,6 +1406,15 @@
   </data>
   <data name="SecondValue" xml:space="preserve">
     <value>Second Value</value>
+  </data>
+  <data name="SelectFirst" xml:space="preserve">
+    <value>Select User at Front of Queue</value>
+  </data>
+  <data name="SelectFirstType" xml:space="preserve">
+    <value>Select First User of Type in Queue</value>
+  </data>
+  <data name="SelectRandom" xml:space="preserve">
+    <value>Select Random User in Queue</value>
   </data>
   <data name="SelectTypeOfCommand" xml:space="preserve">
     <value>Select the type of command you would like to build:</value>
@@ -1604,6 +1643,9 @@
   </data>
   <data name="TargetUser" xml:space="preserve">
     <value>Target User</value>
+  </data>
+  <data name="TargetUserOptional" xml:space="preserve">
+    <value>Target User (Optional)</value>
   </data>
   <data name="Teal" xml:space="preserve">
     <value>Teal</value>

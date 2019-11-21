@@ -414,6 +414,9 @@
   <data name="ClearChatConfirmation" xml:space="preserve">
     <value>[Ţĥîšẋẋ ŵîļļẋẋ çļéåŕẋẋ åļļẋ çĥåţẋẋ ɱéššåĝéšẋẋẋ ƒöŕẋ ţĥéẋ šţŕéåɱ·ẋẋẋ Åŕéẋ ýöûẋ šûŕé¿ẋẋ]</value>
   </data>
+  <data name="ClearQueue" xml:space="preserve">
+    <value>[Çļéåŕẋẋ Ǫûéûéẋẋ]</value>
+  </data>
   <data name="ClearUserData" xml:space="preserve">
     <value>[Çļéåŕẋẋ Ûšéŕẋẋ Ðåţåẋẋ]</value>
   </data>
@@ -603,6 +606,9 @@
   <data name="DisableDiagnostics" xml:space="preserve">
     <value>[Ðîšåƀļéẋẋẋ Ðîåĝñöšţîçšẋẋẋẋ]</value>
   </data>
+  <data name="DisableQueue" xml:space="preserve">
+    <value>[Ðîšåƀļéẋẋẋ Ǫûéûéẋẋ]</value>
+  </data>
   <data name="Discord" xml:space="preserve">
     <value>[Ðîšçöŕðẋẋẋ]</value>
   </data>
@@ -663,8 +669,14 @@
   <data name="EnableDisableDiagnosticsHeader" xml:space="preserve">
     <value>[Éñåƀļé⁄Ðîšåƀļéẋẋẋẋẋ Ðîåĝñöšţîçẋẋẋẋ ļöĝĝîñĝẋẋẋ ƒöŕẋ ƒîñðîñĝẋẋẋ îššûéšẋẋ]</value>
   </data>
+  <data name="EnableDisableQueue" xml:space="preserve">
+    <value>[Éñåƀļé⁄Ðîšåƀļéẋẋẋẋẋ Ǫûéûéẋẋ]</value>
+  </data>
   <data name="EnableDiscord" xml:space="preserve">
     <value>[Þļéåšéẋẋ éñåƀļéẋẋ Ðîšçöŕðẋẋẋ çöññéçţîöñẋẋẋẋ öñẋ ţĥéẋ Šéŕṽîçéšẋẋẋ þåĝé¡ẋẋ]</value>
+  </data>
+  <data name="EnableQueue" xml:space="preserve">
+    <value>[Éñåƀļéẋẋ Ǫûéûéẋẋ]</value>
   </data>
   <data name="EndCredits" xml:space="preserve">
     <value>[Éñðẋ Çŕéðîţšẋẋẋ]</value>
@@ -776,6 +788,9 @@
   </data>
   <data name="GameQueue" xml:space="preserve">
     <value>[Ĝåɱéẋẋ Ǫûéûéẋẋ]</value>
+  </data>
+  <data name="GameQueueAction" xml:space="preserve">
+    <value>[Ĝåɱéẋẋ Ǫûéûéẋẋ Åçţîöñẋẋ]</value>
   </data>
   <data name="Games" xml:space="preserve">
     <value>[Ĝåɱéšẋẋ]</value>
@@ -894,6 +909,12 @@
   <data name="ItemsTraded" xml:space="preserve">
     <value>[Îţéɱšẋẋ Ţŕåðéðẋẋ]</value>
   </data>
+  <data name="JoinFrontOfQueue" xml:space="preserve">
+    <value>[Ûšéŕẋẋ Ĵöîñẋẋ Ƒŕöñţẋẋ öƒẋ Ǫûéûéẋẋ]</value>
+  </data>
+  <data name="JoinQueue" xml:space="preserve">
+    <value>[Ûšéŕẋẋ Ĵöîñẋẋ Ǫûéûéẋẋ]</value>
+  </data>
   <data name="KeyboardKey" xml:space="preserve">
     <value>[Ķéýƀöåŕðẋẋẋ Ķéýẋ]</value>
   </data>
@@ -914,6 +935,9 @@
   </data>
   <data name="Leaderboard" xml:space="preserve">
     <value>[Ļéåðéŕƀöåŕðẋẋẋẋ]</value>
+  </data>
+  <data name="LeaveQueue" xml:space="preserve">
+    <value>[Ûšéŕẋẋ Ļéåṽéẋẋ Ǫûéûéẋẋ]</value>
   </data>
   <data name="LessThan" xml:space="preserve">
     <value>[≤ẋ]</value>
@@ -1242,6 +1266,12 @@
   <data name="Purple" xml:space="preserve">
     <value>[Þûŕþļéẋẋ]</value>
   </data>
+  <data name="QueuePosition" xml:space="preserve">
+    <value>[Ûšéŕ´šẋẋ Ǫûéûéẋẋ Þöšîţîöñẋẋẋ]</value>
+  </data>
+  <data name="QueueStatus" xml:space="preserve">
+    <value>[Ǫûéûéẋẋ Šţåţûšẋẋ]</value>
+  </data>
   <data name="Quote" xml:space="preserve">
     <value>[Ǫûöţéẋẋ]</value>
   </data>
@@ -1376,6 +1406,15 @@
   </data>
   <data name="SecondValue" xml:space="preserve">
     <value>[Šéçöñðẋẋ Ṽåļûéẋẋ]</value>
+  </data>
+  <data name="SelectFirst" xml:space="preserve">
+    <value>[Šéļéçţẋẋ Ûšéŕẋẋ åţẋ Ƒŕöñţẋẋ öƒẋ Ǫûéûéẋẋ]</value>
+  </data>
+  <data name="SelectFirstType" xml:space="preserve">
+    <value>[Šéļéçţẋẋ Ƒîŕšţẋẋ Ûšéŕẋẋ öƒẋ Ţýþéẋẋ îñẋ Ǫûéûéẋẋ]</value>
+  </data>
+  <data name="SelectRandom" xml:space="preserve">
+    <value>[Šéļéçţẋẋ Ŕåñðöɱẋẋ Ûšéŕẋẋ îñẋ Ǫûéûéẋẋ]</value>
   </data>
   <data name="SelectTypeOfCommand" xml:space="preserve">
     <value>[Šéļéçţẋẋ ţĥéẋ ţýþéẋẋ öƒẋ çöɱɱåñðẋẋẋ ýöûẋ ŵöûļðẋẋ ļîķéẋẋ ţöẋ ƀûîļð∶ẋẋ]</value>
@@ -1604,6 +1643,9 @@
   </data>
   <data name="TargetUser" xml:space="preserve">
     <value>[Ţåŕĝéţẋẋ Ûšéŕẋẋ]</value>
+  </data>
+  <data name="TargetUserOptional" xml:space="preserve">
+    <value>[Ţåŕĝéţẋẋ Ûšéŕẋẋ (Öþţîöñåļ)ẋẋẋẋ]</value>
   </data>
   <data name="Teal" xml:space="preserve">
     <value>[Ţéåļẋẋ]</value>
