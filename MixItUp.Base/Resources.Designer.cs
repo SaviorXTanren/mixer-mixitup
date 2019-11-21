@@ -1735,6 +1735,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please enable IFTTT connection on the Services page!.
+        /// </summary>
+        public static string EnableIFTTT {
+            get {
+                return ResourceManager.GetString("EnableIFTTT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enable Queue.
         /// </summary>
         public static string EnableQueue {
@@ -5191,6 +5200,33 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Value 1 (Optional).
+        /// </summary>
+        public static string Value1 {
+            get {
+                return ResourceManager.GetString("Value1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value 2 (Optional).
+        /// </summary>
+        public static string Value2 {
+            get {
+                return ResourceManager.GetString("Value2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value 3 (Optional).
+        /// </summary>
+        public static string Value3 {
+            get {
+                return ResourceManager.GetString("Value3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Version.
         /// </summary>
         public static string Version {
@@ -5304,6 +5340,15 @@ namespace MixItUp.Base {
         public static string WatchTime {
             get {
                 return ResourceManager.GetString("WatchTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Web Hook Event Name.
+        /// </summary>
+        public static string WebHookEventName {
+            get {
+                return ResourceManager.GetString("WebHookEventName", resourceCulture);
             }
         }
         

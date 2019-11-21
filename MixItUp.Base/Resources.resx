@@ -675,6 +675,9 @@
   <data name="EnableDiscord" xml:space="preserve">
     <value>Please enable Discord connection on the Services page!</value>
   </data>
+  <data name="EnableIFTTT" xml:space="preserve">
+    <value>Please enable IFTTT connection on the Services page!</value>
+  </data>
   <data name="EnableQueue" xml:space="preserve">
     <value>Enable Queue</value>
   </data>
@@ -1827,6 +1830,15 @@
   <data name="UserTitles" xml:space="preserve">
     <value>User Titles</value>
   </data>
+  <data name="Value1" xml:space="preserve">
+    <value>Value 1 (Optional)</value>
+  </data>
+  <data name="Value2" xml:space="preserve">
+    <value>Value 2 (Optional)</value>
+  </data>
+  <data name="Value3" xml:space="preserve">
+    <value>Value 3 (Optional)</value>
+  </data>
   <data name="Version" xml:space="preserve">
     <value>Version</value>
   </data>
@@ -1865,6 +1877,9 @@
   </data>
   <data name="WatchTime" xml:space="preserve">
     <value>Watch Time</value>
+  </data>
+  <data name="WebHookEventName" xml:space="preserve">
+    <value>Web Hook Event Name</value>
   </data>
   <data name="WebPage" xml:space="preserve">
     <value>Web Page</value>
