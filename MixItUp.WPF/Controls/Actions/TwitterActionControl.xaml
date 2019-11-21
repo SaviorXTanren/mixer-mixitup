@@ -25,7 +25,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <ComboBox x:Name="TypeComboBox" Grid.Column="0" HorizontalAlignment="Left" Width="250" SelectionChanged="TypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+        <ComboBox x:Name="TypeComboBox" Grid.Column="0" HorizontalAlignment="Left" Width="250" SelectionChanged="TypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
         <TextBlock Grid.Row="0" HorizontalAlignment="Right">
             <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">

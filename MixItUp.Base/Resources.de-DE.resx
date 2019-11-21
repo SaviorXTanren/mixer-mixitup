@@ -195,6 +195,9 @@
   <data name="AddItem" xml:space="preserve">
     <value>Gegenstände hinzufügen</value>
   </data>
+  <data name="AddNewPair" xml:space="preserve">
+    <value>Add New Pair</value>
+  </data>
   <data name="AddNewRank" xml:space="preserve">
     <value>Rang hinzufügen</value>
   </data>
@@ -248,6 +251,9 @@
   </data>
   <data name="AmountPlusMinus" xml:space="preserve">
     <value>Menge (+/-)</value>
+  </data>
+  <data name="AmountSeconds" xml:space="preserve">
+    <value>Amount (Seconds)</value>
   </data>
   <data name="AnyChatMessageSound" xml:space="preserve">
     <value>Beliebiger Chat-Nachrichtenton</value>
@@ -426,6 +432,12 @@
   <data name="Click" xml:space="preserve">
     <value>Click</value>
   </data>
+  <data name="ClipLength" xml:space="preserve">
+    <value>Length (15-300 Secs)</value>
+  </data>
+  <data name="ClipName" xml:space="preserve">
+    <value>Clip Name</value>
+  </data>
   <data name="Close" xml:space="preserve">
     <value>Schließen</value>
   </data>
@@ -470,6 +482,9 @@
   </data>
   <data name="Control" xml:space="preserve">
     <value>Control</value>
+  </data>
+  <data name="ControlID" xml:space="preserve">
+    <value>Control ID</value>
   </data>
   <data name="ConvertToAdvanced" xml:space="preserve">
     <value>In Erweitert konventieren</value>
@@ -630,6 +645,12 @@
   <data name="DownloadAndInstallffmpeg" xml:space="preserve">
     <value>ffmpeg herunterladen &amp; installieren</value>
   </data>
+  <data name="DownloadClip" xml:space="preserve">
+    <value>Download Clip</value>
+  </data>
+  <data name="DownloadDirectory" xml:space="preserve">
+    <value>Download Directory</value>
+  </data>
   <data name="DownloadFrom" xml:space="preserve">
     <value>Herunterladen von</value>
   </data>
@@ -638,6 +659,9 @@
   </data>
   <data name="Duplicate" xml:space="preserve">
     <value>Duplizieren</value>
+  </data>
+  <data name="DurationSec" xml:space="preserve">
+    <value>Duration (Sec)</value>
   </data>
   <data name="Edit" xml:space="preserve">
     <value>Editieren</value>
@@ -672,6 +696,9 @@
   <data name="EnableDiagnostics" xml:space="preserve">
     <value>Diagnose aktivieren</value>
   </data>
+  <data name="EnableDisable" xml:space="preserve">
+    <value>Enable/Disable</value>
+  </data>
   <data name="EnableDisableCommand" xml:space="preserve">
     <value>Befehl aktivieren/deaktivieren</value>
   </data>
@@ -687,6 +714,9 @@
   <data name="EnableIFTTT" xml:space="preserve">
     <value>Please enable IFTTT connection on the Services page!</value>
   </data>
+  <data name="EnableOverlay" xml:space="preserve">
+    <value>Please enable Mix It Up Overlay in the Services Section!</value>
+  </data>
   <data name="EnableQueue" xml:space="preserve">
     <value>Enable Queue</value>
   </data>
@@ -695,6 +725,9 @@
   </data>
   <data name="EnteredUsers" xml:space="preserve">
     <value>Beigetretene Benutzer</value>
+  </data>
+  <data name="EntranceAnimation" xml:space="preserve">
+    <value>Entrance Animation</value>
   </data>
   <data name="EqualsCompare" xml:space="preserve">
     <value>=</value>
@@ -723,6 +756,9 @@
   <data name="ExemptFromRuleAndStrikes" xml:space="preserve">
     <value>Ausgenomme Rollen &amp; Verwarnungen</value>
   </data>
+  <data name="ExitAnimation" xml:space="preserve">
+    <value>Exit Animation</value>
+  </data>
   <data name="ExitConfirmation" xml:space="preserve">
     <value>Bist Du sicher dass, du Mix It Up schließen möchtest?</value>
   </data>
@@ -749,6 +785,12 @@
   </data>
   <data name="FeatureMixItUpStreamer" xml:space="preserve">
     <value>Nimm mich als Mix It Up Streamer auf</value>
+  </data>
+  <data name="FFMPEGMustBeInstalled" xml:space="preserve">
+    <value>FFMPEG must be installed through the Mix It Up Settings to use this feature!</value>
+  </data>
+  <data name="FieldName" xml:space="preserve">
+    <value>Field Name</value>
   </data>
   <data name="FilePath" xml:space="preserve">
     <value>File Path</value>
@@ -833,6 +875,9 @@
   </data>
   <data name="GroupName" xml:space="preserve">
     <value>Gruppenname</value>
+  </data>
+  <data name="GroupNameCaseSensitive" xml:space="preserve">
+    <value>Group Name (Case Sensitive)</value>
   </data>
   <data name="Groups" xml:space="preserve">
     <value>Gruppe</value>
@@ -1035,6 +1080,12 @@
   <data name="MeetTheTeam" xml:space="preserve">
     <value>Triff das Team</value>
   </data>
+  <data name="MetadataName" xml:space="preserve">
+    <value>Metadata Name</value>
+  </data>
+  <data name="MetadataValue" xml:space="preserve">
+    <value>Metadata Value</value>
+  </data>
   <data name="MiddleButton" xml:space="preserve">
     <value>Middle Button</value>
   </data>
@@ -1088,6 +1139,12 @@
   </data>
   <data name="Moderation" xml:space="preserve">
     <value>Moderation</value>
+  </data>
+  <data name="ModerationAction" xml:space="preserve">
+    <value>Moderation Action</value>
+  </data>
+  <data name="ModerationReasonOptional" xml:space="preserve">
+    <value>Moderation Reason (Optional)</value>
   </data>
   <data name="Moderator" xml:space="preserve">
     <value>Moderator</value>
@@ -1214,6 +1271,18 @@
   </data>
   <data name="Overlays" xml:space="preserve">
     <value>Overlays</value>
+  </data>
+  <data name="OverlayToUse" xml:space="preserve">
+    <value>Overlay To Use</value>
+  </data>
+  <data name="OverlayWarning1" xml:space="preserve">
+    <value>WARNING: Animations may not work correctly.</value>
+  </data>
+  <data name="OverlayWarning2" xml:space="preserve">
+    <value>For more information:</value>
+  </data>
+  <data name="OverlayWarning3" xml:space="preserve">
+    <value>Windows Settings: Overlay Animation Issue</value>
   </data>
   <data name="OverlayWidgetEditor" xml:space="preserve">
     <value>Overlay Widget - Editor</value>
@@ -1432,6 +1501,9 @@
   <data name="Scene" xml:space="preserve">
     <value>Szene</value>
   </data>
+  <data name="SceneName" xml:space="preserve">
+    <value>Scene Name (Case Sensitive)</value>
+  </data>
   <data name="Search" xml:space="preserve">
     <value>Suchen</value>
   </data>
@@ -1525,6 +1597,9 @@
   </data>
   <data name="ShowEventAlerts" xml:space="preserve">
     <value>Zeige Event-Alerts</value>
+  </data>
+  <data name="ShowInfoInChat" xml:space="preserve">
+    <value>Show Info In Chat</value>
   </data>
   <data name="ShowLatestChatMessagesAtTopInsteadOfBottom" xml:space="preserve">
     <value>Zeige die neuesten Chat-Nachrichten oben anstatt unten</value>
@@ -1814,6 +1889,9 @@
   <data name="UpdateCommand" xml:space="preserve">
     <value>Befehl aktualisieren</value>
   </data>
+  <data name="UpdatedValue" xml:space="preserve">
+    <value>Updated Value</value>
+  </data>
   <data name="UpdatePreviewProgram" xml:space="preserve">
     <value>Als Preview-Programm aktualisieren</value>
   </data>
@@ -1847,6 +1925,9 @@
   <data name="UserMetrics" xml:space="preserve">
     <value>Benutzerkennzahlen</value>
   </data>
+  <data name="UserNameOptional" xml:space="preserve">
+    <value>User Name (Optional)</value>
+  </data>
   <data name="UserOnlyChatCommands" xml:space="preserve">
     <value>Nur-Benutzer-Chat-Befehle</value>
   </data>
@@ -1867,6 +1948,9 @@
   </data>
   <data name="UserTitles" xml:space="preserve">
     <value>Benutzertitel</value>
+  </data>
+  <data name="UserToMove" xml:space="preserve">
+    <value>User To Move (Optional)</value>
   </data>
   <data name="Value1" xml:space="preserve">
     <value>Value 1 (Optional)</value>
@@ -1903,6 +1987,12 @@
   </data>
   <data name="ViewingTwoHours" xml:space="preserve">
     <value>2 Stunden lang zugeschaut</value>
+  </data>
+  <data name="Visible" xml:space="preserve">
+    <value>Visible</value>
+  </data>
+  <data name="VisibleAnimation" xml:space="preserve">
+    <value>Visible Animation</value>
   </data>
   <data name="Volume" xml:space="preserve">
     <value>Volume</value>
@@ -1948,6 +2038,9 @@
   </data>
   <data name="WhoCanRun" xml:space="preserve">
     <value>Who should be allowed to run this command?</value>
+  </data>
+  <data name="Widget" xml:space="preserve">
+    <value>Widget</value>
   </data>
   <data name="Wildcards" xml:space="preserve">
     <value>Wildcards</value>

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
@@ -32,11 +33,11 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="ModerationActionTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Moderation Action" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="ModerationActionTypeComboBox_SelectionChanged" Width="300" />
+            <ComboBox x:Name="ModerationActionTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ModerationAction}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="ModerationActionTypeComboBox_SelectionChanged" Width="300" />
 
-            <TextBox Grid.Column="2" x:Name="UserNameTextBox" VerticalAlignment="Center" Visibility="Collapsed" MaterialDesign:HintAssist.Hint="User Name (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="200" />
+            <TextBox Grid.Column="2" x:Name="UserNameTextBox" VerticalAlignment="Center" Visibility="Collapsed" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.UserNameOptional}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="200" />
 
-            <TextBox Grid.Column="4" x:Name="TimeAmountTextBox" VerticalAlignment="Center" Visibility="Collapsed" MaterialDesign:HintAssist.Hint="Amount (Seconds)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
+            <TextBox Grid.Column="4" x:Name="TimeAmountTextBox" VerticalAlignment="Center" Visibility="Collapsed" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.AmountSeconds}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
         </Grid>
 
         <Grid Grid.Row="2">
@@ -44,7 +45,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="ModerationReasonTextBox" VerticalAlignment="Center" Margin="0,20,0,0" Visibility="Collapsed" MaterialDesign:HintAssist.Hint="Moderation Reason (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="ModerationReasonTextBox" VerticalAlignment="Center" Margin="0,20,0,0" Visibility="Collapsed" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ModerationReasonOptional}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
     </Grid>
 </local:ActionControlBase>

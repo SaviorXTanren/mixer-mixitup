@@ -5,11 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <local:ActionControlBase.Resources>
-        <ResourceDictionary>
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+        <ResourceDictionary x:Key="Themes">
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Card.xaml" />
@@ -46,11 +48,11 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" x:Name="ClipNameTextBox" MaterialDesign:HintAssist.Hint="Clip Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="380" />
+            <TextBox Grid.Column="0" x:Name="ClipNameTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ClipName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="380" />
 
-            <TextBox Grid.Column="2" x:Name="ClipLengthTextBox" MaterialDesign:HintAssist.Hint="Length (15-300 Secs)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
+            <TextBox Grid.Column="2" x:Name="ClipLengthTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ClipLength}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
 
-            <TextBlock Grid.Column="4" VerticalAlignment="Bottom">Show Info In Chat:</TextBlock>
+            <TextBlock Grid.Column="4" VerticalAlignment="Bottom" Text="{Binding Source={x:Static resx:Resources.ShowInfoInChat}, StringFormat={StaticResource ColumnHeaderFormat}}" />
             <ToggleButton Grid.Column="6" x:Name="ShowClipInfoInChatToggleButton" VerticalAlignment="Bottom" />
         </Grid>
 
@@ -65,13 +67,13 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" VerticalAlignment="Bottom">Download Clip:</TextBlock>
+            <TextBlock Grid.Column="0" VerticalAlignment="Bottom" Text="{Binding Source={x:Static resx:Resources.DownloadClip}, StringFormat={StaticResource ColumnHeaderFormat}}" />
             <ToggleButton Grid.Column="2" x:Name="DownloadClipToggleButton" VerticalAlignment="Bottom" Checked="DownloadClipToggleButton_Checked" Unchecked="DownloadClipToggleButton_Checked" />
 
-            <TextBox Grid.Column="4" x:Name="DownloadDirectoryTextBox" IsEnabled="False" MaterialDesign:HintAssist.Hint="Download Directory" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="450" />
+            <TextBox Grid.Column="4" x:Name="DownloadDirectoryTextBox" IsEnabled="False" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DownloadDirectory}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="450" />
             <Button Grid.Column="6" x:Name="DownloadDirectoryBrowseButton" IsEnabled="False" VerticalAlignment="Bottom" Click="DownloadDirectoryBrowseButton_Click" Content="{x:Static resx:Resources.Browse}"/>
 
-            <TextBlock Grid.Column="4" x:Name="FFMPEGNotInstalledTextBlock" Visibility="Collapsed" Margin="40,0,0,0" VerticalAlignment="Center" Foreground="Red">FFMPEG must be installed through the Mix It Up Settings to use this feature</TextBlock>
+            <TextBlock Grid.Column="4" x:Name="FFMPEGNotInstalledTextBlock" Visibility="Collapsed" Margin="40,0,0,0" VerticalAlignment="Center" Foreground="Red" Text="{x:Static resx:Resources.FFMPEGMustBeInstalled}"/>
         </Grid>
     </Grid>
 </local:ActionControlBase>

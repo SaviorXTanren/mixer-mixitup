@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Overlay"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
@@ -28,7 +29,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox Grid.Column="0" ItemsSource="{Binding TickerTapeTypeStrings}" SelectedItem="{Binding TickerTapeTypeString}" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="115" />
+            <ComboBox Grid.Column="0" ItemsSource="{Binding TickerTapeTypeStrings}" SelectedItem="{Binding TickerTapeTypeString}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="115" />
 
             <TextBox Text="{Binding MinimumAmountRequiredToShowString}" Grid.Column="2" MaterialDesign:HintAssist.Hint="Minimum Amount" Visibility="{Binding ShowMinimumAmountRequiredToShow, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
         </Grid>
