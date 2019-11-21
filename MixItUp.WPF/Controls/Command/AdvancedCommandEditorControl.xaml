@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Command"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:util="clr-namespace:MixItUp.WPF.Util"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -17,6 +18,7 @@
 
              d:DesignHeight="500" d:DesignWidth="700">
     <local:CommandEditorControlBase.Resources>
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
         <util:LocalizationConverter x:Key="LocalizationConverter"/>
         <ResourceDictionary x:Key="Themes">
             <ResourceDictionary.MergedDictionaries>
@@ -60,7 +62,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" VerticalAlignment="Center">Action:</TextBlock>
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Action}, StringFormat={StaticResource ColumnHeaderFormat}}" />
             <ComboBox Grid.Column="2" x:Name="TypeComboBox" Width="200">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
@@ -71,7 +73,7 @@
 
             <Button x:Name="AddActionButton" Content="{MaterialDesign:PackIcon Plus}" Click="AddActionButton_Click" Grid.Column="4" ToolTip="{x:Static resx:Resources.Add}" />
 
-            <Button x:Name="SaveButton" Click="SaveButton_Click" Grid.Column="6" ToolTip="Save" Width="40" HorizontalAlignment="Center">
+            <Button x:Name="SaveButton" Click="SaveButton_Click" Grid.Column="6" ToolTip="{x:Static resx:Resources.Save}" Width="40" HorizontalAlignment="Center">
                 <MaterialDesign:PackIcon Kind="ContentSave" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
             </Button>
 

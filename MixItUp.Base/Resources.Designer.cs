@@ -889,6 +889,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chat Trigger(s) (Space seperated, semi-colon for multi-word).
+        /// </summary>
+        public static string ChatTriggersHintAssist {
+            get {
+                return ResourceManager.GetString("ChatTriggersHintAssist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chat Trigger(s) (No &quot;!&quot; needed, space seperated, semi-colon for multi-word).
+        /// </summary>
+        public static string ChatTriggersNoExclamationHintAssist {
+            get {
+                return ResourceManager.GetString("ChatTriggersNoExclamationHintAssist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chat Whisper Sound.
         /// </summary>
         public static string ChatWhisperSound {

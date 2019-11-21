@@ -393,6 +393,12 @@
   <data name="ChatTextModeration" xml:space="preserve">
     <value>[Çĥåţẋẋ Ţéẋţẋẋ Ṁöðéŕåţîöñẋẋẋẋ]</value>
   </data>
+  <data name="ChatTriggersHintAssist" xml:space="preserve">
+    <value>[Çĥåţẋẋ Ţŕîĝĝéŕ(š)ẋẋẋẋ (Šþåçéẋẋ šéþéŕåţéð،ẋẋẋẋ šéɱî‐çöļöñẋẋẋẋ ƒöŕẋ ɱûļţî‐ŵöŕð)ẋẋẋẋ]</value>
+  </data>
+  <data name="ChatTriggersNoExclamationHintAssist" xml:space="preserve">
+    <value>[Çĥåţẋẋ Ţŕîĝĝéŕ(š)ẋẋẋẋ (Ñöẋ ″¡″ẋ ñééðéð،ẋẋẋ šþåçéẋẋ šéþéŕåţéð،ẋẋẋẋ šéɱî‐çöļöñẋẋẋẋ ƒöŕẋ ɱûļţî‐ŵöŕð)ẋẋẋẋ]</value>
+  </data>
   <data name="ChatWhisperSound" xml:space="preserve">
     <value>[Çĥåţẋẋ Ŵĥîšþéŕẋẋẋ Šöûñðẋẋ]</value>
   </data>

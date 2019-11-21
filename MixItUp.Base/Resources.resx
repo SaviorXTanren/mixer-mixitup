@@ -393,6 +393,12 @@
   <data name="ChatTextModeration" xml:space="preserve">
     <value>Chat Text Moderation</value>
   </data>
+  <data name="ChatTriggersHintAssist" xml:space="preserve">
+    <value>Chat Trigger(s) (Space seperated, semi-colon for multi-word)</value>
+  </data>
+  <data name="ChatTriggersNoExclamationHintAssist" xml:space="preserve">
+    <value>Chat Trigger(s) (No "!" needed, space seperated, semi-colon for multi-word)</value>
+  </data>
   <data name="ChatWhisperSound" xml:space="preserve">
     <value>Chat Whisper Sound</value>
   </data>
