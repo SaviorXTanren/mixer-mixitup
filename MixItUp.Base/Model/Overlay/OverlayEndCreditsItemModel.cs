@@ -299,24 +299,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (message.User != null && !message.User.IgnoreForQueries)
             {
-                if (message.User.ID.Equals(ChannelSession.MixerStreamerUser.id))
-                {
-                    return;
-                }
-                if (ChannelSession.MixerBotUser != null && message.User.ID.Equals(ChannelSession.MixerBotUser.id))
-                {
-                    return;
-                }
-
-                this.viewers.Add(message.User.ID);
-                if (message.User.MixerRoles.Contains(MixerRoleEnum.Subscriber) || message.User.IsEquivalentToMixerSubscriber())
-                {
-                    this.subs.Add(message.User.ID);
-                }
-                if (message.User.MixerRoles.Contains(MixerRoleEnum.Mod) || message.User.MixerRoles.Contains(MixerRoleEnum.ChannelEditor))
-                {
-                    this.mods.Add(message.User.ID);
-                }
+                this.AddUserForRole(message.User);
             }
         }
 
@@ -325,6 +308,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.follows.Contains(user.ID))
             {
                 this.follows.Add(user.ID);
+                this.AddUserForRole(user);
             }
         }
 
@@ -333,6 +317,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.hosts.Contains(host.Item1.ID))
             {
                 this.hosts.Add(host.Item1.ID);
+                this.AddUserForRole(host.Item1);
             }
         }
 
@@ -341,6 +326,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.newSubs.Contains(user.ID))
             {
                 this.newSubs.Add(user.ID);
+                this.AddUserForRole(user);
             }
         }
 
@@ -349,6 +335,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.resubs.ContainsKey(user.Item1.ID))
             {
                 this.resubs[user.Item1.ID] = (uint)user.Item2;
+                this.AddUserForRole(user.Item1);
             }
         }
 
@@ -357,11 +344,13 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.newSubs.Contains(e.Item2.ID))
             {
                 this.newSubs.Add(e.Item2.ID);
+                this.AddUserForRole(e.Item2);
             }
 
             if (!this.giftedSubs.ContainsKey(e.Item1.ID))
             {
                 this.giftedSubs[e.Item1.ID] = 0;
+                this.AddUserForRole(e.Item1);
             }
             this.giftedSubs[e.Item1.ID]++;
         }
@@ -371,6 +360,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.donations.ContainsKey(donation.User.ID))
             {
                 this.donations[donation.User.ID] = 0;
+                this.AddUserForRole(donation.User);
             }
             this.donations[donation.User.ID] += donation.Amount;
         }
@@ -380,6 +370,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.sparks.ContainsKey(sparkUsage.Item1.ID))
             {
                 this.sparks[sparkUsage.Item1.ID] = 0;
+                this.AddUserForRole(sparkUsage.Item1);
             }
             this.sparks[sparkUsage.Item1.ID] += sparkUsage.Item2;
         }
@@ -389,8 +380,31 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.embers.ContainsKey(emberUsage.User.ID))
             {
                 this.embers[emberUsage.User.ID] = 0;
+                this.AddUserForRole(emberUsage.User);
             }
             this.embers[emberUsage.User.ID] += emberUsage.Amount;
+        }
+
+        private void AddUserForRole(UserViewModel user)
+        {
+            if (user.ID.Equals(ChannelSession.MixerStreamerUser.id))
+            {
+                return;
+            }
+            if (ChannelSession.MixerBotUser != null && user.ID.Equals(ChannelSession.MixerBotUser.id))
+            {
+                return;
+            }
+
+            this.viewers.Add(user.ID);
+            if (user.MixerRoles.Contains(MixerRoleEnum.Subscriber) || user.IsEquivalentToMixerSubscriber())
+            {
+                this.subs.Add(user.ID);
+            }
+            if (user.MixerRoles.Contains(MixerRoleEnum.Mod) || user.MixerRoles.Contains(MixerRoleEnum.ChannelEditor))
+            {
+                this.mods.Add(user.ID);
+            }
         }
 
         private Dictionary<UserViewModel, string> GetUsersDictionary(HashSet<uint> data)
