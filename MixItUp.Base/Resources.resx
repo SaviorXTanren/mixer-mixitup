@@ -1221,6 +1221,12 @@
   <data name="Profiles" xml:space="preserve">
     <value>Profiles</value>
   </data>
+  <data name="ProgramArguments" xml:space="preserve">
+    <value>Program Arguments</value>
+  </data>
+  <data name="ProgramFilePath" xml:space="preserve">
+    <value>Program File Path</value>
+  </data>
   <data name="ProgressBar" xml:space="preserve">
     <value>Goal/Progress Bar</value>
   </data>
@@ -1430,6 +1436,9 @@
   </data>
   <data name="ShowUserJoinLeave" xml:space="preserve">
     <value>Show User Join/Leave</value>
+  </data>
+  <data name="ShowWindow" xml:space="preserve">
+    <value>Show Window</value>
   </data>
   <data name="SingleAction" xml:space="preserve">
     <value>Single Action</value>
@@ -1778,6 +1787,9 @@
   </data>
   <data name="Wait" xml:space="preserve">
     <value>Wait</value>
+  </data>
+  <data name="WaitForFinish" xml:space="preserve">
+    <value>Wait For Finish</value>
   </data>
   <data name="WatchTime" xml:space="preserve">
     <value>Watch Time</value>

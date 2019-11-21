@@ -1221,6 +1221,12 @@
   <data name="Profiles" xml:space="preserve">
     <value>[Þŕöƒîļéšẋẋẋ]</value>
   </data>
+  <data name="ProgramArguments" xml:space="preserve">
+    <value>[Þŕöĝŕåɱẋẋẋ Åŕĝûɱéñţšẋẋẋ]</value>
+  </data>
+  <data name="ProgramFilePath" xml:space="preserve">
+    <value>[Þŕöĝŕåɱẋẋẋ Ƒîļéẋẋ Þåţĥẋẋ]</value>
+  </data>
   <data name="ProgressBar" xml:space="preserve">
     <value>[Ĝöåļ⁄Þŕöĝŕéššẋẋẋẋẋ Ɓåŕẋ]</value>
   </data>
@@ -1430,6 +1436,9 @@
   </data>
   <data name="ShowUserJoinLeave" xml:space="preserve">
     <value>[Šĥöŵẋẋ Ûšéŕẋẋ Ĵöîñ⁄Ļéåṽéẋẋẋẋ]</value>
+  </data>
+  <data name="ShowWindow" xml:space="preserve">
+    <value>[Šĥöŵẋẋ Ŵîñðöŵẋẋ]</value>
   </data>
   <data name="SingleAction" xml:space="preserve">
     <value>[Šîñĝļéẋẋ Åçţîöñẋẋ]</value>
@@ -1778,6 +1787,9 @@
   </data>
   <data name="Wait" xml:space="preserve">
     <value>[Ŵåîţẋẋ]</value>
+  </data>
+  <data name="WaitForFinish" xml:space="preserve">
+    <value>[Ŵåîţẋẋ Ƒöŕẋ Ƒîñîšĥẋẋ]</value>
   </data>
   <data name="WatchTime" xml:space="preserve">
     <value>[Ŵåţçĥẋẋ Ţîɱéẋẋ]</value>

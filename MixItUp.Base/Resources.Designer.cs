@@ -3373,6 +3373,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Program Arguments.
+        /// </summary>
+        public static string ProgramArguments {
+            get {
+                return ResourceManager.GetString("ProgramArguments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Program File Path.
+        /// </summary>
+        public static string ProgramFilePath {
+            get {
+                return ResourceManager.GetString("ProgramFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Goal/Progress Bar.
         /// </summary>
         public static string ProgressBar {
@@ -3999,6 +4017,15 @@ namespace MixItUp.Base {
         public static string ShowUserJoinLeave {
             get {
                 return ResourceManager.GetString("ShowUserJoinLeave", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Window.
+        /// </summary>
+        public static string ShowWindow {
+            get {
+                return ResourceManager.GetString("ShowWindow", resourceCulture);
             }
         }
         
@@ -5043,6 +5070,15 @@ namespace MixItUp.Base {
         public static string Wait {
             get {
                 return ResourceManager.GetString("Wait", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wait For Finish.
+        /// </summary>
+        public static string WaitForFinish {
+            get {
+                return ResourceManager.GetString("WaitForFinish", resourceCulture);
             }
         }
         
