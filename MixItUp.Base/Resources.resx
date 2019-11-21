@@ -168,6 +168,9 @@
   <data name="ActionToPeform" xml:space="preserve">
     <value>Action To Peform</value>
   </data>
+  <data name="ActionToPerformWithResponse" xml:space="preserve">
+    <value>Action To Perform With Response</value>
+  </data>
   <data name="ActionToPerformWithTranslation" xml:space="preserve">
     <value>Action To Perform With Translation</value>
   </data>
@@ -296,6 +299,9 @@
   </data>
   <data name="ArgumentsTranslatedText" xml:space="preserve">
     <value>Arguments ($translationresult = Translated Text)</value>
+  </data>
+  <data name="ArgumentsWebRequest" xml:space="preserve">
+    <value>Arguments ($webrequestresult = Result Text)</value>
   </data>
   <data name="Assets" xml:space="preserve">
     <value>Assets</value>
@@ -428,6 +434,9 @@
   </data>
   <data name="ChatMessageTranslatedText" xml:space="preserve">
     <value>Chat Message ($translationresult = Translated Text)</value>
+  </data>
+  <data name="ChatMessageWebRequest" xml:space="preserve">
+    <value>Chat Message ($webrequestresult = Result Text)</value>
   </data>
   <data name="ChatMixPlayParticipation" xml:space="preserve">
     <value>Chat / MixPlay Participation</value>
@@ -704,6 +713,9 @@
   </data>
   <data name="DownloadFrom" xml:space="preserve">
     <value>DownloadFrom</value>
+  </data>
+  <data name="Drop" xml:space="preserve">
+    <value>DROP</value>
   </data>
   <data name="DTR" xml:space="preserve">
     <value>DTR</value>
@@ -1062,6 +1074,9 @@
   <data name="JoinQueue" xml:space="preserve">
     <value>User Join Queue</value>
   </data>
+  <data name="JSONValueName" xml:space="preserve">
+    <value>JSON Value Name (Use '\' for nested parameters)</value>
+  </data>
   <data name="Keyboard" xml:space="preserve">
     <value>Keyboard</value>
   </data>
@@ -1097,6 +1112,9 @@
   </data>
   <data name="LeaveQueue" xml:space="preserve">
     <value>User Leave Queue</value>
+  </data>
+  <data name="Left" xml:space="preserve">
+    <value>LEFT</value>
   </data>
   <data name="LeftButton" xml:space="preserve">
     <value>Left Button</value>
@@ -1137,6 +1155,9 @@
   <data name="Live" xml:space="preserve">
     <value>Live</value>
   </data>
+  <data name="Location" xml:space="preserve">
+    <value>LOCATION</value>
+  </data>
   <data name="LockChatScrolling" xml:space="preserve">
     <value>Lock/Unlock Chat Scrolling</value>
   </data>
@@ -1167,6 +1188,9 @@
   <data name="ManualReset" xml:space="preserve">
     <value>Manual Reset</value>
   </data>
+  <data name="Map" xml:space="preserve">
+    <value>Map</value>
+  </data>
   <data name="MaxAmount" xml:space="preserve">
     <value>Max Amount</value>
   </data>
@@ -1178,6 +1202,9 @@
   </data>
   <data name="MaxPunctSymbolsEmotes" xml:space="preserve">
     <value>Max Punct. / Symbols / Emotes</value>
+  </data>
+  <data name="MaxTime" xml:space="preserve">
+    <value>Max Time</value>
   </data>
   <data name="MaxValue" xml:space="preserve">
     <value>Max Value</value>
@@ -1310,6 +1337,9 @@
   </data>
   <data name="NewCommand" xml:space="preserve">
     <value>New Command</value>
+  </data>
+  <data name="NewProfileName" xml:space="preserve">
+    <value>New Profile Name</value>
   </data>
   <data name="NewStreamer" xml:space="preserve">
     <value>New Streamer</value>
@@ -1644,6 +1674,9 @@
   <data name="RunCommand" xml:space="preserve">
     <value>Run Command</value>
   </data>
+  <data name="RunOneRandomly" xml:space="preserve">
+    <value>Run One Randomly</value>
+  </data>
   <data name="SameAgeRating" xml:space="preserve">
     <value>Same Age Rating</value>
   </data>
@@ -1688,6 +1721,9 @@
   </data>
   <data name="Seconds" xml:space="preserve">
     <value>Seconds</value>
+  </data>
+  <data name="SecondsAllCaps" xml:space="preserve">
+    <value>SECONDS</value>
   </data>
   <data name="SecondValue" xml:space="preserve">
     <value>Second Value</value>
@@ -1835,6 +1871,9 @@
   </data>
   <data name="SourceText" xml:space="preserve">
     <value>Source Text</value>
+  </data>
+  <data name="SparkCost" xml:space="preserve">
+    <value>Spark Cost</value>
   </data>
   <data name="SparkCrystal" xml:space="preserve">
     <value>Spark Crystal</value>
@@ -2049,6 +2088,12 @@
   <data name="TriggerHint" xml:space="preserve">
     <value>Trigger(s) in Chat (No "!" needed)</value>
   </data>
+  <data name="TweetImageURL" xml:space="preserve">
+    <value>Tweet Image URL (Optional)</value>
+  </data>
+  <data name="TweetMessage" xml:space="preserve">
+    <value>Tweet Message (No @mentions allowed)</value>
+  </data>
   <data name="Twitter" xml:space="preserve">
     <value>Twitter</value>
   </data>
@@ -2241,6 +2286,9 @@
   <data name="WebRequest" xml:space="preserve">
     <value>Web Request</value>
   </data>
+  <data name="WebRequestURL" xml:space="preserve">
+    <value>Web Request URL</value>
+  </data>
   <data name="WebShow" xml:space="preserve">
     <value>Web Show</value>
   </data>
@@ -2273,6 +2321,9 @@
   </data>
   <data name="Winner" xml:space="preserve">
     <value>Winner</value>
+  </data>
+  <data name="WinnerAllCaps" xml:space="preserve">
+    <value>WINNER</value>
   </data>
   <data name="WinnerSelected" xml:space="preserve">
     <value>Winner Selected</value>

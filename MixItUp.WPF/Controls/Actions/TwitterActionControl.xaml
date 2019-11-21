@@ -40,9 +40,9 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <TextBox Grid.Row="0" x:Name="TweetMessageTextBox" MaterialDesign:HintAssist.Hint="Tweet Message (No @mentions allowed)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Row="0" x:Name="TweetMessageTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TweetMessage}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox Grid.Row="2" x:Name="TweetImagePathTextBox" MaterialDesign:HintAssist.Hint="Tweet Image URL (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Row="2" x:Name="TweetImagePathTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TweetImageURL}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid x:Name="UpdateNameGrid" Grid.Row="2" Visibility="Collapsed">
@@ -50,7 +50,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <TextBox Grid.Row="0" x:Name="NewProfileNameTextBox" MaterialDesign:HintAssist.Hint="New Profile Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Row="0" x:Name="NewProfileNameTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.NewProfileName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
     </Grid>
 </local:ActionControlBase>

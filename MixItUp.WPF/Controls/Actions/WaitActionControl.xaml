@@ -15,7 +15,7 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         
-        <TextBox x:Name="WaitAmountTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Duration (Seconds)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        <TextBox x:Name="WaitAmountTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.DurationSec}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
         <TextBlock Grid.Column="2" VerticalAlignment="Center">
             <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">
