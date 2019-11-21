@@ -534,6 +534,12 @@
   <data name="DateTime" xml:space="preserve">
     <value>[Ðåţé⁄Ţîɱéẋẋẋ]</value>
   </data>
+  <data name="Deafen" xml:space="preserve">
+    <value>[Ðéåƒéñẋẋ]</value>
+  </data>
+  <data name="DeafenSelf" xml:space="preserve">
+    <value>[Ðéåƒéñ⁄Ûñðéåƒéñẋẋẋẋẋ Šéļƒẋẋ]</value>
+  </data>
   <data name="DeductFromUserRunningCommand" xml:space="preserve">
     <value>[Ðéðûçţẋẋ Ƒŕöɱẋẋ Ûšéŕẋẋ Ŕûññîñĝẋẋẋ Çöɱɱåñðẋẋẋ]</value>
   </data>
@@ -653,6 +659,9 @@
   </data>
   <data name="EnableDisableDiagnosticsHeader" xml:space="preserve">
     <value>[Éñåƀļé⁄Ðîšåƀļéẋẋẋẋẋ Ðîåĝñöšţîçẋẋẋẋ ļöĝĝîñĝẋẋẋ ƒöŕẋ ƒîñðîñĝẋẋẋ îššûéšẋẋ]</value>
+  </data>
+  <data name="EnableDiscord" xml:space="preserve">
+    <value>[Þļéåšéẋẋ éñåƀļéẋẋ Ðîšçöŕðẋẋẋ çöññéçţîöñẋẋẋẋ öñẋ ţĥéẋ Šéŕṽîçéšẋẋẋ þåĝé¡ẋẋ]</value>
   </data>
   <data name="EndCredits" xml:space="preserve">
     <value>[Éñðẋ Çŕéðîţšẋẋẋ]</value>
@@ -1044,6 +1053,12 @@
   <data name="MoveUp" xml:space="preserve">
     <value>[Ṁöṽéẋẋ Ûþẋ]</value>
   </data>
+  <data name="Mute" xml:space="preserve">
+    <value>[Ṁûţéẋẋ]</value>
+  </data>
+  <data name="MuteSelf" xml:space="preserve">
+    <value>[Ṁûţé⁄Ûñɱûţéẋẋẋẋ Šéļƒẋẋ]</value>
+  </data>
   <data name="Name" xml:space="preserve">
     <value>[Ñåɱéẋẋ]</value>
   </data>
@@ -1343,6 +1358,9 @@
   </data>
   <data name="SendAsStreamer" xml:space="preserve">
     <value>[Šéñðẋẋ åšẋ Šţŕéåɱéŕẋẋẋ]</value>
+  </data>
+  <data name="SendMessage" xml:space="preserve">
+    <value>[Šéñðẋẋ Ṁéššåĝéẋẋẋ]</value>
   </data>
   <data name="Serial" xml:space="preserve">
     <value>[Šéŕîåļẋẋ]</value>
@@ -1676,6 +1694,9 @@
   </data>
   <data name="UpdatePreviewProgram" xml:space="preserve">
     <value>[Ûþðåţéẋẋ Þŕéṽîéŵẋẋẋ Þŕöĝŕåɱẋẋẋ]</value>
+  </data>
+  <data name="UploadFilePath" xml:space="preserve">
+    <value>[Ûþļöåðẋẋ Ƒîļéẋẋ Þåţĥẋẋ (Öþţîöñåļ)ẋẋẋẋ]</value>
   </data>
   <data name="UploadTo" xml:space="preserve">
     <value>[Ûþļöåðẋẋ Ţöẋ]</value>

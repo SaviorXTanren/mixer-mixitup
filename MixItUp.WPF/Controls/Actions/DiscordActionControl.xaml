@@ -5,9 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:util="clr-namespace:MixItUp.WPF.Util"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <local:ActionControlBase.Resources>
+        <util:LocalizationConverter x:Key="LocalizationConverter"/>
+    </local:ActionControlBase.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -22,9 +26,15 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="DiscordActionTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="DiscordActionTypeComboBox_SelectionChanged" />
+            <ComboBox x:Name="DiscordActionTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="DiscordActionTypeComboBox_SelectionChanged">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
-            <TextBlock x:Name="DiscordNotEnabledWarningTextBlock" Grid.Column="4" Foreground="Red" Visibility="Hidden" VerticalAlignment="Center">Please enable Discord connection on the Services page!</TextBlock>
+            <TextBlock x:Name="DiscordNotEnabledWarningTextBlock" Grid.Column="4" Foreground="Red" Visibility="Hidden" VerticalAlignment="Center" Text="{x:Static resx:Resources.EnableDiscord}"/>
         </Grid>
 
         <Grid Grid.Row="2">
@@ -50,9 +60,9 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <ComboBox x:Name="SendMessageChannelComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Chat Channel" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="Name" Width="200" />
+                    <ComboBox x:Name="SendMessageChannelComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Channel}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="Name" Width="200" />
 
-                    <TextBox x:Name="SendMessageTextBox" Grid.Column="2" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Message" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox x:Name="SendMessageTextBox" Grid.Column="2" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ChatMessage}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                 </Grid>
 
                 <Grid Grid.Row="4">
@@ -62,9 +72,9 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBox x:Name="FilePath" Grid.Column="0" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Upload File Path (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox x:Name="FilePath" Grid.Column="0" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.UploadFilePath}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                    <Button x:Name="FilePathBrowseButton" Grid.Column="2" Click="FilePathBrowseButton_Click">Browse</Button>
+                    <Button x:Name="FilePathBrowseButton" Grid.Column="2" Click="FilePathBrowseButton_Click" Content="{x:Static resx:Resources.Browse}"/>
                 </Grid>
             </Grid>
 

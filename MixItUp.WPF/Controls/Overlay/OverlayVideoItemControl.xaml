@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Overlay"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -23,7 +24,7 @@
         </Grid.ColumnDefinitions>
 
         <TextBox Grid.Column="0" Text="{Binding FilePath}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Video File Path" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-        <Button Grid.Column="2" Command="{Binding BrowseFilePathCommand}">Browse</Button>
+        <Button Grid.Column="2" Command="{Binding BrowseFilePathCommand}" Content="{x:Static resx:Resources.Browse}"/>
 
         <TextBox Grid.Column="4" Text="{Binding WidthString}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="70" />
 

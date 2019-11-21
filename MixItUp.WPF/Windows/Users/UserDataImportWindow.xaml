@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MixItUp.WPF.Windows.Currency"
+        xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
         xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
@@ -49,7 +50,7 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBox Grid.Column="0" Grid.Row="0" x:Name="UserDataFilePathTextBox" MaterialDesign:HintAssist.Hint="User Data File Path" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                <Button Grid.Column="2" Grid.Row="0" x:Name="UserDataFileBrowseButton" VerticalAlignment="Bottom" Click="UserDataFileBrowseButton_Click">Browse</Button>
+                <Button Grid.Column="2" Grid.Row="0" x:Name="UserDataFileBrowseButton" VerticalAlignment="Bottom" Click="UserDataFileBrowseButton_Click" Content="{x:Static resx:Resources.Browse}"/>
             </Grid>
 
             <TextBlock Grid.Row="4" TextWrapping="Wrap" Margin="20,0" HorizontalAlignment="Center">Next, you'll need to specify the column number for each value in your data file or leave it blank if that value is not present. Note that the data file is required to have at least either the username and/or user ID:</TextBlock>

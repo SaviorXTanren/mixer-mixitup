@@ -1312,6 +1312,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Deafen.
+        /// </summary>
+        public static string Deafen {
+            get {
+                return ResourceManager.GetString("Deafen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deafen/Undeafen Self.
+        /// </summary>
+        public static string DeafenSelf {
+            get {
+                return ResourceManager.GetString("DeafenSelf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Deduct From User Running Command.
         /// </summary>
         public static string DeductFromUserRunningCommand {
@@ -1668,6 +1686,15 @@ namespace MixItUp.Base {
         public static string EnableDisableDiagnosticsHeader {
             get {
                 return ResourceManager.GetString("EnableDisableDiagnosticsHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enable Discord connection on the Services page!.
+        /// </summary>
+        public static string EnableDiscord {
+            get {
+                return ResourceManager.GetString("EnableDiscord", resourceCulture);
             }
         }
         
@@ -2842,6 +2869,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mute.
+        /// </summary>
+        public static string Mute {
+            get {
+                return ResourceManager.GetString("Mute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mute/Unmute Self.
+        /// </summary>
+        public static string MuteSelf {
+            get {
+                return ResourceManager.GetString("MuteSelf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
         public static string Name {
@@ -3738,6 +3783,15 @@ namespace MixItUp.Base {
         public static string SendAsStreamer {
             get {
                 return ResourceManager.GetString("SendAsStreamer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Send Message.
+        /// </summary>
+        public static string SendMessage {
+            get {
+                return ResourceManager.GetString("SendMessage", resourceCulture);
             }
         }
         
@@ -4737,6 +4791,15 @@ namespace MixItUp.Base {
         public static string UpdatePreviewProgram {
             get {
                 return ResourceManager.GetString("UpdatePreviewProgram", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Upload File Path (Optional).
+        /// </summary>
+        public static string UploadFilePath {
+            get {
+                return ResourceManager.GetString("UploadFilePath", resourceCulture);
             }
         }
         

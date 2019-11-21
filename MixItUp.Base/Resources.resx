@@ -534,6 +534,12 @@
   <data name="DateTime" xml:space="preserve">
     <value>Date/Time</value>
   </data>
+  <data name="Deafen" xml:space="preserve">
+    <value>Deafen</value>
+  </data>
+  <data name="DeafenSelf" xml:space="preserve">
+    <value>Deafen/Undeafen Self</value>
+  </data>
   <data name="DeductFromUserRunningCommand" xml:space="preserve">
     <value>Deduct From User Running Command</value>
   </data>
@@ -653,6 +659,9 @@
   </data>
   <data name="EnableDisableDiagnosticsHeader" xml:space="preserve">
     <value>Enable/Disable Diagnostic logging for finding issues</value>
+  </data>
+  <data name="EnableDiscord" xml:space="preserve">
+    <value>Please enable Discord connection on the Services page!</value>
   </data>
   <data name="EndCredits" xml:space="preserve">
     <value>End Credits</value>
@@ -1044,6 +1053,12 @@
   <data name="MoveUp" xml:space="preserve">
     <value>Move Up</value>
   </data>
+  <data name="Mute" xml:space="preserve">
+    <value>Mute</value>
+  </data>
+  <data name="MuteSelf" xml:space="preserve">
+    <value>Mute/Unmute Self</value>
+  </data>
   <data name="Name" xml:space="preserve">
     <value>Name</value>
   </data>
@@ -1343,6 +1358,9 @@
   </data>
   <data name="SendAsStreamer" xml:space="preserve">
     <value>Send as Streamer</value>
+  </data>
+  <data name="SendMessage" xml:space="preserve">
+    <value>Send Message</value>
   </data>
   <data name="Serial" xml:space="preserve">
     <value>Serial</value>
@@ -1676,6 +1694,9 @@
   </data>
   <data name="UpdatePreviewProgram" xml:space="preserve">
     <value>Update Preview Program</value>
+  </data>
+  <data name="UploadFilePath" xml:space="preserve">
+    <value>Upload File Path (Optional)</value>
   </data>
   <data name="UploadTo" xml:space="preserve">
     <value>Upload To</value>

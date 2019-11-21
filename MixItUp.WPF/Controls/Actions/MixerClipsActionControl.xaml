@@ -69,7 +69,7 @@
             <ToggleButton Grid.Column="2" x:Name="DownloadClipToggleButton" VerticalAlignment="Bottom" Checked="DownloadClipToggleButton_Checked" Unchecked="DownloadClipToggleButton_Checked" />
 
             <TextBox Grid.Column="4" x:Name="DownloadDirectoryTextBox" IsEnabled="False" MaterialDesign:HintAssist.Hint="Download Directory" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="450" />
-            <Button Grid.Column="6" x:Name="DownloadDirectoryBrowseButton" IsEnabled="False" VerticalAlignment="Bottom" Click="DownloadDirectoryBrowseButton_Click">Browse</Button>
+            <Button Grid.Column="6" x:Name="DownloadDirectoryBrowseButton" IsEnabled="False" VerticalAlignment="Bottom" Click="DownloadDirectoryBrowseButton_Click" Content="{x:Static resx:Resources.Browse}"/>
 
             <TextBlock Grid.Column="4" x:Name="FFMPEGNotInstalledTextBlock" Visibility="Collapsed" Margin="40,0,0,0" VerticalAlignment="Center" Foreground="Red">FFMPEG must be installed through the Mix It Up Settings to use this feature</TextBlock>
         </Grid>

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                            
         xmlns:local="clr-namespace:MixItUp.WPF.Windows.Store"
+        xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"                         
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -71,7 +72,7 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBox x:Name="DisplayImagePathTextBox" Grid.Column="0" Width="300" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="Display Image (Optional)" />
-                <Button x:Name="DisplayImageBrowseButton" Grid.Column="2" Click="DisplayImageBrowseButton_Click">Browse</Button>
+                <Button x:Name="DisplayImageBrowseButton" Grid.Column="2" Click="DisplayImageBrowseButton_Click" Content="{x:Static resx:Resources.Browse}"/>
             </Grid>
 
             <Grid Grid.Row="8" HorizontalAlignment="Center">

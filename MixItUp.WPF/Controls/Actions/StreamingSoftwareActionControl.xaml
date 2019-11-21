@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -104,7 +105,7 @@
 
                     <TextBox Grid.Column="0" x:Name="SourceLoadTextFromTextBox" IsReadOnly="True" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="File Path" />
 
-                    <Button Grid.Column="2" x:Name="SourceLoadTextFromBrowseButton" Click="SourceLoadTextFromBrowseButton_Click">Browse</Button>
+                    <Button Grid.Column="2" x:Name="SourceLoadTextFromBrowseButton" Click="SourceLoadTextFromBrowseButton_Click" Content="{x:Static resx:Resources.Browse}"/>
                 </Grid>
             </Grid>
 
@@ -117,7 +118,7 @@
 
                 <TextBox Grid.Column="0" x:Name="SourceWebPageTextBox" MaterialDesign:HintAssist.Hint="Web Page (URL or Local File)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                <Button Grid.Column="2" x:Name="SourceWebPageBrowseButton" Click="SourceWebPageBrowseButton_Click">Browse</Button>
+                <Button Grid.Column="2" x:Name="SourceWebPageBrowseButton" Click="SourceWebPageBrowseButton_Click" Content="{x:Static resx:Resources.Browse}"/>
 
             </Grid>
 

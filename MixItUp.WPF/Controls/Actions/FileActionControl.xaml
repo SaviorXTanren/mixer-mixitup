@@ -29,7 +29,7 @@
             </Grid.ColumnDefinitions>
             
             <TextBox Grid.Column="0" x:Name="FilePathTextBox" MaterialDesign:HintAssist.Hint="File Path" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-            <Button Grid.Column="2" x:Name="FileBrowseButton" VerticalAlignment="Bottom" Click="FileBrowseButton_Click">Browse</Button>
+            <Button Grid.Column="2" x:Name="FileBrowseButton" VerticalAlignment="Bottom" Click="FileBrowseButton_Click" Content="{x:Static resx:Resources.Browse}"/>
         </Grid>
 
         <Grid x:Name="SaveToFileGrid" Visibility="Collapsed" Grid.Row="4">

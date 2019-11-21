@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Overlay"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -50,7 +51,7 @@
             </Grid.ColumnDefinitions>
 
             <TextBox Grid.Column="0" Text="{Binding CustomImageFilePath}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Custom Crystal Image File Path / URL" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-            <Button Grid.Column="2" Command="{Binding BrowseFilePathCommand}">Browse</Button>
+            <Button Grid.Column="2" Command="{Binding BrowseFilePathCommand}" Content="{x:Static resx:Resources.Browse}"/>
 
             <ComboBox ItemsSource="{Binding VisibleAnimationStrings}" SelectedItem="{Binding ProgressAnimationString}" Grid.Column="4" MaterialDesign:HintAssist.Hint="Progress Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="130" />
 
