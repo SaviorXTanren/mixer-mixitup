@@ -108,7 +108,7 @@ namespace MixItUp.Base.Actions
 
                 using (HttpResponseMessage response = await httpClient.GetAsync(await this.ReplaceStringWithSpecialModifiers(this.Url, user, arguments, encode: true)))
                 {
-                    if (response.StatusCode == HttpStatusCode.OK)
+                    if (response.IsSuccessStatusCode)
                     {
                         string webRequestResult = await response.Content.ReadAsStringAsync();
                         if (!string.IsNullOrEmpty(webRequestResult))
