@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
@@ -20,9 +21,9 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="SerialDeviceComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Serial Device" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="140" />
+            <ComboBox x:Name="SerialDeviceComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SerialDevice}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="140" />
 
-            <TextBox Grid.Column="2" x:Name="MessageTextBox" MaterialDesign:HintAssist.Hint="Message" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="2" x:Name="MessageTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Message}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
     </Grid>
 </local:ActionControlBase>

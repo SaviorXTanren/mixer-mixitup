@@ -165,6 +165,9 @@
   <data name="Actions" xml:space="preserve">
     <value>Actions</value>
   </data>
+  <data name="ActionToPeform" xml:space="preserve">
+    <value>Action To Peform</value>
+  </data>
   <data name="Add" xml:space="preserve">
     <value>Add</value>
   </data>
@@ -200,6 +203,9 @@
   </data>
   <data name="AddNewRank" xml:space="preserve">
     <value>Add New Rank</value>
+  </data>
+  <data name="AddNewVariable" xml:space="preserve">
+    <value>Add New Variable</value>
   </data>
   <data name="AddOverlayWidget" xml:space="preserve">
     <value>Add Overlay Widget</value>
@@ -254,6 +260,18 @@
   </data>
   <data name="AmountSeconds" xml:space="preserve">
     <value>Amount (Seconds)</value>
+  </data>
+  <data name="Answer1" xml:space="preserve">
+    <value>Answer 1</value>
+  </data>
+  <data name="Answer2" xml:space="preserve">
+    <value>Answer 2</value>
+  </data>
+  <data name="Answer3" xml:space="preserve">
+    <value>Answer 3 (Optional)</value>
+  </data>
+  <data name="Answer4" xml:space="preserve">
+    <value>Answer 4 (Optional)</value>
   </data>
   <data name="AnyChatMessageSound" xml:space="preserve">
     <value>Any Chat Message Sound</value>
@@ -714,11 +732,29 @@
   <data name="EnableIFTTT" xml:space="preserve">
     <value>Please enable IFTTT connection on the Services page!</value>
   </data>
+  <data name="EnableOBS" xml:space="preserve">
+    <value>Please enable OBS Studio connection on the Services page!</value>
+  </data>
   <data name="EnableOverlay" xml:space="preserve">
     <value>Please enable Mix It Up Overlay in the Services Section!</value>
   </data>
+  <data name="EnableOvrStream" xml:space="preserve">
+    <value>Please enable OvrStream on the Services page!</value>
+  </data>
   <data name="EnableQueue" xml:space="preserve">
     <value>Enable Queue</value>
+  </data>
+  <data name="EnableReplayBuffer" xml:space="preserve">
+    <value>Replay buffer has not been enabled. Open OBS Settings -&gt; Output and enable the replay buffer!</value>
+  </data>
+  <data name="EnableStreamlabs" xml:space="preserve">
+    <value>Please enable Streamlabs connection on the Services page!</value>
+  </data>
+  <data name="EnableStreamlabsOBS" xml:space="preserve">
+    <value>Please enable Streamlabs OBS connection on the Services page!</value>
+  </data>
+  <data name="EnableXSplit" xml:space="preserve">
+    <value>Please enable XSplit connection on the Services page!</value>
   </data>
   <data name="EndCredits" xml:space="preserve">
     <value>End Credits</value>
@@ -851,6 +887,9 @@
   </data>
   <data name="General" xml:space="preserve">
     <value>General</value>
+  </data>
+  <data name="GetCurrent" xml:space="preserve">
+    <value>GetCurrent</value>
   </data>
   <data name="Giveaway" xml:space="preserve">
     <value>Giveaway</value>
@@ -1002,6 +1041,9 @@
   <data name="LeftButton" xml:space="preserve">
     <value>Left Button</value>
   </data>
+  <data name="LengthSecs" xml:space="preserve">
+    <value>Length (Secs)</value>
+  </data>
   <data name="LessThan" xml:space="preserve">
     <value>&lt;</value>
   </data>
@@ -1082,6 +1124,9 @@
   </data>
   <data name="MeetTheTeam" xml:space="preserve">
     <value>Meet The Team</value>
+  </data>
+  <data name="Message" xml:space="preserve">
+    <value>Message</value>
   </data>
   <data name="MetadataName" xml:space="preserve">
     <value>Metadata Name</value>
@@ -1221,6 +1266,9 @@
   <data name="Notifications" xml:space="preserve">
     <value>Notifications</value>
   </data>
+  <data name="NotSupportedStreamingSoftware" xml:space="preserve">
+    <value>This feature is not currently supported for this Streaming Software.</value>
+  </data>
   <data name="OfflineRate" xml:space="preserve">
     <value>Offline Rate</value>
   </data>
@@ -1305,6 +1353,9 @@
   <data name="OvrStream" xml:space="preserve">
     <value>OvrStream</value>
   </data>
+  <data name="OvrStreamTitleName" xml:space="preserve">
+    <value>OvrStream Title Name</value>
+  </data>
   <data name="Partner" xml:space="preserve">
     <value>Partner</value>
   </data>
@@ -1323,8 +1374,17 @@
   <data name="Pink" xml:space="preserve">
     <value>Pink</value>
   </data>
+  <data name="Pitch" xml:space="preserve">
+    <value>Pitch (0% - 200%)</value>
+  </data>
   <data name="Play" xml:space="preserve">
     <value>Play</value>
+  </data>
+  <data name="PollResultCommand" xml:space="preserve">
+    <value>Poll Result Command (Optional)</value>
+  </data>
+  <data name="PollResultCommandType" xml:space="preserve">
+    <value>Poll Result Command Type</value>
   </data>
   <data name="PortName" xml:space="preserve">
     <value>Port Name</value>
@@ -1371,6 +1431,9 @@
   <data name="Purple" xml:space="preserve">
     <value>Purple</value>
   </data>
+  <data name="Question" xml:space="preserve">
+    <value>Question</value>
+  </data>
   <data name="QueuePosition" xml:space="preserve">
     <value>User's Queue Position</value>
   </data>
@@ -1391,6 +1454,9 @@
   </data>
   <data name="RankName" xml:space="preserve">
     <value>Rank Name</value>
+  </data>
+  <data name="Rate" xml:space="preserve">
+    <value>Rate (0% - 150%)</value>
   </data>
   <data name="ReadFromFile" xml:space="preserve">
     <value>Read From File</value>
@@ -1476,6 +1542,9 @@
   <data name="Roles" xml:space="preserve">
     <value>Roles</value>
   </data>
+  <data name="Rotation" xml:space="preserve">
+    <value>Rotation (Degrees)</value>
+  </data>
   <data name="RTS" xml:space="preserve">
     <value>RTS</value>
   </data>
@@ -1506,8 +1575,14 @@
   <data name="Scene" xml:space="preserve">
     <value>Scene</value>
   </data>
+  <data name="SceneCollectionName" xml:space="preserve">
+    <value>Scene Collection Name</value>
+  </data>
   <data name="SceneName" xml:space="preserve">
     <value>Scene Name (Case Sensitive)</value>
+  </data>
+  <data name="SceneNameOptional" xml:space="preserve">
+    <value>Scene Name (Optional)</value>
   </data>
   <data name="Search" xml:space="preserve">
     <value>Search</value>
@@ -1547,6 +1622,9 @@
   </data>
   <data name="Serial" xml:space="preserve">
     <value>Serial</value>
+  </data>
+  <data name="SerialDevice" xml:space="preserve">
+    <value>Serial Device</value>
   </data>
   <data name="SerialDevices" xml:space="preserve">
     <value>Serial Devices</value>
@@ -1650,6 +1728,12 @@
   <data name="Source" xml:space="preserve">
     <value>Source</value>
   </data>
+  <data name="SourceName" xml:space="preserve">
+    <value>Source Name</value>
+  </data>
+  <data name="SourceText" xml:space="preserve">
+    <value>Source Text</value>
+  </data>
   <data name="SparkCrystal" xml:space="preserve">
     <value>Spark Crystal</value>
   </data>
@@ -1676,6 +1760,9 @@
   </data>
   <data name="SpecialIdentifiersReference" xml:space="preserve">
     <value>Special Identifiers Reference</value>
+  </data>
+  <data name="SpeechMessage" xml:space="preserve">
+    <value>Speech Message</value>
   </data>
   <data name="Staff" xml:space="preserve">
     <value>Staff</value>
@@ -1965,6 +2052,12 @@
   <data name="Value3" xml:space="preserve">
     <value>Value 3 (Optional)</value>
   </data>
+  <data name="VariableName" xml:space="preserve">
+    <value>Variable Name</value>
+  </data>
+  <data name="VariableValue" xml:space="preserve">
+    <value>Variable Value</value>
+  </data>
   <data name="Version" xml:space="preserve">
     <value>Version</value>
   </data>
@@ -1998,8 +2091,14 @@
   <data name="VisibleAnimation" xml:space="preserve">
     <value>Visible Animation</value>
   </data>
+  <data name="Voice" xml:space="preserve">
+    <value>Voice</value>
+  </data>
   <data name="Volume" xml:space="preserve">
     <value>Volume</value>
+  </data>
+  <data name="Volume0to100" xml:space="preserve">
+    <value>Volume (0% - 100%)</value>
   </data>
   <data name="Wait" xml:space="preserve">
     <value>Wait</value>
@@ -2015,6 +2114,9 @@
   </data>
   <data name="WebPage" xml:space="preserve">
     <value>Web Page</value>
+  </data>
+  <data name="WebPageOrLocalFile" xml:space="preserve">
+    <value>Web Page (URL or Local File)</value>
   </data>
   <data name="WebRequest" xml:space="preserve">
     <value>Web Request</value>
@@ -2061,6 +2163,12 @@
   <data name="XLarge" xml:space="preserve">
     <value>X-Large</value>
   </data>
+  <data name="XPosition" xml:space="preserve">
+    <value>X Position</value>
+  </data>
+  <data name="XScale" xml:space="preserve">
+    <value>X Scale (Decimal)</value>
+  </data>
   <data name="XXLarge" xml:space="preserve">
     <value>XX-Large</value>
   </data>
@@ -2072,5 +2180,11 @@
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Yes</value>
+  </data>
+  <data name="YPosition" xml:space="preserve">
+    <value>Y Position</value>
+  </data>
+  <data name="YScale" xml:space="preserve">
+    <value>Y Scale (Decimal)</value>
   </data>
 </root>

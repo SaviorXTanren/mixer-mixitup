@@ -5,9 +5,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
              xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:util="clr-namespace:MixItUp.WPF.Util"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <local:ActionControlBase.Resources>
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+        <util:LocalizationConverter x:Key="LocalizationConverter"/>
+    </local:ActionControlBase.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -26,13 +32,13 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <ComboBox x:Name="StreamingSoftwareComboBox" Grid.Column="0" Grid.Row="0" SelectionChanged="StreamingSoftwareComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Streaming Software" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox x:Name="StreamingSoftwareComboBox" Grid.Column="0" Grid.Row="0" SelectionChanged="StreamingSoftwareComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.StreamingSoftware}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-            <ComboBox x:Name="StreamingActionTypeComboBox" Grid.Column="2" Grid.Row="0" SelectionChanged="StreamingActionTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Action To Peform" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox x:Name="StreamingActionTypeComboBox" Grid.Column="2" Grid.Row="0" SelectionChanged="StreamingActionTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ActionToPeform}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-            <TextBlock x:Name="OBSStudioNotEnabledWarningTextBlock" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Foreground="Red" HorizontalAlignment="Center" Margin="0,20,0,0" Visibility="Collapsed">Please enable OBS Studio connection on the Services page!</TextBlock>
-            <TextBlock x:Name="XSplitNotEnabledWarningTextBlock" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Foreground="Red" HorizontalAlignment="Center" Margin="0,20,0,0" Visibility="Collapsed">Please enable XSplit connection on the Services page!</TextBlock>
-            <TextBlock x:Name="StreamlabsOBSNotEnabledWarningTextBlock" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Foreground="Red" HorizontalAlignment="Center" Margin="0,20,0,0" Visibility="Collapsed">Please enable Streamlabs OBS connection on the Services page!</TextBlock>
+            <TextBlock x:Name="OBSStudioNotEnabledWarningTextBlock" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Foreground="Red" HorizontalAlignment="Center" Margin="0,20,0,0" Visibility="Collapsed" Text="{x:Static resx:Resources.EnableOBS}"/>
+            <TextBlock x:Name="XSplitNotEnabledWarningTextBlock" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Foreground="Red" HorizontalAlignment="Center" Margin="0,20,0,0" Visibility="Collapsed" Text="{x:Static resx:Resources.EnableXSplit}"/>
+            <TextBlock x:Name="StreamlabsOBSNotEnabledWarningTextBlock" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Foreground="Red" HorizontalAlignment="Center" Margin="0,20,0,0" Visibility="Collapsed" Text="{x:Static resx:Resources.EnableStreamlabsOBS}"/>
         </Grid>
 
         <Grid x:Name="SceneGrid" Grid.Row="2" Visibility="Collapsed">
@@ -40,7 +46,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="SceneNameTextBox" MaterialDesign:HintAssist.Hint="Scene Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="SceneNameTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SceneName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
         </Grid>
 
@@ -49,16 +55,16 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="SceneCollectionNameTextBox" MaterialDesign:HintAssist.Hint="Scene Collection Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="SceneCollectionNameTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SceneCollectionName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
         </Grid>
 
         <Grid x:Name="FeatureNotSupportedGrid" Grid.Row="2" Visibility="Collapsed">
-            <TextBlock Foreground="Red" HorizontalAlignment="Center">This feature is not currently supported for this Streaming Software</TextBlock>
+            <TextBlock Foreground="Red" HorizontalAlignment="Center" Text="{x:Static resx:Resources.NotSupportedStreamingSoftware}"/>
         </Grid>
 
         <Grid x:Name="ReplayBufferNotEnabledInSettingsGrid" Grid.Row="2" Visibility="Collapsed">
-            <TextBlock Foreground="Red" HorizontalAlignment="Center">Replay buffer has not been enabled. Open OBS Settings -> Output and enable the replay buffer</TextBlock>
+            <TextBlock Foreground="Red" HorizontalAlignment="Center" Text="{x:Static resx:Resources.EnableReplayBuffer}"/>
         </Grid>
 
         <Grid x:Name="SourceGrid" Grid.Row="2" Visibility="Collapsed">
@@ -79,11 +85,11 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBox Grid.Column="0" x:Name="SourceSceneNameTextBox" MaterialDesign:HintAssist.Hint="Scene Name (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Grid.Column="0" x:Name="SourceSceneNameTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SceneNameOptional}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                <TextBox Grid.Column="2" x:Name="SourceNameTextBox" MaterialDesign:HintAssist.Hint="Source Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Grid.Column="2" x:Name="SourceNameTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SourceName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                <TextBlock Grid.Column="4" VerticalAlignment="Center">Visible:</TextBlock>
+                <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Visible}, StringFormat={StaticResource ColumnHeaderFormat}}" />
                 <CheckBox Grid.Column="6" x:Name="SourceVisibleCheckBox" />
             </Grid>
 
@@ -94,7 +100,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBox Grid.Row="0" x:Name="SourceTextTextBox" MaterialDesign:HintAssist.Hint="Source Text" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Grid.Row="0" x:Name="SourceTextTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SourceText}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                 <Grid Grid.Row="2">
                     <Grid.ColumnDefinitions>
@@ -103,7 +109,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Grid.Column="0" x:Name="SourceLoadTextFromTextBox" IsReadOnly="True" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="File Path" />
+                    <TextBox Grid.Column="0" x:Name="SourceLoadTextFromTextBox" IsReadOnly="True" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FilePath}" />
 
                     <Button Grid.Column="2" x:Name="SourceLoadTextFromBrowseButton" Click="SourceLoadTextFromBrowseButton_Click" Content="{x:Static resx:Resources.Browse}"/>
                 </Grid>
@@ -116,7 +122,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBox Grid.Column="0" x:Name="SourceWebPageTextBox" MaterialDesign:HintAssist.Hint="Web Page (URL or Local File)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Grid.Column="0" x:Name="SourceWebPageTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.WebPageOrLocalFile}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                 <Button Grid.Column="2" x:Name="SourceWebPageBrowseButton" Click="SourceWebPageBrowseButton_Click" Content="{x:Static resx:Resources.Browse}"/>
 
@@ -136,17 +142,17 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBox Grid.Column="0" Grid.Row="0" x:Name="SourceDimensionsXPositionTextBox" MaterialDesign:HintAssist.Hint="X Position" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Grid.Column="0" Grid.Row="0" x:Name="SourceDimensionsXPositionTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.XPosition}" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                <TextBox Grid.Column="2" Grid.Row="0" x:Name="SourceDimensionsYPositionTextBox" MaterialDesign:HintAssist.Hint="Y Position" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Grid.Column="2" Grid.Row="0" x:Name="SourceDimensionsYPositionTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.YPosition}" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                <TextBox Grid.Column="4" Grid.Row="0" x:Name="SourceDimensionsRotationTextBox" MaterialDesign:HintAssist.Hint="Rotation (Degrees)" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Grid.Column="4" Grid.Row="0" x:Name="SourceDimensionsRotationTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Rotation}" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                <TextBox Grid.Column="0" Grid.Row="2" x:Name="SourceDimensionsXScaleTextBox" MaterialDesign:HintAssist.Hint="X Scale (Decimal)" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Grid.Column="0" Grid.Row="2" x:Name="SourceDimensionsXScaleTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.XScale}" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                <TextBox Grid.Column="2" Grid.Row="2" x:Name="SourceDimensionsYScaleTextBox" MaterialDesign:HintAssist.Hint="Y Scale (Decimal)" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Grid.Column="2" Grid.Row="2" x:Name="SourceDimensionsYScaleTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.YScale}" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                <Button Grid.Column="4" Grid.Row="2" x:Name="GetSourcesDimensionsButton" Click="GetSourcesDimensionsButton_Click">Get Current</Button>
+                <Button Grid.Column="4" Grid.Row="2" x:Name="GetSourcesDimensionsButton" Click="GetSourcesDimensionsButton_Click" Content="{x:Static resx:Resources.GetCurrent}"/>
             </Grid>
         </Grid>
     </Grid>
