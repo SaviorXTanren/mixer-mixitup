@@ -148,6 +148,7 @@ namespace MixItUp.Base.Services
                 }
                 else
                 {
+                    user.IgnoreForQueries = false;
                     if (user.Data.ViewingMinutes == 0)
                     {
                         if (EventCommand.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.ChatUserFirstJoin)))

@@ -114,8 +114,6 @@ namespace MixItUp.Desktop.Services
 
         public async Task Save(IChannelSettings settings) { await this.SaveSettings(settings, this.GetFilePath(settings)); }
 
-        public async Task Save(IChannelSettings settings, string fileName) { await this.SaveSettings(settings, fileName); }
-
         public async Task SaveBackup(IChannelSettings settings)
         {
             string filePath = this.GetFilePath(settings);
