@@ -133,49 +133,58 @@ namespace MixItUp.Base.Model.Overlay
         public override async Task LoadTestData()
         {
             UserViewModel user = await ChannelSession.GetCurrentUser();
-            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Chatters))
+            List<uint> userIDs = new List<uint>(ChannelSession.Settings.UserData.Keys.Take(20));
+            for (int i = userIDs.Count; i < 20; i++)
             {
-                this.viewers.Add(user.ID);
+                userIDs.Add(user.ID);
             }
-            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Subscribers))
+
+            foreach (uint userID in userIDs)
             {
-                this.subs.Add(user.ID);
-            }
-            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Moderators))
-            {
-                this.mods.Add(user.ID);
-            }
-            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Followers))
-            {
-                this.follows.Add(user.ID);
-            }
-            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Hosts))
-            {
-                this.hosts.Add(user.ID);
-            }
-            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.NewSubscribers))
-            {
-                this.newSubs.Add(user.ID);
-            }
-            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Resubscribers))
-            {
-                this.resubs[user.ID] = 5;
-            }
-            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.GiftedSubs))
-            {
-                this.giftedSubs[user.ID] = 5;
-            }
-            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Donations))
-            {
-                this.donations[user.ID] = 12.34;
-            }
-            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Sparks))
-            {
-                this.sparks[user.ID] = 10;
-            }
-            if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Embers))
-            {
-                this.embers[user.ID] = 10;
+                if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Chatters))
+                {
+                    this.viewers.Add(userID);
+                }
+                if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Subscribers))
+                {
+                    this.subs.Add(userID);
+                }
+                if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Moderators))
+                {
+                    this.mods.Add(userID);
+                }
+                if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Followers))
+                {
+                    this.follows.Add(userID);
+                }
+                if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Hosts))
+                {
+                    this.hosts.Add(userID);
+                }
+                if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.NewSubscribers))
+                {
+                    this.newSubs.Add(userID);
+                }
+                if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Resubscribers))
+                {
+                    this.resubs[userID] = 5;
+                }
+                if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.GiftedSubs))
+                {
+                    this.giftedSubs[userID] = 5;
+                }
+                if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Donations))
+                {
+                    this.donations[userID] = 12.34;
+                }
+                if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Sparks))
+                {
+                    this.sparks[userID] = 10;
+                }
+                if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Embers))
+                {
+                    this.embers[userID] = 10;
+                }
             }
         }
 
