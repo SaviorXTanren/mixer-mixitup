@@ -31,8 +31,12 @@ namespace MixItUp.Base.Model.Overlay
         Embers,
         Subscribers,
         Moderators,
-        [Name("Free Form HTML")]
-        FreeFormHTML
+        [Name("Free Form HTML 1")]
+        FreeFormHTML,
+        [Name("Free Form HTML 2")]
+        FreeFormHTML2,
+        [Name("Free Form HTML 3")]
+        FreeFormHTML3,
     }
 
     public enum OverlayEndCreditsSpeedEnum
@@ -197,6 +201,7 @@ namespace MixItUp.Base.Model.Overlay
             if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Followers))
             {
                 GlobalEvents.OnFollowOccurred += GlobalEvents_OnFollowOccurred;
+                GlobalEvents.OnUnfollowOccurred += GlobalEvents_OnUnfollowOccurred;
             }
             if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Hosts))
             {
@@ -234,6 +239,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             GlobalEvents.OnChatMessageReceived -= GlobalEvents_OnChatMessageReceived;
             GlobalEvents.OnFollowOccurred -= GlobalEvents_OnFollowOccurred;
+            GlobalEvents.OnUnfollowOccurred -= GlobalEvents_OnUnfollowOccurred;
             GlobalEvents.OnHostOccurred -= GlobalEvents_OnHostOccurred;
             GlobalEvents.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
             GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
@@ -266,7 +272,8 @@ namespace MixItUp.Base.Model.Overlay
 
             foreach (var kvp in this.SectionTemplates)
             {
-                if (kvp.Key == OverlayEndCreditsSectionTypeEnum.FreeFormHTML)
+                if (kvp.Key == OverlayEndCreditsSectionTypeEnum.FreeFormHTML || kvp.Key == OverlayEndCreditsSectionTypeEnum.FreeFormHTML2 ||
+                    kvp.Key == OverlayEndCreditsSectionTypeEnum.FreeFormHTML3)
                 {
                     OverlayEndCreditsSectionModel sectionTemplate = this.SectionTemplates[kvp.Key];
 
@@ -319,6 +326,11 @@ namespace MixItUp.Base.Model.Overlay
                 this.follows.Add(user.ID);
                 this.AddUserForRole(user);
             }
+        }
+
+        private void GlobalEvents_OnUnfollowOccurred(object sender, UserViewModel user)
+        {
+            this.follows.Remove(user.ID);
         }
 
         private void GlobalEvents_OnHostOccurred(object sender, Tuple<UserViewModel, int> host)
@@ -376,44 +388,57 @@ namespace MixItUp.Base.Model.Overlay
 
         private void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, uint> sparkUsage)
         {
-            if (!this.sparks.ContainsKey(sparkUsage.Item1.ID))
+            if (this.ShouldIncludeUser(sparkUsage.Item1))
             {
-                this.sparks[sparkUsage.Item1.ID] = 0;
-                this.AddUserForRole(sparkUsage.Item1);
+                if (!this.sparks.ContainsKey(sparkUsage.Item1.ID))
+                {
+                    this.sparks[sparkUsage.Item1.ID] = 0;
+                    this.AddUserForRole(sparkUsage.Item1);
+                }
+                this.sparks[sparkUsage.Item1.ID] += sparkUsage.Item2;
             }
-            this.sparks[sparkUsage.Item1.ID] += sparkUsage.Item2;
         }
 
         private void GlobalEvents_OnEmberUseOccurred(object sender, UserEmberUsageModel emberUsage)
         {
-            if (!this.embers.ContainsKey(emberUsage.User.ID))
+            if (this.ShouldIncludeUser(emberUsage.User))
             {
-                this.embers[emberUsage.User.ID] = 0;
-                this.AddUserForRole(emberUsage.User);
+                if (!this.embers.ContainsKey(emberUsage.User.ID))
+                {
+                    this.embers[emberUsage.User.ID] = 0;
+                    this.AddUserForRole(emberUsage.User);
+                }
+                this.embers[emberUsage.User.ID] += emberUsage.Amount;
             }
-            this.embers[emberUsage.User.ID] += emberUsage.Amount;
         }
 
         private void AddUserForRole(UserViewModel user)
         {
+            if (this.ShouldIncludeUser(user))
+            {
+                this.viewers.Add(user.ID);
+                if (user.MixerRoles.Contains(MixerRoleEnum.Subscriber) || user.IsEquivalentToMixerSubscriber())
+                {
+                    this.subs.Add(user.ID);
+                }
+                if (user.MixerRoles.Contains(MixerRoleEnum.Mod) || user.MixerRoles.Contains(MixerRoleEnum.ChannelEditor))
+                {
+                    this.mods.Add(user.ID);
+                }
+            }
+        }
+
+        private bool ShouldIncludeUser(UserViewModel user)
+        {
             if (user.ID.Equals(ChannelSession.MixerStreamerUser.id))
             {
-                return;
+                return false;
             }
             if (ChannelSession.MixerBotUser != null && user.ID.Equals(ChannelSession.MixerBotUser.id))
             {
-                return;
+                return false;
             }
-
-            this.viewers.Add(user.ID);
-            if (user.MixerRoles.Contains(MixerRoleEnum.Subscriber) || user.IsEquivalentToMixerSubscriber())
-            {
-                this.subs.Add(user.ID);
-            }
-            if (user.MixerRoles.Contains(MixerRoleEnum.Mod) || user.MixerRoles.Contains(MixerRoleEnum.ChannelEditor))
-            {
-                this.mods.Add(user.ID);
-            }
+            return true;
         }
 
         private Dictionary<UserViewModel, string> GetUsersDictionary(HashSet<uint> data)
