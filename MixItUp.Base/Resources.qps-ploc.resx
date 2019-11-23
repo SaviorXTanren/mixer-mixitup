@@ -138,6 +138,9 @@
   <data name="AccessTheFolderWhereMixItUpIsInstalled" xml:space="preserve">
     <value>[Åççéššẋẋ ţĥéẋ ƒöļðéŕẋẋ ŵĥéŕéẋẋ Ṁîẋẋ Îţẋ Ûþẋ îšẋ îñšţåļļéðẋẋẋ]</value>
   </data>
+  <data name="Account" xml:space="preserve">
+    <value>[Åççöûñţẋẋẋ]</value>
+  </data>
   <data name="AccountDay" xml:space="preserve">
     <value>[Åççöûñţẋẋẋ Îšẋ ①ẋ Ðåýẋ Öļðẋ]</value>
   </data>
@@ -1278,6 +1281,18 @@
   <data name="MixPlay" xml:space="preserve">
     <value>[ṀîẋÞļåýẋẋẋ]</value>
   </data>
+  <data name="MixPlayCooldownHeader" xml:space="preserve">
+    <value>[Ĥöŵẋ ɱåñýẋẋ šéçöñðšẋẋẋ šĥöûļðẋẋ ţĥéẋ çööļðöŵñẋẋẋ ƀé¿ẋ]</value>
+  </data>
+  <data name="MixPlayCooldownTypeHeader" xml:space="preserve">
+    <value>[Šĥöûļðẋẋ ţĥîšẋẋ ƀûţţöñẋẋ çööļðöŵñẋẋẋ öñẋ îţšẋ öŕẋ ţöĝéţĥéŕẋẋẋ ŵîţĥẋẋ åļļ¿ẋẋ]</value>
+  </data>
+  <data name="MixPlaySparkCostHeader" xml:space="preserve">
+    <value>[Ĥöŵẋ ɱåñýẋẋ Šþåŕķšẋẋ šĥöûļðẋẋ ţĥîšẋẋ ƀûţţöñẋẋ çöšţ¿ẋẋ]</value>
+  </data>
+  <data name="MixPlayTextboxModeration" xml:space="preserve">
+    <value>[Ŵöûļðẋẋ ýöûẋ ļîķéẋẋ ţöẋ ûšéẋ Çĥåţẋẋ Ṁöðéŕåţîöñẋẋẋẋ öñẋ åļļẋ éñţéŕéðẋẋẋ ţéẋţ¿ẋẋ]</value>
+  </data>
   <data name="Mod" xml:space="preserve">
     <value>[Ṁöðẋ]</value>
   </data>
@@ -1673,6 +1688,9 @@
   </data>
   <data name="RunCommand" xml:space="preserve">
     <value>[Ŕûñẋ Çöɱɱåñðẋẋẋ]</value>
+  </data>
+  <data name="RunOneRandomly" xml:space="preserve">
+    <value>[Ŕûñẋ Öñéẋ Ŕåñðöɱļýẋẋẋ]</value>
   </data>
   <data name="SameAgeRating" xml:space="preserve">
     <value>[Šåɱéẋẋ Åĝéẋ Ŕåţîñĝẋẋ]</value>

@@ -124,6 +124,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Account.
+        /// </summary>
+        public static string Account {
+            get {
+                return ResourceManager.GetString("Account", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Account Is 1 Day Old.
         /// </summary>
         public static string AccountDay {
@@ -858,6 +867,15 @@ namespace MixItUp.Base {
         public static string ButtonName {
             get {
                 return ResourceManager.GetString("ButtonName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Button Trigger.
+        /// </summary>
+        public static string ButtonTrigger {
+            get {
+                return ResourceManager.GetString("ButtonTrigger", resourceCulture);
             }
         }
         
@@ -3544,6 +3562,42 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to How many seconds should the cooldown be?.
+        /// </summary>
+        public static string MixPlayCooldownHeader {
+            get {
+                return ResourceManager.GetString("MixPlayCooldownHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Should this button cooldown on its or together with all?.
+        /// </summary>
+        public static string MixPlayCooldownTypeHeader {
+            get {
+                return ResourceManager.GetString("MixPlayCooldownTypeHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to How many Sparks should this button cost?.
+        /// </summary>
+        public static string MixPlaySparkCostHeader {
+            get {
+                return ResourceManager.GetString("MixPlaySparkCostHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Would you like to use Chat Moderation on all entered text?.
+        /// </summary>
+        public static string MixPlayTextboxModeration {
+            get {
+                return ResourceManager.GetString("MixPlayTextboxModeration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mod.
         /// </summary>
         public static string Mod {
@@ -4395,6 +4449,15 @@ namespace MixItUp.Base {
         public static string RateReview {
             get {
                 return ResourceManager.GetString("RateReview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rate (Secs).
+        /// </summary>
+        public static string RateSecs {
+            get {
+                return ResourceManager.GetString("RateSecs", resourceCulture);
             }
         }
         

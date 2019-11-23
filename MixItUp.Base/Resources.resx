@@ -138,6 +138,9 @@
   <data name="AccessTheFolderWhereMixItUpIsInstalled" xml:space="preserve">
     <value>Access the folder where Mix It Up is installed</value>
   </data>
+  <data name="Account" xml:space="preserve">
+    <value>Account</value>
+  </data>
   <data name="AccountDay" xml:space="preserve">
     <value>Account Is 1 Day Old</value>
   </data>
@@ -383,6 +386,9 @@
   </data>
   <data name="ButtonName" xml:space="preserve">
     <value>Button Name</value>
+  </data>
+  <data name="ButtonTrigger" xml:space="preserve">
+    <value>Button Trigger</value>
   </data>
   <data name="BuyPrice" xml:space="preserve">
     <value>Buy Price</value>
@@ -1278,6 +1284,18 @@
   <data name="MixPlay" xml:space="preserve">
     <value>MixPlay</value>
   </data>
+  <data name="MixPlayCooldownHeader" xml:space="preserve">
+    <value>How many seconds should the cooldown be?</value>
+  </data>
+  <data name="MixPlayCooldownTypeHeader" xml:space="preserve">
+    <value>Should this button cooldown on its or together with all?</value>
+  </data>
+  <data name="MixPlaySparkCostHeader" xml:space="preserve">
+    <value>How many Sparks should this button cost?</value>
+  </data>
+  <data name="MixPlayTextboxModeration" xml:space="preserve">
+    <value>Would you like to use Chat Moderation on all entered text?</value>
+  </data>
   <data name="Mod" xml:space="preserve">
     <value>Mod</value>
   </data>
@@ -1562,6 +1580,9 @@
   </data>
   <data name="RateReview" xml:space="preserve">
     <value>Rate/Review</value>
+  </data>
+  <data name="RateSecs" xml:space="preserve">
+    <value>Rate (Secs)</value>
   </data>
   <data name="Rating" xml:space="preserve">
     <value>Rating</value>

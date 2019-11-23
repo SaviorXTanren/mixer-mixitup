@@ -49,14 +49,14 @@
                 <ColumnDefinition Width="220" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" Grid.Row="0" Margin="0,0,0,5" VerticalAlignment="Bottom">How many Sparks should this button cost?:</TextBlock>
-            <TextBox x:Name="SparkCostTextBox" Grid.Column="2" Grid.Row="0" MaterialDesign:HintAssist.Hint="Spark Cost (EX: 50)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBlock Grid.Column="0" Grid.Row="0" Margin="0,0,0,5" VerticalAlignment="Bottom" Text="{x:Static resx:Resources.MixPlaySparkCostHeader}"/>
+            <TextBox x:Name="SparkCostTextBox" Grid.Column="2" Grid.Row="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SparkCost}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBlock Grid.Column="0" Grid.Row="2" Margin="0,0,0,5" VerticalAlignment="Bottom">Should this button cooldown on its or together with all?:</TextBlock>
-            <ComboBox x:Name="CooldownTypeComboBox" Grid.Column="2" Grid.Row="2" MaterialDesign:HintAssist.Hint="Cooldown Type" SelectionChanged="CooldownTypeComboBox_SelectionChanged" />
+            <TextBlock Grid.Column="0" Grid.Row="2" Margin="0,0,0,5" VerticalAlignment="Bottom" Text="{x:Static resx:Resources.MixPlayCooldownTypeHeader}"/>
+            <ComboBox x:Name="CooldownTypeComboBox" Grid.Column="2" Grid.Row="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" SelectionChanged="CooldownTypeComboBox_SelectionChanged" />
 
-            <TextBlock Grid.Column="0" Grid.Row="4" Margin="0,0,0,5" VerticalAlignment="Bottom">How many seconds should the cooldown be?:</TextBlock>
-            <TextBox x:Name="CooldownTextBox" Grid.Column="2" Grid.Row="4" MaterialDesign:HintAssist.Hint="Cooldown (EX: 30)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBlock Grid.Column="0" Grid.Row="4" Margin="0,0,0,5" VerticalAlignment="Bottom" Text="{x:Static resx:Resources.MixPlayCooldownHeader}"/>
+            <TextBox x:Name="CooldownTextBox" Grid.Column="2" Grid.Row="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Cooldown}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
         </Grid>
 
@@ -74,7 +74,7 @@
                 <MaterialDesign:PackIcon Kind="ContentSave" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
             </Button>
 
-            <Button x:Name="ConvertButton" Click="ConvertButton_Click" ToolTip="Save" Width="180" Grid.Column="3" Content="{x:Static resx:Resources.ConvertToAdvanced}"/>
+            <Button x:Name="ConvertButton" Click="ConvertButton_Click" ToolTip="{x:Static resx:Resources.ConvertToAdvanced}" Width="180" Grid.Column="3" Content="{x:Static resx:Resources.ConvertToAdvanced}"/>
         </Grid>
     </Grid>
 </local:CommandEditorControlBase>
