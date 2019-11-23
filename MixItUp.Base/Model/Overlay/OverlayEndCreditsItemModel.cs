@@ -31,8 +31,12 @@ namespace MixItUp.Base.Model.Overlay
         Embers,
         Subscribers,
         Moderators,
-        [Name("Free Form HTML")]
-        FreeFormHTML
+        [Name("Free Form HTML 1")]
+        FreeFormHTML,
+        [Name("Free Form HTML 2")]
+        FreeFormHTML2,
+        [Name("Free Form HTML 3")]
+        FreeFormHTML3,
     }
 
     public enum OverlayEndCreditsSpeedEnum
@@ -268,7 +272,8 @@ namespace MixItUp.Base.Model.Overlay
 
             foreach (var kvp in this.SectionTemplates)
             {
-                if (kvp.Key == OverlayEndCreditsSectionTypeEnum.FreeFormHTML)
+                if (kvp.Key == OverlayEndCreditsSectionTypeEnum.FreeFormHTML || kvp.Key == OverlayEndCreditsSectionTypeEnum.FreeFormHTML2 ||
+                    kvp.Key == OverlayEndCreditsSectionTypeEnum.FreeFormHTML3)
                 {
                     OverlayEndCreditsSectionModel sectionTemplate = this.SectionTemplates[kvp.Key];
 
