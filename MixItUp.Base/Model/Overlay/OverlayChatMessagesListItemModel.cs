@@ -72,6 +72,14 @@ namespace MixItUp.Base.Model.Overlay
             await base.Enable();
         }
 
+        public override async Task Disable()
+        {
+            GlobalEvents.OnChatMessageReceived -= GlobalEvents_OnChatMessageReceived;
+            GlobalEvents.OnChatMessageDeleted -= GlobalEvents_OnChatMessageDeleted;
+
+            await base.Disable();
+        }
+
         private async void GlobalEvents_OnChatMessageReceived(object sender, ChatMessageViewModel message)
         {
             if (!message.IsWhisper)
