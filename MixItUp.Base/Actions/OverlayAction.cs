@@ -71,7 +71,7 @@ namespace MixItUp.Base.Actions
                 {
                     if (this.ShowWidget)
                     {
-                        await widget.Initialize(user, arguments, this.extraSpecialIdentifiers);
+                        await widget.Enable(user, arguments, this.extraSpecialIdentifiers);
                     }
                     else
                     {

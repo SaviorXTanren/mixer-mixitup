@@ -192,7 +192,7 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        public override async Task Initialize()
+        public override Task Initialize()
         {
             if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Hosts))
             {
@@ -231,23 +231,11 @@ namespace MixItUp.Base.Model.Overlay
             {
                 GlobalEvents.OnEmberUseOccurred += GlobalEvents_OnEmberUseOccurred;
             }
-
-            await base.Initialize();
+            return base.Initialize();
         }
 
-        public override async Task Disable()
+        public override async Task Reset()
         {
-            GlobalEvents.OnChatMessageReceived -= GlobalEvents_OnChatMessageReceived;
-            GlobalEvents.OnFollowOccurred -= GlobalEvents_OnFollowOccurred;
-            GlobalEvents.OnUnfollowOccurred -= GlobalEvents_OnUnfollowOccurred;
-            GlobalEvents.OnHostOccurred -= GlobalEvents_OnHostOccurred;
-            GlobalEvents.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
-            GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
-            GlobalEvents.OnSubscriptionGiftedOccurred -= GlobalEvents_OnSubscriptionGiftedOccurred;
-            GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
-            GlobalEvents.OnSparkUseOccurred -= GlobalEvents_OnSparkUseOccurred;
-            GlobalEvents.OnEmberUseOccurred -= GlobalEvents_OnEmberUseOccurred;
-
             this.viewers.Clear();
             this.subs.Clear();
             this.mods.Clear();
@@ -260,7 +248,7 @@ namespace MixItUp.Base.Model.Overlay
             this.sparks.Clear();
             this.embers.Clear();
 
-            await base.Disable();
+            await base.Reset();
         }
 
         protected override async Task PerformReplacements(JObject jobj, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)

@@ -51,11 +51,11 @@ namespace MixItUp.Base.Model.Overlay
             await this.AddSongRequests(songs);
         }
 
-        public override async Task Initialize()
+        public override async Task Enable()
         {
             GlobalEvents.OnSongRequestsChangedOccurred += GlobalEvents_OnSongRequestsChangedOccurred;
 
-            await base.Initialize();
+            await base.Enable();
         }
 
         public override async Task Disable()

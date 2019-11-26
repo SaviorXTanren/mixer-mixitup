@@ -37,11 +37,11 @@ namespace MixItUp.Base.Model.Overlay
             await this.AddGameQueueUsers(users);
         }
 
-        public override async Task Initialize()
+        public override async Task Enable()
         {
             GlobalEvents.OnGameQueueUpdated += GlobalEvents_OnGameQueueUpdated;
 
-            await base.Initialize();
+            await base.Enable();
         }
 
         public override async Task Disable()

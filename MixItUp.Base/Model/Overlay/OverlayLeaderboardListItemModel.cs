@@ -104,7 +104,7 @@ namespace MixItUp.Base.Model.Overlay
             UserViewModel user = await ChannelSession.GetCurrentUser();
         }
 
-        public override async Task Initialize()
+        public override async Task Enable()
         {
             if (this.LeaderboardType == OverlayLeaderboardListItemTypeEnum.Subscribers)
             {
@@ -119,7 +119,7 @@ namespace MixItUp.Base.Model.Overlay
                 GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
             }
 
-            await base.Initialize();
+            await base.Enable();
         }
 
         public override async Task Disable()

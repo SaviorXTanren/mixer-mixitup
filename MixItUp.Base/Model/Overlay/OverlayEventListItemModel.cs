@@ -54,7 +54,7 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        public override async Task Initialize()
+        public override async Task Enable()
         {
             if (this.ItemTypes.Contains(OverlayEventListItemTypeEnum.Followers))
             {
@@ -88,7 +88,7 @@ namespace MixItUp.Base.Model.Overlay
                 GlobalEvents.OnPatronageMilestoneReachedOccurred += GlobalEvents_OnPatronageMilestoneReachedOccurred;
             }
 
-            await base.Initialize();
+            await base.Enable();
         }
 
         public override async Task Disable()

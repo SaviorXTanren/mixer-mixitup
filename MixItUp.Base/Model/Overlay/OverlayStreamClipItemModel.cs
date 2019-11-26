@@ -64,11 +64,11 @@ namespace MixItUp.Base.Model.Overlay
             return Task.FromResult(0);
         }
 
-        public override async Task Initialize()
+        public override async Task Enable()
         {
             GlobalEvents.OnMixerClipCreated += GlobalEvents_OnMixerClipCreated;
 
-            await base.Initialize();
+            await base.Enable();
         }
 
         public override async Task Disable()

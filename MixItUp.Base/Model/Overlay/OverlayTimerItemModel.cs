@@ -49,7 +49,7 @@ namespace MixItUp.Base.Model.Overlay
             this.TimerCompleteCommand = timerCompleteCommand;
         }
 
-        public override async Task Initialize()
+        public override async Task Enable()
         {
             this.timeLeft = this.TotalLength;
 
@@ -59,7 +59,7 @@ namespace MixItUp.Base.Model.Overlay
             Task.Run(async () => { await this.TimerBackground(this.backgroundThreadCancellationTokenSource.Token); }, this.backgroundThreadCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-            await base.Initialize();
+            await base.Enable();
         }
 
         public override async Task Disable()
@@ -90,7 +90,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             try
             {
-                while (this.timeLeft > 0 && this.IsInitialized && !token.IsCancellationRequested)
+                while (this.timeLeft > 0 && this.IsEnabled && !token.IsCancellationRequested)
                 {
                     this.SendUpdateRequired();
 
@@ -99,7 +99,7 @@ namespace MixItUp.Base.Model.Overlay
                     this.timeLeft--;
                 }
 
-                if (this.IsInitialized && !token.IsCancellationRequested)
+                if (this.IsEnabled && !token.IsCancellationRequested)
                 {
                     if (this.TimerCompleteCommand != null)
                     {

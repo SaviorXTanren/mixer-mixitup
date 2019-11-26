@@ -64,20 +64,12 @@ namespace MixItUp.Base.Model.Overlay
             return Task.FromResult(0);
         }
 
-        public override async Task Initialize()
+        public override async Task Enable()
         {
             GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
             GlobalEvents.OnChatMessageDeleted += GlobalEvents_OnChatMessageDeleted;
 
-            await base.Initialize();
-        }
-
-        public override async Task Disable()
-        {
-            GlobalEvents.OnChatMessageReceived -= GlobalEvents_OnChatMessageReceived;
-            GlobalEvents.OnChatMessageDeleted -= GlobalEvents_OnChatMessageDeleted;
-
-            await base.Disable();
+            await base.Enable();
         }
 
         private async void GlobalEvents_OnChatMessageReceived(object sender, ChatMessageViewModel message)
