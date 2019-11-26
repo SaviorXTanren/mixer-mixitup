@@ -8,6 +8,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
@@ -24,6 +25,11 @@ namespace MixItUp.WPF
         public static ApplicationSettings AppSettings;
 
         private bool crashObtained = false;
+
+        public App()
+        {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+        }
 
         public void SwitchTheme(string colorScheme, string backgroundColorName, string fullThemeName)
         {
