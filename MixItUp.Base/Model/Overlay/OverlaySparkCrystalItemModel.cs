@@ -94,14 +94,14 @@ namespace MixItUp.Base.Model.Overlay
             this.MilestoneReachedAnimation = milestoneReachedAnimation;
         }
 
-        public override async Task Initialize()
+        public override async Task Enable()
         {
             await this.RefreshPatronageData();
 
             GlobalEvents.OnPatronageUpdateOccurred += GlobalEvents_OnPatronageUpdateOccurred;
             GlobalEvents.OnPatronageMilestoneReachedOccurred += GlobalEvents_OnPatronageMilestoneReachedOccurred;
 
-            await base.Initialize();
+            await base.Enable();
         }
 
         public override async Task Disable()

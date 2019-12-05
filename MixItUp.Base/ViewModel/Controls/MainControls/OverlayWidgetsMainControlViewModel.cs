@@ -54,7 +54,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         {
             if (widget != null && !widget.IsEnabled)
             {
-                await widget.Initialize();
+                await widget.Enable();
             }
         }
 

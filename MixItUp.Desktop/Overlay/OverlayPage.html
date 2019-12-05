@@ -667,49 +667,52 @@
             }
 
             function endCreditsPacket(data) {
+                if (!widgetData.has(data.ID)) {
+                    var widget = {};
+                    widgetData.set(data.ID, widget);
+                    widget.MainDiv = document.createElement('div');
+                    widget.MainDiv.innerHTML = data.HTML;
+                    mainOverlayDiv.appendChild(widget.MainDiv);
 
-                var divContainer = document.createElement('div');
-                divContainer.innerHTML = data.HTML;
-                mainOverlayDiv.appendChild(divContainer);
+                    var maskHeight = $(document).height();
+                    var maskWidth = $(window).width();
 
-                var maskHeight = $(document).height();
-                var maskWidth = $(window).width();
+                    var titles = $('#titles');
+                    var titlesHeight = Math.max(titles.height(), maskHeight);
+                    var shiftHeight = Math.min(titlesHeight, maskHeight) + 100;
 
-                var titles = $('#titles');
-                var titlesHeight = titles.height();
-                titlesHeight = Math.max(titlesHeight, maskHeight);
+                    $('#titles').css({
+                        'width': maskWidth,
+                        'height': titlesHeight
+                    });
 
-                $('#titles').css({
-                    'width': maskWidth,
-                    'height': titlesHeight
-                });
+                    $('#credits').css({
+                        'position': 'absolute'
+                    });
 
-                $('#credits').css({
-                    'position': 'absolute'
-                });
+                    $('#titles').fadeIn(1000);
+                    $('#titles').fadeTo("fast");
+                    $('#titles').fadeIn();
+                    $('#credits').css("left", (($('#credits').parent().width() - $('#credits').outerWidth()) / 2) + "px");
+                    $('#credits').css("bottom", "-" + shiftHeight + "px");
+                    $('#credits').show('fast');
 
-                $('#titles').fadeIn(1000);
-                $('#titles').fadeTo("fast");
-                $('#titles').fadeIn();
-                $('#credits').css("left", (($('#credits').parent().width() - $('#credits').outerWidth()) / 2) + "px");
-                $('#credits').css("bottom", "-" + maskHeight + "px");
-                $('#credits').show('fast');
+                    $('#credits').animate(
+                        {
+                            bottom: titlesHeight + "px"
+                        },
+                        {
+                            duration: titlesHeight * data.SpeedNumber,
+                            easing: 'linear',
+                            complete: function () {
+                                $('#titles').fadeOut();
 
-                $('#credits').animate(
-                    {
-                        bottom: titlesHeight + "px"
-                    },
-                    {
-                        duration: titlesHeight * data.SpeedNumber,
-                        easing: 'linear',
-                        complete: function () {
-                            $('#titles').fadeOut();
-                            $('.window').fadeOut();
-
-                            mainOverlayDiv.removeChild(divContainer);
+                                mainOverlayDiv.removeChild(widget.MainDiv);
+                                widgetData.delete(data.ID);
+                            }
                         }
-                    }
-                );
+                    );
+                }
             }
 
             function getCreatePersistentElement(data) {

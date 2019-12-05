@@ -538,6 +538,7 @@ namespace MixItUp.Base.ViewModel.User
             {
                 this.Data.OfflineViewingMinutes++;
             }
+            ChannelSession.Settings.UserData.ManualValueChanged(this.ID);
 
             if (ChannelSession.Settings.RegularUserMinimumHours > 0 && this.Data.ViewingHoursPart >= ChannelSession.Settings.RegularUserMinimumHours)
             {

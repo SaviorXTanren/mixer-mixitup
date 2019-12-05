@@ -7,6 +7,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
@@ -26,6 +27,8 @@ namespace MixItUp.WPF
 
         public App()
         {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+
             // NOTE: Uncomment the lines below to test other cultures
             //System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo("de-DE");
             //System.Threading.Thread.CurrentThread.CurrentCulture = ci;

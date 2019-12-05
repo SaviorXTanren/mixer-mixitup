@@ -53,7 +53,7 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        public override async Task Initialize()
+        public override async Task Enable()
         {
             if (this.TickerTapeType == OverlayTickerTapeItemTypeEnum.Followers)
             {
@@ -82,7 +82,7 @@ namespace MixItUp.Base.Model.Overlay
                 GlobalEvents.OnEmberUseOccurred += GlobalEvents_OnEmberUseOccurred;
             }
 
-            await base.Initialize();
+            await base.Enable();
         }
 
         public override async Task Disable()

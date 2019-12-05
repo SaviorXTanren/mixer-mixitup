@@ -22,8 +22,6 @@ namespace MixItUp.Base.Services
 
         Task Save(IChannelSettings settings);
 
-        Task Save(IChannelSettings settings, string filePath);
-
         Task<bool> SaveAndValidate(IChannelSettings settings);
 
         Task SaveBackup(IChannelSettings settings);

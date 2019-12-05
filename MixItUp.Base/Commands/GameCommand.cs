@@ -1802,10 +1802,12 @@ namespace MixItUp.Base.Commands
                 this.playerTypes[user] = WinLosePlayerType.Knight;
             }
 
-            int totalLosers = (int)Math.Ceiling((double)this.ThiefPlayerPercentage * (double)this.playerTypes.Count);
+            double thiefDecimalPercentage = ((double)this.ThiefPlayerPercentage) / 100.0;
+            int totalThieves = (int)Math.Ceiling(thiefDecimalPercentage * (double)this.playerTypes.Count);
+
             IEnumerable<UserViewModel> shuffledPlayers = this.playerTypes.Keys.ToList().Shuffle();
             this.playerTypes[shuffledPlayers.First()] = WinLosePlayerType.King;
-            foreach (UserViewModel user in shuffledPlayers.Skip(2).Take(totalLosers))
+            foreach (UserViewModel user in shuffledPlayers.Skip(2).Take(totalThieves))
             {
                 this.playerTypes[user] = WinLosePlayerType.Thief;
             }

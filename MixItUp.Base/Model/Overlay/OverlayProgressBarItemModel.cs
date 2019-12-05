@@ -112,7 +112,7 @@ namespace MixItUp.Base.Model.Overlay
         [JsonIgnore]
         public override bool SupportsRefreshUpdating { get { return this.ProgressBarType == OverlayProgressBarItemTypeEnum.Custom; } }
 
-        public override async Task Initialize()
+        public override async Task Enable()
         {
             if (this.ResetAfterDays > 0 && this.LastReset.TotalDaysFromNow() > this.ResetAfterDays)
             {
@@ -163,7 +163,7 @@ namespace MixItUp.Base.Model.Overlay
                 GlobalEvents.OnPatronageMilestoneReachedOccurred += GlobalEvents_OnPatronageMilestoneReachedOccurred;
             }
 
-            await base.Initialize();
+            await base.Enable();
         }
 
         public override async Task Disable()

@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 [assembly: InternalsVisibleTo("MixItUp.Desktop")]
@@ -126,6 +127,9 @@ namespace MixItUp.Base
         public static List<PreMadeChatCommand> PreMadeChatCommands { get; private set; }
 
         public static LockedDictionary<string, double> Counters { get; private set; }
+
+        private static CancellationTokenSource sessionBackgroundCancellationTokenSource = new CancellationTokenSource();
+        private static int sessionBackgroundTimer = 0;
 
         public static bool IsDebug()
         {
@@ -618,6 +622,8 @@ namespace MixItUp.Base
 
                     GlobalEvents.OnRankChanged += GlobalEvents_OnRankChanged;
 
+                    AsyncRunner.RunBackgroundTask(sessionBackgroundCancellationTokenSource.Token, 60000, SessionBackgroundTask);
+
                     return true;
                 }
             }
@@ -640,6 +646,24 @@ namespace MixItUp.Base
                 return true;
             }
             return false;
+        }
+
+        private static async Task SessionBackgroundTask(CancellationToken cancellationToken)
+        {
+            if (!cancellationToken.IsCancellationRequested)
+            {
+                sessionBackgroundTimer++;
+
+                await ChannelSession.RefreshUser();
+
+                await ChannelSession.RefreshChannel();
+
+                if (sessionBackgroundTimer >= 5)
+                {
+                    await ChannelSession.SaveSettings();
+                    sessionBackgroundTimer = 0;
+                }
+            }
         }
 
         private static async void GlobalEvents_OnRankChanged(object sender, UserCurrencyDataViewModel currency)

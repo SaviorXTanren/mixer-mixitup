@@ -555,10 +555,8 @@ namespace MixItUp.Base.Services
             }
         }
 
-        private async Task ProcessHoursCurrency(CancellationToken cancellationToken)
+        private Task ProcessHoursCurrency(CancellationToken cancellationToken)
         {
-            await ChannelSession.RefreshChannel();
-
             foreach (UserViewModel user in ChannelSession.Services.User.GetAllWorkableUsers())
             {
                 user.UpdateMinuteData();
@@ -568,6 +566,8 @@ namespace MixItUp.Base.Services
             {
                 currency.UpdateUserData();
             }
+
+            return Task.FromResult(0);
         }
 
         #region Mixer Events

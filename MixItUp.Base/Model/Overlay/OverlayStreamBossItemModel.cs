@@ -138,7 +138,7 @@ namespace MixItUp.Base.Model.Overlay
             this.NewStreamBossCommand = newStreamBossCommand;
         }
 
-        public override async Task Initialize()
+        public override async Task Enable()
         {
             this.DamageTaken = false;
             this.NewBoss = false;
@@ -190,7 +190,7 @@ namespace MixItUp.Base.Model.Overlay
                 GlobalEvents.OnEmberUseOccurred += GlobalEvents_OnEmberUseOccurred;
             }
 
-            await base.Initialize();
+            await base.Enable();
         }
 
         public override async Task Disable()

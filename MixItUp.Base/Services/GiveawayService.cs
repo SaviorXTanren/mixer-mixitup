@@ -244,9 +244,12 @@ namespace MixItUp.Base.Services
                         return;
                     }
 
-                    if (arguments.Count() > 0)
+                    if (arguments.Count() > 0 && ChannelSession.Settings.GiveawayMaximumEntries > 1)
                     {
-                        int.TryParse(arguments.ElementAt(0), out entries);
+                        if (!int.TryParse(arguments.ElementAt(0), out entries) || entries < 1)
+                        {
+                            entries = 1;
+                        }
                     }
 
                     int currentEntries = 0;
