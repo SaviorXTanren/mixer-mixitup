@@ -113,7 +113,7 @@ namespace MixItUp.Base.Util
                 {
                     foreach (string word in ChannelSession.Settings.CommunityFilteredWords)
                     {
-                        if (Regex.IsMatch(text, string.Format(BannedWordRegexFormat, word), RegexOptions.IgnoreCase))
+                        if (Regex.IsMatch(text, string.Format(BannedWordRegexFormat, Regex.Escape(word)), RegexOptions.IgnoreCase))
                         {
                             return "Banned Word";
                         }
@@ -122,7 +122,7 @@ namespace MixItUp.Base.Util
 
                 foreach (string word in ChannelSession.Settings.FilteredWords)
                 {
-                    if (Regex.IsMatch(text, string.Format(BannedWordRegexFormat, word), RegexOptions.IgnoreCase))
+                    if (Regex.IsMatch(text, string.Format(BannedWordRegexFormat, Regex.Escape(word)), RegexOptions.IgnoreCase))
                     {
                         return "The following word is not allowed: " + word;
                     }
@@ -130,7 +130,7 @@ namespace MixItUp.Base.Util
 
                 foreach (string word in ChannelSession.Settings.BannedWords)
                 {
-                    if (Regex.IsMatch(text, string.Format(BannedWordRegexFormat, word), RegexOptions.IgnoreCase))
+                    if (Regex.IsMatch(text, string.Format(BannedWordRegexFormat, Regex.Escape(word)), RegexOptions.IgnoreCase))
                     {
                         await ChannelSession.Services.Chat.BanUser(user);
                         return "The following word is banned: " + word;
