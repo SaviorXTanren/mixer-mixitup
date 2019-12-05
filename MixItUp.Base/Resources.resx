@@ -543,6 +543,9 @@
   <data name="Cooldown" xml:space="preserve">
     <value>Cooldown</value>
   </data>
+  <data name="Cost" xml:space="preserve">
+    <value>Cost</value>
+  </data>
   <data name="Costream" xml:space="preserve">
     <value>Costream</value>
   </data>
