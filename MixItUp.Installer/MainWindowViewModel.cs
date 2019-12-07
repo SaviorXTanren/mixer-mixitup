@@ -105,6 +105,17 @@ namespace MixItUp.Installer
         }
         private string displayText1;
 
+        public string DisplayText2
+        {
+            get { return this.displayText2; }
+            private set
+            {
+                this.displayText2 = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string displayText2;
+
         public bool ErrorOccurred
         {
             get { return this.errorOccurred; }
@@ -116,16 +127,19 @@ namespace MixItUp.Installer
         }
         private bool errorOccurred;
 
-        public string DisplayText2
+        public string HyperlinkAddress
         {
-            get { return this.displayText2; }
+            get { return this.hyperlinkAddress; }
             private set
             {
-                this.displayText2 = value;
+                this.hyperlinkAddress = value;
                 this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("ShowHyperlinkAddress");
             }
         }
-        private string displayText2;
+        private string hyperlinkAddress;
+
+        public bool ShowHyperlinkAddress { get { return !string.IsNullOrEmpty(this.HyperlinkAddress); } }
 
         private string installDirectory;
 
@@ -211,7 +225,8 @@ namespace MixItUp.Installer
 
             if (!result && !this.ErrorOccurred)
             {
-                this.ShowError(string.Format("{0} file created in folder.", InstallerLogFileName), "Email support@mixitupapp.com with this file to help diagnose this issue.");
+                this.HyperlinkAddress = InstallerLogFileName;
+                this.ShowError(string.Format("{0} file created:", InstallerLogFileName), "Please visit our support Discord or send an email to support@mixitupapp.com with the contents of this file.");
             }
             return result;
         }

@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
+using System.Windows.Navigation;
 
 namespace MixItUp.Installer
 {
@@ -28,6 +30,17 @@ namespace MixItUp.Installer
                     this.Close();
                 }
             }
+        }
+
+        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            string path = (e.Uri.IsAbsoluteUri) ? e.Uri.AbsoluteUri : e.Uri.OriginalString;
+            ProcessStartInfo processInfo = new ProcessStartInfo(path)
+            {
+                UseShellExecute = true
+            };
+            Process.Start(processInfo);
+            e.Handled = true;
         }
     }
 }
