@@ -56,11 +56,15 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <Button x:Name="ReportIssueButton" Grid.Column="0" Click="ReportIssueButton_Click">Report Issue</Button>
 
-                <Button x:Name="CancelButton" Grid.Column="2" Click="CancelButton_Click">Cancel</Button>
+                <Button x:Name="OpenLogFileButton" Grid.Column="2" Click="OpenLogFileButton_Click">Open Log File</Button>
+                
+                <Button x:Name="CancelButton" Grid.Column="4" Click="CancelButton_Click">Cancel</Button>
 
             </Grid>
         </Grid>
