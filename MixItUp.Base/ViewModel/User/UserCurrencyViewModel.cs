@@ -176,7 +176,7 @@ namespace MixItUp.Base.ViewModel.User
                             if (user.FanProgression != null && user.FanProgression.level != null && user.FanProgression.level.level > user.Data.GetCurrencyAmount(this))
                             {
                                 user.Data.SetCurrencyAmount(this, (int)user.FanProgression.level.level);
-                                ChannelSession.Settings.UserData.ManualValueChanged(this.ID);
+                                ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
                             }
                         }
                     }
@@ -207,7 +207,7 @@ namespace MixItUp.Base.ViewModel.User
                                             user.Data.AddCurrencyAmount(this, this.SubscriberBonus);
                                         }
                                     }
-                                    ChannelSession.Settings.UserData.ManualValueChanged(this.ID);
+                                    ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
                                 }
                             }
                         }
