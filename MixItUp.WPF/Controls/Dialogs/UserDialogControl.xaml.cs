@@ -41,9 +41,9 @@ namespace MixItUp.WPF.Controls.Dialogs
         {
             if (this.user != null && !this.user.IsAnonymous && !string.IsNullOrEmpty(this.user.UserName))
             {
-                this.DataContext = this.user;
-
                 await this.user.RefreshDetails(force: true);
+
+                this.DataContext = this.user;
 
                 this.PromoteToModButton.IsEnabled = this.DemoteFromModButton.IsEnabled = this.EditUserButton.IsEnabled = ChannelSession.IsStreamer;
 
