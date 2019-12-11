@@ -1915,50 +1915,51 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task<OverlayItemBase> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
-            if (ChannelSession.Services.SongRequestService != null && this.songRequestsUpdated)
-            {
-                this.songRequestsUpdated = false;
+            // TODO: Remove?
+            //if (ChannelSession.Services.SongRequestService != null && this.songRequestsUpdated)
+            //{
+            //    this.songRequestsUpdated = false;
 
-                List<SongRequestModel> songRequests = new List<SongRequestModel>();
+            //    List<SongRequestModel> songRequests = new List<SongRequestModel>();
 
-                SongRequestModel currentlyPlaying = await ChannelSession.Services.SongRequestService.GetCurrent();
-                if (currentlyPlaying != null)
-                {
-                    songRequests.Add(currentlyPlaying);
-                }
+            //    SongRequestModel currentlyPlaying = await ChannelSession.Services.SongRequestService.GetCurrent();
+            //    if (currentlyPlaying != null)
+            //    {
+            //        songRequests.Add(currentlyPlaying);
+            //    }
 
-                IEnumerable<SongRequestModel> allSongRequests = this.testSongRequestsList;
-                if (this.testSongRequestsList.Count == 0)
-                {
-                    allSongRequests = ChannelSession.Services.SongRequestService.RequestSongs.ToList();
-                }
+            //    IEnumerable<SongRequestModel> allSongRequests = this.testSongRequestsList;
+            //    if (this.testSongRequestsList.Count == 0)
+            //    {
+            //        allSongRequests = ChannelSession.Services.SongRequestService.RequestSongs.ToList();
+            //    }
 
-                foreach (SongRequestModel songRequest in allSongRequests)
-                {
-                    if (!songRequests.Any(sr => sr.Equals(songRequest)))
-                    {
-                        songRequests.Add(songRequest);
-                    }
-                }
+            //    foreach (SongRequestModel songRequest in allSongRequests)
+            //    {
+            //        if (!songRequests.Any(sr => sr.Equals(songRequest)))
+            //        {
+            //            songRequests.Add(songRequest);
+            //        }
+            //    }
 
-                this.SongRequestUpdates.Clear();
-                this.currentSongRequests.Clear();
+            //    this.SongRequestUpdates.Clear();
+            //    this.currentSongRequests.Clear();
 
-                OverlaySongRequests copy = this.Copy<OverlaySongRequests>();
-                for (int i = 0; i < songRequests.Count() && i < this.TotalToShow; i++)
-                {
-                    this.currentSongRequests.Add(songRequests.ElementAt(i));
-                }
+            //    OverlaySongRequests copy = this.Copy<OverlaySongRequests>();
+            //    for (int i = 0; i < songRequests.Count() && i < this.TotalToShow; i++)
+            //    {
+            //        this.currentSongRequests.Add(songRequests.ElementAt(i));
+            //    }
 
-                while (this.currentSongRequests.Count > 0)
-                {
-                    OverlayCustomHTMLItem overlayItem = (OverlayCustomHTMLItem)await base.GetProcessedItem(user, arguments, extraSpecialIdentifiers);
-                    copy.SongRequestUpdates.Add(new OverlaySongRequestItem() { HTMLText = overlayItem.HTMLText });
-                    this.currentSongRequests.RemoveAt(0);
-                }
+            //    while (this.currentSongRequests.Count > 0)
+            //    {
+            //        OverlayCustomHTMLItem overlayItem = (OverlayCustomHTMLItem)await base.GetProcessedItem(user, arguments, extraSpecialIdentifiers);
+            //        copy.SongRequestUpdates.Add(new OverlaySongRequestItem() { HTMLText = overlayItem.HTMLText });
+            //        this.currentSongRequests.RemoveAt(0);
+            //    }
 
-                return copy;
-            }
+            //    return copy;
+            //}
             return null;
         }
 
@@ -2816,6 +2817,32 @@ namespace MixItUp.Base.Model.Overlay
             {
                 await this.Item.LoadTestData();
             }
+        }
+    }
+
+    [Obsolete]
+    [DataContract]
+    public class OverlaySongRequestsListItemModel : OverlayListItemModelBase
+    {
+        public const string HTMLTemplate =
+        @"<div style=""position: relative; border-style: solid; border-width: 5px; border-color: {BORDER_COLOR}; background-color: {BACKGROUND_COLOR}; width: {WIDTH}px; height: {HEIGHT}px"">
+            <img src=""{SONG_IMAGE}"" width=""{SONG_IMAGE_SIZE}"" height=""{SONG_IMAGE_SIZE}"" style=""position: absolute; top: 50%; transform: translate(0%, -50%); margin-left: 10px;"">
+            <span style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; font-weight: bold; color: {TEXT_COLOR}; position: absolute; top: 50%; left: 28%; transform: translate(0%, -50%);"">{SONG_NAME}</span>
+        </div>";
+
+        public bool IncludeCurrentSong { get; set; }
+
+        public OverlaySongRequestsListItemModel()
+            : base()
+        {
+            this.IncludeCurrentSong = true;
+        }
+
+        public OverlaySongRequestsListItemModel(string htmlText, int totalToShow, string textFont, int width, int height, string borderColor, string backgroundColor, string textColor,
+            bool includeCurrentSong, OverlayListItemAlignmentTypeEnum alignment, OverlayItemEffectEntranceAnimationTypeEnum addEventAnimation, OverlayItemEffectExitAnimationTypeEnum removeEventAnimation)
+            : base(OverlayItemModelTypeEnum.SongRequests, htmlText, totalToShow, 0, textFont, width, height, borderColor, backgroundColor, textColor, alignment, addEventAnimation, removeEventAnimation)
+        {
+            this.IncludeCurrentSong = includeCurrentSong;
         }
     }
 }

@@ -866,9 +866,6 @@
     <Compile Include="Controls\Services\ServicesGroupBoxControl.xaml.cs">
       <DependentUpon>ServicesGroupBoxControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Services\SpotifyServiceControl.xaml.cs">
-      <DependentUpon>SpotifyServiceControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Services\StreamJarServiceControl.xaml.cs">
       <DependentUpon>StreamJarServiceControl.xaml</DependentUpon>
     </Compile>
@@ -930,9 +927,6 @@
       <DependentUpon>SerialDevicesSettingsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Settings\SettingsControlBase.cs" />
-    <Compile Include="Controls\Settings\SongRequestsSettingsControl.xaml.cs">
-      <DependentUpon>SongRequestsSettingsControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Settings\ThemeSettingsControl.xaml.cs">
       <DependentUpon>ThemeSettingsControl.xaml</DependentUpon>
     </Compile>
@@ -1735,10 +1729,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Services\SpotifyServiceControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\Services\StreamJarServiceControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1816,10 +1806,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Settings\SerialDevicesSettingsControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Settings\SongRequestsSettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

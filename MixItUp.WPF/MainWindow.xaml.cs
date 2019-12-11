@@ -35,12 +35,6 @@ namespace MixItUp.WPF
         {
             InitializeComponent();
 
-            // NOTE: This is an attempt to fix a random crashing bug related with an
-            // "InvalidOperationException" happening after login as the main window is loading.
-            // There were some links that said the WebBrowser control can sometimes cause this and
-            // loading about:blank would fix it.
-            this.YouTubeSongRequestHost.Navigate("about:blank");
-
             this.Closing += MainWindow_Closing;
             this.Initialize(this.StatusBar);
 
@@ -112,9 +106,6 @@ namespace MixItUp.WPF
 
         protected override async Task OnLoaded()
         {
-            ChannelSession.Services.SongRequestService.AddProvider(new SpotifySongRequestProviderService());
-            ChannelSession.Services.SongRequestService.AddProvider(new YouTubeSongRequestProviderService(this.Dispatcher, this.YouTubeSongRequestHost));
-
             ChannelSession.Services.InputService.Initialize(new WindowInteropHelper(this).Handle);
             foreach (HotKeyConfiguration hotKeyConfiguration in ChannelSession.Settings.HotKeys.Values)
             {

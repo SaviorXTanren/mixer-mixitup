@@ -32,7 +32,6 @@ namespace MixItUp.Desktop.Services
             this.ImageManipulationService = new DesktopImageManipulationService();
             this.AudioService = new AudioService();
             this.TextToSpeechService = new WindowsTextToSpeechService();
-            this.SongRequestService = new SongRequestService();
             this.GiveawayService = new GiveawayService();
             this.TranslationService = new TranslationService();
             this.SerialService = new SerialService();
@@ -276,30 +275,6 @@ namespace MixItUp.Desktop.Services
                 await this.Twitter.Disconnect();
                 this.Twitter = null;
                 ChannelSession.Settings.TwitterOAuthToken = null;
-            }
-        }
-
-        public override async Task<bool> InitializeSpotify()
-        {
-            this.Spotify = (ChannelSession.Settings.SpotifyOAuthToken != null) ? new SpotifyService(ChannelSession.Settings.SpotifyOAuthToken) : new SpotifyService();
-            if (await this.Spotify.Connect())
-            {
-                return true;
-            }
-            else
-            {
-                await this.DisconnectSpotify();
-            }
-            return false;
-        }
-
-        public override async Task DisconnectSpotify()
-        {
-            if (this.Spotify != null)
-            {
-                await this.Spotify.Disconnect();
-                this.Spotify = null;
-                ChannelSession.Settings.SpotifyOAuthToken = null;
             }
         }
 

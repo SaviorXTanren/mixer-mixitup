@@ -36,7 +36,7 @@ namespace MixItUp.Base.Model.Overlay
         TimerTrain,
         [Name("Stream Boss")]
         StreamBoss,
-        [Name("Song Requests")]
+        [Obsolete]
         SongRequests,
         [Name("Ticker Tape")]
         TickerTape,

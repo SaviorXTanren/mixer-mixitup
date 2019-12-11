@@ -34,25 +34,26 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.Services.Spotify != null)
-            {
-                if (this.SpotifyType == SpotifyActionTypeEnum.Play)
-                {
-                    await ChannelSession.Services.Spotify.PlayCurrentlyPlaying();
-                }
-                else if (this.SpotifyType == SpotifyActionTypeEnum.Pause)
-                {
-                    await ChannelSession.Services.Spotify.PauseCurrentlyPlaying();
-                }
-                else if (this.SpotifyType == SpotifyActionTypeEnum.Next)
-                {
-                    await ChannelSession.Services.Spotify.NextCurrentlyPlaying();
-                }
-                else if (this.SpotifyType == SpotifyActionTypeEnum.Previous)
-                {
-                    await ChannelSession.Services.Spotify.PreviousCurrentlyPlaying();
-                }
-            }
+            // TODO: What do do? Remove htis?
+            //if (ChannelSession.Services.Spotify != null)
+            //{
+            //    if (this.SpotifyType == SpotifyActionTypeEnum.Play)
+            //    {
+            //        await ChannelSession.Services.Spotify.PlayCurrentlyPlaying();
+            //    }
+            //    else if (this.SpotifyType == SpotifyActionTypeEnum.Pause)
+            //    {
+            //        await ChannelSession.Services.Spotify.PauseCurrentlyPlaying();
+            //    }
+            //    else if (this.SpotifyType == SpotifyActionTypeEnum.Next)
+            //    {
+            //        await ChannelSession.Services.Spotify.NextCurrentlyPlaying();
+            //    }
+            //    else if (this.SpotifyType == SpotifyActionTypeEnum.Previous)
+            //    {
+            //        await ChannelSession.Services.Spotify.PreviousCurrentlyPlaying();
+            //    }
+            //}
         }
     }
 }

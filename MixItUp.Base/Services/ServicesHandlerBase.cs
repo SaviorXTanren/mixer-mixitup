@@ -22,7 +22,6 @@ namespace MixItUp.Base.Services
         public IImageManipulationService ImageManipulationService { get; protected set; }
         public ITextToSpeechService TextToSpeechService { get; protected set; }
         public ITranslationService TranslationService { get; protected set; }
-        public ISongRequestService SongRequestService { get; protected set; }
         public IGiveawayService GiveawayService { get; protected set; }
         public ISerialService SerialService { get; protected set; }
         public LocalRemoteServiceBase RemoteService { get; protected set; }
@@ -34,7 +33,6 @@ namespace MixItUp.Base.Services
         public IDeveloperAPIService DeveloperAPI { get; protected set; }
         public IStreamlabsService Streamlabs { get; protected set; }
         public ITwitterService Twitter { get; protected set; }
-        public SpotifyService Spotify { get; protected set; }
         public IDiscordService Discord { get; protected set; }
         public ITiltifyService Tiltify { get; protected set; }
         public IExtraLifeService ExtraLife { get; protected set; }
@@ -75,9 +73,6 @@ namespace MixItUp.Base.Services
 
         public abstract Task<bool> InitializeTwitter();
         public abstract Task DisconnectTwitter();
-
-        public abstract Task<bool> InitializeSpotify();
-        public abstract Task DisconnectSpotify();
 
         public abstract Task<bool> InitializeDiscord();
         public abstract Task DisconnectDiscord();

@@ -503,10 +503,6 @@ namespace MixItUp.Base
                     {
                         await ChannelSession.Services.InitializeTwitter();
                     }
-                    if (ChannelSession.Settings.SpotifyOAuthToken != null)
-                    {
-                        await ChannelSession.Services.InitializeSpotify();
-                    }
                     if (ChannelSession.Settings.DiscordOAuthToken != null)
                     {
                         await ChannelSession.Services.InitializeDiscord();

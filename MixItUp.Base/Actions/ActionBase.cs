@@ -45,14 +45,14 @@ namespace MixItUp.Base.Actions
         [Name("Special Identifier")]
         SpecialIdentifier,
         File,
-        [Name("Song Request")]
+        [Obsolete]
         SongRequest,
+        [Obsolete]
         Spotify,
         Discord,
         Translation,
         Twitter,
         Conditional,
-        [Name("Streamlabs OBS")]
         [Obsolete]
         StreamlabsOBS,
         [Name("Streaming Software")]

@@ -60,8 +60,7 @@ namespace MixItUp.Desktop.Services
                 DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath, ignoreErrors: true);
                 await ChannelSession.Services.Settings.Initialize(settings);
 
-                settings.SongAddedCommand = CustomCommand.BasicChatCommand("Song Request Added", "$songtitle has been added to the queue", isWhisper: true);
-                settings.SongPlayedCommand = CustomCommand.BasicChatCommand("Song Request Played", "Now Playing: $songtitle");
+                // No longer needed, this used to upgrade song request actions
 
                 await ChannelSession.Services.Settings.Save(settings);
             }
@@ -114,8 +113,6 @@ namespace MixItUp.Desktop.Services
             {
                 DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath, ignoreErrors: true);
                 await ChannelSession.Services.Settings.Initialize(settings);
-
-                settings.SongRemovedCommand = CustomCommand.BasicChatCommand("Song Request Removed", "$songtitle has been removed from the queue", isWhisper: true);
 
                 foreach (GameCommandBase command in settings.GameCommands.ToList())
                 {
@@ -500,9 +497,6 @@ namespace MixItUp.Desktop.Services
             commands.Add(settings.ModerationStrike1Command);
             commands.Add(settings.ModerationStrike2Command);
             commands.Add(settings.ModerationStrike3Command);
-            commands.Add(settings.SongAddedCommand);
-            commands.Add(settings.SongRemovedCommand);
-            commands.Add(settings.SongPlayedCommand);
 
             return commands.Where(c => c != null);
         }
