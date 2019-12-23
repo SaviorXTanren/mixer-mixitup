@@ -57,10 +57,14 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <Button x:Name="ReportIssueButton" Grid.Column="0" Click="ReportIssueButton_Click" Content="{x:Static resx:Resources.ReportIssue}"/>
 
+                <Button x:Name="OpenLogFileButton" Grid.Column="2" Click="OpenLogFileButton_Click">Open Log File</Button>
+                
                 <Button x:Name="CancelButton" Grid.Column="2" Click="CancelButton_Click" Content="{x:Static resx:Resources.Cancel}"/>
 
             </Grid>
