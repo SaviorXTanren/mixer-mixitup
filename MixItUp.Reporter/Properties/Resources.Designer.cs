@@ -106,6 +106,15 @@ namespace MixItUp.Reporter.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open Log File.
+        /// </summary>
+        public static string OpenLogFile {
+            get {
+                return ResourceManager.GetString("OpenLogFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Report Issue.
         /// </summary>
         public static string ReportIssue {

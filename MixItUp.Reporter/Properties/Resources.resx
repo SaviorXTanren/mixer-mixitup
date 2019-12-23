@@ -132,6 +132,9 @@
   <data name="Ok" xml:space="preserve">
     <value>Ok</value>
   </data>
+  <data name="OpenLogFile" xml:space="preserve">
+    <value>Open Log File</value>
+  </data>
   <data name="ReportIssue" xml:space="preserve">
     <value>Report Issue</value>
   </data>
