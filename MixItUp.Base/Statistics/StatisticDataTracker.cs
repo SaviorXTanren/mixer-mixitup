@@ -73,7 +73,7 @@ namespace MixItUp.Base.Statistics
 
         public double AverageUniqueIdentifiers { get { return ((double)this.UniqueIdentifiers) / ((double)this.TotalMinutes); } }
 
-        public int Total { get { return this.DataPoints.Count; ; } }
+        public int Total { get { return this.DataPoints.Count; } }
 
         public double Average { get { return ((double)this.Total) / ((double)this.TotalMinutes); } }
         public string AverageString { get { return Math.Round(Average, 2).ToString(); } }

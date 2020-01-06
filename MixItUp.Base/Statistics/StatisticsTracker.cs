@@ -119,8 +119,8 @@ namespace MixItUp.Base.Statistics
 
             if (ChannelSession.Statistics != null)
             {
-                staticStats.AddValue("Sparks", ChannelSession.Statistics.SparksTracker.Total.ToString());
-                staticStats.AddValue("Embers", ChannelSession.Statistics.EmbersTracker.Total.ToString());
+                staticStats.AddValue("Sparks", ChannelSession.Statistics.SparksTracker.TotalValue.ToString());
+                staticStats.AddValue("Embers", ChannelSession.Statistics.EmbersTracker.TotalValue.ToString());
             }
             else
             {
