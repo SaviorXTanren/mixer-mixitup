@@ -33,7 +33,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         public bool IsNotMilestonesType { get { return this.progressBarType != OverlayProgressBarItemTypeEnum.Milestones; } }
         public bool IsFollowersType { get { return this.progressBarType == OverlayProgressBarItemTypeEnum.Followers; } }
 
-        public bool CanSetStartingAmount { get { return this.IsNotMilestonesType && !this.TotalFollowers; } }
+        public bool CanSetStartingAmount { get { return this.IsNotMilestonesType && !(this.IsFollowersType && this.TotalFollowers); } }
 
         public string StartingAmount
         {

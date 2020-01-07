@@ -73,19 +73,24 @@ namespace MixItUp.Base.Statistics
 
         public double AverageUniqueIdentifiers { get { return ((double)this.UniqueIdentifiers) / ((double)this.TotalMinutes); } }
 
-        public int Total { get { return this.DataPoints.Count; ; } }
+        public int Total { get { return this.DataPoints.Count; } }
 
         public double Average { get { return ((double)this.Total) / ((double)this.TotalMinutes); } }
-        public string AverageString { get { return Math.Round(Average, 2).ToString(); } }
+        public string AverageString { get { return Math.Round(this.Average, 2).ToString(); } }
 
         public int MaxValue { get { return (int)this.MaxValueDecimal; } }
+        public string MaxValueString { get { return this.MaxValue.ToString(); } }
         public double MaxValueDecimal { get { return (this.DataPoints.Count > 0) ? this.DataPoints.Select(dp => dp.ValueDecimal).ToArray().Max() : 0.0; } }
+        public string MaxValueDecimalString { get { return Math.Round(this.MaxValueDecimal, 2).ToString(); } }
 
         public int TotalValue { get { return (int)this.TotalValueDecimal; } }
         public double TotalValueDecimal { get { return this.DataPoints.Select(dp => dp.ValueDecimal).ToArray().Sum(); } }
 
         public double AverageValue { get { return this.TotalValueDecimal / ((double)this.TotalMinutes); } }
         public string AverageValueString { get { return Math.Round(AverageValue, 2).ToString(); } }
+
+        public double LastValue { get { return (this.DataPoints.Count > 0) ? this.DataPoints.Last().ValueDecimal : 0.0; } }
+        public string LastValueString { get { return Math.Round(LastValue, 2).ToString(); } }
 
         public bool IsImageIcon { get { return !this.IsPackIcon; } }
 
@@ -163,16 +168,16 @@ namespace MixItUp.Base.Statistics
 
         public void AddValue(int value) { this.DataPoints.Add(new StatisticDataPoint(value)); }
 
-        public override IEnumerable<string> GetExportHeaders() { return new List<string>() { "Max", "Average" }; }
+        public override IEnumerable<string> GetExportHeaders() { return new List<string>() { "Current", "Max", "Average" }; }
 
         public override IEnumerable<List<string>> GetExportData()
         {
             List<List<string>> results = new List<List<string>>();
-            results.Add(new List<string>() { this.MaxValue.ToString(), this.AverageValue.ToString() });
+            results.Add(new List<string>() { this.LastValueString, this.MaxValueString, this.AverageValueString });
             return results;
         }
 
-        public override string ToString() { return string.Format("Max: {0},    Average: {1}", this.MaxValue, this.AverageValueString); }
+        public override string ToString() { return string.Format("Current: {0},    Max: {1},    Average: {2}", this.LastValueString, this.MaxValueString, this.AverageValueString); }
     }
 
     public class EventStatisticDataTracker : StatisticDataTrackerBase
