@@ -65,7 +65,7 @@ namespace MixItUp.Base.Statistics
             return Task.FromResult(0);
         });
 
-        public EventStatisticDataTracker InteractiveTracker = new EventStatisticDataTracker("Interactive", "GamepadVariant", true, new List<string>() { "Control Name", "Username", "Date & Time" }, (EventStatisticDataTracker dataTracker) =>
+        public EventStatisticDataTracker MixPlayTracker = new EventStatisticDataTracker("MixPlay", "GamepadVariant", true, new List<string>() { "Control Name", "Username", "Date & Time" }, (EventStatisticDataTracker dataTracker) =>
         {
             return string.Format("Total Uses: {0},    Average Uses: {1}", dataTracker.Total, dataTracker.AverageString);
         });
@@ -164,7 +164,7 @@ namespace MixItUp.Base.Statistics
             this.Statistics.Add(this.SubscriberTracker);
             this.Statistics.Add(this.ResubscriberTracker);
             this.Statistics.Add(this.GiftedSubscriptionsTracker);
-            this.Statistics.Add(this.InteractiveTracker);
+            this.Statistics.Add(this.MixPlayTracker);
             this.Statistics.Add(this.SparksTracker);
             this.Statistics.Add(this.EmbersTracker);
             this.Statistics.Add(this.MilestoneTracker);
@@ -205,7 +205,7 @@ namespace MixItUp.Base.Statistics
         {
             if (e.Command != null && e.User != null)
             {
-                this.InteractiveTracker.OnStatisticEventOccurred(e.Command.Name, e.User.UserName);
+                this.MixPlayTracker.OnStatisticEventOccurred(e.Command.Name, e.User.UserName);
             }
         }
 
