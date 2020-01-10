@@ -148,7 +148,7 @@ namespace MixItUp.Base.Actions
                             else if (this.ResponseAction == WebRequestResponseActionTypeEnum.SpecialIdentifier)
                             {
                                 string replacementText = await this.ReplaceStringWithSpecialModifiers(decodedWebRequestResult, user, arguments);
-                                SpecialIdentifierStringBuilder.AddCustomSpecialIdentifier(this.SpecialIdentifierName, replacementText);
+                                this.extraSpecialIdentifiers[this.SpecialIdentifierName] = replacementText;
                             }
                             else if (this.ResponseAction == WebRequestResponseActionTypeEnum.JSONToSpecialIdentifiers)
                             {
@@ -201,7 +201,7 @@ namespace MixItUp.Base.Actions
                                                 if (currentToken != null)
                                                 {
                                                     string replacementText = await this.ReplaceStringWithSpecialModifiers(HttpUtility.HtmlDecode(currentToken.ToString()), user, arguments);
-                                                    SpecialIdentifierStringBuilder.AddCustomSpecialIdentifier(kvp.Value, replacementText);
+                                                    this.extraSpecialIdentifiers[kvp.Value] = replacementText;
                                                 }
                                             }
                                         }
