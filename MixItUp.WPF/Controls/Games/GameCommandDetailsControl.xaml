@@ -30,7 +30,7 @@
 
             <TextBox x:Name="NameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Game Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox x:Name="ChatCommandTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Chat Triggers (No ! needed, space seperated)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="ChatCommandTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Chat Triggers (No ! needed, space separated)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid Grid.Column="0" Grid.Row="2">

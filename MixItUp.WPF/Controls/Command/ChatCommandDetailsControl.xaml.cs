@@ -16,8 +16,8 @@ namespace MixItUp.WPF.Controls.Command
     /// </summary>
     public partial class ChatCommandDetailsControl : CommandDetailsControlBase
     {
-        private const string ChatTriggersNoExclamationHintAssist = "Chat Trigger(s) (No \"!\" needed, space seperated, semi-colon for multi-word)";
-        private const string ChatTriggersHintAssist = "Chat Trigger(s) (Space seperated, semi-colon for multi-word)";
+        private const string ChatTriggersNoExclamationHintAssist = "Chat Trigger(s) (No \"!\" needed, space separated, semi-colon for multi-word)";
+        private const string ChatTriggersHintAssist = "Chat Trigger(s) (Space separated, semi-colon for multi-word)";
 
         private ChatCommand command;
 
