@@ -271,11 +271,7 @@ namespace MixItUp.Base.Util
 
             if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TopSpecialIdentifierHeader))
             {
-                Dictionary<uint, UserDataViewModel> allUsersDictionary = ChannelSession.Settings.UserData.ToDictionary();
-                allUsersDictionary.Remove(ChannelSession.MixerChannel.user.id);
-
-                IEnumerable<UserDataViewModel> allUsers = allUsersDictionary.Select(kvp => kvp.Value);
-                allUsers = allUsers.Where(u => !u.IsCurrencyRankExempt);
+                IEnumerable<UserDataViewModel> allUsers = this.GetAllCurrencyUsers();
 
                 if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopSparksUsedRegexSpecialIdentifierHeader))
                 {
@@ -768,6 +764,13 @@ namespace MixItUp.Base.Util
 
                     foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values.OrderByDescending(c => c.UserAmountSpecialIdentifier))
                     {
+                        if (this.ContainsSpecialIdentifier(identifierHeader + currency.UserPositionSpecialIdentifier))
+                        {
+                            List<UserDataViewModel> allUsers = new List<UserDataViewModel>(this.GetAllCurrencyUsers());
+                            int index = allUsers.FindIndex(u => u.ID == user.ID);
+                            this.ReplaceSpecialIdentifier(identifierHeader + currency.UserPositionSpecialIdentifier, (index + 1).ToString());
+                        }
+
                         UserCurrencyDataViewModel currencyData = userData.GetCurrency(currency);
                         UserRankViewModel rank = currencyData.GetRank();
                         UserRankViewModel nextRank = currencyData.GetNextRank();
@@ -942,6 +945,16 @@ namespace MixItUp.Base.Util
                     }
                 }
             }
+        }
+
+        private IEnumerable<UserDataViewModel> GetAllCurrencyUsers()
+        {
+            Dictionary<uint, UserDataViewModel> allUsersDictionary = ChannelSession.Settings.UserData.ToDictionary();
+            allUsersDictionary.Remove(ChannelSession.MixerChannel.user.id);
+
+            IEnumerable<UserDataViewModel> allUsers = allUsersDictionary.Select(kvp => kvp.Value);
+            allUsers = allUsers.Where(u => !u.IsCurrencyRankExempt);
+            return allUsers;
         }
     }
 }

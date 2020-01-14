@@ -124,6 +124,9 @@ namespace MixItUp.Base.ViewModel.User
         public string UserAmountDisplaySpecialIdentifier { get { return string.Format("{0}display", this.UserAmountSpecialIdentifier); } }
 
         [JsonIgnore]
+        public string UserPositionSpecialIdentifier { get { return string.Format("{0}position", this.UserAmountSpecialIdentifier); } }
+
+        [JsonIgnore]
         public string UserRankNameSpecialIdentifier { get { return string.Format("{0}rank", this.UserAmountSpecialIdentifier); } }
 
         [JsonIgnore]
