@@ -28,6 +28,8 @@ namespace MixItUp.Base.Services.External
         public string Message { get; set; }
         public Exception Exception { get; set; }
 
+        public ExternalServiceResult() : this(true) { }
+
         public ExternalServiceResult(bool success)
         {
             this.Success = success;

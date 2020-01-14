@@ -32,7 +32,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.services.Add(new ServiceContainerControl(this.Window, new StreamlabsServiceControl()));
             this.services.Add(new ServicesGroupBoxControl(this.Window, new TipeeeStreamServiceControl()));
             this.services.Add(new ServicesGroupBoxControl(this.Window, new TreatStreamServiceControl()));
-            this.services.Add(new ServicesGroupBoxControl(this.Window, new StreamJarServiceControl()));
+            this.services.Add(new ServiceContainerControl(this.Window, new StreamJarServiceControl()));
             this.services.Add(new ServicesGroupBoxControl(this.Window, new PatreonServiceControl()));
             this.services.Add(new ServicesGroupBoxControl(this.Window, new StreamlootsServiceControl()));
             this.services.Add(new ServicesGroupBoxControl(this.Window, new TiltifyServiceControl()));

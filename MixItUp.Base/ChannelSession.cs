@@ -479,6 +479,10 @@ namespace MixItUp.Base
                     {
                         externalServiceTasks[ChannelSession.Services.Streamlabs] = ChannelSession.Services.Streamlabs.Connect(ChannelSession.Settings.StreamlabsOAuthToken);
                     }
+                    if (ChannelSession.Settings.StreamJarOAuthToken != null)
+                    {
+                        externalServiceTasks[ChannelSession.Services.StreamJar] = ChannelSession.Services.StreamJar.Connect(ChannelSession.Settings.StreamJarOAuthToken);
+                    }
 
                     if (externalServiceTasks.Count > 0)
                     {
@@ -556,10 +560,7 @@ namespace MixItUp.Base
                     {
                         await ChannelSession.Services.InitializeTreatStream();
                     }
-                    if (ChannelSession.Settings.StreamJarOAuthToken != null)
-                    {
-                        await ChannelSession.Services.InitializeStreamJar();
-                    }
+
                     if (ChannelSession.Settings.PatreonOAuthToken != null)
                     {
                         await ChannelSession.Services.InitializePatreon();

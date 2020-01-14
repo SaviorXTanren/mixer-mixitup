@@ -1,19 +1,104 @@
 ﻿using Mixer.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.Services;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MixItUp.Desktop.Services
+namespace MixItUp.Base.Services.External
 {
-    public class StreamJarService : OAuthServiceBase, IStreamJarService, IDisposable
+    [DataContract]
+    public class StreamJarChannel
+    {
+        [JsonProperty("id")]
+        public int ID { get; set; }
+
+        [JsonProperty("username")]
+        public string Username { get; set; }
+
+        [JsonProperty("avatar")]
+        public string Avatar { get; set; }
+
+        [JsonProperty("Currency")]
+        public string currency { get; set; }
+
+        [JsonProperty("tipsEnabled")]
+        public bool TipsEnabled { get; set; }
+
+        [JsonProperty("tipsConfigured")]
+        public bool TipsConfigured { get; set; }
+
+        [JsonProperty("createdAt")]
+        public DateTimeOffset CreatedAt { get; set; }
+    }
+
+    [DataContract]
+    public class StreamJarDonation
+    {
+        [JsonProperty("id")]
+        public int ID { get; set; }
+
+        [JsonProperty("email")]
+        public string Email { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("amount")]
+        public double Amount { get; set; }
+
+        [JsonProperty("currency")]
+        public string Currency { get; set; }
+
+        [JsonProperty("message")]
+        public string Message { get; set; }
+
+        [JsonProperty("avatar")]
+        public string Avatar { get; set; }
+
+        [JsonProperty("hidden")]
+        public string Hidden { get; set; }
+
+        [JsonProperty("tid")]
+        public string TID { get; set; }
+
+        [JsonProperty("createdAt")]
+        public DateTimeOffset CreatedAt { get; set; }
+
+        public StreamJarDonation() { }
+
+        public UserDonationModel ToGenericDonation()
+        {
+            return new UserDonationModel()
+            {
+                Source = UserDonationSourceEnum.StreamJar,
+
+                ID = this.ID.ToString(),
+                UserName = this.Name,
+                Message = this.Message,
+
+                Amount = Math.Round(this.Amount, 2),
+
+                DateTime = this.CreatedAt,
+            };
+        }
+    }
+
+    public interface IStreamJarService : IOAuthExternalService
+    {
+        Task<StreamJarChannel> GetChannel();
+
+        Task<IEnumerable<StreamJarDonation>> GetDonations();
+    }
+
+    public class StreamJarService : OAuthExternalServiceBase, IStreamJarService
     {
         private const string BaseAddress = "https://jar.streamjar.tv/v2/";
 
@@ -27,46 +112,38 @@ namespace MixItUp.Desktop.Services
 
         public StreamJarService() : base(StreamJarService.BaseAddress) { }
 
-        public StreamJarService(OAuthTokenModel token) : base(StreamJarService.BaseAddress, token) { }
+        public override string Name { get { return "StreamJar"; } }
 
-        public async Task<bool> Connect()
+        public override async Task<ExternalServiceResult> Connect()
         {
-            if (this.token != null)
-            {
-                try
+            try
+            { 
+                string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(StreamJarService.AuthorizationUrl, StreamJarService.ClientID, MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL));
+                if (!string.IsNullOrEmpty(authorizationCode))
                 {
-                    await this.RefreshOAuthToken();
+                    JObject payload = new JObject();
+                    payload["grant_type"] = "authorization_code";
+                    payload["client_id"] = StreamJarService.ClientID;
+                    payload["code"] = authorizationCode;
+                    payload["redirect_uri"] = MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL;
 
-                    if (await this.InitializeInternal())
+                    this.token = await this.PostAsync<OAuthTokenModel>(StreamJarService.TokenUrl, AdvancedHttpClient.CreateContentFromObject(payload), autoRefreshToken: false);
+                    if (this.token != null)
                     {
-                        return true;
+                        token.authorizationCode = authorizationCode;
+                        return await this.InitializeInternal();
                     }
                 }
-                catch (Exception ex) { Logger.Log(ex); }
             }
-
-            string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(StreamJarService.AuthorizationUrl, StreamJarService.ClientID, MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL));
-            if (!string.IsNullOrEmpty(authorizationCode))
+            catch (Exception ex)
             {
-                JObject payload = new JObject();
-                payload["grant_type"] = "authorization_code";
-                payload["client_id"] = StreamJarService.ClientID;
-                payload["code"] = authorizationCode;
-                payload["redirect_uri"] = MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL;
-
-                this.token = await this.PostAsync<OAuthTokenModel>(StreamJarService.TokenUrl, AdvancedHttpClient.CreateContentFromObject(payload), autoRefreshToken: false);
-                if (this.token != null)
-                {
-                    token.authorizationCode = authorizationCode;
-
-                    return await this.InitializeInternal();
-                }
+                Logger.Log(ex);
+                return new ExternalServiceResult(ex);
             }
-
-            return false;
+            return new ExternalServiceResult(false);
         }
 
-        public Task Disconnect()
+        public override Task Disconnect()
         {
             this.cancellationTokenSource.Cancel();
             this.token = null;
@@ -111,7 +188,7 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        private async Task<bool> InitializeInternal()
+        protected override async Task<ExternalServiceResult> InitializeInternal()
         {
             this.cancellationTokenSource = new CancellationTokenSource();
 
@@ -122,9 +199,9 @@ namespace MixItUp.Desktop.Services
                 Task.Run(this.BackgroundDonationCheck, this.cancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-                return true;
+                return new ExternalServiceResult();
             }
-            return false;
+            return new ExternalServiceResult("Failed to get channel data");
         }
 
         private async Task BackgroundDonationCheck()
@@ -156,32 +233,9 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
-        protected virtual void Dispose(bool disposing)
+        protected override void DisposeInternal()
         {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    // Dispose managed state (managed objects).
-                    this.cancellationTokenSource.Dispose();
-                }
-
-                // Free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // Set large fields to null.
-
-                disposedValue = true;
-            }
+            this.cancellationTokenSource.Dispose();
         }
-
-        // This code added to correctly implement the disposable pattern.
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-        }
-        #endregion
     }
 }

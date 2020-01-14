@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base.ViewModel.Controls.Services;
 using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace MixItUp.WPF.Controls.Services
 {

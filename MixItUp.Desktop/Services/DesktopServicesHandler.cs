@@ -39,6 +39,7 @@ namespace MixItUp.Desktop.Services
             this.RemoteService = new RemoteService("https://mixitup-remote-server.azurewebsites.net/api/", "https://mixitup-remote-server.azurewebsites.net/RemoteHub");
 
             this.Streamlabs = new StreamlabsService();
+            this.StreamJar = new StreamJarService();
             this.ExtraLife = new ExtraLifeService();
             this.OverlayServers = new OverlayServiceManager();
             this.MixrElixr = new MixrElixrService();
@@ -384,30 +385,6 @@ namespace MixItUp.Desktop.Services
                 await this.TreatStream.Disconnect();
                 this.TreatStream = null;
                 ChannelSession.Settings.TreatStreamOAuthToken = null;
-            }
-        }
-
-        public override async Task<bool> InitializeStreamJar()
-        {
-            this.StreamJar = (ChannelSession.Settings.StreamJarOAuthToken != null) ? new StreamJarService(ChannelSession.Settings.StreamJarOAuthToken) : new StreamJarService();
-            if (await this.StreamJar.Connect())
-            {
-                return true;
-            }
-            else
-            {
-                await this.DisconnectStreamJar();
-            }
-            return false;
-        }
-
-        public override async Task DisconnectStreamJar()
-        {
-            if (this.StreamJar != null)
-            {
-                await this.StreamJar.Disconnect();
-                this.StreamJar = null;
-                ChannelSession.Settings.StreamJarOAuthToken = null;
             }
         }
 

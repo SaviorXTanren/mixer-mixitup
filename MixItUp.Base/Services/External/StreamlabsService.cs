@@ -206,7 +206,7 @@ namespace MixItUp.Base.Services.External
             Task.Run(this.BackgroundDonationCheck, this.cancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-            return Task.FromResult(new ExternalServiceResult(true));
+            return Task.FromResult(new ExternalServiceResult());
         }
 
         private async Task BackgroundDonationCheck()

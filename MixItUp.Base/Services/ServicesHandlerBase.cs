@@ -87,9 +87,6 @@ namespace MixItUp.Base.Services
         public abstract Task<bool> InitializeTreatStream();
         public abstract Task DisconnectTreatStream();
 
-        public abstract Task<bool> InitializeStreamJar();
-        public abstract Task DisconnectStreamJar();
-
         public abstract Task<bool> InitializePatreon();
         public abstract Task DisconnectPatreon();
 
