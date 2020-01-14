@@ -15,7 +15,19 @@
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
 
              d:DesignHeight="500" d:DesignWidth="600">
-    <Grid Margin="10">
-        <TextBlock VerticalAlignment="Center">TODO: Explain why this is disabled now.</TextBlock>
+    <Grid Margin="10" VerticalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" HorizontalAlignment="Center" Width="500" TextWrapping="Wrap">With every version update to Mix It Up, we take some time to evaluate where we are currently with features and any changes we might need to make to them. This is done to ensure that we are consistently keeping the application as useful and relevant as possible, while also ensuring that any work we’ve done can continue to be sustainable for the future. Very rarely do we remove features, as once something is available, users will start using it and take a dependency on it.</TextBlock>
+
+        <TextBlock Grid.Row="2" HorizontalAlignment="Center" Width="500" TextWrapping="Wrap">After long and careful consideration, we have decided to remove the Song Requests feature from Mix It Up. There were many reasons that culminated in this, but we feel that this is the best decision for our users and for the future of Mix It Up. Below you’ll find a link that contains a detailed explanation for its removal and possible alternatives you can consider:</TextBlock>
+
+        <TextBlock Grid.Row="4" HorizontalAlignment="Center" Width="500" TextWrapping="Wrap"><Hyperlink NavigateUri="https://mixitupapp.com/songrequests" RequestNavigate="Hyperlink_RequestNavigate">https://mixitupapp.com/songrequests</Hyperlink></TextBlock>
     </Grid>
 </local:MainControlBase>
