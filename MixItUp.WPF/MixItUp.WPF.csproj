@@ -513,9 +513,6 @@
     <Compile Include="Controls\Dashboard\QuickCommandsDashboardControl.xaml.cs">
       <DependentUpon>QuickCommandsDashboardControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Dashboard\SongRequestsDashboardControl.xaml.cs">
-      <DependentUpon>SongRequestsDashboardControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Dashboard\StatisticsDashboardControl.xaml.cs">
       <DependentUpon>StatisticsDashboardControl.xaml</DependentUpon>
     </Compile>
@@ -1260,10 +1257,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Dashboard\QuickCommandsDashboardControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Dashboard\SongRequestsDashboardControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
