@@ -3,15 +3,12 @@ using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Runtime.Serialization;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -1826,10 +1823,15 @@ namespace MixItUp.Base.Commands
 
             await this.PerformCommand(this.KingUserCommand, shuffledPlayers.First(), null, 0, 0);
 
-            do
+            for (int i = 0; i < 60 && this.playerSelected == null; i++)
             {
                 await Task.Delay(1000);
-            } while (this.playerSelected == null);
+            }
+
+            if (this.playerSelected == null)
+            {
+                this.playerSelected = this.playerTypes.FirstOrDefault(kvp => kvp.Value == WinLosePlayerType.Thief).Key;
+            }
         }
 
         protected override Task SelectWinners()
