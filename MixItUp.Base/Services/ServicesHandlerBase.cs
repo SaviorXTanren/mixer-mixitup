@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Services.Mixer;
+﻿using MixItUp.Base.Services.External;
+using MixItUp.Base.Services.Mixer;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
@@ -67,9 +68,6 @@ namespace MixItUp.Base.Services
 
         public abstract Task<bool> InitializeTelemetryService();
         public abstract Task DisconnectTelemetryService();
-
-        public abstract Task<bool> InitializeStreamlabs();
-        public abstract Task DisconnectStreamlabs();
 
         public abstract Task<bool> InitializeTwitter();
         public abstract Task DisconnectTwitter();

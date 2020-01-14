@@ -834,6 +834,10 @@
     <Compile Include="Controls\Services\OvrStreamServiceControl.xaml.cs">
       <DependentUpon>OvrStreamServiceControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Services\ServiceContainerControl.xaml.cs">
+      <DependentUpon>ServiceContainerControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\ServiceControlBase.cs" />
     <Compile Include="Controls\Services\StreamAvatarsServiceControl.xaml.cs">
       <DependentUpon>StreamAvatarsServiceControl.xaml</DependentUpon>
     </Compile>
@@ -1683,6 +1687,10 @@
     <Page Include="Controls\Services\OvrStreamServiceControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Services\ServiceContainerControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Services\StreamAvatarsServiceControl.xaml">
       <SubType>Designer</SubType>

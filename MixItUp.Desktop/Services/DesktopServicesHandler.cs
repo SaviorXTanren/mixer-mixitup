@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Mixer;
 using MixItUp.Desktop.Audio;
 using MixItUp.Desktop.Files;
@@ -37,6 +38,7 @@ namespace MixItUp.Desktop.Services
             this.SerialService = new SerialService();
             this.RemoteService = new RemoteService("https://mixitup-remote-server.azurewebsites.net/api/", "https://mixitup-remote-server.azurewebsites.net/RemoteHub");
 
+            this.Streamlabs = new StreamlabsService();
             this.ExtraLife = new ExtraLifeService();
             this.OverlayServers = new OverlayServiceManager();
             this.MixrElixr = new MixrElixrService();
@@ -228,30 +230,6 @@ namespace MixItUp.Desktop.Services
                     this.Telemetry = null;
                 }
             });
-        }
-
-        public override async Task<bool> InitializeStreamlabs()
-        {
-            this.Streamlabs = (ChannelSession.Settings.StreamlabsOAuthToken != null) ? new StreamlabsService(ChannelSession.Settings.StreamlabsOAuthToken) : new StreamlabsService();
-            if (await this.Streamlabs.Connect())
-            {
-                return true;
-            }
-            else
-            {
-                await this.DisconnectStreamlabs();
-            }
-            return false;
-        }
-
-        public override async Task DisconnectStreamlabs()
-        {
-            if (this.Streamlabs != null)
-            {
-                await this.Streamlabs.Disconnect();
-                this.Streamlabs = null;
-                ChannelSession.Settings.StreamlabsOAuthToken = null;
-            }
         }
 
         public override async Task<bool> InitializeTwitter()

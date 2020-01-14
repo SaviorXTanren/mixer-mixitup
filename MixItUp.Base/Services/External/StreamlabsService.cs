@@ -1,8 +1,7 @@
 ﻿using Mixer.Base;
-using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.Services;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
@@ -13,9 +12,74 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MixItUp.Desktop.Services
+namespace MixItUp.Base.Services.External
 {
-    public class StreamlabsService : OAuthServiceBase, IStreamlabsService, IDisposable
+    public class StreamlabsDonation
+    {
+        [JsonProperty("donation_id")]
+        public int ID { get; set; }
+
+        [JsonProperty("name")]
+        public string UserName { get; set; }
+        [JsonProperty("message")]
+        public string Message { get; set; }
+
+        [JsonProperty("amount")]
+        public string AmountString { get; set; }
+
+        [JsonProperty("created_at")]
+        public long CreatedAt { get; set; }
+
+        [JsonIgnore]
+        public double Amount
+        {
+            get
+            {
+                double amount = 0;
+                string amountString = this.AmountString;
+                if (!double.TryParse(amountString, out amount))
+                {
+                    amountString = amountString.Replace(".", ",");
+                    double.TryParse(amountString, out amount);
+                }
+                return amount;
+            }
+        }
+
+        public StreamlabsDonation()
+        {
+            this.CreatedAt = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+        }
+
+        public UserDonationModel ToGenericDonation()
+        {
+            return new UserDonationModel()
+            {
+                Source = UserDonationSourceEnum.Streamlabs,
+
+                ID = this.ID.ToString(),
+                UserName = this.UserName,
+                Message = this.Message,
+
+                Amount = Math.Round(this.Amount, 2),
+
+                DateTime = DateTimeOffsetExtensions.FromUTCUnixTimeSeconds(this.CreatedAt),
+            };
+        }
+    }
+
+    public interface IStreamlabsService : IOAuthExternalService
+    {
+        Task<IEnumerable<StreamlabsDonation>> GetDonations(int maxAmount = 1);
+
+        Task SpinWheel();
+
+        Task EmptyJar();
+
+        Task RollCredits();
+    }
+
+    public class StreamlabsService : OAuthExternalServiceBase, IStreamlabsService
     {
         private const string BaseAddress = "https://streamlabs.com/api/v1.0/";
 
@@ -28,47 +92,39 @@ namespace MixItUp.Desktop.Services
 
         public StreamlabsService() : base(StreamlabsService.BaseAddress) { }
 
-        public StreamlabsService(OAuthTokenModel token) : base(StreamlabsService.BaseAddress, token) { }
+        public override string Name { get { return "Streamlabs"; } }
 
-        public async Task<bool> Connect()
+        public override async Task<ExternalServiceResult> Connect()
         {
-            if (this.token != null)
+            try
             {
-                try
+                string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(StreamlabsService.AuthorizationUrl, StreamlabsService.ClientID));
+                if (!string.IsNullOrEmpty(authorizationCode))
                 {
-                    await this.RefreshOAuthToken();
+                    JObject payload = new JObject();
+                    payload["grant_type"] = "authorization_code";
+                    payload["client_id"] = StreamlabsService.ClientID;
+                    payload["client_secret"] = ChannelSession.SecretManager.GetSecret("StreamlabsSecret");
+                    payload["code"] = authorizationCode;
+                    payload["redirect_uri"] = MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL;
 
-                    if (await this.InitializeInternal())
+                    this.token = await this.PostAsync<OAuthTokenModel>("token", AdvancedHttpClient.CreateContentFromObject(payload), autoRefreshToken: false);
+                    if (this.token != null)
                     {
-                        return true;
+                        token.authorizationCode = authorizationCode;
+                        return await this.InitializeInternal();
                     }
                 }
-                catch (Exception ex) { Logger.Log(ex); }
             }
-
-            string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(StreamlabsService.AuthorizationUrl, StreamlabsService.ClientID));
-            if (!string.IsNullOrEmpty(authorizationCode))
+            catch (Exception ex)
             {
-                JObject payload = new JObject();
-                payload["grant_type"] = "authorization_code";
-                payload["client_id"] = StreamlabsService.ClientID;
-                payload["client_secret"] = ChannelSession.SecretManager.GetSecret("StreamlabsSecret");
-                payload["code"] = authorizationCode;
-                payload["redirect_uri"] = MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL;
-
-                this.token = await this.PostAsync<OAuthTokenModel>("token", AdvancedHttpClient.CreateContentFromObject(payload), autoRefreshToken: false);
-                if (this.token != null)
-                {
-                    token.authorizationCode = authorizationCode;
-
-                    return await this.InitializeInternal();
-                }
+                Logger.Log(ex);
+                return new ExternalServiceResult(ex);
             }
-
-            return false;
+            return new ExternalServiceResult(false);
         }
 
-        public Task Disconnect()
+        public override Task Disconnect()
         {
             this.cancellationTokenSource.Cancel();
             this.token = null;
@@ -140,7 +196,7 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        private Task<bool> InitializeInternal()
+        protected override Task<ExternalServiceResult> InitializeInternal()
         {
             this.cancellationTokenSource = new CancellationTokenSource();
 
@@ -150,7 +206,7 @@ namespace MixItUp.Desktop.Services
             Task.Run(this.BackgroundDonationCheck, this.cancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-            return Task.FromResult(true);
+            return Task.FromResult(new ExternalServiceResult(true));
         }
 
         private async Task BackgroundDonationCheck()
@@ -179,32 +235,9 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
-        protected virtual void Dispose(bool disposing)
+        protected override void DisposeInternal()
         {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    // Dispose managed state (managed objects).
-                    this.cancellationTokenSource.Dispose();
-                }
-
-                // Free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // Set large fields to null.
-
-                disposedValue = true;
-            }
+            this.cancellationTokenSource.Dispose();
         }
-
-        // This code added to correctly implement the disposable pattern.
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-        }
-        #endregion
     }
 }

@@ -1,6 +1,7 @@
 ﻿using MixItUp.WPF.Controls.Services;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -9,7 +10,7 @@ namespace MixItUp.WPF.Controls.MainControls
     /// </summary>
     public partial class ServicesControl : MainControlBase
     {
-        private ObservableCollection<ServicesGroupBoxControl> services = new ObservableCollection<ServicesGroupBoxControl>();
+        private ObservableCollection<UserControl> services = new ObservableCollection<UserControl>();
 
         public ServicesControl()
         {
@@ -28,7 +29,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.services.Add(new ServicesGroupBoxControl(this.Window, new StreamlabsOBSServiceControl()));
             this.services.Add(new ServicesGroupBoxControl(this.Window, new XSplitServiceControl()));
             this.services.Add(new ServicesGroupBoxControl(this.Window, new OvrStreamServiceControl()));
-            this.services.Add(new ServicesGroupBoxControl(this.Window, new StreamlabsServiceControl()));
+            this.services.Add(new ServiceContainerControl(this.Window, new StreamlabsServiceControl()));
             this.services.Add(new ServicesGroupBoxControl(this.Window, new TipeeeStreamServiceControl()));
             this.services.Add(new ServicesGroupBoxControl(this.Window, new TreatStreamServiceControl()));
             this.services.Add(new ServicesGroupBoxControl(this.Window, new StreamJarServiceControl()));

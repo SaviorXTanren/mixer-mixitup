@@ -9,6 +9,7 @@ using MixItUp.Base.Model.API;
 using MixItUp.Base.Model.Chat;
 using MixItUp.Base.Model.Chat.Mixer;
 using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Mixer;
 using MixItUp.Base.Statistics;
 using MixItUp.Base.Util;
@@ -18,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -472,6 +474,45 @@ namespace MixItUp.Base
 
                     await ChannelSession.Services.Chat.Initialize(mixerChatService);
 
+                    Dictionary<IExternalService, Task<ExternalServiceResult>> externalServiceTasks = new Dictionary<IExternalService, Task<ExternalServiceResult>>();
+                    if (ChannelSession.Settings.StreamlabsOAuthToken != null)
+                    {
+                        externalServiceTasks[ChannelSession.Services.Streamlabs] = ChannelSession.Services.Streamlabs.Connect(ChannelSession.Settings.StreamlabsOAuthToken);
+                    }
+
+                    if (externalServiceTasks.Count > 0)
+                    {
+                        await Task.WhenAll(externalServiceTasks.Values);
+
+                        List<IExternalService> failedServices = new List<IExternalService>();
+                        foreach (var kvp in externalServiceTasks)
+                        {
+                            if (!kvp.Value.Result.Success)
+                            {
+                                ExternalServiceResult result = await kvp.Key.Connect();
+                                if (!result.Success)
+                                {
+                                    failedServices.Add(kvp.Key);
+                                }
+                            }
+                        }
+
+                        if (failedServices.Count > 0)
+                        {
+                            StringBuilder message = new StringBuilder();
+                            message.AppendLine("The following services could not be connected:");
+                            message.AppendLine();
+                            foreach (IExternalService service in failedServices)
+                            {
+                                message.AppendLine(" - " + service.Name);
+                            }
+                            message.AppendLine();
+                            message.Append("Please go to the Services page to reconnect them manually.");
+                            await DialogHelper.ShowMessage(message.ToString());
+                        }
+                    }
+
+
                     if (!string.IsNullOrEmpty(ChannelSession.Settings.OBSStudioServerIP))
                     {
                         await ChannelSession.Services.InitializeOBSWebsocket();
@@ -495,10 +536,6 @@ namespace MixItUp.Base
                         await ChannelSession.Services.InitializeDeveloperAPI();
                     }
 
-                    if (ChannelSession.Settings.StreamlabsOAuthToken != null)
-                    {
-                        await ChannelSession.Services.InitializeStreamlabs();
-                    }
                     if (ChannelSession.Settings.TwitterOAuthToken != null)
                     {
                         await ChannelSession.Services.InitializeTwitter();
