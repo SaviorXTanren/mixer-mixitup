@@ -69,7 +69,6 @@ namespace MixItUp.Base.Commands
         [Name("Chat Message Deleted")]
         ChatMessageDeleted = 38,
 
-
         [Name("Channel Stream Start")]
         MixerChannelStreamStart = 40,
         [Name("Channel Stream Stop")]
@@ -160,6 +159,9 @@ namespace MixItUp.Base.Commands
             }
 
             user.Data.TotalAmountDonated += donation.Amount;
+
+            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestDonationUserData] = user;
+            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestDonationAmountData] = donation.AmountText;
 
             Dictionary<string, string> specialIdentifiers = donation.GetSpecialIdentifiers();
             if (additionalSpecialIdentifiers != null)

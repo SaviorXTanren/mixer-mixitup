@@ -68,6 +68,18 @@ namespace MixItUp.Base.Util
 
         public const string UnicodeRegexSpecialIdentifier = "unicode";
 
+        public const string LatestFollowerUserData = "latestfollower";
+        public const string LatestHostUserData = "latesthost";
+        public const string LatestHostViewerCountData = "latesthostviewercount";
+        public const string LatestSubscriberUserData = "latestsubscriber";
+        public const string LatestSubscriberSubMonthsData = "latestsubscribersubmonths";
+        public const string LatestSparkUsageUserData = "latestsparkusage";
+        public const string LatestSparkUsageAmountData = "latestsparkusageamount";
+        public const string LatestEmberUsageUserData = "latestemberusage";
+        public const string LatestEmberUsageAmountData = "latestemberusageamount";
+        public const string LatestDonationUserData = "latestdonation";
+        public const string LatestDonationAmountData = "latestdonationamount";
+
         public const string InteractiveTextBoxTextEntrySpecialIdentifierHelpText = "User Text Entered = " + SpecialIdentifierStringBuilder.SpecialIdentifierHeader +
             SpecialIdentifierStringBuilder.ArgSpecialIdentifierHeader + "1text";
 
@@ -628,6 +640,13 @@ namespace MixItUp.Base.Util
                 }
             }
 
+            await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestFollowerUserData);
+            await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestHostUserData, SpecialIdentifierStringBuilder.LatestHostViewerCountData);
+            await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestSubscriberUserData, SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData);
+            await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestSparkUsageUserData, SpecialIdentifierStringBuilder.LatestSparkUsageAmountData);
+            await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestEmberUsageUserData, SpecialIdentifierStringBuilder.LatestEmberUsageAmountData);
+            await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestDonationUserData, SpecialIdentifierStringBuilder.LatestDonationAmountData);
+
             foreach (UserInventoryViewModel inventory in ChannelSession.Settings.Inventories.Values.OrderByDescending(c => c.SpecialIdentifier))
             {
                 if (this.ContainsSpecialIdentifier(inventory.RandomItemSpecialIdentifier))
@@ -873,6 +892,20 @@ namespace MixItUp.Base.Util
                         this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channelfeatured", channel.featured.ToString());
                     }
                 }
+            }
+        }
+
+        private async Task HandleLatestSpecialIdentifier(string userkey, string extrakey = null)
+        {
+            if (ChannelSession.Settings.LatestSpecialIdentifiersData.ContainsKey(userkey) && ChannelSession.Settings.LatestSpecialIdentifiersData[userkey] != null && ChannelSession.Settings.LatestSpecialIdentifiersData[userkey] is UserViewModel)
+            {
+                UserViewModel user = (UserViewModel)ChannelSession.Settings.LatestSpecialIdentifiersData[userkey];
+                await this.HandleUserSpecialIdentifiers(user, userkey);
+            }
+
+            if (!string.IsNullOrEmpty(extrakey) && ChannelSession.Settings.LatestSpecialIdentifiersData.ContainsKey(extrakey) && ChannelSession.Settings.LatestSpecialIdentifiersData[extrakey] != null)
+            {
+                this.ReplaceSpecialIdentifier(extrakey, ChannelSession.Settings.LatestSpecialIdentifiersData[extrakey].ToString());
             }
         }
 

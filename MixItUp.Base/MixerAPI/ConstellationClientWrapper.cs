@@ -227,6 +227,8 @@ namespace MixItUp.Base.MixerAPI
                         {
                             if (EventCommand.CanUserRunEvent(user, ConstellationClientWrapper.ChannelFollowEvent.ToString()))
                             {
+                                ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestFollowerUserData] = user;
+
                                 foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                                 {
                                     user.Data.AddCurrencyAmount(currency, currency.OnFollowBonus);
@@ -260,6 +262,9 @@ namespace MixItUp.Base.MixerAPI
 
                         if (EventCommand.CanUserRunEvent(user, ConstellationClientWrapper.ChannelHostedEvent.ToString()))
                         {
+                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestHostUserData] = user;
+                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestHostViewerCountData] = viewerCount;
+
                             foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                             {
                                 user.Data.AddCurrencyAmount(currency, currency.OnHostBonus);
@@ -286,6 +291,9 @@ namespace MixItUp.Base.MixerAPI
                             }
                             user.Data.TotalMonthsSubbed++;
 
+                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user;
+                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
+
                             await EventCommand.FindAndRunEventCommand(e.channel, user);
                             GlobalEvents.SubscribeOccurred(user);
                         }
@@ -310,6 +318,9 @@ namespace MixItUp.Base.MixerAPI
                             }
                             user.Data.TotalMonthsSubbed++;
 
+                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user;
+                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = resubMonths;
+
                             Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>() { { "usersubmonths", resubMonths.ToString() } };
                             await EventCommand.FindAndRunEventCommand(ConstellationClientWrapper.ChannelResubscribedEvent.ToString(), user, extraSpecialIdentifiers: specialIdentifiers);
 
@@ -332,6 +343,9 @@ namespace MixItUp.Base.MixerAPI
                             gifterUser.Data.TotalSubsGifted++;
                             receiverUser.Data.TotalSubsReceived++;
                             receiverUser.Data.TotalMonthsSubbed++;
+
+                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = receiverUser;
+                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
 
                             await EventCommand.FindAndRunEventCommand(e.channel, gifterUser, arguments: new List<string>() { receiverUser.UserName });
 
@@ -438,6 +452,9 @@ namespace MixItUp.Base.MixerAPI
                 sparkUsage.Item1.Data.AddCurrencyAmount(sparkCurrency, (int)sparkUsage.Item2);
             }
 
+            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSparkUsageUserData] = sparkUsage.Item1;
+            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSparkUsageAmountData] = sparkUsage.Item2;
+
             Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
             {
                 { "sparkamount", sparkUsage.Item2.ToString() },
@@ -454,6 +471,9 @@ namespace MixItUp.Base.MixerAPI
             {
                 emberUsage.User.Data.AddCurrencyAmount(emberCurrency, (int)emberUsage.Amount);
             }
+
+            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestEmberUsageUserData] = emberUsage.User;
+            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestEmberUsageAmountData] = emberUsage.Amount;
 
             Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
             {

@@ -199,6 +199,8 @@ namespace MixItUp.Base
 
         List<string> RecentStreamTitles { get; set; }
 
+        Dictionary<string, object> LatestSpecialIdentifiersData { get; set; }
+
         string TelemetryUserId { get; set; }
 
         string SettingsBackupLocation { get; set; }

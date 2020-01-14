@@ -1,5 +1,4 @@
 ﻿using Mixer.Base.Model.Channel;
-using Mixer.Base.Model.Game;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
@@ -348,6 +347,9 @@ namespace MixItUp.Desktop
 
         [JsonProperty]
         public List<string> RecentStreamTitles { get; set; } = new List<string>();
+
+        [DataMember]
+        public Dictionary<string, object> LatestSpecialIdentifiersData { get; set; } = new Dictionary<string, object>();
 
         [JsonProperty]
         public string TelemetryUserId { get; set; }
