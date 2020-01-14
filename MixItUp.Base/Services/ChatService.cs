@@ -322,6 +322,19 @@ namespace MixItUp.Base.Services
                 message.User = activeUser;
             }
 
+            if (message.IsWhisper && ChannelSession.Settings.TrackWhispererNumber && !message.IsStreamerOrBot)
+            {
+                await this.whisperNumberLock.WaitAndRelease(() =>
+                {
+                    if (!whisperMap.ContainsKey(message.User.ID.ToString()))
+                    {
+                        whisperMap[message.User.ID.ToString()] = whisperMap.Count + 1;
+                    }
+                    message.User.WhispererNumber = whisperMap[message.User.ID.ToString()];
+                    return Task.FromResult(0);
+                });
+            }
+
             if (!(message is AlertChatMessageViewModel) || !ChannelSession.Settings.OnlyShowAlertsInDashboard)
             {
                 await DispatcherHelper.InvokeDispatcher(() =>
@@ -365,18 +378,8 @@ namespace MixItUp.Base.Services
 
                 if (message.IsWhisper)
                 {
-                    if (ChannelSession.Settings.TrackWhispererNumber && !message.IsStreamerOrBot)
+                    if (ChannelSession.Settings.TrackWhispererNumber && message.User.WhispererNumber > 0)
                     {
-                        await this.whisperNumberLock.WaitAndRelease(() =>
-                        {
-                            if (!whisperMap.ContainsKey(message.User.ID.ToString()))
-                            {
-                                whisperMap[message.User.ID.ToString()] = whisperMap.Count + 1;
-                            }
-                            message.User.WhispererNumber = whisperMap[message.User.ID.ToString()];
-                            return Task.FromResult(0);
-                        });
-
                         await ChannelSession.Services.Chat.Whisper(message.User.UserName, $"You are whisperer #{message.User.WhispererNumber}.", false);
                     }
                 }
