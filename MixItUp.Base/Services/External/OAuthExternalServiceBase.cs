@@ -52,8 +52,6 @@ namespace MixItUp.Base.Services.External
 
         protected OAuthExternalServiceBase(string baseAddress) { this.baseAddress = baseAddress; }
 
-        protected OAuthExternalServiceBase(string baseAddress, OAuthTokenModel token) : this(baseAddress) { this.token = token; }
-
         public abstract string Name { get; }
 
         public bool IsConnected { get { return this.token != null; } }

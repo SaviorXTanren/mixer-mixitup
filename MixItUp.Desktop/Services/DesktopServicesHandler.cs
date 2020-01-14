@@ -40,6 +40,8 @@ namespace MixItUp.Desktop.Services
 
             this.Streamlabs = new StreamlabsService();
             this.StreamJar = new StreamJarService();
+            this.TipeeeStream = new TipeeeStreamService(new SocketIOConnection());
+            this.TreatStream = new TreatStreamService(new SocketIOConnection());
             this.ExtraLife = new ExtraLifeService();
             this.OverlayServers = new OverlayServiceManager();
             this.MixrElixr = new MixrElixrService();
@@ -330,64 +332,6 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        public override async Task<bool> InitializeTipeeeStream()
-        {
-            this.TipeeeStream = (ChannelSession.Settings.TipeeeStreamOAuthToken != null) ? new TipeeeStreamService(ChannelSession.Settings.TipeeeStreamOAuthToken) : new TipeeeStreamService();
-            if (await this.TipeeeStream.Connect())
-            {
-                this.TipeeeStream.OnWebSocketConnectedOccurred += TipeeeStream_OnWebSocketConnectedOccurred;
-                this.TipeeeStream.OnWebSocketDisconnectedOccurred += TipeeeStream_OnWebSocketDisconnectedOccurred;
-                return true;
-            }
-            else
-            {
-                await this.DisconnectTipeeeStream();
-            }
-            return false;
-        }
-
-        public override async Task DisconnectTipeeeStream()
-        {
-            if (this.TipeeeStream != null)
-            {
-                this.TipeeeStream.OnWebSocketConnectedOccurred -= TipeeeStream_OnWebSocketConnectedOccurred;
-                this.TipeeeStream.OnWebSocketDisconnectedOccurred -= TipeeeStream_OnWebSocketDisconnectedOccurred;
-
-                await this.TipeeeStream.Disconnect();
-                this.TipeeeStream = null;
-                ChannelSession.Settings.TipeeeStreamOAuthToken = null;
-            }
-        }
-
-        public override async Task<bool> InitializeTreatStream()
-        {
-            this.TreatStream = (ChannelSession.Settings.TreatStreamOAuthToken != null) ? new TreatStreamService(ChannelSession.Settings.TreatStreamOAuthToken) : new TreatStreamService();
-            if (await this.TreatStream.Connect())
-            {
-                this.TreatStream.OnWebSocketConnectedOccurred += TipeeeStream_OnWebSocketConnectedOccurred;
-                this.TreatStream.OnWebSocketDisconnectedOccurred += TipeeeStream_OnWebSocketDisconnectedOccurred;
-                return true;
-            }
-            else
-            {
-                await this.DisconnectTreatStream();
-            }
-            return false;
-        }
-
-        public override async Task DisconnectTreatStream()
-        {
-            if (this.TreatStream != null)
-            {
-                this.TreatStream.OnWebSocketConnectedOccurred -= TipeeeStream_OnWebSocketConnectedOccurred;
-                this.TreatStream.OnWebSocketDisconnectedOccurred -= TipeeeStream_OnWebSocketDisconnectedOccurred;
-
-                await this.TreatStream.Disconnect();
-                this.TreatStream = null;
-                ChannelSession.Settings.TreatStreamOAuthToken = null;
-            }
-        }
-
         public override async Task<bool> InitializePatreon()
         {
             this.Patreon = (ChannelSession.Settings.PatreonOAuthToken != null) ? new PatreonService(ChannelSession.Settings.PatreonOAuthToken) : new PatreonService();
@@ -524,26 +468,6 @@ namespace MixItUp.Desktop.Services
         private void StreamlabsOBSService_Disconnected(object sender, EventArgs e)
         {
             ChannelSession.DisconnectionOccurred("Streamlabs OBS");
-        }
-
-        private void GameWisp_OnWebSocketConnectedOccurred(object sender, EventArgs e)
-        {
-            ChannelSession.ReconnectionOccurred("GameWisp");
-        }
-
-        private void GameWisp_OnWebSocketDisconnectedOccurred(object sender, EventArgs e)
-        {
-            ChannelSession.DisconnectionOccurred("GameWisp");
-        }
-
-        private void TipeeeStream_OnWebSocketConnectedOccurred(object sender, EventArgs e)
-        {
-            ChannelSession.ReconnectionOccurred("Tipeee Stream");
-        }
-
-        private void TipeeeStream_OnWebSocketDisconnectedOccurred(object sender, EventArgs e)
-        {
-            ChannelSession.DisconnectionOccurred("Tipeee Stream");
         }
     }
 }

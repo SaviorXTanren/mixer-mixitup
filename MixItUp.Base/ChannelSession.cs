@@ -483,6 +483,14 @@ namespace MixItUp.Base
                     {
                         externalServiceTasks[ChannelSession.Services.StreamJar] = ChannelSession.Services.StreamJar.Connect(ChannelSession.Settings.StreamJarOAuthToken);
                     }
+                    if (ChannelSession.Settings.TipeeeStreamOAuthToken != null)
+                    {
+                        externalServiceTasks[ChannelSession.Services.TipeeeStream] = ChannelSession.Services.TipeeeStream.Connect(ChannelSession.Settings.TipeeeStreamOAuthToken);
+                    }
+                    if (ChannelSession.Settings.TreatStreamOAuthToken != null)
+                    {
+                        externalServiceTasks[ChannelSession.Services.TreatStream] = ChannelSession.Services.TreatStream.Connect(ChannelSession.Settings.TreatStreamOAuthToken);
+                    }
 
                     if (externalServiceTasks.Count > 0)
                     {
@@ -551,14 +559,6 @@ namespace MixItUp.Base
                     if (ChannelSession.Settings.TiltifyOAuthToken != null)
                     {
                         await ChannelSession.Services.InitializeTiltify();
-                    }
-                    if (ChannelSession.Settings.TipeeeStreamOAuthToken != null)
-                    {
-                        await ChannelSession.Services.InitializeTipeeeStream();
-                    }
-                    if (ChannelSession.Settings.TreatStreamOAuthToken != null)
-                    {
-                        await ChannelSession.Services.InitializeTreatStream();
                     }
 
                     if (ChannelSession.Settings.PatreonOAuthToken != null)

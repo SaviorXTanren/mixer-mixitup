@@ -1,29 +1,35 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using MixItUp.Base.Services;
+using Newtonsoft.Json.Linq;
 using Quobject.SocketIoClientDotNet.Client;
 using StreamingClient.Base.Util;
 using System;
 using System.Threading.Tasks;
 
-namespace MixItUp.Desktop.Util
+namespace MixItUp.Desktop.Services
 {
-    public abstract class SocketIOService
+    public class SocketIOConnection : ISocketIOConnection
     {
         protected Socket socket;
 
         private string connectionURL;
         private string query;
 
-        public SocketIOService(string connectionURL) { this.connectionURL = connectionURL; }
+        public SocketIOConnection() { }
 
-        public SocketIOService(string connectionURL, string query) : this(connectionURL) { this.query = query; }
-
-        public virtual Task Connect()
+        public Task Connect(string connectionURL)
         {
+            this.connectionURL = connectionURL;
             this.socket = !string.IsNullOrEmpty(this.query) ? IO.Socket(this.connectionURL, new IO.Options() { QueryString = this.query }) : IO.Socket(this.connectionURL);
             return Task.FromResult(0);
         }
 
-        public virtual Task Disconnect()
+        public async Task Connect(string connectionURL, string query)
+        {
+            this.query = query;
+            await this.Connect(connectionURL);
+        }
+
+        public Task Disconnect()
         {
             try
             {
@@ -38,7 +44,7 @@ namespace MixItUp.Desktop.Util
             return Task.FromResult(0);
         }
 
-        protected void SocketReceiveWrapper(string eventString, Action<object> processEvent)
+        public void Listen(string eventString, Action<object> processEvent)
         {
             if (!this.socket.HasListeners(eventString))
             {
@@ -53,9 +59,9 @@ namespace MixItUp.Desktop.Util
             }
         }
 
-        protected void SocketEventReceiverWrapper<T>(string eventString, Action<T> processEvent)
+        public void Listen<T>(string eventString, Action<T> processEvent)
         {
-            this.SocketReceiveWrapper(eventString, (eventData) =>
+            this.Listen(eventString, (eventData) =>
             {
                 JObject jobj = JObject.Parse(eventData.ToString());
                 if (jobj != null)
@@ -65,7 +71,7 @@ namespace MixItUp.Desktop.Util
             });
         }
 
-        protected void SocketSendWrapper(string eventString, object data)
+        public void Send(string eventString, object data)
         {
             try
             {
