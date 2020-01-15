@@ -12,7 +12,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MixItUp.Base.Services
+namespace MixItUp.Base.Services.External
 {
     public class JustGivingUser
     {
@@ -100,12 +100,8 @@ namespace MixItUp.Base.Services
         }
     }
 
-    public interface IJustGivingService
+    public interface IJustGivingService : IOAuthExternalService
     {
-        Task<bool> Connect();
-
-        Task Disconnect();
-
         void SetFundraiser(JustGivingFundraiser fundraiser);
 
         Task<JustGivingUser> GetCurrentAccount();
@@ -113,11 +109,9 @@ namespace MixItUp.Base.Services
         Task<IEnumerable<JustGivingFundraiser>> GetCurrentFundraisers();
 
         Task<IEnumerable<JustGivingDonation>> GetRecentDonations(JustGivingFundraiser fundraiser);
-
-        OAuthTokenModel GetOAuthTokenCopy();
     }
 
-    public class JustGivingService : OAuthServiceBase, IJustGivingService, IDisposable
+    public class JustGivingService : OAuthExternalServiceBase, IJustGivingService, IDisposable
     {
         private const string BaseAddress = "https://api.justgiving.com/v1/";
 
@@ -134,46 +128,39 @@ namespace MixItUp.Base.Services
 
         public JustGivingService() : base(JustGivingService.BaseAddress) { }
 
-        public JustGivingService(OAuthTokenModel token) : base(JustGivingService.BaseAddress, token) { }
+        public override string Name { get { return "JustGiving"; } }
 
-        public async Task<bool> Connect()
+        public override async Task<ExternalServiceResult> Connect()
         {
-            if (this.token != null)
+            try
             {
-                try
+                string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(JustGivingService.AuthorizationUrl, JustGivingService.ClientID));
+                if (!string.IsNullOrEmpty(authorizationCode))
                 {
-                    await this.RefreshOAuthToken();
-
-                    if (await this.InitializeInternal())
-                    {
-                        return true;
-                    }
-                }
-                catch (Exception ex) { Logger.Log(ex); }
-            }
-
-            string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(JustGivingService.AuthorizationUrl, JustGivingService.ClientID));
-            if (!string.IsNullOrEmpty(authorizationCode))
-            {
-                var body = new List<KeyValuePair<string, string>>
+                    var body = new List<KeyValuePair<string, string>>
                 {
                     new KeyValuePair<string, string>("grant_type", "authorization_code"),
                     new KeyValuePair<string, string>("redirect_uri", MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL),
                     new KeyValuePair<string, string>("code", authorizationCode),
                 };
-                this.token = await this.GetWWWFormUrlEncodedOAuthToken("https://identity.justgiving.com/connect/token", JustGivingService.ClientID,
-                    ChannelSession.SecretManager.GetSecret("JustGivingSecret"), body);
-                if (this.token != null)
-                {
-                    token.authorizationCode = authorizationCode;
-                    return await this.InitializeInternal();
+                    this.token = await this.GetWWWFormUrlEncodedOAuthToken("https://identity.justgiving.com/connect/token", JustGivingService.ClientID,
+                        ChannelSession.SecretManager.GetSecret("JustGivingSecret"), body);
+                    if (this.token != null)
+                    {
+                        token.authorizationCode = authorizationCode;
+                        return await this.InitializeInternal();
+                    }
                 }
             }
-
-            return false;
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                return new ExternalServiceResult(ex);
+            }
+            return new ExternalServiceResult(false);
         }
 
-        public Task Disconnect()
+        public override Task Disconnect()
         {
             this.cancellationTokenSource.Cancel();
             this.token = null;
@@ -251,7 +238,7 @@ namespace MixItUp.Base.Services
             return client;
         }
 
-        private async Task<bool> InitializeInternal()
+        protected override async Task<ExternalServiceResult> InitializeInternal()
         {
             this.cancellationTokenSource = new CancellationTokenSource();
 
@@ -268,9 +255,9 @@ namespace MixItUp.Base.Services
 
                 AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 30000, this.BackgroundDonationCheck);
 
-                return true;
+                return new ExternalServiceResult();
             }
-            return false;
+            return new ExternalServiceResult("Unable to get User data");
         }
 
         private async Task BackgroundDonationCheck(CancellationToken token)

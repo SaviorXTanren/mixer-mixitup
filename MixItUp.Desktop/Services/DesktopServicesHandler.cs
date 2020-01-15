@@ -43,6 +43,7 @@ namespace MixItUp.Desktop.Services
             this.TipeeeStream = new TipeeeStreamService(new SocketIOConnection());
             this.TreatStream = new TreatStreamService(new SocketIOConnection());
             this.Streamloots = new StreamlootsService();
+            this.JustGiving = new JustGivingService();
             this.Tiltify = new TiltifyService();
             this.ExtraLife = new ExtraLifeService();
             this.OverlayServers = new OverlayServiceManager();
@@ -347,30 +348,6 @@ namespace MixItUp.Desktop.Services
                 ChannelSession.Settings.IFTTTOAuthToken = null;
             }
             return Task.FromResult(0);
-        }
-
-        public override async Task<bool> InitializeJustGiving()
-        {
-            this.JustGiving = (ChannelSession.Settings.JustGivingOAuthToken != null) ? new JustGivingService(ChannelSession.Settings.JustGivingOAuthToken) : new JustGivingService();
-            if (await this.JustGiving.Connect())
-            {
-                return true;
-            }
-            else
-            {
-                await this.DisconnectJustGiving();
-            }
-            return false;
-        }
-
-        public override async Task DisconnectJustGiving()
-        {
-            if (this.JustGiving != null)
-            {
-                await this.JustGiving.Disconnect();
-                this.JustGiving = null;
-                ChannelSession.Settings.JustGivingOAuthToken = null;
-            }
         }
 
         private void OverlayServer_OnWebSocketConnectedOccurred(object sender, System.EventArgs e)

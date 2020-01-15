@@ -499,6 +499,10 @@ namespace MixItUp.Base
                     {
                         externalServiceTasks[ChannelSession.Services.Tiltify] = ChannelSession.Services.Tiltify.Connect(ChannelSession.Settings.TiltifyOAuthToken);
                     }
+                    if (ChannelSession.Settings.JustGivingOAuthToken != null)
+                    {
+                        externalServiceTasks[ChannelSession.Services.JustGiving] = ChannelSession.Services.JustGiving.Connect(ChannelSession.Settings.JustGivingOAuthToken);
+                    }
 
                     if (externalServiceTasks.Count > 0)
                     {
@@ -580,10 +584,6 @@ namespace MixItUp.Base
                     if (ChannelSession.Settings.ExtraLifeTeamID > 0)
                     {
                         await ChannelSession.Services.InitializeExtraLife();
-                    }
-                    if (ChannelSession.Settings.JustGivingOAuthToken != null)
-                    {
-                        await ChannelSession.Services.InitializeJustGiving();
                     }
 
                     if (ChannelSession.Settings.RemoteHostConnection != null)
