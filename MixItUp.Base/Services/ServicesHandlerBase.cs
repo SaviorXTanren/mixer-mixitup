@@ -90,9 +90,6 @@ namespace MixItUp.Base.Services
         public abstract Task<bool> InitializeIFTTT(string key = null);
         public abstract Task DisconnectIFTTT();
 
-        public abstract Task<bool> InitializeStreamloots(string streamlootsID = null);
-        public abstract Task DisconnectStreamloots();
-
         public abstract Task<bool> InitializeJustGiving();
         public abstract Task DisconnectJustGiving();
     }

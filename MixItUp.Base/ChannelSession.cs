@@ -491,6 +491,10 @@ namespace MixItUp.Base
                     {
                         externalServiceTasks[ChannelSession.Services.TreatStream] = ChannelSession.Services.TreatStream.Connect(ChannelSession.Settings.TreatStreamOAuthToken);
                     }
+                    if (ChannelSession.Settings.StreamlootsOAuthToken != null)
+                    {
+                        externalServiceTasks[ChannelSession.Services.Streamloots] = ChannelSession.Services.Streamloots.Connect(ChannelSession.Settings.StreamlootsOAuthToken);
+                    }
 
                     if (externalServiceTasks.Count > 0)
                     {
@@ -572,10 +576,6 @@ namespace MixItUp.Base
                     if (ChannelSession.Settings.IFTTTOAuthToken != null)
                     {
                         await ChannelSession.Services.InitializeIFTTT();
-                    }
-                    if (ChannelSession.Settings.StreamlootsOAuthToken != null)
-                    {
-                        await ChannelSession.Services.InitializeStreamloots();
                     }
                     if (ChannelSession.Settings.ExtraLifeTeamID > 0)
                     {

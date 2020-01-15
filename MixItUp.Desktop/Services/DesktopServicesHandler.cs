@@ -42,6 +42,7 @@ namespace MixItUp.Desktop.Services
             this.StreamJar = new StreamJarService();
             this.TipeeeStream = new TipeeeStreamService(new SocketIOConnection());
             this.TreatStream = new TreatStreamService(new SocketIOConnection());
+            this.Streamloots = new StreamlootsService();
             this.ExtraLife = new ExtraLifeService();
             this.OverlayServers = new OverlayServiceManager();
             this.MixrElixr = new MixrElixrService();
@@ -370,30 +371,6 @@ namespace MixItUp.Desktop.Services
                 ChannelSession.Settings.IFTTTOAuthToken = null;
             }
             return Task.FromResult(0);
-        }
-
-        public override async Task<bool> InitializeStreamloots(string streamlootsID = null)
-        {
-            this.Streamloots = (ChannelSession.Settings.StreamlootsOAuthToken != null) ? new StreamlootsService(ChannelSession.Settings.StreamlootsOAuthToken) : new StreamlootsService(streamlootsID);
-            if (await this.Streamloots.Connect())
-            {
-                return true;
-            }
-            else
-            {
-                await this.DisconnectStreamloots();
-            }
-            return false;
-        }
-
-        public override async Task DisconnectStreamloots()
-        {
-            if (this.Streamloots != null)
-            {
-                await this.Streamloots.Disconnect();
-                this.Streamloots = null;
-                ChannelSession.Settings.StreamlootsOAuthToken = null;
-            }
         }
 
         public override async Task<bool> InitializeJustGiving()

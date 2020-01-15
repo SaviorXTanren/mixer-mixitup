@@ -14,7 +14,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MixItUp.Base.Services
+namespace MixItUp.Base.Services.External
 {
     public class StreamlootsPurchaseModel
     {
@@ -104,43 +104,27 @@ namespace MixItUp.Base.Services
         public string value { get; set; }
     }
 
-    public interface IStreamlootsService
+    public interface IStreamlootsService : IOAuthExternalService
     {
-        Task<bool> Connect();
-
-        Task Disconnect();
-
-        OAuthTokenModel GetOAuthTokenCopy();
     }
 
-    public class StreamlootsService : IStreamlootsService, IDisposable
+    public class StreamlootsService : OAuthExternalServiceBase, IStreamlootsService
     {
-        private OAuthTokenModel token;
-
         private WebRequest webRequest;
         private Stream responseStream;
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
-        public StreamlootsService(string streamlootsID) : this(new OAuthTokenModel() { accessToken = streamlootsID }) { }
+        public StreamlootsService() : base("") { }
 
-        public StreamlootsService(OAuthTokenModel token) { this.token = token; }
+        public override string Name { get { return "Streamloots"; } }
 
-        public Task<bool> Connect()
+        public override Task<ExternalServiceResult> Connect()
         {
-            try
-            {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                Task.Run(this.BackgroundCheck, this.cancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
-                return Task.FromResult(true);
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-            return Task.FromResult(false);
+            return Task.FromResult(new ExternalServiceResult(false));
         }
 
-        public Task Disconnect()
+        public override Task Disconnect()
         {
             this.cancellationTokenSource.Cancel();
             this.token = null;
@@ -157,9 +141,30 @@ namespace MixItUp.Base.Services
             return Task.FromResult(0);
         }
 
-        public OAuthTokenModel GetOAuthTokenCopy()
+        protected override Task<ExternalServiceResult> InitializeInternal()
         {
-            return this.token;
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            Task.Run(this.BackgroundCheck, this.cancellationTokenSource.Token);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+            return Task.FromResult(new ExternalServiceResult());
+        }
+
+        protected override Task RefreshOAuthToken() { return Task.FromResult(0); }
+
+        protected override void DisposeInternal()
+        {
+            this.cancellationTokenSource.Dispose();
+            if (this.webRequest != null)
+            {
+                this.webRequest.Abort();
+                this.webRequest = null;
+            }
+            if (this.responseStream != null)
+            {
+                this.responseStream.Close();
+                this.responseStream = null;
+            }
         }
 
         private async Task BackgroundCheck()
@@ -198,7 +203,7 @@ namespace MixItUp.Base.Services
                                             if (jobj.Value<JObject>("data").ContainsKey("data") && jobj.Value<JObject>("data").Value<JObject>("data").ContainsKey("type"))
                                             {
                                                 var type = jobj.Value<JObject>("data").Value<JObject>("data").Value<string>("type");
-                                                switch(type.ToLower())
+                                                switch (type.ToLower())
                                                 {
                                                     case "purchase":
                                                         await ProcessPurchase(jobj);
@@ -312,43 +317,5 @@ namespace MixItUp.Base.Services
                 await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.StreamlootsCardRedeemed), user, extraSpecialIdentifiers: specialIdentifiers);
             }
         }
-
-        #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    // Dispose managed state (managed objects).
-                    this.cancellationTokenSource.Dispose();
-                    if (this.webRequest != null)
-                    {
-                        this.webRequest.Abort();
-                        this.webRequest = null;
-                    }
-                    if (this.responseStream != null)
-                    {
-                        this.responseStream.Close();
-                        this.responseStream = null;
-                    }
-                }
-
-                // Free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // Set large fields to null.
-
-                disposedValue = true;
-            }
-        }
-
-        // This code added to correctly implement the disposable pattern.
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-        }
-        #endregion
     }
 }

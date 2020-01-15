@@ -618,10 +618,12 @@ namespace MixItUp.Desktop
                 this.BotOAuthToken = ChannelSession.MixerBotConnection.Connection.GetOAuthTokenCopy();
             }
 
-            if (ChannelSession.Services.Streamlabs != null)
-            {
-                this.StreamlabsOAuthToken = ChannelSession.Services.Streamlabs.GetOAuthTokenCopy();
-            }
+            this.StreamlabsOAuthToken = ChannelSession.Services.Streamlabs.GetOAuthTokenCopy();
+            this.StreamJarOAuthToken = ChannelSession.Services.StreamJar.GetOAuthTokenCopy();
+            this.TipeeeStreamOAuthToken = ChannelSession.Services.TipeeeStream.GetOAuthTokenCopy();
+            this.TreatStreamOAuthToken = ChannelSession.Services.TreatStream.GetOAuthTokenCopy();
+            this.StreamlootsOAuthToken = ChannelSession.Services.Streamloots.GetOAuthTokenCopy();
+
             if (ChannelSession.Services.Twitter != null)
             {
                 this.TwitterOAuthToken = ChannelSession.Services.Twitter.GetOAuthTokenCopy();
@@ -634,18 +636,6 @@ namespace MixItUp.Desktop
             {
                 this.TiltifyOAuthToken = ChannelSession.Services.Tiltify.GetOAuthTokenCopy();
             }
-            if (ChannelSession.Services.TipeeeStream != null)
-            {
-                this.TipeeeStreamOAuthToken = ChannelSession.Services.TipeeeStream.GetOAuthTokenCopy();
-            }
-            if (ChannelSession.Services.TreatStream != null)
-            {
-                this.TreatStreamOAuthToken = ChannelSession.Services.TreatStream.GetOAuthTokenCopy();
-            }
-            if (ChannelSession.Services.StreamJar != null)
-            {
-                this.StreamJarOAuthToken = ChannelSession.Services.StreamJar.GetOAuthTokenCopy();
-            }
             if (ChannelSession.Services.Patreon != null)
             {
                 this.PatreonOAuthToken = ChannelSession.Services.Patreon.GetOAuthTokenCopy();
@@ -653,10 +643,6 @@ namespace MixItUp.Desktop
             if (ChannelSession.Services.IFTTT != null)
             {
                 this.IFTTTOAuthToken = ChannelSession.Services.IFTTT.Token;
-            }
-            if (ChannelSession.Services.Streamloots != null)
-            {
-                this.StreamlootsOAuthToken = ChannelSession.Services.Streamloots.GetOAuthTokenCopy();
             }
             if (ChannelSession.Services.JustGiving != null)
             {
