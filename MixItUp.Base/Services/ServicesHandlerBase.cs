@@ -75,9 +75,6 @@ namespace MixItUp.Base.Services
         public abstract Task<bool> InitializeDiscord();
         public abstract Task DisconnectDiscord();
 
-        public abstract Task<bool> InitializeTiltify(string authorizationCode = null);
-        public abstract Task DisconnectTiltify();
-
         public abstract Task<bool> InitializeExtraLife();
         public abstract Task DisconnectExtraLife();
 

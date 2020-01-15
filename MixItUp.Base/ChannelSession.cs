@@ -495,6 +495,10 @@ namespace MixItUp.Base
                     {
                         externalServiceTasks[ChannelSession.Services.Streamloots] = ChannelSession.Services.Streamloots.Connect(ChannelSession.Settings.StreamlootsOAuthToken);
                     }
+                    if (ChannelSession.Settings.TiltifyOAuthToken != null)
+                    {
+                        externalServiceTasks[ChannelSession.Services.Tiltify] = ChannelSession.Services.Tiltify.Connect(ChannelSession.Settings.TiltifyOAuthToken);
+                    }
 
                     if (externalServiceTasks.Count > 0)
                     {
@@ -559,10 +563,6 @@ namespace MixItUp.Base
                     if (ChannelSession.Settings.DiscordOAuthToken != null)
                     {
                         await ChannelSession.Services.InitializeDiscord();
-                    }
-                    if (ChannelSession.Settings.TiltifyOAuthToken != null)
-                    {
-                        await ChannelSession.Services.InitializeTiltify();
                     }
 
                     if (ChannelSession.Settings.PatreonOAuthToken != null)

@@ -2,6 +2,7 @@
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
@@ -9,12 +10,199 @@ using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MixItUp.Desktop.Services
+
+namespace MixItUp.Base.Services.External
 {
-    public class TiltifyService : OAuthServiceBase, ITiltifyService, IDisposable
+    [DataContract]
+    public class TiltifyUser
+    {
+        [JsonProperty("id")]
+        public int ID { get; set; }
+
+        [JsonProperty("username")]
+        public string UserName { get; set; }
+
+        [JsonProperty("slug")]
+        public string Slug { get; set; }
+
+        [JsonProperty("url")]
+        public string URL { get; set; }
+    }
+
+    [DataContract]
+    public class TiltifyTeam
+    {
+        [JsonProperty("id")]
+        public int ID { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("slug")]
+        public string Slug { get; set; }
+
+        [JsonProperty("url")]
+        public string URL { get; set; }
+
+        [JsonProperty("totalAmountRaised")]
+        public double TotalAmountRaised { get; set; }
+
+        [JsonProperty("role")]
+        public string Role { get; set; }
+    }
+
+    [DataContract]
+    public class TiltifyCampaign
+    {
+        [JsonProperty("id")]
+        public int ID { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("slug")]
+        public string Slug { get; set; }
+
+        [JsonProperty("startsAt")]
+        public long StartsAtMilliseconds { get; set; }
+
+        [JsonProperty("endsAt")]
+        public long EndsAtMilliseconds { get; set; }
+
+        [JsonProperty("description")]
+        public string Description { get; set; }
+
+        [JsonProperty("fundraiserGoalAmount")]
+        public double FundraiserGoalAmount { get; set; }
+
+        [JsonProperty("originalFundraiserGoal")]
+        public double OriginalGoalAmount { get; set; }
+
+        [JsonProperty("supportingAmountRaised")]
+        public double SupportingAmountRaised { get; set; }
+
+        [JsonProperty("amountRaised")]
+        public double AmountRaised { get; set; }
+
+        [JsonProperty("totalAmountRaised")]
+        public double TotalAmountRaised { get; set; }
+
+        [JsonProperty("supportable")]
+        public bool Supportable { get; set; }
+
+        [JsonProperty("status")]
+        public string Status { get; set; }
+
+        [JsonProperty("type")]
+        public string Type { get; set; }
+
+        [JsonProperty("user")]
+        public TiltifyUser User { get; set; }
+
+        [JsonProperty("teamId")]
+        public int TeamID { get; set; }
+
+        [JsonProperty("team")]
+        public TiltifyTeam Team { get; set; }
+
+        [JsonIgnore]
+        public string CampaignURL { get { return string.Format("https://tiltify.com/@{0}/{1}", this.User.Slug, this.Slug); } }
+
+        [JsonIgnore]
+        public string DonateURL { get { return string.Format("{0}/donate", this.CampaignURL); } }
+
+        [JsonIgnore]
+        public DateTimeOffset Starts { get { return DateTimeOffsetExtensions.FromUTCUnixTimeMilliseconds(this.StartsAtMilliseconds); } }
+
+        [JsonIgnore]
+        public DateTimeOffset Ends { get { return DateTimeOffsetExtensions.FromUTCUnixTimeMilliseconds(this.EndsAtMilliseconds); } }
+    }
+
+    [DataContract]
+    public class TiltifyDonation
+    {
+        [JsonProperty("id")]
+        public int ID { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("comment")]
+        public string Comment { get; set; }
+
+        [JsonProperty("amount")]
+        public double Amount { get; set; }
+
+        [JsonProperty("completedAt")]
+        public long CompletedAtTimestamp { get; set; }
+
+        public UserDonationModel ToGenericDonation()
+        {
+            return new UserDonationModel()
+            {
+                Source = UserDonationSourceEnum.Tiltify,
+
+                ID = this.ID.ToString(),
+                UserName = this.Name,
+                Message = this.Comment,
+
+                Amount = Math.Round(this.Amount, 2),
+
+                DateTime = DateTimeOffsetExtensions.FromUTCUnixTimeMilliseconds(this.CompletedAtTimestamp),
+            };
+        }
+    }
+
+    [DataContract]
+    public class TiltifyResult : TiltifyResultBase
+    {
+        [JsonProperty("data")]
+        public JObject Data { get; set; }
+    }
+
+    [DataContract]
+    public class TiltifyResultArray : TiltifyResultBase
+    {
+        [JsonProperty("data")]
+        public JArray Data { get; set; }
+    }
+
+    [DataContract]
+    public abstract class TiltifyResultBase
+    {
+        [JsonProperty("meta")]
+        public JObject Meta { get; set; }
+
+        [JsonProperty("links")]
+        public JObject Links { get; set; }
+
+        [JsonProperty("error")]
+        public JObject Error { get; set; }
+
+        [JsonProperty("errors")]
+        public JObject Errors { get; set; }
+    }
+
+    public interface ITiltifyService : IOAuthExternalService
+    {
+        Task<ExternalServiceResult> Connect(string authorizationToken);
+
+        Task<TiltifyUser> GetUser();
+
+        Task<IEnumerable<TiltifyCampaign>> GetUserCampaigns(TiltifyUser user);
+
+        Task<IEnumerable<TiltifyTeam>> GetUserTeams(TiltifyUser user);
+
+        Task<IEnumerable<TiltifyCampaign>> GetTeamCampaigns(TiltifyTeam team);
+
+        Task<IEnumerable<TiltifyDonation>> GetCampaignDonations(TiltifyCampaign campaign);
+    }
+
+    public class TiltifyService : OAuthExternalServiceBase, ITiltifyService
     {
         private const string BaseAddress = "https://tiltify.com/api/v3/";
 
@@ -25,55 +213,50 @@ namespace MixItUp.Desktop.Services
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
-        private string authorizationToken;
-
         private TiltifyUser user;
 
-        public TiltifyService(string authorizationToken) : base(TiltifyService.BaseAddress) { this.authorizationToken = authorizationToken; }
+        public TiltifyService() : base(TiltifyService.BaseAddress) { }
 
-        public TiltifyService(OAuthTokenModel token) : base(TiltifyService.BaseAddress, token) { }
+        public override string Name { get { return "Tiltify"; } }
 
-        public async Task<bool> Connect()
+        public override Task<ExternalServiceResult> Connect()
         {
-            if (this.token != null)
-            {
-                try
-                {
-                    if (await this.InitializeInternal())
-                    {
-                        return true;
-                    }
-                }
-                catch (Exception ex) { Logger.Log(ex); }
-            }
+            return Task.FromResult(new ExternalServiceResult(false));
+        }
 
-            if (!string.IsNullOrEmpty(this.authorizationToken))
+        public async Task<ExternalServiceResult> Connect(string authorizationToken)
+        {
+            try
             {
-                try
+                if (!string.IsNullOrEmpty(authorizationToken))
                 {
                     JObject payload = new JObject();
                     payload["grant_type"] = "authorization_code";
                     payload["client_id"] = TiltifyService.ClientID;
                     payload["client_secret"] = ChannelSession.SecretManager.GetSecret("TiltifySecret");
-                    payload["code"] = this.authorizationToken;
+                    payload["code"] = authorizationToken;
                     payload["redirect_uri"] = TiltifyService.ListeningURL;
 
                     this.token = await this.PostAsync<OAuthTokenModel>("https://tiltify.com/oauth/token", AdvancedHttpClient.CreateContentFromObject(payload), autoRefreshToken: false);
                     if (this.token != null)
                     {
-                        token.authorizationCode = this.authorizationToken;
+                        token.authorizationCode = authorizationToken;
                         token.AcquiredDateTime = DateTimeOffset.Now;
                         token.expiresIn = int.MaxValue;
 
                         return await this.InitializeInternal();
                     }
                 }
-                catch (Exception ex) { Logger.Log(ex); }
             }
-            return false;
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                return new ExternalServiceResult(ex);
+            }
+            return new ExternalServiceResult(false);
         }
 
-        public Task Disconnect()
+        public override Task Disconnect()
         {
             this.token = null;
             this.cancellationTokenSource.Cancel();
@@ -156,7 +339,12 @@ namespace MixItUp.Desktop.Services
             return Task.FromResult(0);
         }
 
-        private async Task<bool> InitializeInternal()
+        protected override void DisposeInternal()
+        {
+            this.cancellationTokenSource.Dispose();
+        }
+
+        protected override async Task<ExternalServiceResult> InitializeInternal()
         {
             this.cancellationTokenSource = new CancellationTokenSource();
 
@@ -167,9 +355,9 @@ namespace MixItUp.Desktop.Services
                 Task.Run(this.BackgroundDonationCheck, this.cancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-                return true;
+                return new ExternalServiceResult();
             }
-            return false;
+            return new ExternalServiceResult("Failed to get User data");
         }
 
         private async Task BackgroundDonationCheck()
@@ -216,33 +404,5 @@ namespace MixItUp.Desktop.Services
                 await Task.Delay(10000);
             }
         }
-
-        #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    // Dispose managed state (managed objects).
-                    this.cancellationTokenSource.Dispose();
-                }
-
-                // Free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // Set large fields to null.
-
-                disposedValue = true;
-            }
-        }
-
-        // This code added to correctly implement the disposable pattern.
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-        }
-        #endregion
     }
 }

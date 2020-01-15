@@ -315,7 +315,6 @@
     <Compile Include="Services\SerialService.cs" />
     <Compile Include="Services\SocketIOConnection.cs" />
     <Compile Include="Services\StreamlabsOBSService.cs" />
-    <Compile Include="Services\TiltifyService.cs" />
     <Compile Include="Services\TranslationService.cs" />
     <Compile Include="Services\TwitterService.cs" />
     <Compile Include="Services\AudioService.cs" />
