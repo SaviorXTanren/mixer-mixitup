@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
-using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -8,28 +7,29 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MixItUp.Base.Services
+namespace MixItUp.Base.Services.External
 {
-    public interface IIFTTTService
+    public interface IIFTTTService : IOAuthExternalService
     {
-        OAuthTokenModel Token { get; }
-
         Task SendTrigger(string eventName, Dictionary<string, string> values);
     }
 
-    public class IFTTTService : IIFTTTService
+    public class IFTTTService : OAuthExternalServiceBase, IIFTTTService
     {
         private const string WebHookURLFormat = "https://maker.ifttt.com/trigger/{0}/with/key/{1}";
 
-        private string key;
+        public IFTTTService() : base("") { }
 
-        public OAuthTokenModel Token { get { return new OAuthTokenModel() { accessToken = this.key }; } }
+        public override string Name { get { return "IFTTT"; } }
 
-        public IFTTTService(OAuthTokenModel token) : this(token.accessToken) { }
-
-        public IFTTTService(string key)
+        public override Task<ExternalServiceResult> Connect()
         {
-            this.key = key;
+            return Task.FromResult(new ExternalServiceResult(false));
+        }
+
+        public override Task Disconnect()
+        {
+            return Task.FromResult(0);
         }
 
         public async Task SendTrigger(string eventName, Dictionary<string, string> values)
@@ -45,7 +45,7 @@ namespace MixItUp.Base.Services
                     }
                     HttpContent content = new StringContent(SerializerHelper.SerializeToString(jobj), Encoding.UTF8, "application/json");
 
-                    HttpResponseMessage response = await client.PostAsync(string.Format(WebHookURLFormat, eventName, this.key), content);
+                    HttpResponseMessage response = await client.PostAsync(string.Format(WebHookURLFormat, eventName, this.token.accessToken), content);
                     if (!response.IsSuccessStatusCode)
                     {
                         Logger.Log(await response.Content.ReadAsStringAsync());
@@ -56,6 +56,16 @@ namespace MixItUp.Base.Services
             {
                 Logger.Log(ex);
             }
+        }
+
+        protected override Task<ExternalServiceResult> InitializeInternal()
+        {
+            return Task.FromResult(new ExternalServiceResult());
+        }
+
+        protected override Task RefreshOAuthToken()
+        {
+            return Task.FromResult(0);
         }
     }
 }

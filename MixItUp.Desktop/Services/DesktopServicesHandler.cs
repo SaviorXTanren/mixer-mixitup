@@ -46,6 +46,7 @@ namespace MixItUp.Desktop.Services
             this.JustGiving = new JustGivingService();
             this.Tiltify = new TiltifyService();
             this.ExtraLife = new ExtraLifeService();
+            this.IFTTT = new IFTTTService();
             this.OverlayServers = new OverlayServiceManager();
             this.MixrElixr = new MixrElixrService();
         }
@@ -332,22 +333,6 @@ namespace MixItUp.Desktop.Services
                 this.Patreon = null;
                 ChannelSession.Settings.PatreonOAuthToken = null;
             }
-        }
-
-        public override Task<bool> InitializeIFTTT(string key = null)
-        {
-            this.IFTTT = (ChannelSession.Settings.IFTTTOAuthToken != null) ? new IFTTTService(ChannelSession.Settings.IFTTTOAuthToken) : new IFTTTService(key);
-            return Task.FromResult(true);
-        }
-
-        public override Task DisconnectIFTTT()
-        {
-            if (this.IFTTT != null)
-            {
-                this.IFTTT = null;
-                ChannelSession.Settings.IFTTTOAuthToken = null;
-            }
-            return Task.FromResult(0);
         }
 
         private void OverlayServer_OnWebSocketConnectedOccurred(object sender, System.EventArgs e)

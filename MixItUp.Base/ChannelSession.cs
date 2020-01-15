@@ -503,6 +503,10 @@ namespace MixItUp.Base
                     {
                         externalServiceTasks[ChannelSession.Services.JustGiving] = ChannelSession.Services.JustGiving.Connect(ChannelSession.Settings.JustGivingOAuthToken);
                     }
+                    if (ChannelSession.Settings.IFTTTOAuthToken != null)
+                    {
+                        externalServiceTasks[ChannelSession.Services.IFTTT] = ChannelSession.Services.IFTTT.Connect(ChannelSession.Settings.IFTTTOAuthToken);
+                    }
 
                     if (externalServiceTasks.Count > 0)
                     {
@@ -576,10 +580,6 @@ namespace MixItUp.Base
                     if (!string.IsNullOrEmpty(ChannelSession.Settings.OvrStreamServerIP))
                     {
                         await ChannelSession.Services.InitializeOvrStream();
-                    }
-                    if (ChannelSession.Settings.IFTTTOAuthToken != null)
-                    {
-                        await ChannelSession.Services.InitializeIFTTT();
                     }
                     if (ChannelSession.Settings.ExtraLifeTeamID > 0)
                     {

@@ -83,8 +83,5 @@ namespace MixItUp.Base.Services
 
         public abstract Task<bool> InitializeOvrStream();
         public abstract Task DisconnectOvrStream();
-
-        public abstract Task<bool> InitializeIFTTT(string key = null);
-        public abstract Task DisconnectIFTTT();
     }
 }

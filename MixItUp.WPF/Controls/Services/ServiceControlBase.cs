@@ -1,4 +1,6 @@
-﻿using MixItUp.Base.ViewModel.Controls.Services;
+﻿using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Controls.Services;
+using System.Windows.Navigation;
 
 namespace MixItUp.WPF.Controls.Services
 {
@@ -9,5 +11,10 @@ namespace MixItUp.WPF.Controls.Services
         protected ServiceContainerControl containerControl { get; private set; }
 
         public void Initialize(ServiceContainerControl containerControl) { this.containerControl = containerControl; }
+
+        protected void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            ProcessHelper.LaunchLink(e.Uri.AbsoluteUri);
+        }
     }
 }

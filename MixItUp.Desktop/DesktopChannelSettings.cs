@@ -642,7 +642,7 @@ namespace MixItUp.Desktop
             }
             if (ChannelSession.Services.IFTTT != null)
             {
-                this.IFTTTOAuthToken = ChannelSession.Services.IFTTT.Token;
+                this.IFTTTOAuthToken = ChannelSession.Services.IFTTT.GetOAuthTokenCopy();
             }
             if (ChannelSession.Services.JustGiving != null)
             {
