@@ -11,7 +11,7 @@ using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MixItUp.Base.Services
+namespace MixItUp.Base.Services.External
 {
     [DataContract]
     public class ExtraLifeTeam
@@ -123,13 +123,8 @@ namespace MixItUp.Base.Services
         }
     }
 
-    public interface IExtraLifeService
+    public interface IExtraLifeService : IOAuthExternalService
     {
-        bool IsConnected();
-
-        Task<bool> Connect(int teamID, int participantID, bool includeTeamDonations);
-        Task Disconnect();
-
         Task<ExtraLifeTeam> GetTeam();
         Task<ExtraLifeTeam> GetTeam(int teamID);
         Task<IEnumerable<ExtraLifeTeamParticipant>> GetTeamParticipants();
@@ -140,47 +135,46 @@ namespace MixItUp.Base.Services
         Task<IEnumerable<ExtraLifeDonation>> GetTeamDonations();
     }
 
-    public class ExtraLifeService : OAuthServiceBase, IExtraLifeService, IDisposable
+    public class ExtraLifeService : OAuthExternalServiceBase, IExtraLifeService, IDisposable
     {
         private const string BaseAddress = "https://www.extra-life.org/api/";
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
-        private int teamID;
-        private int participantID;
-        private bool includeTeamDonations;
-
         private ExtraLifeTeam team;
         private ExtraLifeTeamParticipant participant;
 
-        public ExtraLifeService() : base(ExtraLifeService.BaseAddress) { this.token = new OAuthTokenModel() { expiresIn = int.MaxValue }; }
+        public ExtraLifeService() : base(ExtraLifeService.BaseAddress) { }
 
-        public bool IsConnected() { return this.team != null && this.participant != null; }
+        public override string Name { get { return "ExtraLife"; } }
 
-        public async Task<bool> Connect(int teamID, int participantID, bool includeTeamDonations)
+        public override bool IsConnected { get { return ChannelSession.Settings.ExtraLifeTeamID > 0 && ChannelSession.Settings.ExtraLifeParticipantID > 0; } }
+
+        public override async Task<ExternalServiceResult> Connect()
         {
-            this.teamID = teamID;
-            this.participantID = participantID;
-            this.includeTeamDonations = includeTeamDonations;
-
-            return await this.InitializeInternal();
+            if (this.IsConnected)
+            {
+                return await this.InitializeInternal();
+            }
+            return new ExternalServiceResult("Extra Life team ID / participant ID was not set");
         }
 
-        public Task Disconnect()
+        public override Task<ExternalServiceResult> Connect(OAuthTokenModel token)
         {
-            this.teamID = 0;
-            this.participantID = 0;
-            this.includeTeamDonations = false;
+            return Task.FromResult(new ExternalServiceResult(false));
+        }
 
-            this.team = null;
-            this.participant = null;
+        public override Task Disconnect()
+        {
+            ChannelSession.Settings.ExtraLifeTeamID = 0;
+            ChannelSession.Settings.ExtraLifeParticipantID = 0;
 
             this.cancellationTokenSource.Cancel();
 
             return Task.FromResult(0);
         }
 
-        public async Task<ExtraLifeTeam> GetTeam() { return await this.GetTeam(this.teamID); }
+        public async Task<ExtraLifeTeam> GetTeam() { return await this.GetTeam(ChannelSession.Settings.ExtraLifeTeamID); }
 
         public async Task<ExtraLifeTeam> GetTeam(int teamID)
         {
@@ -192,7 +186,7 @@ namespace MixItUp.Base.Services
             return null;
         }
 
-        public async Task<IEnumerable<ExtraLifeTeamParticipant>> GetTeamParticipants() { return await this.GetTeamParticipants(this.teamID); }
+        public async Task<IEnumerable<ExtraLifeTeamParticipant>> GetTeamParticipants() { return await this.GetTeamParticipants(ChannelSession.Settings.ExtraLifeTeamID); }
 
         public async Task<IEnumerable<ExtraLifeTeamParticipant>> GetTeamParticipants(int teamID)
         {
@@ -208,7 +202,7 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                return await this.GetAsync<ExtraLifeTeamParticipant>(string.Format("participants/{0}", participantID));
+                return await this.GetAsync<ExtraLifeTeamParticipant>(string.Format("participants/{0}", ChannelSession.Settings.ExtraLifeParticipantID));
             }
             catch (Exception ex) { Logger.Log(ex); }
             return null;
@@ -218,7 +212,7 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                return await this.GetAsync<IEnumerable<ExtraLifeDonation>>(string.Format("participants/{0}/donations?limit=10", participantID));
+                return await this.GetAsync<IEnumerable<ExtraLifeDonation>>(string.Format("participants/{0}/donations?limit=10", ChannelSession.Settings.ExtraLifeParticipantID));
             }
             catch (Exception ex) { Logger.Log(ex); }
             return new List<ExtraLifeDonation>();
@@ -228,7 +222,7 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                return await this.GetAsync<IEnumerable<ExtraLifeDonation>>(string.Format("teams/{0}/donations?limit=10", teamID));
+                return await this.GetAsync<IEnumerable<ExtraLifeDonation>>(string.Format("teams/{0}/donations?limit=10", ChannelSession.Settings.ExtraLifeTeamID));
             }
             catch (Exception ex) { Logger.Log(ex); }
             return new List<ExtraLifeDonation>();
@@ -240,7 +234,7 @@ namespace MixItUp.Base.Services
             return Task.FromResult(0);
         }
 
-        private async Task<bool> InitializeInternal()
+        protected override async Task<ExternalServiceResult> InitializeInternal()
         {
             this.cancellationTokenSource = new CancellationTokenSource();
 
@@ -253,16 +247,21 @@ namespace MixItUp.Base.Services
                 Task.Run(this.BackgroundDonationCheck, this.cancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-                return true;
+                return new ExternalServiceResult();
             }
-            return false;
+            return new ExternalServiceResult("Could not get Team/Participant data");
+        }
+
+        protected override void DisposeInternal()
+        {
+            this.cancellationTokenSource.Dispose();
         }
 
         private async Task BackgroundDonationCheck()
         {
             Dictionary<string, ExtraLifeDonation> donationsReceived = new Dictionary<string, ExtraLifeDonation>();
 
-            IEnumerable<ExtraLifeDonation> donations = (this.includeTeamDonations) ? await this.GetTeamDonations() : await this.GetParticipantDonations();
+            IEnumerable<ExtraLifeDonation> donations = (ChannelSession.Settings.ExtraLifeIncludeTeamDonations) ? await this.GetTeamDonations() : await this.GetParticipantDonations();
             foreach (ExtraLifeDonation donation in donations)
             {
                 if (!string.IsNullOrEmpty(donation.donationID))
@@ -275,7 +274,7 @@ namespace MixItUp.Base.Services
             {
                 try
                 {
-                    donations = (this.includeTeamDonations) ? await this.GetTeamDonations() : await this.GetParticipantDonations();
+                    donations = (ChannelSession.Settings.ExtraLifeIncludeTeamDonations) ? await this.GetTeamDonations() : await this.GetParticipantDonations();
                     foreach (ExtraLifeDonation elDonation in donations)
                     {
                         if (!string.IsNullOrEmpty(elDonation.donationID) && !donationsReceived.ContainsKey(elDonation.donationID))
@@ -302,33 +301,5 @@ namespace MixItUp.Base.Services
                 await Task.Delay(20000);
             }
         }
-
-        #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    // Dispose managed state (managed objects).
-                    this.cancellationTokenSource.Dispose();
-                }
-
-                // Free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // Set large fields to null.
-
-                disposedValue = true;
-            }
-        }
-
-        // This code added to correctly implement the disposable pattern.
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-        }
-        #endregion
     }
 }

@@ -5,6 +5,7 @@ using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
@@ -407,7 +408,7 @@ namespace MixItUp.Base.Util
                 }
             }
 
-            if (ChannelSession.Services.ExtraLife.IsConnected() && this.ContainsSpecialIdentifier(ExtraLifeSpecialIdentifierHeader))
+            if (ChannelSession.Services.ExtraLife.IsConnected && this.ContainsSpecialIdentifier(ExtraLifeSpecialIdentifierHeader))
             {
                 ExtraLifeTeam team = await ChannelSession.Services.ExtraLife.GetTeam();
 

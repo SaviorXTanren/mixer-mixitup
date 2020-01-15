@@ -287,30 +287,6 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        public override async Task<bool> InitializeExtraLife()
-        {
-            if (await this.ExtraLife.Connect(ChannelSession.Settings.ExtraLifeTeamID, ChannelSession.Settings.ExtraLifeParticipantID, ChannelSession.Settings.ExtraLifeIncludeTeamDonations))
-            {
-                return true;
-            }
-            else
-            {
-                await this.DisconnectExtraLife();
-            }
-            return false;
-        }
-
-        public override async Task DisconnectExtraLife()
-        {
-            if (this.ExtraLife != null)
-            {
-                await this.ExtraLife.Disconnect();
-                ChannelSession.Settings.ExtraLifeTeamID = 0;
-                ChannelSession.Settings.ExtraLifeParticipantID = 0;
-                ChannelSession.Settings.ExtraLifeIncludeTeamDonations = false;
-            }
-        }
-
         public override async Task<bool> InitializePatreon()
         {
             this.Patreon = (ChannelSession.Settings.PatreonOAuthToken != null) ? new PatreonService(ChannelSession.Settings.PatreonOAuthToken) : new PatreonService();

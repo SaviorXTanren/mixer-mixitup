@@ -36,7 +36,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.services.Add(new ServicesGroupBoxControl(this.Window, new PatreonServiceControl()));
             this.services.Add(new ServiceContainerControl(this.Window, new StreamlootsServiceControl()));
             this.services.Add(new ServiceContainerControl(this.Window, new TiltifyServiceControl()));
-            this.services.Add(new ServicesGroupBoxControl(this.Window, new ExtraLifeServiceControl()));
+            this.services.Add(new ServiceContainerControl(this.Window, new ExtraLifeServiceControl()));
             this.services.Add(new ServiceContainerControl(this.Window, new JustGivingServiceControl()));
             this.services.Add(new ServicesGroupBoxControl(this.Window, new TwitterServiceControl()));
             this.services.Add(new ServicesGroupBoxControl(this.Window, new DiscordServiceControl()));

@@ -54,7 +54,7 @@ namespace MixItUp.Base.Services.External
 
         public abstract string Name { get; }
 
-        public bool IsConnected { get { return this.token != null; } }
+        public virtual bool IsConnected { get { return this.token != null; } }
 
         public abstract Task<ExternalServiceResult> Connect();
 

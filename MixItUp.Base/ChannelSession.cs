@@ -507,6 +507,10 @@ namespace MixItUp.Base
                     {
                         externalServiceTasks[ChannelSession.Services.IFTTT] = ChannelSession.Services.IFTTT.Connect(ChannelSession.Settings.IFTTTOAuthToken);
                     }
+                    if (ChannelSession.Settings.ExtraLifeTeamID > 0)
+                    {
+                        externalServiceTasks[ChannelSession.Services.ExtraLife] = ChannelSession.Services.ExtraLife.Connect();
+                    }
 
                     if (externalServiceTasks.Count > 0)
                     {
@@ -580,10 +584,6 @@ namespace MixItUp.Base
                     if (!string.IsNullOrEmpty(ChannelSession.Settings.OvrStreamServerIP))
                     {
                         await ChannelSession.Services.InitializeOvrStream();
-                    }
-                    if (ChannelSession.Settings.ExtraLifeTeamID > 0)
-                    {
-                        await ChannelSession.Services.InitializeExtraLife();
                     }
 
                     if (ChannelSession.Settings.RemoteHostConnection != null)
