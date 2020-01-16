@@ -65,7 +65,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             this.StartedCommand = this.CreateBasicChatCommand("@$username has challenged @$targetusername to a duel for $gamebet " + currency.Name + "! Type !duel in chat to accept!");
             this.NotAcceptedCommand = this.CreateBasicChatCommand("@$targetusername did not respond in time...");
             this.SuccessOutcomeCommand = this.CreateBasicChatCommand("@$username won the duel against @$targetusername, winning $gamepayout " + currency.Name + "!");
-            this.FailOutcomeCommand = this.CreateBasicChatCommand("@$targetusername defeated @$username at his own game, winning $gamepayout " + currency.Name + "!");
+            this.FailOutcomeCommand = this.CreateBasicChatCommand("@$targetusername defeated @$username, winning $gamepayout " + currency.Name + "!");
         }
 
         public DuelGameEditorControlViewModel(DuelGameCommand command)
