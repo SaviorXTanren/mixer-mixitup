@@ -48,6 +48,7 @@ namespace MixItUp.Desktop.Services
             this.ExtraLife = new ExtraLifeService();
             this.IFTTT = new IFTTTService();
             this.Patreon = new PatreonService();
+            this.Discord = new DiscordService();
             this.OverlayServers = new OverlayServiceManager();
             this.MixrElixr = new MixrElixrService();
         }
@@ -261,30 +262,6 @@ namespace MixItUp.Desktop.Services
                 await this.Twitter.Disconnect();
                 this.Twitter = null;
                 ChannelSession.Settings.TwitterOAuthToken = null;
-            }
-        }
-
-        public override async Task<bool> InitializeDiscord()
-        {
-            this.Discord = (ChannelSession.Settings.DiscordOAuthToken != null) ? new DiscordService(ChannelSession.Settings.DiscordOAuthToken) : new DiscordService();
-            if (await this.Discord.Connect() && this.Discord.Server != null && this.Discord.User != null)
-            {
-                return true;
-            }
-            else
-            {
-                await this.DisconnectDiscord();
-            }
-            return false;
-        }
-
-        public override async Task DisconnectDiscord()
-        {
-            if (this.Discord != null)
-            {
-                await this.Discord.Disconnect();
-                this.Discord = null;
-                ChannelSession.Settings.DiscordOAuthToken = null;
             }
         }
 

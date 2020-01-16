@@ -487,6 +487,7 @@ namespace MixItUp.Base
                     if (ChannelSession.Settings.IFTTTOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.IFTTT] = ChannelSession.Settings.IFTTTOAuthToken; }
                     if (ChannelSession.Settings.ExtraLifeTeamID > 0) { externalServiceToConnect[ChannelSession.Services.ExtraLife] = new OAuthTokenModel(); }
                     if (ChannelSession.Settings.PatreonOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Patreon] = ChannelSession.Settings.PatreonOAuthToken; }
+                    if (ChannelSession.Settings.DiscordOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Discord] = ChannelSession.Settings.DiscordOAuthToken; }
 
                     if (externalServiceToConnect.Count > 0)
                     {
@@ -552,10 +553,6 @@ namespace MixItUp.Base
                     if (ChannelSession.Settings.TwitterOAuthToken != null)
                     {
                         await ChannelSession.Services.InitializeTwitter();
-                    }
-                    if (ChannelSession.Settings.DiscordOAuthToken != null)
-                    {
-                        await ChannelSession.Services.InitializeDiscord();
                     }
                     if (!string.IsNullOrEmpty(ChannelSession.Settings.OvrStreamServerIP))
                     {

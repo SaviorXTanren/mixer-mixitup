@@ -72,9 +72,6 @@ namespace MixItUp.Base.Services
         public abstract Task<bool> InitializeTwitter();
         public abstract Task DisconnectTwitter();
 
-        public abstract Task<bool> InitializeDiscord();
-        public abstract Task DisconnectDiscord();
-
         public abstract Task<bool> InitializeOvrStream();
         public abstract Task DisconnectOvrStream();
     }

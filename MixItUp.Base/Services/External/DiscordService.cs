@@ -2,22 +2,316 @@
 using MixItUp.Base;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
-using static MixItUp.Base.Services.DiscordWebSocketPacket;
+using static MixItUp.Base.Services.External.DiscordWebSocketPacket;
 
-namespace MixItUp.Desktop.Services
+namespace MixItUp.Base.Services.External
 {
+    public class DiscordUser : IEquatable<DiscordUser>
+    {
+        [JsonProperty("id")]
+        public string ID { get; set; }
+        [JsonProperty("username")]
+        public string UserName { get; set; }
+        [JsonProperty("discriminator")]
+        public string Discriminator { get; set; }
+        [JsonProperty("avatar")]
+        public string AvatarID { get; set; }
+
+        public DiscordUser() { }
+
+        public DiscordUser(JObject data)
+        {
+            this.ID = data["id"].ToString();
+            this.UserName = data["username"].ToString();
+            this.Discriminator = data["discriminator"].ToString();
+            this.AvatarID = data["avatar"].ToString();
+        }
+
+        public override bool Equals(object other)
+        {
+            if (other is DiscordUser)
+            {
+                return this.Equals((DiscordUser)other);
+            }
+            return false;
+        }
+
+        public bool Equals(DiscordUser other) { return this.ID.Equals(other.ID); }
+
+        public override int GetHashCode() { return this.ID.GetHashCode(); }
+    }
+
+    public class DiscordServer : IEquatable<DiscordServer>
+    {
+        private const string MixItUpServerRoleName = "Mix It Up";
+
+        [JsonProperty("id")]
+        public string ID { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
+        [JsonProperty("icon")]
+        public string IconID { get; set; }
+        [JsonProperty("owner")]
+        public bool? Owner { get; set; }
+
+        [JsonProperty("roles")]
+        public List<DiscordServerRole> Roles { get; set; }
+
+        public DiscordServer()
+        {
+            this.Roles = new List<DiscordServerRole>();
+        }
+
+        public uint MixItUpPermissions
+        {
+            get
+            {
+                DiscordServerRole role = this.Roles.FirstOrDefault(r => r.Name.Equals(DiscordServer.MixItUpServerRoleName));
+                if (role != null)
+                {
+                    return role.Permissions;
+                }
+                return 0;
+            }
+        }
+
+        public override bool Equals(object other)
+        {
+            if (other is DiscordServer)
+            {
+                return this.Equals((DiscordServer)other);
+            }
+            return false;
+        }
+
+        public bool Equals(DiscordServer other) { return this.ID.Equals(other.ID); }
+
+        public override int GetHashCode() { return this.ID.GetHashCode(); }
+    }
+
+    public class DiscordServerRole
+    {
+        [JsonProperty("id")]
+        public string ID { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
+        [JsonProperty("permissions")]
+        public uint Permissions { get; set; }
+
+        public DiscordServerRole() { }
+    }
+
+    public class DiscordServerUser
+    {
+        [JsonProperty("user")]
+        public DiscordUser User { get; set; }
+        [JsonProperty("nick")]
+        public string Nickname { get; set; }
+        [JsonProperty("roles")]
+        public List<string> Roles { get; set; }
+        [JsonProperty("mute")]
+        public bool Mute { get; set; }
+        [JsonProperty("deaf")]
+        public bool Deaf { get; set; }
+
+        public DiscordServerUser()
+        {
+            this.Roles = new List<string>();
+        }
+    }
+
+    public class DiscordChannel : IEquatable<DiscordChannel>
+    {
+        public enum DiscordChannelTypeEnum
+        {
+            Text = 0,
+            DirectMessage = 1,
+            Voice = 2,
+            GroupDirectMessage = 3,
+            Category = 4,
+        }
+
+        [JsonProperty("id")]
+        public string ID { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
+        [JsonProperty("type")]
+        public DiscordChannelTypeEnum Type { get; set; }
+
+        [JsonProperty("recipients")]
+        public List<DiscordUser> Users { get; set; }
+
+        public DiscordChannel()
+        {
+            this.Users = new List<DiscordUser>();
+        }
+
+        public override bool Equals(object other)
+        {
+            if (other is DiscordChannel)
+            {
+                return this.Equals((DiscordChannel)other);
+            }
+            return false;
+        }
+
+        public bool Equals(DiscordChannel other) { return this.ID.Equals(other.ID); }
+
+        public override int GetHashCode() { return this.ID.GetHashCode(); }
+    }
+
+    public class DiscordMessage
+    {
+        [JsonProperty("id")]
+        public string ID { get; set; }
+        [JsonProperty("channel_id")]
+        public string ChannelID { get; set; }
+
+        [JsonProperty("type")]
+        public int Type { get; set; }
+
+        [JsonProperty("content")]
+        public string Content { get; set; }
+
+        [JsonProperty("timestamp")]
+        public string Timestamp { get; set; }
+
+        [JsonProperty("file")]
+        public string File { get; set; }
+
+        [JsonProperty("payload_json")]
+        public string PayloadJSON { get; set; }
+
+        public DiscordMessage() { }
+    }
+
+    public class DiscordChannelInvite
+    {
+        private const string InviteLinkTemplate = "https://discord.gg/{0}";
+
+        [JsonProperty("code")]
+        public string Code { get; set; }
+        [JsonProperty("guild")]
+        public DiscordServer Server { get; set; }
+        [JsonProperty("channel")]
+        public DiscordChannel Channel { get; set; }
+
+        [JsonIgnore]
+        public string InviteLink { get { return string.Format(InviteLinkTemplate, this.Code); } }
+
+        public DiscordChannelInvite() { }
+    }
+
+    public class DiscordEmoji
+    {
+        [JsonProperty("id")]
+        public string ID { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
+        [JsonProperty("require_colons")]
+        public bool? RequireColons { get; set; }
+        [JsonProperty("managed")]
+        public bool? Managed { get; set; }
+        [JsonProperty("animated")]
+        public bool? Animated { get; set; }
+    }
+
+    public class DiscordGateway
+    {
+        [JsonProperty("url")]
+        public string WebSocketURL { get; set; }
+        [JsonProperty("shards")]
+        public int Shards { get; set; }
+
+        public DiscordGateway() { }
+    }
+
+    public class DiscordWebSocketPacket
+    {
+        private const string ReadyPacketName = "READY";
+
+        public enum DiscordWebSocketPacketTypeEnum
+        {
+            Unknown = -1,
+
+            Other = 0,
+            Heartbeat = 1,
+            Identify = 2,
+
+            Hello = 10,
+            HeartbeatAck = 11,
+        }
+
+        [JsonProperty("op")]
+        public int OPCode;
+        [JsonProperty("s")]
+        public int? Sequence;
+        [JsonProperty("t")]
+        public string Name;
+        [JsonProperty("d")]
+        public JObject Data;
+
+        [JsonIgnore]
+        public DiscordWebSocketPacketTypeEnum OPCodeType { get { return (DiscordWebSocketPacketTypeEnum)this.OPCode; } set { this.OPCode = (int)value; } }
+
+        [JsonIgnore]
+        public bool IsReadyPacket { get { return ReadyPacketName.Equals(this.Name); } }
+    }
+
+    public interface IDiscordService : IOAuthExternalService
+    {
+        bool IsUsingCustomApplication { get; }
+
+        DiscordUser User { get; }
+        DiscordServer Server { get; }
+
+        string BotPermissions { get; }
+
+        Task<DiscordGateway> GetBotGateway();
+
+        Task<DiscordUser> GetCurrentUser();
+
+        Task<DiscordUser> GetUser(string userID);
+
+        Task<IEnumerable<DiscordServer>> GetCurrentUserServers();
+
+        Task<DiscordServer> GetServer(string serverID);
+
+        Task<IEnumerable<DiscordServerUser>> GetServerMembers(DiscordServer server, int maxNumbers = 1);
+
+        Task<DiscordServerUser> GetServerMember(DiscordServer server, DiscordUser user);
+
+        Task<IEnumerable<DiscordChannel>> GetServerChannels(DiscordServer server);
+
+        Task<DiscordChannel> GetChannel(string channelID);
+
+        Task<IEnumerable<DiscordEmoji>> GetEmojis(DiscordServer server);
+
+        Task<DiscordMessage> CreateMessage(DiscordChannel channel, string message, string filePath);
+
+        Task<DiscordChannelInvite> CreateChannelInvite(DiscordChannel channel, bool isTemporary = false);
+
+        Task ChangeServerMemberRole(DiscordServer server, DiscordUser user, IEnumerable<string> roles);
+
+        Task MuteServerMember(DiscordServer server, DiscordUser user, bool mute = true);
+
+        Task DeafenServerMember(DiscordServer server, DiscordUser user, bool deaf = true);
+    }
+
     public class DiscordOAuthServer : LocalOAuthHttpListenerServer
     {
         private const string ServerIDIdentifier = "guild_id";
@@ -342,7 +636,7 @@ namespace MixItUp.Desktop.Services
         }
     }
 
-    public class DiscordService : OAuthServiceBase, IDiscordService, IDisposable
+    public class DiscordService : OAuthExternalServiceBase, IDiscordService, IDisposable
     {
         /// <summary>
         /// View Channels, Send Messages, Send TTS Messages, Embed Links, Attach Files, Mention Everyone, Use External Emojis, Connect, Mute Members, Deafen Members
@@ -370,52 +664,44 @@ namespace MixItUp.Desktop.Services
 
         public DiscordService() : base(DiscordService.BaseAddress) { }
 
-        public DiscordService(OAuthTokenModel token) : base(DiscordService.BaseAddress, token) { }
+        public override string Name { get { return "Discord"; } }
 
         public bool IsUsingCustomApplication { get { return !string.IsNullOrEmpty(ChannelSession.Settings.DiscordCustomClientID); } }
-        public string ClientID { get { return (!string.IsNullOrEmpty(ChannelSession.Settings.DiscordCustomClientID)) ? ChannelSession.Settings.DiscordCustomClientID : DiscordService.DefaultClientID; } }
-        public string ClientSecret { get { return (!string.IsNullOrEmpty(ChannelSession.Settings.DiscordCustomClientSecret)) ? ChannelSession.Settings.DiscordCustomClientSecret : ChannelSession.SecretManager.GetSecret("DiscordSecret"); } }
-        public string BotToken { get { return (!string.IsNullOrEmpty(ChannelSession.Settings.DiscordCustomBotToken)) ? ChannelSession.Settings.DiscordCustomBotToken : ChannelSession.SecretManager.GetSecret("DiscordBotToken"); } }
+        public string ClientID { get { return (this.IsUsingCustomApplication) ? ChannelSession.Settings.DiscordCustomClientID : DiscordService.DefaultClientID; } }
+        public string ClientSecret { get { return (this.IsUsingCustomApplication) ? ChannelSession.Settings.DiscordCustomClientSecret : ChannelSession.SecretManager.GetSecret("DiscordSecret"); } }
+        public string BotToken { get { return (this.IsUsingCustomApplication) ? ChannelSession.Settings.DiscordCustomBotToken : ChannelSession.SecretManager.GetSecret("DiscordBotToken"); } }
 
-        public async Task<bool> Connect()
+        public override async Task<ExternalServiceResult> Connect()
         {
-            if (this.token != null)
+            try
             {
-                try
+                string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(DiscordService.AuthorizationUrl, this.ClientID, DiscordService.ClientBotPermissions));
+                if (!string.IsNullOrEmpty(authorizationCode))
                 {
-                    await this.RefreshOAuthToken();
-
-                    if (await this.InitializeInternal())
+                    var body = new List<KeyValuePair<string, string>>
                     {
-                        return true;
+                        new KeyValuePair<string, string>("grant_type", "authorization_code"),
+                        new KeyValuePair<string, string>("redirect_uri", MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL),
+                        new KeyValuePair<string, string>("code", authorizationCode),
+                    };
+                    this.token = await this.GetWWWFormUrlEncodedOAuthToken("https://discordapp.com/api/oauth2/token", this.ClientID, this.ClientSecret, body);
+
+                    if (this.token != null)
+                    {
+                        token.authorizationCode = authorizationCode;
+                        return await this.InitializeInternal();
                     }
                 }
-                catch (Exception ex) { Logger.Log(ex); }
             }
-
-            string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(DiscordService.AuthorizationUrl, this.ClientID, DiscordService.ClientBotPermissions));
-            if (!string.IsNullOrEmpty(authorizationCode))
+            catch (Exception ex)
             {
-                var body = new List<KeyValuePair<string, string>>
-                {
-                    new KeyValuePair<string, string>("grant_type", "authorization_code"),
-                    new KeyValuePair<string, string>("redirect_uri", MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL),
-                    new KeyValuePair<string, string>("code", authorizationCode),
-                };
-                this.token = await this.GetWWWFormUrlEncodedOAuthToken("https://discordapp.com/api/oauth2/token", this.ClientID, this.ClientSecret, body);
-
-                if (this.token != null)
-                {
-                    token.authorizationCode = authorizationCode;
-
-                    return await this.InitializeInternal();
-                }
+                Logger.Log(ex);
+                return new ExternalServiceResult(ex);
             }
-
-            return false;
+            return new ExternalServiceResult(false);
         }
 
-        public Task Disconnect()
+        public override Task Disconnect()
         {
             this.token = null;
             this.cancellationTokenSource.Cancel();
@@ -534,7 +820,7 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        private async Task<bool> InitializeInternal()
+        protected override async Task<ExternalServiceResult> InitializeInternal()
         {
             this.botService = new DiscordBotService(this.baseAddress, this.BotToken);
 
@@ -548,18 +834,29 @@ namespace MixItUp.Desktop.Services
 
                     if (!this.IsUsingCustomApplication)
                     {
-                        return true;
+                        return new ExternalServiceResult();
                     }
 
                     DiscordGateway gateway = await this.GetBotGateway();
                     if (gateway != null)
                     {
                         DiscordWebSocket webSocket = new DiscordWebSocket();
-                        return await webSocket.Connect(gateway.WebSocketURL, gateway.Shards, this.BotToken);
+                        if (await webSocket.Connect(gateway.WebSocketURL, gateway.Shards, this.BotToken))
+                        {
+                            return new ExternalServiceResult();
+                        }
+                        return new ExternalServiceResult("Could not connect Bot Application to web socket");
                     }
+                    return new ExternalServiceResult("Could not get Bot Application Gateway data");
                 }
+                return new ExternalServiceResult("Could not get Server data");
             }
-            return false;
+            return new ExternalServiceResult("Could not get User data");
+        }
+
+        protected override void DisposeInternal()
+        {
+            this.cancellationTokenSource.Dispose();
         }
 
         private async Task<bool> IsWithinRateLimiting()
@@ -572,33 +869,5 @@ namespace MixItUp.Desktop.Services
             await ChannelSession.Services.Chat.Whisper(ChannelSession.MixerStreamerUser.username, "The Discord action you were trying to perform was blocked due to too many requests. Please ensure you are only performing 1 Discord action every 30 seconds. You can add a custom Discord Bot under the Services page to circumvent this block.");
             return false;
         }
-
-        #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    // Dispose managed state (managed objects).
-                    this.cancellationTokenSource.Dispose();
-                }
-
-                // Free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // Set large fields to null.
-
-                disposedValue = true;
-            }
-        }
-
-        // This code added to correctly implement the disposable pattern.
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-        }
-        #endregion
     }
 }
