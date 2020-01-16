@@ -14,6 +14,7 @@ using MixItUp.Base.Services.Mixer;
 using MixItUp.Base.Statistics;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -474,49 +475,29 @@ namespace MixItUp.Base
 
                     await ChannelSession.Services.Chat.Initialize(mixerChatService);
 
-                    Dictionary<IExternalService, Task<ExternalServiceResult>> externalServiceTasks = new Dictionary<IExternalService, Task<ExternalServiceResult>>();
-                    if (ChannelSession.Settings.StreamlabsOAuthToken != null)
-                    {
-                        externalServiceTasks[ChannelSession.Services.Streamlabs] = ChannelSession.Services.Streamlabs.Connect(ChannelSession.Settings.StreamlabsOAuthToken);
-                    }
-                    if (ChannelSession.Settings.StreamJarOAuthToken != null)
-                    {
-                        externalServiceTasks[ChannelSession.Services.StreamJar] = ChannelSession.Services.StreamJar.Connect(ChannelSession.Settings.StreamJarOAuthToken);
-                    }
-                    if (ChannelSession.Settings.TipeeeStreamOAuthToken != null)
-                    {
-                        externalServiceTasks[ChannelSession.Services.TipeeeStream] = ChannelSession.Services.TipeeeStream.Connect(ChannelSession.Settings.TipeeeStreamOAuthToken);
-                    }
-                    if (ChannelSession.Settings.TreatStreamOAuthToken != null)
-                    {
-                        externalServiceTasks[ChannelSession.Services.TreatStream] = ChannelSession.Services.TreatStream.Connect(ChannelSession.Settings.TreatStreamOAuthToken);
-                    }
-                    if (ChannelSession.Settings.StreamlootsOAuthToken != null)
-                    {
-                        externalServiceTasks[ChannelSession.Services.Streamloots] = ChannelSession.Services.Streamloots.Connect(ChannelSession.Settings.StreamlootsOAuthToken);
-                    }
-                    if (ChannelSession.Settings.TiltifyOAuthToken != null)
-                    {
-                        externalServiceTasks[ChannelSession.Services.Tiltify] = ChannelSession.Services.Tiltify.Connect(ChannelSession.Settings.TiltifyOAuthToken);
-                    }
-                    if (ChannelSession.Settings.JustGivingOAuthToken != null)
-                    {
-                        externalServiceTasks[ChannelSession.Services.JustGiving] = ChannelSession.Services.JustGiving.Connect(ChannelSession.Settings.JustGivingOAuthToken);
-                    }
-                    if (ChannelSession.Settings.IFTTTOAuthToken != null)
-                    {
-                        externalServiceTasks[ChannelSession.Services.IFTTT] = ChannelSession.Services.IFTTT.Connect(ChannelSession.Settings.IFTTTOAuthToken);
-                    }
-                    if (ChannelSession.Settings.ExtraLifeTeamID > 0)
-                    {
-                        externalServiceTasks[ChannelSession.Services.ExtraLife] = ChannelSession.Services.ExtraLife.Connect();
-                    }
+                    // Connect OAuth External Services
+                    Dictionary<IOAuthExternalService, OAuthTokenModel> externalServiceToConnect = new Dictionary<IOAuthExternalService, OAuthTokenModel>();
+                    if (ChannelSession.Settings.StreamlabsOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Streamlabs] = ChannelSession.Settings.StreamlabsOAuthToken; }
+                    if (ChannelSession.Settings.StreamJarOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.StreamJar] = ChannelSession.Settings.StreamJarOAuthToken; }
+                    if (ChannelSession.Settings.TipeeeStreamOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.TipeeeStream] = ChannelSession.Settings.TipeeeStreamOAuthToken; }
+                    if (ChannelSession.Settings.TreatStreamOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.TreatStream] = ChannelSession.Settings.TreatStreamOAuthToken; }
+                    if (ChannelSession.Settings.StreamlootsOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Streamloots] = ChannelSession.Settings.StreamlootsOAuthToken; }
+                    if (ChannelSession.Settings.TiltifyOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Tiltify] = ChannelSession.Settings.TiltifyOAuthToken; }
+                    if (ChannelSession.Settings.JustGivingOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.JustGiving] = ChannelSession.Settings.JustGivingOAuthToken; }
+                    if (ChannelSession.Settings.IFTTTOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.IFTTT] = ChannelSession.Settings.IFTTTOAuthToken; }
+                    if (ChannelSession.Settings.ExtraLifeTeamID > 0) { externalServiceToConnect[ChannelSession.Services.ExtraLife] = new OAuthTokenModel(); }
+                    if (ChannelSession.Settings.PatreonOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Patreon] = ChannelSession.Settings.PatreonOAuthToken; }
 
-                    if (externalServiceTasks.Count > 0)
+                    if (externalServiceToConnect.Count > 0)
                     {
+                        Dictionary<IOAuthExternalService, Task<ExternalServiceResult>> externalServiceTasks = new Dictionary<IOAuthExternalService, Task<ExternalServiceResult>>();
+                        foreach (var kvp in externalServiceToConnect)
+                        {
+                            externalServiceTasks[kvp.Key] = kvp.Key.Connect(kvp.Value);
+                        }
                         await Task.WhenAll(externalServiceTasks.Values);
 
-                        List<IExternalService> failedServices = new List<IExternalService>();
+                        List<IOAuthExternalService> failedServices = new List<IOAuthExternalService>();
                         foreach (var kvp in externalServiceTasks)
                         {
                             if (!kvp.Value.Result.Success)
@@ -575,11 +556,6 @@ namespace MixItUp.Base
                     if (ChannelSession.Settings.DiscordOAuthToken != null)
                     {
                         await ChannelSession.Services.InitializeDiscord();
-                    }
-
-                    if (ChannelSession.Settings.PatreonOAuthToken != null)
-                    {
-                        await ChannelSession.Services.InitializePatreon();
                     }
                     if (!string.IsNullOrEmpty(ChannelSession.Settings.OvrStreamServerIP))
                     {

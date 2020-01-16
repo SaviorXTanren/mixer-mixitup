@@ -1,22 +1,296 @@
 ﻿using Mixer.Base;
 using Mixer.Base.Model.User;
-using MixItUp.Base;
 using MixItUp.Base.Commands;
-using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MixItUp.Desktop.Services
+namespace MixItUp.Base.Services.External
 {
-    public class PatreonService : OAuthServiceBase, IPatreonService, IDisposable
+    [DataContract]
+    public class PatreonUser : IEquatable<PatreonUser>
+    {
+        [DataMember]
+        public string ID { get; set; }
+
+        [JsonProperty("first_name")]
+        public string FirstName { get; set; }
+
+        [JsonProperty("last_name")]
+        public string LastName { get; set; }
+
+        [JsonProperty("full_name")]
+        public string FullName { get; set; }
+
+        [JsonProperty("vanity")]
+        public string Vanity { get; set; }
+
+        [JsonProperty("url")]
+        public string Url { get; set; }
+
+        [JsonProperty("created")]
+        public DateTimeOffset? Created { get; set; }
+
+        [JsonIgnore]
+        public string LookupName
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(this.Vanity))
+                {
+                    return this.Vanity;
+                }
+                return this.FullName;
+            }
+        }
+
+        public PatreonUser() { }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is PatreonUser)
+            {
+                return this.Equals((PatreonUser)obj);
+            }
+            return false;
+        }
+
+        public bool Equals(PatreonUser other) { return this.ID.Equals(other.ID); }
+
+        public override int GetHashCode() { return this.ID.GetHashCode(); }
+    }
+
+    [DataContract]
+    public class PatreonCampaign : IEquatable<PatreonCampaign>
+    {
+        [DataMember]
+        public string ID { get; set; }
+
+        [JsonProperty("patron_count")]
+        public int PatronCount { get; set; }
+
+        [JsonProperty("creation_name")]
+        public string CreationName { get; set; }
+
+        [JsonProperty("created_at")]
+        public DateTimeOffset? CreatedAt { get; set; }
+
+        [JsonProperty("published_at")]
+        public DateTimeOffset? PublishedAt { get; set; }
+
+        [DataMember]
+        public Dictionary<string, PatreonTier> Tiers { get; set; }
+
+        [DataMember]
+        public Dictionary<string, PatreonBenefit> Benefits { get; set; }
+
+        public PatreonCampaign()
+        {
+            this.Tiers = new Dictionary<string, PatreonTier>();
+            this.Benefits = new Dictionary<string, PatreonBenefit>();
+        }
+
+        [JsonProperty]
+        public IEnumerable<PatreonTier> ActiveTiers { get { return this.Tiers.Values.Where(t => t.Published); } }
+
+        public PatreonTier GetTier(string tierID)
+        {
+            if (!string.IsNullOrEmpty(tierID) && this.Tiers.ContainsKey(tierID) && this.Tiers[tierID].Published)
+            {
+                return this.Tiers[tierID];
+            }
+            return null;
+        }
+
+        public PatreonBenefit GetBenefit(string benefitID)
+        {
+            if (!string.IsNullOrEmpty(benefitID) && this.Benefits.ContainsKey(benefitID) && this.Benefits[benefitID].Published && !this.Benefits[benefitID].Deleted)
+            {
+                return this.Benefits[benefitID];
+            }
+            return null;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is PatreonCampaign)
+            {
+                return this.Equals((PatreonCampaign)obj);
+            }
+            return false;
+        }
+
+        public bool Equals(PatreonCampaign other) { return this.ID.Equals(other.ID); }
+
+        public override int GetHashCode() { return this.ID.GetHashCode(); }
+    }
+
+    [DataContract]
+    public class PatreonTier : IEquatable<PatreonTier>
+    {
+        [DataMember]
+        public string ID { get; set; }
+
+        [JsonProperty("title")]
+        public string Title { get; set; }
+
+        [JsonProperty("description")]
+        public string Description { get; set; }
+
+        [JsonProperty("image_url")]
+        public string ImageUrl { get; set; }
+
+        [JsonProperty("amount_cents")]
+        public int AmountCents { get; set; }
+
+        [JsonProperty("patron_count")]
+        public int PatronCount { get; set; }
+
+        [JsonProperty("published")]
+        public bool Published { get; set; }
+
+        [JsonProperty("created_at")]
+        public DateTimeOffset? CreatedAt { get; set; }
+
+        [JsonProperty("published_at")]
+        public DateTimeOffset? PublishedAt { get; set; }
+
+        [DataMember]
+        public HashSet<string> BenefitIDs { get; set; }
+
+        [JsonIgnore]
+        public double Amount { get { return Math.Round(((double)this.AmountCents) / 100.0, 2); } }
+
+        public PatreonTier()
+        {
+            this.BenefitIDs = new HashSet<string>();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is PatreonTier)
+            {
+                return this.Equals((PatreonTier)obj);
+            }
+            return false;
+        }
+
+        public bool Equals(PatreonTier other) { return this.ID.Equals(other.ID); }
+
+        public override int GetHashCode() { return this.ID.GetHashCode(); }
+    }
+
+    [DataContract]
+    public class PatreonBenefit : IEquatable<PatreonBenefit>
+    {
+        [DataMember]
+        public string ID { get; set; }
+
+        [JsonProperty("title")]
+        public string Title { get; set; }
+
+        [JsonProperty("benefit_type")]
+        public string BenefitType { get; set; }
+
+        [JsonProperty("rule_type")]
+        public string RuleType { get; set; }
+
+        [JsonProperty("is_published")]
+        public bool Published { get; set; }
+
+        [JsonProperty("is_deleted")]
+        public bool Deleted { get; set; }
+
+        [JsonProperty("created_at")]
+        public DateTimeOffset? CreatedAt { get; set; }
+
+        public PatreonBenefit() { }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is PatreonBenefit)
+            {
+                return this.Equals((PatreonBenefit)obj);
+            }
+            return false;
+        }
+
+        public bool Equals(PatreonBenefit other) { return this.ID.Equals(other.ID); }
+
+        public override int GetHashCode() { return this.ID.GetHashCode(); }
+    }
+
+    [DataContract]
+    public class PatreonCampaignMember : IEquatable<PatreonCampaignMember>
+    {
+        [DataMember]
+        public string ID { get; set; }
+
+        [JsonProperty("full_name")]
+        public string FullName { get; set; }
+
+        [JsonProperty("patron_status")]
+        public string PatronStatus { get; set; }
+
+        [JsonProperty("will_pay_amount_cents")]
+        public int AmountToPay { get; set; }
+
+        [JsonProperty("currently_entitled_amount_cents")]
+        public int CurrentAmountPaying { get; set; }
+
+        [JsonProperty("lifetime_support_cents")]
+        public int LifetimeAmountPaid { get; set; }
+
+        [DataMember]
+        public string UserID { get; set; }
+
+        [DataMember]
+        public PatreonUser User { get; set; }
+
+        [DataMember]
+        public string TierID { get; set; }
+
+        [JsonIgnore]
+        public double Amount { get { return Math.Round(((double)this.AmountToPay) / 100.0, 2); } }
+
+        public PatreonCampaignMember() { }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is PatreonCampaignMember)
+            {
+                return this.Equals((PatreonCampaignMember)obj);
+            }
+            return false;
+        }
+
+        public bool Equals(PatreonCampaignMember other) { return this.ID.Equals(other.ID); }
+
+        public override int GetHashCode() { return this.ID.GetHashCode(); }
+    }
+
+    public interface IPatreonService : IOAuthExternalService
+    {
+        PatreonCampaign Campaign { get; }
+        IEnumerable<PatreonCampaignMember> CampaignMembers { get; }
+
+        Task<PatreonUser> GetCurrentUser();
+
+        Task<PatreonCampaign> GetCampaign();
+
+        Task<IEnumerable<PatreonCampaignMember>> GetCampaignMembers();
+    }
+
+    public class PatreonService : OAuthExternalServiceBase, IPatreonService
     {
         private const string BaseAddress = "https://www.patreon.com/api/oauth2/v2/";
 
@@ -36,49 +310,42 @@ namespace MixItUp.Desktop.Services
 
         public PatreonService() : base(PatreonService.BaseAddress) { }
 
-        public PatreonService(OAuthTokenModel token) : base(PatreonService.BaseAddress, token) { }
+        public override string Name { get { return "Patreon"; } }
 
-        public async Task<bool> Connect()
+        public override async Task<ExternalServiceResult> Connect()
         {
-            if (this.token != null)
+            try
             {
-                try
+                string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(PatreonService.AuthorizationUrl, PatreonService.ClientID, MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL));
+                if (!string.IsNullOrEmpty(authorizationCode))
                 {
-                    await this.RefreshOAuthToken();
-
-                    if (await this.InitializeInternal())
+                    var body = new List<KeyValuePair<string, string>>
                     {
-                        return true;
+                        new KeyValuePair<string, string>("grant_type", "authorization_code"),
+                        new KeyValuePair<string, string>("client_id", PatreonService.ClientID),
+                        new KeyValuePair<string, string>("client_secret", ChannelSession.SecretManager.GetSecret("PatreonSecret")),
+                        new KeyValuePair<string, string>("redirect_uri", MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL),
+                        new KeyValuePair<string, string>("code", authorizationCode),
+                    };
+
+                    this.token = await this.GetWWWFormUrlEncodedOAuthToken(PatreonService.TokenUrl, PatreonService.ClientID, ChannelSession.SecretManager.GetSecret("PatreonSecret"), body);
+                    if (this.token != null)
+                    {
+                        token.authorizationCode = authorizationCode;
+
+                        return await this.InitializeInternal();
                     }
                 }
-                catch (Exception ex) { Logger.Log(ex); }
             }
-
-            string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(PatreonService.AuthorizationUrl, PatreonService.ClientID, MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL));
-            if (!string.IsNullOrEmpty(authorizationCode))
+            catch (Exception ex)
             {
-                var body = new List<KeyValuePair<string, string>>
-                {
-                    new KeyValuePair<string, string>("grant_type", "authorization_code"),
-                    new KeyValuePair<string, string>("client_id", PatreonService.ClientID),
-                    new KeyValuePair<string, string>("client_secret", ChannelSession.SecretManager.GetSecret("PatreonSecret")),
-                    new KeyValuePair<string, string>("redirect_uri", MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL),
-                    new KeyValuePair<string, string>("code", authorizationCode),
-                };
-
-                this.token = await this.GetWWWFormUrlEncodedOAuthToken(PatreonService.TokenUrl, PatreonService.ClientID, ChannelSession.SecretManager.GetSecret("PatreonSecret"), body);
-                if (this.token != null)
-                {
-                    token.authorizationCode = authorizationCode;
-
-                    return await this.InitializeInternal();
-                }
+                Logger.Log(ex);
+                return new ExternalServiceResult(ex);
             }
-
-            return false;
+            return new ExternalServiceResult(false);
         }
 
-        public Task Disconnect()
+        public override Task Disconnect()
         {
             this.cancellationTokenSource.Cancel();
             this.token = null;
@@ -310,7 +577,12 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        private async Task<bool> InitializeInternal()
+        protected override void DisposeInternal()
+        {
+            this.cancellationTokenSource.Dispose();
+        }
+
+        protected override async Task<ExternalServiceResult> InitializeInternal()
         {
             this.cancellationTokenSource = new CancellationTokenSource();
 
@@ -324,10 +596,11 @@ namespace MixItUp.Desktop.Services
                     Task.Run(this.BackgroundDonationCheck, this.cancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-                    return true;
+                    return new ExternalServiceResult();
                 }
+                return new ExternalServiceResult("Failed to get Campaign data");
             }
-            return false;
+            return new ExternalServiceResult("Failed to get User data");
         }
 
         private async Task BackgroundDonationCheck()
@@ -388,33 +661,5 @@ namespace MixItUp.Desktop.Services
                 catch (Exception ex) { Logger.Log(ex); }
             }
         }
-
-        #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    // Dispose managed state (managed objects).
-                    this.cancellationTokenSource.Dispose();
-                }
-
-                // Free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // Set large fields to null.
-
-                disposedValue = true;
-            }
-        }
-
-        // This code added to correctly implement the disposable pattern.
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-        }
-        #endregion
     }
 }
