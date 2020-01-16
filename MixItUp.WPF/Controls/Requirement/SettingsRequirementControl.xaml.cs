@@ -36,7 +36,7 @@ namespace MixItUp.WPF.Controls.Requirement
                 }
             }
 
-            if (ChannelSession.Services.Patreon != null)
+            if (ChannelSession.Services.Patreon.IsConnected && ChannelSession.Services.Patreon.Campaign != null)
             {
                 this.EnableDisablePatreonBenefitToggleSwitch.IsEnabled = true;
                 this.PatreonBenefitComboBox.ItemsSource = ChannelSession.Services.Patreon.Campaign.Benefits.Values;
