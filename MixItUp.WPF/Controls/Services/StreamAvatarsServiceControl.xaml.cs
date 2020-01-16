@@ -1,29 +1,25 @@
-﻿using MixItUp.Base.Util;
-using System.Diagnostics;
+﻿using MixItUp.Base.ViewModel.Controls.Services;
 using System.Threading.Tasks;
-using System.Windows.Navigation;
 
 namespace MixItUp.WPF.Controls.Services
 {
     /// <summary>
     /// Interaction logic for StreamAvatarsServiceControl.xaml
     /// </summary>
-    public partial class StreamAvatarsServiceControl : ServicesControlBase
+    public partial class StreamAvatarsServiceControl : ServiceControlBase
     {
+        private StreamAvatarsServiceControlViewModel viewModel;
+
         public StreamAvatarsServiceControl()
         {
+            this.DataContext = this.ViewModel = this.viewModel = new StreamAvatarsServiceControlViewModel();
+
             InitializeComponent();
         }
 
         protected override async Task OnLoaded()
         {
-            this.SetHeaderText("Stream Avatars");
-            await base.OnLoaded();
-        }
-
-        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
-        {
-            ProcessHelper.LaunchLink(e.Uri.AbsoluteUri);
+            await this.viewModel.OnLoaded();
         }
     }
 }
