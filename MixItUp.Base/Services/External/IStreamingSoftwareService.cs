@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace MixItUp.Base.Services
+namespace MixItUp.Base.Services.External
 {
     public interface IStreamingSoftwareService
     {

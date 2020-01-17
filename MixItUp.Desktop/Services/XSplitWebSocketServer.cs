@@ -1,6 +1,6 @@
 ﻿using Mixer.Base.Model.Client;
 using MixItUp.Base.Actions;
-using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
 using System;

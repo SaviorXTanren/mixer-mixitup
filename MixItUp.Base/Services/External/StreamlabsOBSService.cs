@@ -1,6 +1,4 @@
 ﻿using MixItUp.Base.Actions;
-using MixItUp.Base.Services;
-using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
@@ -13,7 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MixItUp.Desktop.Services
+namespace MixItUp.Base.Services.External
 {
     #region Data Classes
 
