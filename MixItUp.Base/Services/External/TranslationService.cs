@@ -1,6 +1,4 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Services;
-using StreamingClient.Base.Model.OAuth;
+﻿using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Services;
 using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
@@ -14,8 +12,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace MixItUp.Desktop.Services
+namespace MixItUp.Base.Services.External
 {
+    public interface ITranslationService
+    {
+        Task SetAccessToken();
+
+        Task<IEnumerable<CultureInfo>> GetAvailableLanguages();
+
+        Task<string> Translate(CultureInfo language, string text, bool allowProfanity = true);
+    }
+
     public class BingTranslationService : OAuthRestServiceBase, ITranslationService
     {
         private const int ExpirationLength = 300000;

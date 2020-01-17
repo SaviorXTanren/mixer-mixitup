@@ -312,14 +312,12 @@
     <Compile Include="Services\OverlayService.cs" />
     <Compile Include="Services\SocketIOConnection.cs" />
     <Compile Include="Services\StreamlabsOBSService.cs" />
-    <Compile Include="Services\TranslationService.cs" />
     <Compile Include="Services\TwitterService.cs" />
     <Compile Include="Services\AudioService.cs" />
     <Compile Include="Services\DeveloperAPI\WindowsDeveloperAPIService.cs" />
     <Compile Include="Services\WindowsFileService.cs" />
     <Compile Include="Services\WindowsInputService.cs" />
     <Compile Include="Services\DesktopSettingsService.cs" />
-    <Compile Include="Services\WindowsTextToSpeechService.cs" />
     <Compile Include="Services\XSplitWebSocketServer.cs" />
     <Compile Include="Util\SocketIOService.cs" />
   </ItemGroup>
