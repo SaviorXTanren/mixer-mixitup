@@ -1,5 +1,4 @@
-﻿using StreamingClient.Base.Model.OAuth;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.External
@@ -11,15 +10,6 @@ namespace MixItUp.Base.Services.External
         Task<ExternalServiceResult> Connect();
 
         Task Disconnect();
-    }
-
-    public interface IOAuthExternalService : IExternalService
-    {
-        bool IsConnected { get; }
-
-        Task<ExternalServiceResult> Connect(OAuthTokenModel token);
-
-        OAuthTokenModel GetOAuthTokenCopy();
     }
 
     public class ExternalServiceResult

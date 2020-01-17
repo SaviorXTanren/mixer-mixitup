@@ -317,7 +317,6 @@
     <Compile Include="Services\WindowsFileService.cs" />
     <Compile Include="Services\WindowsInputService.cs" />
     <Compile Include="Services\DesktopSettingsService.cs" />
-    <Compile Include="Services\XSplitWebSocketServer.cs" />
     <Compile Include="Util\SocketIOService.cs" />
   </ItemGroup>
   <ItemGroup>

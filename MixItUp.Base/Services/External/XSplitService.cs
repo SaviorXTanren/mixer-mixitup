@@ -1,6 +1,5 @@
 ﻿using Mixer.Base.Model.Client;
 using MixItUp.Base.Actions;
-using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
 using System;
@@ -9,7 +8,7 @@ using System.Net.WebSockets;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
-namespace MixItUp.XSplit
+namespace MixItUp.Base.Services.External
 {
     #region Data Classes
 
@@ -58,20 +57,58 @@ namespace MixItUp.XSplit
 
     #endregion Data Classes
 
-    public class XSplitWebSocketHttpListenerServer : WebSocketHttpListenerServerBase, IStreamingSoftwareService
+    public class XSplitWebSocketServer : WebSocketServerBase
     {
-        public event EventHandler Connected { add { base.OnConnectedOccurred += value; } remove { base.OnConnectedOccurred -= value; } }
-        public event EventHandler Disconnected;
+        public XSplitWebSocketServer(HttpListenerContext listenerContext) : base(listenerContext) { this.OnDisconnectOccurred += XSplitWebServer_OnDisconnectOccurred; }
 
-        public XSplitWebSocketHttpListenerServer(string address) : base(address) { }
+        public event EventHandler Connected { add { this.OnConnectedOccurred += value; } remove { this.OnConnectedOccurred -= value; } }
+        public event EventHandler Disconnected = delegate { };
 
-        public Task<bool> Connect()
+        protected override async Task ProcessReceivedPacket(string packetJSON)
         {
-            this.Start();
-            return Task.FromResult(true);
+            await base.ProcessReceivedPacket(packetJSON);
         }
 
-        public async Task Disconnect() { await this.Stop(); }
+        private void XSplitWebServer_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
+        {
+            this.Disconnected(sender, new EventArgs());
+        }
+    }
+
+    public class XSplitService : WebSocketHttpListenerServerBase, IStreamingSoftwareService
+    {
+        public event EventHandler Connected = delegate { };
+        public event EventHandler Disconnected = delegate { };
+
+        public XSplitService(string address)
+            : base(address)
+        {
+            base.OnConnectedOccurred += XSplitService_OnConnectedOccurred;
+            base.OnDisconnectOccurred += XSplitService_OnDisconnectOccurred;
+        }
+
+        public string Name { get { return "XSplit"; } }
+
+        public bool IsConnected { get; private set; }
+
+        public async Task<ExternalServiceResult> Connect()
+        {
+            this.IsConnected = false;
+            this.Start();
+            if (await this.TestConnection())
+            {
+                this.IsConnected = true;
+                return new ExternalServiceResult();
+            }
+            await this.Disconnect();
+            return new ExternalServiceResult("Could not connect to Mix It Up XSplit extension.");
+        }
+
+        public async Task Disconnect()
+        {
+            this.IsConnected = false;
+            await this.Stop();
+        }
 
         public new async Task<bool> TestConnection()
         {
@@ -111,22 +148,16 @@ namespace MixItUp.XSplit
         {
             return new XSplitWebSocketServer(listenerContext);
         }
-    }
 
-    public class XSplitWebSocketServer : WebSocketServerBase
-    {
-        public XSplitWebSocketServer(HttpListenerContext listenerContext) : base(listenerContext) { this.OnDisconnectOccurred += XSplitWebServer_OnDisconnectOccurred; }
-
-        public event EventHandler Connected { add { this.OnConnectedOccurred += value; } remove { this.OnConnectedOccurred -= value; } }
-        public event EventHandler Disconnected = delegate { };
-
-        protected override async Task ProcessReceivedPacket(string packetJSON)
+        private void XSplitService_OnConnectedOccurred(object sender, EventArgs e)
         {
-            await base.ProcessReceivedPacket(packetJSON);
+            ChannelSession.ReconnectionOccurred("XSplit");
+            this.Connected(sender, e);
         }
 
-        private void XSplitWebServer_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
+        private void XSplitService_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
+            ChannelSession.DisconnectionOccurred("XSplit");
             this.Disconnected(sender, new EventArgs());
         }
     }

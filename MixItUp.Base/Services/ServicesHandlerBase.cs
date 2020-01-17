@@ -27,9 +27,9 @@ namespace MixItUp.Base.Services
         public LocalRemoteServiceBase RemoteService { get; protected set; }
 
         public IOverlayServiceManager OverlayServers { get; protected set; }
-        public IStreamingSoftwareService OBSWebsocket { get; protected set; }
-        public IStreamingSoftwareService StreamlabsOBSService { get; protected set; }
-        public IStreamingSoftwareService XSplitServer { get; protected set; }
+        public IStreamingSoftwareService OBSStudio { get; protected set; }
+        public IStreamingSoftwareService StreamlabsOBS { get; protected set; }
+        public IStreamingSoftwareService XSplit { get; protected set; }
         public IDeveloperAPIService DeveloperAPI { get; protected set; }
         public IStreamlabsService Streamlabs { get; protected set; }
         public ITwitterService Twitter { get; protected set; }
@@ -55,12 +55,6 @@ namespace MixItUp.Base.Services
 
         public abstract Task<bool> InitializeOBSWebsocket();
         public abstract Task DisconnectOBSStudio();
-
-        public abstract Task<bool> InitializeStreamlabsOBSService();
-        public abstract Task DisconnectStreamlabsOBSService();
-
-        public abstract Task<bool> InitializeXSplitServer();
-        public abstract Task DisconnectXSplitServer();
 
         public abstract Task<bool> InitializeDeveloperAPI();
         public abstract Task DisconnectDeveloperAPI();

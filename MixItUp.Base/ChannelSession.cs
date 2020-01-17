@@ -475,6 +475,20 @@ namespace MixItUp.Base
 
                     await ChannelSession.Services.Chat.Initialize(mixerChatService);
 
+                    // Connect Streaming Software connections
+                    if (!string.IsNullOrEmpty(ChannelSession.Settings.OBSStudioServerIP))
+                    {
+                        await ChannelSession.Services.OBSStudio.Connect();
+                    }
+                    if (ChannelSession.Settings.EnableStreamlabsOBSConnection)
+                    {
+                        await ChannelSession.Services.StreamlabsOBS.Connect();
+                    }
+                    if (ChannelSession.Settings.EnableXSplitConnection)
+                    {
+                        await ChannelSession.Services.XSplit.Connect();
+                    }
+
                     // Connect OAuth External Services
                     Dictionary<IOAuthExternalService, OAuthTokenModel> externalServiceToConnect = new Dictionary<IOAuthExternalService, OAuthTokenModel>();
                     if (ChannelSession.Settings.StreamlabsOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Streamlabs] = ChannelSession.Settings.StreamlabsOAuthToken; }
@@ -524,20 +538,6 @@ namespace MixItUp.Base
                             message.Append("Please go to the Services page to reconnect them manually.");
                             await DialogHelper.ShowMessage(message.ToString());
                         }
-                    }
-
-
-                    if (!string.IsNullOrEmpty(ChannelSession.Settings.OBSStudioServerIP))
-                    {
-                        await ChannelSession.Services.InitializeOBSWebsocket();
-                    }
-                    if (ChannelSession.Settings.EnableStreamlabsOBSConnection)
-                    {
-                        await ChannelSession.Services.InitializeStreamlabsOBSService();
-                    }
-                    if (ChannelSession.Settings.EnableXSplitConnection)
-                    {
-                        await ChannelSession.Services.InitializeXSplitServer();
                     }
 
                     if (ChannelSession.Settings.EnableOverlay)

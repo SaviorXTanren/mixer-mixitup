@@ -257,7 +257,7 @@ namespace MixItUp.WPF.Windows.Wizard
         {
             bool result = await this.RunAsyncOperation(async () =>
             {
-                return await ChannelSession.Services.InitializeXSplitServer();
+                return (await ChannelSession.Services.XSplit.Connect()).Success;
             });
 
             if (result)
@@ -270,7 +270,7 @@ namespace MixItUp.WPF.Windows.Wizard
             {
                 await this.RunAsyncOperation(async () =>
                 {
-                    await ChannelSession.Services.DisconnectXSplitServer();
+                    await ChannelSession.Services.XSplit.Disconnect();
                 });
                 await DialogHelper.ShowMessage("Could not connect to XSplit. Please make sure XSplit is running, the Mix It Up plugin is installed, and is running");
             }
@@ -280,7 +280,7 @@ namespace MixItUp.WPF.Windows.Wizard
         {
             bool result = await this.RunAsyncOperation(async () =>
             {
-                return await ChannelSession.Services.InitializeStreamlabsOBSService();
+                return (await ChannelSession.Services.StreamlabsOBS.Connect()).Success;
             });
 
             if (result)

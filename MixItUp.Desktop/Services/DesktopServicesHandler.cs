@@ -8,7 +8,6 @@ using MixItUp.Desktop.Services.DeveloperAPI;
 using MixItUp.Input;
 using MixItUp.OBS;
 using MixItUp.OvrStream;
-using MixItUp.XSplit;
 using System;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
@@ -50,6 +49,9 @@ namespace MixItUp.Desktop.Services
             this.Discord = new DiscordService();
             this.OverlayServers = new OverlayServiceManager();
             this.MixrElixr = new MixrElixrService();
+
+            this.StreamlabsOBS = new StreamlabsOBSService();
+            this.XSplit = new XSplitService("http://localhost:8211/");
         }
 
         public override async Task Close()
@@ -57,8 +59,6 @@ namespace MixItUp.Desktop.Services
             await this.DisconnectOverlayServer();
             await this.DisconnectOvrStream();
             await this.DisconnectOBSStudio();
-            await this.DisconnectStreamlabsOBSService();
-            await this.DisconnectXSplitServer();
             await this.DisconnectDeveloperAPI();
             await this.DisconnectTelemetryService();
         }
@@ -85,28 +85,29 @@ namespace MixItUp.Desktop.Services
 
         public override async Task<bool> InitializeOBSWebsocket()
         {
-            if (this.OBSWebsocket == null)
+            if (this.OBSStudio == null)
             {
-                this.OBSWebsocket = new OBSService(ChannelSession.Settings.OBSStudioServerIP, ChannelSession.Settings.OBSStudioServerPassword);
-                if (await this.OBSWebsocket.Connect())
+                this.OBSStudio = new OBSService(ChannelSession.Settings.OBSStudioServerIP, ChannelSession.Settings.OBSStudioServerPassword);
+                ExternalServiceResult result = await this.OBSStudio.Connect();
+                if (result.Success)
                 {
-                    this.OBSWebsocket.Connected += OBSWebsocket_Connected;
-                    this.OBSWebsocket.Disconnected += OBSWebsocket_Disconnected;
+                    this.OBSStudio.Connected += OBSWebsocket_Connected;
+                    this.OBSStudio.Disconnected += OBSWebsocket_Disconnected;
                     return true;
                 }
-                this.OBSWebsocket = null;
+                this.OBSStudio = null;
             }
             return false;
         }
 
         public override async Task DisconnectOBSStudio()
         {
-            if (this.OBSWebsocket != null)
+            if (this.OBSStudio != null)
             {
-                this.OBSWebsocket.Connected -= OBSWebsocket_Connected;
-                this.OBSWebsocket.Disconnected -= OBSWebsocket_Disconnected;
-                await this.OBSWebsocket.Disconnect();
-                this.OBSWebsocket = null;
+                this.OBSStudio.Connected -= OBSWebsocket_Connected;
+                this.OBSStudio.Disconnected -= OBSWebsocket_Disconnected;
+                await this.OBSStudio.Disconnect();
+                this.OBSStudio = null;
             }
         }
 
@@ -133,60 +134,6 @@ namespace MixItUp.Desktop.Services
             {
                 await this.OvrStreamWebsocket.Disconnect();
                 this.OvrStreamWebsocket = null;
-            }
-        }
-
-        public override async Task<bool> InitializeStreamlabsOBSService()
-        {
-            if (this.StreamlabsOBSService == null)
-            {
-                this.StreamlabsOBSService = new StreamlabsOBSService();
-                if (await this.StreamlabsOBSService.Connect())
-                {
-                    this.StreamlabsOBSService.Connected += StreamlabsOBSService_Connected;
-                    this.StreamlabsOBSService.Disconnected += StreamlabsOBSService_Disconnected;
-                    return true;
-                }
-                this.StreamlabsOBSService = null;
-            }
-            return false;
-        }
-
-        public override async Task DisconnectStreamlabsOBSService()
-        {
-            if (this.StreamlabsOBSService != null)
-            {
-                this.StreamlabsOBSService.Connected -= StreamlabsOBSService_Connected;
-                this.StreamlabsOBSService.Disconnected -= StreamlabsOBSService_Disconnected;
-                await this.StreamlabsOBSService.Disconnect();
-                this.StreamlabsOBSService = null;
-            }
-        }
-
-        public override async Task<bool> InitializeXSplitServer()
-        {
-            if (this.XSplitServer == null)
-            {
-                this.XSplitServer = new XSplitWebSocketHttpListenerServer("http://localhost:8211/");
-                if (await this.XSplitServer.Connect())
-                {
-                    this.XSplitServer.Connected += XSplitServer_Connected;
-                    this.XSplitServer.Disconnected += XSplitServer_Disconnected;
-                    return true;
-                }
-            }
-            await this.DisconnectXSplitServer();
-            return true;
-        }
-
-        public override async Task DisconnectXSplitServer()
-        {
-            if (this.XSplitServer != null)
-            {
-                this.XSplitServer.Connected -= XSplitServer_Connected;
-                this.XSplitServer.Disconnected -= XSplitServer_Disconnected;
-                await this.XSplitServer.Disconnect();
-                this.XSplitServer = null;
             }
         }
 
@@ -292,26 +239,6 @@ namespace MixItUp.Desktop.Services
         private void OvrStreamWebsocket_Disconnected(object sender, EventArgs e)
         {
             ChannelSession.DisconnectionOccurred("OvrStream");
-        }
-
-        private void XSplitServer_Connected(object sender, EventArgs e)
-        {
-            ChannelSession.ReconnectionOccurred("XSplit");
-        }
-
-        private void XSplitServer_Disconnected(object sender, EventArgs e)
-        {
-            ChannelSession.DisconnectionOccurred("XSplit");
-        }
-
-        private void StreamlabsOBSService_Connected(object sender, EventArgs e)
-        {
-            ChannelSession.ReconnectionOccurred("Streamlabs OBS");
-        }
-
-        private void StreamlabsOBSService_Disconnected(object sender, EventArgs e)
-        {
-            ChannelSession.DisconnectionOccurred("Streamlabs OBS");
         }
     }
 }

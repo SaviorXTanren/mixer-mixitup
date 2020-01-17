@@ -1,7 +1,5 @@
 ﻿using MixItUp.Base.Actions;
-using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
-using MixItUp.Base.Util;
 using OBSWebsocketDotNet;
 using StreamingClient.Base.Util;
 using System;
@@ -18,7 +16,7 @@ namespace MixItUp.OBS
 
         private string serverIP;
         private string password;
-        private OBSWebsocket OBSWebsocket;
+        private OBSWebsocket OBSWebsocket = new OBSWebsocket();
 
         public OBSService(string serverIP, string password)
         {
@@ -26,47 +24,42 @@ namespace MixItUp.OBS
             this.password = password;
         }
 
-        public async Task<bool> Connect()
+        public string Name { get { return "OBS Studio"; } }
+
+        public bool IsConnected { get; private set; }
+
+        public async Task<ExternalServiceResult> Connect()
         {
-            if (this.OBSWebsocket == null)
+            this.IsConnected = false;
+
+            try
             {
-                this.OBSWebsocket = new OBSWebsocket();
-
-                bool connected = false;
-
-                try
+                this.OBSWebsocket.Connect(this.serverIP, this.password);
+                if (this.OBSWebsocket.IsConnected)
                 {
-                    this.OBSWebsocket.Connect(this.serverIP, this.password);
-                    if (this.OBSWebsocket.IsConnected)
-                    {
-                        this.OBSWebsocket.Disconnected += OBSWebsocket_Disconnected;
-                        connected = true;
-                    }
+                    this.OBSWebsocket.Disconnected += OBSWebsocket_Disconnected;
+                    this.IsConnected = true;
                 }
-                catch (Exception ex) { Logger.Log(ex); }
-
-                if (connected)
-                {
-                    await this.StartReplayBuffer();
-                    this.Connected(this, new EventArgs());
-                }
-                else
-                {
-                    this.OBSWebsocket = null;
-                }
-                return connected;
             }
-            return false;
+            catch (Exception ex) { Logger.Log(ex); }
+
+            if (this.IsConnected)
+            {
+                await this.StartReplayBuffer();
+                this.Connected(this, new EventArgs());
+                return new ExternalServiceResult();
+            }
+            return new ExternalServiceResult("Failed to connect to OBS Studio web socket.");
         }
 
         public Task Disconnect()
         {
+            this.IsConnected = false;
             if (this.OBSWebsocket != null)
             {
                 this.OBSWebsocket.Disconnected -= OBSWebsocket_Disconnected;
                 this.OBSWebsocket.Disconnect();
                 this.Disconnected(this, new EventArgs());
-                this.OBSWebsocket = null;
             }
             return Task.FromResult(0);
         }
@@ -208,11 +201,14 @@ namespace MixItUp.OBS
         {
             await this.Disconnect();
 
+            ExternalServiceResult result;
             do
             {
                 await Task.Delay(2500);
+
+                result = await this.Connect();
             }
-            while (!await this.Connect());
+            while (!result.Success);
         }
     }
 }

@@ -157,21 +157,33 @@ namespace MixItUp.Base.Services.External
         private int currentID = 1;
         private SemaphoreSlim idSempahoreLock = new SemaphoreSlim(1);
 
-        public async Task<bool> Connect()
+        public string Name { get { return "Streamlabs OBS"; } }
+
+        public bool IsConnected { get; private set; }
+
+        public async Task<ExternalServiceResult> Connect()
         {
+            this.IsConnected = false;
             if (await this.TestConnection())
             {
                 await this.StartReplayBuffer();
 
                 this.Connected(this, new EventArgs());
-                return true;
+                ChannelSession.ReconnectionOccurred("Streamlabs OBS");
+                this.IsConnected = true;
+
+                return new ExternalServiceResult();
             }
-            return false;
+            return new ExternalServiceResult("Streamlabs OBS could not be reached.");
         }
 
         public Task Disconnect()
         {
+            this.IsConnected = false;
+
             this.Disconnected(this, new EventArgs());
+            ChannelSession.DisconnectionOccurred("Streamlabs OBS");
+
             return Task.FromResult(0);
         }
 

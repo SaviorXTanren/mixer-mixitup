@@ -12,6 +12,15 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.External
 {
+    public interface IOAuthExternalService : IExternalService
+    {
+        bool IsConnected { get; }
+
+        Task<ExternalServiceResult> Connect(OAuthTokenModel token);
+
+        OAuthTokenModel GetOAuthTokenCopy();
+    }
+
     public static class AdvancedHttpClientExtensions
     {
         public static void SetBasicClientIDClientSecretAuthorizationHeader(this AdvancedHttpClient client, string clientID, string clientSecret)

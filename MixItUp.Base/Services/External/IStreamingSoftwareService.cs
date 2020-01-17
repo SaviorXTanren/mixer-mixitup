@@ -4,14 +4,12 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.External
 {
-    public interface IStreamingSoftwareService
+    public interface IStreamingSoftwareService : IExternalService
     {
         event EventHandler Connected;
         event EventHandler Disconnected;
 
-        Task<bool> Connect();
-        Task Disconnect();
-
+        bool IsConnected { get; }
         Task<bool> TestConnection();
 
         Task ShowScene(string sceneName);
