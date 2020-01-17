@@ -1,12 +1,18 @@
 ﻿using MixItUp.Base.Model.Serial;
-using MixItUp.Base.Services;
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MixItUp.Desktop.Services
+namespace MixItUp.Base.Services.External
 {
+    public interface ISerialService
+    {
+        Task<IEnumerable<string>> GetCurrentPortNames();
+
+        Task SendMessage(SerialDeviceModel serialDevice, string message);
+    }
+
     public class SerialService : ISerialService
     {
         public Task<IEnumerable<string>> GetCurrentPortNames()
