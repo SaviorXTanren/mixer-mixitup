@@ -240,8 +240,6 @@ namespace MixItUp.WPF.Controls.Command
                         case OtherEventTypeEnum.StreamlootsPackGifted:
                             extraSpecialIdentifiers["streamlootspurchasequantity"] = "1";
                             break;
-                        case OtherEventTypeEnum.TwitterStreamTweetRetweet:
-                            break;
                         case OtherEventTypeEnum.MixerSkillUsed:
                             extraSpecialIdentifiers["skillname"] = "Lots of stars";
                             extraSpecialIdentifiers["skilltype"] = EnumHelper.GetEnumName(MixerSkillTypeEnum.Sticker);

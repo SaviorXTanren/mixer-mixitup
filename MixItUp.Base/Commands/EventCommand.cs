@@ -46,6 +46,7 @@ namespace MixItUp.Base.Commands
         [Name("JustGiving Donation")]
         JustGivingDonation = 17,
 
+        [Obsolete]
         [Name("Stream Tweet Retweet")]
         TwitterStreamTweetRetweet = 20,
 

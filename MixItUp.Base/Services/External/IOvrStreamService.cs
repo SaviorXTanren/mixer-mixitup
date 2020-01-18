@@ -1,8 +1,7 @@
-﻿using MixItUp.Base.Services.External;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MixItUp.Base.Services
+namespace MixItUp.Base.Services.External
 {
     public class OvrStreamTitle
     {

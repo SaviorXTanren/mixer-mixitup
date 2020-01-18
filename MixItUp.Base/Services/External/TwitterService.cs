@@ -56,8 +56,6 @@ namespace MixItUp.Base.Services.External
 
         Task<bool> SendTweet(string tweet, string imagePath = null);
 
-        Task<IEnumerable<Tweet>> GetRetweets(Tweet tweet);
-
         Task<bool> UpdateName(string name);
     }
 
@@ -296,11 +294,6 @@ namespace MixItUp.Base.Services.External
             if (!string.IsNullOrEmpty(this.authorizer.CredentialStore.OAuthToken))
             {
                 await this.RefreshOAuthToken();
-
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                Task.Run(this.BackgroundRetweetCheck, this.cancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
                 return new ExternalServiceResult();
             }
             return new ExternalServiceResult("Failed to get authorization");
@@ -315,78 +308,6 @@ namespace MixItUp.Base.Services.External
         protected override void DisposeInternal()
         {
             this.cancellationTokenSource.Dispose();
-        }
-
-        private async Task BackgroundRetweetCheck()
-        {
-            HashSet<ulong> existingRetweets = new HashSet<ulong>();
-
-            IEnumerable<Tweet> tweets = await this.GetLatestTweets();
-            if (tweets.Count() > 0)
-            {
-                Tweet streamTweet = tweets.FirstOrDefault(t => t.IsStreamTweet);
-                if (streamTweet != null)
-                {
-                    IEnumerable<Tweet> retweets = await this.GetRetweets(streamTweet);
-                    if (retweets != null)
-                    {
-                        foreach (Tweet retweet in retweets)
-                        {
-                            existingRetweets.Add(retweet.ID);
-                        }
-                    }
-                }
-            }
-
-            while (!this.cancellationTokenSource.Token.IsCancellationRequested)
-            {
-                try
-                {
-                    EventCommand command = ChannelSession.Settings.EventCommands.FirstOrDefault(c => c.OtherEventType.Equals(OtherEventTypeEnum.TwitterStreamTweetRetweet));
-                    if (command != null)
-                    {
-                        tweets = await this.GetLatestTweets();
-                        if (tweets.Count() > 0)
-                        {
-                            Tweet streamTweet = tweets.FirstOrDefault(t => t.IsStreamTweet);
-                            if (streamTweet != null)
-                            {
-                                IEnumerable<Tweet> retweets = await this.GetRetweets(streamTweet);
-                                if (retweets != null)
-                                {
-                                    foreach (Tweet retweet in retweets)
-                                    {
-                                        if (!existingRetweets.Contains(retweet.ID))
-                                        {
-                                            existingRetweets.Add(retweet.ID);
-
-                                            IEnumerable<UserViewModel> users = ChannelSession.Services.User.GetAllUsers();
-                                            UserViewModel user = users.FirstOrDefault(u => u.TwitterURL != null && u.TwitterURL.Equals(string.Format("https://twitter.com/{0}", retweet.UserName)));
-                                            if (user == null)
-                                            {
-                                                UserModel userModel = await ChannelSession.MixerStreamerConnection.GetUser(retweet.UserName);
-                                                if (userModel != null)
-                                                {
-                                                    user = new UserViewModel(userModel);
-                                                }
-                                                else
-                                                {
-                                                    user = new UserViewModel(0, retweet.UserName);
-                                                }
-                                            }
-
-                                            await command.Perform(user);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex) { Logger.Log(ex); }
-
-                await Task.Delay(60000);
-            }
         }
     }
 }

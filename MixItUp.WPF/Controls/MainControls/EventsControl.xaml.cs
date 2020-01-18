@@ -85,10 +85,6 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     return "StreamJar";
                 }
-                else if (this.OtherEventType == OtherEventTypeEnum.TwitterStreamTweetRetweet)
-                {
-                    return "Twitter";
-                }
                 else if (this.OtherEventType == OtherEventTypeEnum.PatreonSubscribed)
                 {
                     return "Patreon";
@@ -165,7 +161,6 @@ namespace MixItUp.WPF.Controls.MainControls
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.StreamlootsCardRedeemed));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.StreamlootsPackPurchased));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.StreamlootsPackGifted));
-            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TwitterStreamTweetRetweet));
         }
 
         private EventCommandItem GetEventCommand(ConstellationEventTypeEnum eventType)
