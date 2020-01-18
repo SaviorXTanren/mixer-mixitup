@@ -239,7 +239,7 @@ namespace MixItUp.WPF.Windows.Wizard
             ChannelSession.Settings.OBSStudioServerIP = ChannelSession.DefaultOBSStudioConnection;
             bool result = await this.RunAsyncOperation(async () =>
             {
-                return await ChannelSession.Services.InitializeOBSWebsocket();
+                return (await ChannelSession.Services.OBSStudio.Connect()).Success;
             });
 
             if (result)

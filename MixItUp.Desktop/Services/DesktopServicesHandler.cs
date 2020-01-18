@@ -1,5 +1,4 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Services;
+﻿using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Mixer;
 using MixItUp.Desktop.Audio;
@@ -8,8 +7,6 @@ using MixItUp.Desktop.Services.DeveloperAPI;
 using MixItUp.Input;
 using MixItUp.OBS;
 using MixItUp.OvrStream;
-using System;
-using System.Net.WebSockets;
 using System.Threading.Tasks;
 
 namespace MixItUp.Desktop.Services
@@ -53,6 +50,7 @@ namespace MixItUp.Desktop.Services
             this.Overlay = new OverlayService();
             this.MixrElixr = new MixrElixrService();
 
+            this.OBSStudio = new OBSService();
             this.StreamlabsOBS = new StreamlabsOBSService();
             this.XSplit = new XSplitService("http://localhost:8211/");
         }
@@ -61,37 +59,9 @@ namespace MixItUp.Desktop.Services
         {
             await this.Overlay.Disconnect();
             await this.OvrStream.Disconnect();
-            await this.DisconnectOBSStudio();
+            await this.OBSStudio.Disconnect();
             await this.DeveloperAPI.Disconnect();
             await this.DisconnectTelemetryService();
-        }
-
-        public override async Task<bool> InitializeOBSWebsocket()
-        {
-            if (this.OBSStudio == null)
-            {
-                this.OBSStudio = new OBSService(ChannelSession.Settings.OBSStudioServerIP, ChannelSession.Settings.OBSStudioServerPassword);
-                ExternalServiceResult result = await this.OBSStudio.Connect();
-                if (result.Success)
-                {
-                    this.OBSStudio.Connected += OBSWebsocket_Connected;
-                    this.OBSStudio.Disconnected += OBSWebsocket_Disconnected;
-                    return true;
-                }
-                this.OBSStudio = null;
-            }
-            return false;
-        }
-
-        public override async Task DisconnectOBSStudio()
-        {
-            if (this.OBSStudio != null)
-            {
-                this.OBSStudio.Connected -= OBSWebsocket_Connected;
-                this.OBSStudio.Disconnected -= OBSWebsocket_Disconnected;
-                await this.OBSStudio.Disconnect();
-                this.OBSStudio = null;
-            }
         }
 
         public override async Task<bool> InitializeTelemetryService()
@@ -117,36 +87,6 @@ namespace MixItUp.Desktop.Services
                     this.Telemetry = null;
                 }
             });
-        }
-
-        private void OverlayServer_OnWebSocketConnectedOccurred(object sender, System.EventArgs e)
-        {
-            ChannelSession.ReconnectionOccurred("Overlay");
-        }
-
-        private void OverlayServer_OnWebSocketDisconnectedOccurred(object sender, WebSocketCloseStatus e)
-        {
-            ChannelSession.DisconnectionOccurred("Overlay");
-        }
-
-        private void OBSWebsocket_Connected(object sender, EventArgs e)
-        {
-            ChannelSession.ReconnectionOccurred("OBS");
-        }
-
-        private void OBSWebsocket_Disconnected(object sender, EventArgs e)
-        {
-            ChannelSession.DisconnectionOccurred("OBS");
-        }
-
-        private void OvrStreamWebsocket_Connected(object sender, EventArgs e)
-        {
-            ChannelSession.ReconnectionOccurred("OvrStream");
-        }
-
-        private void OvrStreamWebsocket_Disconnected(object sender, EventArgs e)
-        {
-            ChannelSession.DisconnectionOccurred("OvrStream");
         }
     }
 }

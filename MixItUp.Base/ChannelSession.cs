@@ -6,7 +6,6 @@ using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Model.API;
-using MixItUp.Base.Model.Chat;
 using MixItUp.Base.Model.Chat.Mixer;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;

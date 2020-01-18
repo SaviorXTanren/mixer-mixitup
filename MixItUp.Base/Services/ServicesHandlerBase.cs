@@ -49,9 +49,6 @@ namespace MixItUp.Base.Services
 
         public abstract Task Close();
 
-        public abstract Task<bool> InitializeOBSWebsocket();
-        public abstract Task DisconnectOBSStudio();
-
         public abstract Task<bool> InitializeTelemetryService();
         public abstract Task DisconnectTelemetryService();
     }

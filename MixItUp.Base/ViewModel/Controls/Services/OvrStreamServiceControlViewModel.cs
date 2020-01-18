@@ -7,13 +7,14 @@ namespace MixItUp.Base.ViewModel.Controls.Services
     {
         public string OvrStreamAddress
         {
-            get { return ChannelSession.Settings.OvrStreamServerIP; }
+            get { return this.ovrStreamAddress; }
             set
             {
-                ChannelSession.Settings.OvrStreamServerIP = value;
+                this.ovrStreamAddress = value;
                 this.NotifyPropertyChanged();
             }
         }
+        private string ovrStreamAddress;
 
         public ICommand ConnectCommand { get; set; }
         public ICommand DisconnectCommand { get; set; }
@@ -21,8 +22,12 @@ namespace MixItUp.Base.ViewModel.Controls.Services
         public OvrStreamServiceControlViewModel()
             : base("OvrStream")
         {
+            this.OvrStreamAddress = ChannelSession.DefaultOvrStreamConnection;
+
             this.ConnectCommand = this.CreateCommand(async (parameter) =>
             {
+                ChannelSession.Settings.OvrStreamServerIP = this.OvrStreamAddress;
+
                 ExternalServiceResult result = await ChannelSession.Services.OvrStream.Connect();
                 if (result.Success)
                 {

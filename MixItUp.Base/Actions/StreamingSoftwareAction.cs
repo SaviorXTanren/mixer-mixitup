@@ -221,7 +221,7 @@ namespace MixItUp.Base.Actions
             {
                 if (!ChannelSession.Services.OBSStudio.IsConnected)
                 {
-                    await ChannelSession.Services.InitializeOBSWebsocket();
+                    await ChannelSession.Services.OBSStudio.Connect();
                 }
                 ssService = ChannelSession.Services.OBSStudio;
             }

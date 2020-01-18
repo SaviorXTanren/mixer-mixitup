@@ -12,7 +12,7 @@ namespace MixItUp.WPF.Controls.Services
 
         public void Initialize(ServiceContainerControl containerControl) { this.containerControl = containerControl; }
 
-        protected void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        protected virtual void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
             ProcessHelper.LaunchLink(e.Uri.AbsoluteUri);
         }

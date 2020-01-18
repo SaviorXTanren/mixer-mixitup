@@ -9,7 +9,6 @@ namespace MixItUp.Base.Services.External
         event EventHandler Connected;
         event EventHandler Disconnected;
 
-        bool IsConnected { get; }
         Task<bool> TestConnection();
 
         Task ShowScene(string sceneName);

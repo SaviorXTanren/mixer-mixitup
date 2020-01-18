@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Actions;
+﻿using MixItUp.Base;
+using MixItUp.Base.Actions;
 using MixItUp.Base.Services.External;
 using OBSWebsocketDotNet;
 using StreamingClient.Base.Util;
@@ -14,15 +15,9 @@ namespace MixItUp.OBS
         public event EventHandler Connected = delegate { };
         public event EventHandler Disconnected = delegate { };
 
-        private string serverIP;
-        private string password;
         private OBSWebsocket OBSWebsocket = new OBSWebsocket();
 
-        public OBSService(string serverIP, string password)
-        {
-            this.serverIP = serverIP;
-            this.password = password;
-        }
+        public OBSService() { }
 
         public string Name { get { return "OBS Studio"; } }
 
@@ -34,7 +29,7 @@ namespace MixItUp.OBS
 
             try
             {
-                this.OBSWebsocket.Connect(this.serverIP, this.password);
+                this.OBSWebsocket.Connect(ChannelSession.Settings.OBSStudioServerIP, ChannelSession.Settings.OBSStudioServerPassword);
                 if (this.OBSWebsocket.IsConnected)
                 {
                     this.OBSWebsocket.Disconnected += OBSWebsocket_Disconnected;
@@ -47,6 +42,7 @@ namespace MixItUp.OBS
             {
                 await this.StartReplayBuffer();
                 this.Connected(this, new EventArgs());
+                ChannelSession.ReconnectionOccurred("OBS");
                 return new ExternalServiceResult();
             }
             return new ExternalServiceResult("Failed to connect to OBS Studio web socket.");
@@ -60,6 +56,7 @@ namespace MixItUp.OBS
                 this.OBSWebsocket.Disconnected -= OBSWebsocket_Disconnected;
                 this.OBSWebsocket.Disconnect();
                 this.Disconnected(this, new EventArgs());
+                ChannelSession.DisconnectionOccurred("OBS");
             }
             return Task.FromResult(0);
         }
