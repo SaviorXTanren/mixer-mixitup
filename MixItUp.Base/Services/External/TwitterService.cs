@@ -3,75 +3,84 @@ using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json;
 using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MixItUp.Base.Services
+namespace MixItUp.Base.Services.External
 {
     [DataContract]
-    public class TwitterService : ITwitterService, IDisposable
+    public class Tweet
+    {
+        [DataMember]
+        public ulong ID { get; set; }
+
+        [DataMember]
+        public ulong UserID { get; set; }
+
+        [DataMember]
+        public string UserName { get; set; }
+
+        [DataMember]
+        public string Text { get; set; }
+
+        [DataMember]
+        public DateTimeOffset DateTime { get; set; }
+
+        [DataMember]
+        public List<string> Links { get; set; }
+
+        [JsonIgnore]
+        public string TweetLink { get { return string.Format("https://twitter.com/{0}/status/{1}", this.UserName, this.ID); } }
+
+        public Tweet()
+        {
+            this.Links = new List<string>();
+        }
+
+        public bool IsStreamTweet { get { return this.Links.Any(l => l.ToLower().Contains(string.Format("mixer.com/{0}", ChannelSession.MixerChannel.token.ToLower()))); } }
+    }
+
+    public interface ITwitterService : IOAuthExternalService
+    {
+        void SetAuthPin(string pin);
+
+        Task<IEnumerable<Tweet>> GetLatestTweets();
+
+        Task<bool> SendTweet(string tweet, string imagePath = null);
+
+        Task<IEnumerable<Tweet>> GetRetweets(Tweet tweet);
+
+        Task<bool> UpdateName(string name);
+    }
+
+    public class TwitterService : OAuthExternalServiceBase, ITwitterService
     {
         private const string ClientID = "gV0xMGKNgAaaqQ0XnR4JoX91U";
 
-        private OAuthTokenModel token;
-        private IAuthorizer auth;
-
         private string authPin;
+        private IAuthorizer authorizer;
 
         private DateTimeOffset lastTweet = DateTimeOffset.MinValue;
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
-        public TwitterService() { }
+        public TwitterService() : base("") { }
 
-        public TwitterService(OAuthTokenModel token)
+        public override string Name { get { return "Twitter"; } }
+
+        public override async Task<ExternalServiceResult> Connect()
         {
-            this.token = token;
-        }
-
-        public async Task<bool> Connect()
-        {
-            if (this.token != null)
-            {
-                try
-                {
-                    SingleUserAuthorizer singleUserAuth = new SingleUserAuthorizer
-                    {
-                        CredentialStore = new SingleUserInMemoryCredentialStore
-                        {
-                            ConsumerKey = TwitterService.ClientID,
-                            ConsumerSecret = ChannelSession.SecretManager.GetSecret("TwitterSecret"),
-
-                            AccessToken = this.token.accessToken,
-                            AccessTokenSecret = this.token.refreshToken,
-
-                            UserID = ulong.Parse(this.token.clientID),
-                            ScreenName = this.token.authorizationCode,
-                        }
-                    };
-                    await singleUserAuth.AuthorizeAsync();
-
-                    if (await this.InitializeInternal(singleUserAuth))
-                    {
-                        return true;
-                    }
-                }
-                catch (Exception ex) { Logger.Log(ex); }
-            }
-
             try
             {
-                PinAuthorizer pinAuth = new PinAuthorizer()
+                PinAuthorizer pinAuthorizer = new PinAuthorizer()
                 {
                     CredentialStore = new InMemoryCredentialStore
                     {
@@ -89,17 +98,52 @@ namespace MixItUp.Base.Services
                     }
                 };
 
-                await pinAuth.AuthorizeAsync();
+                await pinAuthorizer.AuthorizeAsync();
+                this.authorizer = pinAuthorizer;
+
                 this.authPin = null;
 
-                return await this.InitializeInternal(pinAuth);
+                return await this.InitializeInternal();
             }
-            catch (Exception ex) { Logger.Log(ex); }
-
-            return false;
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                return new ExternalServiceResult(ex);
+            }
         }
 
-        public Task Disconnect()
+        public override async Task<ExternalServiceResult> Connect(OAuthTokenModel token)
+        {
+            try
+            {
+                SingleUserAuthorizer singleUserAuthorizer = new SingleUserAuthorizer
+                {
+                    CredentialStore = new SingleUserInMemoryCredentialStore
+                    {
+                        ConsumerKey = TwitterService.ClientID,
+                        ConsumerSecret = ChannelSession.SecretManager.GetSecret("TwitterSecret"),
+
+                        AccessToken = token.accessToken,
+                        AccessTokenSecret = token.refreshToken,
+
+                        UserID = ulong.Parse(token.clientID),
+                        ScreenName = token.authorizationCode,
+                    }
+                };
+
+                await singleUserAuthorizer.AuthorizeAsync();
+                this.authorizer = singleUserAuthorizer;
+
+                return await this.InitializeInternal();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                return new ExternalServiceResult(ex);
+            }
+        }
+
+        public override Task Disconnect()
         {
             return Task.FromResult(0);
         }
@@ -114,10 +158,10 @@ namespace MixItUp.Base.Services
             List<Tweet> results = new List<Tweet>();
             try
             {
-                using (var twitterCtx = new TwitterContext(this.auth))
+                using (var twitterCtx = new TwitterContext(this.authorizer))
                 {
                     List<Status> tweets = await (from tweet in twitterCtx.Status
-                                                 where tweet.Type == StatusType.User && tweet.ScreenName == this.auth.CredentialStore.ScreenName && tweet.TweetMode == TweetMode.Extended
+                                                 where tweet.Type == StatusType.User && tweet.ScreenName == this.authorizer.CredentialStore.ScreenName && tweet.TweetMode == TweetMode.Extended
                                                  select tweet).ToListAsync();
 
                     foreach (Status tweet in tweets)
@@ -149,7 +193,7 @@ namespace MixItUp.Base.Services
             List<Tweet> results = new List<Tweet>();
             try
             {
-                using (var twitterCtx = new TwitterContext(this.auth))
+                using (var twitterCtx = new TwitterContext(this.authorizer))
                 {
                     List<Status> retweets = await (from retweet in twitterCtx.Status where retweet.Type == StatusType.Retweets && retweet.ID == tweet.ID select retweet).ToListAsync();
 
@@ -190,7 +234,7 @@ namespace MixItUp.Base.Services
                 {
                     this.lastTweet = DateTimeOffset.Now;
 
-                    using (var twitterCtx = new TwitterContext(this.auth))
+                    using (var twitterCtx = new TwitterContext(this.authorizer))
                     {
                         List<ulong> mediaIds = new List<ulong>();
 
@@ -202,14 +246,9 @@ namespace MixItUp.Base.Services
                                 using (WebClient client = new WebClient())
                                 {
                                     var bytes = await Task.Run<byte[]>(async () => { return await client.DownloadDataTaskAsync(imagePath); });
-
-                                    using (Image img = ByteArrayToImage(bytes))
-                                    {
-                                        string mediaType = $"image/{new ImageFormatConverter().ConvertToString(img.RawFormat).ToLower()}";
-
-                                        Media media = await twitterCtx.UploadMediaAsync(bytes, mediaType, "tweet_image");
-                                        mediaIds.Add(media.MediaID);
-                                    }
+                                    string mediaType = $"image/" + ChannelSession.Services.Image.GetImageFormat(bytes);
+                                    Media media = await twitterCtx.UploadMediaAsync(bytes, mediaType, "tweet_image");
+                                    mediaIds.Add(media.MediaID);
                                 }
                             }
                         }
@@ -229,7 +268,7 @@ namespace MixItUp.Base.Services
         {
             try
             {
-                using (var twitterCtx = new TwitterContext(this.auth))
+                using (var twitterCtx = new TwitterContext(this.authorizer))
                 {
                     await twitterCtx.UpdateAccountProfileAsync(name, null, null, null, true);
                     return true;
@@ -239,53 +278,43 @@ namespace MixItUp.Base.Services
             return false;
         }
 
-        public OAuthTokenModel GetOAuthTokenCopy()
+        public override OAuthTokenModel GetOAuthTokenCopy()
         {
-            if (this.token != null)
-            {
-                return new OAuthTokenModel()
-                {
-                    clientID = this.token.clientID,
-                    authorizationCode = this.token.authorizationCode,
-                    refreshToken = this.token.refreshToken,
-                    accessToken = this.token.accessToken,
-                    expiresIn = this.token.expiresIn
-                };
-            }
-            return null;
-        }
-
-        private static Image ByteArrayToImage(byte[] bmpBytes)
-        {
-            Image image = null;
-            using (MemoryStream stream = new MemoryStream(bmpBytes))
-            {
-                image = Image.FromStream(stream);
-            }
-
-            return image;
-        }
-
-        private Task<bool> InitializeInternal(IAuthorizer auth)
-        {
-            this.auth = auth;
-            if (!string.IsNullOrEmpty(this.auth.CredentialStore.OAuthToken))
+            if (this.authorizer != null)
             {
                 this.token = new OAuthTokenModel();
+                this.token.accessToken = this.authorizer.CredentialStore.OAuthToken;
+                this.token.refreshToken = this.authorizer.CredentialStore.OAuthTokenSecret;
+                this.token.clientID = this.authorizer.CredentialStore.UserID.ToString();
+                this.token.authorizationCode = this.authorizer.CredentialStore.ScreenName;
+            }
+            return base.GetOAuthTokenCopy();
+        }
 
-                this.token.accessToken = this.auth.CredentialStore.OAuthToken;
-                this.token.refreshToken = this.auth.CredentialStore.OAuthTokenSecret;
-
-                this.token.clientID = this.auth.CredentialStore.UserID.ToString();
-                this.token.authorizationCode = this.auth.CredentialStore.ScreenName;
+        protected override async Task<ExternalServiceResult> InitializeInternal()
+        {
+            if (!string.IsNullOrEmpty(this.authorizer.CredentialStore.OAuthToken))
+            {
+                await this.RefreshOAuthToken();
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 Task.Run(this.BackgroundRetweetCheck, this.cancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-                return Task.FromResult(true);
+                return new ExternalServiceResult();
             }
-            return Task.FromResult(false);
+            return new ExternalServiceResult("Failed to get authorization");
+        }
+
+        protected override Task RefreshOAuthToken()
+        {
+            this.GetOAuthTokenCopy();
+            return Task.FromResult(0);
+        }
+
+        protected override void DisposeInternal()
+        {
+            this.cancellationTokenSource.Dispose();
         }
 
         private async Task BackgroundRetweetCheck()
@@ -359,33 +388,5 @@ namespace MixItUp.Base.Services
                 await Task.Delay(60000);
             }
         }
-
-        #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    // Dispose managed state (managed objects).
-                    this.cancellationTokenSource.Dispose();
-                }
-
-                // Free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // Set large fields to null.
-
-                disposedValue = true;
-            }
-        }
-
-        // This code added to correctly implement the disposable pattern.
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-        }
-        #endregion
     }
 }

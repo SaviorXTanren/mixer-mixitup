@@ -4,6 +4,7 @@ using MixItUp.Base.Model.Chat.Mixer;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Mixer;
+using MixItUp.Desktop.Services;
 using MixItUp.WPF.Util;
 using StreamingClient.Base.Util;
 using System;
@@ -108,11 +109,11 @@ namespace MixItUp.WPF.Controls.Chat
 
                         if (skillMessage.Skill.IsEmbersSkill)
                         {
-                            this.AddImage(BitmapImageLoader.LoadLocal(new Uri("/Assets/Images/Embers.png", UriKind.Relative)), ChannelSession.Settings.ChatFontSize + 2, MixerSkillModel.EmbersCurrencyName);
+                            this.AddImage(WindowsImageService.LoadLocal(new Uri("/Assets/Images/Embers.png", UriKind.Relative)), ChannelSession.Settings.ChatFontSize + 2, MixerSkillModel.EmbersCurrencyName);
                         }
                         else
                         {
-                            this.AddImage(BitmapImageLoader.LoadLocal(new Uri("/Assets/Images/Sparks.png", UriKind.Relative)), ChannelSession.Settings.ChatFontSize + 2, MixerSkillModel.SparksCurrencyName);
+                            this.AddImage(WindowsImageService.LoadLocal(new Uri("/Assets/Images/Sparks.png", UriKind.Relative)), ChannelSession.Settings.ChatFontSize + 2, MixerSkillModel.SparksCurrencyName);
                             showMessage = false;
                         }
 

@@ -20,7 +20,7 @@ namespace MixItUp.Base.Services
         public IInputService InputService { get; protected set; }
         public ITimerService TimerService { get; protected set; }
         public IGameQueueService GameQueueService { get; protected set; }
-        public IImageManipulationService ImageManipulationService { get; protected set; }
+        public IImageService Image { get; protected set; }
         public ITranslationService TranslationService { get; protected set; }
         public IGiveawayService GiveawayService { get; protected set; }
         public ISerialService SerialService { get; protected set; }
@@ -61,9 +61,6 @@ namespace MixItUp.Base.Services
 
         public abstract Task<bool> InitializeTelemetryService();
         public abstract Task DisconnectTelemetryService();
-
-        public abstract Task<bool> InitializeTwitter();
-        public abstract Task DisconnectTwitter();
 
         public abstract Task<bool> InitializeOvrStream();
         public abstract Task DisconnectOvrStream();

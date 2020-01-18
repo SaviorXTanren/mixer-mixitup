@@ -29,7 +29,7 @@ namespace MixItUp.Desktop.Services
             this.InputService = new WindowsInputService();
             this.TimerService = new TimerService();
             this.GameQueueService = new GameQueueService();
-            this.ImageManipulationService = new DesktopImageManipulationService();
+            this.Image = new WindowsImageService();
             this.AudioService = new AudioService();
             this.GiveawayService = new GiveawayService();
             this.TranslationService = new TranslationService();
@@ -47,6 +47,7 @@ namespace MixItUp.Desktop.Services
             this.IFTTT = new IFTTTService();
             this.Patreon = new PatreonService();
             this.Discord = new DiscordService();
+            this.Twitter = new TwitterService();
             this.OverlayServers = new OverlayServiceManager();
             this.MixrElixr = new MixrElixrService();
 
@@ -185,30 +186,6 @@ namespace MixItUp.Desktop.Services
                     this.Telemetry = null;
                 }
             });
-        }
-
-        public override async Task<bool> InitializeTwitter()
-        {
-            this.Twitter = (ChannelSession.Settings.TwitterOAuthToken != null) ? new TwitterService(ChannelSession.Settings.TwitterOAuthToken) : new TwitterService();
-            if (await this.Twitter.Connect())
-            {
-                return true;
-            }
-            else
-            {
-                await this.DisconnectTwitter();
-            }
-            return false;
-        }
-
-        public override async Task DisconnectTwitter()
-        {
-            if (this.Twitter != null)
-            {
-                await this.Twitter.Disconnect();
-                this.Twitter = null;
-                ChannelSession.Settings.TwitterOAuthToken = null;
-            }
         }
 
         private void OverlayServer_OnWebSocketConnectedOccurred(object sender, System.EventArgs e)

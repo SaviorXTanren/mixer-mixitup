@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.Chat;
 using MixItUp.Base.Model.Chat.Mixer;
+using MixItUp.Desktop.Services;
 using MixItUp.WPF.Util;
 using StreamingClient.Base.Util;
 using System;
@@ -119,7 +120,7 @@ namespace MixItUp.WPF.Controls.Chat
                 using (WebClient client = new WebClient())
                 {
                     var bytes = await Task.Run<byte[]>(async () => { return await client.DownloadDataTaskAsync(url); });
-                    bitmap = BitmapImageLoader.Load(bytes);
+                    bitmap = WindowsImageService.Load(bytes);
                 }
                 ChatImageControl.bitmapImages[url] = bitmap;
             }

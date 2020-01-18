@@ -2,6 +2,7 @@
 using MixItUp.Base;
 using MixItUp.Base.MixerAPI;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.Desktop.Services;
 using MixItUp.WPF.Util;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace MixItUp.WPF.Controls.Interactive
             string bitmapImageData = this.ImageData.Substring(this.ImageData.IndexOf(',') + 1);
             byte[] imageBinaryData = Convert.FromBase64String(bitmapImageData);
 
-            this.ImageBitmap = BitmapImageLoader.Load(imageBinaryData);
+            this.ImageBitmap = WindowsImageService.Load(imageBinaryData);
         }
     }
 

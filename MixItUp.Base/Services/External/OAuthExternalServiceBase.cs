@@ -90,7 +90,7 @@ namespace MixItUp.Base.Services.External
 
         public abstract Task Disconnect();
 
-        public OAuthTokenModel GetOAuthTokenCopy()
+        public virtual OAuthTokenModel GetOAuthTokenCopy()
         {
             if (this.token != null)
             {
