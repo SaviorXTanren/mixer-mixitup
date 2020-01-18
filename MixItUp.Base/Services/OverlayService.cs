@@ -54,6 +54,8 @@ namespace MixItUp.Base.Services
         public async Task<ExternalServiceResult> Connect()
         {
             this.IsConnected = false;
+            ChannelSession.Settings.EnableOverlay = false;
+
             foreach (var kvp in ChannelSession.AllOverlayNameAndPorts)
             {
                 if (!await this.AddOverlay(kvp.Key, kvp.Value))
@@ -68,6 +70,8 @@ namespace MixItUp.Base.Services
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
             this.IsConnected = true;
+            ChannelSession.Settings.EnableOverlay = true;
+
             return new ExternalServiceResult();
         }
 
@@ -79,6 +83,7 @@ namespace MixItUp.Base.Services
                 await this.RemoveOverlay(overlayName);
             }
             this.IsConnected = false;
+            ChannelSession.Settings.EnableOverlay = false;
         }
 
         public async Task<bool> AddOverlay(string name, int port)

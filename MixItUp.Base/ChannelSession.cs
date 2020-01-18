@@ -476,34 +476,8 @@ namespace MixItUp.Base
 
                     await ChannelSession.Services.Chat.Initialize(mixerChatService);
 
-                    // Connect Streaming Software connections
-                    if (!string.IsNullOrEmpty(ChannelSession.Settings.OBSStudioServerIP))
-                    {
-                        await ChannelSession.Services.OBSStudio.Connect();
-                    }
-                    if (ChannelSession.Settings.EnableStreamlabsOBSConnection)
-                    {
-                        await ChannelSession.Services.StreamlabsOBS.Connect();
-                    }
-                    if (ChannelSession.Settings.EnableXSplitConnection)
-                    {
-                        await ChannelSession.Services.XSplit.Connect();
-                    }
-                    if (!string.IsNullOrEmpty(ChannelSession.Settings.OvrStreamServerIP))
-                    {
-                        await ChannelSession.Services.OvrStream.Connect();
-                    }
-                    if (ChannelSession.Settings.EnableOverlay)
-                    {
-                        await ChannelSession.Services.Overlay.Connect();
-                    }
-                    if (ChannelSession.Settings.EnableDeveloperAPI)
-                    {
-                        await ChannelSession.Services.DeveloperAPI.Connect();
-                    }
-
-                    // Connect OAuth External Services
-                    Dictionary<IOAuthExternalService, OAuthTokenModel> externalServiceToConnect = new Dictionary<IOAuthExternalService, OAuthTokenModel>();
+                    // Connect External Services
+                    Dictionary<IExternalService, OAuthTokenModel> externalServiceToConnect = new Dictionary<IExternalService, OAuthTokenModel>();
                     if (ChannelSession.Settings.StreamlabsOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Streamlabs] = ChannelSession.Settings.StreamlabsOAuthToken; }
                     if (ChannelSession.Settings.StreamJarOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.StreamJar] = ChannelSession.Settings.StreamJarOAuthToken; }
                     if (ChannelSession.Settings.TipeeeStreamOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.TipeeeStream] = ChannelSession.Settings.TipeeeStreamOAuthToken; }
@@ -516,17 +490,30 @@ namespace MixItUp.Base
                     if (ChannelSession.Settings.PatreonOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Patreon] = ChannelSession.Settings.PatreonOAuthToken; }
                     if (ChannelSession.Settings.DiscordOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Discord] = ChannelSession.Settings.DiscordOAuthToken; }
                     if (ChannelSession.Settings.TwitterOAuthToken != null) { externalServiceToConnect[ChannelSession.Services.Twitter] = ChannelSession.Settings.TwitterOAuthToken; }
+                    if (!string.IsNullOrEmpty(ChannelSession.Settings.OBSStudioServerIP)) { externalServiceToConnect[ChannelSession.Services.OBSStudio] = null; }
+                    if (ChannelSession.Settings.EnableStreamlabsOBSConnection) { externalServiceToConnect[ChannelSession.Services.StreamlabsOBS] = null; }
+                    if (ChannelSession.Settings.EnableXSplitConnection) { externalServiceToConnect[ChannelSession.Services.XSplit] = null; }
+                    if (!string.IsNullOrEmpty(ChannelSession.Settings.OvrStreamServerIP)) { externalServiceToConnect[ChannelSession.Services.OvrStream] = null; }
+                    if (ChannelSession.Settings.EnableOverlay) { externalServiceToConnect[ChannelSession.Services.Overlay] = null; }
+                    if (ChannelSession.Settings.EnableDeveloperAPI) { externalServiceToConnect[ChannelSession.Services.DeveloperAPI] = null; }
 
                     if (externalServiceToConnect.Count > 0)
                     {
-                        Dictionary<IOAuthExternalService, Task<ExternalServiceResult>> externalServiceTasks = new Dictionary<IOAuthExternalService, Task<ExternalServiceResult>>();
+                        Dictionary<IExternalService, Task<ExternalServiceResult>> externalServiceTasks = new Dictionary<IExternalService, Task<ExternalServiceResult>>();
                         foreach (var kvp in externalServiceToConnect)
                         {
-                            externalServiceTasks[kvp.Key] = kvp.Key.Connect(kvp.Value);
+                            if (kvp.Key is IOAuthExternalService && kvp.Value != null)
+                            {
+                                externalServiceTasks[kvp.Key] = ((IOAuthExternalService)kvp.Key).Connect(kvp.Value);
+                            }
+                            else
+                            {
+                                externalServiceTasks[kvp.Key] = kvp.Key.Connect();
+                            }
                         }
                         await Task.WhenAll(externalServiceTasks.Values);
 
-                        List<IOAuthExternalService> failedServices = new List<IOAuthExternalService>();
+                        List<IExternalService> failedServices = new List<IExternalService>();
                         foreach (var kvp in externalServiceTasks)
                         {
                             if (!kvp.Value.Result.Success)

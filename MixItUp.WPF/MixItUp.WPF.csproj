@@ -2034,9 +2034,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <None Include="SettingsTemplateDatabase.sqlite">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <Page Include="Themes\MixItUpTheme.NibblesCarrotPatch.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
