@@ -29,7 +29,7 @@
 
             <TextBlock Grid.Row="0" TextWrapping="Wrap">The Streamlabs OBS service allows you to directly interact with your instance of Streamlabs OBS to perform changes to scenes and sources</TextBlock>
 
-            <TextBlock Grid.Row="2" VerticalAlignment="Center" TextWrapping="Wrap">The OBS WebSocket must be installed from the <Hyperlink NavigateUri="OBS" RequestNavigate="Hyperlink_RequestNavigate">OBS Folder</Hyperlink> in the Mix It Up install folder.</TextBlock>
+            <TextBlock Grid.Row="2" VerticalAlignment="Center" TextWrapping="Wrap">OBS Studio 23.0 or higher is required and the OBS WebSocket must be installed from the <Hyperlink NavigateUri="OBS" RequestNavigate="Hyperlink_RequestNavigate">OBS Folder</Hyperlink> in the Mix It Up install folder.</TextBlock>
         </Grid>
 
         <Grid Grid.Column="2" Visibility="{Binding IsNotConnected, Converter={StaticResource BooleanToVisibilityConverter}}">

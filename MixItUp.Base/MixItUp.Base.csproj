@@ -5,7 +5,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Overlay\OverlayPage.html" />
+    <None Remove="Overlay\webSocketWrapper.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Include="..\..\Mix It Up Web\MixItUpSecrets.cs" Link="MixItUpSecrets.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Overlay\OverlayPage.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Overlay\webSocketWrapper.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

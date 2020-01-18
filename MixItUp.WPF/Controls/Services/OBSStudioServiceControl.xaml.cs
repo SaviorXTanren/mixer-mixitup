@@ -31,7 +31,7 @@ namespace MixItUp.WPF.Controls.Services
 
         protected override void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            ProcessHelper.LaunchFolder("OBS");
+            ProcessHelper.LaunchFolder("Assets\\OBS");
         }
     }
 }
