@@ -1,8 +1,7 @@
-﻿using Mixer.Base.Clients;
+﻿using MixItUp.Base;
 using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using ovrstream_client_csharp;
 using StreamingClient.Base.Util;
 using System;
@@ -10,7 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml;
 
 namespace MixItUp.OvrStream
 {
@@ -19,28 +17,34 @@ namespace MixItUp.OvrStream
         OvrStreamConnection connection;
         private Uri address;
 
-        public OvrStreamService(string address)
-        {
-            if (Uri.TryCreate(address, UriKind.Absolute, out Uri uri))
-            {
-                this.address = uri;
-            }
-        }
+        public OvrStreamService() { }
 
-        public async Task<bool> Connect()
+        public string Name { get { return "OvrStream"; } }
+
+        public bool IsConnected { get; private set; }
+
+        public async Task<ExternalServiceResult> Connect()
         {
+            this.IsConnected = false;
             try
             {
-                this.connection = new OvrStreamConnection(this.address);
-                await this.connection.ConnectAsync(CancellationToken.None);
+                if (Uri.TryCreate(ChannelSession.Settings.OvrStreamServerIP, UriKind.Absolute, out Uri uri))
+                {
+                    this.address = uri;
 
-                this.connection.OnDisconnected += Connection_OnDisconnected;
-                GlobalEvents.ServiceReconnect("OvrStream");
+                    this.connection = new OvrStreamConnection(this.address);
+                    await this.connection.ConnectAsync(CancellationToken.None);
 
-                return true;
+                    this.connection.OnDisconnected += Connection_OnDisconnected;
+                    GlobalEvents.ServiceReconnect("OvrStream");
+
+                    this.IsConnected = true;
+
+                    return new ExternalServiceResult();
+                }
             }
             catch (Exception ex) { Logger.Log(ex); }
-            return false;
+            return new ExternalServiceResult("Invalid address specified");
         }
 
         public async Task Disconnect()
@@ -50,6 +54,7 @@ namespace MixItUp.OvrStream
                 this.connection.OnDisconnected -= Connection_OnDisconnected;
                 await this.connection.DisconnectAsync(CancellationToken.None);
             }
+            this.IsConnected = false;
         }
 
         public Task UpdateVariables(string titleName, Dictionary<string, string> variables)
@@ -127,11 +132,14 @@ namespace MixItUp.OvrStream
         {
             GlobalEvents.ServiceDisconnect("OvrStream");
 
+            ExternalServiceResult result;
             do
             {
                 await Task.Delay(2500);
+
+                result = await this.Connect();
             }
-            while (!await this.Connect());
+            while (!result.Success);
 
             GlobalEvents.ServiceReconnect("OvrStream");
         }

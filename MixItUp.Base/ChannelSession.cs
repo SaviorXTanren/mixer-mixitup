@@ -488,6 +488,10 @@ namespace MixItUp.Base
                     {
                         await ChannelSession.Services.XSplit.Connect();
                     }
+                    if (!string.IsNullOrEmpty(ChannelSession.Settings.OvrStreamServerIP))
+                    {
+                        await ChannelSession.Services.OvrStream.Connect();
+                    }
 
                     // Connect OAuth External Services
                     Dictionary<IOAuthExternalService, OAuthTokenModel> externalServiceToConnect = new Dictionary<IOAuthExternalService, OAuthTokenModel>();
@@ -549,10 +553,6 @@ namespace MixItUp.Base
                     if (ChannelSession.Settings.EnableDeveloperAPI)
                     {
                         await ChannelSession.Services.InitializeDeveloperAPI();
-                    }
-                    if (!string.IsNullOrEmpty(ChannelSession.Settings.OvrStreamServerIP))
-                    {
-                        await ChannelSession.Services.InitializeOvrStream();
                     }
 
                     if (ChannelSession.Settings.RemoteHostConnection != null)

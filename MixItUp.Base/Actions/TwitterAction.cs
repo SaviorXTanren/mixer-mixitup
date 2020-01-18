@@ -56,7 +56,7 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.Services.Twitter != null)
+            if (ChannelSession.Services.Twitter.IsConnected)
             {
                 if (this.ActionType == TwitterActionTypeEnum.SendTweet)
                 {

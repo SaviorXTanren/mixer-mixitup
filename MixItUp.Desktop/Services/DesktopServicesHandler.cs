@@ -48,6 +48,7 @@ namespace MixItUp.Desktop.Services
             this.Patreon = new PatreonService();
             this.Discord = new DiscordService();
             this.Twitter = new TwitterService();
+            this.OvrStream = new OvrStreamService();
             this.OverlayServers = new OverlayServiceManager();
             this.MixrElixr = new MixrElixrService();
 
@@ -58,7 +59,7 @@ namespace MixItUp.Desktop.Services
         public override async Task Close()
         {
             await this.DisconnectOverlayServer();
-            await this.DisconnectOvrStream();
+            await this.OvrStream.Disconnect();
             await this.DisconnectOBSStudio();
             await this.DisconnectDeveloperAPI();
             await this.DisconnectTelemetryService();
@@ -109,32 +110,6 @@ namespace MixItUp.Desktop.Services
                 this.OBSStudio.Disconnected -= OBSWebsocket_Disconnected;
                 await this.OBSStudio.Disconnect();
                 this.OBSStudio = null;
-            }
-        }
-
-        public override async Task<bool> InitializeOvrStream()
-        {
-            if (this.OvrStreamWebsocket == null)
-            {
-                this.OvrStreamWebsocket = new OvrStreamService(ChannelSession.Settings.OvrStreamServerIP);
-                if (await this.OvrStreamWebsocket.Connect())
-                {
-                    return true;
-                }
-                else
-                {
-                    await this.DisconnectOvrStream();
-                }
-            }
-            return false;
-        }
-
-        public override async Task DisconnectOvrStream()
-        {
-            if (this.OvrStreamWebsocket != null)
-            {
-                await this.OvrStreamWebsocket.Disconnect();
-                this.OvrStreamWebsocket = null;
             }
         }
 

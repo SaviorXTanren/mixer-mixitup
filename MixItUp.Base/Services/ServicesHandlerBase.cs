@@ -41,7 +41,7 @@ namespace MixItUp.Base.Services
         public ITreatStreamService TreatStream { get; protected set; }
         public IStreamJarService StreamJar { get; protected set; }
         public IPatreonService Patreon { get; protected set; }
-        public IOvrStreamService OvrStreamWebsocket { get; protected set; }
+        public IOvrStreamService OvrStream { get; protected set; }
         public IIFTTTService IFTTT { get; protected set; }
         public IStreamlootsService Streamloots { get; protected set; }
         public IMixrElixrService MixrElixr { get; protected set; }
@@ -61,8 +61,5 @@ namespace MixItUp.Base.Services
 
         public abstract Task<bool> InitializeTelemetryService();
         public abstract Task DisconnectTelemetryService();
-
-        public abstract Task<bool> InitializeOvrStream();
-        public abstract Task DisconnectOvrStream();
     }
 }

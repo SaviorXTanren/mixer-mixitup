@@ -381,7 +381,7 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier(CostreamUsersSpecialIdentifier, await CostreamChatCommand.GetCostreamUsers());
             }
 
-            if (ChannelSession.Services.Twitter != null && this.ContainsSpecialIdentifier("tweet"))
+            if (ChannelSession.Services.Twitter.IsConnected && this.ContainsSpecialIdentifier("tweet"))
             {
                 IEnumerable<Tweet> tweets = await ChannelSession.Services.Twitter.GetLatestTweets();
                 if (tweets != null && tweets.Count() > 0)

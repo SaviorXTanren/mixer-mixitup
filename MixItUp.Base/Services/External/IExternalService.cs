@@ -7,6 +7,8 @@ namespace MixItUp.Base.Services.External
     {
         string Name { get; }
 
+        bool IsConnected { get; }
+
         Task<ExternalServiceResult> Connect();
 
         Task Disconnect();

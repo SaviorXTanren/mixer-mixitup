@@ -623,31 +623,12 @@ namespace MixItUp.Desktop
             this.TipeeeStreamOAuthToken = ChannelSession.Services.TipeeeStream.GetOAuthTokenCopy();
             this.TreatStreamOAuthToken = ChannelSession.Services.TreatStream.GetOAuthTokenCopy();
             this.StreamlootsOAuthToken = ChannelSession.Services.Streamloots.GetOAuthTokenCopy();
-
-            if (ChannelSession.Services.Twitter != null)
-            {
-                this.TwitterOAuthToken = ChannelSession.Services.Twitter.GetOAuthTokenCopy();
-            }
-            if (ChannelSession.Services.Discord != null)
-            {
-                this.DiscordOAuthToken = ChannelSession.Services.Discord.GetOAuthTokenCopy();
-            }
-            if (ChannelSession.Services.Tiltify != null)
-            {
-                this.TiltifyOAuthToken = ChannelSession.Services.Tiltify.GetOAuthTokenCopy();
-            }
-            if (ChannelSession.Services.Patreon != null)
-            {
-                this.PatreonOAuthToken = ChannelSession.Services.Patreon.GetOAuthTokenCopy();
-            }
-            if (ChannelSession.Services.IFTTT != null)
-            {
-                this.IFTTTOAuthToken = ChannelSession.Services.IFTTT.GetOAuthTokenCopy();
-            }
-            if (ChannelSession.Services.JustGiving != null)
-            {
-                this.JustGivingOAuthToken = ChannelSession.Services.JustGiving.GetOAuthTokenCopy();
-            }
+            this.TiltifyOAuthToken = ChannelSession.Services.Tiltify.GetOAuthTokenCopy();
+            this.PatreonOAuthToken = ChannelSession.Services.Patreon.GetOAuthTokenCopy();
+            this.IFTTTOAuthToken = ChannelSession.Services.IFTTT.GetOAuthTokenCopy();
+            this.JustGivingOAuthToken = ChannelSession.Services.JustGiving.GetOAuthTokenCopy();
+            this.DiscordOAuthToken = ChannelSession.Services.Discord.GetOAuthTokenCopy();
+            this.TwitterOAuthToken = ChannelSession.Services.Twitter.GetOAuthTokenCopy();
 
             this.currenciesInternal = this.Currencies.ToDictionary();
             this.inventoriesInternal = this.Inventories.ToDictionary();

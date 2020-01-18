@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using MixItUp.Base.Services.External;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
@@ -16,12 +17,8 @@ namespace MixItUp.Base.Services
         public string Value { get; set; }
     }
 
-    public interface IOvrStreamService
+    public interface IOvrStreamService : IExternalService
     {
-        Task<bool> Connect();
-
-        Task Disconnect();
-
         Task UpdateVariables(string titleName, Dictionary<string, string> variables);
         Task HideTitle(string titleName);
         Task EnableTitle(string titleName);

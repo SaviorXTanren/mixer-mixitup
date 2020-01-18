@@ -37,7 +37,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override Task OnLoaded()
         {
-            if (ChannelSession.Services.OvrStreamWebsocket == null)
+            if (!ChannelSession.Services.OvrStream.IsConnected)
             {
                 this.OvrStreamNotEnabledWarningTextBlock.Visibility = Visibility.Visible;
             }
@@ -139,9 +139,9 @@ namespace MixItUp.WPF.Controls.Actions
             HideTitleIntellisense();
             if (shouldShowIntellisense)
             {
-                if (ChannelSession.Services.OvrStreamWebsocket != null && !string.IsNullOrEmpty(this.TitleNameTextBox.Text))
+                if (ChannelSession.Services.OvrStream.IsConnected && !string.IsNullOrEmpty(this.TitleNameTextBox.Text))
                 {
-                    var titles = (await ChannelSession.Services.OvrStreamWebsocket.GetTitles())
+                    var titles = (await ChannelSession.Services.OvrStream.GetTitles())
                         .OrderBy(t => t.Name)
                         .Where(t => t.Name.IndexOf(this.TitleNameTextBox.Text, StringComparison.InvariantCultureIgnoreCase) >= 0)
                         .Take(5)
@@ -171,9 +171,9 @@ namespace MixItUp.WPF.Controls.Actions
             if (shouldShowIntellisense)
             {
                 TextBox variableNameTextBox = sender as TextBox;
-                if (ChannelSession.Services.OvrStreamWebsocket != null && !string.IsNullOrEmpty(variableNameTextBox.Text))
+                if (ChannelSession.Services.OvrStream.IsConnected && !string.IsNullOrEmpty(variableNameTextBox.Text))
                 {
-                    var title = (await ChannelSession.Services.OvrStreamWebsocket.GetTitles())
+                    var title = (await ChannelSession.Services.OvrStream.GetTitles())
                         .SingleOrDefault(t => t.Name.Equals(this.TitleNameTextBox.Text, StringComparison.InvariantCultureIgnoreCase));
 
                     if (title != null)
