@@ -88,7 +88,7 @@ namespace MixItUp.WPF.Windows.Users
                 this.ExistingEntranceCommandButtons.Visibility = Visibility.Collapsed;
             }
 
-            if (ChannelSession.Services.Patreon != null)
+            if (ChannelSession.Services.Patreon.IsConnected)
             {
                 this.PatreonUserComboBox.IsEnabled = true;
                 this.PatreonUserComboBox.ItemsSource = ChannelSession.Services.Patreon.CampaignMembers;

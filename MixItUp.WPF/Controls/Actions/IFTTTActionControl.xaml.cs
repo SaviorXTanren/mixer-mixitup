@@ -32,7 +32,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override Task OnLoaded()
         {
-            if (ChannelSession.Services.IFTTT == null)
+            if (!ChannelSession.Services.IFTTT.IsConnected)
             {
                 this.IFTTTNotEnabledWarningTextBlock.Visibility = Visibility.Visible;
             }

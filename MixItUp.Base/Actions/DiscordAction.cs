@@ -64,7 +64,7 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.Services.Discord != null)
+            if (ChannelSession.Services.Discord.IsConnected)
             {
                 if (this.DiscordType == DiscordActionTypeEnum.SendMessage)
                 {

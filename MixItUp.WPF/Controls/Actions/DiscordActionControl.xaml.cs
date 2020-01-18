@@ -26,7 +26,7 @@ namespace MixItUp.WPF.Controls.Actions
             this.channels.Clear();
             this.SendMessageChannelComboBox.ItemsSource = this.channels;
 
-            if (ChannelSession.Services.Discord == null)
+            if (!ChannelSession.Services.Discord.IsConnected)
             {
                 this.DiscordNotEnabledWarningTextBlock.Visibility = System.Windows.Visibility.Visible;
             }

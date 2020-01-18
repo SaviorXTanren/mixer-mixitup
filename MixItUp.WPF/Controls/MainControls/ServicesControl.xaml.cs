@@ -43,7 +43,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.services.Add(new ServiceContainerControl(this.Window, new StreamDeckServiceControl()));
             this.services.Add(new ServiceContainerControl(this.Window, new IFTTTServiceControl()));
             this.services.Add(new ServiceContainerControl(this.Window, new StreamAvatarsServiceControl()));
-            this.services.Add(new ServicesGroupBoxControl(this.Window, new DeveloperAPIServiceControl()));
+            this.services.Add(new ServiceContainerControl(this.Window, new DeveloperAPIServiceControl()));
 
             await base.InitializeInternal();
         }

@@ -1234,7 +1234,7 @@ namespace MixItUp.Base.Model.Overlay
             }
             else if (this.LeaderboardType == LeaderboardTypeEnum.Donations)
             {
-                if (ChannelSession.Services.Streamlabs != null)
+                if (ChannelSession.Services.Streamlabs.IsConnected)
                 {
                     foreach (StreamlabsDonation donation in await ChannelSession.Services.Streamlabs.GetDonations(int.MaxValue))
                     {

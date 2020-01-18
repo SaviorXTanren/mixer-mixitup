@@ -32,7 +32,7 @@
 
         <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid Visibility="{Binding IsConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <Button Command="{Binding DisconnectCommand}" HorizontalAlignment="Center" Width="90">Disconnect</Button>
+                <Button Command="{Binding DisconnectCommand}" HorizontalAlignment="Center" Width="110">Disconnect</Button>
             </Grid>
 
             <Grid Visibility="{Binding IsNotConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -53,7 +53,7 @@
                     <TextBox Grid.Column="2" Text="{Binding OvrStreamAddress}" Width="130" VerticalAlignment="Center" />
                 </Grid>
 
-                <Button Grid.Row="2" Command="{Binding ConnectCommand}" HorizontalAlignment="Center" Width="90">Connect</Button>
+                <Button Grid.Row="2" Command="{Binding ConnectCommand}" HorizontalAlignment="Center" Width="110">Connect</Button>
             </Grid>
         </Grid>
     </Grid>

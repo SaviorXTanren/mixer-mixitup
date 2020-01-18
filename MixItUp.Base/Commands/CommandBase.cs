@@ -277,14 +277,14 @@ namespace MixItUp.Base.Commands
             {
                 token.ThrowIfCancellationRequested();
 
-                if (actionsToRun[i] is OverlayAction && ChannelSession.Services.Overlay != null)
+                if (actionsToRun[i] is OverlayAction && ChannelSession.Services.Overlay.IsConnected)
                 {
                     ChannelSession.Services.Overlay.StartBatching();
                 }
 
                 await actionsToRun[i].Perform(user, arguments, extraSpecialIdentifiers);
 
-                if (actionsToRun[i] is OverlayAction && ChannelSession.Services.Overlay != null)
+                if (actionsToRun[i] is OverlayAction && ChannelSession.Services.Overlay.IsConnected)
                 {
                     if (i == (actionsToRun.Count - 1) || !(actionsToRun[i + 1] is OverlayAction))
                     {

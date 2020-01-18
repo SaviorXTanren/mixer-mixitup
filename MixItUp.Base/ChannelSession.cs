@@ -498,6 +498,10 @@ namespace MixItUp.Base
                     {
                         await ChannelSession.Services.Overlay.Connect();
                     }
+                    if (ChannelSession.Settings.EnableDeveloperAPI)
+                    {
+                        await ChannelSession.Services.DeveloperAPI.Connect();
+                    }
 
                     // Connect OAuth External Services
                     Dictionary<IOAuthExternalService, OAuthTokenModel> externalServiceToConnect = new Dictionary<IOAuthExternalService, OAuthTokenModel>();
@@ -549,11 +553,6 @@ namespace MixItUp.Base
                             message.Append("Please go to the Services page to reconnect them manually.");
                             await DialogHelper.ShowMessage(message.ToString());
                         }
-                    }
-
-                    if (ChannelSession.Settings.EnableDeveloperAPI)
-                    {
-                        await ChannelSession.Services.InitializeDeveloperAPI();
                     }
 
                     if (ChannelSession.Settings.RemoteHostConnection != null)

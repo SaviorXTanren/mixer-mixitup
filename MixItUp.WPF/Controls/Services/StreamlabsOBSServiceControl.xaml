@@ -29,11 +29,11 @@
 
                 <Button Grid.Row="0" Command="{Binding TestConnectionCommand}" HorizontalAlignment="Center" Width="120">Test Connection</Button>
 
-                <Button Grid.Row="2" Command="{Binding DisconnectCommand}" HorizontalAlignment="Center" Width="90">Disconnect</Button>
+                <Button Grid.Row="2" Command="{Binding DisconnectCommand}" HorizontalAlignment="Center" Width="110">Disconnect</Button>
             </Grid>
 
             <Grid Visibility="{Binding IsNotConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <Button Command="{Binding ConnectCommand}" HorizontalAlignment="Center" Width="90">Connect</Button>
+                <Button Command="{Binding ConnectCommand}" HorizontalAlignment="Center" Width="110">Connect</Button>
             </Grid>
         </Grid>
     </Grid>

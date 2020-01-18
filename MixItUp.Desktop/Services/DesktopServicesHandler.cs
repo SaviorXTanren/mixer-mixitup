@@ -35,6 +35,7 @@ namespace MixItUp.Desktop.Services
             this.TranslationService = new TranslationService();
             this.SerialService = new SerialService();
             this.RemoteService = new RemoteService("https://mixitup-remote-server.azurewebsites.net/api/", "https://mixitup-remote-server.azurewebsites.net/RemoteHub");
+            this.DeveloperAPI = new WindowsDeveloperAPIService();
 
             this.Streamlabs = new StreamlabsService();
             this.StreamJar = new StreamJarService();
@@ -61,7 +62,7 @@ namespace MixItUp.Desktop.Services
             await this.Overlay.Disconnect();
             await this.OvrStream.Disconnect();
             await this.DisconnectOBSStudio();
-            await this.DisconnectDeveloperAPI();
+            await this.DeveloperAPI.Disconnect();
             await this.DisconnectTelemetryService();
         }
 
@@ -93,19 +94,6 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        public override async Task<bool> InitializeDeveloperAPI()
-        {
-            return await Task.Run(() =>
-            {
-                if (this.DeveloperAPI == null)
-                {
-                    this.DeveloperAPI = new WindowsDeveloperAPIService();
-                    this.DeveloperAPI.Start();
-                }
-                return true;
-            });
-        }
-
         public override async Task<bool> InitializeTelemetryService()
         {
             return await Task.Run(() =>
@@ -116,18 +104,6 @@ namespace MixItUp.Desktop.Services
                     this.Telemetry.Start();
                 }
                 return true;
-            });
-        }
-
-        public override async Task DisconnectDeveloperAPI()
-        {
-            await Task.Run(() =>
-            {
-                if (this.DeveloperAPI != null)
-                {
-                    this.DeveloperAPI.End();
-                    this.DeveloperAPI = null;
-                }
             });
         }
 
