@@ -26,7 +26,7 @@ namespace MixItUp.Base.Services
         public ISerialService SerialService { get; protected set; }
         public LocalRemoteServiceBase RemoteService { get; protected set; }
 
-        public IOverlayServiceManager OverlayServers { get; protected set; }
+        public IOverlayService Overlay { get; protected set; }
         public IStreamingSoftwareService OBSStudio { get; protected set; }
         public IStreamingSoftwareService StreamlabsOBS { get; protected set; }
         public IStreamingSoftwareService XSplit { get; protected set; }
@@ -48,10 +48,6 @@ namespace MixItUp.Base.Services
         public IJustGivingService JustGiving { get; protected set; }
 
         public abstract Task Close();
-
-        public abstract Task<bool> InitializeOverlayServer();
-
-        public abstract Task DisconnectOverlayServer();
 
         public abstract Task<bool> InitializeOBSWebsocket();
         public abstract Task DisconnectOBSStudio();

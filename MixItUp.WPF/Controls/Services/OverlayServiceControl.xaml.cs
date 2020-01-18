@@ -1,130 +1,25 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Services;
-using MixItUp.Base.Util;
-using MixItUp.WPF.Util;
-using StreamingClient.Base.Util;
-using System;
-using System.Diagnostics;
+﻿using MixItUp.Base.ViewModel.Controls.Services;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Navigation;
 
 namespace MixItUp.WPF.Controls.Services
 {
     /// <summary>
     /// Interaction logic for OverlayServiceControl.xaml
     /// </summary>
-    public partial class OverlayServiceControl : ServicesControlBase
+    public partial class OverlayServiceControl : ServiceControlBase
     {
+        private OverlayServiceControlViewModel viewModel;
+
         public OverlayServiceControl()
         {
+            this.DataContext = this.ViewModel = this.viewModel = new OverlayServiceControlViewModel();
+
             InitializeComponent();
         }
 
         protected override async Task OnLoaded()
         {
-            this.SetHeaderText("Overlay");
-
-            this.OverlaySourceRefreshTextBox.Text = ChannelSession.Settings.OverlaySourceName;
-
-            if (ChannelSession.Settings.EnableOverlay)
-            {
-                this.EnableOverlayButton.Visibility = Visibility.Collapsed;
-                this.DisableOverlayButton.Visibility = Visibility.Visible;
-                this.TestOverlayButton.IsEnabled = true;
-
-                this.SetCompletedIcon(visible: true);
-            }
-
-            await base.OnLoaded();
-        }
-
-        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
-        {
-            try
-            {
-                ProcessHelper.LaunchLink(e.Uri.AbsoluteUri);
-                e.Handled = true;
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-        }
-
-        private async void EnableOverlayButton_Click(object sender, RoutedEventArgs e)
-        {
-            await this.groupBoxControl.window.RunAsyncOperation(async () =>
-            {
-                if (!await this.ConnectOverlayService())
-                {
-                    await DialogHelper.ShowMessage("Failed to start Overlay Connection, this sometimes means our connection got wonky. If this continues to happen, please try restarting Mix It Up.");
-                }
-                await ChannelSession.SaveSettings();
-            });
-        }
-
-        private async void DisableOverlayButton_Click(object sender, RoutedEventArgs e)
-        {
-            await this.groupBoxControl.window.RunAsyncOperation(async () =>
-            {
-                await this.DisconnectOverlayService();
-                await ChannelSession.SaveSettings();
-            });
-        }
-
-        private async void TestOverlayButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (ChannelSession.Services.OverlayServers != null)
-            {
-                await this.groupBoxControl.window.RunAsyncOperation(async () =>
-                {
-                    int total = await ChannelSession.Services.OverlayServers.TestConnections();
-                    if (total > 0)
-                    {
-                        await DialogHelper.ShowMessage("Overlay connection test successful!" + Environment.NewLine + Environment.NewLine + total + " overlays connected in total");
-                    }
-                    else
-                    {
-                        string message = "Overlay connection test failed, please ensure you have the Mix It Up Overlay page visible and running in your streaming software.";
-                        message += Environment.NewLine + Environment.NewLine;
-                        message += "If you launched your streaming software before Mix It Up, try refreshing the webpage source in your streaming software.";
-                        await DialogHelper.ShowMessage(message);
-                    }
-                });
-            }
-        }
-
-        private async Task<bool> ConnectOverlayService()
-        {
-            if (await ChannelSession.Services.InitializeOverlayServer())
-            {
-                ChannelSession.Settings.EnableOverlay = true;
-
-                this.EnableOverlayButton.Visibility = Visibility.Collapsed;
-                this.DisableOverlayButton.Visibility = Visibility.Visible;
-                this.TestOverlayButton.IsEnabled = true;
-
-                this.SetCompletedIcon(visible: true);
-
-                return true;
-            }
-            return false;
-        }
-
-        private async Task DisconnectOverlayService()
-        {
-            this.EnableOverlayButton.Visibility = Visibility.Visible;
-            this.DisableOverlayButton.Visibility = Visibility.Collapsed;
-            this.TestOverlayButton.IsEnabled = false;
-
-            await ChannelSession.Services.DisconnectOverlayServer();
-
-            ChannelSession.Settings.EnableOverlay = false;
-
-            this.SetCompletedIcon(visible: false);
-        }
-
-        private void OverlaySourceRefreshTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
-        {
-            ChannelSession.Settings.OverlaySourceName = this.OverlaySourceRefreshTextBox.Text;
+            await this.viewModel.OnLoaded();
         }
     }
 }

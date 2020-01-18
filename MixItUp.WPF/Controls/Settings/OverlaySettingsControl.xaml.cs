@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base;
-using MixItUp.Overlay;
+using MixItUp.Base.Services;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -13,9 +12,9 @@ namespace MixItUp.WPF.Controls.Settings
         public string Name { get; set; }
         public int Port { get; set; }
 
-        public string Address { get { return string.Format(OverlayService.RegularOverlayHttpListenerServerAddressFormat, this.Port); } }
+        public string Address { get { return string.Format(OverlayEndpointService.RegularOverlayHttpListenerServerAddressFormat, this.Port); } }
 
-        public bool CanDelete { get { return !ChannelSession.Services.OverlayServers.DefaultOverlayName.Equals(this.Name); } }
+        public bool CanDelete { get { return !ChannelSession.Services.Overlay.DefaultOverlayName.Equals(this.Name); } }
 
         public OverlayEndpointListing(string name, int port)
         {
@@ -65,7 +64,7 @@ namespace MixItUp.WPF.Controls.Settings
                         OverlayEndpointListing overlay = new OverlayEndpointListing(this.OverlayNameTextBox.Text, port);
 
                         ChannelSession.Settings.OverlayCustomNameAndPorts[overlay.Name] = overlay.Port;
-                        await ChannelSession.Services.OverlayServers.AddOverlay(overlay.Name, overlay.Port);
+                        await ChannelSession.Services.Overlay.AddOverlay(overlay.Name, overlay.Port);
                         this.overlays.Add(overlay);
                     }
                 }
@@ -82,7 +81,7 @@ namespace MixItUp.WPF.Controls.Settings
                 OverlayEndpointListing overlay = (OverlayEndpointListing)button.DataContext;
 
                 ChannelSession.Settings.OverlayCustomNameAndPorts.Remove(overlay.Name);
-                await ChannelSession.Services.OverlayServers.RemoveOverlay(overlay.Name);
+                await ChannelSession.Services.Overlay.RemoveOverlay(overlay.Name);
                 this.overlays.Remove(overlay);
             });
         }

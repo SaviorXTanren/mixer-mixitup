@@ -24,7 +24,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.services.Clear();
 
             this.services.Add(new ServicesGroupBoxControl(this.Window, new MixerBotAccountServiceControl()));
-            this.services.Add(new ServicesGroupBoxControl(this.Window, new OverlayServiceControl()));
+            this.services.Add(new ServiceContainerControl(this.Window, new OverlayServiceControl()));
             this.services.Add(new ServicesGroupBoxControl(this.Window, new OBSStudioServiceControl()));
             this.services.Add(new ServiceContainerControl(this.Window, new StreamlabsOBSServiceControl()));
             this.services.Add(new ServiceContainerControl(this.Window, new XSplitServiceControl()));

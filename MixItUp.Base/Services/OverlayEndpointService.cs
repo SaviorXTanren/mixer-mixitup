@@ -1,7 +1,5 @@
 ﻿using Mixer.Base.Model.Client;
-using MixItUp.Base;
 using MixItUp.Base.Model.Overlay;
-using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
@@ -13,11 +11,53 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.WebSockets;
-using System.Security.Principal;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
-namespace MixItUp.Overlay
+namespace MixItUp.Base.Services
 {
+    [DataContract]
+    public class OverlayTextToSpeech
+    {
+        [DataMember]
+        public string Text { get; set; }
+        [DataMember]
+        public string Voice { get; set; }
+        [DataMember]
+        public double Volume { get; set; }
+        [DataMember]
+        public double Pitch { get; set; }
+        [DataMember]
+        public double Rate { get; set; }
+    }
+
+    public interface IOverlayEndpointService
+    {
+        string Name { get; }
+        int Port { get; }
+
+        event EventHandler OnWebSocketConnectedOccurred;
+        event EventHandler<WebSocketCloseStatus> OnWebSocketDisconnectedOccurred;
+
+        Task<bool> Initialize();
+
+        Task Disconnect();
+
+        Task<int> TestConnection();
+
+        void StartBatching();
+
+        Task EndBatching();
+
+        Task ShowItem(OverlayItemModelBase item, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers);
+        Task UpdateItem(OverlayItemModelBase item, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers);
+        Task HideItem(OverlayItemModelBase item);
+
+        Task SendTextToSpeech(OverlayTextToSpeech textToSpeech);
+
+        void SetLocalFile(string fileID, string filePath);
+    }
+
     public class OverlayPacket : WebSocketPacket
     {
         public JObject data;
@@ -38,7 +78,7 @@ namespace MixItUp.Overlay
         }
     }
 
-    public class OverlayService : IOverlayService
+    public class OverlayEndpointService : IOverlayEndpointService
     {
         public const string RegularOverlayHttpListenerServerAddressFormat = "http://localhost:{0}/overlay/";
         public const string RegularOverlayWebSocketServerAddressFormat = "http://localhost:{0}/ws/";
@@ -58,21 +98,12 @@ namespace MixItUp.Overlay
         private List<OverlayPacket> batchPackets = new List<OverlayPacket>();
         private bool isBatching = false;
 
-        public string HttpListenerServerAddress { get { return string.Format(OverlayService.IsElevated ? AdministratorOverlayHttpListenerServerAddressFormat : RegularOverlayHttpListenerServerAddressFormat, this.Port); } }
-        public string WebSocketServerAddress { get { return string.Format(OverlayService.IsElevated ? AdministratorOverlayWebSocketServerAddressFormat : RegularOverlayWebSocketServerAddressFormat, this.Port); } }
+        public string HttpListenerServerAddress { get { return string.Format(ChannelSession.IsElevated ? AdministratorOverlayHttpListenerServerAddressFormat : RegularOverlayHttpListenerServerAddressFormat, this.Port); } }
+        public string WebSocketServerAddress { get { return string.Format(ChannelSession.IsElevated ? AdministratorOverlayWebSocketServerAddressFormat : RegularOverlayWebSocketServerAddressFormat, this.Port); } }
 
         public int TotalConnectedClients { get { return this.webSocketServer.TotalConnectedClients; } }
 
-        private static bool IsElevated
-        {
-            get
-            {
-                WindowsIdentity id = WindowsIdentity.GetCurrent();
-                return id.Owner != id.User;
-            }
-        }
-
-        public OverlayService(string name, int port)
+        public OverlayEndpointService(string name, int port)
         {
             this.Name = name;
             this.Port = port;
@@ -91,9 +122,9 @@ namespace MixItUp.Overlay
                     this.webSocketServer.OnConnectedOccurred += WebSocketServer_OnConnectedOccurred;
                     this.webSocketServer.OnDisconnectOccurred += WebSocketServer_OnDisconnectOccurred;
 
-                    if (this.Name.Equals(ChannelSession.Services.OverlayServers.DefaultOverlayName) && !string.IsNullOrWhiteSpace(ChannelSession.Settings.OverlaySourceName))
+                    if (this.Name.Equals(ChannelSession.Services.Overlay.DefaultOverlayName) && !string.IsNullOrWhiteSpace(ChannelSession.Settings.OverlaySourceName))
                     {
-                        string overlayServerAddress = string.Format(OverlayService.RegularOverlayHttpListenerServerAddressFormat, this.Port);
+                        string overlayServerAddress = string.Format(OverlayEndpointService.RegularOverlayHttpListenerServerAddressFormat, this.Port);
                         if (ChannelSession.Services.OBSStudio.IsConnected)
                         {
                             await ChannelSession.Services.OBSStudio.SetSourceVisibility(null, ChannelSession.Settings.OverlaySourceName, visibility: false);

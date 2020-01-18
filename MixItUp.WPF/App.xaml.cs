@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Principal;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
@@ -106,6 +107,9 @@ namespace MixItUp.WPF
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
             ChannelSession.Initialize(desktopServicesHandler);
+
+            WindowsIdentity id = WindowsIdentity.GetCurrent();
+            ChannelSession.IsElevated = id.Owner != id.User;
 
             Logger.SetLogLevel(LogLevel.Information);
             Logger.Log(LogLevel.Information, "Application Version: " + ChannelSession.Services.FileService.GetApplicationVersion());

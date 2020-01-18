@@ -143,6 +143,8 @@ namespace MixItUp.Base
             #endif
         }
 
+        public static bool IsElevated { get; set; }
+
         public static IEnumerable<PermissionsCommandBase> AllEnabledChatCommands
         {
             get
@@ -190,7 +192,7 @@ namespace MixItUp.Base
             get
             {
                 Dictionary<string, int> results = new Dictionary<string, int>(ChannelSession.Settings.OverlayCustomNameAndPorts);
-                results.Add(ChannelSession.Services.OverlayServers.DefaultOverlayName, ChannelSession.Services.OverlayServers.DefaultOverlayPort);
+                results.Add(ChannelSession.Services.Overlay.DefaultOverlayName, ChannelSession.Services.Overlay.DefaultOverlayPort);
                 return results;
             }
         }
@@ -492,6 +494,10 @@ namespace MixItUp.Base
                     {
                         await ChannelSession.Services.OvrStream.Connect();
                     }
+                    if (ChannelSession.Settings.EnableOverlay)
+                    {
+                        await ChannelSession.Services.Overlay.Connect();
+                    }
 
                     // Connect OAuth External Services
                     Dictionary<IOAuthExternalService, OAuthTokenModel> externalServiceToConnect = new Dictionary<IOAuthExternalService, OAuthTokenModel>();
@@ -543,11 +549,6 @@ namespace MixItUp.Base
                             message.Append("Please go to the Services page to reconnect them manually.");
                             await DialogHelper.ShowMessage(message.ToString());
                         }
-                    }
-
-                    if (ChannelSession.Settings.EnableOverlay)
-                    {
-                        await ChannelSession.Services.InitializeOverlayServer();
                     }
 
                     if (ChannelSession.Settings.EnableDeveloperAPI)

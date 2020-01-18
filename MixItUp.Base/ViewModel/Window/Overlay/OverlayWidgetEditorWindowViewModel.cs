@@ -163,11 +163,11 @@ namespace MixItUp.Base.ViewModel.Window.Overlay
 
         private void Initialize()
         {
-            foreach (string overlayEndpoint in ChannelSession.Services.OverlayServers.GetOverlayNames())
+            foreach (string overlayEndpoint in ChannelSession.Services.Overlay.GetOverlayNames())
             {
                 this.OverlayEndpoints.Add(overlayEndpoint);
             }
-            this.SelectedOverlayEndpoint = ChannelSession.Services.OverlayServers.DefaultOverlayName;
+            this.SelectedOverlayEndpoint = ChannelSession.Services.Overlay.DefaultOverlayName;
         }
     }
 }

@@ -306,9 +306,7 @@
     <Compile Include="Services\DeveloperAPI\NoCacheHeader.cs" />
     <Compile Include="Services\DeveloperAPI\MixPlayController.cs" />
     <Compile Include="Services\DeveloperAPI\UserController.cs" />
-    <Compile Include="Services\OverlayServiceManager.cs" />
     <Compile Include="Services\OBSService.cs" />
-    <Compile Include="Services\OverlayService.cs" />
     <Compile Include="Services\SocketIOConnection.cs" />
     <Compile Include="Services\AudioService.cs" />
     <Compile Include="Services\DeveloperAPI\WindowsDeveloperAPIService.cs" />

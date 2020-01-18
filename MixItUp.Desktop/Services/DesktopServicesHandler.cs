@@ -49,7 +49,7 @@ namespace MixItUp.Desktop.Services
             this.Discord = new DiscordService();
             this.Twitter = new TwitterService();
             this.OvrStream = new OvrStreamService();
-            this.OverlayServers = new OverlayServiceManager();
+            this.Overlay = new OverlayService();
             this.MixrElixr = new MixrElixrService();
 
             this.StreamlabsOBS = new StreamlabsOBSService();
@@ -58,31 +58,11 @@ namespace MixItUp.Desktop.Services
 
         public override async Task Close()
         {
-            await this.DisconnectOverlayServer();
+            await this.Overlay.Disconnect();
             await this.OvrStream.Disconnect();
             await this.DisconnectOBSStudio();
             await this.DisconnectDeveloperAPI();
             await this.DisconnectTelemetryService();
-        }
-
-        public override async Task<bool> InitializeOverlayServer()
-        {
-            foreach (var kvp in ChannelSession.AllOverlayNameAndPorts)
-            {
-                if (!await ChannelSession.Services.OverlayServers.AddOverlay(kvp.Key, kvp.Value))
-                {
-                    await this.DisconnectOverlayServer();
-                    return false;
-                }
-            }
-            this.OverlayServers.Initialize();
-            return true;
-        }
-
-        public override async Task DisconnectOverlayServer()
-        {
-            this.OverlayServers.Disable();
-            await ChannelSession.Services.OverlayServers.RemoveAllOverlays();
         }
 
         public override async Task<bool> InitializeOBSWebsocket()
