@@ -2,6 +2,7 @@
 using MixItUp.Base.Actions;
 using MixItUp.Base.Services.External;
 using OBSWebsocketDotNet;
+using OBSWebsocketDotNet.Types;
 using StreamingClient.Base.Util;
 using System;
 using System.Linq;
@@ -113,10 +114,14 @@ namespace MixItUp.OBS
         {
             try
             {
-                OBSScene scene = this.OBSWebsocket.GetCurrentScene();
+                OBSScene scene;
                 if (!string.IsNullOrEmpty(sceneName))
                 {
                     scene = this.OBSWebsocket.ListScenes().FirstOrDefault(s => s.Name.Equals(sceneName));
+                }
+                else
+                {
+                    scene = this.OBSWebsocket.GetCurrentScene();
                 }
 
                 foreach (SceneItem item in scene.Items)

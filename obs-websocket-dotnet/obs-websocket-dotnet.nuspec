@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
 	<metadata>
 		<id>obs-websocket-dotnet</id>
-		<version>4.2.1-beta3</version>
+		<version>4.2.0-beta3</version>
 
 		<authors>Stéphane Lepin</authors>
 		<owners>Palakis</owners>
@@ -12,7 +12,7 @@
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 
 		<description>C#/VB .NET library to communicate with an obs-websocket server</description>
-		<releaseNotes>Fixing bug with getting source properties</releaseNotes>
+		<releaseNotes>Better error handling + test coverage</releaseNotes>
 
 		<copyright>Copyright 2017 (c) Stéphane Lepin</copyright>
 		<tags>obs studio websocket api</tags>
