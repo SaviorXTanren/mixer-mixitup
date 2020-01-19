@@ -151,16 +151,13 @@ namespace MixItUp.Base.Services
                     user.IgnoreForQueries = false;
                     if (user.Data.ViewingMinutes == 0)
                     {
-                        if (EventCommand.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.ChatUserFirstJoin)))
-                        {
-                            await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.ChatUserFirstJoin), user);
-                        }
+                        await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.MixerChatUserFirstJoin, user));
                     }
 
-                    if (EventCommand.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.ChatUserJoined)))
+                    if (ChannelSession.Services.Events.CanPerformEvent(new EventTrigger(EventTypeEnum.MixerChatUserJoined, user)))
                     {
                         user.Data.TotalStreamsWatched++;
-                        await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.ChatUserJoined), user);
+                        await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.MixerChatUserJoined, user));
                     }
                 }
             }
@@ -202,10 +199,7 @@ namespace MixItUp.Base.Services
             this.usersByID.Remove(user.ID.ToString());
             this.usersByUsername.Remove(user.UserName);
 
-            if (EventCommand.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.ChatUserLeft)))
-            {
-                await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.ChatUserLeft), user);
-            }
+            await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.MixerChatUserLeft, user));
         }
 
         public void Clear()

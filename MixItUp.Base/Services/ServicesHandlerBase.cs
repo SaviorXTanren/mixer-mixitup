@@ -13,6 +13,7 @@ namespace MixItUp.Base.Services
         public IUserService User { get; protected set; }
 
         public IChatService Chat { get; protected set; }
+        public IEventService Events { get; protected set; }
 
         public ISettingsService Settings { get; protected set; }
         public IFileService FileService { get; protected set; }

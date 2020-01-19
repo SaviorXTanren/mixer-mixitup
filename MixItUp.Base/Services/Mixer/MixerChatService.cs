@@ -624,10 +624,7 @@ namespace MixItUp.Base.Services.Mixer
                 {
                     if (user.Data.ViewingMinutes == 0)
                     {
-                        if (EventCommand.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.ChatUserFirstJoin)))
-                        {
-                            await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.ChatUserFirstJoin), user);
-                        }
+                        await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.MixerChatUserFirstJoin, user));
                     }
                 }
                 catch (Exception ex) { Logger.Log(ex); }
@@ -648,10 +645,10 @@ namespace MixItUp.Base.Services.Mixer
             for (int i = 0; i < 8; i++)
             {
                 await Task.Delay(250);
-                if (ChannelSession.Constellation.SkillEventsTriggered.ContainsKey(skillAttribution.id))
+                if (ChannelSession.Services.Events.MixerEventService.SkillEventsTriggered.ContainsKey(skillAttribution.id))
                 {
-                    message.Skill.SetPayload(ChannelSession.Constellation.SkillEventsTriggered[skillAttribution.id]);
-                    ChannelSession.Constellation.SkillEventsTriggered.Remove(skillAttribution.id);
+                    message.Skill.SetPayload(ChannelSession.Services.Events.MixerEventService.SkillEventsTriggered[skillAttribution.id]);
+                    ChannelSession.Services.Events.MixerEventService.SkillEventsTriggered.Remove(skillAttribution.id);
                     break;
                 }
             }

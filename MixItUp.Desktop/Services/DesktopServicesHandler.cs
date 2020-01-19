@@ -20,6 +20,7 @@ namespace MixItUp.Desktop.Services
 
             this.User = new UserService();
             this.Chat = new ChatService();
+            this.Events = new EventService();
 
             this.Settings = new DesktopSettingsService();
             this.FileService = new WindowsFileService();

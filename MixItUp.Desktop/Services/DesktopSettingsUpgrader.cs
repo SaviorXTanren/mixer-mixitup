@@ -1,4 +1,5 @@
-﻿using Mixer.Base.Model.Interactive;
+﻿using Mixer.Base.Clients;
+using Mixer.Base.Model.Interactive;
 using Mixer.Base.Model.MixPlay;
 using Mixer.Base.Model.User;
 using MixItUp.Base;
@@ -44,6 +45,7 @@ namespace MixItUp.Desktop.Services
             await DesktopSettingsUpgrader.Version36Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version37Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version38Upgrade(version, filePath);
+            await DesktopSettingsUpgrader.Version39Upgrade(version, filePath);
 
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath, ignoreErrors: true);
             settings.InitializeDB = false;
@@ -373,6 +375,125 @@ namespace MixItUp.Desktop.Services
                 foreach (CommandBase command in GetAllCommands(settings))
                 {
                     StoreCommandUpgrader.UpdateConditionalAction(command.Actions);
+                }
+
+                await ChannelSession.Services.Settings.Save(settings);
+            }
+        }
+
+        private static async Task Version39Upgrade(int version, string filePath)
+        {
+            if (version < 39)
+            {
+                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath, ignoreErrors: true);
+                await ChannelSession.Services.Settings.Initialize(settings);
+
+                foreach (EventCommand command in settings.EventCommands)
+                {
+#pragma warning disable CS0612 // Type or member is obsolete
+                    if (command.OtherEventType != OtherEventTypeEnum.None)
+                    {
+                        switch (command.OtherEventType)
+                        {
+                            case OtherEventTypeEnum.MixerChannelStreamStart:
+                                command.EventCommandType = EventTypeEnum.MixerChannelStreamStart;
+                                break;
+                            case OtherEventTypeEnum.MixerChannelStreamStop:
+                                command.EventCommandType = EventTypeEnum.MixerChannelStreamStop;
+                                break;
+                            case OtherEventTypeEnum.ChatUserUnfollow:
+                                command.EventCommandType = EventTypeEnum.MixerChannelUnfollowed;
+                                break;
+                            case OtherEventTypeEnum.MixerSparksUsed:
+                                command.EventCommandType = EventTypeEnum.MixerSparksUsed;
+                                break;
+                            case OtherEventTypeEnum.MixerEmbersUsed:
+                                command.EventCommandType = EventTypeEnum.MixerEmbersUsed;
+                                break;
+                            case OtherEventTypeEnum.MixerSkillUsed:
+                                command.EventCommandType = EventTypeEnum.MixerSkillUsed;
+                                break;
+                            case OtherEventTypeEnum.ChatUserFirstJoin:
+                                command.EventCommandType = EventTypeEnum.MixerChatUserFirstJoin;
+                                break;
+                            case OtherEventTypeEnum.ChatUserJoined:
+                                command.EventCommandType = EventTypeEnum.MixerChatUserJoined;
+                                break;
+                            case OtherEventTypeEnum.ChatUserLeft:
+                                command.EventCommandType = EventTypeEnum.MixerChatUserLeft;
+                                break;
+                            case OtherEventTypeEnum.ChatUserPurge:
+                                command.EventCommandType = EventTypeEnum.MixerChatUserPurge;
+                                break;
+                            case OtherEventTypeEnum.ChatUserBan:
+                                command.EventCommandType = EventTypeEnum.MixerChatUserBan;
+                                break;
+                            case OtherEventTypeEnum.ChatMessageReceived:
+                                command.EventCommandType = EventTypeEnum.MixerChatMessageReceived;
+                                break;
+                            case OtherEventTypeEnum.ChatMessageDeleted:
+                                command.EventCommandType = EventTypeEnum.MixerChatMessageDeleted;
+                                break;
+                            case OtherEventTypeEnum.StreamlabsDonation:
+                                command.EventCommandType = EventTypeEnum.StreamlabsDonation;
+                                break;
+                            case OtherEventTypeEnum.TipeeeStreamDonation:
+                                command.EventCommandType = EventTypeEnum.TipeeeStreamDonation;
+                                break;
+                            case OtherEventTypeEnum.TreatStreamDonation:
+                                command.EventCommandType = EventTypeEnum.TreatStreamDonation;
+                                break;
+                            case OtherEventTypeEnum.StreamJarDonation:
+                                command.EventCommandType = EventTypeEnum.StreamJarDonation;
+                                break;
+                            case OtherEventTypeEnum.TiltifyDonation:
+                                command.EventCommandType = EventTypeEnum.TiltifyDonation;
+                                break;
+                            case OtherEventTypeEnum.ExtraLifeDonation:
+                                command.EventCommandType = EventTypeEnum.ExtraLifeDonation;
+                                break;
+                            case OtherEventTypeEnum.JustGivingDonation:
+                                command.EventCommandType = EventTypeEnum.JustGivingDonation;
+                                break;
+                            case OtherEventTypeEnum.PatreonSubscribed:
+                                command.EventCommandType = EventTypeEnum.PatreonSubscribed;
+                                break;
+                            case OtherEventTypeEnum.StreamlootsCardRedeemed:
+                                command.EventCommandType = EventTypeEnum.StreamlootsCardRedeemed;
+                                break;
+                            case OtherEventTypeEnum.StreamlootsPackPurchased:
+                                command.EventCommandType = EventTypeEnum.StreamlootsPackPurchased;
+                                break;
+                            case OtherEventTypeEnum.StreamlootsPackGifted:
+                                command.EventCommandType = EventTypeEnum.StreamlootsPackGifted;
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        switch (command.EventType)
+                        {
+                            case ConstellationEventTypeEnum.channel__id__followed:
+                                command.EventCommandType = EventTypeEnum.MixerChannelFollowed;
+                                break;
+                            case ConstellationEventTypeEnum.channel__id__hosted:
+                                command.EventCommandType = EventTypeEnum.MixerChannelHosted;
+                                break;
+                            case ConstellationEventTypeEnum.channel__id__subscribed:
+                                command.EventCommandType = EventTypeEnum.MixerChannelSubscribed;
+                                break;
+                            case ConstellationEventTypeEnum.channel__id__resubscribed:
+                                command.EventCommandType = EventTypeEnum.MixerChannelResubscribed;
+                                break;
+                            case ConstellationEventTypeEnum.channel__id__subscriptionGifted:
+                                command.EventCommandType = EventTypeEnum.MixerChannelSubscriptionGifted;
+                                break;
+                            case ConstellationEventTypeEnum.progression__id__levelup:
+                                command.EventCommandType = EventTypeEnum.MixerFanProgressionLevelUp;
+                                break;
+                        }
+                    }
+#pragma warning restore CS0612 // Type or member is obsolete
                 }
 
                 await ChannelSession.Services.Settings.Save(settings);

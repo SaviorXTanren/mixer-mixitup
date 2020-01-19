@@ -120,7 +120,6 @@ namespace MixItUp.Base
         public static IChannelSettings Settings { get; private set; }
 
         public static MixPlayClientWrapper Interactive { get; private set; }
-        public static ConstellationClientWrapper Constellation { get; private set; }
 
         public static StatisticsTracker Statistics { get; private set; }
 
@@ -231,7 +230,6 @@ namespace MixItUp.Base
 
             ChannelSession.Services = serviceHandler;
 
-            ChannelSession.Constellation = new ConstellationClientWrapper();
             ChannelSession.Interactive = new MixPlayClientWrapper();
 
             ChannelSession.Statistics = new StatisticsTracker();
@@ -338,8 +336,6 @@ namespace MixItUp.Base
 
             await ChannelSession.Services.Chat.MixerChatService.DisconnectStreamer();
             await ChannelSession.DisconnectBot();
-
-            await ChannelSession.Constellation.Disconnect();
         }
 
         public static async Task SaveSettings()
@@ -468,13 +464,15 @@ namespace MixItUp.Base
                     }
 
                     MixerChatService mixerChatService = new MixerChatService();
+                    MixerEventService mixerEventService = new MixerEventService();
 
-                    if (!await mixerChatService.ConnectStreamer() || !await ChannelSession.Constellation.Connect())
+                    if (!await mixerChatService.ConnectStreamer() || !await mixerEventService.Connect())
                     {
                         return false;
                     }
 
                     await ChannelSession.Services.Chat.Initialize(mixerChatService);
+                    await ChannelSession.Services.Events.Initialize(mixerEventService);
 
                     // Connect External Services
                     Dictionary<IExternalService, OAuthTokenModel> externalServiceToConnect = new Dictionary<IExternalService, OAuthTokenModel>();

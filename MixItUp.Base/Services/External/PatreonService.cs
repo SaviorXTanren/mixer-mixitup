@@ -646,12 +646,11 @@ namespace MixItUp.Base.Services.External
                                         await user.RefreshDetails(force: true);
                                     }
 
-                                    Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();
-                                    extraSpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierNameSpecialIdentifier] = tier.Title;
-                                    extraSpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierAmountSpecialIdentifier] = tier.Amount.ToString();
-                                    extraSpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierImageSpecialIdentifier] = tier.ImageUrl;
-
-                                    await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.PatreonSubscribed), user, arguments: null, extraSpecialIdentifiers: extraSpecialIdentifiers);
+                                    EventTrigger trigger = new EventTrigger(EventTypeEnum.PatreonSubscribed, user);
+                                    trigger.SpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierNameSpecialIdentifier] = tier.Title;
+                                    trigger.SpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierAmountSpecialIdentifier] = tier.Amount.ToString();
+                                    trigger.SpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierImageSpecialIdentifier] = tier.ImageUrl;
+                                    await ChannelSession.Services.Events.PerformEvent(trigger);
                                 }
                             }
                             this.currentMembersAndTiers[member.UserID] = member.TierID;

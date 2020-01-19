@@ -222,8 +222,7 @@ namespace MixItUp.Base.Services.External
                         if (!donationsReceived.ContainsKey(sjDonation.ID))
                         {
                             donationsReceived[sjDonation.ID] = sjDonation;
-                            UserDonationModel donation = sjDonation.ToGenericDonation();
-                            await EventCommand.ProcessDonationEventCommand(donation, OtherEventTypeEnum.StreamJarDonation);
+                            await ChannelSession.Services.Events.PerformEvent(await EventService.ProcessDonationEvent(EventTypeEnum.StreamJarDonation, sjDonation.ToGenericDonation()));
                         }
                     }
                 }

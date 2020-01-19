@@ -274,7 +274,8 @@ namespace MixItUp.Base.Services.External
                             UserDonationModel donation = jgDonation.ToGenericDonation();
                             if (donation.DateTime > this.startTime)
                             {
-                                await EventCommand.ProcessDonationEventCommand(donation, OtherEventTypeEnum.JustGivingDonation);
+                                await ChannelSession.Services.Events.PerformEvent(await EventService.ProcessDonationEvent(EventTypeEnum.JustGivingDonation, donation));
+
                             }
                         }
                     }

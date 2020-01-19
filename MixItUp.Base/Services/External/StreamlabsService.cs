@@ -224,7 +224,7 @@ namespace MixItUp.Base.Services.External
                             UserDonationModel donation = slDonation.ToGenericDonation();
                             if (donation.DateTime > this.startTime)
                             {
-                                await EventCommand.ProcessDonationEventCommand(donation, OtherEventTypeEnum.StreamlabsDonation);
+                                await ChannelSession.Services.Events.PerformEvent(await EventService.ProcessDonationEvent(EventTypeEnum.StreamlabsDonation, donation));
                             }
                         }
                     }

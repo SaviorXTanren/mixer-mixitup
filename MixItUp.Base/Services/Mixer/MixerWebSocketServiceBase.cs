@@ -11,9 +11,16 @@ namespace MixItUp.Base.Services.Mixer
         {
             for (int i = 0; i < connectionAttempts; i++)
             {
-                if (await connect())
+                try
                 {
-                    return true;
+                    if (await connect())
+                    {
+                        return true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
                 }
                 await Task.Delay(1000);
             }

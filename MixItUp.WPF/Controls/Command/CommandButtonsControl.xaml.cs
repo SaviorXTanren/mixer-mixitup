@@ -4,6 +4,7 @@ using MixItUp.Base.Model.Chat;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Controls.MainControls;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.MainControls;
 using MixItUp.WPF.Util;
@@ -78,9 +79,9 @@ namespace MixItUp.WPF.Controls.Command
                 {
                     return (T)commandButtonsControl.DataContext;
                 }
-                else if (commandButtonsControl.DataContext is EventCommandItem)
+                else if (commandButtonsControl.DataContext is EventCommandItemViewModel)
                 {
-                    EventCommandItem commandItem = (EventCommandItem)commandButtonsControl.DataContext;
+                    EventCommandItemViewModel commandItem = (EventCommandItemViewModel)commandButtonsControl.DataContext;
                     return (T)((CommandBase)commandItem.Command);
                 }
             }

@@ -272,16 +272,15 @@ namespace MixItUp.Base.Services.External
                     }
                 }
 
-                Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
-                specialIdentifiers.Add("streamlootspurchasequantity", purchase.data.Quantity.ToString());
-                if (giftee == null)
+                EventTrigger trigger = new EventTrigger(EventTypeEnum.StreamlootsPackPurchased, user);
+                trigger.SpecialIdentifiers["streamlootspurchasequantity"] = purchase.data.Quantity.ToString();
+                if (giftee != null)
                 {
-                    await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.StreamlootsPackPurchased), user, extraSpecialIdentifiers: specialIdentifiers);
+                    trigger.Type = EventTypeEnum.StreamlootsPackGifted;
+                    trigger.Arguments.Add(giftee.UserName);
                 }
-                else
-                {
-                    await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.StreamlootsPackGifted), user, arguments: new List<string>() { giftee.UserName }, extraSpecialIdentifiers: specialIdentifiers);
-                }
+                await ChannelSession.Services.Events.PerformEvent(trigger);
+
                 GlobalEvents.StreamlootsPurchaseOccurred(new Tuple<UserViewModel, int>(user, purchase.data.Quantity));
             }
         }
@@ -300,21 +299,21 @@ namespace MixItUp.Base.Services.External
                     user = new UserViewModel(userModel);
                 }
 
-                Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
-                specialIdentifiers.Add("streamlootscardname", card.data.cardName);
-                specialIdentifiers.Add("streamlootscardimage", card.imageUrl);
-                specialIdentifiers.Add("streamlootscardhasvideo", (!string.IsNullOrEmpty(card.videoUrl)).ToString());
-                specialIdentifiers.Add("streamlootscardvideo", card.videoUrl);
-                specialIdentifiers.Add("streamlootscardsound", card.soundUrl);
+                EventTrigger trigger = new EventTrigger(EventTypeEnum.StreamlootsCardRedeemed, user);
+                trigger.SpecialIdentifiers["streamlootscardname"] = card.data.cardName;
+                trigger.SpecialIdentifiers["streamlootscardimage"] = card.imageUrl;
+                trigger.SpecialIdentifiers["streamlootscardhasvideo"] = (!string.IsNullOrEmpty(card.videoUrl)).ToString();
+                trigger.SpecialIdentifiers["streamlootscardvideo"] = card.videoUrl;
+                trigger.SpecialIdentifiers["streamlootscardsound"] = card.soundUrl;
 
                 string message = card.data.Message;
                 if (string.IsNullOrEmpty(message))
                 {
                     message = card.data.LongMessage;
                 }
-                specialIdentifiers.Add("streamlootsmessage", message);
+                trigger.SpecialIdentifiers["streamlootsmessage"] = message;
 
-                await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.StreamlootsCardRedeemed), user, extraSpecialIdentifiers: specialIdentifiers);
+                await ChannelSession.Services.Events.PerformEvent(trigger);
             }
         }
     }

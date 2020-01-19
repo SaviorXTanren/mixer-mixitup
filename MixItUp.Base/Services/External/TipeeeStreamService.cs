@@ -356,8 +356,7 @@ namespace MixItUp.Base.Services.External
                         this.DonationOccurred(response.Event);
                         Task.Run(async () =>
                         {
-                            UserDonationModel donation = response.Event.ToGenericDonation();
-                            await EventCommand.ProcessDonationEventCommand(donation, OtherEventTypeEnum.TipeeeStreamDonation);
+                            await ChannelSession.Services.Events.PerformEvent(await EventService.ProcessDonationEvent(EventTypeEnum.TipeeeStreamDonation, response.Event.ToGenericDonation()));
                         });
                     }
                 }

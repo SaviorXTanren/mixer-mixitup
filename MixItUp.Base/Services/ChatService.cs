@@ -15,7 +15,6 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -412,11 +411,9 @@ namespace MixItUp.Base.Services
 
                     if (!string.IsNullOrEmpty(message.PlainTextMessage))
                     {
-                        Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
-                        {
-                            { "message", message.PlainTextMessage },
-                        };
-                        await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.ChatMessageReceived), message.User, extraSpecialIdentifiers: specialIdentifiers);
+                        EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChatUserBan, message.User);
+                        trigger.SpecialIdentifiers["message"] = message.PlainTextMessage;
+                        await ChannelSession.Services.Events.PerformEvent(trigger);
                     }
                 }
 
@@ -643,24 +640,14 @@ namespace MixItUp.Base.Services
                 }
             }
 
-            if (EventCommand.CanUserRunEvent(e.Item1, EnumHelper.GetEnumName(OtherEventTypeEnum.ChatUserPurge)))
-            {
-                UserViewModel targetUser = e.Item1;
-                UserViewModel modUser = e.Item2;
-                if (e.Item2 == null)
-                {
-                    modUser = new UserViewModel(ChannelSession.MixerStreamerUser);
-                }
-                await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.ChatUserPurge), modUser, arguments: new List<string>() { targetUser.UserName });
-            }
+            EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChatUserPurge, e.Item2);
+            trigger.Arguments.Add(e.Item1.UserName);
+            await ChannelSession.Services.Events.PerformEvent(trigger);
         }
 
         private async void MixerChatService_OnUserBanOccurred(object sender, UserViewModel user)
         {
-            if (EventCommand.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.ChatUserBan)))
-            {
-                await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.ChatUserBan), user);
-            }
+            await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.MixerChatUserBan, user));
         }
 
         private void MixerChatService_OnPollEndOccurred(object sender, ChatPollEventModel pollResults)

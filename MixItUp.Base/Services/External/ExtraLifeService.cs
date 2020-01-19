@@ -292,7 +292,7 @@ namespace MixItUp.Base.Services.External
                                 user = new UserViewModel(userModel);
                             }
 
-                            await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.ExtraLifeDonation), user, arguments: null, extraSpecialIdentifiers: donation.GetSpecialIdentifiers());
+                            await ChannelSession.Services.Events.PerformEvent(await EventService.ProcessDonationEvent(EventTypeEnum.ExtraLifeDonation, donation));
                         }
                     }
                 }
