@@ -10,7 +10,6 @@ using MixItUp.Base.Model.Chat.Mixer;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Mixer;
-using MixItUp.Base.Statistics;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Model.OAuth;
@@ -108,8 +107,6 @@ namespace MixItUp.Base
             OAuthClientScopeEnum.user__act_as,
         };
 
-        public static SecretManagerService SecretManager { get; internal set; }
-
         public static MixerConnectionService MixerStreamerConnection { get; private set; }
         public static MixerConnectionService MixerBotConnection { get; private set; }
 
@@ -120,8 +117,6 @@ namespace MixItUp.Base
         public static IChannelSettings Settings { get; private set; }
 
         public static MixPlayClientWrapper Interactive { get; private set; }
-
-        public static StatisticsTracker Statistics { get; private set; }
 
         public static ServicesHandlerBase Services { get; private set; }
 
@@ -185,16 +180,6 @@ namespace MixItUp.Base
             }
         }
 
-        public static IDictionary<string, int> AllOverlayNameAndPorts
-        {
-            get
-            {
-                Dictionary<string, int> results = new Dictionary<string, int>(ChannelSession.Settings.OverlayCustomNameAndPorts);
-                results.Add(ChannelSession.Services.Overlay.DefaultOverlayName, ChannelSession.Services.Overlay.DefaultOverlayPort);
-                return results;
-            }
-        }
-
         public static bool IsStreamer
         {
             get
@@ -209,30 +194,22 @@ namespace MixItUp.Base
 
         public static void Initialize(ServicesHandlerBase serviceHandler)
         {
+            ChannelSession.Services = serviceHandler;
+
             try
             {
                 Type mixItUpSecretsType = Type.GetType("MixItUp.Base.MixItUpSecrets");
                 if (mixItUpSecretsType != null)
                 {
-                    ChannelSession.SecretManager = (SecretManagerService)Activator.CreateInstance(mixItUpSecretsType);
+                    ChannelSession.Services.SetSecrets((SecretsService)Activator.CreateInstance(mixItUpSecretsType));
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
 
-            if (ChannelSession.SecretManager == null)
-            {
-                ChannelSession.SecretManager = new SecretManagerService();
-            }
-
             ChannelSession.PreMadeChatCommands = new List<PreMadeChatCommand>();
-
             ChannelSession.Counters = new LockedDictionary<string, double>();
 
-            ChannelSession.Services = serviceHandler;
-
             ChannelSession.Interactive = new MixPlayClientWrapper();
-
-            ChannelSession.Statistics = new StatisticsTracker();
         }
 
         public static async Task<bool> ConnectUser(IEnumerable<OAuthClientScopeEnum> scopes, string channelName = null)
@@ -367,14 +344,14 @@ namespace MixItUp.Base
             }
         }
 
-        public static async Task<UserViewModel> GetCurrentUser()
+        public static Task<UserViewModel> GetCurrentUser()
         {
             UserViewModel user = ChannelSession.Services.User.GetUserByID(ChannelSession.MixerStreamerUser.id);
             if (user == null)
             {
                 user = new UserViewModel(ChannelSession.MixerStreamerUser);
             }
-            return user;
+            return Task.FromResult(user);
         }
 
         public static void DisconnectionOccurred(string serviceName)
@@ -391,8 +368,6 @@ namespace MixItUp.Base
 
         private static async Task<bool> InitializeInternal(bool isStreamer, string channelName = null)
         {
-            await ChannelSession.Services.InitializeTelemetryService();
-
             PrivatePopulatedUserModel user = await ChannelSession.MixerStreamerConnection.GetCurrentUser();
             if (user != null)
             {
@@ -435,7 +410,8 @@ namespace MixItUp.Base
 
                     ChannelSession.Settings.Channel = channel;
 
-                    ChannelSession.Services.Telemetry.SetUserId(ChannelSession.Settings.TelemetryUserId);
+                    await ChannelSession.Services.Telemetry.Connect();
+                    ChannelSession.Services.Telemetry.SetUserID(ChannelSession.Settings.TelemetryUserId);
 
                     ChannelSession.MixerStreamerConnection.Initialize();
                     await MixerChatEmoteModel.InitializeEmoteCache();
@@ -590,6 +566,7 @@ namespace MixItUp.Base
                     }
 
                     ChannelSession.Services.TimerService.Initialize();
+                    ChannelSession.Services.Statistics.Initialize();
 
                     ChannelSession.Services.InputService.HotKeyPressed += InputService_HotKeyPressed;
 

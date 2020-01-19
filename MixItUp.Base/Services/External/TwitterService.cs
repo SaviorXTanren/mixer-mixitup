@@ -83,7 +83,7 @@ namespace MixItUp.Base.Services.External
                     CredentialStore = new InMemoryCredentialStore
                     {
                         ConsumerKey = TwitterService.ClientID,
-                        ConsumerSecret = ChannelSession.SecretManager.GetSecret("TwitterSecret"),
+                        ConsumerSecret = ChannelSession.Services.Secrets.GetSecret("TwitterSecret"),
                     },
                     GoToTwitterAuthorization = pageLink => ProcessHelper.LaunchLink(pageLink),
                     GetPin = () =>
@@ -119,7 +119,7 @@ namespace MixItUp.Base.Services.External
                     CredentialStore = new SingleUserInMemoryCredentialStore
                     {
                         ConsumerKey = TwitterService.ClientID,
-                        ConsumerSecret = ChannelSession.SecretManager.GetSecret("TwitterSecret"),
+                        ConsumerSecret = ChannelSession.Services.Secrets.GetSecret("TwitterSecret"),
 
                         AccessToken = token.accessToken,
                         AccessTokenSecret = token.refreshToken,

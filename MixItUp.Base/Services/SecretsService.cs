@@ -2,7 +2,7 @@
 
 namespace MixItUp.Base.Services
 {
-    public class SecretManagerService
+    public class SecretsService
     {
         private Dictionary<string, string> secrets = new Dictionary<string, string>();
 

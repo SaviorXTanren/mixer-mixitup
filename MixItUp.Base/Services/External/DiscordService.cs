@@ -668,8 +668,8 @@ namespace MixItUp.Base.Services.External
 
         public bool IsUsingCustomApplication { get { return !string.IsNullOrEmpty(ChannelSession.Settings.DiscordCustomClientID); } }
         public string ClientID { get { return (this.IsUsingCustomApplication) ? ChannelSession.Settings.DiscordCustomClientID : DiscordService.DefaultClientID; } }
-        public string ClientSecret { get { return (this.IsUsingCustomApplication) ? ChannelSession.Settings.DiscordCustomClientSecret : ChannelSession.SecretManager.GetSecret("DiscordSecret"); } }
-        public string BotToken { get { return (this.IsUsingCustomApplication) ? ChannelSession.Settings.DiscordCustomBotToken : ChannelSession.SecretManager.GetSecret("DiscordBotToken"); } }
+        public string ClientSecret { get { return (this.IsUsingCustomApplication) ? ChannelSession.Settings.DiscordCustomClientSecret : ChannelSession.Services.Secrets.GetSecret("DiscordSecret"); } }
+        public string BotToken { get { return (this.IsUsingCustomApplication) ? ChannelSession.Settings.DiscordCustomBotToken : ChannelSession.Services.Secrets.GetSecret("DiscordBotToken"); } }
 
         public override async Task<ExternalServiceResult> Connect()
         {

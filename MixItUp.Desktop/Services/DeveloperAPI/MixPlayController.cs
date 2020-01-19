@@ -27,20 +27,20 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
 
         [Route("users")]
         [HttpGet]
-        public async Task<IEnumerable<MixPlayUser>> GetUsers()
+        public Task<IEnumerable<MixPlayUser>> GetUsers()
         {
             var mixplayUsers = ChannelSession.Services.User.GetAllWorkableUsers();
-            return mixplayUsers.Where(x => x.IsInteractiveParticipant).Select(x => new MixPlayUser()
+            return Task.FromResult<IEnumerable<MixPlayUser>>(mixplayUsers.Where(x => x.IsInteractiveParticipant).Select(x => new MixPlayUser()
             {
                 ID = x.ID,
                 UserName = x.UserName,
                 ParticipantIDs = x.InteractiveIDs.Keys.ToList(),
-            });
+            }));
         }
 
         [Route("user/{userID}")]
         [HttpGet]
-        public async Task<MixPlayUser> GetUser(uint userID)
+        public Task<MixPlayUser> GetUser(uint userID)
         {
             UserViewModel user = ChannelSession.Services.User.GetUserByID(userID);
             if (user == null)
@@ -53,17 +53,17 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            return new MixPlayUser()
+            return Task.FromResult(new MixPlayUser()
             {
                 ID = user.ID,
                 UserName = user.UserName,
                 ParticipantIDs = user.InteractiveIDs.Keys.ToList(),
-            };
+            });
         }
 
         [Route("user/search/username/{userName}")]
         [HttpGet]
-        public async Task<MixPlayUser> GetUserByUserName(string userName)
+        public Task<MixPlayUser> GetUserByUserName(string userName)
         {
             UserViewModel user = ChannelSession.Services.User.GetUserByUsername(userName);
 
@@ -77,17 +77,17 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            return new MixPlayUser()
+            return Task.FromResult(new MixPlayUser()
             {
                 ID = user.ID,
                 UserName = user.UserName,
                 ParticipantIDs = user.InteractiveIDs.Keys.ToList(),
-            };
+            });
         }
 
         [Route("user/search/participant/{participantID}")]
         [HttpGet]
-        public async Task<MixPlayUser> GetUserByParticipantID(string participantID)
+        public Task<MixPlayUser> GetUserByParticipantID(string participantID)
         {
             UserViewModel user = ChannelSession.Services.User.GetUserByMixPlayID(participantID);
 
@@ -101,12 +101,12 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            return new MixPlayUser()
+            return Task.FromResult(new MixPlayUser()
             {
                 ID = user.ID,
                 UserName = user.UserName,
                 ParticipantIDs = user.InteractiveIDs.Keys.ToList(),
-            };
+            });
         }
 
         [Route("broadcast")]

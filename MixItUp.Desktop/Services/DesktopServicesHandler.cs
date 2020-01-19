@@ -15,6 +15,7 @@ namespace MixItUp.Desktop.Services
     {
         public void Initialize()
         {
+            this.Secrets = new SecretsService();
             this.MixItUpService = new MixItUpService();
             this.MixerStatus = new MixerStatusService();
 
@@ -23,6 +24,8 @@ namespace MixItUp.Desktop.Services
             this.Events = new EventService();
 
             this.Settings = new DesktopSettingsService();
+            this.Statistics = new StatisticsService();
+            this.Database = new DatabaseService();
             this.FileService = new WindowsFileService();
             this.InputService = new WindowsInputService();
             this.TimerService = new TimerService();
@@ -34,6 +37,7 @@ namespace MixItUp.Desktop.Services
             this.SerialService = new SerialService();
             this.RemoteService = new RemoteService("https://mixitup-remote-server.azurewebsites.net/api/", "https://mixitup-remote-server.azurewebsites.net/RemoteHub");
             this.DeveloperAPI = new WindowsDeveloperAPIService();
+            this.Telemetry = new DesktopTelemetryService();
 
             this.Streamlabs = new StreamlabsService();
             this.StreamJar = new StreamJarService();
@@ -56,38 +60,18 @@ namespace MixItUp.Desktop.Services
             this.XSplit = new XSplitService("http://localhost:8211/");
         }
 
+        public override void SetSecrets(SecretsService secretsService)
+        {
+            this.Secrets = secretsService;
+        }
+
         public override async Task Close()
         {
             await this.Overlay.Disconnect();
             await this.OvrStream.Disconnect();
             await this.OBSStudio.Disconnect();
             await this.DeveloperAPI.Disconnect();
-            await this.DisconnectTelemetryService();
-        }
-
-        public override async Task<bool> InitializeTelemetryService()
-        {
-            return await Task.Run(() =>
-            {
-                if (this.Telemetry == null)
-                {
-                    this.Telemetry = new DesktopTelemetryService();
-                    this.Telemetry.Start();
-                }
-                return true;
-            });
-        }
-
-        public override async Task DisconnectTelemetryService()
-        {
-            await Task.Run(() =>
-            {
-                if (this.Telemetry != null)
-                {
-                    this.Telemetry.End();
-                    this.Telemetry = null;
-                }
-            });
+            await this.Telemetry.Disconnect();
         }
     }
 }

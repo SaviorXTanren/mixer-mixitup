@@ -42,7 +42,7 @@ namespace MixItUp.Base.Services.External
                 {
                     client.DefaultRequestHeaders.Add("Accept", "application/jwt");
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", ChannelSession.SecretManager.GetSecret("AzureTranslationKey"));
+                    client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", ChannelSession.Services.Secrets.GetSecret("AzureTranslationKey"));
                     HttpResponseMessage response = await client.PostAsync("https://api.cognitive.microsoft.com/sts/v1.0/issueToken", null);
                     string accessToken = await response.ProcessStringResponse();
                     if (response.StatusCode == System.Net.HttpStatusCode.OK && !string.IsNullOrEmpty(accessToken))

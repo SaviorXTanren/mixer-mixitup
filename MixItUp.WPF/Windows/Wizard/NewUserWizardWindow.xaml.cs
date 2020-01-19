@@ -1,47 +1,29 @@
-﻿using Mixer.Base.Interactive;
-using Mixer.Base.Model.MixPlay;
+﻿using Mixer.Base.Model.MixPlay;
 using Mixer.Base.Model.User;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
-using MixItUp.Base.Model.Import;
+using MixItUp.Base.Model.Import.ScorpBot;
+using MixItUp.Base.Model.Import.Streamlabs;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.Desktop.Database;
-using MixItUp.WPF.Util;
-using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 using System.Windows.Navigation;
 
 namespace MixItUp.WPF.Windows.Wizard
 {
-    public class SoundwaveProfileItem
-    {
-        public string Name { get; set; }
-        public bool AddProfile { get; set; }
-        public bool CanBeImported { get; set; }
-    }
-
     /// <summary>
     /// Interaction logic for NewUserWizardWindow.xaml
     /// </summary>
     public partial class NewUserWizardWindow : LoadingWindowBase
     {
-        private const string SoundwaveInteractiveGameName = "Soundwave Interactive Soundboard";
-        private const string SoundwaveInteractiveCooldownGroupName = "Soundwave Buttons";
-
-        private static readonly string SoundwaveInteractiveAppDataSettingsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Soundwave Interactive");
-        private static readonly string FirebotAppDataSettingsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Firebot\\firebot-data\\user-settings");
-
         private string directoryPath;
 
         private IEnumerable<MixPlayGameListingModel> interactiveGames;
@@ -49,9 +31,6 @@ namespace MixItUp.WPF.Windows.Wizard
         private ScorpBotData scorpBotData;
 
         private StreamlabsChatBotData streamlabsChatBotData;
-
-        private SoundwaveSettings soundwaveData;
-        private List<SoundwaveProfileItem> soundwaveProfiles;
 
         public NewUserWizardWindow()
         {
@@ -67,13 +46,6 @@ namespace MixItUp.WPF.Windows.Wizard
             this.IntroPageGrid.Visibility = System.Windows.Visibility.Visible;
 
             this.interactiveGames = await ChannelSession.MixerStreamerConnection.GetOwnedMixPlayGames(ChannelSession.MixerChannel);
-
-            await this.GatherSoundwaveSettings();
-            if (this.soundwaveData != null)
-            {
-                this.soundwaveProfiles = this.soundwaveData.Profiles.Keys.Select(p => new SoundwaveProfileItem() { Name = p, AddProfile = false, CanBeImported = !this.interactiveGames.Any(g => g.name.Equals(p)) }).ToList();
-                this.SoundwaveInteractiveProfilesDataGrid.ItemsSource = this.soundwaveProfiles;
-            }
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -107,22 +79,10 @@ namespace MixItUp.WPF.Windows.Wizard
                 this.ImportStreamlabsChatBotSettingsPageGrid.Visibility = System.Windows.Visibility.Collapsed;
                 this.ImportScorpBotSettingsPageGrid.Visibility = System.Windows.Visibility.Visible;
             }
-            else if (this.ImportSoundwaveInteractiveSettingsGrid.Visibility == System.Windows.Visibility.Visible)
-            {
-                this.ImportSoundwaveInteractiveSettingsGrid.Visibility = System.Windows.Visibility.Collapsed;
-                this.ImportStreamlabsChatBotSettingsPageGrid.Visibility = System.Windows.Visibility.Visible;
-            }
             else if (this.SetupCompletePageGrid.Visibility == System.Windows.Visibility.Visible)
             {
                 this.SetupCompletePageGrid.Visibility = System.Windows.Visibility.Collapsed;
-                if (this.soundwaveData != null)
-                {
-                    this.ImportSoundwaveInteractiveSettingsGrid.Visibility = System.Windows.Visibility.Visible;
-                }
-                else
-                {
-                    this.ImportScorpBotSettingsPageGrid.Visibility = System.Windows.Visibility.Visible;
-                }
+                this.ImportScorpBotSettingsPageGrid.Visibility = System.Windows.Visibility.Visible;
             }
         }
 
@@ -176,18 +136,6 @@ namespace MixItUp.WPF.Windows.Wizard
                     }
 
                     this.ImportStreamlabsChatBotSettingsPageGrid.Visibility = System.Windows.Visibility.Collapsed;
-                    if (this.soundwaveData != null)
-                    {
-                        this.ImportSoundwaveInteractiveSettingsGrid.Visibility = System.Windows.Visibility.Visible;
-                    }
-                    else
-                    {
-                        this.SetupCompletePageGrid.Visibility = System.Windows.Visibility.Visible;
-                    }
-                }
-                else if (this.ImportSoundwaveInteractiveSettingsGrid.Visibility == System.Windows.Visibility.Visible)
-                {
-                    this.ImportSoundwaveInteractiveSettingsGrid.Visibility = System.Windows.Visibility.Collapsed;
                     this.SetupCompletePageGrid.Visibility = System.Windows.Visibility.Visible;
                 }
                 else if (this.SetupCompletePageGrid.Visibility == System.Windows.Visibility.Visible)
@@ -313,13 +261,6 @@ namespace MixItUp.WPF.Windows.Wizard
             }
         }
 
-        private void SoundwaveProfileCheckBox_Checked(object sender, System.Windows.RoutedEventArgs e)
-        {
-            CheckBox checkBox = (CheckBox)sender;
-            SoundwaveProfileItem profile = (SoundwaveProfileItem)checkBox.DataContext;
-            this.soundwaveProfiles.First(p => p.Name.Equals(profile.Name)).AddProfile = checkBox.IsChecked.GetValueOrDefault();
-        }
-
         private async Task<ScorpBotData> GatherScorpBotData(string folderPath)
         {
             try
@@ -353,45 +294,37 @@ namespace MixItUp.WPF.Windows.Wizard
                     string databasePath = Path.Combine(dataPath, "Database");
                     if (Directory.Exists(databasePath))
                     {
-                        SQLiteDatabaseWrapper databaseWrapper = new SQLiteDatabaseWrapper(databasePath);
-
-                        databaseWrapper.DatabaseFilePath = Path.Combine(databasePath, "CommandsDB.sqlite");
-                        await databaseWrapper.RunReadCommand("SELECT * FROM RegCommand",
+                        await ChannelSession.Services.Database.Read(Path.Combine(databasePath, "CommandsDB.sqlite"), "SELECT * FROM RegCommand",
                         (reader) =>
                         {
                             scorpBotData.Commands.Add(new ScorpBotCommand(reader));
                         });
 
-                        databaseWrapper.DatabaseFilePath = Path.Combine(databasePath, "Timers2DB.sqlite");
-                        await databaseWrapper.RunReadCommand("SELECT * FROM TimeCommand",
+                        await ChannelSession.Services.Database.Read(Path.Combine(databasePath, "Timers2DB.sqlite"), "SELECT * FROM TimeCommand",
                         (reader) =>
                         {
                             scorpBotData.Timers.Add(new ScorpBotTimer(reader));
                         });
 
-                        databaseWrapper.DatabaseFilePath = Path.Combine(databasePath, "FilteredWordsDB.sqlite");
-                        await databaseWrapper.RunReadCommand("SELECT * FROM Word",
+                        await ChannelSession.Services.Database.Read(Path.Combine(databasePath, "FilteredWordsDB.sqlite"), "SELECT * FROM Word",
                         (reader) =>
                         {
                             scorpBotData.FilteredWords.Add(((string)reader["word"]).ToLower());
                         });
 
-                        databaseWrapper.DatabaseFilePath = Path.Combine(databasePath, "QuotesDB.sqlite");
-                        await databaseWrapper.RunReadCommand("SELECT * FROM Quotes",
+                        await ChannelSession.Services.Database.Read(Path.Combine(databasePath, "QuotesDB.sqlite"), "SELECT * FROM Quotes",
                         (reader) =>
                         {
                             scorpBotData.Quotes.Add((string)reader["quote_text"]);
                         });
 
-                        databaseWrapper.DatabaseFilePath = Path.Combine(databasePath, "RankDB.sqlite");
-                        await databaseWrapper.RunReadCommand("SELECT * FROM Rank",
+                        await ChannelSession.Services.Database.Read(Path.Combine(databasePath, "RankDB.sqlite"), "SELECT * FROM Rank",
                         (reader) =>
                         {
                             scorpBotData.Ranks.Add(new ScorpBotRank(reader));
                         });
 
-                        databaseWrapper.DatabaseFilePath = Path.Combine(databasePath, "Viewers3DB.sqlite");
-                        await databaseWrapper.RunReadCommand("SELECT * FROM Viewer",
+                        await ChannelSession.Services.Database.Read(Path.Combine(databasePath, "Viewers3DB.sqlite"), "SELECT * FROM Viewer",
                         (reader) =>
                         {
                             if (reader["BeamID"] != null && int.TryParse((string)reader["BeamID"], out int id))
@@ -503,28 +436,6 @@ namespace MixItUp.WPF.Windows.Wizard
                 Logger.Log(ex);
             }
             return null;
-        }
-
-        private async Task GatherSoundwaveSettings()
-        {
-            if (Directory.Exists(SoundwaveInteractiveAppDataSettingsFolder))
-            {
-                string interactiveFilePath = Path.Combine(SoundwaveInteractiveAppDataSettingsFolder, "interactive.json");
-                string profilesFilePath = Path.Combine(SoundwaveInteractiveAppDataSettingsFolder, "profiles.json");
-                string soundsFilePath = Path.Combine(SoundwaveInteractiveAppDataSettingsFolder, "sounds.json");
-                if (File.Exists(interactiveFilePath) && File.Exists(profilesFilePath) && File.Exists(soundsFilePath))
-                {
-                    JObject interactive = await SerializerHelper.DeserializeFromFile<JObject>(interactiveFilePath);
-                    JObject profiles = await SerializerHelper.DeserializeFromFile<JObject>(profilesFilePath);
-                    JObject sounds = await SerializerHelper.DeserializeFromFile<JObject>(soundsFilePath);
-
-                    this.soundwaveData = new SoundwaveSettings();
-                    if (interactive != null && profiles != null && sounds != null)
-                    {
-                        this.soundwaveData.Initialize(interactive, profiles, sounds);
-                    }
-                }
-            }
         }
 
         private async Task FinalizeNewUser()
@@ -822,72 +733,6 @@ namespace MixItUp.WPF.Windows.Wizard
                 if (ChannelSession.Settings.UserQuotes.Count > 0)
                 {
                     ChannelSession.Settings.QuotesEnabled = true;
-                }
-            }
-
-            if (this.soundwaveData != null && this.soundwaveProfiles != null && this.soundwaveProfiles.Count(p => p.AddProfile) > 0)
-            {
-                if (this.soundwaveData.StaticCooldown)
-                {
-                    ChannelSession.Settings.CooldownGroups[SoundwaveInteractiveCooldownGroupName] = this.soundwaveData.StaticCooldownAmount / 1000;
-                }
-
-                MixPlayGameListingModel soundwaveGame = this.interactiveGames.FirstOrDefault(g => g.name.Equals(SoundwaveInteractiveGameName));
-                if (soundwaveGame != null)
-                {
-                    MixPlayGameVersionModel version = soundwaveGame.versions.FirstOrDefault();
-                    if (version != null)
-                    {
-                        MixPlayGameVersionModel soundwaveGameVersion = await ChannelSession.MixerStreamerConnection.GetMixPlayGameVersion(version);
-                        if (soundwaveGameVersion != null)
-                        {
-                            MixPlaySceneModel soundwaveGameScene = soundwaveGameVersion.controls.scenes.FirstOrDefault();
-                            if (soundwaveGameScene != null)
-                            {
-                                foreach (string profile in this.soundwaveProfiles.Where(p => p.AddProfile).Select(p => p.Name))
-                                {
-                                    // Add code logic to create Interactive Game on Mixer that is a copy of the Soundwave Interactive game, but with buttons filed in with name and not disabled
-                                    MixPlaySceneModel profileScene = MixPlayGameHelper.CreateDefaultScene();
-                                    MixPlayGameListingModel profileGame = await ChannelSession.MixerStreamerConnection.CreateMixPlayGame(ChannelSession.MixerChannel, ChannelSession.MixerStreamerUser, profile, profileScene);
-                                    MixPlayGameVersionModel gameVersion = profileGame.versions.FirstOrDefault();
-                                    if (gameVersion != null)
-                                    {
-                                        MixPlayGameVersionModel profileGameVersion = await ChannelSession.MixerStreamerConnection.GetMixPlayGameVersion(gameVersion);
-                                        if (profileGameVersion != null)
-                                        {
-                                            profileScene = profileGameVersion.controls.scenes.First();
-
-                                            for (int i = 0; i < this.soundwaveData.Profiles[profile].Count(); i++)
-                                            {
-                                                SoundwaveButton soundwaveButton = this.soundwaveData.Profiles[profile][i];
-                                                MixPlayButtonControlModel soundwaveControl = (MixPlayButtonControlModel)soundwaveGameScene.allControls.FirstOrDefault(c => c.controlID.Equals(i.ToString()));
-
-                                                MixPlayButtonControlModel button = MixPlayGameHelper.CreateButton(soundwaveButton.name, soundwaveButton.name, soundwaveButton.sparks);
-                                                button.position = soundwaveControl.position;
-
-                                                RequirementViewModel requirements = new RequirementViewModel();
-                                                requirements.Cooldown.Amount = soundwaveButton.cooldown;
-                                                if (this.soundwaveData.StaticCooldown)
-                                                {
-                                                    requirements.Cooldown.Type = CooldownTypeEnum.Group;
-                                                    requirements.Cooldown.GroupName = SoundwaveInteractiveCooldownGroupName;
-                                                }
-                                                MixPlayButtonCommand command = new MixPlayButtonCommand(profileGame, profileScene, button, MixPlayButtonCommandTriggerType.MouseKeyDown, requirements);
-
-                                                SoundAction action = new SoundAction(soundwaveButton.path, soundwaveButton.volume);
-                                                command.Actions.Add(action);
-
-                                                ChannelSession.Settings.MixPlayCommands.Add(command);
-                                                profileScene.buttons.Add(button);
-                                            }
-
-                                            await ChannelSession.MixerStreamerConnection.UpdateMixPlayGameVersion(profileGameVersion);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
                 }
             }
 

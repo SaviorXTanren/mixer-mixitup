@@ -3,8 +3,8 @@ using Mixer.Base.Model.MixPlay;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
-using MixItUp.Base.Model.SongRequests;
 using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using PlayFab;
 using PlayFab.ClientModels;
@@ -32,21 +32,32 @@ namespace MixItUp.Desktop.Services
             this.telemetryClient.Context.Component.Version = Assembly.GetEntryAssembly().GetName().Version.ToString();
         }
 
-        public void Start()
+        public string Name { get { return "Telemetry"; } }
+
+        public bool IsConnected { get; private set; }
+
+        public Task<ExternalServiceResult> Connect()
         {
-            string key = ChannelSession.SecretManager.GetSecret("ApplicationInsightsKey");
+            string key = ChannelSession.Services.Secrets.GetSecret("ApplicationInsightsKey");
             if (!string.IsNullOrEmpty(key))
             {
                 this.telemetryClient.InstrumentationKey = key;
             }
 
-            PlayFabSettings.staticSettings.TitleId = ChannelSession.SecretManager.GetSecret("PlayFabTitleID");
+            PlayFabSettings.staticSettings.TitleId = ChannelSession.Services.Secrets.GetSecret("PlayFabTitleID");
+
+            this.IsConnected = true;
+            return Task.FromResult(new ExternalServiceResult());
         }
 
-        public void End()
+        public async Task Disconnect()
         {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             Task.Run(() => { this.telemetryClient.Flush(); });
-            Task.Delay(2000); // Allow time to flush
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            await Task.Delay(2000); // Allow time to flush
+
+            this.IsConnected = false;
         }
 
         public void TrackException(Exception ex)
@@ -85,12 +96,6 @@ namespace MixItUp.Desktop.Services
             this.SendPlayFabEvent("InteractiveGame", "Name", game.name);
         }
 
-        public void TrackSongRequest(SongRequestServiceTypeEnum songService)
-        {
-            this.TrySendEvent(() => this.telemetryClient.TrackEvent("SongRequest", new Dictionary<string, string> { { "Song Request Service", EnumHelper.GetEnumName(songService) } }));
-            this.SendPlayFabEvent("SongRequest", "SongRequestService", EnumHelper.GetEnumName(songService));
-        }
-
         public void TrackRemoteAuthentication(Guid clientID)
         {
             this.telemetryClient.TrackEvent("RemoteAuthentication", new Dictionary<string, string> { { "ClientID", clientID.ToString() } });
@@ -112,9 +117,9 @@ namespace MixItUp.Desktop.Services
                 { "BoardID", boardID.ToString() } });
         }
 
-        public void SetUserId(string userId)
+        public void SetUserID(string userID)
         {
-            this.telemetryClient.Context.User.Id = userId;
+            this.telemetryClient.Context.User.Id = userID;
 
             string playFabUserID = HashHelper.ComputeMD5Hash("Mixer-" + (ChannelSession.IsStreamer ? "Streamer" : "Moderator") + ChannelSession.MixerStreamerUser.id);
             this.TrySendPlayFabTelemetry(PlayFabClientAPI.LoginWithCustomIDAsync(new LoginWithCustomIDRequest { CustomId = playFabUserID, CreateAccount = true }));

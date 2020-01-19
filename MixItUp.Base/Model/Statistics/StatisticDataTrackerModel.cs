@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MixItUp.Base.Statistics
+namespace MixItUp.Base.Model.Statistics
 {
-    public class StatisticDataPoint
+    public class StatisticDataPointModel
     {
         public string Identifier { get; private set; }
 
@@ -14,19 +14,19 @@ namespace MixItUp.Base.Statistics
 
         public DateTimeOffset DateTime { get; set; }
 
-        public StatisticDataPoint(string identifier) : this(identifier, -1) { }
+        public StatisticDataPointModel(string identifier) : this(identifier, -1) { }
 
-        public StatisticDataPoint(int value) : this(null, value) { }
+        public StatisticDataPointModel(int value) : this(null, value) { }
 
-        public StatisticDataPoint(string identifier, int value) : this(identifier, (double)value) { }
+        public StatisticDataPointModel(string identifier, int value) : this(identifier, (double)value) { }
 
-        public StatisticDataPoint(string identifier, string value)
+        public StatisticDataPointModel(string identifier, string value)
             : this(identifier)
         {
             this.ValueString = value;
         }
 
-        public StatisticDataPoint(string identifier, double value)
+        public StatisticDataPointModel(string identifier, double value)
         {
             this.Identifier = identifier;
             this.ValueDecimal = value;
@@ -34,7 +34,7 @@ namespace MixItUp.Base.Statistics
         }
     }
 
-    public abstract class StatisticDataTrackerBase
+    public abstract class StatisticDataTrackerModelBase
     {
         public string Name { get; private set; }
         public string IconName { get; private set; }
@@ -42,16 +42,16 @@ namespace MixItUp.Base.Statistics
 
         public DateTimeOffset StartTime { get; private set; }
 
-        public List<StatisticDataPoint> DataPoints { get; protected set; }
+        public List<StatisticDataPointModel> DataPoints { get; protected set; }
 
-        private Func<StatisticDataTrackerBase, Task> updateFunction;
+        private Func<StatisticDataTrackerModelBase, Task> updateFunction;
 
-        public StatisticDataTrackerBase(string name, string iconName, bool isPackIcon, Func<StatisticDataTrackerBase, Task> updateFunction)
+        public StatisticDataTrackerModelBase(string name, string iconName, bool isPackIcon, Func<StatisticDataTrackerModelBase, Task> updateFunction)
         {
             this.Name = name;
             this.IconName = iconName;
             this.IsPackIcon = isPackIcon;
-            this.DataPoints = new List<StatisticDataPoint>();
+            this.DataPoints = new List<StatisticDataPointModel>();
             this.updateFunction = updateFunction;
 
             this.StartTime = DateTimeOffset.Now;
@@ -99,7 +99,7 @@ namespace MixItUp.Base.Statistics
         public virtual IEnumerable<List<string>> GetExportData()
         {
             List<List<string>> results = new List<List<string>>();
-            foreach (StatisticDataPoint dataPoint in this.DataPoints)
+            foreach (StatisticDataPointModel dataPoint in this.DataPoints)
             {
                 List<string> resultRow = new List<string>();
 
@@ -126,13 +126,13 @@ namespace MixItUp.Base.Statistics
         }
     }
 
-    public class StaticTextStatisticDataTracker : StatisticDataTrackerBase
+    public class StaticTextStatisticDataTrackerModel : StatisticDataTrackerModelBase
     {
-        public StaticTextStatisticDataTracker(string name, string iconName, bool isPackIcon, Func<StatisticDataTrackerBase, Task> updateFunction)
+        public StaticTextStatisticDataTrackerModel(string name, string iconName, bool isPackIcon, Func<StatisticDataTrackerModelBase, Task> updateFunction)
             : base(name, iconName, isPackIcon, updateFunction)
         { }
 
-        public void AddValue(string identifier, string value) { this.DataPoints.Add(new StatisticDataPoint(identifier, value)); }
+        public void AddValue(string identifier, string value) { this.DataPoints.Add(new StatisticDataPointModel(identifier, value)); }
 
         public void ClearValues() { this.DataPoints.Clear(); }
 
@@ -142,7 +142,7 @@ namespace MixItUp.Base.Statistics
         {
             List<List<string>> results = new List<List<string>>();
             results.Add(new List<string>());
-            foreach (StatisticDataPoint dataPoint in this.DataPoints)
+            foreach (StatisticDataPointModel dataPoint in this.DataPoints)
             {
                 results[0].Add(dataPoint.ValueString);
             }
@@ -152,7 +152,7 @@ namespace MixItUp.Base.Statistics
         public override string ToString()
         {
             List<string> values = new List<string>();
-            foreach (StatisticDataPoint dataPoint in this.DataPoints)
+            foreach (StatisticDataPointModel dataPoint in this.DataPoints)
             {
                 values.Add(string.Format("{0}: {1}", dataPoint.Identifier, dataPoint.ValueString));
             }
@@ -160,13 +160,13 @@ namespace MixItUp.Base.Statistics
         }
     }
 
-    public class TrackedNumberStatisticDataTracker : StatisticDataTrackerBase
+    public class TrackedNumberStatisticDataTrackerModel : StatisticDataTrackerModelBase
     {
-        public TrackedNumberStatisticDataTracker(string name, string iconName, bool isPackIcon, Func<StatisticDataTrackerBase, Task> updateFunction)
+        public TrackedNumberStatisticDataTrackerModel(string name, string iconName, bool isPackIcon, Func<StatisticDataTrackerModelBase, Task> updateFunction)
             : base(name, iconName, isPackIcon, updateFunction)
         { }
 
-        public void AddValue(int value) { this.DataPoints.Add(new StatisticDataPoint(value)); }
+        public void AddValue(int value) { this.DataPoints.Add(new StatisticDataPointModel(value)); }
 
         public override IEnumerable<string> GetExportHeaders() { return new List<string>() { "Current", "Max", "Average" }; }
 
@@ -180,7 +180,7 @@ namespace MixItUp.Base.Statistics
         public override string ToString() { return string.Format("Current: {0},    Max: {1},    Average: {2}", this.LastValueString, this.MaxValueString, this.AverageValueString); }
     }
 
-    public class EventStatisticDataTracker : StatisticDataTrackerBase
+    public class EventStatisticDataTrackerModel : StatisticDataTrackerModelBase
     {
         private event EventHandler<string> StatisticEventOccurred;
         private event EventHandler<Tuple<string, double>> StatisticEventWithDecimalValueOccurred;
@@ -188,10 +188,10 @@ namespace MixItUp.Base.Statistics
 
         private IEnumerable<string> exportHeaders;
 
-        private Func<EventStatisticDataTracker, string> customToStringFunction;
+        private Func<EventStatisticDataTrackerModel, string> customToStringFunction;
 
-        public EventStatisticDataTracker(string name, string iconName, bool isPackIcon, IEnumerable<string> exportHeaders, Func<EventStatisticDataTracker, string> customToStringFunction = null)
-            : base(name, iconName, isPackIcon, (StatisticDataTrackerBase stats) => { return Task.FromResult(0); })
+        public EventStatisticDataTrackerModel(string name, string iconName, bool isPackIcon, IEnumerable<string> exportHeaders, Func<EventStatisticDataTrackerModel, string> customToStringFunction = null)
+            : base(name, iconName, isPackIcon, (StatisticDataTrackerModelBase stats) => { return Task.FromResult(0); })
         {
             this.exportHeaders = exportHeaders;
             this.customToStringFunction = customToStringFunction;
@@ -203,11 +203,11 @@ namespace MixItUp.Base.Statistics
 
         public override IEnumerable<string> GetExportHeaders() { return this.exportHeaders; }
 
-        public void AddValue(string identifier) { this.DataPoints.Add(new StatisticDataPoint(identifier)); }
+        public void AddValue(string identifier) { this.DataPoints.Add(new StatisticDataPointModel(identifier)); }
 
-        public void AddValue(string identifier, double value) { this.DataPoints.Add(new StatisticDataPoint(identifier, value)); }
+        public void AddValue(string identifier, double value) { this.DataPoints.Add(new StatisticDataPointModel(identifier, value)); }
 
-        public void AddValue(string identifier, string value) { this.DataPoints.Add(new StatisticDataPoint(identifier, value)); }
+        public void AddValue(string identifier, string value) { this.DataPoints.Add(new StatisticDataPointModel(identifier, value)); }
 
         public void OnStatisticEventOccurred(string key)
         {

@@ -233,7 +233,7 @@ namespace MixItUp.Base.Services.External
                     JObject payload = new JObject();
                     payload["grant_type"] = "authorization_code";
                     payload["client_id"] = TiltifyService.ClientID;
-                    payload["client_secret"] = ChannelSession.SecretManager.GetSecret("TiltifySecret");
+                    payload["client_secret"] = ChannelSession.Services.Secrets.GetSecret("TiltifySecret");
                     payload["code"] = authorizationToken;
                     payload["redirect_uri"] = TiltifyService.ListeningURL;
 

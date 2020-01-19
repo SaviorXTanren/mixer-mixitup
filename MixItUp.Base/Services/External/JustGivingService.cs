@@ -1,9 +1,7 @@
 ﻿using Mixer.Base;
-using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
-using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
 using StreamingClient.Base.Web;
 using System;
@@ -144,7 +142,7 @@ namespace MixItUp.Base.Services.External
                     new KeyValuePair<string, string>("code", authorizationCode),
                 };
                     this.token = await this.GetWWWFormUrlEncodedOAuthToken("https://identity.justgiving.com/connect/token", JustGivingService.ClientID,
-                        ChannelSession.SecretManager.GetSecret("JustGivingSecret"), body);
+                        ChannelSession.Services.Secrets.GetSecret("JustGivingSecret"), body);
                     if (this.token != null)
                     {
                         token.authorizationCode = authorizationCode;
@@ -226,7 +224,7 @@ namespace MixItUp.Base.Services.External
                     new KeyValuePair<string, string>("refresh_token", this.token.refreshToken),
                 };
                 this.token = await this.GetWWWFormUrlEncodedOAuthToken("https://identity.justgiving.com/connect/token", JustGivingService.ClientID,
-                    ChannelSession.SecretManager.GetSecret("JustGivingSecret"), body);
+                    ChannelSession.Services.Secrets.GetSecret("JustGivingSecret"), body);
             }
         }
 
@@ -234,7 +232,7 @@ namespace MixItUp.Base.Services.External
         {
             AdvancedHttpClient client = await base.GetHttpClient(autoRefreshToken);
             client.DefaultRequestHeaders.Add("x-app-id", JustGivingService.ClientID);
-            client.DefaultRequestHeaders.Add("x-application-key", ChannelSession.SecretManager.GetSecret("JustGivingSecret"));
+            client.DefaultRequestHeaders.Add("x-application-key", ChannelSession.Services.Secrets.GetSecret("JustGivingSecret"));
             return client;
         }
 
@@ -260,6 +258,11 @@ namespace MixItUp.Base.Services.External
             return new ExternalServiceResult("Unable to get User data");
         }
 
+        protected override void DisposeInternal()
+        {
+            this.cancellationTokenSource.Dispose();
+        }
+
         private async Task BackgroundDonationCheck(CancellationToken token)
         {
             if (!token.IsCancellationRequested)
@@ -282,33 +285,5 @@ namespace MixItUp.Base.Services.External
                 }
             }
         }
-
-        #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    // Dispose managed state (managed objects).
-                    this.cancellationTokenSource.Dispose();
-                }
-
-                // Free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // Set large fields to null.
-
-                disposedValue = true;
-            }
-        }
-
-        // This code added to correctly implement the disposable pattern.
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-        }
-        #endregion
     }
 }

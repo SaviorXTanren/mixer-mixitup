@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
-using MixItUp.Base.Model.Import;
+using MixItUp.Base.Model.Import.ScorpBot;
+using MixItUp.Base.Model.Import.Streamlabs;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

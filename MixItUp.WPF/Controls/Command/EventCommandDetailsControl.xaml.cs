@@ -45,9 +45,9 @@ namespace MixItUp.WPF.Controls.Command
             return Task.FromResult(0);
         }
 
-        public override async Task<bool> Validate()
+        public override Task<bool> Validate()
         {
-            return true;
+            return Task.FromResult(true);
         }
 
         public override CommandBase GetExistingCommand() { return this.command; }

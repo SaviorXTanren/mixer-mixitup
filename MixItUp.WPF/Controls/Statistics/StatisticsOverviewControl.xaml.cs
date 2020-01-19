@@ -1,5 +1,5 @@
 ﻿using MaterialDesignThemes.Wpf;
-using MixItUp.Base.Statistics;
+using MixItUp.Base.Model.Statistics;
 using StreamingClient.Base.Util;
 using System;
 using System.Threading.Tasks;
@@ -13,9 +13,9 @@ namespace MixItUp.WPF.Controls.Statistics
     public partial class StatisticsOverviewControl : LoadingControlBase
     {
         private PackIconKind icon;
-        private StatisticDataTrackerBase dataTracker;
+        private StatisticDataTrackerModelBase dataTracker;
 
-        public StatisticsOverviewControl(StatisticDataTrackerBase dataTracker)
+        public StatisticsOverviewControl(StatisticDataTrackerModelBase dataTracker)
         {
             InitializeComponent();
 

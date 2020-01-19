@@ -14,7 +14,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
     {
         [Route("users")]
         [HttpGet]
-        public async Task<IEnumerable<User>> GetChatUsers()
+        public Task<IEnumerable<User>> GetChatUsers()
         {
             List<User> users = new List<User>();
 
@@ -27,7 +27,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 }
             }
 
-            return users;
+            return Task.FromResult<IEnumerable<User>>(users);
         }
 
         [Route("message")]

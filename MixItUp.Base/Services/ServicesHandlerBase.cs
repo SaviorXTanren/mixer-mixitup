@@ -16,6 +16,9 @@ namespace MixItUp.Base.Services
         public IEventService Events { get; protected set; }
 
         public ISettingsService Settings { get; protected set; }
+        public SecretsService Secrets { get; protected set; }
+        public StatisticsService Statistics { get; protected set; }
+        public IDatabaseService Database { get; protected set; }
         public IFileService FileService { get; protected set; }
         public IAudioService AudioService { get; protected set; }
         public IInputService InputService { get; protected set; }
@@ -48,9 +51,8 @@ namespace MixItUp.Base.Services
         public IMixrElixrService MixrElixr { get; protected set; }
         public IJustGivingService JustGiving { get; protected set; }
 
-        public abstract Task Close();
+        public abstract void SetSecrets(SecretsService secretsService);
 
-        public abstract Task<bool> InitializeTelemetryService();
-        public abstract Task DisconnectTelemetryService();
+        public abstract Task Close();
     }
 }

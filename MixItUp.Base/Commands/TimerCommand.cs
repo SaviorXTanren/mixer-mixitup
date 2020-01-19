@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Actions;
-using MixItUp.Base.Model.Import;
+using MixItUp.Base.Model.Import.ScorpBot;
+using MixItUp.Base.Model.Import.Streamlabs;
 using System.Threading;
 
 namespace MixItUp.Base.Commands

@@ -81,7 +81,7 @@ namespace MixItUp.Desktop.Services
                 });
 
                 await this.Connect();
-                await this.Authenticate(connection.ID, ChannelSession.SecretManager.GetSecret("RemoteHostSecret"), connection.AccessToken);
+                await this.Authenticate(connection.ID, ChannelSession.Services.Secrets.GetSecret("RemoteHostSecret"), connection.AccessToken);
                 await Task.Delay(3000);
 
                 if (this.IsConnected)

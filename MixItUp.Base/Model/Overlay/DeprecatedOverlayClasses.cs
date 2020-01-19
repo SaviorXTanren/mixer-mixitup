@@ -1,15 +1,10 @@
-﻿using Mixer.Base.Model.Chat;
-using Mixer.Base.Model.Clips;
+﻿using Mixer.Base.Model.Clips;
 using Mixer.Base.Model.Leaderboards;
 using Mixer.Base.Model.Patronage;
 using Mixer.Base.Model.User;
-using Mixer.Base.Util;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
-using MixItUp.Base.Model.Chat;
-using MixItUp.Base.Model.SongRequests;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
@@ -20,7 +15,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -1861,14 +1855,6 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public List<OverlaySongRequestItem> SongRequestUpdates = new List<OverlaySongRequestItem>();
 
-        [JsonIgnore]
-        private bool songRequestsUpdated = true;
-        [JsonIgnore]
-        private List<SongRequestModel> currentSongRequests = new List<SongRequestModel>();
-
-        [JsonIgnore]
-        private List<SongRequestModel> testSongRequestsList = new List<SongRequestModel>();
-
         public OverlaySongRequests() : base(SongRequestsItemType, HTMLTemplate) { }
 
         public OverlaySongRequests(string htmlText, int totalToShow, string textFont, int width, int height, string borderColor, string backgroundColor, string textColor,
@@ -1893,14 +1879,6 @@ namespace MixItUp.Base.Model.Overlay
         {
             for (int i = 0; i < 5; i++)
             {
-                this.testSongRequestsList.Add(new SongRequestModel()
-                {
-                    ID = Guid.NewGuid().ToString(),
-                    Type = SongRequestServiceTypeEnum.YouTube,
-                    Name = "TEST SONG",
-                    AlbumImage = "https://www.youtube.com/yt/about/media/images/brand-resources/icons/YouTube_icon_full-color.svg"
-                });
-                this.songRequestsUpdated = true;
                 await Task.Delay(1500);
             }
         }
@@ -1909,13 +1887,12 @@ namespace MixItUp.Base.Model.Overlay
         {
             GlobalEvents.OnSongRequestsChangedOccurred += GlobalEvents_OnSongRequestsChangedOccurred;
 
-            this.testSongRequestsList.Clear();
-
             await base.Initialize();
         }
 
-        public override async Task<OverlayItemBase> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        public override Task<OverlayItemBase> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
+            return Task.FromResult<OverlayItemBase>(null);
             // TODO: Remove?
             //if (ChannelSession.Services.SongRequestService != null && this.songRequestsUpdated)
             //{
@@ -1961,15 +1938,12 @@ namespace MixItUp.Base.Model.Overlay
 
             //    return copy;
             //}
-            return null;
         }
 
         public override OverlayCustomHTMLItem GetCopy() { return this.Copy<OverlaySongRequests>(); }
 
         protected override Task<Dictionary<string, string>> GetReplacementSets(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
-            SongRequestModel songRequest = this.currentSongRequests.ElementAt(0);
-
             Dictionary<string, string> replacementSets = new Dictionary<string, string>();
 
             replacementSets["BACKGROUND_COLOR"] = this.BackgroundColor;
@@ -1980,14 +1954,10 @@ namespace MixItUp.Base.Model.Overlay
             replacementSets["HEIGHT"] = this.Height.ToString();
             replacementSets["TEXT_SIZE"] = ((int)(0.2 * ((double)this.Height))).ToString();
 
-            replacementSets["SONG_IMAGE"] = songRequest.AlbumImage;
-            replacementSets["SONG_IMAGE_SIZE"] = ((int)(0.8 * ((double)this.Height))).ToString();
-            replacementSets["SONG_NAME"] = songRequest.Name;
-
             return Task.FromResult(replacementSets);
         }
 
-        private void GlobalEvents_OnSongRequestsChangedOccurred(object sender, System.EventArgs e) { this.songRequestsUpdated = true; }
+        private void GlobalEvents_OnSongRequestsChangedOccurred(object sender, System.EventArgs e) { }
     }
 
     [Obsolete]

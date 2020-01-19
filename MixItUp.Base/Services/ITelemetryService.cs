@@ -1,12 +1,12 @@
 ﻿using Mixer.Base.Model.MixPlay;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
-using MixItUp.Base.Model.SongRequests;
+using MixItUp.Base.Services.External;
 using System;
 
 namespace MixItUp.Base.Services
 {
-    public interface ITelemetryService
+    public interface ITelemetryService : IExternalService
     {
         void TrackException(Exception ex);
         void TrackPageView(string pageName);
@@ -14,14 +14,11 @@ namespace MixItUp.Base.Services
         void TrackCommand(CommandTypeEnum type, bool isBasic);
         void TrackAction(ActionTypeEnum type);
         void TrackInteractiveGame(MixPlayGameModel game);
-        void TrackSongRequest(SongRequestServiceTypeEnum songService);
 
         void TrackRemoteAuthentication(Guid clientID);
         void TrackRemoteSendProfiles(Guid clientID);
         void TrackRemoteSendBoard(Guid clientID, Guid profileID, Guid boardID);
 
-        void Start();
-        void SetUserId(string userId);
-        void End();
+        void SetUserID(string userID);
     }
 }

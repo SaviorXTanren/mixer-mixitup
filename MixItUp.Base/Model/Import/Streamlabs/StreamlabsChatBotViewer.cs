@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace MixItUp.Base.Model.Import
+namespace MixItUp.Base.Model.Import.Streamlabs
 {
     [DataContract]
     public class StreamlabsChatBotViewer

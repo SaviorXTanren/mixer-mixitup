@@ -39,7 +39,7 @@ namespace MixItUp.WPF.Controls.Settings
         {
             this.OverlayEndpointsItemsControl.ItemsSource = this.overlays;
             this.overlays.Clear();
-            foreach (var kvp in ChannelSession.AllOverlayNameAndPorts.OrderBy(kvp => kvp.Value))
+            foreach (var kvp in ChannelSession.Services.Overlay.AllOverlayNameAndPorts.OrderBy(kvp => kvp.Value))
             {
                 this.overlays.Add(new OverlayEndpointListing(kvp.Key, kvp.Value));
             }

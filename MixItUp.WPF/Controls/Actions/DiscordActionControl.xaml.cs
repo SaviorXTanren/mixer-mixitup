@@ -3,6 +3,7 @@ using MixItUp.Base.Actions;
 using MixItUp.Base.Services.External;
 using StreamingClient.Base.Util;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -48,7 +49,7 @@ namespace MixItUp.WPF.Controls.Actions
             {
                 this.DiscordActionTypeComboBox.SelectedItem = EnumHelper.GetEnumName(action.DiscordType);
 
-                this.SendMessageChannelComboBox.SelectedItem = action.SendMessageChannel;
+                this.SendMessageChannelComboBox.SelectedItem = this.channels.FirstOrDefault(c => c.ID.Equals(action.SendMessageChannelID));
                 this.SendMessageTextBox.Text = action.SendMessageText;
                 this.FilePath.Text = action.FilePath;
 

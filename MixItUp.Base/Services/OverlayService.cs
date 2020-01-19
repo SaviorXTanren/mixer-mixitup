@@ -20,6 +20,8 @@ namespace MixItUp.Base.Services
         string DefaultOverlayName { get; }
         int DefaultOverlayPort { get; }
 
+        IDictionary<string, int> AllOverlayNameAndPorts { get; }
+
         Task<bool> AddOverlay(string name, int port);
 
         Task RemoveOverlay(string name);
@@ -51,12 +53,24 @@ namespace MixItUp.Base.Services
 
         public bool IsConnected { get; private set; }
 
+        private long updateSeconds = 0;
+
+        public IDictionary<string, int> AllOverlayNameAndPorts
+        {
+            get
+            {
+                Dictionary<string, int> results = new Dictionary<string, int>(ChannelSession.Settings.OverlayCustomNameAndPorts);
+                results.Add(ChannelSession.Services.Overlay.DefaultOverlayName, ChannelSession.Services.Overlay.DefaultOverlayPort);
+                return results;
+            }
+        }
+
         public async Task<ExternalServiceResult> Connect()
         {
             this.IsConnected = false;
             ChannelSession.Settings.EnableOverlay = false;
 
-            foreach (var kvp in ChannelSession.AllOverlayNameAndPorts)
+            foreach (var kvp in this.AllOverlayNameAndPorts)
             {
                 if (!await this.AddOverlay(kvp.Key, kvp.Value))
                 {
@@ -65,9 +79,7 @@ namespace MixItUp.Base.Services
                 }
             }
 
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            Task.Run(async () => { await this.WidgetsBackgroundUpdate(); }, this.backgroundThreadCancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            AsyncRunner.RunBackgroundTask(this.backgroundThreadCancellationTokenSource.Token, 1000, this.WidgetsBackgroundUpdate);
 
             this.IsConnected = true;
             ChannelSession.Settings.EnableOverlay = true;
@@ -153,58 +165,53 @@ namespace MixItUp.Base.Services
             }
         }
 
-        private async Task WidgetsBackgroundUpdate()
+        private async Task WidgetsBackgroundUpdate(CancellationToken token)
         {
-            long updateSeconds = 0;
-            await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
+            token.ThrowIfCancellationRequested();
+
+            UserViewModel user = await ChannelSession.GetCurrentUser();
+
+            foreach (var widgetGroup in ChannelSession.Settings.OverlayWidgets.GroupBy(ow => ow.OverlayName))
             {
-                tokenSource.Token.ThrowIfCancellationRequested();
-
-                UserViewModel user = await ChannelSession.GetCurrentUser();
-
-                foreach (var widgetGroup in ChannelSession.Settings.OverlayWidgets.GroupBy(ow => ow.OverlayName))
+                IOverlayEndpointService overlay = this.GetOverlay(widgetGroup.Key);
+                if (overlay != null)
                 {
-                    IOverlayEndpointService overlay = this.GetOverlay(widgetGroup.Key);
-                    if (overlay != null)
+                    overlay.StartBatching();
+                    foreach (OverlayWidgetModel widget in widgetGroup)
                     {
-                        overlay.StartBatching();
-                        foreach (OverlayWidgetModel widget in widgetGroup)
+                        try
                         {
-                            try
+                            if (!widget.Item.IsInitialized)
                             {
-                                if (!widget.Item.IsInitialized)
-                                {
-                                    await widget.Initialize();
-                                }
+                                await widget.Initialize();
+                            }
 
-                                if (widget.IsEnabled)
+                            if (widget.IsEnabled)
+                            {
+                                if (!widget.Item.IsEnabled)
                                 {
-                                    if (!widget.Item.IsEnabled)
-                                    {
-                                        await widget.Enable();
-                                    }
-                                    else if (widget.SupportsRefreshUpdating && widget.RefreshTime > 0 && (updateSeconds % widget.RefreshTime) == 0)
-                                    {
-                                        await widget.UpdateItem();
-                                    }
+                                    await widget.Enable();
                                 }
-                                else
+                                else if (widget.SupportsRefreshUpdating && widget.RefreshTime > 0 && (this.updateSeconds % widget.RefreshTime) == 0)
                                 {
-                                    if (widget.Item.IsEnabled)
-                                    {
-                                        await widget.Disable();
-                                    }
+                                    await widget.UpdateItem();
                                 }
                             }
-                            catch (Exception ex) { Logger.Log(ex); }
+                            else
+                            {
+                                if (widget.Item.IsEnabled)
+                                {
+                                    await widget.Disable();
+                                }
+                            }
                         }
-                        await overlay.EndBatching();
+                        catch (Exception ex) { Logger.Log(ex); }
                     }
+                    await overlay.EndBatching();
                 }
+            }
 
-                await Task.Delay(1000);
-                updateSeconds++;
-            });
+            this.updateSeconds++;
         }
 
         private async void Overlay_OnWebSocketConnectedOccurred(object sender, EventArgs e)
