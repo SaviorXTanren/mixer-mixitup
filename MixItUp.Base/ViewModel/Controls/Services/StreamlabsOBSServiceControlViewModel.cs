@@ -15,10 +15,12 @@ namespace MixItUp.Base.ViewModel.Controls.Services
         {
             this.ConnectCommand = this.CreateCommand(async (parameter) =>
             {
+                ChannelSession.Settings.EnableXSplitConnection = false;
                 ExternalServiceResult result = await ChannelSession.Services.StreamlabsOBS.Connect();
                 if (result.Success)
                 {
                     this.IsConnected = true;
+                    ChannelSession.Settings.EnableXSplitConnection = true;
                 }
                 else
                 {
@@ -29,6 +31,7 @@ namespace MixItUp.Base.ViewModel.Controls.Services
             this.DisconnectCommand = this.CreateCommand(async (parameter) =>
             {
                 await ChannelSession.Services.StreamlabsOBS.Disconnect();
+                ChannelSession.Settings.EnableXSplitConnection = false;
                 this.IsConnected = false;
             });
 
