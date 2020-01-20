@@ -126,7 +126,9 @@ namespace MixItUp.WPF
                         {
                             if (await this.ShowLicenseAgreement())
                             {
-                                result = await this.NewStreamerLogin();
+                                ShowMainWindow(new NewUserWizardWindow());
+                                this.Hide();
+                                this.Close();
                             }
                         }
                         else
@@ -158,7 +160,9 @@ namespace MixItUp.WPF
                 {
                     if (await this.ShowLicenseAgreement())
                     {
-                        result = await this.NewStreamerLogin();
+                        ShowMainWindow(new NewUserWizardWindow());
+                        this.Hide();
+                        this.Close();
                     }
                 }
             });
@@ -182,37 +186,36 @@ namespace MixItUp.WPF
                     return;
                 }
 
-                bool authenticationSuccessful = false;
                 if (this.ModeratorChannelComboBox.SelectedIndex >= 0)
                 {
                     IChannelSettings setting = (IChannelSettings)this.ModeratorChannelComboBox.SelectedItem;
-                    authenticationSuccessful = await this.ExistingSettingLogin(setting);
+                    if (await this.ExistingSettingLogin(setting))
+                    {
+                        IEnumerable<UserWithGroupsModel> users = await ChannelSession.MixerStreamerConnection.GetUsersWithRoles(ChannelSession.MixerChannel, MixerRoleEnum.Mod);
+                        if (users.Any(uwg => uwg.id.Equals(ChannelSession.MixerStreamerUser.id)) || ChannelSession.IsDebug())
+                        {
+                            ShowMainWindow(new MainWindow());
+                            this.Hide();
+                            this.Close();
+                        }
+                        else
+                        {
+                            await DialogHelper.ShowMessage("You are not a moderator for this channel.");
+                        }
+                    }
+                    else
+                    {
+                        await DialogHelper.ShowMessage("Unable to authenticate with Mixer, please try again");
+                    }
                 }
                 else
                 {
                     if (await this.ShowLicenseAgreement())
                     {
-                        authenticationSuccessful = await this.EstablishConnection(ChannelSession.ModeratorScopes, this.ModeratorChannelComboBox.Text);
-                    }
-                }
-
-                if (authenticationSuccessful)
-                {
-                    IEnumerable<UserWithGroupsModel> users = await ChannelSession.MixerStreamerConnection.GetUsersWithRoles(ChannelSession.MixerChannel, MixerRoleEnum.Mod);
-                    if (users.Any(uwg => uwg.id.Equals(ChannelSession.MixerStreamerUser.id)) || ChannelSession.IsDebug())
-                    {
-                        ShowMainWindow(new MainWindow());
+                        ShowMainWindow(new NewUserWizardWindow());
                         this.Hide();
                         this.Close();
                     }
-                    else
-                    {
-                        await DialogHelper.ShowMessage("You are not a moderator for this channel.");
-                    }
-                }
-                else
-                {
-                    await DialogHelper.ShowMessage("Unable to authenticate with Mixer, please try again");
                 }
             });
         }
@@ -257,22 +260,6 @@ namespace MixItUp.WPF
                     await DialogHelper.ShowMessage("Unable to authenticate with Mixer, please try again");
                 }
                 return result;
-            }
-            return false;
-        }
-
-        private async Task<bool> NewStreamerLogin()
-        {
-            if (await this.EstablishConnection(ChannelSession.StreamerScopes, channelName: null))
-            {
-                ShowMainWindow(new NewUserWizardWindow());
-                this.Hide();
-                this.Close();
-                return true;
-            }
-            else
-            {
-                await DialogHelper.ShowMessage("Unable to authenticate with Mixer, please try again");
             }
             return false;
         }

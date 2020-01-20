@@ -2125,6 +2125,7 @@
     <Resource Include="Assets\CommunityBannedWords.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Assets\Images\MixItUp-Logo-Name.png" />
     <Content Include="Assets\OBS\obs-websocket-4.7.0-Windows-Installer.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
