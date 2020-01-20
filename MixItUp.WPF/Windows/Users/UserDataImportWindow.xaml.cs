@@ -1,9 +1,8 @@
-﻿using Mixer.Base.Model.User;
+﻿using ExcelDataReader;
+using Mixer.Base.Model.User;
 using MixItUp.Base;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.WPF.Util;
-using NetOffice.ExcelApi;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -128,37 +127,24 @@ namespace MixItUp.WPF.Windows.Users
                     {
                         try
                         {
-                            using (NetOffice.ExcelApi.Application application = new NetOffice.ExcelApi.Application())
+                            using (var stream = File.Open(filepath, FileMode.Open, FileAccess.Read))
                             {
-                                application.DisplayAlerts = false;
-
-                                Workbook workbook = application.Workbooks.Open(filepath);
-                                if (workbook != null)
+                                using (var reader = ExcelReaderFactory.CreateReader(stream))
                                 {
-                                    Worksheet worksheet = (Worksheet)workbook.Worksheets.FirstOrDefault();
-                                    if (worksheet != null)
+                                    var result = reader.AsDataSet();
+                                    if (result.Tables.Count > 0)
                                     {
-                                        int maxColumnNumber = this.dataColumns.Max(dc => dc.GetColumnNumber());
-                                        int currentRow = 1;
-                                        List<string> dataValues = new List<string>();
-                                        do
+                                        for (int i = 0; i < result.Tables[0].Rows.Count; i++)
                                         {
-                                            dataValues.Clear();
-                                            for (int i = 1; i <= maxColumnNumber; i++)
+                                            List<string> values = new List<string>();
+                                            for (int j = 0; j < result.Tables[0].Rows[i].ItemArray.Length; j++)
                                             {
-                                                Range range = worksheet.Cells[currentRow, i];
-                                                if (range.Value != null)
-                                                {
-                                                    dataValues.Add(range.Value.ToString());
-                                                }
+                                                values.Add(result.Tables[0].Rows[i].ItemArray[j].ToString());
                                             }
-                                            await this.AddUserData(dataValues);
-                                            currentRow++;
-                                        } while (dataValues.Count > 0);
+                                            await this.AddUserData(values);
+                                        }
                                     }
                                 }
-
-                                application.Quit();
                             }
                         }
                         catch (Exception ex)

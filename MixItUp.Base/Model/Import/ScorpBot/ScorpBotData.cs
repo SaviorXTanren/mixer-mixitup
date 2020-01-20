@@ -1,16 +1,98 @@
-﻿using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Numerics;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Import.ScorpBot
 {
     [DataContract]
     public class ScorpBotData
     {
+        public static async Task<ScorpBotData> GatherScorpBotData(string folderPath)
+        {
+            try
+            {
+                ScorpBotData scorpBotData = new ScorpBotData();
+
+                string dataPath = Path.Combine(folderPath, "Data");
+                string settingsFilePath = Path.Combine(dataPath, "settings.ini");
+                if (Directory.Exists(dataPath) && File.Exists(settingsFilePath))
+                {
+                    IEnumerable<string> lines = File.ReadAllLines(settingsFilePath);
+
+                    string currentGroup = null;
+                    foreach (var line in lines)
+                    {
+                        if (line.Contains("="))
+                        {
+                            string[] splits = line.Split(new string[] { "=" }, StringSplitOptions.RemoveEmptyEntries);
+                            if (splits.Count() == 2)
+                            {
+                                scorpBotData.Settings[currentGroup][splits[0]] = splits[1];
+                            }
+                        }
+                        else
+                        {
+                            currentGroup = line.Replace("[", "").Replace("]", "").ToLower();
+                            scorpBotData.Settings[currentGroup] = new Dictionary<string, string>();
+                        }
+                    }
+
+                    string databasePath = Path.Combine(dataPath, "Database");
+                    if (Directory.Exists(databasePath))
+                    {
+                        await ChannelSession.Services.Database.Read(Path.Combine(databasePath, "CommandsDB.sqlite"), "SELECT * FROM RegCommand",
+                        (reader) =>
+                        {
+                            scorpBotData.Commands.Add(new ScorpBotCommand(reader));
+                        });
+
+                        await ChannelSession.Services.Database.Read(Path.Combine(databasePath, "Timers2DB.sqlite"), "SELECT * FROM TimeCommand",
+                        (reader) =>
+                        {
+                            scorpBotData.Timers.Add(new ScorpBotTimer(reader));
+                        });
+
+                        await ChannelSession.Services.Database.Read(Path.Combine(databasePath, "FilteredWordsDB.sqlite"), "SELECT * FROM Word",
+                        (reader) =>
+                        {
+                            scorpBotData.FilteredWords.Add(((string)reader["word"]).ToLower());
+                        });
+
+                        await ChannelSession.Services.Database.Read(Path.Combine(databasePath, "QuotesDB.sqlite"), "SELECT * FROM Quotes",
+                        (reader) =>
+                        {
+                            scorpBotData.Quotes.Add((string)reader["quote_text"]);
+                        });
+
+                        await ChannelSession.Services.Database.Read(Path.Combine(databasePath, "RankDB.sqlite"), "SELECT * FROM Rank",
+                        (reader) =>
+                        {
+                            scorpBotData.Ranks.Add(new ScorpBotRank(reader));
+                        });
+
+                        await ChannelSession.Services.Database.Read(Path.Combine(databasePath, "Viewers3DB.sqlite"), "SELECT * FROM Viewer",
+                        (reader) =>
+                        {
+                            if (reader["BeamID"] != null && int.TryParse((string)reader["BeamID"], out int id))
+                            {
+                                scorpBotData.Viewers.Add(new ScorpBotViewer(reader));
+                            }
+                        });
+                    }
+                }
+
+                return scorpBotData;
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+            return null;
+        }
+
         [DataMember]
         public Dictionary<string, Dictionary<string, string>> Settings { get; set; }
 

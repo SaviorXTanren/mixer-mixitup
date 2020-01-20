@@ -168,7 +168,7 @@
                     </GroupBox>
                 </Grid>
 
-                <Grid x:Name="ImportScorpBotSettingsPageGrid" Visibility="Collapsed">
+                <Grid Visibility="{Binding ScorpBotPageVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="20" />
@@ -199,13 +199,13 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBox Grid.Row="2" x:Name="ScorpBotDirectoryTextBox" MaterialDesign:HintAssist.Hint="ScorpBot Installation Directory" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <TextBox Grid.Row="2" Text="{Binding ScorpBotDirectory}" MaterialDesign:HintAssist.Hint="ScorpBot Installation Directory" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                        <Button Grid.Column="2" Grid.Row="0" x:Name="ScorpBotDirectoryBrowseButton">Browse</Button>
+                        <Button Grid.Column="2" Grid.Row="0" Command="{Binding ScorpBotDirectoryBrowseCommand}">Browse</Button>
                     </Grid>
                 </Grid>
 
-                <Grid x:Name="ImportStreamlabsChatBotSettingsPageGrid" Visibility="Collapsed">
+                <Grid Visibility="{Binding StreamlabsChatbotPageVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="15" />
@@ -217,7 +217,7 @@
                     <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">Import Streamlabs Chat Bot Data</TextBlock>
 
                     <StackPanel Grid.Row="2" Width="675">
-                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,0">If you previously used Streamlabs Chat Bot, we can import several things from your data to get you ramped up faster in Mix It Up! To use this feature, you must have some form of Microsoft Excel installed. Currently, the following features can be imported:</TextBlock>
+                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,0">If you previously used Streamlabs Chat Bot, we can import several things from your data to get you ramped up faster in Mix It Up! Currently, the following features can be imported:</TextBlock>
 
                         <TextBlock Margin="20,10,0,0">- Chat Commands</TextBlock>
                         <TextBlock Margin="20,0,0,0">- Timers</TextBlock>
@@ -241,61 +241,122 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBox Grid.Row="2" x:Name="StreamlabsChatBotDataFilePathTextBox" MaterialDesign:HintAssist.Hint="Streamlabs Chat Bot Data File" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <TextBox Grid.Row="2" Text="{Binding StreamlabsChatbotDirectory}" MaterialDesign:HintAssist.Hint="Streamlabs Chat Bot Data File" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                        <Button Grid.Column="2" Grid.Row="0" x:Name="StreamlabsChatBotDataFileBrowseButton">Browse</Button>
+                        <Button Grid.Column="2" Grid.Row="0" Command="{Binding StreamlabsChatbotDirectoryBrowseCommand}">Browse</Button>
                     </Grid>
                 </Grid>
 
-                <Grid x:Name="SetupCompletePageGrid" Visibility="Collapsed" Width="550">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="20" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="40" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="40" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="40" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
+                <Grid Visibility="{Binding CommandActionsPageVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-                    <TextBlock TextWrapping="Wrap" Grid.Row="0" HorizontalAlignment="Center">Congratulations, you're all set to start using Mix It Up!</TextBlock>
-
-                    <TextBlock TextWrapping="Wrap" Grid.Row="2">We have several resources available to you for how to get starting using Mix It Up, including a YouTube tutorial series, our extensive Wiki, as well as direct contact for questions or support:</TextBlock>
-
-                    <Grid Grid.Row="4" Margin="20,0,0,0">
+                    <Grid Grid.Column="0" VerticalAlignment="Center">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="20" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="20" />
+                            <RowDefinition Height="40" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
+                        <Grid Grid.Row="0" VerticalAlignment="Center" Width="350">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="20" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
 
+                            <TextBlock Grid.Row="0" TextWrapping="Wrap">Mix It Up uses a Command &amp; Action structure for everything throughout the app. Think of it similar to a recipe that you would follow to make food.</TextBlock>
 
-                        <StackPanel Grid.Row="4" Orientation="Horizontal">
-                            <TextBlock>Questions/Support: support@mixitup.com</TextBlock>
-                        </StackPanel>
+                            <TextBlock Grid.Row="2" TextWrapping="Wrap">Let's say you wanted to make some pasta; you would follow the steps in the recipe one after the other until you're done. You also would follow every step in the order they are specified. For example, you need to heat the water before you can add the pasta.</TextBlock>
+                        </Grid>
+
+                        <Image Grid.Row="2" Source="/Assets/Images/CommandExample.png" Width="200" VerticalAlignment="Bottom" />
                     </Grid>
 
+                    <Grid Grid.Column="2" VerticalAlignment="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Image Grid.Row="0" Source="/Assets/Images/ExampleRecipe.png" Width="200" VerticalAlignment="Top" />
+
+                        <Grid Grid.Row="2" VerticalAlignment="Center" Width="350">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="20" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" TextWrapping="Wrap">Commands are like a recipe and actions are the steps in that recipe. Let's say you make a shout out command, what are the things it should do? Each of those "things" can be thought of as an action.</TextBlock>
+
+                            <TextBlock Grid.Row="2" TextWrapping="Wrap">In this example, our shout out command sends a message to chat, plays a sound, waits 10 seconds, and then shows an image. Each of those correspond to a different action type (Chat, Sound, Wait, and Overlay).</TextBlock>
+                        </Grid>
+                    </Grid>
+                </Grid>
+
+                <Grid Visibility="{Binding FinalPageVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                     <Grid Grid.Row="6">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="40" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="60" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="60" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="60" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
 
-                        <TextBlock Grid.Column="0" TextWrapping="Wrap" Width="450">Don't know how a feature works or want more info? Simply click on the Help icon on the top bar of the main window to find out more!</TextBlock>
+                        <Grid Grid.Row="0" HorizontalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
 
-                        <Button Grid.Column="2" Width="40" HorizontalAlignment="Center" ToolTip="Help">
-                            <MaterialDesign:PackIcon Kind="Help" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                        </Button>
+                            <TextBlock Grid.Column="0" TextWrapping="Wrap" Width="450">Don't know how a feature works or want more info? Simply click on the Help icon on the top bar of the main window to find out more!</TextBlock>
+
+                            <Button Grid.Column="2" Width="40" HorizontalAlignment="Center" ToolTip="Help">
+                                <MaterialDesign:PackIcon Kind="Help" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                            </Button>
+                        </Grid>
+
+                        <TextBlock Grid.Row="2" TextWrapping="Wrap" Width="500">Don't forget the following resources available to you for questions &amp; support:</TextBlock>
+
+                        <Grid Grid.Row="4" HorizontalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <Button Grid.Column="0" Command="{Binding DiscordCommand}" Height="60" Width="60" Background="Transparent">
+                                <Image Source="/Assets/Images/Discord.png" Width="50" Height="50" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Button>
+
+                            <Button Grid.Column="2" Command="{Binding TwitterCommand}" Height="60" Width="60" Background="Transparent">
+                                <Image Source="/Assets/Images/Twitter.png" Width="45" Height="45" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Button>
+
+                            <Button Grid.Column="4" Command="{Binding YouTubeCommand}" Height="60" Width="60" Background="Transparent">
+                                <Image Source="/Assets/Images/YouTube.png" Width="45" Height="45" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Button>
+
+                            <Button Grid.Column="6" Command="{Binding WikiCommand}" Height="60" Width="60" Background="Transparent">
+                                <Image Source="/Assets/Images/Wiki.png" Width="50" Height="50" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Button>
+                        </Grid>
+
+                        <TextBlock TextWrapping="Wrap" Grid.Row="6" HorizontalAlignment="Center">Thanks for using Mix It Up and we hope it meets all your needs!</TextBlock>
                     </Grid>
-
-                    <TextBlock TextWrapping="Wrap" Grid.Row="8" HorizontalAlignment="Center">Thanks for giving Mix It Up a try and we hope it meets all your needs!</TextBlock>
-
                 </Grid>
             </Grid>
 

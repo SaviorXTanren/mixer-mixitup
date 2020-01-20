@@ -6,10 +6,8 @@ using MixItUp.Base.Model.API;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Desktop;
-using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows;
 using MixItUp.WPF.Windows.Wizard;
-using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -113,8 +111,6 @@ namespace MixItUp.WPF
 
         private async void StreamerLoginButton_Click(object sender, RoutedEventArgs e)
         {
-            bool result = false;
-
             await this.RunAsyncOperation(async () =>
             {
                 if (this.ExistingStreamerComboBox.Visibility == Visibility.Visible)
@@ -124,12 +120,7 @@ namespace MixItUp.WPF
                         IChannelSettings setting = (IChannelSettings)this.ExistingStreamerComboBox.SelectedItem;
                         if (setting.Channel.id == 0)
                         {
-                            if (await this.ShowLicenseAgreement())
-                            {
-                                ShowMainWindow(new NewUserWizardWindow());
-                                this.Hide();
-                                this.Close();
-                            }
+                            await this.NewStreamerLogin();
                         }
                         else
                         {
@@ -158,12 +149,7 @@ namespace MixItUp.WPF
                 }
                 else
                 {
-                    if (await this.ShowLicenseAgreement())
-                    {
-                        ShowMainWindow(new NewUserWizardWindow());
-                        this.Hide();
-                        this.Close();
-                    }
+                    await this.NewStreamerLogin();
                 }
             });
         }
@@ -186,36 +172,37 @@ namespace MixItUp.WPF
                     return;
                 }
 
+                bool authenticationSuccessful = false;
                 if (this.ModeratorChannelComboBox.SelectedIndex >= 0)
                 {
                     IChannelSettings setting = (IChannelSettings)this.ModeratorChannelComboBox.SelectedItem;
-                    if (await this.ExistingSettingLogin(setting))
-                    {
-                        IEnumerable<UserWithGroupsModel> users = await ChannelSession.MixerStreamerConnection.GetUsersWithRoles(ChannelSession.MixerChannel, MixerRoleEnum.Mod);
-                        if (users.Any(uwg => uwg.id.Equals(ChannelSession.MixerStreamerUser.id)) || ChannelSession.IsDebug())
-                        {
-                            ShowMainWindow(new MainWindow());
-                            this.Hide();
-                            this.Close();
-                        }
-                        else
-                        {
-                            await DialogHelper.ShowMessage("You are not a moderator for this channel.");
-                        }
-                    }
-                    else
-                    {
-                        await DialogHelper.ShowMessage("Unable to authenticate with Mixer, please try again");
-                    }
+                    authenticationSuccessful = await this.ExistingSettingLogin(setting);
                 }
                 else
                 {
                     if (await this.ShowLicenseAgreement())
                     {
-                        ShowMainWindow(new NewUserWizardWindow());
+                        authenticationSuccessful = await this.EstablishConnection(ChannelSession.ModeratorScopes, this.ModeratorChannelComboBox.Text);
+                    }
+                }
+
+                if (authenticationSuccessful)
+                {
+                    IEnumerable<UserWithGroupsModel> users = await ChannelSession.MixerStreamerConnection.GetUsersWithRoles(ChannelSession.MixerChannel, MixerRoleEnum.Mod);
+                    if (users.Any(uwg => uwg.id.Equals(ChannelSession.MixerStreamerUser.id)) || ChannelSession.IsDebug())
+                    {
+                        ShowMainWindow(new MainWindow());
                         this.Hide();
                         this.Close();
                     }
+                    else
+                    {
+                        await DialogHelper.ShowMessage("You are not a moderator for this channel.");
+                    }
+                }
+                else
+                {
+                    await DialogHelper.ShowMessage("Unable to authenticate with Mixer, please try again");
                 }
             });
         }
@@ -262,6 +249,16 @@ namespace MixItUp.WPF
                 return result;
             }
             return false;
+        }
+
+        private async Task NewStreamerLogin()
+        {
+            if (await this.ShowLicenseAgreement())
+            {
+                ShowMainWindow(new NewUserWizardWindow());
+                this.Hide();
+                this.Close();
+            }
         }
 
         private async Task<bool> EstablishConnection(IEnumerable<OAuthClientScopeEnum> scopes, string channelName = null)

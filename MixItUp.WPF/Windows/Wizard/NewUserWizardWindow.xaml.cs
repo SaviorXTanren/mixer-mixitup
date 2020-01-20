@@ -1,8 +1,6 @@
-﻿using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Window.Wizard;
+﻿using MixItUp.Base.ViewModel.Window.Wizard;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using System.Windows.Navigation;
 
 namespace MixItUp.WPF.Windows.Wizard
 {
@@ -17,6 +15,7 @@ namespace MixItUp.WPF.Windows.Wizard
             : base(new NewUserWizardWindowViewModel())
         {
             this.viewModel = (NewUserWizardWindowViewModel)this.ViewModel;
+            this.viewModel.WizardCompleteEvent += ViewModel_WizardCompleteEvent;
 
             InitializeComponent();
 
@@ -37,6 +36,11 @@ namespace MixItUp.WPF.Windows.Wizard
                 this.ShowMainWindow(new MainWindow());
             }
             base.OnClosing(e);
+        }
+
+        private void ViewModel_WizardCompleteEvent(object sender, System.EventArgs e)
+        {
+            this.Close();
         }
     }
 }
