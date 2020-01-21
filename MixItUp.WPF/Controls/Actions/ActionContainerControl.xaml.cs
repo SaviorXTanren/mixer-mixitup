@@ -115,7 +115,7 @@ namespace MixItUp.WPF.Controls.Actions
                 if (action != null)
                 {
                     UserViewModel currentUser = await ChannelSession.GetCurrentUser();
-                    await action.Perform(currentUser, new List<string>() { "@" + currentUser.UserName }, new Dictionary<string, string>());
+                    await action.Perform(currentUser, new List<string>() { "@" + currentUser.MixerUsername }, new Dictionary<string, string>());
                 }
                 else
                 {

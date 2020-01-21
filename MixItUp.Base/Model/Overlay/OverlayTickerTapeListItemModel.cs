@@ -112,46 +112,46 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void GlobalEvents_OnFollowOccurred(object sender, UserViewModel user)
         {
-            if (!this.follows.Contains(user.ID))
+            if (!this.follows.Contains(user.MixerID))
             {
-                this.follows.Add(user.ID);
-                await this.AddEvent(user.UserName);
+                this.follows.Add(user.MixerID);
+                await this.AddEvent(user.MixerUsername);
             }
         }
 
         private async void GlobalEvents_OnHostOccurred(object sender, Tuple<UserViewModel, int> host)
         {
-            if (!this.hosts.Contains(host.Item1.ID))
+            if (!this.hosts.Contains(host.Item1.MixerID))
             {
-                this.hosts.Add(host.Item1.ID);
-                await this.AddEvent(host.Item1.UserName + " x" + host.Item2);
+                this.hosts.Add(host.Item1.MixerID);
+                await this.AddEvent(host.Item1.MixerUsername + " x" + host.Item2);
             }
         }
 
         private async void GlobalEvents_OnSubscribeOccurred(object sender, UserViewModel user)
         {
-            if (!this.subs.Contains(user.ID))
+            if (!this.subs.Contains(user.MixerID))
             {
-                this.subs.Add(user.ID);
-                await this.AddEvent(user.UserName);
+                this.subs.Add(user.MixerID);
+                await this.AddEvent(user.MixerUsername);
             }
         }
 
         private async void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserViewModel, int> user)
         {
-            if (!this.subs.Contains(user.Item1.ID))
+            if (!this.subs.Contains(user.Item1.MixerID))
             {
-                this.subs.Add(user.Item1.ID);
-                await this.AddEvent(user.Item1.UserName + " x" + user.Item2);
+                this.subs.Add(user.Item1.MixerID);
+                await this.AddEvent(user.Item1.MixerUsername + " x" + user.Item2);
             }
         }
 
         private async void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserViewModel, UserViewModel> e)
         {
-            if (!this.subs.Contains(e.Item2.ID))
+            if (!this.subs.Contains(e.Item2.MixerID))
             {
-                this.subs.Add(e.Item2.ID);
-                await this.AddEvent(e.Item2.UserName);
+                this.subs.Add(e.Item2.MixerID);
+                await this.AddEvent(e.Item2.MixerUsername);
             }
         }
 
@@ -167,7 +167,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (this.MinimumAmountRequiredToShow == 0.0 || sparkUsage.Item2 >= this.MinimumAmountRequiredToShow)
             {
-                await this.AddEvent(sparkUsage.Item1.UserName + ": " + sparkUsage.Item2);
+                await this.AddEvent(sparkUsage.Item1.MixerUsername + ": " + sparkUsage.Item2);
             }
         }
 
@@ -175,7 +175,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (this.MinimumAmountRequiredToShow == 0.0 || emberUsage.Amount >= this.MinimumAmountRequiredToShow)
             {
-                await this.AddEvent(emberUsage.User.UserName + ": " + emberUsage.Amount);
+                await this.AddEvent(emberUsage.User.MixerUsername + ": " + emberUsage.Amount);
             }
         }
 

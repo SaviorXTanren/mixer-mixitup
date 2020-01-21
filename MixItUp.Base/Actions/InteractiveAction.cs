@@ -259,7 +259,7 @@ namespace MixItUp.Base.Actions
                     {
                         if (ChannelSession.Services.Chat != null)
                         {
-                            await ChannelSession.Services.Chat.Whisper(user.UserName, "You do not permission to perform this action.");
+                            await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "You do not permission to perform this action.");
                         }
                         return;
                     }
@@ -421,7 +421,7 @@ namespace MixItUp.Base.Actions
                             }
                             else if (this.InteractiveType == InteractiveActionTypeEnum.SetCustomMetadata)
                             {
-                                control.meta["userID"] = user.ID;
+                                control.meta["userID"] = user.MixerID;
                                 foreach (var kvp in this.CustomMetadata)
                                 {
                                     string value = await this.ReplaceStringWithSpecialModifiers(kvp.Value, user, arguments);

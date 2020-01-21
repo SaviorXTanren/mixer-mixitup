@@ -175,12 +175,12 @@ namespace MixItUp.WPF.Windows.Users
                             case "User ID":
                                 if (uint.TryParse(dataValue, out uint id))
                                 {
-                                    importedUserData.ID = id;
+                                    importedUserData.MixerID = id;
                                 }
                                 columnMatched = true;
                                 break;
                             case "User Name":
-                                importedUserData.UserName = dataValue;
+                                importedUserData.MixerUsername = dataValue;
                                 columnMatched = true;
                                 break;
                             case "Live Viewing Time (Hours)":
@@ -236,26 +236,26 @@ namespace MixItUp.WPF.Windows.Users
                 currentColumn++;
             }
 
-            if (importedUserData.ID == 0)
+            if (importedUserData.MixerID == 0)
             {
-                UserModel user = await ChannelSession.MixerUserConnection.GetUser(importedUserData.UserName);
+                UserModel user = await ChannelSession.MixerUserConnection.GetUser(importedUserData.MixerUsername);
                 if (user != null)
                 {
-                    importedUserData.ID = user.id;
+                    importedUserData.MixerID = user.id;
                 }
             }
-            else if (string.IsNullOrEmpty(importedUserData.UserName))
+            else if (string.IsNullOrEmpty(importedUserData.MixerUsername))
             {
-                UserModel user = await ChannelSession.MixerUserConnection.GetUser(importedUserData.ID);
+                UserModel user = await ChannelSession.MixerUserConnection.GetUser(importedUserData.MixerID);
                 if (user != null)
                 {
-                    importedUserData.UserName = user.username;
+                    importedUserData.MixerUsername = user.username;
                 }
             }
 
-            if (importedUserData.ID > 0 && !string.IsNullOrEmpty(importedUserData.UserName))
+            if (importedUserData.MixerID > 0 && !string.IsNullOrEmpty(importedUserData.MixerUsername))
             {
-                ChannelSession.Settings.UserData[importedUserData.ID] = importedUserData;
+                ChannelSession.Settings.UserData[importedUserData.MixerID] = importedUserData;
                 usersImported++;
                 this.Dispatcher.Invoke(() => { this.ImportDataButton.Content = string.Format("Imported {0} Users", usersImported); });
             }

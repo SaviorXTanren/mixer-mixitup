@@ -132,7 +132,7 @@ namespace MixItUp.WPF.Controls.Interactive
                                         this.WinnerGrid.DataContext = this.winner;
                                     });
 
-                                    ChannelSession.Services.Chat.SendMessage(string.Format("Winner: @{0}, Total Flies: {1}", winner.User.UserName, winner.Total));
+                                    ChannelSession.Services.Chat.SendMessage(string.Format("Winner: @{0}, Total Flies: {1}", winner.User.MixerUsername, winner.Total));
                                 }
                             }
                             catch (Exception ex) { Logger.Log(ex.ToString()); }

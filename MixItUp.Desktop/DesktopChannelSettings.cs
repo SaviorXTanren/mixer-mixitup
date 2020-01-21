@@ -585,7 +585,7 @@ namespace MixItUp.Desktop
                     await this.DatabaseWrapper.RunReadCommand("SELECT * FROM Users", (SQLiteDataReader dataReader) =>
                     {
                         UserDataViewModel userData = new UserDataViewModel(dataReader, this);
-                        initialUsers[userData.ID] = userData;
+                        initialUsers[userData.MixerID] = userData;
                     });
                     this.UserData = new DatabaseDictionary<uint, UserDataViewModel>(initialUsers);
                 }
@@ -655,20 +655,20 @@ namespace MixItUp.Desktop
                 await this.DatabaseWrapper.RunBulkWriteCommand("DELETE FROM Users WHERE ID = @ID", removedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter("@ID", value: (int)u) }));
 
                 IEnumerable<UserDataViewModel> addedUsers = this.UserData.GetAddedValues();
-                addedUsers = addedUsers.Where(u => !string.IsNullOrEmpty(u.UserName));
+                addedUsers = addedUsers.Where(u => !string.IsNullOrEmpty(u.MixerUsername));
                 await this.DatabaseWrapper.RunBulkWriteCommand("INSERT INTO Users(ID, UserName, ViewingMinutes, CurrencyAmounts, InventoryAmounts, CustomCommands, Options) VALUES(?,?,?,?,?,?,?)",
-                    addedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter(DbType.UInt32, u.ID), new SQLiteParameter(DbType.String, value: u.UserName),
+                    addedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter(DbType.UInt32, u.MixerID), new SQLiteParameter(DbType.String, value: u.MixerUsername),
                     new SQLiteParameter(DbType.Int32, value: u.ViewingMinutes), new SQLiteParameter(DbType.String, value: u.GetCurrencyAmountsString()),
                     new SQLiteParameter(DbType.String, value: u.GetInventoryAmountsString()), new SQLiteParameter(DbType.String, value: u.GetCustomCommandsString()),
                     new SQLiteParameter(DbType.String, value: u.GetOptionsString()) }));
 
                 IEnumerable<UserDataViewModel> changedUsers = this.UserData.GetChangedValues();
-                changedUsers = changedUsers.Where(u => !string.IsNullOrEmpty(u.UserName));
+                changedUsers = changedUsers.Where(u => !string.IsNullOrEmpty(u.MixerUsername));
                 await this.DatabaseWrapper.RunBulkWriteCommand("UPDATE Users SET UserName = @UserName, ViewingMinutes = @ViewingMinutes, CurrencyAmounts = @CurrencyAmounts," +
                     " InventoryAmounts = @InventoryAmounts, CustomCommands = @CustomCommands, Options = @Options WHERE ID = @ID",
-                    changedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter("@UserName", value: u.UserName), new SQLiteParameter("@ViewingMinutes", value: u.ViewingMinutes),
+                    changedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter("@UserName", value: u.MixerUsername), new SQLiteParameter("@ViewingMinutes", value: u.ViewingMinutes),
                     new SQLiteParameter("@CurrencyAmounts", value: u.GetCurrencyAmountsString()), new SQLiteParameter("@InventoryAmounts", value: u.GetInventoryAmountsString()),
-                    new SQLiteParameter("@CustomCommands", value: u.GetCustomCommandsString()), new SQLiteParameter("@Options", value: u.GetOptionsString()), new SQLiteParameter("@ID", value: (int)u.ID) }));
+                    new SQLiteParameter("@CustomCommands", value: u.GetCustomCommandsString()), new SQLiteParameter("@Options", value: u.GetOptionsString()), new SQLiteParameter("@ID", value: (int)u.MixerID) }));
             }
 
             // Clear out unused Cooldown Groups and Command Groups

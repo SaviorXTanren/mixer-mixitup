@@ -131,9 +131,9 @@ namespace MixItUp.Base.Commands
 
         public bool CanRun(UserViewModel user)
         {
-            if (!this.userEventTracking.Contains(user.ID.ToString()))
+            if (!this.userEventTracking.Contains(user.MixerID.ToString()))
             {
-                this.userEventTracking.Add(user.ID.ToString());
+                this.userEventTracking.Add(user.MixerID.ToString());
                 return true;
             }
             return false;

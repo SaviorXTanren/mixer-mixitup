@@ -229,7 +229,7 @@ namespace MixItUp.Base.Services.Mixer
                                 GlobalEvents.FollowOccurred(user);
                                 await ChannelSession.Services.Events.PerformEvent(trigger);
                             }
-                            await this.AddAlertChatMessage(user, string.Format("{0} Followed", user.UserName));
+                            await this.AddAlertChatMessage(user, string.Format("{0} Followed", user.MixerUsername));
                         }
                         else
                         {
@@ -239,7 +239,7 @@ namespace MixItUp.Base.Services.Mixer
                                 GlobalEvents.UnfollowOccurred(user);
                                 await ChannelSession.Services.Events.PerformEvent(trigger);
                             }
-                            await this.AddAlertChatMessage(user, string.Format("{0} Unfollowed", user.UserName));
+                            await this.AddAlertChatMessage(user, string.Format("{0} Unfollowed", user.MixerUsername));
                         }
                     }
                 }
@@ -269,7 +269,7 @@ namespace MixItUp.Base.Services.Mixer
                             trigger.SpecialIdentifiers["hostviewercount"] = viewerCount.ToString();
                             await ChannelSession.Services.Events.PerformEvent(trigger);
                         }
-                        await this.AddAlertChatMessage(user, string.Format("{0} Hosted With {1} Viewers", user.UserName, viewerCount));
+                        await this.AddAlertChatMessage(user, string.Format("{0} Hosted With {1} Viewers", user.MixerUsername, viewerCount));
                     }
                 }
                 else if (e.channel.Equals(MixerEventService.ChannelSubscribedEvent.ToString()))
@@ -293,7 +293,7 @@ namespace MixItUp.Base.Services.Mixer
 
                             await ChannelSession.Services.Events.PerformEvent(trigger);
                         }
-                        await this.AddAlertChatMessage(user, string.Format("{0} Subscribed", user.UserName));
+                        await this.AddAlertChatMessage(user, string.Format("{0} Subscribed", user.MixerUsername));
                     }
                 }
                 else if (e.channel.Equals(MixerEventService.ChannelResubscribedEvent.ToString()) || e.channel.Equals(MixerEventService.ChannelResubscribedSharedEvent.ToString()))
@@ -323,7 +323,7 @@ namespace MixItUp.Base.Services.Mixer
                             trigger.SpecialIdentifiers["usersubmonths"] = resubMonths.ToString();
                             await ChannelSession.Services.Events.PerformEvent(trigger);
                         }
-                        await this.AddAlertChatMessage(user, string.Format("{0} Re-Subscribed For {1} Months", user.UserName, resubMonths));
+                        await this.AddAlertChatMessage(user, string.Format("{0} Re-Subscribed For {1} Months", user.MixerUsername, resubMonths));
                     }
                 }
                 else if (e.channel.Equals(MixerEventService.ChannelSubscriptionGiftedEvent.ToString()))
@@ -347,10 +347,10 @@ namespace MixItUp.Base.Services.Mixer
                                 ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = receiverUser;
                                 ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
 
-                                trigger.Arguments.Add(receiverUser.UserName);
+                                trigger.Arguments.Add(receiverUser.MixerUsername);
                                 await ChannelSession.Services.Events.PerformEvent(trigger);
 
-                                await this.AddAlertChatMessage(gifterUser, string.Format("{0} Gifted A Subscription To {1}", gifterUser.UserName, receiverUser.UserName));
+                                await this.AddAlertChatMessage(gifterUser, string.Format("{0} Gifted A Subscription To {1}", gifterUser.MixerUsername, receiverUser.MixerUsername));
 
                                 GlobalEvents.SubscriptionGiftedOccurred(gifterUser, receiverUser);
                             }
@@ -377,7 +377,7 @@ namespace MixItUp.Base.Services.Mixer
                             trigger.SpecialIdentifiers["userfanprogressionimage"] = fanProgression.level.LargeGIFAssetURL.ToString();
                             trigger.SpecialIdentifiers["userfanprogression"] = fanProgression.level.currentXp.GetValueOrDefault().ToString();
 
-                            if (string.IsNullOrEmpty(user.UserName))
+                            if (string.IsNullOrEmpty(user.MixerUsername))
                             {
                                 UserModel userModel = await ChannelSession.MixerUserConnection.GetUser(userID);
                                 if (userModel != null)
@@ -389,7 +389,7 @@ namespace MixItUp.Base.Services.Mixer
                             await ChannelSession.Services.Events.PerformEvent(trigger);
                         }
 
-                        user.FanProgression = fanProgression;
+                        user.MixerFanProgression = fanProgression;
 
                         GlobalEvents.ProgressionLevelUpOccurred(user);
 

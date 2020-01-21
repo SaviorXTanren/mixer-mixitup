@@ -257,7 +257,7 @@ namespace MixItUp.Base.Services.External
                 UserViewModel user = new UserViewModel(0, purchase.data.Username);
                 UserViewModel giftee = (string.IsNullOrEmpty(purchase.data.Giftee)) ? null : new UserViewModel(0, purchase.data.Giftee);
 
-                UserModel userModel = await ChannelSession.MixerUserConnection.GetUser(user.UserName);
+                UserModel userModel = await ChannelSession.MixerUserConnection.GetUser(user.MixerUsername);
                 if (userModel != null)
                 {
                     user = new UserViewModel(userModel);
@@ -265,7 +265,7 @@ namespace MixItUp.Base.Services.External
 
                 if (giftee != null)
                 {
-                    UserModel gifteeModel = await ChannelSession.MixerUserConnection.GetUser(giftee.UserName);
+                    UserModel gifteeModel = await ChannelSession.MixerUserConnection.GetUser(giftee.MixerUsername);
                     if (gifteeModel != null)
                     {
                         giftee = new UserViewModel(gifteeModel);
@@ -277,7 +277,7 @@ namespace MixItUp.Base.Services.External
                 if (giftee != null)
                 {
                     trigger.Type = EventTypeEnum.StreamlootsPackGifted;
-                    trigger.Arguments.Add(giftee.UserName);
+                    trigger.Arguments.Add(giftee.MixerUsername);
                 }
                 await ChannelSession.Services.Events.PerformEvent(trigger);
 
@@ -293,7 +293,7 @@ namespace MixItUp.Base.Services.External
             {
                 UserViewModel user = new UserViewModel(0, card.data.Username);
 
-                UserModel userModel = await ChannelSession.MixerUserConnection.GetUser(user.UserName);
+                UserModel userModel = await ChannelSession.MixerUserConnection.GetUser(user.MixerUsername);
                 if (userModel != null)
                 {
                     user = new UserViewModel(userModel);

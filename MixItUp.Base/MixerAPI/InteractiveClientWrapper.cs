@@ -945,7 +945,7 @@ namespace MixItUp.Base.MixerAPI
 
                     if (user.IsInInteractiveTimeout)
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "You currently timed out from MixPlay.");
+                        await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "You currently timed out from MixPlay.");
                         return;
                     }
 
@@ -1013,7 +1013,7 @@ namespace MixItUp.Base.MixerAPI
                     if (ChannelSession.Settings.ChatShowMixPlayAlerts && user != null && !user.IsAnonymous)
                     {
                         await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer, user,
-                            string.Format("{0} Used The \"{1}\" Interactive Control", user.UserName, connectedControl.Command.Name), ChannelSession.Settings.ChatMixPlayAlertsColorScheme));
+                            string.Format("{0} Used The \"{1}\" Interactive Control", user.MixerUsername, connectedControl.Command.Name), ChannelSession.Settings.ChatMixPlayAlertsColorScheme));
                     }
                 }
             }

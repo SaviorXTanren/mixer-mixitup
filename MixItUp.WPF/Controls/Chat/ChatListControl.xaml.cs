@@ -170,12 +170,12 @@ namespace MixItUp.WPF.Controls.Chat
                         IEnumerable<UserViewModel> users = ChannelSession.Services.User.GetAllUsers();
                         if (!string.IsNullOrEmpty(filter))
                         {
-                            users = users.Where(u => !string.IsNullOrEmpty(u.UserName) && u.UserName.StartsWith(filter, StringComparison.InvariantCultureIgnoreCase)).ToList();
+                            users = users.Where(u => !string.IsNullOrEmpty(u.MixerUsername) && u.MixerUsername.StartsWith(filter, StringComparison.InvariantCultureIgnoreCase)).ToList();
                         }
 
                         if (users.Count() > 0)
                         {
-                            users = users.OrderBy(u => u.UserName).Take(5).Reverse().ToList();
+                            users = users.OrderBy(u => u.MixerUsername).Take(5).Reverse().ToList();
                             this.ShowIntellisense(tag, this.UsernameIntellisense, this.UsernameIntellisenseListBox, users.ToList());
                         }
                     }
@@ -327,7 +327,7 @@ namespace MixItUp.WPF.Controls.Chat
                 ChatMessageViewModel message = (ChatMessageViewModel)this.ChatList.SelectedItem;
                 if (message.User != null)
                 {
-                    this.viewModel.SendMessageText = $"/w @{message.User.UserName} ";
+                    this.viewModel.SendMessageText = $"/w @{message.User.MixerUsername} ";
                     this.ChatMessageTextBox.Focus();
                     this.ChatMessageTextBox.CaretIndex = this.ChatMessageTextBox.Text.Length;
                 }
@@ -359,7 +359,7 @@ namespace MixItUp.WPF.Controls.Chat
                         if (menuItem.DataContext != null && menuItem.DataContext is ChatCommand)
                         {
                             ChatCommand command = (ChatCommand)menuItem.DataContext;
-                            await command.Perform(arguments: new List<string>() { message.User.UserName });
+                            await command.Perform(arguments: new List<string>() { message.User.MixerUsername });
                         }
                     }
                 }
@@ -412,7 +412,7 @@ namespace MixItUp.WPF.Controls.Chat
             UserViewModel user = UsernameIntellisenseListBox.SelectedItem as UserViewModel;
             if (user != null)
             {
-                this.SelectIntellisenseItem("@" + user.UserName);
+                this.SelectIntellisenseItem("@" + user.MixerUsername);
             }
             this.HideIntellisense();
         }

@@ -66,7 +66,7 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     if (!users.Contains(user))
                     {
-                        this.Items.Add(OverlayListIndividualItemModel.CreateRemoveItem(user.ID.ToString()));
+                        this.Items.Add(OverlayListIndividualItemModel.CreateRemoveItem(user.MixerID.ToString()));
                     }
                 }
 
@@ -79,9 +79,9 @@ namespace MixItUp.Base.Model.Overlay
                     int lastIndex = this.lastUsers.IndexOf(user);
                     if (lastIndex < 0 || lastIndex != i)
                     {
-                        item = OverlayListIndividualItemModel.CreateAddItem(user.ID.ToString(), user, i + 1, this.HTML);
+                        item = OverlayListIndividualItemModel.CreateAddItem(user.MixerID.ToString(), user, i + 1, this.HTML);
 
-                        item.TemplateReplacements.Add("USERNAME", user.UserName);
+                        item.TemplateReplacements.Add("USERNAME", user.MixerUsername);
                         item.TemplateReplacements.Add("POSITION", (i + 1).ToString());
 
                         this.Items.Add(item);

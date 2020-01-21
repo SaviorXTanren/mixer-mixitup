@@ -39,7 +39,7 @@ namespace MixItUp.WPF.Controls.Dialogs
 
         private async void UserDialogControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (this.user != null && !this.user.IsAnonymous && !string.IsNullOrEmpty(this.user.UserName))
+            if (this.user != null && !this.user.IsAnonymous && !string.IsNullOrEmpty(this.user.MixerUsername))
             {
                 await this.user.RefreshDetails(force: true);
 
@@ -48,9 +48,9 @@ namespace MixItUp.WPF.Controls.Dialogs
                 this.PromoteToModButton.IsEnabled = this.DemoteFromModButton.IsEnabled = this.EditUserButton.IsEnabled = ChannelSession.IsStreamer;
 
                 bool follows = false;
-                if (this.user.ChannelID > 0)
+                if (this.user.MixerChannelID > 0)
                 {
-                    ExpandedChannelModel channelToCheck = await ChannelSession.MixerUserConnection.GetChannel(this.user.ChannelID);
+                    ExpandedChannelModel channelToCheck = await ChannelSession.MixerUserConnection.GetChannel(this.user.MixerChannelID);
                     if (channelToCheck != null)
                     {
                         follows = (await ChannelSession.MixerUserConnection.CheckIfFollows(channelToCheck, ChannelSession.MixerUser)).HasValue;

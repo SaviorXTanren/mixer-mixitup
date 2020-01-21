@@ -14,7 +14,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
         public int QueuePosition { get; set; }
 
-        public string UserName { get { return this.user.UserName; } }
+        public string UserName { get { return this.user.MixerUsername; } }
 
         public string PrimaryRole { get { return EnumHelper.GetEnumName(this.user.PrimaryRole); } }
 

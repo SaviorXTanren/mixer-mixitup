@@ -41,9 +41,9 @@ namespace MixItUp.Base.Model.User
             {
                 if (this.Role == MixerRoleEnum.Follower)
                 {
-                    if (user.FollowDate != null)
+                    if (user.MixerFollowDate != null)
                     {
-                        return user.FollowDate.GetValueOrDefault().TotalMonthsFromNow() >= this.Months;
+                        return user.MixerFollowDate.GetValueOrDefault().TotalMonthsFromNow() >= this.Months;
                     }
                     else if (!user.ExceedsPermissions(this.Role))
                     {

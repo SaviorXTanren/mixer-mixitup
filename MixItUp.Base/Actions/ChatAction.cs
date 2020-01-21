@@ -47,7 +47,7 @@ namespace MixItUp.Base.Actions
                 string message = await this.ReplaceStringWithSpecialModifiers(this.ChatText, user, arguments);
                 if (this.IsWhisper)
                 {
-                    string whisperUserName = user.UserName;
+                    string whisperUserName = user.MixerUsername;
                     if (!string.IsNullOrEmpty(this.WhisperUserName))
                     {
                         whisperUserName = await this.ReplaceStringWithSpecialModifiers(this.WhisperUserName, user, arguments);

@@ -182,10 +182,10 @@ namespace MixItUp.Base.ViewModel.User
                     {
                         if (!user.Data.IsCurrencyRankExempt)
                         {
-                            if (user.FanProgression != null && user.FanProgression.level != null && user.FanProgression.level.level > user.Data.GetCurrencyAmount(this))
+                            if (user.MixerFanProgression != null && user.MixerFanProgression.level != null && user.MixerFanProgression.level.level > user.Data.GetCurrencyAmount(this))
                             {
-                                user.Data.SetCurrencyAmount(this, (int)user.FanProgression.level.level);
-                                ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
+                                user.Data.SetCurrencyAmount(this, (int)user.MixerFanProgression.level.level);
+                                ChannelSession.Settings.UserData.ManualValueChanged(user.MixerID);
                             }
                         }
                     }
@@ -216,7 +216,7 @@ namespace MixItUp.Base.ViewModel.User
                                             user.Data.AddCurrencyAmount(this, this.SubscriberBonus);
                                         }
                                     }
-                                    ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
+                                    ChannelSession.Settings.UserData.ManualValueChanged(user.MixerID);
                                 }
                             }
                         }
@@ -248,7 +248,7 @@ namespace MixItUp.Base.ViewModel.User
                 if (userData.GetCurrencyAmount(this) > 0)
                 {
                     userData.ResetCurrencyAmount(this);
-                    ChannelSession.Settings.UserData.ManualValueChanged(userData.ID);
+                    ChannelSession.Settings.UserData.ManualValueChanged(userData.MixerID);
                 }
             }
             this.LastReset = new DateTimeOffset(DateTimeOffset.Now.Date);

@@ -191,7 +191,7 @@ namespace MixItUp.Base.Model.Overlay
             replacementSets["TEXT_SIZE"] = this.TextSize.ToString();
 
             replacementSets["USER_IMAGE"] = message.User.AvatarLink;
-            replacementSets["USERNAME"] = message.User.UserName;
+            replacementSets["USERNAME"] = message.User.MixerUsername;
             replacementSets["USER_COLOR"] = OverlayChatMessages.userColors[message.User.PrimaryRoleColorName];
 
             replacementSets["SUB_IMAGE"] = "";
@@ -502,45 +502,45 @@ namespace MixItUp.Base.Model.Overlay
 
         private void GlobalEvents_OnFollowOccurred(object sender, UserViewModel user)
         {
-            if (!this.follows.Contains(user.ID))
+            if (!this.follows.Contains(user.MixerID))
             {
-                this.follows.Add(user.ID);
-                this.AddEvent(user.UserName, "Followed");
+                this.follows.Add(user.MixerID);
+                this.AddEvent(user.MixerUsername, "Followed");
             }
         }
 
         private void GlobalEvents_OnHostOccurred(object sender, Tuple<UserViewModel, int> host)
         {
-            if (!this.hosts.Contains(host.Item1.ID))
+            if (!this.hosts.Contains(host.Item1.MixerID))
             {
-                this.hosts.Add(host.Item1.ID);
-                this.AddEvent(host.Item1.UserName, string.Format("Hosted ({0})", host.Item2));
+                this.hosts.Add(host.Item1.MixerID);
+                this.AddEvent(host.Item1.MixerUsername, string.Format("Hosted ({0})", host.Item2));
             }
         }
 
         private void GlobalEvents_OnSubscribeOccurred(object sender, UserViewModel user)
         {
-            if (!this.subs.Contains(user.ID))
+            if (!this.subs.Contains(user.MixerID))
             {
-                this.subs.Add(user.ID);
-                this.AddEvent(user.UserName, "Subscribed");
+                this.subs.Add(user.MixerID);
+                this.AddEvent(user.MixerUsername, "Subscribed");
             }
         }
 
         private void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserViewModel, int> user)
         {
-            if (!this.subs.Contains(user.Item1.ID))
+            if (!this.subs.Contains(user.Item1.MixerID))
             {
-                this.subs.Add(user.Item1.ID);
-                this.AddEvent(user.Item1.UserName, string.Format("Resubscribed ({0} months)", user.Item2));
+                this.subs.Add(user.Item1.MixerID);
+                this.AddEvent(user.Item1.MixerUsername, string.Format("Resubscribed ({0} months)", user.Item2));
             }
         }
 
         private void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { this.AddEvent(donation.UserName, string.Format("Donated {0}", donation.AmountText)); }
 
-        private void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, uint> sparkUsage) { this.AddEvent(sparkUsage.Item1.UserName, string.Format("{0} Sparks", sparkUsage.Item2)); }
+        private void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, uint> sparkUsage) { this.AddEvent(sparkUsage.Item1.MixerUsername, string.Format("{0} Sparks", sparkUsage.Item2)); }
 
-        private void GlobalEvents_OnEmberUseOccurred(object sender, UserEmberUsageModel emberUsage) { this.AddEvent(emberUsage.User.UserName, string.Format("{0} Embers", emberUsage.Amount)); }
+        private void GlobalEvents_OnEmberUseOccurred(object sender, UserEmberUsageModel emberUsage) { this.AddEvent(emberUsage.User.MixerUsername, string.Format("{0} Embers", emberUsage.Amount)); }
 
         private void GlobalEvents_OnPatronageMilestoneReachedOccurred(object sender, PatronageMilestoneModel patronageMilestone) { this.AddEvent(string.Format("{0} Milestone", patronageMilestone.PercentageAmountText()), string.Format("{0} Sparks", patronageMilestone.target)); }
     }
@@ -676,7 +676,7 @@ namespace MixItUp.Base.Model.Overlay
             replacementSets["HEIGHT"] = this.Height.ToString();
             replacementSets["TEXT_HEIGHT"] = ((int)(0.4 * ((double)this.Height))).ToString();
 
-            replacementSets["USERNAME"] = user.UserName;
+            replacementSets["USERNAME"] = user.MixerUsername;
             replacementSets["POSITION"] = extraSpecialIdentifiers[GameQueueUserPositionSpecialIdentifier];
 
             return Task.FromResult(replacementSets);
@@ -1304,7 +1304,7 @@ namespace MixItUp.Base.Model.Overlay
                         Dictionary<uint, int> currencyAmounts = new Dictionary<uint, int>();
                         foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values)
                         {
-                            currencyAmounts[userData.ID] = userData.GetCurrencyAmount(currency);
+                            currencyAmounts[userData.MixerID] = userData.GetCurrencyAmount(currency);
                         }
 
                         this.currencyUsersToShow.Clear();
@@ -1413,7 +1413,7 @@ namespace MixItUp.Base.Model.Overlay
             replacementSets["TOP_TEXT_HEIGHT"] = ((int)(0.4 * ((double)this.Height))).ToString();
             replacementSets["BOTTOM_TEXT_HEIGHT"] = ((int)(0.2 * ((double)this.Height))).ToString();
 
-            replacementSets["USERNAME"] = user.UserName;
+            replacementSets["USERNAME"] = user.MixerUsername;
             if (extraSpecialIdentifiers.ContainsKey("DETAILS"))
             {
                 replacementSets["DETAILS"] = extraSpecialIdentifiers["DETAILS"];
@@ -2100,7 +2100,7 @@ namespace MixItUp.Base.Model.Overlay
                 this.CurrentBoss = await ChannelSession.GetCurrentUser();
                 this.CurrentHealth = this.StartingHealth;
             }
-            this.CurrentBossUserID = this.CurrentBoss.ID;
+            this.CurrentBossUserID = this.CurrentBoss.MixerID;
 
             GlobalEvents.OnFollowOccurred -= GlobalEvents_OnFollowOccurred;
             GlobalEvents.OnHostOccurred -= GlobalEvents_OnHostOccurred;
@@ -2185,7 +2185,7 @@ namespace MixItUp.Base.Model.Overlay
             replacementSets["HEIGHT"] = this.Height.ToString();
             replacementSets["TEXT_SIZE"] = ((int)(0.2 * ((double)this.Height))).ToString();
 
-            replacementSets["USERNAME"] = boss.UserName;
+            replacementSets["USERNAME"] = boss.MixerUsername;
             replacementSets["USER_IMAGE"] = boss.AvatarLink;
             replacementSets["USER_IMAGE_SIZE"] = ((int)(0.8 * ((double)this.Height))).ToString();
 
@@ -2215,7 +2215,7 @@ namespace MixItUp.Base.Model.Overlay
                 if (this.CurrentHealth <= 0)
                 {
                     this.CurrentBoss = user;
-                    this.CurrentBossUserID = user.ID;
+                    this.CurrentBossUserID = user.MixerID;
                     this.CurrentHealth = this.StartingHealth;
                     this.NewBoss = true;
                 }
@@ -2225,36 +2225,36 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void GlobalEvents_OnFollowOccurred(object sender, UserViewModel user)
         {
-            if (!this.follows.Contains(user.ID))
+            if (!this.follows.Contains(user.MixerID))
             {
-                this.follows.Add(user.ID);
+                this.follows.Add(user.MixerID);
                 await this.ReduceHealth(user, this.FollowBonus);
             }
         }
 
         private async void GlobalEvents_OnHostOccurred(object sender, Tuple<UserViewModel, int> host)
         {
-            if (!this.hosts.Contains(host.Item1.ID))
+            if (!this.hosts.Contains(host.Item1.MixerID))
             {
-                this.hosts.Add(host.Item1.ID);
+                this.hosts.Add(host.Item1.MixerID);
                 await this.ReduceHealth(host.Item1, (Math.Max(host.Item2, 1) * this.HostBonus));
             }
         }
 
         private async void GlobalEvents_OnSubscribeOccurred(object sender, UserViewModel user)
         {
-            if (!this.subs.Contains(user.ID))
+            if (!this.subs.Contains(user.MixerID))
             {
-                this.subs.Add(user.ID);
+                this.subs.Add(user.MixerID);
                 await this.ReduceHealth(user, this.SubscriberBonus);
             }
         }
 
         private async void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserViewModel, int> user)
         {
-            if (!this.subs.Contains(user.Item1.ID))
+            if (!this.subs.Contains(user.Item1.MixerID))
             {
-                this.subs.Add(user.Item1.ID);
+                this.subs.Add(user.Item1.MixerID);
                 await this.ReduceHealth(user.Item1, this.SubscriberBonus);
             }
         }
@@ -2571,36 +2571,36 @@ namespace MixItUp.Base.Model.Overlay
 
         private void GlobalEvents_OnFollowOccurred(object sender, UserViewModel user)
         {
-            if (!this.follows.Contains(user.ID))
+            if (!this.follows.Contains(user.MixerID))
             {
-                this.follows.Add(user.ID);
+                this.follows.Add(user.MixerID);
                 this.SecondsToAdd += this.FollowBonus;
             }
         }
 
         private void GlobalEvents_OnHostOccurred(object sender, Tuple<UserViewModel, int> host)
         {
-            if (!this.hosts.Contains(host.Item1.ID))
+            if (!this.hosts.Contains(host.Item1.MixerID))
             {
-                this.hosts.Add(host.Item1.ID);
+                this.hosts.Add(host.Item1.MixerID);
                 this.SecondsToAdd += (Math.Max(host.Item2, 1) * this.HostBonus);
             }
         }
 
         private void GlobalEvents_OnSubscribeOccurred(object sender, UserViewModel user)
         {
-            if (!this.subs.Contains(user.ID))
+            if (!this.subs.Contains(user.MixerID))
             {
-                this.subs.Add(user.ID);
+                this.subs.Add(user.MixerID);
                 this.SecondsToAdd += this.SubscriberBonus;
             }
         }
 
         private void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserViewModel, int> user)
         {
-            if (!this.subs.Contains(user.Item1.ID))
+            if (!this.subs.Contains(user.Item1.MixerID))
             {
-                this.subs.Add(user.Item1.ID);
+                this.subs.Add(user.Item1.MixerID);
                 this.SecondsToAdd += this.SubscriberBonus;
             }
         }

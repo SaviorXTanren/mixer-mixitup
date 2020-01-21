@@ -61,7 +61,7 @@ namespace MixItUp.WPF.Controls.Users
 
         public async Task SetUserAvatarUrl(uint userID)
         {
-            await this.SetUserAvatarUrl(new UserViewModel() { ID = userID });
+            await this.SetUserAvatarUrl(new UserViewModel() { MixerID = userID });
         }
 
         public async Task SetUserAvatarUrl(UserViewModel user)
@@ -69,9 +69,9 @@ namespace MixItUp.WPF.Controls.Users
             try
             {
                 BitmapImage bitmap = new BitmapImage();
-                if (userAvatarCache.ContainsKey(user.ID))
+                if (userAvatarCache.ContainsKey(user.MixerID))
                 {
-                    bitmap = userAvatarCache[user.ID];
+                    bitmap = userAvatarCache[user.MixerID];
                 }
                 else
                 {
@@ -80,7 +80,7 @@ namespace MixItUp.WPF.Controls.Users
                         var bytes = await Task.Run<byte[]>(async () => { return await client.DownloadDataTaskAsync(user.AvatarLink); });
                         bitmap = WindowsImageService.Load(bytes);
                     }
-                    userAvatarCache[user.ID] = bitmap;
+                    userAvatarCache[user.MixerID] = bitmap;
                 }
 
                 this.ProfileAvatarImage.ImageSource = bitmap;

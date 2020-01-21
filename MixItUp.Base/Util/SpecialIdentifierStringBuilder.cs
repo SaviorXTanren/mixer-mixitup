@@ -298,7 +298,7 @@ namespace MixItUp.Base.Util
                         int userPosition = 1;
                         foreach (UserDataViewModel timeUser in allUsers.OrderByDescending(u => u.ViewingMinutes).Take(total))
                         {
-                            timeUserList.Add($"#{userPosition}) {timeUser.UserName} - {timeUser.ViewingTimeShortString}");
+                            timeUserList.Add($"#{userPosition}) {timeUser.MixerUsername} - {timeUser.ViewingTimeShortString}");
                             userPosition++;
                         }
 
@@ -321,7 +321,7 @@ namespace MixItUp.Base.Util
                             int userPosition = 1;
                             foreach (UserDataViewModel currencyUser in allUsers.OrderByDescending(u => u.GetCurrencyAmount(currency)).Take(total))
                             {
-                                currencyUserList.Add($"#{userPosition}) {currencyUser.UserName} - {currencyUser.GetCurrencyAmount(currency)}");
+                                currencyUserList.Add($"#{userPosition}) {currencyUser.MixerUsername} - {currencyUser.GetCurrencyAmount(currency)}");
                                 userPosition++;
                             }
 
@@ -596,7 +596,7 @@ namespace MixItUp.Base.Util
 
                 if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomSpecialIdentifierHeader + "user"))
                 {
-                    IEnumerable<UserViewModel> users = workableUsers.Where(u => !u.ID.Equals(ChannelSession.MixerUser.id));
+                    IEnumerable<UserViewModel> users = workableUsers.Where(u => !u.MixerID.Equals(ChannelSession.MixerUser.id));
                     if (users != null && users.Count() > 0)
                     {
                         await this.HandleUserSpecialIdentifiers(users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count())), RandomSpecialIdentifierHeader);
@@ -605,7 +605,7 @@ namespace MixItUp.Base.Util
 
                 if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomFollowerSpecialIdentifierHeader + "user"))
                 {
-                    IEnumerable<UserViewModel> users = workableUsers.Where(u => !u.ID.Equals(ChannelSession.MixerUser.id) && u.IsFollower);
+                    IEnumerable<UserViewModel> users = workableUsers.Where(u => !u.MixerID.Equals(ChannelSession.MixerUser.id) && u.IsFollower);
                     if (users != null && users.Count() > 0)
                     {
                         await this.HandleUserSpecialIdentifiers(users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count())), RandomFollowerSpecialIdentifierHeader);
@@ -614,7 +614,7 @@ namespace MixItUp.Base.Util
 
                 if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomSubscriberSpecialIdentifierHeader + "user"))
                 {
-                    IEnumerable<UserViewModel> users = workableUsers.Where(u => !u.ID.Equals(ChannelSession.MixerUser.id) && u.HasPermissionsTo(MixerRoleEnum.Subscriber));
+                    IEnumerable<UserViewModel> users = workableUsers.Where(u => !u.MixerID.Equals(ChannelSession.MixerUser.id) && u.HasPermissionsTo(MixerRoleEnum.Subscriber));
                     if (users != null && users.Count() > 0)
                     {
                         await this.HandleUserSpecialIdentifiers(users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count())), RandomSubscriberSpecialIdentifierHeader);
@@ -759,16 +759,16 @@ namespace MixItUp.Base.Util
             {
                 await user.RefreshDetails();
 
-                if (ChannelSession.Settings.UserData.ContainsKey(user.ID))
+                if (ChannelSession.Settings.UserData.ContainsKey(user.MixerID))
                 {
-                    UserDataViewModel userData = ChannelSession.Settings.UserData[user.ID];
+                    UserDataViewModel userData = ChannelSession.Settings.UserData[user.MixerID];
 
                     foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values.OrderByDescending(c => c.UserAmountSpecialIdentifier))
                     {
                         if (this.ContainsSpecialIdentifier(identifierHeader + currency.UserPositionSpecialIdentifier))
                         {
                             List<UserDataViewModel> allUsers = new List<UserDataViewModel>(this.GetAllCurrencyUsers());
-                            int index = allUsers.FindIndex(u => u.ID == user.ID);
+                            int index = allUsers.FindIndex(u => u.MixerID == user.MixerID);
                             this.ReplaceSpecialIdentifier(identifierHeader + currency.UserPositionSpecialIdentifier, (index + 1).ToString());
                         }
 
@@ -834,9 +834,9 @@ namespace MixItUp.Base.Util
 
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "primaryrole", user.PrimaryRoleString);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "avatar", user.AvatarLink);
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "url", "https://www.mixer.com/" + user.UserName);
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "name", user.UserName);
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "id", user.ID.ToString());
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "url", "https://www.mixer.com/" + user.MixerUsername);
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "name", user.MixerUsername);
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "id", user.MixerID.ToString());
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "sparks", user.Sparks.ToString());
 
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "mixerage", user.MixerAgeString);
@@ -859,11 +859,11 @@ namespace MixItUp.Base.Util
 
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "title", user.Title);
 
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "fanprogressionnext", user.FanProgression?.level?.nextLevelXp.GetValueOrDefault().ToString());
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "fanprogressionrank", user.FanProgression?.level?.level.ToString());
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "fanprogressioncolor", user.FanProgression?.level?.color?.ToString());
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "fanprogressionimage", user.FanProgression?.level?.LargeGIFAssetURL?.ToString());
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "fanprogression", user.FanProgression?.level?.currentXp.GetValueOrDefault().ToString());
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "fanprogressionnext", user.MixerFanProgression?.level?.nextLevelXp.GetValueOrDefault().ToString());
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "fanprogressionrank", user.MixerFanProgression?.level?.level.ToString());
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "fanprogressioncolor", user.MixerFanProgression?.level?.color?.ToString());
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "fanprogressionimage", user.MixerFanProgression?.level?.LargeGIFAssetURL?.ToString());
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "fanprogression", user.MixerFanProgression?.level?.currentXp.GetValueOrDefault().ToString());
 
                 if (this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "gamequeueposition"))
                 {
@@ -882,7 +882,7 @@ namespace MixItUp.Base.Util
                 if (this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "followers") || this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "game") ||
                     this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channel"))
                 {
-                    ExpandedChannelModel channel = await ChannelSession.MixerUserConnection.GetChannel(user.ChannelID);
+                    ExpandedChannelModel channel = await ChannelSession.MixerUserConnection.GetChannel(user.MixerChannelID);
                     if (channel != null)
                     {
                         this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "followers", channel?.numFollowers.ToString() ?? "0");

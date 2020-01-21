@@ -138,11 +138,11 @@ namespace MixItUp.Base.Services
 
         private async Task AddOrUpdateUser(UserViewModel user)
         {
-            if (!user.IsAnonymous && user.ID > 0 && !string.IsNullOrEmpty(user.UserName))
+            if (!user.IsAnonymous && user.MixerID > 0 && !string.IsNullOrEmpty(user.MixerUsername))
             {
-                this.usersByID[user.ID.ToString()] = user;
-                this.usersByUsername[user.UserName] = user;
-                if (UserService.SpecialUserAccounts.Contains(user.UserName))
+                this.usersByID[user.MixerID.ToString()] = user;
+                this.usersByUsername[user.MixerUsername] = user;
+                if (UserService.SpecialUserAccounts.Contains(user.MixerUsername))
                 {
                     user.IgnoreForQueries = true;
                 }
@@ -196,8 +196,8 @@ namespace MixItUp.Base.Services
 
         private async Task RemoveUser(UserViewModel user)
         {
-            this.usersByID.Remove(user.ID.ToString());
-            this.usersByUsername.Remove(user.UserName);
+            this.usersByID.Remove(user.MixerID.ToString());
+            this.usersByUsername.Remove(user.MixerUsername);
 
             await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.MixerChatUserLeft, user));
         }

@@ -506,7 +506,7 @@ namespace MixItUp.Base.Services.Mixer
             List<uint> chatUserIDs = new List<uint>(chatUsers.Select(u => u.userId.GetValueOrDefault()));
 
             IEnumerable<UserViewModel> existingUsers = ChannelSession.Services.User.GetAllUsers();
-            List<uint> existingUsersIDs = new List<uint>(existingUsers.Select(u => u.ID));
+            List<uint> existingUsersIDs = new List<uint>(existingUsers.Select(u => u.MixerID));
 
             Dictionary<uint, ChatUserModel> usersToAdd = new Dictionary<uint, ChatUserModel>();
             foreach (ChatUserModel user in chatUsers)

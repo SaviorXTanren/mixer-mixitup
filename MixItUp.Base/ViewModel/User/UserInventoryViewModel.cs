@@ -192,7 +192,7 @@ namespace MixItUp.Base.ViewModel.User
             foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values)
             {
                 userData.ResetInventoryAmount(this);
-                ChannelSession.Settings.UserData.ManualValueChanged(userData.ID);
+                ChannelSession.Settings.UserData.ManualValueChanged(userData.MixerID);
             }
             await ChannelSession.SaveSettings();
         }
@@ -218,7 +218,7 @@ namespace MixItUp.Base.ViewModel.User
                                     items.Add(item.Name);
                                 }
                             }
-                            await ChannelSession.Services.Chat.Whisper(user.UserName, "Items Available to Buy/Sell: " + string.Join(", ", items));
+                            await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "Items Available to Buy/Sell: " + string.Join(", ", items));
                             return;
                         }
                         else if (arguments.Count() >= 2 &&
@@ -236,7 +236,7 @@ namespace MixItUp.Base.ViewModel.User
                                 {
                                     if (!int.TryParse(arguments.Last(), out amount) || amount <= 0)
                                     {
-                                        await ChannelSession.Services.Chat.Whisper(user.UserName, "A valid amount greater than 0 must be specified");
+                                        await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "A valid amount greater than 0 must be specified");
                                         return;
                                     }
                                 }
@@ -244,7 +244,7 @@ namespace MixItUp.Base.ViewModel.User
 
                             if (item == null)
                             {
-                                await ChannelSession.Services.Chat.Whisper(user.UserName, "The item you specified does not exist");
+                                await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "The item you specified does not exist");
                                 return;
                             }
 
@@ -266,17 +266,17 @@ namespace MixItUp.Base.ViewModel.User
                                         }
                                         else
                                         {
-                                            await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to purchase this item", totalcost, currency.Name));
+                                            await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("You do not have the required {0} {1} to purchase this item", totalcost, currency.Name));
                                         }
                                     }
                                     else
                                     {
-                                        await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You can only have {0} {1} in total", itemMaxAmount, item.Name));
+                                        await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("You can only have {0} {1} in total", itemMaxAmount, item.Name));
                                     }
                                 }
                                 else
                                 {
-                                    await ChannelSession.Services.Chat.Whisper(user.UserName, "This item is not available for buying");
+                                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "This item is not available for buying");
                                 }
                             }
                             else if (arg1.Equals("sell", StringComparison.InvariantCultureIgnoreCase))
@@ -292,17 +292,17 @@ namespace MixItUp.Base.ViewModel.User
                                     }
                                     else
                                     {
-                                        await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to sell", amount, item.Name));
+                                        await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("You do not have the required {0} {1} to sell", amount, item.Name));
                                     }
                                 }
                                 else
                                 {
-                                    await ChannelSession.Services.Chat.Whisper(user.UserName, "This item is not available for selling");
+                                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "This item is not available for selling");
                                 }
                             }
                             else
                             {
-                                await ChannelSession.Services.Chat.Whisper(user.UserName, "You must specify either \"buy\" & \"sell\"");
+                                await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "You must specify either \"buy\" & \"sell\"");
                             }
 
                             if (command != null)
@@ -338,16 +338,16 @@ namespace MixItUp.Base.ViewModel.User
                                         itemInfo.Append(string.Format("Sell = {0} {1}", item.SellAmount, currency.Name));
                                     }
 
-                                    await ChannelSession.Services.Chat.Whisper(user.UserName, itemInfo.ToString());
+                                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, itemInfo.ToString());
                                 }
                                 else
                                 {
-                                    await ChannelSession.Services.Chat.Whisper(user.UserName, "This item is not available to buy/sell");
+                                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "This item is not available to buy/sell");
                                 }
                             }
                             else
                             {
-                                await ChannelSession.Services.Chat.Whisper(user.UserName, "The item you specified does not exist");
+                                await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "The item you specified does not exist");
                             }
                             return;
                         }
@@ -358,7 +358,7 @@ namespace MixItUp.Base.ViewModel.User
                     storeHelp.Append(this.ShopCommand + " <ITEM NAME> = Lists the buying/selling price for the item ** ");
                     storeHelp.Append(this.ShopCommand + " buy <ITEM NAME> [AMOUNT] = Buys 1 or the amount specified of the item ** ");
                     storeHelp.Append(this.ShopCommand + " sell <ITEM NAME> [AMOUNT] = Sells 1 or the amount specified of the item");
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, storeHelp.ToString());
+                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, storeHelp.ToString());
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
@@ -375,7 +375,7 @@ namespace MixItUp.Base.ViewModel.User
                         UserViewModel targetUser = await SpecialIdentifierStringBuilder.GetUserFromArgument(arguments.First());
                         if (targetUser == null)
                         {
-                            await ChannelSession.Services.Chat.Whisper(user.UserName, "The specified user does not exist");
+                            await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "The specified user does not exist");
                             return;
                         }
 
@@ -391,7 +391,7 @@ namespace MixItUp.Base.ViewModel.User
                             {
                                 if (!int.TryParse(arguments.Last(), out amount) || amount <= 0)
                                 {
-                                    await ChannelSession.Services.Chat.Whisper(user.UserName, "A valid amount greater than 0 must be specified");
+                                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "A valid amount greater than 0 must be specified");
                                     return;
                                 }
                             }
@@ -399,13 +399,13 @@ namespace MixItUp.Base.ViewModel.User
 
                         if (item == null)
                         {
-                            await ChannelSession.Services.Chat.Whisper(user.UserName, "The item you specified does not exist");
+                            await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "The item you specified does not exist");
                             return;
                         }
 
                         if (!user.Data.HasInventoryAmount(this, item.Name, amount))
                         {
-                            await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to trade", amount, item.Name));
+                            await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("You do not have the required {0} {1} to trade", amount, item.Name));
                             return;
                         }
 
@@ -434,7 +434,7 @@ namespace MixItUp.Base.ViewModel.User
                             }
                         });
 
-                        await ChannelSession.Services.Chat.SendMessage(string.Format("@{0} has started a trade with @{1} for {2} {3}. Type {4} <ITEM NAME> [AMOUNT] in chat to reply back with your offer in the next 60 seconds.", this.tradeSender.User.UserName, this.tradeReceiver.User.UserName, this.tradeSender.Amount, this.tradeSender.Item.Name, this.TradeCommand));
+                        await ChannelSession.Services.Chat.SendMessage(string.Format("@{0} has started a trade with @{1} for {2} {3}. Type {4} <ITEM NAME> [AMOUNT] in chat to reply back with your offer in the next 60 seconds.", this.tradeSender.User.MixerUsername, this.tradeReceiver.User.MixerUsername, this.tradeSender.Amount, this.tradeSender.Item.Name, this.TradeCommand));
                         return;
                     }
                     else if (this.tradeSender != null && this.tradeReceiver != null && this.tradeReceiver.User.Equals(user) && this.tradeReceiver.Amount == 0 && arguments.Count() >= 1)
@@ -451,7 +451,7 @@ namespace MixItUp.Base.ViewModel.User
                             {
                                 if (!int.TryParse(arguments.Last(), out amount) || amount <= 0)
                                 {
-                                    await ChannelSession.Services.Chat.Whisper(user.UserName, "A valid amount greater than 0 must be specified");
+                                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "A valid amount greater than 0 must be specified");
                                     return;
                                 }
                             }
@@ -459,20 +459,20 @@ namespace MixItUp.Base.ViewModel.User
 
                         if (item == null)
                         {
-                            await ChannelSession.Services.Chat.Whisper(user.UserName, "The item you specified does not exist");
+                            await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "The item you specified does not exist");
                             return;
                         }
 
                         if (!user.Data.HasInventoryAmount(this, item.Name, amount))
                         {
-                            await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to trade", amount, item.Name));
+                            await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("You do not have the required {0} {1} to trade", amount, item.Name));
                             return;
                         }
 
                         this.tradeReceiver.Item = item;
                         this.tradeReceiver.Amount = amount;
 
-                        await ChannelSession.Services.Chat.SendMessage(string.Format("@{0} has replied back to the offer by @{1} with {2} {3}. Type {4} in chat to accept the trade.", this.tradeReceiver.User.UserName, this.tradeSender.User.UserName, this.tradeReceiver.Amount, this.tradeReceiver.Item.Name, this.TradeCommand));
+                        await ChannelSession.Services.Chat.SendMessage(string.Format("@{0} has replied back to the offer by @{1} with {2} {3}. Type {4} in chat to accept the trade.", this.tradeReceiver.User.MixerUsername, this.tradeSender.User.MixerUsername, this.tradeReceiver.Amount, this.tradeReceiver.Item.Name, this.TradeCommand));
                         return;
                     }
                     else if (this.tradeSender != null && this.tradeReceiver != null && this.tradeReceiver.Amount > 0 && this.tradeSender.User.Equals(user))
@@ -480,14 +480,14 @@ namespace MixItUp.Base.ViewModel.User
                         int senderItemMaxAmount = (this.tradeReceiver.Item.HasMaxAmount) ? this.tradeReceiver.Item.MaxAmount : this.DefaultMaxAmount;
                         if ((this.tradeSender.User.Data.GetInventoryAmount(this, this.tradeReceiver.Item.Name) + this.tradeReceiver.Amount) > senderItemMaxAmount)
                         {
-                            await ChannelSession.Services.Chat.Whisper(this.tradeSender.User.UserName, string.Format("You can only have {0} {1} in total", senderItemMaxAmount, this.tradeReceiver.Item.Name));
+                            await ChannelSession.Services.Chat.Whisper(this.tradeSender.User.MixerUsername, string.Format("You can only have {0} {1} in total", senderItemMaxAmount, this.tradeReceiver.Item.Name));
                             return;
                         }
 
                         int receiverItemMaxAmount = (this.tradeSender.Item.HasMaxAmount) ? this.tradeSender.Item.MaxAmount : this.DefaultMaxAmount;
                         if ((this.tradeReceiver.User.Data.GetInventoryAmount(this, this.tradeSender.Item.Name) + this.tradeSender.Amount) > receiverItemMaxAmount)
                         {
-                            await ChannelSession.Services.Chat.Whisper(this.tradeReceiver.User.UserName, string.Format("You can only have {0} {1} in total", receiverItemMaxAmount, this.tradeSender.Item.Name));
+                            await ChannelSession.Services.Chat.Whisper(this.tradeReceiver.User.MixerUsername, string.Format("You can only have {0} {1} in total", receiverItemMaxAmount, this.tradeSender.Item.Name));
                             return;
                         }
 
@@ -504,7 +504,7 @@ namespace MixItUp.Base.ViewModel.User
                             specialIdentifiers["itemname"] = this.tradeSender.Item.Name;
                             specialIdentifiers["targetitemtotal"] = this.tradeReceiver.Amount.ToString();
                             specialIdentifiers["targetitemname"] = this.tradeReceiver.Item.Name;
-                            await this.ItemsTradedCommand.Perform(user, arguments: new string[] { this.tradeReceiver.User.UserName }, extraSpecialIdentifiers: specialIdentifiers);
+                            await this.ItemsTradedCommand.Perform(user, arguments: new string[] { this.tradeReceiver.User.MixerUsername }, extraSpecialIdentifiers: specialIdentifiers);
                         }
 
                         this.tradeSender = null;
@@ -516,11 +516,11 @@ namespace MixItUp.Base.ViewModel.User
                     }
                     else if (this.tradeSender != null && this.tradeReceiver != null && !this.tradeReceiver.User.Equals(user))
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "A trade is already underway, please wait until it is completed");
+                        await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "A trade is already underway, please wait until it is completed");
                         return;
                     }
                 }
-                await ChannelSession.Services.Chat.Whisper(user.UserName, this.TradeCommand + " <USERNAME> <ITEM NAME> [AMOUNT] = Trades 1 or the amount specified of the item to the specified user");
+                await ChannelSession.Services.Chat.Whisper(user.MixerUsername, this.TradeCommand + " <USERNAME> <ITEM NAME> [AMOUNT] = Trades 1 or the amount specified of the item to the specified user");
             }
             catch (Exception ex) { Logger.Log(ex); }
         }

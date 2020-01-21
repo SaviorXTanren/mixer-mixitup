@@ -333,22 +333,22 @@ namespace MixItUp.WPF.Controls.Interactive
                     {
                         Point point = new Point() { X = (double)input.input.meta["x"], Y = (double)input.input.meta["y"] };
 
-                        this.userPoints[user.ID] = point;
+                        this.userPoints[user.MixerID] = point;
 
                         MixPlayConnectedButtonControlModel control = new MixPlayConnectedButtonControlModel() { controlID = this.positionButton.controlID };
-                        control.meta["userID"] = user.ID;
+                        control.meta["userID"] = user.MixerID;
                         control.meta["x"] = point.X;
                         control.meta["y"] = point.Y;
                         await ChannelSession.Interactive.UpdateControls(this.scene, new List<MixPlayControlModel>() { control });
 
                         await this.Dispatcher.InvokeAsync(async () =>
                         {
-                            if (!this.userAvatars.ContainsKey(user.ID))
+                            if (!this.userAvatars.ContainsKey(user.MixerID))
                             {
                                 UserProfileAvatarControl avatarControl = new UserProfileAvatarControl();
                                 await avatarControl.SetUserAvatarUrl(user);
                                 avatarControl.SetSize(20);
-                                this.userAvatars[user.ID] = avatarControl;
+                                this.userAvatars[user.MixerID] = avatarControl;
 
                                 this.canvas.Children.Add(avatarControl);
                             }
@@ -440,7 +440,7 @@ namespace MixItUp.WPF.Controls.Interactive
 
         private void PositionUserPointOnCanvas(UserViewModel user, Point point)
         {
-            UserProfileAvatarControl avatarControl = this.userAvatars[user.ID];
+            UserProfileAvatarControl avatarControl = this.userAvatars[user.MixerID];
 
             double canvasX = ((point.X / 100.0) * this.image.ActualWidth);
             double canvasY = ((point.Y / 100.0) * this.image.ActualHeight);

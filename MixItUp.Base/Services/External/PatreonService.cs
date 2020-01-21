@@ -634,7 +634,7 @@ namespace MixItUp.Base.Services.External
                                 {
                                     UserViewModel user = new UserViewModel(0, member.User.LookupName);
 
-                                    UserModel userModel = await ChannelSession.MixerUserConnection.GetUser(user.UserName);
+                                    UserModel userModel = await ChannelSession.MixerUserConnection.GetUser(user.MixerUsername);
                                     if (userModel != null)
                                     {
                                         user = ChannelSession.Services.User.GetUserByID(userModel.id);

@@ -122,7 +122,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
 
                 if (user == null)
                 {
-                    user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.UserName.Equals(giveData.UsernameOrID, StringComparison.InvariantCultureIgnoreCase));
+                    user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.MixerUsername.Equals(giveData.UsernameOrID, StringComparison.InvariantCultureIgnoreCase));
                 }
 
                 if (user != null && giveData.Amount > 0)

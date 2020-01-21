@@ -145,10 +145,9 @@ namespace MixItUp.Base.ViewModel.User
     public class UserDataViewModel : NotifyPropertyChangedBase, IEquatable<UserDataViewModel>
     {
         [DataMember]
-        public uint ID { get; set; }
-
+        public uint MixerID { get; set; }
         [DataMember]
-        public string UserName { get; set; }
+        public string MixerUsername { get; set; }
 
         [DataMember]
         public string CustomTitle { get; set; }
@@ -224,13 +223,13 @@ namespace MixItUp.Base.ViewModel.User
         public UserDataViewModel(uint id, string username)
             : this()
         {
-            this.ID = id;
-            this.UserName = username;
+            this.MixerID = id;
+            this.MixerUsername = username;
         }
 
         public UserDataViewModel(UserModel user) : this(user.id, user.username) { }
 
-        public UserDataViewModel(UserViewModel user) : this(user.ID, user.UserName) { }
+        public UserDataViewModel(UserViewModel user) : this(user.MixerID, user.MixerUsername) { }
 
         public UserDataViewModel(ScorpBotViewer viewer)
             : this(viewer.ID, viewer.UserName)
@@ -426,7 +425,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public void UpdateData(UserViewModel user)
         {
-            this.UserName = user.UserName;
+            this.MixerUsername = user.MixerUsername;
         }
 
         public UserCurrencyDataViewModel GetCurrency(Guid currencyID)
@@ -551,17 +550,17 @@ namespace MixItUp.Base.ViewModel.User
 
         public bool Equals(UserDataViewModel other)
         {
-            return this.ID.Equals(other.ID);
+            return this.MixerID.Equals(other.MixerID);
         }
 
         public override int GetHashCode()
         {
-            return this.ID.GetHashCode();
+            return this.MixerID.GetHashCode();
         }
 
         public override string ToString()
         {
-            return this.UserName;
+            return this.MixerUsername;
         }
 
         internal string GetCurrencyAmountsString()

@@ -373,11 +373,11 @@ namespace MixItUp.Base.Util
 
                 if (isChat)
                 {
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("Your message has been deleted because only {0} can participate currently.", reason));
+                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("Your message has been deleted because only {0} can participate currently.", reason));
                 }
                 else if (isInteractive)
                 {
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("Your interactive selection has been ignored because only {0} can participate currently.", reason));
+                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("Your interactive selection has been ignored because only {0} can participate currently.", reason));
                 }
             }
         }

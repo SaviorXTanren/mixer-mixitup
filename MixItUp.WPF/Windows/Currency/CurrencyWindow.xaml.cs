@@ -407,15 +407,15 @@ namespace MixItUp.WPF.Windows.Currency
                         {
                             int intervalsToGive = userData.ViewingMinutes / this.currency.AcquireInterval;
                             userData.AddCurrencyAmount(this.currency, this.currency.AcquireAmount * intervalsToGive);
-                            if (modIDs.Contains(userData.ID))
+                            if (modIDs.Contains(userData.MixerID))
                             {
                                 userData.AddCurrencyAmount(this.currency, this.currency.ModeratorBonus * intervalsToGive);
                             }
-                            else if (subscriberIDs.Contains(userData.ID))
+                            else if (subscriberIDs.Contains(userData.MixerID))
                             {
                                 userData.AddCurrencyAmount(this.currency, this.currency.SubscriberBonus * intervalsToGive);
                             }
-                            ChannelSession.Settings.UserData.ManualValueChanged(userData.ID);
+                            ChannelSession.Settings.UserData.ManualValueChanged(userData.MixerID);
                         }
                     }
                 }
@@ -536,7 +536,7 @@ namespace MixItUp.WPF.Windows.Currency
                     StringBuilder fileContents = new StringBuilder();
                     foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values.ToList())
                     {
-                        fileContents.AppendLine(string.Format("{0} {1} {2}", userData.ID, userData.UserName, userData.GetCurrencyAmount(this.currency)));
+                        fileContents.AppendLine(string.Format("{0} {1} {2}", userData.MixerID, userData.MixerUsername, userData.GetCurrencyAmount(this.currency)));
                     }
 
                     await ChannelSession.Services.FileService.SaveFile(filePath, fileContents.ToString());

@@ -21,9 +21,9 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             var chatUsers = ChannelSession.Services.User.GetAllWorkableUsers();
             foreach (var chatUser in chatUsers)
             {
-                if (ChannelSession.Settings.UserData.ContainsKey(chatUser.ID))
+                if (ChannelSession.Settings.UserData.ContainsKey(chatUser.MixerID))
                 { 
-                    users.Add(UserController.UserFromUserDataViewModel(ChannelSession.Settings.UserData[chatUser.ID]));
+                    users.Add(UserController.UserFromUserDataViewModel(ChannelSession.Settings.UserData[chatUser.MixerID]));
                 }
             }
 

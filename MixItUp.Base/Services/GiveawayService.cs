@@ -119,7 +119,7 @@ namespace MixItUp.Base.Services
 
             if (this.Winner != null)
             {
-                pastWinners.Add(this.Winner.ID);
+                pastWinners.Add(this.Winner.MixerID);
             }
 
             this.TimeLeft = 0;
@@ -179,7 +179,7 @@ namespace MixItUp.Base.Services
                             currentEntry += kvp.Entries;
                             if (entryNumber < currentEntry)
                             {
-                                this.enteredUsers.Remove(kvp.User.ID);
+                                this.enteredUsers.Remove(kvp.User.MixerID);
                                 this.Winner = kvp.User;
                                 break;
                             }
@@ -198,7 +198,7 @@ namespace MixItUp.Base.Services
                         }
                         else
                         {
-                            await ChannelSession.Services.Chat.SendMessage(string.Format("@{0} you've won the giveaway; type \"!claim\" in chat!.", this.Winner.UserName));
+                            await ChannelSession.Services.Chat.SendMessage(string.Format("@{0} you've won the giveaway; type \"!claim\" in chat!.", this.Winner.MixerUsername));
 
                             this.TimeLeft = 60;
                             while (this.TimeLeft > 0)
@@ -238,9 +238,9 @@ namespace MixItUp.Base.Services
                 {
                     int entries = 1;
 
-                    if (pastWinners.Contains(message.User.ID))
+                    if (pastWinners.Contains(message.User.MixerID))
                     {
-                        await ChannelSession.Services.Chat.Whisper(message.User.UserName, "You have already won a giveaway and can not enter this one");
+                        await ChannelSession.Services.Chat.Whisper(message.User.MixerUsername, "You have already won a giveaway and can not enter this one");
                         return;
                     }
 
@@ -253,14 +253,14 @@ namespace MixItUp.Base.Services
                     }
 
                     int currentEntries = 0;
-                    if (this.enteredUsers.ContainsKey(message.User.ID))
+                    if (this.enteredUsers.ContainsKey(message.User.MixerID))
                     {
-                        currentEntries = this.enteredUsers[message.User.ID].Entries;
+                        currentEntries = this.enteredUsers[message.User.MixerID].Entries;
                     }
 
                     if ((entries + currentEntries) > ChannelSession.Settings.GiveawayMaximumEntries)
                     {
-                        await ChannelSession.Services.Chat.Whisper(message.User.UserName, string.Format("You may only enter {0} time(s), you currently have entered {1} time(s)", ChannelSession.Settings.GiveawayMaximumEntries, currentEntries));
+                        await ChannelSession.Services.Chat.Whisper(message.User.MixerUsername, string.Format("You may only enter {0} time(s), you currently have entered {1} time(s)", ChannelSession.Settings.GiveawayMaximumEntries, currentEntries));
                         return;
                     }
 
@@ -271,7 +271,7 @@ namespace MixItUp.Base.Services
                             int totalAmount = ChannelSession.Settings.GiveawayRequirements.Currency.RequiredAmount * entries;
                             if (!ChannelSession.Settings.GiveawayRequirements.TrySubtractCurrencyAmount(message.User, totalAmount))
                             {
-                                await ChannelSession.Services.Chat.Whisper(message.User.UserName, string.Format("You do not have the required {0} {1} to do this", totalAmount, ChannelSession.Settings.GiveawayRequirements.Currency.GetCurrency().Name));
+                                await ChannelSession.Services.Chat.Whisper(message.User.MixerUsername, string.Format("You do not have the required {0} {1} to do this", totalAmount, ChannelSession.Settings.GiveawayRequirements.Currency.GetCurrency().Name));
                                 return;
                             }
                         }
@@ -281,16 +281,16 @@ namespace MixItUp.Base.Services
                             int totalAmount = ChannelSession.Settings.GiveawayRequirements.Inventory.Amount * entries;
                             if (!ChannelSession.Settings.GiveawayRequirements.TrySubtractInventoryAmount(message.User, totalAmount))
                             {
-                                await ChannelSession.Services.Chat.Whisper(message.User.UserName, string.Format("You do not have the required {0} {1} to do this", totalAmount, ChannelSession.Settings.GiveawayRequirements.Inventory.GetInventory().Name));
+                                await ChannelSession.Services.Chat.Whisper(message.User.MixerUsername, string.Format("You do not have the required {0} {1} to do this", totalAmount, ChannelSession.Settings.GiveawayRequirements.Inventory.GetInventory().Name));
                                 return;
                             }
                         }
 
-                        if (!this.enteredUsers.ContainsKey(message.User.ID))
+                        if (!this.enteredUsers.ContainsKey(message.User.MixerID))
                         {
-                            this.enteredUsers[message.User.ID] = new GiveawayUser() { User = message.User, Entries = 0 };
+                            this.enteredUsers[message.User.MixerID] = new GiveawayUser() { User = message.User, Entries = 0 };
                         }
-                        GiveawayUser giveawayUser = this.enteredUsers[message.User.ID];
+                        GiveawayUser giveawayUser = this.enteredUsers[message.User.MixerID];
 
                         if (giveawayUser != null)
                         {

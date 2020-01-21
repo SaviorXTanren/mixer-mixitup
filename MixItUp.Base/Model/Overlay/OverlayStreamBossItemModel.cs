@@ -161,7 +161,7 @@ namespace MixItUp.Base.Model.Overlay
                 this.CurrentBoss = await ChannelSession.GetCurrentUser();
                 this.CurrentHealth = this.CurrentStartingHealth = this.StartingHealth;
             }
-            this.CurrentBossUserID = this.CurrentBoss.ID;
+            this.CurrentBossUserID = this.CurrentBoss.MixerID;
 
             if (this.FollowBonus > 0.0)
             {
@@ -231,7 +231,7 @@ namespace MixItUp.Base.Model.Overlay
 
             if (boss != null)
             {
-                replacementSets["USERNAME"] = boss.UserName;
+                replacementSets["USERNAME"] = boss.MixerUsername;
                 replacementSets["USER_IMAGE"] = boss.AvatarLink;
             }
             replacementSets["USER_IMAGE_SIZE"] = ((int)(0.8 * ((double)this.Height))).ToString();
@@ -267,7 +267,7 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     this.NewBoss = true;
                     this.CurrentBoss = user;
-                    this.CurrentBossUserID = user.ID;
+                    this.CurrentBossUserID = user.MixerID;
 
                     int newHealth = this.StartingHealth;
                     if (this.OverkillBonus > 0.0)
@@ -291,45 +291,45 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void GlobalEvents_OnFollowOccurred(object sender, UserViewModel user)
         {
-            if (!this.follows.Contains(user.ID))
+            if (!this.follows.Contains(user.MixerID))
             {
-                this.follows.Add(user.ID);
+                this.follows.Add(user.MixerID);
                 await this.ReduceHealth(user, this.FollowBonus);
             }
         }
 
         private async void GlobalEvents_OnHostOccurred(object sender, Tuple<UserViewModel, int> host)
         {
-            if (!this.hosts.Contains(host.Item1.ID))
+            if (!this.hosts.Contains(host.Item1.MixerID))
             {
-                this.hosts.Add(host.Item1.ID);
+                this.hosts.Add(host.Item1.MixerID);
                 await this.ReduceHealth(host.Item1, (Math.Max(host.Item2, 1) * this.HostBonus));
             }
         }
 
         private async void GlobalEvents_OnSubscribeOccurred(object sender, UserViewModel user)
         {
-            if (!this.subs.Contains(user.ID))
+            if (!this.subs.Contains(user.MixerID))
             {
-                this.subs.Add(user.ID);
+                this.subs.Add(user.MixerID);
                 await this.ReduceHealth(user, this.SubscriberBonus);
             }
         }
 
         private async void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserViewModel, int> user)
         {
-            if (!this.subs.Contains(user.Item1.ID))
+            if (!this.subs.Contains(user.Item1.MixerID))
             {
-                this.subs.Add(user.Item1.ID);
+                this.subs.Add(user.Item1.MixerID);
                 await this.ReduceHealth(user.Item1, this.SubscriberBonus);
             }
         }
 
         private async void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserViewModel, UserViewModel> e)
         {
-            if (!this.subs.Contains(e.Item2.ID))
+            if (!this.subs.Contains(e.Item2.MixerID))
             {
-                this.subs.Add(e.Item2.ID);
+                this.subs.Add(e.Item2.MixerID);
                 await this.ReduceHealth(e.Item2, this.SubscriberBonus);
             }
         }

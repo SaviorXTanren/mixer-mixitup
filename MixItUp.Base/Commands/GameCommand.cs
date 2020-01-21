@@ -119,7 +119,7 @@ namespace MixItUp.Base.Commands
             {
                 if (arguments.Count() != 0)
                 {
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("USAGE: !{0}", this.Commands.First()));
+                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("USAGE: !{0}", this.Commands.First()));
                     return false;
                 }
             }
@@ -134,7 +134,7 @@ namespace MixItUp.Base.Commands
                 {
                     betAmountUsageText += "+";
                 }
-                await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("USAGE: !{0} {1}", this.Commands.First(), betAmountUsageText));
+                await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("USAGE: !{0} {1}", this.Commands.First(), betAmountUsageText));
                 return false;
             }
             return true;
@@ -146,7 +146,7 @@ namespace MixItUp.Base.Commands
             {
                 if (arguments.Count() != 1)
                 {
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("USAGE: !{0} <USERNAME>", this.Commands.First()));
+                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("USAGE: !{0} <USERNAME>", this.Commands.First()));
                     return false;
                 }
             }
@@ -161,7 +161,7 @@ namespace MixItUp.Base.Commands
                 {
                     betAmountUsageText += "+";
                 }
-                await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("USAGE: !{0} <USERNAME> {1}", this.Commands.First(), betAmountUsageText));
+                await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("USAGE: !{0} <USERNAME> {1}", this.Commands.First(), betAmountUsageText));
                 return false;
             }
             return true;
@@ -206,7 +206,7 @@ namespace MixItUp.Base.Commands
                 {
                     if (!int.TryParse(betAmountText, out betAmount) || betAmount <= 0)
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "You must specify a valid amount");
+                        await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "You must specify a valid amount");
                         return -1;
                     }
 
@@ -214,12 +214,12 @@ namespace MixItUp.Base.Commands
                     {
                         if (this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum)
                         {
-                            await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You must specify an amount between {0} - {1} {2}",
+                            await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("You must specify an amount between {0} - {1} {2}",
                                 this.Requirements.Currency.RequiredAmount, this.Requirements.Currency.MaximumAmount, currency.Name));
                         }
                         else if (this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.MinimumOnly)
                         {
-                            await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You must specify an amount of at least {0} {1}",
+                            await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("You must specify an amount of at least {0} {1}",
                                 this.Requirements.Currency.RequiredAmount, currency.Name));
                         }
                         return -1;
@@ -239,7 +239,7 @@ namespace MixItUp.Base.Commands
 
                 if (targetUser == null || user.Equals(targetUser))
                 {
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, "The User specified is either not valid or not currently in the channel");
+                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "The User specified is either not valid or not currently in the channel");
                     return null;
                 }
             }
@@ -274,7 +274,7 @@ namespace MixItUp.Base.Commands
 
             if (!user.Data.HasCurrencyAmount(currency, betAmount))
             {
-                await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You do not have {0} {1}", betAmount, currency.Name));
+                await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("You do not have {0} {1}", betAmount, currency.Name));
                 return false;
             }
             user.Data.SubtractCurrencyAmount(currency, betAmount);
@@ -319,11 +319,11 @@ namespace MixItUp.Base.Commands
                 specialIdentifiers[GameCommandBase.GameAllPayoutSpecialIdentifier] = this.totalPayout.ToString();
                 if (this.winners.Count > 0)
                 {
-                    specialIdentifiers[GameCommandBase.GameWinnersSpecialIdentifier] = string.Join(", ", this.winners.Select(w => "@" + w.UserName));
+                    specialIdentifiers[GameCommandBase.GameWinnersSpecialIdentifier] = string.Join(", ", this.winners.Select(w => "@" + w.MixerUsername));
                 }
                 else if (user != null)
                 {
-                    specialIdentifiers[GameCommandBase.GameWinnersSpecialIdentifier] = "@" + user.UserName;
+                    specialIdentifiers[GameCommandBase.GameWinnersSpecialIdentifier] = "@" + user.MixerUsername;
                 }
                 else
                 {
@@ -466,7 +466,7 @@ namespace MixItUp.Base.Commands
 
             if (users.Count == 0)
             {
-                await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("There are no active users with {0} {1}", betAmount, currency.Name));
+                await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("There are no active users with {0} {1}", betAmount, currency.Name));
                 user.Data.AddCurrencyAmount(currency, betAmount);
                 return null;
             }
@@ -482,7 +482,7 @@ namespace MixItUp.Base.Commands
             {
                 if (!targetUser.Data.HasCurrencyAmount(currency, betAmount))
                 {
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("@{0} does not have {1} {2}", targetUser.UserName, betAmount, currency.Name));
+                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("@{0} does not have {1} {2}", targetUser.MixerUsername, betAmount, currency.Name));
                     return null;
                 }
             }
@@ -491,7 +491,7 @@ namespace MixItUp.Base.Commands
 
         protected async Task PerformOutcome(UserViewModel user, IEnumerable<string> arguments, GameOutcome outcome, int betAmount, UserViewModel targetUser)
         {
-            await base.PerformOutcome(user, new List<string>() { targetUser.UserName }, outcome, betAmount);
+            await base.PerformOutcome(user, new List<string>() { targetUser.MixerUsername }, outcome, betAmount);
         }
     }
 
@@ -619,7 +619,7 @@ namespace MixItUp.Base.Commands
         {
             if (this.enteredUsers.ContainsKey(user))
             {
-                await ChannelSession.Services.Chat.Whisper(user.UserName, "You've already joined the game");
+                await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "You've already joined the game");
                 return false;
             }
             return true;
@@ -718,7 +718,7 @@ namespace MixItUp.Base.Commands
             {
                 if (arguments.Count() != 0)
                 {
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("USAGE: !{0} -or- !{0} {1}", this.Commands.First(), this.StatusArgument));
+                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("USAGE: !{0} -or- !{0} {1}", this.Commands.First(), this.StatusArgument));
                     return false;
                 }
             }
@@ -733,7 +733,7 @@ namespace MixItUp.Base.Commands
                 {
                     betAmountUsageText += "+";
                 }
-                await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("USAGE: !{0} {1} -or- !{0} {2}", this.Commands.First(), betAmountUsageText, this.StatusArgument));
+                await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("USAGE: !{0} {1} -or- !{0} {2}", this.Commands.First(), betAmountUsageText, this.StatusArgument));
                 return false;
             }
             return true;
@@ -833,16 +833,16 @@ namespace MixItUp.Base.Commands
                         {
                             this.currentUser = this.targetUser;
                             this.targetUser = newTarget;
-                            await this.PerformCommand(this.TossPotatoCommand, this.currentUser, new List<string>() { this.targetUser.UserName }, 0, 0);
+                            await this.PerformCommand(this.TossPotatoCommand, this.currentUser, new List<string>() { this.targetUser.MixerUsername }, 0, 0);
                         }
                         else
                         {
-                            await ChannelSession.Services.Chat.Whisper(user.UserName, "Could not find a user to pass to");
+                            await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "Could not find a user to pass to");
                         }
                     }
                     else
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "You do not have the ability to pass right now");
+                        await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "You do not have the ability to pass right now");
                     }
                 }
                 else
@@ -851,7 +851,7 @@ namespace MixItUp.Base.Commands
                     this.targetUser = await this.GetUserToPassTo(user, arguments);
                     if (this.targetUser != null)
                     {
-                        await this.PerformCommand(this.StartedCommand, this.currentUser, new List<string>() { this.targetUser.UserName }, 0, 0);
+                        await this.PerformCommand(this.StartedCommand, this.currentUser, new List<string>() { this.targetUser.MixerUsername }, 0, 0);
 
                         this.timeLimitTask = Task.Run(async () =>
                         {
@@ -859,14 +859,14 @@ namespace MixItUp.Base.Commands
 
                             this.Requirements.UpdateCooldown(user);
 
-                            await this.PerformCommand(this.PotatoExplodeCommand, this.currentUser, new List<string>() { this.targetUser.UserName }, 0, 0);
+                            await this.PerformCommand(this.PotatoExplodeCommand, this.currentUser, new List<string>() { this.targetUser.MixerUsername }, 0, 0);
 
                             this.ResetData(user);
                         });
                     }
                     else
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "Could not find a user to pass to");
+                        await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "Could not find a user to pass to");
                     }
                 }
             }
@@ -878,7 +878,7 @@ namespace MixItUp.Base.Commands
             {
                 if (arguments.Count() != 0 && arguments.Count() != 1)
                 {
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("USAGE: !{0} -OR- !{0} <TARGET USER>", this.Commands.First()));
+                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("USAGE: !{0} -OR- !{0} <TARGET USER>", this.Commands.First()));
                     return false;
                 }
 
@@ -895,7 +895,7 @@ namespace MixItUp.Base.Commands
             {
                 if (arguments.Count() != 0)
                 {
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("USAGE: !{0}", this.Commands.First()));
+                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("USAGE: !{0}", this.Commands.First()));
                     return false;
                 }
             }
@@ -1005,18 +1005,18 @@ namespace MixItUp.Base.Commands
                             this.currentUser = this.targetUser;
                             this.targetUser = newTarget;
 
-                            await this.PerformCommand(this.BallHitCommand, this.currentUser, new List<string>() { this.targetUser.UserName }, 0, 0);
+                            await this.PerformCommand(this.BallHitCommand, this.currentUser, new List<string>() { this.targetUser.MixerUsername }, 0, 0);
 
                             this.PerformPass();
                         }
                         else
                         {
-                            await ChannelSession.Services.Chat.Whisper(user.UserName, "Could not find a user to pass to");
+                            await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "Could not find a user to pass to");
                         }
                     }
                     else
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "You do not have the ability to pass right now");
+                        await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "You do not have the ability to pass right now");
                     }
                 }
                 else
@@ -1025,13 +1025,13 @@ namespace MixItUp.Base.Commands
                     this.targetUser = await this.GetUserToPassTo(user, arguments);
                     if (this.targetUser != null)
                     {
-                        await this.PerformCommand(this.StartedCommand, this.currentUser, new List<string>() { this.targetUser.UserName }, 0, 0);
+                        await this.PerformCommand(this.StartedCommand, this.currentUser, new List<string>() { this.targetUser.MixerUsername }, 0, 0);
 
                         this.PerformPass();
                     }
                     else
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "Could not find a user to pass to");
+                        await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "Could not find a user to pass to");
                     }
                 }
             }
@@ -1043,7 +1043,7 @@ namespace MixItUp.Base.Commands
             {
                 if (arguments.Count() != 0 && arguments.Count() != 1)
                 {
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("USAGE: !{0} -OR- !{0} <TARGET USER>", this.Commands.First()));
+                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("USAGE: !{0} -OR- !{0} <TARGET USER>", this.Commands.First()));
                     return false;
                 }
 
@@ -1060,7 +1060,7 @@ namespace MixItUp.Base.Commands
             {
                 if (arguments.Count() != 0)
                 {
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("USAGE: !{0}", this.Commands.First()));
+                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("USAGE: !{0}", this.Commands.First()));
                     return false;
                 }
             }
@@ -1110,7 +1110,7 @@ namespace MixItUp.Base.Commands
 
                     if (!token.IsCancellationRequested)
                     {
-                        await this.PerformCommand(this.BallMissedCommand, this.currentUser, new List<string>() { this.targetUser.UserName }, 0, 0);
+                        await this.PerformCommand(this.BallMissedCommand, this.currentUser, new List<string>() { this.targetUser.MixerUsername }, 0, 0);
                         this.Requirements.UpdateCooldown(this.currentUser);
 
                         this.ResetData(this.currentUser);
@@ -1377,19 +1377,19 @@ namespace MixItUp.Base.Commands
                         this.winners.Add(this.currentStarterUser);
                         this.currentStarterUser.Data.AddCurrencyAmount(currency, this.currentBetAmount * 2);
                         user.Data.SubtractCurrencyAmount(currency, this.currentBetAmount);
-                        await this.PerformCommand(this.SuccessfulOutcome.Command, this.currentStarterUser, new List<string>() { user.UserName }, currentBetAmount, currentBetAmount);
+                        await this.PerformCommand(this.SuccessfulOutcome.Command, this.currentStarterUser, new List<string>() { user.MixerUsername }, currentBetAmount, currentBetAmount);
                     }
                     else
                     {
                         this.winners.Add(user);
                         user.Data.AddCurrencyAmount(currency, this.currentBetAmount);
-                        await this.PerformCommand(this.FailedOutcome.Command, this.currentStarterUser, new List<string>() { user.UserName }, currentBetAmount, currentBetAmount);
+                        await this.PerformCommand(this.FailedOutcome.Command, this.currentStarterUser, new List<string>() { user.MixerUsername }, currentBetAmount, currentBetAmount);
                     }
                     this.ResetData(user);
                 }
                 else
                 {
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, "This game is already underway, please wait until it is finished");
+                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "This game is already underway, please wait until it is finished");
                 }
             }
             else if (await this.PerformUsageChecks(user, arguments))
@@ -1433,7 +1433,7 @@ namespace MixItUp.Base.Commands
 
                                                 if (this.NotAcceptedCommand != null)
                                                 {
-                                                    await this.NotAcceptedCommand.Perform(this.currentStarterUser, arguments: new List<string>() { this.currentTargetUser.UserName });
+                                                    await this.NotAcceptedCommand.Perform(this.currentStarterUser, arguments: new List<string>() { this.currentTargetUser.MixerUsername });
                                                 }
 
                                                 this.ResetData(user);
@@ -1444,7 +1444,7 @@ namespace MixItUp.Base.Commands
                                 catch (Exception) { }
                             }, this.taskCancellationSource.Token);
 
-                            await this.PerformCommand(this.StartedCommand, user, new List<string>() { currentTargetUser.UserName }, currentBetAmount, 0);
+                            await this.PerformCommand(this.StartedCommand, user, new List<string>() { currentTargetUser.MixerUsername }, currentBetAmount, 0);
                         }
                     }
                 }
@@ -1466,7 +1466,7 @@ namespace MixItUp.Base.Commands
             UserViewModel targetUser = await base.GetArgumentsTargetUser(user, arguments, currency, betAmount);
             if (targetUser != null && this.Requirements.Inventory != null && !this.Requirements.Inventory.DoesMeetRequirement(targetUser.Data))
             {
-                await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("@{0} does not have {1} {2}", targetUser.UserName, this.Requirements.Inventory.Amount, this.Requirements.Inventory.ItemName));
+                await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("@{0} does not have {1} {2}", targetUser.MixerUsername, this.Requirements.Inventory.Amount, this.Requirements.Inventory.ItemName));
                 return null;
             }
             return targetUser;
@@ -1597,7 +1597,7 @@ namespace MixItUp.Base.Commands
             {
                 if (arguments.Count() != 0)
                 {
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("The game is already underway, type !{0} in chat to join!", this.Commands.First()));
+                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("The game is already underway, type !{0} in chat to join!", this.Commands.First()));
                     return false;
                 }
                 return true;
@@ -1737,14 +1737,14 @@ namespace MixItUp.Base.Commands
                         }
                         else
                         {
-                            await ChannelSession.Services.Chat.Whisper(user.UserName, "You must select a valid player who is participating in the game");
+                            await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "You must select a valid player who is participating in the game");
                             return;
                         }
                     }
                 }
                 else
                 {
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, "Only the King can choose a defender");
+                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "Only the King can choose a defender");
                     return;
                 }
             }
@@ -1760,14 +1760,14 @@ namespace MixItUp.Base.Commands
             {
                 if (arguments.Count() != 0)
                 {
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("The game is already underway, type !{0} in chat to join!", this.Commands.First()));
+                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("The game is already underway, type !{0} in chat to join!", this.Commands.First()));
                     return false;
                 }
                 return true;
             }
             else if (this.timeComplete)
             {
-                await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("The game is already locked and no more players may join"));
+                await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("The game is already locked and no more players may join"));
                 return false;
             }
             return await base.PerformUsageChecks(user, arguments);
@@ -1870,11 +1870,11 @@ namespace MixItUp.Base.Commands
             UserViewModel king = this.playerTypes.FirstOrDefault(kvp => kvp.Value == WinLosePlayerType.King).Key;
             if (this.playerTypes[this.playerSelected] == WinLosePlayerType.Knight)
             {
-                await this.PerformCommand(this.KnightSelectedCommand, king, new List<string>() { this.playerSelected.UserName }, this.betAmount, this.individualPayout);
+                await this.PerformCommand(this.KnightSelectedCommand, king, new List<string>() { this.playerSelected.MixerUsername }, this.betAmount, this.individualPayout);
             }
             else
             {
-                await this.PerformCommand(this.ThiefSelectedCommand, king, new List<string>() { this.playerSelected.UserName }, this.betAmount, this.individualPayout);
+                await this.PerformCommand(this.ThiefSelectedCommand, king, new List<string>() { this.playerSelected.MixerUsername }, this.betAmount, this.individualPayout);
             }
         }
 
@@ -1934,7 +1934,7 @@ namespace MixItUp.Base.Commands
             {
                 if (!this.GameStarterRequirement.DoesMeetRequirement(user))
                 {
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You must be a {0} to start this game", this.GameStarterRequirement.RoleNameString));
+                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("You must be a {0} to start this game", this.GameStarterRequirement.RoleNameString));
                     return false;
                 }
             }
@@ -1956,7 +1956,7 @@ namespace MixItUp.Base.Commands
             int betAmount = await base.GetBetAmount(user, betAmountText);
             if (betAmount >= 0 && betAmount <= this.highestBid)
             {
-                await ChannelSession.Services.Chat.Whisper(user.UserName, "You must specify an amount higher than the current highest: " + this.highestBid);
+                await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "You must specify an amount higher than the current highest: " + this.highestBid);
                 return -1;
             }
             return betAmount;
@@ -1986,7 +1986,7 @@ namespace MixItUp.Base.Commands
         protected override async Task NotEnoughUsers()
         {
             this.highestUser.Data.AddCurrencyAmount(this.Requirements.Currency.GetCurrency(), this.highestBid);
-            await ChannelSession.Services.Chat.SendMessage(string.Format("@{0} couldn't get enough users to join in...", this.starterUser.UserName));
+            await ChannelSession.Services.Chat.SendMessage(string.Format("@{0} couldn't get enough users to join in...", this.starterUser.MixerUsername));
         }
 
         protected override Task SelectWinners()
@@ -2063,19 +2063,19 @@ namespace MixItUp.Base.Commands
                 {
                     if (!this.GameStarterRequirement.DoesMeetRequirement(user))
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You must be a {0} to pick the answer", this.GameStarterRequirement.RoleNameString));
+                        await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("You must be a {0} to pick the answer", this.GameStarterRequirement.RoleNameString));
                         return;
                     }
                     this.winningOption = option;
                     return;
                 }
-                await ChannelSession.Services.Chat.Whisper(user.UserName, "All betting is currently closed");
+                await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "All betting is currently closed");
             }
             else
             {
                 if (this.timeLimitTask == null && !this.GameStarterRequirement.DoesMeetRequirement(user))
                 {
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You must be a {0} to start this game", this.GameStarterRequirement.RoleNameString));
+                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("You must be a {0} to start this game", this.GameStarterRequirement.RoleNameString));
                     return;
                 }
 
@@ -2093,7 +2093,7 @@ namespace MixItUp.Base.Commands
             {
                 if (arguments.Count() != 1)
                 {
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("USAGE: !{0} <OPTION #>", this.Commands.First()));
+                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("USAGE: !{0} <OPTION #>", this.Commands.First()));
                     return false;
                 }
             }
@@ -2108,7 +2108,7 @@ namespace MixItUp.Base.Commands
                 {
                     betAmountUsageText += "+";
                 }
-                await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("USAGE: !{0} <OPTION #> {1}", this.Commands.First(), betAmountUsageText));
+                await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("USAGE: !{0} <OPTION #> {1}", this.Commands.First(), betAmountUsageText));
                 return false;
             }
             return true;
@@ -2137,7 +2137,7 @@ namespace MixItUp.Base.Commands
 
             if (!int.TryParse(arguments.First(), out int option) || option <= 0 || option > this.BetOptions.Count)
             {
-                await ChannelSession.Services.Chat.Whisper(user.UserName, "The option number you selected is not a valid number");
+                await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "The option number you selected is not a valid number");
                 return false;
             }
 
@@ -2158,7 +2158,7 @@ namespace MixItUp.Base.Commands
 
         protected override async Task NotEnoughUsers()
         {
-            await ChannelSession.Services.Chat.SendMessage(string.Format("@{0} couldn't get enough users to join in...", this.starterUser.UserName));
+            await ChannelSession.Services.Chat.SendMessage(string.Format("@{0} couldn't get enough users to join in...", this.starterUser.MixerUsername));
         }
 
         protected override async Task TimeComplete()
@@ -2264,7 +2264,7 @@ namespace MixItUp.Base.Commands
             {
                 if (arguments.Count() != 1)
                 {
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("USAGE: !{0} <NUMBER>", this.Commands.First()));
+                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("USAGE: !{0} <NUMBER>", this.Commands.First()));
                     return false;
                 }
             }
@@ -2279,7 +2279,7 @@ namespace MixItUp.Base.Commands
                 {
                     betAmountUsageText += "+";
                 }
-                await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("USAGE: !{0} <NUMBER> {1}", this.Commands.First(), betAmountUsageText));
+                await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("USAGE: !{0} <NUMBER> {1}", this.Commands.First(), betAmountUsageText));
                 return false;
             }
             return true;
@@ -2295,7 +2295,7 @@ namespace MixItUp.Base.Commands
             string betType = arguments.ElementAt(0).ToLower();
             if (!this.ValidBetTypes.Contains(betType))
             {
-                await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("Valid Bet Types: {0}", this.GetValidBetTypeString()));
+                await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("Valid Bet Types: {0}", this.GetValidBetTypeString()));
                 return false;
             }
             return await base.CanUserEnter(user, arguments, betAmount);
@@ -2420,7 +2420,7 @@ namespace MixItUp.Base.Commands
             {
                 if (arguments.Count() != 0)
                 {
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("The game is already underway, type !{0} in chat to join!", this.Commands.First()));
+                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("The game is already underway, type !{0} in chat to join!", this.Commands.First()));
                     return false;
                 }
                 return true;
@@ -2564,7 +2564,7 @@ namespace MixItUp.Base.Commands
             {
                 if (arguments.Count() != 0)
                 {
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("The game is already underway, type !{0} in chat to join!", this.Commands.First()));
+                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("The game is already underway, type !{0} in chat to join!", this.Commands.First()));
                     return false;
                 }
                 return true;
@@ -2841,7 +2841,7 @@ namespace MixItUp.Base.Commands
                     {
                         if (this.collectUsers.Contains(user))
                         {
-                            await ChannelSession.Services.Chat.Whisper(user.UserName, "You've already collected your share");
+                            await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "You've already collected your share");
                             return;
                         }
 
@@ -2850,7 +2850,7 @@ namespace MixItUp.Base.Commands
                     }
                     else
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "Collecting is currently underway, please wait until it has completed");
+                        await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "Collecting is currently underway, please wait until it has completed");
                     }
                 }
             }
@@ -3015,7 +3015,7 @@ namespace MixItUp.Base.Commands
                         UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
                         if (!user.Data.HasCurrencyAmount(currency, this.InspectionCost))
                         {
-                            await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to do this", this.InspectionCost, currency.Name));
+                            await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("You do not have the required {0} {1} to do this", this.InspectionCost, currency.Name));
                             return;
                         }
 
@@ -3033,19 +3033,19 @@ namespace MixItUp.Base.Commands
         {
             if (arguments.Count() != 1)
             {
-                await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("USAGE: !{0} <GUESS> -or- !{0} {1} -or- !{0} {2}", this.Commands.First(), this.StatusArgument, this.InspectionArgument));
+                await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("USAGE: !{0} <GUESS> -or- !{0} {1} -or- !{0} {2}", this.Commands.First(), this.StatusArgument, this.InspectionArgument));
                 return false;
             }
 
             if (!int.TryParse(arguments.ElementAt(0), out int guess) || guess < 0)
             {
-                await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("The guess must a valid combination of the digits 0 - 9", this.CombinationLength));
+                await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("The guess must a valid combination of the digits 0 - 9", this.CombinationLength));
                 return false;
             }
 
             if (arguments.ElementAt(0).Length != this.CombinationLength)
             {
-                await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("The guess must be exactly {0} numbers", this.CombinationLength));
+                await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("The guess must be exactly {0} numbers", this.CombinationLength));
                 return false;
             }
 
@@ -3204,20 +3204,20 @@ namespace MixItUp.Base.Commands
         {
             if (arguments.Count() != 1)
             {
-                await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("USAGE: !{0} <GUESS> -or- !{0} {1}", this.Commands.First(), this.StatusArgument));
+                await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("USAGE: !{0} <GUESS> -or- !{0} {1}", this.Commands.First(), this.StatusArgument));
                 return false;
             }
 
             if (arguments.ElementAt(0).Length != 1 || arguments.ElementAt(0).Any(c => !char.IsLetter(c)))
             {
-                await ChannelSession.Services.Chat.Whisper(user.UserName, "The guess must be a single letter A-Z");
+                await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "The guess must be a single letter A-Z");
                 return false;
             }
 
             char letter = arguments.ElementAt(0).ToUpper().First();
             if (this.SuccessfulGuesses.Contains(letter) || this.FailedGuesses.Contains(letter))
             {
-                await ChannelSession.Services.Chat.Whisper(user.UserName, "This letter has already been guessed");
+                await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "This letter has already been guessed");
                 return false;
             }
 
@@ -3429,7 +3429,7 @@ namespace MixItUp.Base.Commands
             {
                 if (arguments.Count() != 0)
                 {
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, "The game is already underway, type the number for your answer in chat to join!");
+                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "The game is already underway, type the number for your answer in chat to join!");
                     return false;
                 }
                 return true;

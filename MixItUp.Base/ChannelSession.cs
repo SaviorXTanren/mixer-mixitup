@@ -473,7 +473,7 @@ namespace MixItUp.Base
                         foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values.Where(u => u.ModerationStrikes > 0))
                         {
                             userData.ModerationStrikes = 0;
-                            ChannelSession.Settings.UserData.ManualValueChanged(userData.ID);
+                            ChannelSession.Settings.UserData.ManualValueChanged(userData.MixerID);
                         }
                     }
 
@@ -544,7 +544,7 @@ namespace MixItUp.Base
         {
             if (currency.Currency.RankChangedCommand != null)
             {
-                UserViewModel user = ChannelSession.Services.User.GetUserByID(currency.User.ID);
+                UserViewModel user = ChannelSession.Services.User.GetUserByID(currency.User.MixerID);
                 if (user != null)
                 {
                     await currency.Currency.RankChangedCommand.Perform(user);

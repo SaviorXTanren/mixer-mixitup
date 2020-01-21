@@ -69,7 +69,7 @@ namespace MixItUp.Base.ViewModel.Requirement
         {
             if (ChannelSession.Services.Chat != null)
             {
-                await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You must be a {0} to do this", (this.MixerRole != MixerRoleEnum.Custom) ?
+                await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("You must be a {0} to do this", (this.MixerRole != MixerRoleEnum.Custom) ?
                     EnumHelper.GetEnumName(this.MixerRole) : this.CustomRole));
             }
         }

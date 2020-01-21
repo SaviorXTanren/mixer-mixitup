@@ -122,11 +122,11 @@ namespace MixItUp.Base.Commands
                     if (commandTriggers.Count > 0)
                     {
                         string text = "Available Commands: " + string.Join(", ", commandTriggers.OrderBy(c => c));
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, text);
+                        await ChannelSession.Services.Chat.Whisper(user.MixerUsername, text);
                     }
                     else
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "There are no commands available for you to use.");
+                        await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "There are no commands available for you to use.");
                     }
                 }
             }));
@@ -154,11 +154,11 @@ namespace MixItUp.Base.Commands
                     if (commandTriggers.Count > 0)
                     {
                         string text = "Available Games: " + string.Join(", ", commandTriggers.OrderBy(c => c));
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, text);
+                        await ChannelSession.Services.Chat.Whisper(user.MixerUsername, text);
                     }
                     else
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "There are no games available for you to use.");
+                        await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "There are no games available for you to use.");
                     }
                 }
             }));
@@ -325,7 +325,7 @@ namespace MixItUp.Base.Commands
                 if (ChannelSession.Services.Chat != null)
                 {
                     await user.RefreshDetails();
-                    await ChannelSession.Services.Chat.SendMessage(user.UserName + "'s Mixer Age: " + user.MixerAgeString);
+                    await ChannelSession.Services.Chat.SendMessage(user.MixerUsername + "'s Mixer Age: " + user.MixerAgeString);
                 }
             }));
         }
@@ -341,7 +341,7 @@ namespace MixItUp.Base.Commands
                 if (ChannelSession.Services.Chat != null)
                 {
                     await user.RefreshDetails();
-                    await ChannelSession.Services.Chat.SendMessage(user.UserName + "'s Follow Age: " + user.FollowAgeString);
+                    await ChannelSession.Services.Chat.SendMessage(user.MixerUsername + "'s Follow Age: " + user.FollowAgeString);
                 }
             }));
         }
@@ -357,7 +357,7 @@ namespace MixItUp.Base.Commands
                 if (ChannelSession.Services.Chat != null)
                 {
                     await user.RefreshDetails();
-                    await ChannelSession.Services.Chat.SendMessage(user.UserName + "'s Subscribe Age: " + user.MixerSubscribeAgeString);
+                    await ChannelSession.Services.Chat.SendMessage(user.MixerUsername + "'s Subscribe Age: " + user.MixerSubscribeAgeString);
                 }
             }));
         }
@@ -373,7 +373,7 @@ namespace MixItUp.Base.Commands
                 if (ChannelSession.Services.Chat != null)
                 {
                     await user.RefreshDetails();
-                    await ChannelSession.Services.Chat.SendMessage(user.UserName + "'s Streamer Age: " + user.MixerAgeString);
+                    await ChannelSession.Services.Chat.SendMessage(user.MixerUsername + "'s Streamer Age: " + user.MixerAgeString);
                 }
             }));
         }
@@ -428,7 +428,7 @@ namespace MixItUp.Base.Commands
                             {
                                 if (!int.TryParse(arguments.ElementAt(0), out quoteIndex))
                                 {
-                                    await ChannelSession.Services.Chat.Whisper(user.UserName, "USAGE: !quote [QUOTE NUMBER]");
+                                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "USAGE: !quote [QUOTE NUMBER]");
                                     return;
                                 }
 
@@ -436,13 +436,13 @@ namespace MixItUp.Base.Commands
 
                                 if (quoteIndex < 0)
                                 {
-                                    await ChannelSession.Services.Chat.Whisper(user.UserName, "Quote # must be greater than 0");
+                                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "Quote # must be greater than 0");
                                     return;
                                 }
 
                                 if (quoteIndex >= ChannelSession.Settings.UserQuotes.Count)
                                 {
-                                    await ChannelSession.Services.Chat.Whisper(user.UserName, "There is no quote with a number that high");
+                                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "There is no quote with a number that high");
                                     return;
                                 }
                             }
@@ -532,7 +532,7 @@ namespace MixItUp.Base.Commands
                     }
                     else
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "Usage: !addquote <FULL QUOTE TEXT>");
+                        await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "Usage: !addquote <FULL QUOTE TEXT>");
                     }
                 }
                 else
@@ -779,7 +779,7 @@ namespace MixItUp.Base.Commands
                     }
                     else
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "Usage: !settitle <TITLE NAME>");
+                        await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "Usage: !settitle <TITLE NAME>");
                     }
                 }
             }));
@@ -815,16 +815,16 @@ namespace MixItUp.Base.Commands
                             await ChannelSession.MixerUserConnection.UpdateChannel(ChannelSession.MixerChannel.id, gameTypeID: newGame.id);
                             await ChannelSession.RefreshChannel();
 
-                            await ChannelSession.Services.Chat.Whisper(user.UserName, "Game Updated: " + newGame.name);
+                            await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "Game Updated: " + newGame.name);
                         }
                         else
                         {
-                            await ChannelSession.Services.Chat.Whisper(user.UserName, "We could not find a game with that name/ID");
+                            await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "We could not find a game with that name/ID");
                         }
                     }
                     else
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "Usage: !setgame <GAME NAME>");
+                        await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "Usage: !setgame <GAME NAME>");
                     }
                 }
             }));
@@ -860,7 +860,7 @@ namespace MixItUp.Base.Commands
                         }
                     }
 
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, "Usage: !setaudience family|teen|adult");
+                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "Usage: !setaudience family|teen|adult");
                 }
             }));
         }
@@ -891,12 +891,12 @@ namespace MixItUp.Base.Commands
                         }
                         else
                         {
-                            await ChannelSession.Services.Chat.Whisper(user.UserName, username + " is not a valid user");
+                            await ChannelSession.Services.Chat.Whisper(user.MixerUsername, username + " is not a valid user");
                         }
                     }
                     else
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "Usage: !settitle <USERNAME> <TITLE NAME>");
+                        await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "Usage: !settitle <USERNAME> <TITLE NAME>");
                     }
                 }
             }));
@@ -916,7 +916,7 @@ namespace MixItUp.Base.Commands
 
                     if (!CommandBase.IsValidCommandString(commandTrigger))
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "ERROR: Command trigger contain an invalid character");
+                        await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "ERROR: Command trigger contain an invalid character");
                         return;
                     }
 
@@ -926,7 +926,7 @@ namespace MixItUp.Base.Commands
                         {
                             if (command.Commands.Contains(commandTrigger, StringComparer.InvariantCultureIgnoreCase))
                             {
-                                await ChannelSession.Services.Chat.Whisper(user.UserName, "ERROR: There already exists an enabled, chat command that uses the command trigger you have specified");
+                                await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "ERROR: There already exists an enabled, chat command that uses the command trigger you have specified");
                                 return;
                             }
                         }
@@ -934,7 +934,7 @@ namespace MixItUp.Base.Commands
 
                     if (!int.TryParse(arguments.ElementAt(1), out int cooldown) || cooldown < 0)
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "ERROR: Cooldown must be 0 or greater");
+                        await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "ERROR: Cooldown must be 0 or greater");
                         return;
                     }
 
@@ -961,7 +961,7 @@ namespace MixItUp.Base.Commands
                 }
                 else
                 {
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, "Usage: !addcommand <COMMAND TRIGGER, NO !> <COOLDOWN> <FULL COMMAND MESSAGE TEXT>");
+                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "Usage: !addcommand <COMMAND TRIGGER, NO !> <COOLDOWN> <FULL COMMAND MESSAGE TEXT>");
                 }
             }));
         }
@@ -981,13 +981,13 @@ namespace MixItUp.Base.Commands
                     PermissionsCommandBase command = ChannelSession.AllEnabledChatCommands.FirstOrDefault(c => c.Commands.Contains(commandTrigger, StringComparer.InvariantCultureIgnoreCase));
                     if (command == null)
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "ERROR: Could not find any command with that trigger");
+                        await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "ERROR: Could not find any command with that trigger");
                         return;
                     }
 
                     if (!int.TryParse(arguments.ElementAt(1), out int cooldown) || cooldown < 0)
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "ERROR: Cooldown must be 0 or greater");
+                        await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "ERROR: Cooldown must be 0 or greater");
                         return;
                     }
 
@@ -1017,7 +1017,7 @@ namespace MixItUp.Base.Commands
                 }
                 else
                 {
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, "Usage: !updatecommand <COMMAND TRIGGER, NO !> <COOLDOWN> [OPTIONAL FULL COMMAND MESSAGE TEXT]");
+                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "Usage: !updatecommand <COMMAND TRIGGER, NO !> <COOLDOWN> [OPTIONAL FULL COMMAND MESSAGE TEXT]");
                 }
             }));
         }
@@ -1037,7 +1037,7 @@ namespace MixItUp.Base.Commands
                     PermissionsCommandBase command = ChannelSession.AllEnabledChatCommands.FirstOrDefault(c => c.Commands.Contains(commandTrigger, StringComparer.InvariantCultureIgnoreCase));
                     if (command == null)
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "ERROR: Could not find any command with that trigger");
+                        await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "ERROR: Could not find any command with that trigger");
                         return;
                     }
 
@@ -1052,7 +1052,7 @@ namespace MixItUp.Base.Commands
                 }
                 else
                 {
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, "Usage: !disablecommand <COMMAND TRIGGER, NO !>");
+                    await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "Usage: !disablecommand <COMMAND TRIGGER, NO !>");
                 }
             }));
         }
@@ -1072,12 +1072,12 @@ namespace MixItUp.Base.Commands
                         string result = await ChannelSession.Services.GiveawayService.Start(string.Join(" ", arguments));
                         if (!string.IsNullOrEmpty(result))
                         {
-                            await ChannelSession.Services.Chat.Whisper(user.UserName, "ERROR: " + result);
+                            await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "ERROR: " + result);
                         }
                     }
                     else
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "Usage: !startgiveaway <GIVEAWAY ITEM>");
+                        await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "Usage: !startgiveaway <GIVEAWAY ITEM>");
                     }
                 }
             }));

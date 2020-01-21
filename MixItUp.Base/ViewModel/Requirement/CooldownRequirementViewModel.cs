@@ -87,7 +87,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             {
                 return false;
             }
-            else if (this.Type == CooldownTypeEnum.PerPerson && this.individualCooldowns.ContainsKey(user.ID) && this.individualCooldowns[user.ID].AddSeconds(this.CooldownAmount) > DateTimeOffset.Now)
+            else if (this.Type == CooldownTypeEnum.PerPerson && this.individualCooldowns.ContainsKey(user.MixerID) && this.individualCooldowns[user.MixerID].AddSeconds(this.CooldownAmount) > DateTimeOffset.Now)
             {
                 return false;
             }
@@ -111,13 +111,13 @@ namespace MixItUp.Base.ViewModel.Requirement
             }
             else if (this.Type == CooldownTypeEnum.PerPerson)
             {
-                timeLeft = this.individualCooldowns[user.ID].AddSeconds(this.CooldownAmount) - DateTimeOffset.Now;
+                timeLeft = this.individualCooldowns[user.MixerID].AddSeconds(this.CooldownAmount) - DateTimeOffset.Now;
             }
             else if (this.IsGroup && CooldownRequirementViewModel.groupCooldowns.ContainsKey(this.GroupName))
             {
                 timeLeft = CooldownRequirementViewModel.groupCooldowns[this.GroupName].AddSeconds(this.CooldownAmount) - DateTimeOffset.Now;
             }
-            await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("This command is currently on cooldown, please wait another {0} second(s).", Math.Max((int)timeLeft.TotalSeconds, 1)));
+            await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("This command is currently on cooldown, please wait another {0} second(s).", Math.Max((int)timeLeft.TotalSeconds, 1)));
         }
 
         public void UpdateCooldown(UserViewModel user)
@@ -128,7 +128,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             }
             else if (this.Type == CooldownTypeEnum.PerPerson)
             {
-                this.individualCooldowns[user.ID] = DateTimeOffset.Now;
+                this.individualCooldowns[user.MixerID] = DateTimeOffset.Now;
             }
             else if (this.IsGroup)
             {
@@ -144,7 +144,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             }
             else if (this.Type == CooldownTypeEnum.PerPerson)
             {
-                this.individualCooldowns[user.ID] = DateTimeOffset.Now.Subtract(TimeSpan.FromSeconds(this.CooldownAmount));
+                this.individualCooldowns[user.MixerID] = DateTimeOffset.Now.Subtract(TimeSpan.FromSeconds(this.CooldownAmount));
             }
             else if (this.IsGroup)
             {

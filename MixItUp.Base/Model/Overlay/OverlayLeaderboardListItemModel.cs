@@ -153,7 +153,7 @@ namespace MixItUp.Base.Model.Overlay
                     {
                         var kvp = orderedUsers.ElementAt(i);
 
-                        OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateAddItem(kvp.Key.UserName, new UserViewModel(kvp.Key), i + 1, this.HTML);
+                        OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateAddItem(kvp.Key.MixerUsername, new UserViewModel(kvp.Key), i + 1, this.HTML);
                         item.Hash = kvp.Value.ToString();
                         items.Add(item);
                     }
@@ -266,7 +266,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 var kvp = orderedUsers.ElementAt(i);
 
-                OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateAddItem(kvp.Key.UserName, kvp.Key, i + 1, this.HTML);
+                OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateAddItem(kvp.Key.MixerUsername, kvp.Key, i + 1, this.HTML);
                 item.Hash = kvp.Value.AmountText;
             }
 
@@ -297,7 +297,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 var kvp = orderedUsers.ElementAt(i);
 
-                OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateAddItem(kvp.Key.UserName, kvp.Key, i + 1, this.HTML);
+                OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateAddItem(kvp.Key.MixerUsername, kvp.Key, i + 1, this.HTML);
                 item.Hash = kvp.Value.GetAge();
             }
 
@@ -335,9 +335,9 @@ namespace MixItUp.Base.Model.Overlay
                 if (this.NewLeaderCommand != null)
                 {
                     // Detect if we had a list before, and we have a list now, and the top user changed, let's trigger the event
-                    if (this.lastItems.Count() > 0 && items.Count() > 0 && !this.lastItems.First().User.ID.Equals(items.First().User.ID))
+                    if (this.lastItems.Count() > 0 && items.Count() > 0 && !this.lastItems.First().User.MixerID.Equals(items.First().User.MixerID))
                     {
-                        await this.NewLeaderCommand.Perform(items.First().User, new string[] { this.lastItems.First().User.UserName });
+                        await this.NewLeaderCommand.Perform(items.First().User, new string[] { this.lastItems.First().User.MixerUsername });
                     }
                 }
 
