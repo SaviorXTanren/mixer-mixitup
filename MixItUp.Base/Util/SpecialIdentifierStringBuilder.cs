@@ -789,12 +789,11 @@ namespace MixItUp.Base.Util
                     {
                         if (this.ContainsSpecialIdentifier(identifierHeader + inventory.UserAmountSpecialIdentifierHeader))
                         {
-                            UserInventoryDataViewModel inventoryData = userData.GetInventory(inventory);
                             Dictionary<string, int> userItems = new Dictionary<string, int>();
 
                             foreach (UserInventoryItemModel item in inventory.Items.Values.OrderByDescending(i => i.Name))
                             {
-                                var quantity = inventoryData.GetAmount(item);
+                                var quantity = inventory.GetAmount(userData, item);
                                 if (quantity > 0)
                                 {
                                     userItems[item.Name] = quantity;

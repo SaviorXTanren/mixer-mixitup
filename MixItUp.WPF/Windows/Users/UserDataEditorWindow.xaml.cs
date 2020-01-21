@@ -61,7 +61,7 @@ namespace MixItUp.WPF.Windows.Users
             this.InventoryStackPanel.Children.Clear();
             foreach (UserInventoryModel inventory in ChannelSession.Settings.Inventories.Values.ToList())
             {
-                UserInventoryDataViewModel inventoryData = this.user.Data.GetInventory(inventory);
+                UserInventoryDataViewModel inventoryData = new UserInventoryDataViewModel(this.user.Data, inventory);
                 this.InventoryStackPanel.Children.Add(new UserInventoryEditorControl(inventory, inventoryData));
             }
 

@@ -45,17 +45,11 @@ namespace MixItUp.Base.ViewModel.Requirement
             if (this.DoesMeetRequirement(userData))
             {
                 UserInventoryModel inventory = this.GetInventory();
-                if (inventory == null)
+                if (inventory != null)
                 {
-                    return false;
+                    inventory.SubtractAmount(userData, this.ItemName, amount);
+                    return true;
                 }
-
-                if (!userData.HasInventoryAmount(inventory, this.ItemName, amount))
-                {
-                    return false;
-                }
-                userData.SubtractInventoryAmount(inventory, this.ItemName, amount);
-                return true;
             }
             return false;
         }
@@ -78,7 +72,7 @@ namespace MixItUp.Base.ViewModel.Requirement
                 return false;
             }
 
-            return userData.GetInventoryAmount(inventory, this.ItemName) >= this.Amount;
+            return inventory.GetAmount(userData, this.ItemName) >= this.Amount;
         }
 
         public async Task SendNotMetWhisper(UserViewModel user)

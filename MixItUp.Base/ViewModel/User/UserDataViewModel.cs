@@ -252,41 +252,6 @@ namespace MixItUp.Base.ViewModel.User
             currency.ResetAmount(this);
         }
 
-        public UserInventoryDataViewModel GetInventory(UserInventoryModel inventory)
-        {
-            return new UserInventoryDataViewModel(this, inventory);
-        }
-
-        public int GetInventoryAmount(UserInventoryModel inventory, string item)
-        {
-            return inventory.GetAmount(this, item);
-        }
-
-        public bool HasInventoryAmount(UserInventoryModel inventory, string item, int amount)
-        {
-            return (this.IsCurrencyRankExempt || this.GetInventoryAmount(inventory, item) >= amount);
-        }
-
-        public void SetInventoryAmount(UserInventoryModel inventory, string item, int amount)
-        {
-            inventory.SetAmount(this, item, amount);
-        }
-
-        public void AddInventoryAmount(UserInventoryModel inventory, string item, int amount)
-        {
-            inventory.AddAmount(this, item, amount);
-        }
-
-        public void SubtractInventoryAmount(UserInventoryModel inventory, string item, int amount)
-        {
-            inventory.SubtractAmount(this, item, amount);
-        }
-
-        public void ResetInventoryAmount(UserInventoryModel inventory)
-        {
-            inventory.ResetAmount(this);
-        }
-
         public override bool Equals(object obj)
         {
             if (obj is UserDataViewModel)

@@ -256,7 +256,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
 
             foreach (UserInventoryModel inventory in ChannelSession.Settings.Inventories.Values)
             {
-                user.InventoryAmounts.Add(InventoryController.InventoryAmountFromUserInventoryViewModel(inventory, userData.GetInventory(inventory)));
+                user.InventoryAmounts.Add(InventoryController.InventoryAmountFromUserInventoryViewModel(inventory, new UserInventoryDataViewModel(userData, inventory)));
             }
 
             return user;
@@ -346,7 +346,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             if (inventoryUpdate.Amount < 0)
             {
                 int quantityToRemove = inventoryUpdate.Amount * -1;
-                if (!user.HasInventoryAmount(inventory, inventoryUpdate.Name, quantityToRemove))
+                if (inventory.GetAmount(user, inventoryUpdate.Name) < quantityToRemove)
                 {
                     // If the request is to remove inventory, but user doesn't have enough, fail
                     var resp = new HttpResponseMessage(HttpStatusCode.Forbidden)
@@ -357,11 +357,11 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                     throw new HttpResponseException(resp);
                 }
 
-                user.SubtractInventoryAmount(inventory, inventoryUpdate.Name, quantityToRemove);
+                inventory.SubtractAmount(user, inventoryUpdate.Name, quantityToRemove);
             }
             else if (inventoryUpdate.Amount > 0)
             {
-                user.AddInventoryAmount(inventory, inventoryUpdate.Name, inventoryUpdate.Amount);
+                inventory.AddAmount(user, inventoryUpdate.Name, inventoryUpdate.Amount);
             }
 
             return UserFromUserDataViewModel(user);

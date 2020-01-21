@@ -152,11 +152,11 @@ namespace MixItUp.Base.Actions
                 {
                     if (currency != null)
                     {
-                        user.Data.ResetCurrencyAmount(currency);
+                        currency.ResetAmount(user.Data);
                     }
                     else if (inventory != null)
                     {
-                        user.Data.ResetInventoryAmount(inventory);
+                        inventory.ResetAmount(user.Data);
                     }
                 }
                 else
@@ -223,12 +223,12 @@ namespace MixItUp.Base.Actions
                         }
                         else if (inventory != null)
                         {
-                            if (!user.Data.HasInventoryAmount(inventory, itemName, amountValue))
+                            if (!inventory.HasAmount(user.Data, itemName, amountValue))
                             {
                                 await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("You do not have the required {0} {1} to do this", amountValue, itemName));
                                 return;
                             }
-                            user.Data.SubtractInventoryAmount(inventory, itemName, amountValue);
+                            inventory.SubtractAmount(user.Data, itemName, amountValue);
                         }
                     }
 
@@ -251,11 +251,11 @@ namespace MixItUp.Base.Actions
                             {
                                 if (this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromSpecificUser || this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromAllChatUsers)
                                 {
-                                    receiverUser.SubtractInventoryAmount(inventory, itemName, amountValue);
+                                    inventory.SubtractAmount(receiverUser, itemName, amountValue);
                                 }
                                 else
                                 {
-                                    receiverUser.AddInventoryAmount(inventory, itemName, amountValue);
+                                    inventory.AddAmount(receiverUser, itemName, amountValue);
                                 }
                             }
                         }

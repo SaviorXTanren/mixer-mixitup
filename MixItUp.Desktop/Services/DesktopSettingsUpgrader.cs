@@ -564,7 +564,7 @@ namespace MixItUp.Desktop.Services
                                         UserInventoryModel inventory = settings.Inventories[kvp.Key];
                                         foreach (var itemKVP in kvp.Value)
                                         {
-                                            userData.SetInventoryAmount(inventory, itemKVP.Key, itemKVP.Value);
+                                            inventory.SetAmount(userData, itemKVP.Key, itemKVP.Value);
                                         }
                                     }
                                 }

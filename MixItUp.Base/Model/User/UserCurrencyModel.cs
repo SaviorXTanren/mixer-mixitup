@@ -191,7 +191,7 @@ namespace MixItUp.Base.Model.User
         {
             if (!user.IsCurrencyRankExempt)
             {
-                this.SetAmount(user, Math.Max(this.GetAmount(user) - amount, 0));
+                this.SetAmount(user, this.GetAmount(user) - amount);
             }
         }
 

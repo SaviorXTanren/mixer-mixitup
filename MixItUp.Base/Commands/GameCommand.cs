@@ -1429,7 +1429,7 @@ namespace MixItUp.Base.Commands
                                                 this.currentStarterUser.Data.AddCurrencyAmount(currency, this.currentBetAmount);
                                                 if (this.Requirements.Inventory != null)
                                                 {
-                                                    this.currentStarterUser.Data.AddInventoryAmount(this.Requirements.Inventory.GetInventory(), this.Requirements.Inventory.ItemName, this.Requirements.Inventory.Amount);
+                                                    this.Requirements.Inventory.GetInventory().AddAmount(this.currentStarterUser.Data, this.Requirements.Inventory.ItemName, this.Requirements.Inventory.Amount);
                                                 }
 
                                                 if (this.NotAcceptedCommand != null)

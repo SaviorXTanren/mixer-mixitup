@@ -191,6 +191,11 @@ namespace MixItUp.Base.Model.User
         [JsonIgnore]
         public string UserRandomItemSpecialIdentifier { get { return string.Format("{0}randomitem", this.UserAmountSpecialIdentifierHeader); } }
 
+        public int GetAmount(UserDataViewModel user, UserInventoryItemModel item)
+        {
+            return this.GetAmount(user, item.Name);
+        }
+
         public int GetAmount(UserDataViewModel user, string item)
         {
             if (this.UserAmounts.ContainsKey(user.ID) && this.UserAmounts[user.ID].ContainsKey(item))
@@ -247,7 +252,7 @@ namespace MixItUp.Base.Model.User
         {
             if (!user.IsCurrencyRankExempt)
             {
-                this.SetAmount(user, item, Math.Max(this.GetAmount(user, item) - amount, 0));
+                this.SetAmount(user, item, this.GetAmount(user, item) - amount);
             }
         }
 
@@ -259,10 +264,10 @@ namespace MixItUp.Base.Model.User
 
         public async Task Reset()
         {
-            foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values)
+            foreach (Guid key in this.UserAmounts.Keys)
             {
-                userData.ResetInventoryAmount(this);
-                ChannelSession.Settings.UserData.ManualValueChanged(userData.MixerID);
+                this.UserAmounts[key] = new Dictionary<string, int>();
+                this.UserAmounts.ManualValueChanged(key);
             }
             await ChannelSession.SaveSettings();
         }
@@ -325,13 +330,13 @@ namespace MixItUp.Base.Model.User
                                 if (item.HasBuyAmount)
                                 {
                                     int itemMaxAmount = (item.HasMaxAmount) ? item.MaxAmount : this.DefaultMaxAmount;
-                                    if ((user.Data.GetInventoryAmount(this, item.Name) + amount) <= itemMaxAmount)
+                                    if ((this.GetAmount(user.Data, item.Name) + amount) <= itemMaxAmount)
                                     {
                                         totalcost = item.BuyAmount * amount;
                                         if (user.Data.HasCurrencyAmount(currency, totalcost))
                                         {
                                             user.Data.SubtractCurrencyAmount(currency, totalcost);
-                                            user.Data.AddInventoryAmount(this, item.Name, amount);
+                                            this.AddAmount(user.Data, item.Name, amount);
                                             command = this.ItemsBoughtCommand;
                                         }
                                         else
@@ -354,9 +359,9 @@ namespace MixItUp.Base.Model.User
                                 if (item.HasSellAmount)
                                 {
                                     totalcost = item.SellAmount * amount;
-                                    if (user.Data.HasInventoryAmount(this, item.Name, amount))
+                                    if (this.HasAmount(user.Data, item.Name, amount))
                                     {
-                                        user.Data.SubtractInventoryAmount(this, item.Name, amount);
+                                        this.SubtractAmount(user.Data, item.Name, amount);
                                         user.Data.AddCurrencyAmount(currency, totalcost);
                                         command = this.ItemsSoldCommand;
                                     }
@@ -473,7 +478,7 @@ namespace MixItUp.Base.Model.User
                             return;
                         }
 
-                        if (!user.Data.HasInventoryAmount(this, item.Name, amount))
+                        if (!this.HasAmount(user.Data, item.Name, amount))
                         {
                             await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("You do not have the required {0} {1} to trade", amount, item.Name));
                             return;
@@ -533,7 +538,7 @@ namespace MixItUp.Base.Model.User
                             return;
                         }
 
-                        if (!user.Data.HasInventoryAmount(this, item.Name, amount))
+                        if (!this.HasAmount(user.Data, item.Name, amount))
                         {
                             await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("You do not have the required {0} {1} to trade", amount, item.Name));
                             return;
@@ -548,24 +553,24 @@ namespace MixItUp.Base.Model.User
                     else if (this.tradeSender != null && this.tradeReceiver != null && this.tradeReceiver.Amount > 0 && this.tradeSender.User.Equals(user))
                     {
                         int senderItemMaxAmount = (this.tradeReceiver.Item.HasMaxAmount) ? this.tradeReceiver.Item.MaxAmount : this.DefaultMaxAmount;
-                        if ((this.tradeSender.User.Data.GetInventoryAmount(this, this.tradeReceiver.Item.Name) + this.tradeReceiver.Amount) > senderItemMaxAmount)
+                        if ((this.GetAmount(this.tradeSender.User.Data, this.tradeReceiver.Item.Name) + this.tradeReceiver.Amount) > senderItemMaxAmount)
                         {
                             await ChannelSession.Services.Chat.Whisper(this.tradeSender.User.MixerUsername, string.Format("You can only have {0} {1} in total", senderItemMaxAmount, this.tradeReceiver.Item.Name));
                             return;
                         }
 
                         int receiverItemMaxAmount = (this.tradeSender.Item.HasMaxAmount) ? this.tradeSender.Item.MaxAmount : this.DefaultMaxAmount;
-                        if ((this.tradeReceiver.User.Data.GetInventoryAmount(this, this.tradeSender.Item.Name) + this.tradeSender.Amount) > receiverItemMaxAmount)
+                        if ((this.GetAmount(this.tradeReceiver.User.Data, this.tradeSender.Item.Name) + this.tradeSender.Amount) > receiverItemMaxAmount)
                         {
                             await ChannelSession.Services.Chat.Whisper(this.tradeReceiver.User.MixerUsername, string.Format("You can only have {0} {1} in total", receiverItemMaxAmount, this.tradeSender.Item.Name));
                             return;
                         }
 
-                        this.tradeSender.User.Data.SubtractInventoryAmount(this, this.tradeSender.Item.Name, this.tradeSender.Amount);
-                        this.tradeReceiver.User.Data.AddInventoryAmount(this, this.tradeSender.Item.Name, this.tradeSender.Amount);
+                        this.SubtractAmount(this.tradeSender.User.Data, this.tradeSender.Item.Name, this.tradeSender.Amount);
+                        this.AddAmount(this.tradeReceiver.User.Data, this.tradeSender.Item.Name, this.tradeSender.Amount);
 
-                        this.tradeReceiver.User.Data.SubtractInventoryAmount(this, this.tradeReceiver.Item.Name, this.tradeReceiver.Amount);
-                        this.tradeSender.User.Data.AddInventoryAmount(this, this.tradeReceiver.Item.Name, this.tradeReceiver.Amount);
+                        this.SubtractAmount(this.tradeReceiver.User.Data, this.tradeReceiver.Item.Name, this.tradeReceiver.Amount);
+                        this.AddAmount(this.tradeSender.User.Data, this.tradeReceiver.Item.Name, this.tradeReceiver.Amount);
 
                         if (this.ItemsTradedCommand != null)
                         {
