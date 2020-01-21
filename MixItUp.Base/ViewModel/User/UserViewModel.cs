@@ -375,15 +375,15 @@ namespace MixItUp.Base.ViewModel.User
         {
             if (!this.IsAnonymous && (this.LastUpdated.TotalMinutesFromNow() >= 1 || force))
             {
-                UserWithChannelModel user = await ChannelSession.MixerStreamerConnection.GetUser(this.ID);
+                UserWithChannelModel user = await ChannelSession.MixerUserConnection.GetUser(this.ID);
                 if (user != null)
                 {
                     this.SetMixerUserDetails(user);
 
-                    this.FollowDate = await ChannelSession.MixerStreamerConnection.CheckIfFollows(ChannelSession.MixerChannel, this.GetModel());
+                    this.FollowDate = await ChannelSession.MixerUserConnection.CheckIfFollows(ChannelSession.MixerChannel, this.GetModel());
                     if (this.IsMixerSubscriber || force)
                     {
-                        UserWithGroupsModel userGroups = await ChannelSession.MixerStreamerConnection.GetUserInChannel(ChannelSession.MixerChannel, this.ID);
+                        UserWithGroupsModel userGroups = await ChannelSession.MixerUserConnection.GetUserInChannel(ChannelSession.MixerChannel, this.ID);
                         if (userGroups != null)
                         {
                             this.MixerSubscribeDate = userGroups.GetSubscriberDate();
@@ -397,7 +397,7 @@ namespace MixItUp.Base.ViewModel.User
                         }
                     }
 
-                    this.FanProgression = await ChannelSession.MixerStreamerConnection.GetUserFanProgression(ChannelSession.MixerChannel, user);
+                    this.FanProgression = await ChannelSession.MixerUserConnection.GetUserFanProgression(ChannelSession.MixerChannel, user);
                 }
 
                 if (!this.IsInChat)
@@ -415,7 +415,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             if (!this.IsAnonymous && this.LastUpdated.TotalMinutesFromNow() >= 1)
             {
-                ChatUserModel chatUser = await ChannelSession.MixerStreamerConnection.GetChatUser(ChannelSession.MixerChannel, this.ID);
+                ChatUserModel chatUser = await ChannelSession.MixerUserConnection.GetChatUser(ChannelSession.MixerChannel, this.ID);
                 if (chatUser != null)
                 {
                     this.SetChatDetails(chatUser, addToChat);

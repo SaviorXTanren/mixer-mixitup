@@ -33,7 +33,7 @@ namespace MixItUp.Base.Model.Store
             : this()
         {
             this.ID = command.ID;
-            this.UserID = ChannelSession.MixerStreamerUser.id;
+            this.UserID = ChannelSession.MixerUser.id;
             this.AppVersion = ChannelSession.Services.FileService.GetApplicationVersion();
             this.Name = name;
             this.Description = description;

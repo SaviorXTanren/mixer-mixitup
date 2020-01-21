@@ -169,7 +169,7 @@ namespace MixItUp.WPF.Controls.Store
                 {
                     StoreListingReviewModel review = new StoreListingReviewModel(this.currentListing, reviewControl.Rating, reviewControl.ReviewText);
 
-                    StoreListingReviewModel existingReview = this.currentListing.Reviews.FirstOrDefault(r => r.UserID.Equals(ChannelSession.MixerStreamerUser.id));
+                    StoreListingReviewModel existingReview = this.currentListing.Reviews.FirstOrDefault(r => r.UserID.Equals(ChannelSession.MixerUser.id));
                     if (existingReview != null)
                     {
                         review.ID = existingReview.ID;

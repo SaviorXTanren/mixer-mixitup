@@ -14,7 +14,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
         [Route("{userID:int:min(0)}")]
         public UserModel Get(uint userID)
         {
-            UserModel user = ChannelSession.MixerStreamerConnection.GetUser(userID).Result;
+            UserModel user = ChannelSession.MixerUserConnection.GetUser(userID).Result;
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -32,7 +32,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
         [HttpGet]
         public UserModel Get(string username)
         {
-            UserModel user = ChannelSession.MixerStreamerConnection.GetUser(username).Result;
+            UserModel user = ChannelSession.MixerUserConnection.GetUser(username).Result;
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)

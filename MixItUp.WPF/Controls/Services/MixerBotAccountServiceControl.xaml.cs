@@ -21,16 +21,16 @@ namespace MixItUp.WPF.Controls.Services
         {
             this.SetHeaderText("Mixer Bot Account");
 
-            if (ChannelSession.Settings.BotOAuthToken != null && ChannelSession.MixerBotUser != null)
+            if (ChannelSession.Settings.BotOAuthToken != null && ChannelSession.MixerBot != null)
             {
                 this.ExistingBotGrid.Visibility = Visibility.Visible;
                 this.NewBotLoginGrid.Visibility = Visibility.Collapsed;
 
-                this.BotLoggedInNameTextBlock.Text = ChannelSession.MixerBotUser.username;
-                if (!string.IsNullOrEmpty(ChannelSession.MixerBotUser.avatarUrl))
+                this.BotLoggedInNameTextBlock.Text = ChannelSession.MixerBot.username;
+                if (!string.IsNullOrEmpty(ChannelSession.MixerBot.avatarUrl))
                 {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    this.BotProfileAvatar.SetUserAvatarUrl(ChannelSession.MixerBotUser.id);
+                    this.BotProfileAvatar.SetUserAvatarUrl(ChannelSession.MixerBot.id);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 }
 
@@ -49,7 +49,7 @@ namespace MixItUp.WPF.Controls.Services
         {
             bool result = await this.groupBoxControl.window.RunAsyncOperation(async () =>
             {
-                TestStreamSettingsModel testStreamSettings = await ChannelSession.MixerStreamerConnection.GetTestStreamSettings(ChannelSession.MixerChannel);
+                TestStreamSettingsModel testStreamSettings = await ChannelSession.MixerUserConnection.GetTestStreamSettings(ChannelSession.MixerChannel);
                 if (testStreamSettings != null && testStreamSettings.isActive.GetValueOrDefault())
                 {
                     if (!await DialogHelper.ShowConfirmation("Because test stream settings are enabled, your bot account will not be able to connect correctly. You will need to disable Test Streams in order to use your bot account for things such a chat messages & whispers. Are you sure you still wish to connect it?"))
@@ -64,7 +64,7 @@ namespace MixItUp.WPF.Controls.Services
             {
                 await DialogHelper.ShowMessage("Unable to authenticate Bot with Mixer. Please ensure you approved access for the application in a timely manner.");
             }
-            else if (ChannelSession.MixerBotUser.id.Equals(ChannelSession.MixerStreamerUser.id))
+            else if (ChannelSession.MixerBot.id.Equals(ChannelSession.MixerUser.id))
             {
                 await this.groupBoxControl.window.RunAsyncOperation(async () =>
                 {
@@ -78,11 +78,11 @@ namespace MixItUp.WPF.Controls.Services
                 this.NewBotLoginGrid.Visibility = Visibility.Collapsed;
                 this.ExistingBotGrid.Visibility = Visibility.Visible;
 
-                this.BotLoggedInNameTextBlock.Text = ChannelSession.MixerBotUser.username;
-                if (!string.IsNullOrEmpty(ChannelSession.MixerBotUser.avatarUrl))
+                this.BotLoggedInNameTextBlock.Text = ChannelSession.MixerBot.username;
+                if (!string.IsNullOrEmpty(ChannelSession.MixerBot.avatarUrl))
                 {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    this.BotProfileAvatar.SetUserAvatarUrl(ChannelSession.MixerBotUser.id);
+                    this.BotProfileAvatar.SetUserAvatarUrl(ChannelSession.MixerBot.id);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 }
 

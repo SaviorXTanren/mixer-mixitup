@@ -49,14 +49,14 @@ namespace MixItUp.Base.Model.Overlay
 
         public override Task LoadTestData()
         {
-            ChatMessageViewModel message = new ChatMessageViewModel(Guid.NewGuid().ToString(), StreamingPlatformTypeEnum.Mixer, new UserViewModel(ChannelSession.MixerStreamerUser));
+            ChatMessageViewModel message = new ChatMessageViewModel(Guid.NewGuid().ToString(), StreamingPlatformTypeEnum.Mixer, new UserViewModel(ChannelSession.MixerUser));
             message.AddStringMessagePart("Test Message");
 
             ChatMessageEventModel messageEvent = new ChatMessageEventModel()
             {
                 id = Guid.NewGuid(),
-                user_id = ChannelSession.MixerStreamerUser.id,
-                user_name = ChannelSession.MixerStreamerUser.username,
+                user_id = ChannelSession.MixerUser.id,
+                user_name = ChannelSession.MixerUser.username,
                 channel = ChannelSession.MixerChannel.id,
                 message = new ChatMessageContentsModel() { message = new ChatMessageDataModel[] { new ChatMessageDataModel() { type = "text", text = "Test Message" } } }
             };

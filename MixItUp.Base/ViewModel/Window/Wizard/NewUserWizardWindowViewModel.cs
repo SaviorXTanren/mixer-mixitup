@@ -71,7 +71,7 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
 
         public ICommand MixerUserAccountCommand { get; set; }
         public string MixerUserAccountButtonContent { get { return this.IsMixerUserAccountConnected ? "Log Out" : "Log In"; } }
-        public bool IsMixerUserAccountConnected { get { return ChannelSession.MixerStreamerConnection != null; } }
+        public bool IsMixerUserAccountConnected { get { return ChannelSession.MixerUserConnection != null; } }
 
         public string MixerBotAccountAvatar
         {
@@ -230,13 +230,13 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
 
             if (this.IsMixerUserAccountConnected)
             {
-                this.MixerUserAccountAvatar = ChannelSession.MixerStreamerUser.avatarUrl;
-                this.MixerUserAccountUsername = ChannelSession.MixerStreamerUser.username;
+                this.MixerUserAccountAvatar = ChannelSession.MixerUser.avatarUrl;
+                this.MixerUserAccountUsername = ChannelSession.MixerUser.username;
             }
             if (this.IsMixerBotAccountConnected)
             {
-                this.MixerBotAccountAvatar = ChannelSession.MixerBotUser.avatarUrl;
-                this.MixerBotAccountUsername = ChannelSession.MixerBotUser.username;
+                this.MixerBotAccountAvatar = ChannelSession.MixerBot.avatarUrl;
+                this.MixerBotAccountUsername = ChannelSession.MixerBot.username;
             }
 
             this.MixerUserAccountCommand = this.CreateCommand(async (parameter) =>
@@ -251,11 +251,11 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
                 }
                 else
                 {
-                    bool result = await ChannelSession.ConnectUser(ChannelSession.StreamerScopes);
+                    bool result = await ChannelSession.ConnectUser(channelName: null);
                     if (result)
                     {
-                        this.MixerUserAccountAvatar = ChannelSession.MixerStreamerUser.avatarUrl;
-                        this.MixerUserAccountUsername = ChannelSession.MixerStreamerUser.username;
+                        this.MixerUserAccountAvatar = ChannelSession.MixerUser.avatarUrl;
+                        this.MixerUserAccountUsername = ChannelSession.MixerUser.username;
                     }
                     else
                     {
@@ -286,8 +286,8 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
                     bool result = await ChannelSession.ConnectBot();
                     if (result)
                     {
-                        this.MixerBotAccountAvatar = ChannelSession.MixerBotUser.avatarUrl;
-                        this.MixerBotAccountUsername = ChannelSession.MixerBotUser.username;
+                        this.MixerBotAccountAvatar = ChannelSession.MixerBot.avatarUrl;
+                        this.MixerBotAccountUsername = ChannelSession.MixerBot.username;
                     }
                     else
                     {

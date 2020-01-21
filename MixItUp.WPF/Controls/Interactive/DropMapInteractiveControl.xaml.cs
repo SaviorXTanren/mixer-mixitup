@@ -287,7 +287,7 @@ namespace MixItUp.WPF.Controls.Interactive
                         Point point = this.userPoints[winner];
                         UserProfileAvatarControl avatar = this.userAvatars[winner];
 
-                        UserModel user = await ChannelSession.MixerStreamerConnection.GetUser(winner);
+                        UserModel user = await ChannelSession.MixerUserConnection.GetUser(winner);
 
                         string username = (user != null) ? user.username : "Unknown";
                         string location = this.ComputeLocation(point);

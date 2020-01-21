@@ -70,7 +70,7 @@ namespace MixItUp.Base.Actions
                     targetUser = ChannelSession.Services.User.GetUserByUsername(username);
                     if (targetUser == null)
                     {
-                        UserModel targetUserModel = await ChannelSession.MixerStreamerConnection.GetUser(username);
+                        UserModel targetUserModel = await ChannelSession.MixerUserConnection.GetUser(username);
                         if (targetUser == null)
                         {
                             targetUser = new UserViewModel(targetUserModel);

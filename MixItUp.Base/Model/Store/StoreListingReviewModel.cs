@@ -30,7 +30,7 @@ namespace MixItUp.Base.Model.Store
         public StoreListingReviewModel(StoreListingModel listing, int rating, string review)
         {
             this.ListingID = listing.ID;
-            this.UserID = ChannelSession.MixerStreamerUser.id;
+            this.UserID = ChannelSession.MixerUser.id;
             this.Rating = rating;
             this.Review = review;
         }
@@ -50,7 +50,7 @@ namespace MixItUp.Base.Model.Store
         {
             if (this.UserID > 0)
             {
-                this.User = await ChannelSession.MixerStreamerConnection.GetUser(this.UserID);
+                this.User = await ChannelSession.MixerUserConnection.GetUser(this.UserID);
             }
         }
     }

@@ -1340,16 +1340,16 @@ namespace MixItUp.Base.Model.Overlay
                     switch (this.DateRange)
                     {
                         case LeaderboardSparksEmbersDateEnum.Weekly:
-                            this.sparkLeaders = await ChannelSession.MixerStreamerConnection.GetWeeklySparksLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
+                            this.sparkLeaders = await ChannelSession.MixerUserConnection.GetWeeklySparksLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                             break;
                         case LeaderboardSparksEmbersDateEnum.Monthly:
-                            this.sparkLeaders = await ChannelSession.MixerStreamerConnection.GetMonthlySparksLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
+                            this.sparkLeaders = await ChannelSession.MixerUserConnection.GetMonthlySparksLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                             break;
                         case LeaderboardSparksEmbersDateEnum.Yearly:
-                            this.sparkLeaders = await ChannelSession.MixerStreamerConnection.GetYearlySparksLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
+                            this.sparkLeaders = await ChannelSession.MixerUserConnection.GetYearlySparksLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                             break;
                         case LeaderboardSparksEmbersDateEnum.AllTime:
-                            this.sparkLeaders = await ChannelSession.MixerStreamerConnection.GetAllTimeSparksLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
+                            this.sparkLeaders = await ChannelSession.MixerUserConnection.GetAllTimeSparksLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                             break;
                     }
                 }
@@ -1372,16 +1372,16 @@ namespace MixItUp.Base.Model.Overlay
                     switch (this.DateRange)
                     {
                         case LeaderboardSparksEmbersDateEnum.Weekly:
-                            this.emberLeaders = await ChannelSession.MixerStreamerConnection.GetWeeklyEmbersLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
+                            this.emberLeaders = await ChannelSession.MixerUserConnection.GetWeeklyEmbersLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                             break;
                         case LeaderboardSparksEmbersDateEnum.Monthly:
-                            this.emberLeaders = await ChannelSession.MixerStreamerConnection.GetMonthlyEmbersLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
+                            this.emberLeaders = await ChannelSession.MixerUserConnection.GetMonthlyEmbersLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                             break;
                         case LeaderboardSparksEmbersDateEnum.Yearly:
-                            this.emberLeaders = await ChannelSession.MixerStreamerConnection.GetYearlyEmbersLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
+                            this.emberLeaders = await ChannelSession.MixerUserConnection.GetYearlyEmbersLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                             break;
                         case LeaderboardSparksEmbersDateEnum.AllTime:
-                            this.emberLeaders = await ChannelSession.MixerStreamerConnection.GetAllTimeEmbersLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
+                            this.emberLeaders = await ChannelSession.MixerUserConnection.GetAllTimeEmbersLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                             break;
                     }
                 }
@@ -1674,13 +1674,13 @@ namespace MixItUp.Base.Model.Overlay
             }
             else if (this.ProgressBarType == ProgressBarTypeEnum.Milestones)
             {
-                PatronageStatusModel patronageStatus = await ChannelSession.MixerStreamerConnection.GetPatronageStatus(ChannelSession.MixerChannel);
+                PatronageStatusModel patronageStatus = await ChannelSession.MixerUserConnection.GetPatronageStatus(ChannelSession.MixerChannel);
                 if (patronageStatus != null)
                 {
                     this.CurrentAmountNumber = patronageStatus.patronageEarned;
                 }
 
-                PatronageMilestoneModel currentMilestone = await ChannelSession.MixerStreamerConnection.GetCurrentPatronageMilestone();
+                PatronageMilestoneModel currentMilestone = await ChannelSession.MixerUserConnection.GetCurrentPatronageMilestone();
                 if (currentMilestone != null)
                 {
                     this.GoalAmountNumber = currentMilestone.target;
@@ -1741,7 +1741,7 @@ namespace MixItUp.Base.Model.Overlay
                 if (this.refreshMilestone)
                 {
                     this.refreshMilestone = false;
-                    PatronageMilestoneModel currentMilestone = await ChannelSession.MixerStreamerConnection.GetCurrentPatronageMilestone();
+                    PatronageMilestoneModel currentMilestone = await ChannelSession.MixerUserConnection.GetCurrentPatronageMilestone();
                     if (currentMilestone != null)
                     {
                         goal = this.GoalAmountNumber = currentMilestone.target;
@@ -2084,7 +2084,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (this.CurrentBossUserID > 0)
             {
-                UserModel user = await ChannelSession.MixerStreamerConnection.GetUser(this.CurrentBossUserID);
+                UserModel user = await ChannelSession.MixerUserConnection.GetUser(this.CurrentBossUserID);
                 if (user != null)
                 {
                     this.CurrentBoss = new UserViewModel(user);

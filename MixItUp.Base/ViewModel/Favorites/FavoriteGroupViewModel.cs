@@ -32,7 +32,7 @@ namespace MixItUp.Base.ViewModel.Favorites
         {
             if (this.IsTeam)
             {
-                this.Group.Team = await ChannelSession.MixerStreamerConnection.GetTeam(this.Group.Team.id);
+                this.Group.Team = await ChannelSession.MixerUserConnection.GetTeam(this.Group.Team.id);
             }
             this.LastCheckUsers = new List<UserWithChannelModel>(await this.GetUsers());
         }
@@ -57,14 +57,14 @@ namespace MixItUp.Base.ViewModel.Favorites
         {
             if (this.IsTeam)
             {
-                return await ChannelSession.MixerStreamerConnection.GetTeamUsers(this.Group.Team, 10000);
+                return await ChannelSession.MixerUserConnection.GetTeamUsers(this.Group.Team, 10000);
             }
             else
             {
                 List<UserWithChannelModel> users = new List<UserWithChannelModel>();
                 foreach (uint userID in this.Group.GroupUserIDs)
                 {
-                    UserWithChannelModel user = await ChannelSession.MixerStreamerConnection.GetUser(userID);
+                    UserWithChannelModel user = await ChannelSession.MixerUserConnection.GetUser(userID);
                     if (user != null)
                     {
                         users.Add(user);

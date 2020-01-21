@@ -286,15 +286,15 @@ namespace MixItUp.Base.MixerAPI
                     this.lastRefresh = DateTimeOffset.Now.AddMinutes(1);
                     this.games.Clear();
 
-                    this.games.AddRange(await ChannelSession.MixerStreamerConnection.GetOwnedMixPlayGames(ChannelSession.MixerChannel));
+                    this.games.AddRange(await ChannelSession.MixerUserConnection.GetOwnedMixPlayGames(ChannelSession.MixerChannel));
                     games.RemoveAll(g => g.name.Equals("Soundwave Interactive Soundboard"));
 
                     foreach (MixPlaySharedProjectModel project in ChannelSession.Settings.CustomMixPlayProjectIDs)
                     {
-                        MixPlayGameVersionModel version = await ChannelSession.MixerStreamerConnection.GetMixPlayGameVersion(project.VersionID);
+                        MixPlayGameVersionModel version = await ChannelSession.MixerUserConnection.GetMixPlayGameVersion(project.VersionID);
                         if (version != null)
                         {
-                            MixPlayGameModel game = await ChannelSession.MixerStreamerConnection.GetMixPlayGame(version.gameId);
+                            MixPlayGameModel game = await ChannelSession.MixerUserConnection.GetMixPlayGame(version.gameId);
                             if (game != null)
                             {
                                 games.Add(game);
@@ -304,10 +304,10 @@ namespace MixItUp.Base.MixerAPI
 
                     foreach (MixPlaySharedProjectModel project in MixPlaySharedProjectModel.AllMixPlayProjects)
                     {
-                        MixPlayGameVersionModel version = await ChannelSession.MixerStreamerConnection.GetMixPlayGameVersion(project.VersionID);
+                        MixPlayGameVersionModel version = await ChannelSession.MixerUserConnection.GetMixPlayGameVersion(project.VersionID);
                         if (version != null)
                         {
-                            MixPlayGameModel game = await ChannelSession.MixerStreamerConnection.GetMixPlayGame(version.gameId);
+                            MixPlayGameModel game = await ChannelSession.MixerUserConnection.GetMixPlayGame(version.gameId);
                             if (game != null)
                             {
                                 game.name += " (MixPlay)";
@@ -327,7 +327,7 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task<MixPlayConnectionResult> Connect(MixPlayGameModel game)
         {
-            IEnumerable<MixPlayGameVersionModel> versions = await ChannelSession.MixerStreamerConnection.GetMixPlayGameVersions(game);
+            IEnumerable<MixPlayGameVersionModel> versions = await ChannelSession.MixerUserConnection.GetMixPlayGameVersions(game);
             return await this.Connect(game, versions.First());
         }
 
@@ -521,7 +521,7 @@ namespace MixItUp.Base.MixerAPI
                     control.disabled = (command == null || !command.IsEnabled);
                 }
             }
-            await ChannelSession.MixerStreamerConnection.UpdateMixPlayGameVersion(version);
+            await ChannelSession.MixerUserConnection.UpdateMixPlayGameVersion(version);
         }
 
         public async Task TimeoutUser(UserViewModel user, int amountInSeconds)
@@ -641,11 +641,11 @@ namespace MixItUp.Base.MixerAPI
 
             if (this.SharedProject != null)
             {
-                this.Client = await this.RunAsync(MixPlayClient.CreateFromChannel(ChannelSession.MixerStreamerConnection.Connection, ChannelSession.MixerChannel, this.Game, this.Version, this.SharedProject.ShareCode));
+                this.Client = await this.RunAsync(MixPlayClient.CreateFromChannel(ChannelSession.MixerUserConnection.Connection, ChannelSession.MixerChannel, this.Game, this.Version, this.SharedProject.ShareCode));
             }
             else
             {
-                this.Client = await this.RunAsync(MixPlayClient.CreateFromChannel(ChannelSession.MixerStreamerConnection.Connection, ChannelSession.MixerChannel, this.Game, this.Version));
+                this.Client = await this.RunAsync(MixPlayClient.CreateFromChannel(ChannelSession.MixerUserConnection.Connection, ChannelSession.MixerChannel, this.Game, this.Version));
             }
 
             return await this.RunAsync(async () =>
@@ -699,7 +699,7 @@ namespace MixItUp.Base.MixerAPI
             this.Scenes.Clear();
             this.ControlCommands.Clear();
 
-            this.Version = await ChannelSession.MixerStreamerConnection.GetMixPlayGameVersion(this.Version);
+            this.Version = await ChannelSession.MixerUserConnection.GetMixPlayGameVersion(this.Version);
             foreach (MixPlaySceneModel scene in this.Version.controls.scenes)
             {
                 if (scene.allControls.Count() > 0)

@@ -257,7 +257,7 @@ namespace MixItUp.Base.Services.External
                 UserViewModel user = new UserViewModel(0, purchase.data.Username);
                 UserViewModel giftee = (string.IsNullOrEmpty(purchase.data.Giftee)) ? null : new UserViewModel(0, purchase.data.Giftee);
 
-                UserModel userModel = await ChannelSession.MixerStreamerConnection.GetUser(user.UserName);
+                UserModel userModel = await ChannelSession.MixerUserConnection.GetUser(user.UserName);
                 if (userModel != null)
                 {
                     user = new UserViewModel(userModel);
@@ -265,7 +265,7 @@ namespace MixItUp.Base.Services.External
 
                 if (giftee != null)
                 {
-                    UserModel gifteeModel = await ChannelSession.MixerStreamerConnection.GetUser(giftee.UserName);
+                    UserModel gifteeModel = await ChannelSession.MixerUserConnection.GetUser(giftee.UserName);
                     if (gifteeModel != null)
                     {
                         giftee = new UserViewModel(gifteeModel);
@@ -293,7 +293,7 @@ namespace MixItUp.Base.Services.External
             {
                 UserViewModel user = new UserViewModel(0, card.data.Username);
 
-                UserModel userModel = await ChannelSession.MixerStreamerConnection.GetUser(user.UserName);
+                UserModel userModel = await ChannelSession.MixerUserConnection.GetUser(user.UserName);
                 if (userModel != null)
                 {
                     user = new UserViewModel(userModel);

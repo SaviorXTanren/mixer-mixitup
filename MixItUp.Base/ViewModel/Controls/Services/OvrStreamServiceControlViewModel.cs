@@ -5,6 +5,8 @@ namespace MixItUp.Base.ViewModel.Controls.Services
 {
     public class OvrStreamServiceControlViewModel : ServiceControlViewModelBase
     {
+        public const string DefaultOvrStreamConnection = "ws://127.0.0.1:8023";
+
         public string OvrStreamAddress
         {
             get { return this.ovrStreamAddress; }
@@ -22,7 +24,7 @@ namespace MixItUp.Base.ViewModel.Controls.Services
         public OvrStreamServiceControlViewModel()
             : base("OvrStream")
         {
-            this.OvrStreamAddress = ChannelSession.DefaultOvrStreamConnection;
+            this.OvrStreamAddress = OvrStreamServiceControlViewModel.DefaultOvrStreamConnection;
 
             this.ConnectCommand = this.CreateCommand(async (parameter) =>
             {

@@ -610,9 +610,9 @@ namespace MixItUp.Desktop
         {
             this.Version = DesktopChannelSettings.LatestVersion;
 
-            if (ChannelSession.MixerStreamerConnection != null)
+            if (ChannelSession.MixerUserConnection != null)
             {
-                this.OAuthToken = ChannelSession.MixerStreamerConnection.Connection.GetOAuthTokenCopy();
+                this.OAuthToken = ChannelSession.MixerUserConnection.Connection.GetOAuthTokenCopy();
             }
             if (ChannelSession.MixerBotConnection != null)
             {

@@ -77,10 +77,10 @@ namespace MixItUp.Base.Actions
                     ClipModel clip = null;
                     DateTimeOffset clipCreationTime = DateTimeOffset.Now;
 
-                    BroadcastModel broadcast = await ChannelSession.MixerStreamerConnection.GetCurrentBroadcast();
+                    BroadcastModel broadcast = await ChannelSession.MixerUserConnection.GetCurrentBroadcast();
                     if (broadcast != null)
                     {
-                        clip = await ChannelSession.MixerStreamerConnection.CreateClip(new ClipRequestModel()
+                        clip = await ChannelSession.MixerUserConnection.CreateClip(new ClipRequestModel()
                         {
                             broadcastId = broadcast.id.ToString(),
                             highlightTitle = clipName,
@@ -94,7 +94,7 @@ namespace MixItUp.Base.Actions
                         {
                             await Task.Delay(2000);
 
-                            IEnumerable<ClipModel> clips = await ChannelSession.MixerStreamerConnection.GetChannelClips(ChannelSession.MixerChannel);
+                            IEnumerable<ClipModel> clips = await ChannelSession.MixerUserConnection.GetChannelClips(ChannelSession.MixerChannel);
                             clip = clips.OrderByDescending(c => c.uploadDate).FirstOrDefault();
                             if (clip != null && clip.uploadDate.ToLocalTime() >= clipCreationTime && clip.title.Equals(clipName))
                             {
@@ -131,7 +131,7 @@ namespace MixItUp.Base.Actions
                 {
                     string error = "ERROR: The download folder specified for Mixer Clips does not exist";
                     Logger.Log(error);
-                    await ChannelSession.Services.Chat.Whisper(ChannelSession.MixerStreamerUser.username, error);
+                    await ChannelSession.Services.Chat.Whisper(ChannelSession.MixerUser.username, error);
                     return;
                 }
 
@@ -139,7 +139,7 @@ namespace MixItUp.Base.Actions
                 {
                     string error = "ERROR: FFMPEG could not be found and the Mixer Clip can not be converted without it";
                     Logger.Log(error);
-                    await ChannelSession.Services.Chat.Whisper(ChannelSession.MixerStreamerUser.username, error);
+                    await ChannelSession.Services.Chat.Whisper(ChannelSession.MixerUser.username, error);
                     return;
                 }
 

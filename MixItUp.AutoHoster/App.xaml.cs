@@ -60,7 +60,7 @@ namespace MixItUp.AutoHoster
                 Logger.Log("CRASH OCCURRED");
                 Logger.Log(ex, includeStackTrace: true);
 
-                ProcessHelper.LaunchProgram("MixItUp.Reporter.exe", string.Format("{0} {1}", (ChannelSession.MixerStreamerUser != null) ? ChannelSession.MixerStreamerUser.id : 0, FileLoggerHandler.CurrentLogFilePath));
+                ProcessHelper.LaunchProgram("MixItUp.Reporter.exe", string.Format("{0} {1}", (ChannelSession.MixerUser != null) ? ChannelSession.MixerUser.id : 0, FileLoggerHandler.CurrentLogFilePath));
 
                 Task.Delay(1000).Wait();
             }

@@ -99,7 +99,7 @@ namespace MixItUp.Base.Model.Store
         public UserModel User { get; set; }
 
         [JsonIgnore]
-        public bool IsCommandOwnedByUser { get { return (this.User != null && this.User.id.Equals(ChannelSession.MixerStreamerUser.id)); } }
+        public bool IsCommandOwnedByUser { get { return (this.User != null && this.User.id.Equals(ChannelSession.MixerUser.id)); } }
 
         [JsonIgnore]
         public string UserName { get { return (this.User != null) ? this.User.username : "Unknown"; } }
@@ -148,7 +148,7 @@ namespace MixItUp.Base.Model.Store
         {
             if (this.UserID > 0)
             {
-                this.User = await ChannelSession.MixerStreamerConnection.GetUser(this.UserID);
+                this.User = await ChannelSession.MixerUserConnection.GetUser(this.UserID);
             }
         }
     }

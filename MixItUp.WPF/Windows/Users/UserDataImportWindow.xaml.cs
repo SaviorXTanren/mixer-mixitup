@@ -238,7 +238,7 @@ namespace MixItUp.WPF.Windows.Users
 
             if (importedUserData.ID == 0)
             {
-                UserModel user = await ChannelSession.MixerStreamerConnection.GetUser(importedUserData.UserName);
+                UserModel user = await ChannelSession.MixerUserConnection.GetUser(importedUserData.UserName);
                 if (user != null)
                 {
                     importedUserData.ID = user.id;
@@ -246,7 +246,7 @@ namespace MixItUp.WPF.Windows.Users
             }
             else if (string.IsNullOrEmpty(importedUserData.UserName))
             {
-                UserModel user = await ChannelSession.MixerStreamerConnection.GetUser(importedUserData.ID);
+                UserModel user = await ChannelSession.MixerUserConnection.GetUser(importedUserData.ID);
                 if (user != null)
                 {
                     importedUserData.UserName = user.username;

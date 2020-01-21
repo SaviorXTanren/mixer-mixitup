@@ -73,7 +73,7 @@ namespace MixItUp.Base.Services.Mixer
         {
             return await this.AttemptConnect(async () =>
             {
-                this.Client = await this.RunAsync(ConstellationClient.Create(ChannelSession.MixerStreamerConnection.Connection));
+                this.Client = await this.RunAsync(ConstellationClient.Create(ChannelSession.MixerUserConnection.Connection));
                 if (this.Client != null && await this.RunAsync(this.Client.Connect()))
                 {
                     this.Client.OnDisconnectOccurred += ConstellationClient_OnDisconnectOccurred;
@@ -88,10 +88,10 @@ namespace MixItUp.Base.Services.Mixer
 
                     await this.SubscribeToEvents(MixerEventService.subscribedEvents.Select(e => new ConstellationEventType(e, ChannelSession.MixerChannel.id)));
 
-                    PatronageStatusModel patronageStatus = await ChannelSession.MixerStreamerConnection.GetPatronageStatus(ChannelSession.MixerChannel);
+                    PatronageStatusModel patronageStatus = await ChannelSession.MixerUserConnection.GetPatronageStatus(ChannelSession.MixerChannel);
                     if (patronageStatus != null)
                     {
-                        PatronagePeriodModel patronagePeriod = await ChannelSession.MixerStreamerConnection.GetPatronagePeriod(patronageStatus);
+                        PatronagePeriodModel patronagePeriod = await ChannelSession.MixerUserConnection.GetPatronagePeriod(patronageStatus);
                         if (patronagePeriod != null)
                         {
                             this.allPatronageMilestones = new List<PatronageMilestoneModel>(patronagePeriod.milestoneGroups.SelectMany(mg => mg.milestones));
@@ -333,8 +333,8 @@ namespace MixItUp.Base.Services.Mixer
                         EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChannelSubscriptionGifted, user);
                         if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                         {
-                            UserModel gifterUserModel = await ChannelSession.MixerStreamerConnection.GetUser(gifterID.ToObject<uint>());
-                            UserModel receiverUserModel = await ChannelSession.MixerStreamerConnection.GetUser(receiverID.ToObject<uint>());
+                            UserModel gifterUserModel = await ChannelSession.MixerUserConnection.GetUser(gifterID.ToObject<uint>());
+                            UserModel receiverUserModel = await ChannelSession.MixerUserConnection.GetUser(receiverID.ToObject<uint>());
                             if (gifterUserModel != null && receiverUserModel != null)
                             {
                                 UserViewModel gifterUser = new UserViewModel(gifterUserModel);
@@ -379,7 +379,7 @@ namespace MixItUp.Base.Services.Mixer
 
                             if (string.IsNullOrEmpty(user.UserName))
                             {
-                                UserModel userModel = await ChannelSession.MixerStreamerConnection.GetUser(userID);
+                                UserModel userModel = await ChannelSession.MixerUserConnection.GetUser(userID);
                                 if (userModel != null)
                                 {
                                     user = new UserViewModel(userModel);

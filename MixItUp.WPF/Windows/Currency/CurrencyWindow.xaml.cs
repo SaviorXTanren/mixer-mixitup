@@ -388,17 +388,17 @@ namespace MixItUp.WPF.Windows.Currency
                         await this.currency.Reset();
 
                         HashSet<uint> subscriberIDs = new HashSet<uint>();
-                        foreach (UserWithGroupsModel user in await ChannelSession.MixerStreamerConnection.GetUsersWithRoles(ChannelSession.MixerChannel, MixerRoleEnum.Subscriber))
+                        foreach (UserWithGroupsModel user in await ChannelSession.MixerUserConnection.GetUsersWithRoles(ChannelSession.MixerChannel, MixerRoleEnum.Subscriber))
                         {
                             subscriberIDs.Add(user.id);
                         }
 
                         HashSet<uint> modIDs = new HashSet<uint>();
-                        foreach (UserWithGroupsModel user in await ChannelSession.MixerStreamerConnection.GetUsersWithRoles(ChannelSession.MixerChannel, MixerRoleEnum.Mod))
+                        foreach (UserWithGroupsModel user in await ChannelSession.MixerUserConnection.GetUsersWithRoles(ChannelSession.MixerChannel, MixerRoleEnum.Mod))
                         {
                             modIDs.Add(user.id);
                         }
-                        foreach (UserWithGroupsModel user in await ChannelSession.MixerStreamerConnection.GetUsersWithRoles(ChannelSession.MixerChannel, MixerRoleEnum.ChannelEditor))
+                        foreach (UserWithGroupsModel user in await ChannelSession.MixerUserConnection.GetUsersWithRoles(ChannelSession.MixerChannel, MixerRoleEnum.ChannelEditor))
                         {
                             modIDs.Add(user.id);
                         }
@@ -481,11 +481,11 @@ namespace MixItUp.WPF.Windows.Currency
                                     {
                                         if (id > 0)
                                         {
-                                            user = await ChannelSession.MixerStreamerConnection.GetUser(id);
+                                            user = await ChannelSession.MixerUserConnection.GetUser(id);
                                         }
                                         else if (!string.IsNullOrEmpty(username))
                                         {
-                                            user = await ChannelSession.MixerStreamerConnection.GetUser(username);
+                                            user = await ChannelSession.MixerUserConnection.GetUser(username);
                                         }
                                     }
 

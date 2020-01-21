@@ -40,12 +40,12 @@ namespace MixItUp.WPF.Controls.Chat
                             await ChannelSession.Services.Chat.UnbanUser(user);
                             break;
                         case UserDialogResult.Follow:
-                            ExpandedChannelModel channelToFollow = await ChannelSession.MixerStreamerConnection.GetChannel(user.ChannelID);
-                            await ChannelSession.MixerStreamerConnection.Follow(channelToFollow, ChannelSession.MixerStreamerUser);
+                            ExpandedChannelModel channelToFollow = await ChannelSession.MixerUserConnection.GetChannel(user.ChannelID);
+                            await ChannelSession.MixerUserConnection.Follow(channelToFollow, ChannelSession.MixerUser);
                             break;
                         case UserDialogResult.Unfollow:
-                            ExpandedChannelModel channelToUnfollow = await ChannelSession.MixerStreamerConnection.GetChannel(user.ChannelID);
-                            await ChannelSession.MixerStreamerConnection.Unfollow(channelToUnfollow, ChannelSession.MixerStreamerUser);
+                            ExpandedChannelModel channelToUnfollow = await ChannelSession.MixerUserConnection.GetChannel(user.ChannelID);
+                            await ChannelSession.MixerUserConnection.Unfollow(channelToUnfollow, ChannelSession.MixerUser);
                             break;
                         case UserDialogResult.PromoteToMod:
                             if (await DialogHelper.ShowConfirmation(string.Format("This will promote the user {0} to a moderator of this channel. Are you sure?", user.UserName)))

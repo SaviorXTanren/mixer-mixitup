@@ -418,11 +418,11 @@ namespace MixItUp.Base.Model.Overlay
 
         private bool ShouldIncludeUser(UserViewModel user)
         {
-            if (user.ID.Equals(ChannelSession.MixerStreamerUser.id))
+            if (user.ID.Equals(ChannelSession.MixerUser.id))
             {
                 return false;
             }
-            if (ChannelSession.MixerBotUser != null && user.ID.Equals(ChannelSession.MixerBotUser.id))
+            if (ChannelSession.MixerBot != null && user.ID.Equals(ChannelSession.MixerBot.id))
             {
                 return false;
             }

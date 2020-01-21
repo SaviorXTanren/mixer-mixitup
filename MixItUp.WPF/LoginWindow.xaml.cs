@@ -182,14 +182,14 @@ namespace MixItUp.WPF
                 {
                     if (await this.ShowLicenseAgreement())
                     {
-                        authenticationSuccessful = await this.EstablishConnection(ChannelSession.ModeratorScopes, this.ModeratorChannelComboBox.Text);
+                        authenticationSuccessful = await this.EstablishConnection(this.ModeratorChannelComboBox.Text);
                     }
                 }
 
                 if (authenticationSuccessful)
                 {
-                    IEnumerable<UserWithGroupsModel> users = await ChannelSession.MixerStreamerConnection.GetUsersWithRoles(ChannelSession.MixerChannel, MixerRoleEnum.Mod);
-                    if (users.Any(uwg => uwg.id.Equals(ChannelSession.MixerStreamerUser.id)) || ChannelSession.IsDebug())
+                    IEnumerable<UserWithGroupsModel> users = await ChannelSession.MixerUserConnection.GetUsersWithRoles(ChannelSession.MixerChannel, MixerRoleEnum.Mod);
+                    if (users.Any(uwg => uwg.id.Equals(ChannelSession.MixerUser.id)) || ChannelSession.IsDebug())
                     {
                         ShowMainWindow(new MainWindow());
                         this.Hide();
@@ -261,9 +261,9 @@ namespace MixItUp.WPF
             }
         }
 
-        private async Task<bool> EstablishConnection(IEnumerable<OAuthClientScopeEnum> scopes, string channelName = null)
+        private async Task<bool> EstablishConnection(string channelName = null)
         {
-            return await ChannelSession.ConnectUser(scopes, channelName);
+            return await ChannelSession.ConnectUser(channelName);
         }
 
         private async void GlobalEvents_OnShowMessageBox(object sender, string message)
