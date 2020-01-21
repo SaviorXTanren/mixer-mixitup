@@ -1,7 +1,7 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.Controls.Games;
 using MixItUp.Base.ViewModel.Requirement;
-using MixItUp.Base.ViewModel.User;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.Games
@@ -14,7 +14,7 @@ namespace MixItUp.WPF.Controls.Games
         private WordScrambleGameEditorControlViewModel viewModel;
         private WordScrambleGameCommand existingCommand;
 
-        public WordScrambleGameEditorControl(UserCurrencyViewModel currency)
+        public WordScrambleGameEditorControl(UserCurrencyModel currency)
         {
             InitializeComponent();
 

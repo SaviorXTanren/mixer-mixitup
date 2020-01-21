@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
@@ -98,7 +99,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         private SlotMachineGameCommand existingCommand;
 
-        public SlotMachineGameEditorControlViewModel(UserCurrencyViewModel currency)
+        public SlotMachineGameEditorControlViewModel(UserCurrencyModel currency)
             : this()
         {
             this.FailureOutcomeCommand = this.CreateBasicChatCommand("Result: $gameslotsoutcome - Looks like luck was not on your side. Better luck next time...", whisper: true);
@@ -126,7 +127,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         {
             this.AddOutcomeCommand = this.CreateCommand((parameter) =>
             {
-                UserCurrencyViewModel currency = (UserCurrencyViewModel)parameter;
+                UserCurrencyModel currency = (UserCurrencyModel)parameter;
                 this.Outcomes.Add(new SlotMachineOutcome(null, null, null, this.CreateBasicChatCommand("Result: $gameslotsoutcome - @$username walks away with $gamepayout " + currency.Name + "!")));
                 return Task.FromResult(0);
             });

@@ -1,10 +1,8 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.Controls.Games;
 using MixItUp.Base.ViewModel.Requirement;
-using MixItUp.Base.ViewModel.User;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace MixItUp.WPF.Controls.Games
 {
@@ -16,7 +14,7 @@ namespace MixItUp.WPF.Controls.Games
         private HitmanGameEditorControlViewModel viewModel;
         private HitmanGameCommand existingCommand;
 
-        public HitmanGameEditorControl(UserCurrencyViewModel currency)
+        public HitmanGameEditorControl(UserCurrencyModel currency)
         {
             InitializeComponent();
 

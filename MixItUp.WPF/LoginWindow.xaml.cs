@@ -233,20 +233,17 @@ namespace MixItUp.WPF
 
         private async Task<bool> ExistingSettingLogin(SettingsV2Model setting)
         {
-            if (await this.ShowLicenseAgreement())
+            if (await ChannelSession.ConnectUser(setting))
             {
-                if (await ChannelSession.ConnectUser(setting))
+                if (setting.MixerBotOAuthToken != null && !await ChannelSession.ConnectBot(setting))
                 {
-                    if (setting.MixerBotOAuthToken != null && !await ChannelSession.ConnectBot(setting))
-                    {
-                        await DialogHelper.ShowMessage("Bot Account failed to authenticate, please re-connect it from the Services section.");
-                    }
-                    return true;
+                    await DialogHelper.ShowMessage("Bot Account failed to authenticate, please re-connect it from the Services section.");
                 }
-                else
-                {
-                    await DialogHelper.ShowMessage("Unable to authenticate with Mixer, please try again");
-                }
+                return true;
+            }
+            else
+            {
+                await DialogHelper.ShowMessage("Unable to authenticate with Mixer, please try again");
             }
             return false;
         }

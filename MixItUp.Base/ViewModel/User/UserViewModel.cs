@@ -7,6 +7,7 @@ using MixItUp.Base.Model.MixPlay;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModels;
 using Newtonsoft.Json;
 using StreamingClient.Base.Util;
 using System;
@@ -693,6 +694,111 @@ namespace MixItUp.Base.ViewModel.User
 
                 this.RolesDisplayString = string.Join(", ", displayRoles.OrderByDescending(r => r));
             }
+        }
+    }
+
+    [DataContract]
+    public class UserCurrencyDataViewModel : ViewModelBase, IEquatable<UserCurrencyDataViewModel>
+    {
+        [JsonIgnore]
+        public UserDataViewModel User { get; set; }
+
+        [JsonIgnore]
+        public UserCurrencyModel Currency { get; set; }
+
+        [DataMember]
+        public int Amount
+        {
+            get { return this.Currency.GetAmount(this.User); }
+            set
+            {
+                this.Currency.SetAmount(this.User, value);
+                this.NotifyPropertyChanged();
+            }
+        }
+
+        public UserCurrencyDataViewModel() { }
+
+        public UserCurrencyDataViewModel(UserDataViewModel user, UserCurrencyModel currency)
+        {
+            this.User = user;
+            this.Currency = currency;
+        }
+
+        public UserRankViewModel GetRank() { return this.Currency.GetRankForPoints(this.Amount); }
+
+        public UserRankViewModel GetNextRank() { return this.Currency.GetNextRankForPoints(this.Amount); }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is UserCurrencyDataViewModel)
+            {
+                return this.Equals((UserCurrencyDataViewModel)obj);
+            }
+            return false;
+        }
+
+        public bool Equals(UserCurrencyDataViewModel other)
+        {
+            return this.User.Equals(other.User) && this.Currency.Equals(other.Currency);
+        }
+
+        public override int GetHashCode()
+        {
+            return this.User.GetHashCode() + this.Currency.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            UserRankViewModel rank = this.Currency.GetRankForPoints(this.Amount);
+            return string.Format("{0} - {1}", rank.Name, this.Amount);
+        }
+    }
+
+    [DataContract]
+    public class UserInventoryDataViewModel : ViewModelBase, IEquatable<UserInventoryDataViewModel>
+    {
+        [JsonIgnore]
+        public UserDataViewModel User { get; set; }
+
+        [JsonIgnore]
+        public UserInventoryModel Inventory { get; set; }
+
+        public UserInventoryDataViewModel() { }
+
+        public UserInventoryDataViewModel(UserDataViewModel user, UserInventoryModel inventory)
+        {
+            this.User = user;
+            this.Inventory = inventory;
+        }
+
+        public int GetAmount(UserInventoryItemModel item) { return this.GetAmount(item.Name); }
+
+        public int GetAmount(string itemName) { return this.Inventory.GetAmount(this.User, itemName); }
+
+        public Dictionary<string, int> GetAmounts() { return this.Inventory.GetAmounts(this.User); }
+
+        public void SetAmount(UserInventoryItemModel item, int amount) { this.SetAmount(item.Name, amount); }
+
+        public void SetAmount(string itemName, int amount) { this.Inventory.SetAmount(this.User, itemName, amount); }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is UserInventoryDataViewModel)
+            {
+                return this.Equals((UserInventoryDataViewModel)obj);
+            }
+            return false;
+        }
+
+        public bool Equals(UserInventoryDataViewModel other)
+        {
+            return this.User.Equals(other.User) && this.Inventory.Equals(other.Inventory);
+        }
+
+        public override int GetHashCode()
+        {
+            return this.Inventory.GetHashCode();
         }
     }
 }

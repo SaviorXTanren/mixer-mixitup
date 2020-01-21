@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.Model.User;
+using MixItUp.Base.ViewModel.User;
 using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.Currency
@@ -10,7 +11,7 @@ namespace MixItUp.WPF.Controls.Currency
     {
         private UserCurrencyDataViewModel currencyData;
 
-        private UserInventoryItemViewModel inventoryItem;
+        private UserInventoryItemModel inventoryItem;
         private UserInventoryDataViewModel inventoryData;
 
         public UserCurrencyIndividualEditorControl(UserCurrencyDataViewModel currencyData)
@@ -19,7 +20,7 @@ namespace MixItUp.WPF.Controls.Currency
             this.currencyData = currencyData;
         }
 
-        public UserCurrencyIndividualEditorControl(UserInventoryItemViewModel inventoryItem, UserInventoryDataViewModel inventoryData)
+        public UserCurrencyIndividualEditorControl(UserInventoryItemModel inventoryItem, UserInventoryDataViewModel inventoryData)
             : this()
         {
             this.inventoryItem = inventoryItem;
@@ -43,14 +44,7 @@ namespace MixItUp.WPF.Controls.Currency
             else if (this.inventoryItem != null && this.inventoryData != null)
             {
                 this.NameTextBlock.Text = this.inventoryItem.Name;
-                if (this.inventoryData.Amounts.ContainsKey(this.inventoryItem.Name))
-                {
-                    this.AmountTextBox.Text = this.inventoryData.Amounts[this.inventoryItem.Name].ToString();
-                }
-                else
-                {
-                    this.AmountTextBox.Text = "0";
-                }
+                this.AmountTextBox.Text = this.inventoryData.GetAmount(this.inventoryItem).ToString();
             }
         }
 
@@ -64,7 +58,7 @@ namespace MixItUp.WPF.Controls.Currency
                 }
                 else if (this.inventoryItem != null && this.inventoryData != null)
                 {
-                    this.inventoryData.Amounts[this.inventoryItem.Name] = amount;
+                    this.inventoryData.SetAmount(this.inventoryItem, amount);
                 }
             }
         }

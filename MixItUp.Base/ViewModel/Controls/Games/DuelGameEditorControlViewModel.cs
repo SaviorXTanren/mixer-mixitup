@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Controls.Games
 {
@@ -60,7 +61,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         private DuelGameCommand existingCommand;
 
-        public DuelGameEditorControlViewModel(UserCurrencyViewModel currency)
+        public DuelGameEditorControlViewModel(UserCurrencyModel currency)
         {
             this.StartedCommand = this.CreateBasicChatCommand("@$username has challenged @$targetusername to a duel for $gamebet " + currency.Name + "! Type !duel in chat to accept!");
             this.NotAcceptedCommand = this.CreateBasicChatCommand("@$targetusername did not respond in time...");

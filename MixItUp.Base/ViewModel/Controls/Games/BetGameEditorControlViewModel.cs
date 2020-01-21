@@ -1,5 +1,5 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
@@ -99,7 +99,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         private BetGameCommand existingCommand;
 
-        public BetGameEditorControlViewModel(UserCurrencyViewModel currency)
+        public BetGameEditorControlViewModel(UserCurrencyModel currency)
             : this()
         {
             this.StartedCommand = this.CreateBasic2ChatCommand("@$username has started a bet on...SOMETHING! Type !bet <OPTION #> <AMOUNT> in chat to participate!", "Options: $gamebetoptions");

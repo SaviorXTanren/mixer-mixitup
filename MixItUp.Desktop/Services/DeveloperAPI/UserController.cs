@@ -1,13 +1,14 @@
-﻿using MixItUp.Base;
+﻿using MixItUp.API.Models;
+using MixItUp.Base;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.API.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web.Http;
 using System.Net.Http;
 using System.Net.Http.Formatting;
+using System.Web.Http;
 
 namespace MixItUp.Desktop.Services.DeveloperAPI
 {
@@ -248,12 +249,12 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 ViewingMinutes = userData.ViewingMinutes
             };
 
-            foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+            foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
             {
                 user.CurrencyAmounts.Add(CurrencyController.CurrencyAmountFromUserCurrencyViewModel(currency, userData.GetCurrencyAmount(currency)));
             }
 
-            foreach (UserInventoryViewModel inventory in ChannelSession.Settings.Inventories.Values)
+            foreach (UserInventoryModel inventory in ChannelSession.Settings.Inventories.Values)
             {
                 user.InventoryAmounts.Add(InventoryController.InventoryAmountFromUserInventoryViewModel(inventory, userData.GetInventory(inventory)));
             }
@@ -283,7 +284,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            UserCurrencyViewModel currency = ChannelSession.Settings.Currencies[currencyID];
+            UserCurrencyModel currency = ChannelSession.Settings.Currencies[currencyID];
 
             if (currencyUpdate.Amount < 0)
             {
@@ -330,7 +331,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            UserInventoryViewModel inventory = ChannelSession.Settings.Inventories[inventoryID];
+            UserInventoryModel inventory = ChannelSession.Settings.Inventories[inventoryID];
 
             if (string.IsNullOrEmpty(inventoryUpdate.Name) || !inventory.Items.ContainsKey(inventoryUpdate.Name))
             {

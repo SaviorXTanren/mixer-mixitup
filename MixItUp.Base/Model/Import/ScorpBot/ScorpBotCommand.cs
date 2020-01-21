@@ -1,10 +1,10 @@
 ﻿using MixItUp.Base.Actions;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.Import.ScorpBot
@@ -80,7 +80,7 @@ namespace MixItUp.Base.Model.Import.ScorpBot
             this.Enabled = ((string)data["Enabled"]).Equals("True");
         }
 
-        public void ProcessData(UserCurrencyViewModel currency, UserCurrencyViewModel rank)
+        public void ProcessData(UserCurrencyModel currency, UserCurrencyModel rank)
         {
             this.Text = SpecialIdentifierStringBuilder.ConvertScorpBotText(this.Text);
 

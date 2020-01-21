@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Model.User;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
@@ -190,7 +191,7 @@ namespace MixItUp.Base.Commands
         {
             int betAmount = 0;
 
-            UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
+            UserCurrencyModel currency = this.Requirements.Currency.GetCurrency();
             if (currency == null)
             {
                 return -1;
@@ -266,7 +267,7 @@ namespace MixItUp.Base.Commands
 
         protected virtual async Task<bool> PerformCurrencyChecks(UserViewModel user, int betAmount)
         {
-            UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
+            UserCurrencyModel currency = this.Requirements.Currency.GetCurrency();
             if (currency == null)
             {
                 return false;
@@ -426,7 +427,7 @@ namespace MixItUp.Base.Commands
                 {
                     if (await this.PerformRequirementChecks(user) && await this.PerformCurrencyChecks(user, betAmount))
                     {
-                        UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
+                        UserCurrencyModel currency = this.Requirements.Currency.GetCurrency();
                         if (currency == null)
                         {
                             return;
@@ -453,7 +454,7 @@ namespace MixItUp.Base.Commands
             }
         }
 
-        protected virtual async Task<UserViewModel> GetTargetUser(UserViewModel user, IEnumerable<string> arguments, UserCurrencyViewModel currency, int betAmount)
+        protected virtual async Task<UserViewModel> GetTargetUser(UserViewModel user, IEnumerable<string> arguments, UserCurrencyModel currency, int betAmount)
         {
             List<UserViewModel> users = new List<UserViewModel>();
             foreach (UserViewModel activeUser in ChannelSession.Services.User.GetAllWorkableUsers())
@@ -475,7 +476,7 @@ namespace MixItUp.Base.Commands
             return users[userIndex];
         }
 
-        protected virtual async Task<UserViewModel> GetArgumentsTargetUser(UserViewModel user, IEnumerable<string> arguments, UserCurrencyViewModel currency, int betAmount)
+        protected virtual async Task<UserViewModel> GetArgumentsTargetUser(UserViewModel user, IEnumerable<string> arguments, UserCurrencyModel currency, int betAmount)
         {
             UserViewModel targetUser = await this.GetArgumentsTargetUser(user, arguments);
             if (targetUser != null)
@@ -588,7 +589,7 @@ namespace MixItUp.Base.Commands
 
                                     this.Requirements.UpdateCooldown(user);
 
-                                    UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
+                                    UserCurrencyModel currency = this.Requirements.Currency.GetCurrency();
                                     if (currency == null)
                                     {
                                         this.ResetData(user);
@@ -635,7 +636,7 @@ namespace MixItUp.Base.Commands
 
         protected virtual async Task NotEnoughUsers()
         {
-            UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
+            UserCurrencyModel currency = this.Requirements.Currency.GetCurrency();
             foreach (var enteredUser in this.enteredUsers)
             {
                 enteredUser.Key.Data.AddCurrencyAmount(currency, enteredUser.Value);
@@ -818,7 +819,7 @@ namespace MixItUp.Base.Commands
 
             if (await this.PerformUsageChecks(user, arguments) && await this.PerformRequirementChecks(user))
             {
-                UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
+                UserCurrencyModel currency = this.Requirements.Currency.GetCurrency();
                 if (currency == null)
                 {
                     return;
@@ -989,7 +990,7 @@ namespace MixItUp.Base.Commands
 
             if (await this.PerformUsageChecks(user, arguments) && await this.PerformRequirementChecks(user))
             {
-                UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
+                UserCurrencyModel currency = this.Requirements.Currency.GetCurrency();
                 if (currency == null)
                 {
                     return;
@@ -1290,7 +1291,7 @@ namespace MixItUp.Base.Commands
             return base.GetBetAmountSecondArgument(arguments);
         }
 
-        protected override Task<UserViewModel> GetTargetUser(UserViewModel user, IEnumerable<string> arguments, UserCurrencyViewModel currency, int betAmount)
+        protected override Task<UserViewModel> GetTargetUser(UserViewModel user, IEnumerable<string> arguments, UserCurrencyModel currency, int betAmount)
         {
             return base.GetArgumentsTargetUser(user, arguments, currency, betAmount);
         }
@@ -1363,7 +1364,7 @@ namespace MixItUp.Base.Commands
             {
                 if (isTarget)
                 {
-                    UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
+                    UserCurrencyModel currency = this.Requirements.Currency.GetCurrency();
                     if (currency == null)
                     {
                         return;
@@ -1397,7 +1398,7 @@ namespace MixItUp.Base.Commands
                 this.currentBetAmount = await this.GetBetAmount(user, this.GetBetAmountArgument(arguments));
                 if (this.currentBetAmount >= 0)
                 {
-                    UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
+                    UserCurrencyModel currency = this.Requirements.Currency.GetCurrency();
                     if (currency == null)
                     {
                         return;
@@ -1461,7 +1462,7 @@ namespace MixItUp.Base.Commands
             return base.GetBetAmountSecondArgument(arguments);
         }
 
-        protected override async Task<UserViewModel> GetArgumentsTargetUser(UserViewModel user, IEnumerable<string> arguments, UserCurrencyViewModel currency, int betAmount)
+        protected override async Task<UserViewModel> GetArgumentsTargetUser(UserViewModel user, IEnumerable<string> arguments, UserCurrencyModel currency, int betAmount)
         {
             UserViewModel targetUser = await base.GetArgumentsTargetUser(user, arguments, currency, betAmount);
             if (targetUser != null && this.Requirements.Inventory != null && !this.Requirements.Inventory.DoesMeetRequirement(targetUser.Data))
@@ -2731,7 +2732,7 @@ namespace MixItUp.Base.Commands
 
             this.totalPayout = this.GenerateRandomNumber(minimum, maximum + 1);
 
-            UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
+            UserCurrencyModel currency = this.Requirements.Currency.GetCurrency();
             if (currency == null)
             {
                 return;
@@ -2932,7 +2933,7 @@ namespace MixItUp.Base.Commands
             int payout = this.GenerateRandomNumber(minAmount, maxAmount + 1);
             this.totalPayout += payout;
 
-            UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
+            UserCurrencyModel currency = this.Requirements.Currency.GetCurrency();
             if (currency == null)
             {
                 return;
@@ -3012,7 +3013,7 @@ namespace MixItUp.Base.Commands
                 {
                     if (this.Requirements.Currency != null && this.Requirements.Currency.GetCurrency() != null)
                     {
-                        UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
+                        UserCurrencyModel currency = this.Requirements.Currency.GetCurrency();
                         if (!user.Data.HasCurrencyAmount(currency, this.InspectionCost))
                         {
                             await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("You do not have the required {0} {1} to do this", this.InspectionCost, currency.Name));
@@ -3085,7 +3086,7 @@ namespace MixItUp.Base.Commands
         {
             this.totalPayout = this.TotalAmount;
 
-            UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
+            UserCurrencyModel currency = this.Requirements.Currency.GetCurrency();
             if (currency == null)
             {
                 return;
@@ -3273,7 +3274,7 @@ namespace MixItUp.Base.Commands
         {
             this.totalPayout = this.TotalAmount;
 
-            UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
+            UserCurrencyModel currency = this.Requirements.Currency.GetCurrency();
             if (currency == null)
             {
                 return;

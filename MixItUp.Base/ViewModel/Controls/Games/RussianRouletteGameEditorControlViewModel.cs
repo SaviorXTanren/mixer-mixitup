@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
@@ -53,7 +54,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         private RussianRouletteGameCommand existingCommand;
 
-        public RussianRouletteGameEditorControlViewModel(UserCurrencyViewModel currency)
+        public RussianRouletteGameEditorControlViewModel(UserCurrencyModel currency)
         {
             this.StartedCommand = this.CreateBasicChatCommand("@$username has started a game of Russian Roulette with a $gamebet " + currency.Name + " entry fee! Type !rr to join in!");
 

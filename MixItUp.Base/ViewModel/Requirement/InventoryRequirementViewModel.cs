@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.Model.User;
+using MixItUp.Base.ViewModel.User;
 using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -19,14 +20,14 @@ namespace MixItUp.Base.ViewModel.Requirement
 
         public InventoryRequirementViewModel() { }
 
-        public InventoryRequirementViewModel(UserInventoryViewModel inventory, UserInventoryItemViewModel item, int amount)
+        public InventoryRequirementViewModel(UserInventoryModel inventory, UserInventoryItemModel item, int amount)
         {
             this.InventoryID = inventory.ID;
             this.ItemName = item.Name;
             this.Amount = amount;
         }
 
-        public UserInventoryViewModel GetInventory()
+        public UserInventoryModel GetInventory()
         {
             if (ChannelSession.Settings.Inventories.ContainsKey(this.InventoryID))
             {
@@ -43,7 +44,7 @@ namespace MixItUp.Base.ViewModel.Requirement
         {
             if (this.DoesMeetRequirement(userData))
             {
-                UserInventoryViewModel inventory = this.GetInventory();
+                UserInventoryModel inventory = this.GetInventory();
                 if (inventory == null)
                 {
                     return false;
@@ -66,7 +67,7 @@ namespace MixItUp.Base.ViewModel.Requirement
                 return true;
             }
 
-            UserInventoryViewModel inventory = this.GetInventory();
+            UserInventoryModel inventory = this.GetInventory();
             if (inventory == null)
             {
                 return false;

@@ -1186,7 +1186,7 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayLeaderboard() : base(LeaderboardItemType, HTMLTemplate) { }
 
         public OverlayLeaderboard(string htmlText, LeaderboardTypeEnum leaderboardType, int totalToShow, string borderColor, string backgroundColor, string textColor,
-            string textFont, int width, int height, OverlayEffectEntranceAnimationTypeEnum addEvent, OverlayEffectExitAnimationTypeEnum removeEvent, UserCurrencyViewModel currency)
+            string textFont, int width, int height, OverlayEffectEntranceAnimationTypeEnum addEvent, OverlayEffectExitAnimationTypeEnum removeEvent, UserCurrencyModel currency)
             : this(htmlText, leaderboardType, totalToShow, borderColor, backgroundColor, textColor, textFont, width, height, addEvent, removeEvent)
         {
             this.CurrencyID = currency.ID;
@@ -1296,7 +1296,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 if (ChannelSession.Settings.Currencies.ContainsKey(this.CurrencyID))
                 {
-                    UserCurrencyViewModel currency = ChannelSession.Settings.Currencies[this.CurrencyID];
+                    UserCurrencyModel currency = ChannelSession.Settings.Currencies[this.CurrencyID];
                     if (this.lastRefresh < DateTimeOffset.Now)
                     {
                         this.lastRefresh = DateTimeOffset.Now.AddMinutes(1);

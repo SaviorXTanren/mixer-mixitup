@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
@@ -113,7 +114,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         private HeistGameCommand existingCommand;
 
-        public HeistGameEditorControlViewModel(UserCurrencyViewModel currency)
+        public HeistGameEditorControlViewModel(UserCurrencyModel currency)
         {
             this.StartedCommand = this.CreateBasicChatCommand("@$username has started a game of Heist! Type !heist <AMOUNT> to join in!");
 

@@ -8,6 +8,7 @@ using System.Net;
 using System.Web.Http;
 using System.Net.Http;
 using System.Net.Http.Formatting;
+using MixItUp.Base.Model.User;
 
 namespace MixItUp.Desktop.Services.DeveloperAPI
 {
@@ -69,7 +70,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            UserCurrencyViewModel currency = ChannelSession.Settings.Currencies[currencyID];
+            UserCurrencyModel currency = ChannelSession.Settings.Currencies[currencyID];
 
             Dictionary<uint, UserDataViewModel> allUsersDictionary = ChannelSession.Settings.UserData.ToDictionary();
             allUsersDictionary.Remove(ChannelSession.MixerChannel.user.id);
@@ -109,7 +110,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            UserCurrencyViewModel currency = ChannelSession.Settings.Currencies[currencyID];
+            UserCurrencyModel currency = ChannelSession.Settings.Currencies[currencyID];
 
             List<User> users = new List<User>();
             foreach (var giveData in giveDatas)
@@ -135,7 +136,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             return users;
         }
 
-        public static CurrencyAmount CurrencyAmountFromUserCurrencyViewModel(UserCurrencyViewModel currency, int amount)
+        public static CurrencyAmount CurrencyAmountFromUserCurrencyViewModel(UserCurrencyModel currency, int amount)
         {
             return new CurrencyAmount
             {
@@ -145,7 +146,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             };
         }
 
-        public static Currency CurrencyFromUserCurrencyViewModel(UserCurrencyViewModel currency)
+        public static Currency CurrencyFromUserCurrencyViewModel(UserCurrencyModel currency)
         {
             return new Currency
             {

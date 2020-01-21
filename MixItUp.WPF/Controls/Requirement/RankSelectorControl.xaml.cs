@@ -1,8 +1,8 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.WPF.Util;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,7 +23,7 @@ namespace MixItUp.WPF.Controls.Requirement
             this.RankMustEqualComboBox.SelectedIndex = 0;
         }
 
-        public UserCurrencyViewModel GetRankType() { return (UserCurrencyViewModel)this.RankTypeComboBox.SelectedItem; }
+        public UserCurrencyModel GetRankType() { return (UserCurrencyModel)this.RankTypeComboBox.SelectedItem; }
 
         public bool GetRankMustEqual() { return this.RankMustEqualComboBox.SelectedIndex == 1; }
 
@@ -81,7 +81,7 @@ namespace MixItUp.WPF.Controls.Requirement
 
             if (ChannelSession.Settings != null)
             {
-                IEnumerable<UserCurrencyViewModel> ranks = ChannelSession.Settings.Currencies.Values.Where(c => c.IsRank);
+                IEnumerable<UserCurrencyModel> ranks = ChannelSession.Settings.Currencies.Values.Where(c => c.IsRank);
                 this.IsEnabled = (ranks.Count() > 0);
                 this.RankTypeComboBox.ItemsSource = ranks;
             }
@@ -103,7 +103,7 @@ namespace MixItUp.WPF.Controls.Requirement
 
         private void RankTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            UserCurrencyViewModel rankType = (UserCurrencyViewModel)this.RankTypeComboBox.SelectedItem;
+            UserCurrencyModel rankType = (UserCurrencyModel)this.RankTypeComboBox.SelectedItem;
 
             this.RankMustEqualComboBox.IsEnabled = true;
 

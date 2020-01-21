@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
@@ -73,7 +74,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         private VendingMachineGameCommand existingCommand;
 
-        public VendingMachineGameEditorControlViewModel(UserCurrencyViewModel currency)
+        public VendingMachineGameEditorControlViewModel(UserCurrencyModel currency)
             : this()
         {
             this.Outcomes.Add(new VendingMachineOutcome("Nothing", this.CreateBasicChatCommand("@$username opened their capsule and found nothing..."), 40, 40, 40));

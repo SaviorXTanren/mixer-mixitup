@@ -221,7 +221,7 @@ namespace MixItUp.Base.Services.Mixer
                             {
                                 ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestFollowerUserData] = user;
 
-                                foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+                                foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
                                 {
                                     user.Data.AddCurrencyAmount(currency, currency.OnFollowBonus);
                                 }
@@ -259,7 +259,7 @@ namespace MixItUp.Base.Services.Mixer
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestHostUserData] = user;
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestHostViewerCountData] = viewerCount;
 
-                            foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+                            foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
                             {
                                 user.Data.AddCurrencyAmount(currency, currency.OnHostBonus);
                             }
@@ -280,7 +280,7 @@ namespace MixItUp.Base.Services.Mixer
                         if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                         {
                             user.MixerSubscribeDate = DateTimeOffset.Now;
-                            foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+                            foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
                             {
                                 user.Data.AddCurrencyAmount(currency, currency.OnSubscribeBonus);
                             }
@@ -309,7 +309,7 @@ namespace MixItUp.Base.Services.Mixer
                         EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChannelResubscribed, user);
                         if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                         {
-                            foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+                            foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
                             {
                                 user.Data.AddCurrencyAmount(currency, currency.OnSubscribeBonus);
                             }
@@ -393,7 +393,7 @@ namespace MixItUp.Base.Services.Mixer
 
                         GlobalEvents.ProgressionLevelUpOccurred(user);
 
-                        foreach (UserCurrencyViewModel fanProgressionCurrency in ChannelSession.Settings.Currencies.Values.Where(c => c.IsTrackingFanProgression))
+                        foreach (UserCurrencyModel fanProgressionCurrency in ChannelSession.Settings.Currencies.Values.Where(c => c.IsTrackingFanProgression))
                         {
                             user.Data.SetCurrencyAmount(fanProgressionCurrency, (int)fanProgression.level.level);
                         }
@@ -447,7 +447,7 @@ namespace MixItUp.Base.Services.Mixer
         {
             sparkUsage.Item1.Data.TotalSparksSpent += (uint)sparkUsage.Item2;
 
-            foreach (UserCurrencyViewModel sparkCurrency in ChannelSession.Settings.Currencies.Values.Where(c => c.IsTrackingSparks))
+            foreach (UserCurrencyModel sparkCurrency in ChannelSession.Settings.Currencies.Values.Where(c => c.IsTrackingSparks))
             {
                 sparkUsage.Item1.Data.AddCurrencyAmount(sparkCurrency, (int)sparkUsage.Item2);
             }
@@ -464,7 +464,7 @@ namespace MixItUp.Base.Services.Mixer
         {
             emberUsage.User.Data.TotalEmbersSpent += (uint)emberUsage.Amount;
 
-            foreach (UserCurrencyViewModel emberCurrency in ChannelSession.Settings.Currencies.Values.Where(c => c.IsTrackingEmbers))
+            foreach (UserCurrencyModel emberCurrency in ChannelSession.Settings.Currencies.Values.Where(c => c.IsTrackingEmbers))
             {
                 emberUsage.User.Data.AddCurrencyAmount(emberCurrency, (int)emberUsage.Amount);
             }

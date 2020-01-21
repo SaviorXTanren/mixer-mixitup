@@ -4,7 +4,7 @@ using Mixer.Base.Model.Patronage;
 using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Overlay;
-using MixItUp.Base.Services;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -311,7 +311,7 @@ namespace MixItUp.Base.Util
                     });
                 }
 
-                foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+                foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
                 {
                     if (this.ContainsRegexSpecialIdentifier(currency.TopRegexSpecialIdentifier))
                     {
@@ -644,7 +644,7 @@ namespace MixItUp.Base.Util
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestEmberUsageUserData, SpecialIdentifierStringBuilder.LatestEmberUsageAmountData);
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestDonationUserData, SpecialIdentifierStringBuilder.LatestDonationAmountData);
 
-            foreach (UserInventoryViewModel inventory in ChannelSession.Settings.Inventories.Values.OrderByDescending(c => c.SpecialIdentifier))
+            foreach (UserInventoryModel inventory in ChannelSession.Settings.Inventories.Values.OrderByDescending(c => c.SpecialIdentifier))
             {
                 if (this.ContainsSpecialIdentifier(inventory.RandomItemSpecialIdentifier))
                 {
@@ -763,7 +763,7 @@ namespace MixItUp.Base.Util
                 {
                     UserDataViewModel userData = ChannelSession.Settings.UserData[user.MixerID];
 
-                    foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values.OrderByDescending(c => c.UserAmountSpecialIdentifier))
+                    foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values.OrderByDescending(c => c.UserAmountSpecialIdentifier))
                     {
                         if (this.ContainsSpecialIdentifier(identifierHeader + currency.UserPositionSpecialIdentifier))
                         {
@@ -785,14 +785,14 @@ namespace MixItUp.Base.Util
                         this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountSpecialIdentifier, currencyData.Amount.ToString());
                     }
 
-                    foreach (UserInventoryViewModel inventory in ChannelSession.Settings.Inventories.Values.OrderByDescending(c => c.UserAmountSpecialIdentifierHeader))
+                    foreach (UserInventoryModel inventory in ChannelSession.Settings.Inventories.Values.OrderByDescending(c => c.UserAmountSpecialIdentifierHeader))
                     {
                         if (this.ContainsSpecialIdentifier(identifierHeader + inventory.UserAmountSpecialIdentifierHeader))
                         {
                             UserInventoryDataViewModel inventoryData = userData.GetInventory(inventory);
                             Dictionary<string, int> userItems = new Dictionary<string, int>();
 
-                            foreach (UserInventoryItemViewModel item in inventory.Items.Values.OrderByDescending(i => i.Name))
+                            foreach (UserInventoryItemModel item in inventory.Items.Values.OrderByDescending(i => i.Name))
                             {
                                 var quantity = inventoryData.GetAmount(item);
                                 if (quantity > 0)

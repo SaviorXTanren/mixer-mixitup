@@ -54,10 +54,10 @@ namespace MixItUp.Base.Model.Settings
 
         [Obsolete]
         [DataMember]
-        public Dictionary<Guid, UserCurrencyViewModel> currenciesInternal { get; set; } = new Dictionary<Guid, UserCurrencyViewModel>();
+        public Dictionary<Guid, UserCurrencyModel> currenciesInternal { get; set; } = new Dictionary<Guid, UserCurrencyModel>();
         [Obsolete]
         [DataMember]
-        public Dictionary<Guid, UserInventoryViewModel> inventoriesInternal { get; set; } = new Dictionary<Guid, UserInventoryViewModel>();
+        public Dictionary<Guid, UserInventoryModel> inventoriesInternal { get; set; } = new Dictionary<Guid, UserInventoryModel>();
 
         [Obsolete]
         [DataMember]
@@ -507,9 +507,9 @@ namespace MixItUp.Base.Model.Settings
         #endregion Advanced
 
         [DataMember]
-        public Dictionary<Guid, UserCurrencyViewModel> Currencies { get; set; } = new Dictionary<Guid, UserCurrencyViewModel>();
+        public Dictionary<Guid, UserCurrencyModel> Currencies { get; set; } = new Dictionary<Guid, UserCurrencyModel>();
         [DataMember]
-        public Dictionary<Guid, UserInventoryViewModel> Inventories { get; set; } = new Dictionary<Guid, UserInventoryViewModel>();
+        public Dictionary<Guid, UserInventoryModel> Inventories { get; set; } = new Dictionary<Guid, UserInventoryModel>();
 
         [DataMember]
         public Dictionary<string, int> CooldownGroups { get; set; } = new Dictionary<string, int>();
@@ -613,7 +613,7 @@ namespace MixItUp.Base.Model.Settings
                         this.UserData[userData.MixerID] = userData;
                     });
 
-                    Dictionary<Guid, UserCurrencyViewModel> currencies = new Dictionary<Guid, UserCurrencyViewModel>();
+                    Dictionary<Guid, UserCurrencyModel> currencies = new Dictionary<Guid, UserCurrencyModel>();
                     foreach (var kvp in ChannelSession.Settings.Currencies)
                     {
                         currencies[kvp.Key] = kvp.Value;
@@ -627,16 +627,10 @@ namespace MixItUp.Base.Model.Settings
                         if (currencies.ContainsKey(currencyID))
                         {
                             currencies[currencyID].UserAmounts[userID] = amount;
-
-                            UserDataViewModel userData = this.UserData.Values.FirstOrDefault(u => u.ID.Equals(userID));
-                            if (userData != null)
-                            {
-                                userData.CurrencyAmounts[currencies[currencyID]] = new UserCurrencyDataViewModel(userData, currencies[currencyID], amount);
-                            }
                         }
                     });
 
-                    Dictionary<Guid, UserInventoryViewModel> inventories = new Dictionary<Guid, UserInventoryViewModel>();
+                    Dictionary<Guid, UserInventoryModel> inventories = new Dictionary<Guid, UserInventoryModel>();
                     foreach (var kvp in ChannelSession.Settings.Inventories)
                     {
                         inventories[kvp.Key] = kvp.Value;
@@ -655,16 +649,6 @@ namespace MixItUp.Base.Model.Settings
                                 inventories[inventoryID].UserAmounts[userID] = new Dictionary<string, int>();
                             }
                             inventories[inventoryID].UserAmounts[userID][itemName] = amount;
-
-                            UserDataViewModel userData = this.UserData.Values.FirstOrDefault(u => u.ID.Equals(userID));
-                            if (userData != null)
-                            {
-                                if (!userData.InventoryAmounts.ContainsKey(inventories[inventoryID]))
-                                {
-                                    userData.InventoryAmounts[inventories[inventoryID]] = new UserInventoryDataViewModel(userData, inventories[inventoryID]);
-                                }
-                                userData.InventoryAmounts[inventories[inventoryID]].Amounts[itemName] = amount;
-                            }
                         }
                     });
 
@@ -796,16 +780,16 @@ namespace MixItUp.Base.Model.Settings
                         foreach (var item in kvp.Value.GetAmounts(changedKey))
                         {
                             changedData.Add(new Dictionary<string, object>()
-                        {
-                            { "@CurrencyID", kvp.Value.ID.ToString() },
-                            { "@UserID", changedKey.ToString() },
-                            { "@ItemName", item.Key },
-                            { "@Amount", item.Value }
-                        });
+                            {
+                                { "@InventoryID", kvp.Value.ID.ToString() },
+                                { "@UserID", changedKey.ToString() },
+                                { "@ItemName", item.Key },
+                                { "@Amount", item.Value }
+                            });
                         }
                     }
 
-                    await ChannelSession.Services.Database.BulkWrite(this.DatabasePath, "REPLACE INTO InventoryAmounts(CurrencyID, UserID, ItemName, Amount) VALUES(@CurrencyID, @UserID, @ItemName, @Amount)", changedData);
+                    await ChannelSession.Services.Database.BulkWrite(this.DatabasePath, "REPLACE INTO InventoryAmounts(InventoryID, UserID, ItemName, Amount) VALUES(@InventoryID, @UserID, @ItemName, @Amount)", changedData);
                 }
 
                 List<CommandBase> commands = new List<CommandBase>();

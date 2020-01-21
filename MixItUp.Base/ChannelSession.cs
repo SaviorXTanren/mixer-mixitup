@@ -7,6 +7,7 @@ using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Model.API;
 using MixItUp.Base.Model.Chat.Mixer;
 using MixItUp.Base.Model.Settings;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Mixer;
@@ -458,7 +459,7 @@ namespace MixItUp.Base
                         }
                     }
 
-                    foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+                    foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
                     {
                         if (currency.ShouldBeReset())
                         {

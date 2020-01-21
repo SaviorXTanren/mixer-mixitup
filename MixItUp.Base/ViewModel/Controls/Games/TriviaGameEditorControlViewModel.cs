@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
@@ -141,7 +142,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         public TriviaGameCommand existingCommand;
 
-        public TriviaGameEditorControlViewModel(UserCurrencyViewModel currency)
+        public TriviaGameEditorControlViewModel(UserCurrencyModel currency)
             : this()
         {
             this.StartedCommand = this.CreateBasic2ChatCommand("@$username has started a game of trivia! Type the number of the answer to the following question: $gamequestion", "$gameanswers");

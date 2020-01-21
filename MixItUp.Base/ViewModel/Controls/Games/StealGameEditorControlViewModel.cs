@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
@@ -47,7 +48,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         private StealGameCommand existingCommand;
 
-        public StealGameEditorControlViewModel(UserCurrencyViewModel currency)
+        public StealGameEditorControlViewModel(UserCurrencyModel currency)
         {
             this.SuccessOutcomeCommand = this.CreateBasicChatCommand("@$username stole $gamepayout " + currency.Name + " from @$targetusername!");
             this.FailOutcomeCommand = this.CreateBasicChatCommand("@$username was unable to steal from @$targetusername...");

@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
@@ -125,7 +126,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         private RouletteGameCommand existingCommand;
 
-        public RouletteGameEditorControlViewModel(UserCurrencyViewModel currency)
+        public RouletteGameEditorControlViewModel(UserCurrencyModel currency)
         {
             this.StartedCommand = this.CreateBasic2ChatCommand("@$username has started a game of roulette! Type !roulette <BET TYPE> <AMOUNT> in chat to play!", "Valid Bet Types: $gamevalidbettypes");
 

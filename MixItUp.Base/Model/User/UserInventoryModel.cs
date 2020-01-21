@@ -1,6 +1,6 @@
 ﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using StreamingClient.Base.Util;
 using System;
@@ -11,10 +11,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MixItUp.Base.ViewModel.User
+namespace MixItUp.Base.Model.User
 {
     [DataContract]
-    public class UserInventoryItemViewModel : IEquatable<UserInventoryItemViewModel>
+    public class UserInventoryItemModel : IEquatable<UserInventoryItemModel>
     {
         [DataMember]
         public string Name { get; set; }
@@ -79,7 +79,7 @@ namespace MixItUp.Base.ViewModel.User
         [JsonIgnore]
         public string SpecialIdentifier { get { return SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(this.Name); } }
 
-        public UserInventoryItemViewModel(string name, int maxAmount = -1, int buyAmount = -1, int sellAmount = -1)
+        public UserInventoryItemModel(string name, int maxAmount = -1, int buyAmount = -1, int sellAmount = -1)
         {
             this.Name = name;
             this.MaxAmount = maxAmount;
@@ -89,14 +89,14 @@ namespace MixItUp.Base.ViewModel.User
 
         public override bool Equals(object obj)
         {
-            if (obj is UserInventoryItemViewModel)
+            if (obj is UserInventoryItemModel)
             {
-                return this.Equals((UserInventoryItemViewModel)obj);
+                return this.Equals((UserInventoryItemModel)obj);
             }
             return false;
         }
 
-        public bool Equals(UserInventoryItemViewModel other)
+        public bool Equals(UserInventoryItemModel other)
         {
             return this.Name.Equals(other.Name);
         }
@@ -107,15 +107,15 @@ namespace MixItUp.Base.ViewModel.User
         }
     }
 
-    public class UserInventoryTradeViewModel
+    public class UserInventoryTradeModel
     {
         public UserViewModel User { get; set; }
-        public UserInventoryItemViewModel Item { get; set; }
+        public UserInventoryItemModel Item { get; set; }
         public int Amount { get; set; }
     }
 
     [DataContract]
-    public class UserInventoryViewModel : IEquatable<UserInventoryViewModel>
+    public class UserInventoryModel : IEquatable<UserInventoryModel>
     {
         [DataMember]
         public Guid ID { get; set; }
@@ -135,7 +135,7 @@ namespace MixItUp.Base.ViewModel.User
         public string SpecialIdentifier { get; set; }
 
         [DataMember]
-        public Dictionary<string, UserInventoryItemViewModel> Items { get; set; }
+        public Dictionary<string, UserInventoryItemModel> Items { get; set; }
 
         [DataMember]
         public bool ShopEnabled { get; set; }
@@ -159,13 +159,13 @@ namespace MixItUp.Base.ViewModel.User
         public DatabaseDictionary<Guid, Dictionary<string, int>> UserAmounts { get; set; } = new DatabaseDictionary<Guid, Dictionary<string, int>>();
 
         [JsonIgnore]
-        private UserInventoryTradeViewModel tradeSender = null;
+        private UserInventoryTradeModel tradeSender = null;
         [JsonIgnore]
-        private UserInventoryTradeViewModel tradeReceiver = null;
+        private UserInventoryTradeModel tradeReceiver = null;
         [JsonIgnore]
         private CancellationTokenSource tradeTimeCheckToken = null;
 
-        public UserInventoryViewModel()
+        public UserInventoryModel()
         {
             this.ID = Guid.NewGuid();
             this.DefaultMaxAmount = 99;
@@ -173,7 +173,7 @@ namespace MixItUp.Base.ViewModel.User
             this.ResetInterval = CurrencyResetRateEnum.Never;
             this.LastReset = DateTimeOffset.MinValue;
 
-            this.Items = new Dictionary<string, UserInventoryItemViewModel>();
+            this.Items = new Dictionary<string, UserInventoryItemModel>();
         }
 
         [JsonIgnore]
@@ -225,12 +225,12 @@ namespace MixItUp.Base.ViewModel.User
         {
             if (this.Items.ContainsKey(itemName))
             {
-                UserInventoryItemViewModel item = this.Items[itemName];
+                UserInventoryItemModel item = this.Items[itemName];
                 if (!this.UserAmounts.ContainsKey(user.ID))
                 {
                     this.UserAmounts[user.ID] = new Dictionary<string, int>();
                 }
-                this.UserAmounts[user.ID][itemName] = Math.Min(amount, item.HasMaxAmount ? item.MaxAmount : this.DefaultMaxAmount);
+                this.UserAmounts[user.ID][itemName] = Math.Min(Math.Max(amount, 0), item.HasMaxAmount ? item.MaxAmount : this.DefaultMaxAmount);
                 ChannelSession.Settings.UserData.ManualValueChanged(user.MixerID);
             }
         }
@@ -273,7 +273,7 @@ namespace MixItUp.Base.ViewModel.User
             {
                 if (ChannelSession.Services.Chat != null && ChannelSession.Settings.Currencies.ContainsKey(this.ShopCurrencyID))
                 {
-                    UserCurrencyViewModel currency = ChannelSession.Settings.Currencies[this.ShopCurrencyID];
+                    UserCurrencyModel currency = ChannelSession.Settings.Currencies[this.ShopCurrencyID];
 
                     if (arguments != null && arguments.Count() > 0)
                     {
@@ -281,7 +281,7 @@ namespace MixItUp.Base.ViewModel.User
                         if (arguments.Count() == 1 && arg1.Equals("list", StringComparison.InvariantCultureIgnoreCase))
                         {
                             List<string> items = new List<string>();
-                            foreach (UserInventoryItemViewModel item in this.Items.Values)
+                            foreach (UserInventoryItemModel item in this.Items.Values)
                             {
                                 if (item.HasBuyAmount || item.HasSellAmount)
                                 {
@@ -297,7 +297,7 @@ namespace MixItUp.Base.ViewModel.User
                             int amount = 1;
 
                             IEnumerable<string> itemArgs = arguments.Skip(1);
-                            UserInventoryItemViewModel item = this.GetItem(string.Join(" ", itemArgs));
+                            UserInventoryItemModel item = this.GetItem(string.Join(" ", itemArgs));
                             if (item == null && itemArgs.Count() > 1)
                             {
                                 itemArgs = itemArgs.Take(itemArgs.Count() - 1);
@@ -388,7 +388,7 @@ namespace MixItUp.Base.ViewModel.User
                         }
                         else
                         {
-                            UserInventoryItemViewModel item = this.GetItem(string.Join(" ", arguments));
+                            UserInventoryItemModel item = this.GetItem(string.Join(" ", arguments));
                             if (item != null)
                             {
                                 if (item.HasBuyAmount || item.HasSellAmount)
@@ -451,7 +451,7 @@ namespace MixItUp.Base.ViewModel.User
 
                         int amount = 1;
                         IEnumerable<string> itemArgs = arguments.Skip(1);
-                        UserInventoryItemViewModel item = this.GetItem(string.Join(" ", itemArgs));
+                        UserInventoryItemModel item = this.GetItem(string.Join(" ", itemArgs));
 
                         if (item == null && itemArgs.Count() > 1)
                         {
@@ -479,14 +479,14 @@ namespace MixItUp.Base.ViewModel.User
                             return;
                         }
 
-                        this.tradeSender = new UserInventoryTradeViewModel()
+                        this.tradeSender = new UserInventoryTradeModel()
                         {
                             User = user,
                             Item = item,
                             Amount = amount
                         };
 
-                        this.tradeReceiver = new UserInventoryTradeViewModel()
+                        this.tradeReceiver = new UserInventoryTradeModel()
                         {
                             User = targetUser
                         };
@@ -511,7 +511,7 @@ namespace MixItUp.Base.ViewModel.User
                     {
                         int amount = 1;
                         IEnumerable<string> itemArgs = arguments.ToList();
-                        UserInventoryItemViewModel item = this.GetItem(string.Join(" ", itemArgs));
+                        UserInventoryItemModel item = this.GetItem(string.Join(" ", itemArgs));
 
                         if (item == null && itemArgs.Count() > 1)
                         {
@@ -597,14 +597,14 @@ namespace MixItUp.Base.ViewModel.User
 
         public override bool Equals(object obj)
         {
-            if (obj is UserInventoryViewModel)
+            if (obj is UserInventoryModel)
             {
-                return this.Equals((UserInventoryViewModel)obj);
+                return this.Equals((UserInventoryModel)obj);
             }
             return false;
         }
 
-        public bool Equals(UserInventoryViewModel other)
+        public bool Equals(UserInventoryModel other)
         {
             return this.ID.Equals(other.ID);
         }
@@ -614,9 +614,9 @@ namespace MixItUp.Base.ViewModel.User
             return this.ID.GetHashCode();
         }
 
-        private UserInventoryItemViewModel GetItem(string itemName)
+        private UserInventoryItemModel GetItem(string itemName)
         {
-            foreach (UserInventoryItemViewModel item in this.Items.Values)
+            foreach (UserInventoryItemModel item in this.Items.Values)
             {
                 if (item.Name.Equals(itemName, StringComparison.InvariantCultureIgnoreCase))
                 {

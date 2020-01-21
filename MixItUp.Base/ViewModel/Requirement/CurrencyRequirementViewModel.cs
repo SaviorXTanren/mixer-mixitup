@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Util;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using StreamingClient.Base.Util;
@@ -44,24 +45,24 @@ namespace MixItUp.Base.ViewModel.Requirement
             this.RequirementType = CurrencyRequirementTypeEnum.RequiredAmount;
         }
 
-        public CurrencyRequirementViewModel(UserCurrencyViewModel currency, int amount)
+        public CurrencyRequirementViewModel(UserCurrencyModel currency, int amount)
             : this(currency, CurrencyRequirementTypeEnum.RequiredAmount, amount)
         { }
 
-        public CurrencyRequirementViewModel(UserCurrencyViewModel currency, int minimumAmount, int maximumAmount)
+        public CurrencyRequirementViewModel(UserCurrencyModel currency, int minimumAmount, int maximumAmount)
             : this(currency, CurrencyRequirementTypeEnum.MinimumAndMaximum, minimumAmount)
         {
             this.MaximumAmount = maximumAmount;
         }
 
-        public CurrencyRequirementViewModel(UserCurrencyViewModel currency, CurrencyRequirementTypeEnum requirementType, int amount)
+        public CurrencyRequirementViewModel(UserCurrencyModel currency, CurrencyRequirementTypeEnum requirementType, int amount)
         {
             this.CurrencyID = currency.ID;
             this.RequiredAmount = amount;
             this.RequirementType = requirementType;
         }
 
-        public CurrencyRequirementViewModel(UserCurrencyViewModel currency, UserRankViewModel rank, bool mustEqual = false)
+        public CurrencyRequirementViewModel(UserCurrencyModel currency, UserRankViewModel rank, bool mustEqual = false)
         {
             this.CurrencyID = currency.ID;
             this.RankName = rank.Name;
@@ -73,7 +74,7 @@ namespace MixItUp.Base.ViewModel.Requirement
         {
             get
             {
-                UserCurrencyViewModel currency = this.GetCurrency();
+                UserCurrencyModel currency = this.GetCurrency();
                 if (currency != null)
                 {
                     UserRankViewModel rank = currency.Ranks.FirstOrDefault(r => r.Name.Equals(this.RankName));
@@ -82,11 +83,11 @@ namespace MixItUp.Base.ViewModel.Requirement
                         return rank;
                     }
                 }
-                return UserCurrencyViewModel.NoRank;
+                return UserCurrencyModel.NoRank;
             }
         }
 
-        public UserCurrencyViewModel GetCurrency()
+        public UserCurrencyModel GetCurrency()
         {
             if (ChannelSession.Settings.Currencies.ContainsKey(this.CurrencyID))
             {
@@ -103,7 +104,7 @@ namespace MixItUp.Base.ViewModel.Requirement
         {
             if (this.DoesMeetCurrencyRequirement(amount))
             {
-                UserCurrencyViewModel currency = this.GetCurrency();
+                UserCurrencyModel currency = this.GetCurrency();
                 if (currency == null)
                 {
                     return false;
@@ -126,7 +127,7 @@ namespace MixItUp.Base.ViewModel.Requirement
                 return true;
             }
 
-            UserCurrencyViewModel currency = this.GetCurrency();
+            UserCurrencyModel currency = this.GetCurrency();
             if (currency == null)
             {
                 return false;
@@ -165,7 +166,7 @@ namespace MixItUp.Base.ViewModel.Requirement
                 return true;
             }
 
-            UserCurrencyViewModel currency = this.GetCurrency();
+            UserCurrencyModel currency = this.GetCurrency();
             if (currency == null)
             {
                 return false;

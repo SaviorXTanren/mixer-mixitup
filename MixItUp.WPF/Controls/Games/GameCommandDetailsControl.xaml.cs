@@ -1,10 +1,8 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base;
+﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
-using MixItUp.Base.ViewModel.User;
-using MixItUp.WPF.Util;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -28,7 +26,7 @@ namespace MixItUp.WPF.Controls.Games
             this.Requirements.HideCurrencyRequirement();
             this.Requirements.HideThresholdRequirement();
 
-            IEnumerable<UserCurrencyViewModel> currencies = ChannelSession.Settings.Currencies.Values;
+            IEnumerable<UserCurrencyModel> currencies = ChannelSession.Settings.Currencies.Values;
             this.IsEnabled = (currencies.Count() > 0);
             this.CurrencyTypeComboBox.ItemsSource = currencies;
             this.CurrencyTypeComboBox.SelectedIndex = 0;
@@ -39,7 +37,7 @@ namespace MixItUp.WPF.Controls.Games
 
         public string GameName { get { return this.NameTextBox.Text; } }
         public IEnumerable<string> ChatTriggers { get { return this.ChatCommandTextBox.Text.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries); } }
-        public UserCurrencyViewModel Currency { get { return (UserCurrencyViewModel)this.CurrencyTypeComboBox.SelectedItem; } }
+        public UserCurrencyModel Currency { get { return (UserCurrencyModel)this.CurrencyTypeComboBox.SelectedItem; } }
         public CurrencyRequirementTypeEnum CurrencyUsage
         {
             get
@@ -76,7 +74,7 @@ namespace MixItUp.WPF.Controls.Games
         {
             RequirementViewModel requirements = this.Requirements.GetRequirements();
 
-            UserCurrencyViewModel currency = (UserCurrencyViewModel)this.CurrencyTypeComboBox.SelectedItem;
+            UserCurrencyModel currency = (UserCurrencyModel)this.CurrencyTypeComboBox.SelectedItem;
             CurrencyRequirementTypeEnum requirement = this.CurrencyUsage;
             if (requirement == CurrencyRequirementTypeEnum.NoCurrencyCost)
             {

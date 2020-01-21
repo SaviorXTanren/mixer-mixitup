@@ -2,6 +2,7 @@
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
@@ -45,7 +46,7 @@ namespace MixItUp.WPF.Windows.Currency
     {
         private const string RankChangedCommandName = "User Rank Changed";
 
-        private UserCurrencyViewModel currency;
+        private UserCurrencyModel currency;
         private CustomCommand rankChangedCommand;
 
         private Dictionary<UserDataViewModel, int> userImportData = new Dictionary<UserDataViewModel, int>();
@@ -61,7 +62,7 @@ namespace MixItUp.WPF.Windows.Currency
             this.Initialize(this.StatusBar);
         }
 
-        public CurrencyWindow(UserCurrencyViewModel currency)
+        public CurrencyWindow(UserCurrencyModel currency)
         {
             this.currency = currency;
             this.rankChangedCommand = this.currency.RankChangedCommand;
@@ -560,14 +561,14 @@ namespace MixItUp.WPF.Windows.Currency
                     return;
                 }
 
-                UserCurrencyViewModel dupeCurrency = ChannelSession.Settings.Currencies.Values.FirstOrDefault(c => c.Name.Equals(this.NameTextBox.Text));
+                UserCurrencyModel dupeCurrency = ChannelSession.Settings.Currencies.Values.FirstOrDefault(c => c.Name.Equals(this.NameTextBox.Text));
                 if (dupeCurrency != null && (this.currency == null || !this.currency.ID.Equals(dupeCurrency.ID)))
                 {
                     await DialogHelper.ShowMessage("There already exists a currency or rank system with this name");
                     return;
                 }
 
-                UserInventoryViewModel dupeInventory = ChannelSession.Settings.Inventories.Values.FirstOrDefault(c => c.Name.Equals(this.NameTextBox.Text));
+                UserInventoryModel dupeInventory = ChannelSession.Settings.Inventories.Values.FirstOrDefault(c => c.Name.Equals(this.NameTextBox.Text));
                 if (dupeInventory != null)
                 {
                     await DialogHelper.ShowMessage("There already exists an inventory with this name");
@@ -688,7 +689,7 @@ namespace MixItUp.WPF.Windows.Currency
                 if (this.currency == null)
                 {
                     isNew = true;
-                    this.currency = new UserCurrencyViewModel();
+                    this.currency = new UserCurrencyModel();
                     ChannelSession.Settings.Currencies[this.currency.ID] = this.currency;
                 }
 

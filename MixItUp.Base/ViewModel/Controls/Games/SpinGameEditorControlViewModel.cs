@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
@@ -84,7 +85,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         private SpinGameCommand existingCommand;
 
-        public SpinGameEditorControlViewModel(UserCurrencyViewModel currency)
+        public SpinGameEditorControlViewModel(UserCurrencyModel currency)
             : this()
         {
             this.Outcomes.Add(new SpinOutcome("Lose", this.CreateBasicChatCommand("Sorry @$username, you lost the spin!"), 0, 70, 70, 70));

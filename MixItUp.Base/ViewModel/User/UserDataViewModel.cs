@@ -2,145 +2,16 @@
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Import.ScorpBot;
 using MixItUp.Base.Model.Import.Streamlabs;
-using MixItUp.Base.Model.Settings;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.ViewModel.User
 {
-    [DataContract]
-    public class UserCurrencyDataViewModel : IEquatable<UserCurrencyDataViewModel>
-    {
-        [JsonIgnore]
-        public UserDataViewModel User { get; set; }
-
-        [JsonIgnore]
-        public UserCurrencyViewModel Currency { get; set; }
-
-        [JsonIgnore]
-        private int _Amount;
-        [DataMember]
-        public int Amount
-        {
-            get { return _Amount; }
-            set
-            {
-                if (value < 0)
-                {
-                    value = 0;
-                }
-
-                UserRankViewModel prevRank = this.GetRank();
-                this._Amount = value;
-                UserRankViewModel newRank = this.GetRank();
-                if (prevRank != newRank)
-                {
-                    GlobalEvents.RankChanged(this);
-                }
-            }
-        }
-
-        public UserCurrencyDataViewModel() { }
-
-        public UserCurrencyDataViewModel(UserDataViewModel user, UserCurrencyViewModel currency, int amount = 0)
-        {
-            this.User = user;
-            this.Currency = currency;
-            this.Amount = amount;
-        }
-
-        public UserRankViewModel GetRank() { return this.Currency.GetRankForPoints(this.Amount); }
-
-        public UserRankViewModel GetNextRank() { return this.Currency.GetNextRankForPoints(this.Amount); }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is UserCurrencyDataViewModel)
-            {
-                return this.Equals((UserCurrencyDataViewModel)obj);
-            }
-            return false;
-        }
-
-        public bool Equals(UserCurrencyDataViewModel other)
-        {
-            return this.User.Equals(other.User) && this.Currency.Equals(other.Currency);
-        }
-
-        public override int GetHashCode()
-        {
-            return this.Currency.GetHashCode();
-        }
-
-        public override string ToString()
-        {
-            UserRankViewModel rank = this.Currency.GetRankForPoints(this.Amount);
-            return string.Format("{0} - {1}", rank.Name, this.Amount);
-        }
-    }
-
-    [DataContract]
-    public class UserInventoryDataViewModel : IEquatable<UserInventoryDataViewModel>
-    {
-        [JsonIgnore]
-        public UserDataViewModel User { get; set; }
-
-        [JsonIgnore]
-        public UserInventoryViewModel Inventory { get; set; }
-
-        [DataMember]
-        public Dictionary<string, int> Amounts { get; set; }
-
-        public UserInventoryDataViewModel()
-        {
-            this.Amounts = new Dictionary<string, int>();
-        }
-
-        public UserInventoryDataViewModel(UserDataViewModel user, UserInventoryViewModel inventory) : this(user, inventory, new Dictionary<string, int>()) { }
-
-        public UserInventoryDataViewModel(UserDataViewModel user, UserInventoryViewModel inventory, IDictionary<string, int> amounts)
-        {
-            this.User = user;
-            this.Inventory = inventory;
-            this.Amounts = new Dictionary<string, int>(amounts);
-        }
-
-        public int GetAmount(UserInventoryItemViewModel item) { return this.GetAmount(item.Name); }
-
-        public int GetAmount(string itemName)
-        {
-            if (this.Amounts.ContainsKey(itemName))
-            {
-                return this.Amounts[itemName];
-            }
-            return 0;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is UserInventoryDataViewModel)
-            {
-                return this.Equals((UserInventoryDataViewModel)obj);
-            }
-            return false;
-        }
-
-        public bool Equals(UserInventoryDataViewModel other)
-        {
-            return this.User.Equals(other.User) && this.Inventory.Equals(other.Inventory);
-        }
-
-        public override int GetHashCode()
-        {
-            return this.Inventory.GetHashCode();
-        }
-    }
-
     [DataContract]
     public class UserDataViewModel : NotifyPropertyChangedBase, IEquatable<UserDataViewModel>
     {
@@ -160,12 +31,6 @@ namespace MixItUp.Base.ViewModel.User
 
         [DataMember]
         public int OfflineViewingMinutes { get; set; }
-
-        [JsonIgnore]
-        public LockedDictionary<UserCurrencyViewModel, UserCurrencyDataViewModel> CurrencyAmounts { get; set; } = new LockedDictionary<UserCurrencyViewModel, UserCurrencyDataViewModel>();
-
-        [JsonIgnore]
-        public LockedDictionary<UserInventoryViewModel, UserInventoryDataViewModel> InventoryAmounts { get; set; } = new LockedDictionary<UserInventoryViewModel, UserInventoryDataViewModel>();
 
         [DataMember]
         public LockedList<ChatCommand> CustomCommands { get; set; } = new LockedList<ChatCommand>();
@@ -246,74 +111,6 @@ namespace MixItUp.Base.ViewModel.User
             this.ViewingMinutes = (int)(viewer.Hours * 60.0);
         }
 
-        public UserDataViewModel(Dictionary<string, object> data, SettingsV2Model settings)
-            : this(uint.Parse(data["ID"].ToString()), data["UserName"].ToString())
-        {
-            this.ViewingMinutes = int.Parse(data["ViewingMinutes"].ToString());
-
-            if (data.ContainsKey("CurrencyAmounts"))
-            {
-                Dictionary<Guid, int> currencyAmounts = JsonConvert.DeserializeObject<Dictionary<Guid, int>>(data["CurrencyAmounts"].ToString());
-                if (currencyAmounts != null)
-                {
-                    foreach (var kvp in currencyAmounts)
-                    {
-                        if (settings.Currencies.ContainsKey(kvp.Key))
-                        {
-                            this.SetCurrencyAmount(settings.Currencies[kvp.Key], kvp.Value);
-                        }
-                    }
-                }
-            }
-
-            if (data.ContainsKey("InventoryAmounts"))
-            {
-                Dictionary<Guid, Dictionary<string, int>> inventoryAmounts = JsonConvert.DeserializeObject<Dictionary<Guid, Dictionary<string, int>>>(data["InventoryAmounts"].ToString());
-                if (inventoryAmounts != null)
-                {
-                    foreach (var kvp in inventoryAmounts)
-                    {
-                        if (settings.Inventories.ContainsKey(kvp.Key))
-                        {
-                            UserInventoryViewModel inventory = settings.Inventories[kvp.Key];
-                            this.InventoryAmounts[inventory] = new UserInventoryDataViewModel(this, inventory, kvp.Value);
-                        }
-                    }
-                }
-            }
-
-            if (data.ContainsKey("CustomCommands") && !string.IsNullOrEmpty(data["CustomCommands"].ToString()))
-            {
-                this.CustomCommands.AddRange(SerializerHelper.DeserializeFromString<List<ChatCommand>>(data["CustomCommands"].ToString()));
-            }
-
-            if (data.ContainsKey("Options") && !string.IsNullOrEmpty(data["Options"].ToString()))
-            {
-                JObject optionsJObj = JObject.Parse(data["Options"].ToString());
-                if (optionsJObj.ContainsKey("EntranceCommand") && optionsJObj["EntranceCommand"] != null)
-                {
-                    this.EntranceCommand = SerializerHelper.DeserializeFromString<CustomCommand>(optionsJObj["EntranceCommand"].ToString());
-                }
-                this.IsSparkExempt = this.GetOptionValue<bool>(optionsJObj, "IsSparkExempt");
-                this.IsCurrencyRankExempt = this.GetOptionValue<bool>(optionsJObj, "IsCurrencyRankExempt");
-                this.GameWispUserID = this.GetOptionValue<uint>(optionsJObj, "GameWispUserID");
-                this.PatreonUserID = this.GetOptionValue<string>(optionsJObj, "PatreonUserID");
-                this.ModerationStrikes = this.GetOptionValue<uint>(optionsJObj, "ModerationStrikes");
-                this.CustomTitle = this.GetOptionValue<string>(optionsJObj, "CustomTitle");
-                this.TotalStreamsWatched = this.GetOptionValue<uint>(optionsJObj, "TotalStreamsWatched");
-                this.TotalAmountDonated = this.GetOptionValue<double>(optionsJObj, "TotalAmountDonated");
-                this.TotalSparksSpent = this.GetOptionValue<uint>(optionsJObj, "TotalSparksSpent");
-                this.TotalEmbersSpent = this.GetOptionValue<uint>(optionsJObj, "TotalEmbersSpent");
-                this.TotalSubsGifted = this.GetOptionValue<uint>(optionsJObj, "TotalSubsGifted");
-                this.TotalSubsReceived = this.GetOptionValue<uint>(optionsJObj, "TotalSubsReceived");
-                this.TotalChatMessageSent = this.GetOptionValue<uint>(optionsJObj, "TotalChatMessageSent");
-                this.TotalTimesTagged = this.GetOptionValue<uint>(optionsJObj, "TotalTimesTagged");
-                this.TotalSkillsUsed = this.GetOptionValue<uint>(optionsJObj, "TotalSkillsUsed");
-                this.TotalCommandsRun = this.GetOptionValue<uint>(optionsJObj, "TotalCommandsRun");
-                this.TotalMonthsSubbed = this.GetOptionValue<uint>(optionsJObj, "TotalMonthsSubbed");
-            }
-        }
-
         [JsonIgnore]
         public string ViewingHoursString { get { return (this.ViewingMinutes / 60).ToString(); } }
 
@@ -360,15 +157,10 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                UserCurrencyDataViewModel currency = this.CurrencyAmounts.Values.FirstOrDefault(c => !c.Currency.IsRank && c.Currency.IsPrimary);
-                if (currency == null)
-                {
-                    currency = this.CurrencyAmounts.Values.FirstOrDefault(c => !c.Currency.IsRank);
-                }
-
+                UserCurrencyModel currency = ChannelSession.Settings.Currencies.Values.FirstOrDefault(c => !c.IsRank && c.IsPrimary);
                 if (currency != null)
                 {
-                    return currency.Amount;
+                    return currency.GetAmount(this);
                 }
                 return 0;
             }
@@ -379,18 +171,12 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                UserRankViewModel rank = UserCurrencyViewModel.NoRank;
-                UserCurrencyDataViewModel currency = this.CurrencyAmounts.Values.FirstOrDefault(c => c.Currency.IsRank && c.Currency.IsPrimary);
-                if (currency == null)
-                {
-                    currency = this.CurrencyAmounts.Values.FirstOrDefault(c => c.Currency.IsRank);
-                }
-
+                UserCurrencyModel currency = ChannelSession.Settings.Currencies.Values.FirstOrDefault(c => !c.IsRank && c.IsPrimary);
                 if (currency != null)
                 {
-                    rank = currency.GetRank();
+                    return currency.GetRank(this);
                 }
-                return rank;
+                return UserCurrencyModel.NoRank;
             }
         }
 
@@ -399,10 +185,10 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                UserCurrencyDataViewModel currency = this.CurrencyAmounts.Values.FirstOrDefault(c => c.Currency.IsRank);
+                UserCurrencyModel currency = ChannelSession.Settings.Currencies.Values.FirstOrDefault(c => c.IsRank && c.IsPrimary);
                 if (currency != null)
                 {
-                    return currency.Amount;
+                    return currency.GetAmount(this);
                 }
                 return 0;
             }
@@ -431,115 +217,74 @@ namespace MixItUp.Base.ViewModel.User
             this.MixerUsername = user.MixerUsername;
         }
 
-        public UserCurrencyDataViewModel GetCurrency(Guid currencyID)
+        public UserCurrencyDataViewModel GetCurrency(UserCurrencyModel currency)
         {
-            if (ChannelSession.Settings.Currencies.ContainsKey(currencyID))
-            {
-                return this.GetCurrency(ChannelSession.Settings.Currencies[currencyID]);
-            }
-            return null;
+            return new UserCurrencyDataViewModel(this, currency);
         }
 
-        public UserCurrencyDataViewModel GetCurrency(UserCurrencyViewModel currency)
+        public int GetCurrencyAmount(UserCurrencyModel currency)
         {
-            return this.CurrencyAmounts.GetValueIfExists(currency, new UserCurrencyDataViewModel(this, currency));
+            return currency.GetAmount(this);
         }
 
-        public int GetCurrencyAmount(UserCurrencyViewModel currency)
-        {
-            return this.GetCurrency(currency).Amount;
-        }
-
-        public bool HasCurrencyAmount(UserCurrencyViewModel currency, int amount)
+        public bool HasCurrencyAmount(UserCurrencyModel currency, int amount)
         {
             return (this.IsCurrencyRankExempt || this.GetCurrencyAmount(currency) >= amount);
         }
 
-        public void SetCurrencyAmount(UserCurrencyViewModel currency, int amount)
+        public void SetCurrencyAmount(UserCurrencyModel currency, int amount)
         {
-            UserCurrencyDataViewModel currencyData = this.GetCurrency(currency);
-            currencyData.Amount = Math.Min(amount, currencyData.Currency.MaxAmount);
+            currency.SetAmount(this, amount);
         }
 
-        public void AddCurrencyAmount(UserCurrencyViewModel currency, int amount)
+        public void AddCurrencyAmount(UserCurrencyModel currency, int amount)
         {
-            if (!this.IsCurrencyRankExempt)
-            {
-                this.SetCurrencyAmount(currency, this.GetCurrencyAmount(currency) + amount);
-            }
+            currency.AddAmount(this, amount);
         }
 
-        public void SubtractCurrencyAmount(UserCurrencyViewModel currency, int amount)
+        public void SubtractCurrencyAmount(UserCurrencyModel currency, int amount)
         {
-            if (!this.IsCurrencyRankExempt)
-            {
-                this.SetCurrencyAmount(currency, Math.Max(this.GetCurrencyAmount(currency) - amount, 0));
-            }
+            currency.SubtractAmount(this, amount);
         }
 
-        public void ResetCurrencyAmount(UserCurrencyViewModel currency)
+        public void ResetCurrencyAmount(UserCurrencyModel currency)
         {
-            this.CurrencyAmounts[currency] = new UserCurrencyDataViewModel(this, currency);
+            currency.ResetAmount(this);
         }
 
-        public UserInventoryDataViewModel GetInventory(Guid inventoryID)
+        public UserInventoryDataViewModel GetInventory(UserInventoryModel inventory)
         {
-            if (ChannelSession.Settings.Inventories.ContainsKey(inventoryID))
-            {
-                return this.GetInventory(ChannelSession.Settings.Inventories[inventoryID]);
-            }
-            return null;
+            return new UserInventoryDataViewModel(this, inventory);
         }
 
-        public UserInventoryDataViewModel GetInventory(UserInventoryViewModel inventory)
+        public int GetInventoryAmount(UserInventoryModel inventory, string item)
         {
-            return this.InventoryAmounts.GetValueIfExists(inventory, new UserInventoryDataViewModel(this, inventory));
+            return inventory.GetAmount(this, item);
         }
 
-        public int GetInventoryAmount(UserInventoryViewModel inventory, string item)
-        {
-            UserInventoryDataViewModel inventoryData = this.GetInventory(inventory);
-            if (inventoryData.Amounts.ContainsKey(item))
-            {
-                return inventoryData.Amounts[item];
-            }
-            return 0;
-        }
-
-        public bool HasInventoryAmount(UserInventoryViewModel inventory, string item, int amount)
+        public bool HasInventoryAmount(UserInventoryModel inventory, string item, int amount)
         {
             return (this.IsCurrencyRankExempt || this.GetInventoryAmount(inventory, item) >= amount);
         }
 
-        public void SetInventoryAmount(UserInventoryViewModel inventory, string itemName, int amount)
+        public void SetInventoryAmount(UserInventoryModel inventory, string item, int amount)
         {
-            if (inventory.Items.ContainsKey(itemName))
-            {
-                UserInventoryItemViewModel item = inventory.Items[itemName];
-                UserInventoryDataViewModel inventoryData = this.GetInventory(inventory);
-                inventoryData.Amounts[itemName] = Math.Min(amount, item.HasMaxAmount ? item.MaxAmount : inventoryData.Inventory.DefaultMaxAmount);
-            }
+            inventory.SetAmount(this, item, amount);
         }
 
-        public void AddInventoryAmount(UserInventoryViewModel inventory, string item, int amount)
+        public void AddInventoryAmount(UserInventoryModel inventory, string item, int amount)
         {
-            if (!this.IsCurrencyRankExempt)
-            {
-                this.SetInventoryAmount(inventory, item, this.GetInventoryAmount(inventory, item) + amount);
-            }
+            inventory.AddAmount(this, item, amount);
         }
 
-        public void SubtractInventoryAmount(UserInventoryViewModel inventory, string item, int amount)
+        public void SubtractInventoryAmount(UserInventoryModel inventory, string item, int amount)
         {
-            if (!this.IsCurrencyRankExempt)
-            {
-                this.SetInventoryAmount(inventory, item, Math.Max(this.GetInventoryAmount(inventory, item) - amount, 0));
-            }
+            inventory.SubtractAmount(this, item, amount);
         }
 
-        public void ResetInventoryAmount(UserInventoryViewModel inventory)
+        public void ResetInventoryAmount(UserInventoryModel inventory)
         {
-            this.InventoryAmounts[inventory] = new UserInventoryDataViewModel(this, inventory);
+            inventory.ResetAmount(this);
         }
 
         public override bool Equals(object obj)
@@ -564,55 +309,6 @@ namespace MixItUp.Base.ViewModel.User
         public override string ToString()
         {
             return this.MixerUsername;
-        }
-
-        internal string GetCurrencyAmountsString()
-        {
-            Dictionary<Guid, int> amounts = new Dictionary<Guid, int>();
-            foreach (UserCurrencyDataViewModel currencyData in this.CurrencyAmounts.Values.ToList())
-            {
-                amounts[currencyData.Currency.ID] = currencyData.Amount;
-            }
-            return SerializerHelper.SerializeToString(amounts);
-        }
-
-        internal string GetInventoryAmountsString()
-        {
-            Dictionary<Guid, Dictionary<string, int>> amounts = new Dictionary<Guid, Dictionary<string, int>>();
-            foreach (UserInventoryDataViewModel inventoryData in this.InventoryAmounts.Values.ToList())
-            {
-                amounts[inventoryData.Inventory.ID] = inventoryData.Amounts;
-            }
-            return SerializerHelper.SerializeToString(amounts);
-        }
-
-        internal string GetCustomCommandsString()
-        {
-            return SerializerHelper.SerializeToString(this.CustomCommands.ToList());
-        }
-
-        internal string GetOptionsString()
-        {
-            JObject options = new JObject();
-            options["EntranceCommand"] = SerializerHelper.SerializeToString(this.EntranceCommand);
-            options["IsSparkExempt"] = this.IsSparkExempt;
-            options["IsCurrencyRankExempt"] = this.IsCurrencyRankExempt;
-            options["GameWispUserID"] = this.GameWispUserID;
-            options["PatreonUserID"] = this.PatreonUserID;
-            options["ModerationStrikes"] = this.ModerationStrikes;
-            options["CustomTitle"] = this.CustomTitle;
-            options["TotalStreamsWatched"] = this.TotalStreamsWatched.ToString();
-            options["TotalAmountDonated"] = this.TotalAmountDonated.ToString();
-            options["TotalSparksSpent"] = this.TotalSparksSpent.ToString();
-            options["TotalEmbersSpent"] = this.TotalEmbersSpent.ToString();
-            options["TotalSubsGifted"] = this.TotalSubsGifted.ToString();
-            options["TotalSubsReceived"] = this.TotalSubsReceived.ToString();
-            options["TotalChatMessageSent"] = this.TotalChatMessageSent.ToString();
-            options["TotalTimesTagged"] = this.TotalTimesTagged.ToString();
-            options["TotalSkillsUsed"] = this.TotalSkillsUsed.ToString();
-            options["TotalCommandsRun"] = this.TotalCommandsRun.ToString();
-            options["TotalMonthsSubbed"] = this.TotalMonthsSubbed.ToString();
-            return options.ToString();
         }
 
         private T GetOptionValue<T>(JObject jobj, string key)

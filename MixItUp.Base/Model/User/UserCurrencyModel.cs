@@ -1,6 +1,6 @@
 ﻿using MixItUp.Base.Commands;
-using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
-namespace MixItUp.Base.ViewModel.User
+namespace MixItUp.Base.Model.User
 {
     public enum CurrencyResetRateEnum
     {
@@ -20,7 +20,7 @@ namespace MixItUp.Base.ViewModel.User
     }
 
     [DataContract]
-    public class UserCurrencyViewModel : IEquatable<UserCurrencyViewModel>
+    public class UserCurrencyModel : IEquatable<UserCurrencyModel>
     {
         public static UserRankViewModel NoRank = new UserRankViewModel("No Rank", 0);
 
@@ -86,7 +86,7 @@ namespace MixItUp.Base.ViewModel.User
         [JsonProperty]
         public DatabaseDictionary<Guid, int> UserAmounts { get; set; } = new DatabaseDictionary<Guid, int>();
 
-        public UserCurrencyViewModel()
+        public UserCurrencyModel()
         {
             this.ID = Guid.NewGuid();
             this.MinimumActiveRate = 0;
@@ -166,7 +166,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public void SetAmount(UserDataViewModel user, int amount)
         {
-            this.UserAmounts[this.ID] = Math.Min(amount, this.MaxAmount);
+            this.UserAmounts[user.ID] = Math.Min(Math.Max(amount, 0), this.MaxAmount);
             ChannelSession.Settings.UserData.ManualValueChanged(user.MixerID);
         }
 
@@ -174,7 +174,16 @@ namespace MixItUp.Base.ViewModel.User
         {
             if (!user.IsCurrencyRankExempt)
             {
+                UserRankViewModel prevRank = this.GetRankForPoints(this.GetAmount(user));
+
                 this.SetAmount(user, this.GetAmount(user) + amount);
+
+                UserRankViewModel newRank = this.GetRankForPoints(this.GetAmount(user));
+
+                if (newRank.MinimumPoints > prevRank.MinimumPoints)
+                {
+                    GlobalEvents.RankChanged(new UserCurrencyDataViewModel(user, this));
+                }
             }
         }
 
@@ -192,15 +201,20 @@ namespace MixItUp.Base.ViewModel.User
             ChannelSession.Settings.UserData.ManualValueChanged(user.MixerID);
         }
 
+        public UserRankViewModel GetRank(UserDataViewModel user)
+        {
+            return this.GetRankForPoints(this.GetAmount(user));
+        }
+
         public UserRankViewModel GetRankForPoints(int points)
         {
-            UserRankViewModel rank = UserCurrencyViewModel.NoRank;
+            UserRankViewModel rank = UserCurrencyModel.NoRank;
             if (this.Ranks.Count > 0)
             {
                 rank = this.Ranks.Where(r => r.MinimumPoints <= points).OrderByDescending(r => r.MinimumPoints).FirstOrDefault();
                 if (rank == null)
                 {
-                    rank = UserCurrencyViewModel.NoRank;
+                    rank = UserCurrencyModel.NoRank;
                 }
             }
             return rank;
@@ -208,13 +222,13 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserRankViewModel GetNextRankForPoints(int points)
         {
-            UserRankViewModel rank = UserCurrencyViewModel.NoRank;
+            UserRankViewModel rank = UserCurrencyModel.NoRank;
             if (this.Ranks.Count > 0)
             {
                 rank = this.Ranks.Where(r => r.MinimumPoints > points).OrderBy(r => r.MinimumPoints).FirstOrDefault();
                 if (rank == null)
                 {
-                    rank = UserCurrencyViewModel.NoRank;
+                    rank = UserCurrencyModel.NoRank;
                 }
             }
             return rank;
@@ -306,14 +320,14 @@ namespace MixItUp.Base.ViewModel.User
 
         public override bool Equals(object obj)
         {
-            if (obj is UserCurrencyViewModel)
+            if (obj is UserCurrencyModel)
             {
-                return this.Equals((UserCurrencyViewModel)obj);
+                return this.Equals((UserCurrencyModel)obj);
             }
             return false;
         }
 
-        public bool Equals(UserCurrencyViewModel other)
+        public bool Equals(UserCurrencyModel other)
         {
             return this.ID.Equals(other.ID);
         }

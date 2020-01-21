@@ -1,6 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
-using MixItUp.Base.Services;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Command;
@@ -52,14 +52,14 @@ namespace MixItUp.WPF.Windows.Users
             await this.user.RefreshDetails(force: true);
 
             this.CurrencyRankStackPanel.Children.Clear();
-            foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values.ToList())
+            foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values.ToList())
             {
                 UserCurrencyDataViewModel currencyData = this.user.Data.GetCurrency(currency);
                 this.CurrencyRankStackPanel.Children.Add(new UserCurrencyIndividualEditorControl(currencyData));
             }
 
             this.InventoryStackPanel.Children.Clear();
-            foreach (UserInventoryViewModel inventory in ChannelSession.Settings.Inventories.Values.ToList())
+            foreach (UserInventoryModel inventory in ChannelSession.Settings.Inventories.Values.ToList())
             {
                 UserInventoryDataViewModel inventoryData = this.user.Data.GetInventory(inventory);
                 this.InventoryStackPanel.Children.Add(new UserInventoryEditorControl(inventory, inventoryData));
@@ -206,7 +206,7 @@ namespace MixItUp.WPF.Windows.Users
         private void CurrencyRankExemptToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             this.user.Data.IsCurrencyRankExempt = this.CurrencyRankExemptToggleButton.IsChecked.GetValueOrDefault();
-            foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+            foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
             {
                 this.user.Data.ResetCurrencyAmount(currency);
             }

@@ -8,6 +8,7 @@ using System.Net;
 using System.Web.Http;
 using System.Net.Http;
 using System.Net.Http.Formatting;
+using MixItUp.Base.Model.User;
 
 namespace MixItUp.Desktop.Services.DeveloperAPI
 {
@@ -43,17 +44,17 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             return InventoryFromUserInventoryViewModel(ChannelSession.Settings.Inventories[inventoryID]);
         }
 
-        public static InventoryAmount InventoryAmountFromUserInventoryViewModel(UserInventoryViewModel inventory, UserInventoryDataViewModel inventoryData)
+        public static InventoryAmount InventoryAmountFromUserInventoryViewModel(UserInventoryModel inventory, UserInventoryDataViewModel inventoryData)
         {
             return new InventoryAmount
             {
                 ID = inventory.ID,
                 Name = inventory.Name,
-                Items = inventoryData.Amounts.Select(kvp => new InventoryItemAmount() { Name = kvp.Key, Amount = kvp.Value }).ToList(),
+                Items = inventoryData.GetAmounts().Select(kvp => new InventoryItemAmount() { Name = kvp.Key, Amount = kvp.Value }).ToList(),
             };
         }
 
-        public static Inventory InventoryFromUserInventoryViewModel(UserInventoryViewModel inventory)
+        public static Inventory InventoryFromUserInventoryViewModel(UserInventoryModel inventory)
         {
             return new Inventory
             {

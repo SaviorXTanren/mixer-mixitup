@@ -66,7 +66,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayLeaderboardListItemModel(string htmlText, OverlayLeaderboardListItemTypeEnum leaderboardType, int totalToShow, string textFont, int width, int height, string borderColor,
             string backgroundColor, string textColor, OverlayListItemAlignmentTypeEnum alignment, OverlayItemEffectEntranceAnimationTypeEnum addEventAnimation,
-            OverlayItemEffectExitAnimationTypeEnum removeEventAnimation, UserCurrencyViewModel currency, CustomCommand newLeaderCommand)
+            OverlayItemEffectExitAnimationTypeEnum removeEventAnimation, UserCurrencyModel currency, CustomCommand newLeaderCommand)
             : this(htmlText, leaderboardType, totalToShow, textFont, width, height, borderColor, backgroundColor, textColor, alignment, addEventAnimation, removeEventAnimation, newLeaderCommand)
         {
             this.CurrencyID = currency.ID;
@@ -141,7 +141,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 if (ChannelSession.Settings.Currencies.ContainsKey(this.CurrencyID))
                 {
-                    UserCurrencyViewModel currency = ChannelSession.Settings.Currencies[this.CurrencyID];
+                    UserCurrencyModel currency = ChannelSession.Settings.Currencies[this.CurrencyID];
                     Dictionary<UserDataViewModel, int> currencyAmounts = new Dictionary<UserDataViewModel, int>();
                     foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values)
                     {

@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.User;
 using Mixer.Base.Util;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
@@ -73,7 +74,7 @@ namespace MixItUp.Base.Actions
 
         public CurrencyAction() : base(ActionTypeEnum.Currency) { this.RoleRequirement = MixerRoleEnum.User; }
 
-        public CurrencyAction(UserCurrencyViewModel currency, CurrencyActionTypeEnum currencyActionType, string amount, string username = null,
+        public CurrencyAction(UserCurrencyModel currency, CurrencyActionTypeEnum currencyActionType, string amount, string username = null,
             MixerRoleEnum roleRequirement = MixerRoleEnum.User, bool deductFromUser = false)
             : this()
         {
@@ -85,7 +86,7 @@ namespace MixItUp.Base.Actions
             this.DeductFromUser = deductFromUser;
         }
 
-        public CurrencyAction(UserInventoryViewModel inventory, CurrencyActionTypeEnum currencyActionType, string itemName = null, string amount = null, string username = null,
+        public CurrencyAction(UserInventoryModel inventory, CurrencyActionTypeEnum currencyActionType, string itemName = null, string amount = null, string username = null,
             MixerRoleEnum roleRequirement = MixerRoleEnum.User, bool deductFromUser = false)
             : this()
         {
@@ -102,8 +103,8 @@ namespace MixItUp.Base.Actions
         {
             if (ChannelSession.Services.Chat != null)
             {
-                UserCurrencyViewModel currency = null;
-                UserInventoryViewModel inventory = null;
+                UserCurrencyModel currency = null;
+                UserInventoryModel inventory = null;
                 string systemName = null;
                 string itemName = null;
 

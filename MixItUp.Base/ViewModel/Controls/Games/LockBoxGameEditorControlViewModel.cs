@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
@@ -54,7 +55,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         private LockBoxGameCommand existingCommand;
 
-        public LockBoxGameEditorControlViewModel(UserCurrencyViewModel currency)
+        public LockBoxGameEditorControlViewModel(UserCurrencyModel currency)
         {
             this.FailedGuessCommand = this.CreateBasicChatCommand("@$username drops their coins into and try their combo $arg1text...but the box doesn't unlock. Their guess was too $gamelockboxhint.");
             this.SuccessfulGuessCommand = this.CreateBasicChatCommand("@$username drops their coins into and try their combo $arg1text...and unlocks the box! They quickly run off with the $gamepayout " + currency.Name + " inside it!");

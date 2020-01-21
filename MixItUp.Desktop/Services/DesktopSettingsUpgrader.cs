@@ -8,6 +8,7 @@ using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Model.MixPlay;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Settings;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Remote.Models;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
@@ -18,7 +19,6 @@ using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -402,8 +402,8 @@ namespace MixItUp.Desktop.Services
                 settings.BannedWords = new List<string>(settings.bannedWordsInternal);
                 settings.MixPlayUserGroups = new Dictionary<uint, List<MixPlayUserGroupModel>>(settings.mixPlayUserGroupsInternal);
                 settings.OverlayWidgets = new List<OverlayWidgetModel>(settings.overlayWidgetModelsInternal);
-                settings.Currencies = new Dictionary<Guid, UserCurrencyViewModel>(settings.currenciesInternal);
-                settings.Inventories = new Dictionary<Guid, UserInventoryViewModel>(settings.inventoriesInternal);
+                settings.Currencies = new Dictionary<Guid, UserCurrencyModel>(settings.currenciesInternal);
+                settings.Inventories = new Dictionary<Guid, UserInventoryModel>(settings.inventoriesInternal);
                 settings.CooldownGroups = new Dictionary<string, int>(settings.cooldownGroupsInternal);
                 settings.PreMadeChatCommandSettings = new List<PreMadeChatCommandSettings>(settings.preMadeChatCommandSettingsInternal);
 
@@ -530,7 +530,78 @@ namespace MixItUp.Desktop.Services
                     string oldDatabaseFilePath = Path.Combine(Path.GetDirectoryName(filePath), settings.DatabasePath);
                     await ChannelSession.Services.Database.Read(oldDatabaseFilePath, "SELECT * FROM Users", (Dictionary<string, object> data) =>
                     {
-                        UserDataViewModel userData = new UserDataViewModel(data, settings);
+                        UserDataViewModel userData = new UserDataViewModel();
+
+                        userData.MixerID = uint.Parse(data["ID"].ToString());
+                        userData.MixerUsername = data["UserName"].ToString();
+
+                        userData.ViewingMinutes = int.Parse(data["ViewingMinutes"].ToString());
+
+                        if (data.ContainsKey("CurrencyAmounts"))
+                        {
+                            Dictionary<Guid, int> currencyAmounts = JsonConvert.DeserializeObject<Dictionary<Guid, int>>(data["CurrencyAmounts"].ToString());
+                            if (currencyAmounts != null)
+                            {
+                                foreach (var kvp in currencyAmounts)
+                                {
+                                    if (settings.Currencies.ContainsKey(kvp.Key))
+                                    {
+                                        userData.SetCurrencyAmount(settings.Currencies[kvp.Key], kvp.Value);
+                                    }
+                                }
+                            }
+                        }
+
+                        if (data.ContainsKey("InventoryAmounts"))
+                        {
+                            Dictionary<Guid, Dictionary<string, int>> inventoryAmounts = JsonConvert.DeserializeObject<Dictionary<Guid, Dictionary<string, int>>>(data["InventoryAmounts"].ToString());
+                            if (inventoryAmounts != null)
+                            {
+                                foreach (var kvp in inventoryAmounts)
+                                {
+                                    if (settings.Inventories.ContainsKey(kvp.Key))
+                                    {
+                                        UserInventoryModel inventory = settings.Inventories[kvp.Key];
+                                        foreach (var itemKVP in kvp.Value)
+                                        {
+                                            userData.SetInventoryAmount(inventory, itemKVP.Key, itemKVP.Value);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        if (data.ContainsKey("CustomCommands") && !string.IsNullOrEmpty(data["CustomCommands"].ToString()))
+                        {
+                            userData.CustomCommands.AddRange(SerializerHelper.DeserializeFromString<List<ChatCommand>>(data["CustomCommands"].ToString()));
+                        }
+
+                        if (data.ContainsKey("Options") && !string.IsNullOrEmpty(data["Options"].ToString()))
+                        {
+                            JObject optionsJObj = JObject.Parse(data["Options"].ToString());
+                            if (optionsJObj.ContainsKey("EntranceCommand") && optionsJObj["EntranceCommand"] != null)
+                            {
+                                userData.EntranceCommand = SerializerHelper.DeserializeFromString<CustomCommand>(optionsJObj["EntranceCommand"].ToString());
+                            }
+                            userData.IsSparkExempt = GetOptionValue<bool>(optionsJObj, "IsSparkExempt");
+                            userData.IsCurrencyRankExempt = GetOptionValue<bool>(optionsJObj, "IsCurrencyRankExempt");
+                            userData.GameWispUserID = GetOptionValue<uint>(optionsJObj, "GameWispUserID");
+                            userData.PatreonUserID = GetOptionValue<string>(optionsJObj, "PatreonUserID");
+                            userData.ModerationStrikes = GetOptionValue<uint>(optionsJObj, "ModerationStrikes");
+                            userData.CustomTitle = GetOptionValue<string>(optionsJObj, "CustomTitle");
+                            userData.TotalStreamsWatched = GetOptionValue<uint>(optionsJObj, "TotalStreamsWatched");
+                            userData.TotalAmountDonated = GetOptionValue<double>(optionsJObj, "TotalAmountDonated");
+                            userData.TotalSparksSpent = GetOptionValue<uint>(optionsJObj, "TotalSparksSpent");
+                            userData.TotalEmbersSpent = GetOptionValue<uint>(optionsJObj, "TotalEmbersSpent");
+                            userData.TotalSubsGifted = GetOptionValue<uint>(optionsJObj, "TotalSubsGifted");
+                            userData.TotalSubsReceived = GetOptionValue<uint>(optionsJObj, "TotalSubsReceived");
+                            userData.TotalChatMessageSent = GetOptionValue<uint>(optionsJObj, "TotalChatMessageSent");
+                            userData.TotalTimesTagged = GetOptionValue<uint>(optionsJObj, "TotalTimesTagged");
+                            userData.TotalSkillsUsed = GetOptionValue<uint>(optionsJObj, "TotalSkillsUsed");
+                            userData.TotalCommandsRun = GetOptionValue<uint>(optionsJObj, "TotalCommandsRun");
+                            userData.TotalMonthsSubbed = GetOptionValue<uint>(optionsJObj, "TotalMonthsSubbed");
+                        }
+
                         settings.UserData[userData.MixerID] = userData;
                     });
 
@@ -579,7 +650,7 @@ namespace MixItUp.Desktop.Services
                 commands.AddRange(gameCommand.GetAllInnerCommands());
             }
 
-            foreach (UserCurrencyViewModel currency in settings.Currencies.Values)
+            foreach (UserCurrencyModel currency in settings.Currencies.Values)
             {
                 if (currency.RankChangedCommand != null)
                 {
@@ -587,7 +658,7 @@ namespace MixItUp.Desktop.Services
                 }
             }
 
-            foreach (UserInventoryViewModel inventory in settings.Inventories.Values)
+            foreach (UserInventoryModel inventory in settings.Inventories.Values)
             {
                 commands.Add(inventory.ItemsBoughtCommand);
                 commands.Add(inventory.ItemsSoldCommand);
@@ -661,6 +732,15 @@ namespace MixItUp.Desktop.Services
             commands.Add(settings.ModerationStrike3Command);
 
             return commands.Where(c => c != null);
+        }
+
+        private static T GetOptionValue<T>(JObject jobj, string key)
+        {
+            if (jobj[key] != null)
+            {
+                return jobj[key].ToObject<T>();
+            }
+            return default(T);
         }
     }
 

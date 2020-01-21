@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Actions;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
@@ -72,7 +73,7 @@ namespace MixItUp.Base.Model.Import.Streamlabs
             this.Enabled = bool.Parse(values[8]);
         }
 
-        public void ProcessData(UserCurrencyViewModel currency, UserCurrencyViewModel rank)
+        public void ProcessData(UserCurrencyModel currency, UserCurrencyModel rank)
         {
             this.Requirements = new RequirementViewModel();
 
