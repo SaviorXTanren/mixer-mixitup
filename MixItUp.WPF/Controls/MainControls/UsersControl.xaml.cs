@@ -159,7 +159,7 @@ namespace MixItUp.WPF.Controls.MainControls
                         fileContents.Append(string.Format("{0}\t{1}\t{2}\t{3}", userData.MixerID, userData.MixerUsername, userData.ViewingMinutes, userData.OfflineViewingMinutes));
                         foreach (var kvp in ChannelSession.Settings.Currencies)
                         {
-                            fileContents.Append("\t" + userData.GetCurrencyAmount(kvp.Value));
+                            fileContents.Append("\t" + kvp.Value.GetAmount(userData));
                         }
                         fileContents.AppendLine();
                     }

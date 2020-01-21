@@ -244,9 +244,9 @@ namespace MixItUp.Base.Model.User
                     {
                         if (!user.Data.IsCurrencyRankExempt)
                         {
-                            if (user.MixerFanProgression != null && user.MixerFanProgression.level != null && user.MixerFanProgression.level.level > user.Data.GetCurrencyAmount(this))
+                            if (user.MixerFanProgression != null && user.MixerFanProgression.level != null && user.MixerFanProgression.level.level > this.GetAmount(user.Data))
                             {
-                                user.Data.SetCurrencyAmount(this, (int)user.MixerFanProgression.level.level);
+                                this.SetAmount(user.Data, (int)user.MixerFanProgression.level.level);
                                 ChannelSession.Settings.UserData.ManualValueChanged(user.MixerID);
                             }
                         }
@@ -266,16 +266,16 @@ namespace MixItUp.Base.Model.User
                                 int minutes = ChannelSession.MixerChannel.online ? user.Data.ViewingMinutes : user.Data.OfflineViewingMinutes;
                                 if (minutes % interval == 0)
                                 {
-                                    user.Data.AddCurrencyAmount(this, ChannelSession.MixerChannel.online ? this.AcquireAmount : this.OfflineAcquireAmount);
+                                    this.AddAmount(user.Data, ChannelSession.MixerChannel.online ? this.AcquireAmount : this.OfflineAcquireAmount);
                                     if (bonusesCanBeApplied)
                                     {
                                         if (user.HasPermissionsTo(MixerRoleEnum.Mod) && this.ModeratorBonus > 0)
                                         {
-                                            user.Data.AddCurrencyAmount(this, this.ModeratorBonus);
+                                            this.AddAmount(user.Data, this.ModeratorBonus);
                                         }
                                         else if (user.HasPermissionsTo(MixerRoleEnum.Subscriber) && this.SubscriberBonus > 0)
                                         {
-                                            user.Data.AddCurrencyAmount(this, this.SubscriberBonus);
+                                            this.AddAmount(user.Data, this.SubscriberBonus);
                                         }
                                     }
                                     ChannelSession.Settings.UserData.ManualValueChanged(user.MixerID);
@@ -305,16 +305,12 @@ namespace MixItUp.Base.Model.User
 
         public async Task Reset()
         {
-            foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values)
+            foreach (Guid key in this.UserAmounts.Keys)
             {
-                if (userData.GetCurrencyAmount(this) > 0)
-                {
-                    userData.ResetCurrencyAmount(this);
-                    ChannelSession.Settings.UserData.ManualValueChanged(userData.MixerID);
-                }
+                this.UserAmounts[key] = 0;
+                this.UserAmounts.ManualValueChanged(key);
             }
             this.LastReset = new DateTimeOffset(DateTimeOffset.Now.Date);
-
             await ChannelSession.SaveSettings();
         }
 

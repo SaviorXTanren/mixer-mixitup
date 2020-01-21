@@ -109,12 +109,7 @@ namespace MixItUp.Base.ViewModel.Requirement
                 {
                     return false;
                 }
-
-                if (!userData.HasCurrencyAmount(currency, amount))
-                {
-                    return false;
-                }
-                userData.SubtractCurrencyAmount(currency, amount);
+                currency.SubtractAmount(userData, amount);
                 return true;
             }
             return false;
@@ -139,9 +134,7 @@ namespace MixItUp.Base.ViewModel.Requirement
                 return false;
             }
 
-            UserCurrencyDataViewModel userCurrencyData = userData.GetCurrency(currency);
-
-            return this.DoesMeetCurrencyRequirement(userCurrencyData.Amount);
+            return this.DoesMeetCurrencyRequirement(currency.GetAmount(userData));
         }
 
         public bool DoesMeetCurrencyRequirement(int amount)
@@ -178,12 +171,12 @@ namespace MixItUp.Base.ViewModel.Requirement
                 return false;
             }
 
-            if (!userData.HasCurrencyAmount(currency, rank.MinimumPoints))
+            if (!currency.HasAmount(userData, rank.MinimumPoints))
             {
                 return false;
             }
 
-            UserCurrencyDataViewModel userCurrencyData = userData.GetCurrency(currency);
+            UserCurrencyDataViewModel userCurrencyData = new UserCurrencyDataViewModel(userData, currency);
             if (this.MustEqual && userCurrencyData.GetRank() != rank && !userData.IsCurrencyRankExempt)
             {
                 return false;

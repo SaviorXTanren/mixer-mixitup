@@ -273,12 +273,12 @@ namespace MixItUp.Base.Commands
                 return false;
             }
 
-            if (!user.Data.HasCurrencyAmount(currency, betAmount))
+            if (!currency.HasAmount(user.Data, betAmount))
             {
                 await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("You do not have {0} {1}", betAmount, currency.Name));
                 return false;
             }
-            user.Data.SubtractCurrencyAmount(currency, betAmount);
+            currency.SubtractAmount(user.Data, betAmount);
 
             this.Requirements.TrySubtractInventoryAmount(user);
 
@@ -304,7 +304,7 @@ namespace MixItUp.Base.Commands
         protected virtual async Task PerformOutcome(UserViewModel user, IEnumerable<string> arguments, GameOutcome outcome, int betAmount)
         {
             int payout = outcome.GetPayout(user, betAmount);
-            user.Data.AddCurrencyAmount(this.Requirements.Currency.GetCurrency(), payout);
+            this.Requirements.Currency.GetCurrency().AddAmount(user.Data, payout);
             this.totalPayout += payout;
             await this.PerformCommand(outcome.Command, user, arguments, betAmount, payout);
         }
@@ -439,8 +439,8 @@ namespace MixItUp.Base.Commands
                             int randomNumber = this.GenerateProbability();
                             if (randomNumber <= this.SuccessfulOutcome.GetRoleProbability(user))
                             {
-                                user.Data.AddCurrencyAmount(currency, betAmount);
-                                targetUser.Data.SubtractCurrencyAmount(currency, betAmount);
+                                currency.AddAmount(user.Data, betAmount);
+                                currency.SubtractAmount(targetUser.Data, betAmount);
                                 await this.PerformOutcome(user, arguments, this.SuccessfulOutcome, betAmount, targetUser);
                             }
                             else
@@ -459,7 +459,7 @@ namespace MixItUp.Base.Commands
             List<UserViewModel> users = new List<UserViewModel>();
             foreach (UserViewModel activeUser in ChannelSession.Services.User.GetAllWorkableUsers())
             {
-                if (!user.Equals(activeUser) && !activeUser.Data.IsCurrencyRankExempt && activeUser.Data.HasCurrencyAmount(currency, betAmount))
+                if (!user.Equals(activeUser) && !activeUser.Data.IsCurrencyRankExempt && currency.HasAmount(activeUser.Data, betAmount))
                 {
                     users.Add(activeUser);
                 }
@@ -468,7 +468,7 @@ namespace MixItUp.Base.Commands
             if (users.Count == 0)
             {
                 await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("There are no active users with {0} {1}", betAmount, currency.Name));
-                user.Data.AddCurrencyAmount(currency, betAmount);
+                currency.AddAmount(user.Data, betAmount);
                 return null;
             }
 
@@ -481,7 +481,7 @@ namespace MixItUp.Base.Commands
             UserViewModel targetUser = await this.GetArgumentsTargetUser(user, arguments);
             if (targetUser != null)
             {
-                if (!targetUser.Data.HasCurrencyAmount(currency, betAmount))
+                if (!currency.HasAmount(targetUser.Data, betAmount))
                 {
                     await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("@{0} does not have {1} {2}", targetUser.MixerUsername, betAmount, currency.Name));
                     return null;
@@ -639,7 +639,7 @@ namespace MixItUp.Base.Commands
             UserCurrencyModel currency = this.Requirements.Currency.GetCurrency();
             foreach (var enteredUser in this.enteredUsers)
             {
-                enteredUser.Key.Data.AddCurrencyAmount(currency, enteredUser.Value);
+                currency.AddAmount(enteredUser.Key.Data, enteredUser.Value);
             }
             
             if (this.NotEnoughPlayersCommand != null)
@@ -1376,14 +1376,14 @@ namespace MixItUp.Base.Commands
                     if (randomNumber <= this.SuccessfulOutcome.GetRoleProbability(user))
                     {
                         this.winners.Add(this.currentStarterUser);
-                        this.currentStarterUser.Data.AddCurrencyAmount(currency, this.currentBetAmount * 2);
-                        user.Data.SubtractCurrencyAmount(currency, this.currentBetAmount);
+                        currency.AddAmount(this.currentStarterUser.Data, this.currentBetAmount * 2);
+                        currency.SubtractAmount(user.Data, this.currentBetAmount);
                         await this.PerformCommand(this.SuccessfulOutcome.Command, this.currentStarterUser, new List<string>() { user.MixerUsername }, currentBetAmount, currentBetAmount);
                     }
                     else
                     {
                         this.winners.Add(user);
-                        user.Data.AddCurrencyAmount(currency, this.currentBetAmount);
+                        currency.AddAmount(user.Data, this.currentBetAmount);
                         await this.PerformCommand(this.FailedOutcome.Command, this.currentStarterUser, new List<string>() { user.MixerUsername }, currentBetAmount, currentBetAmount);
                     }
                     this.ResetData(user);
@@ -1426,7 +1426,7 @@ namespace MixItUp.Base.Commands
                                         {
                                             if (this.currentTargetUser != null)
                                             {
-                                                this.currentStarterUser.Data.AddCurrencyAmount(currency, this.currentBetAmount);
+                                                currency.AddAmount(this.currentStarterUser.Data, this.currentBetAmount);
                                                 if (this.Requirements.Inventory != null)
                                                 {
                                                     this.Requirements.Inventory.GetInventory().AddAmount(this.currentStarterUser.Data, this.Requirements.Inventory.ItemName, this.Requirements.Inventory.Amount);
@@ -1637,7 +1637,7 @@ namespace MixItUp.Base.Commands
             {
                 if (this.winners.Contains(kvp.Key))
                 {
-                    kvp.Key.Data.AddCurrencyAmount(this.Requirements.Currency.GetCurrency(), individualPayout);
+                    this.Requirements.Currency.GetCurrency().AddAmount(kvp.Key.Data, individualPayout);
                     await this.PerformCommand(this.UserSuccessOutcome.Command, kvp.Key, new List<string>(), kvp.Value, individualPayout);
                 }
                 else
@@ -1859,7 +1859,7 @@ namespace MixItUp.Base.Commands
             {
                 if (this.winners.Contains(kvp.Key))
                 {
-                    kvp.Key.Data.AddCurrencyAmount(this.Requirements.Currency.GetCurrency(), this.individualPayout);
+                    this.Requirements.Currency.GetCurrency().AddAmount(kvp.Key.Data, this.individualPayout);
                 }
             }
 
@@ -1975,7 +1975,7 @@ namespace MixItUp.Base.Commands
         {
             if (this.highestUser != null)
             {
-                this.highestUser.Data.AddCurrencyAmount(this.Requirements.Currency.GetCurrency(), this.highestBid);
+                this.Requirements.Currency.GetCurrency().AddAmount(this.highestUser.Data, this.highestBid);
             }
 
             await base.UserJoined(user, arguments, betAmount);
@@ -1986,7 +1986,7 @@ namespace MixItUp.Base.Commands
 
         protected override async Task NotEnoughUsers()
         {
-            this.highestUser.Data.AddCurrencyAmount(this.Requirements.Currency.GetCurrency(), this.highestBid);
+            this.Requirements.Currency.GetCurrency().AddAmount(this.highestUser.Data, this.highestBid);
             await ChannelSession.Services.Chat.SendMessage(string.Format("@{0} couldn't get enough users to join in...", this.starterUser.MixerUsername));
         }
 
@@ -2485,7 +2485,7 @@ namespace MixItUp.Base.Commands
             if (this.winners.Count > 0)
             {
                 this.totalPayout = this.enteredUsers.Values.Sum();
-                this.winners.First().Data.AddCurrencyAmount(this.Requirements.Currency.GetCurrency(), this.totalPayout);
+                this.Requirements.Currency.GetCurrency().AddAmount(this.winners.First().Data, this.totalPayout);
                 await this.PerformCommand(this.UserSuccessOutcome.Command, this.winners.First(), new List<string>(), this.betAmount, this.totalPayout);
             }
             else
@@ -2630,7 +2630,7 @@ namespace MixItUp.Base.Commands
             if (this.winners.Count > 0)
             {
                 this.totalPayout = this.enteredUsers.Values.Sum();
-                this.winners.First().Data.AddCurrencyAmount(this.Requirements.Currency.GetCurrency(), this.totalPayout);
+                this.Requirements.Currency.GetCurrency().AddAmount(this.winners.First().Data, this.totalPayout);
                 await this.PerformCommand(this.UserSuccessOutcome.Command, this.winners.First(), new List<string>(), this.betAmount, this.totalPayout);
             }
             else
@@ -2737,7 +2737,7 @@ namespace MixItUp.Base.Commands
             {
                 return;
             }
-            user.Data.AddCurrencyAmount(currency, this.totalPayout);
+            currency.AddAmount(user.Data, this.totalPayout);
             this.TotalAmount -= this.totalPayout;
 
             await this.PerformCommand(this.PayoutCommand, user, arguments, betAmount, this.totalPayout);
@@ -2938,7 +2938,7 @@ namespace MixItUp.Base.Commands
             {
                 return;
             }
-            user.Data.AddCurrencyAmount(currency, payout);
+            currency.AddAmount(user.Data, payout);
 
             await this.PerformCommand(command, user, arguments, betAmount, payout);
         }
@@ -3014,7 +3014,7 @@ namespace MixItUp.Base.Commands
                     if (this.Requirements.Currency != null && this.Requirements.Currency.GetCurrency() != null)
                     {
                         UserCurrencyModel currency = this.Requirements.Currency.GetCurrency();
-                        if (!user.Data.HasCurrencyAmount(currency, this.InspectionCost))
+                        if (!currency.HasAmount(user.Data, this.InspectionCost))
                         {
                             await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("You do not have the required {0} {1} to do this", this.InspectionCost, currency.Name));
                             return;
@@ -3091,7 +3091,7 @@ namespace MixItUp.Base.Commands
             {
                 return;
             }
-            user.Data.AddCurrencyAmount(currency, this.totalPayout);
+            currency.AddAmount(user.Data, this.totalPayout);
 
             await this.PerformCommand(this.SuccessfulGuessCommand, user, arguments, betAmount, this.totalPayout);
 
@@ -3279,7 +3279,7 @@ namespace MixItUp.Base.Commands
             {
                 return;
             }
-            user.Data.AddCurrencyAmount(currency, this.totalPayout);
+            currency.AddAmount(user.Data, this.totalPayout);
 
             await this.PerformCommand(this.GameWonCommand, user, arguments, betAmount, this.TotalAmount);
 

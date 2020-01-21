@@ -546,7 +546,7 @@ namespace MixItUp.Desktop.Services
                                 {
                                     if (settings.Currencies.ContainsKey(kvp.Key))
                                     {
-                                        userData.SetCurrencyAmount(settings.Currencies[kvp.Key], kvp.Value);
+                                        settings.Currencies[kvp.Key].SetAmount(userData, kvp.Value);
                                     }
                                 }
                             }

@@ -134,7 +134,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             {
                 if (ChannelSession.Settings.Currencies.ContainsKey(currencyData.ID))
                 {
-                    user.SetCurrencyAmount(ChannelSession.Settings.Currencies[currencyData.ID], currencyData.Amount);
+                    ChannelSession.Settings.Currencies[currencyData.ID].SetAmount(user, currencyData.Amount);
                 }
             }
 
@@ -251,7 +251,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
 
             foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
             {
-                user.CurrencyAmounts.Add(CurrencyController.CurrencyAmountFromUserCurrencyViewModel(currency, userData.GetCurrencyAmount(currency)));
+                user.CurrencyAmounts.Add(CurrencyController.CurrencyAmountFromUserCurrencyViewModel(currency, currency.GetAmount(userData)));
             }
 
             foreach (UserInventoryModel inventory in ChannelSession.Settings.Inventories.Values)
@@ -289,7 +289,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             if (currencyUpdate.Amount < 0)
             {
                 int quantityToRemove = currencyUpdate.Amount * -1;
-                if (!user.HasCurrencyAmount(currency, quantityToRemove))
+                if (!currency.HasAmount(user, quantityToRemove))
                 {
                     var resp = new HttpResponseMessage(HttpStatusCode.Forbidden)
                     {
@@ -299,11 +299,11 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                     throw new HttpResponseException(resp);
                 }
 
-                user.SubtractCurrencyAmount(currency, quantityToRemove);
+                currency.SubtractAmount(user, quantityToRemove);
             }
             else if (currencyUpdate.Amount > 0)
             {
-                user.AddCurrencyAmount(currency, currencyUpdate.Amount);
+                currency.AddAmount(user, currencyUpdate.Amount);
             }
 
             return UserFromUserDataViewModel(user);
@@ -346,7 +346,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             if (inventoryUpdate.Amount < 0)
             {
                 int quantityToRemove = inventoryUpdate.Amount * -1;
-                if (inventory.GetAmount(user, inventoryUpdate.Name) < quantityToRemove)
+                if (!inventory.HasAmount(user, inventoryUpdate.Name, quantityToRemove))
                 {
                     // If the request is to remove inventory, but user doesn't have enough, fail
                     var resp = new HttpResponseMessage(HttpStatusCode.Forbidden)

@@ -1304,7 +1304,7 @@ namespace MixItUp.Base.Model.Overlay
                         Dictionary<uint, int> currencyAmounts = new Dictionary<uint, int>();
                         foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values)
                         {
-                            currencyAmounts[userData.MixerID] = userData.GetCurrencyAmount(currency);
+                            currencyAmounts[userData.MixerID] = currency.GetAmount(userData);
                         }
 
                         this.currencyUsersToShow.Clear();
@@ -1325,7 +1325,7 @@ namespace MixItUp.Base.Model.Overlay
 
                     foreach (UserDataViewModel userToShow in this.currencyUsersToShow)
                     {
-                        extraSpecialIdentifiers["DETAILS"] = userToShow.GetCurrencyAmount(currency).ToString();
+                        extraSpecialIdentifiers["DETAILS"] = currency.GetAmount(userToShow).ToString();
                         OverlayCustomHTMLItem htmlItem = (OverlayCustomHTMLItem)await base.GetProcessedItem(new UserViewModel(userToShow), arguments, extraSpecialIdentifiers);
                         copy.LeaderboardEntries.Add(htmlItem.HTMLText);
                     }

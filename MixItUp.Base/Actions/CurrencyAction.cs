@@ -214,12 +214,12 @@ namespace MixItUp.Base.Actions
                     {
                         if (currency != null)
                         {
-                            if (!user.Data.HasCurrencyAmount(currency, amountValue))
+                            if (!currency.HasAmount(user.Data, amountValue))
                             {
                                 await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("You do not have the required {0} {1} to do this", amountValue, systemName));
                                 return;
                             }
-                            user.Data.SubtractCurrencyAmount(currency, amountValue);
+                            currency.SubtractAmount(user.Data, amountValue);
                         }
                         else if (inventory != null)
                         {
@@ -240,11 +240,11 @@ namespace MixItUp.Base.Actions
                             {
                                 if (this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromSpecificUser || this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromAllChatUsers)
                                 {
-                                    receiverUser.SubtractCurrencyAmount(currency, amountValue);
+                                    currency.SubtractAmount(receiverUser, amountValue);
                                 }
                                 else
                                 {
-                                    receiverUser.AddCurrencyAmount(currency, amountValue);
+                                    currency.AddAmount(receiverUser, amountValue);
                                 }
                             }
                             else if (inventory != null)

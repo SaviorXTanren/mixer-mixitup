@@ -333,9 +333,9 @@ namespace MixItUp.Base.Model.User
                                     if ((this.GetAmount(user.Data, item.Name) + amount) <= itemMaxAmount)
                                     {
                                         totalcost = item.BuyAmount * amount;
-                                        if (user.Data.HasCurrencyAmount(currency, totalcost))
+                                        if (currency.HasAmount(user.Data, totalcost))
                                         {
-                                            user.Data.SubtractCurrencyAmount(currency, totalcost);
+                                            currency.SubtractAmount(user.Data, totalcost);
                                             this.AddAmount(user.Data, item.Name, amount);
                                             command = this.ItemsBoughtCommand;
                                         }
@@ -362,7 +362,7 @@ namespace MixItUp.Base.Model.User
                                     if (this.HasAmount(user.Data, item.Name, amount))
                                     {
                                         this.SubtractAmount(user.Data, item.Name, amount);
-                                        user.Data.AddCurrencyAmount(currency, totalcost);
+                                        currency.AddAmount(user.Data, totalcost);
                                         command = this.ItemsSoldCommand;
                                     }
                                     else

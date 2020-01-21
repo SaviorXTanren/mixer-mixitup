@@ -223,7 +223,7 @@ namespace MixItUp.Base.Services.Mixer
 
                                 foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
                                 {
-                                    user.Data.AddCurrencyAmount(currency, currency.OnFollowBonus);
+                                    currency.AddAmount(user.Data, currency.OnFollowBonus);
                                 }
 
                                 GlobalEvents.FollowOccurred(user);
@@ -261,7 +261,7 @@ namespace MixItUp.Base.Services.Mixer
 
                             foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
                             {
-                                user.Data.AddCurrencyAmount(currency, currency.OnHostBonus);
+                                currency.AddAmount(user.Data, currency.OnHostBonus);
                             }
 
                             GlobalEvents.HostOccurred(new Tuple<UserViewModel, int>(user, viewerCount));
@@ -282,7 +282,7 @@ namespace MixItUp.Base.Services.Mixer
                             user.MixerSubscribeDate = DateTimeOffset.Now;
                             foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
                             {
-                                user.Data.AddCurrencyAmount(currency, currency.OnSubscribeBonus);
+                                currency.AddAmount(user.Data, currency.OnSubscribeBonus);
                             }
                             user.Data.TotalMonthsSubbed++;
 
@@ -311,7 +311,7 @@ namespace MixItUp.Base.Services.Mixer
                         {
                             foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
                             {
-                                user.Data.AddCurrencyAmount(currency, currency.OnSubscribeBonus);
+                                currency.AddAmount(user.Data, currency.OnSubscribeBonus);
                             }
                             user.Data.TotalMonthsSubbed++;
 
@@ -395,7 +395,7 @@ namespace MixItUp.Base.Services.Mixer
 
                         foreach (UserCurrencyModel fanProgressionCurrency in ChannelSession.Settings.Currencies.Values.Where(c => c.IsTrackingFanProgression))
                         {
-                            user.Data.SetCurrencyAmount(fanProgressionCurrency, (int)fanProgression.level.level);
+                            fanProgressionCurrency.SetAmount(user.Data, (int)fanProgression.level.level);
                         }
                     }
                 }
@@ -449,7 +449,7 @@ namespace MixItUp.Base.Services.Mixer
 
             foreach (UserCurrencyModel sparkCurrency in ChannelSession.Settings.Currencies.Values.Where(c => c.IsTrackingSparks))
             {
-                sparkUsage.Item1.Data.AddCurrencyAmount(sparkCurrency, (int)sparkUsage.Item2);
+                sparkCurrency.AddAmount(sparkUsage.Item1.Data, (int)sparkUsage.Item2);
             }
 
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSparkUsageUserData] = sparkUsage.Item1;
@@ -466,7 +466,7 @@ namespace MixItUp.Base.Services.Mixer
 
             foreach (UserCurrencyModel emberCurrency in ChannelSession.Settings.Currencies.Values.Where(c => c.IsTrackingEmbers))
             {
-                emberUsage.User.Data.AddCurrencyAmount(emberCurrency, (int)emberUsage.Amount);
+                emberCurrency.AddAmount(emberUsage.User.Data, (int)emberUsage.Amount);
             }
 
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestEmberUsageUserData] = emberUsage.User;

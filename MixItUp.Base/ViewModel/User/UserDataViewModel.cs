@@ -217,41 +217,6 @@ namespace MixItUp.Base.ViewModel.User
             this.MixerUsername = user.MixerUsername;
         }
 
-        public UserCurrencyDataViewModel GetCurrency(UserCurrencyModel currency)
-        {
-            return new UserCurrencyDataViewModel(this, currency);
-        }
-
-        public int GetCurrencyAmount(UserCurrencyModel currency)
-        {
-            return currency.GetAmount(this);
-        }
-
-        public bool HasCurrencyAmount(UserCurrencyModel currency, int amount)
-        {
-            return (this.IsCurrencyRankExempt || this.GetCurrencyAmount(currency) >= amount);
-        }
-
-        public void SetCurrencyAmount(UserCurrencyModel currency, int amount)
-        {
-            currency.SetAmount(this, amount);
-        }
-
-        public void AddCurrencyAmount(UserCurrencyModel currency, int amount)
-        {
-            currency.AddAmount(this, amount);
-        }
-
-        public void SubtractCurrencyAmount(UserCurrencyModel currency, int amount)
-        {
-            currency.SubtractAmount(this, amount);
-        }
-
-        public void ResetCurrencyAmount(UserCurrencyModel currency)
-        {
-            currency.ResetAmount(this);
-        }
-
         public override bool Equals(object obj)
         {
             if (obj is UserDataViewModel)

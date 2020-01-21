@@ -79,7 +79,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             allUsers = allUsers.Where(u => !u.IsCurrencyRankExempt);
 
             List<User> currencyUserList = new List<User>();
-            foreach (UserDataViewModel currencyUser in allUsers.OrderByDescending(u => u.GetCurrencyAmount(currency)).Take(count))
+            foreach (UserDataViewModel currencyUser in allUsers.OrderByDescending(u => currency.GetAmount(u)).Take(count))
             {
                 currencyUserList.Add(UserController.UserFromUserDataViewModel(currencyUser));
             }
@@ -128,7 +128,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
 
                 if (user != null && giveData.Amount > 0)
                 {
-                    user.AddCurrencyAmount(currency, giveData.Amount);
+                    currency.AddAmount(user, giveData.Amount);
                     users.Add(UserController.UserFromUserDataViewModel(user));
                 }
             }

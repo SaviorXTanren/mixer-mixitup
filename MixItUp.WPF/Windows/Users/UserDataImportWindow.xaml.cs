@@ -218,7 +218,7 @@ namespace MixItUp.WPF.Windows.Users
                                     {
                                         if (int.TryParse(dataValue, out int currencyAmount))
                                         {
-                                            importedUserData.SetCurrencyAmount(currency, currencyAmount);
+                                            currency.SetAmount(importedUserData, currencyAmount);
                                         }
                                         columnMatched = true;
                                         break;

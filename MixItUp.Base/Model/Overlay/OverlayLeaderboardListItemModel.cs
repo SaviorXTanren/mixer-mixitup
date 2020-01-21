@@ -145,7 +145,7 @@ namespace MixItUp.Base.Model.Overlay
                     Dictionary<UserDataViewModel, int> currencyAmounts = new Dictionary<UserDataViewModel, int>();
                     foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values)
                     {
-                        currencyAmounts[userData] = userData.GetCurrencyAmount(currency);
+                        currencyAmounts[userData] = currency.GetAmount(userData);
                     }
 
                     var orderedUsers = currencyAmounts.OrderByDescending(kvp => kvp.Value);

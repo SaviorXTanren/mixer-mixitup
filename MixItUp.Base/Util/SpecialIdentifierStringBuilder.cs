@@ -272,8 +272,6 @@ namespace MixItUp.Base.Util
 
             if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TopSpecialIdentifierHeader))
             {
-                IEnumerable<UserDataViewModel> allUsers = this.GetAllCurrencyUsers();
-
                 if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopSparksUsedRegexSpecialIdentifierHeader))
                 {
                     await this.HandleSparksUsed("weekly", async (amount) => { return await ChannelSession.MixerUserConnection.GetWeeklySparksLeaderboard(ChannelSession.MixerChannel, amount); });
@@ -294,9 +292,15 @@ namespace MixItUp.Base.Util
                 {
                     await this.ReplaceNumberBasedRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopTimeRegexSpecialIdentifier, (total) =>
                     {
+                        Dictionary<uint, UserDataViewModel> applicableUsers = ChannelSession.Settings.UserData.ToDictionary();
+                        foreach (UserDataViewModel u in this.GetAllExemptUsers())
+                        {
+                            applicableUsers.Remove(u.MixerID);
+                        }
+
                         List<string> timeUserList = new List<string>();
                         int userPosition = 1;
-                        foreach (UserDataViewModel timeUser in allUsers.OrderByDescending(u => u.ViewingMinutes).Take(total))
+                        foreach (UserDataViewModel timeUser in applicableUsers.Values.OrderByDescending(u => u.ViewingMinutes).Take(total))
                         {
                             timeUserList.Add($"#{userPosition}) {timeUser.MixerUsername} - {timeUser.ViewingTimeShortString}");
                             userPosition++;
@@ -319,10 +323,14 @@ namespace MixItUp.Base.Util
                         {
                             List<string> currencyUserList = new List<string>();
                             int userPosition = 1;
-                            foreach (UserDataViewModel currencyUser in allUsers.OrderByDescending(u => u.GetCurrencyAmount(currency)).Take(total))
+                            foreach (Guid userID in this.GetOrderedCurrencyList(currency).Take(total))
                             {
-                                currencyUserList.Add($"#{userPosition}) {currencyUser.MixerUsername} - {currencyUser.GetCurrencyAmount(currency)}");
-                                userPosition++;
+                                UserDataViewModel userData = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.ID.Equals(userID));
+                                if (userData != null)
+                                {
+                                    currencyUserList.Add($"#{userPosition}) {userData.MixerUsername} - {currency.GetAmount(userData)}");
+                                    userPosition++;
+                                }
                             }
 
                             string result = "No users found.";
@@ -767,12 +775,12 @@ namespace MixItUp.Base.Util
                     {
                         if (this.ContainsSpecialIdentifier(identifierHeader + currency.UserPositionSpecialIdentifier))
                         {
-                            List<UserDataViewModel> allUsers = new List<UserDataViewModel>(this.GetAllCurrencyUsers());
-                            int index = allUsers.FindIndex(u => u.MixerID == user.MixerID);
+                            List<Guid> sortedUsers = this.GetOrderedCurrencyList(currency);
+                            int index = sortedUsers.FindIndex(id => id == userData.ID);
                             this.ReplaceSpecialIdentifier(identifierHeader + currency.UserPositionSpecialIdentifier, (index + 1).ToString());
                         }
 
-                        UserCurrencyDataViewModel currencyData = userData.GetCurrency(currency);
+                        UserCurrencyDataViewModel currencyData = new UserCurrencyDataViewModel(userData, currency);
                         UserRankViewModel rank = currencyData.GetRank();
                         UserRankViewModel nextRank = currencyData.GetNextRank();
 
@@ -947,14 +955,22 @@ namespace MixItUp.Base.Util
             }
         }
 
-        private IEnumerable<UserDataViewModel> GetAllCurrencyUsers()
+        private List<Guid> GetOrderedCurrencyList(UserCurrencyModel currency)
         {
-            Dictionary<uint, UserDataViewModel> allUsersDictionary = ChannelSession.Settings.UserData.ToDictionary();
-            allUsersDictionary.Remove(ChannelSession.MixerChannel.user.id);
+            Dictionary<Guid, int> applicableUsers = currency.UserAmounts.ToDictionary();
+            foreach (UserDataViewModel exemptUser in this.GetAllExemptUsers())
+            {
+                applicableUsers.Remove(exemptUser.ID);
+            }
+            return new List<Guid>(applicableUsers.OrderByDescending(kvp => kvp.Value).Select(kvp => kvp.Key));
+        }
 
-            IEnumerable<UserDataViewModel> allUsers = allUsersDictionary.Select(kvp => kvp.Value);
-            allUsers = allUsers.Where(u => !u.IsCurrencyRankExempt);
-            return allUsers;
+        private IEnumerable<UserDataViewModel> GetAllExemptUsers()
+        {
+            List<UserDataViewModel> exemptUsers = new List<UserDataViewModel>();
+            exemptUsers.Add(ChannelSession.Settings.UserData[ChannelSession.MixerChannel.user.id]);
+            exemptUsers.AddRange(ChannelSession.Settings.UserData.Values.Where(u => u.IsCurrencyRankExempt));
+            return exemptUsers;
         }
     }
 }

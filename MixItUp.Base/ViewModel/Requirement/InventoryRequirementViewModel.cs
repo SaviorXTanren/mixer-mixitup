@@ -72,7 +72,7 @@ namespace MixItUp.Base.ViewModel.Requirement
                 return false;
             }
 
-            return inventory.GetAmount(userData, this.ItemName) >= this.Amount;
+            return inventory.HasAmount(userData, this.ItemName, this.Amount);
         }
 
         public async Task SendNotMetWhisper(UserViewModel user)

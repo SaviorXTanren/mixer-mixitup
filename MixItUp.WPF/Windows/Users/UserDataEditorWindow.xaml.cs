@@ -54,7 +54,7 @@ namespace MixItUp.WPF.Windows.Users
             this.CurrencyRankStackPanel.Children.Clear();
             foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values.ToList())
             {
-                UserCurrencyDataViewModel currencyData = this.user.Data.GetCurrency(currency);
+                UserCurrencyDataViewModel currencyData = new UserCurrencyDataViewModel(this.user.Data, currency);
                 this.CurrencyRankStackPanel.Children.Add(new UserCurrencyIndividualEditorControl(currencyData));
             }
 
@@ -208,7 +208,7 @@ namespace MixItUp.WPF.Windows.Users
             this.user.Data.IsCurrencyRankExempt = this.CurrencyRankExemptToggleButton.IsChecked.GetValueOrDefault();
             foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
             {
-                this.user.Data.ResetCurrencyAmount(currency);
+                currency.ResetAmount(this.user.Data);
             }
             ChannelSession.Settings.UserData.ManualValueChanged(this.user.MixerID);
         }
