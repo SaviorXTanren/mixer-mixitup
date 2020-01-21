@@ -1,5 +1,4 @@
 ﻿using Mixer.Base.Clients;
-using Mixer.Base.Model.Interactive;
 using Mixer.Base.Model.MixPlay;
 using Mixer.Base.Model.User;
 using MixItUp.Base;
@@ -8,10 +7,10 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Model.MixPlay;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
-using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -47,10 +46,10 @@ namespace MixItUp.Desktop.Services
             await DesktopSettingsUpgrader.Version38Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version39Upgrade(version, filePath);
 
-            DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath, ignoreErrors: true);
+            SettingsV2Model settings = await SerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
             settings.InitializeDB = false;
             await ChannelSession.Services.Settings.Initialize(settings);
-            settings.Version = DesktopChannelSettings.LatestVersion;
+            settings.Version = SettingsV2Model.LatestVersion;
 
             await ChannelSession.Services.Settings.Save(settings);
         }
@@ -59,7 +58,7 @@ namespace MixItUp.Desktop.Services
         {
             if (version < 29)
             {
-                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath, ignoreErrors: true);
+                SettingsV2Model settings = await SerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
                 await ChannelSession.Services.Settings.Initialize(settings);
 
                 // No longer needed, this used to upgrade song request actions
@@ -72,7 +71,7 @@ namespace MixItUp.Desktop.Services
         {
             if (version < 30)
             {
-                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath, ignoreErrors: true);
+                SettingsV2Model settings = await SerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
                 await ChannelSession.Services.Settings.Initialize(settings);
 
                 settings.GameQueueUserJoinedCommand = CustomCommand.BasicChatCommand("Game Queue Used Joined", "You are #$queueposition in the queue to play.", isWhisper: true);
@@ -86,7 +85,7 @@ namespace MixItUp.Desktop.Services
         {
             if (version < 31)
             {
-                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath, ignoreErrors: true);
+                SettingsV2Model settings = await SerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
                 await ChannelSession.Services.Settings.Initialize(settings);
 
                 settings.GiveawayStartedReminderCommand = CustomCommand.BasicChatCommand("Giveaway Started/Reminder", "A giveaway has started for $giveawayitem! Type $giveawaycommand in chat in the next $giveawaytimelimit minute(s) to enter!");
@@ -113,7 +112,7 @@ namespace MixItUp.Desktop.Services
         {
             if (version < 32)
             {
-                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath, ignoreErrors: true);
+                SettingsV2Model settings = await SerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
                 await ChannelSession.Services.Settings.Initialize(settings);
 
                 foreach (GameCommandBase command in settings.GameCommands.ToList())
@@ -132,7 +131,7 @@ namespace MixItUp.Desktop.Services
         {
             if (version < 33)
             {
-                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath, ignoreErrors: true);
+                SettingsV2Model settings = await SerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
                 await ChannelSession.Services.Settings.Initialize(settings);
 
 #pragma warning disable CS0612 // Type or member is obsolete
@@ -153,7 +152,7 @@ namespace MixItUp.Desktop.Services
         {
             if (version < 34)
             {
-                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath, ignoreErrors: true);
+                SettingsV2Model settings = await SerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
                 await ChannelSession.Services.Settings.Initialize(settings);
 
                 string defaultColor = "Default Color";
@@ -178,7 +177,7 @@ namespace MixItUp.Desktop.Services
         {
             if (version < 35)
             {
-                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath, ignoreErrors: true);
+                SettingsV2Model settings = await SerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
                 await ChannelSession.Services.Settings.Initialize(settings);
 
                 foreach (CommandBase command in GetAllCommands(settings))
@@ -210,7 +209,7 @@ namespace MixItUp.Desktop.Services
         {
             if (version < 36)
             {
-                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath, ignoreErrors: true);
+                SettingsV2Model settings = await SerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
                 await ChannelSession.Services.Settings.Initialize(settings);
 
                 foreach (CommandBase command in GetAllCommands(settings))
@@ -243,7 +242,7 @@ namespace MixItUp.Desktop.Services
                 fileData = fileData.Replace("MixItUp.Base.Model.Interactive.InteractiveSharedProjectModel, MixItUp.Base", "MixItUp.Base.Model.Interactive.InteractiveSharedProjectModel, MixItUp.Desktop");
                 LegacyDesktopChannelSettings legacySettings = SerializerHelper.DeserializeFromString<LegacyDesktopChannelSettings>(fileData, ignoreErrors: true);
 
-                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath, ignoreErrors: true);
+                SettingsV2Model settings = await SerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
                 await ChannelSession.Services.Settings.Initialize(settings);
 
                 settings.ChatMixPlayAlertsColorScheme = legacySettings.ChatInteractiveAlertsColorScheme;
@@ -369,7 +368,7 @@ namespace MixItUp.Desktop.Services
         {
             if (version < 38)
             {
-                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath, ignoreErrors: true);
+                SettingsV2Model settings = await SerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
                 await ChannelSession.Services.Settings.Initialize(settings);
 
                 foreach (CommandBase command in GetAllCommands(settings))
@@ -385,7 +384,7 @@ namespace MixItUp.Desktop.Services
         {
             if (version < 39)
             {
-                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath, ignoreErrors: true);
+                SettingsV2Model settings = await SerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
                 await ChannelSession.Services.Settings.Initialize(settings);
 
                 foreach (EventCommand command in settings.EventCommands)
@@ -513,7 +512,7 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        private static IEnumerable<CommandBase> GetAllCommands(IChannelSettings settings)
+        private static IEnumerable<CommandBase> GetAllCommands(SettingsV2Model settings)
         {
             List<CommandBase> commands = new List<CommandBase>();
 
@@ -624,7 +623,7 @@ namespace MixItUp.Desktop.Services
     }
 
     [DataContract]
-    public class LegacyDesktopChannelSettings : DesktopChannelSettings
+    public class LegacyDesktopChannelSettings : SettingsV2Model
     {
         [JsonProperty]
         public bool ChatShowInteractiveAlerts { get; set; }

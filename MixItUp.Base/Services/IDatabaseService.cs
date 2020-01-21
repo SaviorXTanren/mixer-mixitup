@@ -13,4 +13,19 @@ namespace MixItUp.Base.Services
 
         Task BulkWrite(string databaseFilePath, string commandString, IEnumerable<Dictionary<string, object>> parameters);
     }
+
+    public static class DbDataReaderExtensions
+    {
+        public static bool ColumnExists(this DbDataReader reader, string columnName)
+        {
+            for (int i = 0; i < reader.FieldCount; i++)
+            {
+                if (reader.GetName(i).Equals(columnName, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
 }

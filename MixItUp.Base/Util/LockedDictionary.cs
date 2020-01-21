@@ -11,6 +11,7 @@ namespace MixItUp.Base.Util
         protected object objLock = new object();
 
         public LockedDictionary() { }
+
         public LockedDictionary(IEqualityComparer<K> comparer)
         {
             this.items = new Dictionary<K, V>(comparer);

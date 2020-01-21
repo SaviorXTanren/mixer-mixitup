@@ -1,5 +1,4 @@
 ﻿using Mixer.Base.Model.Channel;
-using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Favorites;
@@ -17,27 +16,23 @@ using MixItUp.Base.ViewModel.Window.Dashboard;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Model.OAuth;
-using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
-using System.Data.SQLite;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
-namespace MixItUp.Desktop
+namespace MixItUp.Base.Model.Settings
 {
     [DataContract]
-    public class DesktopSavableChannelSettings : ISavableChannelSettings
+    public class SettingsV2Model
     {
         public const int LatestVersion = 39;
 
         [JsonProperty]
-        public int Version { get; set; } = DesktopChannelSettings.LatestVersion;
+        public int Version { get; set; } = SettingsV2Model.LatestVersion;
 
         [JsonProperty]
         public bool LicenseAccepted { get; set; }
@@ -82,9 +77,9 @@ namespace MixItUp.Desktop
         public OAuthTokenModel JustGivingOAuthToken { get; set; }
 
         [JsonProperty]
-        public Dictionary<string, CommandGroupSettings> CommandGroups { get; set; }
+        public Dictionary<string, CommandGroupSettings> CommandGroups { get; set; } = new Dictionary<string, CommandGroupSettings>();
         [JsonProperty]
-        public Dictionary<string, HotKeyConfiguration> HotKeys { get; set; }
+        public Dictionary<string, HotKeyConfiguration> HotKeys { get; set; } = new Dictionary<string, HotKeyConfiguration>();
 
         [JsonProperty]
         public ExpandedChannelModel Channel { get; set; }
@@ -132,12 +127,12 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public bool PreventSmallerMixPlayCooldowns { get; set; }
         [JsonProperty]
-        public List<MixPlaySharedProjectModel> CustomMixPlayProjectIDs { get; set; }
+        public List<MixPlaySharedProjectModel> CustomMixPlayProjectIDs { get; set; } = new List<MixPlaySharedProjectModel>();
 
         [JsonProperty]
         public int RegularUserMinimumHours { get; set; }
         [JsonProperty]
-        public List<UserTitleModel> UserTitles { get; set; }
+        public List<UserTitleModel> UserTitles { get; set; } = new List<UserTitleModel>();
 
         [JsonProperty]
         public bool GameQueueSubPriority { get; set; }
@@ -230,7 +225,7 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public bool EnableOverlay { get; set; }
         [JsonProperty]
-        public Dictionary<string, int> OverlayCustomNameAndPorts { get; set; }
+        public Dictionary<string, int> OverlayCustomNameAndPorts { get; set; } = new Dictionary<string, int>();
         [JsonProperty]
         public string OverlaySourceName { get; set; }
         [JsonProperty]
@@ -326,18 +321,18 @@ namespace MixItUp.Desktop
         public bool AutoExportStatistics { get; set; }
 
         [JsonProperty]
-        public List<SerialDeviceModel> SerialDevices { get; set; }
+        public List<SerialDeviceModel> SerialDevices { get; set; } = new List<SerialDeviceModel>();
 
         [JsonProperty]
         public RemoteConnectionAuthenticationTokenModel RemoteHostConnection { get; set; }
         [JsonProperty]
-        public List<RemoteConnectionModel> RemoteClientConnections { get; set; }
+        public List<RemoteConnectionModel> RemoteClientConnections { get; set; } = new List<RemoteConnectionModel>();
 
         [JsonProperty]
-        public List<FavoriteGroupModel> FavoriteGroups { get; set; }
+        public List<FavoriteGroupModel> FavoriteGroups { get; set; } = new List<FavoriteGroupModel>();
 
         [JsonProperty]
-        public Dictionary<uint, JObject> CustomMixPlaySettings { get; set; }
+        public Dictionary<uint, JObject> CustomMixPlaySettings { get; set; } = new Dictionary<uint, JObject>();
 
         [JsonProperty]
         public DashboardLayoutTypeEnum DashboardLayout { get; set; }
@@ -362,152 +357,108 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public DateTimeOffset SettingsLastBackup { get; set; }
 
-        [JsonProperty]
-        protected Dictionary<Guid, UserCurrencyViewModel> currenciesInternal { get; set; }
-        [JsonProperty]
-        protected Dictionary<Guid, UserInventoryViewModel> inventoriesInternal { get; set; }
-
-        [JsonProperty]
-        protected Dictionary<string, int> cooldownGroupsInternal { get; set; }
-
-        [JsonProperty]
-        protected List<PreMadeChatCommandSettings> preMadeChatCommandSettingsInternal { get; set; }
-        [JsonProperty]
-        protected List<ChatCommand> chatCommandsInternal { get; set; }
-        [JsonProperty]
-        protected List<EventCommand> eventCommandsInternal { get; set; }
-        [JsonProperty]
-        protected List<MixPlayCommand> mixPlayCmmandsInternal { get; set; }
-        [JsonProperty]
-        protected List<TimerCommand> timerCommandsInternal { get; set; }
-        [JsonProperty]
-        protected List<ActionGroupCommand> actionGroupCommandsInternal { get; set; }
-        [JsonProperty]
-        protected List<GameCommandBase> gameCommandsInternal { get; set; }
-
-        [JsonProperty]
-        protected List<UserQuoteViewModel> userQuotesInternal { get; set; }
-
-        [JsonProperty]
-        [Obsolete]
-        public List<OverlayWidget> overlayWidgetsInternal { get; set; }
-        [JsonProperty]
-        protected List<OverlayWidgetModel> overlayWidgetModelsInternal { get; set; }
-
-        [JsonProperty]
-        protected List<RemoteProfileModel> remoteProfilesInternal { get; set; }
-        [JsonProperty]
-        protected Dictionary<Guid, RemoteProfileBoardsModel> remoteProfileBoardsInternal { get; set; }
-
-        [JsonProperty]
-        protected List<string> filteredWordsInternal { get; set; }
-        [JsonProperty]
-        protected List<string> bannedWordsInternal { get; set; }
-
-        [JsonProperty]
-        protected Dictionary<uint, List<MixPlayUserGroupModel>> mixPlayUserGroupsInternal { get; set; }
-        [JsonProperty]
-        [Obsolete]
-        internal Dictionary<string, int> interactiveCooldownGroupsInternal { get; set; }
-
-        public DesktopSavableChannelSettings()
-        {
-            this.CommandGroups = new Dictionary<string, CommandGroupSettings>();
-            this.HotKeys = new Dictionary<string, HotKeyConfiguration>();
-            this.OverlayCustomNameAndPorts = new Dictionary<string, int>();
-            this.CustomMixPlayProjectIDs = new List<MixPlaySharedProjectModel>();
-            this.UserTitles = new List<UserTitleModel>();
-            this.SerialDevices = new List<SerialDeviceModel>();
-            this.RemoteClientConnections = new List<RemoteConnectionModel>();
-            this.FavoriteGroups = new List<FavoriteGroupModel>();
-            this.CustomMixPlaySettings = new Dictionary<uint, JObject>();
-
-            this.currenciesInternal = new Dictionary<Guid, UserCurrencyViewModel>();
-            this.inventoriesInternal = new Dictionary<Guid, UserInventoryViewModel>();
-            this.preMadeChatCommandSettingsInternal = new List<PreMadeChatCommandSettings>();
-            this.cooldownGroupsInternal = new Dictionary<string, int>();
-            this.chatCommandsInternal = new List<ChatCommand>();
-            this.eventCommandsInternal = new List<EventCommand>();
-            this.mixPlayCmmandsInternal = new List<MixPlayCommand>();
-            this.timerCommandsInternal = new List<TimerCommand>();
-            this.actionGroupCommandsInternal = new List<ActionGroupCommand>();
-            this.gameCommandsInternal = new List<GameCommandBase>();
-            this.userQuotesInternal = new List<UserQuoteViewModel>();
-            this.remoteProfilesInternal = new List<RemoteProfileModel>();
-            this.remoteProfileBoardsInternal = new Dictionary<Guid, RemoteProfileBoardsModel>();
-            this.overlayWidgetModelsInternal = new List<OverlayWidgetModel>();
-            this.filteredWordsInternal = new List<string>();
-            this.bannedWordsInternal = new List<string>();
-            this.mixPlayUserGroupsInternal = new Dictionary<uint, List<MixPlayUserGroupModel>>();
-#pragma warning disable CS0612 // Type or member is obsolete
-            this.overlayWidgetsInternal = new List<OverlayWidget>();
-            this.interactiveCooldownGroupsInternal = new Dictionary<string, int>();
-#pragma warning restore CS0612 // Type or member is obsolete
-        }
-    }
-
-    [DataContract]
-    public class DesktopChannelSettings : DesktopSavableChannelSettings, IChannelSettings
-    {
-        private const string CommunityFilteredWordsFilePath = "Assets\\CommunityBannedWords.txt";
+        [JsonIgnore]
+        public DatabaseDictionary<uint, UserDataViewModel> UserData { get; set; } = new DatabaseDictionary<uint, UserDataViewModel>();
 
         [JsonIgnore]
-        public DatabaseDictionary<uint, UserDataViewModel> UserData { get; set; }
+        public LockedDictionary<Guid, UserCurrencyViewModel> Currencies { get; set; } = new LockedDictionary<Guid, UserCurrencyViewModel>();
+        [JsonIgnore]
+        public LockedDictionary<Guid, UserInventoryViewModel> Inventories { get; set; } = new LockedDictionary<Guid, UserInventoryViewModel>();
 
         [JsonIgnore]
-        public LockedDictionary<Guid, UserCurrencyViewModel> Currencies { get; set; }
-        [JsonIgnore]
-        public LockedDictionary<Guid, UserInventoryViewModel> Inventories { get; set; }
+        public LockedDictionary<string, int> CooldownGroups { get; set; } = new LockedDictionary<string, int>();
 
         [JsonIgnore]
-        public LockedDictionary<string, int> CooldownGroups { get; set; }
+        public LockedList<PreMadeChatCommandSettings> PreMadeChatCommandSettings { get; set; } = new LockedList<PreMadeChatCommandSettings>();
+        [JsonIgnore]
+        public LockedList<ChatCommand> ChatCommands { get; set; } = new LockedList<ChatCommand>();
+        [JsonIgnore]
+        public LockedList<EventCommand> EventCommands { get; set; } = new LockedList<EventCommand>();
+        [JsonIgnore]
+        public LockedList<MixPlayCommand> MixPlayCommands { get; set; } = new LockedList<MixPlayCommand>();
+        [JsonIgnore]
+        public LockedList<TimerCommand> TimerCommands { get; set; } = new LockedList<TimerCommand>();
+        [JsonIgnore]
+        public LockedList<ActionGroupCommand> ActionGroupCommands { get; set; } = new LockedList<ActionGroupCommand>();
+        [JsonIgnore]
+        public LockedList<GameCommandBase> GameCommands { get; set; } = new LockedList<GameCommandBase>();
 
         [JsonIgnore]
-        public LockedList<PreMadeChatCommandSettings> PreMadeChatCommandSettings { get; set; }
-        [JsonIgnore]
-        public LockedList<ChatCommand> ChatCommands { get; set; }
-        [JsonIgnore]
-        public LockedList<EventCommand> EventCommands { get; set; }
-        [JsonIgnore]
-        public LockedList<MixPlayCommand> MixPlayCommands { get; set; }
-        [JsonIgnore]
-        public LockedList<TimerCommand> TimerCommands { get; set; }
-        [JsonIgnore]
-        public LockedList<ActionGroupCommand> ActionGroupCommands { get; set; }
-        [JsonIgnore]
-        public LockedList<GameCommandBase> GameCommands { get; set; }
+        public LockedList<UserQuoteViewModel> UserQuotes { get; set; } = new LockedList<UserQuoteViewModel>();
 
         [JsonIgnore]
-        public LockedList<UserQuoteViewModel> UserQuotes { get; set; }
+        public LockedList<OverlayWidgetModel> OverlayWidgets { get; set; } = new LockedList<OverlayWidgetModel>();
 
         [JsonIgnore]
-        public LockedList<OverlayWidgetModel> OverlayWidgets { get; set; }
+        public LockedList<RemoteProfileModel> RemoteProfiles { get; set; } = new LockedList<RemoteProfileModel>();
+        [JsonIgnore]
+        public LockedDictionary<Guid, RemoteProfileBoardsModel> RemoteProfileBoards { get; set; } = new LockedDictionary<Guid, RemoteProfileBoardsModel>();
 
         [JsonIgnore]
-        public LockedList<RemoteProfileModel> RemoteProfiles { get; set; }
+        public LockedList<string> FilteredWords { get; set; } = new LockedList<string>();
         [JsonIgnore]
-        public LockedDictionary<Guid, RemoteProfileBoardsModel> RemoteProfileBoards { get; set; }
+        public LockedList<string> BannedWords { get; set; } = new LockedList<string>();
 
         [JsonIgnore]
-        public LockedList<string> FilteredWords { get; set; }
-        [JsonIgnore]
-        public LockedList<string> BannedWords { get; set; }
-        [JsonIgnore]
-        public LockedList<string> CommunityFilteredWords { get; set; }
-
-        [JsonIgnore]
-        public LockedDictionary<uint, List<MixPlayUserGroupModel>> MixPlayUserGroups { get; set; }
+        public LockedDictionary<uint, List<MixPlayUserGroupModel>> MixPlayUserGroups { get; set; } = new LockedDictionary<uint, List<MixPlayUserGroupModel>>();
 
         [JsonIgnore]
         public string DatabasePath { get; set; }
 
         [JsonIgnore]
-        internal SQLiteDatabaseWrapper DatabaseWrapper;
-
-        [JsonIgnore]
         internal bool InitializeDB = true;
 
-        public DesktopChannelSettings(ExpandedChannelModel channel, bool isStreamer = true)
+        [JsonProperty]
+        protected Dictionary<Guid, UserCurrencyViewModel> currenciesInternal { get; set; } = new Dictionary<Guid, UserCurrencyViewModel>();
+        [JsonProperty]
+        protected Dictionary<Guid, UserInventoryViewModel> inventoriesInternal { get; set; } = new Dictionary<Guid, UserInventoryViewModel>();
+
+        [JsonProperty]
+        protected Dictionary<string, int> cooldownGroupsInternal { get; set; } = new Dictionary<string, int>();
+
+        [JsonProperty]
+        protected List<PreMadeChatCommandSettings> preMadeChatCommandSettingsInternal { get; set; } = new List<PreMadeChatCommandSettings>();
+        [JsonProperty]
+        protected List<ChatCommand> chatCommandsInternal { get; set; } = new List<ChatCommand>();
+        [JsonProperty]
+        protected List<EventCommand> eventCommandsInternal { get; set; } = new List<EventCommand>();
+        [JsonProperty]
+        protected List<MixPlayCommand> mixPlayCmmandsInternal { get; set; } = new List<MixPlayCommand>();
+        [JsonProperty]
+        protected List<TimerCommand> timerCommandsInternal { get; set; } = new List<TimerCommand>();
+        [JsonProperty]
+        protected List<ActionGroupCommand> actionGroupCommandsInternal { get; set; } = new List<ActionGroupCommand>();
+        [JsonProperty]
+        protected List<GameCommandBase> gameCommandsInternal { get; set; } = new List<GameCommandBase>();
+
+        [JsonProperty]
+        protected List<UserQuoteViewModel> userQuotesInternal { get; set; } = new List<UserQuoteViewModel>();
+
+        [JsonProperty]
+        [Obsolete]
+        public List<OverlayWidget> overlayWidgetsInternal { get; set; } = new List<OverlayWidget>();
+        [JsonProperty]
+        protected List<OverlayWidgetModel> overlayWidgetModelsInternal { get; set; } = new List<OverlayWidgetModel>();
+
+        [JsonProperty]
+        protected List<RemoteProfileModel> remoteProfilesInternal { get; set; } = new List<RemoteProfileModel>();
+        [JsonProperty]
+        protected Dictionary<Guid, RemoteProfileBoardsModel> remoteProfileBoardsInternal { get; set; } = new Dictionary<Guid, RemoteProfileBoardsModel>();
+
+        [JsonProperty]
+        protected List<string> filteredWordsInternal { get; set; } = new List<string>();
+        [JsonProperty]
+        protected List<string> bannedWordsInternal { get; set; } = new List<string>();
+
+        [JsonProperty]
+        protected Dictionary<uint, List<MixPlayUserGroupModel>> mixPlayUserGroupsInternal { get; set; } = new Dictionary<uint, List<MixPlayUserGroupModel>>();
+        [JsonProperty]
+        [Obsolete]
+        internal Dictionary<string, int> interactiveCooldownGroupsInternal { get; set; } = new Dictionary<string, int>();
+
+        public SettingsV2Model() { }
+
+        public SettingsV2Model(ExpandedChannelModel channel, bool isStreamer = true)
             : this()
         {
             this.Channel = channel;
@@ -517,29 +468,6 @@ namespace MixItUp.Desktop
 
             this.DashboardItems = new List<DashboardItemTypeEnum>() { DashboardItemTypeEnum.None, DashboardItemTypeEnum.None, DashboardItemTypeEnum.None, DashboardItemTypeEnum.None };
             this.DashboardQuickCommands = new List<Guid>() { Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty };
-        }
-
-        public DesktopChannelSettings()
-            : base()
-        {
-            this.UserData = new DatabaseDictionary<uint, UserDataViewModel>();
-            this.Currencies = new LockedDictionary<Guid, UserCurrencyViewModel>();
-            this.Inventories = new LockedDictionary<Guid, UserInventoryViewModel>();
-            this.CooldownGroups = new LockedDictionary<string, int>();
-            this.PreMadeChatCommandSettings = new LockedList<PreMadeChatCommandSettings>();
-            this.ChatCommands = new LockedList<ChatCommand>();
-            this.EventCommands = new LockedList<EventCommand>();
-            this.MixPlayCommands = new LockedList<MixPlayCommand>();
-            this.TimerCommands = new LockedList<TimerCommand>();
-            this.ActionGroupCommands = new LockedList<ActionGroupCommand>();
-            this.GameCommands = new LockedList<GameCommandBase>();
-            this.UserQuotes = new LockedList<UserQuoteViewModel>();
-            this.RemoteProfiles = new LockedList<RemoteProfileModel>();
-            this.OverlayWidgets = new LockedList<OverlayWidgetModel>();
-            this.FilteredWords = new LockedList<string>();
-            this.BannedWords = new LockedList<string>();
-            this.CommunityFilteredWords = new LockedList<string>();
-            this.MixPlayUserGroups = new LockedDictionary<uint, List<MixPlayUserGroupModel>>();
         }
 
         public async Task Initialize()
@@ -571,18 +499,12 @@ namespace MixItUp.Desktop
                 this.DashboardQuickCommands = new List<Guid>() { Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty };
             }
 
-            if (File.Exists(DesktopChannelSettings.CommunityFilteredWordsFilePath))
-            {
-                this.CommunityFilteredWords = new LockedList<string>(File.ReadAllLines(DesktopChannelSettings.CommunityFilteredWordsFilePath));
-            }
-
             if (this.IsStreamer)
             {
-                this.DatabaseWrapper = new SQLiteDatabaseWrapper(this.DatabasePath);
                 if (this.InitializeDB)
                 {
                     Dictionary<uint, UserDataViewModel> initialUsers = new Dictionary<uint, UserDataViewModel>();
-                    await this.DatabaseWrapper.RunReadCommand("SELECT * FROM Users", (SQLiteDataReader dataReader) =>
+                    await ChannelSession.Services.Database.Read(this.DatabasePath, "SELECT * FROM Users", (DbDataReader dataReader) =>
                     {
                         UserDataViewModel userData = new UserDataViewModel(dataReader, this);
                         initialUsers[userData.MixerID] = userData;
@@ -608,7 +530,7 @@ namespace MixItUp.Desktop
 
         public async Task CopyLatestValues()
         {
-            this.Version = DesktopChannelSettings.LatestVersion;
+            this.Version = SettingsV2Model.LatestVersion;
 
             if (ChannelSession.MixerUserConnection != null)
             {
@@ -652,40 +574,40 @@ namespace MixItUp.Desktop
             if (this.IsStreamer)
             {
                 IEnumerable<uint> removedUsers = this.UserData.GetRemovedValues();
-                await this.DatabaseWrapper.RunBulkWriteCommand("DELETE FROM Users WHERE ID = @ID", removedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter("@ID", value: (int)u) }));
+                await ChannelSession.Services.Database.BulkWrite(this.DatabasePath, "DELETE FROM Users WHERE ID = @ID", removedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u } }));
 
                 IEnumerable<UserDataViewModel> addedUsers = this.UserData.GetAddedValues();
                 addedUsers = addedUsers.Where(u => !string.IsNullOrEmpty(u.MixerUsername));
-                await this.DatabaseWrapper.RunBulkWriteCommand("INSERT INTO Users(ID, UserName, ViewingMinutes, CurrencyAmounts, InventoryAmounts, CustomCommands, Options) VALUES(?,?,?,?,?,?,?)",
-                    addedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter(DbType.UInt32, u.MixerID), new SQLiteParameter(DbType.String, value: u.MixerUsername),
-                    new SQLiteParameter(DbType.Int32, value: u.ViewingMinutes), new SQLiteParameter(DbType.String, value: u.GetCurrencyAmountsString()),
-                    new SQLiteParameter(DbType.String, value: u.GetInventoryAmountsString()), new SQLiteParameter(DbType.String, value: u.GetCustomCommandsString()),
-                    new SQLiteParameter(DbType.String, value: u.GetOptionsString()) }));
+                await ChannelSession.Services.Database.BulkWrite(this.DatabasePath, "INSERT INTO Users(ID, UserName, ViewingMinutes, CurrencyAmounts, InventoryAmounts, CustomCommands, Options)" +
+                    " VALUES(@ID, @UserName, @ViewingMinutes, @CurrencyAmounts, @InventoryAmounts, @CustomCommands, @Options)",
+                    addedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.MixerID }, { "@UserName", u.MixerUsername }, { "@ViewingMinutes", u.ViewingMinutes },
+                        { "@CurrencyAmounts", u.GetCurrencyAmountsString() }, { "@InventoryAmounts", u.GetInventoryAmountsString() }, { "@CustomCommands", u.GetCustomCommandsString() },
+                        { "@Options", u.GetOptionsString() } }));
 
                 IEnumerable<UserDataViewModel> changedUsers = this.UserData.GetChangedValues();
                 changedUsers = changedUsers.Where(u => !string.IsNullOrEmpty(u.MixerUsername));
-                await this.DatabaseWrapper.RunBulkWriteCommand("UPDATE Users SET UserName = @UserName, ViewingMinutes = @ViewingMinutes, CurrencyAmounts = @CurrencyAmounts," +
+                await ChannelSession.Services.Database.BulkWrite(this.DatabasePath, "UPDATE Users SET UserName = @UserName, ViewingMinutes = @ViewingMinutes, CurrencyAmounts = @CurrencyAmounts," +
                     " InventoryAmounts = @InventoryAmounts, CustomCommands = @CustomCommands, Options = @Options WHERE ID = @ID",
-                    changedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter("@UserName", value: u.MixerUsername), new SQLiteParameter("@ViewingMinutes", value: u.ViewingMinutes),
-                    new SQLiteParameter("@CurrencyAmounts", value: u.GetCurrencyAmountsString()), new SQLiteParameter("@InventoryAmounts", value: u.GetInventoryAmountsString()),
-                    new SQLiteParameter("@CustomCommands", value: u.GetCustomCommandsString()), new SQLiteParameter("@Options", value: u.GetOptionsString()), new SQLiteParameter("@ID", value: (int)u.MixerID) }));
+                    changedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.MixerID }, { "@UserName", u.MixerUsername }, { "@ViewingMinutes", u.ViewingMinutes },
+                        { "@CurrencyAmounts", u.GetCurrencyAmountsString() }, { "@InventoryAmounts", u.GetInventoryAmountsString() }, { "@CustomCommands", u.GetCustomCommandsString() },
+                        { "@Options", u.GetOptionsString() } }));
             }
 
             // Clear out unused Cooldown Groups and Command Groups
-            var allUsedCooldownGroupNames = 
+            var allUsedCooldownGroupNames =
                 this.MixPlayCommands.Select(c => c.Requirements?.Cooldown?.GroupName)
                 .Union(this.ChatCommands.Select(c => c.Requirements?.Cooldown?.GroupName))
                 .Union(this.GameCommands.Select(c => c.Requirements?.Cooldown?.GroupName))
                 .Distinct();
             var allUnusedCooldownGroupNames = this.CooldownGroups.ToDictionary().Where(c => !allUsedCooldownGroupNames.Contains(c.Key, StringComparer.InvariantCultureIgnoreCase));
-            foreach(var unused in allUnusedCooldownGroupNames)
+            foreach (var unused in allUnusedCooldownGroupNames)
             {
                 this.CooldownGroups.Remove(unused.Key);
             }
 
-            var allUsedCommandGroupNames = 
+            var allUsedCommandGroupNames =
                 this.ChatCommands.Select(c => c.GroupName)
-                .Union(this.ActionGroupCommands.Select(a=>a.GroupName))
+                .Union(this.ActionGroupCommands.Select(a => a.GroupName))
                 .Union(this.TimerCommands.Select(a => a.GroupName))
                 .Distinct();
             var allUnusedCommandGroupNames = this.CommandGroups.Where(c => !allUsedCommandGroupNames.Contains(c.Key, StringComparer.InvariantCultureIgnoreCase));
@@ -710,111 +632,5 @@ namespace MixItUp.Desktop
         }
 
         public Version GetLatestVersion() { return Assembly.GetEntryAssembly().GetName().Version; }
-    }
-
-    public class SQLiteDatabaseWrapper
-    {
-        private const int MaxBulkInsertRows = 10000;
-
-        public string DatabaseFilePath { get; set; }
-
-        public SQLiteDatabaseWrapper(string databaseFilePath)
-        {
-            this.DatabaseFilePath = databaseFilePath;
-        }
-
-        public async Task EstablishConnection(Func<SQLiteConnection, Task> databaseQuery)
-        {
-            await this.AsyncWrapper(async () =>
-            {
-                try
-                {
-                    if (File.Exists(this.DatabaseFilePath))
-                    {
-                        using (SQLiteConnection connection = new SQLiteConnection("Data Source=" + this.DatabaseFilePath))
-                        {
-                            await connection.OpenAsync();
-                            await databaseQuery(connection);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log(ex);
-                }
-            });
-        }
-
-        public async Task RunReadCommand(string commandString, Action<SQLiteDataReader> processRow)
-        {
-            await this.EstablishConnection((connection) =>
-            {
-                using (SQLiteCommand command = new SQLiteCommand(commandString, connection))
-                {
-                    using (SQLiteDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            try
-                            {
-                                processRow(reader);
-                            }
-                            catch (Exception ex) { Logger.Log(ex); }
-                        }
-                    }
-                }
-                return Task.FromResult(0);
-            });
-        }
-
-        public async Task RunWriteCommand(string commandString)
-        {
-            Logger.Log(LogLevel.Debug, string.Format("SQLite Query: {0}", commandString));
-
-            await this.EstablishConnection(async (connection) =>
-            {
-                using (SQLiteCommand command = new SQLiteCommand(commandString, connection))
-                {
-                    await command.ExecuteNonQueryAsync();
-                }
-            });
-        }
-
-        public async Task RunBulkWriteCommand(string commandString, IEnumerable<IEnumerable<SQLiteParameter>> parameters)
-        {
-            await this.EstablishConnection(async (connection) =>
-            {
-                for (int i = 0; i < parameters.Count(); i += SQLiteDatabaseWrapper.MaxBulkInsertRows)
-                {
-                    var rowsToInsert = parameters.Skip(i).Take(SQLiteDatabaseWrapper.MaxBulkInsertRows);
-
-                    using (SQLiteTransaction transaction = connection.BeginTransaction())
-                    {
-                        using (SQLiteCommand command = new SQLiteCommand(commandString, connection))
-                        {
-                            foreach (IEnumerable<SQLiteParameter> rowParameters in rowsToInsert)
-                            {
-                                try
-                                {
-                                    foreach (SQLiteParameter rowParam in rowParameters)
-                                    {
-                                        command.Parameters.Add(rowParam);
-                                    }
-
-                                    Logger.Log(LogLevel.Debug, string.Format("SQLite Query: {0} - {1}", commandString, SerializerHelper.SerializeToString(rowParameters)));
-
-                                    await command.ExecuteNonQueryAsync();
-                                    command.Parameters.Clear();
-                                }
-                                catch (Exception ex) { Logger.Log(ex); }
-                            }
-                        }
-                        transaction.Commit();
-                    }
-                }
-            });
-        }
-
-        private async Task AsyncWrapper(Func<Task> function) { await Task.Run(async () => { await function(); }); }
     }
 }

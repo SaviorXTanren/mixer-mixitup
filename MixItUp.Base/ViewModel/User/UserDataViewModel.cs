@@ -2,6 +2,8 @@
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Import.ScorpBot;
 using MixItUp.Base.Model.Import.Streamlabs;
+using MixItUp.Base.Model.Settings;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -243,7 +245,7 @@ namespace MixItUp.Base.ViewModel.User
             this.ViewingMinutes = (int)(viewer.Hours * 60.0);
         }
 
-        public UserDataViewModel(DbDataReader dataReader, IChannelSettings settings)
+        public UserDataViewModel(DbDataReader dataReader, SettingsV2Model settings)
             : this(uint.Parse(dataReader["ID"].ToString()), dataReader["UserName"].ToString())
         {
             this.ViewingMinutes = int.Parse(dataReader["ViewingMinutes"].ToString());

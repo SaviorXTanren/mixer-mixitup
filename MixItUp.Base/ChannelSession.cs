@@ -6,6 +6,7 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Model.API;
 using MixItUp.Base.Model.Chat.Mixer;
+using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Mixer;
@@ -34,7 +35,7 @@ namespace MixItUp.Base
         public static PrivatePopulatedUserModel MixerBot { get; private set; }
         public static ExpandedChannelModel MixerChannel { get; private set; }
 
-        public static IChannelSettings Settings { get; private set; }
+        public static SettingsV2Model Settings { get; private set; }
 
         public static MixPlayClientWrapper Interactive { get; private set; }
 
@@ -150,7 +151,7 @@ namespace MixItUp.Base
             return false;
         }
 
-        public static async Task<bool> ConnectUser(IChannelSettings settings)
+        public static async Task<bool> ConnectUser(SettingsV2Model settings)
         {
             ChannelSession.Settings = settings;
             try
@@ -161,11 +162,10 @@ namespace MixItUp.Base
                     ChannelSession.MixerUserConnection = result.Result;
                     return await ChannelSession.InitializeInternal(ChannelSession.Settings.IsStreamer, ChannelSession.Settings.Channel.token);
                 }
-            }
-            catch (HttpRestRequestException ex)
-            {
-                Logger.Log(ex);
-                return await ChannelSession.ConnectUser(ChannelSession.Settings.IsStreamer ? null : ChannelSession.Settings.Channel.token);
+                else
+                {
+                    return await ChannelSession.ConnectUser(ChannelSession.Settings.IsStreamer ? null : ChannelSession.Settings.Channel.token);
+                }
             }
             catch (Exception ex)
             {
@@ -192,7 +192,7 @@ namespace MixItUp.Base
             return false;
         }
 
-        public static async Task<bool> ConnectBot(IChannelSettings settings)
+        public static async Task<bool> ConnectBot(SettingsV2Model settings)
         {
             if (settings.BotOAuthToken != null)
             {
@@ -479,6 +479,7 @@ namespace MixItUp.Base
 
                     ChannelSession.Services.TimerService.Initialize();
                     ChannelSession.Services.Statistics.Initialize();
+                    await ModerationHelper.Initialize();
 
                     ChannelSession.Services.InputService.HotKeyPressed += InputService_HotKeyPressed;
 

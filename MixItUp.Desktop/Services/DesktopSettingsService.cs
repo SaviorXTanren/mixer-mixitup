@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.Channel;
 using MixItUp.Base;
+using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
@@ -22,19 +23,19 @@ namespace MixItUp.Desktop.Services
 
         private static SemaphoreSlim semaphore = new SemaphoreSlim(1);
 
-        public async Task<IEnumerable<IChannelSettings>> GetAllSettings()
+        public async Task<IEnumerable<SettingsV2Model>> GetAllSettings()
         {
             if (!Directory.Exists(SettingsDirectoryName))
             {
                 Directory.CreateDirectory(SettingsDirectoryName);
             }
 
-            List<IChannelSettings> settings = new List<IChannelSettings>();
+            List<SettingsV2Model> settings = new List<SettingsV2Model>();
             foreach (string filePath in Directory.GetFiles(SettingsDirectoryName))
             {
                 if (filePath.EndsWith(".xml"))
                 {
-                    IChannelSettings setting = null;
+                    SettingsV2Model setting = null;
                     try
                     {
                         setting = await this.UpgradeSettings(filePath);
@@ -60,9 +61,9 @@ namespace MixItUp.Desktop.Services
 
         public void Initialize() { Directory.CreateDirectory(SettingsDirectoryName); }
 
-        public async Task<IChannelSettings> Create(ExpandedChannelModel channel, bool isStreamer)
+        public async Task<SettingsV2Model> Create(ExpandedChannelModel channel, bool isStreamer)
         {
-            IChannelSettings settings = new DesktopChannelSettings(channel, isStreamer);
+            SettingsV2Model settings = new SettingsV2Model(channel, isStreamer);
             if (File.Exists(this.GetFilePath(settings)))
             {
                 var tempSettings = await this.UpgradeSettings(this.GetFilePath(settings));
@@ -84,25 +85,23 @@ namespace MixItUp.Desktop.Services
             return settings;
         }
 
-        public async Task Initialize(IChannelSettings settings)
+        public async Task Initialize(SettingsV2Model settings)
         {
-            DesktopChannelSettings desktopSettings = (DesktopChannelSettings)settings;
-
-            desktopSettings.DatabasePath = this.GetDatabaseFilePath(desktopSettings);
-            if (!File.Exists(desktopSettings.DatabasePath))
+            settings.DatabasePath = this.GetDatabaseFilePath(settings);
+            if (!File.Exists(settings.DatabasePath))
             {
-                File.Copy(SettingsTemplateDatabaseFileName, desktopSettings.DatabasePath, overwrite: true);
+                File.Copy(SettingsTemplateDatabaseFileName, settings.DatabasePath, overwrite: true);
             }
 
-            await desktopSettings.Initialize();
+            await settings.Initialize();
         }
 
-        public async Task<bool> SaveAndValidate(IChannelSettings settings)
+        public async Task<bool> SaveAndValidate(SettingsV2Model settings)
         {
             try
             {
                 await this.Save(settings);
-                IChannelSettings loadedSettings = await this.UpgradeSettings(this.GetFilePath(settings));
+                SettingsV2Model loadedSettings = await this.UpgradeSettings(this.GetFilePath(settings));
                 return true;
             }
             catch (Exception ex)
@@ -112,23 +111,21 @@ namespace MixItUp.Desktop.Services
             return false;
         }
 
-        public async Task Save(IChannelSettings settings) { await this.SaveSettings(settings, this.GetFilePath(settings)); }
+        public async Task Save(SettingsV2Model settings) { await this.SaveSettings(settings, this.GetFilePath(settings)); }
 
-        public async Task SaveBackup(IChannelSettings settings)
+        public async Task SaveBackup(SettingsV2Model settings)
         {
             string filePath = this.GetFilePath(settings);
             await this.SaveSettings(settings, filePath + DesktopSettingsService.BackupFileExtension);
 
-            DesktopChannelSettings desktopSettings = (DesktopChannelSettings)settings;
-            File.Copy(desktopSettings.DatabasePath, desktopSettings.DatabasePath + DesktopSettingsService.BackupFileExtension, overwrite: true);
+            File.Copy(settings.DatabasePath, settings.DatabasePath + DesktopSettingsService.BackupFileExtension, overwrite: true);
         }
 
-        public async Task SavePackagedBackup(IChannelSettings settings, string filePath)
+        public async Task SavePackagedBackup(SettingsV2Model settings, string filePath)
         {
             await this.Save(ChannelSession.Settings);
 
             string settingsFilePath = this.GetFilePath(settings);
-            DesktopChannelSettings desktopSettings = (DesktopChannelSettings)settings;
 
             if (Directory.Exists(Path.GetDirectoryName(filePath)))
             {
@@ -140,12 +137,12 @@ namespace MixItUp.Desktop.Services
                 using (ZipArchive zipFile = ZipFile.Open(filePath, ZipArchiveMode.Create))
                 {
                     zipFile.CreateEntryFromFile(settingsFilePath, Path.GetFileName(settingsFilePath));
-                    zipFile.CreateEntryFromFile(desktopSettings.DatabasePath, Path.GetFileName(desktopSettings.DatabasePath));
+                    zipFile.CreateEntryFromFile(settings.DatabasePath, Path.GetFileName(settings.DatabasePath));
                 }
             }
         }
 
-        public async Task PerformBackupIfApplicable(IChannelSettings settings)
+        public async Task PerformBackupIfApplicable(SettingsV2Model settings)
         {
             if (settings.SettingsBackupRate != SettingsBackupRateEnum.None && !string.IsNullOrEmpty(settings.SettingsBackupLocation))
             {
@@ -166,28 +163,26 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        public string GetFilePath(IChannelSettings settings)
+        public string GetFilePath(SettingsV2Model settings)
         {
             return Path.Combine(SettingsDirectoryName, string.Format("{0}.{1}.xml", settings.Channel.id.ToString(), (settings.IsStreamer) ? "Streamer" : "Moderator"));
         }
 
-        public async Task ClearAllUserData(IChannelSettings settings)
+        public async Task ClearAllUserData(SettingsV2Model settings)
         {
-            DesktopChannelSettings desktopSettings = (DesktopChannelSettings)settings;
-            await desktopSettings.DatabaseWrapper.RunWriteCommand("DELETE FROM Users");
+            await ChannelSession.Services.Database.Write(settings.DatabasePath, "DELETE FROM Users");
         }
 
-        public async Task SaveSettings(IChannelSettings settings, string filePath)
+        public async Task SaveSettings(SettingsV2Model settings, string filePath)
         {
             await semaphore.WaitAndRelease(async () =>
             {
-                DesktopChannelSettings desktopSettings = (DesktopChannelSettings)settings;
-                await desktopSettings.CopyLatestValues();
-                await SerializerHelper.SerializeToFile(filePath, desktopSettings);
+                await settings.CopyLatestValues();
+                await SerializerHelper.SerializeToFile(filePath, settings);
             });
         }
 
-        public string GetDatabaseFilePath(IChannelSettings settings)
+        public string GetDatabaseFilePath(SettingsV2Model settings)
         {
             return Path.Combine(SettingsDirectoryName, string.Format("{0}.{1}.sqlite", settings.Channel.id.ToString(), (settings.IsStreamer) ? "Streamer" : "Moderator"));
         }
@@ -206,10 +201,10 @@ namespace MixItUp.Desktop.Services
 
         public int GetLatestVersion()
         {
-            return DesktopChannelSettings.LatestVersion;
+            return SettingsV2Model.LatestVersion;
         }
 
-        private async Task<IChannelSettings> UpgradeSettings(string filePath)
+        private async Task<SettingsV2Model> UpgradeSettings(string filePath)
         {
             int currentVersion = await GetSettingsVersion(filePath);
             if (currentVersion == -1)
@@ -217,17 +212,17 @@ namespace MixItUp.Desktop.Services
                 // Settings file is invalid, we can't use this
                 return null;
             }
-            else if (currentVersion > DesktopChannelSettings.LatestVersion)
+            else if (currentVersion > SettingsV2Model.LatestVersion)
             {
                 // Future build, like a preview build, we can't load this
                 return null;
             }
-            else if (currentVersion < DesktopChannelSettings.LatestVersion)
+            else if (currentVersion < SettingsV2Model.LatestVersion)
             {
                 await DesktopSettingsUpgrader.UpgradeSettingsToLatest(currentVersion, filePath);
             }
 
-            return await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
+            return await SerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath);
         }
     }
 }

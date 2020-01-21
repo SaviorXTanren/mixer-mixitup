@@ -70,7 +70,7 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock x:Name="UserNameTextBlock" Grid.Column="0" Text="{Binding UserName}" VerticalAlignment="Center" />
+                            <TextBlock x:Name="UserNameTextBlock" Grid.Column="0" Text="{Binding MixerUsername}" VerticalAlignment="Center" />
 
                             <Image Grid.Column="2" Source="{Binding FanProgression.level.SmallAssetURL}" MaxHeight="20" MaxWidth="20" />
                             <TextBlock Grid.Column="4" Text="{Binding FanProgression.level.level}" VerticalAlignment="Center" />

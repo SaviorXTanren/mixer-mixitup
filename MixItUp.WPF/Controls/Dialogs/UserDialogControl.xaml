@@ -83,7 +83,7 @@
                     <Image Grid.Column="0" Source="{Binding FanProgression.level.SmallAssetURL}" MaxHeight="20" MaxWidth="20" />
                     <TextBlock Grid.Column="2" Text="{Binding FanProgression.level.level}" VerticalAlignment="Center" />
 
-                    <TextBlock Grid.Column="4" Text="{Binding UserName}" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="4" Text="{Binding MixerUsername}" VerticalAlignment="Center" />
                 </Grid>
 
                 <TextBlock Grid.Column="0" Grid.Row="2">Roles:</TextBlock>

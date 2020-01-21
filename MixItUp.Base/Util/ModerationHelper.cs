@@ -55,11 +55,24 @@ namespace MixItUp.Base.Util
         public const string BannedWordRegexFormat = "(^|[^\\w]){0}([^\\w]|$)";
         public const string BannedWordWildcardRegexFormat = "\\S*";
 
+        public static LockedList<string> CommunityFilteredWords { get; set; } = new LockedList<string>();
+
+        private const string CommunityFilteredWordsFilePath = "Assets\\CommunityBannedWords.txt";
+
         private const int MinimumMessageLengthForPercentageModeration = 5;
 
         private static readonly Regex EmoteRegex = new Regex(":\\w+ ");
         private static readonly Regex EmojiRegex = new Regex(@"\uD83D[\uDC00-\uDFFF]|\uD83C[\uDC00-\uDFFF]|\uFFFD");
         private static readonly Regex LinkRegex = new Regex(@"(?xi)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'"".,<>?«»“”‘’]))");
+
+        public static async Task Initialize()
+        {
+            if (ChannelSession.Services.FileService.FileExists(ModerationHelper.CommunityFilteredWordsFilePath))
+            {
+                string text = await ChannelSession.Services.FileService.ReadFile(ModerationHelper.CommunityFilteredWordsFilePath);
+                ModerationHelper.CommunityFilteredWords = new LockedList<string>(text.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries));
+            }
+        }
 
         public static async Task<string> ShouldBeModerated(UserViewModel user, string text, bool containsLink = false)
         {
@@ -111,7 +124,7 @@ namespace MixItUp.Base.Util
             {
                 if (ChannelSession.Settings.ModerationUseCommunityFilteredWords)
                 {
-                    foreach (string word in ChannelSession.Settings.CommunityFilteredWords)
+                    foreach (string word in ModerationHelper.CommunityFilteredWords)
                     {
                         if (Regex.IsMatch(text, string.Format(BannedWordRegexFormat, Regex.Escape(word)), RegexOptions.IgnoreCase))
                         {

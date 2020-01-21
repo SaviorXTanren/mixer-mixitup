@@ -3,6 +3,7 @@ using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.User;
 using MixItUp.Base;
 using MixItUp.Base.Model.API;
+using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Desktop;
@@ -26,8 +27,8 @@ namespace MixItUp.WPF
         private MixItUpUpdateModel currentUpdate;
         private bool updateFound = false;
 
-        private ObservableCollection<IChannelSettings> streamerSettings = new ObservableCollection<IChannelSettings>();
-        private ObservableCollection<IChannelSettings> moderatorSettings = new ObservableCollection<IChannelSettings>();
+        private ObservableCollection<SettingsV2Model> streamerSettings = new ObservableCollection<SettingsV2Model>();
+        private ObservableCollection<SettingsV2Model> moderatorSettings = new ObservableCollection<SettingsV2Model>();
 
         public LoginWindow()
         {
@@ -47,7 +48,7 @@ namespace MixItUp.WPF
 
             await this.CheckForUpdates();
 
-            foreach (IChannelSettings setting in (await ChannelSession.Services.Settings.GetAllSettings()).OrderBy(s => s.Channel.token))
+            foreach (SettingsV2Model setting in (await ChannelSession.Services.Settings.GetAllSettings()).OrderBy(s => s.Channel.token))
             {
                 if (setting.IsStreamer)
                 {
@@ -62,7 +63,7 @@ namespace MixItUp.WPF
             if (this.streamerSettings.Count > 0)
             {
                 this.ExistingStreamerComboBox.Visibility = Visibility.Visible;
-                this.streamerSettings.Add(new DesktopChannelSettings() { Channel = new ExpandedChannelModel() { id = 0, user = new UserWithGroupsModel() { username = "NEW STREAMER" }, token = "NEW STREAMER" } });
+                this.streamerSettings.Add(new SettingsV2Model() { Channel = new ExpandedChannelModel() { id = 0, user = new UserWithGroupsModel() { username = "NEW STREAMER" }, token = "NEW STREAMER" } });
                 if (this.streamerSettings.Count() == 2)
                 {
                     this.ExistingStreamerComboBox.SelectedIndex = 0;
@@ -79,7 +80,7 @@ namespace MixItUp.WPF
                 var allSettings = this.streamerSettings.ToList();
                 allSettings.AddRange(this.moderatorSettings);
 
-                IChannelSettings autoLogInSettings = allSettings.FirstOrDefault(s => s.Channel.user.id == App.AppSettings.AutoLogInAccount);
+                SettingsV2Model autoLogInSettings = allSettings.FirstOrDefault(s => s.Channel.user.id == App.AppSettings.AutoLogInAccount);
                 if (autoLogInSettings != null && autoLogInSettings.LicenseAccepted)
                 {
                     await Task.Delay(5000);
@@ -117,7 +118,7 @@ namespace MixItUp.WPF
                 {
                     if (this.ExistingStreamerComboBox.SelectedIndex >= 0)
                     {
-                        IChannelSettings setting = (IChannelSettings)this.ExistingStreamerComboBox.SelectedItem;
+                        SettingsV2Model setting = (SettingsV2Model)this.ExistingStreamerComboBox.SelectedItem;
                         if (setting.Channel.id == 0)
                         {
                             await this.NewStreamerLogin();
@@ -175,7 +176,7 @@ namespace MixItUp.WPF
                 bool authenticationSuccessful = false;
                 if (this.ModeratorChannelComboBox.SelectedIndex >= 0)
                 {
-                    IChannelSettings setting = (IChannelSettings)this.ModeratorChannelComboBox.SelectedItem;
+                    SettingsV2Model setting = (SettingsV2Model)this.ModeratorChannelComboBox.SelectedItem;
                     authenticationSuccessful = await this.ExistingSettingLogin(setting);
                 }
                 else
@@ -230,23 +231,22 @@ namespace MixItUp.WPF
             }
         }
 
-        private async Task<bool> ExistingSettingLogin(IChannelSettings setting)
+        private async Task<bool> ExistingSettingLogin(SettingsV2Model setting)
         {
             if (setting.LicenseAccepted || await this.ShowLicenseAgreement())
             {
-                bool result = await ChannelSession.ConnectUser(setting);
-                if (result)
+                if (await ChannelSession.ConnectUser(setting))
                 {
-                    if (!await ChannelSession.ConnectBot(setting))
+                    if (setting.BotOAuthToken != null && !await ChannelSession.ConnectBot(setting))
                     {
                         await DialogHelper.ShowMessage("Bot Account failed to authenticate, please re-connect it from the Services section.");
                     }
+                    return true;
                 }
                 else
                 {
                     await DialogHelper.ShowMessage("Unable to authenticate with Mixer, please try again");
                 }
-                return result;
             }
             return false;
         }
