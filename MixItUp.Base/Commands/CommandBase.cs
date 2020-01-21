@@ -15,15 +15,15 @@ namespace MixItUp.Base.Commands
 {
     public enum CommandTypeEnum
     {
-        Chat,
-        Interactive,
-        Event,
-        Timer,
-        Custom,
+        Chat = 0,
+        Interactive = 1,
+        Event = 2,
+        Timer = 3,
+        Custom = 4,
         [Name("Action Group")]
-        ActionGroup,
-        Game,
-        Remote,
+        ActionGroup = 5,
+        Game = 6,
+        Remote = 7,
     }
 
     [DataContract]

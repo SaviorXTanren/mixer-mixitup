@@ -248,9 +248,9 @@ namespace MixItUp.Base.Util
 
         public async Task ReplaceCommonSpecialModifiers(UserViewModel user, IEnumerable<string> arguments = null)
         {
-            foreach (string counter in ChannelSession.Counters.Keys)
+            foreach (string counter in ChannelSession.Settings.Counters.Keys)
             {
-                this.ReplaceSpecialIdentifier(counter, ChannelSession.Counters[counter].ToString());
+                this.ReplaceSpecialIdentifier(counter, ChannelSession.Settings.Counters[counter].ToString());
             }
 
             foreach (var kvp in SpecialIdentifierStringBuilder.CustomSpecialIdentifiers)
@@ -354,9 +354,9 @@ namespace MixItUp.Base.Util
                 }
             }
 
-            if (this.ContainsSpecialIdentifier(QuoteSpecialIdentifierHeader) && ChannelSession.Settings.QuotesEnabled && ChannelSession.Settings.UserQuotes.Count > 0)
+            if (this.ContainsSpecialIdentifier(QuoteSpecialIdentifierHeader) && ChannelSession.Settings.QuotesEnabled && ChannelSession.Settings.Quotes.Count > 0)
             {
-                UserQuoteViewModel quote = ChannelSession.Settings.UserQuotes.PickRandom();
+                UserQuoteViewModel quote = ChannelSession.Settings.Quotes.PickRandom();
                 if (quote != null)
                 {
                     this.ReplaceSpecialIdentifier(QuoteSpecialIdentifierHeader + "random", quote.ToString());
@@ -366,10 +366,10 @@ namespace MixItUp.Base.Util
                 {
                     await this.ReplaceNumberBasedRegexSpecialIdentifier(QuoteSpecialIdentifierHeader + SpecialIdentifierNumberRegexPattern, (index) =>
                     {
-                        if (index > 0 && index <= ChannelSession.Settings.UserQuotes.Count)
+                        if (index > 0 && index <= ChannelSession.Settings.Quotes.Count)
                         {
                             index--;
-                            return Task.FromResult(ChannelSession.Settings.UserQuotes[index].ToString());
+                            return Task.FromResult(ChannelSession.Settings.Quotes[index].ToString());
                         }
                         return Task.FromResult<string>(null);
                     });

@@ -421,7 +421,7 @@ namespace MixItUp.Base.Commands
                 {
                     if (ChannelSession.Settings.QuotesEnabled)
                     {
-                        if (ChannelSession.Settings.UserQuotes.Count > 0)
+                        if (ChannelSession.Settings.Quotes.Count > 0)
                         {
                             int quoteIndex = 0;
                             if (arguments.Count() == 1)
@@ -440,7 +440,7 @@ namespace MixItUp.Base.Commands
                                     return;
                                 }
 
-                                if (quoteIndex >= ChannelSession.Settings.UserQuotes.Count)
+                                if (quoteIndex >= ChannelSession.Settings.Quotes.Count)
                                 {
                                     await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "There is no quote with a number that high");
                                     return;
@@ -448,10 +448,10 @@ namespace MixItUp.Base.Commands
                             }
                             else
                             {
-                                quoteIndex = RandomHelper.GenerateRandomNumber(ChannelSession.Settings.UserQuotes.Count);
+                                quoteIndex = RandomHelper.GenerateRandomNumber(ChannelSession.Settings.Quotes.Count);
                             }
 
-                            UserQuoteViewModel quote = ChannelSession.Settings.UserQuotes[quoteIndex];
+                            UserQuoteViewModel quote = ChannelSession.Settings.Quotes[quoteIndex];
                             await ChannelSession.Services.Chat.SendMessage(quote.ToString());
                         }
                         else
@@ -479,9 +479,9 @@ namespace MixItUp.Base.Commands
                 {
                     if (ChannelSession.Settings.QuotesEnabled)
                     {
-                        if (ChannelSession.Settings.UserQuotes.Count > 0)
+                        if (ChannelSession.Settings.Quotes.Count > 0)
                         {
-                            UserQuoteViewModel quote = ChannelSession.Settings.UserQuotes.LastOrDefault();
+                            UserQuoteViewModel quote = ChannelSession.Settings.Quotes.LastOrDefault();
                             if (quote != null)
                             {
                                 await ChannelSession.Services.Chat.SendMessage(quote.ToString());
@@ -520,7 +520,7 @@ namespace MixItUp.Base.Commands
                         quoteText = quoteText.Trim(new char[] { ' ', '\'', '\"' });
 
                         UserQuoteViewModel quote = new UserQuoteViewModel(quoteText, DateTimeOffset.Now, ChannelSession.MixerChannel.type);
-                        ChannelSession.Settings.UserQuotes.Add(quote);
+                        ChannelSession.Settings.Quotes.Add(quote);
                         await ChannelSession.SaveSettings();
 
                         GlobalEvents.QuoteAdded(quote);

@@ -25,8 +25,6 @@ namespace MixItUp.Base.Services
 
         Task<bool> SaveAndValidate(SettingsV2Model settings);
 
-        Task SaveBackup(SettingsV2Model settings);
-
         Task SavePackagedBackup(SettingsV2Model settings, string filePath);
 
         Task PerformBackupIfApplicable(SettingsV2Model settings);

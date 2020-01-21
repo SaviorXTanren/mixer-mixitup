@@ -8,6 +8,7 @@ using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Model.MixPlay;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Settings;
+using MixItUp.Base.Remote.Models;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
@@ -17,6 +18,7 @@ using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -385,11 +387,43 @@ namespace MixItUp.Desktop.Services
             if (version < 39)
             {
                 SettingsV2Model settings = await SerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
-                await ChannelSession.Services.Settings.Initialize(settings);
-
-                foreach (EventCommand command in settings.EventCommands)
-                {
 #pragma warning disable CS0612 // Type or member is obsolete
+                settings.MixerUserOAuthToken = settings.OAuthToken;
+                settings.MixerBotOAuthToken = settings.BotOAuthToken;
+                if (settings.Channel != null)
+                {
+                    settings.Name = settings.Channel.token;
+                    settings.MixerChannelID = settings.Channel.id;
+                }
+                settings.TelemetryUserID = settings.TelemetryUserId;
+
+                settings.RemoteProfileBoards = new Dictionary<Guid, RemoteProfileBoardsModel>(settings.remoteProfileBoardsInternal);
+                settings.FilteredWords = new List<string>(settings.filteredWordsInternal);
+                settings.BannedWords = new List<string>(settings.bannedWordsInternal);
+                settings.MixPlayUserGroups = new Dictionary<uint, List<MixPlayUserGroupModel>>(settings.mixPlayUserGroupsInternal);
+                settings.OverlayWidgets = new List<OverlayWidgetModel>(settings.overlayWidgetModelsInternal);
+                settings.Currencies = new Dictionary<Guid, UserCurrencyViewModel>(settings.currenciesInternal);
+                settings.Inventories = new Dictionary<Guid, UserInventoryViewModel>(settings.inventoriesInternal);
+                settings.CooldownGroups = new Dictionary<string, int>(settings.cooldownGroupsInternal);
+                settings.PreMadeChatCommandSettings = new List<PreMadeChatCommandSettings>(settings.preMadeChatCommandSettingsInternal);
+
+                settings.ChatCommands = new LockedList<ChatCommand>(settings.chatCommandsInternal);
+                settings.EventCommands = new LockedList<EventCommand>(settings.eventCommandsInternal);
+                settings.MixPlayCommands = new LockedList<MixPlayCommand>(settings.mixPlayCmmandsInternal);
+                settings.TimerCommands = new LockedList<TimerCommand>(settings.timerCommandsInternal);
+                settings.ActionGroupCommands = new LockedList<ActionGroupCommand>(settings.actionGroupCommandsInternal);
+                settings.GameCommands = new LockedList<GameCommandBase>(settings.gameCommandsInternal);
+                settings.Quotes = new LockedList<UserQuoteViewModel>(settings.userQuotesInternal);
+
+                int quoteID = 1;
+                foreach (UserQuoteViewModel quote in settings.userQuotesInternal)
+                {
+                    quote.ID = quoteID;
+                    quoteID++;
+                }
+
+                foreach (EventCommand command in settings.eventCommandsInternal)
+                {
                     if (command.OtherEventType != OtherEventTypeEnum.None)
                     {
                         switch (command.OtherEventType)
@@ -492,6 +526,14 @@ namespace MixItUp.Desktop.Services
                                 break;
                         }
                     }
+
+                    string oldDatabaseFilePath = Path.Combine(Path.GetDirectoryName(filePath), settings.DatabasePath);
+                    await ChannelSession.Services.Database.Read(oldDatabaseFilePath, "SELECT * FROM Users", (Dictionary<string, object> data) =>
+                    {
+                        UserDataViewModel userData = new UserDataViewModel(data, settings);
+                        settings.UserData[userData.MixerID] = userData;
+                    });
+
 #pragma warning restore CS0612 // Type or member is obsolete
                 }
 

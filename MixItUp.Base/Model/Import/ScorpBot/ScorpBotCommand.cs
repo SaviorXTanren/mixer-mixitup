@@ -61,23 +61,23 @@ namespace MixItUp.Base.Model.Import.ScorpBot
             this.Enabled = true;
         }
 
-        public ScorpBotCommand(DbDataReader reader)
-            : this((string)reader["Command"], (string)reader["Response"])
+        public ScorpBotCommand(Dictionary<string, object> data)
+            : this((string)data["Command"], (string)data["Response"])
         {
-            string permInfo = (string)reader["PermInfo"];
+            string permInfo = (string)data["PermInfo"];
             if (permInfo.Contains("followed.php"))
             {
                 this.Requirements.Role.MixerRole = MixerRoleEnum.Follower;
             }
 
-            string permission = (string)reader["Permission"];
+            string permission = (string)data["Permission"];
             if (permission.Equals("Moderator"))
             {
                 this.Requirements.Role.MixerRole = MixerRoleEnum.Mod;
             }
 
-            this.Requirements.Cooldown.Amount = (int)reader["Cooldown"];
-            this.Enabled = ((string)reader["Enabled"]).Equals("True");
+            this.Requirements.Cooldown.Amount = (int)data["Cooldown"];
+            this.Enabled = ((string)data["Enabled"]).Equals("True");
         }
 
         public void ProcessData(UserCurrencyViewModel currency, UserCurrencyViewModel rank)

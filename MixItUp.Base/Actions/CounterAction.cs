@@ -64,22 +64,22 @@ namespace MixItUp.Base.Actions
 
         public async Task SetCounterValue()
         {
-            if (!ChannelSession.Counters.ContainsKey(this.CounterName))
+            if (!ChannelSession.Settings.Counters.ContainsKey(this.CounterName))
             {
-                ChannelSession.Counters[this.CounterName] = 0;
+                ChannelSession.Settings.Counters[this.CounterName] = 0;
 
                 if (File.Exists(this.GetCounterFilePath()))
                 {
                     string data = await ChannelSession.Services.FileService.ReadFile(this.GetCounterFilePath());
                     if (double.TryParse(data, out double amount))
                     {
-                        ChannelSession.Counters[this.CounterName] = amount;
+                        ChannelSession.Settings.Counters[this.CounterName] = amount;
                     }
                 }
 
                 if (this.ResetOnLoad)
                 {
-                    ChannelSession.Counters[this.CounterName] = 0.0;
+                    ChannelSession.Settings.Counters[this.CounterName] = 0.0;
                 }
 
                 await this.SaveCounterToFile();
@@ -88,9 +88,9 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (!ChannelSession.Counters.ContainsKey(this.CounterName))
+            if (!ChannelSession.Settings.Counters.ContainsKey(this.CounterName))
             {
-                ChannelSession.Counters[this.CounterName] = 0.0;
+                ChannelSession.Settings.Counters[this.CounterName] = 0.0;
             }
 
             if (this.UpdateAmount)
@@ -98,7 +98,7 @@ namespace MixItUp.Base.Actions
                 string amountText = await this.ReplaceStringWithSpecialModifiers(this.Amount, user, arguments);
                 if (double.TryParse(amountText, out double amount))
                 {
-                    ChannelSession.Counters[this.CounterName] += amount;
+                    ChannelSession.Settings.Counters[this.CounterName] += amount;
                 }
             }
             else if (this.SetAmount)
@@ -106,12 +106,12 @@ namespace MixItUp.Base.Actions
                 string amountText = await this.ReplaceStringWithSpecialModifiers(this.Amount, user, arguments);
                 if (double.TryParse(amountText, out double amount))
                 {
-                    ChannelSession.Counters[this.CounterName] = amount;
+                    ChannelSession.Settings.Counters[this.CounterName] = amount;
                 }
             }
             else if (this.ResetAmount)
             {
-                ChannelSession.Counters[this.CounterName] = 0.0;
+                ChannelSession.Settings.Counters[this.CounterName] = 0.0;
             }
 
             await this.SaveCounterToFile();
@@ -122,7 +122,7 @@ namespace MixItUp.Base.Actions
             if (this.SaveToFile)
             {
                 await ChannelSession.Services.FileService.CreateDirectory(CounterAction.CounterFolderName);
-                await ChannelSession.Services.FileService.SaveFile(this.GetCounterFilePath(), ChannelSession.Counters[this.CounterName].ToString());
+                await ChannelSession.Services.FileService.SaveFile(this.GetCounterFilePath(), ChannelSession.Settings.Counters[this.CounterName].ToString());
             }
         }
 

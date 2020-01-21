@@ -7,7 +7,7 @@ namespace MixItUp.Base.Services
 {
     public interface IDatabaseService
     {
-        Task Read(string databaseFilePath, string commandString, Action<DbDataReader> processRow);
+        Task Read(string databaseFilePath, string commandString, Action<Dictionary<string, object>> processRow);
 
         Task Write(string databaseFilePath, string commandString);
 

@@ -101,7 +101,7 @@ namespace MixItUp.WPF.Controls.MainControls
         public void RefreshList()
         {
             this.items.Clear();
-            foreach (var kvp in ChannelSession.Settings.Currencies.ToDictionary())
+            foreach (var kvp in ChannelSession.Settings.Currencies)
             {
                 if (kvp.Value.IsRank)
                 {
@@ -112,7 +112,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     this.items.Add(new CurrencyRankInventoryContainer(kvp.Value));
                 }
             }
-            foreach (var kvp in ChannelSession.Settings.Inventories.ToDictionary())
+            foreach (var kvp in ChannelSession.Settings.Inventories)
             {
                 this.items.Add(new CurrencyRankInventoryContainer(kvp.Value));
             }

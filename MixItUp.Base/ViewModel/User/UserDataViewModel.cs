@@ -3,13 +3,11 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Import.ScorpBot;
 using MixItUp.Base.Model.Import.Streamlabs;
 using MixItUp.Base.Model.Settings;
-using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -147,6 +145,9 @@ namespace MixItUp.Base.ViewModel.User
     public class UserDataViewModel : NotifyPropertyChangedBase, IEquatable<UserDataViewModel>
     {
         [DataMember]
+        public Guid ID { get; set; } = Guid.NewGuid();
+
+        [DataMember]
         public uint MixerID { get; set; }
         [DataMember]
         public string MixerUsername { get; set; }
@@ -160,10 +161,10 @@ namespace MixItUp.Base.ViewModel.User
         [DataMember]
         public int OfflineViewingMinutes { get; set; }
 
-        [DataMember]
+        [JsonIgnore]
         public LockedDictionary<UserCurrencyViewModel, UserCurrencyDataViewModel> CurrencyAmounts { get; set; } = new LockedDictionary<UserCurrencyViewModel, UserCurrencyDataViewModel>();
 
-        [DataMember]
+        [JsonIgnore]
         public LockedDictionary<UserInventoryViewModel, UserInventoryDataViewModel> InventoryAmounts { get; set; } = new LockedDictionary<UserInventoryViewModel, UserInventoryDataViewModel>();
 
         [DataMember]
@@ -245,14 +246,14 @@ namespace MixItUp.Base.ViewModel.User
             this.ViewingMinutes = (int)(viewer.Hours * 60.0);
         }
 
-        public UserDataViewModel(DbDataReader dataReader, SettingsV2Model settings)
-            : this(uint.Parse(dataReader["ID"].ToString()), dataReader["UserName"].ToString())
+        public UserDataViewModel(Dictionary<string, object> data, SettingsV2Model settings)
+            : this(uint.Parse(data["ID"].ToString()), data["UserName"].ToString())
         {
-            this.ViewingMinutes = int.Parse(dataReader["ViewingMinutes"].ToString());
+            this.ViewingMinutes = int.Parse(data["ViewingMinutes"].ToString());
 
-            if (dataReader.ColumnExists("CurrencyAmounts"))
+            if (data.ContainsKey("CurrencyAmounts"))
             {
-                Dictionary<Guid, int> currencyAmounts = JsonConvert.DeserializeObject<Dictionary<Guid, int>>(dataReader["CurrencyAmounts"].ToString());
+                Dictionary<Guid, int> currencyAmounts = JsonConvert.DeserializeObject<Dictionary<Guid, int>>(data["CurrencyAmounts"].ToString());
                 if (currencyAmounts != null)
                 {
                     foreach (var kvp in currencyAmounts)
@@ -265,9 +266,9 @@ namespace MixItUp.Base.ViewModel.User
                 }
             }
 
-            if (dataReader.ColumnExists("InventoryAmounts"))
+            if (data.ContainsKey("InventoryAmounts"))
             {
-                Dictionary<Guid, Dictionary<string, int>> inventoryAmounts = JsonConvert.DeserializeObject<Dictionary<Guid, Dictionary<string, int>>>(dataReader["InventoryAmounts"].ToString());
+                Dictionary<Guid, Dictionary<string, int>> inventoryAmounts = JsonConvert.DeserializeObject<Dictionary<Guid, Dictionary<string, int>>>(data["InventoryAmounts"].ToString());
                 if (inventoryAmounts != null)
                 {
                     foreach (var kvp in inventoryAmounts)
@@ -281,14 +282,14 @@ namespace MixItUp.Base.ViewModel.User
                 }
             }
 
-            if (dataReader.ColumnExists("CustomCommands") && !string.IsNullOrEmpty(dataReader["CustomCommands"].ToString()))
+            if (data.ContainsKey("CustomCommands") && !string.IsNullOrEmpty(data["CustomCommands"].ToString()))
             {
-                this.CustomCommands.AddRange(SerializerHelper.DeserializeFromString<List<ChatCommand>>(dataReader["CustomCommands"].ToString()));
+                this.CustomCommands.AddRange(SerializerHelper.DeserializeFromString<List<ChatCommand>>(data["CustomCommands"].ToString()));
             }
 
-            if (dataReader.ColumnExists("Options") && !string.IsNullOrEmpty(dataReader["Options"].ToString()))
+            if (data.ContainsKey("Options") && !string.IsNullOrEmpty(data["Options"].ToString()))
             {
-                JObject optionsJObj = JObject.Parse(dataReader["Options"].ToString());
+                JObject optionsJObj = JObject.Parse(data["Options"].ToString());
                 if (optionsJObj.ContainsKey("EntranceCommand") && optionsJObj["EntranceCommand"] != null)
                 {
                     this.EntranceCommand = SerializerHelper.DeserializeFromString<CustomCommand>(optionsJObj["EntranceCommand"].ToString());

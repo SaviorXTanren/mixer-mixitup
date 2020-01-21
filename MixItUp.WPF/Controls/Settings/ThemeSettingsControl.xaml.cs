@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using MixItUp.Base;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -28,9 +29,9 @@ namespace MixItUp.WPF.Controls.Settings
 
             this.ColorSchemeComboBox.RemoveNonThemes();
 
-            this.ColorSchemeComboBox.SelectedItem = this.ColorSchemeComboBox.AvailableColorSchemes.FirstOrDefault(c => c.Name.Equals(App.AppSettings.ColorScheme));
-            this.BackgroundColorComboBox.SelectedItem = App.AppSettings.BackgroundColor;
-            this.FullThemeComboBox.SelectedItem = this.availableFullThemes.FirstOrDefault(t => t.Value.Equals(App.AppSettings.FullThemeName));
+            this.ColorSchemeComboBox.SelectedItem = this.ColorSchemeComboBox.AvailableColorSchemes.FirstOrDefault(c => c.Name.Equals(ChannelSession.AppSettings.ColorScheme));
+            this.BackgroundColorComboBox.SelectedItem = ChannelSession.AppSettings.BackgroundColor;
+            this.FullThemeComboBox.SelectedItem = this.availableFullThemes.FirstOrDefault(t => t.Value.Equals(ChannelSession.AppSettings.FullThemeName));
 
             await base.InitializeInternal();
         }
@@ -45,11 +46,11 @@ namespace MixItUp.WPF.Controls.Settings
             if (this.ColorSchemeComboBox.SelectedIndex >= 0)
             {
                 ColorSchemeOption colorScheme = (ColorSchemeOption)this.ColorSchemeComboBox.SelectedItem;
-                if (!colorScheme.Name.Equals(App.AppSettings.ColorScheme))
+                if (!colorScheme.Name.Equals(ChannelSession.AppSettings.ColorScheme))
                 {
-                    App.AppSettings.SettingsChangeRestartRequired = true;
+                    ChannelSession.AppSettings.SettingsChangeRestartRequired = true;
                 }
-                App.AppSettings.ColorScheme = colorScheme.Name;
+                ChannelSession.AppSettings.ColorScheme = colorScheme.Name;
             }
         }
 
@@ -57,11 +58,11 @@ namespace MixItUp.WPF.Controls.Settings
         {
             if (this.BackgroundColorComboBox.SelectedIndex >= 0)
             {
-                if (!this.BackgroundColorComboBox.SelectedItem.Equals(App.AppSettings.BackgroundColor))
+                if (!this.BackgroundColorComboBox.SelectedItem.Equals(ChannelSession.AppSettings.BackgroundColor))
                 {
-                    App.AppSettings.SettingsChangeRestartRequired = true;
+                    ChannelSession.AppSettings.SettingsChangeRestartRequired = true;
                 }
-                App.AppSettings.BackgroundColor = (string)this.BackgroundColorComboBox.SelectedItem;
+                ChannelSession.AppSettings.BackgroundColor = (string)this.BackgroundColorComboBox.SelectedItem;
             }
         }
 
@@ -70,11 +71,11 @@ namespace MixItUp.WPF.Controls.Settings
             if (this.FullThemeComboBox.SelectedIndex >= 0)
             {
                 KeyValuePair<string, string> selectedValue = (KeyValuePair<string, string>)this.FullThemeComboBox.SelectedItem;
-                if (!selectedValue.Value.Equals(App.AppSettings.FullThemeName))
+                if (!selectedValue.Value.Equals(ChannelSession.AppSettings.FullThemeName))
                 {
-                    App.AppSettings.SettingsChangeRestartRequired = true;
+                    ChannelSession.AppSettings.SettingsChangeRestartRequired = true;
                 }
-                App.AppSettings.FullThemeName = selectedValue.Value;
+                ChannelSession.AppSettings.FullThemeName = selectedValue.Value;
             }
         }
     }

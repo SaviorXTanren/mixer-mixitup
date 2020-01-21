@@ -23,8 +23,6 @@ namespace MixItUp.WPF
     /// </summary>
     public partial class App : Application
     {
-        public static ApplicationSettings AppSettings;
-
         private bool crashObtained = false;
 
         public App()
@@ -81,13 +79,8 @@ namespace MixItUp.WPF
             Application.Current.Resources.MergedDictionaries.Add(newMIUResourceDictionary);
         }
 
-        protected override void OnStartup(StartupEventArgs e)
+        protected override async void OnStartup(StartupEventArgs e)
         {
-            App.AppSettings = ApplicationSettings.Load();
-            this.SwitchTheme(App.AppSettings.ColorScheme, App.AppSettings.BackgroundColor, App.AppSettings.FullThemeName);
-
-            LocalizationHandler.SetCurrentLanguage(App.AppSettings.Language);
-
             DesktopServicesHandler desktopServicesHandler = new DesktopServicesHandler();
             desktopServicesHandler.Initialize();
 
@@ -106,7 +99,7 @@ namespace MixItUp.WPF
             Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
-            ChannelSession.Initialize(desktopServicesHandler);
+            await ChannelSession.Initialize(desktopServicesHandler);
 
             WindowsIdentity id = WindowsIdentity.GetCurrent();
             ChannelSession.IsElevated = id.Owner != id.User;
@@ -114,6 +107,10 @@ namespace MixItUp.WPF
             Logger.SetLogLevel(LogLevel.Information);
             Logger.Log(LogLevel.Information, "Application Version: " + ChannelSession.Services.FileService.GetApplicationVersion());
             Logger.SetLogLevel(LogLevel.Error);
+
+            this.SwitchTheme(ChannelSession.AppSettings.ColorScheme, ChannelSession.AppSettings.BackgroundColor, ChannelSession.AppSettings.FullThemeName);
+
+            LocalizationHandler.SetCurrentLanguage(ChannelSession.AppSettings.Language);
 
             base.OnStartup(e);
         }

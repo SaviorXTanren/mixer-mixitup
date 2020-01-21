@@ -148,7 +148,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     StringBuilder fileContents = new StringBuilder();
                     fileContents.Append("User ID\tUsername\tViewing Minutes\tOffline Viewing Minutes");
-                    foreach (var kvp in ChannelSession.Settings.Currencies.ToDictionary())
+                    foreach (var kvp in ChannelSession.Settings.Currencies)
                     {
                         fileContents.Append("\t" + kvp.Value.Name);
                     }
@@ -157,7 +157,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values.ToList())
                     {
                         fileContents.Append(string.Format("{0}\t{1}\t{2}\t{3}", userData.MixerID, userData.MixerUsername, userData.ViewingMinutes, userData.OfflineViewingMinutes));
-                        foreach (var kvp in ChannelSession.Settings.Currencies.ToDictionary())
+                        foreach (var kvp in ChannelSession.Settings.Currencies)
                         {
                             fileContents.Append("\t" + userData.GetCurrencyAmount(kvp.Value));
                         }

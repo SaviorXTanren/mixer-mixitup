@@ -35,6 +35,7 @@ namespace MixItUp.Base
         public static PrivatePopulatedUserModel MixerBot { get; private set; }
         public static ExpandedChannelModel MixerChannel { get; private set; }
 
+        public static ApplicationSettingsV2Model AppSettings { get; private set; }
         public static SettingsV2Model Settings { get; private set; }
 
         public static MixPlayClientWrapper Interactive { get; private set; }
@@ -42,8 +43,6 @@ namespace MixItUp.Base
         public static ServicesHandlerBase Services { get; private set; }
 
         public static List<PreMadeChatCommand> PreMadeChatCommands { get; private set; }
-
-        public static LockedDictionary<string, double> Counters { get; private set; }
 
         private static CancellationTokenSource sessionBackgroundCancellationTokenSource = new CancellationTokenSource();
         private static int sessionBackgroundTimer = 0;
@@ -113,7 +112,7 @@ namespace MixItUp.Base
             }
         }
 
-        public static void Initialize(ServicesHandlerBase serviceHandler)
+        public static async Task Initialize(ServicesHandlerBase serviceHandler)
         {
             ChannelSession.Services = serviceHandler;
 
@@ -128,9 +127,10 @@ namespace MixItUp.Base
             catch (Exception ex) { Logger.Log(ex); }
 
             ChannelSession.PreMadeChatCommands = new List<PreMadeChatCommand>();
-            ChannelSession.Counters = new LockedDictionary<string, double>();
 
             ChannelSession.Interactive = new MixPlayClientWrapper();
+
+            ChannelSession.AppSettings = await ApplicationSettingsV2Model.Load();
         }
 
         public static async Task<bool> ConnectUser(string channelName = null)
@@ -156,15 +156,15 @@ namespace MixItUp.Base
             ChannelSession.Settings = settings;
             try
             {
-                ExternalServiceResult<MixerConnectionService> result = await MixerConnectionService.Connect(ChannelSession.Settings.OAuthToken);
+                ExternalServiceResult<MixerConnectionService> result = await MixerConnectionService.Connect(ChannelSession.Settings.MixerUserOAuthToken);
                 if (result.Success)
                 {
                     ChannelSession.MixerUserConnection = result.Result;
-                    return await ChannelSession.InitializeInternal(ChannelSession.Settings.IsStreamer, ChannelSession.Settings.Channel.token);
+                    return await ChannelSession.InitializeInternal(ChannelSession.Settings.IsStreamer, ChannelSession.Settings.Name);
                 }
                 else
                 {
-                    return await ChannelSession.ConnectUser(ChannelSession.Settings.IsStreamer ? null : ChannelSession.Settings.Channel.token);
+                    return await ChannelSession.ConnectUser(ChannelSession.Settings.IsStreamer ? null : ChannelSession.Settings.Name);
                 }
             }
             catch (Exception ex)
@@ -194,11 +194,11 @@ namespace MixItUp.Base
 
         public static async Task<bool> ConnectBot(SettingsV2Model settings)
         {
-            if (settings.BotOAuthToken != null)
+            if (settings.MixerBotOAuthToken != null)
             {
                 try
                 {
-                    ExternalServiceResult<MixerConnectionService> result = await MixerConnectionService.Connect(settings.BotOAuthToken);
+                    ExternalServiceResult<MixerConnectionService> result = await MixerConnectionService.Connect(settings.MixerBotOAuthToken);
                     if (result.Success)
                     {
                         ChannelSession.MixerBotConnection = result.Result;
@@ -207,7 +207,7 @@ namespace MixItUp.Base
                 }
                 catch (HttpRestRequestException)
                 {
-                    settings.BotOAuthToken = null;
+                    settings.MixerBotOAuthToken = null;
                     return false;
                 }
             }
@@ -310,21 +310,19 @@ namespace MixItUp.Base
                         Logger.SetLogLevel(LogLevel.Debug);
                     }
 
-                    ChannelSession.Settings.LicenseAccepted = true;
-
-                    if (isStreamer && ChannelSession.Settings.Channel != null && ChannelSession.MixerUser.id != ChannelSession.Settings.Channel.userId)
+                    if (isStreamer && ChannelSession.Settings.MixerChannelID > 0 && ChannelSession.MixerUser.channel.id != ChannelSession.Settings.MixerChannelID)
                     {
                         GlobalEvents.ShowMessageBox("The account you are logged in as on Mixer does not match the account for this settings. Please log in as the correct account on Mixer.");
-                        ChannelSession.Settings.OAuthToken.accessToken = string.Empty;
-                        ChannelSession.Settings.OAuthToken.refreshToken = string.Empty;
-                        ChannelSession.Settings.OAuthToken.expiresIn = 0;
+                        ChannelSession.Settings.MixerUserOAuthToken.accessToken = string.Empty;
+                        ChannelSession.Settings.MixerUserOAuthToken.refreshToken = string.Empty;
+                        ChannelSession.Settings.MixerUserOAuthToken.expiresIn = 0;
                         return false;
                     }
 
-                    ChannelSession.Settings.Channel = channel;
+                    ChannelSession.Settings.MixerChannelID = channel.id;
 
                     await ChannelSession.Services.Telemetry.Connect();
-                    ChannelSession.Services.Telemetry.SetUserID(ChannelSession.Settings.TelemetryUserId);
+                    ChannelSession.Services.Telemetry.SetUserID(ChannelSession.Settings.TelemetryUserID);
 
                     await MixerChatEmoteModel.InitializeEmoteCache();
 
@@ -484,9 +482,6 @@ namespace MixItUp.Base
                     ChannelSession.Services.InputService.HotKeyPressed += InputService_HotKeyPressed;
 
                     await ChannelSession.SaveSettings();
-
-                    await ChannelSession.Services.Settings.SaveBackup(ChannelSession.Settings);
-
                     await ChannelSession.Services.Settings.PerformBackupIfApplicable(ChannelSession.Settings);
 
                     ChannelSession.Services.Telemetry.TrackLogin(ChannelSession.MixerUser.id.ToString(), ChannelSession.IsStreamer, ChannelSession.MixerChannel.partnered);

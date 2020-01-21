@@ -59,7 +59,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 await this.Window.RunAsyncOperation(async () =>
                 {
                     UserQuoteViewModel newQuote = new UserQuoteViewModel(this.AddQuoteTextBox.Text, DateTimeOffset.Now, ChannelSession.MixerChannel.type);
-                    ChannelSession.Settings.UserQuotes.Add(newQuote);
+                    ChannelSession.Settings.Quotes.Add(newQuote);
                     this.AddQuoteTextBox.Clear();
                     await ChannelSession.SaveSettings();
                     this.RefreshList();
@@ -75,7 +75,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 QuoteListing quote = (QuoteListing)button.DataContext;
                 await this.Window.RunAsyncOperation(async () =>
                 {
-                    ChannelSession.Settings.UserQuotes.Remove(quote.Quote);
+                    ChannelSession.Settings.Quotes.Remove(quote.Quote);
                     await ChannelSession.SaveSettings();
                     this.RefreshList();
                 });
@@ -85,9 +85,9 @@ namespace MixItUp.WPF.Controls.MainControls
         private void RefreshList()
         {
             this.quotes.Clear();
-            for (int i = 0; i < ChannelSession.Settings.UserQuotes.Count; i++)
+            for (int i = 0; i < ChannelSession.Settings.Quotes.Count; i++)
             {
-                this.quotes.Add(new QuoteListing() { Index = (i + 1), Quote = ChannelSession.Settings.UserQuotes[i] });
+                this.quotes.Add(new QuoteListing() { Index = (i + 1), Quote = ChannelSession.Settings.Quotes[i] });
             }
         }
 

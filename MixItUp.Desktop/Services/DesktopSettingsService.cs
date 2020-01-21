@@ -17,9 +17,7 @@ namespace MixItUp.Desktop.Services
     public class DesktopSettingsService : ISettingsService
     {
         public const string SettingsDirectoryName = "Settings";
-        public const string SettingsTemplateDatabaseFileName = "SettingsTemplateDatabase.sqlite";
-
-        private const string BackupFileExtension = ".backup";
+        public const string SettingsTemplateDatabaseFileName = "SettingsTemplateDatabase.db";
 
         private static SemaphoreSlim semaphore = new SemaphoreSlim(1);
 
@@ -33,7 +31,7 @@ namespace MixItUp.Desktop.Services
             List<SettingsV2Model> settings = new List<SettingsV2Model>();
             foreach (string filePath in Directory.GetFiles(SettingsDirectoryName))
             {
-                if (filePath.EndsWith(".xml"))
+                if (filePath.EndsWith(SettingsV2Model.SettingsFileExtension))
                 {
                     SettingsV2Model setting = null;
                     try
@@ -42,18 +40,9 @@ namespace MixItUp.Desktop.Services
                         if (setting != null)
                         {
                             settings.Add(setting);
-                            continue;
                         }
                     }
                     catch (Exception ex) { Logger.Log(ex); }
-
-                    string backupFilePath = filePath + DesktopSettingsService.BackupFileExtension;
-                    setting = await this.UpgradeSettings(backupFilePath);
-                    if (setting != null)
-                    {
-                        settings.Add(setting);
-                        GlobalEvents.ShowMessageBox("We were unable to load your settings file due to file corruption and will instead load your backup. This means that your most recent changes from the last time you ran Mix It Up will not be present." + Environment.NewLine + Environment.NewLine + "We apologize for this inconvenience and have already recorded this issue to help prevent this from happening in the future.");
-                    }
                 }
             }
             return settings;
@@ -113,14 +102,6 @@ namespace MixItUp.Desktop.Services
 
         public async Task Save(SettingsV2Model settings) { await this.SaveSettings(settings, this.GetFilePath(settings)); }
 
-        public async Task SaveBackup(SettingsV2Model settings)
-        {
-            string filePath = this.GetFilePath(settings);
-            await this.SaveSettings(settings, filePath + DesktopSettingsService.BackupFileExtension);
-
-            File.Copy(settings.DatabasePath, settings.DatabasePath + DesktopSettingsService.BackupFileExtension, overwrite: true);
-        }
-
         public async Task SavePackagedBackup(SettingsV2Model settings, string filePath)
         {
             await this.Save(ChannelSession.Settings);
@@ -154,7 +135,7 @@ namespace MixItUp.Desktop.Services
 
                 if (newResetDate < DateTimeOffset.Now)
                 {
-                    string filePath = Path.Combine(settings.SettingsBackupLocation, settings.Channel.id + "-Backup-" + DateTimeOffset.Now.ToString("MM-dd-yyyy") + ".mixitup");
+                    string filePath = Path.Combine(settings.SettingsBackupLocation, settings.MixerChannelID + "-Backup-" + DateTimeOffset.Now.ToString("MM-dd-yyyy") + ".mixitup");
 
                     await this.SavePackagedBackup(settings, filePath);
 
@@ -165,7 +146,12 @@ namespace MixItUp.Desktop.Services
 
         public string GetFilePath(SettingsV2Model settings)
         {
-            return Path.Combine(SettingsDirectoryName, string.Format("{0}.{1}.xml", settings.Channel.id.ToString(), (settings.IsStreamer) ? "Streamer" : "Moderator"));
+            return Path.Combine(SettingsDirectoryName, settings.SettingsFileName);
+        }
+
+        public string GetDatabaseFilePath(SettingsV2Model settings)
+        {
+            return Path.Combine(SettingsDirectoryName, settings.DatabaseFileName);
         }
 
         public async Task ClearAllUserData(SettingsV2Model settings)
@@ -177,14 +163,10 @@ namespace MixItUp.Desktop.Services
         {
             await semaphore.WaitAndRelease(async () =>
             {
-                await settings.CopyLatestValues();
+                settings.CopyLatestValues();
                 await SerializerHelper.SerializeToFile(filePath, settings);
+                await settings.SaveDatabaseData();
             });
-        }
-
-        public string GetDatabaseFilePath(SettingsV2Model settings)
-        {
-            return Path.Combine(SettingsDirectoryName, string.Format("{0}.{1}.sqlite", settings.Channel.id.ToString(), (settings.IsStreamer) ? "Streamer" : "Moderator"));
         }
 
         public async Task<int> GetSettingsVersion(string filePath)

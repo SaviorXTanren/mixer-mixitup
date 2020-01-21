@@ -48,7 +48,7 @@ namespace MixItUp.WPF
 
             await this.CheckForUpdates();
 
-            foreach (SettingsV2Model setting in (await ChannelSession.Services.Settings.GetAllSettings()).OrderBy(s => s.Channel.token))
+            foreach (SettingsV2Model setting in (await ChannelSession.Services.Settings.GetAllSettings()).OrderBy(s => s.Name))
             {
                 if (setting.IsStreamer)
                 {
@@ -63,7 +63,7 @@ namespace MixItUp.WPF
             if (this.streamerSettings.Count > 0)
             {
                 this.ExistingStreamerComboBox.Visibility = Visibility.Visible;
-                this.streamerSettings.Add(new SettingsV2Model() { Channel = new ExpandedChannelModel() { id = 0, user = new UserWithGroupsModel() { username = "NEW STREAMER" }, token = "NEW STREAMER" } });
+                this.streamerSettings.Add(new SettingsV2Model() { MixerChannelID = 0, Name = "NEW STREAMER" });
                 if (this.streamerSettings.Count() == 2)
                 {
                     this.ExistingStreamerComboBox.SelectedIndex = 0;
@@ -75,13 +75,13 @@ namespace MixItUp.WPF
                 this.ModeratorChannelComboBox.SelectedIndex = 0;
             }
 
-            if (App.AppSettings.AutoLogInAccount > 0)
+            if (ChannelSession.AppSettings.AutoLogInAccount > 0)
             {
                 var allSettings = this.streamerSettings.ToList();
                 allSettings.AddRange(this.moderatorSettings);
 
-                SettingsV2Model autoLogInSettings = allSettings.FirstOrDefault(s => s.Channel.user.id == App.AppSettings.AutoLogInAccount);
-                if (autoLogInSettings != null && autoLogInSettings.LicenseAccepted)
+                SettingsV2Model autoLogInSettings = allSettings.FirstOrDefault(s => s.MixerChannelID == ChannelSession.AppSettings.AutoLogInAccount);
+                if (autoLogInSettings != null)
                 {
                     await Task.Delay(5000);
 
@@ -119,7 +119,7 @@ namespace MixItUp.WPF
                     if (this.ExistingStreamerComboBox.SelectedIndex >= 0)
                     {
                         SettingsV2Model setting = (SettingsV2Model)this.ExistingStreamerComboBox.SelectedItem;
-                        if (setting.Channel.id == 0)
+                        if (setting.MixerChannelID == 0)
                         {
                             await this.NewStreamerLogin();
                         }
@@ -213,7 +213,7 @@ namespace MixItUp.WPF
             this.currentUpdate = await ChannelSession.Services.MixItUpService.GetLatestUpdate();
             if (this.currentUpdate != null)
             {
-                if (App.AppSettings.PreviewProgram)
+                if (ChannelSession.AppSettings.PreviewProgram)
                 {
                     MixItUpUpdateModel previewUpdate = await ChannelSession.Services.MixItUpService.GetLatestPreviewUpdate();
                     if (previewUpdate != null && previewUpdate.SystemVersion >= this.currentUpdate.SystemVersion)
@@ -233,11 +233,11 @@ namespace MixItUp.WPF
 
         private async Task<bool> ExistingSettingLogin(SettingsV2Model setting)
         {
-            if (setting.LicenseAccepted || await this.ShowLicenseAgreement())
+            if (await this.ShowLicenseAgreement())
             {
                 if (await ChannelSession.ConnectUser(setting))
                 {
-                    if (setting.BotOAuthToken != null && !await ChannelSession.ConnectBot(setting))
+                    if (setting.MixerBotOAuthToken != null && !await ChannelSession.ConnectBot(setting))
                     {
                         await DialogHelper.ShowMessage("Bot Account failed to authenticate, please re-connect it from the Services section.");
                     }

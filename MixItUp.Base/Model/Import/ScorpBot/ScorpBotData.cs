@@ -47,41 +47,41 @@ namespace MixItUp.Base.Model.Import.ScorpBot
                     if (Directory.Exists(databasePath))
                     {
                         await ChannelSession.Services.Database.Read(Path.Combine(databasePath, "CommandsDB.sqlite"), "SELECT * FROM RegCommand",
-                        (reader) =>
+                        (Dictionary<string, object> data) =>
                         {
-                            scorpBotData.Commands.Add(new ScorpBotCommand(reader));
+                            scorpBotData.Commands.Add(new ScorpBotCommand(data));
                         });
 
                         await ChannelSession.Services.Database.Read(Path.Combine(databasePath, "Timers2DB.sqlite"), "SELECT * FROM TimeCommand",
-                        (reader) =>
+                        (Dictionary<string, object> data) =>
                         {
-                            scorpBotData.Timers.Add(new ScorpBotTimer(reader));
+                            scorpBotData.Timers.Add(new ScorpBotTimer(data));
                         });
 
                         await ChannelSession.Services.Database.Read(Path.Combine(databasePath, "FilteredWordsDB.sqlite"), "SELECT * FROM Word",
-                        (reader) =>
+                        (Dictionary<string, object> data) =>
                         {
-                            scorpBotData.FilteredWords.Add(((string)reader["word"]).ToLower());
+                            scorpBotData.FilteredWords.Add(((string)data["word"]).ToLower());
                         });
 
                         await ChannelSession.Services.Database.Read(Path.Combine(databasePath, "QuotesDB.sqlite"), "SELECT * FROM Quotes",
-                        (reader) =>
+                        (Dictionary<string, object> data) =>
                         {
-                            scorpBotData.Quotes.Add((string)reader["quote_text"]);
+                            scorpBotData.Quotes.Add((string)data["quote_text"]);
                         });
 
                         await ChannelSession.Services.Database.Read(Path.Combine(databasePath, "RankDB.sqlite"), "SELECT * FROM Rank",
-                        (reader) =>
+                        (Dictionary<string, object> data) =>
                         {
-                            scorpBotData.Ranks.Add(new ScorpBotRank(reader));
+                            scorpBotData.Ranks.Add(new ScorpBotRank(data));
                         });
 
                         await ChannelSession.Services.Database.Read(Path.Combine(databasePath, "Viewers3DB.sqlite"), "SELECT * FROM Viewer",
-                        (reader) =>
+                        (Dictionary<string, object> data) =>
                         {
-                            if (reader["BeamID"] != null && int.TryParse((string)reader["BeamID"], out int id))
+                            if (data["BeamID"] != null && int.TryParse((string)data["BeamID"], out int id))
                             {
-                                scorpBotData.Viewers.Add(new ScorpBotViewer(reader));
+                                scorpBotData.Viewers.Add(new ScorpBotViewer(data));
                             }
                         });
                     }

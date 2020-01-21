@@ -48,13 +48,13 @@ namespace MixItUp.WPF
                 this.EndAsyncOperation();
             };
 
-            if (App.AppSettings.Width > 0)
+            if (ChannelSession.AppSettings.Width > 0)
             {
                 this.WindowStartupLocation = WindowStartupLocation.Manual;
-                this.Height = App.AppSettings.Height;
-                this.Width = App.AppSettings.Width;
-                this.Top = App.AppSettings.Top;
-                this.Left = App.AppSettings.Left;
+                this.Height = ChannelSession.AppSettings.Height;
+                this.Width = ChannelSession.AppSettings.Width;
+                this.Top = ChannelSession.AppSettings.Top;
+                this.Left = ChannelSession.AppSettings.Left;
 
                 var rect = new System.Drawing.Rectangle((int)this.Left, (int)this.Top, (int)this.Width, (int)this.Height);
                 var screen = System.Windows.Forms.Screen.FromRectangle(rect);
@@ -85,7 +85,7 @@ namespace MixItUp.WPF
                     }
                 }
 
-                if (App.AppSettings.IsMaximized)
+                if (ChannelSession.AppSettings.IsMaximized)
                 {
                     WindowState = WindowState.Maximized;
                 }
@@ -164,19 +164,19 @@ namespace MixItUp.WPF
             if (WindowState == WindowState.Maximized)
             {
                 // Use the RestoreBounds as the current values will be 0, 0 and the size of the screen
-                App.AppSettings.Top = RestoreBounds.Top;
-                App.AppSettings.Left = RestoreBounds.Left;
-                App.AppSettings.Height = RestoreBounds.Height;
-                App.AppSettings.Width = RestoreBounds.Width;
-                App.AppSettings.IsMaximized = true;
+                ChannelSession.AppSettings.Top = RestoreBounds.Top;
+                ChannelSession.AppSettings.Left = RestoreBounds.Left;
+                ChannelSession.AppSettings.Height = RestoreBounds.Height;
+                ChannelSession.AppSettings.Width = RestoreBounds.Width;
+                ChannelSession.AppSettings.IsMaximized = true;
             }
             else
             {
-                App.AppSettings.Top = this.Top;
-                App.AppSettings.Left = this.Left;
-                App.AppSettings.Height = this.Height;
-                App.AppSettings.Width = this.Width;
-                App.AppSettings.IsMaximized = false;
+                ChannelSession.AppSettings.Top = this.Top;
+                ChannelSession.AppSettings.Left = this.Left;
+                ChannelSession.AppSettings.Height = this.Height;
+                ChannelSession.AppSettings.Width = this.Width;
+                ChannelSession.AppSettings.IsMaximized = false;
             }
 
             Properties.Settings.Default.Save();
@@ -209,7 +209,7 @@ namespace MixItUp.WPF
                 }
             }
 
-            App.AppSettings.Save();
+            await ChannelSession.AppSettings.Save();
 
             await ChannelSession.Close();
 

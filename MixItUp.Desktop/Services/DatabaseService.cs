@@ -3,7 +3,6 @@ using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
@@ -15,7 +14,7 @@ namespace MixItUp.Desktop.Services
     {
         private const int MaxBulkInsertRows = 10000;
 
-        public async Task Read(string databaseFilePath, string commandString, Action<DbDataReader> processRow)
+        public async Task Read(string databaseFilePath, string commandString, Action<Dictionary<string, object>> processRow)
         {
             await this.EstablishConnection(databaseFilePath, (connection) =>
             {
@@ -23,14 +22,20 @@ namespace MixItUp.Desktop.Services
                 {
                     using (SQLiteDataReader reader = command.ExecuteReader())
                     {
+                        Dictionary<string, object> values = new Dictionary<string, object>();
                         while (reader.Read())
                         {
                             try
                             {
-                                processRow(reader);
+                                for (int i = 0; i < reader.FieldCount; i++)
+                                {
+                                    values[reader.GetName(i)] = reader.GetValue(i);
+                                }
+                                processRow(values);
                             }
                             catch (Exception ex) { Logger.Log(ex); }
                         }
+                        values.Clear();
                     }
                 }
                 return Task.FromResult(0);

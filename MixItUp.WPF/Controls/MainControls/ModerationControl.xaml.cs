@@ -131,7 +131,7 @@ namespace MixItUp.WPF.Controls.MainControls
             return text;
         }
 
-        private void ConvertFilteredTextToWordList(string text, LockedList<string> list)
+        private void ConvertFilteredTextToWordList(string text, List<string> list)
         {
             if (string.IsNullOrEmpty(text))
             {

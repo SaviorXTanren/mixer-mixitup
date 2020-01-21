@@ -1,4 +1,4 @@
-﻿using System.Data.Common;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.Import.ScorpBot
@@ -14,12 +14,12 @@ namespace MixItUp.Base.Model.Import.ScorpBot
 
         public ScorpBotRank() { }
 
-        public ScorpBotRank(DbDataReader reader)
+        public ScorpBotRank(Dictionary<string, object> data)
         {
-            this.Name = (string)reader["Name"];
+            this.Name = (string)data["Name"];
 
             int amount = 0;
-            int.TryParse((string)reader["Points_v3"], out amount);
+            int.TryParse((string)data["Points_v3"], out amount);
             this.Amount = amount;
         }
     }

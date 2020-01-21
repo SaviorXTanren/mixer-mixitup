@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using System;
@@ -82,6 +83,9 @@ namespace MixItUp.Base.ViewModel.User
         [DataMember]
         public bool IsPrimary { get; set; }
 
+        [JsonProperty]
+        public DatabaseDictionary<Guid, int> UserAmounts { get; set; } = new DatabaseDictionary<Guid, int>();
+
         public UserCurrencyViewModel()
         {
             this.ID = Guid.NewGuid();
@@ -143,6 +147,50 @@ namespace MixItUp.Base.ViewModel.User
 
         [JsonIgnore]
         public string Top10SpecialIdentifier { get { return string.Format("{0}10{1}", SpecialIdentifierStringBuilder.TopSpecialIdentifierHeader, this.SpecialIdentifier); } }
+
+        public int GetAmount(UserDataViewModel user) { return this.GetAmount(user.ID); }
+
+        public int GetAmount(Guid userID)
+        {
+            if (this.UserAmounts.ContainsKey(userID))
+            {
+                return this.UserAmounts[userID];
+            }
+            return 0;
+        }
+
+        public bool HasAmount(UserDataViewModel user, int amount)
+        {
+            return (user.IsCurrencyRankExempt || this.GetAmount(user) >= amount);
+        }
+
+        public void SetAmount(UserDataViewModel user, int amount)
+        {
+            this.UserAmounts[this.ID] = Math.Min(amount, this.MaxAmount);
+            ChannelSession.Settings.UserData.ManualValueChanged(user.MixerID);
+        }
+
+        public void AddAmount(UserDataViewModel user, int amount)
+        {
+            if (!user.IsCurrencyRankExempt)
+            {
+                this.SetAmount(user, this.GetAmount(user) + amount);
+            }
+        }
+
+        public void SubtractAmount(UserDataViewModel user, int amount)
+        {
+            if (!user.IsCurrencyRankExempt)
+            {
+                this.SetAmount(user, Math.Max(this.GetAmount(user) - amount, 0));
+            }
+        }
+
+        public void ResetAmount(UserDataViewModel user)
+        {
+            this.UserAmounts[user.ID] = 0;
+            ChannelSession.Settings.UserData.ManualValueChanged(user.MixerID);
+        }
 
         public UserRankViewModel GetRankForPoints(int points)
         {

@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using StreamingClient.Base.Util;
@@ -154,6 +155,9 @@ namespace MixItUp.Base.ViewModel.User
         [DataMember]
         public CustomCommand ItemsTradedCommand { get; set; }
 
+        [JsonProperty]
+        public DatabaseDictionary<Guid, Dictionary<string, int>> UserAmounts { get; set; } = new DatabaseDictionary<Guid, Dictionary<string, int>>();
+
         [JsonIgnore]
         private UserInventoryTradeViewModel tradeSender = null;
         [JsonIgnore]
@@ -186,6 +190,72 @@ namespace MixItUp.Base.ViewModel.User
 
         [JsonIgnore]
         public string UserRandomItemSpecialIdentifier { get { return string.Format("{0}randomitem", this.UserAmountSpecialIdentifierHeader); } }
+
+        public int GetAmount(UserDataViewModel user, string item)
+        {
+            if (this.UserAmounts.ContainsKey(user.ID) && this.UserAmounts[user.ID].ContainsKey(item))
+            {
+                return this.UserAmounts[user.ID][item];
+            }
+            return 0;
+        }
+
+        public Dictionary<string, int> GetAmounts(UserDataViewModel user) { return this.GetAmounts(user.ID); }
+
+        public Dictionary<string, int> GetAmounts(Guid userID)
+        {
+            Dictionary<string, int> amounts = new Dictionary<string, int>();
+            foreach (string itemName in this.Items.Keys)
+            {
+                amounts[itemName] = 0;
+                if (this.UserAmounts.ContainsKey(userID) && this.UserAmounts[userID].ContainsKey(itemName))
+                {
+                    amounts[itemName] = this.UserAmounts[userID][itemName];
+                }
+            }
+            return amounts;
+        }
+
+        public bool HasAmount(UserDataViewModel user, string item, int amount)
+        {
+            return (user.IsCurrencyRankExempt || this.GetAmount(user, item) >= amount);
+        }
+
+        public void SetAmount(UserDataViewModel user, string itemName, int amount)
+        {
+            if (this.Items.ContainsKey(itemName))
+            {
+                UserInventoryItemViewModel item = this.Items[itemName];
+                if (!this.UserAmounts.ContainsKey(user.ID))
+                {
+                    this.UserAmounts[user.ID] = new Dictionary<string, int>();
+                }
+                this.UserAmounts[user.ID][itemName] = Math.Min(amount, item.HasMaxAmount ? item.MaxAmount : this.DefaultMaxAmount);
+                ChannelSession.Settings.UserData.ManualValueChanged(user.MixerID);
+            }
+        }
+
+        public void AddAmount(UserDataViewModel user, string item, int amount)
+        {
+            if (!user.IsCurrencyRankExempt)
+            {
+                this.SetAmount(user, item, this.GetAmount(user, item) + amount);
+            }
+        }
+
+        public void SubtractAmount(UserDataViewModel user, string item, int amount)
+        {
+            if (!user.IsCurrencyRankExempt)
+            {
+                this.SetAmount(user, item, Math.Max(this.GetAmount(user, item) - amount, 0));
+            }
+        }
+
+        public void ResetAmount(UserDataViewModel user)
+        {
+            this.UserAmounts[user.ID] = new Dictionary<string, int>();
+            ChannelSession.Settings.UserData.ManualValueChanged(user.MixerID);
+        }
 
         public async Task Reset()
         {

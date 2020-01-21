@@ -196,8 +196,8 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                App.AppSettings.Save();
-                if (App.AppSettings.SettingsChangeRestartRequired && await DialogHelper.ShowConfirmation("Some of the settings you have changed require a restart to take effect. Would you like to restart Mix It Up now?"))
+                await ChannelSession.AppSettings.Save();
+                if (ChannelSession.AppSettings.SettingsChangeRestartRequired && await DialogHelper.ShowConfirmation("Some of the settings you have changed require a restart to take effect. Would you like to restart Mix It Up now?"))
                 {
                     ((MainWindow)this.Window).Restart();
                 }

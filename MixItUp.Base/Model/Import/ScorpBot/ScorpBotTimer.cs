@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base.Util;
-using System.Data.Common;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.Import.ScorpBot
@@ -18,14 +18,14 @@ namespace MixItUp.Base.Model.Import.ScorpBot
 
         public ScorpBotTimer() { }
 
-        public ScorpBotTimer(DbDataReader reader)
+        public ScorpBotTimer(Dictionary<string, object> data)
         {
-            this.Name = (string)reader["Name2"];
+            this.Name = (string)data["Name2"];
 
-            this.Text = (string)reader["Response"];
+            this.Text = (string)data["Response"];
             this.Text = SpecialIdentifierStringBuilder.ConvertScorpBotText(this.Text);
 
-            this.Enabled = (((int)reader["Enabled"]) == 1);
+            this.Enabled = (((int)data["Enabled"]) == 1);
         }
     }
 }

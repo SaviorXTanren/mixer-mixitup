@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Data.Common;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.Import.ScorpBot
@@ -31,16 +31,16 @@ namespace MixItUp.Base.Model.Import.ScorpBot
 
         public ScorpBotViewer() { }
 
-        public ScorpBotViewer(DbDataReader reader)
+        public ScorpBotViewer(Dictionary<string, object> data)
         {
-            this.ID = uint.Parse((string)reader["BeamID"]);
-            this.UserName = (string)reader["BeamName"];
-            this.Type = (int)reader["Type"];
-            this.Rank = (reader["Rank"] != null && reader["Rank"] != DBNull.Value) ? (string)reader["Rank"] : string.Empty;
-            this.RankPoints = (long)reader["Points"];
-            this.Currency = (long)reader["Points2"];
-            this.Hours = double.Parse(reader["Hours"].ToString());
-            this.Sub = (string)reader["Sub"];
+            this.ID = uint.Parse((string)data["BeamID"]);
+            this.UserName = (string)data["BeamName"];
+            this.Type = (int)data["Type"];
+            this.Rank = (data["Rank"] != null && data["Rank"] != DBNull.Value) ? (string)data["Rank"] : string.Empty;
+            this.RankPoints = (long)data["Points"];
+            this.Currency = (long)data["Points2"];
+            this.Hours = double.Parse(data["Hours"].ToString());
+            this.Sub = (string)data["Sub"];
         }
     }
 }

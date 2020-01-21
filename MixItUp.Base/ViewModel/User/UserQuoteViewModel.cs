@@ -1,7 +1,6 @@
 ﻿using Mixer.Base.Model.Game;
 using MixItUp.Base.Util;
 using System;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 
@@ -14,6 +13,9 @@ namespace MixItUp.Base.ViewModel.User
         public const string QuoteTextSpecialIdentifier = "quotetext";
         public const string QuoteGameSpecialIdentifier = "quotegame";
         public const string QuoteDateTimeSpecialIdentifier = "quotedatetime";
+
+        [DataMember]
+        public int ID { get; set; }
 
         [DataMember]
         public string Quote { get; set; }
@@ -47,12 +49,10 @@ namespace MixItUp.Base.ViewModel.User
 
         public override string ToString()
         {
-            int quoteIndex = ChannelSession.Settings.UserQuotes.IndexOf(this);
-
             if (!string.IsNullOrEmpty(ChannelSession.Settings.QuotesFormat))
             {
                 SpecialIdentifierStringBuilder str = new SpecialIdentifierStringBuilder(ChannelSession.Settings.QuotesFormat);
-                str.ReplaceSpecialIdentifier(QuoteNumberSpecialIdentifier, (quoteIndex + 1).ToString());
+                str.ReplaceSpecialIdentifier(QuoteNumberSpecialIdentifier, this.ID.ToString());
                 str.ReplaceSpecialIdentifier(QuoteTextSpecialIdentifier, this.Quote);
                 str.ReplaceSpecialIdentifier(QuoteGameSpecialIdentifier, this.GameName);
                 str.ReplaceSpecialIdentifier(QuoteDateTimeSpecialIdentifier, this.DateTime.ToString("d"));
@@ -62,7 +62,7 @@ namespace MixItUp.Base.ViewModel.User
             {
                 StringBuilder result = new StringBuilder();
 
-                result.Append("Quote #" + (quoteIndex + 1) + ": ");
+                result.Append("Quote #" + this.ID + ": ");
                 result.Append("\"" + this.Quote + "\"");
 
                 if (!string.IsNullOrEmpty(this.GameName))
