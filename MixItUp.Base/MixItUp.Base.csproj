@@ -30,6 +30,7 @@
     <PackageReference Include="mixer-client-csharp" Version="0.9.0.9-beta" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="System.IO.Ports" Version="4.7.0" />
+    <PackageReference Include="Twitch.Base" Version="0.1.0.2" />
   </ItemGroup>
 
   <ItemGroup>
