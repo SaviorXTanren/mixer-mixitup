@@ -166,6 +166,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserViewModel(UserModel user)
         {
+            this.Platform = StreamingPlatformTypeEnum.Mixer;
             this.MixerID = user.id;
             this.MixerUsername = user.username;
             this.SetMixerUserDetails(user);
@@ -173,6 +174,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserViewModel(ChannelModel channel)
         {
+            this.Platform = StreamingPlatformTypeEnum.Mixer;
             this.MixerID = channel.userId;
             this.MixerUsername = channel.token;
             this.MixerChannelID = channel.id;
@@ -180,6 +182,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserViewModel(ChatUserModel user)
         {
+            this.Platform = StreamingPlatformTypeEnum.Mixer;
             this.MixerID = user.userId.GetValueOrDefault();
             this.MixerUsername = user.userName;
             this.SetMixerRoles(user.userRoles);
@@ -189,6 +192,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserViewModel(ChatMessageEventModel messageEvent)
         {
+            this.Platform = StreamingPlatformTypeEnum.Mixer;
             this.MixerID = messageEvent.user_id;
             this.MixerUsername = messageEvent.user_name;
             this.SetMixerRoles(messageEvent.user_roles);
@@ -198,6 +202,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserViewModel(ChatMessageUserModel chatUser)
         {
+            this.Platform = StreamingPlatformTypeEnum.Mixer;
             this.MixerID = chatUser.user_id;
             this.MixerUsername = chatUser.user_name;
             this.SetMixerRoles(chatUser.user_roles);
@@ -207,6 +212,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserViewModel(MixPlayParticipantModel participant)
         {
+            this.Platform = StreamingPlatformTypeEnum.Mixer;
             this.MixerID = participant.userID;
             this.MixerUsername = participant.username;
 
@@ -215,6 +221,10 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserViewModel(UserDataModel user)
         {
+            if (user.MixerID > 0)
+            {
+                this.Platform = StreamingPlatformTypeEnum.Mixer;
+            }
             this.MixerID = user.MixerID;
             this.MixerUsername = user.MixerUsername;
         }

@@ -142,7 +142,7 @@ namespace MixItUp.Base.Services.Mixer
                 Logger.Log(ex);
                 return new ExternalServiceResult<MixerConnectionService>(ex);
             }
-            return new ExternalServiceResult<MixerConnectionService>("Mixer user OAuth token could not be used");
+            return new ExternalServiceResult<MixerConnectionService>("Mixer OAuth token could not be used");
         }
 
         public static async Task<ExternalServiceResult<MixerConnectionService>> ConnectUser(bool isStreamer)

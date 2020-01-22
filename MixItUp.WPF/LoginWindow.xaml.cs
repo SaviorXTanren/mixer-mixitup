@@ -4,6 +4,7 @@ using Mixer.Base.Model.User;
 using MixItUp.Base;
 using MixItUp.Base.Model.API;
 using MixItUp.Base.Model.Settings;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Desktop;
@@ -173,21 +174,30 @@ namespace MixItUp.WPF
                     return;
                 }
 
-                bool authenticationSuccessful = false;
                 if (this.ModeratorChannelComboBox.SelectedIndex >= 0)
                 {
                     SettingsV2Model setting = (SettingsV2Model)this.ModeratorChannelComboBox.SelectedItem;
-                    authenticationSuccessful = await this.ExistingSettingLogin(setting);
+                    if (!await this.ExistingSettingLogin(setting))
+                    {
+                        return;
+                    }
                 }
                 else
                 {
-                    if (await this.ShowLicenseAgreement())
+                    if (!await this.ShowLicenseAgreement())
                     {
-                        authenticationSuccessful = await this.EstablishConnection(this.ModeratorChannelComboBox.Text);
+                        return;
+                    }
+
+                    ExternalServiceResult result = await ChannelSession.ConnectMixerUser(isStreamer: false);
+                    if (!result.Success)
+                    {
+                        await DialogHelper.ShowMessage(result.Message);
+                        return;
                     }
                 }
 
-                if (authenticationSuccessful)
+                if (await ChannelSession.InitializeSession(this.ModeratorChannelComboBox.Text))
                 {
                     IEnumerable<UserWithGroupsModel> users = await ChannelSession.MixerUserConnection.GetUsersWithRoles(ChannelSession.MixerChannel, UserRoleEnum.Mod);
                     if (users.Any(uwg => uwg.id.Equals(ChannelSession.MixerUser.id)) || ChannelSession.IsDebug())
@@ -203,7 +213,7 @@ namespace MixItUp.WPF
                 }
                 else
                 {
-                    await DialogHelper.ShowMessage("Unable to authenticate with Mixer, please try again");
+                    await DialogHelper.ShowMessage("Unable to initialize session.");
                 }
             });
         }
@@ -233,17 +243,17 @@ namespace MixItUp.WPF
 
         private async Task<bool> ExistingSettingLogin(SettingsV2Model setting)
         {
-            if (await ChannelSession.ConnectUser(setting))
+            ExternalServiceResult result = await ChannelSession.ConnectUser(setting);
+            if (result.Success)
             {
-                if (setting.MixerBotOAuthToken != null && !await ChannelSession.ConnectBot(setting))
+                if (await ChannelSession.InitializeSession(setting.IsStreamer ? null : setting.Name))
                 {
-                    await DialogHelper.ShowMessage("Bot Account failed to authenticate, please re-connect it from the Services section.");
+                    return true;
                 }
-                return true;
             }
             else
             {
-                await DialogHelper.ShowMessage("Unable to authenticate with Mixer, please try again");
+                await DialogHelper.ShowMessage(result.Message);
             }
             return false;
         }
@@ -256,11 +266,6 @@ namespace MixItUp.WPF
                 this.Hide();
                 this.Close();
             }
-        }
-
-        private async Task<bool> EstablishConnection(string channelName = null)
-        {
-            return await ChannelSession.ConnectUser(channelName);
         }
 
         private async void GlobalEvents_OnShowMessageBox(object sender, string message)

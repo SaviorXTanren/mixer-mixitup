@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Import.ScorpBot;
 using MixItUp.Base.Model.Import.Streamlabs;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using System;
 using System.Threading.Tasks;
@@ -252,8 +253,8 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
                 }
                 else
                 {
-                    bool result = await ChannelSession.ConnectUser(channelName: null);
-                    if (result)
+                    ExternalServiceResult result = await ChannelSession.ConnectMixerUser(isStreamer: true);
+                    if (result.Success)
                     {
                         this.MixerUserAccountAvatar = ChannelSession.MixerUser.avatarUrl;
                         this.MixerUserAccountUsername = ChannelSession.MixerUser.username;
@@ -262,6 +263,8 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
                     {
                         this.MixerUserAccountAvatar = null;
                         this.MixerUserAccountUsername = null;
+
+                        await DialogHelper.ShowMessage(result.Message);
                     }
                 }
                 this.NotifyPropertyChanged("IsMixerUserAccountConnected");
@@ -278,14 +281,14 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
 
                 if (this.IsMixerBotAccountConnected)
                 {
-                    await ChannelSession.DisconnectBot();
+                    await ChannelSession.DisconnectMixerBot();
                     this.MixerBotAccountAvatar = null;
                     this.MixerBotAccountUsername = null;
                 }
                 else
                 {
-                    bool result = await ChannelSession.ConnectBot();
-                    if (result)
+                    ExternalServiceResult result = await ChannelSession.ConnectMixerBot();
+                    if (result.Success)
                     {
                         this.MixerBotAccountAvatar = ChannelSession.MixerBot.avatarUrl;
                         this.MixerBotAccountUsername = ChannelSession.MixerBot.username;
@@ -294,6 +297,8 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
                     {
                         this.MixerBotAccountAvatar = null;
                         this.MixerBotAccountUsername = null;
+
+                        await DialogHelper.ShowMessage(result.Message);
                     }
                 }
                 this.NotifyPropertyChanged("IsMixerBotAccountConnected");
@@ -385,6 +390,11 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
                 }
                 else if (this.FinalPageVisible)
                 {
+                    if (!await ChannelSession.InitializeSession(modChannelName: null))
+                    {
+                        await DialogHelper.ShowMessage("Failed to initialize session.");
+                        return;
+                    }
                     this.WizardComplete = true;
                     this.WizardCompleteEvent(this, new EventArgs());
                 }
