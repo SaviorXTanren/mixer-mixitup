@@ -188,20 +188,23 @@ namespace MixItUp.Base
                     return new ExternalServiceResult("Failed to get Mixer user data");
                 }
 
-                result = await MixerConnectionService.Connect(settings.MixerBotOAuthToken);
-                if (result.Success)
+                if (settings.MixerBotOAuthToken != null)
                 {
-                    ChannelSession.MixerBotConnection = result.Result;
-                    ChannelSession.MixerBot = await ChannelSession.MixerBotConnection.GetCurrentUser();
-                    if (ChannelSession.MixerBot == null)
+                    result = await MixerConnectionService.Connect(settings.MixerBotOAuthToken);
+                    if (result.Success)
                     {
-                        return new ExternalServiceResult("Failed to get Mixer bot data");
+                        ChannelSession.MixerBotConnection = result.Result;
+                        ChannelSession.MixerBot = await ChannelSession.MixerBotConnection.GetCurrentUser();
+                        if (ChannelSession.MixerBot == null)
+                        {
+                            return new ExternalServiceResult("Failed to get Mixer bot data");
+                        }
                     }
-                }
-                else
-                {
-                    settings.MixerBotOAuthToken = null;
-                    return new ExternalServiceResult(success: true, message: "Failed to connect Mixer bot account, please manually reconnect");
+                    else
+                    {
+                        settings.MixerBotOAuthToken = null;
+                        return new ExternalServiceResult(success: true, message: "Failed to connect Mixer bot account, please manually reconnect");
+                    }
                 }
             }
             return new ExternalServiceResult();
