@@ -54,15 +54,12 @@ namespace MixItUp.Base.Model.User
         {
             get
             {
-                UserDataModel userData = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => !string.IsNullOrEmpty(u.MixerUsername) && u.MixerUsername.Equals(this.Username, StringComparison.InvariantCultureIgnoreCase));
-                if (userData != null)
+                UserViewModel user = ChannelSession.Services.User.GetUserByUsername(this.Username);
+                if (user != null)
                 {
-                    return new UserViewModel(userData);
+                    return user;
                 }
-                else
-                {
-                    return new UserViewModel() { MixerUsername = this.Username };
-                }
+                return new UserViewModel() { MixerUsername = this.Username };
             }
         }
 

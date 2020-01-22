@@ -49,7 +49,7 @@ namespace MixItUp.WPF.Windows.Currency
         private UserCurrencyModel currency;
         private CustomCommand rankChangedCommand;
 
-        private Dictionary<UserDataModel, int> userImportData = new Dictionary<UserDataModel, int>();
+        private Dictionary<Guid, int> userImportData = new Dictionary<Guid, int>();
 
         private ObservableCollection<UserRankViewModel> ranks = new ObservableCollection<UserRankViewModel>();
 
@@ -416,7 +416,7 @@ namespace MixItUp.WPF.Windows.Currency
                             {
                                 this.currency.AddAmount(userData, this.currency.SubscriberBonus * intervalsToGive);
                             }
-                            ChannelSession.Settings.UserData.ManualValueChanged(userData.MixerID);
+                            ChannelSession.Settings.UserData.ManualValueChanged(userData.ID);
                         }
                     }
                 }
@@ -443,7 +443,7 @@ namespace MixItUp.WPF.Windows.Currency
                             {
                                 foreach (string line in lines)
                                 {
-                                    UserModel user = null;
+                                    UserModel mixerUser = null;
                                     uint id = 0;
                                     string username = null;
                                     int amount = 0;
@@ -482,22 +482,22 @@ namespace MixItUp.WPF.Windows.Currency
                                     {
                                         if (id > 0)
                                         {
-                                            user = await ChannelSession.MixerUserConnection.GetUser(id);
+                                            mixerUser = await ChannelSession.MixerUserConnection.GetUser(id);
                                         }
                                         else if (!string.IsNullOrEmpty(username))
                                         {
-                                            user = await ChannelSession.MixerUserConnection.GetUser(username);
+                                            mixerUser = await ChannelSession.MixerUserConnection.GetUser(username);
                                         }
                                     }
 
-                                    if (user != null)
+                                    if (mixerUser != null)
                                     {
-                                        UserDataModel data = ChannelSession.Settings.UserData.GetValueIfExists(user.id, new UserDataModel(user));
-                                        if (!this.userImportData.ContainsKey(data))
+                                        UserViewModel user = new UserViewModel(mixerUser);
+                                        if (!this.userImportData.ContainsKey(user.ID))
                                         {
-                                            this.userImportData[data] = amount;
+                                            this.userImportData[user.ID] = amount;
                                         }
-                                        this.userImportData[data] = Math.Max(this.userImportData[data], amount);
+                                        this.userImportData[user.ID] = Math.Max(this.userImportData[user.ID], amount);
                                         this.ImportFromFileButton.Content = string.Format("{0} Imported...", this.userImportData.Count());
                                     }
                                 }

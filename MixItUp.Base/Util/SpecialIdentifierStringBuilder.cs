@@ -292,10 +292,10 @@ namespace MixItUp.Base.Util
                 {
                     await this.ReplaceNumberBasedRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopTimeRegexSpecialIdentifier, (total) =>
                     {
-                        Dictionary<uint, UserDataModel> applicableUsers = ChannelSession.Settings.UserData.ToDictionary();
+                        Dictionary<Guid, UserDataModel> applicableUsers = ChannelSession.Settings.UserData.ToDictionary();
                         foreach (UserDataModel u in this.GetAllExemptUsers())
                         {
-                            applicableUsers.Remove(u.MixerID);
+                            applicableUsers.Remove(u.ID);
                         }
 
                         List<string> timeUserList = new List<string>();
@@ -325,12 +325,9 @@ namespace MixItUp.Base.Util
                             int userPosition = 1;
                             foreach (Guid userID in this.GetOrderedCurrencyList(currency).Take(total))
                             {
-                                UserDataModel userData = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.ID.Equals(userID));
-                                if (userData != null)
-                                {
-                                    currencyUserList.Add($"#{userPosition}) {userData.MixerUsername} - {currency.GetAmount(userData)}");
-                                    userPosition++;
-                                }
+                                UserDataModel userData = ChannelSession.Settings.GetUserData(userID);
+                                currencyUserList.Add($"#{userPosition}) {userData.MixerUsername} - {currency.GetAmount(userData)}");
+                                userPosition++;
                             }
 
                             string result = "No users found.";
@@ -767,77 +764,74 @@ namespace MixItUp.Base.Util
             {
                 await user.RefreshDetails();
 
-                if (ChannelSession.Settings.UserData.ContainsKey(user.MixerID))
+                UserDataModel userData = user.Data;
+
+                foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values.OrderByDescending(c => c.UserAmountSpecialIdentifier))
                 {
-                    UserDataModel userData = ChannelSession.Settings.UserData[user.MixerID];
-
-                    foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values.OrderByDescending(c => c.UserAmountSpecialIdentifier))
+                    if (this.ContainsSpecialIdentifier(identifierHeader + currency.UserPositionSpecialIdentifier))
                     {
-                        if (this.ContainsSpecialIdentifier(identifierHeader + currency.UserPositionSpecialIdentifier))
-                        {
-                            List<Guid> sortedUsers = this.GetOrderedCurrencyList(currency);
-                            int index = sortedUsers.FindIndex(id => id == userData.ID);
-                            this.ReplaceSpecialIdentifier(identifierHeader + currency.UserPositionSpecialIdentifier, (index + 1).ToString());
-                        }
-
-                        UserCurrencyDataViewModel currencyData = new UserCurrencyDataViewModel(userData, currency);
-                        UserRankViewModel rank = currencyData.GetRank();
-                        UserRankViewModel nextRank = currencyData.GetNextRank();
-
-                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserRankNextNameSpecialIdentifier, nextRank.Name);
-                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountNextDisplaySpecialIdentifier, nextRank.MinimumPoints.ToString("N0"));
-                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountNextSpecialIdentifier, nextRank.MinimumPoints.ToString());
-
-                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserRankNameSpecialIdentifier, rank.Name);
-                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountDisplaySpecialIdentifier, currencyData.Amount.ToString("N0"));
-                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountSpecialIdentifier, currencyData.Amount.ToString());
+                        List<Guid> sortedUsers = this.GetOrderedCurrencyList(currency);
+                        int index = sortedUsers.FindIndex(id => id == user.ID);
+                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserPositionSpecialIdentifier, (index + 1).ToString());
                     }
 
-                    foreach (UserInventoryModel inventory in ChannelSession.Settings.Inventories.Values.OrderByDescending(c => c.UserAmountSpecialIdentifierHeader))
-                    {
-                        if (this.ContainsSpecialIdentifier(identifierHeader + inventory.UserAmountSpecialIdentifierHeader))
-                        {
-                            Dictionary<string, int> userItems = new Dictionary<string, int>();
+                    UserCurrencyDataViewModel currencyData = new UserCurrencyDataViewModel(userData, currency);
+                    UserRankViewModel rank = currencyData.GetRank();
+                    UserRankViewModel nextRank = currencyData.GetNextRank();
 
-                            foreach (UserInventoryItemModel item in inventory.Items.Values.OrderByDescending(i => i.Name))
-                            {
-                                var quantity = inventory.GetAmount(userData, item);
-                                if (quantity > 0)
-                                {
-                                    userItems[item.Name] = quantity;
-                                }
+                    this.ReplaceSpecialIdentifier(identifierHeader + currency.UserRankNextNameSpecialIdentifier, nextRank.Name);
+                    this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountNextDisplaySpecialIdentifier, nextRank.MinimumPoints.ToString("N0"));
+                    this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountNextSpecialIdentifier, nextRank.MinimumPoints.ToString());
 
-                                string itemSpecialIdentifier = identifierHeader + inventory.UserAmountSpecialIdentifierHeader + item.SpecialIdentifier;
-                                this.ReplaceSpecialIdentifier(itemSpecialIdentifier, quantity.ToString());
-                            }
-
-                            if (userItems.Count > 0)
-                            {
-                                List<string> userAllItems = new List<string>();
-                                foreach (var kvp in userItems.OrderBy(i => i.Key))
-                                {
-                                    if (kvp.Value > 0)
-                                    {
-                                        userAllItems.Add(kvp.Key + " x" + kvp.Value);
-                                    }
-                                }
-                                this.ReplaceSpecialIdentifier(identifierHeader + inventory.UserAllAmountSpecialIdentifier, string.Join(", ", userAllItems));
-                                this.ReplaceSpecialIdentifier(identifierHeader + inventory.UserRandomItemSpecialIdentifier, userItems.Keys.Random());
-                            }
-                            else
-                            {
-                                this.ReplaceSpecialIdentifier(identifierHeader + inventory.UserAllAmountSpecialIdentifier, "Nothing");
-                                this.ReplaceSpecialIdentifier(identifierHeader + inventory.UserRandomItemSpecialIdentifier, "Nothing");
-                            }
-                        }
-                    }
-
-                    this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "time", userData.ViewingTimeString);
-                    this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "hours", userData.ViewingHoursString);
-                    this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "mins", userData.ViewingMinutesString);
-
-                    this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "moderationstrikes", userData.ModerationStrikes.ToString());
+                    this.ReplaceSpecialIdentifier(identifierHeader + currency.UserRankNameSpecialIdentifier, rank.Name);
+                    this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountDisplaySpecialIdentifier, currencyData.Amount.ToString("N0"));
+                    this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountSpecialIdentifier, currencyData.Amount.ToString());
                 }
+
+                foreach (UserInventoryModel inventory in ChannelSession.Settings.Inventories.Values.OrderByDescending(c => c.UserAmountSpecialIdentifierHeader))
+                {
+                    if (this.ContainsSpecialIdentifier(identifierHeader + inventory.UserAmountSpecialIdentifierHeader))
+                    {
+                        Dictionary<string, int> userItems = new Dictionary<string, int>();
+
+                        foreach (UserInventoryItemModel item in inventory.Items.Values.OrderByDescending(i => i.Name))
+                        {
+                            var quantity = inventory.GetAmount(userData, item);
+                            if (quantity > 0)
+                            {
+                                userItems[item.Name] = quantity;
+                            }
+
+                            string itemSpecialIdentifier = identifierHeader + inventory.UserAmountSpecialIdentifierHeader + item.SpecialIdentifier;
+                            this.ReplaceSpecialIdentifier(itemSpecialIdentifier, quantity.ToString());
+                        }
+
+                        if (userItems.Count > 0)
+                        {
+                            List<string> userAllItems = new List<string>();
+                            foreach (var kvp in userItems.OrderBy(i => i.Key))
+                            {
+                                if (kvp.Value > 0)
+                                {
+                                    userAllItems.Add(kvp.Key + " x" + kvp.Value);
+                                }
+                            }
+                            this.ReplaceSpecialIdentifier(identifierHeader + inventory.UserAllAmountSpecialIdentifier, string.Join(", ", userAllItems));
+                            this.ReplaceSpecialIdentifier(identifierHeader + inventory.UserRandomItemSpecialIdentifier, userItems.Keys.Random());
+                        }
+                        else
+                        {
+                            this.ReplaceSpecialIdentifier(identifierHeader + inventory.UserAllAmountSpecialIdentifier, "Nothing");
+                            this.ReplaceSpecialIdentifier(identifierHeader + inventory.UserRandomItemSpecialIdentifier, "Nothing");
+                        }
+                    }
+                }
+
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "time", userData.ViewingTimeString);
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "hours", userData.ViewingHoursString);
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "mins", userData.ViewingMinutesString);
+
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "moderationstrikes", userData.ModerationStrikes.ToString());
 
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "primaryrole", user.PrimaryRoleString);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "avatar", user.MixerAvatarLink);
@@ -968,7 +962,7 @@ namespace MixItUp.Base.Util
         private IEnumerable<UserDataModel> GetAllExemptUsers()
         {
             List<UserDataModel> exemptUsers = new List<UserDataModel>();
-            exemptUsers.Add(ChannelSession.Settings.UserData[ChannelSession.MixerChannel.user.id]);
+            exemptUsers.Add(ChannelSession.Settings.GetUserDataByMixerID(ChannelSession.MixerChannel.user.id));
             exemptUsers.AddRange(ChannelSession.Settings.UserData.Values.Where(u => u.IsCurrencyRankExempt));
             return exemptUsers;
         }

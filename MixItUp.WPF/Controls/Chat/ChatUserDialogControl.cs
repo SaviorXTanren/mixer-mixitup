@@ -63,7 +63,7 @@ namespace MixItUp.WPF.Controls.Chat
                             ProcessHelper.LaunchLink($"https://mixer.com/{user.MixerUsername}");
                             break;
                         case UserDialogResult.EditUser:
-                            UserDataEditorWindow window = new UserDataEditorWindow(ChannelSession.Settings.UserData[user.MixerID]);
+                            UserDataEditorWindow window = new UserDataEditorWindow(ChannelSession.Settings.GetUserData(user.ID));
                             await Task.Delay(100);
                             window.Show();
                             await Task.Delay(100);

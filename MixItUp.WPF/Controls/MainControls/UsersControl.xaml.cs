@@ -116,7 +116,7 @@ namespace MixItUp.WPF.Controls.MainControls
             UserDataModel userData = (UserDataModel)button.DataContext;
             if (await DialogHelper.ShowConfirmation("This will delete this user's data, which includes their Hours, Currency, Rank, & Custom User Commands. Are you sure you want to do this?"))
             {
-                ChannelSession.Settings.UserData.Remove(userData.MixerID);
+                ChannelSession.Settings.UserData.Remove(userData.ID);
             }
             this.RefreshList();
         }
@@ -146,7 +146,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     StringBuilder fileContents = new StringBuilder();
-                    fileContents.Append("User ID\tUsername\tViewing Minutes\tOffline Viewing Minutes");
+                    fileContents.Append("Mixer User ID\tUsername\tViewing Minutes\tOffline Viewing Minutes");
                     foreach (var kvp in ChannelSession.Settings.Currencies)
                     {
                         fileContents.Append("\t" + kvp.Value.Name);

@@ -536,9 +536,6 @@ namespace MixItUp.Base.Model.Settings
         #region Database Data
 
         [JsonIgnore]
-        public DatabaseDictionary<uint, UserDataModel> UserData { get; set; } = new DatabaseDictionary<uint, UserDataModel>();
-
-        [JsonIgnore]
         public LockedList<ChatCommand> ChatCommands { get; set; } = new LockedList<ChatCommand>();
         [JsonIgnore]
         public LockedList<EventCommand> EventCommands { get; set; } = new LockedList<EventCommand>();
@@ -553,6 +550,11 @@ namespace MixItUp.Base.Model.Settings
 
         [JsonIgnore]
         public LockedList<UserQuoteViewModel> Quotes { get; set; } = new LockedList<UserQuoteViewModel>();
+
+        [JsonIgnore]
+        public DatabaseDictionary<Guid, UserDataModel> UserData { get; set; } = new DatabaseDictionary<Guid, UserDataModel>();
+        [JsonIgnore]
+        private Dictionary<uint, Guid> MixerUserIDLookups { get; set; } = new Dictionary<uint, Guid>();
 
         #endregion Database Data
 
@@ -610,7 +612,8 @@ namespace MixItUp.Base.Model.Settings
                     await ChannelSession.Services.Database.Read(this.DatabasePath, "SELECT * FROM Users", (Dictionary<string, object> data) =>
                     {
                         UserDataModel userData = SerializerHelper.DeserializeFromString<UserDataModel>((string)data["Data"]);
-                        this.UserData[userData.MixerID] = userData;
+                        this.UserData[userData.ID] = userData;
+                        this.MixerUserIDLookups[userData.MixerID] = userData.ID;
                     });
 
                     Dictionary<Guid, UserCurrencyModel> currencies = new Dictionary<Guid, UserCurrencyModel>();
@@ -756,7 +759,7 @@ namespace MixItUp.Base.Model.Settings
         {
             if (this.IsStreamer)
             {
-                IEnumerable<uint> removedUsers = this.UserData.GetRemovedValues();
+                IEnumerable<Guid> removedUsers = this.UserData.GetRemovedValues();
                 await ChannelSession.Services.Database.BulkWrite(this.DatabasePath, "DELETE FROM Users WHERE ID = @ID", removedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.ToString() } }));
 
                 IEnumerable<UserDataModel> changedUsers = this.UserData.GetChangedValues();
@@ -805,6 +808,53 @@ namespace MixItUp.Base.Model.Settings
                 await ChannelSession.Services.Database.BulkWrite(this.DatabasePath, "REPLACE INTO Quotes(ID, Data) VALUES(@ID, @Data)",
                     this.Quotes.Select(q => new Dictionary<string, object>() { { "@ID", q.ID }, { "@Data", SerializerHelper.SerializeToString(q) } }));
             }
+        }
+
+        public UserDataModel GetUserData(UserViewModel userViewModel)
+        {
+            UserDataModel userData = this.GetUserDataByMixerID(userViewModel.MixerID);
+            if (userData == null)
+            {
+                userData = this.GetUserData(userViewModel.ID);
+                if (userData == null)
+                {
+                    userData = new UserDataModel(userViewModel);
+                    if (userData.ID == Guid.Empty)
+                    {
+                        userViewModel.ID = userData.ID = Guid.NewGuid();
+                    }
+
+                    this.UserData[userData.ID] = userData;
+
+                    if (userData.MixerID > 0)
+                    {
+                        this.MixerUserIDLookups[userData.MixerID] = userData.ID;
+                    }
+                }
+            }
+            return userData;
+        }
+
+        public UserDataModel GetUserData(Guid id)
+        {
+            if (this.UserData.ContainsKey(id))
+            {
+                return this.UserData[id];
+            }
+            return null;
+        }
+
+        public UserDataModel GetUserDataByMixerID(uint mixerID)
+        {
+            if (mixerID > 0 && this.MixerUserIDLookups.ContainsKey(mixerID))
+            {
+                Guid id = this.MixerUserIDLookups[mixerID];
+                if (this.UserData.ContainsKey(id))
+                {
+                    return this.UserData[id];
+                }
+            }
+            return null;
         }
 
         private void BuildMissingCommands()

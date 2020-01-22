@@ -210,7 +210,7 @@ namespace MixItUp.WPF.Windows.Users
             {
                 currency.ResetAmount(this.user.Data);
             }
-            ChannelSession.Settings.UserData.ManualValueChanged(this.user.MixerID);
+            ChannelSession.Settings.UserData.ManualValueChanged(this.user.ID);
         }
 
         private void SparkExemptToggleButton_Checked(object sender, RoutedEventArgs e)
