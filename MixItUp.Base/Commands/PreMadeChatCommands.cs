@@ -325,7 +325,7 @@ namespace MixItUp.Base.Commands
                 if (ChannelSession.Services.Chat != null)
                 {
                     await user.RefreshDetails();
-                    await ChannelSession.Services.Chat.SendMessage(user.Username + "'s Mixer Age: " + user.MixerAgeString);
+                    await ChannelSession.Services.Chat.SendMessage(user.Username + "'s Mixer Age: " + user.AccountAgeString);
                 }
             }));
         }
@@ -341,7 +341,7 @@ namespace MixItUp.Base.Commands
                 if (ChannelSession.Services.Chat != null)
                 {
                     await user.RefreshDetails();
-                    await ChannelSession.Services.Chat.SendMessage(user.Username + "'s Follow Age: " + user.MixerFollowAgeString);
+                    await ChannelSession.Services.Chat.SendMessage(user.Username + "'s Follow Age: " + user.FollowAgeString);
                 }
             }));
         }
@@ -357,7 +357,7 @@ namespace MixItUp.Base.Commands
                 if (ChannelSession.Services.Chat != null)
                 {
                     await user.RefreshDetails();
-                    await ChannelSession.Services.Chat.SendMessage(user.Username + "'s Subscribe Age: " + user.MixerSubscribeAgeString);
+                    await ChannelSession.Services.Chat.SendMessage(user.Username + "'s Subscribe Age: " + user.SubscribeAgeString);
                 }
             }));
         }
@@ -373,7 +373,7 @@ namespace MixItUp.Base.Commands
                 if (ChannelSession.Services.Chat != null)
                 {
                     await user.RefreshDetails();
-                    await ChannelSession.Services.Chat.SendMessage(user.Username + "'s Streamer Age: " + user.MixerAgeString);
+                    await ChannelSession.Services.Chat.SendMessage(user.Username + "'s Streamer Age: " + user.AccountAgeString);
                 }
             }));
         }

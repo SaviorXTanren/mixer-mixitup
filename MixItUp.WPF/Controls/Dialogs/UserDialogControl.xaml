@@ -83,20 +83,20 @@
                     <Image Grid.Column="0" Source="{Binding FanProgression.level.SmallAssetURL}" MaxHeight="20" MaxWidth="20" />
                     <TextBlock Grid.Column="2" Text="{Binding FanProgression.level.level}" VerticalAlignment="Center" />
 
-                    <TextBlock Grid.Column="4" Text="{Binding MixerUsername}" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="4" Text="{Binding Username}" VerticalAlignment="Center" />
                 </Grid>
 
                 <TextBlock Grid.Column="0" Grid.Row="2">Roles:</TextBlock>
                 <TextBlock Grid.Column="2" Grid.Row="2" Text="{Binding RolesDisplayString}" TextWrapping="Wrap" />
 
                 <TextBlock Grid.Column="0" Grid.Row="4">Mixer Age:</TextBlock>
-                <TextBlock Grid.Column="2" Grid.Row="4" Text="{Binding MixerAgeString}" />
+                <TextBlock Grid.Column="2" Grid.Row="4" Text="{Binding AccountAgeString}" />
 
                 <TextBlock Grid.Column="0" Grid.Row="6">Watch Time:</TextBlock>
                 <TextBlock Grid.Column="2" Grid.Row="6" Text="{Binding Data.ViewingTimeString}" />
 
                 <TextBlock Grid.Column="0" Grid.Row="8">Follow Age:</TextBlock>
-                <TextBlock Grid.Column="2" Grid.Row="8" Text="{Binding MixerFollowAgeString}" />
+                <TextBlock Grid.Column="2" Grid.Row="8" Text="{Binding FollowAgeString}" />
 
                 <TextBlock Grid.Column="0" Grid.Row="10">Stream:</TextBlock>
                 <TextBlock x:Name="StreamStatusTextBlock" Grid.Column="2" Grid.Row="10" />

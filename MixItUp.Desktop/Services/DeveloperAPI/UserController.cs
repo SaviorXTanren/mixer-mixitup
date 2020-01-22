@@ -30,7 +30,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
 
                 if (user == null)
                 {
-                    user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.MixerUsername.Equals(usernameOrID, StringComparison.InvariantCultureIgnoreCase));
+                    user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.Username.Equals(usernameOrID, StringComparison.InvariantCultureIgnoreCase));
                 }
 
                 if (user != null)
@@ -63,7 +63,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
         [HttpGet]
         public User Get(string username)
         {
-            UserDataModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.MixerUsername.Equals(username, StringComparison.InvariantCultureIgnoreCase));
+            UserDataModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.Username.Equals(username, StringComparison.InvariantCultureIgnoreCase));
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -99,7 +99,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
         [HttpPut, HttpPatch]
         public User Update(string username, [FromBody] User updatedUserData)
         {
-            UserDataModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.MixerUsername.Equals(username, StringComparison.InvariantCultureIgnoreCase));
+            UserDataModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.Username.Equals(username, StringComparison.InvariantCultureIgnoreCase));
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -163,7 +163,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
         [HttpPut, HttpPatch]
         public User AdjustUserCurrency(string username, Guid currencyID, [FromBody] AdjustCurrency currencyUpdate)
         {
-            UserDataModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.MixerUsername.Equals(username, StringComparison.InvariantCultureIgnoreCase));
+            UserDataModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.Username.Equals(username, StringComparison.InvariantCultureIgnoreCase));
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -198,7 +198,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
         [HttpPut, HttpPatch]
         public User AdjustUserInventory(string username, Guid inventoryID, [FromBody]AdjustInventory inventoryUpdate)
         {
-            UserDataModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.MixerUsername.Equals(username, StringComparison.InvariantCultureIgnoreCase));
+            UserDataModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.Username.Equals(username, StringComparison.InvariantCultureIgnoreCase));
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -249,7 +249,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             User user = new User
             {
                 ID = userData.MixerID,
-                UserName = userData.MixerUsername,
+                UserName = userData.Username,
                 ViewingMinutes = userData.ViewingMinutes
             };
 

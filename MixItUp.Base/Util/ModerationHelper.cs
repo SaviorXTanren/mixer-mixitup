@@ -260,9 +260,9 @@ namespace MixItUp.Base.Util
                     return false;
                 }
 
-                if (user.MixerAccountDate.HasValue)
+                if (user.AccountDate.HasValue)
                 {
-                    TimeSpan accountLength = DateTimeOffset.Now - user.MixerAccountDate.GetValueOrDefault();
+                    TimeSpan accountLength = DateTimeOffset.Now - user.AccountDate.GetValueOrDefault();
                     if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountHour && accountLength.TotalHours < 1)
                     {
                         return false;

@@ -41,9 +41,9 @@ namespace MixItUp.Base.Model.User
             {
                 if (this.Role == UserRoleEnum.Follower)
                 {
-                    if (user.MixerFollowDate != null)
+                    if (user.FollowDate != null)
                     {
-                        return user.MixerFollowDate.GetValueOrDefault().TotalMonthsFromNow() >= this.Months;
+                        return user.FollowDate.GetValueOrDefault().TotalMonthsFromNow() >= this.Months;
                     }
                     else if (!user.ExceedsPermissions(this.Role))
                     {
@@ -52,11 +52,11 @@ namespace MixItUp.Base.Model.User
                 }
                 else if (this.Role == UserRoleEnum.Subscriber)
                 {
-                    if (user.MixerSubscribeDate != null)
+                    if (user.SubscribeDate != null)
                     {
-                        return user.MixerSubscribeDate.GetValueOrDefault().TotalMonthsFromNow() >= this.Months;
+                        return user.SubscribeDate.GetValueOrDefault().TotalMonthsFromNow() >= this.Months;
                     }
-                    else if (user.IsEquivalentToMixerSubscriber() && this.Months == 1)
+                    else if (user.IsEquivalentToSubscriber() && this.Months == 1)
                     {
                         return true;
                     }

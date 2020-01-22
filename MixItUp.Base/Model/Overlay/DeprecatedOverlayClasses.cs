@@ -195,7 +195,7 @@ namespace MixItUp.Base.Model.Overlay
             replacementSets["USER_COLOR"] = OverlayChatMessages.userColors[message.User.PrimaryRoleColorName];
 
             replacementSets["SUB_IMAGE"] = "";
-            if (message.User.IsMixerSubscriber && ChannelSession.MixerChannel.badge != null)
+            if (message.User.IsPlatformSubscriber && ChannelSession.MixerChannel.badge != null)
             {
                 replacementSets["SUB_IMAGE"] = ChannelSession.MixerChannel.badge.url;
             }

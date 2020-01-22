@@ -67,7 +67,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 if (sortColumn != null)
                 {
                     int columnIndex = this.UserDataGridView.Columns.IndexOf(sortColumn);
-                    if (columnIndex == 0) { data = data.OrderBy(u => u.MixerUsername); }
+                    if (columnIndex == 0) { data = data.OrderBy(u => u.Username); }
                     if (columnIndex == 1) { data = data.OrderBy(u => u.ViewingMinutes); }
                     if (columnIndex == 2) { data = data.OrderBy(u => u.PrimaryCurrency); }
                     if (columnIndex == 3) { data = data.OrderBy(u => u.PrimaryRankPoints); }
@@ -81,7 +81,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
                 foreach (var userData in data)
                 {
-                    if (string.IsNullOrEmpty(filter) || userData.MixerUsername.ToLower().Contains(filter))
+                    if (string.IsNullOrEmpty(filter) || userData.Username.ToLower().Contains(filter))
                     {
                         this.userData.Add(userData);
                     }
@@ -146,7 +146,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     StringBuilder fileContents = new StringBuilder();
-                    fileContents.Append("Mixer User ID\tUsername\tViewing Minutes\tOffline Viewing Minutes");
+                    fileContents.Append("User ID\tUsername\tViewing Minutes\tOffline Viewing Minutes");
                     foreach (var kvp in ChannelSession.Settings.Currencies)
                     {
                         fileContents.Append("\t" + kvp.Value.Name);
@@ -155,7 +155,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
                     foreach (UserDataModel userData in ChannelSession.Settings.UserData.Values.ToList())
                     {
-                        fileContents.Append(string.Format("{0}\t{1}\t{2}\t{3}", userData.MixerID, userData.MixerUsername, userData.ViewingMinutes, userData.OfflineViewingMinutes));
+                        fileContents.Append(string.Format("{0}\t{1}\t{2}\t{3}", userData.ID, userData.Username, userData.ViewingMinutes, userData.OfflineViewingMinutes));
                         foreach (var kvp in ChannelSession.Settings.Currencies)
                         {
                             fileContents.Append("\t" + kvp.Value.GetAmount(userData));

@@ -405,7 +405,7 @@ namespace MixItUp.Base.Model.Overlay
             if (this.ShouldIncludeUser(user))
             {
                 this.viewers.Add(user.ID);
-                if (user.UserRoles.Contains(UserRoleEnum.Subscriber) || user.IsEquivalentToMixerSubscriber())
+                if (user.UserRoles.Contains(UserRoleEnum.Subscriber) || user.IsEquivalentToSubscriber())
                 {
                     this.subs.Add(user.ID);
                 }

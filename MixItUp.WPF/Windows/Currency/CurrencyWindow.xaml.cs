@@ -537,7 +537,7 @@ namespace MixItUp.WPF.Windows.Currency
                     StringBuilder fileContents = new StringBuilder();
                     foreach (UserDataModel userData in ChannelSession.Settings.UserData.Values.ToList())
                     {
-                        fileContents.AppendLine(string.Format("{0} {1} {2}", userData.MixerID, userData.MixerUsername, this.currency.GetAmount(userData)));
+                        fileContents.AppendLine(string.Format("{0} {1} {2}", userData.MixerID, userData.Username, this.currency.GetAmount(userData)));
                     }
 
                     await ChannelSession.Services.FileService.SaveFile(filePath, fileContents.ToString());
