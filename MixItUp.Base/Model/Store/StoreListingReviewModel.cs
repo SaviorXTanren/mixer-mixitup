@@ -41,7 +41,7 @@ namespace MixItUp.Base.Model.Store
         [JsonIgnore]
         public string UserName { get { return (this.User != null) ? this.User.username : "Unknown"; } }
         [JsonIgnore]
-        public string UserAvatar { get { return (this.User != null && !string.IsNullOrEmpty(this.User.avatarUrl)) ? this.User.avatarUrl : UserViewModel.DefaultAvatarLink; } }
+        public string UserAvatar { get { return (this.User != null && !string.IsNullOrEmpty(this.User.avatarUrl)) ? this.User.avatarUrl : UserViewModel.MixerUserDefaultAvatarLink; } }
 
         [JsonIgnore]
         public string LastUpdatedDateString { get { return this.LastUpdatedDate.ToLocalTime().ToString("G"); } }

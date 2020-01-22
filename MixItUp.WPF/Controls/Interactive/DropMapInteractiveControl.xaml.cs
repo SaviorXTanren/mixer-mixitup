@@ -6,7 +6,6 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Desktop.Services;
 using MixItUp.WPF.Controls.Users;
-using MixItUp.WPF.Util;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
 using System;
@@ -16,7 +15,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Imaging;
 
 namespace MixItUp.WPF.Controls.Interactive
 {

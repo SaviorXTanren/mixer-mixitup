@@ -194,7 +194,7 @@ namespace MixItUp.WPF.Controls.Command
                             {
                                 Amount = 12.34,
                                 Message = "Test donation message",
-                                ImageLink = currentUser.MixerAvatarLink
+                                ImageLink = currentUser.AvatarLink
                             };
 
                             switch (eventCommand.EventCommandType)

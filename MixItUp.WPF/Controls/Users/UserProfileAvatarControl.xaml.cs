@@ -78,7 +78,7 @@ namespace MixItUp.WPF.Controls.Users
                 {
                     using (WebClient client = new WebClient())
                     {
-                        var bytes = await Task.Run<byte[]>(async () => { return await client.DownloadDataTaskAsync(user.MixerAvatarLink); });
+                        var bytes = await Task.Run<byte[]>((Func<Task<byte[]>>)(async () => { return await client.DownloadDataTaskAsync((string)user.AvatarLink); }));
                         bitmap = WindowsImageService.Load(bytes);
                     }
                     userAvatarCache[user.MixerID] = bitmap;

@@ -163,7 +163,7 @@
 
                             <TextBlock Grid.Column="0" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">Created By:</TextBlock>
                             <UsersControls:UserProfileAvatarControl x:Name="DetailsUserAvatar" Grid.Column="2" VerticalAlignment="Center" Width="25" Height="25"  />
-                            <TextBlock Grid.Column="4" Text="{Binding MixerUsername}" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="4" Text="{Binding Username}" VerticalAlignment="Center" />
                         </Grid>
 
                         <Grid Grid.Row="8" HorizontalAlignment="Left">

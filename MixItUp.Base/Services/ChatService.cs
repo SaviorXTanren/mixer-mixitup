@@ -433,7 +433,7 @@ namespace MixItUp.Base.Services
 
                 GlobalEvents.ChatMessageReceived(message);
 
-                if (ChannelSession.IsStreamer && !string.IsNullOrEmpty(message.PlainTextMessage) && message.User != null && !message.User.MixerRoles.Contains(UserRoleEnum.Banned))
+                if (ChannelSession.IsStreamer && !string.IsNullOrEmpty(message.PlainTextMessage) && message.User != null && !message.User.UserRoles.Contains(UserRoleEnum.Banned))
                 {
                     if (!ChannelSession.Settings.AllowCommandWhispering && message.IsWhisper)
                     {

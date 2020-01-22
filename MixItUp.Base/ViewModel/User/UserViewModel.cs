@@ -68,8 +68,8 @@ namespace MixItUp.Base.ViewModel.User
     [DataContract]
     public class UserViewModel : IEquatable<UserViewModel>, IComparable<UserViewModel>
     {
-        public const string DefaultAvatarLink = "https://mixer.com/_latest/assets/images/main/avatars/default.png";
-        public const string UserAvatarLinkFormat = "https://mixer.com/api/v1/users/{0}/avatar?w=128&h=128";
+        public const string MixerUserDefaultAvatarLink = "https://mixer.com/_latest/assets/images/main/avatars/default.png";
+        public const string MixerUserAvatarLinkFormat = "https://mixer.com/api/v1/users/{0}/avatar?w=128&h=128";
 
         public static IEnumerable<UserRoleEnum> SelectableBasicUserRoles()
         {
@@ -103,6 +103,64 @@ namespace MixItUp.Base.ViewModel.User
         [DataMember]
         public StreamingPlatformTypeEnum Platform { get; set; }
 
+        [DataMember]
+        public HashSet<UserRoleEnum> UserRoles
+        {
+            get
+            {
+                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.MixerUserRoles; }
+                return new HashSet<UserRoleEnum>();
+            }
+        }
+
+        [DataMember]
+        public string AvatarLink
+        {
+            get
+            {
+                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.MixerAvatarLink; }
+                return string.Empty;
+            }
+        }
+
+        [DataMember]
+        public DateTimeOffset? AccountDate
+        {
+            get
+            {
+                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.AccountDate; }
+                return null;
+            }
+        }
+        [DataMember]
+        public DateTimeOffset? FollowDate
+        {
+            get
+            {
+                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.FollowDate; }
+                return null;
+            }
+        }
+        [DataMember]
+        public DateTimeOffset? SubscribeDate
+        {
+            get
+            {
+                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.SubscribeDate; }
+                return null;
+            }
+        }
+
+        [JsonIgnore]
+        public string SubscriberBadgeLink
+        {
+            get
+            {
+                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return (ChannelSession.MixerChannel.badge != null) ? ChannelSession.MixerChannel.badge.url : string.Empty; }
+                return null;
+            }
+        }
+
         #region Mixer
 
         [DataMember]
@@ -113,7 +171,7 @@ namespace MixItUp.Base.ViewModel.User
         public uint MixerChannelID { get; set; }
 
         [DataMember]
-        public HashSet<UserRoleEnum> MixerRoles { get; set; } = new HashSet<UserRoleEnum>();
+        public HashSet<UserRoleEnum> MixerUserRoles { get; set; } = new HashSet<UserRoleEnum>();
 
         [DataMember]
         public DateTimeOffset? MixerAccountDate { get; set; }
@@ -138,6 +196,18 @@ namespace MixItUp.Base.ViewModel.User
 
         [DataMember]
         public bool IsInInteractiveTimeout { get; set; }
+
+        [JsonIgnore]
+        public bool IsAnonymous { get { return this.MixerID == 0 || this.InteractiveIDs.Values.Any(i => i.anonymous.GetValueOrDefault()); } }
+
+        [JsonIgnore]
+        public string MixerAvatarLink { get { return string.Format(MixerUserAvatarLinkFormat, this.MixerID); } }
+
+        [JsonIgnore]
+        public string MixerChannelBadgeLink { get { return this.MixerFanProgression?.level?.SmallAssetURL?.ToString(); } }
+
+        [JsonIgnore]
+        public bool HasMixerChannelBadgeLink { get { return !string.IsNullOrEmpty(this.MixerChannelBadgeLink); } }
 
         #endregion Mixer
 
@@ -230,18 +300,6 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         [JsonIgnore]
-        public string MixerAvatarLink { get { return string.Format(UserAvatarLinkFormat, this.MixerID); } }
-
-        [JsonIgnore]
-        public string MixerSubscriberBadgeLink { get { return (ChannelSession.MixerChannel.badge != null) ? ChannelSession.MixerChannel.badge.url : string.Empty; } }
-
-        [JsonIgnore]
-        public string MixerChannelBadgeLink { get { return this.MixerFanProgression?.level?.SmallAssetURL?.ToString(); } }
-
-        [JsonIgnore]
-        public bool HasMixerChannelBadgeLink { get { return !string.IsNullOrEmpty(this.MixerChannelBadgeLink); } }
-
-        [JsonIgnore]
         public DateTimeOffset LastActivity { get; set; }
 
         [JsonIgnore]
@@ -254,10 +312,7 @@ namespace MixItUp.Base.ViewModel.User
         public string RolesDisplayString { get; private set; }
 
         [JsonIgnore]
-        public bool IsAnonymous { get { return this.MixerID == 0 || this.InteractiveIDs.Values.Any(i => i.anonymous.GetValueOrDefault()); } }
-
-        [JsonIgnore]
-        public UserRoleEnum PrimaryRole { get { return this.MixerRoles.Max(); } }
+        public UserRoleEnum PrimaryRole { get { return this.UserRoles.Max(); } }
 
         [JsonIgnore]
         public string PrimaryRoleString { get { return EnumHelper.GetEnumName(this.PrimaryRole); } }
@@ -301,22 +356,22 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         [JsonIgnore]
-        public string MixerAgeString { get { return (this.MixerAccountDate != null) ? this.MixerAccountDate.GetValueOrDefault().GetAge() : "Unknown"; } }
+        public string AccountAgeString { get { return (this.AccountDate != null) ? this.AccountDate.GetValueOrDefault().GetAge() : "Unknown"; } }
 
         [JsonIgnore]
-        public bool IsMixerFollower { get { return this.MixerRoles.Contains(UserRoleEnum.Follower) || this.HasPermissionsTo(UserRoleEnum.Subscriber); } }
+        public bool IsFollower { get { return this.UserRoles.Contains(UserRoleEnum.Follower) || this.HasPermissionsTo(UserRoleEnum.Subscriber); } }
 
         [JsonIgnore]
-        public string MixerFollowAgeString { get { return (this.MixerFollowDate != null) ? this.MixerFollowDate.GetValueOrDefault().GetAge() : "Not Following"; } }
+        public string FollowAgeString { get { return (this.FollowDate != null) ? this.FollowDate.GetValueOrDefault().GetAge() : "Not Following"; } }
 
         [JsonIgnore]
-        public bool IsMixerSubscriber { get { return this.MixerRoles.Contains(UserRoleEnum.Subscriber); } }
+        public bool IsPlatformSubscriber { get { return this.UserRoles.Contains(UserRoleEnum.Subscriber); } }
 
         [JsonIgnore]
-        public bool ShowMixerSubscriberBadge { get { return this.IsMixerSubscriber && !string.IsNullOrEmpty(this.MixerSubscriberBadgeLink); } }
+        public bool ShowSubscriberBadge { get { return this.IsPlatformSubscriber && !string.IsNullOrEmpty(this.SubscriberBadgeLink); } }
 
         [JsonIgnore]
-        public string MixerSubscribeAgeString { get { return (this.MixerSubscribeDate != null) ? this.MixerSubscribeDate.GetValueOrDefault().GetAge() : "Not Subscribed"; } }
+        public string SubscribeAgeString { get { return (this.SubscribeDate != null) ? this.SubscribeDate.GetValueOrDefault().GetAge() : "Not Subscribed"; } }
 
         [JsonIgnore]
         public int WhispererNumber { get; set; }
@@ -329,9 +384,9 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                if (this.MixerSubscribeDate != null)
+                if (this.SubscribeDate != null)
                 {
-                    return this.MixerSubscribeDate.GetValueOrDefault().TotalMonthsFromNow();
+                    return this.SubscribeDate.GetValueOrDefault().TotalMonthsFromNow();
                 }
                 return 0;
             }
@@ -355,7 +410,7 @@ namespace MixItUp.Base.ViewModel.User
                         return "UserGlobalModRoleColor";
                 }
 
-                if (this.MixerRoles.Contains(UserRoleEnum.Pro))
+                if (this.UserRoles.Contains(UserRoleEnum.Pro))
                 {
                     return "UserProRoleColor";
                 }
@@ -384,7 +439,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public bool HasPermissionsTo(UserRoleEnum checkRole)
         {
-            if (checkRole == UserRoleEnum.Subscriber && this.IsEquivalentToMixerSubscriber())
+            if (checkRole == UserRoleEnum.Subscriber && this.IsEquivalentToSubscriber())
             {
                 return true;
             }
@@ -393,7 +448,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public bool ExceedsPermissions(UserRoleEnum checkRole) { return this.PrimaryRole > checkRole; }
 
-        public bool IsEquivalentToMixerSubscriber()
+        public bool IsEquivalentToSubscriber()
         {
             if (this.PatreonUser != null && ChannelSession.Services.Patreon.IsConnected && !string.IsNullOrEmpty(ChannelSession.Settings.PatreonTierMixerSubscriberEquivalent))
             {
@@ -419,22 +474,22 @@ namespace MixItUp.Base.ViewModel.User
                     this.SetMixerUserDetails(user);
 
                     this.MixerFollowDate = await ChannelSession.MixerUserConnection.CheckIfFollows(ChannelSession.MixerChannel, this.GetModel());
-                    if (this.MixerFollowDate != null && this.MixerFollowDate.GetValueOrDefault() > DateTimeOffset.MinValue)
+                    if (this.MixerFollowDate != null && this.FollowDate.GetValueOrDefault() > DateTimeOffset.MinValue)
                     {
-                        this.MixerRoles.Add(UserRoleEnum.Follower);
+                        this.MixerUserRoles.Add(UserRoleEnum.Follower);
                     }
 
-                    if (this.IsMixerSubscriber || force)
+                    if (this.IsPlatformSubscriber || force)
                     {
                         UserWithGroupsModel userGroups = await ChannelSession.MixerUserConnection.GetUserInChannel(ChannelSession.MixerChannel, this.MixerID);
                         if (userGroups != null)
                         {
                             this.MixerSubscribeDate = userGroups.GetSubscriberDate();
-                            if (this.MixerSubscribeDate != null)
+                            if (this.SubscribeDate != null)
                             {
-                                if (this.Data.TotalMonthsSubbed < this.MixerSubscribeDate.GetValueOrDefault().TotalMonthsFromNow())
+                                if (this.Data.TotalMonthsSubbed < this.SubscribeDate.GetValueOrDefault().TotalMonthsFromNow())
                                 {
-                                    this.Data.TotalMonthsSubbed = (uint)this.MixerSubscribeDate.GetValueOrDefault().TotalMonthsFromNow();
+                                    this.Data.TotalMonthsSubbed = (uint)this.SubscribeDate.GetValueOrDefault().TotalMonthsFromNow();
                                 }
                             }
                         }
@@ -595,7 +650,7 @@ namespace MixItUp.Base.ViewModel.User
 
             if (ChannelSession.Settings.RegularUserMinimumHours > 0 && this.Data.ViewingHoursPart >= ChannelSession.Settings.RegularUserMinimumHours)
             {
-                this.MixerRoles.Add(UserRoleEnum.Regular);
+                this.UserRoles.Add(UserRoleEnum.Regular);
             }
         }
 
@@ -614,7 +669,7 @@ namespace MixItUp.Base.ViewModel.User
             {
                 userId = this.MixerID,
                 userName = this.MixerUsername,
-                userRoles = this.MixerRoles.Select(r => r.ToString()).ToArray(),
+                userRoles = this.MixerUserRoles.Select(r => r.ToString()).ToArray(),
             };
         }
 
@@ -667,58 +722,58 @@ namespace MixItUp.Base.ViewModel.User
 
         private void SetMixerRoles(string[] userRoles)
         {
-            this.MixerRoles.Clear();
-            this.MixerRoles.Add(UserRoleEnum.User);
+            this.MixerUserRoles.Clear();
+            this.MixerUserRoles.Add(UserRoleEnum.User);
 
             if (userRoles != null && userRoles.Length > 0)
             {
-                if (userRoles.Any(r => r.Equals("Owner"))) { this.MixerRoles.Add(UserRoleEnum.Streamer); }
-                if (userRoles.Any(r => r.Equals("Staff"))) { this.MixerRoles.Add(UserRoleEnum.Staff); }
-                if (userRoles.Any(r => r.Equals("ChannelEditor"))) { this.MixerRoles.Add(UserRoleEnum.ChannelEditor); }
-                if (userRoles.Any(r => r.Equals("Mod"))) { this.MixerRoles.Add(UserRoleEnum.Mod); }
-                if (userRoles.Any(r => r.Equals("GlobalMod"))) { this.MixerRoles.Add(UserRoleEnum.GlobalMod); }
-                if (userRoles.Any(r => r.Equals("Subscriber"))) { this.MixerRoles.Add(UserRoleEnum.Subscriber); }
-                if (userRoles.Any(r => r.Equals("Partner"))) { this.MixerRoles.Add(UserRoleEnum.Partner); }
-                if (userRoles.Any(r => r.Equals("Pro"))) { this.MixerRoles.Add(UserRoleEnum.Pro); }
-                if (userRoles.Any(r => r.Equals("Banned"))) { this.MixerRoles.Add(UserRoleEnum.Banned); }
+                if (userRoles.Any(r => r.Equals("Owner"))) { this.MixerUserRoles.Add(UserRoleEnum.Streamer); }
+                if (userRoles.Any(r => r.Equals("Staff"))) { this.MixerUserRoles.Add(UserRoleEnum.Staff); }
+                if (userRoles.Any(r => r.Equals("ChannelEditor"))) { this.MixerUserRoles.Add(UserRoleEnum.ChannelEditor); }
+                if (userRoles.Any(r => r.Equals("Mod"))) { this.MixerUserRoles.Add(UserRoleEnum.Mod); }
+                if (userRoles.Any(r => r.Equals("GlobalMod"))) { this.MixerUserRoles.Add(UserRoleEnum.GlobalMod); }
+                if (userRoles.Any(r => r.Equals("Subscriber"))) { this.MixerUserRoles.Add(UserRoleEnum.Subscriber); }
+                if (userRoles.Any(r => r.Equals("Partner"))) { this.MixerUserRoles.Add(UserRoleEnum.Partner); }
+                if (userRoles.Any(r => r.Equals("Pro"))) { this.MixerUserRoles.Add(UserRoleEnum.Pro); }
+                if (userRoles.Any(r => r.Equals("Banned"))) { this.MixerUserRoles.Add(UserRoleEnum.Banned); }
             }
 
             if (ChannelSession.MixerChannel != null && ChannelSession.MixerChannel.user.id.Equals(this.MixerID))
             {
-                this.MixerRoles.Add(UserRoleEnum.Streamer);
+                this.MixerUserRoles.Add(UserRoleEnum.Streamer);
             }
 
-            if (this.MixerFollowDate != null && this.MixerFollowDate.GetValueOrDefault() > DateTimeOffset.MinValue)
+            if (this.FollowDate != null && this.FollowDate.GetValueOrDefault() > DateTimeOffset.MinValue)
             {
-                this.MixerRoles.Add(UserRoleEnum.Follower);
+                this.MixerUserRoles.Add(UserRoleEnum.Follower);
             }
 
-            if (this.MixerRoles.Contains(UserRoleEnum.Streamer))
+            if (this.MixerUserRoles.Contains(UserRoleEnum.Streamer))
             {
-                this.MixerRoles.Add(UserRoleEnum.ChannelEditor);
-                this.MixerRoles.Add(UserRoleEnum.Subscriber);
-                this.MixerRoles.Add(UserRoleEnum.Follower);
+                this.MixerUserRoles.Add(UserRoleEnum.ChannelEditor);
+                this.MixerUserRoles.Add(UserRoleEnum.Subscriber);
+                this.MixerUserRoles.Add(UserRoleEnum.Follower);
             }
 
-            if (this.MixerRoles.Contains(UserRoleEnum.ChannelEditor))
+            if (this.MixerUserRoles.Contains(UserRoleEnum.ChannelEditor))
             {
-                this.MixerRoles.Add(UserRoleEnum.Mod);
+                this.MixerUserRoles.Add(UserRoleEnum.Mod);
             }
 
             if (ChannelSession.Settings.RegularUserMinimumHours > 0 && this.Data.ViewingHoursPart >= ChannelSession.Settings.RegularUserMinimumHours)
             {
-                this.MixerRoles.Add(UserRoleEnum.Regular);
+                this.MixerUserRoles.Add(UserRoleEnum.Regular);
             }
 
-            List<UserRoleEnum> mixerDisplayRoles = this.MixerRoles.ToList();
-            if (this.MixerRoles.Contains(UserRoleEnum.Banned))
+            List<UserRoleEnum> mixerDisplayRoles = this.MixerUserRoles.ToList();
+            if (this.MixerUserRoles.Contains(UserRoleEnum.Banned))
             {
                 mixerDisplayRoles.Clear();
                 mixerDisplayRoles.Add(UserRoleEnum.Banned);
             }
             else
             {
-                if (this.MixerRoles.Count() > 1)
+                if (this.MixerUserRoles.Count() > 1)
                 {
                     mixerDisplayRoles.Remove(UserRoleEnum.User);
                 }
@@ -728,12 +783,12 @@ namespace MixItUp.Base.ViewModel.User
                     mixerDisplayRoles.Remove(UserRoleEnum.Mod);
                 }
 
-                if (this.MixerRoles.Contains(UserRoleEnum.Subscriber) || this.MixerRoles.Contains(UserRoleEnum.Streamer))
+                if (this.MixerUserRoles.Contains(UserRoleEnum.Subscriber) || this.MixerUserRoles.Contains(UserRoleEnum.Streamer))
                 {
                     mixerDisplayRoles.Remove(UserRoleEnum.Follower);
                 }
 
-                if (this.MixerRoles.Contains(UserRoleEnum.Streamer))
+                if (this.MixerUserRoles.Contains(UserRoleEnum.Streamer))
                 {
                     mixerDisplayRoles.Remove(UserRoleEnum.ChannelEditor);
                     mixerDisplayRoles.Remove(UserRoleEnum.Subscriber);
