@@ -227,20 +227,23 @@ namespace MixItUp.Base
                     return new ExternalServiceResult("Failed to get Mixer user data");
                 }
 
-                mixerResult = await MixerConnectionService.Connect(settings.MixerBotOAuthToken);
-                if (mixerResult.Success)
+                if (settings.MixerBotOAuthToken != null)
                 {
-                    ChannelSession.MixerBotConnection = mixerResult.Result;
-                    ChannelSession.MixerBot = await ChannelSession.MixerBotConnection.GetCurrentUser();
-                    if (ChannelSession.MixerBot == null)
+                    mixerResult = await MixerConnectionService.Connect(settings.MixerBotOAuthToken);
+                    if (mixerResult.Success)
                     {
-                        return new ExternalServiceResult("Failed to get Mixer bot data");
+                        ChannelSession.MixerBotConnection = mixerResult.Result;
+                        ChannelSession.MixerBot = await ChannelSession.MixerBotConnection.GetCurrentUser();
+                        if (ChannelSession.MixerBot == null)
+                        {
+                            return new ExternalServiceResult("Failed to get Mixer bot data");
+                        }
                     }
-                }
-                else
-                {
-                    settings.MixerBotOAuthToken = null;
-                    return new ExternalServiceResult(success: true, message: "Failed to connect Mixer bot account, please manually reconnect");
+                    else
+                    {
+                        settings.MixerBotOAuthToken = null;
+                        return new ExternalServiceResult(success: true, message: "Failed to connect Mixer bot account, please manually reconnect");
+                    }
                 }
             }
 
@@ -263,20 +266,23 @@ namespace MixItUp.Base
                     return new ExternalServiceResult("Failed to get Twitch user data");
                 }
 
-                twitchResult = await TwitchConnectionService.Connect(settings.TwitchBotOAuthToken);
-                if (twitchResult.Success)
+                if (settings.TwitchBotOAuthToken != null)
                 {
-                    ChannelSession.TwitchBotConnection = twitchResult.Result;
-                    ChannelSession.TwitchBot = await ChannelSession.TwitchBotConnection.GetNewAPICurrentUser();
-                    if (ChannelSession.TwitchBot == null)
+                    twitchResult = await TwitchConnectionService.Connect(settings.TwitchBotOAuthToken);
+                    if (twitchResult.Success)
                     {
-                        return new ExternalServiceResult("Failed to get Twitch bot data");
+                        ChannelSession.TwitchBotConnection = twitchResult.Result;
+                        ChannelSession.TwitchBot = await ChannelSession.TwitchBotConnection.GetNewAPICurrentUser();
+                        if (ChannelSession.TwitchBot == null)
+                        {
+                            return new ExternalServiceResult("Failed to get Twitch bot data");
+                        }
                     }
-                }
-                else
-                {
-                    settings.TwitchBotOAuthToken = null;
-                    return new ExternalServiceResult(success: true, message: "Failed to connect Twitch bot account, please manually reconnect");
+                    else
+                    {
+                        settings.TwitchBotOAuthToken = null;
+                        return new ExternalServiceResult(success: true, message: "Failed to connect Twitch bot account, please manually reconnect");
+                    }
                 }
             }
 
