@@ -128,7 +128,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.AccountDate; }
+                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.MixerAccountDate; }
                 return null;
             }
         }
@@ -137,7 +137,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.FollowDate; }
+                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.MixerFollowDate; }
                 return null;
             }
         }
@@ -146,7 +146,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.SubscribeDate; }
+                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.MixerSubscribeDate; }
                 return null;
             }
         }
