@@ -97,7 +97,7 @@ namespace MixItUp.WPF.Controls.Interactive
                         this.userCollection.Clear();
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        Task.Run(async () =>
+                        Task.Run((Func<Task>)(async () =>
                         {
                             try
                             {
@@ -132,11 +132,11 @@ namespace MixItUp.WPF.Controls.Interactive
                                         this.WinnerGrid.DataContext = this.winner;
                                     });
 
-                                    ChannelSession.Services.Chat.SendMessage(string.Format("Winner: @{0}, Total Flies: {1}", winner.User.MixerUsername, winner.Total));
+                                    ChannelSession.Services.Chat.SendMessage(string.Format("Winner: @{0}, Total Flies: {1}", (object)winner.User.Username, winner.Total));
                                 }
                             }
                             catch (Exception ex) { Logger.Log(ex.ToString()); }
-                        });
+                        }));
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                         return true;

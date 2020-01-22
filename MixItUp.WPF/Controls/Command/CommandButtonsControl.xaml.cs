@@ -289,7 +289,7 @@ namespace MixItUp.WPF.Controls.Command
                     }
                 }
 
-                await command.PerformAndWait(currentUser, new List<string>() { "@" + currentUser.MixerUsername }, extraSpecialIdentifiers);
+                await command.PerformAndWait(currentUser, new List<string>() { "@" + currentUser.Username }, extraSpecialIdentifiers);
                 if (command is PermissionsCommandBase)
                 {
                     PermissionsCommandBase permissionCommand = (PermissionsCommandBase)command;

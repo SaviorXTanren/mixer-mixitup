@@ -33,7 +33,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             return Task.FromResult<IEnumerable<MixPlayUser>>(mixplayUsers.Where(x => x.IsInteractiveParticipant).Select(x => new MixPlayUser()
             {
                 ID = x.MixerID,
-                UserName = x.MixerUsername,
+                UserName = x.Username,
                 ParticipantIDs = x.InteractiveIDs.Keys.ToList(),
             }));
         }
@@ -56,7 +56,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             return Task.FromResult(new MixPlayUser()
             {
                 ID = user.MixerID,
-                UserName = user.MixerUsername,
+                UserName = user.Username,
                 ParticipantIDs = user.InteractiveIDs.Keys.ToList(),
             });
         }
@@ -80,7 +80,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             return Task.FromResult(new MixPlayUser()
             {
                 ID = user.MixerID,
-                UserName = user.MixerUsername,
+                UserName = user.Username,
                 ParticipantIDs = user.InteractiveIDs.Keys.ToList(),
             });
         }
@@ -104,7 +104,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             return Task.FromResult(new MixPlayUser()
             {
                 ID = user.MixerID,
-                UserName = user.MixerUsername,
+                UserName = user.Username,
                 ParticipantIDs = user.InteractiveIDs.Keys.ToList(),
             });
         }

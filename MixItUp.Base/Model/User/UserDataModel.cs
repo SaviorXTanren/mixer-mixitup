@@ -110,7 +110,7 @@ namespace MixItUp.Base.Model.User
         {
             this.ID = user.ID;
             this.MixerID = user.MixerID;
-            this.MixerUsername = user.MixerUsername;
+            this.MixerUsername = user.Username;
         }
 
         public UserDataModel(ScorpBotViewer viewer)
@@ -246,7 +246,7 @@ namespace MixItUp.Base.Model.User
         {
             this.ID = user.ID;
             this.MixerID = user.MixerID;
-            this.MixerUsername = user.MixerUsername;
+            this.MixerUsername = user.Username;
         }
 
         public override bool Equals(object obj)

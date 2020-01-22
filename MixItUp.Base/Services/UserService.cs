@@ -135,7 +135,7 @@ namespace MixItUp.Base.Services
                 this.usersByID[user.ID] = user;
                 this.usersByUsername[user.Username.ToLower()] = user;
 
-                if (user.MixerID > 0 && !string.IsNullOrEmpty(user.MixerUsername))
+                if (user.MixerID > 0 && !string.IsNullOrEmpty(user.Username))
                 {
                     this.usersByMixerID[user.MixerID] = user;
                 }
@@ -195,7 +195,7 @@ namespace MixItUp.Base.Services
         private async Task RemoveUser(UserViewModel user)
         {
             this.usersByID.Remove(user.ID);
-            this.usersByUsername.Remove(user.MixerUsername);
+            this.usersByUsername.Remove(user.Username);
 
             if (user.MixerID > 0)
             {

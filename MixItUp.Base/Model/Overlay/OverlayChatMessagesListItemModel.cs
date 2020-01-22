@@ -133,7 +133,7 @@ namespace MixItUp.Base.Model.Overlay
                         item.TemplateReplacements.Add("TEXT", string.Join(" ", textParts));
                     }
 
-                    item.TemplateReplacements.Add("USERNAME", item.User.MixerUsername);
+                    item.TemplateReplacements.Add("USERNAME", item.User.Username);
                     item.TemplateReplacements.Add("USER_IMAGE", item.User.MixerAvatarLink);
                     item.TemplateReplacements.Add("USER_COLOR", OverlayChatMessagesListItemModel.userColors[item.User.PrimaryRoleColorName]);
                     item.TemplateReplacements.Add("SUB_IMAGE", (item.User.IsMixerSubscriber && ChannelSession.MixerChannel.badge != null) ? ChannelSession.MixerChannel.badge.url : string.Empty);

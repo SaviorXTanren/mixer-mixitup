@@ -31,7 +31,7 @@ namespace MixItUp.WPF.Controls.Chat
                             await ChannelSession.Services.Chat.TimeoutUser(user, 300);
                             break;
                         case UserDialogResult.Ban:
-                            if (await DialogHelper.ShowConfirmation(string.Format("This will ban the user {0} from this channel. Are you sure?", user.MixerUsername)))
+                            if (await DialogHelper.ShowConfirmation(string.Format("This will ban the user {0} from this channel. Are you sure?", user.Username)))
                             {
                                 await ChannelSession.Services.Chat.BanUser(user);
                             }
@@ -48,19 +48,19 @@ namespace MixItUp.WPF.Controls.Chat
                             await ChannelSession.MixerUserConnection.Unfollow(channelToUnfollow, ChannelSession.MixerUser);
                             break;
                         case UserDialogResult.PromoteToMod:
-                            if (await DialogHelper.ShowConfirmation(string.Format("This will promote the user {0} to a moderator of this channel. Are you sure?", user.MixerUsername)))
+                            if (await DialogHelper.ShowConfirmation(string.Format("This will promote the user {0} to a moderator of this channel. Are you sure?", user.Username)))
                             {
                                 await ChannelSession.Services.Chat.ModUser(user);
                             }
                             break;
                         case UserDialogResult.DemoteFromMod:
-                            if (await DialogHelper.ShowConfirmation(string.Format("This will demote the user {0} from a moderator of this channel. Are you sure?", user.MixerUsername)))
+                            if (await DialogHelper.ShowConfirmation(string.Format("This will demote the user {0} from a moderator of this channel. Are you sure?", user.Username)))
                             {
                                 await ChannelSession.Services.Chat.UnmodUser(user);
                             }
                             break;
                         case UserDialogResult.MixerPage:
-                            ProcessHelper.LaunchLink($"https://mixer.com/{user.MixerUsername}");
+                            ProcessHelper.LaunchLink($"https://mixer.com/{user.Username}");
                             break;
                         case UserDialogResult.EditUser:
                             UserDataEditorWindow window = new UserDataEditorWindow(ChannelSession.Settings.GetUserData(user.ID));

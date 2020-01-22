@@ -166,11 +166,11 @@ namespace MixItUp.Base.Services
             int position = this.GetUserPosition(user);
             if (position != -1)
             {
-                await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("You are #{0} in the queue to play", position));
+                await ChannelSession.Services.Chat.Whisper(user.Username, string.Format("You are #{0} in the queue to play", position));
             }
             else
             {
-                await ChannelSession.Services.Chat.Whisper(user.MixerUsername, "You are not currently in the queue to play");
+                await ChannelSession.Services.Chat.Whisper(user.Username, "You are not currently in the queue to play");
             }
         }
 
@@ -186,7 +186,7 @@ namespace MixItUp.Base.Services
                 List<string> users = new List<string>();
                 for (int i = 0; i < this.queue.Count() && i < 5; i++)
                 {
-                    users.Add("@" + this.queue[i].MixerUsername);
+                    users.Add("@" + this.queue[i].Username);
                 }
 
                 message.Append(string.Join(", ", users));
@@ -208,7 +208,7 @@ namespace MixItUp.Base.Services
             int position = this.GetUserPosition(user);
             if (position != -1)
             {
-                await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("You are already #{0} in the queue", position));
+                await ChannelSession.Services.Chat.Whisper(user.Username, string.Format("You are already #{0} in the queue", position));
                 return false;
             }
             return true;

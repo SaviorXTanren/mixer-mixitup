@@ -112,7 +112,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.follows.Contains(user.MixerID))
             {
                 this.follows.Add(user.MixerID);
-                await this.AddEvent(user.MixerUsername, "Followed");
+                await this.AddEvent(user.Username, "Followed");
             }
         }
 
@@ -121,7 +121,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.hosts.Contains(host.Item1.MixerID))
             {
                 this.hosts.Add(host.Item1.MixerID);
-                await this.AddEvent(host.Item1.MixerUsername, string.Format("Hosted ({0})", host.Item2));
+                await this.AddEvent(host.Item1.Username, string.Format("Hosted ({0})", host.Item2));
             }
         }
 
@@ -130,7 +130,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.subs.Contains(user.MixerID))
             {
                 this.subs.Add(user.MixerID);
-                await this.AddEvent(user.MixerUsername, "Subscribed");
+                await this.AddEvent(user.Username, "Subscribed");
             }
         }
 
@@ -139,7 +139,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.subs.Contains(user.Item1.MixerID))
             {
                 this.subs.Add(user.Item1.MixerID);
-                await this.AddEvent(user.Item1.MixerUsername, string.Format("Resubscribed ({0} months)", user.Item2));
+                await this.AddEvent(user.Item1.Username, string.Format("Resubscribed ({0} months)", user.Item2));
             }
         }
 
@@ -148,17 +148,17 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.subs.Contains(e.Item2.MixerID))
             {
                 this.subs.Add(e.Item2.MixerID);
-                await this.AddEvent(e.Item2.MixerUsername, "Gifted Sub");
+                await this.AddEvent(e.Item2.Username, "Gifted Sub");
             }
         }
 
         private async void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { await this.AddEvent(donation.Username, string.Format("Donated {0}", donation.AmountText)); }
 
-        private async void GlobalEvents_OnStreamlootsPurchaseOccurred(object sender, Tuple<UserViewModel, int> purchase) { await this.AddEvent(purchase.Item1.MixerUsername, string.Format("Purchased {0} Packs", purchase.Item2)); }
+        private async void GlobalEvents_OnStreamlootsPurchaseOccurred(object sender, Tuple<UserViewModel, int> purchase) { await this.AddEvent(purchase.Item1.Username, string.Format("Purchased {0} Packs", purchase.Item2)); }
 
-        private async void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, uint> sparkUsage) { await this.AddEvent(sparkUsage.Item1.MixerUsername, string.Format("{0} Sparks", sparkUsage.Item2)); }
+        private async void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, uint> sparkUsage) { await this.AddEvent(sparkUsage.Item1.Username, string.Format("{0} Sparks", sparkUsage.Item2)); }
 
-        private async void GlobalEvents_OnEmberUseOccurred(object sender, UserEmberUsageModel emberUsage) { await this.AddEvent(emberUsage.User.MixerUsername, string.Format("{0} Embers", emberUsage.Amount)); }
+        private async void GlobalEvents_OnEmberUseOccurred(object sender, UserEmberUsageModel emberUsage) { await this.AddEvent(emberUsage.User.Username, string.Format("{0} Embers", emberUsage.Amount)); }
 
         private async void GlobalEvents_OnPatronageMilestoneReachedOccurred(object sender, PatronageMilestoneModel patronageMilestone) { await this.AddEvent(string.Format("{0} Milestone", patronageMilestone.PercentageAmountText()), string.Format("{0} Sparks", patronageMilestone.target)); }
 

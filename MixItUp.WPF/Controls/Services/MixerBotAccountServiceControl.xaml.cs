@@ -57,7 +57,7 @@ namespace MixItUp.WPF.Controls.Services
                         return false;
                     }
                 }
-                return await ChannelSession.ConnectBot();
+                return (await ChannelSession.ConnectMixerBot()).Success;
             });
 
             if (!result)
@@ -68,7 +68,7 @@ namespace MixItUp.WPF.Controls.Services
             {
                 await this.groupBoxControl.window.RunAsyncOperation(async () =>
                 {
-                    await ChannelSession.DisconnectBot();
+                    await ChannelSession.DisconnectMixerBot();
                 });
                 ChannelSession.Settings.MixerBotOAuthToken = null;
                 await DialogHelper.ShowMessage("You must sign in to a different account than your Streamer account.");
@@ -94,7 +94,7 @@ namespace MixItUp.WPF.Controls.Services
         {
             await this.groupBoxControl.window.RunAsyncOperation(async () =>
             {
-                await ChannelSession.DisconnectBot();
+                await ChannelSession.DisconnectMixerBot();
             });
             ChannelSession.Settings.MixerBotOAuthToken = null;
 

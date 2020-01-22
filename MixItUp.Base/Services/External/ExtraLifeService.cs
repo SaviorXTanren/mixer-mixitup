@@ -284,9 +284,9 @@ namespace MixItUp.Base.Services.External
                             UserDonationModel donation = elDonation.ToGenericDonation();
                             GlobalEvents.DonationOccurred(donation);
 
-                            UserViewModel user = new UserViewModel() { MixerUsername = donation.Username };
+                            UserViewModel user = new UserViewModel(donation.Username);
 
-                            UserModel userModel = await ChannelSession.MixerUserConnection.GetUser(user.MixerUsername);
+                            UserModel userModel = await ChannelSession.MixerUserConnection.GetUser(user.Username);
                             if (userModel != null)
                             {
                                 user = new UserViewModel(userModel);

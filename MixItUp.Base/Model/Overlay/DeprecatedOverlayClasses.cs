@@ -191,7 +191,7 @@ namespace MixItUp.Base.Model.Overlay
             replacementSets["TEXT_SIZE"] = this.TextSize.ToString();
 
             replacementSets["USER_IMAGE"] = message.User.MixerAvatarLink;
-            replacementSets["USERNAME"] = message.User.MixerUsername;
+            replacementSets["USERNAME"] = message.User.Username;
             replacementSets["USER_COLOR"] = OverlayChatMessages.userColors[message.User.PrimaryRoleColorName];
 
             replacementSets["SUB_IMAGE"] = "";
@@ -505,7 +505,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.follows.Contains(user.MixerID))
             {
                 this.follows.Add(user.MixerID);
-                this.AddEvent(user.MixerUsername, "Followed");
+                this.AddEvent(user.Username, "Followed");
             }
         }
 
@@ -514,7 +514,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.hosts.Contains(host.Item1.MixerID))
             {
                 this.hosts.Add(host.Item1.MixerID);
-                this.AddEvent(host.Item1.MixerUsername, string.Format("Hosted ({0})", host.Item2));
+                this.AddEvent(host.Item1.Username, string.Format("Hosted ({0})", host.Item2));
             }
         }
 
@@ -523,7 +523,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.subs.Contains(user.MixerID))
             {
                 this.subs.Add(user.MixerID);
-                this.AddEvent(user.MixerUsername, "Subscribed");
+                this.AddEvent(user.Username, "Subscribed");
             }
         }
 
@@ -532,15 +532,15 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.subs.Contains(user.Item1.MixerID))
             {
                 this.subs.Add(user.Item1.MixerID);
-                this.AddEvent(user.Item1.MixerUsername, string.Format("Resubscribed ({0} months)", user.Item2));
+                this.AddEvent(user.Item1.Username, string.Format("Resubscribed ({0} months)", user.Item2));
             }
         }
 
         private void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { this.AddEvent(donation.Username, string.Format("Donated {0}", donation.AmountText)); }
 
-        private void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, uint> sparkUsage) { this.AddEvent(sparkUsage.Item1.MixerUsername, string.Format("{0} Sparks", sparkUsage.Item2)); }
+        private void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, uint> sparkUsage) { this.AddEvent(sparkUsage.Item1.Username, string.Format("{0} Sparks", sparkUsage.Item2)); }
 
-        private void GlobalEvents_OnEmberUseOccurred(object sender, UserEmberUsageModel emberUsage) { this.AddEvent(emberUsage.User.MixerUsername, string.Format("{0} Embers", emberUsage.Amount)); }
+        private void GlobalEvents_OnEmberUseOccurred(object sender, UserEmberUsageModel emberUsage) { this.AddEvent(emberUsage.User.Username, string.Format("{0} Embers", emberUsage.Amount)); }
 
         private void GlobalEvents_OnPatronageMilestoneReachedOccurred(object sender, PatronageMilestoneModel patronageMilestone) { this.AddEvent(string.Format("{0} Milestone", patronageMilestone.PercentageAmountText()), string.Format("{0} Sparks", patronageMilestone.target)); }
     }
@@ -676,7 +676,7 @@ namespace MixItUp.Base.Model.Overlay
             replacementSets["HEIGHT"] = this.Height.ToString();
             replacementSets["TEXT_HEIGHT"] = ((int)(0.4 * ((double)this.Height))).ToString();
 
-            replacementSets["USERNAME"] = user.MixerUsername;
+            replacementSets["USERNAME"] = user.Username;
             replacementSets["POSITION"] = extraSpecialIdentifiers[GameQueueUserPositionSpecialIdentifier];
 
             return Task.FromResult(replacementSets);
@@ -1358,7 +1358,7 @@ namespace MixItUp.Base.Model.Overlay
                     foreach (SparksLeaderboardModel sparkLeader in this.sparkLeaders)
                     {
                         extraSpecialIdentifiers["DETAILS"] = sparkLeader.statValue.ToString();
-                        OverlayCustomHTMLItem htmlItem = (OverlayCustomHTMLItem)await base.GetProcessedItem(new UserViewModel() { MixerUsername = sparkLeader.username }, arguments, extraSpecialIdentifiers);
+                        OverlayCustomHTMLItem htmlItem = (OverlayCustomHTMLItem)await base.GetProcessedItem(new UserViewModel(sparkLeader.username), arguments, extraSpecialIdentifiers);
                         copy.LeaderboardEntries.Add(htmlItem.HTMLText);
                     }
                     return copy;
@@ -1391,7 +1391,7 @@ namespace MixItUp.Base.Model.Overlay
                     foreach (EmbersLeaderboardModel emberLeader in this.emberLeaders)
                     {
                         extraSpecialIdentifiers["DETAILS"] = emberLeader.statValue.ToString();
-                        OverlayCustomHTMLItem htmlItem = (OverlayCustomHTMLItem)await base.GetProcessedItem(new UserViewModel() { MixerUsername = emberLeader.username }, arguments, extraSpecialIdentifiers);
+                        OverlayCustomHTMLItem htmlItem = (OverlayCustomHTMLItem)await base.GetProcessedItem(new UserViewModel(emberLeader.username), arguments, extraSpecialIdentifiers);
                         copy.LeaderboardEntries.Add(htmlItem.HTMLText);
                     }
                     return copy;
@@ -1413,7 +1413,7 @@ namespace MixItUp.Base.Model.Overlay
             replacementSets["TOP_TEXT_HEIGHT"] = ((int)(0.4 * ((double)this.Height))).ToString();
             replacementSets["BOTTOM_TEXT_HEIGHT"] = ((int)(0.2 * ((double)this.Height))).ToString();
 
-            replacementSets["USERNAME"] = user.MixerUsername;
+            replacementSets["USERNAME"] = user.Username;
             if (extraSpecialIdentifiers.ContainsKey("DETAILS"))
             {
                 replacementSets["DETAILS"] = extraSpecialIdentifiers["DETAILS"];
@@ -2185,7 +2185,7 @@ namespace MixItUp.Base.Model.Overlay
             replacementSets["HEIGHT"] = this.Height.ToString();
             replacementSets["TEXT_SIZE"] = ((int)(0.2 * ((double)this.Height))).ToString();
 
-            replacementSets["USERNAME"] = boss.MixerUsername;
+            replacementSets["USERNAME"] = boss.Username;
             replacementSets["USER_IMAGE"] = boss.MixerAvatarLink;
             replacementSets["USER_IMAGE_SIZE"] = ((int)(0.8 * ((double)this.Height))).ToString();
 

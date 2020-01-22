@@ -263,7 +263,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 var kvp = orderedUsers.ElementAt(i);
 
-                OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateAddItem(kvp.Key.MixerUsername, kvp.Key, i + 1, this.HTML);
+                OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateAddItem(kvp.Key.Username, kvp.Key, i + 1, this.HTML);
                 item.Hash = kvp.Value.AmountText;
             }
 
@@ -294,7 +294,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 var kvp = orderedUsers.ElementAt(i);
 
-                OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateAddItem(kvp.Key.MixerUsername, kvp.Key, i + 1, this.HTML);
+                OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateAddItem(kvp.Key.Username, kvp.Key, i + 1, this.HTML);
                 item.Hash = kvp.Value.GetAge();
             }
 
@@ -304,7 +304,7 @@ namespace MixItUp.Base.Model.Overlay
 
         private async Task AddLeaderboardItems(IEnumerable<OverlayListIndividualItemModel> items)
         {
-            await this.listSemaphore.WaitAndRelease(async () =>
+            await this.listSemaphore.WaitAndRelease((Func<Task>)(async () =>
             {
                 foreach (OverlayListIndividualItemModel item in this.lastItems)
                 {
@@ -334,12 +334,12 @@ namespace MixItUp.Base.Model.Overlay
                     // Detect if we had a list before, and we have a list now, and the top user changed, let's trigger the event
                     if (this.lastItems.Count() > 0 && items.Count() > 0 && !this.lastItems.First().User.MixerID.Equals(items.First().User.MixerID))
                     {
-                        await this.NewLeaderCommand.Perform(items.First().User, new string[] { this.lastItems.First().User.MixerUsername });
+                        await this.NewLeaderCommand.Perform(items.First().User, new string[] { this.lastItems.First().User.Username });
                     }
                 }
 
                 this.lastItems = new List<OverlayListIndividualItemModel>(items);
-            });
+            }));
         }
     }
 }

@@ -254,10 +254,10 @@ namespace MixItUp.Base.Services.External
             var purchase = jobj["data"].ToObject<StreamlootsPurchaseModel>();
             if (purchase != null)
             {
-                UserViewModel user = new UserViewModel() { MixerUsername = purchase.data.Username };
-                UserViewModel giftee = (string.IsNullOrEmpty(purchase.data.Giftee)) ? null : new UserViewModel() { MixerUsername = purchase.data.Giftee };
+                UserViewModel user = new UserViewModel(purchase.data.Username);
+                UserViewModel giftee = (string.IsNullOrEmpty(purchase.data.Giftee)) ? null : new UserViewModel(purchase.data.Giftee);
 
-                UserModel userModel = await ChannelSession.MixerUserConnection.GetUser(user.MixerUsername);
+                UserModel userModel = await ChannelSession.MixerUserConnection.GetUser(user.Username);
                 if (userModel != null)
                 {
                     user = new UserViewModel(userModel);
@@ -265,7 +265,7 @@ namespace MixItUp.Base.Services.External
 
                 if (giftee != null)
                 {
-                    UserModel gifteeModel = await ChannelSession.MixerUserConnection.GetUser(giftee.MixerUsername);
+                    UserModel gifteeModel = await ChannelSession.MixerUserConnection.GetUser(giftee.Username);
                     if (gifteeModel != null)
                     {
                         giftee = new UserViewModel(gifteeModel);
@@ -277,7 +277,7 @@ namespace MixItUp.Base.Services.External
                 if (giftee != null)
                 {
                     trigger.Type = EventTypeEnum.StreamlootsPackGifted;
-                    trigger.Arguments.Add(giftee.MixerUsername);
+                    trigger.Arguments.Add(giftee.Username);
                 }
                 await ChannelSession.Services.Events.PerformEvent(trigger);
 
@@ -291,9 +291,9 @@ namespace MixItUp.Base.Services.External
             StreamlootsCardModel card = jobj["data"].ToObject<StreamlootsCardModel>();
             if (card != null)
             {
-                UserViewModel user = new UserViewModel() { MixerUsername = card.data.Username };
+                UserViewModel user = new UserViewModel(card.data.Username);
 
-                UserModel userModel = await ChannelSession.MixerUserConnection.GetUser(user.MixerUsername);
+                UserModel userModel = await ChannelSession.MixerUserConnection.GetUser(user.Username);
                 if (userModel != null)
                 {
                     user = new UserViewModel(userModel);
