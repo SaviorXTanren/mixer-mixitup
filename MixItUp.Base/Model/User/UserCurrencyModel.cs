@@ -164,10 +164,12 @@ namespace MixItUp.Base.Model.User
             return (user.IsCurrencyRankExempt || this.GetAmount(user) >= amount);
         }
 
-        public void SetAmount(UserDataModel user, int amount)
+        public void SetAmount(UserDataModel user, int amount) { this.SetAmount(user.ID, amount); }
+
+        public void SetAmount(Guid id, int amount)
         {
-            this.UserAmounts[user.ID] = Math.Min(Math.Max(amount, 0), this.MaxAmount);
-            ChannelSession.Settings.UserData.ManualValueChanged(user.MixerID);
+            this.UserAmounts[id] = Math.Min(Math.Max(amount, 0), this.MaxAmount);
+            ChannelSession.Settings.UserData.ManualValueChanged(id);
         }
 
         public void AddAmount(UserDataModel user, int amount)
@@ -198,7 +200,7 @@ namespace MixItUp.Base.Model.User
         public void ResetAmount(UserDataModel user)
         {
             this.UserAmounts[user.ID] = 0;
-            ChannelSession.Settings.UserData.ManualValueChanged(user.MixerID);
+            ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
         }
 
         public UserRankViewModel GetRank(UserDataModel user)
@@ -247,7 +249,7 @@ namespace MixItUp.Base.Model.User
                             if (user.MixerFanProgression != null && user.MixerFanProgression.level != null && user.MixerFanProgression.level.level > this.GetAmount(user.Data))
                             {
                                 this.SetAmount(user.Data, (int)user.MixerFanProgression.level.level);
-                                ChannelSession.Settings.UserData.ManualValueChanged(user.MixerID);
+                                ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
                             }
                         }
                     }
@@ -278,7 +280,7 @@ namespace MixItUp.Base.Model.User
                                             this.AddAmount(user.Data, this.SubscriberBonus);
                                         }
                                     }
-                                    ChannelSession.Settings.UserData.ManualValueChanged(user.MixerID);
+                                    ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
                                 }
                             }
                         }

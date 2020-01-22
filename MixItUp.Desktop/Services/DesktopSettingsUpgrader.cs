@@ -602,7 +602,7 @@ namespace MixItUp.Desktop.Services
                             userData.TotalMonthsSubbed = GetOptionValue<uint>(optionsJObj, "TotalMonthsSubbed");
                         }
 
-                        settings.UserData[userData.MixerID] = userData;
+                        settings.UserData[userData.ID] = userData;
                     });
 
 #pragma warning restore CS0612 // Type or member is obsolete

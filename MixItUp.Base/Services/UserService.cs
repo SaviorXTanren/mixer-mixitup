@@ -57,7 +57,7 @@ namespace MixItUp.Base.Services
 
         public UserViewModel GetUserByUsername(string username)
         {
-            if (this.usersByUsername.TryGetValue(username, out UserViewModel user))
+            if (this.usersByUsername.TryGetValue(username.ToLower(), out UserViewModel user))
             {
                 return user;
             }
@@ -133,7 +133,7 @@ namespace MixItUp.Base.Services
             if (!user.IsAnonymous)
             {
                 this.usersByID[user.ID] = user;
-                this.usersByUsername[user.Username] = user;
+                this.usersByUsername[user.Username.ToLower()] = user;
 
                 if (user.MixerID > 0 && !string.IsNullOrEmpty(user.MixerUsername))
                 {

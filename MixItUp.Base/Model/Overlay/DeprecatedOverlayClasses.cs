@@ -1302,10 +1302,10 @@ namespace MixItUp.Base.Model.Overlay
                         this.lastRefresh = DateTimeOffset.Now.AddMinutes(1);
 
                         Dictionary<uint, int> currencyAmounts = new Dictionary<uint, int>();
-                        foreach (UserDataModel userData in ChannelSession.Settings.UserData.Values)
-                        {
-                            currencyAmounts[userData.MixerID] = currency.GetAmount(userData);
-                        }
+                        //foreach (UserDataModel userData in ChannelSession.Settings.UserData.Values)
+                        //{
+                        //    currencyAmounts[userData.MixerID] = currency.GetAmount(userData);
+                        //}
 
                         this.currencyUsersToShow.Clear();
                         for (int i = 0; i < this.TotalToShow && i < currencyAmounts.Count; i++)
@@ -1315,7 +1315,7 @@ namespace MixItUp.Base.Model.Overlay
                                 KeyValuePair<uint, int> top = currencyAmounts.Aggregate((current, highest) => (current.Key <= 0 || current.Value < highest.Value) ? highest : current);
                                 if (!top.Equals(default(KeyValuePair<uint, int>)))
                                 {
-                                    this.currencyUsersToShow.Add(ChannelSession.Settings.UserData[top.Key]);
+                                    //this.currencyUsersToShow.Add(ChannelSession.Settings.UserData[top.Key]);
                                     currencyAmounts.Remove(top.Key);
                                 }
                             }

@@ -142,18 +142,15 @@ namespace MixItUp.Base.Model.Overlay
                 if (ChannelSession.Settings.Currencies.ContainsKey(this.CurrencyID))
                 {
                     UserCurrencyModel currency = ChannelSession.Settings.Currencies[this.CurrencyID];
-                    Dictionary<UserDataModel, int> currencyAmounts = new Dictionary<UserDataModel, int>();
-                    foreach (UserDataModel userData in ChannelSession.Settings.UserData.Values)
-                    {
-                        currencyAmounts[userData] = currency.GetAmount(userData);
-                    }
+                    Dictionary<Guid, int> currencyAmounts = currency.UserAmounts.ToDictionary();
 
                     var orderedUsers = currencyAmounts.OrderByDescending(kvp => kvp.Value);
                     for (int i = 0; i < this.TotalToShow && i < orderedUsers.Count(); i++)
                     {
                         var kvp = orderedUsers.ElementAt(i);
+                        UserDataModel userData = ChannelSession.Settings.GetUserData(kvp.Key);
 
-                        OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateAddItem(kvp.Key.MixerUsername, new UserViewModel(kvp.Key), i + 1, this.HTML);
+                        OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateAddItem(userData.Username, new UserViewModel(userData), i + 1, this.HTML);
                         item.Hash = kvp.Value.ToString();
                         items.Add(item);
                     }

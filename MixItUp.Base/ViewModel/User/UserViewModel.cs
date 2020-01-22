@@ -87,7 +87,8 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         [DataMember]
-        public Guid ID { get; set; } = Guid.NewGuid();
+        public Guid ID { get; set; } = Guid.Empty;
+
         [DataMember]
         public string Username
         {
@@ -234,7 +235,7 @@ namespace MixItUp.Base.ViewModel.User
         public DateTimeOffset LastUpdated { get; set; }
 
         [JsonIgnore]
-        public UserDataModel Data { get { return ChannelSession.Settings.UserData.GetValueIfExists(this.MixerID, new UserDataModel(this)); } }
+        public UserDataModel Data { get { return ChannelSession.Settings.GetUserData(this); } }
 
         [JsonIgnore]
         public string RolesDisplayString { get; private set; }
@@ -577,7 +578,7 @@ namespace MixItUp.Base.ViewModel.User
             {
                 this.Data.OfflineViewingMinutes++;
             }
-            ChannelSession.Settings.UserData.ManualValueChanged(this.MixerID);
+            ChannelSession.Settings.UserData.ManualValueChanged(this.ID);
 
             if (ChannelSession.Settings.RegularUserMinimumHours > 0 && this.Data.ViewingHoursPart >= ChannelSession.Settings.RegularUserMinimumHours)
             {

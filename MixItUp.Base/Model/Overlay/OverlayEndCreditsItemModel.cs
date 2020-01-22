@@ -100,17 +100,17 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public int SpeedNumber { get { return (int)this.Speed; } }
 
-        private HashSet<uint> viewers = new HashSet<uint>();
-        private HashSet<uint> subs = new HashSet<uint>();
-        private HashSet<uint> mods = new HashSet<uint>();
-        private HashSet<uint> follows = new HashSet<uint>();
-        private HashSet<uint> hosts = new HashSet<uint>();
-        private HashSet<uint> newSubs = new HashSet<uint>();
-        private Dictionary<uint, uint> resubs = new Dictionary<uint, uint>();
-        private Dictionary<uint, uint> giftedSubs = new Dictionary<uint, uint>();
-        private Dictionary<uint, double> donations = new Dictionary<uint, double>();
-        private Dictionary<uint, uint> sparks = new Dictionary<uint, uint>();
-        private Dictionary<uint, uint> embers = new Dictionary<uint, uint>();
+        private HashSet<Guid> viewers = new HashSet<Guid>();
+        private HashSet<Guid> subs = new HashSet<Guid>();
+        private HashSet<Guid> mods = new HashSet<Guid>();
+        private HashSet<Guid> follows = new HashSet<Guid>();
+        private HashSet<Guid> hosts = new HashSet<Guid>();
+        private HashSet<Guid> newSubs = new HashSet<Guid>();
+        private Dictionary<Guid, uint> resubs = new Dictionary<Guid, uint>();
+        private Dictionary<Guid, uint> giftedSubs = new Dictionary<Guid, uint>();
+        private Dictionary<Guid, double> donations = new Dictionary<Guid, double>();
+        private Dictionary<Guid, uint> sparks = new Dictionary<Guid, uint>();
+        private Dictionary<Guid, uint> embers = new Dictionary<Guid, uint>();
 
         public OverlayEndCreditsItemModel() : base() { }
 
@@ -137,13 +137,13 @@ namespace MixItUp.Base.Model.Overlay
         public override async Task LoadTestData()
         {
             UserViewModel user = await ChannelSession.GetCurrentUser();
-            List<uint> userIDs = new List<uint>(ChannelSession.Settings.UserData.Keys.Take(20));
+            List<Guid> userIDs = new List<Guid>(ChannelSession.Settings.UserData.Keys.Take(20));
             for (int i = userIDs.Count; i < 20; i++)
             {
-                userIDs.Add(user.MixerID);
+                userIDs.Add(user.ID);
             }
 
-            foreach (uint userID in userIDs)
+            foreach (Guid userID in userIDs)
             {
                 if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Chatters))
                 {
@@ -309,81 +309,81 @@ namespace MixItUp.Base.Model.Overlay
 
         private void GlobalEvents_OnFollowOccurred(object sender, UserViewModel user)
         {
-            if (!this.follows.Contains(user.MixerID))
+            if (!this.follows.Contains(user.ID))
             {
-                this.follows.Add(user.MixerID);
+                this.follows.Add(user.ID);
                 this.AddUserForRole(user);
             }
         }
 
         private void GlobalEvents_OnUnfollowOccurred(object sender, UserViewModel user)
         {
-            this.follows.Remove(user.MixerID);
+            this.follows.Remove(user.ID);
         }
 
         private void GlobalEvents_OnHostOccurred(object sender, Tuple<UserViewModel, int> host)
         {
-            if (!this.hosts.Contains(host.Item1.MixerID))
+            if (!this.hosts.Contains(host.Item1.ID))
             {
-                this.hosts.Add(host.Item1.MixerID);
+                this.hosts.Add(host.Item1.ID);
                 this.AddUserForRole(host.Item1);
             }
         }
 
         private void GlobalEvents_OnSubscribeOccurred(object sender, UserViewModel user)
         {
-            if (!this.newSubs.Contains(user.MixerID))
+            if (!this.newSubs.Contains(user.ID))
             {
-                this.newSubs.Add(user.MixerID);
+                this.newSubs.Add(user.ID);
                 this.AddUserForRole(user);
             }
         }
 
         private void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserViewModel, int> user)
         {
-            if (!this.resubs.ContainsKey(user.Item1.MixerID))
+            if (!this.resubs.ContainsKey(user.Item1.ID))
             {
-                this.resubs[user.Item1.MixerID] = (uint)user.Item2;
+                this.resubs[user.Item1.ID] = (uint)user.Item2;
                 this.AddUserForRole(user.Item1);
             }
         }
 
         private void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserViewModel, UserViewModel> e)
         {
-            if (!this.newSubs.Contains(e.Item2.MixerID))
+            if (!this.newSubs.Contains(e.Item2.ID))
             {
-                this.newSubs.Add(e.Item2.MixerID);
+                this.newSubs.Add(e.Item2.ID);
                 this.AddUserForRole(e.Item2);
             }
 
-            if (!this.giftedSubs.ContainsKey(e.Item1.MixerID))
+            if (!this.giftedSubs.ContainsKey(e.Item1.ID))
             {
-                this.giftedSubs[e.Item1.MixerID] = 0;
+                this.giftedSubs[e.Item1.ID] = 0;
                 this.AddUserForRole(e.Item1);
             }
-            this.giftedSubs[e.Item1.MixerID]++;
+            this.giftedSubs[e.Item1.ID]++;
         }
 
         private void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation)
         {
-            if (!this.donations.ContainsKey(donation.User.MixerID))
+            if (!this.donations.ContainsKey(donation.User.ID))
             {
-                this.donations[donation.User.MixerID] = 0;
+                this.donations[donation.User.ID] = 0;
                 this.AddUserForRole(donation.User);
             }
-            this.donations[donation.User.MixerID] += donation.Amount;
+            this.donations[donation.User.ID] += donation.Amount;
         }
 
         private void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, uint> sparkUsage)
         {
             if (this.ShouldIncludeUser(sparkUsage.Item1))
             {
-                if (!this.sparks.ContainsKey(sparkUsage.Item1.MixerID))
+                if (!this.sparks.ContainsKey(sparkUsage.Item1.ID))
                 {
-                    this.sparks[sparkUsage.Item1.MixerID] = 0;
+                    this.sparks[sparkUsage.Item1.ID] = 0;
                     this.AddUserForRole(sparkUsage.Item1);
                 }
-                this.sparks[sparkUsage.Item1.MixerID] += sparkUsage.Item2;
+                this.sparks[sparkUsage.Item1.ID] += sparkUsage.Item2;
             }
         }
 
@@ -391,12 +391,12 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (this.ShouldIncludeUser(emberUsage.User))
             {
-                if (!this.embers.ContainsKey(emberUsage.User.MixerID))
+                if (!this.embers.ContainsKey(emberUsage.User.ID))
                 {
-                    this.embers[emberUsage.User.MixerID] = 0;
+                    this.embers[emberUsage.User.ID] = 0;
                     this.AddUserForRole(emberUsage.User);
                 }
-                this.embers[emberUsage.User.MixerID] += emberUsage.Amount;
+                this.embers[emberUsage.User.ID] += emberUsage.Amount;
             }
         }
 
@@ -404,14 +404,14 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (this.ShouldIncludeUser(user))
             {
-                this.viewers.Add(user.MixerID);
+                this.viewers.Add(user.ID);
                 if (user.MixerRoles.Contains(UserRoleEnum.Subscriber) || user.IsEquivalentToMixerSubscriber())
                 {
-                    this.subs.Add(user.MixerID);
+                    this.subs.Add(user.ID);
                 }
                 if (user.MixerRoles.Contains(UserRoleEnum.Mod) || user.MixerRoles.Contains(UserRoleEnum.ChannelEditor))
                 {
-                    this.mods.Add(user.MixerID);
+                    this.mods.Add(user.ID);
                 }
             }
         }
@@ -429,10 +429,10 @@ namespace MixItUp.Base.Model.Overlay
             return true;
         }
 
-        private Dictionary<UserViewModel, string> GetUsersDictionary(HashSet<uint> data)
+        private Dictionary<UserViewModel, string> GetUsersDictionary(HashSet<Guid> data)
         {
             Dictionary<UserViewModel, string> results = new Dictionary<UserViewModel, string>();
-            foreach (uint userID in data)
+            foreach (Guid userID in data)
             {
                 UserViewModel user = this.GetUser(userID);
                 if (user != null)
@@ -443,7 +443,7 @@ namespace MixItUp.Base.Model.Overlay
             return results;
         }
 
-        private Dictionary<UserViewModel, string> GetUsersDictionary(Dictionary<uint, uint> data)
+        private Dictionary<UserViewModel, string> GetUsersDictionary(Dictionary<Guid, uint> data)
         {
             Dictionary<UserViewModel, string> results = new Dictionary<UserViewModel, string>();
             foreach (var kvp in data)
@@ -457,7 +457,7 @@ namespace MixItUp.Base.Model.Overlay
             return results;
         }
 
-        private Dictionary<UserViewModel, string> GetUsersDictionary(Dictionary<uint, double> data)
+        private Dictionary<UserViewModel, string> GetUsersDictionary(Dictionary<Guid, double> data)
         {
             Dictionary<UserViewModel, string> results = new Dictionary<UserViewModel, string>();
             foreach (var kvp in data)
@@ -471,19 +471,7 @@ namespace MixItUp.Base.Model.Overlay
             return results;
         }
 
-        private UserViewModel GetUser(uint userID)
-        {
-            UserViewModel user = ChannelSession.Services.User.GetUserByMixerID(userID);
-            if (user == null)
-            {
-                if (ChannelSession.Settings.UserData.ContainsKey(userID))
-                {
-                    return new UserViewModel(ChannelSession.Settings.UserData[userID]);
-                }
-                return null;
-            }
-            return user;
-        }
+        private UserViewModel GetUser(Guid userID) { return new UserViewModel(ChannelSession.Settings.GetUserData(userID)); }
 
         private async Task PerformSectionTemplateReplacement(StringBuilder htmlBuilder, OverlayEndCreditsSectionTypeEnum itemType, Dictionary<UserViewModel, string> replacers)
         {

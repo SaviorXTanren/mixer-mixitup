@@ -255,7 +255,9 @@ namespace MixItUp.WPF.Windows.Users
 
             if (importedUserData.MixerID > 0 && !string.IsNullOrEmpty(importedUserData.MixerUsername))
             {
-                ChannelSession.Settings.UserData[importedUserData.MixerID] = importedUserData;
+                UserViewModel user = new UserViewModel(new UserModel() { id = importedUserData.MixerID, username = importedUserData.MixerUsername });
+                UserDataModel userData = user.Data;
+
                 usersImported++;
                 this.Dispatcher.Invoke(() => { this.ImportDataButton.Content = string.Format("Imported {0} Users", usersImported); });
             }

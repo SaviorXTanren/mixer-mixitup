@@ -25,7 +25,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 UserDataModel user = null;
                 if (uint.TryParse(usernameOrID, out uint userID))
                 {
-                    user = ChannelSession.Settings.UserData[userID];
+                    user = ChannelSession.Settings.GetUserDataByMixerID(userID);
                 }
 
                 if (user == null)
@@ -45,7 +45,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
         [Route("{userID:int:min(0)}")]
         public User Get(uint userID)
         {
-            UserDataModel user = ChannelSession.Settings.UserData[userID];
+            UserDataModel user = ChannelSession.Settings.GetUserDataByMixerID(userID);
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -81,7 +81,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
         [HttpPut, HttpPatch]
         public User Update(uint userID, [FromBody] User updatedUserData)
         {
-            UserDataModel user = ChannelSession.Settings.UserData[userID];
+            UserDataModel user = ChannelSession.Settings.GetUserDataByMixerID(userID);
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -145,7 +145,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
         [HttpPut, HttpPatch]
         public User AdjustUserCurrency(uint userID, Guid currencyID, [FromBody] AdjustCurrency currencyUpdate)
         {
-            UserDataModel user = ChannelSession.Settings.UserData[userID];
+            UserDataModel user = ChannelSession.Settings.GetUserDataByMixerID(userID);
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -181,7 +181,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
         [HttpPut, HttpPatch]
         public User AdjustUserInventory(uint userID, Guid inventoryID, [FromBody]AdjustInventory inventoryUpdate)
         {
-            UserDataModel user = ChannelSession.Settings.UserData[userID];
+            UserDataModel user = ChannelSession.Settings.GetUserDataByMixerID(userID);
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -226,8 +226,12 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            Dictionary<uint, UserDataModel> allUsersDictionary = ChannelSession.Settings.UserData.ToDictionary();
-            allUsersDictionary.Remove(ChannelSession.MixerChannel.user.id);
+            Dictionary<Guid, UserDataModel> allUsersDictionary = ChannelSession.Settings.UserData.ToDictionary();
+            UserDataModel streamer = ChannelSession.Settings.GetUserDataByMixerID(ChannelSession.MixerChannel.user.id);
+            if (streamer != null)
+            {
+                allUsersDictionary.Remove(streamer.ID);
+            }
 
             IEnumerable<UserDataModel> allUsers = allUsersDictionary.Select(kvp => kvp.Value);
             allUsers = allUsers.Where(u => !u.IsCurrencyRankExempt);

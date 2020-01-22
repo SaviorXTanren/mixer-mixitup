@@ -236,7 +236,7 @@ namespace MixItUp.Base.Model.User
                     this.UserAmounts[user.ID] = new Dictionary<string, int>();
                 }
                 this.UserAmounts[user.ID][itemName] = Math.Min(Math.Max(amount, 0), item.HasMaxAmount ? item.MaxAmount : this.DefaultMaxAmount);
-                ChannelSession.Settings.UserData.ManualValueChanged(user.MixerID);
+                ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
             }
         }
 
@@ -259,7 +259,7 @@ namespace MixItUp.Base.Model.User
         public void ResetAmount(UserDataModel user)
         {
             this.UserAmounts[user.ID] = new Dictionary<string, int>();
-            ChannelSession.Settings.UserData.ManualValueChanged(user.MixerID);
+            ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
         }
 
         public async Task Reset()
