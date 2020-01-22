@@ -71,13 +71,13 @@ namespace MixItUp.WPF.Controls.Dialogs
                     this.FollowButton.Visibility = System.Windows.Visibility.Collapsed;
                 }
 
-                if (this.user.MixerRoles.Contains(UserRoleEnum.Banned))
+                if (this.user.UserRoles.Contains(UserRoleEnum.Banned))
                 {
                     this.UnbanButton.Visibility = System.Windows.Visibility.Visible;
                     this.BanButton.Visibility = System.Windows.Visibility.Collapsed;
                 }
 
-                if (this.user.MixerRoles.Contains(UserRoleEnum.Mod))
+                if (this.user.UserRoles.Contains(UserRoleEnum.Mod))
                 {
                     this.DemoteFromModButton.Visibility = System.Windows.Visibility.Visible;
                     this.PromoteToModButton.Visibility = System.Windows.Visibility.Collapsed;

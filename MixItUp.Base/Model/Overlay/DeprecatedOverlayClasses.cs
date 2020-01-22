@@ -190,7 +190,7 @@ namespace MixItUp.Base.Model.Overlay
             replacementSets["TEXT_FONT"] = this.TextFont;
             replacementSets["TEXT_SIZE"] = this.TextSize.ToString();
 
-            replacementSets["USER_IMAGE"] = message.User.MixerAvatarLink;
+            replacementSets["USER_IMAGE"] = message.User.AvatarLink;
             replacementSets["USERNAME"] = message.User.Username;
             replacementSets["USER_COLOR"] = OverlayChatMessages.userColors[message.User.PrimaryRoleColorName];
 
@@ -2186,7 +2186,7 @@ namespace MixItUp.Base.Model.Overlay
             replacementSets["TEXT_SIZE"] = ((int)(0.2 * ((double)this.Height))).ToString();
 
             replacementSets["USERNAME"] = boss.Username;
-            replacementSets["USER_IMAGE"] = boss.MixerAvatarLink;
+            replacementSets["USER_IMAGE"] = boss.AvatarLink;
             replacementSets["USER_IMAGE_SIZE"] = ((int)(0.8 * ((double)this.Height))).ToString();
 
             replacementSets["HEALTH_REMAINING"] = health.ToString();

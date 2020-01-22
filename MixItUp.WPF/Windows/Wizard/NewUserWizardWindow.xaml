@@ -114,6 +114,8 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="20" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.Row="0" TextWrapping="Wrap" Width="700">Let's get started by signing in to the accounts you use on each Streaming Platform. Select the options below for each account you want to log in. You can revisit these options later by going to the Accounts page.</TextBlock>
@@ -164,6 +166,53 @@
                             </Grid>
 
                             <Button Grid.Column="2" Grid.Row="2" Command="{Binding MixerBotAccountCommand}" IsEnabled="{Binding IsMixerUserAccountConnected}" Content="{Binding MixerBotAccountButtonContent}" Width="90" />
+                        </Grid>
+                    </GroupBox>
+
+                    <GroupBox Grid.Row="6" Header="Twitch">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="45" />
+                                <RowDefinition Height="35" />
+                            </Grid.RowDefinitions>
+
+                            <Image Source="/Assets/Images/Twitch.png" Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Width="70" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="30,0,0,0" />
+
+                            <TextBlock Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">Streamer:</TextBlock>
+
+                            <Grid Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsTwitchUserAccountConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="5" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Image Grid.Column="0" Source="{Binding TwitchUserAccountAvatar}" Height="24" Width="24" />
+                                <TextBlock Grid.Column="2" Text="{Binding TwitchUserAccountUsername}" VerticalAlignment="Center" />
+                            </Grid>
+
+                            <Button Grid.Column="1" Grid.Row="2" Command="{Binding TwitchUserAccountCommand}" Content="{Binding TwitchUserAccountButtonContent}" Width="90" />
+
+                            <TextBlock Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">Bot Account:</TextBlock>
+
+                            <Grid Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsTwitchBotAccountConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="5" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Image Grid.Column="0" Source="{Binding TwitchBotAccountAvatar}" Height="24" Width="24" />
+                                <TextBlock Grid.Column="2" Text="{Binding TwitchBotAccountUsername}" VerticalAlignment="Center" />
+                            </Grid>
+
+                            <Button Grid.Column="2" Grid.Row="2" Command="{Binding TwitchBotAccountCommand}" IsEnabled="{Binding IsTwitchUserAccountConnected}" Content="{Binding TwitchBotAccountButtonContent}" Width="90" />
                         </Grid>
                     </GroupBox>
                 </Grid>

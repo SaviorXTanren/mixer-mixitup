@@ -405,11 +405,11 @@ namespace MixItUp.Base.Model.Overlay
             if (this.ShouldIncludeUser(user))
             {
                 this.viewers.Add(user.ID);
-                if (user.MixerRoles.Contains(UserRoleEnum.Subscriber) || user.IsEquivalentToMixerSubscriber())
+                if (user.UserRoles.Contains(UserRoleEnum.Subscriber) || user.IsEquivalentToMixerSubscriber())
                 {
                     this.subs.Add(user.ID);
                 }
-                if (user.MixerRoles.Contains(UserRoleEnum.Mod) || user.MixerRoles.Contains(UserRoleEnum.ChannelEditor))
+                if (user.UserRoles.Contains(UserRoleEnum.Mod) || user.UserRoles.Contains(UserRoleEnum.ChannelEditor))
                 {
                     this.mods.Add(user.ID);
                 }

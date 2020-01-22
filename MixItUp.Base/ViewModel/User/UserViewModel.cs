@@ -70,8 +70,8 @@ namespace MixItUp.Base.ViewModel.User
     [DataContract]
     public class UserViewModel : IEquatable<UserViewModel>, IComparable<UserViewModel>
     {
-        public const string DefaultAvatarLink = "https://mixer.com/_latest/assets/images/main/avatars/default.png";
-        public const string UserAvatarLinkFormat = "https://mixer.com/api/v1/users/{0}/avatar?w=128&h=128";
+        public const string MixerUserDefaultAvatarLink = "https://mixer.com/_latest/assets/images/main/avatars/default.png";
+        public const string MixerUserAvatarLinkFormat = "https://mixer.com/api/v1/users/{0}/avatar?w=128&h=128";
 
         public static IEnumerable<UserRoleEnum> SelectableBasicUserRoles()
         {
@@ -105,6 +105,28 @@ namespace MixItUp.Base.ViewModel.User
 
         [DataMember]
         public StreamingPlatformTypeEnum Platform { get; set; }
+
+        [DataMember]
+        public HashSet<UserRoleEnum> UserRoles
+        {
+            get
+            {
+                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.MixerRoles; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchRoles; }
+                return new HashSet<UserRoleEnum>();
+            }
+        }
+
+        [DataMember]
+        public string AvatarLink
+        {
+            get
+            {
+                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.MixerAvatarLink; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchAvatarLink; }
+                return string.Empty;
+            }
+        }
 
         #region Mixer
 
@@ -141,6 +163,9 @@ namespace MixItUp.Base.ViewModel.User
 
         [DataMember]
         public bool IsInInteractiveTimeout { get; set; }
+
+        [JsonIgnore]
+        public string MixerAvatarLink { get { return string.Format(MixerUserAvatarLinkFormat, this.MixerID); } }
 
         #endregion Mixer
 
@@ -249,6 +274,10 @@ namespace MixItUp.Base.ViewModel.User
 
             this.TwitchRoles.Clear();
             this.TwitchRoles.Add(UserRoleEnum.User);
+            if (ChannelSession.TwitchChannel != null && ChannelSession.TwitchChannel.id.Equals(this.TwitchID))
+            {
+                this.MixerRoles.Add(UserRoleEnum.Streamer);
+            }
 
             List<string> displayRoles = new List<string>(this.TwitchRoles.Select(r => EnumHelper.GetEnumName(r)));
             displayRoles.AddRange(this.CustomRoles);
@@ -267,6 +296,10 @@ namespace MixItUp.Base.ViewModel.User
 
             this.TwitchRoles.Clear();
             this.TwitchRoles.Add(UserRoleEnum.User);
+            if (ChannelSession.TwitchChannel != null && ChannelSession.TwitchChannel.id.Equals(this.TwitchID))
+            {
+                this.MixerRoles.Add(UserRoleEnum.Streamer);
+            }
 
             List<string> displayRoles = new List<string>(this.TwitchRoles.Select(r => EnumHelper.GetEnumName(r)));
             displayRoles.AddRange(this.CustomRoles);
@@ -294,9 +327,6 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         [JsonIgnore]
-        public string MixerAvatarLink { get { return string.Format(UserAvatarLinkFormat, this.MixerID); } }
-
-        [JsonIgnore]
         public string MixerSubscriberBadgeLink { get { return (ChannelSession.MixerChannel.badge != null) ? ChannelSession.MixerChannel.badge.url : string.Empty; } }
 
         [JsonIgnore]
@@ -321,7 +351,7 @@ namespace MixItUp.Base.ViewModel.User
         public bool IsAnonymous { get { return this.MixerID == 0 || this.InteractiveIDs.Values.Any(i => i.anonymous.GetValueOrDefault()); } }
 
         [JsonIgnore]
-        public UserRoleEnum PrimaryRole { get { return this.MixerRoles.Max(); } }
+        public UserRoleEnum PrimaryRole { get { return this.UserRoles.Max(); } }
 
         [JsonIgnore]
         public string PrimaryRoleString { get { return EnumHelper.GetEnumName(this.PrimaryRole); } }
@@ -368,13 +398,13 @@ namespace MixItUp.Base.ViewModel.User
         public string MixerAgeString { get { return (this.MixerAccountDate != null) ? this.MixerAccountDate.GetValueOrDefault().GetAge() : "Unknown"; } }
 
         [JsonIgnore]
-        public bool IsMixerFollower { get { return this.MixerRoles.Contains(UserRoleEnum.Follower) || this.HasPermissionsTo(UserRoleEnum.Subscriber); } }
+        public bool IsMixerFollower { get { return this.UserRoles.Contains(UserRoleEnum.Follower) || this.HasPermissionsTo(UserRoleEnum.Subscriber); } }
 
         [JsonIgnore]
         public string MixerFollowAgeString { get { return (this.MixerFollowDate != null) ? this.MixerFollowDate.GetValueOrDefault().GetAge() : "Not Following"; } }
 
         [JsonIgnore]
-        public bool IsMixerSubscriber { get { return this.MixerRoles.Contains(UserRoleEnum.Subscriber); } }
+        public bool IsMixerSubscriber { get { return this.UserRoles.Contains(UserRoleEnum.Subscriber); } }
 
         [JsonIgnore]
         public bool ShowMixerSubscriberBadge { get { return this.IsMixerSubscriber && !string.IsNullOrEmpty(this.MixerSubscriberBadgeLink); } }
@@ -419,7 +449,7 @@ namespace MixItUp.Base.ViewModel.User
                         return "UserGlobalModRoleColor";
                 }
 
-                if (this.MixerRoles.Contains(UserRoleEnum.Pro))
+                if (this.UserRoles.Contains(UserRoleEnum.Pro))
                 {
                     return "UserProRoleColor";
                 }
@@ -674,7 +704,7 @@ namespace MixItUp.Base.ViewModel.User
 
             if (ChannelSession.Settings.RegularUserMinimumHours > 0 && this.Data.ViewingHoursPart >= ChannelSession.Settings.RegularUserMinimumHours)
             {
-                this.MixerRoles.Add(UserRoleEnum.Regular);
+                this.UserRoles.Add(UserRoleEnum.Regular);
             }
         }
 
@@ -693,7 +723,7 @@ namespace MixItUp.Base.ViewModel.User
             {
                 userId = this.MixerID,
                 userName = this.MixerUsername,
-                userRoles = this.MixerRoles.Select(r => r.ToString()).ToArray(),
+                userRoles = this.UserRoles.Select(r => r.ToString()).ToArray(),
             };
         }
 

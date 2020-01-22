@@ -100,6 +100,56 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
         public string MixerBotAccountButtonContent { get { return this.IsMixerBotAccountConnected ? "Log Out" : "Log In"; } }
         public bool IsMixerBotAccountConnected { get { return ChannelSession.MixerBotConnection != null; } }
 
+        public string TwitchUserAccountAvatar
+        {
+            get { return this.twitchUserAccountAvatar; }
+            set
+            {
+                this.twitchUserAccountAvatar = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string twitchUserAccountAvatar;
+        public string TwitchUserAccountUsername
+        {
+            get { return this.twitchUserAccountUsername; }
+            set
+            {
+                this.twitchUserAccountUsername = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string twitchUserAccountUsername;
+
+        public ICommand TwitchUserAccountCommand { get; set; }
+        public string TwitchUserAccountButtonContent { get { return this.IsTwitchUserAccountConnected ? "Log Out" : "Log In"; } }
+        public bool IsTwitchUserAccountConnected { get { return ChannelSession.TwitchUserConnection != null; } }
+
+        public string TwitchBotAccountAvatar
+        {
+            get { return this.twitchBotAccountAvatar; }
+            set
+            {
+                this.twitchBotAccountAvatar = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string twitchBotAccountAvatar;
+        public string TwitchBotAccountUsername
+        {
+            get { return this.twitchBotAccountUsername; }
+            set
+            {
+                this.twitchBotAccountUsername = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private string twitchBotAccountUsername;
+
+        public ICommand TwitchBotAccountCommand { get; set; }
+        public string TwitchBotAccountButtonContent { get { return this.IsTwitchBotAccountConnected ? "Log Out" : "Log In"; } }
+        public bool IsTwitchBotAccountConnected { get { return ChannelSession.TwitchBotConnection != null; } }
+
         #endregion Accounts Page
 
         #region ScorpBot Page
@@ -241,15 +291,24 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
                 this.MixerBotAccountUsername = ChannelSession.MixerBot.username;
             }
 
+            if (this.IsTwitchUserAccountConnected)
+            {
+                this.TwitchUserAccountAvatar = ChannelSession.TwitchUser.profile_image_url;
+                this.TwitchUserAccountUsername = ChannelSession.TwitchUser.login;
+            }
+            if (this.IsTwitchBotAccountConnected)
+            {
+                this.TwitchBotAccountAvatar = ChannelSession.TwitchBot.profile_image_url;
+                this.TwitchBotAccountUsername = ChannelSession.TwitchBot.login;
+            }
+
             this.MixerUserAccountCommand = this.CreateCommand(async (parameter) =>
             {
                 this.StartLoadingOperation();
 
                 if (this.IsMixerUserAccountConnected)
                 {
-                    //ChannelSession.Disconnect();
-                    //this.MixerUserAccountAvatar = null;
-                    //this.MixerUserAccountUsername = null;
+
                 }
                 else
                 {
@@ -308,6 +367,71 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
                 this.EndLoadingOperation();
             });
 
+            this.TwitchUserAccountCommand = this.CreateCommand(async (parameter) =>
+            {
+                this.StartLoadingOperation();
+
+                if (this.IsTwitchUserAccountConnected)
+                {
+
+                }
+                else
+                {
+                    ExternalServiceResult result = await ChannelSession.ConnectTwitchUser(isStreamer: true);
+                    if (result.Success)
+                    {
+                        this.TwitchUserAccountAvatar = ChannelSession.TwitchUser.profile_image_url;
+                        this.TwitchUserAccountUsername = ChannelSession.TwitchUser.login;
+                    }
+                    else
+                    {
+                        this.TwitchUserAccountAvatar = null;
+                        this.TwitchUserAccountUsername = null;
+
+                        await DialogHelper.ShowMessage(result.Message);
+                    }
+                }
+                this.NotifyPropertyChanged("IsTwitchUserAccountConnected");
+                this.NotifyPropertyChanged("IsTwitchUserAccountNotConnected");
+                this.NotifyPropertyChanged("TwitchUserAccountButtonContent");
+                this.NotifyPropertyChanged("CanConnectTwitchBotAccount");
+
+                this.EndLoadingOperation();
+            });
+
+            this.TwitchBotAccountCommand = this.CreateCommand(async (parameter) =>
+            {
+                this.StartLoadingOperation();
+
+                if (this.IsTwitchBotAccountConnected)
+                {
+                    await ChannelSession.DisconnectTwitchBot();
+                    this.TwitchBotAccountAvatar = null;
+                    this.TwitchBotAccountUsername = null;
+                }
+                else
+                {
+                    ExternalServiceResult result = await ChannelSession.ConnectTwitchBot();
+                    if (result.Success)
+                    {
+                        this.TwitchBotAccountAvatar = ChannelSession.TwitchBot.profile_image_url;
+                        this.TwitchBotAccountUsername = ChannelSession.TwitchBot.login;
+                    }
+                    else
+                    {
+                        this.TwitchBotAccountAvatar = null;
+                        this.TwitchBotAccountUsername = null;
+
+                        await DialogHelper.ShowMessage(result.Message);
+                    }
+                }
+                this.NotifyPropertyChanged("IsTwitchBotAccountConnected");
+                this.NotifyPropertyChanged("IsTwitchBotAccountNotConnected");
+                this.NotifyPropertyChanged("TwitchBotAccountButtonContent");
+
+                this.EndLoadingOperation();
+            });
+
             this.ScorpBotDirectoryBrowseCommand = this.CreateCommand((parameter) =>
             {
                 string folderPath = ChannelSession.Services.FileService.ShowOpenFolderDialog();
@@ -342,9 +466,9 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
                 }
                 else if (this.StreamerAccountsPageVisible)
                 {
-                    if (!this.IsMixerUserAccountConnected)
+                    if (!this.IsMixerUserAccountConnected && !this.IsTwitchUserAccountConnected)
                     {
-                        this.StatusMessage = "A Mixer Streamer account must be signed in.";
+                        this.StatusMessage = "A Mixer & Twitch Streamer account must be signed in.";
                         return;
                     }
 

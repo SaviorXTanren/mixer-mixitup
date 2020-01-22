@@ -840,7 +840,7 @@ namespace MixItUp.Base.Model.Settings
             if (userData == null)
             {
                 userData = this.GetUserDataByTwitchID(userViewModel.TwitchID);
-                if (userData != null)
+                if (userData == null)
                 {
                     userData = this.GetUserData(userViewModel.ID);
                     if (userData == null)
