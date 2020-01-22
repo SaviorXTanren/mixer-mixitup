@@ -1,5 +1,5 @@
 ﻿using Mixer.Base.Model.Client;
-using MixItUp.Base.Services.Mixer;
+using MixItUp.Base.Services;
 using StreamingClient.Base.Util;
 using System;
 using System.Threading;

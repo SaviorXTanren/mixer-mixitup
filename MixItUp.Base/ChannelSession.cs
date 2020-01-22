@@ -228,10 +228,12 @@ namespace MixItUp.Base
         public static async Task Close()
         {
             await ChannelSession.Services.Close();
+
             if (ChannelSession.Services.Chat.MixerChatService != null)
             {
                 await ChannelSession.Services.Chat.MixerChatService.DisconnectStreamer();
             }
+
             await ChannelSession.DisconnectMixerBot();
         }
 
@@ -244,10 +246,10 @@ namespace MixItUp.Base
         {
             if (ChannelSession.MixerUser != null)
             {
-                PrivatePopulatedUserModel user = await ChannelSession.MixerUserConnection.GetCurrentUser();
-                if (user != null)
+                PrivatePopulatedUserModel mixerUser = await ChannelSession.MixerUserConnection.GetCurrentUser();
+                if (mixerUser != null)
                 {
-                    ChannelSession.MixerUser = user;
+                    ChannelSession.MixerUser = mixerUser;
                 }
             }
 
@@ -265,19 +267,19 @@ namespace MixItUp.Base
         {
             if (ChannelSession.MixerChannel != null)
             {
-                ExpandedChannelModel channel = await ChannelSession.MixerUserConnection.GetChannel(ChannelSession.MixerChannel.id);
-                if (channel != null)
+                ExpandedChannelModel mixerChannel = await ChannelSession.MixerUserConnection.GetChannel(ChannelSession.MixerChannel.id);
+                if (mixerChannel != null)
                 {
-                    ChannelSession.MixerChannel = channel;
+                    ChannelSession.MixerChannel = mixerChannel;
                 }
             }
 
-            if (ChannelSession.TwitchChannel)
+            if (ChannelSession.TwitchChannel != null)
             {
-                TwitchNewAPI.Users.UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPICurrentUser();
-                if (twitchUser != null)
+                TwitchNewAPI.Users.UserModel twitchChannel = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(ChannelSession.TwitchChannel.login);
+                if (twitchChannel != null)
                 {
-                    ChannelSession.TwitchUser = twitchUser;
+                    ChannelSession.TwitchChannel = twitchChannel;
                 }
             }
         }
