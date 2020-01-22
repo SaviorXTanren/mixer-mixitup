@@ -229,7 +229,7 @@ namespace MixItUp.Base.ViewModel.User
         public string TwitchAvatarLink { get; set; }
 
         [DataMember]
-        public HashSet<UserRoleEnum> TwitchRoles { get; set; } = new HashSet<UserRoleEnum>();
+        public HashSet<UserRoleEnum> TwitchUserRoles { get; set; } = new HashSet<UserRoleEnum>();
 
         #endregion Twitch
 
@@ -319,14 +319,14 @@ namespace MixItUp.Base.ViewModel.User
             this.TwitchDisplayName = (!string.IsNullOrEmpty(twitchUser.display_name)) ? twitchUser.display_name : this.TwitchUsername;
             this.TwitchAvatarLink = twitchUser.profile_image_url;
 
-            this.TwitchRoles.Clear();
-            this.TwitchRoles.Add(UserRoleEnum.User);
+            this.TwitchUserRoles.Clear();
+            this.TwitchUserRoles.Add(UserRoleEnum.User);
             if (ChannelSession.TwitchChannel != null && ChannelSession.TwitchChannel.id.Equals(this.TwitchID))
             {
-                this.MixerRoles.Add(UserRoleEnum.Streamer);
+                this.TwitchUserRoles.Add(UserRoleEnum.Streamer);
             }
 
-            List<string> displayRoles = new List<string>(this.TwitchRoles.Select(r => EnumHelper.GetEnumName(r)));
+            List<string> displayRoles = new List<string>(this.TwitchUserRoles.Select(r => EnumHelper.GetEnumName(r)));
             displayRoles.AddRange(this.CustomRoles);
 
             this.RolesDisplayString = string.Join(", ", displayRoles.OrderByDescending(r => r));
@@ -341,14 +341,14 @@ namespace MixItUp.Base.ViewModel.User
             this.TwitchUsername = twitchMessage.UserLogin;
             this.TwitchDisplayName = (!string.IsNullOrEmpty(twitchMessage.UserDisplayName)) ? twitchMessage.UserDisplayName : this.TwitchUsername;
 
-            this.TwitchRoles.Clear();
-            this.TwitchRoles.Add(UserRoleEnum.User);
+            this.TwitchUserRoles.Clear();
+            this.TwitchUserRoles.Add(UserRoleEnum.User);
             if (ChannelSession.TwitchChannel != null && ChannelSession.TwitchChannel.id.Equals(this.TwitchID))
             {
-                this.MixerRoles.Add(UserRoleEnum.Streamer);
+                this.TwitchUserRoles.Add(UserRoleEnum.Streamer);
             }
 
-            List<string> displayRoles = new List<string>(this.TwitchRoles.Select(r => EnumHelper.GetEnumName(r)));
+            List<string> displayRoles = new List<string>(this.TwitchUserRoles.Select(r => EnumHelper.GetEnumName(r)));
             displayRoles.AddRange(this.CustomRoles);
 
             this.RolesDisplayString = string.Join(", ", displayRoles.OrderByDescending(r => r));
