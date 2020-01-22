@@ -15,6 +15,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using Twitch.Base.Models.Clients.Chat;
+using TwitchNewAPI = Twitch.Base.Models.NewAPI;
 
 namespace MixItUp.Base.ViewModel.User
 {
@@ -148,6 +150,14 @@ namespace MixItUp.Base.ViewModel.User
         public string TwitchID { get; set; }
         [DataMember]
         public string TwitchUsername { get; set; }
+        [DataMember]
+        public string TwitchDisplayName { get; set; }
+
+        [DataMember]
+        public string TwitchAvatarLink { get; set; }
+
+        [DataMember]
+        public HashSet<UserRoleEnum> TwitchRoles { get; set; } = new HashSet<UserRoleEnum>();
 
         #endregion Twitch
 
@@ -229,6 +239,43 @@ namespace MixItUp.Base.ViewModel.User
             this.SetInteractiveDetails(participant);
         }
 
+        public UserViewModel(TwitchNewAPI.Users.UserModel twitchUser)
+        {
+            this.Platform = StreamingPlatformTypeEnum.Twitch;
+            this.TwitchID = twitchUser.id;
+            this.TwitchUsername = twitchUser.login;
+            this.TwitchDisplayName = (!string.IsNullOrEmpty(twitchUser.display_name)) ? twitchUser.display_name : this.TwitchUsername;
+            this.TwitchAvatarLink = twitchUser.profile_image_url;
+
+            this.TwitchRoles.Clear();
+            this.TwitchRoles.Add(UserRoleEnum.User);
+
+            List<string> displayRoles = new List<string>(this.TwitchRoles.Select(r => EnumHelper.GetEnumName(r)));
+            displayRoles.AddRange(this.CustomRoles);
+
+            this.RolesDisplayString = string.Join(", ", displayRoles.OrderByDescending(r => r));
+
+            this.Data.UpdateData(this);
+        }
+
+        public UserViewModel(ChatMessagePacketModel twitchMessage)
+        {
+            this.Platform = StreamingPlatformTypeEnum.Twitch;
+            this.TwitchID = twitchMessage.UserID;
+            this.TwitchUsername = twitchMessage.UserLogin;
+            this.TwitchDisplayName = (!string.IsNullOrEmpty(twitchMessage.UserDisplayName)) ? twitchMessage.UserDisplayName : this.TwitchUsername;
+
+            this.TwitchRoles.Clear();
+            this.TwitchRoles.Add(UserRoleEnum.User);
+
+            List<string> displayRoles = new List<string>(this.TwitchRoles.Select(r => EnumHelper.GetEnumName(r)));
+            displayRoles.AddRange(this.CustomRoles);
+
+            this.RolesDisplayString = string.Join(", ", displayRoles.OrderByDescending(r => r));
+
+            this.Data.UpdateData(this);
+        }
+
         public UserViewModel(UserDataModel user)
         {
             if (user.MixerID > 0)
@@ -238,6 +285,10 @@ namespace MixItUp.Base.ViewModel.User
             this.MixerID = user.MixerID;
             this.MixerUsername = user.MixerUsername;
 
+            if (!string.IsNullOrEmpty(user.TwitchID))
+            {
+                this.Platform = StreamingPlatformTypeEnum.Twitch;
+            }
             this.TwitchID = user.TwitchID;
             this.TwitchUsername = user.TwitchUsername;
         }
@@ -426,39 +477,54 @@ namespace MixItUp.Base.ViewModel.User
         {
             if (!this.IsAnonymous && (this.LastUpdated.TotalMinutesFromNow() >= 1 || force))
             {
-                UserWithChannelModel user = await ChannelSession.MixerUserConnection.GetUser(this.MixerID);
-                if (user != null)
+                if (this.Platform == StreamingPlatformTypeEnum.Mixer)
                 {
-                    this.SetMixerUserDetails(user);
-
-                    this.MixerFollowDate = await ChannelSession.MixerUserConnection.CheckIfFollows(ChannelSession.MixerChannel, this.GetModel());
-                    if (this.MixerFollowDate != null && this.MixerFollowDate.GetValueOrDefault() > DateTimeOffset.MinValue)
+                    UserWithChannelModel user = await ChannelSession.MixerUserConnection.GetUser(this.MixerID);
+                    if (user != null)
                     {
-                        this.MixerRoles.Add(UserRoleEnum.Follower);
-                    }
+                        this.SetMixerUserDetails(user);
 
-                    if (this.IsMixerSubscriber || force)
-                    {
-                        UserWithGroupsModel userGroups = await ChannelSession.MixerUserConnection.GetUserInChannel(ChannelSession.MixerChannel, this.MixerID);
-                        if (userGroups != null)
+                        this.MixerFollowDate = await ChannelSession.MixerUserConnection.CheckIfFollows(ChannelSession.MixerChannel, this.GetModel());
+                        if (this.MixerFollowDate != null && this.MixerFollowDate.GetValueOrDefault() > DateTimeOffset.MinValue)
                         {
-                            this.MixerSubscribeDate = userGroups.GetSubscriberDate();
-                            if (this.MixerSubscribeDate != null)
+                            this.MixerRoles.Add(UserRoleEnum.Follower);
+                        }
+
+                        if (this.IsMixerSubscriber || force)
+                        {
+                            UserWithGroupsModel userGroups = await ChannelSession.MixerUserConnection.GetUserInChannel(ChannelSession.MixerChannel, this.MixerID);
+                            if (userGroups != null)
                             {
-                                if (this.Data.TotalMonthsSubbed < this.MixerSubscribeDate.GetValueOrDefault().TotalMonthsFromNow())
+                                this.MixerSubscribeDate = userGroups.GetSubscriberDate();
+                                if (this.MixerSubscribeDate != null)
                                 {
-                                    this.Data.TotalMonthsSubbed = (uint)this.MixerSubscribeDate.GetValueOrDefault().TotalMonthsFromNow();
+                                    if (this.Data.TotalMonthsSubbed < this.MixerSubscribeDate.GetValueOrDefault().TotalMonthsFromNow())
+                                    {
+                                        this.Data.TotalMonthsSubbed = (uint)this.MixerSubscribeDate.GetValueOrDefault().TotalMonthsFromNow();
+                                    }
                                 }
                             }
                         }
+
+                        this.MixerFanProgression = await ChannelSession.MixerUserConnection.GetUserFanProgression(ChannelSession.MixerChannel, user);
                     }
 
-                    this.MixerFanProgression = await ChannelSession.MixerUserConnection.GetUserFanProgression(ChannelSession.MixerChannel, user);
+                    if (!this.IsInChat)
+                    {
+                        await this.RefreshChatDetails(addToChat: false);
+                    }
                 }
-
-                if (!this.IsInChat)
+                else if (this.Platform == StreamingPlatformTypeEnum.Twitch)
                 {
-                    await this.RefreshChatDetails(addToChat: false);
+                    TwitchNewAPI.Users.UserModel twitchUser = (!string.IsNullOrEmpty(this.TwitchID)) ? await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(this.TwitchID)
+                        : await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(this.TwitchUsername);
+                    if (twitchUser != null)
+                    {
+                        this.TwitchID = twitchUser.id;
+                        this.TwitchUsername = twitchUser.login;
+                        this.TwitchDisplayName = (!string.IsNullOrEmpty(twitchUser.display_name)) ? twitchUser.display_name : this.TwitchDisplayName;
+                        this.TwitchAvatarLink = twitchUser.profile_image_url;
+                    }
                 }
 
                 await this.SetCustomRoles();

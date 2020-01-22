@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TwitchNewAPI = Twitch.Base.Models.NewAPI;
 
 namespace MixItUp.Base.Services
 {
@@ -31,11 +32,15 @@ namespace MixItUp.Base.Services
 
         Task<UserViewModel> AddOrUpdateUser(MixPlayParticipantModel mixplayUser);
 
+        Task<UserViewModel> AddOrUpdateUser(TwitchNewAPI.Users.UserModel twitchChatUser);
+
         Task<UserViewModel> RemoveUser(ChatUserEventModel chatUser);
 
         Task<UserViewModel> RemoveUser(ChatUserModel chatUser);
 
         Task<UserViewModel> RemoveUser(MixPlayParticipantModel mixplayUser);
+
+        Task<UserViewModel> RemoveUser(string twitchLogin);
 
         void Clear();
 
@@ -54,6 +59,7 @@ namespace MixItUp.Base.Services
         private LockedDictionary<uint, UserViewModel> usersByMixerID = new LockedDictionary<uint, UserViewModel>();
         private LockedDictionary<string, UserViewModel> usersByUsername = new LockedDictionary<string, UserViewModel>();
         private LockedDictionary<string, UserViewModel> usersByMixPlayID = new LockedDictionary<string, UserViewModel>();
+        private LockedDictionary<string, UserViewModel> usersByTwitchID = new LockedDictionary<string, UserViewModel>();
 
         public UserViewModel GetUserByUsername(string username)
         {
@@ -128,6 +134,17 @@ namespace MixItUp.Base.Services
             return user;
         }
 
+        public async Task<UserViewModel> AddOrUpdateUser(TwitchNewAPI.Users.UserModel twitchChatUser)
+        {
+            if (!string.IsNullOrEmpty(twitchChatUser.id) && !string.IsNullOrEmpty(twitchChatUser.login))
+            {
+                UserViewModel user = new UserViewModel(twitchChatUser);
+                await this.AddOrUpdateUser(user);
+                return user;
+            }
+            return null;
+        }
+
         private async Task AddOrUpdateUser(UserViewModel user)
         {
             if (!user.IsAnonymous)
@@ -138,6 +155,11 @@ namespace MixItUp.Base.Services
                 if (user.MixerID > 0 && !string.IsNullOrEmpty(user.Username))
                 {
                     this.usersByMixerID[user.MixerID] = user;
+                }
+
+                if (!string.IsNullOrEmpty(user.TwitchID) && !string.IsNullOrEmpty(user.TwitchUsername))
+                {
+                    this.usersByTwitchID[user.TwitchID] = user;
                 }
 
                 if (UserService.SpecialUserAccounts.Contains(user.Username))
@@ -192,6 +214,16 @@ namespace MixItUp.Base.Services
             return null;
         }
 
+        public async Task<UserViewModel> RemoveUser(string twitchLogin)
+        {
+            if (this.usersByTwitchID.TryGetValue(twitchLogin, out UserViewModel user))
+            {
+                await this.RemoveUser(user);
+                return user;
+            }
+            return null;
+        }
+
         private async Task RemoveUser(UserViewModel user)
         {
             this.usersByID.Remove(user.ID);
@@ -200,6 +232,11 @@ namespace MixItUp.Base.Services
             if (user.MixerID > 0)
             {
                 this.usersByMixerID.Remove(user.MixerID);
+            }
+
+            if (!string.IsNullOrEmpty(user.TwitchID))
+            {
+                this.usersByTwitchID.Remove(user.TwitchID);
             }
 
             await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.MixerChatUserLeft, user));
@@ -212,6 +249,8 @@ namespace MixItUp.Base.Services
 
             this.usersByMixerID.Clear();
             this.usersByMixPlayID.Clear();
+
+            this.usersByTwitchID.Clear();
         }
 
         public IEnumerable<UserViewModel> GetAllUsers() { return this.usersByID.Values; }
