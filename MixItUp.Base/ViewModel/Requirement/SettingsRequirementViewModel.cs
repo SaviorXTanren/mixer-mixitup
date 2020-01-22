@@ -24,7 +24,7 @@ namespace MixItUp.Base.ViewModel.Requirement
 
         public bool DoesMeetRequirement(UserViewModel user)
         {
-            if (!string.IsNullOrEmpty(this.PatreonBenefitIDRequirement) && !user.HasPermissionsTo(MixerRoleEnum.Mod))
+            if (!string.IsNullOrEmpty(this.PatreonBenefitIDRequirement) && !user.HasPermissionsTo(UserRoleEnum.Mod))
             {
                 PatreonBenefit benefit = ChannelSession.Services.Patreon.Campaign.GetBenefit(this.PatreonBenefitIDRequirement);
                 if (benefit != null)

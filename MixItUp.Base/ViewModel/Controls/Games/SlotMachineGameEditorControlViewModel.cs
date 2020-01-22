@@ -46,9 +46,9 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             this.Symbol3 = outcome.Symbol3;
             this.AnyOrder = outcome.AnyOrder;
             this.Command = outcome.Command;
-            this.UserPayout = outcome.RolePayouts[MixerRoleEnum.User] * 100.0;
-            this.SubscriberPayout = outcome.RolePayouts[MixerRoleEnum.Subscriber] * 100.0;
-            this.ModPayout = outcome.RolePayouts[MixerRoleEnum.Mod] * 100.0;
+            this.UserPayout = outcome.RolePayouts[UserRoleEnum.User] * 100.0;
+            this.SubscriberPayout = outcome.RolePayouts[UserRoleEnum.Subscriber] * 100.0;
+            this.ModPayout = outcome.RolePayouts[UserRoleEnum.Mod] * 100.0;
         }
 
         public string UserPayoutString
@@ -72,7 +72,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         public SlotsGameOutcome GetGameOutcome()
         {
             return new SlotsGameOutcome(this.Symbol1 + " " + this.Symbol2 + " " + this.Symbol3, this.Symbol1, this.Symbol2, this.Symbol3,
-                new Dictionary<MixerRoleEnum, double>() { { MixerRoleEnum.User, this.UserPayout / 100.0 }, { MixerRoleEnum.Subscriber, this.SubscriberPayout / 100.0 }, { MixerRoleEnum.Mod, this.ModPayout / 100.0 } },
+                new Dictionary<UserRoleEnum, double>() { { UserRoleEnum.User, this.UserPayout / 100.0 }, { UserRoleEnum.Subscriber, this.SubscriberPayout / 100.0 }, { UserRoleEnum.Mod, this.ModPayout / 100.0 } },
                 this.Command, this.AnyOrder);
         }
     }

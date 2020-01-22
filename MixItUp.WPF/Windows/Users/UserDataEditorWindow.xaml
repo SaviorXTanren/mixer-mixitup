@@ -84,7 +84,7 @@
                         <TextBox x:Name="ViewingMinutesTextBox" Grid.Row="2" Grid.Column="4" Width="50" Text="{Binding Data.ViewingMinutesPart}" MaterialDesign:HintAssist.Hint="Minutes" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
 
                         <TextBlock Grid.Row="2" Grid.Column="6" VerticalAlignment="Center">Follow Age:</TextBlock>
-                        <TextBlock x:Name="FollowAgeTextBlock" VerticalAlignment="Center" Grid.Row="2" Grid.Column="8" Text="{Binding FollowAgeString}" />
+                        <TextBlock x:Name="FollowAgeTextBlock" VerticalAlignment="Center" Grid.Row="2" Grid.Column="8" Text="{Binding MixerFollowAgeString}" />
 
                         <TextBox x:Name="CustomTitleTextBox" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="5" Width="200" Text="{Binding Data.CustomTitle}" MaterialDesign:HintAssist.Hint="Custom Title" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
 

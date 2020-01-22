@@ -42,7 +42,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         public GameOutcome GetGameOutcome()
         {
-            return new GameOutcome(this.Name, Convert.ToDouble(this.Payout) / 100.0, new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, 0 }, { MixerRoleEnum.Subscriber, 0 }, { MixerRoleEnum.Mod, 0 } }, this.Command);
+            return new GameOutcome(this.Name, Convert.ToDouble(this.Payout) / 100.0, new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, 0 }, { UserRoleEnum.Subscriber, 0 }, { UserRoleEnum.Mod, 0 } }, this.Command);
         }
     }
 
@@ -57,11 +57,11 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             get { return EnumHelper.GetEnumName(this.WhoCanStart); }
             set
             {
-                this.WhoCanStart = EnumHelper.GetEnumValueFromString<MixerRoleEnum>(value);
+                this.WhoCanStart = EnumHelper.GetEnumValueFromString<UserRoleEnum>(value);
                 this.NotifyPropertyChanged();
             }
         }
-        public MixerRoleEnum WhoCanStart { get; set; } = MixerRoleEnum.Mod;
+        public UserRoleEnum WhoCanStart { get; set; } = UserRoleEnum.Mod;
 
         public string MinimumParticipantsString
         {
@@ -157,7 +157,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             RoleRequirementViewModel starterRequirement = new RoleRequirementViewModel(this.WhoCanStart);
             GameCommandBase newCommand = new BetGameCommand(name, triggers, requirements, this.MinimumParticipants, this.TimeLimit, starterRequirement,
                 this.Options.Select(o => o.GetGameOutcome()), this.StartedCommand, this.UserJoinedCommand, this.BetsClosedCommand,
-                new GameOutcome("Failure", 0, new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, 0 }, { MixerRoleEnum.Subscriber, 0 }, { MixerRoleEnum.Mod, 0 } }, this.UserFailCommand),
+                new GameOutcome("Failure", 0, new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, 0 }, { UserRoleEnum.Subscriber, 0 }, { UserRoleEnum.Mod, 0 } }, this.UserFailCommand),
                 this.GameCompleteCommand, this.NotEnoughPlayersCommand);
             if (this.existingCommand != null)
             {

@@ -530,7 +530,7 @@ namespace MixItUp.Desktop.Services
                     string oldDatabaseFilePath = Path.Combine(Path.GetDirectoryName(filePath), settings.DatabasePath);
                     await ChannelSession.Services.Database.Read(oldDatabaseFilePath, "SELECT * FROM Users", (Dictionary<string, object> data) =>
                     {
-                        UserDataViewModel userData = new UserDataViewModel();
+                        UserDataModel userData = new UserDataModel();
 
                         userData.MixerID = uint.Parse(data["ID"].ToString());
                         userData.MixerUsername = data["UserName"].ToString();
@@ -612,16 +612,16 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        private static MixerRoleEnum ConvertLegacyRoles(MixerRoleEnum legacyRole)
+        private static UserRoleEnum ConvertLegacyRoles(UserRoleEnum legacyRole)
         {
             int legacyRoleID = (int)legacyRole;
-            if ((int)MixerRoleEnum.Custom == legacyRoleID)
+            if ((int)UserRoleEnum.Custom == legacyRoleID)
             {
-                return MixerRoleEnum.Custom;
+                return UserRoleEnum.Custom;
             }
             else
             {
-                return (MixerRoleEnum)(legacyRoleID * 10);
+                return (UserRoleEnum)(legacyRoleID * 10);
             }
         }
 
@@ -636,7 +636,7 @@ namespace MixItUp.Desktop.Services
             commands.AddRange(settings.ActionGroupCommands);
             commands.AddRange(settings.GameCommands);
 
-            foreach (UserDataViewModel userData in settings.UserData.Values)
+            foreach (UserDataModel userData in settings.UserData.Values)
             {
                 commands.AddRange(userData.CustomCommands);
                 if (userData.EntranceCommand != null)
@@ -1154,8 +1154,8 @@ namespace MixItUp.Base.ViewModel.Interactive
 
         public InteractiveUserGroupViewModel() { }
 
-        public InteractiveUserGroupViewModel(MixerRoleEnum associatedUserRole)
-            : this((associatedUserRole != MixerRoleEnum.User) ? EnumHelper.GetEnumName(associatedUserRole) : DefaultName)
+        public InteractiveUserGroupViewModel(UserRoleEnum associatedUserRole)
+            : this((associatedUserRole != UserRoleEnum.User) ? EnumHelper.GetEnumName(associatedUserRole) : DefaultName)
         {
             this.AssociatedUserRole = associatedUserRole;
         }
@@ -1166,7 +1166,7 @@ namespace MixItUp.Base.ViewModel.Interactive
         {
             this.GroupName = groupName;
             this.DefaultScene = defaultScene;
-            this.AssociatedUserRole = MixerRoleEnum.Custom;
+            this.AssociatedUserRole = UserRoleEnum.Custom;
         }
 
         public InteractiveUserGroupViewModel(MixPlayGroupModel group) : this(group.groupID, group.sceneID) { }
@@ -1176,7 +1176,7 @@ namespace MixItUp.Base.ViewModel.Interactive
         [DataMember]
         public string DefaultScene { get; set; }
         [DataMember]
-        public MixerRoleEnum AssociatedUserRole { get; set; }
+        public UserRoleEnum AssociatedUserRole { get; set; }
 
         [JsonIgnore]
         public string CurrentScene { get; set; }

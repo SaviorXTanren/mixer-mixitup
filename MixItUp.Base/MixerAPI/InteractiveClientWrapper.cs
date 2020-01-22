@@ -788,7 +788,7 @@ namespace MixItUp.Base.MixerAPI
                     {
                         this.Participants[participant.sessionID] = participant;
 
-                        UserViewModel user = ChannelSession.Services.User.GetUserByID(participant.userID);
+                        UserViewModel user = ChannelSession.Services.User.GetUserByMixerID(participant.userID);
                         if (user != null)
                         {
                             MixPlayUserGroupModel group = gameGroups.FirstOrDefault(g => user.HasPermissionsTo(g.AssociatedUserRole));
@@ -929,7 +929,7 @@ namespace MixItUp.Base.MixerAPI
 
                     if (user == null)
                     {
-                        user = new UserViewModel(0, "Unknown User");
+                        user = new UserViewModel() { MixerUsername = "Unknown User" };
                         user.InteractiveIDs[e.participantID] = new MixPlayParticipantModel() { sessionID = e.participantID, anonymous = true };
                     }
                     else

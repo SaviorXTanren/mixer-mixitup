@@ -7,6 +7,8 @@ namespace MixItUp.Base.Model.Import.Streamlabs
     public class StreamlabsChatBotViewer
     {
         [DataMember]
+        public StreamingPlatformTypeEnum Platform { get; set; }
+        [DataMember]
         public uint ID { get; set; }
         [DataMember]
         public string Name { get; set; }
@@ -19,8 +21,10 @@ namespace MixItUp.Base.Model.Import.Streamlabs
 
         public StreamlabsChatBotViewer() { }
 
-        public StreamlabsChatBotViewer(List<string> values)
+        public StreamlabsChatBotViewer(StreamingPlatformTypeEnum platform, List<string> values)
         {
+            this.Platform = platform;
+
             this.Name = values[0];
             this.Rank = values[1];
 

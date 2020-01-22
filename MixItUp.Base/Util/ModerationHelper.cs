@@ -245,17 +245,17 @@ namespace MixItUp.Base.Util
                     return true;
                 }
 
-                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.FollowerOnly && !user.HasPermissionsTo(MixerRoleEnum.Follower))
+                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.FollowerOnly && !user.HasPermissionsTo(UserRoleEnum.Follower))
                 {
                     return false;
                 }
 
-                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.SubscriberOnly && !user.HasPermissionsTo(MixerRoleEnum.Subscriber))
+                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.SubscriberOnly && !user.HasPermissionsTo(UserRoleEnum.Subscriber))
                 {
                     return false;
                 }
 
-                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.ModeratorOnly && user.HasPermissionsTo(MixerRoleEnum.Mod))
+                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.ModeratorOnly && user.HasPermissionsTo(UserRoleEnum.Mod))
                 {
                     return false;
                 }

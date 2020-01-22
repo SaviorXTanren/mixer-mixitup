@@ -191,12 +191,12 @@ namespace MixItUp.Base.Model.User
         [JsonIgnore]
         public string UserRandomItemSpecialIdentifier { get { return string.Format("{0}randomitem", this.UserAmountSpecialIdentifierHeader); } }
 
-        public int GetAmount(UserDataViewModel user, UserInventoryItemModel item)
+        public int GetAmount(UserDataModel user, UserInventoryItemModel item)
         {
             return this.GetAmount(user, item.Name);
         }
 
-        public int GetAmount(UserDataViewModel user, string item)
+        public int GetAmount(UserDataModel user, string item)
         {
             if (this.UserAmounts.ContainsKey(user.ID) && this.UserAmounts[user.ID].ContainsKey(item))
             {
@@ -205,7 +205,7 @@ namespace MixItUp.Base.Model.User
             return 0;
         }
 
-        public Dictionary<string, int> GetAmounts(UserDataViewModel user) { return this.GetAmounts(user.ID); }
+        public Dictionary<string, int> GetAmounts(UserDataModel user) { return this.GetAmounts(user.ID); }
 
         public Dictionary<string, int> GetAmounts(Guid userID)
         {
@@ -221,12 +221,12 @@ namespace MixItUp.Base.Model.User
             return amounts;
         }
 
-        public bool HasAmount(UserDataViewModel user, string item, int amount)
+        public bool HasAmount(UserDataModel user, string item, int amount)
         {
             return (user.IsCurrencyRankExempt || this.GetAmount(user, item) >= amount);
         }
 
-        public void SetAmount(UserDataViewModel user, string itemName, int amount)
+        public void SetAmount(UserDataModel user, string itemName, int amount)
         {
             if (this.Items.ContainsKey(itemName))
             {
@@ -240,7 +240,7 @@ namespace MixItUp.Base.Model.User
             }
         }
 
-        public void AddAmount(UserDataViewModel user, string item, int amount)
+        public void AddAmount(UserDataModel user, string item, int amount)
         {
             if (!user.IsCurrencyRankExempt)
             {
@@ -248,7 +248,7 @@ namespace MixItUp.Base.Model.User
             }
         }
 
-        public void SubtractAmount(UserDataViewModel user, string item, int amount)
+        public void SubtractAmount(UserDataModel user, string item, int amount)
         {
             if (!user.IsCurrencyRankExempt)
             {
@@ -256,7 +256,7 @@ namespace MixItUp.Base.Model.User
             }
         }
 
-        public void ResetAmount(UserDataViewModel user)
+        public void ResetAmount(UserDataModel user)
         {
             this.UserAmounts[user.ID] = new Dictionary<string, int>();
             ChannelSession.Settings.UserData.ManualValueChanged(user.MixerID);

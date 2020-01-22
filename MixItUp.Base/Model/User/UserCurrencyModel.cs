@@ -148,7 +148,7 @@ namespace MixItUp.Base.Model.User
         [JsonIgnore]
         public string Top10SpecialIdentifier { get { return string.Format("{0}10{1}", SpecialIdentifierStringBuilder.TopSpecialIdentifierHeader, this.SpecialIdentifier); } }
 
-        public int GetAmount(UserDataViewModel user) { return this.GetAmount(user.ID); }
+        public int GetAmount(UserDataModel user) { return this.GetAmount(user.ID); }
 
         public int GetAmount(Guid userID)
         {
@@ -159,18 +159,18 @@ namespace MixItUp.Base.Model.User
             return 0;
         }
 
-        public bool HasAmount(UserDataViewModel user, int amount)
+        public bool HasAmount(UserDataModel user, int amount)
         {
             return (user.IsCurrencyRankExempt || this.GetAmount(user) >= amount);
         }
 
-        public void SetAmount(UserDataViewModel user, int amount)
+        public void SetAmount(UserDataModel user, int amount)
         {
             this.UserAmounts[user.ID] = Math.Min(Math.Max(amount, 0), this.MaxAmount);
             ChannelSession.Settings.UserData.ManualValueChanged(user.MixerID);
         }
 
-        public void AddAmount(UserDataViewModel user, int amount)
+        public void AddAmount(UserDataModel user, int amount)
         {
             if (!user.IsCurrencyRankExempt)
             {
@@ -187,7 +187,7 @@ namespace MixItUp.Base.Model.User
             }
         }
 
-        public void SubtractAmount(UserDataViewModel user, int amount)
+        public void SubtractAmount(UserDataModel user, int amount)
         {
             if (!user.IsCurrencyRankExempt)
             {
@@ -195,13 +195,13 @@ namespace MixItUp.Base.Model.User
             }
         }
 
-        public void ResetAmount(UserDataViewModel user)
+        public void ResetAmount(UserDataModel user)
         {
             this.UserAmounts[user.ID] = 0;
             ChannelSession.Settings.UserData.ManualValueChanged(user.MixerID);
         }
 
-        public UserRankViewModel GetRank(UserDataViewModel user)
+        public UserRankViewModel GetRank(UserDataModel user)
         {
             return this.GetRankForPoints(this.GetAmount(user));
         }
@@ -269,11 +269,11 @@ namespace MixItUp.Base.Model.User
                                     this.AddAmount(user.Data, ChannelSession.MixerChannel.online ? this.AcquireAmount : this.OfflineAcquireAmount);
                                     if (bonusesCanBeApplied)
                                     {
-                                        if (user.HasPermissionsTo(MixerRoleEnum.Mod) && this.ModeratorBonus > 0)
+                                        if (user.HasPermissionsTo(UserRoleEnum.Mod) && this.ModeratorBonus > 0)
                                         {
                                             this.AddAmount(user.Data, this.ModeratorBonus);
                                         }
-                                        else if (user.HasPermissionsTo(MixerRoleEnum.Subscriber) && this.SubscriberBonus > 0)
+                                        else if (user.HasPermissionsTo(UserRoleEnum.Subscriber) && this.SubscriberBonus > 0)
                                         {
                                             this.AddAmount(user.Data, this.SubscriberBonus);
                                         }

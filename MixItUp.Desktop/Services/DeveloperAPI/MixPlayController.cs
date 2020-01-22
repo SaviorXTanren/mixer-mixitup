@@ -42,7 +42,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
         [HttpGet]
         public Task<MixPlayUser> GetUser(uint userID)
         {
-            UserViewModel user = ChannelSession.Services.User.GetUserByID(userID);
+            UserViewModel user = ChannelSession.Services.User.GetUserByMixerID(userID);
             if (user == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -162,7 +162,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
 
             MixPlayBroadcastTargetBase[] targets;
 
-            var mixplayUsers = ChannelSession.Services.User.GetUsersByID(broadcast.Users.Select(x => x.UserID).ToArray());
+            var mixplayUsers = ChannelSession.Services.User.GetUsersByMixerID(broadcast.Users.Select(x => x.UserID).ToArray());
 
             targets = mixplayUsers.Where(x => x.IsInteractiveParticipant).SelectMany(x => x.InteractiveIDs.Keys).Select(x => new MixPlayBroadcastParticipant(x)).ToArray();
 

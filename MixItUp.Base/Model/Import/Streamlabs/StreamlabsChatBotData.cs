@@ -12,9 +12,9 @@ namespace MixItUp.Base.Model.Import.Streamlabs
     [DataContract]
     public class StreamlabsChatBotData
     {
-        public static async Task<StreamlabsChatBotData> GatherStreamlabsChatBotSettings(string filePath)
+        public static async Task<StreamlabsChatBotData> GatherStreamlabsChatBotSettings(StreamingPlatformTypeEnum platform, string filePath)
         {
-            StreamlabsChatBotData data = new StreamlabsChatBotData();
+            StreamlabsChatBotData data = new StreamlabsChatBotData(platform);
             await Task.Run(() =>
             {
                 try
@@ -81,6 +81,8 @@ namespace MixItUp.Base.Model.Import.Streamlabs
         }
 
         [DataMember]
+        StreamingPlatformTypeEnum Platform { get; set; }
+        [DataMember]
         public List<StreamlabsChatBotCommand> Commands { get; set; }
         [DataMember]
         public List<StreamlabsChatBotTimer> Timers { get; set; }
@@ -93,8 +95,9 @@ namespace MixItUp.Base.Model.Import.Streamlabs
         [DataMember]
         public List<StreamlabsChatBotEvent> Events { get; set; }
 
-        public StreamlabsChatBotData()
+        public StreamlabsChatBotData(StreamingPlatformTypeEnum platform)
         {
+            this.Platform = platform;
             this.Commands = new List<StreamlabsChatBotCommand>();
             this.Timers = new List<StreamlabsChatBotTimer>();
             this.Quotes = new List<string>();
@@ -139,7 +142,7 @@ namespace MixItUp.Base.Model.Import.Streamlabs
         {
             foreach (List<string> value in values)
             {
-                this.Viewers.Add(new StreamlabsChatBotViewer(value));
+                this.Viewers.Add(new StreamlabsChatBotViewer(this.Platform, value));
             }
         }
 

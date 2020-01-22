@@ -26,7 +26,7 @@ namespace MixItUp.WPF.Windows.Users
 
         private ObservableCollection<ChatCommand> userOnlyCommands = new ObservableCollection<ChatCommand>();
 
-        public UserDataEditorWindow(UserDataViewModel userData)
+        public UserDataEditorWindow(UserDataModel userData)
         {
             this.user = new UserViewModel(userData);
 

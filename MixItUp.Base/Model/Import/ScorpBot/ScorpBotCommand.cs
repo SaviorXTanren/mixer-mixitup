@@ -56,7 +56,7 @@ namespace MixItUp.Base.Model.Import.ScorpBot
 
             this.Command = this.Command.Replace("!", "");
 
-            this.Requirements.Role.MixerRole = MixerRoleEnum.User;
+            this.Requirements.Role.MixerRole = UserRoleEnum.User;
 
             this.Enabled = true;
         }
@@ -67,13 +67,13 @@ namespace MixItUp.Base.Model.Import.ScorpBot
             string permInfo = (string)data["PermInfo"];
             if (permInfo.Contains("followed.php"))
             {
-                this.Requirements.Role.MixerRole = MixerRoleEnum.Follower;
+                this.Requirements.Role.MixerRole = UserRoleEnum.Follower;
             }
 
             string permission = (string)data["Permission"];
             if (permission.Equals("Moderator"))
             {
-                this.Requirements.Role.MixerRole = MixerRoleEnum.Mod;
+                this.Requirements.Role.MixerRole = UserRoleEnum.Mod;
             }
 
             this.Requirements.Cooldown.Amount = (int)data["Cooldown"];

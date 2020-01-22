@@ -87,23 +87,23 @@ namespace MixItUp.Base.Model.Import.Streamlabs
                 switch (this.Permission)
                 {
                     case "Subscriber":
-                        this.Requirements.Role = new RoleRequirementViewModel(MixerRoleEnum.Subscriber);
+                        this.Requirements.Role = new RoleRequirementViewModel(UserRoleEnum.Subscriber);
                         break;
                     case "Moderator":
-                        this.Requirements.Role = new RoleRequirementViewModel(MixerRoleEnum.Mod);
+                        this.Requirements.Role = new RoleRequirementViewModel(UserRoleEnum.Mod);
                         break;
                     case "Editor":
-                        this.Requirements.Role = new RoleRequirementViewModel(MixerRoleEnum.ChannelEditor);
+                        this.Requirements.Role = new RoleRequirementViewModel(UserRoleEnum.ChannelEditor);
                         break;
                     case "Min_Points":
-                        this.Requirements.Role = new RoleRequirementViewModel(MixerRoleEnum.User);
+                        this.Requirements.Role = new RoleRequirementViewModel(UserRoleEnum.User);
                         if (!string.IsNullOrEmpty(this.PermInfo) && int.TryParse(this.PermInfo, out int cost))
                         {
                             this.Requirements.Currency = new CurrencyRequirementViewModel(currency, cost);
                         }
                         break;
                     case "Min_Rank":
-                        this.Requirements.Role = new RoleRequirementViewModel(MixerRoleEnum.User);
+                        this.Requirements.Role = new RoleRequirementViewModel(UserRoleEnum.User);
                         if (!string.IsNullOrEmpty(this.PermInfo))
                         {
                             UserRankViewModel minRank = rank.Ranks.FirstOrDefault(r => r.Name.ToLower().Equals(this.PermInfo.ToLower()));
@@ -114,7 +114,7 @@ namespace MixItUp.Base.Model.Import.Streamlabs
                         }
                         break;
                     default:
-                        this.Requirements.Role = new RoleRequirementViewModel(MixerRoleEnum.User);
+                        this.Requirements.Role = new RoleRequirementViewModel(UserRoleEnum.User);
                         break;
                 }
             }

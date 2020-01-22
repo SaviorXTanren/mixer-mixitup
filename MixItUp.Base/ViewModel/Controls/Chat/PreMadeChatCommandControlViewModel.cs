@@ -22,7 +22,7 @@ namespace MixItUp.Base.ViewModel.Controls.Chat
             get { return EnumHelper.GetEnumName(this.command.Requirements.Role.MixerRole); }
             set
             {
-                this.command.Requirements.Role.MixerRole = EnumHelper.GetEnumValueFromString<MixerRoleEnum>(value);
+                this.command.Requirements.Role.MixerRole = EnumHelper.GetEnumValueFromString<UserRoleEnum>(value);
                 this.UpdateSetting();
                 this.NotifyPropertyChanged();
             }

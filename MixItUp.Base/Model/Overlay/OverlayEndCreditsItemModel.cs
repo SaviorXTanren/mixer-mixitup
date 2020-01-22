@@ -405,11 +405,11 @@ namespace MixItUp.Base.Model.Overlay
             if (this.ShouldIncludeUser(user))
             {
                 this.viewers.Add(user.MixerID);
-                if (user.MixerRoles.Contains(MixerRoleEnum.Subscriber) || user.IsEquivalentToMixerSubscriber())
+                if (user.MixerRoles.Contains(UserRoleEnum.Subscriber) || user.IsEquivalentToMixerSubscriber())
                 {
                     this.subs.Add(user.MixerID);
                 }
-                if (user.MixerRoles.Contains(MixerRoleEnum.Mod) || user.MixerRoles.Contains(MixerRoleEnum.ChannelEditor))
+                if (user.MixerRoles.Contains(UserRoleEnum.Mod) || user.MixerRoles.Contains(UserRoleEnum.ChannelEditor))
                 {
                     this.mods.Add(user.MixerID);
                 }
@@ -473,7 +473,7 @@ namespace MixItUp.Base.Model.Overlay
 
         private UserViewModel GetUser(uint userID)
         {
-            UserViewModel user = ChannelSession.Services.User.GetUserByID(userID);
+            UserViewModel user = ChannelSession.Services.User.GetUserByMixerID(userID);
             if (user == null)
             {
                 if (ChannelSession.Settings.UserData.ContainsKey(userID))

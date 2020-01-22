@@ -16,17 +16,17 @@ namespace MixItUp.Base.ViewModel.Requirement
         public static IEnumerable<string> AdvancedUserRoleAllowedValues { get { return UserViewModel.SelectableAdvancedUserRoles(); } }
 
         [JsonProperty]
-        public MixerRoleEnum MixerRole { get; set; }
+        public UserRoleEnum MixerRole { get; set; }
 
         [JsonProperty]
         public string CustomRole { get; set; }
 
         public RoleRequirementViewModel()
         {
-            this.MixerRole = MixerRoleEnum.User;
+            this.MixerRole = UserRoleEnum.User;
         }
 
-        public RoleRequirementViewModel(MixerRoleEnum mixerRole)
+        public RoleRequirementViewModel(UserRoleEnum mixerRole)
         {
             this.MixerRole = mixerRole;
         }
@@ -41,7 +41,7 @@ namespace MixItUp.Base.ViewModel.Requirement
         {
             get
             {
-                if (this.MixerRole == MixerRoleEnum.Custom && !string.IsNullOrEmpty(this.CustomRole))
+                if (this.MixerRole == UserRoleEnum.Custom && !string.IsNullOrEmpty(this.CustomRole))
                 {
                     return this.CustomRole;
                 }
@@ -51,14 +51,14 @@ namespace MixItUp.Base.ViewModel.Requirement
 
         public void SetRoleBasedOnString(string role)
         {
-            MixerRoleEnum mixerRole = EnumHelper.GetEnumValueFromString<MixerRoleEnum>(role);
-            if (mixerRole > MixerRoleEnum.Banned)
+            UserRoleEnum mixerRole = EnumHelper.GetEnumValueFromString<UserRoleEnum>(role);
+            if (mixerRole > UserRoleEnum.Banned)
             {
                 this.MixerRole = mixerRole;
             }
             else
             {
-                this.MixerRole = MixerRoleEnum.Custom;
+                this.MixerRole = UserRoleEnum.Custom;
                 this.CustomRole = role;
             }
         }
@@ -69,7 +69,7 @@ namespace MixItUp.Base.ViewModel.Requirement
         {
             if (ChannelSession.Services.Chat != null)
             {
-                await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("You must be a {0} to do this", (this.MixerRole != MixerRoleEnum.Custom) ?
+                await ChannelSession.Services.Chat.Whisper(user.MixerUsername, string.Format("You must be a {0} to do this", (this.MixerRole != UserRoleEnum.Custom) ?
                     EnumHelper.GetEnumName(this.MixerRole) : this.CustomRole));
             }
         }

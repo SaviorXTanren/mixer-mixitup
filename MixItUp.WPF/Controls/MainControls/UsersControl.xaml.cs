@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
-using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Users;
 using StreamingClient.Base.Util;
 using System;
@@ -21,7 +20,7 @@ namespace MixItUp.WPF.Controls.MainControls
     /// </summary>
     public partial class UsersControl : MainControlBase
     {
-        private ObservableCollection<UserDataViewModel> userData = new ObservableCollection<UserDataViewModel>();
+        private ObservableCollection<UserDataModel> userData = new ObservableCollection<UserDataModel>();
 
         private DataGridColumn lastSortedColumn = null;
 
@@ -64,7 +63,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 this.LimitingResultsMessage.Visibility = Visibility.Collapsed;
                 this.userData.Clear();
 
-                IEnumerable<UserDataViewModel> data = ChannelSession.Settings.UserData.Values.ToList();
+                IEnumerable<UserDataModel> data = ChannelSession.Settings.UserData.Values.ToList();
                 if (sortColumn != null)
                 {
                     int columnIndex = this.UserDataGridView.Columns.IndexOf(sortColumn);
@@ -105,7 +104,7 @@ namespace MixItUp.WPF.Controls.MainControls
         private void UserEditButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            UserDataViewModel userData = (UserDataViewModel)button.DataContext;
+            UserDataModel userData = (UserDataModel)button.DataContext;
             UserDataEditorWindow window = new UserDataEditorWindow(userData);
             window.Closed += Window_Closed;
             window.Show();
@@ -114,7 +113,7 @@ namespace MixItUp.WPF.Controls.MainControls
         private async void UserDeleteButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            UserDataViewModel userData = (UserDataViewModel)button.DataContext;
+            UserDataModel userData = (UserDataModel)button.DataContext;
             if (await DialogHelper.ShowConfirmation("This will delete this user's data, which includes their Hours, Currency, Rank, & Custom User Commands. Are you sure you want to do this?"))
             {
                 ChannelSession.Settings.UserData.Remove(userData.MixerID);
@@ -154,7 +153,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     }
                     fileContents.AppendLine();
 
-                    foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values.ToList())
+                    foreach (UserDataModel userData in ChannelSession.Settings.UserData.Values.ToList())
                     {
                         fileContents.Append(string.Format("{0}\t{1}\t{2}\t{3}", userData.MixerID, userData.MixerUsername, userData.ViewingMinutes, userData.OfflineViewingMinutes));
                         foreach (var kvp in ChannelSession.Settings.Currencies)

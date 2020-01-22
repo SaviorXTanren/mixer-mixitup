@@ -145,7 +145,7 @@ namespace MixItUp.Base.Services.Mixer
                 if (e.payload.TryGetValue("user", out payloadToken))
                 {
                     UserModel userPayload = payloadToken.ToObject<UserModel>();
-                    user = ChannelSession.Services.User.GetUserByID(userPayload.id.ToString());
+                    user = ChannelSession.Services.User.GetUserByMixerID(userPayload.id);
                     if (user == null)
                     {
                         user = new UserViewModel(userPayload);
@@ -165,10 +165,10 @@ namespace MixItUp.Base.Services.Mixer
                 else if (e.payload.TryGetValue("hoster", out payloadToken))
                 {
                     channel = payloadToken.ToObject<ChannelModel>();
-                    user = ChannelSession.Services.User.GetUserByID(channel.userId.ToString());
+                    user = ChannelSession.Services.User.GetUserByMixerID(channel.userId);
                     if (user == null)
                     {
-                        user = new UserViewModel(channel.userId, channel.token);
+                        user = new UserViewModel(channel);
                     }
                 }
                 else if (e.payload.TryGetValue("userId", out JToken id))
@@ -362,40 +362,38 @@ namespace MixItUp.Base.Services.Mixer
                     UserFanProgressionModel fanProgression = e.payload.ToObject<UserFanProgressionModel>();
                     if (fanProgression != null)
                     {
-                        user = ChannelSession.Services.User.GetUserByID(userID);
+                        user = ChannelSession.Services.User.GetUserByMixerID(userID);
                         if (user == null)
                         {
-                            user = new UserViewModel(userID, string.Empty);
+                            UserModel userModel = await ChannelSession.MixerUserConnection.GetUser(userID);
+                            if (userModel != null)
+                            {
+                                user = new UserViewModel(userModel);
+                            }
                         }
 
-                        EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerFanProgressionLevelUp, user);
-                        if (ChannelSession.Services.Events.CanPerformEvent(trigger))
+                        if (user != null)
                         {
-                            trigger.SpecialIdentifiers["userfanprogressionnext"] = fanProgression.level.nextLevelXp.GetValueOrDefault().ToString();
-                            trigger.SpecialIdentifiers["userfanprogressionrank"] = fanProgression.level.level.ToString();
-                            trigger.SpecialIdentifiers["userfanprogressioncolor"] = fanProgression.level.color.ToString();
-                            trigger.SpecialIdentifiers["userfanprogressionimage"] = fanProgression.level.LargeGIFAssetURL.ToString();
-                            trigger.SpecialIdentifiers["userfanprogression"] = fanProgression.level.currentXp.GetValueOrDefault().ToString();
-
-                            if (string.IsNullOrEmpty(user.MixerUsername))
+                            EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerFanProgressionLevelUp, user);
+                            if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                             {
-                                UserModel userModel = await ChannelSession.MixerUserConnection.GetUser(userID);
-                                if (userModel != null)
-                                {
-                                    user = new UserViewModel(userModel);
-                                }
+                                trigger.SpecialIdentifiers["userfanprogressionnext"] = fanProgression.level.nextLevelXp.GetValueOrDefault().ToString();
+                                trigger.SpecialIdentifiers["userfanprogressionrank"] = fanProgression.level.level.ToString();
+                                trigger.SpecialIdentifiers["userfanprogressioncolor"] = fanProgression.level.color.ToString();
+                                trigger.SpecialIdentifiers["userfanprogressionimage"] = fanProgression.level.LargeGIFAssetURL.ToString();
+                                trigger.SpecialIdentifiers["userfanprogression"] = fanProgression.level.currentXp.GetValueOrDefault().ToString();
+
+                                await ChannelSession.Services.Events.PerformEvent(trigger);
                             }
 
-                            await ChannelSession.Services.Events.PerformEvent(trigger);
-                        }
+                            user.MixerFanProgression = fanProgression;
 
-                        user.MixerFanProgression = fanProgression;
+                            GlobalEvents.ProgressionLevelUpOccurred(user);
 
-                        GlobalEvents.ProgressionLevelUpOccurred(user);
-
-                        foreach (UserCurrencyModel fanProgressionCurrency in ChannelSession.Settings.Currencies.Values.Where(c => c.IsTrackingFanProgression))
-                        {
-                            fanProgressionCurrency.SetAmount(user.Data, (int)fanProgression.level.level);
+                            foreach (UserCurrencyModel fanProgressionCurrency in ChannelSession.Settings.Currencies.Values.Where(c => c.IsTrackingFanProgression))
+                            {
+                                fanProgressionCurrency.SetAmount(user.Data, (int)fanProgression.level.level);
+                            }
                         }
                     }
                 }

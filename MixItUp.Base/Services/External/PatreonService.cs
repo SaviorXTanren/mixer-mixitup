@@ -632,12 +632,12 @@ namespace MixItUp.Base.Services.External
                                 PatreonTier tier = this.Campaign.GetTier(member.TierID);
                                 if (tier != null)
                                 {
-                                    UserViewModel user = new UserViewModel(0, member.User.LookupName);
+                                    UserViewModel user = new UserViewModel() { MixerUsername = member.User.LookupName };
 
                                     UserModel userModel = await ChannelSession.MixerUserConnection.GetUser(user.MixerUsername);
                                     if (userModel != null)
                                     {
-                                        user = ChannelSession.Services.User.GetUserByID(userModel.id);
+                                        user = ChannelSession.Services.User.GetUserByMixerID(userModel.id);
                                         if (user == null)
                                         {
                                             user = new UserViewModel(userModel);

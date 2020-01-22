@@ -365,7 +365,7 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public int ModerationFilteredWordsTimeout5MinuteOffenseCount { get; set; }
         [DataMember]
-        public MixerRoleEnum ModerationFilteredWordsExcempt { get; set; } = MixerRoleEnum.Mod;
+        public UserRoleEnum ModerationFilteredWordsExcempt { get; set; } = UserRoleEnum.Mod;
         [DataMember]
         public bool ModerationFilteredWordsApplyStrikes { get; set; } = true;
 
@@ -378,21 +378,21 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public bool ModerationPunctuationBlockIsPercentage { get; set; } = true;
         [DataMember]
-        public MixerRoleEnum ModerationChatTextExcempt { get; set; } = MixerRoleEnum.Mod;
+        public UserRoleEnum ModerationChatTextExcempt { get; set; } = UserRoleEnum.Mod;
         [DataMember]
         public bool ModerationChatTextApplyStrikes { get; set; } = true;
 
         [DataMember]
         public bool ModerationBlockLinks { get; set; }
         [DataMember]
-        public MixerRoleEnum ModerationBlockLinksExcempt { get; set; } = MixerRoleEnum.Mod;
+        public UserRoleEnum ModerationBlockLinksExcempt { get; set; } = UserRoleEnum.Mod;
         [DataMember]
         public bool ModerationBlockLinksApplyStrikes { get; set; } = true;
 
         [DataMember]
         public ModerationChatInteractiveParticipationEnum ModerationChatInteractiveParticipation { get; set; } = ModerationChatInteractiveParticipationEnum.None;
         [DataMember]
-        public MixerRoleEnum ModerationChatInteractiveParticipationExcempt { get; set; } = MixerRoleEnum.Mod;
+        public UserRoleEnum ModerationChatInteractiveParticipationExcempt { get; set; } = UserRoleEnum.Mod;
 
         [DataMember]
         public bool ModerationResetStrikesOnLaunch { get; set; }
@@ -536,7 +536,7 @@ namespace MixItUp.Base.Model.Settings
         #region Database Data
 
         [JsonIgnore]
-        public DatabaseDictionary<uint, UserDataViewModel> UserData { get; set; } = new DatabaseDictionary<uint, UserDataViewModel>();
+        public DatabaseDictionary<uint, UserDataModel> UserData { get; set; } = new DatabaseDictionary<uint, UserDataModel>();
 
         [JsonIgnore]
         public LockedList<ChatCommand> ChatCommands { get; set; } = new LockedList<ChatCommand>();
@@ -609,7 +609,7 @@ namespace MixItUp.Base.Model.Settings
                 {
                     await ChannelSession.Services.Database.Read(this.DatabasePath, "SELECT * FROM Users", (Dictionary<string, object> data) =>
                     {
-                        UserDataViewModel userData = SerializerHelper.DeserializeFromString<UserDataViewModel>((string)data["Data"]);
+                        UserDataModel userData = SerializerHelper.DeserializeFromString<UserDataModel>((string)data["Data"]);
                         this.UserData[userData.MixerID] = userData;
                     });
 
@@ -759,7 +759,7 @@ namespace MixItUp.Base.Model.Settings
                 IEnumerable<uint> removedUsers = this.UserData.GetRemovedValues();
                 await ChannelSession.Services.Database.BulkWrite(this.DatabasePath, "DELETE FROM Users WHERE ID = @ID", removedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.ToString() } }));
 
-                IEnumerable<UserDataViewModel> changedUsers = this.UserData.GetChangedValues();
+                IEnumerable<UserDataModel> changedUsers = this.UserData.GetChangedValues();
                 await ChannelSession.Services.Database.BulkWrite(this.DatabasePath, "REPLACE INTO Users(ID, Data) VALUES(@ID, @Data)",
                     changedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.ID.ToString() }, { "@Data", SerializerHelper.SerializeToString(u) } }));
 

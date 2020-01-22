@@ -142,8 +142,8 @@ namespace MixItUp.Base.Model.Overlay
                 if (ChannelSession.Settings.Currencies.ContainsKey(this.CurrencyID))
                 {
                     UserCurrencyModel currency = ChannelSession.Settings.Currencies[this.CurrencyID];
-                    Dictionary<UserDataViewModel, int> currencyAmounts = new Dictionary<UserDataViewModel, int>();
-                    foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values)
+                    Dictionary<UserDataModel, int> currencyAmounts = new Dictionary<UserDataModel, int>();
+                    foreach (UserDataModel userData in ChannelSession.Settings.UserData.Values)
                     {
                         currencyAmounts[userData] = currency.GetAmount(userData);
                     }
@@ -277,7 +277,7 @@ namespace MixItUp.Base.Model.Overlay
         private async Task UpdateSubscribers()
         {
             this.userSubDates.Clear();
-            await ChannelSession.MixerUserConnection.GetUsersWithRoles(ChannelSession.MixerChannel, MixerRoleEnum.Subscriber, (collection) =>
+            await ChannelSession.MixerUserConnection.GetUsersWithRoles(ChannelSession.MixerChannel, UserRoleEnum.Subscriber, (collection) =>
             {
                 foreach (UserWithGroupsModel userWithGroups in collection)
                 {

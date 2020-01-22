@@ -152,7 +152,7 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private async void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { await this.AddEvent(donation.UserName, string.Format("Donated {0}", donation.AmountText)); }
+        private async void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { await this.AddEvent(donation.Username, string.Format("Donated {0}", donation.AmountText)); }
 
         private async void GlobalEvents_OnStreamlootsPurchaseOccurred(object sender, Tuple<UserViewModel, int> purchase) { await this.AddEvent(purchase.Item1.MixerUsername, string.Format("Purchased {0} Packs", purchase.Item2)); }
 

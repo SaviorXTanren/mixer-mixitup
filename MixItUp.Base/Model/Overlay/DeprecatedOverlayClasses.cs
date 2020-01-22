@@ -190,7 +190,7 @@ namespace MixItUp.Base.Model.Overlay
             replacementSets["TEXT_FONT"] = this.TextFont;
             replacementSets["TEXT_SIZE"] = this.TextSize.ToString();
 
-            replacementSets["USER_IMAGE"] = message.User.AvatarLink;
+            replacementSets["USER_IMAGE"] = message.User.MixerAvatarLink;
             replacementSets["USERNAME"] = message.User.MixerUsername;
             replacementSets["USER_COLOR"] = OverlayChatMessages.userColors[message.User.PrimaryRoleColorName];
 
@@ -536,7 +536,7 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { this.AddEvent(donation.UserName, string.Format("Donated {0}", donation.AmountText)); }
+        private void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { this.AddEvent(donation.Username, string.Format("Donated {0}", donation.AmountText)); }
 
         private void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, uint> sparkUsage) { this.AddEvent(sparkUsage.Item1.MixerUsername, string.Format("{0} Sparks", sparkUsage.Item2)); }
 
@@ -1179,7 +1179,7 @@ namespace MixItUp.Base.Model.Overlay
         private bool refreshDonations = true;
 
         private DateTimeOffset lastRefresh = DateTimeOffset.MinValue;
-        private List<UserDataViewModel> currencyUsersToShow = new List<UserDataViewModel>();
+        private List<UserDataModel> currencyUsersToShow = new List<UserDataModel>();
         private IEnumerable<SparksLeaderboardModel> sparkLeaders;
         private IEnumerable<EmbersLeaderboardModel> emberLeaders;
 
@@ -1302,7 +1302,7 @@ namespace MixItUp.Base.Model.Overlay
                         this.lastRefresh = DateTimeOffset.Now.AddMinutes(1);
 
                         Dictionary<uint, int> currencyAmounts = new Dictionary<uint, int>();
-                        foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values)
+                        foreach (UserDataModel userData in ChannelSession.Settings.UserData.Values)
                         {
                             currencyAmounts[userData.MixerID] = currency.GetAmount(userData);
                         }
@@ -1323,7 +1323,7 @@ namespace MixItUp.Base.Model.Overlay
                         }
                     }
 
-                    foreach (UserDataViewModel userToShow in this.currencyUsersToShow)
+                    foreach (UserDataModel userToShow in this.currencyUsersToShow)
                     {
                         extraSpecialIdentifiers["DETAILS"] = currency.GetAmount(userToShow).ToString();
                         OverlayCustomHTMLItem htmlItem = (OverlayCustomHTMLItem)await base.GetProcessedItem(new UserViewModel(userToShow), arguments, extraSpecialIdentifiers);
@@ -1358,7 +1358,7 @@ namespace MixItUp.Base.Model.Overlay
                     foreach (SparksLeaderboardModel sparkLeader in this.sparkLeaders)
                     {
                         extraSpecialIdentifiers["DETAILS"] = sparkLeader.statValue.ToString();
-                        OverlayCustomHTMLItem htmlItem = (OverlayCustomHTMLItem)await base.GetProcessedItem(new UserViewModel(0, sparkLeader.username), arguments, extraSpecialIdentifiers);
+                        OverlayCustomHTMLItem htmlItem = (OverlayCustomHTMLItem)await base.GetProcessedItem(new UserViewModel() { MixerUsername = sparkLeader.username }, arguments, extraSpecialIdentifiers);
                         copy.LeaderboardEntries.Add(htmlItem.HTMLText);
                     }
                     return copy;
@@ -1391,7 +1391,7 @@ namespace MixItUp.Base.Model.Overlay
                     foreach (EmbersLeaderboardModel emberLeader in this.emberLeaders)
                     {
                         extraSpecialIdentifiers["DETAILS"] = emberLeader.statValue.ToString();
-                        OverlayCustomHTMLItem htmlItem = (OverlayCustomHTMLItem)await base.GetProcessedItem(new UserViewModel(0, emberLeader.username), arguments, extraSpecialIdentifiers);
+                        OverlayCustomHTMLItem htmlItem = (OverlayCustomHTMLItem)await base.GetProcessedItem(new UserViewModel() { MixerUsername = emberLeader.username }, arguments, extraSpecialIdentifiers);
                         copy.LeaderboardEntries.Add(htmlItem.HTMLText);
                     }
                     return copy;
@@ -1432,12 +1432,12 @@ namespace MixItUp.Base.Model.Overlay
 
         private void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation)
         {
-            if (!this.userDonations.ContainsKey(donation.UserName))
+            if (!this.userDonations.ContainsKey(donation.Username))
             {
-                this.userDonations[donation.UserName] = donation.Copy();
-                this.userDonations[donation.UserName].Amount = 0.0;
+                this.userDonations[donation.Username] = donation.Copy();
+                this.userDonations[donation.Username].Amount = 0.0;
             }
-            this.userDonations[donation.UserName].Amount += donation.Amount;
+            this.userDonations[donation.Username].Amount += donation.Amount;
             this.refreshDonations = true;
         }
     }
@@ -2186,7 +2186,7 @@ namespace MixItUp.Base.Model.Overlay
             replacementSets["TEXT_SIZE"] = ((int)(0.2 * ((double)this.Height))).ToString();
 
             replacementSets["USERNAME"] = boss.MixerUsername;
-            replacementSets["USER_IMAGE"] = boss.AvatarLink;
+            replacementSets["USER_IMAGE"] = boss.MixerAvatarLink;
             replacementSets["USER_IMAGE_SIZE"] = ((int)(0.8 * ((double)this.Height))).ToString();
 
             replacementSets["HEALTH_REMAINING"] = health.ToString();

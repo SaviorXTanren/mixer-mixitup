@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Import.ScorpBot;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.Import.ScorpBot;
 using MixItUp.Base.Model.Import.Streamlabs;
 using MixItUp.Base.Util;
 using System;
@@ -366,7 +367,7 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
                     if (!string.IsNullOrEmpty(this.StreamlabsChatbotDirectory))
                     {
                         this.StatusMessage = "Gathering Streamlabs ChatBot Data...";
-                        this.StreamlabsChatBot = await StreamlabsChatBotData.GatherStreamlabsChatBotSettings(this.StreamlabsChatbotDirectory);
+                        this.StreamlabsChatBot = await StreamlabsChatBotData.GatherStreamlabsChatBotSettings(StreamingPlatformTypeEnum.Mixer, this.StreamlabsChatbotDirectory);
                         if (this.StreamlabsChatBot == null)
                         {
                             this.StatusMessage = "Failed to import Streamlabs Chat Bot data, please ensure that you have selected the correct data file & have Microsoft Excel installed. If this continues to fail, please contact Mix it Up support for assistance.";

@@ -254,8 +254,8 @@ namespace MixItUp.Base.Services.External
             var purchase = jobj["data"].ToObject<StreamlootsPurchaseModel>();
             if (purchase != null)
             {
-                UserViewModel user = new UserViewModel(0, purchase.data.Username);
-                UserViewModel giftee = (string.IsNullOrEmpty(purchase.data.Giftee)) ? null : new UserViewModel(0, purchase.data.Giftee);
+                UserViewModel user = new UserViewModel() { MixerUsername = purchase.data.Username };
+                UserViewModel giftee = (string.IsNullOrEmpty(purchase.data.Giftee)) ? null : new UserViewModel() { MixerUsername = purchase.data.Giftee };
 
                 UserModel userModel = await ChannelSession.MixerUserConnection.GetUser(user.MixerUsername);
                 if (userModel != null)
@@ -291,7 +291,7 @@ namespace MixItUp.Base.Services.External
             StreamlootsCardModel card = jobj["data"].ToObject<StreamlootsCardModel>();
             if (card != null)
             {
-                UserViewModel user = new UserViewModel(0, card.data.Username);
+                UserViewModel user = new UserViewModel() { MixerUsername = card.data.Username };
 
                 UserModel userModel = await ChannelSession.MixerUserConnection.GetUser(user.MixerUsername);
                 if (userModel != null)

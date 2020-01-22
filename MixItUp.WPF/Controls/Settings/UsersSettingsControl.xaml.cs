@@ -62,8 +62,8 @@ namespace MixItUp.WPF.Controls.Settings
             this.TitleMinimumMonthsTextBox.Text = string.Empty;
             if (this.TitleRoleComboBox.SelectedIndex >= 0)
             {
-                MixerRoleEnum role = EnumHelper.GetEnumValueFromString<MixerRoleEnum>((string)this.TitleRoleComboBox.SelectedItem);
-                if (role == MixerRoleEnum.Follower || role == MixerRoleEnum.Subscriber)
+                UserRoleEnum role = EnumHelper.GetEnumValueFromString<UserRoleEnum>((string)this.TitleRoleComboBox.SelectedItem);
+                if (role == UserRoleEnum.Follower || role == UserRoleEnum.Subscriber)
                 {
                     this.TitleMinimumMonthsTextBox.IsEnabled = true;
                     this.TitleMinimumMonthsTextBox.Text = "0";
@@ -89,8 +89,8 @@ namespace MixItUp.WPF.Controls.Settings
 
                 int months = 0;
 
-                MixerRoleEnum role = EnumHelper.GetEnumValueFromString<MixerRoleEnum>((string)this.TitleRoleComboBox.SelectedItem);
-                if (role == MixerRoleEnum.Follower || role == MixerRoleEnum.Subscriber)
+                UserRoleEnum role = EnumHelper.GetEnumValueFromString<UserRoleEnum>((string)this.TitleRoleComboBox.SelectedItem);
+                if (role == UserRoleEnum.Follower || role == UserRoleEnum.Subscriber)
                 {
                     if (!int.TryParse(this.TitleMinimumMonthsTextBox.Text, out months) || months < 0)
                     {
@@ -108,7 +108,7 @@ namespace MixItUp.WPF.Controls.Settings
                 if (this.titles.Any(t => t.Role.Equals(role)))
                 {
                     UserTitleModel existingTitle = this.titles.FirstOrDefault(t => t.Role.Equals(role));
-                    if (existingTitle.Role == MixerRoleEnum.Follower || existingTitle.Role == MixerRoleEnum.Subscriber)
+                    if (existingTitle.Role == UserRoleEnum.Follower || existingTitle.Role == UserRoleEnum.Subscriber)
                     {
                         if (existingTitle.Months == months)
                         {

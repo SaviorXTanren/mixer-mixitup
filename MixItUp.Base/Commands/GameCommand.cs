@@ -28,26 +28,26 @@ namespace MixItUp.Base.Commands
         public double Payout { get; set; }
 
         [DataMember]
-        public Dictionary<MixerRoleEnum, double> RolePayouts { get; set; }
+        public Dictionary<UserRoleEnum, double> RolePayouts { get; set; }
 
         [DataMember]
-        public Dictionary<MixerRoleEnum, int> RoleProbabilities { get; set; }
+        public Dictionary<UserRoleEnum, int> RoleProbabilities { get; set; }
 
         [DataMember]
         public CustomCommand Command { get; set; }
 
         public GameOutcome() { }
 
-        public GameOutcome(string name, double payout, Dictionary<MixerRoleEnum, int> roleProbabilities, CustomCommand command)
+        public GameOutcome(string name, double payout, Dictionary<UserRoleEnum, int> roleProbabilities, CustomCommand command)
         {
             this.Name = name;
             this.Payout = payout;
-            this.RolePayouts = new Dictionary<MixerRoleEnum, double>();
+            this.RolePayouts = new Dictionary<UserRoleEnum, double>();
             this.RoleProbabilities = roleProbabilities;
             this.Command = command;
         }
 
-        public GameOutcome(string name, Dictionary<MixerRoleEnum, double> rolePayouts, Dictionary<MixerRoleEnum, int> roleProbabilities, CustomCommand command)
+        public GameOutcome(string name, Dictionary<UserRoleEnum, double> rolePayouts, Dictionary<UserRoleEnum, int> roleProbabilities, CustomCommand command)
         {
             this.Name = name;
             this.Payout = 0;
@@ -1154,8 +1154,8 @@ namespace MixItUp.Base.Commands
 
         public SlotsGameOutcome() { }
 
-        public SlotsGameOutcome(string name, string symbol1, string symbol2, string symbol3, Dictionary<MixerRoleEnum, double> rolePayouts, CustomCommand command, bool anyOrder)
-            : base(name, rolePayouts, new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, 0 }, { MixerRoleEnum.Subscriber, 0 }, { MixerRoleEnum.Mod, 0 } }, command)
+        public SlotsGameOutcome(string name, string symbol1, string symbol2, string symbol3, Dictionary<UserRoleEnum, double> rolePayouts, CustomCommand command, bool anyOrder)
+            : base(name, rolePayouts, new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, 0 }, { UserRoleEnum.Subscriber, 0 }, { UserRoleEnum.Mod, 0 } }, command)
         {
             this.Symbol1 = symbol1;
             this.Symbol2 = symbol2;

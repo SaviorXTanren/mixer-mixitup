@@ -260,7 +260,7 @@ namespace MixItUp.Base
 
         public static Task<UserViewModel> GetCurrentUser()
         {
-            UserViewModel user = ChannelSession.Services.User.GetUserByID(ChannelSession.MixerUser.id);
+            UserViewModel user = ChannelSession.Services.User.GetUserByMixerID(ChannelSession.MixerUser.id);
             if (user == null)
             {
                 user = new UserViewModel(ChannelSession.MixerUser);
@@ -469,7 +469,7 @@ namespace MixItUp.Base
 
                     if (ChannelSession.Settings.ModerationResetStrikesOnLaunch)
                     {
-                        foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values.Where(u => u.ModerationStrikes > 0))
+                        foreach (UserDataModel userData in ChannelSession.Settings.UserData.Values.Where(u => u.ModerationStrikes > 0))
                         {
                             userData.ModerationStrikes = 0;
                             ChannelSession.Settings.UserData.ManualValueChanged(userData.MixerID);
@@ -541,7 +541,7 @@ namespace MixItUp.Base
         {
             if (currency.Currency.RankChangedCommand != null)
             {
-                UserViewModel user = ChannelSession.Services.User.GetUserByID(currency.User.MixerID);
+                UserViewModel user = ChannelSession.Services.User.GetUserByMixerID(currency.User.MixerID);
                 if (user != null)
                 {
                     await currency.Currency.RankChangedCommand.Perform(user);

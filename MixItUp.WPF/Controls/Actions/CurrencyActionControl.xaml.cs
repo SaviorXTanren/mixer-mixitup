@@ -73,14 +73,14 @@ namespace MixItUp.WPF.Controls.Actions
                         }
                     }
 
-                    MixerRoleEnum roleRequirement = MixerRoleEnum.User;
+                    UserRoleEnum roleRequirement = UserRoleEnum.User;
                     if (actionType == CurrencyActionTypeEnum.AddToAllChatUsers || actionType == CurrencyActionTypeEnum.SubtractFromAllChatUsers)
                     {
                         if (this.CurrencyPermissionsAllowedComboBox.SelectedIndex < 0)
                         {
                             return null;
                         }
-                        roleRequirement = EnumHelper.GetEnumValueFromString<MixerRoleEnum>((string)this.CurrencyPermissionsAllowedComboBox.SelectedItem);
+                        roleRequirement = EnumHelper.GetEnumValueFromString<UserRoleEnum>((string)this.CurrencyPermissionsAllowedComboBox.SelectedItem);
                     }
 
                     if (currency != null)

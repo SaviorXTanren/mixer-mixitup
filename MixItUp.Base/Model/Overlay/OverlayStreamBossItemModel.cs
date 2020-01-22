@@ -232,7 +232,7 @@ namespace MixItUp.Base.Model.Overlay
             if (boss != null)
             {
                 replacementSets["USERNAME"] = boss.MixerUsername;
-                replacementSets["USER_IMAGE"] = boss.AvatarLink;
+                replacementSets["USER_IMAGE"] = boss.MixerAvatarLink;
             }
             replacementSets["USER_IMAGE_SIZE"] = ((int)(0.8 * ((double)this.Height))).ToString();
 

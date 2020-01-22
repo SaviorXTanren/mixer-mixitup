@@ -8,10 +8,9 @@ namespace MixItUp.Base.Model.Import.ScorpBot
     public class ScorpBotViewer
     {
         [DataMember]
-        public uint ID { get; set; }
-
+        public uint MixerID { get; set; }
         [DataMember]
-        public string UserName { get; set; }
+        public string MixerUsername { get; set; }
 
         [DataMember]
         public int Type { get; set; }
@@ -33,8 +32,8 @@ namespace MixItUp.Base.Model.Import.ScorpBot
 
         public ScorpBotViewer(Dictionary<string, object> data)
         {
-            this.ID = uint.Parse((string)data["BeamID"]);
-            this.UserName = (string)data["BeamName"];
+            this.MixerID = uint.Parse((string)data["BeamID"]);
+            this.MixerUsername = (string)data["BeamName"];
             this.Type = (int)data["Type"];
             this.Rank = (data["Rank"] != null && data["Rank"] != DBNull.Value) ? (string)data["Rank"] : string.Empty;
             this.RankPoints = (long)data["Points"];

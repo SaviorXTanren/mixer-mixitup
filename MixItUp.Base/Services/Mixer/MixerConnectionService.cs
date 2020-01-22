@@ -192,9 +192,9 @@ namespace MixItUp.Base.Services.Mixer
 
         public async Task<UserWithGroupsModel> GetUserInChannel(ChannelModel channel, uint userID) { return await this.RunAsync(this.Connection.Channels.GetUser(channel, userID), logNotFoundException: false); }
 
-        public async Task<IEnumerable<UserWithGroupsModel>> GetUsersWithRoles(ChannelModel channel, MixerRoleEnum role) { return await this.RunAsync(this.Connection.Channels.GetUsersWithRoles(channel, role.ToString(), int.MaxValue), logNotFoundException: false); }
+        public async Task<IEnumerable<UserWithGroupsModel>> GetUsersWithRoles(ChannelModel channel, UserRoleEnum role) { return await this.RunAsync(this.Connection.Channels.GetUsersWithRoles(channel, role.ToString(), int.MaxValue), logNotFoundException: false); }
 
-        public async Task GetUsersWithRoles(ChannelModel channel, MixerRoleEnum role, Func<IEnumerable<UserWithGroupsModel>, Task> processor) { await this.RunAsync(this.Connection.Channels.GetUsersWithRoles(channel, role.ToString(), processor, int.MaxValue), logNotFoundException: false); }
+        public async Task GetUsersWithRoles(ChannelModel channel, UserRoleEnum role, Func<IEnumerable<UserWithGroupsModel>, Task> processor) { await this.RunAsync(this.Connection.Channels.GetUsersWithRoles(channel, role.ToString(), processor, int.MaxValue), logNotFoundException: false); }
 
         public async Task<PrivatePopulatedUserModel> GetCurrentUser() { return await this.RunAsync(this.Connection.Users.GetCurrentUser()); }
 
@@ -252,9 +252,9 @@ namespace MixItUp.Base.Services.Mixer
 
         public async Task<IEnumerable<EmbersLeaderboardModel>> GetAllTimeEmbersLeaderboard(ChannelModel channel, int amount = 10) { return await this.RunAsync(this.Connection.Leaderboards.GetAllTimeEmbersLeaderboard(channel, amount)); }
 
-        public async Task AddUserRoles(ChannelModel channel, UserModel user, IEnumerable<MixerRoleEnum> roles) { await this.RunAsync(this.Connection.Channels.UpdateUserRoles(channel, user, roles.Select(r => EnumHelper.GetEnumName(r)), null)); }
+        public async Task AddUserRoles(ChannelModel channel, UserModel user, IEnumerable<UserRoleEnum> roles) { await this.RunAsync(this.Connection.Channels.UpdateUserRoles(channel, user, roles.Select(r => EnumHelper.GetEnumName(r)), null)); }
 
-        public async Task RemoveUserRoles(ChannelModel channel, UserModel user, IEnumerable<MixerRoleEnum> roles) { await this.RunAsync(this.Connection.Channels.UpdateUserRoles(channel, user, null, roles.Select(r => EnumHelper.GetEnumName(r)))); }
+        public async Task RemoveUserRoles(ChannelModel channel, UserModel user, IEnumerable<UserRoleEnum> roles) { await this.RunAsync(this.Connection.Channels.UpdateUserRoles(channel, user, null, roles.Select(r => EnumHelper.GetEnumName(r)))); }
 
         public async Task<IEnumerable<MixPlayGameListingModel>> GetOwnedMixPlayGames(ChannelModel channel) { return await this.RunAsync(this.Connection.MixPlay.GetOwnedMixPlayGames(channel)); }
 

@@ -1,11 +1,12 @@
-﻿namespace MixItUp.Base.Model
+﻿using System;
+
+namespace MixItUp.Base.Model
 {
+    [Flags]
     public enum StreamingPlatformTypeEnum
     {
-        Mixer,
-        Twitch,
-        YouTube,
-
-        All = 100,
+        Mixer = 1,
+        Twitch = 2,
+        YouTube = 4,
     }
 }

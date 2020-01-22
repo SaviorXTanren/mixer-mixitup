@@ -90,7 +90,7 @@ namespace MixItUp.Base.Services.External
                 Source = UserDonationSourceEnum.TipeeeStream,
 
                 ID = this.ID.ToString(),
-                UserName = this.Parameters.Username,
+                Username = this.Parameters.Username,
                 Message = this.Parameters.Message,
 
                 Amount = Math.Round(amount, 2),

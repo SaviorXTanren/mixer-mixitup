@@ -88,7 +88,7 @@ namespace MixItUp.Base.Services.External
                 Source = UserDonationSourceEnum.JustGiving,
 
                 ID = this.id.ToString(),
-                UserName = this.donorDisplayName,
+                Username = this.donorDisplayName,
                 Message = this.message,
 
                 Amount = double.Parse(this.donorLocalAmount),

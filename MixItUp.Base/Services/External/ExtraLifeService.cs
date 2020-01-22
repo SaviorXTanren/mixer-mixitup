@@ -113,7 +113,7 @@ namespace MixItUp.Base.Services.External
                 Source = UserDonationSourceEnum.ExtraLife,
 
                 ID = this.donationID,
-                UserName = this.displayName,
+                Username = this.displayName,
                 Message = this.message,
 
                 Amount = Math.Round(amount, 2),
@@ -284,7 +284,7 @@ namespace MixItUp.Base.Services.External
                             UserDonationModel donation = elDonation.ToGenericDonation();
                             GlobalEvents.DonationOccurred(donation);
 
-                            UserViewModel user = new UserViewModel(0, donation.UserName);
+                            UserViewModel user = new UserViewModel() { MixerUsername = donation.Username };
 
                             UserModel userModel = await ChannelSession.MixerUserConnection.GetUser(user.MixerUsername);
                             if (userModel != null)

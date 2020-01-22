@@ -49,7 +49,7 @@ namespace MixItUp.WPF.Windows.Currency
         private UserCurrencyModel currency;
         private CustomCommand rankChangedCommand;
 
-        private Dictionary<UserDataViewModel, int> userImportData = new Dictionary<UserDataViewModel, int>();
+        private Dictionary<UserDataModel, int> userImportData = new Dictionary<UserDataModel, int>();
 
         private ObservableCollection<UserRankViewModel> ranks = new ObservableCollection<UserRankViewModel>();
 
@@ -389,22 +389,22 @@ namespace MixItUp.WPF.Windows.Currency
                         await this.currency.Reset();
 
                         HashSet<uint> subscriberIDs = new HashSet<uint>();
-                        foreach (UserWithGroupsModel user in await ChannelSession.MixerUserConnection.GetUsersWithRoles(ChannelSession.MixerChannel, MixerRoleEnum.Subscriber))
+                        foreach (UserWithGroupsModel user in await ChannelSession.MixerUserConnection.GetUsersWithRoles(ChannelSession.MixerChannel, UserRoleEnum.Subscriber))
                         {
                             subscriberIDs.Add(user.id);
                         }
 
                         HashSet<uint> modIDs = new HashSet<uint>();
-                        foreach (UserWithGroupsModel user in await ChannelSession.MixerUserConnection.GetUsersWithRoles(ChannelSession.MixerChannel, MixerRoleEnum.Mod))
+                        foreach (UserWithGroupsModel user in await ChannelSession.MixerUserConnection.GetUsersWithRoles(ChannelSession.MixerChannel, UserRoleEnum.Mod))
                         {
                             modIDs.Add(user.id);
                         }
-                        foreach (UserWithGroupsModel user in await ChannelSession.MixerUserConnection.GetUsersWithRoles(ChannelSession.MixerChannel, MixerRoleEnum.ChannelEditor))
+                        foreach (UserWithGroupsModel user in await ChannelSession.MixerUserConnection.GetUsersWithRoles(ChannelSession.MixerChannel, UserRoleEnum.ChannelEditor))
                         {
                             modIDs.Add(user.id);
                         }
 
-                        foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values)
+                        foreach (UserDataModel userData in ChannelSession.Settings.UserData.Values)
                         {
                             int intervalsToGive = userData.ViewingMinutes / this.currency.AcquireInterval;
                             this.currency.AddAmount(userData, this.currency.AcquireAmount * intervalsToGive);
@@ -492,7 +492,7 @@ namespace MixItUp.WPF.Windows.Currency
 
                                     if (user != null)
                                     {
-                                        UserDataViewModel data = ChannelSession.Settings.UserData.GetValueIfExists(user.id, new UserDataViewModel(user));
+                                        UserDataModel data = ChannelSession.Settings.UserData.GetValueIfExists(user.id, new UserDataModel(user));
                                         if (!this.userImportData.ContainsKey(data))
                                         {
                                             this.userImportData[data] = amount;
@@ -535,7 +535,7 @@ namespace MixItUp.WPF.Windows.Currency
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     StringBuilder fileContents = new StringBuilder();
-                    foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values.ToList())
+                    foreach (UserDataModel userData in ChannelSession.Settings.UserData.Values.ToList())
                     {
                         fileContents.AppendLine(string.Format("{0} {1} {2}", userData.MixerID, userData.MixerUsername, this.currency.GetAmount(userData)));
                     }
@@ -761,7 +761,7 @@ namespace MixItUp.WPF.Windows.Currency
                 {
                     List<NewCurrencyRankCommand> commandsToAdd = new List<NewCurrencyRankCommand>();
 
-                    ChatCommand statusCommand = new ChatCommand("User " + this.currency.Name, this.currency.SpecialIdentifier, new RequirementViewModel(MixerRoleEnum.User, 5));
+                    ChatCommand statusCommand = new ChatCommand("User " + this.currency.Name, this.currency.SpecialIdentifier, new RequirementViewModel(UserRoleEnum.User, 5));
                     string statusChatText = string.Empty;
                     if (this.currency.IsRank)
                     {
@@ -776,19 +776,19 @@ namespace MixItUp.WPF.Windows.Currency
 
                     if (!this.currency.IsTrackingSparks && !this.currency.IsTrackingEmbers)
                     {
-                        ChatCommand addCommand = new ChatCommand("Add " + this.currency.Name, "add" + this.currency.SpecialIdentifier, new RequirementViewModel(MixerRoleEnum.Mod, 5));
+                        ChatCommand addCommand = new ChatCommand("Add " + this.currency.Name, "add" + this.currency.SpecialIdentifier, new RequirementViewModel(UserRoleEnum.Mod, 5));
                         addCommand.Actions.Add(new CurrencyAction(this.currency, CurrencyActionTypeEnum.AddToSpecificUser, "$arg2text", username: "$targetusername"));
                         addCommand.Actions.Add(new ChatAction(string.Format("@$targetusername received $arg2text {0}!", this.currency.Name)));
                         commandsToAdd.Add(new NewCurrencyRankCommand(string.Format("!{0} - {1}", addCommand.Commands.First(), "Adds Amount To Specified User"), addCommand));
 
-                        ChatCommand addAllCommand = new ChatCommand("Add All " + this.currency.Name, "addall" + this.currency.SpecialIdentifier, new RequirementViewModel(MixerRoleEnum.Mod, 5));
+                        ChatCommand addAllCommand = new ChatCommand("Add All " + this.currency.Name, "addall" + this.currency.SpecialIdentifier, new RequirementViewModel(UserRoleEnum.Mod, 5));
                         addAllCommand.Actions.Add(new CurrencyAction(this.currency, CurrencyActionTypeEnum.AddToAllChatUsers, "$arg1text"));
                         addAllCommand.Actions.Add(new ChatAction(string.Format("Everyone got $arg1text {0}!", this.currency.Name)));
                         commandsToAdd.Add(new NewCurrencyRankCommand(string.Format("!{0} - {1}", addAllCommand.Commands.First(), "Adds Amount To All Chat Users"), addAllCommand));
 
                         if (!this.currency.IsRank)
                         {
-                            ChatCommand giveCommand = new ChatCommand("Give " + this.currency.Name, "give" + this.currency.SpecialIdentifier, new RequirementViewModel(MixerRoleEnum.User, 5));
+                            ChatCommand giveCommand = new ChatCommand("Give " + this.currency.Name, "give" + this.currency.SpecialIdentifier, new RequirementViewModel(UserRoleEnum.User, 5));
                             giveCommand.Actions.Add(new CurrencyAction(this.currency, CurrencyActionTypeEnum.AddToSpecificUser, "$arg2text", username: "$targetusername", deductFromUser: true));
                             giveCommand.Actions.Add(new ChatAction(string.Format("@$username gave @$targetusername $arg2text {0}!", this.currency.Name)));
                             commandsToAdd.Add(new NewCurrencyRankCommand(string.Format("!{0} - {1}", giveCommand.Commands.First(), "Gives Amount To Specified User"), giveCommand));

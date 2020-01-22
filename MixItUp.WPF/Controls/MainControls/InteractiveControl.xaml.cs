@@ -180,7 +180,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 ChannelSession.Settings.MixPlayUserGroups[this.selectedGame.id] = new List<MixPlayUserGroupModel>();
             }
 
-            foreach (MixerRoleEnum role in UserViewModel.SelectableBasicUserRoles())
+            foreach (UserRoleEnum role in UserViewModel.SelectableBasicUserRoles())
             {
                 if (!ChannelSession.Settings.MixPlayUserGroups[this.selectedGame.id].Any(ug => ug.AssociatedUserRole == role))
                 {

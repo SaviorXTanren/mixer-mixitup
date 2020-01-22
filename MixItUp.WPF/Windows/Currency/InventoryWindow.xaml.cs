@@ -30,7 +30,7 @@ namespace MixItUp.WPF.Windows.Currency
 
         private ObservableCollection<UserInventoryItemModel> items = new ObservableCollection<UserInventoryItemModel>();
 
-        private Dictionary<UserDataViewModel, int> userImportData = new Dictionary<UserDataViewModel, int>();
+        private Dictionary<UserDataModel, int> userImportData = new Dictionary<UserDataModel, int>();
 
         public InventoryWindow()
         {

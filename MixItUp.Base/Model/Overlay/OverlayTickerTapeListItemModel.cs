@@ -159,7 +159,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (this.MinimumAmountRequiredToShow == 0.0 || donation.Amount >= this.MinimumAmountRequiredToShow)
             {
-                await this.AddEvent(donation.UserName + ": " + donation.AmountText);
+                await this.AddEvent(donation.Username + ": " + donation.AmountText);
             }
         }
 

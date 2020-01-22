@@ -35,9 +35,9 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         public VendingMachineOutcome(GameOutcome outcome) : this(outcome.Name, outcome.Command)
         {
-            this.UserChance = outcome.RoleProbabilities[MixerRoleEnum.User];
-            this.SubscriberChance = outcome.RoleProbabilities[MixerRoleEnum.Subscriber];
-            this.ModChance = outcome.RoleProbabilities[MixerRoleEnum.Mod];
+            this.UserChance = outcome.RoleProbabilities[UserRoleEnum.User];
+            this.SubscriberChance = outcome.RoleProbabilities[UserRoleEnum.Subscriber];
+            this.ModChance = outcome.RoleProbabilities[UserRoleEnum.Mod];
         }
 
         public string UserChanceString
@@ -60,8 +60,8 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         public GameOutcome GetGameOutcome()
         {
-            return new GameOutcome(this.Name, 0, new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, this.UserChance }, { MixerRoleEnum.Subscriber, this.SubscriberChance },
-                { MixerRoleEnum.Mod, this.ModChance } }, this.Command);
+            return new GameOutcome(this.Name, 0, new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, this.UserChance }, { UserRoleEnum.Subscriber, this.SubscriberChance },
+                { UserRoleEnum.Mod, this.ModChance } }, this.Command);
         }
     }
 

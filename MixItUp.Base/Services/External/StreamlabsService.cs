@@ -58,7 +58,7 @@ namespace MixItUp.Base.Services.External
                 Source = UserDonationSourceEnum.Streamlabs,
 
                 ID = this.ID.ToString(),
-                UserName = this.UserName,
+                Username = this.UserName,
                 Message = this.Message,
 
                 Amount = Math.Round(this.Amount, 2),

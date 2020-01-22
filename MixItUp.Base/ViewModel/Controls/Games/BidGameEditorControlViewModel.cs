@@ -18,11 +18,11 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             get { return EnumHelper.GetEnumName(this.WhoCanStart); }
             set
             {
-                this.WhoCanStart = EnumHelper.GetEnumValueFromString<MixerRoleEnum>(value);
+                this.WhoCanStart = EnumHelper.GetEnumValueFromString<UserRoleEnum>(value);
                 this.NotifyPropertyChanged();
             }
         }
-        public MixerRoleEnum WhoCanStart { get; set; } = MixerRoleEnum.Mod;
+        public UserRoleEnum WhoCanStart { get; set; } = UserRoleEnum.Mod;
 
         public string MinimumParticipantsString
         {

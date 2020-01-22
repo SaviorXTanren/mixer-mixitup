@@ -58,9 +58,9 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         {
             this.existingCommand = command;
 
-            this.UserPercentage = this.existingCommand.SuccessfulOutcome.RoleProbabilities[MixerRoleEnum.User];
-            this.SubscriberPercentage = this.existingCommand.SuccessfulOutcome.RoleProbabilities[MixerRoleEnum.Subscriber];
-            this.ModPercentage = this.existingCommand.SuccessfulOutcome.RoleProbabilities[MixerRoleEnum.Mod];
+            this.UserPercentage = this.existingCommand.SuccessfulOutcome.RoleProbabilities[UserRoleEnum.User];
+            this.SubscriberPercentage = this.existingCommand.SuccessfulOutcome.RoleProbabilities[UserRoleEnum.Subscriber];
+            this.ModPercentage = this.existingCommand.SuccessfulOutcome.RoleProbabilities[UserRoleEnum.Mod];
 
             this.SuccessOutcomeCommand = this.existingCommand.SuccessfulOutcome.Command;
             this.FailOutcomeCommand = this.existingCommand.FailedOutcome.Command;
@@ -68,8 +68,8 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         public override void SaveGameCommand(string name, IEnumerable<string> triggers, RequirementViewModel requirements)
         {
-            Dictionary<MixerRoleEnum, int> successRoleProbabilities = new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, this.UserPercentage }, { MixerRoleEnum.Subscriber, this.SubscriberPercentage }, { MixerRoleEnum.Mod, this.ModPercentage } };
-            Dictionary<MixerRoleEnum, int> failRoleProbabilities = new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, 100 - this.UserPercentage }, { MixerRoleEnum.Subscriber, 100 - this.SubscriberPercentage }, { MixerRoleEnum.Mod, 100 - this.ModPercentage } };
+            Dictionary<UserRoleEnum, int> successRoleProbabilities = new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, this.UserPercentage }, { UserRoleEnum.Subscriber, this.SubscriberPercentage }, { UserRoleEnum.Mod, this.ModPercentage } };
+            Dictionary<UserRoleEnum, int> failRoleProbabilities = new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, 100 - this.UserPercentage }, { UserRoleEnum.Subscriber, 100 - this.SubscriberPercentage }, { UserRoleEnum.Mod, 100 - this.ModPercentage } };
 
             GameCommandBase newCommand = new StealGameCommand(name, triggers, requirements, new GameOutcome("Success", 1, successRoleProbabilities, this.SuccessOutcomeCommand),
                 new GameOutcome("Failure", 0, failRoleProbabilities, this.FailOutcomeCommand));

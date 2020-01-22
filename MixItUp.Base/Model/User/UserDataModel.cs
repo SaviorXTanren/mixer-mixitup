@@ -2,18 +2,18 @@
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Import.ScorpBot;
 using MixItUp.Base.Model.Import.Streamlabs;
-using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
 using System.Runtime.Serialization;
 
-namespace MixItUp.Base.ViewModel.User
+namespace MixItUp.Base.Model.User
 {
     [DataContract]
-    public class UserDataViewModel : NotifyPropertyChangedBase, IEquatable<UserDataViewModel>
+    public class UserDataModel : NotifyPropertyChangedBase, IEquatable<UserDataModel>
     {
         [DataMember]
         public Guid ID { get; set; } = Guid.NewGuid();
@@ -86,29 +86,54 @@ namespace MixItUp.Base.ViewModel.User
         [DataMember]
         public uint TotalMonthsSubbed { get; set; }
 
-        public UserDataViewModel() { }
+        public UserDataModel() { }
 
-        public UserDataViewModel(uint id, string username)
+        public UserDataModel(uint id, string username)
             : this()
         {
             this.MixerID = id;
             this.MixerUsername = username;
         }
 
-        public UserDataViewModel(UserModel user) : this(user.id, user.username) { }
-
-        public UserDataViewModel(UserViewModel user) : this(user.MixerID, user.MixerUsername) { }
-
-        public UserDataViewModel(ScorpBotViewer viewer)
-            : this(viewer.ID, viewer.UserName)
+        public UserDataModel(UserModel user)
         {
+            this.MixerID = user.id;
+            this.MixerUsername = user.username;
+        }
+
+        public UserDataModel(UserViewModel user)
+        {
+            this.ID = user.ID;
+            this.MixerID = user.MixerID;
+            this.MixerUsername = user.MixerUsername;
+        }
+
+        public UserDataModel(ScorpBotViewer viewer)
+        {
+            this.MixerID = viewer.MixerID;
+            this.MixerUsername = viewer.MixerUsername;
             this.ViewingMinutes = (int)(viewer.Hours * 60.0);
         }
 
-        public UserDataViewModel(StreamlabsChatBotViewer viewer)
-            : this(viewer.ID, viewer.Name)
+        public UserDataModel(StreamlabsChatBotViewer viewer)
         {
+            if (viewer.Platform == StreamingPlatformTypeEnum.Mixer)
+            {
+                this.MixerID = viewer.ID;
+                this.MixerUsername = viewer.Name;
+            }
             this.ViewingMinutes = (int)(viewer.Hours * 60.0);
+        }
+
+        [DataMember]
+        public string Username
+        {
+            get
+            {
+                if (this.MixerID > 0) { return this.MixerUsername; }
+                return this.MixerUsername;
+            }
+            set { }
         }
 
         [JsonIgnore]
@@ -214,31 +239,33 @@ namespace MixItUp.Base.ViewModel.User
 
         public void UpdateData(UserViewModel user)
         {
+            this.ID = user.ID;
+            this.MixerID = user.MixerID;
             this.MixerUsername = user.MixerUsername;
         }
 
         public override bool Equals(object obj)
         {
-            if (obj is UserDataViewModel)
+            if (obj is UserDataModel)
             {
-                return this.Equals((UserDataViewModel)obj);
+                return this.Equals((UserDataModel)obj);
             }
             return false;
         }
 
-        public bool Equals(UserDataViewModel other)
+        public bool Equals(UserDataModel other)
         {
-            return this.MixerID.Equals(other.MixerID);
+            return this.ID.Equals(other.ID);
         }
 
         public override int GetHashCode()
         {
-            return this.MixerID.GetHashCode();
+            return this.ID.GetHashCode();
         }
 
         public override string ToString()
         {
-            return this.MixerUsername;
+            return this.Username;
         }
 
         private T GetOptionValue<T>(JObject jobj, string key)

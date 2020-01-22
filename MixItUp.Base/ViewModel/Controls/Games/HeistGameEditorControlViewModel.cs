@@ -137,12 +137,12 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
             this.MinimumParticipants = this.existingCommand.MinimumParticipants;
             this.TimeLimit = this.existingCommand.TimeLimit;
-            this.UserPayout = (this.existingCommand.UserSuccessOutcome.RolePayouts[MixerRoleEnum.User] * 100);
-            this.SubscriberPayout = (this.existingCommand.UserSuccessOutcome.RolePayouts[MixerRoleEnum.Subscriber] * 100);
-            this.ModPayout = (this.existingCommand.UserSuccessOutcome.RolePayouts[MixerRoleEnum.Mod] * 100);
-            this.UserProbability = this.existingCommand.UserSuccessOutcome.RoleProbabilities[MixerRoleEnum.User];
-            this.SubscriberProbability = this.existingCommand.UserSuccessOutcome.RoleProbabilities[MixerRoleEnum.Subscriber];
-            this.ModProbability = this.existingCommand.UserSuccessOutcome.RoleProbabilities[MixerRoleEnum.Mod];
+            this.UserPayout = (this.existingCommand.UserSuccessOutcome.RolePayouts[UserRoleEnum.User] * 100);
+            this.SubscriberPayout = (this.existingCommand.UserSuccessOutcome.RolePayouts[UserRoleEnum.Subscriber] * 100);
+            this.ModPayout = (this.existingCommand.UserSuccessOutcome.RolePayouts[UserRoleEnum.Mod] * 100);
+            this.UserProbability = this.existingCommand.UserSuccessOutcome.RoleProbabilities[UserRoleEnum.User];
+            this.SubscriberProbability = this.existingCommand.UserSuccessOutcome.RoleProbabilities[UserRoleEnum.Subscriber];
+            this.ModProbability = this.existingCommand.UserSuccessOutcome.RoleProbabilities[UserRoleEnum.Mod];
 
             this.StartedCommand = this.existingCommand.StartedCommand;
 
@@ -165,9 +165,9 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             this.SubscriberPayout = this.SubscriberPayout / 100.0;
             this.ModPayout = this.ModPayout / 100.0;
 
-            Dictionary<MixerRoleEnum, double> successRolePayouts = new Dictionary<MixerRoleEnum, double>() { { MixerRoleEnum.User, this.UserPayout }, { MixerRoleEnum.Subscriber, this.SubscriberPayout }, { MixerRoleEnum.Mod, this.ModPayout } };
-            Dictionary<MixerRoleEnum, int> successRoleProbabilities = new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, this.UserProbability }, { MixerRoleEnum.Subscriber, this.SubscriberProbability }, { MixerRoleEnum.Mod, this.ModProbability } };
-            Dictionary<MixerRoleEnum, int> failRoleProbabilities = new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, 100 - this.UserProbability }, { MixerRoleEnum.Subscriber, 100 - this.SubscriberProbability }, { MixerRoleEnum.Mod, 100 - this.ModProbability } };
+            Dictionary<UserRoleEnum, double> successRolePayouts = new Dictionary<UserRoleEnum, double>() { { UserRoleEnum.User, this.UserPayout }, { UserRoleEnum.Subscriber, this.SubscriberPayout }, { UserRoleEnum.Mod, this.ModPayout } };
+            Dictionary<UserRoleEnum, int> successRoleProbabilities = new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, this.UserProbability }, { UserRoleEnum.Subscriber, this.SubscriberProbability }, { UserRoleEnum.Mod, this.ModProbability } };
+            Dictionary<UserRoleEnum, int> failRoleProbabilities = new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, 100 - this.UserProbability }, { UserRoleEnum.Subscriber, 100 - this.SubscriberProbability }, { UserRoleEnum.Mod, 100 - this.ModProbability } };
 
             GameCommandBase newCommand = new HeistGameCommand(name, triggers, requirements, this.MinimumParticipants, this.TimeLimit, this.StartedCommand, this.UserJoinCommand,
                 new GameOutcome("Success", successRolePayouts, successRoleProbabilities, this.UserSuccessCommand), new GameOutcome("Failure", 0, failRoleProbabilities, this.UserFailCommand),

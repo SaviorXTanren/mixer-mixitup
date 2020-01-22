@@ -60,7 +60,7 @@ namespace MixItUp.Base.Actions
         public bool DeductFromUser { get; set; }
 
         [DataMember]
-        public MixerRoleEnum RoleRequirement { get; set; }
+        public UserRoleEnum RoleRequirement { get; set; }
 
         [DataMember]
         [Obsolete]
@@ -72,10 +72,10 @@ namespace MixItUp.Base.Actions
         [Obsolete]
         public bool GiveToAllUsers { get; set; }
 
-        public CurrencyAction() : base(ActionTypeEnum.Currency) { this.RoleRequirement = MixerRoleEnum.User; }
+        public CurrencyAction() : base(ActionTypeEnum.Currency) { this.RoleRequirement = UserRoleEnum.User; }
 
         public CurrencyAction(UserCurrencyModel currency, CurrencyActionTypeEnum currencyActionType, string amount, string username = null,
-            MixerRoleEnum roleRequirement = MixerRoleEnum.User, bool deductFromUser = false)
+            UserRoleEnum roleRequirement = UserRoleEnum.User, bool deductFromUser = false)
             : this()
         {
             this.CurrencyID = currency.ID;
@@ -87,7 +87,7 @@ namespace MixItUp.Base.Actions
         }
 
         public CurrencyAction(UserInventoryModel inventory, CurrencyActionTypeEnum currencyActionType, string itemName = null, string amount = null, string username = null,
-            MixerRoleEnum roleRequirement = MixerRoleEnum.User, bool deductFromUser = false)
+            UserRoleEnum roleRequirement = UserRoleEnum.User, bool deductFromUser = false)
             : this()
         {
             this.InventoryID = inventory.ID;
@@ -175,7 +175,7 @@ namespace MixItUp.Base.Actions
                         return;
                     }
 
-                    HashSet<UserDataViewModel> receiverUserData = new HashSet<UserDataViewModel>();
+                    HashSet<UserDataModel> receiverUserData = new HashSet<UserDataModel>();
                     if (this.CurrencyActionType == CurrencyActionTypeEnum.AddToUser)
                     {
                         receiverUserData.Add(user.Data);
@@ -189,7 +189,7 @@ namespace MixItUp.Base.Actions
                             UserModel receivingUser = await ChannelSession.MixerUserConnection.GetUser(usernameString);
                             if (receivingUser != null)
                             {
-                                receiverUserData.Add(ChannelSession.Settings.UserData.GetValueIfExists(receivingUser.id, new UserDataViewModel(new UserViewModel(receivingUser))));
+                                receiverUserData.Add(ChannelSession.Settings.UserData.GetValueIfExists(receivingUser.id, new UserDataModel(new UserViewModel(receivingUser))));
                             }
                             else
                             {
@@ -234,7 +234,7 @@ namespace MixItUp.Base.Actions
 
                     if (receiverUserData.Count > 0)
                     {
-                        foreach (UserDataViewModel receiverUser in receiverUserData)
+                        foreach (UserDataModel receiverUser in receiverUserData)
                         {
                             if (currency != null)
                             {

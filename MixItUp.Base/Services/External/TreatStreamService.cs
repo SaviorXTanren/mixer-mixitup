@@ -46,7 +46,7 @@ namespace MixItUp.Base.Services.External
                 Source = UserDonationSourceEnum.TreatStream,
 
                 ID = Guid.NewGuid().ToString(),
-                UserName = this.Sender,
+                Username = this.Sender,
                 Type = this.Title,
                 Message = this.Message,
 

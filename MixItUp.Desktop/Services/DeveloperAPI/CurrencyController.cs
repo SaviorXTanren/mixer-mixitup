@@ -72,14 +72,14 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
 
             UserCurrencyModel currency = ChannelSession.Settings.Currencies[currencyID];
 
-            Dictionary<uint, UserDataViewModel> allUsersDictionary = ChannelSession.Settings.UserData.ToDictionary();
+            Dictionary<uint, UserDataModel> allUsersDictionary = ChannelSession.Settings.UserData.ToDictionary();
             allUsersDictionary.Remove(ChannelSession.MixerChannel.user.id);
 
-            IEnumerable<UserDataViewModel> allUsers = allUsersDictionary.Select(kvp => kvp.Value);
+            IEnumerable<UserDataModel> allUsers = allUsersDictionary.Select(kvp => kvp.Value);
             allUsers = allUsers.Where(u => !u.IsCurrencyRankExempt);
 
             List<User> currencyUserList = new List<User>();
-            foreach (UserDataViewModel currencyUser in allUsers.OrderByDescending(u => currency.GetAmount(u)).Take(count))
+            foreach (UserDataModel currencyUser in allUsers.OrderByDescending(u => currency.GetAmount(u)).Take(count))
             {
                 currencyUserList.Add(UserController.UserFromUserDataViewModel(currencyUser));
             }
@@ -115,7 +115,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             List<User> users = new List<User>();
             foreach (var giveData in giveDatas)
             {
-                UserDataViewModel user = null;
+                UserDataModel user = null;
                 if (uint.TryParse(giveData.UsernameOrID, out uint userID))
                 {
                     user = ChannelSession.Settings.UserData[userID];

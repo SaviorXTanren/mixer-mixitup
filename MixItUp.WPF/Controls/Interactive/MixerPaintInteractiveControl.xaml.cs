@@ -123,7 +123,7 @@ namespace MixItUp.WPF.Controls.Interactive
             {
                 MixPlayConnectedButtonControlModel control = new MixPlayConnectedButtonControlModel() { controlID = this.presentButton.controlID };
                 control.meta["username"] = this.selectedUserImage.User.MixerUsername;
-                control.meta["useravatar"] = this.selectedUserImage.User.AvatarLink;
+                control.meta["useravatar"] = this.selectedUserImage.User.MixerAvatarLink;
                 control.meta["image"] = this.selectedUserImage.ImageData;
                 await ChannelSession.Interactive.UpdateControls(this.scene, new List<MixPlayControlModel>() { control });
 

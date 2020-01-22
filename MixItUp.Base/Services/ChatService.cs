@@ -316,7 +316,7 @@ namespace MixItUp.Base.Services
         {
             Logger.Log(LogLevel.Debug, string.Format("Message Received - {0}", message.ToString()));
 
-            UserViewModel activeUser = ChannelSession.Services.User.GetUserByID(message.User.MixerID.ToString());
+            UserViewModel activeUser = ChannelSession.Services.User.GetUserByMixerID(message.User.MixerID);
             if (activeUser != null)
             {
                 message.User = activeUser;
@@ -433,7 +433,7 @@ namespace MixItUp.Base.Services
 
                 GlobalEvents.ChatMessageReceived(message);
 
-                if (ChannelSession.IsStreamer && !string.IsNullOrEmpty(message.PlainTextMessage) && message.User != null && !message.User.MixerRoles.Contains(MixerRoleEnum.Banned))
+                if (ChannelSession.IsStreamer && !string.IsNullOrEmpty(message.PlainTextMessage) && message.User != null && !message.User.MixerRoles.Contains(UserRoleEnum.Banned))
                 {
                     if (!ChannelSession.Settings.AllowCommandWhispering && message.IsWhisper)
                     {

@@ -177,7 +177,7 @@ namespace MixItUp.Base.Services
 
             EventTrigger trigger = new EventTrigger(type);
 
-            trigger.User = new UserViewModel(0, donation.UserName);
+            trigger.User = new UserViewModel() { MixerUsername = donation.Username };
 
             UserModel userModel = await ChannelSession.MixerUserConnection.GetUser(trigger.User.MixerUsername);
             if (userModel != null)

@@ -147,7 +147,7 @@ namespace MixItUp.Base.Services.External
                 Source = UserDonationSourceEnum.Tiltify,
 
                 ID = this.ID.ToString(),
-                UserName = this.Name,
+                Username = this.Name,
                 Message = this.Comment,
 
                 Amount = Math.Round(this.Amount, 2),

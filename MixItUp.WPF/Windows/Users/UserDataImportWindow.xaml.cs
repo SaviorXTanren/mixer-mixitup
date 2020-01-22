@@ -162,7 +162,7 @@ namespace MixItUp.WPF.Windows.Users
         private async Task AddUserData(IEnumerable<string> dataValues)
         {
             int currentColumn = 1;
-            UserDataViewModel importedUserData = new UserDataViewModel();
+            UserDataModel importedUserData = new UserDataModel();
             foreach (string dataValue in dataValues)
             {
                 bool columnMatched = false;

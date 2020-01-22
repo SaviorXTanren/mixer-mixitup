@@ -76,7 +76,7 @@ namespace MixItUp.Base.Actions
     [DataContract]
     public class InteractiveAction : ActionBase
     {
-        public static InteractiveAction CreateMoveUserToGroupAction(string groupName, MixerRoleEnum requiredRole, string username = null)
+        public static InteractiveAction CreateMoveUserToGroupAction(string groupName, UserRoleEnum requiredRole, string username = null)
         {
             return new InteractiveAction(InteractiveActionTypeEnum.MoveUserToGroup)
             {
@@ -86,7 +86,7 @@ namespace MixItUp.Base.Actions
             };
         }
 
-        public static InteractiveAction CreateMoveUserToSceneAction(string sceneID, MixerRoleEnum requiredRole, string username = null)
+        public static InteractiveAction CreateMoveUserToSceneAction(string sceneID, UserRoleEnum requiredRole, string username = null)
         {
             return new InteractiveAction(InteractiveActionTypeEnum.MoveUserToScene)
             {
@@ -106,7 +106,7 @@ namespace MixItUp.Base.Actions
             };
         }
 
-        public static InteractiveAction CreateMoveAllUsersToSceneAction(string sceneID, MixerRoleEnum requiredRole)
+        public static InteractiveAction CreateMoveAllUsersToSceneAction(string sceneID, UserRoleEnum requiredRole)
         {
             return new InteractiveAction(InteractiveActionTypeEnum.MoveAllUsersToScene)
             {
@@ -116,7 +116,7 @@ namespace MixItUp.Base.Actions
             };
         }
 
-        public static InteractiveAction CreateMoveAllUsersToGroupAction(string groupName, MixerRoleEnum requiredRole)
+        public static InteractiveAction CreateMoveAllUsersToGroupAction(string groupName, UserRoleEnum requiredRole)
         {
             return new InteractiveAction(InteractiveActionTypeEnum.MoveAllUsersToGroup)
             {
@@ -181,7 +181,7 @@ namespace MixItUp.Base.Actions
         public string GroupName { get; set; }
 
         [DataMember]
-        public MixerRoleEnum RoleRequirement { get; set; }
+        public UserRoleEnum RoleRequirement { get; set; }
 
         [DataMember]
         public string SceneID { get; set; }
@@ -214,7 +214,7 @@ namespace MixItUp.Base.Actions
         public InteractiveAction()
             : base(ActionTypeEnum.Interactive)
         {
-            this.RoleRequirement = MixerRoleEnum.User;
+            this.RoleRequirement = UserRoleEnum.User;
         }
 
         public InteractiveAction(InteractiveActionTypeEnum interactiveType)

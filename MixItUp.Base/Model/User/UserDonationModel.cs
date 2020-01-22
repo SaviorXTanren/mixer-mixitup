@@ -32,7 +32,7 @@ namespace MixItUp.Base.Model.User
         [DataMember]
         public string ID { get; set; }
         [DataMember]
-        public string UserName { get; set; }
+        public string Username { get; set; }
         [DataMember]
         public string Type { get; set; }
         [DataMember]
@@ -54,14 +54,14 @@ namespace MixItUp.Base.Model.User
         {
             get
             {
-                UserDataViewModel userData = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => !string.IsNullOrEmpty(u.MixerUsername) && u.MixerUsername.Equals(this.UserName, StringComparison.InvariantCultureIgnoreCase));
+                UserDataModel userData = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => !string.IsNullOrEmpty(u.MixerUsername) && u.MixerUsername.Equals(this.Username, StringComparison.InvariantCultureIgnoreCase));
                 if (userData != null)
                 {
                     return new UserViewModel(userData);
                 }
                 else
                 {
-                    return new UserViewModel(0, this.UserName);
+                    return new UserViewModel() { MixerUsername = this.Username };
                 }
             }
         }

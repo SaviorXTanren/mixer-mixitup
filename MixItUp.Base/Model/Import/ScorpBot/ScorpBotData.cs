@@ -163,17 +163,17 @@ namespace MixItUp.Base.Model.Import.ScorpBot
             return (this.GetIntSettingsValue(key, value) == 1);
         }
 
-        public MixerRoleEnum GetUserRoleSettingsValue(string key, string value)
+        public UserRoleEnum GetUserRoleSettingsValue(string key, string value)
         {
             switch (this.GetIntSettingsValue(key, value))
             {
-                case 0: return MixerRoleEnum.User;
-                case 1: return MixerRoleEnum.Subscriber;
-                case 2: return MixerRoleEnum.Mod;
+                case 0: return UserRoleEnum.User;
+                case 1: return UserRoleEnum.Subscriber;
+                case 2: return UserRoleEnum.Mod;
                 case 3:
                 case 4:
                 default:
-                    return MixerRoleEnum.Streamer;
+                    return UserRoleEnum.Streamer;
             }
         }
     }

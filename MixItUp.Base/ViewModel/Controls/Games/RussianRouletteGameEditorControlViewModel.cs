@@ -86,7 +86,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         public override void SaveGameCommand(string name, IEnumerable<string> triggers, RequirementViewModel requirements)
         {
-            Dictionary<MixerRoleEnum, int> roleProbabilities = new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, 0 }, { MixerRoleEnum.Subscriber, 0 }, { MixerRoleEnum.Mod, 0 } };
+            Dictionary<UserRoleEnum, int> roleProbabilities = new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, 0 }, { UserRoleEnum.Subscriber, 0 }, { UserRoleEnum.Mod, 0 } };
 
             GameCommandBase newCommand = new RussianRouletteGameCommand(name, triggers, requirements, this.MinimumParticipants, this.TimeLimit, this.StartedCommand, this.UserJoinCommand,
                 new GameOutcome("Success", 0, roleProbabilities, this.UserSuccessCommand), new GameOutcome("Failure", 0, roleProbabilities, this.UserFailCommand), this.MaxWinners,
