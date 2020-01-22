@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.Mixer
 {
-    public abstract class MixerWebSocketServiceBase : MixerRequestWrapperBase
+    public abstract class MixerWebSocketServiceBase : AsyncRequestServiceBase
     {
         public async Task<bool> AttemptConnect(Func<Task<bool>> connect, int connectionAttempts = 5)
         {

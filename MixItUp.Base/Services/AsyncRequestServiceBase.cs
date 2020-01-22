@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MixItUp.Base.Services.Mixer
+namespace MixItUp.Base.Services
 {
-    public abstract class MixerRequestWrapperBase
+    public abstract class AsyncRequestServiceBase
     {
         public async Task RunAsync(Task task, bool logNotFoundException = true) { await AsyncRunner.RunAsync(task, logNotFoundException); }
 

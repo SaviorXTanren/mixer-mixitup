@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.MixerAPI
 {
-    public abstract class MixerWebSocketWrapper : MixerRequestWrapperBase
+    public abstract class MixerWebSocketWrapper : AsyncRequestServiceBase
     {
         public bool ShouldRetry { get; set; } = true;
 

@@ -24,7 +24,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.MixerAPI
 {
-    public class MixerConnectionWrapper : MixerRequestWrapperBase
+    public class MixerConnectionWrapper : AsyncRequestServiceBase
     {
         public MixerConnection Connection { get; private set; }
 

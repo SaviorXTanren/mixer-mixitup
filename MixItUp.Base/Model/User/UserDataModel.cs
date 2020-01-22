@@ -24,6 +24,11 @@ namespace MixItUp.Base.Model.User
         public string MixerUsername { get; set; }
 
         [DataMember]
+        public string TwitchID { get; set; }
+        [DataMember]
+        public string TwitchUsername { get; set; }
+
+        [DataMember]
         public string CustomTitle { get; set; }
 
         [DataMember]

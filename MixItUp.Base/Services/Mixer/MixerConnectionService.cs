@@ -49,7 +49,7 @@ namespace MixItUp.Base.Services.Mixer
         }
     }
 
-    public class MixerConnectionService : MixerRequestWrapperBase, IMixerConnectionService
+    public class MixerConnectionService : AsyncRequestServiceBase, IMixerConnectionService
     {
         public const string ClientID = "5e3140d0719f5842a09dd2700befbfc100b5a246e35f2690";
 

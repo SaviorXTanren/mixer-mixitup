@@ -95,6 +95,7 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.MixerUsername; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchUsername; }
                 return this.MixerUsername;
             }
             set { }
@@ -140,6 +141,15 @@ namespace MixItUp.Base.ViewModel.User
         public bool IsInInteractiveTimeout { get; set; }
 
         #endregion Mixer
+
+        #region Twitch
+
+        [DataMember]
+        public string TwitchID { get; set; }
+        [DataMember]
+        public string TwitchUsername { get; set; }
+
+        #endregion Twitch
 
         [DataMember]
         public HashSet<string> CustomRoles { get; set; } = new HashSet<string>();
@@ -214,6 +224,9 @@ namespace MixItUp.Base.ViewModel.User
         {
             this.MixerID = user.MixerID;
             this.MixerUsername = user.MixerUsername;
+
+            this.TwitchID = user.TwitchID;
+            this.TwitchUsername = user.TwitchUsername;
         }
 
         [JsonIgnore]

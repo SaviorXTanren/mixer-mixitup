@@ -18,7 +18,6 @@ using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Model.OAuth;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -148,6 +147,13 @@ namespace MixItUp.Base.Model.Settings
         public OAuthTokenModel MixerBotOAuthToken { get; set; }
         [DataMember]
         public uint MixerChannelID { get; set; }
+
+        [JsonProperty]
+        public OAuthTokenModel TwitchUserOAuthToken { get; set; }
+        [JsonProperty]
+        public OAuthTokenModel TwitchBotOAuthToken { get; set; }
+        [JsonProperty]
+        public string TwitchChannelID { get; set; }
 
         [DataMember]
         public OAuthTokenModel StreamlabsOAuthToken { get; set; }
@@ -555,6 +561,8 @@ namespace MixItUp.Base.Model.Settings
         public DatabaseDictionary<Guid, UserDataModel> UserData { get; set; } = new DatabaseDictionary<Guid, UserDataModel>();
         [JsonIgnore]
         private Dictionary<uint, Guid> MixerUserIDLookups { get; set; } = new Dictionary<uint, Guid>();
+        [JsonIgnore]
+        private Dictionary<string, Guid> TwitchUserIDLookups { get; set; } = new Dictionary<string, Guid>();
 
         #endregion Database Data
 
@@ -613,7 +621,14 @@ namespace MixItUp.Base.Model.Settings
                     {
                         UserDataModel userData = SerializerHelper.DeserializeFromString<UserDataModel>((string)data["Data"]);
                         this.UserData[userData.ID] = userData;
-                        this.MixerUserIDLookups[userData.MixerID] = userData.ID;
+                        if (userData.MixerID > 0)
+                        {
+                            this.MixerUserIDLookups[userData.MixerID] = userData.ID;
+                        }
+                        if (!string.IsNullOrEmpty(userData.TwitchID))
+                        {
+                            this.TwitchUserIDLookups[userData.TwitchID] = userData.ID;
+                        }
                     });
 
                     Dictionary<Guid, UserCurrencyModel> currencies = new Dictionary<Guid, UserCurrencyModel>();
@@ -719,6 +734,15 @@ namespace MixItUp.Base.Model.Settings
                 this.MixerBotOAuthToken = ChannelSession.MixerBotConnection.Connection.GetOAuthTokenCopy();
             }
 
+            if (ChannelSession.TwitchUserConnection != null)
+            {
+                this.TwitchUserOAuthToken = ChannelSession.TwitchUserConnection.Connection.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.TwitchBotConnection != null)
+            {
+                this.TwitchBotOAuthToken = ChannelSession.TwitchBotConnection.Connection.GetOAuthTokenCopy();
+            }
+
             this.StreamlabsOAuthToken = ChannelSession.Services.Streamlabs.GetOAuthTokenCopy();
             this.StreamJarOAuthToken = ChannelSession.Services.StreamJar.GetOAuthTokenCopy();
             this.TipeeeStreamOAuthToken = ChannelSession.Services.TipeeeStream.GetOAuthTokenCopy();
@@ -815,20 +839,28 @@ namespace MixItUp.Base.Model.Settings
             UserDataModel userData = this.GetUserDataByMixerID(userViewModel.MixerID);
             if (userData == null)
             {
-                userData = this.GetUserData(userViewModel.ID);
-                if (userData == null)
+                userData = this.GetUserDataByTwitchID(userViewModel.TwitchID);
+                if (userData != null)
                 {
-                    userData = new UserDataModel(userViewModel);
-                    if (userData.ID == Guid.Empty)
+                    userData = this.GetUserData(userViewModel.ID);
+                    if (userData == null)
                     {
-                        userViewModel.ID = userData.ID = Guid.NewGuid();
-                    }
+                        userData = new UserDataModel(userViewModel);
+                        if (userData.ID == Guid.Empty)
+                        {
+                            userViewModel.ID = userData.ID = Guid.NewGuid();
+                        }
 
-                    this.UserData[userData.ID] = userData;
+                        this.UserData[userData.ID] = userData;
 
-                    if (userData.MixerID > 0)
-                    {
-                        this.MixerUserIDLookups[userData.MixerID] = userData.ID;
+                        if (userData.MixerID > 0)
+                        {
+                            this.MixerUserIDLookups[userData.MixerID] = userData.ID;
+                        }
+                        if (!string.IsNullOrEmpty(userData.TwitchID))
+                        {
+                            this.TwitchUserIDLookups[userData.TwitchID] = userData.ID;
+                        }
                     }
                 }
             }
@@ -849,6 +881,19 @@ namespace MixItUp.Base.Model.Settings
             if (mixerID > 0 && this.MixerUserIDLookups.ContainsKey(mixerID))
             {
                 Guid id = this.MixerUserIDLookups[mixerID];
+                if (this.UserData.ContainsKey(id))
+                {
+                    return this.UserData[id];
+                }
+            }
+            return null;
+        }
+
+        public UserDataModel GetUserDataByTwitchID(string twitchID)
+        {
+            if (!string.IsNullOrEmpty(twitchID) && this.TwitchUserIDLookups.ContainsKey(twitchID))
+            {
+                Guid id = this.TwitchUserIDLookups[twitchID];
                 if (this.UserData.ContainsKey(id))
                 {
                     return this.UserData[id];
