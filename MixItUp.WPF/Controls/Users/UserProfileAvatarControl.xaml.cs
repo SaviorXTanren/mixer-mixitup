@@ -62,7 +62,7 @@ namespace MixItUp.WPF.Controls.Users
 
         public async Task SetUserAvatarUrl(uint userID)
         {
-            await this.SetUserAvatarUrl(new UserViewModel() { MixerID = userID });
+            await this.SetUserAvatarUrl(new UserViewModel(string.Empty) { MixerID = userID });
         }
 
         public async Task SetUserAvatarUrl(UserViewModel user)

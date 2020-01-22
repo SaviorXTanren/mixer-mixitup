@@ -59,7 +59,7 @@ namespace MixItUp.Base.Model.User
                 {
                     return user;
                 }
-                return new UserViewModel() { MixerUsername = this.Username };
+                return new UserViewModel(this.Username);
             }
         }
 

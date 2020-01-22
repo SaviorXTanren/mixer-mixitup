@@ -109,19 +109,19 @@ namespace MixItUp.WPF.Controls.Actions
 
         private async void PlayActionButton_Click(object sender, RoutedEventArgs e)
         {
-            await this.Window.RunAsyncOperation(async () =>
+            await this.Window.RunAsyncOperation((System.Func<System.Threading.Tasks.Task>)(async () =>
             {
                 ActionBase action = this.GetAction();
                 if (action != null)
                 {
                     UserViewModel currentUser = await ChannelSession.GetCurrentUser();
-                    await action.Perform(currentUser, new List<string>() { "@" + currentUser.MixerUsername }, new Dictionary<string, string>());
+                    await action.Perform(currentUser, new List<string>() { "@" + currentUser.Username }, new Dictionary<string, string>());
                 }
                 else
                 {
                     await DialogHelper.ShowMessage("Required action information is missing");
                 }
-            });
+            }));
         }
 
         private void MoveUpActionButton_Click(object sender, RoutedEventArgs e) { this.EditorControl.MoveActionUp(this); }

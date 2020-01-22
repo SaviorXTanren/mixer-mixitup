@@ -187,7 +187,7 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task Whisper(UserViewModel user, string message, bool sendAsStreamer = false, bool waitForResponse = false) { await this.Whisper(user.MixerUsername, message, sendAsStreamer); }
+        public async Task Whisper(UserViewModel user, string message, bool sendAsStreamer = false, bool waitForResponse = false) { await this.Whisper(user.Username, message, sendAsStreamer); }
 
         public async Task Whisper(string username, string message, bool sendAsStreamer = false, bool waitForResponse = false)
         {
@@ -242,7 +242,7 @@ namespace MixItUp.Base.Services
         {
             if (user.Platform == StreamingPlatformTypeEnum.Mixer)
             {
-                await this.MixerChatService.PurgeUser(user.MixerUsername);
+                await this.MixerChatService.PurgeUser(user.Username);
             }
         }
 
@@ -250,7 +250,7 @@ namespace MixItUp.Base.Services
         {
             if (user.Platform == StreamingPlatformTypeEnum.Mixer)
             {
-                await this.MixerChatService.TimeoutUser(user.MixerUsername, durationInSeconds);
+                await this.MixerChatService.TimeoutUser(user.Username, durationInSeconds);
             }
         }
 
@@ -380,7 +380,7 @@ namespace MixItUp.Base.Services
                 {
                     if (ChannelSession.Settings.TrackWhispererNumber && message.User.WhispererNumber > 0)
                     {
-                        await ChannelSession.Services.Chat.Whisper(message.User.MixerUsername, $"You are whisperer #{message.User.WhispererNumber}.", false);
+                        await ChannelSession.Services.Chat.Whisper(message.User.Username, $"You are whisperer #{message.User.WhispererNumber}.", false);
                     }
                 }
                 else
@@ -512,7 +512,7 @@ namespace MixItUp.Base.Services
 
                 if (ChannelSession.Settings.ChatShowUserJoinLeave && users.Count() < 5)
                 {
-                    alerts.Add(new AlertChatMessageViewModel(user.Platform, user, string.Format("{0} Joined Chat", user.MixerUsername), ChannelSession.Settings.ChatUserJoinLeaveColorScheme));
+                    alerts.Add(new AlertChatMessageViewModel(user.Platform, user, string.Format("{0} Joined Chat", user.Username), ChannelSession.Settings.ChatUserJoinLeaveColorScheme));
                 }
             }
             this.DisplayUsersUpdated(this, new EventArgs());
@@ -544,7 +544,7 @@ namespace MixItUp.Base.Services
 
                     if (ChannelSession.Settings.ChatShowUserJoinLeave && users.Count() < 5)
                     {
-                        alerts.Add(new AlertChatMessageViewModel(user.Platform, user, string.Format("{0} Left Chat", user.MixerUsername), ChannelSession.Settings.ChatUserJoinLeaveColorScheme));
+                        alerts.Add(new AlertChatMessageViewModel(user.Platform, user, string.Format("{0} Left Chat", user.Username), ChannelSession.Settings.ChatUserJoinLeaveColorScheme));
                     }
                 }
             }
@@ -642,7 +642,7 @@ namespace MixItUp.Base.Services
             }
 
             EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChatUserPurge, e.Item2);
-            trigger.Arguments.Add(e.Item1.MixerUsername);
+            trigger.Arguments.Add(e.Item1.Username);
             await ChannelSession.Services.Events.PerformEvent(trigger);
         }
 

@@ -39,7 +39,7 @@ namespace MixItUp.WPF.Controls.Dialogs
 
         private async void UserDialogControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (this.user != null && !this.user.IsAnonymous && !string.IsNullOrEmpty(this.user.MixerUsername))
+            if (this.user != null && !this.user.IsAnonymous && !string.IsNullOrEmpty(this.user.Username))
             {
                 await this.user.RefreshDetails(force: true);
 

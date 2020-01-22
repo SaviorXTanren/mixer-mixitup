@@ -95,10 +95,10 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.MixerUsername; }
-                return this.MixerUsername;
+                return this.unassociatedUsername;
             }
-            set { }
         }
+        private string unassociatedUsername;
 
         [DataMember]
         public StreamingPlatformTypeEnum Platform { get; set; }
@@ -159,7 +159,10 @@ namespace MixItUp.Base.ViewModel.User
         [DataMember]
         public PatreonCampaignMember PatreonUser { get; set; }
 
-        public UserViewModel() { }
+        public UserViewModel(string username)
+        {
+            this.unassociatedUsername = username;
+        }
 
         public UserViewModel(UserModel user)
         {
@@ -259,7 +262,7 @@ namespace MixItUp.Base.ViewModel.User
                 {
                     role = UserRoleEnum.User;
                 }
-                return (999 - role) + "-" + this.Platform.ToString() + "-" + this.MixerUsername;
+                return (999 - role) + "-" + this.Platform.ToString() + "-" + this.Username;
             }
         }
 
@@ -514,7 +517,7 @@ namespace MixItUp.Base.ViewModel.User
                 }
                 else
                 {
-                    patreonUser = campaignMembers.FirstOrDefault(u => u.User.LookupName.Equals(this.MixerUsername, StringComparison.CurrentCultureIgnoreCase));
+                    patreonUser = campaignMembers.FirstOrDefault(u => u.User.LookupName.Equals(this.Username, StringComparison.CurrentCultureIgnoreCase));
                 }
 
                 this.PatreonUser = patreonUser;
@@ -631,13 +634,13 @@ namespace MixItUp.Base.ViewModel.User
             return false;
         }
 
-        public bool Equals(UserViewModel other) { return this.MixerID.Equals(other.MixerID); }
+        public bool Equals(UserViewModel other) { return this.ID.Equals(other.ID); }
 
-        public int CompareTo(UserViewModel other) { return this.MixerUsername.CompareTo(other.MixerUsername); }
+        public int CompareTo(UserViewModel other) { return this.Username.CompareTo(other.Username); }
 
-        public override int GetHashCode() { return this.MixerID.GetHashCode(); }
+        public override int GetHashCode() { return this.ID.GetHashCode(); }
 
-        public override string ToString() { return this.MixerUsername; }
+        public override string ToString() { return this.Username; }
 
         private void SetMixerUserDetails(UserModel user)
         {

@@ -115,7 +115,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.follows.Contains(user.MixerID))
             {
                 this.follows.Add(user.MixerID);
-                await this.AddEvent(user.MixerUsername);
+                await this.AddEvent(user.Username);
             }
         }
 
@@ -124,7 +124,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.hosts.Contains(host.Item1.MixerID))
             {
                 this.hosts.Add(host.Item1.MixerID);
-                await this.AddEvent(host.Item1.MixerUsername + " x" + host.Item2);
+                await this.AddEvent(host.Item1.Username + " x" + host.Item2);
             }
         }
 
@@ -133,7 +133,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.subs.Contains(user.MixerID))
             {
                 this.subs.Add(user.MixerID);
-                await this.AddEvent(user.MixerUsername);
+                await this.AddEvent(user.Username);
             }
         }
 
@@ -142,7 +142,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.subs.Contains(user.Item1.MixerID))
             {
                 this.subs.Add(user.Item1.MixerID);
-                await this.AddEvent(user.Item1.MixerUsername + " x" + user.Item2);
+                await this.AddEvent(user.Item1.Username + " x" + user.Item2);
             }
         }
 
@@ -151,7 +151,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.subs.Contains(e.Item2.MixerID))
             {
                 this.subs.Add(e.Item2.MixerID);
-                await this.AddEvent(e.Item2.MixerUsername);
+                await this.AddEvent(e.Item2.Username);
             }
         }
 
@@ -167,7 +167,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (this.MinimumAmountRequiredToShow == 0.0 || sparkUsage.Item2 >= this.MinimumAmountRequiredToShow)
             {
-                await this.AddEvent(sparkUsage.Item1.MixerUsername + ": " + sparkUsage.Item2);
+                await this.AddEvent(sparkUsage.Item1.Username + ": " + sparkUsage.Item2);
             }
         }
 
@@ -175,7 +175,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (this.MinimumAmountRequiredToShow == 0.0 || emberUsage.Amount >= this.MinimumAmountRequiredToShow)
             {
-                await this.AddEvent(emberUsage.User.MixerUsername + ": " + emberUsage.Amount);
+                await this.AddEvent(emberUsage.User.Username + ": " + emberUsage.Amount);
             }
         }
 

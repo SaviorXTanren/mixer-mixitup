@@ -489,13 +489,13 @@ namespace MixItUp.Base.Model.Overlay
                 sectionHTML = await this.ReplaceStringWithSpecialModifiers(sectionHTML, await ChannelSession.GetCurrentUser(), new List<string>(), new Dictionary<string, string>());
 
                 List<string> userHTMLs = new List<string>();
-                foreach (var kvp in replacers.OrderBy(kvp => kvp.Key.MixerUsername))
+                foreach (var kvp in replacers.OrderBy(kvp => kvp.Key.Username))
                 {
-                    if (!string.IsNullOrEmpty(kvp.Key.MixerUsername))
+                    if (!string.IsNullOrEmpty(kvp.Key.Username))
                     {
                         string userHTML = this.PerformTemplateReplacements(sectionTemplate.UserHTML, new Dictionary<string, string>()
                         {
-                            { "NAME", kvp.Key.MixerUsername },
+                            { "NAME", kvp.Key.Username },
                             { "DETAILS", kvp.Value },
                             { "TEXT_FONT", this.ItemTextFont },
                             { "TEXT_SIZE", this.ItemTextSize.ToString() },

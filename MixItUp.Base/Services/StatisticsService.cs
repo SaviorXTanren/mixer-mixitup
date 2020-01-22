@@ -205,39 +205,39 @@ namespace MixItUp.Base.Services
 
         private void Constellation_OnFollowOccurred(object sender, UserViewModel e)
         {
-            this.FollowTracker.OnStatisticEventOccurred(e.MixerUsername);
+            this.FollowTracker.OnStatisticEventOccurred(e.Username);
         }
 
         private void Constellation_OnUnfollowOccurred(object sender, UserViewModel e)
         {
-            this.UnfollowTracker.OnStatisticEventOccurred(e.MixerUsername);
+            this.UnfollowTracker.OnStatisticEventOccurred(e.Username);
         }
 
         private void Constellation_OnHostedOccurred(object sender, Tuple<UserViewModel, int> e)
         {
-            this.HostsTracker.OnStatisticEventOccurred(e.Item1.MixerUsername, e.Item2);
+            this.HostsTracker.OnStatisticEventOccurred(e.Item1.Username, e.Item2);
         }
 
         private void Constellation_OnSubscribedOccurred(object sender, UserViewModel e)
         {
-            this.SubscriberTracker.OnStatisticEventOccurred(e.MixerUsername);
+            this.SubscriberTracker.OnStatisticEventOccurred(e.Username);
         }
 
         private void Constellation_OnResubscribedOccurred(object sender, Tuple<UserViewModel, int> e)
         {
-            this.ResubscriberTracker.OnStatisticEventOccurred(e.Item1.MixerUsername);
+            this.ResubscriberTracker.OnStatisticEventOccurred(e.Item1.Username);
         }
 
         private void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserViewModel, UserViewModel> e)
         {
-            this.GiftedSubscriptionsTracker.OnStatisticEventOccurred(e.Item1.MixerUsername, e.Item2.MixerUsername);
+            this.GiftedSubscriptionsTracker.OnStatisticEventOccurred(e.Item1.Username, e.Item2.Username);
         }
 
         private void Interactive_OnInteractiveControlUsed(object sender, InteractiveInputEvent e)
         {
             if (e.Command != null && e.User != null)
             {
-                this.MixPlayTracker.OnStatisticEventOccurred(e.Command.Name, e.User.MixerUsername);
+                this.MixPlayTracker.OnStatisticEventOccurred(e.Command.Name, e.User.Username);
             }
         }
 
@@ -248,12 +248,12 @@ namespace MixItUp.Base.Services
 
         private void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, uint> e)
         {
-            this.SparksTracker.OnStatisticEventOccurred(e.Item1.MixerUsername, e.Item2);
+            this.SparksTracker.OnStatisticEventOccurred(e.Item1.Username, e.Item2);
         }
 
         private void GlobalEvents_OnEmberUseOccurred(object sender, UserEmberUsageModel e)
         {
-            this.EmbersTracker.OnStatisticEventOccurred(e.User.MixerUsername, e.Amount);
+            this.EmbersTracker.OnStatisticEventOccurred(e.User.Username, e.Amount);
         }
     }
 }
