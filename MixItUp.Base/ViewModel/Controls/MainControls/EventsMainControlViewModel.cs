@@ -105,12 +105,23 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelHosted));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelSubscribed));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelResubscribed));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelResubscribed));
+            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelSubscriptionGifted));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerFanProgressionLevelUp));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerSparksUsed));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerEmbersUsed));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerSkillUsed));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerMilestoneReached));
+
+            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelStreamStart));
+            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelStreamStop));
+            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelHosted));
+            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelFollowed));
+            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelUnfollowed));
+            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelSubscribed));
+            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelResubscribed));
+            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelSubscriptionGifted));
+            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchBitsUsed));
+
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.ChatUserFirstJoin));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.ChatUserJoined));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.ChatUserLeft));

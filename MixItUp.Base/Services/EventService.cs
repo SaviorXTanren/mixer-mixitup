@@ -97,7 +97,44 @@ namespace MixItUp.Base.Services
         [Name("Mixer Channel Fan Progression Level-Up")]
         MixerFanProgressionLevelUp = 174,
 
-        // 200
+        // Twitch = 200
+
+        [Name("Twitch Channel Stream Start")]
+        TwitchChannelStreamStart = 200,
+        [Name("Twitch Channel Stream Stop")]
+        TwitchChannelStreamStop = 201,
+        [Name("Twitch Channel Hosted")]
+        TwitchChannelHosted = 202,
+
+        [Name("Twitch Channel Followed")]
+        TwitchChannelFollowed = 210,
+        [Name("Twitch Channel Unfollowed")]
+        TwitchChannelUnfollowed = 211,
+
+        [Name("Twitch Channel Subscribed")]
+        TwitchChannelSubscribed = 220,
+        [Name("Twitch Channel Resubscribed")]
+        TwitchChannelResubscribed = 221,
+        [Name("Twitch Channel Subscription Gifted")]
+        TwitchChannelSubscriptionGifted = 222,
+
+        [Name("Twitch Chat New User Joined")]
+        TwitchChatUserFirstJoin = 250,
+        [Name("Twitch Chat User Purged")]
+        TwitchChatUserPurge = 251,
+        [Name("Twitch Chat User Banned")]
+        TwitchChatUserBan = 252,
+        [Name("Twitch Chat Message Received")]
+        TwitchChatMessageReceived = 253,
+        [Name("Twitch Chat User Joined")]
+        TwitchChatUserJoined = 254,
+        [Name("Twitch Chat User Left")]
+        TwitchChatUserLeft = 255,
+        [Name("Twitch Chat Message Deleted")]
+        TwitchChatMessageDeleted = 256,
+
+        [Name("Twitch Channel Bits Spent")]
+        TwitchBitsUsed = 270,
 
         // 300
 

@@ -1,4 +1,7 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.User;
+using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Twitch;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
@@ -219,7 +222,6 @@ namespace MixItUp.Base.Services.Twitch
             }
         }
 
-
         private async void UserClient_OnPingReceived(object sender, EventArgs e)
         {
             Logger.Log(LogLevel.Debug, "Twitch User Client - Ping");
@@ -257,7 +259,7 @@ namespace MixItUp.Base.Services.Twitch
             this.initialUserLogins.AddRange(userList.UserLogins);
         }
 
-        private void Client_OnPacketReceived(object sender, ChatRawPacketModel packet)
+        private async void Client_OnPacketReceived(object sender, ChatRawPacketModel packet)
         {
             if (!TwitchChatService.ExcludedDiagnosticPacketLogging.Contains(packet.Command))
             {
@@ -266,12 +268,56 @@ namespace MixItUp.Base.Services.Twitch
                     Logger.Log(LogLevel.Debug, string.Format("Twitch Client Packet Received: {0} - {1} - {2} - {3} - {4}", packet.Command, packet.Prefix,
                         JSONSerializerHelper.SerializeToString(packet.Parameters), JSONSerializerHelper.SerializeToString(packet.Tags), packet.RawText));
                 }
+
+                if (packet.Command.Equals("USERNOTICE"))
+                {
+                    if (packet.Tags.ContainsKey("msg-id") && packet.Tags.Equals("raid"))
+                    {
+                        UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(packet.Tags["login"]);
+                        if (user == null)
+                        {
+                            user = new UserViewModel(packet);
+                        }
+
+                        int viewerCount = 0;
+                        if (packet.Tags.ContainsKey("msg-param-viewerCount"))
+                        {
+                            int.TryParse(packet.Tags["msg-param-viewerCount"], out viewerCount);
+                        }
+
+                        EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelHosted, user);
+                        if (ChannelSession.Services.Events.CanPerformEvent(trigger))
+                        {
+                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestHostUserData] = user;
+                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestHostViewerCountData] = viewerCount;
+
+                            foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
+                            {
+                                currency.AddAmount(user.Data, currency.OnHostBonus);
+                            }
+
+                            GlobalEvents.HostOccurred(new Tuple<UserViewModel, int>(user, viewerCount));
+
+                            trigger.SpecialIdentifiers["hostviewercount"] = viewerCount.ToString();
+                            await ChannelSession.Services.Events.PerformEvent(trigger);
+                        }
+                        await this.AddAlertChatMessage(user, string.Format("{0} Hosted With {1} Viewers", user.Username, viewerCount));
+                    }
+                }
             }
         }
 
         private void Client_OnSentOccurred(object sender, string packet)
         {
             Logger.Log(LogLevel.Debug, string.Format("Twitch Chat Packet Sent: {0}", packet));
+        }
+
+        private async Task AddAlertChatMessage(UserViewModel user, string message)
+        {
+            if (ChannelSession.Settings.ChatShowEventAlerts)
+            {
+                await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, message, ChannelSession.Settings.ChatEventAlertsColorScheme));
+            }
         }
 
         private async void UserClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus closeStatus)

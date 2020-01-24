@@ -245,8 +245,12 @@ namespace MixItUp.Base.Model.User
         public void UpdateData(UserViewModel user)
         {
             this.ID = user.ID;
+
             this.MixerID = user.MixerID;
-            this.MixerUsername = user.Username;
+            this.MixerUsername = user.MixerUsername;
+
+            this.TwitchID = user.TwitchID;
+            this.TwitchUsername = user.TwitchUsername;
         }
 
         public override bool Equals(object obj)
