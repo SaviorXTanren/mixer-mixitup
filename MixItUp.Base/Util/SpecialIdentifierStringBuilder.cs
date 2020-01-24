@@ -904,15 +904,15 @@ namespace MixItUp.Base.Util
 
         private async Task HandleLatestSpecialIdentifier(string userkey, string extrakey = null)
         {
+            if (!string.IsNullOrEmpty(extrakey) && ChannelSession.Settings.LatestSpecialIdentifiersData.ContainsKey(extrakey) && ChannelSession.Settings.LatestSpecialIdentifiersData[extrakey] != null)
+            {
+                this.ReplaceSpecialIdentifier(extrakey, ChannelSession.Settings.LatestSpecialIdentifiersData[extrakey].ToString());
+            }
+
             if (ChannelSession.Settings.LatestSpecialIdentifiersData.ContainsKey(userkey) && ChannelSession.Settings.LatestSpecialIdentifiersData[userkey] != null && ChannelSession.Settings.LatestSpecialIdentifiersData[userkey] is UserViewModel)
             {
                 UserViewModel user = (UserViewModel)ChannelSession.Settings.LatestSpecialIdentifiersData[userkey];
                 await this.HandleUserSpecialIdentifiers(user, userkey);
-            }
-
-            if (!string.IsNullOrEmpty(extrakey) && ChannelSession.Settings.LatestSpecialIdentifiersData.ContainsKey(extrakey) && ChannelSession.Settings.LatestSpecialIdentifiersData[extrakey] != null)
-            {
-                this.ReplaceSpecialIdentifier(extrakey, ChannelSession.Settings.LatestSpecialIdentifiersData[extrakey].ToString());
             }
         }
 
