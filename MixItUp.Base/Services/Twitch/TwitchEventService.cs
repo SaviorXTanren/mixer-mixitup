@@ -8,6 +8,7 @@ using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Twitch.Base.Clients;
 using Twitch.Base.Models.Clients.PubSub;
@@ -24,6 +25,10 @@ namespace MixItUp.Base.Services.Twitch
     public class TwitchEventService : PlatformServiceBase, ITwitchEventService
     {
         private PubSubClient pubSub;
+
+        private CancellationTokenSource cancellationTokenSource;
+
+        private HashSet<string> follows = new HashSet<string>();
 
         public TwitchEventService() { }
 
@@ -72,6 +77,17 @@ namespace MixItUp.Base.Services.Twitch
 
                         await this.pubSub.Ping();
 
+                        this.cancellationTokenSource = new CancellationTokenSource();
+
+                        follows.Clear();
+                        IEnumerable<UserFollowModel> followers = await ChannelSession.TwitchUserConnection.GetNewAPIFollowers(ChannelSession.TwitchChannelNewAPI, maxResult: 100);
+                        foreach (UserFollowModel follow in followers)
+                        {
+                            follows.Add(follow.from_id);
+                        }
+
+                        AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.FollowerBackground);
+
                         return true;
                     }
                 }
@@ -110,12 +126,56 @@ namespace MixItUp.Base.Services.Twitch
 
                     await this.pubSub.Disconnect();
                 }
+
+                if (this.cancellationTokenSource != null)
+                {
+                    this.cancellationTokenSource.Cancel();
+                    this.cancellationTokenSource = null;
+                }
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
             }
             this.pubSub = null;
+        }
+
+        private async Task FollowerBackground(CancellationToken cancellationToken)
+        {
+            if (!cancellationToken.IsCancellationRequested)
+            {
+                foreach (UserFollowModel follow in await ChannelSession.TwitchUserConnection.GetNewAPIFollowers(ChannelSession.TwitchChannelNewAPI, maxResult: 100))
+                {
+                    if (!follows.Contains(follow.from_id))
+                    {
+                        follows.Add(follow.from_id);
+
+                        UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(follow.from_id);
+                        if (user == null)
+                        {
+                            user = new UserViewModel(follow);
+                        }
+
+                        EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelFollowed, user);
+                        if (ChannelSession.Services.Events.CanPerformEvent(trigger))
+                        {
+                            user.TwitchFollowDate = DateTimeOffset.Now;
+
+                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestFollowerUserData] = user;
+
+                            foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
+                            {
+                                currency.AddAmount(user.Data, currency.OnFollowBonus);
+                            }
+
+                            await ChannelSession.Services.Events.PerformEvent(trigger);
+
+                            GlobalEvents.FollowOccurred(user);
+                            await this.AddAlertChatMessage(user, string.Format("{0} Followed", user.Username));
+                        }
+                    }
+                }
+            }
         }
 
         private async void PubSub_OnDisconnectOccurred(object sender, System.Net.WebSockets.WebSocketCloseStatus e)

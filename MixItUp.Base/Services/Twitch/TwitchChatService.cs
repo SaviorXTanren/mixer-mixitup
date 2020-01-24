@@ -90,7 +90,7 @@ namespace MixItUp.Base.Services.Twitch
 
                         await Task.Delay(1000);
 
-                        await this.userClient.Join(ChannelSession.TwitchChannel);
+                        await this.userClient.Join(ChannelSession.TwitchChannelNewAPI);
 
                         AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 2500, this.ChatterJoinLeaveBackground);
 
@@ -159,7 +159,7 @@ namespace MixItUp.Base.Services.Twitch
                 ChatClient client = this.GetChatClient(sendAsStreamer);
                 if (client != null)
                 {
-                    await client.SendMessage(ChannelSession.TwitchChannel, message);
+                    await client.SendMessage(ChannelSession.TwitchChannelNewAPI, message);
                 }
             });
         }
