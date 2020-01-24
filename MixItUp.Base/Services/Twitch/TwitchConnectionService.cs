@@ -32,6 +32,7 @@ namespace MixItUp.Base.Services.Twitch
 
             OAuthClientScopeEnum.bits__read,
             OAuthClientScopeEnum.channel__moderate,
+            OAuthClientScopeEnum.channel__read__redemptions,
             OAuthClientScopeEnum.chat__edit,
             OAuthClientScopeEnum.chat__read,
             OAuthClientScopeEnum.user__edit,

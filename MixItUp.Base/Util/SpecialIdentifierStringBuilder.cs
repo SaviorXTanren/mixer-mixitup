@@ -78,6 +78,8 @@ namespace MixItUp.Base.Util
         public const string LatestSparkUsageAmountData = "latestsparkusageamount";
         public const string LatestEmberUsageUserData = "latestemberusage";
         public const string LatestEmberUsageAmountData = "latestemberusageamount";
+        public const string LatestBitsUsageUserData = "latestbitsusage";
+        public const string LatestBitsUsageAmountData = "latestbitsusageamount";
         public const string LatestDonationUserData = "latestdonation";
         public const string LatestDonationAmountData = "latestdonationamount";
 
@@ -647,6 +649,7 @@ namespace MixItUp.Base.Util
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestSubscriberUserData, SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData);
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestSparkUsageUserData, SpecialIdentifierStringBuilder.LatestSparkUsageAmountData);
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestEmberUsageUserData, SpecialIdentifierStringBuilder.LatestEmberUsageAmountData);
+            await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestBitsUsageUserData, SpecialIdentifierStringBuilder.LatestBitsUsageAmountData);
             await this.HandleLatestSpecialIdentifier(SpecialIdentifierStringBuilder.LatestDonationUserData, SpecialIdentifierStringBuilder.LatestDonationAmountData);
 
             foreach (UserInventoryModel inventory in ChannelSession.Settings.Inventories.Values.OrderByDescending(c => c.SpecialIdentifier))

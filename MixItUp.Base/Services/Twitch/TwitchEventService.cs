@@ -1,12 +1,18 @@
-﻿using MixItUp.Base.ViewModel.Chat.Twitch;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.Model.User;
+using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Chat;
+using MixItUp.Base.ViewModel.Chat.Twitch;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Twitch.Base.Clients;
 using Twitch.Base.Models.Clients.PubSub;
 using Twitch.Base.Models.Clients.PubSub.Messages;
+using Twitch.Base.Models.NewAPI.Users;
 
 namespace MixItUp.Base.Services.Twitch
 {
@@ -43,12 +49,12 @@ namespace MixItUp.Base.Services.Twitch
                         this.pubSub.OnResponseReceived += PubSub_OnResponseReceived;
 
                         this.pubSub.OnWhisperReceived += PubSub_OnWhisperReceived;
-                        this.pubSub.OnBitsV1Received += PubSub_OnBitsV1Received;
                         this.pubSub.OnBitsV2Received += PubSub_OnBitsV2Received;
                         this.pubSub.OnBitsBadgeReceived += PubSub_OnBitsBadgeReceived;
                         this.pubSub.OnSubscribedReceived += PubSub_OnSubscribedReceived;
                         this.pubSub.OnSubscriptionsGiftedReceived += PubSub_OnSubscriptionsGiftedReceived;
                         this.pubSub.OnCommerceReceived += PubSub_OnCommerceReceived;
+                        this.pubSub.OnChannelPointsRedeemed += PubSub_OnChannelPointsRedeemed;
 
                         await this.pubSub.Connect();
 
@@ -77,18 +83,6 @@ namespace MixItUp.Base.Services.Twitch
             });
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
         public async Task Disconnect()
         {
             try
@@ -107,12 +101,12 @@ namespace MixItUp.Base.Services.Twitch
                     this.pubSub.OnResponseReceived -= PubSub_OnResponseReceived;
 
                     this.pubSub.OnWhisperReceived -= PubSub_OnWhisperReceived;
-                    this.pubSub.OnBitsV1Received -= PubSub_OnBitsV1Received;
                     this.pubSub.OnBitsV2Received -= PubSub_OnBitsV2Received;
                     this.pubSub.OnBitsBadgeReceived -= PubSub_OnBitsBadgeReceived;
                     this.pubSub.OnSubscribedReceived -= PubSub_OnSubscribedReceived;
                     this.pubSub.OnSubscriptionsGiftedReceived -= PubSub_OnSubscriptionsGiftedReceived;
                     this.pubSub.OnCommerceReceived -= PubSub_OnCommerceReceived;
+                    this.pubSub.OnChannelPointsRedeemed -= PubSub_OnChannelPointsRedeemed;
 
                     await this.pubSub.Disconnect();
                 }
@@ -145,19 +139,19 @@ namespace MixItUp.Base.Services.Twitch
 
         private void PubSub_OnSentOccurred(object sender, string packet)
         {
-            Logger.Log("PUB SUB SEND: " + packet);
+            Logger.Log(LogLevel.Debug, "PUB SUB SEND: " + packet);
         }
 
-        private void PubSub_OnTextReceivedOccurred(object sender, string e)
+        private void PubSub_OnTextReceivedOccurred(object sender, string text)
         {
-            throw new NotImplementedException();
+            Logger.Log(LogLevel.Debug, "PUB SUB TEXT: " + text);
         }
 
         private void PubSub_OnMessageReceived(object sender, PubSubMessagePacketModel packet)
         {
-            Logger.Log(string.Format("PUB SUB MESSAGE: {0} {1} ", packet.type, packet.message));
+            Logger.Log(LogLevel.Debug, string.Format("PUB SUB MESSAGE: {0} {1} ", packet.type, packet.message));
 
-            Logger.Log(JSONSerializerHelper.SerializeToString(packet));
+            Logger.Log(LogLevel.Debug, JSONSerializerHelper.SerializeToString(packet));
         }
 
         private void PubSub_OnResponseReceived(object sender, PubSubResponsePacketModel packet)
@@ -165,39 +159,171 @@ namespace MixItUp.Base.Services.Twitch
             Logger.Log("PUB SUB RESPONSE: " + packet.error);
         }
 
-        private void PubSub_OnBitsV1Received(object sender, PubSubBitsEventV1Model e)
+        private async void PubSub_OnBitsV2Received(object sender, PubSubBitsEventV2Model packet)
+        {
+            UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(packet.user_id);
+            if (user == null)
+            {
+                user = new UserViewModel(packet);
+            }
+
+            //foreach (UserCurrencyModel emberCurrency in ChannelSession.Settings.Currencies.Values.Where(c => c.IsTrackingEmbers))
+            //{
+            //    emberCurrency.AddAmount(emberUsage.User.Data, (int)emberUsage.Amount);
+            //}
+
+            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsUsageUserData] = user;
+            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsUsageAmountData] = packet.bits_used;
+
+            EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchBitsUsed, user);
+            trigger.SpecialIdentifiers["bitsamount"] = packet.bits_used.ToString();
+            await ChannelSession.Services.Events.PerformEvent(trigger);
+        }
+
+        private void PubSub_OnBitsBadgeReceived(object sender, PubSubBitBadgeEventModel packet)
         {
 
         }
 
-        private void PubSub_OnBitsV2Received(object sender, PubSubBitsEventV2Model e)
+        private async void PubSub_OnSubscribedReceived(object sender, PubSubSubscriptionsEventModel packet)
+        {
+            UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(packet.user_id);
+            if (user == null)
+            {
+                user = new UserViewModel(packet);
+            }
+
+            if ((packet.months == 1 || packet.months == 0) && packet.cumulativeMonths == 1 && (packet.streakMonths == 0 || packet.streakMonths == 1))
+            {
+                EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelSubscribed, user);
+                if (ChannelSession.Services.Events.CanPerformEvent(trigger))
+                {
+                    trigger.SpecialIdentifiers["message"] = (packet.sub_message.ContainsKey("message")) ? packet.sub_message["message"].ToString() : string.Empty;
+                    trigger.SpecialIdentifiers["usersubplan"] = packet.sub_plan;
+
+                    ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user;
+                    ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
+
+                    user.TwitchSubscribeDate = DateTimeOffset.Now;
+                    foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
+                    {
+                        currency.AddAmount(user.Data, currency.OnSubscribeBonus);
+                    }
+                    user.Data.TotalMonthsSubbed++;
+
+                    await ChannelSession.Services.Events.PerformEvent(trigger);
+
+                    GlobalEvents.SubscribeOccurred(user);
+
+                    await this.AddAlertChatMessage(user, string.Format("{0} Subscribed", user.Username));
+                }
+            }
+            else
+            {
+                EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelResubscribed, user);
+                if (ChannelSession.Services.Events.CanPerformEvent(trigger))
+                {
+                    int months = (packet.streakMonths > 0) ? packet.streakMonths : packet.cumulativeMonths;
+
+                    trigger.SpecialIdentifiers["message"] = (packet.sub_message.ContainsKey("message")) ? packet.sub_message["message"].ToString() : string.Empty;
+                    trigger.SpecialIdentifiers["usersubplan"] = packet.sub_plan;
+                    trigger.SpecialIdentifiers["usersubmonths"] = months.ToString();
+
+                    ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user;
+                    ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = months;
+
+                    user.TwitchSubscribeDate = DateTimeOffset.Now.SubtractMonths(months - 1);
+                    foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
+                    {
+                        currency.AddAmount(user.Data, currency.OnSubscribeBonus);
+                    }
+                    user.Data.TotalMonthsSubbed++;
+
+                    await ChannelSession.Services.Events.PerformEvent(trigger);
+
+                    GlobalEvents.ResubscribeOccurred(new Tuple<UserViewModel, int>(user, months));
+
+                    await this.AddAlertChatMessage(user, string.Format("{0} Re-Subscribed For {1} Months", user.Username, months));
+                }
+            }
+        }
+
+        private async void PubSub_OnSubscriptionsGiftedReceived(object sender, PubSubSubscriptionsGiftEventModel packet)
+        {
+            UserViewModel gifter = ChannelSession.Services.User.GetUserByTwitchID(packet.user_id);
+            if (gifter == null)
+            {
+                gifter = new UserViewModel(packet);
+            }
+
+            UserViewModel receiver = ChannelSession.Services.User.GetUserByTwitchID(packet.recipient_id);
+            if (receiver == null)
+            {
+                receiver = new UserViewModel(new UserModel()
+                {
+                    id = packet.recipient_id,
+                    login = packet.recipient_user_name,
+                    display_name = packet.recipient_display_name
+                });
+            }
+
+            EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelSubscriptionGifted, gifter);
+            trigger.SpecialIdentifiers["message"] = (packet.sub_message.ContainsKey("message")) ? packet.sub_message["message"].ToString() : string.Empty;
+            trigger.SpecialIdentifiers["usersubplan"] = packet.sub_plan;
+
+            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = receiver;
+            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
+
+            receiver.TwitchSubscribeDate = DateTimeOffset.Now;
+            foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
+            {
+                currency.AddAmount(gifter.Data, currency.OnSubscribeBonus);
+            }
+            gifter.Data.TotalSubsGifted++;
+            receiver.Data.TotalSubsReceived++;
+            receiver.Data.TotalMonthsSubbed++;
+
+            trigger.Arguments.Add(receiver.Username);
+            await ChannelSession.Services.Events.PerformEvent(trigger);
+
+            await this.AddAlertChatMessage(gifter, string.Format("{0} Gifted A Subscription To {1}", gifter.Username, receiver.Username));
+
+            GlobalEvents.SubscriptionGiftedOccurred(gifter, receiver);
+        }
+
+        private void PubSub_OnCommerceReceived(object sender, PubSubCommerceEventModel packet)
         {
 
         }
 
-        private void PubSub_OnBitsBadgeReceived(object sender, PubSubBitBadgeEventModel e)
+        private async void PubSub_OnChannelPointsRedeemed(object sender, PubSubChannelPointsRedeemedEventModel packet)
         {
+            UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(packet.user.id);
+            if (user == null)
+            {
+                user = new UserViewModel(packet.user);
+            }
 
+            EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelPointedRedeemed, user);
+
+            trigger.SpecialIdentifiers["rewardname"] = packet.reward.title;
+            trigger.SpecialIdentifiers["rewardcost"] = packet.reward.cost.ToString();
+            trigger.SpecialIdentifiers["message"] = packet.user_input;
+
+            await ChannelSession.Services.Events.PerformEvent(trigger);
         }
 
-        private void PubSub_OnSubscribedReceived(object sender, PubSubSubscriptionsEventModel e)
+        private async void PubSub_OnWhisperReceived(object sender, PubSubWhisperEventModel packet)
         {
-
+            await ChannelSession.Services.Chat.AddMessage(new TwitchChatMessageViewModel(packet));
         }
 
-        private void PubSub_OnSubscriptionsGiftedReceived(object sender, PubSubSubscriptionsGiftEventModel e)
+        private async Task AddAlertChatMessage(UserViewModel user, string message)
         {
-
-        }
-
-        private void PubSub_OnCommerceReceived(object sender, PubSubCommerceEventModel e)
-        {
-
-        }
-
-        private async void PubSub_OnWhisperReceived(object sender, PubSubWhisperEventModel whisper)
-        {
-            await ChannelSession.Services.Chat.AddMessage(new TwitchChatMessageViewModel(whisper));
+            if (ChannelSession.Settings.ChatShowEventAlerts)
+            {
+                await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Twitch, user, message, ChannelSession.Settings.ChatEventAlertsColorScheme));
+            }
         }
 
         private void PubSub_OnPongReceived(object sender, EventArgs e)

@@ -73,5 +73,10 @@ namespace MixItUp.Base.Util
         {
             return (DateTimeOffset.Now - dt).TotalSeconds;
         }
+
+        public static DateTimeOffset SubtractMonths(this DateTimeOffset dt, int months)
+        {
+            return dt.Subtract(TimeSpan.FromDays(months * 30));
+        }
     }
 }

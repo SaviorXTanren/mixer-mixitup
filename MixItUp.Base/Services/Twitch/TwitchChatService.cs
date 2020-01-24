@@ -273,7 +273,7 @@ namespace MixItUp.Base.Services.Twitch
                 {
                     if (packet.Tags.ContainsKey("msg-id") && packet.Tags.Equals("raid"))
                     {
-                        UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(packet.Tags["login"]);
+                        UserViewModel user = ChannelSession.Services.User.GetUserByUsername(packet.Tags["login"]);
                         if (user == null)
                         {
                             user = new UserViewModel(packet);
@@ -302,6 +302,14 @@ namespace MixItUp.Base.Services.Twitch
                             await ChannelSession.Services.Events.PerformEvent(trigger);
                         }
                         await this.AddAlertChatMessage(user, string.Format("{0} Hosted With {1} Viewers", user.Username, viewerCount));
+                    }
+                }
+                else if (packet.Command.Equals("HOSTTARGET"))
+                {
+                    string[] splits = packet.Get1SkippedParameterText.Split(new char[] { ' ' });
+                    if (splits.Length > 0)
+                    {
+                        string hostTarget = splits[0];
                     }
                 }
             }

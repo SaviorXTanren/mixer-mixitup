@@ -232,6 +232,13 @@ namespace MixItUp.Base.ViewModel.User
         [DataMember]
         public HashSet<UserRoleEnum> TwitchUserRoles { get; set; } = new HashSet<UserRoleEnum>();
 
+        [DataMember]
+        public DateTimeOffset? TwitchAccountDate { get; set; }
+        [DataMember]
+        public DateTimeOffset? TwitchFollowDate { get; set; }
+        [DataMember]
+        public DateTimeOffset? TwitchSubscribeDate { get; set; }
+
         #endregion Twitch
 
         [DataMember]
@@ -349,6 +356,25 @@ namespace MixItUp.Base.ViewModel.User
             this.TwitchID = packet.Tags["user-id"];
             this.TwitchUsername = packet.Tags["login"];
             this.TwitchDisplayName = (packet.Tags.ContainsKey("display-name") && !string.IsNullOrEmpty(packet.Tags["display-name"])) ? packet.Tags["display-name"] : this.TwitchUsername;
+
+            this.SetTwitchRoles();
+        }
+
+        public UserViewModel(PubSubBitsEventV2Model packet)
+        {
+            this.Platform = StreamingPlatformTypeEnum.Twitch;
+            this.TwitchID = packet.user_id;
+            this.TwitchDisplayName = this.TwitchUsername = packet.user_name;
+
+            this.SetTwitchRoles();
+        }
+
+        public UserViewModel(PubSubSubscriptionsEventModel packet)
+        {
+            this.Platform = StreamingPlatformTypeEnum.Twitch;
+            this.TwitchID = packet.user_id;
+            this.TwitchUsername = packet.user_name;
+            this.TwitchDisplayName = (!string.IsNullOrEmpty(packet.display_name)) ? packet.display_name : this.TwitchUsername;
 
             this.SetTwitchRoles();
         }
