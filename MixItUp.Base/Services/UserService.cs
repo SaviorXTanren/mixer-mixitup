@@ -26,6 +26,8 @@ namespace MixItUp.Base.Services
 
         UserViewModel GetUserByMixPlayID(string id);
 
+        UserViewModel GetUserByTwitchID(string id);
+
         IEnumerable<UserViewModel> GetUsersByMixerID(IEnumerable<uint> ids);
 
         Task<UserViewModel> AddOrUpdateUser(UserModel userModel);
@@ -86,6 +88,15 @@ namespace MixItUp.Base.Services
         public UserViewModel GetUserByMixPlayID(string id)
         {
             if (this.usersByMixPlayID.TryGetValue(id, out UserViewModel user))
+            {
+                return user;
+            }
+            return null;
+        }
+
+        public UserViewModel GetUserByTwitchID(string id)
+        {
+            if (this.usersByTwitchID.TryGetValue(id, out UserViewModel user))
             {
                 return user;
             }

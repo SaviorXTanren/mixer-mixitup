@@ -350,6 +350,14 @@ namespace MixItUp.Base.Services
                     message.User = activeUser;
                 }
             }
+            else if (message.Platform == StreamingPlatformTypeEnum.Twitch)
+            {
+                UserViewModel activeUser = ChannelSession.Services.User.GetUserByTwitchID(message.User.TwitchID);
+                if (activeUser != null)
+                {
+                    message.User = activeUser;
+                }
+            }
 
             if (message.IsWhisper && ChannelSession.Settings.TrackWhispererNumber && !message.IsStreamerOrBot)
             {
