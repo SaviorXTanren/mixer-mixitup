@@ -29,7 +29,7 @@ namespace MixItUp.Base.Services.Twitch
         Task SendMessage(string message, bool sendAsStreamer = false);
     }
 
-    public class TwitchChatService : AsyncRequestServiceBase, ITwitchChatService
+    public class TwitchChatService : PlatformServiceBase, ITwitchChatService
     {
         private static List<string> ExcludedDiagnosticPacketLogging = new List<string>() { "PING", ChatMessagePacketModel.CommandID, ChatUserJoinPacketModel.CommandID, ChatUserLeavePacketModel.CommandID };
 
@@ -54,7 +54,7 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task<bool> ConnectUser()
         {
-            return await this.AttemptRunAsync(async () =>
+            return await this.AttemptConnect(async () =>
             {
                 try
                 {
@@ -286,19 +286,6 @@ namespace MixItUp.Base.Services.Twitch
             while (!await this.ConnectUser());
 
             ChannelSession.ReconnectionOccurred("Twitch User Chat");
-        }
-
-        private async Task<bool> AttemptRunAsync(Func<Task<bool>> task, int attempts = 5)
-        {
-            for (int i = 0; i < attempts; i++)
-            {
-                if (await task())
-                {
-                    return true;
-                }
-                await Task.Delay(1000);
-            }
-            return false;
         }
     }
 }

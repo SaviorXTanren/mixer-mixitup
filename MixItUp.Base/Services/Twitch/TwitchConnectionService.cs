@@ -17,7 +17,7 @@ namespace MixItUp.Base.Services.Twitch
 
     }
 
-    public class TwitchConnectionService : AsyncRequestServiceBase, ITwitchConnectionService
+    public class TwitchConnectionService : PlatformServiceBase, ITwitchConnectionService
     {
         public const string ClientID = "50ipfqzuqbv61wujxcm80zyzqwoqp1";
 
