@@ -2,6 +2,7 @@
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.Mixer;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
@@ -196,8 +197,9 @@ namespace MixItUp.Base.Services
     public interface IEventService
     {
         IMixerEventService MixerEventService { get; }
+        ITwitchEventService TwitchEventService { get; }
 
-        Task Initialize(IMixerEventService mixerEventService);
+        Task Initialize(IMixerEventService mixerEventService, ITwitchEventService twitchEventService);
 
         EventCommand GetEventCommand(EventTypeEnum type);
 
@@ -234,9 +236,12 @@ namespace MixItUp.Base.Services
 
         public IMixerEventService MixerEventService { get; private set; }
 
-        public Task Initialize(IMixerEventService mixerEventService)
+        public ITwitchEventService TwitchEventService { get; private set; }
+
+        public Task Initialize(IMixerEventService mixerEventService, ITwitchEventService twitchEventService)
         {
             this.MixerEventService = mixerEventService;
+            this.TwitchEventService = twitchEventService;
             return Task.FromResult(0);
         }
 

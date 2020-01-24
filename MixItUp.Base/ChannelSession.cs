@@ -448,14 +448,15 @@ namespace MixItUp.Base
                 MixerChatService mixerChatService = new MixerChatService();
                 MixerEventService mixerEventService = new MixerEventService();
                 TwitchChatService twitchChatService = new TwitchChatService();
+                TwitchEventService twitchEventService = new TwitchEventService();
 
-                if (!await mixerChatService.ConnectStreamer() || !await mixerEventService.Connect() || !await twitchChatService.ConnectUser())
+                if (!await mixerChatService.ConnectStreamer() || !await mixerEventService.Connect() || !await twitchChatService.ConnectUser() || !await twitchEventService.Connect())
                 {
                     return false;
                 }
 
                 await ChannelSession.Services.Chat.Initialize(mixerChatService, twitchChatService);
-                await ChannelSession.Services.Events.Initialize(mixerEventService);
+                await ChannelSession.Services.Events.Initialize(mixerEventService, twitchEventService);
 
                 await MixerChatEmoteModel.InitializeEmoteCache();
 
