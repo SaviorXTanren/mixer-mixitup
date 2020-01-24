@@ -109,7 +109,7 @@ namespace MixItUp.Base.Services
         private HashSet<Guid> userEntranceCommands = new HashSet<Guid>();
 
         private SemaphoreSlim whisperNumberLock = new SemaphoreSlim(1);
-        private Dictionary<string, int> whisperMap = new Dictionary<string, int>();
+        private Dictionary<Guid, int> whisperMap = new Dictionary<Guid, int>();
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
@@ -359,15 +359,22 @@ namespace MixItUp.Base.Services
                 }
             }
 
+            if (message.User != null)
+            {
+                await message.User.RefreshDetails();
+                message.User.UpdateLastActivity();
+                message.User.Data.TotalChatMessageSent++;
+            }
+
             if (message.IsWhisper && ChannelSession.Settings.TrackWhispererNumber && !message.IsStreamerOrBot)
             {
                 await this.whisperNumberLock.WaitAndRelease(() =>
                 {
-                    if (!whisperMap.ContainsKey(message.User.MixerID.ToString()))
+                    if (!whisperMap.ContainsKey(message.User.ID))
                     {
-                        whisperMap[message.User.MixerID.ToString()] = whisperMap.Count + 1;
+                        whisperMap[message.User.ID] = whisperMap.Count + 1;
                     }
-                    message.User.WhispererNumber = whisperMap[message.User.MixerID.ToString()];
+                    message.User.WhispererNumber = whisperMap[message.User.ID];
                     return Task.FromResult(0);
                 });
             }
@@ -404,13 +411,6 @@ namespace MixItUp.Base.Services
                     Logger.Log(LogLevel.Debug, string.Format("Deleting Message As Chat Disabled - {0}", message.PlainTextMessage));
                     await this.DeleteMessage(message);
                     return;
-                }
-
-                if (message.User != null)
-                {
-                    await message.User.RefreshDetails();
-                    message.User.UpdateLastActivity();
-                    message.User.Data.TotalChatMessageSent++;
                 }
 
                 if (message.IsWhisper)
