@@ -1357,9 +1357,9 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     foreach (SparksLeaderboardModel sparkLeader in this.sparkLeaders)
                     {
-                        extraSpecialIdentifiers["DETAILS"] = sparkLeader.statValue.ToString();
-                        OverlayCustomHTMLItem htmlItem = (OverlayCustomHTMLItem)await base.GetProcessedItem(new UserViewModel(sparkLeader.username), arguments, extraSpecialIdentifiers);
-                        copy.LeaderboardEntries.Add(htmlItem.HTMLText);
+                        //extraSpecialIdentifiers["DETAILS"] = sparkLeader.statValue.ToString();
+                        //OverlayCustomHTMLItem htmlItem = (OverlayCustomHTMLItem)await base.GetProcessedItem(new UserViewModel(sparkLeader.username), arguments, extraSpecialIdentifiers);
+                        //copy.LeaderboardEntries.Add(htmlItem.HTMLText);
                     }
                     return copy;
                 }
@@ -1390,9 +1390,9 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     foreach (EmbersLeaderboardModel emberLeader in this.emberLeaders)
                     {
-                        extraSpecialIdentifiers["DETAILS"] = emberLeader.statValue.ToString();
-                        OverlayCustomHTMLItem htmlItem = (OverlayCustomHTMLItem)await base.GetProcessedItem(new UserViewModel(emberLeader.username), arguments, extraSpecialIdentifiers);
-                        copy.LeaderboardEntries.Add(htmlItem.HTMLText);
+                        //extraSpecialIdentifiers["DETAILS"] = emberLeader.statValue.ToString();
+                        //OverlayCustomHTMLItem htmlItem = (OverlayCustomHTMLItem)await base.GetProcessedItem(new UserViewModel(emberLeader.username), arguments, extraSpecialIdentifiers);
+                        //copy.LeaderboardEntries.Add(htmlItem.HTMLText);
                     }
                     return copy;
                 }
@@ -2087,7 +2087,7 @@ namespace MixItUp.Base.Model.Overlay
                 UserModel user = await ChannelSession.MixerUserConnection.GetUser(this.CurrentBossUserID);
                 if (user != null)
                 {
-                    this.CurrentBoss = new UserViewModel(user);
+                    //this.CurrentBoss = new UserViewModel(user);
                 }
                 else
                 {

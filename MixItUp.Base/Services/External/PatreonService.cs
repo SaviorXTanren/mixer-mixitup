@@ -632,21 +632,18 @@ namespace MixItUp.Base.Services.External
                                 PatreonTier tier = this.Campaign.GetTier(member.TierID);
                                 if (tier != null)
                                 {
-                                    UserViewModel user = new UserViewModel(member.User.LookupName);
+                                    EventTrigger trigger = new EventTrigger(EventTypeEnum.PatreonSubscribed);
 
-                                    UserModel userModel = await ChannelSession.MixerUserConnection.GetUser(user.Username);
-                                    if (userModel != null)
+                                    trigger.User = ChannelSession.Services.User.GetUserByUsername(member.User.LookupName);
+                                    if (trigger.User != null)
                                     {
-                                        user = ChannelSession.Services.User.GetUserByMixerID(userModel.id);
-                                        if (user == null)
-                                        {
-                                            user = new UserViewModel(userModel);
-                                        }
-                                        user.Data.PatreonUserID = member.UserID;
-                                        await user.RefreshDetails(force: true);
+                                        trigger.User.Data.PatreonUserID = member.UserID;
+                                    }
+                                    else
+                                    {
+                                        trigger.User = new UserViewModel(member.User.LookupName);
                                     }
 
-                                    EventTrigger trigger = new EventTrigger(EventTypeEnum.PatreonSubscribed, user);
                                     trigger.SpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierNameSpecialIdentifier] = tier.Title;
                                     trigger.SpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierAmountSpecialIdentifier] = tier.Amount.ToString();
                                     trigger.SpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierImageSpecialIdentifier] = tier.ImageUrl;

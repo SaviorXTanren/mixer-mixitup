@@ -171,20 +171,11 @@ namespace MixItUp.Base.Services
 
     public class EventService : IEventService
     {
-        public static async Task<EventTrigger> ProcessDonationEvent(EventTypeEnum type, UserDonationModel donation, Dictionary<string, string> additionalSpecialIdentifiers = null)
+        public static Task<EventTrigger> ProcessDonationEvent(EventTypeEnum type, UserDonationModel donation, Dictionary<string, string> additionalSpecialIdentifiers = null)
         {
             GlobalEvents.DonationOccurred(donation);
 
-            EventTrigger trigger = new EventTrigger(type);
-
-            trigger.User = new UserViewModel(donation.Username);
-
-            UserModel userModel = await ChannelSession.MixerUserConnection.GetUser(trigger.User.Username);
-            if (userModel != null)
-            {
-                trigger.User = new UserViewModel(userModel);
-            }
-
+            EventTrigger trigger = new EventTrigger(type, donation.User);
             trigger.User.Data.TotalAmountDonated += donation.Amount;
 
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestDonationUserData] = trigger.User;
@@ -199,7 +190,7 @@ namespace MixItUp.Base.Services
                 }
             }
 
-            return trigger;
+            return Task.FromResult(trigger);
         }
 
         public IMixerEventService MixerEventService { get; private set; }

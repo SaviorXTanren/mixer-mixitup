@@ -157,18 +157,18 @@ namespace MixItUp.Base.Services
                 }
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                Task.Run(async () =>
+            Task.Run(async () =>
+            {
+                await ChannelSession.MixerUserConnection.GetChatUsers(ChannelSession.MixerChannel, async (collection) =>
                 {
-                    await ChannelSession.MixerUserConnection.GetChatUsers(ChannelSession.MixerChannel, async (collection) =>
+                    List<UserViewModel> users = new List<UserViewModel>();
+                    foreach (ChatUserModel chatUser in collection)
                     {
-                        List<UserViewModel> users = new List<UserViewModel>();
-                        foreach (ChatUserModel chatUser in collection)
-                        {
-                            users.Add(new UserViewModel(chatUser));
-                        }
-                        await this.UsersJoined(users);
-                    }, int.MaxValue);
-                });
+                        users.Add(await ChannelSession.Services.User.AddOrUpdateUser(chatUser));
+                    }
+                    await this.UsersJoined(users);
+                }, int.MaxValue);
+            });
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             }
 
@@ -342,10 +342,13 @@ namespace MixItUp.Base.Services
         {
             Logger.Log(LogLevel.Debug, string.Format("Message Received - {0}", message.ToString()));
 
-            UserViewModel activeUser = ChannelSession.Services.User.GetUserByMixerID(message.User.MixerID);
-            if (activeUser != null)
+            if (message.Platform == StreamingPlatformTypeEnum.Mixer)
             {
-                message.User = activeUser;
+                UserViewModel activeUser = ChannelSession.Services.User.GetUserByMixerID(message.User.MixerID);
+                if (activeUser != null)
+                {
+                    message.User = activeUser;
+                }
             }
 
             if (message.IsWhisper && ChannelSession.Settings.TrackWhispererNumber && !message.IsStreamerOrBot)
