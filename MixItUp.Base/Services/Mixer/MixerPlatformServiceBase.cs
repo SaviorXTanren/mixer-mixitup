@@ -1,32 +1,11 @@
 ﻿using Mixer.Base.Model.Client;
 using StreamingClient.Base.Util;
 using System;
-using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services.Mixer
 {
-    public abstract class MixerWebSocketServiceBase : AsyncRequestServiceBase
+    public abstract class MixerPlatformServiceBase : PlatformServiceBase
     {
-        public async Task<bool> AttemptConnect(Func<Task<bool>> connect, int connectionAttempts = 5)
-        {
-            for (int i = 0; i < connectionAttempts; i++)
-            {
-                try
-                {
-                    if (await connect())
-                    {
-                        return true;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log(ex);
-                }
-                await Task.Delay(1000);
-            }
-            return false;
-        }
-
         protected void WebSocketClient_OnPacketSentOccurred(object sender, WebSocketPacket e)
         {
             if (e is MethodPacket)

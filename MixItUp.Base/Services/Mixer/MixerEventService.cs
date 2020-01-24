@@ -31,7 +31,7 @@ namespace MixItUp.Base.Services.Mixer
         Task Disconnect();
     }
 
-    public class MixerEventService : MixerWebSocketServiceBase, IMixerEventService
+    public class MixerEventService : MixerPlatformServiceBase, IMixerEventService
     {
         public static ConstellationEventType ChannelUpdateEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__update, ChannelSession.MixerChannel.id); } }
         public static ConstellationEventType ChannelFollowEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__followed, ChannelSession.MixerChannel.id); } }

@@ -59,7 +59,7 @@ namespace MixItUp.Base.Services.Mixer
         Task StartPoll(string question, IEnumerable<string> answers, uint lengthInSeconds);
     }
 
-    public class MixerChatService : MixerWebSocketServiceBase, IMixerChatService
+    public class MixerChatService : MixerPlatformServiceBase, IMixerChatService
     {
         public event EventHandler<MixerChatMessageViewModel> OnMessageOccurred = delegate { };
         public event EventHandler<Tuple<Guid, UserViewModel>> OnDeleteMessageOccurred = delegate { };
