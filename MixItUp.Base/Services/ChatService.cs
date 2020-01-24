@@ -168,7 +168,7 @@ namespace MixItUp.Base.Services
                     List<UserViewModel> users = new List<UserViewModel>();
                     foreach (ChatUserModel chatUser in collection)
                     {
-                        users.Add(new UserViewModel(chatUser));
+                        users.Add(await ChannelSession.Services.User.AddOrUpdateUser(chatUser));
                     }
                     await this.UsersJoined(users);
                 }, int.MaxValue);
@@ -316,10 +316,13 @@ namespace MixItUp.Base.Services
         {
             Logger.Log(LogLevel.Debug, string.Format("Message Received - {0}", message.ToString()));
 
-            UserViewModel activeUser = ChannelSession.Services.User.GetUserByMixerID(message.User.MixerID);
-            if (activeUser != null)
+            if (message.Platform == StreamingPlatformTypeEnum.Mixer)
             {
-                message.User = activeUser;
+                UserViewModel activeUser = ChannelSession.Services.User.GetUserByMixerID(message.User.MixerID);
+                if (activeUser != null)
+                {
+                    message.User = activeUser;
+                }
             }
 
             if (message.IsWhisper && ChannelSession.Settings.TrackWhispererNumber && !message.IsStreamerOrBot)

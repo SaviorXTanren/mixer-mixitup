@@ -10,9 +10,11 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
-    public static class ChatUserEventModelExtensions
+    public static class ChatUserModelExtensions
     {
         public static ChatUserModel ToChatUserModel(this ChatUserEventModel chatUser) { return new ChatUserModel() { userId = chatUser.id, userName = chatUser.username, userRoles = chatUser.roles }; }
+
+        public static ChatUserModel ToChatUserModel(this ChatMessageUserModel chatMessageUser) { return new ChatUserModel() { userId = chatMessageUser.user_id, userName = chatMessageUser.user_name, userRoles = chatMessageUser.user_roles }; }
     }
 
     public interface IUserService
@@ -24,6 +26,8 @@ namespace MixItUp.Base.Services
         UserViewModel GetUserByMixPlayID(string id);
 
         IEnumerable<UserViewModel> GetUsersByMixerID(IEnumerable<uint> ids);
+
+        Task<UserViewModel> AddOrUpdateUser(UserModel userModel);
 
         Task<UserViewModel> AddOrUpdateUser(ChatUserEventModel chatUser);
 
@@ -93,6 +97,20 @@ namespace MixItUp.Base.Services
                 }
             }
             return results;
+        }
+
+        public async Task<UserViewModel> AddOrUpdateUser(UserModel userModel)
+        {
+            UserViewModel user = new UserViewModel(userModel);
+            if (user.MixerID > 0)
+            {
+                if (this.usersByMixerID.ContainsKey(user.MixerID))
+                {
+                    user = this.usersByMixerID[user.MixerID];
+                }
+                await this.AddOrUpdateUser(user);
+            }
+            return user;
         }
 
         public async Task<UserViewModel> AddOrUpdateUser(ChatUserEventModel chatUser) { return await this.AddOrUpdateUser(chatUser.ToChatUserModel()); }

@@ -883,15 +883,14 @@ namespace MixItUp.Base.Commands
                             username = username.Substring(1);
                         }
 
-                        UserModel targetUserModel = await ChannelSession.MixerUserConnection.GetUser(username);
-                        if (targetUserModel != null)
+                        UserViewModel targetUser = ChannelSession.Services.User.GetUserByUsername(username);
+                        if (targetUser != null)
                         {
-                            UserViewModel targetUser = new UserViewModel(targetUserModel);
                             targetUser.Title = string.Join(" ", arguments.Skip(1));
                         }
                         else
                         {
-                            await ChannelSession.Services.Chat.Whisper(user.Username, username + " is not a valid user");
+                            await ChannelSession.Services.Chat.Whisper(user.Username, username + " could not be found in chat");
                         }
                     }
                     else

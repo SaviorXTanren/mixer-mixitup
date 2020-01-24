@@ -174,6 +174,15 @@ namespace MixItUp.Base.Services.Mixer
                 else if (e.payload.TryGetValue("userId", out JToken id))
                 {
                     userID = id.ToObject<uint>();
+                    user = ChannelSession.Services.User.GetUserByMixerID(userID);
+                    if (user == null)
+                    {
+                        UserModel userModel = await ChannelSession.MixerUserConnection.GetUser(userID);
+                        if (userModel != null)
+                        {
+                            user = await ChannelSession.Services.User.AddOrUpdateUser(userModel);
+                        }
+                    }
                 }
 
                 if (user != null)
@@ -186,7 +195,6 @@ namespace MixItUp.Base.Services.Mixer
                     if (e.payload["online"] != null)
                     {
                         bool online = e.payload["online"].ToObject<bool>();
-                        user = await ChannelSession.GetCurrentUser();
                         if (online)
                         {
                             await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.MixerChannelStreamStart));
@@ -330,16 +338,31 @@ namespace MixItUp.Base.Services.Mixer
                 {
                     if (e.payload.TryGetValue("gifterId", out JToken gifterID) && e.payload.TryGetValue("giftReceiverId", out JToken receiverID))
                     {
-                        EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChannelSubscriptionGifted, user);
-                        if (ChannelSession.Services.Events.CanPerformEvent(trigger))
+                        UserViewModel gifterUser = ChannelSession.Services.User.GetUserByMixerID(gifterID.ToObject<uint>());
+                        if (gifterUser == null)
                         {
                             UserModel gifterUserModel = await ChannelSession.MixerUserConnection.GetUser(gifterID.ToObject<uint>());
-                            UserModel receiverUserModel = await ChannelSession.MixerUserConnection.GetUser(receiverID.ToObject<uint>());
-                            if (gifterUserModel != null && receiverUserModel != null)
+                            if (gifterUserModel != null)
                             {
-                                UserViewModel gifterUser = new UserViewModel(gifterUserModel);
-                                UserViewModel receiverUser = new UserViewModel(receiverUserModel);
+                                gifterUser = await ChannelSession.Services.User.AddOrUpdateUser(gifterUserModel);
+                            }
+                        }
 
+                        UserViewModel receiverUser = ChannelSession.Services.User.GetUserByMixerID(receiverID.ToObject<uint>());
+                        if (gifterUser == null)
+                        {
+                            UserModel receiverUserModel = await ChannelSession.MixerUserConnection.GetUser(receiverID.ToObject<uint>());
+                            if (receiverUserModel != null)
+                            {
+                                receiverUser = await ChannelSession.Services.User.AddOrUpdateUser(receiverUserModel);
+                            }
+                        }
+
+                        if (gifterUser != null && receiverUser != null)
+                        {
+                            EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChannelSubscriptionGifted, gifterUser);
+                            if (ChannelSession.Services.Events.CanPerformEvent(trigger))
+                            {
                                 gifterUser.Data.TotalSubsGifted++;
                                 receiverUser.Data.TotalSubsReceived++;
                                 receiverUser.Data.TotalMonthsSubbed++;
@@ -359,20 +382,10 @@ namespace MixItUp.Base.Services.Mixer
                 }
                 else if (e.channel.Equals(MixerEventService.ProgressionLevelupEvent.ToString()))
                 {
-                    UserFanProgressionModel fanProgression = e.payload.ToObject<UserFanProgressionModel>();
-                    if (fanProgression != null)
+                    if (user != null)
                     {
-                        user = ChannelSession.Services.User.GetUserByMixerID(userID);
-                        if (user == null)
-                        {
-                            UserModel userModel = await ChannelSession.MixerUserConnection.GetUser(userID);
-                            if (userModel != null)
-                            {
-                                user = new UserViewModel(userModel);
-                            }
-                        }
-
-                        if (user != null)
+                        UserFanProgressionModel fanProgression = e.payload.ToObject<UserFanProgressionModel>();
+                        if (fanProgression != null)
                         {
                             EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerFanProgressionLevelUp, user);
                             if (ChannelSession.Services.Events.CanPerformEvent(trigger))

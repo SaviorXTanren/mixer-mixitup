@@ -569,22 +569,35 @@ namespace MixItUp.Base.Services.Mixer
             }
         }
 
-        private void ChatClient_OnDeleteMessageOccurred(object sender, ChatDeleteMessageEventModel e)
+        private async void ChatClient_OnDeleteMessageOccurred(object sender, ChatDeleteMessageEventModel e)
         {
-            this.OnDeleteMessageOccurred(sender, new Tuple<Guid, UserViewModel>(e.id, new UserViewModel(e.moderator)));
+            if (e != null && e.moderator != null)
+            {
+                UserViewModel moderator = ChannelSession.Services.User.GetUserByMixerID(e.moderator.user_id);
+                if (moderator == null)
+                {
+                    moderator = await ChannelSession.Services.User.AddOrUpdateUser(e.moderator.ToChatUserModel());
+                }
+
+                this.OnDeleteMessageOccurred(sender, new Tuple<Guid, UserViewModel>(e.id, moderator));
+            }
         }
 
-        private void ChatClient_OnPurgeMessageOccurred(object sender, ChatPurgeMessageEventModel e)
+        private async void ChatClient_OnPurgeMessageOccurred(object sender, ChatPurgeMessageEventModel e)
         {
             UserViewModel user = ChannelSession.Services.User.GetUserByMixerID(e.user_id);
             if (user != null)
             {
-                UserViewModel modUser = null;
+                UserViewModel moderator = null;
                 if (e.moderator != null)
                 {
-                    modUser = new UserViewModel(e.moderator);
+                    moderator = ChannelSession.Services.User.GetUserByMixerID(e.moderator.user_id);
+                    if (moderator == null)
+                    {
+                        moderator = await ChannelSession.Services.User.AddOrUpdateUser(e.moderator.ToChatUserModel());
+                    }
                 }
-                this.OnUserPurgeOccurred(sender, new Tuple<UserViewModel, UserViewModel>(user, modUser));
+                this.OnUserPurgeOccurred(sender, new Tuple<UserViewModel, UserViewModel>(user, moderator));
             }
         }
 

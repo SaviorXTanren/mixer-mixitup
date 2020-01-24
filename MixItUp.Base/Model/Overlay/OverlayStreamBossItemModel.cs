@@ -88,7 +88,7 @@ namespace MixItUp.Base.Model.Overlay
         public string NewBossAnimationName { get { return OverlayItemEffectsModel.GetAnimationClassName(this.NewBossAnimation); } set { } }
 
         [DataMember]
-        public uint CurrentBossUserID { get; set; }
+        public Guid CurrentBossUserID { get; set; } = Guid.Empty;
         [DataMember]
         public int CurrentStartingHealth { get; set; }
         [DataMember]
@@ -143,25 +143,25 @@ namespace MixItUp.Base.Model.Overlay
             this.DamageTaken = false;
             this.NewBoss = false;
 
-            if (this.CurrentBossUserID > 0)
+            if (this.CurrentBossUserID != Guid.Empty)
             {
-                UserModel user = await ChannelSession.MixerUserConnection.GetUser(this.CurrentBossUserID);
-                if (user != null)
+                UserDataModel userData = ChannelSession.Settings.GetUserData(this.CurrentBossUserID);
+                if (userData != null)
                 {
-                    this.CurrentBoss = new UserViewModel(user);
+                    this.CurrentBoss = new UserViewModel(userData);
                 }
                 else
                 {
-                    this.CurrentBossUserID = 0;
+                    this.CurrentBossUserID = Guid.Empty;
                 }
             }
 
-            if (this.CurrentBossUserID == 0)
+            if (this.CurrentBoss == null)
             {
                 this.CurrentBoss = await ChannelSession.GetCurrentUser();
                 this.CurrentHealth = this.CurrentStartingHealth = this.StartingHealth;
             }
-            this.CurrentBossUserID = this.CurrentBoss.MixerID;
+            this.CurrentBossUserID = this.CurrentBoss.ID;
 
             if (this.FollowBonus > 0.0)
             {
@@ -267,7 +267,7 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     this.NewBoss = true;
                     this.CurrentBoss = user;
-                    this.CurrentBossUserID = user.MixerID;
+                    this.CurrentBossUserID = user.ID;
 
                     int newHealth = this.StartingHealth;
                     if (this.OverkillBonus > 0.0)

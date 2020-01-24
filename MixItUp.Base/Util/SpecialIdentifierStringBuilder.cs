@@ -578,7 +578,7 @@ namespace MixItUp.Base.Util
 
             if (this.ContainsSpecialIdentifier(StreamerSpecialIdentifierHeader))
             {
-                await this.HandleUserSpecialIdentifiers(new UserViewModel(ChannelSession.MixerChannel.user), StreamerSpecialIdentifierHeader);
+                await this.HandleUserSpecialIdentifiers(await ChannelSession.GetCurrentUser(), StreamerSpecialIdentifierHeader);
             }
 
             if (this.ContainsSpecialIdentifier(StreamBossSpecialIdentifierHeader))

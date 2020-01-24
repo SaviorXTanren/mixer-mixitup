@@ -913,7 +913,7 @@ namespace MixItUp.Base.MixerAPI
                             MixPlayParticipantModel participant = null;
                             if (this.Participants.TryGetValue(e.participantID, out participant))
                             {
-                                user = new UserViewModel(participant);
+                                user = await ChannelSession.Services.User.AddOrUpdateUser(participant);
                             }
                             else
                             {

@@ -254,23 +254,8 @@ namespace MixItUp.Base.Services.External
             var purchase = jobj["data"].ToObject<StreamlootsPurchaseModel>();
             if (purchase != null)
             {
-                UserViewModel user = new UserViewModel(purchase.data.Username);
-                UserViewModel giftee = (string.IsNullOrEmpty(purchase.data.Giftee)) ? null : new UserViewModel(purchase.data.Giftee);
-
-                UserModel userModel = await ChannelSession.MixerUserConnection.GetUser(user.Username);
-                if (userModel != null)
-                {
-                    user = new UserViewModel(userModel);
-                }
-
-                if (giftee != null)
-                {
-                    UserModel gifteeModel = await ChannelSession.MixerUserConnection.GetUser(giftee.Username);
-                    if (gifteeModel != null)
-                    {
-                        giftee = new UserViewModel(gifteeModel);
-                    }
-                }
+                UserViewModel user = this.GetUser(purchase.data.Username);
+                UserViewModel giftee = (string.IsNullOrEmpty(purchase.data.Giftee)) ? null : this.GetUser(purchase.data.Giftee);
 
                 EventTrigger trigger = new EventTrigger(EventTypeEnum.StreamlootsPackPurchased, user);
                 trigger.SpecialIdentifiers["streamlootspurchasequantity"] = purchase.data.Quantity.ToString();
@@ -291,13 +276,7 @@ namespace MixItUp.Base.Services.External
             StreamlootsCardModel card = jobj["data"].ToObject<StreamlootsCardModel>();
             if (card != null)
             {
-                UserViewModel user = new UserViewModel(card.data.Username);
-
-                UserModel userModel = await ChannelSession.MixerUserConnection.GetUser(user.Username);
-                if (userModel != null)
-                {
-                    user = new UserViewModel(userModel);
-                }
+                UserViewModel user = this.GetUser(card.data.Username);
 
                 EventTrigger trigger = new EventTrigger(EventTypeEnum.StreamlootsCardRedeemed, user);
                 trigger.SpecialIdentifiers["streamlootscardname"] = card.data.cardName;
@@ -315,6 +294,16 @@ namespace MixItUp.Base.Services.External
 
                 await ChannelSession.Services.Events.PerformEvent(trigger);
             }
+        }
+
+        private UserViewModel GetUser(string username)
+        {
+            UserViewModel user = ChannelSession.Services.User.GetUserByUsername(username);
+            if (user == null)
+            {
+                user = new UserViewModel(username);
+            }
+            return user;
         }
     }
 }
