@@ -111,6 +111,8 @@ namespace MixItUp.Base.Commands
             this.IsEnabled = true;
         }
 
+        public CommandBase(string name, CommandTypeEnum type) : this(name, type, new List<string>() { }) { }
+
         public CommandBase(string name, CommandTypeEnum type, string command) : this(name, type, new List<string>() { command }) { }
 
         public CommandBase(string name, CommandTypeEnum type, IEnumerable<string> commands)
