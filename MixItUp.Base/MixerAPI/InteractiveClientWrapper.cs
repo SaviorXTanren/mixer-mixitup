@@ -96,7 +96,7 @@ namespace MixItUp.Base.MixerAPI
                 extraSpecialIdentifiers.Add("mixplaycontroltext", ((MixPlayLabelControlModel)this.Control).text);
             }
 
-            await this.Command.Perform(user, arguments, extraSpecialIdentifiers);
+            await this.Command.Perform(user, StreamingPlatformTypeEnum.Mixer, arguments, extraSpecialIdentifiers);
         }
     }
 

@@ -3,6 +3,7 @@ using Mixer.Base.Model.Leaderboards;
 using Mixer.Base.Model.Patronage;
 using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.External;
@@ -224,27 +225,32 @@ namespace MixItUp.Base.Util
             return text;
         }
 
-        public static async Task<UserViewModel> GetUserFromArgument(string argument)
+        public static async Task<UserViewModel> GetUserFromArgument(string argument, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None)
         {
             string username = argument.Replace("@", "");
             UserViewModel user = ChannelSession.Services.User.GetUserByUsername(username);
             if (user == null)
             {
-                UserModel argUserModel = await ChannelSession.MixerUserConnection.GetUser(username);
-                if (argUserModel != null)
+                if (ChannelSession.MixerUserConnection != null)
                 {
-                    user = new UserViewModel(argUserModel);
+                    Mixer.Base.Model.User.UserModel argUserModel = await ChannelSession.MixerUserConnection.GetUser(username);
+                    if (argUserModel != null)
+                    {
+                        user = new UserViewModel(argUserModel);
+                    }
                 }
             }
             return user;
         }
 
         private string text;
+        private StreamingPlatformTypeEnum platform;
         private bool encode;
 
-        public SpecialIdentifierStringBuilder(string text, bool encode = false)
+        public SpecialIdentifierStringBuilder(string text, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, bool encode = false)
         {
             this.text = !string.IsNullOrEmpty(text) ? text : string.Empty;
+            this.platform = platform;
             this.encode = encode;
         }
 
@@ -532,7 +538,7 @@ namespace MixItUp.Base.Util
                     string currentArgumentSpecialIdentifierHeader = ArgSpecialIdentifierHeader + (i + 1);
                     if (this.ContainsSpecialIdentifier(currentArgumentSpecialIdentifierHeader))
                     {
-                        UserViewModel argUser = await SpecialIdentifierStringBuilder.GetUserFromArgument(arguments.ElementAt(i));
+                        UserViewModel argUser = await SpecialIdentifierStringBuilder.GetUserFromArgument(arguments.ElementAt(i), this.platform);
                         if (argUser != null)
                         {
                             await this.HandleUserSpecialIdentifiers(argUser, currentArgumentSpecialIdentifierHeader);
@@ -567,7 +573,7 @@ namespace MixItUp.Base.Util
                 UserViewModel targetUser = null;
                 if (arguments != null && arguments.Count() > 0)
                 {
-                    targetUser = await SpecialIdentifierStringBuilder.GetUserFromArgument(arguments.ElementAt(0));
+                    targetUser = await SpecialIdentifierStringBuilder.GetUserFromArgument(arguments.ElementAt(0), this.platform);
                 }
 
                 if (targetUser == null)

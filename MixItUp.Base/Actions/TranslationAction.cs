@@ -116,7 +116,7 @@ namespace MixItUp.Base.Actions
                                 string argumentsText = (this.ResponseCommandArgumentsText != null) ? this.ResponseCommandArgumentsText : string.Empty;
                                 string commandArguments = await this.ReplaceSpecialIdentifiers(this.ResponseChatText, user, arguments, translationResult);
 
-                                await command.Perform(user, commandArguments.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries), this.GetExtraSpecialIdentifiers());
+                                await command.Perform(user, this.platform, commandArguments.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries), this.GetExtraSpecialIdentifiers());
                             }
                         }
                         else if (this.ResponseAction == TranslationResponseActionTypeEnum.SpecialIdentifier)

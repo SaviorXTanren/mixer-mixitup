@@ -121,7 +121,7 @@ namespace MixItUp.Base.Actions
                             {
                                 this.extraSpecialIdentifiers["pollresultanswer"] = winner.Key;
                                 this.extraSpecialIdentifiers["pollresulttotal"] = winner.Value.ToString();
-                                await command.Perform(arguments: this.lastArguments, extraSpecialIdentifiers: this.GetExtraSpecialIdentifiers());
+                                await command.Perform(this.platform, arguments: this.lastArguments, extraSpecialIdentifiers: this.GetExtraSpecialIdentifiers());
                             }
                         }
                     }

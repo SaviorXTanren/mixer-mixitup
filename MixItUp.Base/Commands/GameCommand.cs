@@ -330,7 +330,7 @@ namespace MixItUp.Base.Commands
                 {
                     specialIdentifiers[GameCommandBase.GameWinnersSpecialIdentifier] = "None";
                 }
-                await command.Perform(user, arguments, specialIdentifiers);
+                await command.Perform(user, this.platform, arguments, specialIdentifiers);
             }
         }
 

@@ -427,7 +427,7 @@ namespace MixItUp.Base.Services
                         this.userEntranceCommands.Add(message.User.ID);
                         if (message.User.Data.EntranceCommand != null)
                         {
-                            await message.User.Data.EntranceCommand.Perform(message.User);
+                            await message.User.Data.EntranceCommand.Perform(message.User, message.Platform);
                         }
                     }
 
@@ -531,7 +531,7 @@ namespace MixItUp.Base.Services
                     await this.DeleteMessage(message);
                 }
 
-                await command.Perform(message.User, arguments: arguments);
+                await command.Perform(message.User, message.Platform, arguments: arguments);
             }
         }
 

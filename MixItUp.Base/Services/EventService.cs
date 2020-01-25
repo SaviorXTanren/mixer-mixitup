@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.Mixer;
 using MixItUp.Base.Services.Twitch;
@@ -172,6 +173,7 @@ namespace MixItUp.Base.Services
     public class EventTrigger
     {
         public EventTypeEnum Type { get; set; }
+        public StreamingPlatformTypeEnum Platform { get; set; } = StreamingPlatformTypeEnum.None;
         public UserViewModel User { get; set; }
         public List<string> Arguments { get; set; } = new List<string>();
         public Dictionary<string, string> SpecialIdentifiers { get; set; } = new Dictionary<string, string>();
@@ -185,6 +187,7 @@ namespace MixItUp.Base.Services
             : this(type)
         {
             this.User = user;
+            this.Platform = this.User.Platform;
         }
 
         public EventTrigger(EventTypeEnum type, UserViewModel user, Dictionary<string, string> specialIdentifiers)
@@ -276,11 +279,11 @@ namespace MixItUp.Base.Services
             {
                 if (trigger.User != null)
                 {
-                    await command.Perform(trigger.User, arguments: trigger.Arguments, extraSpecialIdentifiers: trigger.SpecialIdentifiers);
+                    await command.Perform(trigger.User, platform: trigger.Platform, arguments: trigger.Arguments, extraSpecialIdentifiers: trigger.SpecialIdentifiers);
                 }
                 else
                 {
-                    await command.Perform(await ChannelSession.GetCurrentUser(), arguments: trigger.Arguments, extraSpecialIdentifiers: trigger.SpecialIdentifiers);
+                    await command.Perform(await ChannelSession.GetCurrentUser(), platform: trigger.Platform, arguments: trigger.Arguments, extraSpecialIdentifiers: trigger.SpecialIdentifiers);
                 }
             }
         }

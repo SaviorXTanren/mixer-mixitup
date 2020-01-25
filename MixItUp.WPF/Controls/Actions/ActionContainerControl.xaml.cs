@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Actions;
+using MixItUp.Base.Model;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Command;
@@ -115,7 +116,7 @@ namespace MixItUp.WPF.Controls.Actions
                 if (action != null)
                 {
                     UserViewModel currentUser = await ChannelSession.GetCurrentUser();
-                    await action.Perform(currentUser, new List<string>() { "@" + currentUser.Username }, new Dictionary<string, string>());
+                    await action.Perform(currentUser, StreamingPlatformTypeEnum.None, new List<string>() { "@" + currentUser.Username }, new Dictionary<string, string>());
                 }
                 else
                 {

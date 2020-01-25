@@ -81,7 +81,7 @@ namespace MixItUp.Base.Services
                 }
 
                 int position = this.queue.IndexOf(user);
-                await ChannelSession.Settings.GameQueueUserJoinedCommand.Perform(user, arguments: null, extraSpecialIdentifiers: new Dictionary<string, string>() { { "queueposition", this.GetUserPosition(user).ToString() } });
+                await ChannelSession.Settings.GameQueueUserJoinedCommand.Perform(user, user.Platform, arguments: null, extraSpecialIdentifiers: new Dictionary<string, string>() { { "queueposition", this.GetUserPosition(user).ToString() } });
             }
             GlobalEvents.GameQueueUpdated();
         }
@@ -91,7 +91,7 @@ namespace MixItUp.Base.Services
             if (await this.ValidateJoin(user))
             {
                 this.queue.Insert(0, user);
-                await ChannelSession.Settings.GameQueueUserJoinedCommand.Perform(user, arguments: null, extraSpecialIdentifiers: new Dictionary<string, string>() { { "queueposition", this.GetUserPosition(user).ToString() } });
+                await ChannelSession.Settings.GameQueueUserJoinedCommand.Perform(user, user.Platform, arguments: null, extraSpecialIdentifiers: new Dictionary<string, string>() { { "queueposition", this.GetUserPosition(user).ToString() } });
             }
             GlobalEvents.GameQueueUpdated();
         }
