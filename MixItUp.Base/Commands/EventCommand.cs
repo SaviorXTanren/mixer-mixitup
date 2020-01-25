@@ -107,7 +107,7 @@ namespace MixItUp.Base.Commands
             EventTypeEnum.MixerSparksUsed, EventTypeEnum.MixerEmbersUsed, EventTypeEnum.MixerSkillUsed, EventTypeEnum.MixerMilestoneReached, EventTypeEnum.MixerFanProgressionLevelUp,
         };
 
-        private LockedHashSet<string> userEventTracking = new LockedHashSet<string>();
+        private LockedHashSet<Guid> userEventTracking = new LockedHashSet<Guid>();
 
         [Obsolete]
         [DataMember]
@@ -125,15 +125,16 @@ namespace MixItUp.Base.Commands
         public EventCommand() { }
 
         public EventCommand(EventTypeEnum eventType)
+            : base(EnumHelper.GetEnumName(eventType), CommandTypeEnum.Event)
         {
             this.EventCommandType = eventType;
         }
 
         public bool CanRun(UserViewModel user)
         {
-            if (!this.userEventTracking.Contains(user.MixerID.ToString()))
+            if (!this.userEventTracking.Contains(user.ID))
             {
-                this.userEventTracking.Add(user.MixerID.ToString());
+                this.userEventTracking.Add(user.ID);
                 return true;
             }
             return false;
