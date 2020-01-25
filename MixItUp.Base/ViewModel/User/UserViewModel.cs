@@ -83,6 +83,16 @@ namespace MixItUp.Base.ViewModel.User
         {
             return twitchUser.broadcaster_type.Equals("partner");
         }
+
+        public static bool IsStaff(this TwitchNewAPI.Users.UserModel twitchUser)
+        {
+            return twitchUser.type.Equals("staff") || twitchUser.type.Equals("admin");
+        }
+
+        public static bool IsGlobalMod(this TwitchNewAPI.Users.UserModel twitchUser)
+        {
+            return twitchUser.type.Equals("global_mod");
+        }
     }
 
     [DataContract]
@@ -664,13 +674,22 @@ namespace MixItUp.Base.ViewModel.User
                         this.TwitchDisplayName = (!string.IsNullOrEmpty(twitchUser.display_name)) ? twitchUser.display_name : this.TwitchDisplayName;
                         this.TwitchAvatarLink = twitchUser.profile_image_url;
 
-                        if (ChannelSession.TwitchUser.IsPartner())
+                        if (twitchUser.IsPartner())
                         {
                             this.TwitchUserRoles.Add(UserRoleEnum.Partner);
                         }
-                        else if (ChannelSession.TwitchUser.IsAffiliate())
+                        else if (twitchUser.IsAffiliate())
                         {
                             this.TwitchUserRoles.Add(UserRoleEnum.Affiliate);
+                        }
+
+                        if (twitchUser.IsStaff())
+                        {
+                            this.TwitchUserRoles.Add(UserRoleEnum.Staff);
+                        }
+                        if (twitchUser.IsGlobalMod())
+                        {
+                            this.TwitchUserRoles.Add(UserRoleEnum.GlobalMod);
                         }
 
                         UserFollowModel follow = await ChannelSession.TwitchUserConnection.CheckIfFollowsNewAPI(ChannelSession.TwitchChannelNewAPI, twitchUser);
@@ -945,7 +964,6 @@ namespace MixItUp.Base.ViewModel.User
 
         private void SetTwitchRoles()
         {
-            this.MixerUserRoles.Clear();
             this.TwitchUserRoles.Add(UserRoleEnum.User);
             if (ChannelSession.TwitchChannelNewAPI != null && ChannelSession.TwitchChannelNewAPI.id.Equals(this.TwitchID))
             {
@@ -987,7 +1005,7 @@ namespace MixItUp.Base.ViewModel.User
             }
             else
             {
-                if (this.MixerUserRoles.Count() > 1)
+                if (displayRoles.Count() > 1)
                 {
                     displayRoles.Remove(UserRoleEnum.User);
                 }
@@ -997,12 +1015,12 @@ namespace MixItUp.Base.ViewModel.User
                     displayRoles.Remove(UserRoleEnum.Mod);
                 }
 
-                if (this.MixerUserRoles.Contains(UserRoleEnum.Subscriber) || this.MixerUserRoles.Contains(UserRoleEnum.Streamer))
+                if (displayRoles.Contains(UserRoleEnum.Subscriber) || displayRoles.Contains(UserRoleEnum.Streamer))
                 {
                     displayRoles.Remove(UserRoleEnum.Follower);
                 }
 
-                if (this.MixerUserRoles.Contains(UserRoleEnum.Streamer))
+                if (displayRoles.Contains(UserRoleEnum.Streamer))
                 {
                     displayRoles.Remove(UserRoleEnum.ChannelEditor);
                     displayRoles.Remove(UserRoleEnum.Subscriber);
