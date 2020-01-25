@@ -356,19 +356,21 @@ namespace MixItUp.Base.Services.Twitch
 
         }
 
-        private async void PubSub_OnChannelPointsRedeemed(object sender, PubSubChannelPointsRedeemedEventModel packet)
+        private async void PubSub_OnChannelPointsRedeemed(object sender, PubSubChannelPointsRedemptionEventModel packet)
         {
-            UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(packet.user.id);
+            PubSubChannelPointsRedeemedEventModel redemption = packet.redemption;
+
+            UserViewModel user = ChannelSession.Services.User.GetUserByTwitchID(redemption.user.id);
             if (user == null)
             {
-                user = new UserViewModel(packet.user);
+                user = new UserViewModel(redemption.user);
             }
 
             EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelPointedRedeemed, user);
 
-            trigger.SpecialIdentifiers["rewardname"] = packet.reward.title;
-            trigger.SpecialIdentifiers["rewardcost"] = packet.reward.cost.ToString();
-            trigger.SpecialIdentifiers["message"] = packet.user_input;
+            trigger.SpecialIdentifiers["rewardname"] = redemption.reward.title;
+            trigger.SpecialIdentifiers["rewardcost"] = redemption.reward.cost.ToString();
+            trigger.SpecialIdentifiers["message"] = redemption.user_input;
 
             await ChannelSession.Services.Events.PerformEvent(trigger);
         }
