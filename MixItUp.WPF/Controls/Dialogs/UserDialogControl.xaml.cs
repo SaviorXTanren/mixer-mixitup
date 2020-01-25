@@ -17,7 +17,7 @@ namespace MixItUp.WPF.Controls.Dialogs
         Unfollow,
         PromoteToMod,
         DemoteFromMod,
-        MixerPage,
+        ChannelPage,
         EditUser,
     }
 

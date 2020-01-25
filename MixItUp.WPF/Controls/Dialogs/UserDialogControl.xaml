@@ -89,7 +89,7 @@
                 <TextBlock Grid.Column="0" Grid.Row="2">Roles:</TextBlock>
                 <TextBlock Grid.Column="2" Grid.Row="2" Text="{Binding RolesDisplayString}" TextWrapping="Wrap" />
 
-                <TextBlock Grid.Column="0" Grid.Row="4">Mixer Age:</TextBlock>
+                <TextBlock Grid.Column="0" Grid.Row="4">Account Age:</TextBlock>
                 <TextBlock Grid.Column="2" Grid.Row="4" Text="{Binding AccountAgeString}" />
 
                 <TextBlock Grid.Column="0" Grid.Row="6">Watch Time:</TextBlock>
@@ -98,7 +98,7 @@
                 <TextBlock Grid.Column="0" Grid.Row="8">Follow Age:</TextBlock>
                 <TextBlock Grid.Column="2" Grid.Row="8" Text="{Binding FollowAgeString}" />
 
-                <TextBlock Grid.Column="0" Grid.Row="10">Stream:</TextBlock>
+                <TextBlock Grid.Column="0" Grid.Row="10">Stream Info:</TextBlock>
                 <TextBlock x:Name="StreamStatusTextBlock" Grid.Column="2" Grid.Row="10" />
             </Grid>
         </Grid>
@@ -187,9 +187,9 @@
                 </StackPanel>
             </Button>
 
-            <Button Grid.Column="4" ToolTip="Open Mixer Page" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
+            <Button Grid.Column="4" ToolTip="Open Channel Page" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
                 <Button.CommandParameter>
-                    <system:String>MixerPage</system:String>
+                    <system:String>ChannelPage</system:String>
                 </Button.CommandParameter>
                 <StackPanel Orientation="Horizontal">
                     <MaterialDesign:PackIcon Kind="Link" Height="24" Width="24" Margin="-13,-10" Style="{StaticResource DefaultPackIcon}" />

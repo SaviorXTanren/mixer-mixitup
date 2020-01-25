@@ -182,6 +182,16 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        [JsonIgnore]
+        public bool IsAnonymous
+        {
+            get
+            {
+                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.MixerID == 0 || this.InteractiveIDs.Values.Any(i => i.anonymous.GetValueOrDefault()); }
+                return false;
+            }
+        }
+
         #region Mixer
 
         [DataMember]
@@ -217,9 +227,6 @@ namespace MixItUp.Base.ViewModel.User
 
         [DataMember]
         public bool IsInInteractiveTimeout { get; set; }
-
-        [JsonIgnore]
-        public bool IsAnonymous { get { return this.MixerID == 0 || this.InteractiveIDs.Values.Any(i => i.anonymous.GetValueOrDefault()); } }
 
         [JsonIgnore]
         public string MixerAvatarLink { get { return string.Format(MixerUserAvatarLinkFormat, this.MixerID); } }

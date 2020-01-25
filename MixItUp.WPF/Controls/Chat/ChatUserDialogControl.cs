@@ -59,7 +59,7 @@ namespace MixItUp.WPF.Controls.Chat
                                 await ChannelSession.Services.Chat.UnmodUser(user);
                             }
                             break;
-                        case UserDialogResult.MixerPage:
+                        case UserDialogResult.ChannelPage:
                             ProcessHelper.LaunchLink($"https://mixer.com/{user.Username}");
                             break;
                         case UserDialogResult.EditUser:
