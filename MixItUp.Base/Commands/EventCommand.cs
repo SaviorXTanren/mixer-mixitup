@@ -131,12 +131,11 @@ namespace MixItUp.Base.Commands
 
         public bool CanRun(UserViewModel user)
         {
-            if (!this.userEventTracking.Contains(user.MixerID.ToString()))
+            if (EventCommand.ignoreUserTracking.Contains(this.EventCommandType))
             {
-                this.userEventTracking.Add(user.MixerID.ToString());
                 return true;
             }
-            return false;
+            return !this.userEventTracking.Contains(user.ID);
         }
 
         public override bool Equals(object obj)
@@ -156,11 +155,14 @@ namespace MixItUp.Base.Commands
 
         protected override Task<bool> PerformPreChecks(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
-            if (EventCommand.ignoreUserTracking.Contains(this.EventCommandType))
-            {
-                return Task.FromResult(true);
-            }
             return Task.FromResult(this.CanRun(user));
+        }
+
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
+        {
+            this.userEventTracking.Add(user.ID);
+
+            await base.PerformInternal(user, arguments, extraSpecialIdentifiers, token);
         }
     }
 }
