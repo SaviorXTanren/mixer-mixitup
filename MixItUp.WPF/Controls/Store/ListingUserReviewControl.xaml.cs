@@ -22,7 +22,7 @@ namespace MixItUp.WPF.Controls.Store
         private void ListingUserReviewControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            this.UserAvatar.SetUserAvatarUrl(this.review.UserID);
+            this.UserAvatar.SetMixerUserAvatarUrl(this.review.UserID);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
     }

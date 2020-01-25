@@ -33,7 +33,7 @@ namespace MixItUp.Base.Services
 
         Dictionary<string, MixrElixrEmoteModel> MixrElixrEmotes { get; }
 
-        LockedDictionary<string, UserViewModel> AllUsers { get; }
+        LockedDictionary<Guid, UserViewModel> AllUsers { get; }
         IEnumerable<UserViewModel> DisplayUsers { get; }
         event EventHandler DisplayUsersUpdated;
 
@@ -79,7 +79,7 @@ namespace MixItUp.Base.Services
 
         public Dictionary<string, MixrElixrEmoteModel> MixrElixrEmotes { get; private set; } = new Dictionary<string, MixrElixrEmoteModel>();
 
-        public LockedDictionary<string, UserViewModel> AllUsers { get; private set; } = new LockedDictionary<string, UserViewModel>();
+        public LockedDictionary<Guid, UserViewModel> AllUsers { get; private set; } = new LockedDictionary<Guid, UserViewModel>();
         public IEnumerable<UserViewModel> DisplayUsers
         {
             get
@@ -507,7 +507,7 @@ namespace MixItUp.Base.Services
 
             foreach (UserViewModel user in users)
             {
-                this.AllUsers[user.MixerID.ToString()] = user;
+                this.AllUsers[user.ID] = user;
                 lock (displayUsersLock)
                 {
                     this.displayUsers[user.SortableID] = user;
@@ -538,7 +538,7 @@ namespace MixItUp.Base.Services
 
             foreach (UserViewModel user in users)
             {
-                if (this.AllUsers.Remove(user.MixerID.ToString()))
+                if (this.AllUsers.Remove(user.ID))
                 {
                     lock (displayUsersLock)
                     {

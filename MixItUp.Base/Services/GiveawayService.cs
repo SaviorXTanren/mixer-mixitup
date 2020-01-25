@@ -43,9 +43,9 @@ namespace MixItUp.Base.Services
 
         private ChatCommand giveawayCommand = null;
 
-        private Dictionary<uint, GiveawayUser> enteredUsers = new Dictionary<uint, GiveawayUser>();
+        private Dictionary<Guid, GiveawayUser> enteredUsers = new Dictionary<Guid, GiveawayUser>();
 
-        private List<uint> pastWinners = new List<uint>();
+        private List<Guid> pastWinners = new List<Guid>();
 
         private CancellationTokenSource backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 
@@ -119,7 +119,7 @@ namespace MixItUp.Base.Services
 
             if (this.Winner != null)
             {
-                pastWinners.Add(this.Winner.MixerID);
+                pastWinners.Add(this.Winner.ID);
             }
 
             this.TimeLeft = 0;
@@ -179,7 +179,7 @@ namespace MixItUp.Base.Services
                             currentEntry += kvp.Entries;
                             if (entryNumber < currentEntry)
                             {
-                                this.enteredUsers.Remove(kvp.User.MixerID);
+                                this.enteredUsers.Remove(kvp.User.ID);
                                 this.Winner = kvp.User;
                                 break;
                             }
@@ -238,7 +238,7 @@ namespace MixItUp.Base.Services
                 {
                     int entries = 1;
 
-                    if (pastWinners.Contains(message.User.MixerID))
+                    if (pastWinners.Contains(message.User.ID))
                     {
                         await ChannelSession.Services.Chat.Whisper(message.User.Username, "You have already won a giveaway and can not enter this one");
                         return;
@@ -253,9 +253,9 @@ namespace MixItUp.Base.Services
                     }
 
                     int currentEntries = 0;
-                    if (this.enteredUsers.ContainsKey(message.User.MixerID))
+                    if (this.enteredUsers.ContainsKey(message.User.ID))
                     {
-                        currentEntries = this.enteredUsers[message.User.MixerID].Entries;
+                        currentEntries = this.enteredUsers[message.User.ID].Entries;
                     }
 
                     if ((entries + currentEntries) > ChannelSession.Settings.GiveawayMaximumEntries)
@@ -286,11 +286,11 @@ namespace MixItUp.Base.Services
                             }
                         }
 
-                        if (!this.enteredUsers.ContainsKey(message.User.MixerID))
+                        if (!this.enteredUsers.ContainsKey(message.User.ID))
                         {
-                            this.enteredUsers[message.User.MixerID] = new GiveawayUser() { User = message.User, Entries = 0 };
+                            this.enteredUsers[message.User.ID] = new GiveawayUser() { User = message.User, Entries = 0 };
                         }
-                        GiveawayUser giveawayUser = this.enteredUsers[message.User.MixerID];
+                        GiveawayUser giveawayUser = this.enteredUsers[message.User.ID];
 
                         if (giveawayUser != null)
                         {
