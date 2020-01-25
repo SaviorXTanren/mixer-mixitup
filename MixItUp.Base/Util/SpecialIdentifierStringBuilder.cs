@@ -231,9 +231,17 @@ namespace MixItUp.Base.Util
             UserViewModel user = ChannelSession.Services.User.GetUserByUsername(username);
             if (user == null)
             {
-                if (ChannelSession.MixerUserConnection != null)
+                if (platform == StreamingPlatformTypeEnum.Mixer && ChannelSession.MixerUserConnection != null)
                 {
                     Mixer.Base.Model.User.UserModel argUserModel = await ChannelSession.MixerUserConnection.GetUser(username);
+                    if (argUserModel != null)
+                    {
+                        user = new UserViewModel(argUserModel);
+                    }
+                }
+                else if (platform == StreamingPlatformTypeEnum.Twitch && ChannelSession.TwitchUserConnection != null)
+                {
+                    Twitch.Base.Models.NewAPI.Users.UserModel argUserModel = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(username);
                     if (argUserModel != null)
                     {
                         user = new UserViewModel(argUserModel);
