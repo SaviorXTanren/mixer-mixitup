@@ -4,6 +4,7 @@ using MixItUp.Base.Model.Chat.Mixer;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Mixer;
+using MixItUp.Base.ViewModel.Chat.Twitch;
 using MixItUp.Desktop.Services;
 using MixItUp.WPF.Util;
 using StreamingClient.Base.Util;
@@ -57,6 +58,8 @@ namespace MixItUp.WPF.Controls.Chat
             {
                 this.Message = (ChatMessageViewModel)this.DataContext;
                 this.Message.OnDeleted += Message_OnDeleted;
+                bool italics = false;
+
                 if (this.DataContext is AlertChatMessageViewModel)
                 {
                     AlertChatMessageViewModel alert = (AlertChatMessageViewModel)this.DataContext;
@@ -119,6 +122,12 @@ namespace MixItUp.WPF.Controls.Chat
 
                         this.AddStringMessage(" " + skillMessage.Skill.Cost.ToString());
                     }
+                    else if (this.DataContext is TwitchChatMessageViewModel)
+                    {
+                        TwitchChatMessageViewModel twitchMessage = (TwitchChatMessageViewModel)this.DataContext;
+                        italics = twitchMessage.IsSlashMe;
+                    }
+
 
                     if (showMessage)
                     {
@@ -131,7 +140,7 @@ namespace MixItUp.WPF.Controls.Chat
                                 bool isWhisperToStreamer = this.Message.IsWhisper && ChannelSession.MixerUser.username.Equals(this.Message.TargetUsername, StringComparison.InvariantCultureIgnoreCase);
                                 bool isStreamerTagged = messagePartString.Contains("@" + ChannelSession.MixerUser.username);
 
-                                this.AddStringMessage(messagePartString, isHighlighted: (isWhisperToStreamer || isStreamerTagged));
+                                this.AddStringMessage(messagePartString, isHighlighted: (isWhisperToStreamer || isStreamerTagged), isItalicized: italics);
                             }
                             else if (messagePart is MixerChatEmoteModel)
                             {
@@ -147,7 +156,7 @@ namespace MixItUp.WPF.Controls.Chat
             }
         }
 
-        private void AddStringMessage(string text, bool isHighlighted = false, SolidColorBrush foreground = null)
+        private void AddStringMessage(string text, bool isHighlighted = false, bool isItalicized = false, SolidColorBrush foreground = null)
         {
             foreach (string word in text.Split(new string[] { " " }, StringSplitOptions.None))
             {
@@ -165,6 +174,14 @@ namespace MixItUp.WPF.Controls.Chat
                 {
                     textBlock.Background = (Brush)FindResource("PrimaryHueLightBrush");
                     textBlock.Foreground = (Brush)FindResource("PrimaryHueLightForegroundBrush");
+                }
+
+                if (isItalicized)
+                {
+                    foreach (var run in textBlock.Inlines)
+                    {
+                        run.FontStyle = FontStyles.Italic;
+                    }
                 }
 
                 this.textBlocks.Add(textBlock);
