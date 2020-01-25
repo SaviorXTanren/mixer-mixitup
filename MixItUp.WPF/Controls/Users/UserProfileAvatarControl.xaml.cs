@@ -20,7 +20,7 @@ namespace MixItUp.WPF.Controls.Users
     /// </summary>
     public partial class UserProfileAvatarControl : UserControl
     {
-        private static Dictionary<uint, BitmapImage> userAvatarCache = new Dictionary<uint, BitmapImage>();
+        private static Dictionary<Guid, BitmapImage> userAvatarCache = new Dictionary<Guid, BitmapImage>();
 
         // Using a DependencyProperty as the backing store for Size.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty SizeProperty = DependencyProperty.Register("Size", typeof(int), typeof(UserProfileAvatarControl), new PropertyMetadata(0));
@@ -62,7 +62,10 @@ namespace MixItUp.WPF.Controls.Users
 
         public async Task SetUserAvatarUrl(uint userID)
         {
-            await this.SetUserAvatarUrl(new UserViewModel(string.Empty) { MixerID = userID });
+            if (userID > 0)
+            {
+                await this.SetUserAvatarUrl(new UserViewModel(string.Empty) { MixerID = userID });
+            }
         }
 
         public async Task SetUserAvatarUrl(UserViewModel user)
@@ -70,18 +73,18 @@ namespace MixItUp.WPF.Controls.Users
             try
             {
                 BitmapImage bitmap = new BitmapImage();
-                if (userAvatarCache.ContainsKey(user.MixerID))
+                if (userAvatarCache.ContainsKey(user.ID))
                 {
-                    bitmap = userAvatarCache[user.MixerID];
+                    bitmap = userAvatarCache[user.ID];
                 }
-                else
+                else if (!string.IsNullOrEmpty(user.AvatarLink))
                 {
                     using (WebClient client = new WebClient())
                     {
                         var bytes = await Task.Run<byte[]>((Func<Task<byte[]>>)(async () => { return await client.DownloadDataTaskAsync((string)user.AvatarLink); }));
                         bitmap = WindowsImageService.Load(bytes);
                     }
-                    userAvatarCache[user.MixerID] = bitmap;
+                    userAvatarCache[user.ID] = bitmap;
                 }
 
                 this.ProfileAvatarImage.ImageSource = bitmap;
