@@ -106,9 +106,9 @@ namespace MixItUp.Base.Model.Overlay
 
         private SemaphoreSlim HealthSemaphore = new SemaphoreSlim(1);
 
-        private HashSet<uint> follows = new HashSet<uint>();
-        private HashSet<uint> hosts = new HashSet<uint>();
-        private HashSet<uint> subs = new HashSet<uint>();
+        private HashSet<Guid> follows = new HashSet<Guid>();
+        private HashSet<Guid> hosts = new HashSet<Guid>();
+        private HashSet<Guid> subs = new HashSet<Guid>();
 
         public OverlayStreamBossItemModel() : base() { }
 
@@ -291,45 +291,45 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void GlobalEvents_OnFollowOccurred(object sender, UserViewModel user)
         {
-            if (!this.follows.Contains(user.MixerID))
+            if (!this.follows.Contains(user.ID))
             {
-                this.follows.Add(user.MixerID);
+                this.follows.Add(user.ID);
                 await this.ReduceHealth(user, this.FollowBonus);
             }
         }
 
         private async void GlobalEvents_OnHostOccurred(object sender, Tuple<UserViewModel, int> host)
         {
-            if (!this.hosts.Contains(host.Item1.MixerID))
+            if (!this.hosts.Contains(host.Item1.ID))
             {
-                this.hosts.Add(host.Item1.MixerID);
+                this.hosts.Add(host.Item1.ID);
                 await this.ReduceHealth(host.Item1, (Math.Max(host.Item2, 1) * this.HostBonus));
             }
         }
 
         private async void GlobalEvents_OnSubscribeOccurred(object sender, UserViewModel user)
         {
-            if (!this.subs.Contains(user.MixerID))
+            if (!this.subs.Contains(user.ID))
             {
-                this.subs.Add(user.MixerID);
+                this.subs.Add(user.ID);
                 await this.ReduceHealth(user, this.SubscriberBonus);
             }
         }
 
         private async void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserViewModel, int> user)
         {
-            if (!this.subs.Contains(user.Item1.MixerID))
+            if (!this.subs.Contains(user.Item1.ID))
             {
-                this.subs.Add(user.Item1.MixerID);
+                this.subs.Add(user.Item1.ID);
                 await this.ReduceHealth(user.Item1, this.SubscriberBonus);
             }
         }
 
         private async void GlobalEvents_OnSubscriptionGiftedOccurred(object sender, Tuple<UserViewModel, UserViewModel> e)
         {
-            if (!this.subs.Contains(e.Item2.MixerID))
+            if (!this.subs.Contains(e.Item2.ID))
             {
-                this.subs.Add(e.Item2.MixerID);
+                this.subs.Add(e.Item2.ID);
                 await this.ReduceHealth(e.Item2, this.SubscriberBonus);
             }
         }

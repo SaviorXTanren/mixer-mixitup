@@ -34,7 +34,7 @@ namespace MixItUp.Base.ViewModel.Requirement
         [JsonIgnore]
         private DateTimeOffset globalCooldown = DateTimeOffset.MinValue;
         [JsonIgnore]
-        private LockedDictionary<uint, DateTimeOffset> individualCooldowns = new LockedDictionary<uint, DateTimeOffset>();
+        private LockedDictionary<Guid, DateTimeOffset> individualCooldowns = new LockedDictionary<Guid, DateTimeOffset>();
 
         public CooldownRequirementViewModel()
         {
@@ -87,7 +87,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             {
                 return false;
             }
-            else if (this.Type == CooldownTypeEnum.PerPerson && this.individualCooldowns.ContainsKey(user.MixerID) && this.individualCooldowns[user.MixerID].AddSeconds(this.CooldownAmount) > DateTimeOffset.Now)
+            else if (this.Type == CooldownTypeEnum.PerPerson && this.individualCooldowns.ContainsKey(user.ID) && this.individualCooldowns[user.ID].AddSeconds(this.CooldownAmount) > DateTimeOffset.Now)
             {
                 return false;
             }
@@ -111,7 +111,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             }
             else if (this.Type == CooldownTypeEnum.PerPerson)
             {
-                timeLeft = this.individualCooldowns[user.MixerID].AddSeconds(this.CooldownAmount) - DateTimeOffset.Now;
+                timeLeft = this.individualCooldowns[user.ID].AddSeconds(this.CooldownAmount) - DateTimeOffset.Now;
             }
             else if (this.IsGroup && CooldownRequirementViewModel.groupCooldowns.ContainsKey(this.GroupName))
             {
@@ -128,7 +128,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             }
             else if (this.Type == CooldownTypeEnum.PerPerson)
             {
-                this.individualCooldowns[user.MixerID] = DateTimeOffset.Now;
+                this.individualCooldowns[user.ID] = DateTimeOffset.Now;
             }
             else if (this.IsGroup)
             {
@@ -144,7 +144,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             }
             else if (this.Type == CooldownTypeEnum.PerPerson)
             {
-                this.individualCooldowns[user.MixerID] = DateTimeOffset.Now.Subtract(TimeSpan.FromSeconds(this.CooldownAmount));
+                this.individualCooldowns[user.ID] = DateTimeOffset.Now.Subtract(TimeSpan.FromSeconds(this.CooldownAmount));
             }
             else if (this.IsGroup)
             {

@@ -371,10 +371,6 @@ namespace MixItUp.Base.Model.Overlay
 
         private List<OverlayEventListItem> eventsToAdd = new List<OverlayEventListItem>();
 
-        private HashSet<uint> follows = new HashSet<uint>();
-        private HashSet<uint> hosts = new HashSet<uint>();
-        private HashSet<uint> subs = new HashSet<uint>();
-
         public OverlayEventList() : base(EventListItemType, HTMLTemplate) { }
 
         public OverlayEventList(string htmlText, IEnumerable<EventListItemTypeEnum> itemTypes, int totalToShow, bool resetOnLoad, string textFont, int width, int height,
@@ -502,38 +498,22 @@ namespace MixItUp.Base.Model.Overlay
 
         private void GlobalEvents_OnFollowOccurred(object sender, UserViewModel user)
         {
-            if (!this.follows.Contains(user.MixerID))
-            {
-                this.follows.Add(user.MixerID);
-                this.AddEvent(user.Username, "Followed");
-            }
+
         }
 
         private void GlobalEvents_OnHostOccurred(object sender, Tuple<UserViewModel, int> host)
         {
-            if (!this.hosts.Contains(host.Item1.MixerID))
-            {
-                this.hosts.Add(host.Item1.MixerID);
-                this.AddEvent(host.Item1.Username, string.Format("Hosted ({0})", host.Item2));
-            }
+
         }
 
         private void GlobalEvents_OnSubscribeOccurred(object sender, UserViewModel user)
         {
-            if (!this.subs.Contains(user.MixerID))
-            {
-                this.subs.Add(user.MixerID);
-                this.AddEvent(user.Username, "Subscribed");
-            }
+
         }
 
         private void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserViewModel, int> user)
         {
-            if (!this.subs.Contains(user.Item1.MixerID))
-            {
-                this.subs.Add(user.Item1.MixerID);
-                this.AddEvent(user.Item1.Username, string.Format("Resubscribed ({0} months)", user.Item2));
-            }
+
         }
 
         private void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { this.AddEvent(donation.Username, string.Format("Donated {0}", donation.AmountText)); }
@@ -2100,7 +2080,6 @@ namespace MixItUp.Base.Model.Overlay
                 this.CurrentBoss = await ChannelSession.GetCurrentUser();
                 this.CurrentHealth = this.StartingHealth;
             }
-            this.CurrentBossUserID = this.CurrentBoss.MixerID;
 
             GlobalEvents.OnFollowOccurred -= GlobalEvents_OnFollowOccurred;
             GlobalEvents.OnHostOccurred -= GlobalEvents_OnHostOccurred;
@@ -2215,7 +2194,6 @@ namespace MixItUp.Base.Model.Overlay
                 if (this.CurrentHealth <= 0)
                 {
                     this.CurrentBoss = user;
-                    this.CurrentBossUserID = user.MixerID;
                     this.CurrentHealth = this.StartingHealth;
                     this.NewBoss = true;
                 }
@@ -2225,38 +2203,22 @@ namespace MixItUp.Base.Model.Overlay
 
         private async void GlobalEvents_OnFollowOccurred(object sender, UserViewModel user)
         {
-            if (!this.follows.Contains(user.MixerID))
-            {
-                this.follows.Add(user.MixerID);
-                await this.ReduceHealth(user, this.FollowBonus);
-            }
+
         }
 
         private async void GlobalEvents_OnHostOccurred(object sender, Tuple<UserViewModel, int> host)
         {
-            if (!this.hosts.Contains(host.Item1.MixerID))
-            {
-                this.hosts.Add(host.Item1.MixerID);
-                await this.ReduceHealth(host.Item1, (Math.Max(host.Item2, 1) * this.HostBonus));
-            }
+
         }
 
         private async void GlobalEvents_OnSubscribeOccurred(object sender, UserViewModel user)
         {
-            if (!this.subs.Contains(user.MixerID))
-            {
-                this.subs.Add(user.MixerID);
-                await this.ReduceHealth(user, this.SubscriberBonus);
-            }
+
         }
 
         private async void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserViewModel, int> user)
         {
-            if (!this.subs.Contains(user.Item1.MixerID))
-            {
-                this.subs.Add(user.Item1.MixerID);
-                await this.ReduceHealth(user.Item1, this.SubscriberBonus);
-            }
+
         }
 
         private async void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { await this.ReduceHealth(donation.User, (donation.Amount * this.DonationBonus)); }
@@ -2571,38 +2533,22 @@ namespace MixItUp.Base.Model.Overlay
 
         private void GlobalEvents_OnFollowOccurred(object sender, UserViewModel user)
         {
-            if (!this.follows.Contains(user.MixerID))
-            {
-                this.follows.Add(user.MixerID);
-                this.SecondsToAdd += this.FollowBonus;
-            }
+
         }
 
         private void GlobalEvents_OnHostOccurred(object sender, Tuple<UserViewModel, int> host)
         {
-            if (!this.hosts.Contains(host.Item1.MixerID))
-            {
-                this.hosts.Add(host.Item1.MixerID);
-                this.SecondsToAdd += (Math.Max(host.Item2, 1) * this.HostBonus);
-            }
+
         }
 
         private void GlobalEvents_OnSubscribeOccurred(object sender, UserViewModel user)
         {
-            if (!this.subs.Contains(user.MixerID))
-            {
-                this.subs.Add(user.MixerID);
-                this.SecondsToAdd += this.SubscriberBonus;
-            }
+
         }
 
         private void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserViewModel, int> user)
         {
-            if (!this.subs.Contains(user.Item1.MixerID))
-            {
-                this.subs.Add(user.Item1.MixerID);
-                this.SecondsToAdd += this.SubscriberBonus;
-            }
+
         }
 
         private void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { this.SecondsToAdd += (donation.Amount * this.DonationBonus); }

@@ -60,7 +60,7 @@ namespace MixItUp.WPF.Controls.Users
             }
         }
 
-        public async Task SetUserAvatarUrl(uint userID)
+        public async Task SetMixerUserAvatarUrl(uint userID)
         {
             if (userID > 0)
             {
