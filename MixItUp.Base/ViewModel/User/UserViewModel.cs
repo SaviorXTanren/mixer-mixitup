@@ -274,6 +274,8 @@ namespace MixItUp.Base.ViewModel.User
         [DataMember]
         public PatreonCampaignMember PatreonUser { get; set; }
 
+        public UserViewModel() { }
+
         public UserViewModel(string username)
         {
             this.unassociatedUsername = username;
