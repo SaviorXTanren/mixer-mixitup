@@ -136,6 +136,7 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.MixerAccountDate; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchAccountDate; }
                 return null;
             }
         }
@@ -145,6 +146,7 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.MixerFollowDate; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchFollowDate; }
                 return null;
             }
         }
@@ -154,6 +156,7 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.MixerSubscribeDate; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchSubscribeDate; }
                 return null;
             }
         }
@@ -164,6 +167,17 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return (ChannelSession.MixerChannel.badge != null) ? ChannelSession.MixerChannel.badge.url : string.Empty; }
+                return null;
+            }
+        }
+
+        [JsonIgnore]
+        public string UserLink
+        {
+            get
+            {
+                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return string.Format("https://www.mixer.com/{0}", this.Username); }
+                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return string.Format("https://www.twitch.tv/{0}", this.Username); }
                 return null;
             }
         }
