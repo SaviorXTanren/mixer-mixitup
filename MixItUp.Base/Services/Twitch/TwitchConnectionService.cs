@@ -3,6 +3,7 @@ using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Twitch.Base;
 using Twitch.Base.Models.NewAPI.Games;
@@ -159,9 +160,26 @@ namespace MixItUp.Base.Services.Twitch
         {
             return await this.RunAsync(this.Connection.V5API.Channels.GetChannelFollowers(channel, maxResult));
         }
+
         public async Task<IEnumerable<NewAPI.Users.UserFollowModel>> GetNewAPIFollowers(NewAPI.Users.UserModel channel, int maxResult = 1)
         {
             return await this.RunAsync(this.Connection.NewAPI.Users.GetFollows(to: channel, maxResults: maxResult));
+        }
+
+        public async Task<NewAPI.Users.UserFollowModel> CheckIfFollowsNewAPI(NewAPI.Users.UserModel channel, NewAPI.Users.UserModel userToCheck)
+        {
+            IEnumerable<NewAPI.Users.UserFollowModel> follows = await this.RunAsync(this.Connection.NewAPI.Users.GetFollows(from: userToCheck, to: channel, maxResults: 1));
+            if (follows != null)
+            {
+                return follows.FirstOrDefault();
+            }
+            return null;
+        }
+
+
+        public async Task<V5API.Users.UserSubscriptionModel> CheckIfSubscribedV5(V5API.Channel.ChannelModel channel, V5API.Users.UserModel userToCheck)
+        {
+            return await this.RunAsync(this.Connection.V5API.Channels.GetChannelUserSubscription(channel, userToCheck));
         }
 
 
