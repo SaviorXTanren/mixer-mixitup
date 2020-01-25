@@ -186,10 +186,13 @@ namespace MixItUp.Base.Services.Twitch
                 foreach (string chatUser in joinsToProcess)
                 {
                     TwitchNewAPI.Users.UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(chatUser);
-                    UserViewModel user = await ChannelSession.Services.User.AddOrUpdateUser(twitchUser);
-                    if (user != null)
+                    if (twitchUser != null)
                     {
-                        processedUsers.Add(user);
+                        UserViewModel user = await ChannelSession.Services.User.AddOrUpdateUser(twitchUser);
+                        if (user != null)
+                        {
+                            processedUsers.Add(user);
+                        }
                     }
                 }
                 this.OnUsersJoinOccurred(this, processedUsers);
@@ -212,10 +215,13 @@ namespace MixItUp.Base.Services.Twitch
                 List<UserViewModel> processedUsers = new List<UserViewModel>();
                 foreach (string chatUser in leavesToProcess)
                 {
-                    UserViewModel user = await ChannelSession.Services.User.RemoveUser(chatUser);
-                    if (user != null)
+                    if (!string.IsNullOrEmpty(chatUser))
                     {
-                        processedUsers.Add(user);
+                        UserViewModel user = await ChannelSession.Services.User.RemoveUser(chatUser);
+                        if (user != null)
+                        {
+                            processedUsers.Add(user);
+                        }
                     }
                 }
                 this.OnUsersLeaveOccurred(this, processedUsers);
@@ -232,7 +238,10 @@ namespace MixItUp.Base.Services.Twitch
         {
             await this.userJoinLeaveEventsSemaphore.WaitAndRelease(() =>
             {
-                this.userJoinEvents.Add(userJoin.UserLogin);
+                if (!string.IsNullOrEmpty(userJoin.UserLogin))
+                {
+                    this.userJoinEvents.Add(userJoin.UserLogin);
+                }
                 return Task.FromResult(0);
             });
         }
@@ -241,16 +250,26 @@ namespace MixItUp.Base.Services.Twitch
         {
             await this.userJoinLeaveEventsSemaphore.WaitAndRelease(() =>
             {
-                this.userLeaveEvents.Add(userLeave.UserLogin);
+                if (!string.IsNullOrEmpty(userLeave.UserLogin))
+                {
+                    this.userLeaveEvents.Add(userLeave.UserLogin);
+                }
                 return Task.FromResult(0);
             });
         }
 
         private void UserClient_OnMessageReceived(object sender, ChatMessagePacketModel message)
         {
-            if (message != null)
+            if (message != null && !string.IsNullOrEmpty(message.Message))
             {
-                this.OnMessageOccurred(this, new TwitchChatMessageViewModel(message));
+                if (string.IsNullOrEmpty(message.UserID) || message.UserLogin.Equals("jtv"))
+                {
+                    Logger.Log(SerializerHelper.SerializeToString(message));
+                }
+                else
+                {
+                    this.OnMessageOccurred(this, new TwitchChatMessageViewModel(message));
+                }
             }
         }
 
