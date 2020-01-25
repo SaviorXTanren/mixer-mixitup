@@ -450,7 +450,15 @@ namespace MixItUp.Base
                 TwitchChatService twitchChatService = new TwitchChatService();
                 TwitchEventService twitchEventService = new TwitchEventService();
 
-                if (!await mixerChatService.ConnectStreamer() || !await mixerEventService.Connect() || !await twitchChatService.ConnectUser() || !await twitchEventService.Connect())
+                List<Task<bool>> platformServicesTasks = new List<Task<bool>>();
+                platformServicesTasks.Add(mixerChatService.ConnectStreamer());
+                platformServicesTasks.Add(mixerEventService.Connect());
+                platformServicesTasks.Add(twitchChatService.ConnectUser());
+                platformServicesTasks.Add(twitchEventService.Connect());
+
+                await Task.WhenAll(platformServicesTasks);
+
+                if (platformServicesTasks.Any(t => !t.Result))
                 {
                     return false;
                 }
