@@ -127,7 +127,7 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.MixerUsername; }
-                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchUsername; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return (!string.IsNullOrEmpty(this.TwitchDisplayName)) ? this.TwitchDisplayName : this.TwitchUsername; }
                 return this.unassociatedUsername;
             }
         }
