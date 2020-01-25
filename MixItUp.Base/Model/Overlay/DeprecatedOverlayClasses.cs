@@ -819,7 +819,7 @@ namespace MixItUp.Base.Model.Overlay
 
         protected async Task<string> ReplaceStringWithSpecialModifiers(string str, UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, bool encode = false)
         {
-            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str, encode);
+            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str, encode: encode);
             if (extraSpecialIdentifiers != null)
             {
                 foreach (var kvp in extraSpecialIdentifiers)

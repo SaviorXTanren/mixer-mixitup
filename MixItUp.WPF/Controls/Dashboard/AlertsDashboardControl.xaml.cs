@@ -118,7 +118,7 @@ namespace MixItUp.WPF.Controls.Dashboard
                         if (menuItem.DataContext != null && menuItem.DataContext is ChatCommand)
                         {
                             ChatCommand command = (ChatCommand)menuItem.DataContext;
-                            await command.Perform(arguments: new List<string>() { message.User.Username });
+                            await command.Perform(message.Platform, arguments: new List<string>() { message.User.Username });
                         }
                     }
                 }

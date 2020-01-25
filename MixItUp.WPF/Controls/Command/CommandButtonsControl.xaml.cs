@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.Chat;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
@@ -289,7 +290,7 @@ namespace MixItUp.WPF.Controls.Command
                     }
                 }
 
-                await command.PerformAndWait(currentUser, new List<string>() { "@" + currentUser.Username }, extraSpecialIdentifiers);
+                await command.PerformAndWait(currentUser, StreamingPlatformTypeEnum.None, new List<string>() { "@" + currentUser.Username }, extraSpecialIdentifiers);
                 if (command is PermissionsCommandBase)
                 {
                     PermissionsCommandBase permissionCommand = (PermissionsCommandBase)command;
