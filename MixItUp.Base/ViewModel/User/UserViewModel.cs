@@ -117,6 +117,8 @@ namespace MixItUp.Base.ViewModel.User
             return roles;
         }
 
+        public UserDataModel Data { get; private set; }
+
         public Guid ID { get { return this.Data.ID; } }
 
         public string Username
@@ -130,7 +132,14 @@ namespace MixItUp.Base.ViewModel.User
         }
         private string unassociatedUsername;
 
-        public StreamingPlatformTypeEnum Platform { get; set; }
+        public StreamingPlatformTypeEnum Platform
+        {
+            get
+            {
+                if (this.MixerID > 0) { return StreamingPlatformTypeEnum.Mixer; }
+                return StreamingPlatformTypeEnum.None;
+            }
+        }
 
         public HashSet<UserRoleEnum> UserRoles
         {
@@ -269,29 +278,30 @@ namespace MixItUp.Base.ViewModel.User
         public UserViewModel() { }
 
         public UserViewModel(string username)
+            : this(mixerID: 0)
         {
             this.unassociatedUsername = username;
         }
 
         public UserViewModel(Mixer.Base.Model.User.UserModel user)
+            : this(mixerID: user.id)
         {
-            this.Platform = StreamingPlatformTypeEnum.Mixer;
             this.MixerID = user.id;
             this.MixerUsername = user.username;
             this.SetMixerUserDetails(user);
         }
 
         public UserViewModel(ChannelModel channel)
+            : this(mixerID: channel.userId)
         {
-            this.Platform = StreamingPlatformTypeEnum.Mixer;
             this.MixerID = channel.userId;
             this.MixerUsername = channel.token;
             this.MixerChannelID = channel.id;
         }
 
         public UserViewModel(ChatUserModel user)
+            : this(mixerID: user.userId.GetValueOrDefault())
         {
-            this.Platform = StreamingPlatformTypeEnum.Mixer;
             this.MixerID = user.userId.GetValueOrDefault();
             this.MixerUsername = user.userName;
             this.SetMixerRoles(user.userRoles);
@@ -300,8 +310,8 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         public UserViewModel(ChatMessageEventModel messageEvent)
+            : this(mixerID: messageEvent.user_id)
         {
-            this.Platform = StreamingPlatformTypeEnum.Mixer;
             this.MixerID = messageEvent.user_id;
             this.MixerUsername = messageEvent.user_name;
             this.SetMixerRoles(messageEvent.user_roles);
@@ -310,8 +320,8 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         public UserViewModel(ChatMessageUserModel chatUser)
+            : this(mixerID: chatUser.user_id)
         {
-            this.Platform = StreamingPlatformTypeEnum.Mixer;
             this.MixerID = chatUser.user_id;
             this.MixerUsername = chatUser.user_name;
             this.SetMixerRoles(chatUser.user_roles);
@@ -320,8 +330,8 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         public UserViewModel(MixPlayParticipantModel participant)
+            : this(mixerID: participant.userID)
         {
-            this.Platform = StreamingPlatformTypeEnum.Mixer;
             this.MixerID = participant.userID;
             this.MixerUsername = participant.username;
 
@@ -397,53 +407,33 @@ namespace MixItUp.Base.ViewModel.User
             this.SetTwitchRoles();
         }
 
-        public UserViewModel(UserDataModel user)
+        public UserViewModel(UserDataModel userData)
         {
-            if (user.MixerID > 0)
-            {
-                this.Platform = StreamingPlatformTypeEnum.Mixer;
-            }
-            this.MixerID = user.MixerID;
-            this.MixerUsername = user.MixerUsername;
-
-            if (!string.IsNullOrEmpty(user.TwitchID))
-            {
-                this.Platform = StreamingPlatformTypeEnum.Twitch;
-            }
-            this.TwitchID = user.TwitchID;
-            this.TwitchUsername = user.TwitchUsername;
+            this.Data = userData;
         }
 
-        [JsonIgnore]
+        private UserViewModel(uint mixerID = 0)
+        {
+            if (mixerID > 0)
+            {
+                this.Data = ChannelSession.Settings.GetUserDataByMixerID(mixerID);
+            }
+            else
+            {
+                this.Data = new UserDataModel();
+            }
+        }
+
         public DateTimeOffset LastActivity { get; set; }
 
-        [JsonIgnore]
         public DateTimeOffset LastUpdated { get; set; }
 
-        [JsonIgnore]
-        public UserDataModel Data
-        {
-            get
-            {
-                if (this.data == null)
-                {
-                    this.data = ChannelSession.Settings.GetUserData(this);
-                }
-                return this.data;
-            }
-        }
-        private UserDataModel data;
-
-        [JsonIgnore]
         public string RolesDisplayString { get; private set; }
 
-        [JsonIgnore]
         public UserRoleEnum PrimaryRole { get { return this.UserRoles.Max(); } }
 
-        [JsonIgnore]
         public string PrimaryRoleString { get { return EnumHelper.GetEnumName(this.PrimaryRole); } }
 
-        [JsonIgnore]
         public string SortableID
         {
             get
@@ -457,7 +447,6 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        [JsonIgnore]
         public string Title
         {
             get
@@ -481,31 +470,22 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        [JsonIgnore]
         public string AccountAgeString { get { return (this.AccountDate != null) ? this.AccountDate.GetValueOrDefault().GetAge() : "Unknown"; } }
 
-        [JsonIgnore]
         public bool IsFollower { get { return this.UserRoles.Contains(UserRoleEnum.Follower) || this.HasPermissionsTo(UserRoleEnum.Subscriber); } }
 
-        [JsonIgnore]
         public string FollowAgeString { get { return (this.FollowDate != null) ? this.FollowDate.GetValueOrDefault().GetAge() : "Not Following"; } }
 
-        [JsonIgnore]
         public bool IsPlatformSubscriber { get { return this.UserRoles.Contains(UserRoleEnum.Subscriber); } }
 
-        [JsonIgnore]
         public bool ShowSubscriberBadge { get { return this.IsPlatformSubscriber && !string.IsNullOrEmpty(this.SubscriberBadgeLink); } }
 
-        [JsonIgnore]
         public string SubscribeAgeString { get { return (this.SubscribeDate != null) ? this.SubscribeDate.GetValueOrDefault().GetAge() : "Not Subscribed"; } }
 
-        [JsonIgnore]
         public int WhispererNumber { get; set; }
 
-        [JsonIgnore]
         public bool HasWhisperNumber { get { return this.WhispererNumber > 0; } }
 
-        [JsonIgnore]
         public int SubscribeMonths
         {
             get
@@ -518,7 +498,6 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        [JsonIgnore]
         public string PrimaryRoleColorName
         {
             get
@@ -547,10 +526,8 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        [JsonIgnore]
         public bool IsInteractiveParticipant { get { return this.InteractiveIDs.Count > 0; } }
 
-        [JsonIgnore]
         public PatreonTier PatreonTier
         {
             get

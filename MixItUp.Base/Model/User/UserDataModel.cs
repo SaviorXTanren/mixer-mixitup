@@ -18,9 +18,6 @@ namespace MixItUp.Base.Model.User
         [DataMember]
         public Guid ID { get; set; } = Guid.NewGuid();
 
-        [DataMember]
-        public StreamingPlatformTypeEnum Platform { get; set; }
-
         #region Mixer
 
         [DataMember]
