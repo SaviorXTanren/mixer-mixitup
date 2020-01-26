@@ -945,7 +945,7 @@ namespace MixItUp.Base.MixerAPI
 
                     if (user.IsInInteractiveTimeout)
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.Username, "You currently timed out from MixPlay.");
+                        await ChannelSession.Services.Chat.Whisper(user, "You currently timed out from MixPlay.");
                         return;
                     }
 

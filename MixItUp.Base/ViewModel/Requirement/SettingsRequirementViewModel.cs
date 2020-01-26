@@ -45,7 +45,7 @@ namespace MixItUp.Base.ViewModel.Requirement
                 {
                     if (ChannelSession.Services.Chat != null)
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.Username, string.Format("You must have the {0} Patreon Benefit to do this", benefit.Title));
+                        await ChannelSession.Services.Chat.Whisper(user, string.Format("You must have the {0} Patreon Benefit to do this", benefit.Title));
                     }
                 }
             }

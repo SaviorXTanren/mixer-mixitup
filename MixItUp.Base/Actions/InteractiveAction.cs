@@ -259,7 +259,7 @@ namespace MixItUp.Base.Actions
                     {
                         if (ChannelSession.Services.Chat != null)
                         {
-                            await ChannelSession.Services.Chat.Whisper(user.Username, "You do not permission to perform this action.");
+                            await ChannelSession.Services.Chat.Whisper(user, "You do not permission to perform this action.");
                         }
                         return;
                     }
