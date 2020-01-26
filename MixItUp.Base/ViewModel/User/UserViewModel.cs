@@ -609,27 +609,27 @@ namespace MixItUp.Base.ViewModel.User
                     {
                         this.SetMixerUserDetails(user);
 
-                    this.Data.MixerFollowDate = await ChannelSession.MixerUserConnection.CheckIfFollows(ChannelSession.MixerChannel, this.GetModel());
-                    if (this.Data.MixerFollowDate != null && this.FollowDate.GetValueOrDefault() > DateTimeOffset.MinValue)
-                    {
-                        this.MixerUserRoles.Add(UserRoleEnum.Follower);
-                    }
-
-                    if (this.IsPlatformSubscriber || force)
-                    {
-                        UserWithGroupsModel userGroups = await ChannelSession.MixerUserConnection.GetUserInChannel(ChannelSession.MixerChannel, this.MixerID);
-                        if (userGroups != null)
+                        this.Data.MixerFollowDate = await ChannelSession.MixerUserConnection.CheckIfFollows(ChannelSession.MixerChannel, this.GetMixerUserModel());
+                        if (this.Data.MixerFollowDate != null && this.FollowDate.GetValueOrDefault() > DateTimeOffset.MinValue)
                         {
-                            this.Data.MixerSubscribeDate = userGroups.GetSubscriberDate();
-                            if (this.SubscribeDate != null)
+                            this.MixerUserRoles.Add(UserRoleEnum.Follower);
+                        }
+
+                        if (this.IsPlatformSubscriber || force)
+                        {
+                            UserWithGroupsModel userGroups = await ChannelSession.MixerUserConnection.GetUserInChannel(ChannelSession.MixerChannel, this.MixerID);
+                            if (userGroups != null)
                             {
-                                if (this.Data.TotalMonthsSubbed < this.SubscribeDate.GetValueOrDefault().TotalMonthsFromNow())
+                                this.Data.MixerSubscribeDate = userGroups.GetSubscriberDate();
+                                if (this.SubscribeDate != null)
                                 {
-                                    this.Data.TotalMonthsSubbed = (uint)this.SubscribeDate.GetValueOrDefault().TotalMonthsFromNow();
+                                    if (this.Data.TotalMonthsSubbed < this.SubscribeDate.GetValueOrDefault().TotalMonthsFromNow())
+                                    {
+                                        this.Data.TotalMonthsSubbed = (uint)this.SubscribeDate.GetValueOrDefault().TotalMonthsFromNow();
+                                    }
                                 }
                             }
                         }
-                    }
 
                         this.MixerFanProgression = await ChannelSession.MixerUserConnection.GetUserFanProgression(ChannelSession.MixerChannel, user);
                     }
