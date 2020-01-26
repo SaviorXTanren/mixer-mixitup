@@ -585,7 +585,6 @@ namespace MixItUp.Desktop.Services
                             }
                             userData.IsSparkExempt = GetOptionValue<bool>(optionsJObj, "IsSparkExempt");
                             userData.IsCurrencyRankExempt = GetOptionValue<bool>(optionsJObj, "IsCurrencyRankExempt");
-                            userData.GameWispUserID = GetOptionValue<uint>(optionsJObj, "GameWispUserID");
                             userData.PatreonUserID = GetOptionValue<string>(optionsJObj, "PatreonUserID");
                             userData.ModerationStrikes = GetOptionValue<uint>(optionsJObj, "ModerationStrikes");
                             userData.CustomTitle = GetOptionValue<string>(optionsJObj, "CustomTitle");

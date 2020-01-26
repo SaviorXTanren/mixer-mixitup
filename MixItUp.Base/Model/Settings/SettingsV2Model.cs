@@ -836,35 +836,31 @@ namespace MixItUp.Base.Model.Settings
 
         public UserDataModel GetUserData(UserViewModel userViewModel)
         {
-            UserDataModel userData = this.GetUserDataByMixerID(userViewModel.MixerID);
-            if (userData == null)
+            lock (this.UserData)
             {
-                userData = this.GetUserDataByTwitchID(userViewModel.TwitchID);
+                UserDataModel userData = this.GetUserDataByMixerID(userViewModel.MixerID);
                 if (userData == null)
                 {
-                    userData = this.GetUserData(userViewModel.ID);
-                    if (userData == null)
+                    userData = new UserDataModel(userViewModel);
+                    if (userData.ID == Guid.Empty)
                     {
-                        userData = new UserDataModel(userViewModel);
-                        if (userData.ID == Guid.Empty)
-                        {
-                            userViewModel.ID = userData.ID = Guid.NewGuid();
-                        }
+                        userData.ID = Guid.NewGuid();
+                    }
 
                         this.UserData[userData.ID] = userData;
 
-                        if (userData.MixerID > 0)
-                        {
-                            this.MixerUserIDLookups[userData.MixerID] = userData.ID;
-                        }
-                        if (!string.IsNullOrEmpty(userData.TwitchID))
-                        {
-                            this.TwitchUserIDLookups[userData.TwitchID] = userData.ID;
-                        }
+                    if (userData.MixerID > 0)
+                    {
+                        this.MixerUserIDLookups[userData.MixerID] = userData.ID;
+                    }
+
+                    if (!string.IsNullOrEmpty(userData.TwitchID))
+                    {
+                        this.TwitchUserIDLookups[userData.TwitchID] = userData.ID;
                     }
                 }
+                return userData;
             }
-            return userData;
         }
 
         public UserDataModel GetUserData(Guid id)
