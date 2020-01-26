@@ -137,6 +137,7 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.MixerID > 0) { return StreamingPlatformTypeEnum.Mixer; }
+                else if (!string.IsNullOrEmpty(this.TwitchID)) { return StreamingPlatformTypeEnum.Twitch; }
                 return StreamingPlatformTypeEnum.None;
             }
         }
@@ -339,8 +340,8 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         public UserViewModel(TwitchNewAPI.Users.UserModel twitchUser)
+            : this(twitchID: twitchUser.id)
         {
-            this.Platform = StreamingPlatformTypeEnum.Twitch;
             this.TwitchID = twitchUser.id;
             this.TwitchUsername = twitchUser.login;
             this.TwitchDisplayName = (!string.IsNullOrEmpty(twitchUser.display_name)) ? twitchUser.display_name : this.TwitchUsername;
@@ -350,8 +351,8 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         public UserViewModel(ChatMessagePacketModel twitchMessage)
+            : this(twitchID: twitchMessage.UserID)
         {
-            this.Platform = StreamingPlatformTypeEnum.Twitch;
             this.TwitchID = twitchMessage.UserID;
             this.TwitchUsername = twitchMessage.UserLogin;
             this.TwitchDisplayName = (!string.IsNullOrEmpty(twitchMessage.UserDisplayName)) ? twitchMessage.UserDisplayName : this.TwitchUsername;
@@ -360,8 +361,8 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         public UserViewModel(PubSubWhisperEventModel whisper)
+            : this(twitchID: whisper.from_id.ToString())
         {
-            this.Platform = StreamingPlatformTypeEnum.Twitch;
             this.TwitchID = whisper.from_id.ToString();
             this.TwitchUsername = whisper.tags.login;
             this.TwitchDisplayName = (!string.IsNullOrEmpty(whisper.tags.display_name)) ? whisper.tags.display_name : this.TwitchUsername;
@@ -370,8 +371,8 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         public UserViewModel(ChatRawPacketModel packet)
+            : this(twitchID: packet.Tags["user-id"])
         {
-            this.Platform = StreamingPlatformTypeEnum.Twitch;
             this.TwitchID = packet.Tags["user-id"];
             this.TwitchUsername = packet.Tags["login"];
             this.TwitchDisplayName = (packet.Tags.ContainsKey("display-name") && !string.IsNullOrEmpty(packet.Tags["display-name"])) ? packet.Tags["display-name"] : this.TwitchUsername;
@@ -380,8 +381,8 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         public UserViewModel(PubSubBitsEventV2Model packet)
+            : this(twitchID: packet.user_id)
         {
-            this.Platform = StreamingPlatformTypeEnum.Twitch;
             this.TwitchID = packet.user_id;
             this.TwitchDisplayName = this.TwitchUsername = packet.user_name;
 
@@ -389,8 +390,8 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         public UserViewModel(PubSubSubscriptionsEventModel packet)
+            : this(twitchID: packet.user_id)
         {
-            this.Platform = StreamingPlatformTypeEnum.Twitch;
             this.TwitchID = packet.user_id;
             this.TwitchUsername = packet.user_name;
             this.TwitchDisplayName = (!string.IsNullOrEmpty(packet.display_name)) ? packet.display_name : this.TwitchUsername;
@@ -399,8 +400,8 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         public UserViewModel(UserFollowModel follow)
+            : this(twitchID: follow.from_id)
         {
-            this.Platform = StreamingPlatformTypeEnum.Twitch;
             this.TwitchID = follow.from_id;
             this.TwitchDisplayName = this.TwitchUsername = follow.from_name;
 
@@ -412,11 +413,15 @@ namespace MixItUp.Base.ViewModel.User
             this.Data = userData;
         }
 
-        private UserViewModel(uint mixerID = 0)
+        private UserViewModel(uint mixerID = 0, string twitchID = null)
         {
             if (mixerID > 0)
             {
                 this.Data = ChannelSession.Settings.GetUserDataByMixerID(mixerID);
+            }
+            else if (!string.IsNullOrEmpty(twitchID))
+            {
+                this.Data = ChannelSession.Settings.GetUserDataByTwitchID(twitchID);
             }
             else
             {

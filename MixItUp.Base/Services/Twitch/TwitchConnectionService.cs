@@ -28,6 +28,7 @@ namespace MixItUp.Base.Services.Twitch
             OAuthClientScopeEnum.channel_editor,
             OAuthClientScopeEnum.channel_read,
             OAuthClientScopeEnum.channel_subscriptions,
+            OAuthClientScopeEnum.user_subscriptions,
 
             OAuthClientScopeEnum.user_read,
 

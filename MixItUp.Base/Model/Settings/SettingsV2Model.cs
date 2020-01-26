@@ -858,11 +858,27 @@ namespace MixItUp.Base.Model.Settings
                         return this.UserData[id];
                     }
                 }
-                return this.CreateUserData(mixerID);
+                return this.CreateUserData(mixerID: mixerID);
             }
         }
 
-        private UserDataModel CreateUserData(uint mixerID = 0)
+        public UserDataModel GetUserDataByTwitchID(string twitchID)
+        {
+            lock (this.UserData)
+            {
+                if (!string.IsNullOrEmpty(twitchID) && this.TwitchUserIDLookups.ContainsKey(twitchID))
+                {
+                    Guid id = this.TwitchUserIDLookups[twitchID];
+                    if (this.UserData.ContainsKey(id))
+                    {
+                        return this.UserData[id];
+                    }
+                }
+                return this.CreateUserData(twitchID: twitchID);
+            }
+        }
+
+        private UserDataModel CreateUserData(uint mixerID = 0, string twitchID = null)
         {
             UserDataModel userData = new UserDataModel();
             this.UserData[userData.ID] = userData;
@@ -873,20 +889,13 @@ namespace MixItUp.Base.Model.Settings
                 this.MixerUserIDLookups[userData.MixerID] = userData.ID;
             }
 
-            return userData;
-        }
-
-        public UserDataModel GetUserDataByTwitchID(string twitchID)
-        {
-            if (!string.IsNullOrEmpty(twitchID) && this.TwitchUserIDLookups.ContainsKey(twitchID))
+            userData.TwitchID = twitchID;
+            if (!string.IsNullOrEmpty(userData.TwitchID))
             {
-                Guid id = this.TwitchUserIDLookups[twitchID];
-                if (this.UserData.ContainsKey(id))
-                {
-                    return this.UserData[id];
-                }
+                this.TwitchUserIDLookups[userData.TwitchID] = userData.ID;
             }
-            return null;
+
+            return userData;
         }
 
         private void BuildMissingCommands()
