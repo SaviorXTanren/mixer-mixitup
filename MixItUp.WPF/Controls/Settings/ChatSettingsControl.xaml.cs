@@ -165,6 +165,11 @@ namespace MixItUp.WPF.Controls.Settings
             ChannelSession.Settings.DeleteChatCommandsWhenRun = this.DeleteChatCommandsWhenRunToggleButton.IsChecked.GetValueOrDefault();
         }
 
+        private void ShowBetterTTVEmotesToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            ChannelSession.Settings.ShowBetterTTVEmotes = this.ShowBetterTTVEmotesToggleButton.IsChecked.GetValueOrDefault();
+        }
+
         private void ShowMixrElixrEmotesToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             ChannelSession.Settings.ShowMixrElixrEmotes = this.ShowMixrElixrEmotesToggleButton.IsChecked.GetValueOrDefault();

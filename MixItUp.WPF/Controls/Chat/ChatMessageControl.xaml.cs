@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.Chat;
 using MixItUp.Base.Model.Chat.Mixer;
+using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Mixer;
@@ -152,6 +153,10 @@ namespace MixItUp.WPF.Controls.Chat
                             else if (messagePart is TwitchV5API.EmoteModel)
                             {
                                 this.MessageWrapPanel.Children.Add(new ChatImageControl((TwitchV5API.EmoteModel)messagePart));
+                            }
+                            else if (messagePart is BetterTTVEmoteModel)
+                            {
+                                this.MessageWrapPanel.Children.Add(new ChatImageControl((BetterTTVEmoteModel)messagePart));
                             }
                         }
                     }

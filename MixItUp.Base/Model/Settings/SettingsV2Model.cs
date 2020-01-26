@@ -242,6 +242,8 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public bool ShowMixrElixrEmotes { get; set; }
         [DataMember]
+        public bool ShowBetterTTVEmotes { get; set; }
+        [DataMember]
         public bool ShowChatMessageTimestamps { get; set; }
 
         #endregion Chat

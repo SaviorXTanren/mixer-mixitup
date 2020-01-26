@@ -4,7 +4,9 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Twitch;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
+using StreamingClient.Base.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,9 +22,20 @@ using TwitchNewAPI = Twitch.Base.Models.NewAPI;
 
 namespace MixItUp.Base.Services.Twitch
 {
+    public class BetterTTVEmoteModel
+    {
+        public string id { get; set; }
+        public string channel { get; set; }
+        public string code { get; set; }
+        public string imageType { get; set; }
+
+        public string url { get { return string.Format("https://cdn.betterttv.net/emote/{0}/1x", this.id); } }
+    }
+
     public interface ITwitchChatService
     {
         IDictionary<string, EmoteModel> Emotes { get; }
+        IDictionary<string, BetterTTVEmoteModel> BetterTTVEmotes { get; }
 
         event EventHandler<IEnumerable<UserViewModel>> OnUsersJoinOccurred;
         event EventHandler<IEnumerable<UserViewModel>> OnUsersLeaveOccurred;
@@ -45,6 +58,9 @@ namespace MixItUp.Base.Services.Twitch
 
         public IDictionary<string, EmoteModel> Emotes { get { return this.emotes; } }
         private Dictionary<string, EmoteModel> emotes = new Dictionary<string, EmoteModel>();
+
+        public IDictionary<string, BetterTTVEmoteModel> BetterTTVEmotes { get { return this.betterTTVEmotes; } }
+        private Dictionary<string, BetterTTVEmoteModel> betterTTVEmotes = new Dictionary<string, BetterTTVEmoteModel>();
 
         public event EventHandler<IEnumerable<UserViewModel>> OnUsersJoinOccurred = delegate { };
         public event EventHandler<IEnumerable<UserViewModel>> OnUsersLeaveOccurred = delegate { };
@@ -151,10 +167,23 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task Initialize()
         {
-            foreach (EmoteModel emote in await ChannelSession.TwitchUserConnection.GetEmotesForUserV5(ChannelSession.TwitchUserV5))
+            List<Task> emoteTasks = new List<Task>();
+
+            emoteTasks.Add(Task.Run(async() =>
             {
-                this.emotes[emote.code] = emote;
+                foreach (EmoteModel emote in await ChannelSession.TwitchUserConnection.GetEmotesForUserV5(ChannelSession.TwitchUserV5))
+                {
+                    this.emotes[emote.code] = emote;
+                }
+            }));
+
+            if (ChannelSession.Settings.ShowBetterTTVEmotes)
+            {
+                emoteTasks.Add(this.DownloadBetterTTVEmotes());
+                emoteTasks.Add(this.DownloadBetterTTVEmotes(ChannelSession.TwitchChannelNewAPI.login));
             }
+
+            await Task.WhenAll(emoteTasks);
 
             await this.userJoinLeaveEventsSemaphore.WaitAndRelease(() =>
             {
@@ -409,6 +438,29 @@ namespace MixItUp.Base.Services.Twitch
             while (!await this.ConnectUser());
 
             ChannelSession.ReconnectionOccurred("Twitch User Chat");
+        }
+
+        private async Task DownloadBetterTTVEmotes(string channelName = null)
+        {
+            try
+            {
+                using (AdvancedHttpClient client = new AdvancedHttpClient())
+                {
+                    JObject jobj = await client.GetJObjectAsync((!string.IsNullOrEmpty(channelName)) ? "https://api.betterttv.net/2/channels/" + channelName : "https://api.betterttv.net/2/emotes");
+                    if (jobj != null && jobj.ContainsKey("emotes"))
+                    {
+                        JArray array = (JArray)jobj["emotes"];
+                        foreach (BetterTTVEmoteModel emote in array.ToTypedArray<BetterTTVEmoteModel>())
+                        {
+                            this.betterTTVEmotes[emote.code] = emote;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
         }
     }
 }

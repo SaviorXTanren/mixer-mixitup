@@ -50,6 +50,10 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
                     {
                         this.MessageParts[this.MessageParts.Count - 1] = ChannelSession.Services.Chat.TwitchChatService.Emotes[part];
                     }
+                    else if (ChannelSession.Settings.ShowBetterTTVEmotes && ChannelSession.Services.Chat.TwitchChatService.BetterTTVEmotes.ContainsKey(part))
+                    {
+                        this.MessageParts[this.MessageParts.Count - 1] = ChannelSession.Services.Chat.TwitchChatService.BetterTTVEmotes[part];
+                    }
                 }
             }
         }
