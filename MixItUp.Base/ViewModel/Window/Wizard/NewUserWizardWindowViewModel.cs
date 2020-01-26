@@ -304,8 +304,6 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
 
             this.MixerUserAccountCommand = this.CreateCommand(async (parameter) =>
             {
-                this.StartLoadingOperation();
-
                 if (this.IsMixerUserAccountConnected)
                 {
 
@@ -330,14 +328,10 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
                 this.NotifyPropertyChanged("IsMixerUserAccountNotConnected");
                 this.NotifyPropertyChanged("MixerUserAccountButtonContent");
                 this.NotifyPropertyChanged("CanConnectMixerBotAccount");
-
-                this.EndLoadingOperation();
             });
 
             this.MixerBotAccountCommand = this.CreateCommand(async (parameter) =>
             {
-                this.StartLoadingOperation();
-
                 if (this.IsMixerBotAccountConnected)
                 {
                     await ChannelSession.DisconnectMixerBot();
@@ -363,8 +357,6 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
                 this.NotifyPropertyChanged("IsMixerBotAccountConnected");
                 this.NotifyPropertyChanged("IsMixerBotAccountNotConnected");
                 this.NotifyPropertyChanged("MixerBotAccountButtonContent");
-
-                this.EndLoadingOperation();
             });
 
             this.TwitchUserAccountCommand = this.CreateCommand(async (parameter) =>
@@ -454,8 +446,6 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
 
             this.NextCommand = this.CreateCommand(async (parameter) =>
             {
-                this.StartLoadingOperation();
-
                 this.StatusMessage = string.Empty;
 
                 if (this.IntroPageVisible)
@@ -524,8 +514,6 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
                 }
 
                 this.StatusMessage = string.Empty;
-
-                this.EndLoadingOperation();
             });
 
             this.BackCommand = this.CreateCommand((parameter) =>
