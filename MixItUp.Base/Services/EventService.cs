@@ -107,6 +107,8 @@ namespace MixItUp.Base.Services
         TwitchChannelStreamStop = 201,
         [Name("Twitch Channel Hosted")]
         TwitchChannelHosted = 202,
+        [Name("Twitch Channel Raided")]
+        TwitchChannelRaided = 203,
 
         [Name("Twitch Channel Followed")]
         TwitchChannelFollowed = 210,

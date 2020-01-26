@@ -9,10 +9,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Twitch.Base.Clients;
 using Twitch.Base.Models.Clients.Chat;
+using Twitch.Base.Models.NewAPI.Users;
 using TwitchNewAPI = Twitch.Base.Models.NewAPI;
 
 namespace MixItUp.Base.Services.Twitch
@@ -35,6 +37,8 @@ namespace MixItUp.Base.Services.Twitch
     public class TwitchChatService : PlatformServiceBase, ITwitchChatService
     {
         private static List<string> ExcludedDiagnosticPacketLogging = new List<string>() { "PING", ChatMessagePacketModel.CommandID, ChatUserJoinPacketModel.CommandID, ChatUserLeavePacketModel.CommandID };
+
+        private const string HostChatMessageRegexPattern = "^\\w+ is now hosting you.$";
 
         public event EventHandler<IEnumerable<UserViewModel>> OnUsersJoinOccurred = delegate { };
         public event EventHandler<IEnumerable<UserViewModel>> OnUsersLeaveOccurred = delegate { };
@@ -258,10 +262,44 @@ namespace MixItUp.Base.Services.Twitch
             });
         }
 
-        private void UserClient_OnMessageReceived(object sender, ChatMessagePacketModel message)
+        private async void UserClient_OnMessageReceived(object sender, ChatMessagePacketModel message)
         {
             if (message != null && !string.IsNullOrEmpty(message.Message))
             {
+                if (string.IsNullOrEmpty(message.UserLogin))
+                {
+                    if (Regex.IsMatch(message.Message, TwitchChatService.HostChatMessageRegexPattern))
+                    {
+                        string hoster = message.Message.Substring(0, message.Message.IndexOf(' '));
+                        UserViewModel user = ChannelSession.Services.User.GetUserByUsername(hoster);
+                        if (user == null)
+                        {
+                            UserModel twitchUser = await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(hoster);
+                            if (twitchUser != null)
+                            {
+                                user = await ChannelSession.Services.User.AddOrUpdateUser(twitchUser);
+                            }
+                        }
+
+                        if (user != null)
+                        {
+                            EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelHosted, user);
+                            if (ChannelSession.Services.Events.CanPerformEvent(trigger))
+                            {
+                                foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
+                                {
+                                    currency.AddAmount(user.Data, currency.OnHostBonus);
+                                }
+
+                                GlobalEvents.HostOccurred(new Tuple<UserViewModel, int>(user, 0));
+
+                                await ChannelSession.Services.Events.PerformEvent(trigger);
+
+                                await this.AddAlertChatMessage(user, string.Format("{0} hosted the channel", user.Username));
+                            }
+                        }
+                    }
+                }
                 if (string.IsNullOrEmpty(message.UserID) || message.UserLogin.Equals("jtv"))
                 {
                     Logger.Log(SerializerHelper.SerializeToString(message));
@@ -304,7 +342,7 @@ namespace MixItUp.Base.Services.Twitch
                             int.TryParse(packet.Tags["msg-param-viewerCount"], out viewerCount);
                         }
 
-                        EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelHosted, user);
+                        EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelRaided, user);
                         if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                         {
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestHostUserData] = user;
@@ -319,8 +357,9 @@ namespace MixItUp.Base.Services.Twitch
 
                             trigger.SpecialIdentifiers["hostviewercount"] = viewerCount.ToString();
                             await ChannelSession.Services.Events.PerformEvent(trigger);
+
+                            await this.AddAlertChatMessage(user, string.Format("{0} raided with {1} viewers", user.Username, viewerCount));
                         }
-                        await this.AddAlertChatMessage(user, string.Format("{0} Hosted With {1} Viewers", user.Username, viewerCount));
                     }
                 }
                 else if (packet.Command.Equals("HOSTTARGET"))
