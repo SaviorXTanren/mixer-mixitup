@@ -22,11 +22,11 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
             {
                 this.IsSlashMe = true;
                 string text = message.Message.Replace(SlashMeAction, string.Empty);
-                this.AddStringMessagePart(text.Substring(0, text.Length - 1));
+                this.ProcessMessageContents(text.Substring(0, text.Length - 1));
             }
             else
             {
-                this.AddStringMessagePart(message.Message);
+                this.ProcessMessageContents(message.Message);
             }
         }
 
@@ -35,7 +35,7 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
         {
             this.WhisperThreadID = whisper.thread_id;
 
-            this.AddStringMessagePart(whisper.body);
+            this.ProcessMessageContents(whisper.body);
         }
 
         private void ProcessMessageContents(string message)
