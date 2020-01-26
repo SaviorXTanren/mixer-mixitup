@@ -810,30 +810,6 @@ namespace MixItUp.Base.Model.Settings
             }
         }
 
-        public UserDataModel GetUserData(UserViewModel userViewModel)
-        {
-            lock (this.UserData)
-            {
-                UserDataModel userData = this.GetUserDataByMixerID(userViewModel.MixerID);
-                if (userData == null)
-                {
-                    userData = new UserDataModel(userViewModel);
-                    if (userData.ID == Guid.Empty)
-                    {
-                        userData.ID = Guid.NewGuid();
-                    }
-
-                    this.UserData[userData.ID] = userData;
-
-                    if (userData.MixerID > 0)
-                    {
-                        this.MixerUserIDLookups[userData.MixerID] = userData.ID;
-                    }
-                }
-                return userData;
-            }
-        }
-
         public UserDataModel GetUserData(Guid id)
         {
             if (this.UserData.ContainsKey(id))
@@ -853,7 +829,21 @@ namespace MixItUp.Base.Model.Settings
                     return this.UserData[id];
                 }
             }
-            return null;
+            return this.CreateUserData(mixerID);
+        }
+
+        private UserDataModel CreateUserData(uint mixerID = 0)
+        {
+            UserDataModel userData = new UserDataModel();
+            this.UserData[userData.ID] = userData;
+
+            userData.MixerID = mixerID;
+            if (userData.MixerID > 0)
+            {
+                this.MixerUserIDLookups[userData.MixerID] = userData.ID;
+            }
+
+            return userData;
         }
 
         private void BuildMissingCommands()

@@ -929,7 +929,7 @@ namespace MixItUp.Base.MixerAPI
 
                     if (user == null)
                     {
-                        user = new UserViewModel("Unknown User") { Platform = StreamingPlatformTypeEnum.Mixer };
+                        user = new UserViewModel("Unknown User");
                         user.InteractiveIDs[e.participantID] = new MixPlayParticipantModel() { sessionID = e.participantID, anonymous = true };
                     }
                     else
