@@ -236,7 +236,7 @@ namespace MixItUp.Base.Services
             }
             if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
             {
-
+                // https://github.com/TwitchLib/TwitchLib.Client/blob/1dc45145654ac467a7568c88770c0df258a2bedb/TwitchLib.Client.Models/OutboundWhisperMessage.cs
             }
         }
 
@@ -284,7 +284,7 @@ namespace MixItUp.Base.Services
             }
             if (user.Platform == StreamingPlatformTypeEnum.Twitch)
             {
-                await this.TwitchChatService.PurgeUser(user);
+                // Not supported
             }
         }
 
@@ -296,7 +296,7 @@ namespace MixItUp.Base.Services
             }
             if (user.Platform == StreamingPlatformTypeEnum.Twitch)
             {
-
+                await this.TwitchChatService.TimeoutUser(user, (int)durationInSeconds);
             }
         }
 
@@ -332,7 +332,7 @@ namespace MixItUp.Base.Services
             }
             if (user.Platform == StreamingPlatformTypeEnum.Twitch)
             {
-
+                await this.TwitchChatService.BanUser(user);
             }
         }
 
@@ -344,7 +344,7 @@ namespace MixItUp.Base.Services
             }
             if (user.Platform == StreamingPlatformTypeEnum.Twitch)
             {
-
+                // Not supported
             }
         }
 

@@ -49,8 +49,6 @@ namespace MixItUp.Base.Services.Twitch
 
         Task SendMessage(string message, bool sendAsStreamer = false);
 
-        Task PurgeUser(UserViewModel user);
-
         Task DeleteMessage(ChatMessageViewModel message);
 
         Task ClearMessages();
@@ -58,6 +56,12 @@ namespace MixItUp.Base.Services.Twitch
         Task ModUser(UserViewModel user);
 
         Task UnmodUser(UserViewModel user);
+
+        Task TimeoutUser(UserViewModel user, int lengthInSeconds);
+
+        Task BanUser(UserViewModel user);
+
+        Task RunCommercial(int lengthInSeconds);
     }
 
     public class TwitchChatService : PlatformServiceBase, ITwitchChatService
@@ -218,18 +222,6 @@ namespace MixItUp.Base.Services.Twitch
             });
         }
 
-        public async Task PurgeUser(UserViewModel user)
-        {
-            await this.RunAsync(async () =>
-            {
-                ChatClient client = this.GetChatClient();
-                if (client != null)
-                {
-                    await client.PurgeUser(ChannelSession.TwitchChannelNewAPI, user.GetTwitchNewAPIUserModel());
-                }
-            });
-        }
-
         public async Task DeleteMessage(ChatMessageViewModel message)
         {
             await this.RunAsync(async () =>
@@ -237,7 +229,7 @@ namespace MixItUp.Base.Services.Twitch
                 ChatClient client = this.GetChatClient();
                 if (client != null)
                 {
-                    await client.ClearMessage(ChannelSession.TwitchChannelNewAPI, message.ID);
+                    await client.DeleteMessage(ChannelSession.TwitchChannelNewAPI, message.ID);
                 }
             });
         }
@@ -274,6 +266,42 @@ namespace MixItUp.Base.Services.Twitch
                 if (client != null)
                 {
                     await client.UnmodUser(ChannelSession.TwitchChannelNewAPI, user.GetTwitchNewAPIUserModel());
+                }
+            });
+        }
+
+        public async Task TimeoutUser(UserViewModel user, int lengthInSeconds)
+        {
+            await this.RunAsync(async () =>
+            {
+                ChatClient client = this.GetChatClient();
+                if (client != null)
+                {
+                    await client.TimeoutUser(ChannelSession.TwitchChannelNewAPI, user.GetTwitchNewAPIUserModel(), lengthInSeconds);
+                }
+            });
+        }
+
+        public async Task BanUser(UserViewModel user)
+        {
+            await this.RunAsync(async () =>
+            {
+                ChatClient client = this.GetChatClient();
+                if (client != null)
+                {
+                    await client.BanUser(ChannelSession.TwitchChannelNewAPI, user.GetTwitchNewAPIUserModel());
+                }
+            });
+        }
+
+        public async Task RunCommercial(int lengthInSeconds)
+        {
+            await this.RunAsync(async () =>
+            {
+                ChatClient client = this.GetChatClient();
+                if (client != null)
+                {
+                    await client.RunCommercial(ChannelSession.TwitchChannelNewAPI, lengthInSeconds);
                 }
             });
         }
