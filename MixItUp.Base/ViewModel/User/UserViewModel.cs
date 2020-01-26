@@ -624,6 +624,12 @@ namespace MixItUp.Base.ViewModel.User
                         this.TwitchDisplayName = (!string.IsNullOrEmpty(twitchUser.display_name)) ? twitchUser.display_name : this.TwitchDisplayName;
                         this.TwitchAvatarLink = twitchUser.profile_image_url;
 
+                        TwitchV5API.Users.UserModel twitchV5User = await ChannelSession.TwitchUserConnection.GetV5APIUserByLogin(this.TwitchUsername);
+                        if (twitchV5User != null)
+                        {
+                            this.Data.TwitchAccountDate = DateTimeOffset.Parse(twitchV5User.created_at);
+                        }
+
                         if (twitchUser.IsPartner())
                         {
                             this.TwitchUserRoles.Add(UserRoleEnum.Partner);
@@ -651,7 +657,6 @@ namespace MixItUp.Base.ViewModel.User
 
                         if (ChannelSession.TwitchUserNewAPI.IsAffiliate() || ChannelSession.TwitchUserNewAPI.IsPartner())
                         {
-                            TwitchV5API.Users.UserModel twitchV5User = await ChannelSession.TwitchUserConnection.GetV5APIUserByLogin(this.TwitchUsername);
                             if (twitchV5User != null)
                             {
                                 TwitchV5API.Users.UserSubscriptionModel subscription = await ChannelSession.TwitchUserConnection.CheckIfSubscribedV5(ChannelSession.TwitchChannelV5, twitchV5User);
@@ -854,6 +859,26 @@ namespace MixItUp.Base.ViewModel.User
                 });
             }
             return participants;
+        }
+
+        public TwitchV5API.Users.UserModel GetTwitchV5APIUserModel()
+        {
+            return new TwitchV5API.Users.UserModel()
+            {
+                id = this.TwitchID,
+                name = this.TwitchUsername,
+                display_name = this.TwitchDisplayName,
+            };
+        }
+
+        public TwitchNewAPI.Users.UserModel GetTwitchNewAPIUserModel()
+        {
+            return new TwitchNewAPI.Users.UserModel()
+            {
+                id = this.TwitchID,
+                login = this.TwitchUsername,
+                display_name = this.TwitchDisplayName,
+            };
         }
 
         public override bool Equals(object obj)

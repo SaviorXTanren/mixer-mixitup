@@ -48,6 +48,16 @@ namespace MixItUp.Base.Services.Twitch
         Task Initialize();
 
         Task SendMessage(string message, bool sendAsStreamer = false);
+
+        Task PurgeUser(UserViewModel user);
+
+        Task DeleteMessage(ChatMessageViewModel message);
+
+        Task ClearMessages();
+
+        Task ModUser(UserViewModel user);
+
+        Task UnmodUser(UserViewModel user);
     }
 
     public class TwitchChatService : PlatformServiceBase, ITwitchChatService
@@ -204,6 +214,66 @@ namespace MixItUp.Base.Services.Twitch
                 if (client != null)
                 {
                     await client.SendMessage(ChannelSession.TwitchChannelNewAPI, message);
+                }
+            });
+        }
+
+        public async Task PurgeUser(UserViewModel user)
+        {
+            await this.RunAsync(async () =>
+            {
+                ChatClient client = this.GetChatClient();
+                if (client != null)
+                {
+                    await client.PurgeUser(ChannelSession.TwitchChannelNewAPI, user.GetTwitchNewAPIUserModel());
+                }
+            });
+        }
+
+        public async Task DeleteMessage(ChatMessageViewModel message)
+        {
+            await this.RunAsync(async () =>
+            {
+                ChatClient client = this.GetChatClient();
+                if (client != null)
+                {
+                    await client.ClearMessage(ChannelSession.TwitchChannelNewAPI, message.ID);
+                }
+            });
+        }
+
+        public async Task ClearMessages()
+        {
+            await this.RunAsync(async () =>
+            {
+                ChatClient client = this.GetChatClient();
+                if (client != null)
+                {
+                    await client.ClearChat(ChannelSession.TwitchChannelNewAPI);
+                }
+            });
+        }
+
+        public async Task ModUser(UserViewModel user)
+        {
+            await this.RunAsync(async () =>
+            {
+                ChatClient client = this.GetChatClient();
+                if (client != null)
+                {
+                    await client.ModUser(ChannelSession.TwitchChannelNewAPI, user.GetTwitchNewAPIUserModel());
+                }
+            });
+        }
+
+        public async Task UnmodUser(UserViewModel user)
+        {
+            await this.RunAsync(async () =>
+            {
+                ChatClient client = this.GetChatClient();
+                if (client != null)
+                {
+                    await client.UnmodUser(ChannelSession.TwitchChannelNewAPI, user.GetTwitchNewAPIUserModel());
                 }
             });
         }

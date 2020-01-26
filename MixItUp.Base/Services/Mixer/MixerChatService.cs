@@ -48,8 +48,8 @@ namespace MixItUp.Base.Services.Mixer
         Task DeleteMessage(ChatMessageViewModel message);
         Task ClearMessages();
 
-        Task PurgeUser(string username);
-        Task TimeoutUser(string username, uint durationInSeconds);
+        Task PurgeUser(UserViewModel user);
+        Task TimeoutUser(UserViewModel user, uint durationInSeconds);
 
         Task BanUser(UserViewModel user);
         Task UnbanUser(UserViewModel user);
@@ -339,19 +339,19 @@ namespace MixItUp.Base.Services.Mixer
             });
         }
 
-        public async Task PurgeUser(string username)
+        public async Task PurgeUser(UserViewModel user)
         {
             await this.RunAsync(async () =>
             {
-                await this.streamerClient.PurgeUser(username);
+                await this.streamerClient.PurgeUser(user.MixerUsername);
             });
         }
 
-        public async Task TimeoutUser(string username, uint durationInSeconds)
+        public async Task TimeoutUser(UserViewModel user, uint durationInSeconds)
         {
             await this.RunAsync(async () =>
             {
-                await this.streamerClient.TimeoutUser(username, durationInSeconds);
+                await this.streamerClient.TimeoutUser(user.MixerUsername, durationInSeconds);
             });
         }
 

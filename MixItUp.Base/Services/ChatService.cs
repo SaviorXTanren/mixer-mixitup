@@ -209,7 +209,10 @@ namespace MixItUp.Base.Services
             {
                 await this.MixerChatService.SendMessage(message, sendAsStreamer);
             }
-            await this.TwitchChatService.SendMessage(message, sendAsStreamer);
+            if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
+            {
+                await this.TwitchChatService.SendMessage(message, sendAsStreamer);
+            }
         }
 
         public async Task Whisper(UserViewModel user, string message, bool sendAsStreamer = false, bool waitForResponse = false) { await this.Whisper(user.Platform, user.Username, message, sendAsStreamer); }
@@ -231,6 +234,10 @@ namespace MixItUp.Base.Services
                     await this.MixerChatService.Whisper(username, message, sendAsStreamer);
                 }
             }
+            if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
+            {
+
+            }
         }
 
         public async Task DeleteMessage(ChatMessageViewModel message)
@@ -238,6 +245,10 @@ namespace MixItUp.Base.Services
             if (message.Platform == StreamingPlatformTypeEnum.Mixer)
             {
                 await this.MixerChatService.DeleteMessage(message);
+            }
+            if (message.Platform == StreamingPlatformTypeEnum.Twitch)
+            {
+                await this.TwitchChatService.DeleteMessage(message);
             }
         }
 
@@ -249,7 +260,10 @@ namespace MixItUp.Base.Services
                 this.Messages.Clear();
                 return Task.FromResult(0);
             });
+
             await this.MixerChatService.ClearMessages();
+
+            await this.TwitchChatService.ClearMessages();
         }
 
         public async Task StartPoll(string question, IEnumerable<string> answers, uint lengthInSeconds)
@@ -266,7 +280,11 @@ namespace MixItUp.Base.Services
         {
             if (user.Platform == StreamingPlatformTypeEnum.Mixer)
             {
-                await this.MixerChatService.PurgeUser(user.Username);
+                await this.MixerChatService.PurgeUser(user);
+            }
+            if (user.Platform == StreamingPlatformTypeEnum.Twitch)
+            {
+                await this.TwitchChatService.PurgeUser(user);
             }
         }
 
@@ -274,7 +292,11 @@ namespace MixItUp.Base.Services
         {
             if (user.Platform == StreamingPlatformTypeEnum.Mixer)
             {
-                await this.MixerChatService.TimeoutUser(user.Username, durationInSeconds);
+                await this.MixerChatService.TimeoutUser(user, durationInSeconds);
+            }
+            if (user.Platform == StreamingPlatformTypeEnum.Twitch)
+            {
+
             }
         }
 
@@ -284,6 +306,10 @@ namespace MixItUp.Base.Services
             {
                 await this.MixerChatService.ModUser(user);
             }
+            if (user.Platform == StreamingPlatformTypeEnum.Twitch)
+            {
+                await this.TwitchChatService.ModUser(user);
+            }
         }
 
         public async Task UnmodUser(UserViewModel user)
@@ -291,6 +317,10 @@ namespace MixItUp.Base.Services
             if (user.Platform == StreamingPlatformTypeEnum.Mixer)
             {
                 await this.MixerChatService.UnmodUser(user);
+            }
+            if (user.Platform == StreamingPlatformTypeEnum.Twitch)
+            {
+                await this.TwitchChatService.UnmodUser(user);
             }
         }
 
@@ -300,6 +330,10 @@ namespace MixItUp.Base.Services
             {
                 await this.MixerChatService.BanUser(user);
             }
+            if (user.Platform == StreamingPlatformTypeEnum.Twitch)
+            {
+
+            }
         }
 
         public async Task UnbanUser(UserViewModel user)
@@ -307,6 +341,10 @@ namespace MixItUp.Base.Services
             if (user.Platform == StreamingPlatformTypeEnum.Mixer)
             {
                 await this.MixerChatService.UnbanUser(user);
+            }
+            if (user.Platform == StreamingPlatformTypeEnum.Twitch)
+            {
+
             }
         }
 
