@@ -16,6 +16,14 @@ namespace MixItUp.WPF.Windows.Wizard
         {
             this.viewModel = (NewUserWizardWindowViewModel)this.ViewModel;
             this.viewModel.WizardCompleteEvent += ViewModel_WizardCompleteEvent;
+            this.viewModel.StartLoadingOperationOccurred += (sender, args) =>
+            {
+                this.StartAsyncOperation();
+            };
+            this.viewModel.EndLoadingOperationOccurred += (sender, args) =>
+            {
+                this.EndAsyncOperation();
+            };
 
             InitializeComponent();
 
