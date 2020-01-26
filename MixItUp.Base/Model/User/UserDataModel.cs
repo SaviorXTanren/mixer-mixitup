@@ -7,6 +7,7 @@ using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -19,33 +20,45 @@ namespace MixItUp.Base.Model.User
         public Guid ID { get; set; } = Guid.NewGuid();
 
         [DataMember]
+        public StreamingPlatformTypeEnum Platform { get; set; }
+
+        #region Mixer
+
+        [DataMember]
         public uint MixerID { get; set; }
         [DataMember]
         public string MixerUsername { get; set; }
+        [DataMember]
+        public uint MixerChannelID { get; set; }
+
+        [DataMember]
+        public DateTimeOffset? MixerAccountDate { get; set; }
+        [DataMember]
+        public DateTimeOffset? MixerFollowDate { get; set; }
+        [DataMember]
+        public DateTimeOffset? MixerSubscribeDate { get; set; }
+        [DataMember]
+        public UserFanProgressionModel MixerFanProgression { get; set; }
+
+        #endregion Mixer
 
         [DataMember]
         public string CustomTitle { get; set; }
 
         [DataMember]
         public int ViewingMinutes { get; set; }
-
         [DataMember]
         public int OfflineViewingMinutes { get; set; }
 
         [DataMember]
         public LockedList<ChatCommand> CustomCommands { get; set; } = new LockedList<ChatCommand>();
-
         [DataMember]
         public CustomCommand EntranceCommand { get; set; }
 
         [DataMember]
         public bool IsCurrencyRankExempt { get; set; }
-
         [DataMember]
         public bool IsSparkExempt { get; set; }
-
-        [DataMember]
-        public uint GameWispUserID { get; set; }
 
         [DataMember]
         public string PatreonUserID { get; set; }
@@ -55,34 +68,24 @@ namespace MixItUp.Base.Model.User
 
         [DataMember]
         public uint TotalStreamsWatched { get; set; }
-
         [DataMember]
         public double TotalAmountDonated { get; set; }
-        
         [DataMember]
         public uint TotalSparksSpent { get; set; }
-
         [DataMember]
         public uint TotalEmbersSpent { get; set; }
-
         [DataMember]
         public uint TotalSubsGifted { get; set; }
-
         [DataMember]
         public uint TotalSubsReceived { get; set; }
-
         [DataMember]
         public uint TotalChatMessageSent { get; set; }
-
         [DataMember]
         public uint TotalTimesTagged { get; set; }
-
         [DataMember]
         public uint TotalSkillsUsed { get; set; }
-
         [DataMember]
         public uint TotalCommandsRun { get; set; }
-
         [DataMember]
         public uint TotalMonthsSubbed { get; set; }
 
@@ -125,7 +128,7 @@ namespace MixItUp.Base.Model.User
             this.ViewingMinutes = (int)(viewer.Hours * 60.0);
         }
 
-        [DataMember]
+        [JsonIgnore]
         public string Username
         {
             get
@@ -133,7 +136,6 @@ namespace MixItUp.Base.Model.User
                 if (this.MixerID > 0) { return this.MixerUsername; }
                 return this.MixerUsername;
             }
-            set { }
         }
 
         [JsonIgnore]

@@ -154,7 +154,7 @@ namespace MixItUp.Base.Services.Mixer
                     JToken subscribeStartToken;
                     if (e.payload.TryGetValue("since", out subscribeStartToken))
                     {
-                        user.MixerSubscribeDate = subscribeStartToken.ToObject<DateTimeOffset>();
+                        user.Data.MixerSubscribeDate = subscribeStartToken.ToObject<DateTimeOffset>();
                     }
 
                     if (e.payload.TryGetValue("following", out JToken followedToken))
@@ -287,7 +287,7 @@ namespace MixItUp.Base.Services.Mixer
                         EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChannelSubscribed, user);
                         if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                         {
-                            user.MixerSubscribeDate = DateTimeOffset.Now;
+                            user.Data.MixerSubscribeDate = DateTimeOffset.Now;
                             foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
                             {
                                 currency.AddAmount(user.Data, currency.OnSubscribeBonus);

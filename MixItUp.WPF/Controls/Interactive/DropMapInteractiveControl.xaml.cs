@@ -431,7 +431,7 @@ namespace MixItUp.WPF.Controls.Interactive
         {
             foreach (var userPoint in this.userPoints)
             {
-                UserViewModel user = new UserViewModel(string.Empty) { MixerID = userPoint.Key };
+                UserViewModel user = new UserViewModel(new UserModel() { id = userPoint.Key });
                 this.PositionUserPointOnCanvas(user, userPoint.Value);
             }
         }

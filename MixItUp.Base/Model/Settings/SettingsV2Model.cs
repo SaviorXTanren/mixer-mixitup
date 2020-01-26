@@ -812,16 +812,15 @@ namespace MixItUp.Base.Model.Settings
 
         public UserDataModel GetUserData(UserViewModel userViewModel)
         {
-            UserDataModel userData = this.GetUserDataByMixerID(userViewModel.MixerID);
-            if (userData == null)
+            lock (this.UserData)
             {
-                userData = this.GetUserData(userViewModel.ID);
+                UserDataModel userData = this.GetUserDataByMixerID(userViewModel.MixerID);
                 if (userData == null)
                 {
                     userData = new UserDataModel(userViewModel);
                     if (userData.ID == Guid.Empty)
                     {
-                        userViewModel.ID = userData.ID = Guid.NewGuid();
+                        userData.ID = Guid.NewGuid();
                     }
 
                     this.UserData[userData.ID] = userData;
@@ -831,8 +830,8 @@ namespace MixItUp.Base.Model.Settings
                         this.MixerUserIDLookups[userData.MixerID] = userData.ID;
                     }
                 }
+                return userData;
             }
-            return userData;
         }
 
         public UserDataModel GetUserData(Guid id)
