@@ -7,7 +7,6 @@ using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -42,10 +41,25 @@ namespace MixItUp.Base.Model.User
 
         #endregion Mixer
 
+        #region Twitch
+
         [DataMember]
         public string TwitchID { get; set; }
         [DataMember]
         public string TwitchUsername { get; set; }
+        [DataMember]
+        public string TwitchDisplayName { get; set; }
+        [DataMember]
+        public string TwitchAvatarLink { get; set; }
+
+        [DataMember]
+        public DateTimeOffset? TwitchAccountDate { get; set; }
+        [DataMember]
+        public DateTimeOffset? TwitchFollowDate { get; set; }
+        [DataMember]
+        public DateTimeOffset? TwitchSubscribeDate { get; set; }
+
+        #endregion Twitch
 
         [DataMember]
         public string CustomTitle { get; set; }

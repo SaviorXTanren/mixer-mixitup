@@ -159,7 +159,7 @@ namespace MixItUp.Base.Services.Twitch
                         EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelFollowed, user);
                         if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                         {
-                            user.TwitchFollowDate = DateTimeOffset.Now;
+                            user.Data.TwitchFollowDate = DateTimeOffset.Now;
 
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestFollowerUserData] = user;
 
@@ -264,7 +264,7 @@ namespace MixItUp.Base.Services.Twitch
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user;
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
 
-                    user.TwitchSubscribeDate = DateTimeOffset.Now;
+                    user.Data.TwitchSubscribeDate = DateTimeOffset.Now;
                     foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
                     {
                         currency.AddAmount(user.Data, currency.OnSubscribeBonus);
@@ -292,7 +292,7 @@ namespace MixItUp.Base.Services.Twitch
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user;
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = months;
 
-                    user.TwitchSubscribeDate = DateTimeOffset.Now.SubtractMonths(months - 1);
+                    user.Data.TwitchSubscribeDate = DateTimeOffset.Now.SubtractMonths(months - 1);
                     foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
                     {
                         currency.AddAmount(user.Data, currency.OnSubscribeBonus);
@@ -334,7 +334,7 @@ namespace MixItUp.Base.Services.Twitch
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = receiver;
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
 
-            receiver.TwitchSubscribeDate = DateTimeOffset.Now;
+            receiver.Data.TwitchSubscribeDate = DateTimeOffset.Now;
             foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
             {
                 currency.AddAmount(gifter.Data, currency.OnSubscribeBonus);

@@ -157,7 +157,7 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.Data.MixerAccountDate; }
-                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchAccountDate; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.Data.TwitchAccountDate; }
                 return null;
             }
         }
@@ -167,7 +167,7 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.Data.MixerFollowDate; }
-                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchFollowDate; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.Data.TwitchFollowDate; }
                 return null;
             }
         }
@@ -177,7 +177,7 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.Data.MixerSubscribeDate; }
-                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchSubscribeDate; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.Data.TwitchSubscribeDate; }
                 return null;
             }
         }
@@ -243,24 +243,16 @@ namespace MixItUp.Base.ViewModel.User
         #region Twitch
 
         [DataMember]
-        public string TwitchID { get; set; }
+        public string TwitchID { get { return this.Data.TwitchID; } private set { this.Data.TwitchID = value; } }
         [DataMember]
-        public string TwitchUsername { get; set; }
+        public string TwitchUsername { get { return this.Data.TwitchUsername; } private set { this.Data.TwitchUsername = value; } }
         [DataMember]
-        public string TwitchDisplayName { get; set; }
-
+        public string TwitchDisplayName { get { return this.Data.TwitchDisplayName; } private set { this.Data.TwitchDisplayName = value; } }
         [DataMember]
-        public string TwitchAvatarLink { get; set; }
+        public string TwitchAvatarLink { get { return this.Data.TwitchAvatarLink; } private set { this.Data.TwitchAvatarLink = value; } }
 
         [DataMember]
         public HashSet<UserRoleEnum> TwitchUserRoles { get; set; } = new HashSet<UserRoleEnum>();
-
-        [DataMember]
-        public DateTimeOffset? TwitchAccountDate { get; set; }
-        [DataMember]
-        public DateTimeOffset? TwitchFollowDate { get; set; }
-        [DataMember]
-        public DateTimeOffset? TwitchSubscribeDate { get; set; }
 
         #endregion Twitch
 
@@ -671,7 +663,7 @@ namespace MixItUp.Base.ViewModel.User
                         UserFollowModel follow = await ChannelSession.TwitchUserConnection.CheckIfFollowsNewAPI(ChannelSession.TwitchChannelNewAPI, twitchUser);
                         if (follow != null && !string.IsNullOrEmpty(follow.followed_at))
                         {
-                            this.TwitchFollowDate = DateTimeOffset.Parse(follow.followed_at);
+                            this.Data.TwitchFollowDate = DateTimeOffset.Parse(follow.followed_at);
                             this.TwitchUserRoles.Add(UserRoleEnum.Follower);
                         }
 
@@ -683,7 +675,7 @@ namespace MixItUp.Base.ViewModel.User
                                 TwitchV5API.Users.UserSubscriptionModel subscription = await ChannelSession.TwitchUserConnection.CheckIfSubscribedV5(ChannelSession.TwitchChannelV5, twitchV5User);
                                 if (subscription != null)
                                 {
-                                    this.TwitchSubscribeDate = DateTimeOffset.Parse(subscription.created_at);
+                                    this.Data.TwitchSubscribeDate = DateTimeOffset.Parse(subscription.created_at);
                                     this.TwitchUserRoles.Add(UserRoleEnum.Subscriber);
                                 }
                             }
