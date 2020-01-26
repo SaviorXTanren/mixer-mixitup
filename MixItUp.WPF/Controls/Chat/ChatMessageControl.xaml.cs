@@ -6,7 +6,6 @@ using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Mixer;
 using MixItUp.Base.ViewModel.Chat.Twitch;
 using MixItUp.Desktop.Services;
-using MixItUp.WPF.Util;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -14,6 +13,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using TwitchV5API = Twitch.Base.Models.V5.Emotes;
 
 namespace MixItUp.WPF.Controls.Chat
 {
@@ -128,7 +128,6 @@ namespace MixItUp.WPF.Controls.Chat
                         italics = twitchMessage.IsSlashMe;
                     }
 
-
                     if (showMessage)
                     {
                         foreach (object messagePart in this.Message.MessageParts)
@@ -149,6 +148,10 @@ namespace MixItUp.WPF.Controls.Chat
                             else if (messagePart is MixrElixrEmoteModel)
                             {
                                 this.MessageWrapPanel.Children.Add(new ChatImageControl((MixrElixrEmoteModel)messagePart));
+                            }
+                            else if (messagePart is TwitchV5API.EmoteModel)
+                            {
+                                this.MessageWrapPanel.Children.Add(new ChatImageControl((TwitchV5API.EmoteModel)messagePart));
                             }
                         }
                     }

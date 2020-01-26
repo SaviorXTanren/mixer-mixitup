@@ -68,7 +68,7 @@ namespace MixItUp.Base.Services.Twitch
                         List<PubSubListenTopicModel> topics = new List<PubSubListenTopicModel>();
                         foreach (PubSubTopicsEnum topic in EnumHelper.GetEnumList<PubSubTopicsEnum>())
                         {
-                            topics.Add(new PubSubListenTopicModel(topic, ChannelSession.TwitchUser.id));
+                            topics.Add(new PubSubListenTopicModel(topic, ChannelSession.TwitchUserNewAPI.id));
                         }
 
                         await this.pubSub.Listen(topics);

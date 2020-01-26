@@ -293,13 +293,13 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
 
             if (this.IsTwitchUserAccountConnected)
             {
-                this.TwitchUserAccountAvatar = ChannelSession.TwitchUser.profile_image_url;
-                this.TwitchUserAccountUsername = ChannelSession.TwitchUser.login;
+                this.TwitchUserAccountAvatar = ChannelSession.TwitchUserNewAPI.profile_image_url;
+                this.TwitchUserAccountUsername = ChannelSession.TwitchUserNewAPI.login;
             }
             if (this.IsTwitchBotAccountConnected)
             {
-                this.TwitchBotAccountAvatar = ChannelSession.TwitchBot.profile_image_url;
-                this.TwitchBotAccountUsername = ChannelSession.TwitchBot.login;
+                this.TwitchBotAccountAvatar = ChannelSession.TwitchBotNewAPI.profile_image_url;
+                this.TwitchBotAccountUsername = ChannelSession.TwitchBotNewAPI.login;
             }
 
             this.MixerUserAccountCommand = this.CreateCommand(async (parameter) =>
@@ -380,8 +380,8 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
                     ExternalServiceResult result = await ChannelSession.ConnectTwitchUser(isStreamer: true);
                     if (result.Success)
                     {
-                        this.TwitchUserAccountAvatar = ChannelSession.TwitchUser.profile_image_url;
-                        this.TwitchUserAccountUsername = ChannelSession.TwitchUser.login;
+                        this.TwitchUserAccountAvatar = ChannelSession.TwitchUserNewAPI.profile_image_url;
+                        this.TwitchUserAccountUsername = ChannelSession.TwitchUserNewAPI.login;
                     }
                     else
                     {
@@ -414,8 +414,8 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
                     ExternalServiceResult result = await ChannelSession.ConnectTwitchBot();
                     if (result.Success)
                     {
-                        this.TwitchBotAccountAvatar = ChannelSession.TwitchBot.profile_image_url;
-                        this.TwitchBotAccountUsername = ChannelSession.TwitchBot.login;
+                        this.TwitchBotAccountAvatar = ChannelSession.TwitchBotNewAPI.profile_image_url;
+                        this.TwitchBotAccountUsername = ChannelSession.TwitchBotNewAPI.login;
                     }
                     else
                     {

@@ -15,12 +15,15 @@ using System.Threading.Tasks;
 using Twitch.Base.Clients;
 using Twitch.Base.Models.Clients.Chat;
 using Twitch.Base.Models.NewAPI.Users;
+using Twitch.Base.Models.V5.Emotes;
 using TwitchNewAPI = Twitch.Base.Models.NewAPI;
 
 namespace MixItUp.Base.Services.Twitch
 {
     public interface ITwitchChatService
     {
+        IDictionary<string, EmoteModel> Emotes { get; }
+
         event EventHandler<IEnumerable<UserViewModel>> OnUsersJoinOccurred;
         event EventHandler<IEnumerable<UserViewModel>> OnUsersLeaveOccurred;
 
@@ -39,6 +42,9 @@ namespace MixItUp.Base.Services.Twitch
         private static List<string> ExcludedDiagnosticPacketLogging = new List<string>() { "PING", ChatMessagePacketModel.CommandID, ChatUserJoinPacketModel.CommandID, ChatUserLeavePacketModel.CommandID };
 
         private const string HostChatMessageRegexPattern = "^\\w+ is now hosting you.$";
+
+        public IDictionary<string, EmoteModel> Emotes { get { return this.emotes; } }
+        private Dictionary<string, EmoteModel> emotes = new Dictionary<string, EmoteModel>();
 
         public event EventHandler<IEnumerable<UserViewModel>> OnUsersJoinOccurred = delegate { };
         public event EventHandler<IEnumerable<UserViewModel>> OnUsersLeaveOccurred = delegate { };
@@ -145,6 +151,11 @@ namespace MixItUp.Base.Services.Twitch
 
         public async Task Initialize()
         {
+            foreach (EmoteModel emote in await ChannelSession.TwitchUserConnection.GetEmotesForUserV5(ChannelSession.TwitchUserV5))
+            {
+                this.emotes[emote.code] = emote;
+            }
+
             await this.userJoinLeaveEventsSemaphore.WaitAndRelease(() =>
             {
                 foreach (string user in this.initialUserLogins)

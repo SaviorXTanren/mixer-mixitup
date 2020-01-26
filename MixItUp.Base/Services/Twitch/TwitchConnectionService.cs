@@ -127,25 +127,21 @@ namespace MixItUp.Base.Services.Twitch
             this.Connection = connection;
         }
 
-        public async Task<NewAPI.Users.UserModel> GetNewAPICurrentUser() { return await this.RunAsync(this.Connection.NewAPI.Users.GetCurrentUser()); }
-
-        public async Task<NewAPI.Users.UserModel> GetNewAPIUserByID(string userID) { return await this.RunAsync(this.Connection.NewAPI.Users.GetUserByID(userID)); }
-
-        public async Task<NewAPI.Users.UserModel> GetNewAPIUserByLogin(string login) { return await this.RunAsync(this.Connection.NewAPI.Users.GetUserByLogin(login)); }
+        // V5 API Methods
 
         public async Task<V5API.Users.UserModel> GetV5APIUserByID(string userID) { return await this.RunAsync(this.Connection.V5API.Users.GetUserByID(userID)); }
 
         public async Task<V5API.Users.UserModel> GetV5APIUserByLogin(string login) { return await this.RunAsync(this.Connection.V5API.Users.GetUserByLogin(login)); }
 
-
         public async Task<V5API.Channel.PrivateChannelModel> GetCurrentV5APIChannel() { return await this.RunAsync(this.Connection.V5API.Channels.GetCurrentChannel()); }
+
         public async Task<V5API.Channel.ChannelModel> GetV5APIChannel(string channelID) { return await this.RunAsync(this.Connection.V5API.Channels.GetChannelByID(channelID)); }
 
         public async Task<V5API.Channel.ChannelModel> GetV5APIChannel(V5API.Users.UserModel user) { return await this.RunAsync(this.Connection.V5API.Channels.GetChannel(user)); }
 
         public async Task<V5API.Channel.ChannelModel> GetV5APIChannel(V5API.Channel.ChannelModel channel) { return await this.RunAsync(this.Connection.V5API.Channels.GetChannel(channel)); }
 
-        public async Task UpdateChannel(V5API.Channel.ChannelModel channel, string status = null, GameModel game = null)
+        public async Task UpdateV5Channel(V5API.Channel.ChannelModel channel, string status = null, GameModel game = null)
         {
             ChannelUpdateModel update = new ChannelUpdateModel()
             {
@@ -155,11 +151,28 @@ namespace MixItUp.Base.Services.Twitch
             await this.RunAsync(this.Connection.V5API.Channels.UpdateChannel(channel, update));
         }
 
-
         public async Task<IEnumerable<V5API.Users.UserFollowModel>> GetV5APIFollowers(V5API.Channel.ChannelModel channel, int maxResult = 1)
         {
             return await this.RunAsync(this.Connection.V5API.Channels.GetChannelFollowers(channel, maxResult));
         }
+
+        public async Task<V5API.Users.UserSubscriptionModel> CheckIfSubscribedV5(V5API.Channel.ChannelModel channel, V5API.Users.UserModel userToCheck)
+        {
+            return await this.RunAsync(this.Connection.V5API.Channels.GetChannelUserSubscription(channel, userToCheck));
+        }
+
+        public async Task<IEnumerable<V5API.Emotes.EmoteModel>> GetEmotesForUserV5(V5API.Users.UserModel user)
+        {
+            return await this.RunAsync(this.Connection.V5API.Users.GetUserEmotes(user));
+        }
+
+        // New API Methods
+
+        public async Task<NewAPI.Users.UserModel> GetNewAPICurrentUser() { return await this.RunAsync(this.Connection.NewAPI.Users.GetCurrentUser()); }
+
+        public async Task<NewAPI.Users.UserModel> GetNewAPIUserByID(string userID) { return await this.RunAsync(this.Connection.NewAPI.Users.GetUserByID(userID)); }
+
+        public async Task<NewAPI.Users.UserModel> GetNewAPIUserByLogin(string login) { return await this.RunAsync(this.Connection.NewAPI.Users.GetUserByLogin(login)); }
 
         public async Task<IEnumerable<NewAPI.Users.UserFollowModel>> GetNewAPIFollowers(NewAPI.Users.UserModel channel, int maxResult = 1)
         {
@@ -175,13 +188,6 @@ namespace MixItUp.Base.Services.Twitch
             }
             return null;
         }
-
-
-        public async Task<V5API.Users.UserSubscriptionModel> CheckIfSubscribedV5(V5API.Channel.ChannelModel channel, V5API.Users.UserModel userToCheck)
-        {
-            return await this.RunAsync(this.Connection.V5API.Channels.GetChannelUserSubscription(channel, userToCheck));
-        }
-
 
         public async Task<NewAPI.Games.GameModel> GetNewAPIGameByID(string id) { return await this.RunAsync(this.Connection.NewAPI.Games.GetGameByID(id)); }
 

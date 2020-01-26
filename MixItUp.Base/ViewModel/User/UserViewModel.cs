@@ -667,7 +667,7 @@ namespace MixItUp.Base.ViewModel.User
                             this.TwitchUserRoles.Add(UserRoleEnum.Follower);
                         }
 
-                        if (ChannelSession.TwitchUser.IsAffiliate() || ChannelSession.TwitchUser.IsPartner())
+                        if (ChannelSession.TwitchUserNewAPI.IsAffiliate() || ChannelSession.TwitchUserNewAPI.IsPartner())
                         {
                             TwitchV5API.Users.UserModel twitchV5User = await ChannelSession.TwitchUserConnection.GetV5APIUserByLogin(this.TwitchUsername);
                             if (twitchV5User != null)

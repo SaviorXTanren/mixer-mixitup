@@ -2,7 +2,6 @@
 using MixItUp.Base.Model.Chat;
 using MixItUp.Base.Model.Chat.Mixer;
 using MixItUp.Desktop.Services;
-using MixItUp.WPF.Util;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -11,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using TwitchV5API = Twitch.Base.Models.V5.Emotes;
 
 namespace MixItUp.WPF.Controls.Chat
 {
@@ -51,6 +51,8 @@ namespace MixItUp.WPF.Controls.Chat
 
         public ChatImageControl(MixerSkillModel skill) : this() { this.DataContext = skill; }
 
+        public ChatImageControl(TwitchV5API.EmoteModel emote) : this() { this.DataContext = emote; }
+
         private void ChatEmoteControl_Loaded(object sender, RoutedEventArgs e)
         {
             this.EmoticonControl_DataContextChanged(sender, new DependencyPropertyChangedEventArgs());
@@ -65,8 +67,7 @@ namespace MixItUp.WPF.Controls.Chat
                     if (this.DataContext is MixerChatEmoteModel)
                     {
                         MixerChatEmoteModel emote = (MixerChatEmoteModel)this.DataContext;
-                        await this.DownloadImageUrl(emote.Uri);
-                        CroppedBitmap croppedBitmap = new CroppedBitmap(ChatImageControl.bitmapImages[emote.Uri], new Int32Rect((int)emote.X, (int)emote.Y, (int)emote.Width, (int)emote.Height));
+                        CroppedBitmap croppedBitmap = new CroppedBitmap(await this.DownloadImageUrl(emote.Uri), new Int32Rect((int)emote.X, (int)emote.Y, (int)emote.Width, (int)emote.Height));
                         this.Image.Source = croppedBitmap;
                         this.Image.ToolTip = this.AltText.Text = emote.Name;
                     }
@@ -80,23 +81,26 @@ namespace MixItUp.WPF.Controls.Chat
                         }
                         else
                         {
-                            await this.DownloadImageUrl(emote.Url);
-                            this.Image.Source = ChatImageControl.bitmapImages[emote.Url];
+                            this.Image.Source = await this.DownloadImageUrl(emote.Url);
                             this.Image.ToolTip = this.AltText.Text = emote.code;
                         }
                     }
                     else if (this.DataContext is MixerSkillModel)
                     {
                         MixerSkillModel skill = (MixerSkillModel)this.DataContext;
-                        await this.DownloadImageUrl(skill.Image);
-                        this.Image.Source = ChatImageControl.bitmapImages[skill.Image];
+                        this.Image.Source = await this.DownloadImageUrl(skill.Image);
                         this.Image.ToolTip = this.AltText.Text = skill.Name;
+                    }
+                    else if (this.DataContext is TwitchV5API.EmoteModel)
+                    {
+                        TwitchV5API.EmoteModel emote = (TwitchV5API.EmoteModel)this.DataContext;
+                        this.Image.Source = await this.DownloadImageUrl(emote.url);
+                        this.Image.ToolTip = this.AltText.Text = emote.code;
                     }
                     else if (this.DataContext is string)
                     {
                         string imageUrl = (string)this.DataContext;
-                        await this.DownloadImageUrl(imageUrl);
-                        this.Image.Source = ChatImageControl.bitmapImages[imageUrl];
+                        this.Image.Source = await this.DownloadImageUrl(imageUrl);
                     }
 
                     if (this.Image.Source != null)
@@ -112,7 +116,7 @@ namespace MixItUp.WPF.Controls.Chat
             catch (Exception ex) { Logger.Log(ex); }
         }
 
-        private async Task DownloadImageUrl(string url)
+        private async Task<BitmapImage> DownloadImageUrl(string url)
         {
             if (!ChatImageControl.bitmapImages.ContainsKey(url))
             {
@@ -124,6 +128,7 @@ namespace MixItUp.WPF.Controls.Chat
                 }
                 ChatImageControl.bitmapImages[url] = bitmap;
             }
+            return ChatImageControl.bitmapImages[url];
         }
     }
 }

@@ -37,5 +37,21 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
 
             this.AddStringMessagePart(whisper.body);
         }
+
+        private void ProcessMessageContents(string message)
+        {
+            if (!string.IsNullOrEmpty(message))
+            {
+                string[] parts = message.Split(new char[] { ' ' });
+                foreach (string part in parts)
+                {
+                    this.AddStringMessagePart(part);
+                    if (ChannelSession.Services.Chat.TwitchChatService.Emotes.ContainsKey(part))
+                    {
+                        this.MessageParts[this.MessageParts.Count - 1] = ChannelSession.Services.Chat.TwitchChatService.Emotes[part];
+                    }
+                }
+            }
+        }
     }
 }
