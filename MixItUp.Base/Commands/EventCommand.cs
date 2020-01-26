@@ -107,7 +107,7 @@ namespace MixItUp.Base.Commands
             EventTypeEnum.MixerSparksUsed, EventTypeEnum.MixerEmbersUsed, EventTypeEnum.MixerSkillUsed, EventTypeEnum.MixerMilestoneReached, EventTypeEnum.MixerFanProgressionLevelUp,
         };
 
-        private LockedHashSet<string> userEventTracking = new LockedHashSet<string>();
+        private LockedHashSet<Guid> userEventTracking = new LockedHashSet<Guid>();
 
         [Obsolete]
         [DataMember]
