@@ -131,7 +131,7 @@ namespace MixItUp.Base.Actions
                 {
                     string error = "ERROR: The download folder specified for Mixer Clips does not exist";
                     Logger.Log(error);
-                    await ChannelSession.Services.Chat.Whisper(ChannelSession.MixerUser.username, error);
+                    await ChannelSession.Services.Chat.Whisper(await ChannelSession.GetCurrentUser(), error);
                     return;
                 }
 
@@ -139,7 +139,7 @@ namespace MixItUp.Base.Actions
                 {
                     string error = "ERROR: FFMPEG could not be found and the Mixer Clip can not be converted without it";
                     Logger.Log(error);
-                    await ChannelSession.Services.Chat.Whisper(ChannelSession.MixerUser.username, error);
+                    await ChannelSession.Services.Chat.Whisper(await ChannelSession.GetCurrentUser(), error);
                     return;
                 }
 
