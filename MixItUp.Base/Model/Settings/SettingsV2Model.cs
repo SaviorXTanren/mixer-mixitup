@@ -812,24 +812,30 @@ namespace MixItUp.Base.Model.Settings
 
         public UserDataModel GetUserData(Guid id)
         {
-            if (this.UserData.ContainsKey(id))
+            lock (this.UserData)
             {
-                return this.UserData[id];
-            }
-            return null;
-        }
-
-        public UserDataModel GetUserDataByMixerID(uint mixerID)
-        {
-            if (mixerID > 0 && this.MixerUserIDLookups.ContainsKey(mixerID))
-            {
-                Guid id = this.MixerUserIDLookups[mixerID];
                 if (this.UserData.ContainsKey(id))
                 {
                     return this.UserData[id];
                 }
+                return null;
             }
-            return this.CreateUserData(mixerID);
+        }
+
+        public UserDataModel GetUserDataByMixerID(uint mixerID)
+        {
+            lock (this.UserData)
+            {
+                if (mixerID > 0 && this.MixerUserIDLookups.ContainsKey(mixerID))
+                {
+                    Guid id = this.MixerUserIDLookups[mixerID];
+                    if (this.UserData.ContainsKey(id))
+                    {
+                        return this.UserData[id];
+                    }
+                }
+                return this.CreateUserData(mixerID);
+            }
         }
 
         private UserDataModel CreateUserData(uint mixerID = 0)
