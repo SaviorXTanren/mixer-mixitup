@@ -217,7 +217,7 @@ namespace MixItUp.Base.Services.Twitch
                 {
                     if (!string.IsNullOrEmpty(chatUser))
                     {
-                        UserViewModel user = await ChannelSession.Services.User.RemoveUser(chatUser);
+                        UserViewModel user = await ChannelSession.Services.User.RemoveUserByTwitchLogin(chatUser);
                         if (user != null)
                         {
                             processedUsers.Add(user);
