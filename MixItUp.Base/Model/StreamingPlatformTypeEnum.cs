@@ -11,6 +11,6 @@ namespace MixItUp.Base.Model
         Twitch = 2,
         YouTube = 4,
 
-        All = 1073741824,
+        All = 2147483647,
     }
 }
