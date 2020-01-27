@@ -49,6 +49,8 @@ namespace MixItUp.Base.Services.Twitch
 
         Task SendMessage(string message, bool sendAsStreamer = false);
 
+        Task SendWhisperMessage(UserViewModel user, string message, bool sendAsStreamer = false);
+
         Task DeleteMessage(ChatMessageViewModel message);
 
         Task ClearMessages();
@@ -60,6 +62,8 @@ namespace MixItUp.Base.Services.Twitch
         Task TimeoutUser(UserViewModel user, int lengthInSeconds);
 
         Task BanUser(UserViewModel user);
+
+        Task UnbanUser(UserViewModel user);
 
         Task RunCommercial(int lengthInSeconds);
     }
@@ -222,6 +226,18 @@ namespace MixItUp.Base.Services.Twitch
             });
         }
 
+        public async Task SendWhisperMessage(UserViewModel user, string message, bool sendAsStreamer = false)
+        {
+            await this.RunAsync(async () =>
+            {
+                ChatClient client = this.GetChatClient(sendAsStreamer);
+                if (client != null)
+                {
+                    await client.SendWhisperMessage(ChannelSession.TwitchChannelNewAPI, user.GetTwitchNewAPIUserModel(), message);
+                }
+            });
+        }
+
         public async Task DeleteMessage(ChatMessageViewModel message)
         {
             await this.RunAsync(async () =>
@@ -290,6 +306,18 @@ namespace MixItUp.Base.Services.Twitch
                 if (client != null)
                 {
                     await client.BanUser(ChannelSession.TwitchChannelNewAPI, user.GetTwitchNewAPIUserModel());
+                }
+            });
+        }
+
+        public async Task UnbanUser(UserViewModel user)
+        {
+            await this.RunAsync(async () =>
+            {
+                ChatClient client = this.GetChatClient();
+                if (client != null)
+                {
+                    await client.UnbanUser(ChannelSession.TwitchChannelNewAPI, user.GetTwitchNewAPIUserModel());
                 }
             });
         }

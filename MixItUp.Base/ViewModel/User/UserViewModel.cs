@@ -370,6 +370,17 @@ namespace MixItUp.Base.ViewModel.User
             this.SetTwitchRoles();
         }
 
+        public UserViewModel(PubSubWhisperEventRecipientModel whisperRecipient)
+            : this(twitchID: whisperRecipient.id.ToString())
+        {
+            this.TwitchID = whisperRecipient.id.ToString();
+            this.TwitchUsername = whisperRecipient.username;
+            this.TwitchDisplayName = (!string.IsNullOrEmpty(whisperRecipient.display_name)) ? whisperRecipient.display_name : this.TwitchUsername;
+            this.TwitchAvatarLink = whisperRecipient.profile_image;
+
+            this.SetTwitchRoles();
+        }
+
         public UserViewModel(ChatRawPacketModel packet)
             : this(twitchID: packet.Tags["user-id"])
         {

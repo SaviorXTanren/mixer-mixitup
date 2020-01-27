@@ -215,15 +215,13 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task Whisper(UserViewModel user, string message, bool sendAsStreamer = false, bool waitForResponse = false) { await this.Whisper(user.Platform, user.Username, message, sendAsStreamer); }
-
-        public async Task Whisper(StreamingPlatformTypeEnum platform, string username, string message, bool sendAsStreamer = false, bool waitForResponse = false)
+        public async Task Whisper(UserViewModel user, string message, bool sendAsStreamer = false, bool waitForResponse = false)
         {
-            if (platform.HasFlag(StreamingPlatformTypeEnum.Mixer))
+            if (user.Platform.HasFlag(StreamingPlatformTypeEnum.Mixer))
             {
                 if (waitForResponse)
                 {
-                    ChatMessageEventModel messageEvent = await this.MixerChatService.WhisperWithResponse(username, message, sendAsStreamer);
+                    ChatMessageEventModel messageEvent = await this.MixerChatService.WhisperWithResponse(user.Username, message, sendAsStreamer);
                     if (messageEvent != null)
                     {
                         await this.AddMessage(new MixerChatMessageViewModel(messageEvent));
@@ -231,12 +229,21 @@ namespace MixItUp.Base.Services
                 }
                 else
                 {
-                    await this.MixerChatService.Whisper(username, message, sendAsStreamer);
+                    await this.MixerChatService.Whisper(user.Username, message, sendAsStreamer);
                 }
             }
-            if (platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
+            if (user.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
             {
-                // https://github.com/TwitchLib/TwitchLib.Client/blob/1dc45145654ac467a7568c88770c0df258a2bedb/TwitchLib.Client.Models/OutboundWhisperMessage.cs
+                await this.TwitchChatService.SendWhisperMessage(user, message, sendAsStreamer);
+            }
+        }
+
+        public async Task Whisper(StreamingPlatformTypeEnum platform, string username, string message, bool sendAsStreamer = false, bool waitForResponse = false)
+        {
+            UserViewModel user = ChannelSession.Services.User.GetUserByUsername(username);
+            if (user != null)
+            {
+                await this.Whisper(user, message, sendAsStreamer, waitForResponse);
             }
         }
 
@@ -284,7 +291,7 @@ namespace MixItUp.Base.Services
             }
             if (user.Platform == StreamingPlatformTypeEnum.Twitch)
             {
-                // Not supported
+                await this.TwitchChatService.TimeoutUser(user, 1);
             }
         }
 
@@ -344,7 +351,7 @@ namespace MixItUp.Base.Services
             }
             if (user.Platform == StreamingPlatformTypeEnum.Twitch)
             {
-                // Not supported
+                await this.TwitchChatService.UnbanUser(user);
             }
         }
 

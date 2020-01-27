@@ -8,6 +8,14 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
 {
     public class TwitchChatMessageViewModel : ChatMessageViewModel
     {
+        public static TwitchChatMessageViewModel CreateWhisper(UserViewModel user, string message)
+        {
+            TwitchChatMessageViewModel result = new TwitchChatMessageViewModel(user);
+            result.ProcessMessageContents(message);
+            result.TargetUsername = user.Username;
+            return result;
+        }
+
         private const char SOHCharacter = (char)1;
         private static readonly string SlashMeAction = SOHCharacter.ToString() + "ACTION ";
 
@@ -35,8 +43,13 @@ namespace MixItUp.Base.ViewModel.Chat.Twitch
         {
             this.WhisperThreadID = whisper.thread_id;
 
+            UserViewModel recipient = new UserViewModel(whisper.recipient);
+            this.TargetUsername = recipient.Username;
+
             this.ProcessMessageContents(whisper.body);
         }
+
+        private TwitchChatMessageViewModel(UserViewModel user) : base(string.Empty, StreamingPlatformTypeEnum.Twitch, user) { }
 
         private void ProcessMessageContents(string message)
         {
