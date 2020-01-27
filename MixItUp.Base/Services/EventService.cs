@@ -137,8 +137,8 @@ namespace MixItUp.Base.Services
         [Name("Twitch Chat Message Deleted")]
         TwitchChatMessageDeleted = 256,
 
-        [Name("Twitch Channel Bits Spent")]
-        TwitchBitsUsed = 270,
+        [Name("Twitch Channel Bits Cheered")]
+        TwitchBitsCheered = 270,
         [Name("Twitch Channel Points Redeemed")]
         TwitchChannelPointedRedeemed = 271,
 
