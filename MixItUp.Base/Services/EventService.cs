@@ -140,7 +140,7 @@ namespace MixItUp.Base.Services
         [Name("Twitch Channel Bits Cheered")]
         TwitchBitsCheered = 270,
         [Name("Twitch Channel Points Redeemed")]
-        TwitchChannelPointedRedeemed = 271,
+        TwitchChannelPointsRedeemed = 271,
 
         // 300
 

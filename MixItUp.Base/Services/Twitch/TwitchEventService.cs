@@ -366,7 +366,7 @@ namespace MixItUp.Base.Services.Twitch
                 user = new UserViewModel(redemption.user);
             }
 
-            EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelPointedRedeemed, user);
+            EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelPointsRedeemed, user);
 
             trigger.SpecialIdentifiers["rewardname"] = redemption.reward.title;
             trigger.SpecialIdentifiers["rewardcost"] = redemption.reward.cost.ToString();
