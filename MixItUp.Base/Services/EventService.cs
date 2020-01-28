@@ -181,7 +181,7 @@ namespace MixItUp.Base.Services
             EventTrigger trigger = new EventTrigger(type, donation.User);
             trigger.User.Data.TotalAmountDonated += donation.Amount;
 
-            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestDonationUserData] = trigger.User;
+            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestDonationUserData] = trigger.User.Data;
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestDonationAmountData] = donation.AmountText;
 
             trigger.SpecialIdentifiers = donation.GetSpecialIdentifiers();

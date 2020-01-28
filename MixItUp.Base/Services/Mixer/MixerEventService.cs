@@ -227,7 +227,7 @@ namespace MixItUp.Base.Services.Mixer
                             EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChannelFollowed, user);
                             if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                             {
-                                ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestFollowerUserData] = user;
+                                ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestFollowerUserData] = user.Data;
 
                                 foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
                                 {
@@ -264,7 +264,7 @@ namespace MixItUp.Base.Services.Mixer
                         EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChannelHosted, user);
                         if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                         {
-                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestHostUserData] = user;
+                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestHostUserData] = user.Data;
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestHostViewerCountData] = viewerCount;
 
                             foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
@@ -294,7 +294,7 @@ namespace MixItUp.Base.Services.Mixer
                             }
                             user.Data.TotalMonthsSubbed++;
 
-                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user;
+                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.Data;
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
 
                             GlobalEvents.SubscribeOccurred(user);
@@ -323,7 +323,7 @@ namespace MixItUp.Base.Services.Mixer
                             }
                             user.Data.TotalMonthsSubbed++;
 
-                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user;
+                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.Data;
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = resubMonths;
 
                             GlobalEvents.ResubscribeOccurred(new Tuple<UserViewModel, int>(user, resubMonths));
@@ -367,7 +367,7 @@ namespace MixItUp.Base.Services.Mixer
                                 receiverUser.Data.TotalSubsReceived++;
                                 receiverUser.Data.TotalMonthsSubbed++;
 
-                                ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = receiverUser;
+                                ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = receiverUser.Data;
                                 ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
 
                                 trigger.Arguments.Add(receiverUser.Username);
