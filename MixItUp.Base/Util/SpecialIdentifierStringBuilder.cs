@@ -929,8 +929,8 @@ namespace MixItUp.Base.Util
 
             if (ChannelSession.Settings.LatestSpecialIdentifiersData.ContainsKey(userkey) && ChannelSession.Settings.LatestSpecialIdentifiersData[userkey] != null && ChannelSession.Settings.LatestSpecialIdentifiersData[userkey] is UserViewModel)
             {
-                UserViewModel user = (UserViewModel)ChannelSession.Settings.LatestSpecialIdentifiersData[userkey];
-                await this.HandleUserSpecialIdentifiers(user, userkey);
+                UserDataModel userData = (UserDataModel)ChannelSession.Settings.LatestSpecialIdentifiersData[userkey];
+                await this.HandleUserSpecialIdentifiers(new UserViewModel(userData), userkey);
             }
         }
 
