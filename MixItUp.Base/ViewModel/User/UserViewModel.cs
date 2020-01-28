@@ -636,9 +636,9 @@ namespace MixItUp.Base.ViewModel.User
                         this.TwitchAvatarLink = twitchUser.profile_image_url;
 
                         TwitchV5API.Users.UserModel twitchV5User = await ChannelSession.TwitchUserConnection.GetV5APIUserByLogin(this.TwitchUsername);
-                        if (twitchV5User != null)
+                        if (twitchV5User != null && !string.IsNullOrEmpty(twitchV5User.created_at) && DateTimeOffset.TryParse(twitchV5User.created_at, out DateTimeOffset createdDate))
                         {
-                            this.Data.TwitchAccountDate = DateTimeOffset.Parse(twitchV5User.created_at);
+                            this.Data.TwitchAccountDate = createdDate;
                         }
 
                         if (twitchUser.IsPartner())
@@ -660,9 +660,9 @@ namespace MixItUp.Base.ViewModel.User
                         }
 
                         UserFollowModel follow = await ChannelSession.TwitchUserConnection.CheckIfFollowsNewAPI(ChannelSession.TwitchChannelNewAPI, twitchUser);
-                        if (follow != null && !string.IsNullOrEmpty(follow.followed_at))
+                        if (follow != null && !string.IsNullOrEmpty(follow.followed_at) && DateTimeOffset.TryParse(follow.followed_at, out DateTimeOffset followDate))
                         {
-                            this.Data.TwitchFollowDate = DateTimeOffset.Parse(follow.followed_at);
+                            this.Data.TwitchFollowDate = followDate;
                             this.TwitchUserRoles.Add(UserRoleEnum.Follower);
                         }
 
@@ -671,9 +671,9 @@ namespace MixItUp.Base.ViewModel.User
                             if (twitchV5User != null)
                             {
                                 TwitchV5API.Users.UserSubscriptionModel subscription = await ChannelSession.TwitchUserConnection.CheckIfSubscribedV5(ChannelSession.TwitchChannelV5, twitchV5User);
-                                if (subscription != null)
+                                if (subscription != null && !string.IsNullOrEmpty(subscription.created_at) && DateTimeOffset.TryParse(subscription.created_at, out DateTimeOffset subDate))
                                 {
-                                    this.Data.TwitchSubscribeDate = DateTimeOffset.Parse(subscription.created_at);
+                                    this.Data.TwitchSubscribeDate = subDate;
                                     this.TwitchUserRoles.Add(UserRoleEnum.Subscriber);
                                 }
                             }
