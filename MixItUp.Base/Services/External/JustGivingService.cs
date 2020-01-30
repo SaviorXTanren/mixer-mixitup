@@ -278,7 +278,6 @@ namespace MixItUp.Base.Services.External
                             if (donation.DateTime > this.startTime)
                             {
                                 await ChannelSession.Services.Events.PerformEvent(await EventService.ProcessDonationEvent(EventTypeEnum.JustGivingDonation, donation));
-
                             }
                         }
                     }

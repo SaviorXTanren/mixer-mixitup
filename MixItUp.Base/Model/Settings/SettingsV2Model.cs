@@ -152,6 +152,8 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public OAuthTokenModel StreamlabsOAuthToken { get; set; }
         [DataMember]
+        public OAuthTokenModel StreamElementsOAuthToken { get; set; }
+        [DataMember]
         public OAuthTokenModel TwitterOAuthToken { get; set; }
         [DataMember]
         public OAuthTokenModel DiscordOAuthToken { get; set; }
@@ -720,6 +722,7 @@ namespace MixItUp.Base.Model.Settings
             }
 
             this.StreamlabsOAuthToken = ChannelSession.Services.Streamlabs.GetOAuthTokenCopy();
+            this.StreamElementsOAuthToken = ChannelSession.Services.StreamElements.GetOAuthTokenCopy();
             this.StreamJarOAuthToken = ChannelSession.Services.StreamJar.GetOAuthTokenCopy();
             this.TipeeeStreamOAuthToken = ChannelSession.Services.TipeeeStream.GetOAuthTokenCopy();
             this.TreatStreamOAuthToken = ChannelSession.Services.TreatStream.GetOAuthTokenCopy();

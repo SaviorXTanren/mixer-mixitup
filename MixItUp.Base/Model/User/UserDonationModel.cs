@@ -21,6 +21,7 @@ namespace MixItUp.Base.Model.User
         TreatStream,
         StreamJar,
         JustGiving,
+        StreamElements,
     }
 
     [DataContract]

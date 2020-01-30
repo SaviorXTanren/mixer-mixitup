@@ -2,6 +2,7 @@
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Model.OAuth;
@@ -116,10 +117,10 @@ namespace MixItUp.Base.Services.External
         public string DonateURL { get { return string.Format("{0}/donate", this.CampaignURL); } }
 
         [JsonIgnore]
-        public DateTimeOffset Starts { get { return DateTimeOffsetExtensions.FromUTCUnixTimeMilliseconds(this.StartsAtMilliseconds); } }
+        public DateTimeOffset Starts { get { return StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCUnixTimeMilliseconds(this.StartsAtMilliseconds); } }
 
         [JsonIgnore]
-        public DateTimeOffset Ends { get { return DateTimeOffsetExtensions.FromUTCUnixTimeMilliseconds(this.EndsAtMilliseconds); } }
+        public DateTimeOffset Ends { get { return StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCUnixTimeMilliseconds(this.EndsAtMilliseconds); } }
     }
 
     [DataContract]
@@ -152,7 +153,7 @@ namespace MixItUp.Base.Services.External
 
                 Amount = Math.Round(this.Amount, 2),
 
-                DateTime = DateTimeOffsetExtensions.FromUTCUnixTimeMilliseconds(this.CompletedAtTimestamp),
+                DateTime = StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCUnixTimeMilliseconds(this.CompletedAtTimestamp),
             };
         }
     }
@@ -214,6 +215,10 @@ namespace MixItUp.Base.Services.External
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
         private TiltifyUser user;
+
+        private int currentCampaign = 0;
+        private TiltifyCampaign campaign = null;
+        private Dictionary<int, TiltifyDonation> donationsReceived = new Dictionary<int, TiltifyDonation>();
 
         public TiltifyService() : base(TiltifyService.BaseAddress) { }
 
@@ -351,56 +356,41 @@ namespace MixItUp.Base.Services.External
             this.user = await this.GetUser();
             if (this.user != null)
             {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                Task.Run(this.BackgroundDonationCheck, this.cancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 30000, this.BackgroundDonationCheck);
 
                 return new ExternalServiceResult();
             }
             return new ExternalServiceResult("Failed to get User data");
         }
 
-        private async Task BackgroundDonationCheck()
+        private async Task BackgroundDonationCheck(CancellationToken token)
         {
-            int currentCampaign = 0;
-            TiltifyCampaign campaign = null;
-            Dictionary<int, TiltifyDonation> donationsReceived = new Dictionary<int, TiltifyDonation>();
-
-            while (!this.cancellationTokenSource.Token.IsCancellationRequested)
+            if (ChannelSession.Settings.TiltifyCampaign != currentCampaign)
             {
-                try
+                currentCampaign = ChannelSession.Settings.TiltifyCampaign;
+                donationsReceived.Clear();
+
+                IEnumerable<TiltifyCampaign> campaigns = await this.GetUserCampaigns(this.user);
+                campaign = campaigns.FirstOrDefault(c => c.ID.Equals(currentCampaign));
+                if (campaign != null)
                 {
-                    if (ChannelSession.Settings.TiltifyCampaign != currentCampaign)
+                    foreach (TiltifyDonation donation in await this.GetCampaignDonations(campaign))
                     {
-                        currentCampaign = ChannelSession.Settings.TiltifyCampaign;
-                        donationsReceived.Clear();
-
-                        IEnumerable<TiltifyCampaign> campaigns = await this.GetUserCampaigns(this.user);
-                        campaign = campaigns.FirstOrDefault(c => c.ID.Equals(currentCampaign));
-                        if (campaign != null)
-                        {
-                            foreach (TiltifyDonation donation in await this.GetCampaignDonations(campaign))
-                            {
-                                donationsReceived[donation.ID] = donation;
-                            }
-                        }
-                    }
-
-                    if (campaign != null)
-                    {
-                        foreach (TiltifyDonation tDonation in await this.GetCampaignDonations(campaign))
-                        {
-                            if (!donationsReceived.ContainsKey(tDonation.ID))
-                            {
-                                donationsReceived[tDonation.ID] = tDonation;
-                                await ChannelSession.Services.Events.PerformEvent(await EventService.ProcessDonationEvent(EventTypeEnum.TiltifyDonation, tDonation.ToGenericDonation()));
-                            }
-                        }
+                        donationsReceived[donation.ID] = donation;
                     }
                 }
-                catch (Exception ex) { Logger.Log(ex); }
+            }
 
-                await Task.Delay(10000);
+            if (campaign != null)
+            {
+                foreach (TiltifyDonation tDonation in await this.GetCampaignDonations(campaign))
+                {
+                    if (!donationsReceived.ContainsKey(tDonation.ID))
+                    {
+                        donationsReceived[tDonation.ID] = tDonation;
+                        await ChannelSession.Services.Events.PerformEvent(await EventService.ProcessDonationEvent(EventTypeEnum.TiltifyDonation, tDonation.ToGenericDonation()));
+                    }
+                }
             }
         }
     }

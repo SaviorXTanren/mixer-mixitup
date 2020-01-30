@@ -128,6 +128,8 @@ namespace MixItUp.Base.Services
         StreamlootsPackPurchased = 1091,
         [Name("Streamloots Pack Gifted")]
         StreamlootsPackGifted = 1092,
+        [Name("StreamElements Donation")]
+        StreamElementsDonation = 1100,
     }
 
     public class EventTrigger

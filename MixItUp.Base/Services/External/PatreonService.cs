@@ -592,9 +592,17 @@ namespace MixItUp.Base.Services.External
                 this.Campaign = await this.GetCampaign();
                 if (this.Campaign != null)
                 {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    Task.Run(this.BackgroundDonationCheck, this.cancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    try
+                    {
+                        this.members = new List<PatreonCampaignMember>(await this.GetCampaignMembers());
+                        foreach (PatreonCampaignMember member in this.members)
+                        {
+                            this.currentMembersAndTiers[member.UserID] = member.TierID;
+                        }
+                    }
+                    catch (Exception ex) { Logger.Log(ex); }
+
+                    AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.BackgroundDonationCheck);
 
                     return new ExternalServiceResult();
                 }
@@ -603,58 +611,39 @@ namespace MixItUp.Base.Services.External
             return new ExternalServiceResult("Failed to get User data");
         }
 
-        private async Task BackgroundDonationCheck()
+        private async Task BackgroundDonationCheck(CancellationToken token)
         {
-            try
+            IEnumerable<PatreonCampaignMember> pledges = await this.GetCampaignMembers();
+            if (pledges.Count() > 0)
             {
-                this.members = new List<PatreonCampaignMember>(await this.GetCampaignMembers());
+                this.members = pledges.ToList();
                 foreach (PatreonCampaignMember member in this.members)
                 {
-                    this.currentMembersAndTiers[member.UserID] = member.TierID;
-                }
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-
-            while (!this.cancellationTokenSource.Token.IsCancellationRequested)
-            {
-                await Task.Delay(60000);
-
-                try
-                {
-                    IEnumerable<PatreonCampaignMember> pledges = await this.GetCampaignMembers();
-                    if (pledges.Count() > 0)
+                    if (!this.currentMembersAndTiers.ContainsKey(member.UserID) || !this.currentMembersAndTiers[member.UserID].Equals(member.TierID))
                     {
-                        this.members = pledges.ToList();
-                        foreach (PatreonCampaignMember member in this.members)
+                        PatreonTier tier = this.Campaign.GetTier(member.TierID);
+                        if (tier != null)
                         {
-                            if (!this.currentMembersAndTiers.ContainsKey(member.UserID) || !this.currentMembersAndTiers[member.UserID].Equals(member.TierID))
+                            EventTrigger trigger = new EventTrigger(EventTypeEnum.PatreonSubscribed);
+
+                            trigger.User = ChannelSession.Services.User.GetUserByUsername(member.User.LookupName);
+                            if (trigger.User != null)
                             {
-                                PatreonTier tier = this.Campaign.GetTier(member.TierID);
-                                if (tier != null)
-                                {
-                                    EventTrigger trigger = new EventTrigger(EventTypeEnum.PatreonSubscribed);
-
-                                    trigger.User = ChannelSession.Services.User.GetUserByUsername(member.User.LookupName);
-                                    if (trigger.User != null)
-                                    {
-                                        trigger.User.Data.PatreonUserID = member.UserID;
-                                    }
-                                    else
-                                    {
-                                        trigger.User = new UserViewModel(member.User.LookupName);
-                                    }
-
-                                    trigger.SpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierNameSpecialIdentifier] = tier.Title;
-                                    trigger.SpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierAmountSpecialIdentifier] = tier.Amount.ToString();
-                                    trigger.SpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierImageSpecialIdentifier] = tier.ImageUrl;
-                                    await ChannelSession.Services.Events.PerformEvent(trigger);
-                                }
+                                trigger.User.Data.PatreonUserID = member.UserID;
                             }
-                            this.currentMembersAndTiers[member.UserID] = member.TierID;
+                            else
+                            {
+                                trigger.User = new UserViewModel(member.User.LookupName);
+                            }
+
+                            trigger.SpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierNameSpecialIdentifier] = tier.Title;
+                            trigger.SpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierAmountSpecialIdentifier] = tier.Amount.ToString();
+                            trigger.SpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierImageSpecialIdentifier] = tier.ImageUrl;
+                            await ChannelSession.Services.Events.PerformEvent(trigger);
                         }
                     }
+                    this.currentMembersAndTiers[member.UserID] = member.TierID;
                 }
-                catch (Exception ex) { Logger.Log(ex); }
             }
         }
     }

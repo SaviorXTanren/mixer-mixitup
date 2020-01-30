@@ -1,6 +1,7 @@
 ﻿using Mixer.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Model.OAuth;
@@ -110,6 +111,8 @@ namespace MixItUp.Base.Services.External
 
         private StreamJarChannel channel;
 
+        private Dictionary<int, StreamJarDonation> donationsReceived = new Dictionary<int, StreamJarDonation>();
+
         public StreamJarService() : base(StreamJarService.BaseAddress) { }
 
         public override string Name { get { return "StreamJar"; } }
@@ -195,40 +198,27 @@ namespace MixItUp.Base.Services.External
             this.channel = await this.GetChannel();
             if (this.channel != null)
             {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                Task.Run(this.BackgroundDonationCheck, this.cancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                foreach (StreamJarDonation donation in await this.GetDonations())
+                {
+                    donationsReceived[donation.ID] = donation;
+                }
+
+                AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 30000, this.BackgroundDonationCheck);
 
                 return new ExternalServiceResult();
             }
             return new ExternalServiceResult("Failed to get channel data");
         }
 
-        private async Task BackgroundDonationCheck()
+        private async Task BackgroundDonationCheck(CancellationToken token)
         {
-            Dictionary<int, StreamJarDonation> donationsReceived = new Dictionary<int, StreamJarDonation>();
-
-            foreach (StreamJarDonation donation in await this.GetDonations())
+            foreach (StreamJarDonation sjDonation in await this.GetDonations())
             {
-                donationsReceived[donation.ID] = donation;
-            }
-
-            while (!this.cancellationTokenSource.Token.IsCancellationRequested)
-            {
-                try
+                if (!donationsReceived.ContainsKey(sjDonation.ID))
                 {
-                    foreach (StreamJarDonation sjDonation in await this.GetDonations())
-                    {
-                        if (!donationsReceived.ContainsKey(sjDonation.ID))
-                        {
-                            donationsReceived[sjDonation.ID] = sjDonation;
-                            await ChannelSession.Services.Events.PerformEvent(await EventService.ProcessDonationEvent(EventTypeEnum.StreamJarDonation, sjDonation.ToGenericDonation()));
-                        }
-                    }
+                    donationsReceived[sjDonation.ID] = sjDonation;
+                    await ChannelSession.Services.Events.PerformEvent(await EventService.ProcessDonationEvent(EventTypeEnum.StreamJarDonation, sjDonation.ToGenericDonation()));
                 }
-                catch (Exception ex) { Logger.Log(ex); }
-
-                await Task.Delay(10000);
             }
         }
 

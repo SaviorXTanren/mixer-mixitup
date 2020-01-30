@@ -90,6 +90,7 @@ namespace MixItUp.WPF.Windows.Store
                         this.Tag4ComboBox.SelectedItem = StoreListingModel.ResubscribeTag;
                         break;
                     case EventTypeEnum.StreamlabsDonation:
+                    case EventTypeEnum.StreamElementsDonation:
                     case EventTypeEnum.GawkBoxDonation:
                     case EventTypeEnum.TiltifyDonation:
                     case EventTypeEnum.ExtraLifeDonation:
@@ -97,6 +98,9 @@ namespace MixItUp.WPF.Windows.Store
                     case EventTypeEnum.TipeeeStreamDonation:
                     case EventTypeEnum.TreatStreamDonation:
                     case EventTypeEnum.JustGivingDonation:
+                    case EventTypeEnum.StreamlootsCardRedeemed:
+                    case EventTypeEnum.StreamlootsPackGifted:
+                    case EventTypeEnum.StreamlootsPackPurchased:
                         this.Tag4ComboBox.SelectedItem = StoreListingModel.DonationTag;
                         break;
                 }

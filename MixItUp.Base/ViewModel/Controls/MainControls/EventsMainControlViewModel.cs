@@ -68,6 +68,10 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 {
                     return "Streamloots";
                 }
+                else if (this.EventType == EventTypeEnum.StreamElementsDonation)
+                {
+                    return "StreamElements";
+                }
                 else if (eventNumber >= 100 && eventNumber < 200)
                 {
                     return "Mixer";
@@ -119,7 +123,9 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.ChatUserBan));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.ChatMessageReceived));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.ChatMessageDeleted));
+
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.StreamlabsDonation));
+            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.StreamElementsDonation));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TipeeeStreamDonation));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TreatStreamDonation));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.StreamJarDonation));

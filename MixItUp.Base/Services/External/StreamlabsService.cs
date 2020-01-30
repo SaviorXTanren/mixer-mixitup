@@ -1,6 +1,7 @@
 ﻿using Mixer.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Model.OAuth;
@@ -63,7 +64,7 @@ namespace MixItUp.Base.Services.External
 
                 Amount = Math.Round(this.Amount, 2),
 
-                DateTime = DateTimeOffsetExtensions.FromUTCUnixTimeSeconds(this.CreatedAt),
+                DateTime = StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCUnixTimeSeconds(this.CreatedAt),
             };
         }
     }
@@ -89,6 +90,7 @@ namespace MixItUp.Base.Services.External
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
         private DateTimeOffset startTime;
+        private Dictionary<int, StreamlabsDonation> donationsReceived = new Dictionary<int, StreamlabsDonation>();
 
         public StreamlabsService() : base(StreamlabsService.BaseAddress) { }
 
@@ -202,36 +204,24 @@ namespace MixItUp.Base.Services.External
 
             this.startTime = DateTimeOffset.Now;
 
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            Task.Run(this.BackgroundDonationCheck, this.cancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 30000, this.BackgroundDonationCheck);
 
             return Task.FromResult(new ExternalServiceResult());
         }
 
-        private async Task BackgroundDonationCheck()
+        private async Task BackgroundDonationCheck(CancellationToken token)
         {
-            Dictionary<int, StreamlabsDonation> donationsReceived = new Dictionary<int, StreamlabsDonation>();
-            while (!this.cancellationTokenSource.Token.IsCancellationRequested)
+            foreach (StreamlabsDonation slDonation in await this.GetDonations())
             {
-                try
+                if (!donationsReceived.ContainsKey(slDonation.ID))
                 {
-                    foreach (StreamlabsDonation slDonation in await this.GetDonations())
+                    donationsReceived[slDonation.ID] = slDonation;
+                    UserDonationModel donation = slDonation.ToGenericDonation();
+                    if (donation.DateTime > this.startTime)
                     {
-                        if (!donationsReceived.ContainsKey(slDonation.ID))
-                        {
-                            donationsReceived[slDonation.ID] = slDonation;
-                            UserDonationModel donation = slDonation.ToGenericDonation();
-                            if (donation.DateTime > this.startTime)
-                            {
-                                await ChannelSession.Services.Events.PerformEvent(await EventService.ProcessDonationEvent(EventTypeEnum.StreamlabsDonation, donation));
-                            }
-                        }
+                        await ChannelSession.Services.Events.PerformEvent(await EventService.ProcessDonationEvent(EventTypeEnum.StreamlabsDonation, donation));
                     }
                 }
-                catch (Exception ex) { Logger.Log(ex); }
-
-                await Task.Delay(10000);
             }
         }
 
