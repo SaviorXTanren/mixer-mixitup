@@ -36,6 +36,8 @@ namespace MixItUp.Base.Model.User
         public bool IsTrackingEmbers { get; set; }
         [DataMember]
         public bool IsTrackingFanProgression { get; set; }
+        [DataMember]
+        public bool IsTrackingBits { get; set; }
 
         [DataMember]
         public int AcquireAmount { get; set; }
@@ -254,7 +256,7 @@ namespace MixItUp.Base.Model.User
                         }
                     }
                 }
-                else if (!this.IsTrackingSparks && !this.IsTrackingEmbers)
+                else if (!this.IsTrackingSparks && !this.IsTrackingEmbers && !this.IsTrackingBits)
                 {
                     int interval = ChannelSession.MixerChannel.online ? this.AcquireInterval : this.OfflineAcquireInterval;
                     if (interval > 0)

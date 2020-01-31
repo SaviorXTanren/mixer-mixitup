@@ -33,6 +33,8 @@ namespace MixItUp.WPF.Windows.Currency
         Sparks,
         [Name("1 Per Ember")]
         Embers,
+        [Name("1 Per Bit")]
+        Bits,
         [Name("Fan Progression")]
         FanProgression,
         Custom,
@@ -113,6 +115,10 @@ namespace MixItUp.WPF.Windows.Currency
                 else if (this.currency.IsTrackingFanProgression)
                 {
                     this.OnlineRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.FanProgression);
+                }
+                else if (this.currency.IsTrackingBits)
+                {
+                    this.OnlineRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Bits);
                 }
                 else if (this.currency.IsOnlineIntervalMinutes)
                 {
@@ -224,7 +230,8 @@ namespace MixItUp.WPF.Windows.Currency
                         this.OnlineTimeRateTextBox.Text = "60";
                     }
                 }
-                else if (acquireRate == CurrencyAcquireRateTypeEnum.Sparks || acquireRate == CurrencyAcquireRateTypeEnum.Embers || acquireRate == CurrencyAcquireRateTypeEnum.FanProgression)
+                else if (acquireRate == CurrencyAcquireRateTypeEnum.Sparks || acquireRate == CurrencyAcquireRateTypeEnum.Embers ||
+                    acquireRate == CurrencyAcquireRateTypeEnum.FanProgression || acquireRate == CurrencyAcquireRateTypeEnum.Bits)
                 {
                     this.OnlineAmountRateTextBox.Text = "1";
                     this.OnlineTimeRateTextBox.Text = "1";
@@ -380,7 +387,7 @@ namespace MixItUp.WPF.Windows.Currency
                 {
                     if (this.currency != null && this.currency.AcquireInterval > 0)
                     {
-                        if (this.currency.IsTrackingSparks || this.currency.IsTrackingEmbers || this.currency.IsTrackingFanProgression)
+                        if (this.currency.IsTrackingSparks || this.currency.IsTrackingEmbers || this.currency.IsTrackingFanProgression || this.currency.IsTrackingBits)
                         {
                             await DialogHelper.ShowMessage("The rate type for this currency does not support retroactively giving points.");
                             return;
@@ -576,7 +583,7 @@ namespace MixItUp.WPF.Windows.Currency
                 }
 
                 string siName = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(this.NameTextBox.Text);
-                if (siName.Equals("time") || siName.Equals("hours") || siName.Equals("mins") || siName.Equals("sparks") || siName.Equals("embers") || siName.Equals("fanprogression"))
+                if (siName.Equals("time") || siName.Equals("hours") || siName.Equals("mins") || siName.Equals("sparks") || siName.Equals("embers") || siName.Equals("fanprogression") || siName.Equals("bits"))
                 {
                     await DialogHelper.ShowMessage("This name is reserved and can not be used");
                     return;
@@ -702,6 +709,7 @@ namespace MixItUp.WPF.Windows.Currency
                 this.currency.IsTrackingSparks = false;
                 this.currency.IsTrackingEmbers = false;
                 this.currency.IsTrackingFanProgression = false;
+                this.currency.IsTrackingBits = false;
                 if (acquireRate == CurrencyAcquireRateTypeEnum.Sparks)
                 {
                     this.currency.IsTrackingSparks = true;
@@ -713,6 +721,10 @@ namespace MixItUp.WPF.Windows.Currency
                 else if (acquireRate == CurrencyAcquireRateTypeEnum.FanProgression)
                 {
                     this.currency.IsTrackingFanProgression = true;
+                }
+                else if (acquireRate == CurrencyAcquireRateTypeEnum.Bits)
+                {
+                    this.currency.IsTrackingBits = true;
                 }
 
                 this.currency.Name = this.NameTextBox.Text;
@@ -774,7 +786,7 @@ namespace MixItUp.WPF.Windows.Currency
                     statusCommand.Actions.Add(new ChatAction(statusChatText));
                     commandsToAdd.Add(new NewCurrencyRankCommand(string.Format("!{0} - {1}", statusCommand.Commands.First(), "Shows User's Amount"), statusCommand));
 
-                    if (!this.currency.IsTrackingSparks && !this.currency.IsTrackingEmbers)
+                    if (!this.currency.IsTrackingSparks && !this.currency.IsTrackingEmbers && !this.currency.IsTrackingFanProgression && !this.currency.IsTrackingBits)
                     {
                         ChatCommand addCommand = new ChatCommand("Add " + this.currency.Name, "add" + this.currency.SpecialIdentifier, new RequirementViewModel(UserRoleEnum.Mod, 5));
                         addCommand.Actions.Add(new CurrencyAction(this.currency, CurrencyActionTypeEnum.AddToSpecificUser, "$arg2text", username: "$targetusername"));
