@@ -191,6 +191,7 @@ namespace MixItUp.WPF.Controls.Command
                         case EventTypeEnum.TreatStreamDonation:
                         case EventTypeEnum.StreamJarDonation:
                         case EventTypeEnum.JustGivingDonation:
+                        case EventTypeEnum.StreamElementsDonation:
                             UserDonationModel donation = new UserDonationModel()
                             {
                                 Amount = 12.34,
@@ -208,6 +209,7 @@ namespace MixItUp.WPF.Controls.Command
                                 case EventTypeEnum.TreatStreamDonation: donation.Source = UserDonationSourceEnum.TreatStream; break;
                                 case EventTypeEnum.StreamJarDonation: donation.Source = UserDonationSourceEnum.StreamJar; break;
                                 case EventTypeEnum.JustGivingDonation: donation.Source = UserDonationSourceEnum.JustGiving; break;
+                                case EventTypeEnum.StreamElementsDonation: donation.Source = UserDonationSourceEnum.StreamElements; break;
                             }
 
                             foreach (var kvp in donation.GetSpecialIdentifiers())

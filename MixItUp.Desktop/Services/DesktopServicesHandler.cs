@@ -40,6 +40,7 @@ namespace MixItUp.Desktop.Services
             this.Telemetry = new DesktopTelemetryService();
 
             this.Streamlabs = new StreamlabsService();
+            this.StreamElements = new StreamElementsService();
             this.StreamJar = new StreamJarService();
             this.TipeeeStream = new TipeeeStreamService(new SocketIOConnection());
             this.TreatStream = new TreatStreamService(new SocketIOConnection());

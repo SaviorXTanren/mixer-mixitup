@@ -30,6 +30,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.services.Add(new ServiceContainerControl(this.Window, new XSplitServiceControl()));
             this.services.Add(new ServiceContainerControl(this.Window, new OvrStreamServiceControl()));
             this.services.Add(new ServiceContainerControl(this.Window, new StreamlabsServiceControl()));
+            this.services.Add(new ServiceContainerControl(this.Window, new StreamElementsServiceControl()));
             this.services.Add(new ServiceContainerControl(this.Window, new TipeeeStreamServiceControl()));
             this.services.Add(new ServiceContainerControl(this.Window, new TreatStreamServiceControl()));
             this.services.Add(new ServiceContainerControl(this.Window, new StreamJarServiceControl()));

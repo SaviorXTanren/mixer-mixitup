@@ -36,6 +36,7 @@ namespace MixItUp.Base.Services
         public IStreamingSoftwareService XSplit { get; protected set; }
         public IDeveloperAPIService DeveloperAPI { get; protected set; }
         public IStreamlabsService Streamlabs { get; protected set; }
+        public IStreamElementsService StreamElements { get; protected set; }
         public ITwitterService Twitter { get; protected set; }
         public IDiscordService Discord { get; protected set; }
         public ITiltifyService Tiltify { get; protected set; }
