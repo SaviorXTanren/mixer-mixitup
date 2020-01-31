@@ -1,6 +1,5 @@
 ﻿using Mixer.Base;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
@@ -11,6 +10,7 @@ using System.Net.Http.Headers;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using StreamingClient.Base.Util;
 
 namespace MixItUp.Base.Services.External
 {
@@ -48,26 +48,23 @@ namespace MixItUp.Base.Services.External
         public string channel { get; set; }
 
         [DataMember]
-        public JObject user { get; set; }
-
-        [DataMember]
-        public string message { get; set; }
-
-        [DataMember]
-        public double amount { get; set; }
-        [DataMember]
-        public string currency { get; set; }
-
-        [DataMember]
         public string status { get; set; }
+        [DataMember]
+        public string approved { get; set; }
         [DataMember]
         public bool deleted { get; set; }
 
         [DataMember]
         public string createdAt { get; set; }
 
+        [DataMember]
+        public StreamElementsDonationDetails donation { get; set; }
+
         [JsonIgnore]
-        public DateTimeOffset CreatedDate { get { return DateTimeOffset.Parse(this.createdAt); } }
+        public bool IsApproved { get { return string.Equals(this.approved, "allowed"); } }
+
+        [JsonIgnore]
+        public DateTimeOffset CreatedDate { get { return new DateTimeOffset(DateTime.Parse(this.createdAt), new TimeSpan()); } }
 
         public UserDonationModel ToGenericDonation()
         {
@@ -77,20 +74,44 @@ namespace MixItUp.Base.Services.External
 
                 ID = this._id.ToString(),
                 Username = "",
-                Message = this.message,
+                Message = (this.donation != null) ? this.donation.message : string.Empty,
 
-                Amount = Math.Round(this.amount, 2),
+                Amount = Math.Round((this.donation != null) ? this.donation.amount : 0, 2),
 
                 DateTime = this.CreatedDate,
             };
         }
     }
 
+    [DataContract]
+    public class StreamElementsDonationDetails
+    {
+        [DataMember]
+        public StreamElementsDonationDetailsUser user { get; set; }
+
+        [DataMember]
+        public string message { get; set; }
+
+        [DataMember]
+        public double amount { get; set; }
+        [DataMember]
+        public string currency { get; set; }
+    }
+
+    [DataContract]
+    public class StreamElementsDonationDetailsUser
+    {
+        [DataMember]
+        public string username { get; set; }
+        [DataMember]
+        public string geo { get; set; }
+    }
+
     public interface IStreamElementsService : IOAuthExternalService
     {
         Task<StreamElementsChannel> GetCurrentChannel();
 
-        Task<IEnumerable<StreamElementsDonation>> GetDonations(DateTimeOffset startTime);
+        Task<IEnumerable<StreamElementsDonation>> GetDonations();
     }
 
     public class StreamElementsService : OAuthExternalServiceBase, IStreamElementsService
@@ -103,8 +124,7 @@ namespace MixItUp.Base.Services.External
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
-        private DateTimeOffset lastQuery = DateTimeOffset.Now;
-        Dictionary<string, StreamElementsDonation> donationsReceived = new Dictionary<string, StreamElementsDonation>();
+        private Dictionary<string, StreamElementsDonation> donationsReceived = new Dictionary<string, StreamElementsDonation>();
 
         private StreamElementsChannel channel;
 
@@ -156,9 +176,9 @@ namespace MixItUp.Base.Services.External
             return await this.GetAsync<StreamElementsChannel>("channels/me");
         }
 
-        public async Task<IEnumerable<StreamElementsDonation>> GetDonations(DateTimeOffset startTime)
+        public async Task<IEnumerable<StreamElementsDonation>> GetDonations()
         {
-            JObject jobj = await this.GetJObjectAsync(string.Format("tips/{0}?limit=25&after={1}", this.channel._id, startTime.ToString()));
+            JObject jobj = await this.GetJObjectAsync(string.Format("tips/{0}?limit=25&sort=-createdAt", this.channel._id));
             if (jobj != null && jobj.ContainsKey("docs"))
             {
                 JArray jarray = (JArray)jobj["docs"];
@@ -192,7 +212,12 @@ namespace MixItUp.Base.Services.External
             this.channel = await this.GetCurrentChannel();
             if (this.channel != null)
             {
-                AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 30000, this.BackgroundDonationCheck);
+                foreach (StreamElementsDonation seDonation in await this.GetDonations())
+                {
+                    donationsReceived[seDonation._id] = seDonation;
+                }
+
+                MixItUp.Base.Util.AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 30000, this.BackgroundDonationCheck);
 
                 return new ExternalServiceResult();
             }
@@ -216,16 +241,13 @@ namespace MixItUp.Base.Services.External
 
         private async Task BackgroundDonationCheck(CancellationToken token)
         {
-            foreach (StreamElementsDonation seDonation in await this.GetDonations(this.lastQuery))
+            foreach (StreamElementsDonation seDonation in await this.GetDonations())
             {
                 if (!donationsReceived.ContainsKey(seDonation._id))
                 {
                     donationsReceived[seDonation._id] = seDonation;
-                    if (seDonation.CreatedDate > this.lastQuery)
-                    {
-                        UserDonationModel donation = seDonation.ToGenericDonation();
-                        await ChannelSession.Services.Events.PerformEvent(await EventService.ProcessDonationEvent(EventTypeEnum.StreamElementsDonation, donation));
-                    }
+                    UserDonationModel donation = seDonation.ToGenericDonation();
+                    await ChannelSession.Services.Events.PerformEvent(await EventService.ProcessDonationEvent(EventTypeEnum.StreamElementsDonation, donation));
                 }
             }
         }
