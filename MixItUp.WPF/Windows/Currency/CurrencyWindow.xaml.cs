@@ -585,7 +585,7 @@ namespace MixItUp.WPF.Windows.Currency
                 string siName = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(this.NameTextBox.Text);
                 if (siName.Equals("time") || siName.Equals("hours") || siName.Equals("mins") || siName.Equals("sparks") || siName.Equals("embers") || siName.Equals("fanprogression") || siName.Equals("bits"))
                 {
-                    await DialogHelper.ShowMessage("This name is reserved and can not be used");
+                    await DialogHelper.ShowMessage("The following names are reserved and can not be used: time, hours, mins, sparks, embers, fanprogression");
                     return;
                 }
 
