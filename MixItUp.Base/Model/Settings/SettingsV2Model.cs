@@ -590,6 +590,11 @@ namespace MixItUp.Base.Model.Settings
             this.MixerChannelID = channel.id;
             this.IsStreamer = isStreamer;
 
+            if (ChannelSession.IsDebug())
+            {
+                this.DiagnosticLogging = true;
+            }
+
             BuildMissingCommands();
 
             this.DashboardItems = new List<DashboardItemTypeEnum>() { DashboardItemTypeEnum.None, DashboardItemTypeEnum.None, DashboardItemTypeEnum.None, DashboardItemTypeEnum.None };
