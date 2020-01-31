@@ -24,17 +24,20 @@ namespace MixItUp.Base.Services.Twitch
 
         public static readonly List<OAuthClientScopeEnum> StreamerScopes = new List<OAuthClientScopeEnum>()
         {
+            OAuthClientScopeEnum.channel_check_subscription,
             OAuthClientScopeEnum.channel_commercial,
             OAuthClientScopeEnum.channel_editor,
             OAuthClientScopeEnum.channel_read,
             OAuthClientScopeEnum.channel_subscriptions,
-            OAuthClientScopeEnum.user_subscriptions,
-
+            OAuthClientScopeEnum.user_follows_edit,
             OAuthClientScopeEnum.user_read,
+            OAuthClientScopeEnum.user_subscriptions,
 
             OAuthClientScopeEnum.bits__read,
             OAuthClientScopeEnum.channel__moderate,
             OAuthClientScopeEnum.channel__read__redemptions,
+            OAuthClientScopeEnum.channel__read__subscriptions,
+            OAuthClientScopeEnum.clips__edit,
             OAuthClientScopeEnum.chat__edit,
             OAuthClientScopeEnum.chat__read,
             OAuthClientScopeEnum.user__edit,
