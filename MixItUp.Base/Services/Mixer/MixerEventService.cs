@@ -463,7 +463,7 @@ namespace MixItUp.Base.Services.Mixer
                 sparkCurrency.AddAmount(sparkUsage.Item1.Data, (int)sparkUsage.Item2);
             }
 
-            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSparkUsageUserData] = sparkUsage.Item1;
+            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSparkUsageUserData] = sparkUsage.Item1.Data;
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSparkUsageAmountData] = sparkUsage.Item2;
 
             EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerSparksUsed, sparkUsage.Item1);
@@ -480,7 +480,7 @@ namespace MixItUp.Base.Services.Mixer
                 emberCurrency.AddAmount(emberUsage.User.Data, (int)emberUsage.Amount);
             }
 
-            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestEmberUsageUserData] = emberUsage.User;
+            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestEmberUsageUserData] = emberUsage.User.Data;
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestEmberUsageAmountData] = emberUsage.Amount;
 
             EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerSparksUsed, emberUsage.User);
