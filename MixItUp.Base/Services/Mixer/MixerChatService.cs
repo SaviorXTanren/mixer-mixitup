@@ -4,6 +4,7 @@ using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Chat;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Mixer;
@@ -34,10 +35,10 @@ namespace MixItUp.Base.Services.Mixer
 
         bool IsBotConnected { get; }
 
-        Task<bool> ConnectStreamer();
+        Task<ExternalServiceResult> ConnectStreamer();
         Task DisconnectStreamer();
 
-        Task<bool> ConnectBot();
+        Task<ExternalServiceResult> ConnectBot();
         Task DisconnectBot();
 
         Task SendMessage(string message, bool sendAsStreamer = false);
@@ -89,17 +90,19 @@ namespace MixItUp.Base.Services.Mixer
 
         public bool IsBotConnected { get { return this.botClient != null && this.botClient.Connected; } }
 
-        public async Task<bool> ConnectStreamer()
+        public async Task<ExternalServiceResult> ConnectStreamer()
         {
-            return await this.AttemptConnect(async () =>
+            if (ChannelSession.MixerUserConnection != null)
             {
-                if (ChannelSession.MixerUserConnection != null)
+                return await this.AttemptConnect(async () =>
                 {
                     this.cancellationTokenSource = new CancellationTokenSource();
 
-                    this.streamerClient = await this.ConnectAndAuthenticateChatClient(ChannelSession.MixerUserConnection);
-                    if (this.streamerClient != null)
+                    ExternalServiceResult<ChatClient> result = await this.ConnectAndAuthenticateChatClient(ChannelSession.MixerUserConnection);
+                    if (result.Success)
                     {
+                        this.streamerClient = result.Result;
+
                         this.streamerClient.OnClearMessagesOccurred += ChatClient_OnClearMessagesOccurred;
                         this.streamerClient.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
                         this.streamerClient.OnMessageOccurred += ChatClient_OnMessageOccurred;
@@ -138,13 +141,15 @@ namespace MixItUp.Base.Services.Mixer
                             AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 300000, this.ChatterRefreshBackground);
                         });
                         AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 2500, this.ChatterJoinLeaveBackground);
-
-                        return true;
                     }
-                }
-                await this.DisconnectStreamer();
-                return false;
-            });
+                    else
+                    {
+                        await this.DisconnectStreamer();
+                    }
+                    return result;
+                });
+            }
+            return new ExternalServiceResult("Mixer connection has not been established");
         }
 
         public async Task DisconnectStreamer()
@@ -184,35 +189,35 @@ namespace MixItUp.Base.Services.Mixer
             });
         }
 
-        public async Task<bool> ConnectBot()
+        public async Task<ExternalServiceResult> ConnectBot()
         {
             if (ChannelSession.MixerBotConnection != null)
             {
                 return await this.AttemptConnect(async () =>
                 {
-                    if (ChannelSession.MixerBotConnection != null)
+                    ExternalServiceResult<ChatClient> result = await this.ConnectAndAuthenticateChatClient(ChannelSession.MixerBotConnection);
+                    if (result.Success)
                     {
-                        this.botClient = await this.ConnectAndAuthenticateChatClient(ChannelSession.MixerBotConnection);
-                        if (this.botClient != null)
+                        this.botClient = result.Result;
+
+                        this.botClient.OnMessageOccurred += BotChatClient_OnMessageOccurred;
+                        this.botClient.OnDisconnectOccurred += BotClient_OnDisconnectOccurred;
+                        if (ChannelSession.Settings.DiagnosticLogging)
                         {
-                            this.botClient.OnMessageOccurred += BotChatClient_OnMessageOccurred;
-                            this.botClient.OnDisconnectOccurred += BotClient_OnDisconnectOccurred;
-                            if (ChannelSession.Settings.DiagnosticLogging)
-                            {
-                                this.botClient.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
-                                this.botClient.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
-                                this.botClient.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
-                                this.botClient.OnEventOccurred += WebSocketClient_OnEventOccurred;
-                            }
-                            return true;
+                            this.botClient.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
+                            this.botClient.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
+                            this.botClient.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
+                            this.botClient.OnEventOccurred += WebSocketClient_OnEventOccurred;
                         }
-                        return false;
                     }
-                    await this.DisconnectBot();
-                    return false;
+                    else
+                    {
+                        await this.DisconnectBot();
+                    }
+                    return result;
                 });
             }
-            return true;
+            return new ExternalServiceResult("Mixer connection has not been established");
         }
 
         public async Task DisconnectBot()
@@ -401,21 +406,22 @@ namespace MixItUp.Base.Services.Mixer
 
         private ChatClient GetChatClient(bool sendAsStreamer = false) { return (this.botClient != null && !sendAsStreamer) ? this.botClient : this.streamerClient; }
 
-        private async Task<ChatClient> ConnectAndAuthenticateChatClient(MixerConnectionService connection)
+        private async Task<ExternalServiceResult<ChatClient>> ConnectAndAuthenticateChatClient(MixerConnectionService connection)
         {
             ChatClient client = await this.RunAsync(ChatClient.CreateFromChannel(connection.Connection, ChannelSession.MixerChannel));
             if (client != null)
             {
-                if (await this.RunAsync(client.Connect()) && await this.RunAsync(client.Authenticate()))
+                if (await this.RunAsync(client.Connect()))
                 {
-                    return client;
+                    if (await this.RunAsync(client.Authenticate()))
+                    {
+                        return new ExternalServiceResult<ChatClient>(client);
+                    }
+                    return new ExternalServiceResult<ChatClient>("Failed to authenticate to Mixer chat");
                 }
-                else
-                {
-                    Logger.Log("Failed to connect & authenticate Chat client");
-                }
+                return new ExternalServiceResult<ChatClient>("Failed to connect Mixer chat");
             }
-            return null;
+            return new ExternalServiceResult<ChatClient>("Failed to create chat client from connection");
         }
 
         private string SplitLargeMessage(string message, out string subMessage)
@@ -692,30 +698,36 @@ namespace MixItUp.Base.Services.Mixer
 
         private async void StreamerClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
-            ChannelSession.DisconnectionOccurred("Streamer Chat");
+            ChannelSession.DisconnectionOccurred("Mixer Streamer Chat");
 
+            ExternalServiceResult result;
             await this.DisconnectStreamer();
             do
             {
                 await Task.Delay(2500);
-            }
-            while (!await this.ConnectStreamer());
 
-            ChannelSession.ReconnectionOccurred("Streamer Chat");
+                result = await this.ConnectStreamer();
+            }
+            while (!result.Success);
+
+            ChannelSession.ReconnectionOccurred("Mixer Streamer Chat");
         }
 
         private async void BotClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
-            ChannelSession.DisconnectionOccurred("Bot Chat");
+            ChannelSession.DisconnectionOccurred("Mixer Bot Chat");
 
+            ExternalServiceResult result;
             await this.DisconnectBot();
             do
             {
                 await Task.Delay(2500);
-            }
-            while (!await this.ConnectBot());
 
-            ChannelSession.ReconnectionOccurred("Bot Chat");
+                result = await this.ConnectBot();
+            }
+            while (!result.Success);
+
+            ChannelSession.ReconnectionOccurred("Mixer Bot Chat");
         }
 
         #endregion Chat Event Handlers

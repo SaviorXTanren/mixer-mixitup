@@ -6,6 +6,7 @@ using Mixer.Base.Model.User;
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.Chat;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Mixer;
@@ -27,7 +28,7 @@ namespace MixItUp.Base.Services.Mixer
 
         LockedDictionary<Guid, MixerSkillPayloadModel> SkillEventsTriggered { get; }
 
-        Task<bool> Connect();
+        Task<ExternalServiceResult> Connect();
         Task Disconnect();
     }
 
@@ -69,41 +70,50 @@ namespace MixItUp.Base.Services.Mixer
             GlobalEvents.OnSkillUseOccurred += GlobalEvents_OnSkillUseOccurred;
         }
 
-        public async Task<bool> Connect()
+        public async Task<ExternalServiceResult> Connect()
         {
-            return await this.AttemptConnect(async () =>
+            if (ChannelSession.MixerUserConnection != null)
             {
-                this.Client = await this.RunAsync(ConstellationClient.Create(ChannelSession.MixerUserConnection.Connection));
-                if (this.Client != null && await this.RunAsync(this.Client.Connect()))
+                return await this.AttemptConnect(async () =>
                 {
-                    this.Client.OnDisconnectOccurred += ConstellationClient_OnDisconnectOccurred;
-                    if (ChannelSession.Settings.DiagnosticLogging)
+                    this.Client = await ConstellationClient.Create(ChannelSession.MixerUserConnection.Connection);
+                    if (this.Client != null && await this.RunAsync(this.Client.Connect()))
                     {
-                        this.Client.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
-                        this.Client.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
-                        this.Client.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
-                        this.Client.OnEventOccurred += WebSocketClient_OnEventOccurred;
-                    }
-                    this.Client.OnSubscribedEventOccurred += ConstellationClient_OnSubscribedEventOccurred;
-
-                    await this.SubscribeToEvents(MixerEventService.subscribedEvents.Select(e => new ConstellationEventType(e, ChannelSession.MixerChannel.id)));
-
-                    PatronageStatusModel patronageStatus = await ChannelSession.MixerUserConnection.GetPatronageStatus(ChannelSession.MixerChannel);
-                    if (patronageStatus != null)
-                    {
-                        PatronagePeriodModel patronagePeriod = await ChannelSession.MixerUserConnection.GetPatronagePeriod(patronageStatus);
-                        if (patronagePeriod != null)
+                        this.Client.OnDisconnectOccurred += ConstellationClient_OnDisconnectOccurred;
+                        if (ChannelSession.Settings.DiagnosticLogging)
                         {
-                            this.allPatronageMilestones = new List<PatronageMilestoneModel>(patronagePeriod.milestoneGroups.SelectMany(mg => mg.milestones));
-                            this.remainingPatronageMilestones = new List<PatronageMilestoneModel>(this.allPatronageMilestones.Where(m => m.target > patronageStatus.patronageEarned));
-                            return true;
+                            this.Client.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
+                            this.Client.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
+                            this.Client.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
+                            this.Client.OnEventOccurred += WebSocketClient_OnEventOccurred;
                         }
-                    }
-                }
+                        this.Client.OnSubscribedEventOccurred += ConstellationClient_OnSubscribedEventOccurred;
 
-                await this.Disconnect();
-                return false;
-            });
+                        await this.SubscribeToEvents(MixerEventService.subscribedEvents.Select(e => new ConstellationEventType(e, ChannelSession.MixerChannel.id)));
+
+                        PatronageStatusModel patronageStatus = await ChannelSession.MixerUserConnection.GetPatronageStatus(ChannelSession.MixerChannel);
+                        if (patronageStatus != null)
+                        {
+                            PatronagePeriodModel patronagePeriod = await ChannelSession.MixerUserConnection.GetPatronagePeriod(patronageStatus);
+                            if (patronagePeriod != null)
+                            {
+                                this.allPatronageMilestones = new List<PatronageMilestoneModel>(patronagePeriod.milestoneGroups.SelectMany(mg => mg.milestones));
+                                this.remainingPatronageMilestones = new List<PatronageMilestoneModel>(this.allPatronageMilestones.Where(m => m.target > patronageStatus.patronageEarned));
+                                return new ExternalServiceResult();
+                            }
+                        }
+
+                        await this.Disconnect();
+                        return new ExternalServiceResult("Failed to get Mixer patronage information");
+                    }
+                    else
+                    {
+                        await this.Disconnect();
+                        return new ExternalServiceResult("Failed to connect to Mixer Constellation");
+                    }
+                });
+            }
+            return new ExternalServiceResult("Mixer connection has not been established");
         }
 
         public async Task Disconnect()
@@ -509,11 +519,14 @@ namespace MixItUp.Base.Services.Mixer
         {
             ChannelSession.DisconnectionOccurred("Constellation");
 
+            ExternalServiceResult result;
             do
             {
                 await Task.Delay(2500);
+
+                result = await this.Connect();
             }
-            while (!await this.Connect());
+            while (!result.Success);
 
             ChannelSession.ReconnectionOccurred("Constellation");
         }

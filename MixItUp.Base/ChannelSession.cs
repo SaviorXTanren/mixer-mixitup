@@ -324,8 +324,15 @@ namespace MixItUp.Base
                 MixerChatService mixerChatService = new MixerChatService();
                 MixerEventService mixerEventService = new MixerEventService();
 
-                if (!await mixerChatService.ConnectStreamer() || !await mixerEventService.Connect())
+                List<Task<ExternalServiceResult>> mixerConnections = new List<Task<ExternalServiceResult>>();
+                mixerConnections.Add(mixerChatService.ConnectStreamer());
+                mixerConnections.Add(mixerEventService.Connect());
+                await Task.WhenAll(mixerConnections);
+
+                if (mixerConnections.Any(c => !c.Result.Success))
                 {
+                    string errors = string.Join(Environment.NewLine, mixerConnections.Where(c => !c.Result.Success).Select(c => c.Result.Message));
+                    GlobalEvents.ShowMessageBox("Failed to connect to Mixer services:" + Environment.NewLine + Environment.NewLine + errors);
                     return false;
                 }
 
