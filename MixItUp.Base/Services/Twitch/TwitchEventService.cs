@@ -24,6 +24,16 @@ namespace MixItUp.Base.Services.Twitch
 
     public class TwitchEventService : PlatformServiceBase, ITwitchEventService
     {
+        private static readonly List<PubSubTopicsEnum> topicTypes = new List<PubSubTopicsEnum>()
+        {
+            PubSubTopicsEnum.ChannelBitsEventsV2,
+            PubSubTopicsEnum.ChannelBitsBadgeUnlocks,
+            PubSubTopicsEnum.ChannelSubscriptionsV1,
+            PubSubTopicsEnum.ChannelCommerceV1,
+            PubSubTopicsEnum.UserWhispers,
+            PubSubTopicsEnum.ChannelPointsRedeemed
+        };
+
         private PubSubClient pubSub;
 
         private CancellationTokenSource cancellationTokenSource;
@@ -58,7 +68,6 @@ namespace MixItUp.Base.Services.Twitch
                         this.pubSub.OnBitsBadgeReceived += PubSub_OnBitsBadgeReceived;
                         this.pubSub.OnSubscribedReceived += PubSub_OnSubscribedReceived;
                         this.pubSub.OnSubscriptionsGiftedReceived += PubSub_OnSubscriptionsGiftedReceived;
-                        this.pubSub.OnCommerceReceived += PubSub_OnCommerceReceived;
                         this.pubSub.OnChannelPointsRedeemed += PubSub_OnChannelPointsRedeemed;
 
                         await this.pubSub.Connect();
@@ -66,7 +75,7 @@ namespace MixItUp.Base.Services.Twitch
                         await Task.Delay(1000);
 
                         List<PubSubListenTopicModel> topics = new List<PubSubListenTopicModel>();
-                        foreach (PubSubTopicsEnum topic in EnumHelper.GetEnumList<PubSubTopicsEnum>())
+                        foreach (PubSubTopicsEnum topic in TwitchEventService.topicTypes)
                         {
                             topics.Add(new PubSubListenTopicModel(topic, ChannelSession.TwitchUserNewAPI.id));
                         }
@@ -121,7 +130,6 @@ namespace MixItUp.Base.Services.Twitch
                     this.pubSub.OnBitsBadgeReceived -= PubSub_OnBitsBadgeReceived;
                     this.pubSub.OnSubscribedReceived -= PubSub_OnSubscribedReceived;
                     this.pubSub.OnSubscriptionsGiftedReceived -= PubSub_OnSubscriptionsGiftedReceived;
-                    this.pubSub.OnCommerceReceived -= PubSub_OnCommerceReceived;
                     this.pubSub.OnChannelPointsRedeemed -= PubSub_OnChannelPointsRedeemed;
 
                     await this.pubSub.Disconnect();
@@ -253,13 +261,13 @@ namespace MixItUp.Base.Services.Twitch
                 user = new UserViewModel(packet);
             }
 
-            if ((packet.months == 1 || packet.months == 0) && packet.cumulativeMonths == 1 && (packet.streakMonths == 0 || packet.streakMonths == 1))
+            if (string.Equals(packet.context, "sub") || packet.cumulativeMonths == 1)
             {
                 EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelSubscribed, user);
                 if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                 {
                     trigger.SpecialIdentifiers["message"] = (packet.sub_message.ContainsKey("message")) ? packet.sub_message["message"].ToString() : string.Empty;
-                    trigger.SpecialIdentifiers["usersubplan"] = packet.sub_plan;
+                    trigger.SpecialIdentifiers["usersubplan"] = packet.sub_plan_name;
 
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.Data;
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
@@ -272,21 +280,21 @@ namespace MixItUp.Base.Services.Twitch
                     user.Data.TotalMonthsSubbed++;
 
                     await ChannelSession.Services.Events.PerformEvent(trigger);
-
-                    GlobalEvents.SubscribeOccurred(user);
-
-                    await this.AddAlertChatMessage(user, string.Format("{0} Subscribed", user.Username));
                 }
+
+                GlobalEvents.SubscribeOccurred(user);
+
+                await this.AddAlertChatMessage(user, string.Format("{0} Subscribed", user.Username));
             }
             else
             {
+                int months = (packet.streakMonths > packet.cumulativeMonths) ? packet.streakMonths : packet.cumulativeMonths;
+
                 EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelResubscribed, user);
                 if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                 {
-                    int months = (packet.streakMonths > 0) ? packet.streakMonths : packet.cumulativeMonths;
-
                     trigger.SpecialIdentifiers["message"] = (packet.sub_message.ContainsKey("message")) ? packet.sub_message["message"].ToString() : string.Empty;
-                    trigger.SpecialIdentifiers["usersubplan"] = packet.sub_plan;
+                    trigger.SpecialIdentifiers["usersubplan"] = packet.sub_plan_name;
                     trigger.SpecialIdentifiers["usersubmonths"] = months.ToString();
 
                     ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.Data;
@@ -300,11 +308,11 @@ namespace MixItUp.Base.Services.Twitch
                     user.Data.TotalMonthsSubbed++;
 
                     await ChannelSession.Services.Events.PerformEvent(trigger);
-
-                    GlobalEvents.ResubscribeOccurred(new Tuple<UserViewModel, int>(user, months));
-
-                    await this.AddAlertChatMessage(user, string.Format("{0} Re-Subscribed For {1} Months", user.Username, months));
                 }
+
+                GlobalEvents.ResubscribeOccurred(new Tuple<UserViewModel, int>(user, months));
+
+                await this.AddAlertChatMessage(user, string.Format("{0} Re-Subscribed For {1} Months", user.Username, months));
             }
         }
 
@@ -329,7 +337,7 @@ namespace MixItUp.Base.Services.Twitch
 
             EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelSubscriptionGifted, gifter);
             trigger.SpecialIdentifiers["message"] = (packet.sub_message.ContainsKey("message")) ? packet.sub_message["message"].ToString() : string.Empty;
-            trigger.SpecialIdentifiers["usersubplan"] = packet.sub_plan;
+            trigger.SpecialIdentifiers["usersubplan"] = packet.sub_plan_name;
 
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = receiver.Data;
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
@@ -349,11 +357,6 @@ namespace MixItUp.Base.Services.Twitch
             await this.AddAlertChatMessage(gifter, string.Format("{0} Gifted A Subscription To {1}", gifter.Username, receiver.Username));
 
             GlobalEvents.SubscriptionGiftedOccurred(gifter, receiver);
-        }
-
-        private void PubSub_OnCommerceReceived(object sender, PubSubCommerceEventModel packet)
-        {
-
         }
 
         private async void PubSub_OnChannelPointsRedeemed(object sender, PubSubChannelPointsRedemptionEventModel packet)
