@@ -432,7 +432,7 @@ namespace MixItUp.Base.Services.Twitch
         {
             if (message != null && !string.IsNullOrEmpty(message.Message))
             {
-                if (string.IsNullOrEmpty(message.UserLogin))
+                if (!string.IsNullOrEmpty(message.UserLogin) && message.UserLogin.Equals("jtv"))
                 {
                     if (Regex.IsMatch(message.Message, TwitchChatService.HostChatMessageRegexPattern))
                     {
@@ -465,10 +465,6 @@ namespace MixItUp.Base.Services.Twitch
                             }
                         }
                     }
-                }
-                if (string.IsNullOrEmpty(message.UserID) || message.UserLogin.Equals("jtv"))
-                {
-                    Logger.Log(SerializerHelper.SerializeToString(message));
                 }
                 else
                 {
