@@ -3,6 +3,7 @@ using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.MixPlay;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.WPF.Controls.Dialogs;
 using MixItUp.WPF.Util;
@@ -14,32 +15,26 @@ using System.Windows;
 namespace MixItUp.WPF.Controls.Command
 {
     /// <summary>
-    /// Interaction logic for InteractiveJoystickCommandDetailsControl.xaml
+    /// Interaction logic for MixPlayJoystickCommandDetailsControl.xaml
     /// </summary>
-    public partial class InteractiveJoystickCommandDetailsControl : CommandDetailsControlBase
+    public partial class MixPlayJoystickCommandDetailsControl : CommandDetailsControlBase
     {
         public MixPlayGameModel Game { get; private set; }
         public MixPlayGameVersionModel Version { get; private set; }
-        public MixPlaySceneModel Scene { get; private set; }
         public MixPlayJoystickControlModel Control { get; private set; }
 
         private MixPlayJoystickCommand command;
 
-        public InteractiveJoystickCommandDetailsControl(MixPlayGameModel game, MixPlayGameVersionModel version, MixPlayJoystickCommand command)
+        public MixPlayJoystickCommandDetailsControl(MixPlayGameModel game, MixPlayGameVersionModel version, MixPlayControlViewModel command)
+            : this(game, version, command.Joystick)
         {
-            this.Game = game;
-            this.Version = version;
-            this.command = command;
-            this.Control = command.Joystick;
-
-            InitializeComponent();
+            this.command = (MixPlayJoystickCommand)command.Command;
         }
 
-        public InteractiveJoystickCommandDetailsControl(MixPlayGameModel game, MixPlayGameVersionModel version, MixPlaySceneModel scene, MixPlayJoystickControlModel control)
+        public MixPlayJoystickCommandDetailsControl(MixPlayGameModel game, MixPlayGameVersionModel version, MixPlayJoystickControlModel control)
         {
             this.Game = game;
             this.Version = version;
-            this.Scene = scene;
             this.Control = control;
 
             InitializeComponent();
@@ -62,22 +57,11 @@ namespace MixItUp.WPF.Controls.Command
                 this.NameTextBox.Text = this.Control.controlID;
             }
 
-            if (this.Scene != null)
-            {
-                this.SceneTextBox.Text = this.Scene.sceneID;
-            }
-
             if (this.command != null)
             {
-                this.SceneTextBox.Text = this.command.SceneID;
                 this.JoystickSetupComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.SetupType);
                 this.JoystickDeadZoneTextBox.Text = (this.command.DeadZone * 100).ToString();
                 this.MouseMovementMultiplierTextBox.Text = this.command.MouseMovementMultiplier.ToString();
-
-                if (this.Game != null)
-                {
-                    this.Scene = this.Version.controls.scenes.FirstOrDefault(s => s.sceneID.Equals(this.command.SceneID));
-                }
             }
 
             return Task.FromResult(0);
@@ -127,7 +111,7 @@ namespace MixItUp.WPF.Controls.Command
 
                 if (this.command == null)
                 {
-                    this.command = new MixPlayJoystickCommand(this.Game, this.Scene, this.Control, requirements);
+                    this.command = new MixPlayJoystickCommand(this.Game, this.Control, requirements);
                     ChannelSession.Settings.MixPlayCommands.Add(this.command);
                 }
                 this.command.InitializeAction();

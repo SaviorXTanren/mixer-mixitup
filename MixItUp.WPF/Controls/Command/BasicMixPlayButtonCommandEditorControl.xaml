@@ -1,4 +1,4 @@
-﻿<local:CommandEditorControlBase x:Class="MixItUp.WPF.Controls.Command.BasicInteractiveButtonCommandEditorControl"
+﻿<local:CommandEditorControlBase x:Class="MixItUp.WPF.Controls.Command.BasicMixPlayButtonCommandEditorControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 

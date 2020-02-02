@@ -28,7 +28,7 @@ namespace MixItUp.WPF.Controls.Settings
         {
             List<MixPlayGameModel> interactiveGames = new List<MixPlayGameModel>();
             interactiveGames.Add(InteractiveSettingsControl.NoneInteractiveGame);
-            interactiveGames.AddRange(await ChannelSession.Interactive.GetAllConnectableGames());
+            interactiveGames.AddRange(await ChannelSession.Services.MixPlay.GetAllGames());
             this.DefaultInteractiveGameComboBox.ItemsSource = interactiveGames;
 
             MixPlayGameModel game = interactiveGames.FirstOrDefault(g => g.id.Equals(ChannelSession.Settings.DefaultMixPlayGame));

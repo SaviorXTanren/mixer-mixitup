@@ -1,6 +1,5 @@
 ﻿using Mixer.Base.Model.MixPlay;
 using MixItUp.Base;
-using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
@@ -80,7 +79,7 @@ namespace MixItUp.WPF.Controls.Interactive
 
         protected override async Task<bool> GameConnectedInternal()
         {
-            MixPlayConnectedSceneGroupCollectionModel sceneGroups = await ChannelSession.Interactive.GetScenes();
+            MixPlayConnectedSceneGroupCollectionModel sceneGroups = await ChannelSession.Services.MixPlay.GetScenes();
             if (sceneGroups != null)
             {
                 this.scene = sceneGroups.scenes.FirstOrDefault();
@@ -105,12 +104,12 @@ namespace MixItUp.WPF.Controls.Interactive
                                 winner = null;
 
                                 this.gameStartButton.meta["timeLeft"] = this.maxTime;
-                                await ChannelSession.Interactive.UpdateControls(scene, new List<MixPlayControlModel>() { this.gameStartButton });
+                                await ChannelSession.Services.MixPlay.UpdateControls(scene, new List<MixPlayControlModel>() { this.gameStartButton });
 
                                 for (int i = this.maxTime; i >= 0; i--)
                                 {
                                     this.timeLeftButton.meta["timeLeft"] = i;
-                                    await ChannelSession.Interactive.UpdateControls(scene, new List<MixPlayControlModel>() { this.timeLeftButton });
+                                    await ChannelSession.Services.MixPlay.UpdateControls(scene, new List<MixPlayControlModel>() { this.timeLeftButton });
 
                                     await this.Dispatcher.InvokeAsync(() =>
                                     {
@@ -124,8 +123,8 @@ namespace MixItUp.WPF.Controls.Interactive
                                 winner = userTotals.Values.OrderByDescending(user => user.Total).FirstOrDefault();
                                 if (winner != null && winner.User.GetMixerMixPlayParticipantModels().Count() > 0)
                                 {
-                                    this.resultsButton.meta["winner"] = JObject.FromObject(winner.User.GetMixerMixPlayParticipantModels().FirstOrDefault());
-                                    await ChannelSession.Interactive.UpdateControls(scene, new List<MixPlayControlModel>() { this.resultsButton });
+                                    this.resultsButton.meta["winner"] = JObject.FromObject(winner.User.GetParticipantModels().FirstOrDefault());
+                                    await ChannelSession.Services.MixPlay.UpdateControls(scene, new List<MixPlayControlModel>() { this.resultsButton });
 
                                     this.Dispatcher.InvokeAsync(() =>
                                     {
@@ -146,7 +145,7 @@ namespace MixItUp.WPF.Controls.Interactive
             return false;
         }
 
-        protected override async Task OnInteractiveControlUsed(UserViewModel user, MixPlayGiveInputModel input, InteractiveConnectedControlCommand command)
+        protected override async Task OnMixPlayControlUsed(UserViewModel user, MixPlayGiveInputModel input, MixPlayControlModel control)
         {
             if (user != null && !user.IsAnonymous && (input.input.controlID.Equals("gameEnd") || input.input.controlID.Equals("flyHit"))
                 && input.input.meta.TryGetValue("total", out JToken totalToken))

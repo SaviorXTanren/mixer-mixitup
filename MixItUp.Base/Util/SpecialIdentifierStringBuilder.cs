@@ -1,7 +1,6 @@
 ﻿using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.Leaderboards;
 using Mixer.Base.Model.Patronage;
-using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.Overlay;

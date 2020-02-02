@@ -1,7 +1,8 @@
-﻿using Mixer.Base.Model.Patronage;
-using MixItUp.Base.MixerAPI;
+﻿using Mixer.Base.Model.MixPlay;
+using Mixer.Base.Model.Patronage;
 using MixItUp.Base.Model.Statistics;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services.Mixer;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -50,7 +51,7 @@ namespace MixItUp.Base.Services
             GlobalEvents.OnResubscribeOccurred += Constellation_OnResubscribedOccurred;
             GlobalEvents.OnSubscriptionGiftedOccurred += GlobalEvents_OnSubscriptionGiftedOccurred;
 
-            ChannelSession.Interactive.OnInteractiveControlUsed += Interactive_OnInteractiveControlUsed;
+            ChannelSession.Services.MixPlay.OnControlUsed += MixPlay_OnControlUsed;
 
             GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
 
@@ -233,12 +234,9 @@ namespace MixItUp.Base.Services
             this.GiftedSubscriptionsTracker.OnStatisticEventOccurred(e.Item1.Username, e.Item2.Username);
         }
 
-        private void Interactive_OnInteractiveControlUsed(object sender, InteractiveInputEvent e)
+        private void MixPlay_OnControlUsed(object sender, MixPlayInputEvent e)
         {
-            if (e.Command != null && e.User != null)
-            {
-                this.MixPlayTracker.OnStatisticEventOccurred(e.Command.Name, e.User.Username);
-            }
+            this.MixPlayTracker.OnStatisticEventOccurred(e.Control.controlID, e.User.Username);
         }
 
         private void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel e)

@@ -2,40 +2,34 @@
 using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.MixPlay;
 using MixItUp.Base.ViewModel.Requirement;
-using MixItUp.WPF.Util;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.Command
 {
     /// <summary>
-    /// Interaction logic for InteractiveTextBoxCommandDetailsControl.xaml
+    /// Interaction logic for MixPlayTextBoxCommandDetailsControl.xaml
     /// </summary>
-    public partial class InteractiveTextBoxCommandDetailsControl : CommandDetailsControlBase
+    public partial class MixPlayTextBoxCommandDetailsControl : CommandDetailsControlBase
     {
         public MixPlayGameModel Game { get; private set; }
         public MixPlayGameVersionModel Version { get; private set; }
-        public MixPlaySceneModel Scene { get; private set; }
         public MixPlayTextBoxControlModel Control { get; private set; }
 
         private MixPlayTextBoxCommand command;
 
-        public InteractiveTextBoxCommandDetailsControl(MixPlayGameModel game, MixPlayGameVersionModel version, MixPlayTextBoxCommand command)
+        public MixPlayTextBoxCommandDetailsControl(MixPlayGameModel game, MixPlayGameVersionModel version, MixPlayControlViewModel command)
+            : this(game, version, command.TextBox)
         {
-            this.Game = game;
-            this.Version = version;
-            this.command = command;
-            this.Control = command.TextBox;
-
-            InitializeComponent();
+            this.command = (MixPlayTextBoxCommand)command.Command;
         }
 
-        public InteractiveTextBoxCommandDetailsControl(MixPlayGameModel game, MixPlayGameVersionModel version, MixPlaySceneModel scene, MixPlayTextBoxControlModel control)
+        public MixPlayTextBoxCommandDetailsControl(MixPlayGameModel game, MixPlayGameVersionModel version, MixPlayTextBoxControlModel control)
         {
             this.Game = game;
             this.Version = version;
-            this.Scene = scene;
             this.Control = control;
 
             InitializeComponent();
@@ -54,22 +48,11 @@ namespace MixItUp.WPF.Controls.Command
                 this.SparkCostTextBox.Text = this.Control.cost.ToString();
             }
 
-            if (this.Scene != null)
-            {
-                this.SceneTextBox.Text = this.Scene.sceneID;
-            }
-
             if (this.command != null)
             {
-                this.SceneTextBox.Text = this.command.SceneID;
                 this.UseChatModerationCheckBox.IsChecked = this.command.UseChatModeration;
                 this.UnlockedControl.Unlocked = this.command.Unlocked;
                 this.Requirements.SetRequirements(this.command.Requirements);
-
-                if (this.Game != null)
-                {
-                    this.Scene = this.Version.controls.scenes.FirstOrDefault(s => s.sceneID.Equals(this.command.SceneID));
-                }
             }
 
             return Task.FromResult(0);
@@ -101,11 +84,11 @@ namespace MixItUp.WPF.Controls.Command
 
                 if (this.command == null)
                 {
-                    this.command = new MixPlayTextBoxCommand(this.Game, this.Scene, this.Control, requirements);
+                    this.command = new MixPlayTextBoxCommand(this.Game, this.Control, requirements);
                     ChannelSession.Settings.MixPlayCommands.Add(this.command);
                 }
 
-                this.command.TextBox.cost = int.Parse(this.SparkCostTextBox.Text);
+                this.Control.cost = int.Parse(this.SparkCostTextBox.Text);
                 this.command.UseChatModeration = this.UseChatModerationCheckBox.IsChecked.GetValueOrDefault();
                 this.command.Unlocked = this.UnlockedControl.Unlocked;
                 this.command.Requirements = requirements;

@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Services.External;
+using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -8,15 +9,17 @@ namespace MixItUp.Base.Services
 {
     public abstract class PlatformServiceBase
     {
-        public async Task<bool> AttemptConnect(Func<Task<bool>> connect, int connectionAttempts = 5)
+        public async Task<ExternalServiceResult> AttemptConnect(Func<Task<ExternalServiceResult>> connect, int connectionAttempts = 5)
         {
+            ExternalServiceResult result = new ExternalServiceResult();
             for (int i = 0; i < connectionAttempts; i++)
             {
                 try
                 {
-                    if (await connect())
+                    result = await connect();
+                    if (result.Success)
                     {
-                        return true;
+                        return result;
                     }
                 }
                 catch (Exception ex)
@@ -25,7 +28,7 @@ namespace MixItUp.Base.Services
                 }
                 await Task.Delay(1000);
             }
-            return false;
+            return result;
         }
 
         public async Task RunAsync(Task task, bool logNotFoundException = true) { await AsyncRunner.RunAsync(task, logNotFoundException); }

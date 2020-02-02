@@ -44,9 +44,7 @@ namespace MixItUp.Base.Commands
         public uint GameID { get; set; }
 
         [JsonProperty]
-        public string SceneID { get; set; }
-
-        [JsonProperty]
+        [Obsolete]
         public MixPlayControlModel Control { get; set; }
 
         [JsonProperty]
@@ -57,22 +55,59 @@ namespace MixItUp.Base.Commands
         [Obsolete]
         public string CooldownGroup { get; set; }
 
+        [JsonIgnore]
+        public int CooldownAmount
+        {
+            get
+            {
+                if (this.Requirements != null && this.Requirements.Cooldown != null)
+                {
+                    return this.Requirements.Cooldown.CooldownAmount;
+                }
+                return 0;
+            }
+        }
+
+        [JsonIgnore]
+        public bool HasCooldown { get { return this.CooldownAmount > 0; } }
+        
+        [JsonIgnore]
+        public bool IsIndividualCooldown { get { return (this.Requirements != null && this.Requirements.Cooldown != null) ? this.Requirements.Cooldown.Type == CooldownTypeEnum.Individual : false; } }
+
+        [JsonIgnore]
+        public bool IsGroupCooldown { get { return (this.Requirements != null && this.Requirements.Cooldown != null) ? this.Requirements.Cooldown.Type == CooldownTypeEnum.Group : false; } }
+
+        [JsonIgnore]
+        public string CooldownGroupName
+        {
+            get
+            {
+                if (this.Requirements != null && this.Requirements.Cooldown != null)
+                {
+                    return this.Requirements.Cooldown.GroupName;
+                }
+                return string.Empty;
+            }
+        }
+
         protected override SemaphoreSlim AsyncSemaphore { get { return MixPlayCommand.mixPlayCommandPerformSemaphore; } }
 
         public MixPlayCommand() { }
 
-        protected MixPlayCommand(MixPlayGameModel game, MixPlaySceneModel scene, MixPlayControlModel control, string command, RequirementViewModel requirements)
+        protected MixPlayCommand(MixPlayGameModel game, MixPlayControlModel control, string command, RequirementViewModel requirements)
             : base(control.controlID, CommandTypeEnum.Interactive, command, requirements)
         {
             this.GameID = game.id;
-            this.SceneID = scene.sceneID;
-            this.Control = control;
         }
 
         [JsonIgnore]
         public virtual string EventTypeString { get { return string.Empty; } }
 
-        public void UpdateWithLatestControl(MixPlayControlModel control) { this.Control = control; }
+        public virtual bool DoesInputMatchCommand(MixPlayGiveInputModel input) { return this.EventTypeString.Equals(input.input.eventType); }
+
+        public virtual long GetCooldownTimestamp() { return 0; }
+
+        public void ResetCooldown() { this.Requirements.ResetCooldown(); }
     }
 
     public class MixPlayButtonCommand : MixPlayCommand
@@ -90,51 +125,57 @@ namespace MixItUp.Base.Commands
 
         public MixPlayButtonCommand() { }
 
-        public MixPlayButtonCommand(MixPlayGameModel game, MixPlaySceneModel scene, MixPlayButtonControlModel control, MixPlayButtonCommandTriggerType eventType, RequirementViewModel requirements)
-            : this(game, scene, control, eventType, 0, requirements)
+        public MixPlayButtonCommand(MixPlayGameModel game, MixPlayButtonControlModel control, MixPlayButtonCommandTriggerType eventType, RequirementViewModel requirements)
+            : this(game, control, eventType, 0, requirements)
         { }
 
-        public MixPlayButtonCommand(MixPlayGameModel game, MixPlaySceneModel scene, MixPlayButtonControlModel control, MixPlayButtonCommandTriggerType eventType, int heldRate, RequirementViewModel requirements)
-            : base(game, scene, control, EnumHelper.GetEnumName(eventType), requirements)
+        public MixPlayButtonCommand(MixPlayGameModel game, MixPlayButtonControlModel control, MixPlayButtonCommandTriggerType eventType, int heldRate, RequirementViewModel requirements)
+            : base(game, control, EnumHelper.GetEnumName(eventType), requirements)
         {
             this.Trigger = eventType;
             this.HeldRate = heldRate;
         }
 
         [JsonIgnore]
-        public MixPlayButtonControlModel Button { get { return (MixPlayButtonControlModel)this.Control; } }
-
-        [JsonIgnore]
-        public int CooldownAmount
-        {
-            get
-            {
-                if (this.Requirements.Cooldown != null)
-                {
-                    return this.Requirements.Cooldown.CooldownAmount;
-                }
-                return 0;
-            }
-        }
-
-        [JsonIgnore]
-        public bool HasCooldown { get { return this.CooldownAmount > 0; } }
-
-        [JsonIgnore]
-        public string CooldownGroupName
-        {
-            get
-            {
-                if (this.Requirements.Cooldown != null)
-                {
-                    return this.Requirements.Cooldown.GroupName;
-                }
-                return string.Empty;
-            }
-        }
-
-        [JsonIgnore]
         public override string EventTypeString { get { return this.Trigger.ToString().ToLower(); } }
+
+        public override bool DoesInputMatchCommand(MixPlayGiveInputModel input)
+        {
+            string inputEvent = input?.input?.eventType;
+            if (!string.IsNullOrEmpty(inputEvent))
+            {
+                if (this.Trigger == MixPlayButtonCommandTriggerType.MouseKeyDown)
+                {
+                    return inputEvent.Equals("mousedown") || inputEvent.Equals("keydown");
+                }
+                else if (this.Trigger == MixPlayButtonCommandTriggerType.MouseKeyUp)
+                {
+                    return inputEvent.Equals("mouseup") || inputEvent.Equals("keyup");
+                }
+                else if (this.Trigger == MixPlayButtonCommandTriggerType.MouseKeyHeld)
+                {
+                    if (inputEvent.Equals("mousedown") || inputEvent.Equals("keydown"))
+                    {
+                        this.IsBeingHeld = true;
+                        return true;
+                    }
+                    else if (inputEvent.Equals("mouseup") || inputEvent.Equals("keyup"))
+                    {
+                        this.IsBeingHeld = false;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public override long GetCooldownTimestamp()
+        {
+            if (this.Requirements.Cooldown != null && (this.Requirements.Cooldown.Type == CooldownTypeEnum.Individual || this.Requirements.Cooldown.Type == CooldownTypeEnum.Group))
+            {
+                return DateTimeOffset.Now.AddSeconds(this.CooldownAmount).ToUnixTimeMilliseconds();
+            }
+            return DateTimeOffset.Now.ToUnixTimeMilliseconds();
+        }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
         {
@@ -151,24 +192,6 @@ namespace MixItUp.Base.Commands
             {
                 await base.PerformInternal(user, arguments, extraSpecialIdentifiers, token);
             }
-        }
-
-        public override async Task<bool> CheckCooldownRequirement(UserViewModel user)
-        {
-            if (this.Requirements.Cooldown != null && this.Requirements.Cooldown.Type == CooldownTypeEnum.PerPerson)
-            {
-                return await base.CheckCooldownRequirement(user);
-            }
-            return true;
-        }
-
-        public long GetCooldownTimestamp()
-        {
-            if (this.Requirements.Cooldown != null && (this.Requirements.Cooldown.Type == CooldownTypeEnum.Individual || this.Requirements.Cooldown.Type == CooldownTypeEnum.Group))
-            {
-                return DateTimeOffset.Now.AddSeconds(this.CooldownAmount).ToUnixTimeMilliseconds();
-            }
-            return DateTimeOffset.Now.ToUnixTimeMilliseconds();
         }
     }
 
@@ -314,39 +337,10 @@ namespace MixItUp.Base.Commands
             this.MappedKeys = new List<InputKeyEnum?>();
         }
 
-        public MixPlayJoystickCommand(MixPlayGameModel game, MixPlaySceneModel scene, MixPlayJoystickControlModel control, RequirementViewModel requirements)
-            : base(game, scene, control, string.Empty, requirements)
+        public MixPlayJoystickCommand(MixPlayGameModel game, MixPlayJoystickControlModel control, RequirementViewModel requirements)
+            : base(game, control, string.Empty, requirements)
         {
             this.MappedKeys = new List<InputKeyEnum?>();
-        }
-
-        [JsonIgnore]
-        public MixPlayJoystickControlModel Joystick { get { return (MixPlayJoystickControlModel)this.Control; } }
-
-        [JsonIgnore]
-        public int CooldownAmount
-        {
-            get
-            {
-                if (this.Requirements.Cooldown != null)
-                {
-                    return this.Requirements.Cooldown.CooldownAmount;
-                }
-                return 0;
-            }
-        }
-
-        [JsonIgnore]
-        public string CooldownGroupName
-        {
-            get
-            {
-                if (this.Requirements.Cooldown != null)
-                {
-                    return this.Requirements.Cooldown.GroupName;
-                }
-                return string.Empty;
-            }
         }
 
         [JsonIgnore]
@@ -369,41 +363,12 @@ namespace MixItUp.Base.Commands
     {
         public MixPlayTextBoxCommand() { }
 
-        public MixPlayTextBoxCommand(MixPlayGameModel game, MixPlaySceneModel scene, MixPlayTextBoxControlModel control, RequirementViewModel requirements)
-            : base(game, scene, control, string.Empty, requirements)
+        public MixPlayTextBoxCommand(MixPlayGameModel game, MixPlayTextBoxControlModel control, RequirementViewModel requirements)
+            : base(game, control, string.Empty, requirements)
         { }
 
         [JsonProperty]
         public bool UseChatModeration { get; set; }
-
-        [JsonIgnore]
-        public MixPlayTextBoxControlModel TextBox { get { return (MixPlayTextBoxControlModel)this.Control; } }
-
-        [JsonIgnore]
-        public int CooldownAmount
-        {
-            get
-            {
-                if (this.Requirements.Cooldown != null)
-                {
-                    return this.Requirements.Cooldown.CooldownAmount;
-                }
-                return 0;
-            }
-        }
-
-        [JsonIgnore]
-        public string CooldownGroupName
-        {
-            get
-            {
-                if (this.Requirements.Cooldown != null)
-                {
-                    return this.Requirements.Cooldown.GroupName;
-                }
-                return string.Empty;
-            }
-        }
 
         [JsonIgnore]
         public override string EventTypeString { get { return "submit"; } }

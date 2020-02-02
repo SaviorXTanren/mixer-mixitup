@@ -2,11 +2,8 @@
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Window;
-using MixItUp.Desktop.Services;
 using MixItUp.WPF.Controls.MainControls;
-using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows;
-using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Reflection;
@@ -130,13 +127,17 @@ namespace MixItUp.WPF
 
             await this.MainMenu.Initialize(this);
 
+            if (ChannelSession.Settings.IsStreamer)
+            {
+                await this.MainMenu.AddMenuItem("Accounts", new AccountsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki");
+            }
             await this.MainMenu.AddMenuItem("Chat", new ChatControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Chat");
             if (ChannelSession.Settings.IsStreamer)
             {
                 await this.MainMenu.AddMenuItem("Channel", new ChannelControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Channel");
                 await this.MainMenu.AddMenuItem("Commands", new ChatCommandsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Commands");
                 await this.MainMenu.AddMenuItem("Events", new EventsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Events");
-                await this.MainMenu.AddMenuItem("MixPlay", new InteractiveControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/MixPlay");
+                await this.MainMenu.AddMenuItem("MixPlay", new MixPlayControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/MixPlay");
                 await this.MainMenu.AddMenuItem("Timers", new TimerControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Timers");
                 await this.MainMenu.AddMenuItem("Action Groups", new ActionGroupControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Action-Groups");
                 await this.MainMenu.AddMenuItem("Remote", new RemoteControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Remote");
@@ -155,8 +156,11 @@ namespace MixItUp.WPF
                 await this.MainMenu.AddMenuItem("Moderation", new ModerationControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Moderation");
                 await this.MainMenu.AddMenuItem("Auto-Hoster", new AutoHosterControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Auto-Hoster");
                 await this.MainMenu.AddMenuItem("Services", new ServicesControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Services");
+                await this.MainMenu.AddMenuItem("Accounts", new AccountsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki");
             }
             await this.MainMenu.AddMenuItem("About", new AboutControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki");
+
+            this.MainMenu.MenuItemSelected("Chat");
         }
 
         private async Task StartShutdownProcess()

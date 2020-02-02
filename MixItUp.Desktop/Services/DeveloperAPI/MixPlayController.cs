@@ -20,8 +20,8 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
         {
             return new MixPlayStatus
             {
-                IsConnected = ChannelSession.Interactive.IsConnected(),
-                GameName = ChannelSession.Interactive.Game?.name ?? string.Empty
+                IsConnected = ChannelSession.Services.MixPlay.IsConnected,
+                GameName = ChannelSession.Services.MixPlay.SelectedGame?.name ?? string.Empty
             };
         }
 
@@ -123,7 +123,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            if (!ChannelSession.Interactive.IsConnected())
+            if (!ChannelSession.Services.MixPlay.IsConnected)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.ServiceUnavailable)
                 {
@@ -133,7 +133,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            await ChannelSession.Interactive.BroadcastEvent(broadcast.Targets.Select(x => x.ScopeString()).ToList(), broadcast.Data);
+            await ChannelSession.Services.MixPlay.BroadcastEvent(broadcast.Targets.Select(x => x.ScopeString()).ToList(), broadcast.Data);
         }
 
         [Route("broadcast/users")]
@@ -150,7 +150,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            if (!ChannelSession.Interactive.IsConnected())
+            if (!ChannelSession.Services.MixPlay.IsConnected)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.ServiceUnavailable)
                 {

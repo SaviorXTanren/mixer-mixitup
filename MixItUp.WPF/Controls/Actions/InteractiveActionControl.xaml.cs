@@ -50,7 +50,7 @@ namespace MixItUp.WPF.Controls.Actions
             this.CustomMetadataItemsControl.ItemsSource = this.customMetadataPairs;
             this.customMetadataPairs.Add(new CustomMetadataPair());
 
-            foreach (MixPlayGameModel game in await ChannelSession.Interactive.GetAllConnectableGames())
+            foreach (MixPlayGameModel game in await ChannelSession.Services.MixPlay.GetAllGames())
             {
                 this.games.Add(game);
             }
@@ -89,7 +89,7 @@ namespace MixItUp.WPF.Controls.Actions
                     this.action.InteractiveType == InteractiveActionTypeEnum.CooldownScene)
                 {
                     this.CooldownNameTextBox.Text = this.action.CooldownID;
-                    this.CooldownAmountTextBox.Text = this.action.CooldownAmount.ToString();
+                    this.CooldownAmountTextBox.Text = this.action.CooldownAmountString;
                 }
                 else if (this.action.InteractiveType == InteractiveActionTypeEnum.Connect)
                 {
@@ -156,9 +156,9 @@ namespace MixItUp.WPF.Controls.Actions
                 else if (interactiveType == InteractiveActionTypeEnum.CooldownButton || interactiveType == InteractiveActionTypeEnum.CooldownGroup ||
                     interactiveType == InteractiveActionTypeEnum.CooldownScene)
                 {
-                    if (!string.IsNullOrEmpty(this.CooldownNameTextBox.Text) && int.TryParse(this.CooldownAmountTextBox.Text, out int cooldownAmount) && cooldownAmount > 0)
+                    if (!string.IsNullOrEmpty(this.CooldownNameTextBox.Text))
                     {
-                        return InteractiveAction.CreateCooldownAction(interactiveType, this.CooldownNameTextBox.Text, cooldownAmount);
+                        return InteractiveAction.CreateCooldownAction(interactiveType, this.CooldownNameTextBox.Text, this.CooldownAmountTextBox.Text);
                     }
                 }
                 else if (interactiveType == InteractiveActionTypeEnum.Connect)

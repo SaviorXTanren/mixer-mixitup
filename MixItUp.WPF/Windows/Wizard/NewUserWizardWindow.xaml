@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MixItUp.WPF.Windows.Wizard"
+        xmlns:AccountControls="clr-namespace:MixItUp.WPF.Controls.Accounts"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -120,101 +121,9 @@
 
                     <TextBlock Grid.Row="0" TextWrapping="Wrap" Width="700">Let's get started by signing in to the accounts you use on each Streaming Platform. Select the options below for each account you want to log in. You can revisit these options later by going to the Accounts page.</TextBlock>
 
-                    <TextBlock Grid.Row="2" TextWrapping="Wrap" Width="700">Streamer accounts are your actual account that you are streaming from. Bot accounts are optional accounts that you can use to send messages from in your channel.</TextBlock>
+                    <TextBlock Grid.Row="2" TextWrapping="Wrap" Width="700">Streamer accounts are your actual account that you are streaming from. Bot accounts are separate, optional accounts that you can use to send messages from in your channel. Bots accounts must be manually created by you and you must make sure to be signed in to them before you try connecting them in Mix It Up.</TextBlock>
 
-                    <GroupBox Grid.Row="4" Header="Mixer">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="30" />
-                                <RowDefinition Height="45" />
-                                <RowDefinition Height="35" />
-                            </Grid.RowDefinitions>
-
-                            <Image Source="/Assets/Images/Mixer.png" Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Width="70" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="30,0,0,0" />
-
-                            <TextBlock Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">Streamer:</TextBlock>
-
-                            <Grid Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsMixerUserAccountConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="5" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-
-                                <Image Grid.Column="0" Source="{Binding MixerUserAccountAvatar}" Height="24" Width="24" />
-                                <TextBlock Grid.Column="2" Text="{Binding MixerUserAccountUsername}" VerticalAlignment="Center" />
-                            </Grid>
-
-                            <Button Grid.Column="1" Grid.Row="2" Command="{Binding MixerUserAccountCommand}" Content="{Binding MixerUserAccountButtonContent}" Width="90" />
-
-                            <TextBlock Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">Bot Account:</TextBlock>
-
-                            <Grid Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsMixerBotAccountConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="5" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-
-                                <Image Grid.Column="0" Source="{Binding MixerBotAccountAvatar}" Height="24" Width="24" />
-                                <TextBlock Grid.Column="2" Text="{Binding MixerBotAccountUsername}" VerticalAlignment="Center" />
-                            </Grid>
-
-                            <Button Grid.Column="2" Grid.Row="2" Command="{Binding MixerBotAccountCommand}" IsEnabled="{Binding IsMixerUserAccountConnected}" Content="{Binding MixerBotAccountButtonContent}" Width="90" />
-                        </Grid>
-                    </GroupBox>
-
-                    <GroupBox Grid.Row="6" Header="Twitch">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="30" />
-                                <RowDefinition Height="45" />
-                                <RowDefinition Height="35" />
-                            </Grid.RowDefinitions>
-
-                            <Image Source="/Assets/Images/Twitch.png" Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Width="70" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="30,0,0,0" />
-
-                            <TextBlock Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">Streamer:</TextBlock>
-
-                            <Grid Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsTwitchUserAccountConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="5" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-
-                                <Image Grid.Column="0" Source="{Binding TwitchUserAccountAvatar}" Height="24" Width="24" />
-                                <TextBlock Grid.Column="2" Text="{Binding TwitchUserAccountUsername}" VerticalAlignment="Center" />
-                            </Grid>
-
-                            <Button Grid.Column="1" Grid.Row="2" Command="{Binding TwitchUserAccountCommand}" Content="{Binding TwitchUserAccountButtonContent}" Width="90" />
-
-                            <TextBlock Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">Bot Account:</TextBlock>
-
-                            <Grid Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsTwitchBotAccountConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="5" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-
-                                <Image Grid.Column="0" Source="{Binding TwitchBotAccountAvatar}" Height="24" Width="24" />
-                                <TextBlock Grid.Column="2" Text="{Binding TwitchBotAccountUsername}" VerticalAlignment="Center" />
-                            </Grid>
-
-                            <Button Grid.Column="2" Grid.Row="2" Command="{Binding TwitchBotAccountCommand}" IsEnabled="{Binding IsTwitchUserAccountConnected}" Content="{Binding TwitchBotAccountButtonContent}" Width="90" />
-                        </Grid>
-                    </GroupBox>
+                    <AccountControls:StreamingPlatformAccountControl Grid.Row="4" DataContext="{Binding Mixer}" />
                 </Grid>
 
                 <Grid Visibility="{Binding ScorpBotPageVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
@@ -348,19 +257,43 @@
                     </Grid>
                 </Grid>
 
-                <Grid Visibility="{Binding FinalPageVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                <Grid Visibility="{Binding FinalPageVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}">
                     <Grid Grid.Row="6">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="60" />
+                            <RowDefinition Height="50" />
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="60" />
+                            <RowDefinition Height="50" />
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="60" />
+                            <RowDefinition Height="50" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="50" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
                         <Grid Grid.Row="0" HorizontalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center" TextWrapping="Wrap" Width="450">Mix It Up is a desktop-only application, so your settings and data only exist on their computer. Therefore we encourge our users to set up automatic backups for their settings to ensure you always have something to fall back to in the event of any issues:</TextBlock>
+
+                            <Grid Grid.Column="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="10" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <Button x:Name="SettingsBackupLocationButton" Grid.Row="0" Content="Set Location" Command="{Binding SetBackupLocationCommand}" />
+
+                                <ComboBox x:Name="SettingsBackupRateComboBox" Grid.Row="2" Width="110" MaterialDesign:HintAssist.Hint="Backup Rate" ItemsSource="{Binding SettingsBackupOptions}" SelectedItem="{Binding SelectedSettingsBackupOption}" IsEnabled="{Binding IsBackupLocationSet, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+                            </Grid>
+                        </Grid>
+
+                        <Grid Grid.Row="2" HorizontalAlignment="Center">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="20" />
@@ -374,9 +307,9 @@
                             </Button>
                         </Grid>
 
-                        <TextBlock Grid.Row="2" TextWrapping="Wrap" Width="500">Don't forget the following resources available to you for questions &amp; support:</TextBlock>
+                        <TextBlock Grid.Row="4" TextWrapping="Wrap" Width="500">Don't forget the following resources available to you for questions &amp; support:</TextBlock>
 
-                        <Grid Grid.Row="4" HorizontalAlignment="Center">
+                        <Grid Grid.Row="6" HorizontalAlignment="Center">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="20" />
@@ -404,7 +337,7 @@
                             </Button>
                         </Grid>
 
-                        <TextBlock TextWrapping="Wrap" Grid.Row="6" HorizontalAlignment="Center">Thanks for using Mix It Up and we hope it meets all your needs!</TextBlock>
+                        <TextBlock TextWrapping="Wrap" Grid.Row="8" HorizontalAlignment="Center">Thanks for using Mix It Up and we hope it meets all your needs!</TextBlock>
                     </Grid>
                 </Grid>
             </Grid>

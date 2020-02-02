@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Model.MixPlay;
-using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Model.MixPlay;
+using MixItUp.Base.Services.External;
+using MixItUp.Base.Services.Mixer;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
@@ -125,12 +126,12 @@ namespace MixItUp.Base.Actions
             };
         }
 
-        public static InteractiveAction CreateCooldownAction(InteractiveActionTypeEnum type, string cooldownID, int cooldownAmount)
+        public static InteractiveAction CreateCooldownAction(InteractiveActionTypeEnum type, string cooldownID, string cooldownAmount)
         {
             return new InteractiveAction(type)
             {
                 CooldownID = cooldownID,
-                CooldownAmount = cooldownAmount,
+                CooldownAmountString = cooldownAmount,
             };
         }
 
@@ -189,6 +190,9 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public string CooldownID { get; set; }
         [DataMember]
+        public string CooldownAmountString { get; set; }
+        [DataMember]
+        [Obsolete]
         public int CooldownAmount { get; set; }
 
         [DataMember]
@@ -225,231 +229,204 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.Interactive != null)
+            if (this.InteractiveType == InteractiveActionTypeEnum.Connect)
             {
-                if (this.InteractiveType == InteractiveActionTypeEnum.Connect)
+                if (ChannelSession.Services.MixPlay.IsConnected)
                 {
-                    if (ChannelSession.Interactive.IsConnected())
-                    {
-                        await ChannelSession.Interactive.Disconnect();
-                        GlobalEvents.InteractiveDisconnected();
-                    }
+                    await ChannelSession.Services.MixPlay.Disconnect();
+                    GlobalEvents.InteractiveDisconnected();
+                }
 
-                    IEnumerable<MixPlayGameModel> games = await ChannelSession.Interactive.GetAllConnectableGames();
-                    MixPlayGameModel game = games.FirstOrDefault(g => g.id.Equals(this.InteractiveGameID));
-                    if (game != null)
+                IEnumerable<MixPlayGameModel> games = await ChannelSession.Services.MixPlay.GetAllGames();
+                MixPlayGameModel game = games.FirstOrDefault(g => g.id.Equals(this.InteractiveGameID));
+                if (game != null)
+                {
+                    await ChannelSession.Services.MixPlay.SetGame(game);
+                    ExternalServiceResult result = await ChannelSession.Services.MixPlay.Connect();
+                    if (result.Success)
                     {
-                        if (await ChannelSession.Interactive.Connect(game) == MixPlayConnectionResult.Success)
-                        {
-                            GlobalEvents.InteractiveConnected(game);
-                        }
+                        GlobalEvents.InteractiveConnected(game);
                     }
                 }
-                else if (this.InteractiveType == InteractiveActionTypeEnum.Disconnect)
+            }
+            else if (this.InteractiveType == InteractiveActionTypeEnum.Disconnect)
+            {
+                if (ChannelSession.Services.MixPlay.IsConnected)
                 {
-                    if (ChannelSession.Interactive.IsConnected())
+                    await ChannelSession.Services.MixPlay.Disconnect();
+                    GlobalEvents.InteractiveDisconnected();
+                }
+            }
+            else if (ChannelSession.Services.MixPlay.IsConnected)
+            {
+                if (user != null && !user.HasPermissionsTo(this.RoleRequirement))
+                {
+                    if (ChannelSession.Services.Chat != null)
                     {
-                        await ChannelSession.Interactive.Disconnect();
-                        GlobalEvents.InteractiveDisconnected();
+                        await ChannelSession.Services.Chat.Whisper(user, "You do not permission to perform this action.");
+                    }
+                    return;
+                }
+
+                await ChannelSession.Services.MixPlay.AddGroup(this.GroupName, (!string.IsNullOrEmpty(this.SceneID)) ? this.SceneID : MixPlayUserGroupModel.DefaultName);
+
+                if (this.InteractiveType == InteractiveActionTypeEnum.MoveGroupToScene)
+                {
+                    await ChannelSession.Services.MixPlay.UpdateGroup(this.GroupName, this.SceneID);
+                }
+                else if (this.InteractiveType == InteractiveActionTypeEnum.MoveUserToGroup || this.InteractiveType == InteractiveActionTypeEnum.MoveUserToScene)
+                {
+                    if (!string.IsNullOrEmpty(this.OptionalUserName))
+                    {
+                        string optionalUserName = await this.ReplaceStringWithSpecialModifiers(this.OptionalUserName, user, arguments);
+                        UserViewModel optionalUser = ChannelSession.Services.User.GetUserByUsername(optionalUserName);
+                        if (optionalUser != null)
+                        {
+                            await ChannelSession.Services.MixPlay.AddUserToGroup(optionalUser, this.GroupName);
+                        }
+                    }
+                    else
+                    {
+                        await ChannelSession.Services.MixPlay.AddUserToGroup(user, this.GroupName);
                     }
                 }
-                else if (ChannelSession.Interactive.IsConnected())
+                if (this.InteractiveType == InteractiveActionTypeEnum.MoveAllUsersToGroup || this.InteractiveType == InteractiveActionTypeEnum.MoveAllUsersToScene)
                 {
-                    if (user != null && !user.HasPermissionsTo(this.RoleRequirement))
+                    foreach (UserViewModel chatUser in ChannelSession.Services.User.GetAllUsers())
                     {
-                        if (ChannelSession.Services.Chat != null)
-                        {
-                            await ChannelSession.Services.Chat.Whisper(user, "You do not permission to perform this action.");
-                        }
-                        return;
+                        await ChannelSession.Services.MixPlay.AddUserToGroup(chatUser, this.GroupName);
                     }
 
-                    await ChannelSession.Interactive.AddGroup(this.GroupName, (!string.IsNullOrEmpty(this.SceneID)) ? this.SceneID : MixPlayUserGroupModel.DefaultName);
-
-                    if (this.InteractiveType == InteractiveActionTypeEnum.MoveGroupToScene)
+                    IEnumerable<MixPlayParticipantModel> participants = ChannelSession.Services.MixPlay.Participants.Values;
+                    foreach (MixPlayParticipantModel participant in participants)
                     {
-                        await ChannelSession.Interactive.UpdateGroup(this.GroupName, this.SceneID);
+                        participant.groupID = this.GroupName;
                     }
-                    else if (this.InteractiveType == InteractiveActionTypeEnum.MoveUserToGroup || this.InteractiveType == InteractiveActionTypeEnum.MoveUserToScene)
+                    await ChannelSession.Services.MixPlay.UpdateParticipants(participants);
+                }
+                else if (this.InteractiveType == InteractiveActionTypeEnum.CooldownButton || this.InteractiveType == InteractiveActionTypeEnum.CooldownGroup ||
+                    this.InteractiveType == InteractiveActionTypeEnum.CooldownScene)
+                {
+                    string amountString = await this.ReplaceStringWithSpecialModifiers(this.CooldownAmountString, user, arguments);
+                    if (int.TryParse(amountString, out int amount) && amount >= 0)
                     {
-                        if (!string.IsNullOrEmpty(this.OptionalUserName))
-                        {
-                            string optionalUserName = await this.ReplaceStringWithSpecialModifiers(this.OptionalUserName, user, arguments);
-                            UserViewModel optionalUser = ChannelSession.Services.User.GetUserByUsername(optionalUserName);
-                            if (optionalUser != null)
-                            {
-                                await ChannelSession.Interactive.AddUserToGroup(optionalUser, this.GroupName);
-                            }
-                        }
-                        else
-                        {
-                            await ChannelSession.Interactive.AddUserToGroup(user, this.GroupName);
-                        }
-                    }
-                    if (this.InteractiveType == InteractiveActionTypeEnum.MoveAllUsersToGroup || this.InteractiveType == InteractiveActionTypeEnum.MoveAllUsersToScene)
-                    {
-                        foreach (UserViewModel chatUser in ChannelSession.Services.User.GetAllUsers())
-                        {
-                            await ChannelSession.Interactive.AddUserToGroup(chatUser, this.GroupName);
-                        }
-
-                        IEnumerable<MixPlayParticipantModel> participants = ChannelSession.Interactive.Participants.Values;
-                        foreach (MixPlayParticipantModel participant in participants)
-                        {
-                            participant.groupID = this.GroupName;
-                        }
-                        await ChannelSession.Interactive.UpdateParticipants(participants);
-                    }
-                    else if (this.InteractiveType == InteractiveActionTypeEnum.CooldownButton || this.InteractiveType == InteractiveActionTypeEnum.CooldownGroup ||
-                        this.InteractiveType == InteractiveActionTypeEnum.CooldownScene)
-                    {
-                        MixPlayConnectedSceneModel scene = null;
-                        List<MixPlayConnectedButtonControlModel> buttons = new List<MixPlayConnectedButtonControlModel>();
+                        long timestamp = DateTimeOffset.Now.AddSeconds(amount).ToUnixTimeMilliseconds();
                         if (this.InteractiveType == InteractiveActionTypeEnum.CooldownButton)
                         {
-                            if (ChannelSession.Interactive.ControlCommands.ContainsKey(this.CooldownID) && ChannelSession.Interactive.ControlCommands[this.CooldownID] is InteractiveConnectedButtonCommand)
-                            {
-                                InteractiveConnectedButtonCommand command = (InteractiveConnectedButtonCommand)ChannelSession.Interactive.ControlCommands[this.CooldownID];
-                                scene = command.Scene;
-                                buttons.Add(command.Button);
-                            }
+                            await ChannelSession.Services.MixPlay.CooldownButton(this.CooldownID, timestamp);
                         }
-
-                        if (this.InteractiveType == InteractiveActionTypeEnum.CooldownGroup)
+                        else if (this.InteractiveType == InteractiveActionTypeEnum.CooldownGroup)
                         {
-                            var allButtons = ChannelSession.Interactive.ControlCommands.Values.Where(c => c is InteractiveConnectedButtonCommand).Select(c => (InteractiveConnectedButtonCommand)c);
-                            allButtons = allButtons.Where(c => this.CooldownID.Equals(c.ButtonCommand.CooldownGroupName));
-                            if (allButtons.Count() > 0)
-                            {
-                                scene = allButtons.FirstOrDefault().Scene;
-                                buttons.AddRange(allButtons.Select(c => c.Button));
-                            }
+                            await ChannelSession.Services.MixPlay.CooldownGroup(this.CooldownID, timestamp);
                         }
-
-                        if (this.InteractiveType == InteractiveActionTypeEnum.CooldownScene)
+                        else if (this.InteractiveType == InteractiveActionTypeEnum.CooldownScene)
                         {
-                            var allButtons = ChannelSession.Interactive.ControlCommands.Values.Where(c => c is InteractiveConnectedButtonCommand).Select(c => (InteractiveConnectedButtonCommand)c);
-                            allButtons = allButtons.Where(c => this.CooldownID.Equals(c.ButtonCommand.SceneID));
-                            if (allButtons.Count() > 0)
-                            {
-                                scene = allButtons.FirstOrDefault().Scene;
-                                buttons.AddRange(allButtons.Select(c => c.Button));
-                            }
-                        }
-
-                        if (buttons.Count > 0)
-                        {
-                            long timestamp = DateTimeOffset.Now.AddSeconds(this.CooldownAmount).ToUnixTimeMilliseconds();
-                            foreach (MixPlayConnectedButtonControlModel button in buttons)
-                            {
-                                button.SetCooldownTimestamp(timestamp);
-                            }
-                            await ChannelSession.Interactive.UpdateControls(scene, buttons);
+                            await ChannelSession.Services.MixPlay.CooldownScene(this.CooldownID, timestamp);
                         }
                     }
-                    else if (this.InteractiveType == InteractiveActionTypeEnum.UpdateControl || this.InteractiveType == InteractiveActionTypeEnum.SetCustomMetadata ||
-                        this.InteractiveType == InteractiveActionTypeEnum.EnableDisableControl)
+                }
+                else if (this.InteractiveType == InteractiveActionTypeEnum.UpdateControl || this.InteractiveType == InteractiveActionTypeEnum.SetCustomMetadata ||
+                    this.InteractiveType == InteractiveActionTypeEnum.EnableDisableControl)
+                {
+                    MixPlayConnectedSceneModel scene = null;
+                    MixPlayControlModel control = null;
+
+                    string processedControlId = await this.ReplaceStringWithSpecialModifiers(this.ControlID, user, arguments);
+                    foreach (MixPlayConnectedSceneModel s in ChannelSession.Services.MixPlay.Scenes.Values)
                     {
-                        MixPlayConnectedSceneModel scene = null;
-                        MixPlayControlModel control = null;
-
-                        string processedControlId = await this.ReplaceStringWithSpecialModifiers(this.ControlID, user, arguments);
-                        foreach (MixPlayConnectedSceneModel s in ChannelSession.Interactive.Scenes)
+                        foreach (MixPlayControlModel c in s.allControls)
                         {
-                            foreach (MixPlayControlModel c in s.allControls)
+                            if (c.controlID.Equals(processedControlId))
                             {
-                                if (c.controlID.Equals(processedControlId))
-                                {
-                                    scene = s;
-                                    control = c;
-                                    break;
-                                }
-                            }
-
-                            if (control != null)
-                            {
+                                scene = s;
+                                control = c;
                                 break;
                             }
                         }
 
-                        if (scene != null && control != null)
+                        if (control != null)
                         {
-                            if (this.InteractiveType == InteractiveActionTypeEnum.UpdateControl)
-                            {
-                                string replacementValue = await this.ReplaceStringWithSpecialModifiers(this.UpdateValue, user, arguments);
-                                int.TryParse(replacementValue, out int replacementNumberValue);
-                                float.TryParse(replacementValue, out float replacementFloatValue);
-
-                                if (control is MixPlayButtonControlModel)
-                                {
-                                    MixPlayButtonControlModel button = (MixPlayButtonControlModel)control;
-                                    switch (this.UpdateControlType)
-                                    {
-                                        case InteractiveActionUpdateControlTypeEnum.Text: button.text = replacementValue; break;
-                                        case InteractiveActionUpdateControlTypeEnum.TextSize: button.textSize = replacementValue; break;
-                                        case InteractiveActionUpdateControlTypeEnum.TextColor: button.textColor = replacementValue; break;
-                                        case InteractiveActionUpdateControlTypeEnum.Tooltip: button.tooltip = replacementValue; break;
-                                        case InteractiveActionUpdateControlTypeEnum.SparkCost: button.cost = replacementNumberValue; break;
-                                        case InteractiveActionUpdateControlTypeEnum.AccentColor: button.accentColor = replacementValue; break;
-                                        case InteractiveActionUpdateControlTypeEnum.FocusColor: button.focusColor = replacementValue; break;
-                                        case InteractiveActionUpdateControlTypeEnum.BorderColor: button.borderColor = replacementValue; break;
-                                        case InteractiveActionUpdateControlTypeEnum.BackgroundColor: button.backgroundColor = replacementValue; break;
-                                        case InteractiveActionUpdateControlTypeEnum.BackgroundImage: button.backgroundImage = replacementValue; break;
-                                        case InteractiveActionUpdateControlTypeEnum.Progress: ((MixPlayConnectedButtonControlModel)button).SetProgress(replacementFloatValue); break;
-                                    }
-                                }
-                                else if (control is MixPlayLabelControlModel)
-                                {
-                                    MixPlayLabelControlModel label = (MixPlayLabelControlModel)control;
-                                    switch (this.UpdateControlType)
-                                    {
-                                        case InteractiveActionUpdateControlTypeEnum.Text: label.text = replacementValue; break;
-                                        case InteractiveActionUpdateControlTypeEnum.TextSize: label.textSize = replacementValue; break;
-                                        case InteractiveActionUpdateControlTypeEnum.TextColor: label.textColor = replacementValue; break;
-                                    }
-                                }
-                                else if (control is MixPlayTextBoxControlModel)
-                                {
-                                    MixPlayTextBoxControlModel textbox = (MixPlayTextBoxControlModel)control;
-                                    switch (this.UpdateControlType)
-                                    {
-                                        case InteractiveActionUpdateControlTypeEnum.Text: textbox.submitText = replacementValue; break;
-                                        case InteractiveActionUpdateControlTypeEnum.Tooltip: textbox.placeholder = replacementValue; break;
-                                        case InteractiveActionUpdateControlTypeEnum.SparkCost: textbox.cost = replacementNumberValue; break;
-                                    }
-                                }
-                            }
-                            else if (this.InteractiveType == InteractiveActionTypeEnum.SetCustomMetadata)
-                            {
-                                control.meta["userID"] = user.MixerID;
-                                foreach (var kvp in this.CustomMetadata)
-                                {
-                                    string value = await this.ReplaceStringWithSpecialModifiers(kvp.Value, user, arguments);
-                                    if (bool.TryParse(value, out bool boolValue))
-                                    {
-                                        control.meta[kvp.Key] = boolValue;
-                                    }
-                                    else if (int.TryParse(value, out int intValue))
-                                    {
-                                        control.meta[kvp.Key] = intValue;
-                                    }
-                                    else if (double.TryParse(value, out double doubleValue))
-                                    {
-                                        control.meta[kvp.Key] = doubleValue;
-                                    }
-                                    else
-                                    {
-                                        control.meta[kvp.Key] = value;
-                                    }
-                                }
-                            }
-                            else if (this.InteractiveType == InteractiveActionTypeEnum.EnableDisableControl)
-                            {
-                                control.disabled = !this.EnableDisableControl;
-                            }
-
-                            await ChannelSession.Interactive.UpdateControls(scene, new List<MixPlayControlModel>() { control });
+                            break;
                         }
+                    }
+
+                    if (scene != null && control != null)
+                    {
+                        if (this.InteractiveType == InteractiveActionTypeEnum.UpdateControl)
+                        {
+                            string replacementValue = await this.ReplaceStringWithSpecialModifiers(this.UpdateValue, user, arguments);
+                            int.TryParse(replacementValue, out int replacementNumberValue);
+                            float.TryParse(replacementValue, out float replacementFloatValue);
+
+                            if (control is MixPlayButtonControlModel)
+                            {
+                                MixPlayButtonControlModel button = (MixPlayButtonControlModel)control;
+                                switch (this.UpdateControlType)
+                                {
+                                    case InteractiveActionUpdateControlTypeEnum.Text: button.text = replacementValue; break;
+                                    case InteractiveActionUpdateControlTypeEnum.TextSize: button.textSize = replacementValue; break;
+                                    case InteractiveActionUpdateControlTypeEnum.TextColor: button.textColor = replacementValue; break;
+                                    case InteractiveActionUpdateControlTypeEnum.Tooltip: button.tooltip = replacementValue; break;
+                                    case InteractiveActionUpdateControlTypeEnum.SparkCost: button.cost = replacementNumberValue; break;
+                                    case InteractiveActionUpdateControlTypeEnum.AccentColor: button.accentColor = replacementValue; break;
+                                    case InteractiveActionUpdateControlTypeEnum.FocusColor: button.focusColor = replacementValue; break;
+                                    case InteractiveActionUpdateControlTypeEnum.BorderColor: button.borderColor = replacementValue; break;
+                                    case InteractiveActionUpdateControlTypeEnum.BackgroundColor: button.backgroundColor = replacementValue; break;
+                                    case InteractiveActionUpdateControlTypeEnum.BackgroundImage: button.backgroundImage = replacementValue; break;
+                                    case InteractiveActionUpdateControlTypeEnum.Progress: ((MixPlayConnectedButtonControlModel)button).SetProgress(replacementFloatValue); break;
+                                }
+                            }
+                            else if (control is MixPlayLabelControlModel)
+                            {
+                                MixPlayLabelControlModel label = (MixPlayLabelControlModel)control;
+                                switch (this.UpdateControlType)
+                                {
+                                    case InteractiveActionUpdateControlTypeEnum.Text: label.text = replacementValue; break;
+                                    case InteractiveActionUpdateControlTypeEnum.TextSize: label.textSize = replacementValue; break;
+                                    case InteractiveActionUpdateControlTypeEnum.TextColor: label.textColor = replacementValue; break;
+                                }
+                            }
+                            else if (control is MixPlayTextBoxControlModel)
+                            {
+                                MixPlayTextBoxControlModel textbox = (MixPlayTextBoxControlModel)control;
+                                switch (this.UpdateControlType)
+                                {
+                                    case InteractiveActionUpdateControlTypeEnum.Text: textbox.submitText = replacementValue; break;
+                                    case InteractiveActionUpdateControlTypeEnum.Tooltip: textbox.placeholder = replacementValue; break;
+                                    case InteractiveActionUpdateControlTypeEnum.SparkCost: textbox.cost = replacementNumberValue; break;
+                                }
+                            }
+                        }
+                        else if (this.InteractiveType == InteractiveActionTypeEnum.SetCustomMetadata)
+                        {
+                            control.meta["userID"] = user.MixerID;
+                            foreach (var kvp in this.CustomMetadata)
+                            {
+                                string value = await this.ReplaceStringWithSpecialModifiers(kvp.Value, user, arguments);
+                                if (bool.TryParse(value, out bool boolValue))
+                                {
+                                    control.meta[kvp.Key] = boolValue;
+                                }
+                                else if (int.TryParse(value, out int intValue))
+                                {
+                                    control.meta[kvp.Key] = intValue;
+                                }
+                                else if (double.TryParse(value, out double doubleValue))
+                                {
+                                    control.meta[kvp.Key] = doubleValue;
+                                }
+                                else
+                                {
+                                    control.meta[kvp.Key] = value;
+                                }
+                            }
+                        }
+                        else if (this.InteractiveType == InteractiveActionTypeEnum.EnableDisableControl)
+                        {
+                            control.disabled = !this.EnableDisableControl;
+                        }
+
+                        await ChannelSession.Services.MixPlay.UpdateControls(scene, new List<MixPlayControlModel>() { control });
                     }
                 }
             }

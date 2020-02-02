@@ -1,13 +1,10 @@
 ﻿using Mixer.Base.Model.MixPlay;
 using MixItUp.Base;
-using MixItUp.Base.MixerAPI;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Desktop.Services;
-using MixItUp.WPF.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
@@ -62,7 +59,7 @@ namespace MixItUp.WPF.Controls.Interactive
 
         protected override async Task<bool> GameConnectedInternal()
         {
-            MixPlayConnectedSceneGroupCollectionModel sceneGroups = await ChannelSession.Interactive.GetScenes();
+            MixPlayConnectedSceneGroupCollectionModel sceneGroups = await ChannelSession.Services.MixPlay.GetScenes();
             if (sceneGroups != null)
             {
                 this.scene = sceneGroups.scenes.FirstOrDefault();
@@ -79,7 +76,7 @@ namespace MixItUp.WPF.Controls.Interactive
             return false;
         }
 
-        protected override async Task OnInteractiveControlUsed(UserViewModel user, MixPlayGiveInputModel input, InteractiveConnectedControlCommand command)
+        protected override async Task OnMixPlayControlUsed(UserViewModel user, MixPlayGiveInputModel input, MixPlayControlModel control)
         {
             if (user != null && !user.IsAnonymous && input.input.meta.ContainsKey("image"))
             {
@@ -125,7 +122,7 @@ namespace MixItUp.WPF.Controls.Interactive
                 control.meta["username"] = this.selectedUserImage.User.Username;
                 control.meta["useravatar"] = this.selectedUserImage.User.AvatarLink;
                 control.meta["image"] = this.selectedUserImage.ImageData;
-                await ChannelSession.Interactive.UpdateControls(this.scene, new List<MixPlayControlModel>() { control });
+                await ChannelSession.Services.MixPlay.UpdateControls(this.scene, new List<MixPlayControlModel>() { control });
 
                 await this.Dispatcher.InvokeAsync(() =>
                 {

@@ -3,6 +3,7 @@ using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.MixPlay;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.WPF.Controls.Actions;
 using MixItUp.WPF.Util;
@@ -15,41 +16,39 @@ using System.Windows;
 namespace MixItUp.WPF.Controls.Command
 {
     /// <summary>
-    /// Interaction logic for BasicInteractiveButtonCommandEditorControl.xaml
+    /// Interaction logic for BasicMixPlayButtonCommandEditorControl.xaml
     /// </summary>
-    public partial class BasicInteractiveButtonCommandEditorControl : CommandEditorControlBase
+    public partial class BasicMixPlayButtonCommandEditorControl : CommandEditorControlBase
     {
         private CommandWindow window;
 
         private BasicCommandTypeEnum commandType;
         private MixPlayGameModel game;
         private MixPlayGameVersionModel version;
-        private MixPlaySceneModel scene;
         private MixPlayButtonControlModel button;
 
         private MixPlayButtonCommand command;
 
         private ActionControlBase actionControl;
 
-        public BasicInteractiveButtonCommandEditorControl(CommandWindow window, MixPlayGameModel game, MixPlayGameVersionModel version, MixPlayButtonCommand command)
+        public BasicMixPlayButtonCommandEditorControl(CommandWindow window, MixPlayGameModel game, MixPlayGameVersionModel version, MixPlayButtonControlModel button, MixPlayButtonCommand command)
+            : this(window, game, version, button)
         {
-            this.window = window;
-            this.game = game;
-            this.version = version;
             this.command = command;
-
-            InitializeComponent();
         }
 
-        public BasicInteractiveButtonCommandEditorControl(CommandWindow window, MixPlayGameModel game, MixPlayGameVersionModel version, MixPlaySceneModel scene,
-            MixPlayButtonControlModel button, BasicCommandTypeEnum commandType)
+        public BasicMixPlayButtonCommandEditorControl(CommandWindow window, MixPlayGameModel game, MixPlayGameVersionModel version, MixPlayButtonControlModel button, BasicCommandTypeEnum commandType)
+                        : this(window, game, version, button)
+        {
+            this.commandType = commandType;
+        }
+
+        private BasicMixPlayButtonCommandEditorControl(CommandWindow window, MixPlayGameModel game, MixPlayGameVersionModel version, MixPlayButtonControlModel button)
         {
             this.window = window;
             this.game = game;
             this.version = version;
-            this.scene = scene;
             this.button = button;
-            this.commandType = commandType;
 
             InitializeComponent();
         }
@@ -61,15 +60,9 @@ namespace MixItUp.WPF.Controls.Command
             this.CooldownTypeComboBox.ItemsSource = new List<string>() { "By Itself", "With All Buttons" };
             this.CooldownTypeComboBox.SelectedIndex = 0;
 
+            this.SparkCostTextBox.Text = this.button.cost.ToString();
             if (this.command != null)
             {
-                if (this.game != null)
-                {
-                    this.scene = this.version.controls.scenes.FirstOrDefault(s => s.sceneID.Equals(this.command.SceneID));
-                    this.button = this.command.Button;
-                }
-
-                this.SparkCostTextBox.Text = this.command.Button.cost.ToString();
                 if (this.command.Requirements.Cooldown != null && this.command.Requirements.Cooldown.IsGroup)
                 {
                     this.CooldownTypeComboBox.SelectedIndex = 1;
@@ -91,7 +84,6 @@ namespace MixItUp.WPF.Controls.Command
             }
             else
             {
-                this.SparkCostTextBox.Text = this.button.cost.ToString();
                 this.CooldownTextBox.Text = "0";
 
                 if (this.commandType == BasicCommandTypeEnum.Chat)
@@ -192,7 +184,7 @@ namespace MixItUp.WPF.Controls.Command
 
                 if (this.command == null)
                 {
-                    this.command = new MixPlayButtonCommand(this.game, this.scene, this.button, MixPlayButtonCommandTriggerType.MouseKeyDown, requirements);
+                    this.command = new MixPlayButtonCommand(this.game, this.button, MixPlayButtonCommandTriggerType.MouseKeyDown, requirements);
                     ChannelSession.Settings.MixPlayCommands.Add(this.command);
                 }
                 else
@@ -200,7 +192,7 @@ namespace MixItUp.WPF.Controls.Command
                     this.command.Requirements = requirements;
                 }
 
-                this.command.Button.cost = sparkCost;
+                this.button.cost = sparkCost;
                 await ChannelSession.MixerUserConnection.UpdateMixPlayGameVersion(this.version);
 
                 this.command.IsBasic = isBasic;
@@ -214,7 +206,7 @@ namespace MixItUp.WPF.Controls.Command
                 if (!isBasic)
                 {
                     await Task.Delay(250);
-                    CommandWindow window = new CommandWindow(new InteractiveButtonCommandDetailsControl(this.game, this.version, this.command));
+                    CommandWindow window = new CommandWindow(new MixPlayButtonCommandDetailsControl(this.game, this.version, new MixPlayControlViewModel(this.game, this.button) { Command = this.command }));
                     window.CommandSaveSuccessfully += (sender, cmd) => this.CommandSavedSuccessfully(cmd);
                     window.Show();
                 }

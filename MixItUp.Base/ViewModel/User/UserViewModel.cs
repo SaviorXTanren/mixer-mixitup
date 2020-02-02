@@ -229,7 +229,7 @@ namespace MixItUp.Base.ViewModel.User
         public string MixerUsername { get { return this.Data.MixerUsername; } private set { this.Data.MixerUsername = value; } }
         public uint MixerChannelID { get { return this.Data.MixerChannelID; } private set { this.Data.MixerChannelID = value; } }
 
-        public HashSet<UserRoleEnum> MixerUserRoles { get; set; } = new HashSet<UserRoleEnum>();
+        public HashSet<UserRoleEnum> MixerUserRoles { get; set; } = new HashSet<UserRoleEnum>() { UserRoleEnum.User };
 
         public UserFanProgressionModel MixerFanProgression { get; set; }
         public int Sparks { get; set; }
