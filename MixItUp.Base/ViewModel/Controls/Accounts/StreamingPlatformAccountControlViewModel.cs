@@ -168,7 +168,7 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
                 {
                     if (this.Platform == StreamingPlatformTypeEnum.Mixer)
                     {
-                        
+                        await ChannelSession.DisconnectMixerBot();
                     }
                     this.BotAccountAvatar = null;
                     this.BotAccountUsername = null;
