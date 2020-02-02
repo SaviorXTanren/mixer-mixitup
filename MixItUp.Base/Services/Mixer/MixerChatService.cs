@@ -38,7 +38,7 @@ namespace MixItUp.Base.Services.Mixer
         bool IsBotConnected { get; }
 
         Task<ExternalServiceResult> ConnectUser();
-        Task DisconnectStreamer();
+        Task DisconnectUser();
 
         Task<ExternalServiceResult> ConnectBot();
         Task DisconnectBot();
@@ -146,7 +146,7 @@ namespace MixItUp.Base.Services.Mixer
                     }
                     else
                     {
-                        await this.DisconnectStreamer();
+                        await this.DisconnectUser();
                     }
                     return result;
                 });
@@ -154,7 +154,7 @@ namespace MixItUp.Base.Services.Mixer
             return new ExternalServiceResult("Mixer connection has not been established");
         }
 
-        public async Task DisconnectStreamer()
+        public async Task DisconnectUser()
         {
             await this.RunAsync(async () =>
             {
@@ -722,7 +722,7 @@ namespace MixItUp.Base.Services.Mixer
             ChannelSession.DisconnectionOccurred("Mixer Streamer Chat");
 
             ExternalServiceResult result;
-            await this.DisconnectStreamer();
+            await this.DisconnectUser();
             do
             {
                 await Task.Delay(2500);
