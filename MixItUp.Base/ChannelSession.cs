@@ -320,7 +320,7 @@ namespace MixItUp.Base
                 MixerEventService mixerEventService = new MixerEventService();
 
                 List<Task<ExternalServiceResult>> mixerConnections = new List<Task<ExternalServiceResult>>();
-                mixerConnections.Add(mixerChatService.ConnectStreamer());
+                mixerConnections.Add(mixerChatService.ConnectUser());
                 mixerConnections.Add(mixerEventService.Connect());
                 await Task.WhenAll(mixerConnections);
 
