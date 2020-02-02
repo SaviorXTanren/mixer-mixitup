@@ -755,15 +755,6 @@ namespace MixItUp.Base.Services
         private async void TwitchChatService_OnMessageOccurred(object sender, ChatMessageViewModel message)
         {
             await this.AddMessage(message);
-            if (ChannelSession.Settings.SaveChatEventLogs)
-            {
-                try
-                {
-                    await ChannelSession.Services.FileService.AppendFile(this.currentChatEventLogFilePath, string.Format("{0} ({1}){2}",
-                        message, DateTime.Now.ToString("HH:mm", CultureInfo.InvariantCulture), Environment.NewLine));
-                }
-                catch (Exception) { }
-            }
         }
 
         private async void TwitchChatService_OnUsersJoinOccurred(object sender, IEnumerable<UserViewModel> users)
