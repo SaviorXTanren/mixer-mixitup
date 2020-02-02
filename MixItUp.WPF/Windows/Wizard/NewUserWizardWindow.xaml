@@ -299,19 +299,43 @@
                     </Grid>
                 </Grid>
 
-                <Grid Visibility="{Binding FinalPageVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                <Grid Visibility="{Binding FinalPageVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}">
                     <Grid Grid.Row="6">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="60" />
+                            <RowDefinition Height="50" />
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="60" />
+                            <RowDefinition Height="50" />
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="60" />
+                            <RowDefinition Height="50" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="50" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
                         <Grid Grid.Row="0" HorizontalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center" TextWrapping="Wrap" Width="450">Mix It Up is a desktop-only application, so your settings and data only exist on their computer. Therefore we encourge our users to set up automatic backups for their settings to ensure you always have something to fall back to in the event of any issues:</TextBlock>
+
+                            <Grid Grid.Column="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="10" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <Button x:Name="SettingsBackupLocationButton" Grid.Row="0" Content="Set Location" Command="{Binding SetBackupLocationCommand}" />
+
+                                <ComboBox x:Name="SettingsBackupRateComboBox" Grid.Row="2" Width="110" MaterialDesign:HintAssist.Hint="Backup Rate" ItemsSource="{Binding SettingsBackupOptions}" SelectedItem="{Binding SelectedSettingsBackupOption}" IsEnabled="{Binding IsBackupLocationSet, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+                            </Grid>
+                        </Grid>
+
+                        <Grid Grid.Row="2" HorizontalAlignment="Center">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="20" />
@@ -325,9 +349,9 @@
                             </Button>
                         </Grid>
 
-                        <TextBlock Grid.Row="2" TextWrapping="Wrap" Width="500">Don't forget the following resources available to you for questions &amp; support:</TextBlock>
+                        <TextBlock Grid.Row="4" TextWrapping="Wrap" Width="500">Don't forget the following resources available to you for questions &amp; support:</TextBlock>
 
-                        <Grid Grid.Row="4" HorizontalAlignment="Center">
+                        <Grid Grid.Row="6" HorizontalAlignment="Center">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="20" />
@@ -355,7 +379,7 @@
                             </Button>
                         </Grid>
 
-                        <TextBlock TextWrapping="Wrap" Grid.Row="6" HorizontalAlignment="Center">Thanks for using Mix It Up and we hope it meets all your needs!</TextBlock>
+                        <TextBlock TextWrapping="Wrap" Grid.Row="8" HorizontalAlignment="Center">Thanks for using Mix It Up and we hope it meets all your needs!</TextBlock>
                     </Grid>
                 </Grid>
             </Grid>

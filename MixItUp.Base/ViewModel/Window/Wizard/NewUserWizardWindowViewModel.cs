@@ -1,9 +1,13 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.Import.ScorpBot;
 using MixItUp.Base.Model.Import.Streamlabs;
+using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
+using StreamingClient.Base.Util;
 using System;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -186,6 +190,33 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
         }
         private bool finalPageVisible;
 
+        public ICommand SetBackupLocationCommand { get; private set; }
+
+        public string SettingsBackupLocation
+        {
+            get { return this.settingsBackupLocation; }
+            set
+            {
+                this.settingsBackupLocation = value;
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("IsBackupLocationSet");
+            }
+        }
+        private string settingsBackupLocation;
+        public bool IsBackupLocationSet { get { return !string.IsNullOrEmpty(this.SettingsBackupLocation); } }
+
+        public ObservableCollection<SettingsBackupRateEnum> SettingsBackupOptions { get; private set; } = new ObservableCollection<SettingsBackupRateEnum>(EnumHelper.GetEnumList<SettingsBackupRateEnum>());
+        public SettingsBackupRateEnum SelectedSettingsBackupOption
+        {
+            get { return this.selectedSettingsBackupOption; }
+            set
+            {
+                this.selectedSettingsBackupOption = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private SettingsBackupRateEnum selectedSettingsBackupOption;
+
         public event EventHandler WizardCompleteEvent = delegate { };
 
         #endregion Final Page
@@ -320,6 +351,24 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
                 return Task.FromResult(0);
             });
 
+            this.SetBackupLocationCommand = this.CreateCommand((parameter) =>
+            {
+                string folderPath = ChannelSession.Services.FileService.ShowOpenFolderDialog();
+                if (!string.IsNullOrEmpty(folderPath) && Directory.Exists(folderPath))
+                {
+                    this.SettingsBackupLocation = folderPath;
+                }
+
+                if (this.SelectedSettingsBackupOption == SettingsBackupRateEnum.None)
+                {
+                    this.SelectedSettingsBackupOption = SettingsBackupRateEnum.Monthly;
+                }
+
+                this.NotifyPropertyChanged("IsBackupLocationSet");
+
+                return Task.FromResult(0);
+            });
+
             this.NextCommand = this.CreateCommand(async (parameter) =>
             {
                 this.StatusMessage = string.Empty;
@@ -385,6 +434,10 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
                         await DialogHelper.ShowMessage("Failed to initialize session.");
                         return;
                     }
+
+                    ChannelSession.Settings.SettingsBackupLocation = this.SettingsBackupLocation;
+                    ChannelSession.Settings.SettingsBackupRate = this.SelectedSettingsBackupOption;
+
                     this.WizardComplete = true;
                     this.WizardCompleteEvent(this, new EventArgs());
                 }
