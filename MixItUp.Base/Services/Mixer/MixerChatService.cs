@@ -1,7 +1,9 @@
 ﻿using Mixer.Base.Clients;
 using Mixer.Base.Model.Chat;
+using Mixer.Base.Model.Client;
 using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.Chat;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.External;
@@ -202,6 +204,7 @@ namespace MixItUp.Base.Services.Mixer
 
                         this.botClient.OnMessageOccurred += BotChatClient_OnMessageOccurred;
                         this.botClient.OnDisconnectOccurred += BotClient_OnDisconnectOccurred;
+                        this.botClient.OnReplyOccurred += BotClient_OnReplyOccurred;
                         if (ChannelSession.Settings.DiagnosticLogging)
                         {
                             this.botClient.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
@@ -228,6 +231,7 @@ namespace MixItUp.Base.Services.Mixer
                 {
                     this.botClient.OnMessageOccurred -= BotChatClient_OnMessageOccurred;
                     this.botClient.OnDisconnectOccurred -= BotClient_OnDisconnectOccurred;
+                    this.botClient.OnReplyOccurred -= BotClient_OnReplyOccurred;
                     if (ChannelSession.Settings.DiagnosticLogging)
                     {
                         this.botClient.OnPacketSentOccurred -= WebSocketClient_OnPacketSentOccurred;
@@ -675,6 +679,23 @@ namespace MixItUp.Base.Services.Mixer
             this.OnMessageOccurred(sender, message);
 
             this.ProcessSkill(message);
+        }
+
+        protected async void BotClient_OnReplyOccurred(object sender, ReplyPacket e)
+        {
+            if (e.errorObject != null)
+            {
+                if (e.errorObject.ContainsKey("code") && e.errorObject.ContainsKey("message") && e.errorObject["code"].ToString().Equals("4007"))
+                {
+                    await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer, await ChannelSession.GetCurrentUser(),
+                        "The Bot account could not send the last message for the following reason: " + e.errorObject["message"]));
+                }
+            }
+            else if (e.error != null)
+            {
+                await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer, await ChannelSession.GetCurrentUser(),
+                    "Bot account error: " + e.error.ToString()));
+            }
         }
 
         private void ProcessSkill(MixerSkillChatMessageViewModel message)
