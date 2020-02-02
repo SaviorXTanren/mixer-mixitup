@@ -46,6 +46,9 @@ namespace MixItUp.Base.Services.Twitch
         Task<ExternalServiceResult> ConnectUser();
         Task DisconnectUser();
 
+        Task<ExternalServiceResult> ConnectBot();
+        Task DisconnectBot();
+
         Task Initialize();
 
         Task SendMessage(string message, bool sendAsStreamer = false);
@@ -160,7 +163,10 @@ namespace MixItUp.Base.Services.Twitch
             {
                 if (this.userClient != null)
                 {
-                    this.userClient.OnSentOccurred -= Client_OnSentOccurred;
+                    if (ChannelSession.Settings.DiagnosticLogging)
+                    {
+                        this.userClient.OnSentOccurred -= Client_OnSentOccurred;
+                    }
                     this.userClient.OnPacketReceived -= Client_OnPacketReceived;
                     this.userClient.OnDisconnectOccurred -= UserClient_OnDisconnectOccurred;
                     this.userClient.OnPingReceived -= UserClient_OnPingReceived;
@@ -183,6 +189,74 @@ namespace MixItUp.Base.Services.Twitch
                 Logger.Log(ex);
             }
             this.userClient = null;
+        }
+
+        public async Task<ExternalServiceResult> ConnectBot()
+        {
+            if (ChannelSession.TwitchUserConnection != null)
+            {
+                return await this.AttemptConnect(async () =>
+                {
+                    try
+                    {
+                        this.cancellationTokenSource = new CancellationTokenSource();
+
+                        this.botClient = new ChatClient(ChannelSession.TwitchBotConnection.Connection);
+
+                        if (ChannelSession.Settings.DiagnosticLogging)
+                        {
+                            this.botClient.OnSentOccurred += Client_OnSentOccurred;
+                        }
+                        this.botClient.OnDisconnectOccurred += BotClient_OnDisconnectOccurred;
+                        this.botClient.OnPingReceived += BotClient_OnPingReceived;
+
+                        await this.botClient.Connect();
+
+                        await Task.Delay(1000);
+
+                        await this.botClient.AddCommandsCapability();
+                        await this.botClient.AddTagsCapability();
+                        await this.botClient.AddMembershipCapability();
+
+                        await Task.Delay(1000);
+
+                        await this.botClient.Join(ChannelSession.TwitchChannelNewAPI);
+
+                        await Task.Delay(3000);
+
+                        return new ExternalServiceResult();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log(ex);
+                        return new ExternalServiceResult(ex);
+                    }
+                });
+            }
+            return new ExternalServiceResult("Twitch connection has not been established");
+        }
+
+        public async Task DisconnectBot()
+        {
+            try
+            {
+                if (this.botClient != null)
+                {
+                    if (ChannelSession.Settings.DiagnosticLogging)
+                    {
+                        this.botClient.OnSentOccurred -= Client_OnSentOccurred;
+                    }
+                    this.botClient.OnDisconnectOccurred -= BotClient_OnDisconnectOccurred;
+                    this.botClient.OnPingReceived -= BotClient_OnPingReceived;
+
+                    await this.botClient.Disconnect();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            this.botClient = null;
         }
 
         public async Task Initialize()
@@ -406,6 +480,12 @@ namespace MixItUp.Base.Services.Twitch
             await this.userClient.Pong();
         }
 
+        private async void BotClient_OnPingReceived(object sender, EventArgs e)
+        {
+            Logger.Log(LogLevel.Debug, "Twitch Bot Client - Ping");
+            await this.botClient.Pong();
+        }
+
         private async void UserClient_OnUserJoinReceived(object sender, ChatUserJoinPacketModel userJoin)
         {
             await this.userJoinLeaveEventsSemaphore.WaitAndRelease(() =>
@@ -565,6 +645,23 @@ namespace MixItUp.Base.Services.Twitch
             while (!result.Success);
 
             ChannelSession.ReconnectionOccurred("Twitch User Chat");
+        }
+
+        private async void BotClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus closeStatus)
+        {
+            ChannelSession.DisconnectionOccurred("Twitch Bot Chat");
+
+            ExternalServiceResult result;
+            await this.DisconnectBot();
+            do
+            {
+                await Task.Delay(2500);
+
+                result = await this.ConnectBot();
+            }
+            while (!result.Success);
+
+            ChannelSession.ReconnectionOccurred("Twitch Bot Chat");
         }
 
         private async Task DownloadBetterTTVEmotes(string channelName = null)

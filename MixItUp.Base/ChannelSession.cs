@@ -302,7 +302,7 @@ namespace MixItUp.Base
             ChannelSession.TwitchBotConnection = null;
             if (ChannelSession.Services.Chat.TwitchChatService != null)
             {
-
+                await ChannelSession.Services.Chat.TwitchChatService.DisconnectBot();
             }
         }
 
@@ -314,8 +314,13 @@ namespace MixItUp.Base
             {
                 await ChannelSession.Services.Chat.MixerChatService.DisconnectStreamer();
             }
-
             await ChannelSession.DisconnectMixerBot();
+
+            if (ChannelSession.Services.Chat.TwitchChatService != null)
+            {
+                await ChannelSession.Services.Chat.TwitchChatService.DisconnectUser();
+            }
+            await ChannelSession.DisconnectTwitchBot();
         }
 
         public static async Task SaveSettings()
@@ -688,7 +693,11 @@ namespace MixItUp.Base
 
             if (ChannelSession.TwitchBotConnection != null)
             {
-
+                ExternalServiceResult result = await ChannelSession.Services.Chat.TwitchChatService.ConnectBot();
+                if (!result.Success)
+                {
+                    return result;
+                }
             }
 
             await ChannelSession.SaveSettings();
