@@ -385,6 +385,15 @@ namespace MixItUp.Base.Services
         {
             Logger.Log(LogLevel.Debug, string.Format("Message Received - {0}", message.ToString()));
 
+            if (ChannelSession.Settings.SaveChatEventLogs)
+            {
+                try
+                {
+                    await ChannelSession.Services.FileService.AppendFile(this.currentChatEventLogFilePath, string.Format($"{message} ({DateTime.Now.ToString("HH:mm", CultureInfo.InvariantCulture)})" + Environment.NewLine));
+                }
+                catch (Exception) { }
+            }
+
             if (message.Platform == StreamingPlatformTypeEnum.Mixer)
             {
                 UserViewModel activeUser = ChannelSession.Services.User.GetUserByMixerID(message.User.MixerID);
@@ -656,15 +665,6 @@ namespace MixItUp.Base.Services
         private async void MixerChatService_OnMessageOccurred(object sender, ChatMessageViewModel message)
         {
             await this.AddMessage(message);
-            if (ChannelSession.Settings.SaveChatEventLogs)
-            {
-                try
-                {
-                    await ChannelSession.Services.FileService.AppendFile(this.currentChatEventLogFilePath, string.Format("{0} ({1}){2}",
-                        message, DateTime.Now.ToString("HH:mm", CultureInfo.InvariantCulture), Environment.NewLine));
-                }
-                catch (Exception) { }
-            }
         }
 
         private async void MixerChatService_OnDeleteMessageOccurred(object sender, Tuple<Guid, UserViewModel> messageDeletion)
