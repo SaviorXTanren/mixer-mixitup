@@ -68,15 +68,34 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await control.Initialize(this.Window);
             this.menuItems.Add(new MainMenuItem(name, control, helpLink));
-            if (this.menuItems.Count == 1)
-            {
-                this.MenuItemSelected(this.menuItems.First());
-            }
         }
 
         public void AddMenuItem(string name, string link)
         {
             this.menuItems.Add(new MainMenuItem(name, link));
+        }
+
+        public void MenuItemSelected(string name)
+        {
+            MainMenuItem item = this.menuItems.FirstOrDefault(i => i.Name.Equals(name));
+            if (item != null)
+            {
+                this.MenuItemSelected(item);
+            }
+        }
+
+        public void MenuItemSelected(MainMenuItem item)
+        {
+            if (item.Control != null)
+            {
+                this.DataContext = item;
+                this.ActiveControlContentControl.Content = item.Control;
+            }
+            else if (!string.IsNullOrEmpty(item.Link))
+            {
+                ProcessHelper.LaunchLink(item.Link);
+            }
+            this.MenuToggleButton.IsChecked = false;
         }
 
         protected override async Task InitializeInternal()
@@ -123,20 +142,6 @@ namespace MixItUp.WPF.Controls.MainControls
                     ProcessHelper.LaunchLink(menuItem.HelpLink);
                 }
             }
-        }
-
-        private void MenuItemSelected(MainMenuItem item)
-        {
-            if (item.Control != null)
-            {
-                this.DataContext = item;
-                this.ActiveControlContentControl.Content = item.Control;
-            }
-            else if (!string.IsNullOrEmpty(item.Link))
-            {
-                ProcessHelper.LaunchLink(item.Link);
-            }
-            this.MenuToggleButton.IsChecked = false;
         }
 
         private async void GlobalEvents_OnServiceDisconnect(object sender, string serviceName)

@@ -337,6 +337,9 @@
     <Compile Include="Controls\AccordianGroupBoxControl.xaml.cs">
       <DependentUpon>AccordianGroupBoxControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Accounts\StreamingPlatformAccountControl.xaml.cs">
+      <DependentUpon>StreamingPlatformAccountControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\ActionContainerControl.xaml.cs">
       <DependentUpon>ActionContainerControl.xaml</DependentUpon>
     </Compile>
@@ -605,6 +608,9 @@
       <DependentUpon>LicenseControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\LoadingWindowControlBase.cs" />
+    <Compile Include="Controls\MainControls\AccountsControl.xaml.cs">
+      <DependentUpon>AccountsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MainControls\AutoHosterControl.xaml.cs">
       <DependentUpon>AutoHosterControl.xaml</DependentUpon>
     </Compile>
@@ -840,9 +846,6 @@
     <Compile Include="Controls\Services\ExtraLifeServiceControl.xaml.cs">
       <DependentUpon>ExtraLifeServiceControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Services\MixerBotAccountServiceControl.xaml.cs">
-      <DependentUpon>MixerBotAccountServiceControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Services\OBSStudioServiceControl.xaml.cs">
       <DependentUpon>OBSStudioServiceControl.xaml</DependentUpon>
     </Compile>
@@ -1030,6 +1033,10 @@
       <DependentUpon>NewUserWizardWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Controls\AccordianGroupBoxControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Accounts\StreamingPlatformAccountControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1381,6 +1388,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\MainControls\AccountsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\MainControls\AutoHosterControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1690,10 +1701,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Services\ExtraLifeServiceControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Services\MixerBotAccountServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
