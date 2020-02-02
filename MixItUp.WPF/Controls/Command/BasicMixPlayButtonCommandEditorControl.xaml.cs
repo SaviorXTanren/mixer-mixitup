@@ -25,7 +25,6 @@ namespace MixItUp.WPF.Controls.Command
         private BasicCommandTypeEnum commandType;
         private MixPlayGameModel game;
         private MixPlayGameVersionModel version;
-        private MixPlaySceneModel scene;
         private MixPlayButtonControlModel button;
 
         private MixPlayButtonCommand command;

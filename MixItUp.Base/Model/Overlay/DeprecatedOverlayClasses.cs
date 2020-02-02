@@ -2201,22 +2201,22 @@ namespace MixItUp.Base.Model.Overlay
             });
         }
 
-        private async void GlobalEvents_OnFollowOccurred(object sender, UserViewModel user)
+        private void GlobalEvents_OnFollowOccurred(object sender, UserViewModel user)
         {
 
         }
 
-        private async void GlobalEvents_OnHostOccurred(object sender, Tuple<UserViewModel, int> host)
+        private void GlobalEvents_OnHostOccurred(object sender, Tuple<UserViewModel, int> host)
         {
 
         }
 
-        private async void GlobalEvents_OnSubscribeOccurred(object sender, UserViewModel user)
+        private void GlobalEvents_OnSubscribeOccurred(object sender, UserViewModel user)
         {
 
         }
 
-        private async void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserViewModel, int> user)
+        private void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserViewModel, int> user)
         {
 
         }

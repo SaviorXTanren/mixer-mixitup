@@ -126,12 +126,12 @@ namespace MixItUp.Base.Actions
             };
         }
 
-        public static InteractiveAction CreateCooldownAction(InteractiveActionTypeEnum type, string cooldownID, int cooldownAmount)
+        public static InteractiveAction CreateCooldownAction(InteractiveActionTypeEnum type, string cooldownID, string cooldownAmount)
         {
             return new InteractiveAction(type)
             {
                 CooldownID = cooldownID,
-                CooldownAmount = cooldownAmount,
+                CooldownAmountString = cooldownAmount,
             };
         }
 
@@ -190,6 +190,9 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public string CooldownID { get; set; }
         [DataMember]
+        public string CooldownAmountString { get; set; }
+        [DataMember]
+        [Obsolete]
         public int CooldownAmount { get; set; }
 
         [DataMember]
@@ -304,18 +307,22 @@ namespace MixItUp.Base.Actions
                 else if (this.InteractiveType == InteractiveActionTypeEnum.CooldownButton || this.InteractiveType == InteractiveActionTypeEnum.CooldownGroup ||
                     this.InteractiveType == InteractiveActionTypeEnum.CooldownScene)
                 {
-                    long timestamp = DateTimeOffset.Now.AddSeconds(this.CooldownAmount).ToUnixTimeMilliseconds();
-                    if (this.InteractiveType == InteractiveActionTypeEnum.CooldownButton)
+                    string amountString = await this.ReplaceStringWithSpecialModifiers(this.CooldownAmountString, user, arguments);
+                    if (int.TryParse(amountString, out int amount) && amount >= 0)
                     {
-                        await ChannelSession.Services.MixPlay.CooldownButton(this.CooldownID, timestamp);
-                    }
-                    else if (this.InteractiveType == InteractiveActionTypeEnum.CooldownGroup)
-                    {
-                        await ChannelSession.Services.MixPlay.CooldownGroup(this.CooldownID, timestamp);
-                    }
-                    else if (this.InteractiveType == InteractiveActionTypeEnum.CooldownScene)
-                    {
-                        await ChannelSession.Services.MixPlay.CooldownScene(this.CooldownID, timestamp);
+                        long timestamp = DateTimeOffset.Now.AddSeconds(amount).ToUnixTimeMilliseconds();
+                        if (this.InteractiveType == InteractiveActionTypeEnum.CooldownButton)
+                        {
+                            await ChannelSession.Services.MixPlay.CooldownButton(this.CooldownID, timestamp);
+                        }
+                        else if (this.InteractiveType == InteractiveActionTypeEnum.CooldownGroup)
+                        {
+                            await ChannelSession.Services.MixPlay.CooldownGroup(this.CooldownID, timestamp);
+                        }
+                        else if (this.InteractiveType == InteractiveActionTypeEnum.CooldownScene)
+                        {
+                            await ChannelSession.Services.MixPlay.CooldownScene(this.CooldownID, timestamp);
+                        }
                     }
                 }
                 else if (this.InteractiveType == InteractiveActionTypeEnum.UpdateControl || this.InteractiveType == InteractiveActionTypeEnum.SetCustomMetadata ||

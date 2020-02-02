@@ -265,7 +265,9 @@ namespace MixItUp.Desktop.Services
                         {
                             Actions = iCommand.Actions,
                             Commands = iCommand.Commands,
+#pragma warning disable CS0612 // Type or member is obsolete
                             Control = iCommand.Control,
+#pragma warning restore CS0612 // Type or member is obsolete
                             GameID = iCommand.GameID,
                             GroupName = iCommand.GroupName,
                             ID = iCommand.ID,
@@ -290,7 +292,9 @@ namespace MixItUp.Desktop.Services
                         {
                             Actions = iCommand.Actions,
                             Commands = iCommand.Commands,
+#pragma warning disable CS0612 // Type or member is obsolete
                             Control = iCommand.Control,
+#pragma warning restore CS0612 // Type or member is obsolete
                             GameID = iCommand.GameID,
                             GroupName = iCommand.GroupName,
                             ID = iCommand.ID,
@@ -316,7 +320,9 @@ namespace MixItUp.Desktop.Services
                         {
                             Actions = iCommand.Actions,
                             Commands = iCommand.Commands,
+#pragma warning disable CS0612 // Type or member is obsolete
                             Control = iCommand.Control,
+#pragma warning restore CS0612 // Type or member is obsolete
                             GameID = iCommand.GameID,
                             GroupName = iCommand.GroupName,
                             ID = iCommand.ID,
@@ -607,6 +613,21 @@ namespace MixItUp.Desktop.Services
                 });
 
                 await ChannelSession.Services.Settings.Save(settings);
+
+                await ChannelSession.Services.Settings.Initialize(settings);
+                foreach (CommandBase command in GetAllCommands(settings))
+                {
+                    foreach (ActionBase action in command.Actions)
+                    {
+                        if (action is InteractiveAction)
+                        {
+                            InteractiveAction iaction = (InteractiveAction)action;
+#pragma warning disable CS0612 // Type or member is obsolete
+                            iaction.CooldownAmountString = iaction.CooldownAmount.ToString();
+#pragma warning restore CS0612 // Type or member is obsolete
+                        }
+                    }
+                }
             }
         }
 

@@ -10,7 +10,6 @@ using System.Net.Http.Headers;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using StreamingClient.Base.Util;
 
 namespace MixItUp.Base.Services.External
 {
