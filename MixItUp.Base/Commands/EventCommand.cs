@@ -24,73 +24,100 @@ namespace MixItUp.Base.Commands
         Donation,
 
         [Name("GameWisp Subscribed")]
+        [Obsolete]
         GameWispSubscribed = 2,
         [Name("GameWisp Resubscribed")]
+        [Obsolete]
         GameWispResubscribed = 3,
 
         [Name("Patreon Subscribed")]
+        [Obsolete]
         PatreonSubscribed = 5,
 
         [Name("Streamlabs Donation")]
+        [Obsolete]
         StreamlabsDonation = 10,
         [Name("GawkBox Donation")]
+        [Obsolete]
         GawkBoxDonation = 11,
         [Name("Tiltify Donation")]
+        [Obsolete]
         TiltifyDonation = 12,
         [Name("Extra Life Donation")]
+        [Obsolete]
         ExtraLifeDonation = 13,
         [Name("TipeeeStream Donation")]
+        [Obsolete]
         TipeeeStreamDonation = 14,
         [Name("TreatStream Donation")]
+        [Obsolete]
         TreatStreamDonation = 15,
         [Name("StreamJar Donation")]
+        [Obsolete]
         StreamJarDonation = 16,
         [Name("JustGiving Donation")]
+        [Obsolete]
         JustGivingDonation = 17,
 
-        [Obsolete]
         [Name("Stream Tweet Retweet")]
+        [Obsolete]
         TwitterStreamTweetRetweet = 20,
 
         [Name("Chat New User Joined")]
+        [Obsolete]
         ChatUserFirstJoin = 30,
         [Name("Channel Unfollowed")]
+        [Obsolete]
         ChatUserUnfollow = 31,
         [Name("Chat User Purged")]
+        [Obsolete]
         ChatUserPurge = 32,
         [Name("Chat User Timed Out")]
         [Obsolete]
         ChatUserTimeout = 33,
         [Name("Chat User Banned")]
+        [Obsolete]
         ChatUserBan = 34,
         [Name("Chat Message Received")]
+        [Obsolete]
         ChatMessageReceived = 35,
         [Name("Chat User Joined")]
+        [Obsolete]
         ChatUserJoined = 36,
         [Name("Chat User Left")]
+        [Obsolete]
         ChatUserLeft = 37,
         [Name("Chat Message Deleted")]
+        [Obsolete]
         ChatMessageDeleted = 38,
-
         [Name("Channel Stream Start")]
+        [Obsolete]
         MixerChannelStreamStart = 40,
         [Name("Channel Stream Stop")]
+        [Obsolete]
         MixerChannelStreamStop = 41,
 
         [Name("Channel Milestone Reached")]
+        [Obsolete]
         MixerMilestoneReached = 50,
         [Name("Channel Skill Used")]
+        [Obsolete]
         MixerSkillUsed = 51,
         [Name("Channel Sparks Spent")]
+        [Obsolete]
         MixerSparksUsed = 52,
         [Name("Channel Embers Spent")]
+        [Obsolete]
         MixerEmbersUsed = 53,
 
         [Name("Streamloots Card Redeemed")]
+        [Obsolete]
         StreamlootsCardRedeemed = 60,
         [Name("Streamloots Pack Purchased")]
+        [Obsolete]
         StreamlootsPackPurchased = 61,
         [Name("Streamloots Pack Gifted")]
+        [Obsolete]
         StreamlootsPackGifted = 62,
     }
 
@@ -101,8 +128,6 @@ namespace MixItUp.Base.Commands
         private static HashSet<EventTypeEnum> ignoreUserTracking = new HashSet<EventTypeEnum>()
         {
             EventTypeEnum.ChannelSubscriptionGifted, EventTypeEnum.ChatUserPurge, EventTypeEnum.ChatMessageReceived, EventTypeEnum.ChatMessageDeleted,
-
-            EventTypeEnum.MixerChannelSubscriptionGifted, EventTypeEnum.MixerChatUserPurge, EventTypeEnum.MixerChatMessageReceived, EventTypeEnum.MixerChatMessageDeleted,
 
             EventTypeEnum.MixerSparksUsed, EventTypeEnum.MixerEmbersUsed, EventTypeEnum.MixerSkillUsed, EventTypeEnum.MixerMilestoneReached, EventTypeEnum.MixerFanProgressionLevelUp,
         };

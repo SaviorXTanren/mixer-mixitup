@@ -119,7 +119,7 @@ namespace MixItUp.Base.ViewModel.Chat
 
                 if (this.User != null && !string.IsNullOrEmpty(this.PlainTextMessage))
                 {
-                    EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChatMessageDeleted, user);
+                    EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatMessageDeleted, user);
                     trigger.SpecialIdentifiers["message"] = this.PlainTextMessage;
                     trigger.SpecialIdentifiers["reason"] = (!string.IsNullOrEmpty(this.ModerationReason)) ? this.ModerationReason : "Manual Deletion";
                     await ChannelSession.Services.Events.PerformEvent(trigger);

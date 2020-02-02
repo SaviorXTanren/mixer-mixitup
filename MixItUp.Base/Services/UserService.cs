@@ -205,13 +205,16 @@ namespace MixItUp.Base.Services
                     user.IgnoreForQueries = false;
                     if (user.Data.ViewingMinutes == 0)
                     {
-                        await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.MixerChatUserFirstJoin, user));
+                        if (ChannelSession.Services.Events.CanPerformEvent(new EventTrigger(EventTypeEnum.ChatUserFirstJoin, user)))
+                        {
+                            await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.ChatUserFirstJoin, user));
+                        }
                     }
 
-                    if (ChannelSession.Services.Events.CanPerformEvent(new EventTrigger(EventTypeEnum.MixerChatUserJoined, user)))
+                    if (ChannelSession.Services.Events.CanPerformEvent(new EventTrigger(EventTypeEnum.ChatUserJoined, user)))
                     {
                         user.Data.TotalStreamsWatched++;
-                        await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.MixerChatUserJoined, user));
+                        await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.ChatUserJoined, user));
                     }
                 }
             }
@@ -277,7 +280,7 @@ namespace MixItUp.Base.Services
                 this.usersByTwitchLogin.Remove(user.TwitchUsername);
             }
 
-            await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.MixerChatUserLeft, user));
+            await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.ChatUserLeft, user));
         }
 
         public void Clear()

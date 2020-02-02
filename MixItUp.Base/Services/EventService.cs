@@ -73,20 +73,20 @@ namespace MixItUp.Base.Services
         [Name("Mixer Channel Subscription Gifted")]
         MixerChannelSubscriptionGifted = 122,
 
-        [Name("Mixer Chat New User Joined")]
-        MixerChatUserFirstJoin = 150,
-        [Name("Mixer Chat User Purged")]
-        MixerChatUserPurge = 151,
-        [Name("Mixer Chat User Banned")]
-        MixerChatUserBan = 152,
-        [Name("Mixer Chat Message Received")]
-        MixerChatMessageReceived = 153,
-        [Name("Mixer Chat User Joined")]
-        MixerChatUserJoined = 154,
-        [Name("Mixer Chat User Left")]
-        MixerChatUserLeft = 155,
-        [Name("Mixer Chat Message Deleted")]
-        MixerChatMessageDeleted = 156,
+        //[Name("Mixer Chat New User Joined")]
+        //MixerChatUserFirstJoin = 150,
+        //[Name("Mixer Chat User Purged")]
+        //MixerChatUserPurge = 151,
+        //[Name("Mixer Chat User Banned")]
+        //MixerChatUserBan = 152,
+        //[Name("Mixer Chat Message Received")]
+        //MixerChatMessageReceived = 153,
+        //[Name("Mixer Chat User Joined")]
+        //MixerChatUserJoined = 154,
+        //[Name("Mixer Chat User Left")]
+        //MixerChatUserLeft = 155,
+        //[Name("Mixer Chat Message Deleted")]
+        //MixerChatMessageDeleted = 156,
 
         [Name("Mixer Channel Sparks Spent")]
         MixerSparksUsed = 170,
@@ -122,20 +122,20 @@ namespace MixItUp.Base.Services
         [Name("Twitch Channel Subscription Gifted")]
         TwitchChannelSubscriptionGifted = 222,
 
-        [Name("Twitch Chat New User Joined")]
-        TwitchChatUserFirstJoin = 250,
-        [Name("Twitch Chat User Purged")]
-        TwitchChatUserPurge = 251,
-        [Name("Twitch Chat User Banned")]
-        TwitchChatUserBan = 252,
-        [Name("Twitch Chat Message Received")]
-        TwitchChatMessageReceived = 253,
-        [Name("Twitch Chat User Joined")]
-        TwitchChatUserJoined = 254,
-        [Name("Twitch Chat User Left")]
-        TwitchChatUserLeft = 255,
-        [Name("Twitch Chat Message Deleted")]
-        TwitchChatMessageDeleted = 256,
+        //[Name("Twitch Chat New User Joined")]
+        //TwitchChatUserFirstJoin = 250,
+        //[Name("Twitch Chat User Purged")]
+        //TwitchChatUserPurge = 251,
+        //[Name("Twitch Chat User Banned")]
+        //TwitchChatUserBan = 252,
+        //[Name("Twitch Chat Message Received")]
+        //TwitchChatMessageReceived = 253,
+        //[Name("Twitch Chat User Joined")]
+        //TwitchChatUserJoined = 254,
+        //[Name("Twitch Chat User Left")]
+        //TwitchChatUserLeft = 255,
+        //[Name("Twitch Chat Message Deleted")]
+        //TwitchChatMessageDeleted = 256,
 
         [Name("Twitch Channel Bits Cheered")]
         TwitchBitsCheered = 270,
