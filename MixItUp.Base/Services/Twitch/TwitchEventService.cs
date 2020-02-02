@@ -31,7 +31,6 @@ namespace MixItUp.Base.Services.Twitch
             PubSubTopicsEnum.ChannelBitsEventsV2,
             PubSubTopicsEnum.ChannelBitsBadgeUnlocks,
             PubSubTopicsEnum.ChannelSubscriptionsV1,
-            PubSubTopicsEnum.ChannelCommerceV1,
             PubSubTopicsEnum.UserWhispers,
             PubSubTopicsEnum.ChannelPointsRedeemed
         };

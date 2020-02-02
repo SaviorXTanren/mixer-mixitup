@@ -170,6 +170,11 @@ namespace MixItUp.Base.Services.Twitch
             return await this.RunAsync(this.Connection.V5API.Users.GetUserEmotes(user));
         }
 
+        public async Task<V5API.Streams.StreamModel> GetV5LiveStream(V5API.Channel.ChannelModel channel)
+        {
+            return await this.RunAsync(this.Connection.V5API.Streams.GetChannelStream(channel));
+        }
+
         // New API Methods
 
         public async Task<NewAPI.Users.UserModel> GetNewAPICurrentUser() { return await this.RunAsync(this.Connection.NewAPI.Users.GetCurrentUser()); }

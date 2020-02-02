@@ -19,6 +19,7 @@ using Twitch.Base.Clients;
 using Twitch.Base.Models.Clients.Chat;
 using Twitch.Base.Models.NewAPI.Users;
 using Twitch.Base.Models.V5.Emotes;
+using Twitch.Base.Models.V5.Streams;
 using TwitchNewAPI = Twitch.Base.Models.NewAPI;
 
 namespace MixItUp.Base.Services.Twitch
@@ -100,6 +101,8 @@ namespace MixItUp.Base.Services.Twitch
         private HashSet<string> userLeaveEvents = new HashSet<string>();
 
         private List<string> initialUserLogins = new List<string>();
+
+        private bool streamStartDetected = false;
 
         public TwitchChatService() { }
 
@@ -611,7 +614,37 @@ namespace MixItUp.Base.Services.Twitch
                     string[] splits = packet.Get1SkippedParameterText.Split(new char[] { ' ' });
                     if (splits.Length > 0)
                     {
-                        string hostTarget = splits[0];
+                        bool isUnhost = splits[0].Equals("-");
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        Task.Run(async () =>
+                        {
+                            await Task.Delay(30000);
+
+                            StreamModel stream = await ChannelSession.TwitchUserConnection.GetV5LiveStream(ChannelSession.TwitchChannelV5);
+
+                            EventTrigger trigger = null;
+                            if (isUnhost)
+                            {
+                                if (stream != null && stream.id > 0 && !stream.is_playlist)
+                                {
+                                    this.streamStartDetected = true;
+                                    trigger = new EventTrigger(EventTypeEnum.TwitchChannelStreamStart, await ChannelSession.GetCurrentUser());
+                                }
+                            }
+                            else if (this.streamStartDetected)
+                            {
+                                if (stream == null || stream.id == 0)
+                                {
+                                    trigger = new EventTrigger(EventTypeEnum.TwitchChannelStreamStop, await ChannelSession.GetCurrentUser());
+                                }
+                            }
+
+                            if (trigger != null && ChannelSession.Services.Events.CanPerformEvent(trigger))
+                            {
+                                await ChannelSession.Services.Events.PerformEvent(trigger);
+                            }
+                        });
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     }
                 }
             }
