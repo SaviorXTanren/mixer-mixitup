@@ -463,7 +463,7 @@ namespace MixItUp.Base
                 MixerEventService mixerEventService = new MixerEventService();
 
                 List<Task<ExternalServiceResult>> mixerPlatformServiceTasks = new List<Task<ExternalServiceResult>>();
-                mixerPlatformServiceTasks.Add(mixerChatService.ConnectStreamer());
+                mixerPlatformServiceTasks.Add(mixerChatService.ConnectUser());
                 mixerPlatformServiceTasks.Add(mixerEventService.Connect());
 
                 TwitchChatService twitchChatService = new TwitchChatService();

@@ -37,7 +37,7 @@ namespace MixItUp.Base.Services.Mixer
 
         bool IsBotConnected { get; }
 
-        Task<ExternalServiceResult> ConnectStreamer();
+        Task<ExternalServiceResult> ConnectUser();
         Task DisconnectStreamer();
 
         Task<ExternalServiceResult> ConnectBot();
@@ -92,7 +92,7 @@ namespace MixItUp.Base.Services.Mixer
 
         public bool IsBotConnected { get { return this.botClient != null && this.botClient.Connected; } }
 
-        public async Task<ExternalServiceResult> ConnectStreamer()
+        public async Task<ExternalServiceResult> ConnectUser()
         {
             if (ChannelSession.MixerUserConnection != null)
             {
@@ -727,7 +727,7 @@ namespace MixItUp.Base.Services.Mixer
             {
                 await Task.Delay(2500);
 
-                result = await this.ConnectStreamer();
+                result = await this.ConnectUser();
             }
             while (!result.Success);
 

@@ -199,7 +199,7 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
                 {
                     if (this.Platform == StreamingPlatformTypeEnum.Mixer)
                     {
-
+                        await ChannelSession.DisconnectMixerBot();
                     }
                     else if (this.Platform == StreamingPlatformTypeEnum.Twitch)
                     {
