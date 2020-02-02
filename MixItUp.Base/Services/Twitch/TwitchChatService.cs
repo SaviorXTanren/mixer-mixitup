@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Twitch;
@@ -42,7 +43,7 @@ namespace MixItUp.Base.Services.Twitch
 
         event EventHandler<TwitchChatMessageViewModel> OnMessageOccurred;
 
-        Task<bool> ConnectUser();
+        Task<ExternalServiceResult> ConnectUser();
         Task DisconnectUser();
 
         Task Initialize();
@@ -99,13 +100,13 @@ namespace MixItUp.Base.Services.Twitch
 
         public TwitchChatService() { }
 
-        public async Task<bool> ConnectUser()
+        public async Task<ExternalServiceResult> ConnectUser()
         {
-            return await this.AttemptConnect(async () =>
+            if (ChannelSession.TwitchUserConnection != null)
             {
-                try
+                return await this.AttemptConnect(async () =>
                 {
-                    if (ChannelSession.TwitchUserConnection != null)
+                    try
                     {
                         this.cancellationTokenSource = new CancellationTokenSource();
 
@@ -141,15 +142,16 @@ namespace MixItUp.Base.Services.Twitch
                         await Task.Delay(3000);
                         this.userClient.OnUserListReceived -= UserClient_OnUserListReceived;
 
-                        return true;
+                        return new ExternalServiceResult();
                     }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log(ex);
-                }
-                return false;
-            });
+                    catch (Exception ex)
+                    {
+                        Logger.Log(ex);
+                        return new ExternalServiceResult(ex);
+                    }
+                });
+            }
+            return new ExternalServiceResult("Twitch connection has not been established");
         }
 
         public async Task DisconnectUser()
@@ -552,12 +554,15 @@ namespace MixItUp.Base.Services.Twitch
         {
             ChannelSession.DisconnectionOccurred("Twitch User Chat");
 
+            ExternalServiceResult result;
             await this.DisconnectUser();
             do
             {
                 await Task.Delay(2500);
+
+                result = await this.ConnectUser();
             }
-            while (!await this.ConnectUser());
+            while (!result.Success);
 
             ChannelSession.ReconnectionOccurred("Twitch User Chat");
         }

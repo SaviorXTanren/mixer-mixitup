@@ -24,10 +24,14 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" TextWrapping="Wrap">Streamer accounts are your actual account that you are streaming from. Bot accounts are separate, optional accounts that you can use to send messages from in your channel. Bots accounts must be manually created by you and you must make sure to be signed in to them before you try connecting them in Mix It Up.</TextBlock>
 
-        <AccountControls:StreamingPlatformAccountControl Grid.Row="4" DataContext="{Binding Mixer}" />
+        <AccountControls:StreamingPlatformAccountControl Grid.Row="2" DataContext="{Binding Mixer}" />
+
+        <AccountControls:StreamingPlatformAccountControl Grid.Row="4" DataContext="{Binding Twitch}" />
     </Grid>
 </local:MainControlBase>

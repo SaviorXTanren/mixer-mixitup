@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Twitch;
@@ -19,7 +20,8 @@ namespace MixItUp.Base.Services.Twitch
 {
     public interface ITwitchEventService
     {
-
+        Task<ExternalServiceResult> Connect();
+        Task Disconnect();
     }
 
     public class TwitchEventService : PlatformServiceBase, ITwitchEventService
@@ -42,13 +44,13 @@ namespace MixItUp.Base.Services.Twitch
 
         public TwitchEventService() { }
 
-        public async Task<bool> Connect()
+        public async Task<ExternalServiceResult> Connect()
         {
-            return await this.AttemptConnect(async () =>
+            if (ChannelSession.TwitchUserConnection != null)
             {
-                try
+                return await this.AttemptConnect(async () =>
                 {
-                    if (ChannelSession.TwitchUserConnection != null)
+                    try
                     {
                         this.pubSub = new PubSubClient(ChannelSession.TwitchUserConnection.Connection);
 
@@ -97,15 +99,16 @@ namespace MixItUp.Base.Services.Twitch
 
                         AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.FollowerBackground);
 
-                        return true;
+                        return new ExternalServiceResult();
                     }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log(ex);
-                }
-                return false;
-            });
+                    catch (Exception ex)
+                    {
+                        Logger.Log(ex);
+                        return new ExternalServiceResult(ex);
+                    }
+                });
+            }
+            return new ExternalServiceResult("Twitch connection has not been established");
         }
 
         public async Task Disconnect()
@@ -190,12 +193,15 @@ namespace MixItUp.Base.Services.Twitch
         {
             ChannelSession.DisconnectionOccurred("Twitch PubSub");
 
+            ExternalServiceResult result;
             await this.Disconnect();
             do
             {
                 await Task.Delay(2500);
+
+                result = await this.Connect();
             }
-            while (!await this.Connect());
+            while (!result.Success);
 
             ChannelSession.ReconnectionOccurred("Twitch PubSub");
         }

@@ -461,26 +461,34 @@ namespace MixItUp.Base
 
                 MixerChatService mixerChatService = new MixerChatService();
                 MixerEventService mixerEventService = new MixerEventService();
+
+                List<Task<ExternalServiceResult>> mixerPlatformServiceTasks = new List<Task<ExternalServiceResult>>();
+                mixerPlatformServiceTasks.Add(mixerChatService.ConnectStreamer());
+                mixerPlatformServiceTasks.Add(mixerEventService.Connect());
+
                 TwitchChatService twitchChatService = new TwitchChatService();
                 TwitchEventService twitchEventService = new TwitchEventService();
 
-                List<Task<bool>> platformServicesTasks = new List<Task<bool>>();
-                platformServicesTasks.Add(mixerChatService.ConnectStreamer());
-                platformServicesTasks.Add(mixerEventService.Connect());
-                platformServicesTasks.Add(twitchChatService.ConnectUser());
-                platformServicesTasks.Add(twitchEventService.Connect());
+                List<Task<ExternalServiceResult>> twitchPlatformServiceTasks = new List<Task<ExternalServiceResult>>();
+                twitchPlatformServiceTasks.Add(twitchChatService.ConnectUser());
+                twitchPlatformServiceTasks.Add(twitchEventService.Connect());
 
+                List<Task> platformServicesTasks = new List<Task>();
+                platformServicesTasks.AddRange(mixerPlatformServiceTasks);
+                platformServicesTasks.AddRange(twitchPlatformServiceTasks);
                 await Task.WhenAll(platformServicesTasks);
 
-                List<Task<ExternalServiceResult>> mixerConnections = new List<Task<ExternalServiceResult>>();
-                mixerConnections.Add(mixerChatService.ConnectStreamer());
-                mixerConnections.Add(mixerEventService.Connect());
-                await Task.WhenAll(mixerConnections);
-
-                if (mixerConnections.Any(c => !c.Result.Success))
+                if (mixerPlatformServiceTasks.Any(c => !c.Result.Success))
                 {
-                    string errors = string.Join(Environment.NewLine, mixerConnections.Where(c => !c.Result.Success).Select(c => c.Result.Message));
+                    string errors = string.Join(Environment.NewLine, mixerPlatformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
                     GlobalEvents.ShowMessageBox("Failed to connect to Mixer services:" + Environment.NewLine + Environment.NewLine + errors);
+                    return false;
+                }
+
+                if (twitchPlatformServiceTasks.Any(c => !c.Result.Success))
+                {
+                    string errors = string.Join(Environment.NewLine, twitchPlatformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
+                    GlobalEvents.ShowMessageBox("Failed to connect to Twitch services:" + Environment.NewLine + Environment.NewLine + errors);
                     return false;
                 }
 
@@ -491,7 +499,8 @@ namespace MixItUp.Base
 
                 if (ChannelSession.IsStreamer)
                 {
-                    if (!await ChannelSession.InitializeBotInternal())
+                    ExternalServiceResult result = await ChannelSession.InitializeBotInternal();
+                    if (!result.Success)
                     {
                         await DialogHelper.ShowMessage("Failed to initialize Bot account");
                         return false;
@@ -540,7 +549,7 @@ namespace MixItUp.Base
                         {
                             if (!kvp.Value.Result.Success)
                             {
-                                ExternalServiceResult result = await kvp.Key.Connect();
+                                result = await kvp.Key.Connect();
                                 if (!result.Success)
                                 {
                                     failedServices.Add(kvp.Key);
@@ -586,7 +595,7 @@ namespace MixItUp.Base
                         if (game != null)
                         {
                             await ChannelSession.Services.MixPlay.SetGame(game);
-                            ExternalServiceResult result = await ChannelSession.Services.MixPlay.Connect();
+                            result = await ChannelSession.Services.MixPlay.Connect();
                             if (!result.Success)
                             {
                                 await ChannelSession.Services.MixPlay.Disconnect();
@@ -666,11 +675,15 @@ namespace MixItUp.Base
             return false;
         }
 
-        private static async Task<bool> InitializeBotInternal()
+        private static async Task<ExternalServiceResult> InitializeBotInternal()
         {
-            if (ChannelSession.MixerBotConnection != null && !await ChannelSession.Services.Chat.MixerChatService.ConnectBot())
+            if (ChannelSession.MixerBotConnection != null)
             {
-                return false;
+                ExternalServiceResult result = await ChannelSession.Services.Chat.MixerChatService.ConnectBot();
+                if (!result.Success)
+                {
+                    return result;
+                }
             }
 
             if (ChannelSession.TwitchBotConnection != null)
@@ -679,7 +692,8 @@ namespace MixItUp.Base
             }
 
             await ChannelSession.SaveSettings();
-            return true;
+
+            return new ExternalServiceResult();
         }
 
         private static async Task SessionBackgroundTask(CancellationToken cancellationToken)

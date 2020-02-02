@@ -123,7 +123,7 @@ namespace MixItUp.WPF.Controls.Interactive
                                 winner = userTotals.Values.OrderByDescending(user => user.Total).FirstOrDefault();
                                 if (winner != null && winner.User.GetMixerMixPlayParticipantModels().Count() > 0)
                                 {
-                                    this.resultsButton.meta["winner"] = JObject.FromObject(winner.User.GetParticipantModels().FirstOrDefault());
+                                    this.resultsButton.meta["winner"] = JObject.FromObject(winner.User.GetMixerMixPlayParticipantModels().FirstOrDefault());
                                     await ChannelSession.Services.MixPlay.UpdateControls(scene, new List<MixPlayControlModel>() { this.resultsButton });
 
                                     this.Dispatcher.InvokeAsync(() =>

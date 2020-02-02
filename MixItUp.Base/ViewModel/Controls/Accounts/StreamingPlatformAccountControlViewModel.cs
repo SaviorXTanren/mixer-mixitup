@@ -32,6 +32,10 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
                 {
                     return "/Assets/Images/Mixer.png";
                 }
+                else if (this.Platform == StreamingPlatformTypeEnum.Twitch)
+                {
+                    return "/Assets/Images/Twitch.png";
+                }
                 return string.Empty;
             }
         }
@@ -66,6 +70,10 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
                 if (this.Platform == StreamingPlatformTypeEnum.Mixer)
                 {
                     return ChannelSession.MixerUserConnection != null;
+                }
+                else if (this.Platform == StreamingPlatformTypeEnum.Twitch)
+                {
+                    return ChannelSession.TwitchUserConnection != null;
                 }
                 return false;
             }
@@ -102,6 +110,10 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
                 {
                     return ChannelSession.MixerBotConnection != null;
                 }
+                else if (this.Platform == StreamingPlatformTypeEnum.Twitch)
+                {
+                    return ChannelSession.TwitchBotConnection != null;
+                }
                 return false;
             }
         }
@@ -117,6 +129,11 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
                     this.UserAccountAvatar = ChannelSession.MixerUser.avatarUrl;
                     this.UserAccountUsername = ChannelSession.MixerUser.username;
                 }
+                else if (this.Platform == StreamingPlatformTypeEnum.Twitch)
+                {
+                    this.UserAccountAvatar = ChannelSession.TwitchUserNewAPI.profile_image_url;
+                    this.UserAccountUsername = ChannelSession.TwitchUserNewAPI.login;
+                }
             }
             if (this.IsBotAccountConnected)
             {
@@ -124,6 +141,11 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
                 {
                     this.BotAccountAvatar = ChannelSession.MixerBot.avatarUrl;
                     this.BotAccountUsername = ChannelSession.MixerBot.username;
+                }
+                else if (this.Platform == StreamingPlatformTypeEnum.Twitch)
+                {
+                    this.BotAccountAvatar = ChannelSession.TwitchBotNewAPI.profile_image_url;
+                    this.BotAccountUsername = ChannelSession.TwitchBotNewAPI.login;
                 }
             }
 
@@ -150,6 +172,15 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
                             this.UserAccountUsername = ChannelSession.MixerUser.username;
                         }
                     }
+                    else if (this.Platform == StreamingPlatformTypeEnum.Twitch)
+                    {
+                        result = await ChannelSession.ConnectTwitchUser(isStreamer: true);
+                        if (result.Success)
+                        {
+                            this.UserAccountAvatar = ChannelSession.TwitchUserNewAPI.profile_image_url;
+                            this.UserAccountUsername = ChannelSession.TwitchUserNewAPI.login;
+                        }
+                    }
 
                     if (!result.Success)
                     {
@@ -168,7 +199,11 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
                 {
                     if (this.Platform == StreamingPlatformTypeEnum.Mixer)
                     {
-                        
+
+                    }
+                    else if (this.Platform == StreamingPlatformTypeEnum.Twitch)
+                    {
+                        await ChannelSession.DisconnectTwitchBot();
                     }
                     this.BotAccountAvatar = null;
                     this.BotAccountUsername = null;
@@ -200,6 +235,15 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
 
                             this.BotAccountAvatar = ChannelSession.MixerBot.avatarUrl;
                             this.BotAccountUsername = ChannelSession.MixerBot.username;
+                        }
+                    }
+                    else if (this.Platform == StreamingPlatformTypeEnum.Twitch)
+                    {
+                        result = await ChannelSession.ConnectTwitchBot();
+                        if (result.Success)
+                        {
+                            this.BotAccountAvatar = ChannelSession.TwitchBotNewAPI.profile_image_url;
+                            this.BotAccountUsername = ChannelSession.TwitchBotNewAPI.login;
                         }
                     }
 

@@ -442,7 +442,7 @@ namespace MixItUp.Base.Services.Mixer
             if (!string.IsNullOrEmpty(groupName) && user.IsInteractiveParticipant)
             {
                 user.InteractiveGroupID = groupName;
-                foreach (MixPlayParticipantModel participant in user.GetParticipantModels())
+                foreach (MixPlayParticipantModel participant in user.GetMixerMixPlayParticipantModels())
                 {
                     await this.UpdateParticipant(participant);
                 }
@@ -477,7 +477,7 @@ namespace MixItUp.Base.Services.Mixer
             if (user != null && user.IsInteractiveParticipant)
             {
                 user.IsInInteractiveTimeout = disabled;
-                foreach (MixPlayParticipantModel participant in user.GetParticipantModels())
+                foreach (MixPlayParticipantModel participant in user.GetMixerMixPlayParticipantModels())
                 {
                     await this.UpdateParticipant(participant);
                 }
@@ -583,7 +583,7 @@ namespace MixItUp.Base.Services.Mixer
                                 user.InteractiveGroupID = group.GroupName;
                                 if (updateParticipant)
                                 {
-                                    participantsToUpdate.AddRange(user.GetParticipantModels());
+                                    participantsToUpdate.AddRange(user.GetMixerMixPlayParticipantModels());
                                 }
                             }
                         }
