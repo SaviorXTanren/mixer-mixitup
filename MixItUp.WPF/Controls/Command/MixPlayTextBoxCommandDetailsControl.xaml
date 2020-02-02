@@ -1,4 +1,4 @@
-﻿<local:CommandDetailsControlBase x:Class="MixItUp.WPF.Controls.Command.InteractiveButtonCommandDetailsControl"
+﻿<local:CommandDetailsControlBase x:Class="MixItUp.WPF.Controls.Command.MixPlayTextBoxCommandDetailsControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -26,37 +26,33 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="10" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <TextBox x:Name="SceneTextBox" Grid.Column="0" IsEnabled="False" MaterialDesign:HintAssist.Hint="Scene Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="200" />
-
-                <TextBox x:Name="NameTextBox" Grid.Column="2" IsEnabled="False" MaterialDesign:HintAssist.Hint="Control Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-            </Grid>
+            <TextBox x:Name="NameTextBox" Grid.Row="0" IsEnabled="False" MaterialDesign:HintAssist.Hint="Control Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="30" />
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="5" />
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="30" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <ComboBox x:Name="ButtonTriggerComboBox" Grid.Column="0" IsEnabled="False" MaterialDesign:HintAssist.Hint="Button Trigger" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="160" SelectionChanged="ButtonTriggerComboBox_SelectionChanged" />
-                <TextBox x:Name="HeldRateTextBox" Grid.Column="1" Visibility="Collapsed" Margin="20,0,0,0" MaterialDesign:HintAssist.Hint="Rate (Secs)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="60" />
+                <TextBox x:Name="SparkCostTextBox" Grid.Column="0" Margin="0,0,0,8" IsEnabled="False" MaterialDesign:HintAssist.Hint="Spark Cost" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
 
-                <TextBox x:Name="SparkCostTextBox" Grid.Column="3" IsEnabled="False" MaterialDesign:HintAssist.Hint="Cost" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="60" />
+                <TextBlock Grid.Column="2" Margin="0,7,0,5" VerticalAlignment="Center">Use Chat Moderation:</TextBlock>
+                <CheckBox x:Name="UseChatModerationCheckBox" Grid.Column="4" Margin="0,2,0,0" />
 
-                <local:UnlockedCommandControl x:Name="UnlockedControl" Grid.Column="5" HorizontalAlignment="Center" />
+                <local:UnlockedCommandControl x:Name="UnlockedControl" Grid.Column="6" HorizontalAlignment="Center" />
+            </Grid>
+
+            <Grid Grid.Row="4">
+                <TextBlock x:Name="TextValueSpecialIdentifierTextBlock" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" />
             </Grid>
         </Grid>
 

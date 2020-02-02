@@ -148,6 +148,14 @@ namespace MixItUp.Base.ViewModel.Requirement
             }
         }
 
+        public void ResetCooldown()
+        {
+            if (this.Cooldown != null)
+            {
+                this.Cooldown.ResetCooldown();
+            }
+        }
+
         public bool TrySubtractCurrencyAmount(UserViewModel user)
         {
             if (this.Currency != null)

@@ -13,7 +13,6 @@ namespace MixItUp.Base.Services
         void TrackLogin(string userID, bool isStreamer, bool isPartner);
         void TrackCommand(CommandTypeEnum type, bool isBasic);
         void TrackAction(ActionTypeEnum type);
-        void TrackInteractiveGame(MixPlayGameModel game);
 
         void TrackRemoteAuthentication(Guid clientID);
         void TrackRemoteSendProfiles(Guid clientID);

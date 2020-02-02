@@ -3,9 +3,9 @@ using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.MixPlay;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.WPF.Controls.Actions;
-using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,9 +14,9 @@ using System.Windows;
 namespace MixItUp.WPF.Controls.Command
 {
     /// <summary>
-    /// Interaction logic for BasicInteractiveTextBoxCommandEditorControl.xaml
+    /// Interaction logic for BasicMixPlayTextBoxCommandEditorControl.xaml
     /// </summary>
-    public partial class BasicInteractiveTextBoxCommandEditorControl : CommandEditorControlBase
+    public partial class BasicMixPlayTextBoxCommandEditorControl : CommandEditorControlBase
     {
         private CommandWindow window;
 
@@ -30,25 +30,24 @@ namespace MixItUp.WPF.Controls.Command
 
         private ActionControlBase actionControl;
 
-        public BasicInteractiveTextBoxCommandEditorControl(CommandWindow window, MixPlayGameModel game, MixPlayGameVersionModel version, MixPlayTextBoxCommand command)
+        public BasicMixPlayTextBoxCommandEditorControl(CommandWindow window, MixPlayGameModel game, MixPlayGameVersionModel version, MixPlayTextBoxControlModel textBox, MixPlayTextBoxCommand command)
+            : this(window, game, version, textBox)
         {
-            this.window = window;
-            this.game = game;
-            this.version = version;
             this.command = command;
-
-            InitializeComponent();
         }
 
-        public BasicInteractiveTextBoxCommandEditorControl(CommandWindow window, MixPlayGameModel game, MixPlayGameVersionModel version, MixPlaySceneModel scene,
-            MixPlayTextBoxControlModel textBox, BasicCommandTypeEnum commandType)
+        public BasicMixPlayTextBoxCommandEditorControl(CommandWindow window, MixPlayGameModel game, MixPlayGameVersionModel version, MixPlayTextBoxControlModel textBox, BasicCommandTypeEnum commandType)
+            : this(window, game, version, textBox)
+        {
+            this.commandType = commandType;
+        }
+
+        private BasicMixPlayTextBoxCommandEditorControl(CommandWindow window, MixPlayGameModel game, MixPlayGameVersionModel version, MixPlayTextBoxControlModel textBox)
         {
             this.window = window;
             this.game = game;
             this.version = version;
-            this.scene = scene;
             this.textBox = textBox;
-            this.commandType = commandType;
 
             InitializeComponent();
         }
@@ -59,15 +58,9 @@ namespace MixItUp.WPF.Controls.Command
         {
             this.TextValueSpecialIdentifierTextBlock.Text = SpecialIdentifierStringBuilder.InteractiveTextBoxTextEntrySpecialIdentifierHelpText;
 
+            this.SparkCostTextBox.Text = this.textBox.cost.ToString();
             if (this.command != null)
             {
-                if (this.game != null)
-                {
-                    this.scene = this.version.controls.scenes.FirstOrDefault(s => s.sceneID.Equals(this.command.SceneID));
-                    this.textBox = this.command.TextBox;
-                }
-
-                this.SparkCostTextBox.Text = this.command.TextBox.cost.ToString();
                 this.UseChatModerationCheckBox.IsChecked = this.command.UseChatModeration;
 
                 if (this.command.Actions.First() is ChatAction)
@@ -81,8 +74,6 @@ namespace MixItUp.WPF.Controls.Command
             }
             else
             {
-                this.SparkCostTextBox.Text = this.textBox.cost.ToString();
-
                 if (this.commandType == BasicCommandTypeEnum.Chat)
                 {
                     this.actionControl = new ChatActionControl(null);
@@ -137,11 +128,11 @@ namespace MixItUp.WPF.Controls.Command
 
                 if (this.command == null)
                 {
-                    this.command = new MixPlayTextBoxCommand(this.game, this.scene, this.textBox, requirements);
+                    this.command = new MixPlayTextBoxCommand(this.game, this.textBox, requirements);
                     ChannelSession.Settings.MixPlayCommands.Add(this.command);
                 }
 
-                this.command.TextBox.cost = sparkCost;
+                this.textBox.cost = sparkCost;
                 await ChannelSession.MixerUserConnection.UpdateMixPlayGameVersion(this.version);
 
                 this.command.UseChatModeration = this.UseChatModerationCheckBox.IsChecked.GetValueOrDefault();
@@ -156,7 +147,7 @@ namespace MixItUp.WPF.Controls.Command
                 if (!isBasic)
                 {
                     await Task.Delay(250);
-                    CommandWindow window = new CommandWindow(new InteractiveTextBoxCommandDetailsControl(this.game, this.version, this.command));
+                    CommandWindow window = new CommandWindow(new MixPlayTextBoxCommandDetailsControl(this.game, this.version, new MixPlayControlViewModel(this.game, this.textBox) { Command = this.command }));
                     window.CommandSaveSuccessfully += (sender, cmd) => this.CommandSavedSuccessfully(cmd);
                     window.Show();
                 }

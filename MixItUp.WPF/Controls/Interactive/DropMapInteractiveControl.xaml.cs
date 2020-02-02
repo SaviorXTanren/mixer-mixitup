@@ -1,7 +1,6 @@
 ﻿using Mixer.Base.Model.MixPlay;
 using Mixer.Base.Model.User;
 using MixItUp.Base;
-using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Desktop.Services;
@@ -209,7 +208,7 @@ namespace MixItUp.WPF.Controls.Interactive
 
             this.SaveSettings();
 
-            MixPlayConnectedSceneGroupCollectionModel sceneGroups = await ChannelSession.Interactive.GetScenes();
+            MixPlayConnectedSceneGroupCollectionModel sceneGroups = await ChannelSession.Services.MixPlay.GetScenes();
             if (sceneGroups != null)
             {
                 this.scene = sceneGroups.scenes.FirstOrDefault();
@@ -229,9 +228,7 @@ namespace MixItUp.WPF.Controls.Interactive
             if (this.sparkCost > 0)
             {
                 this.positionButton.cost = this.sparkCost;
-                await ChannelSession.Interactive.UpdateControls(this.scene, new List<MixPlayControlModel>() { this.positionButton });
-
-                await ChannelSession.Interactive.RefreshCachedControls();
+                await ChannelSession.Services.MixPlay.UpdateControls(this.scene, new List<MixPlayControlModel>() { this.positionButton });
             }
 
             if (this.dropMapType == DropMapTypeEnum.PUBG)
@@ -244,7 +241,7 @@ namespace MixItUp.WPF.Controls.Interactive
 
                 MixPlayConnectedButtonControlModel control = new MixPlayConnectedButtonControlModel() { controlID = this.positionButton.controlID };
                 control.meta["map"] = map.Map;
-                await ChannelSession.Interactive.UpdateControls(this.scene, new List<MixPlayControlModel>() { control });
+                await ChannelSession.Services.MixPlay.UpdateControls(this.scene, new List<MixPlayControlModel>() { control });
             }
 
             this.userAvatars.Clear();
@@ -274,7 +271,7 @@ namespace MixItUp.WPF.Controls.Interactive
 
                         control = new MixPlayConnectedButtonControlModel() { controlID = this.winnerButton.controlID };
                         control.meta["timeleft"] = timeLeft;
-                        await ChannelSession.Interactive.UpdateControls(this.scene, new List<MixPlayControlModel>() { control });
+                        await ChannelSession.Services.MixPlay.UpdateControls(this.scene, new List<MixPlayControlModel>() { control });
                     }
 
                     if (this.userPoints.Count > 0)
@@ -301,7 +298,7 @@ namespace MixItUp.WPF.Controls.Interactive
                         control.meta["userID"] = winner;
                         control.meta["username"] = username;
                         control.meta["location"] = location;
-                        await ChannelSession.Interactive.UpdateControls(this.scene, new List<MixPlayControlModel>() { control });
+                        await ChannelSession.Services.MixPlay.UpdateControls(this.scene, new List<MixPlayControlModel>() { control });
 
                         await ChannelSession.Services.Chat.SendMessage(string.Format("Winner: @{0}, Drop Location: {1}", username, location));
                     }
@@ -321,7 +318,7 @@ namespace MixItUp.WPF.Controls.Interactive
             await base.GameDisconnectedInternal();
         }
 
-        protected override async Task OnInteractiveControlUsed(UserViewModel user, MixPlayGiveInputModel input, InteractiveConnectedControlCommand command)
+        protected override async Task OnMixPlayControlUsed(UserViewModel user, MixPlayGiveInputModel input, MixPlayControlModel control)
         {
             try
             {
@@ -333,11 +330,10 @@ namespace MixItUp.WPF.Controls.Interactive
 
                         this.userPoints[user.MixerID] = point;
 
-                        MixPlayConnectedButtonControlModel control = new MixPlayConnectedButtonControlModel() { controlID = this.positionButton.controlID };
                         control.meta["userID"] = user.MixerID;
                         control.meta["x"] = point.X;
                         control.meta["y"] = point.Y;
-                        await ChannelSession.Interactive.UpdateControls(this.scene, new List<MixPlayControlModel>() { control });
+                        await ChannelSession.Services.MixPlay.UpdateControls(this.scene, new List<MixPlayControlModel>() { control });
 
                         await this.Dispatcher.InvokeAsync(async () =>
                         {

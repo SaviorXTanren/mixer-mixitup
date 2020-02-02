@@ -116,9 +116,9 @@ namespace MixItUp.Base.Actions
                             }
                             else if (this.ModerationType == ModerationActionTypeEnum.InteractiveTimeout)
                             {
-                                if (targetUser != null && ChannelSession.Interactive != null)
+                                if (targetUser != null && ChannelSession.Services.MixPlay.IsConnected)
                                 {
-                                    await ChannelSession.Interactive.TimeoutUser(targetUser, (int)timeAmount);
+                                    await ChannelSession.Services.MixPlay.TimeoutUser(targetUser, (int)timeAmount);
                                 }
                             }
                         }

@@ -50,7 +50,7 @@ namespace MixItUp.WPF.Controls.Actions
             this.CustomMetadataItemsControl.ItemsSource = this.customMetadataPairs;
             this.customMetadataPairs.Add(new CustomMetadataPair());
 
-            foreach (MixPlayGameModel game in await ChannelSession.Interactive.GetAllConnectableGames())
+            foreach (MixPlayGameModel game in await ChannelSession.Services.MixPlay.GetAllGames())
             {
                 this.games.Add(game);
             }

@@ -3,7 +3,6 @@ using Mixer.Base.Model.MixPlay;
 using Mixer.Base.Model.User;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
-using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Model.API;
 using MixItUp.Base.Model.Chat.Mixer;
 using MixItUp.Base.Model.Settings;
@@ -38,8 +37,6 @@ namespace MixItUp.Base
 
         public static ApplicationSettingsV2Model AppSettings { get; private set; }
         public static SettingsV2Model Settings { get; private set; }
-
-        public static MixPlayClientWrapper Interactive { get; private set; }
 
         public static ServicesHandlerBase Services { get; private set; }
 
@@ -128,8 +125,6 @@ namespace MixItUp.Base
             catch (Exception ex) { Logger.Log(ex); }
 
             ChannelSession.PreMadeChatCommands = new List<PreMadeChatCommand>();
-
-            ChannelSession.Interactive = new MixPlayClientWrapper();
 
             ChannelSession.AppSettings = await ApplicationSettingsV2Model.Load();
         }
@@ -437,9 +432,11 @@ namespace MixItUp.Base
                         MixPlayGameListingModel game = games.FirstOrDefault(g => g.id.Equals(ChannelSession.Settings.DefaultMixPlayGame));
                         if (game != null)
                         {
-                            if (await ChannelSession.Interactive.Connect(game) != MixPlayConnectionResult.Success)
+                            await ChannelSession.Services.MixPlay.SetGame(game);
+                            ExternalServiceResult result = await ChannelSession.Services.MixPlay.Connect();
+                            if (!result.Success)
                             {
-                                await ChannelSession.Interactive.Disconnect();
+                                await ChannelSession.Services.MixPlay.Disconnect();
                             }
                         }
                         else

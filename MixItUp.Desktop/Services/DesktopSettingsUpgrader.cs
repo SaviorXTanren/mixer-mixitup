@@ -274,7 +274,6 @@ namespace MixItUp.Desktop.Services
                             IsRandomized = iCommand.IsRandomized,
                             Name = iCommand.Name,
                             Requirements = iCommand.Requirements,
-                            SceneID = iCommand.SceneID,
                             StoreID = iCommand.StoreID,
                             Type = iCommand.Type,
                             Unlocked = iCommand.Unlocked,
@@ -300,7 +299,6 @@ namespace MixItUp.Desktop.Services
                             IsRandomized = iCommand.IsRandomized,
                             Name = iCommand.Name,
                             Requirements = iCommand.Requirements,
-                            SceneID = iCommand.SceneID,
                             StoreID = iCommand.StoreID,
                             Type = iCommand.Type,
                             Unlocked = iCommand.Unlocked,
@@ -327,7 +325,6 @@ namespace MixItUp.Desktop.Services
                             IsRandomized = iCommand.IsRandomized,
                             Name = iCommand.Name,
                             Requirements = iCommand.Requirements,
-                            SceneID = iCommand.SceneID,
                             StoreID = iCommand.StoreID,
                             Type = iCommand.Type,
                             Unlocked = iCommand.Unlocked,
@@ -387,7 +384,9 @@ namespace MixItUp.Desktop.Services
             if (version < 39)
             {
                 SettingsV2Model settings = await SerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
+
 #pragma warning disable CS0612 // Type or member is obsolete
+
                 settings.MixerUserOAuthToken = settings.OAuthToken;
                 settings.MixerBotOAuthToken = settings.BotOAuthToken;
                 if (settings.Channel != null)
@@ -526,86 +525,86 @@ namespace MixItUp.Desktop.Services
                                 break;
                         }
                     }
-
-                    string oldDatabaseFilePath = Path.Combine(Path.GetDirectoryName(filePath), settings.DatabasePath);
-                    await ChannelSession.Services.Database.Read(oldDatabaseFilePath, "SELECT * FROM Users", (Dictionary<string, object> data) =>
-                    {
-                        UserDataModel userData = new UserDataModel();
-
-                        userData.MixerID = uint.Parse(data["ID"].ToString());
-                        userData.MixerUsername = data["UserName"].ToString();
-
-                        userData.ViewingMinutes = int.Parse(data["ViewingMinutes"].ToString());
-
-                        if (data.ContainsKey("CurrencyAmounts"))
-                        {
-                            Dictionary<Guid, int> currencyAmounts = JsonConvert.DeserializeObject<Dictionary<Guid, int>>(data["CurrencyAmounts"].ToString());
-                            if (currencyAmounts != null)
-                            {
-                                foreach (var kvp in currencyAmounts)
-                                {
-                                    if (settings.Currencies.ContainsKey(kvp.Key))
-                                    {
-                                        settings.Currencies[kvp.Key].SetAmount(userData, kvp.Value);
-                                    }
-                                }
-                            }
-                        }
-
-                        if (data.ContainsKey("InventoryAmounts"))
-                        {
-                            Dictionary<Guid, Dictionary<string, int>> inventoryAmounts = JsonConvert.DeserializeObject<Dictionary<Guid, Dictionary<string, int>>>(data["InventoryAmounts"].ToString());
-                            if (inventoryAmounts != null)
-                            {
-                                foreach (var kvp in inventoryAmounts)
-                                {
-                                    if (settings.Inventories.ContainsKey(kvp.Key))
-                                    {
-                                        UserInventoryModel inventory = settings.Inventories[kvp.Key];
-                                        foreach (var itemKVP in kvp.Value)
-                                        {
-                                            inventory.SetAmount(userData, itemKVP.Key, itemKVP.Value);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        if (data.ContainsKey("CustomCommands") && !string.IsNullOrEmpty(data["CustomCommands"].ToString()))
-                        {
-                            userData.CustomCommands.AddRange(SerializerHelper.DeserializeFromString<List<ChatCommand>>(data["CustomCommands"].ToString()));
-                        }
-
-                        if (data.ContainsKey("Options") && !string.IsNullOrEmpty(data["Options"].ToString()))
-                        {
-                            JObject optionsJObj = JObject.Parse(data["Options"].ToString());
-                            if (optionsJObj.ContainsKey("EntranceCommand") && optionsJObj["EntranceCommand"] != null)
-                            {
-                                userData.EntranceCommand = SerializerHelper.DeserializeFromString<CustomCommand>(optionsJObj["EntranceCommand"].ToString());
-                            }
-                            userData.IsSparkExempt = GetOptionValue<bool>(optionsJObj, "IsSparkExempt");
-                            userData.IsCurrencyRankExempt = GetOptionValue<bool>(optionsJObj, "IsCurrencyRankExempt");
-                            userData.PatreonUserID = GetOptionValue<string>(optionsJObj, "PatreonUserID");
-                            userData.ModerationStrikes = GetOptionValue<uint>(optionsJObj, "ModerationStrikes");
-                            userData.CustomTitle = GetOptionValue<string>(optionsJObj, "CustomTitle");
-                            userData.TotalStreamsWatched = GetOptionValue<uint>(optionsJObj, "TotalStreamsWatched");
-                            userData.TotalAmountDonated = GetOptionValue<double>(optionsJObj, "TotalAmountDonated");
-                            userData.TotalSparksSpent = GetOptionValue<uint>(optionsJObj, "TotalSparksSpent");
-                            userData.TotalEmbersSpent = GetOptionValue<uint>(optionsJObj, "TotalEmbersSpent");
-                            userData.TotalSubsGifted = GetOptionValue<uint>(optionsJObj, "TotalSubsGifted");
-                            userData.TotalSubsReceived = GetOptionValue<uint>(optionsJObj, "TotalSubsReceived");
-                            userData.TotalChatMessageSent = GetOptionValue<uint>(optionsJObj, "TotalChatMessageSent");
-                            userData.TotalTimesTagged = GetOptionValue<uint>(optionsJObj, "TotalTimesTagged");
-                            userData.TotalSkillsUsed = GetOptionValue<uint>(optionsJObj, "TotalSkillsUsed");
-                            userData.TotalCommandsRun = GetOptionValue<uint>(optionsJObj, "TotalCommandsRun");
-                            userData.TotalMonthsSubbed = GetOptionValue<uint>(optionsJObj, "TotalMonthsSubbed");
-                        }
-
-                        settings.UserData[userData.ID] = userData;
-                    });
+                }
 
 #pragma warning restore CS0612 // Type or member is obsolete
-                }
+
+                string oldDatabaseFilePath = Path.Combine(Path.GetDirectoryName(filePath), settings.DatabasePath);
+                await ChannelSession.Services.Database.Read(oldDatabaseFilePath, "SELECT * FROM Users", (Dictionary<string, object> data) =>
+                {
+                    UserDataModel userData = new UserDataModel();
+
+                    userData.MixerID = uint.Parse(data["ID"].ToString());
+                    userData.MixerUsername = data["UserName"].ToString();
+
+                    userData.ViewingMinutes = int.Parse(data["ViewingMinutes"].ToString());
+
+                    if (data.ContainsKey("CurrencyAmounts"))
+                    {
+                        Dictionary<Guid, int> currencyAmounts = JsonConvert.DeserializeObject<Dictionary<Guid, int>>(data["CurrencyAmounts"].ToString());
+                        if (currencyAmounts != null)
+                        {
+                            foreach (var kvp in currencyAmounts)
+                            {
+                                if (settings.Currencies.ContainsKey(kvp.Key))
+                                {
+                                    settings.Currencies[kvp.Key].SetAmount(userData, kvp.Value);
+                                }
+                            }
+                        }
+                    }
+
+                    if (data.ContainsKey("InventoryAmounts"))
+                    {
+                        Dictionary<Guid, Dictionary<string, int>> inventoryAmounts = JsonConvert.DeserializeObject<Dictionary<Guid, Dictionary<string, int>>>(data["InventoryAmounts"].ToString());
+                        if (inventoryAmounts != null)
+                        {
+                            foreach (var kvp in inventoryAmounts)
+                            {
+                                if (settings.Inventories.ContainsKey(kvp.Key))
+                                {
+                                    UserInventoryModel inventory = settings.Inventories[kvp.Key];
+                                    foreach (var itemKVP in kvp.Value)
+                                    {
+                                        inventory.SetAmount(userData, itemKVP.Key, itemKVP.Value);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (data.ContainsKey("CustomCommands") && !string.IsNullOrEmpty(data["CustomCommands"].ToString()))
+                    {
+                        userData.CustomCommands.AddRange(SerializerHelper.DeserializeFromString<List<ChatCommand>>(data["CustomCommands"].ToString()));
+                    }
+
+                    if (data.ContainsKey("Options") && !string.IsNullOrEmpty(data["Options"].ToString()))
+                    {
+                        JObject optionsJObj = JObject.Parse(data["Options"].ToString());
+                        if (optionsJObj.ContainsKey("EntranceCommand") && optionsJObj["EntranceCommand"] != null)
+                        {
+                            userData.EntranceCommand = SerializerHelper.DeserializeFromString<CustomCommand>(optionsJObj["EntranceCommand"].ToString());
+                        }
+                        userData.IsSparkExempt = GetOptionValue<bool>(optionsJObj, "IsSparkExempt");
+                        userData.IsCurrencyRankExempt = GetOptionValue<bool>(optionsJObj, "IsCurrencyRankExempt");
+                        userData.PatreonUserID = GetOptionValue<string>(optionsJObj, "PatreonUserID");
+                        userData.ModerationStrikes = GetOptionValue<uint>(optionsJObj, "ModerationStrikes");
+                        userData.CustomTitle = GetOptionValue<string>(optionsJObj, "CustomTitle");
+                        userData.TotalStreamsWatched = GetOptionValue<uint>(optionsJObj, "TotalStreamsWatched");
+                        userData.TotalAmountDonated = GetOptionValue<double>(optionsJObj, "TotalAmountDonated");
+                        userData.TotalSparksSpent = GetOptionValue<uint>(optionsJObj, "TotalSparksSpent");
+                        userData.TotalEmbersSpent = GetOptionValue<uint>(optionsJObj, "TotalEmbersSpent");
+                        userData.TotalSubsGifted = GetOptionValue<uint>(optionsJObj, "TotalSubsGifted");
+                        userData.TotalSubsReceived = GetOptionValue<uint>(optionsJObj, "TotalSubsReceived");
+                        userData.TotalChatMessageSent = GetOptionValue<uint>(optionsJObj, "TotalChatMessageSent");
+                        userData.TotalTimesTagged = GetOptionValue<uint>(optionsJObj, "TotalTimesTagged");
+                        userData.TotalSkillsUsed = GetOptionValue<uint>(optionsJObj, "TotalSkillsUsed");
+                        userData.TotalCommandsRun = GetOptionValue<uint>(optionsJObj, "TotalCommandsRun");
+                        userData.TotalMonthsSubbed = GetOptionValue<uint>(optionsJObj, "TotalMonthsSubbed");
+                    }
+
+                    settings.UserData[userData.ID] = userData;
+                });
 
                 await ChannelSession.Services.Settings.Save(settings);
             }
