@@ -219,7 +219,7 @@ namespace MixItUp.Base
             await ChannelSession.Services.Close();
             if (ChannelSession.Services.Chat.MixerChatService != null)
             {
-                await ChannelSession.Services.Chat.MixerChatService.DisconnectStreamer();
+                await ChannelSession.Services.Chat.MixerChatService.DisconnectUser();
             }
             await ChannelSession.DisconnectMixerBot();
         }
