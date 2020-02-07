@@ -55,6 +55,8 @@ namespace MixItUp.Base.Services.Mixer
 
         public static readonly List<OAuthClientScopeEnum> StreamerScopes = new List<OAuthClientScopeEnum>()
         {
+            OAuthClientScopeEnum.chat__bypass_catbot,
+            OAuthClientScopeEnum.chat__bypass_filter,
             OAuthClientScopeEnum.chat__bypass_links,
             OAuthClientScopeEnum.chat__bypass_slowchat,
             OAuthClientScopeEnum.chat__change_ban,
@@ -86,6 +88,8 @@ namespace MixItUp.Base.Services.Mixer
 
         public static readonly List<OAuthClientScopeEnum> ModeratorScopes = new List<OAuthClientScopeEnum>()
         {
+            OAuthClientScopeEnum.chat__bypass_catbot,
+            OAuthClientScopeEnum.chat__bypass_filter,
             OAuthClientScopeEnum.chat__bypass_links,
             OAuthClientScopeEnum.chat__bypass_slowchat,
             OAuthClientScopeEnum.chat__change_ban,
