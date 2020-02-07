@@ -271,6 +271,12 @@ namespace MixItUp.Base.Services.Mixer
                             viewerCount = (int)channel.viewersCurrent;
                         }
 
+                        bool isAutoHost = false;
+                        if (e.payload.ContainsKey("auto"))
+                        {
+                            bool.TryParse(e.payload["auto"].ToString(), out isAutoHost);
+                        }
+
                         EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChannelHosted, user);
                         if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                         {
@@ -285,6 +291,7 @@ namespace MixItUp.Base.Services.Mixer
                             GlobalEvents.HostOccurred(new Tuple<UserViewModel, int>(user, viewerCount));
 
                             trigger.SpecialIdentifiers["hostviewercount"] = viewerCount.ToString();
+                            trigger.SpecialIdentifiers["isautohost"] = isAutoHost.ToString();
                             await ChannelSession.Services.Events.PerformEvent(trigger);
                         }
                         await this.AddAlertChatMessage(user, string.Format("{0} Hosted With {1} Viewers", user.Username, viewerCount));
