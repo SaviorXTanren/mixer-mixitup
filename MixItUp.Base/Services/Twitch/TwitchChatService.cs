@@ -569,13 +569,12 @@ namespace MixItUp.Base.Services.Twitch
             {
                 if (ChannelSession.Settings.DiagnosticLogging)
                 {
-                    Logger.Log(LogLevel.Debug, string.Format("Twitch Client Packet Received: {0} - {1} - {2} - {3} - {4}", packet.Command, packet.Prefix,
-                        JSONSerializerHelper.SerializeToString(packet.Parameters), JSONSerializerHelper.SerializeToString(packet.Tags), packet.RawText));
+                    Logger.Log(LogLevel.Debug, string.Format("Twitch Client Packet Received: {0}", JSONSerializerHelper.SerializeToString(packet)));
                 }
 
                 if (packet.Command.Equals("USERNOTICE"))
                 {
-                    if (packet.Tags.ContainsKey("msg-id") && packet.Tags.Equals("raid"))
+                    if (packet.Tags.ContainsKey("msg-id") && packet.Tags["msg-id"].Equals("raid"))
                     {
                         UserViewModel user = ChannelSession.Services.User.GetUserByUsername(packet.Tags["login"]);
                         if (user == null)
