@@ -100,7 +100,15 @@ namespace MixItUp.Desktop.Services
             return false;
         }
 
-        public async Task Save(SettingsV2Model settings) { await this.SaveSettings(settings, this.GetFilePath(settings)); }
+        public async Task Save(SettingsV2Model settings)
+        {
+            await semaphore.WaitAndRelease(async () =>
+            {
+                settings.CopyLatestValues();
+                await SerializerHelper.SerializeToFile(this.GetFilePath(settings), settings);
+                await settings.SaveDatabaseData();
+            });
+        }
 
         public async Task SavePackagedBackup(SettingsV2Model settings, string filePath)
         {
@@ -157,16 +165,6 @@ namespace MixItUp.Desktop.Services
         public async Task ClearAllUserData(SettingsV2Model settings)
         {
             await ChannelSession.Services.Database.Write(settings.DatabasePath, "DELETE FROM Users");
-        }
-
-        public async Task SaveSettings(SettingsV2Model settings, string filePath)
-        {
-            await semaphore.WaitAndRelease(async () =>
-            {
-                settings.CopyLatestValues();
-                await SerializerHelper.SerializeToFile(filePath, settings);
-                await settings.SaveDatabaseData();
-            });
         }
 
         public async Task<int> GetSettingsVersion(string filePath)
