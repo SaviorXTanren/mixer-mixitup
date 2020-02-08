@@ -88,7 +88,7 @@ namespace MixItUp.Base.Model.Overlay
         public string NewBossAnimationName { get { return OverlayItemEffectsModel.GetAnimationClassName(this.NewBossAnimation); } set { } }
 
         [DataMember]
-        public Guid CurrentBossUserID { get; set; } = Guid.Empty;
+        public Guid CurrentBossID { get; set; } = Guid.Empty;
         [DataMember]
         public int CurrentStartingHealth { get; set; }
         [DataMember]
@@ -143,16 +143,16 @@ namespace MixItUp.Base.Model.Overlay
             this.DamageTaken = false;
             this.NewBoss = false;
 
-            if (this.CurrentBossUserID != Guid.Empty)
+            if (this.CurrentBossID != Guid.Empty)
             {
-                UserDataModel userData = ChannelSession.Settings.GetUserData(this.CurrentBossUserID);
+                UserDataModel userData = ChannelSession.Settings.GetUserData(this.CurrentBossID);
                 if (userData != null)
                 {
                     this.CurrentBoss = new UserViewModel(userData);
                 }
                 else
                 {
-                    this.CurrentBossUserID = Guid.Empty;
+                    this.CurrentBossID = Guid.Empty;
                 }
             }
 
@@ -161,7 +161,7 @@ namespace MixItUp.Base.Model.Overlay
                 this.CurrentBoss = await ChannelSession.GetCurrentUser();
                 this.CurrentHealth = this.CurrentStartingHealth = this.StartingHealth;
             }
-            this.CurrentBossUserID = this.CurrentBoss.ID;
+            this.CurrentBossID = this.CurrentBoss.ID;
 
             if (this.FollowBonus > 0.0)
             {
@@ -267,7 +267,7 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     this.NewBoss = true;
                     this.CurrentBoss = user;
-                    this.CurrentBossUserID = user.ID;
+                    this.CurrentBossID = user.ID;
 
                     int newHealth = this.StartingHealth;
                     if (this.OverkillBonus > 0.0)
