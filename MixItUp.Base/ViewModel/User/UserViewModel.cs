@@ -126,7 +126,7 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.Data.MixerUsername; }
-                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return (!string.IsNullOrEmpty(this.TwitchDisplayName)) ? this.TwitchDisplayName : this.TwitchUsername; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchVisualName; }
                 return this.unassociatedUsername;
             }
         }
@@ -263,6 +263,9 @@ namespace MixItUp.Base.ViewModel.User
 
         [DataMember]
         public HashSet<UserRoleEnum> TwitchUserRoles { get; set; } = new HashSet<UserRoleEnum>();
+
+        [JsonIgnore]
+        public string TwitchVisualName { get { return (!string.IsNullOrEmpty(this.TwitchDisplayName)) ? this.TwitchDisplayName : this.TwitchUsername; } }
 
         #endregion Twitch
 

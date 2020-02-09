@@ -67,6 +67,7 @@ namespace MixItUp.Base.Services
         private LockedDictionary<uint, UserViewModel> usersByMixerID = new LockedDictionary<uint, UserViewModel>();
         private LockedDictionary<string, UserViewModel> usersByMixerUsername = new LockedDictionary<string, UserViewModel>();
         private LockedDictionary<string, UserViewModel> usersByMixPlayID = new LockedDictionary<string, UserViewModel>();
+
         private LockedDictionary<string, UserViewModel> usersByTwitchID = new LockedDictionary<string, UserViewModel>();
         private LockedDictionary<string, UserViewModel> usersByTwitchLogin = new LockedDictionary<string, UserViewModel>();
 
@@ -74,6 +75,10 @@ namespace MixItUp.Base.Services
         {
             UserViewModel user = null;
             if (this.usersByMixerUsername.TryGetValue(username.ToLower(), out user))
+            {
+                return user;
+            }
+            if (this.usersByTwitchLogin.TryGetValue(username.ToLower(), out user))
             {
                 return user;
             }
@@ -172,6 +177,10 @@ namespace MixItUp.Base.Services
             if (!string.IsNullOrEmpty(twitchChatUser.id) && !string.IsNullOrEmpty(twitchChatUser.login))
             {
                 UserViewModel user = new UserViewModel(twitchChatUser);
+                if (this.usersByTwitchID.ContainsKey(twitchChatUser.id))
+                {
+                    user = this.usersByTwitchID[twitchChatUser.id];
+                }
                 await this.AddOrUpdateUser(user);
                 return user;
             }
@@ -190,12 +199,9 @@ namespace MixItUp.Base.Services
                     this.usersByMixerUsername[user.MixerUsername.ToLower()] = user;
                 }
 
-                if (!string.IsNullOrEmpty(user.TwitchID))
+                if (!string.IsNullOrEmpty(user.TwitchID) && !string.IsNullOrEmpty(user.TwitchUsername))
                 {
                     this.usersByTwitchID[user.TwitchID] = user;
-                }
-                if (!string.IsNullOrEmpty(user.TwitchUsername))
-                {
                     this.usersByTwitchLogin[user.TwitchUsername] = user;
                 }
 
@@ -271,12 +277,9 @@ namespace MixItUp.Base.Services
                 this.usersByMixerUsername.Remove(user.MixerUsername);
             }
 
-            if (!string.IsNullOrEmpty(user.TwitchID))
+            if (!string.IsNullOrEmpty(user.TwitchID) && !string.IsNullOrEmpty(user.TwitchUsername))
             {
                 this.usersByTwitchID.Remove(user.TwitchID);
-            }
-            if (!string.IsNullOrEmpty(user.TwitchUsername))
-            {
                 this.usersByTwitchLogin.Remove(user.TwitchUsername);
             }
 
@@ -292,6 +295,7 @@ namespace MixItUp.Base.Services
             this.usersByMixPlayID.Clear();
 
             this.usersByTwitchID.Clear();
+            this.usersByTwitchLogin.Clear();
         }
 
         public IEnumerable<UserViewModel> GetAllUsers() { return this.usersByID.Values; }
