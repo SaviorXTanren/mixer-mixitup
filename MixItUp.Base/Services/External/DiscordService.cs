@@ -675,7 +675,7 @@ namespace MixItUp.Base.Services.External
         {
             try
             {
-                string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(DiscordService.AuthorizationUrl, this.ClientID, DiscordService.ClientBotPermissions));
+                string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(DiscordService.AuthorizationUrl, this.ClientID, DiscordService.ClientBotPermissions), secondsToWait: 60);
                 if (!string.IsNullOrEmpty(authorizationCode))
                 {
                     var body = new List<KeyValuePair<string, string>>
