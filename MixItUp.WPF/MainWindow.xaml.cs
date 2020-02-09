@@ -190,7 +190,7 @@ namespace MixItUp.WPF
 
             if (!string.IsNullOrEmpty(this.RestoredSettingsFilePath))
             {
-                string settingsFilePath = ChannelSession.Services.Settings.GetFilePath(ChannelSession.Settings);
+                string settingsFilePath = ChannelSession.Settings.SettingsFilePath;
                 string settingsFolder = Path.GetDirectoryName(settingsFilePath);
                 using (ZipArchive zipFile = ZipFile.Open(this.RestoredSettingsFilePath, ZipArchiveMode.Read))
                 {

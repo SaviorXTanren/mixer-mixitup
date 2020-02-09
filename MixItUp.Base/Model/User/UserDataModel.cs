@@ -265,14 +265,5 @@ namespace MixItUp.Base.Model.User
         {
             return this.Username;
         }
-
-        private T GetOptionValue<T>(JObject jobj, string key)
-        {
-            if (jobj[key] != null)
-            {
-                return jobj[key].ToObject<T>();
-            }
-            return default(T);
-        }
     }
 }

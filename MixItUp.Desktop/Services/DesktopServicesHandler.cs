@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Mixer;
+using MixItUp.Base.Util;
 using MixItUp.Desktop.Audio;
 using MixItUp.Desktop.Files;
 using MixItUp.Desktop.Services.DeveloperAPI;
@@ -60,6 +61,9 @@ namespace MixItUp.Desktop.Services
             this.OBSStudio = new OBSService();
             this.StreamlabsOBS = new StreamlabsOBSService();
             this.XSplit = new XSplitService("http://localhost:8211/");
+
+            this.Settings.Initialize();
+            SerializerHelper.Initialize(this.FileService);
         }
 
         public override void SetSecrets(SecretsService secretsService)

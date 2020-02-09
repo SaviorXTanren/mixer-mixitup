@@ -18,7 +18,7 @@ using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Model.OAuth;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -29,95 +29,14 @@ namespace MixItUp.Base.Model.Settings
     [DataContract]
     public class SettingsV2Model
     {
-        public const int LatestVersion = 39;
+        public const int LatestVersion = 1;
+
+        public const string SettingsDirectoryName = "Settings";
+
+        public const string SettingsTemplateDatabaseFileName = "SettingsTemplateDatabase.db";
 
         public const string SettingsFileExtension = "miu";
-
-        #region Obsolete Settings
-
-        [Obsolete]
-        [JsonIgnore]
-        public string OldDatabaseFileName { get { return string.Format("{0}.{1}.sqlite", this.MixerChannelID.ToString(), (this.IsStreamer) ? "Streamer" : "Moderator"); } }
-
-        [Obsolete]
-        [DataMember]
-        public OAuthTokenModel OAuthToken { get; set; }
-        [Obsolete]
-        [DataMember]
-        public OAuthTokenModel BotOAuthToken { get; set; }
-        [Obsolete]
-        [DataMember]
-        public ExpandedChannelModel Channel { get; set; }
-        [Obsolete]
-        [DataMember]
-        public string TelemetryUserId { get; set; }
-
-        [Obsolete]
-        [DataMember]
-        public Dictionary<Guid, UserCurrencyModel> currenciesInternal { get; set; } = new Dictionary<Guid, UserCurrencyModel>();
-        [Obsolete]
-        [DataMember]
-        public Dictionary<Guid, UserInventoryModel> inventoriesInternal { get; set; } = new Dictionary<Guid, UserInventoryModel>();
-
-        [Obsolete]
-        [DataMember]
-        public Dictionary<string, int> cooldownGroupsInternal { get; set; } = new Dictionary<string, int>();
-
-        [Obsolete]
-        [DataMember]
-        public List<PreMadeChatCommandSettings> preMadeChatCommandSettingsInternal { get; set; } = new List<PreMadeChatCommandSettings>();
-        [Obsolete]
-        [DataMember]
-        public List<ChatCommand> chatCommandsInternal { get; set; } = new List<ChatCommand>();
-        [Obsolete]
-        [DataMember]
-        public List<EventCommand> eventCommandsInternal { get; set; } = new List<EventCommand>();
-        [Obsolete]
-        [DataMember]
-        public List<MixPlayCommand> mixPlayCmmandsInternal { get; set; } = new List<MixPlayCommand>();
-        [Obsolete]
-        [DataMember]
-        public List<TimerCommand> timerCommandsInternal { get; set; } = new List<TimerCommand>();
-        [Obsolete]
-        [DataMember]
-        public List<ActionGroupCommand> actionGroupCommandsInternal { get; set; } = new List<ActionGroupCommand>();
-        [Obsolete]
-        [DataMember]
-        public List<GameCommandBase> gameCommandsInternal { get; set; } = new List<GameCommandBase>();
-
-        [Obsolete]
-        [DataMember]
-        public List<UserQuoteViewModel> userQuotesInternal { get; set; } = new List<UserQuoteViewModel>();
-
-        [DataMember]
-        [Obsolete]
-        public List<OverlayWidget> overlayWidgetsInternal { get; set; } = new List<OverlayWidget>();
-        [Obsolete]
-        [DataMember]
-        public List<OverlayWidgetModel> overlayWidgetModelsInternal { get; set; } = new List<OverlayWidgetModel>();
-
-        [Obsolete]
-        [DataMember]
-        public List<RemoteProfileModel> remoteProfilesInternal { get; set; } = new List<RemoteProfileModel>();
-        [Obsolete]
-        [DataMember]
-        public Dictionary<Guid, RemoteProfileBoardsModel> remoteProfileBoardsInternal { get; set; } = new Dictionary<Guid, RemoteProfileBoardsModel>();
-
-        [Obsolete]
-        [DataMember]
-        public List<string> filteredWordsInternal { get; set; } = new List<string>();
-        [Obsolete]
-        [DataMember]
-        public List<string> bannedWordsInternal { get; set; } = new List<string>();
-
-        [Obsolete]
-        [DataMember]
-        public Dictionary<uint, List<MixPlayUserGroupModel>> mixPlayUserGroupsInternal { get; set; } = new Dictionary<uint, List<MixPlayUserGroupModel>>();
-        [DataMember]
-        [Obsolete]
-        public Dictionary<string, int> interactiveCooldownGroupsInternal { get; set; } = new Dictionary<string, int>();
-
-        #endregion Obsolete Settings
+        public const string SettingsBackupFileExtension = "miubackup";
 
         [DataMember]
         public int Version { get; set; } = SettingsV2Model.LatestVersion;
@@ -562,14 +481,13 @@ namespace MixItUp.Base.Model.Settings
 
         [JsonIgnore]
         public string SettingsFileName { get { return string.Format("{0}.{1}", this.ID, SettingsV2Model.SettingsFileExtension); } }
+        [JsonIgnore]
+        public string SettingsFilePath { get { return Path.Combine(SettingsV2Model.SettingsDirectoryName, this.SettingsFileName); } }
 
         [JsonIgnore]
         public string DatabaseFileName { get { return string.Format("{0}.db", this.ID); } }
         [JsonIgnore]
-        public string DatabasePath { get; set; }
-
-        [JsonIgnore]
-        internal bool InitializeDB = true;
+        public string DatabaseFilePath { get { return Path.Combine(SettingsV2Model.SettingsDirectoryName, this.DatabaseFileName); } }
 
         public SettingsV2Model() { }
 
@@ -585,117 +503,97 @@ namespace MixItUp.Base.Model.Settings
                 this.DiagnosticLogging = true;
             }
 
-            BuildMissingCommands();
-
-            this.DashboardItems = new List<DashboardItemTypeEnum>() { DashboardItemTypeEnum.None, DashboardItemTypeEnum.None, DashboardItemTypeEnum.None, DashboardItemTypeEnum.None };
-            this.DashboardQuickCommands = new List<Guid>() { Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty };
+            this.InitializeMissingData();
         }
 
         public async Task Initialize()
         {
-#pragma warning disable CS0612 // Type or member is obsolete
-            this.ChatCommands = new LockedList<ChatCommand>(this.chatCommandsInternal);
-            this.EventCommands = new LockedList<EventCommand>(this.eventCommandsInternal);
-            this.MixPlayCommands = new LockedList<MixPlayCommand>(this.mixPlayCmmandsInternal);
-            this.TimerCommands = new LockedList<TimerCommand>(this.timerCommandsInternal);
-            this.ActionGroupCommands = new LockedList<ActionGroupCommand>(this.actionGroupCommandsInternal);
-            this.GameCommands = new LockedList<GameCommandBase>(this.gameCommandsInternal);
-            this.Quotes = new LockedList<UserQuoteViewModel>(this.userQuotesInternal);
-#pragma warning restore CS0612 // Type or member is obsolete
-
-            if (this.DashboardItems.Count < 4)
-            {
-                this.DashboardItems = new List<DashboardItemTypeEnum>() { DashboardItemTypeEnum.None, DashboardItemTypeEnum.None, DashboardItemTypeEnum.None, DashboardItemTypeEnum.None };
-            }
-            if (this.DashboardQuickCommands.Count < 5)
-            {
-                this.DashboardQuickCommands = new List<Guid>() { Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty };
-            }
-
             if (this.IsStreamer)
             {
-                if (this.InitializeDB)
+                if (!ChannelSession.Services.FileService.FileExists(this.DatabaseFilePath))
                 {
-                    await ChannelSession.Services.Database.Read(this.DatabasePath, "SELECT * FROM Users", (Dictionary<string, object> data) =>
-                    {
-                        UserDataModel userData = SerializerHelper.DeserializeFromString<UserDataModel>((string)data["Data"]);
-                        this.UserData[userData.ID] = userData;
-                        this.MixerUserIDLookups[userData.MixerID] = userData.ID;
-                    });
-
-                    Dictionary<Guid, UserCurrencyModel> currencies = new Dictionary<Guid, UserCurrencyModel>();
-                    foreach (var kvp in ChannelSession.Settings.Currencies)
-                    {
-                        currencies[kvp.Key] = kvp.Value;
-                    }
-                    await ChannelSession.Services.Database.Read(this.DatabasePath, "SELECT * FROM CurrencyAmounts", (Dictionary<string, object> data) =>
-                    {
-                        Guid currencyID = Guid.Parse((string)data["CurrencyID"]);
-                        Guid userID = Guid.Parse((string)data["UserID"]);
-                        int amount = Convert.ToInt32(data["Amount"]);
-
-                        if (currencies.ContainsKey(currencyID))
-                        {
-                            currencies[currencyID].UserAmounts[userID] = amount;
-                        }
-                    });
-
-                    Dictionary<Guid, UserInventoryModel> inventories = new Dictionary<Guid, UserInventoryModel>();
-                    foreach (var kvp in ChannelSession.Settings.Inventories)
-                    {
-                        inventories[kvp.Key] = kvp.Value;
-                    }
-                    await ChannelSession.Services.Database.Read(this.DatabasePath, "SELECT * FROM InventoryAmounts", (Dictionary<string, object> data) =>
-                    {
-                        Guid inventoryID = Guid.Parse((string)data["InventoryID"]);
-                        Guid userID = Guid.Parse((string)data["UserID"]);
-                        string itemName = (string)data["ItemName"];
-                        int amount = Convert.ToInt32(data["Amount"]);
-
-                        if (inventories.ContainsKey(inventoryID))
-                        {
-                            if (!inventories[inventoryID].UserAmounts.ContainsKey(userID))
-                            {
-                                inventories[inventoryID].UserAmounts[userID] = new Dictionary<string, int>();
-                            }
-                            inventories[inventoryID].UserAmounts[userID][itemName] = amount;
-                        }
-                    });
-
-                    await ChannelSession.Services.Database.Read(this.DatabasePath, "SELECT * FROM Quotes", (Dictionary<string, object> data) =>
-                    {
-                        this.Quotes.Add(SerializerHelper.DeserializeFromString<UserQuoteViewModel>((string)data["Data"]));
-                    });
-
-                    await ChannelSession.Services.Database.Read(this.DatabasePath, "SELECT * FROM Commands", (Dictionary<string, object> data) =>
-                    {
-                        CommandTypeEnum type = (CommandTypeEnum)Convert.ToInt32(data["TypeID"]);
-                        if (type == CommandTypeEnum.Chat)
-                        {
-                            this.ChatCommands.Add(SerializerHelper.DeserializeFromString<ChatCommand>((string)data["Data"]));
-                        }
-                        else if (type == CommandTypeEnum.Event)
-                        {
-                            this.EventCommands.Add(SerializerHelper.DeserializeFromString<EventCommand>((string)data["Data"]));
-                        }
-                        else if (type == CommandTypeEnum.Interactive)
-                        {
-                            this.MixPlayCommands.Add(SerializerHelper.DeserializeFromString<MixPlayCommand>((string)data["Data"]));
-                        }
-                        else if (type == CommandTypeEnum.Timer)
-                        {
-                            this.TimerCommands.Add(SerializerHelper.DeserializeFromString<TimerCommand>((string)data["Data"]));
-                        }
-                        else if (type == CommandTypeEnum.ActionGroup)
-                        {
-                            this.ActionGroupCommands.Add(SerializerHelper.DeserializeFromString<ActionGroupCommand>((string)data["Data"]));
-                        }
-                        else if (type == CommandTypeEnum.Game)
-                        {
-                            this.GameCommands.Add(SerializerHelper.DeserializeFromString<GameCommandBase>((string)data["Data"]));
-                        }
-                    });
+                    await ChannelSession.Services.FileService.CopyFile(SettingsV2Model.SettingsTemplateDatabaseFileName, this.DatabaseFilePath);
                 }
+
+                await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Users", (Dictionary<string, object> data) =>
+                {
+                    UserDataModel userData = SerializerHelper.DeserializeFromString<UserDataModel>((string)data["Data"]);
+                    this.UserData[userData.ID] = userData;
+                    this.MixerUserIDLookups[userData.MixerID] = userData.ID;
+                });
+
+                Dictionary<Guid, UserCurrencyModel> currencies = new Dictionary<Guid, UserCurrencyModel>();
+                foreach (var kvp in this.Currencies)
+                {
+                    currencies[kvp.Key] = kvp.Value;
+                }
+                await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM CurrencyAmounts", (Dictionary<string, object> data) =>
+                {
+                    Guid currencyID = Guid.Parse((string)data["CurrencyID"]);
+                    Guid userID = Guid.Parse((string)data["UserID"]);
+                    int amount = Convert.ToInt32(data["Amount"]);
+
+                    if (currencies.ContainsKey(currencyID))
+                    {
+                        currencies[currencyID].UserAmounts[userID] = amount;
+                    }
+                });
+
+                Dictionary<Guid, UserInventoryModel> inventories = new Dictionary<Guid, UserInventoryModel>();
+                foreach (var kvp in this.Inventories)
+                {
+                    inventories[kvp.Key] = kvp.Value;
+                }
+                await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM InventoryAmounts", (Dictionary<string, object> data) =>
+                {
+                    Guid inventoryID = Guid.Parse((string)data["InventoryID"]);
+                    Guid userID = Guid.Parse((string)data["UserID"]);
+                    string itemName = (string)data["ItemName"];
+                    int amount = Convert.ToInt32(data["Amount"]);
+
+                    if (inventories.ContainsKey(inventoryID))
+                    {
+                        if (!inventories[inventoryID].UserAmounts.ContainsKey(userID))
+                        {
+                            inventories[inventoryID].UserAmounts[userID] = new Dictionary<string, int>();
+                        }
+                        inventories[inventoryID].UserAmounts[userID][itemName] = amount;
+                    }
+                });
+
+                await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Quotes", (Dictionary<string, object> data) =>
+                {
+                    this.Quotes.Add(SerializerHelper.DeserializeFromString<UserQuoteViewModel>((string)data["Data"]));
+                });
+
+                await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Commands", (Dictionary<string, object> data) =>
+                {
+                    CommandTypeEnum type = (CommandTypeEnum)Convert.ToInt32(data["TypeID"]);
+                    if (type == CommandTypeEnum.Chat)
+                    {
+                        this.ChatCommands.Add(SerializerHelper.DeserializeFromString<ChatCommand>((string)data["Data"]));
+                    }
+                    else if (type == CommandTypeEnum.Event)
+                    {
+                        this.EventCommands.Add(SerializerHelper.DeserializeFromString<EventCommand>((string)data["Data"]));
+                    }
+                    else if (type == CommandTypeEnum.Interactive)
+                    {
+                        this.MixPlayCommands.Add(SerializerHelper.DeserializeFromString<MixPlayCommand>((string)data["Data"]));
+                    }
+                    else if (type == CommandTypeEnum.Timer)
+                    {
+                        this.TimerCommands.Add(SerializerHelper.DeserializeFromString<TimerCommand>((string)data["Data"]));
+                    }
+                    else if (type == CommandTypeEnum.ActionGroup)
+                    {
+                        this.ActionGroupCommands.Add(SerializerHelper.DeserializeFromString<ActionGroupCommand>((string)data["Data"]));
+                    }
+                    else if (type == CommandTypeEnum.Game)
+                    {
+                        this.GameCommands.Add(SerializerHelper.DeserializeFromString<GameCommandBase>((string)data["Data"]));
+                    }
+                });
             }
 
             if (string.IsNullOrEmpty(this.TelemetryUserID))
@@ -710,7 +608,13 @@ namespace MixItUp.Base.Model.Settings
                 }
             }
 
-            BuildMissingCommands();
+            this.InitializeMissingData();
+        }
+
+        public async Task ClearAllUserData()
+        {
+            this.UserData.Clear();
+            await ChannelSession.Services.Database.Write(this.DatabaseFilePath, "DELETE FROM Users");
         }
 
         public void CopyLatestValues()
@@ -768,20 +672,20 @@ namespace MixItUp.Base.Model.Settings
             if (this.IsStreamer)
             {
                 IEnumerable<Guid> removedUsers = this.UserData.GetRemovedValues();
-                await ChannelSession.Services.Database.BulkWrite(this.DatabasePath, "DELETE FROM Users WHERE ID = @ID", removedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.ToString() } }));
+                await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Users WHERE ID = @ID", removedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.ToString() } }));
 
                 IEnumerable<UserDataModel> changedUsers = this.UserData.GetChangedValues();
-                await ChannelSession.Services.Database.BulkWrite(this.DatabasePath, "REPLACE INTO Users(ID, Data) VALUES(@ID, @Data)",
+                await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Users(ID, Data) VALUES(@ID, @Data)",
                     changedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.ID.ToString() }, { "@Data", SerializerHelper.SerializeToString(u) } }));
 
-                foreach (var kvp in ChannelSession.Settings.Currencies)
+                foreach (var kvp in this.Currencies)
                 {
                     IEnumerable<Guid> changedKeys = kvp.Value.UserAmounts.GetChangedKeys();
-                    await ChannelSession.Services.Database.BulkWrite(this.DatabasePath, "REPLACE INTO CurrencyAmounts(CurrencyID, UserID, Amount) VALUES(@CurrencyID, @UserID, @Amount)",
+                    await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO CurrencyAmounts(CurrencyID, UserID, Amount) VALUES(@CurrencyID, @UserID, @Amount)",
                         changedKeys.Select(u => new Dictionary<string, object>() { { "@CurrencyID", kvp.Value.ID.ToString() }, { "@UserID", u.ToString() }, { "@Amount", kvp.Value.GetAmount(u) } }));
                 }
 
-                foreach (var kvp in ChannelSession.Settings.Inventories)
+                foreach (var kvp in this.Inventories)
                 {
                     List<Dictionary<string, object>> changedData = new List<Dictionary<string, object>>();
 
@@ -800,7 +704,7 @@ namespace MixItUp.Base.Model.Settings
                         }
                     }
 
-                    await ChannelSession.Services.Database.BulkWrite(this.DatabasePath, "REPLACE INTO InventoryAmounts(InventoryID, UserID, ItemName, Amount) VALUES(@InventoryID, @UserID, @ItemName, @Amount)", changedData);
+                    await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO InventoryAmounts(InventoryID, UserID, ItemName, Amount) VALUES(@InventoryID, @UserID, @ItemName, @Amount)", changedData);
                 }
 
                 List<CommandBase> commands = new List<CommandBase>();
@@ -810,10 +714,10 @@ namespace MixItUp.Base.Model.Settings
                 commands.AddRange(this.TimerCommands);
                 commands.AddRange(this.ActionGroupCommands);
                 commands.AddRange(this.GameCommands);
-                await ChannelSession.Services.Database.BulkWrite(this.DatabasePath, "REPLACE INTO Commands(ID, TypeID, Data) VALUES(@ID, @TypeID, @Data)",
+                await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Commands(ID, TypeID, Data) VALUES(@ID, @TypeID, @Data)",
                     commands.Select(c => new Dictionary<string, object>() { { "@ID", c.ID.ToString() }, { "@TypeID", (int)c.Type }, { "@Data", SerializerHelper.SerializeToString(c) } }));
 
-                await ChannelSession.Services.Database.BulkWrite(this.DatabasePath, "REPLACE INTO Quotes(ID, Data) VALUES(@ID, @Data)",
+                await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Quotes(ID, Data) VALUES(@ID, @Data)",
                     this.Quotes.Select(q => new Dictionary<string, object>() { { "@ID", q.ID }, { "@Data", SerializerHelper.SerializeToString(q) } }));
             }
         }
@@ -860,7 +764,7 @@ namespace MixItUp.Base.Model.Settings
             return userData;
         }
 
-        private void BuildMissingCommands()
+        private void InitializeMissingData()
         {
             this.GameQueueUserJoinedCommand = this.GameQueueUserJoinedCommand ?? CustomCommand.BasicChatCommand("Game Queue Used Joined", "You are #$queueposition in the queue to play.", isWhisper: true);
             this.GameQueueUserSelectedCommand = this.GameQueueUserSelectedCommand ?? CustomCommand.BasicChatCommand("Game Queue Used Selected", "It's time to play @$username! Listen carefully for instructions on how to join...");
@@ -872,6 +776,15 @@ namespace MixItUp.Base.Model.Settings
             this.ModerationStrike1Command = this.ModerationStrike1Command ?? CustomCommand.BasicChatCommand("Moderation Strike 1", "$moderationreason. You have received a moderation strike & currently have $usermoderationstrikes strike(s)", isWhisper: true);
             this.ModerationStrike2Command = this.ModerationStrike2Command ?? CustomCommand.BasicChatCommand("Moderation Strike 2", "$moderationreason. You have received a moderation strike & currently have $usermoderationstrikes strike(s)", isWhisper: true);
             this.ModerationStrike3Command = this.ModerationStrike3Command ?? CustomCommand.BasicChatCommand("Moderation Strike 3", "$moderationreason. You have received a moderation strike & currently have $usermoderationstrikes strike(s)", isWhisper: true);
+
+            if (this.DashboardItems.Count < 4)
+            {
+                this.DashboardItems = new List<DashboardItemTypeEnum>() { DashboardItemTypeEnum.None, DashboardItemTypeEnum.None, DashboardItemTypeEnum.None, DashboardItemTypeEnum.None };
+            }
+            if (this.DashboardQuickCommands.Count < 5)
+            {
+                this.DashboardQuickCommands = new List<Guid>() { Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty };
+            }
         }
 
         public Version GetLatestVersion() { return Assembly.GetEntryAssembly().GetName().Version; }

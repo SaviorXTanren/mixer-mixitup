@@ -3,7 +3,6 @@ using MixItUp.Base;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
-using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -16,27 +15,46 @@ namespace MixItUp.Desktop.Services
 {
     public class DesktopSettingsService : ISettingsService
     {
-        public const string SettingsDirectoryName = "Settings";
-        public const string SettingsTemplateDatabaseFileName = "SettingsTemplateDatabase.db";
-
         private static SemaphoreSlim semaphore = new SemaphoreSlim(1);
+
+        public void Initialize() { Directory.CreateDirectory(SettingsV2Model.SettingsDirectoryName); }
 
         public async Task<IEnumerable<SettingsV2Model>> GetAllSettings()
         {
-            if (!Directory.Exists(SettingsDirectoryName))
+            // Check for old V1 settings
+#pragma warning disable CS0612 // Type or member is obsolete
+            List<SettingsV1Model> oldSettings = new List<SettingsV1Model>();
+            foreach (string filePath in Directory.GetFiles(SettingsV2Model.SettingsDirectoryName))
             {
-                Directory.CreateDirectory(SettingsDirectoryName);
+                if (filePath.EndsWith(SettingsV1Model.SettingsFileExtension))
+                {
+                    try
+                    {
+                        SettingsV1Model setting = await SettingsV1Upgrader.UpgradeSettingsToLatest(filePath);
+
+                        string oldSettingsPath = Path.Combine(SettingsV2Model.SettingsDirectoryName, "Old");
+                        Directory.CreateDirectory(oldSettingsPath);
+
+                        await ChannelSession.Services.FileService.CopyFile(filePath, Path.Combine(oldSettingsPath, Path.GetFileName(filePath)));
+                        await ChannelSession.Services.FileService.CopyFile(Path.Combine(SettingsV2Model.SettingsDirectoryName, setting.DatabaseFileName), Path.Combine(oldSettingsPath, setting.DatabaseFileName));
+
+                        await ChannelSession.Services.FileService.DeleteFile(filePath);
+                        await ChannelSession.Services.FileService.DeleteFile(Path.Combine(SettingsV2Model.SettingsDirectoryName, setting.DatabaseFileName));
+                    }
+                    catch (Exception ex) { Logger.Log(ex); }
+                }
             }
+#pragma warning restore CS0612 // Type or member is obsolete
 
             List<SettingsV2Model> settings = new List<SettingsV2Model>();
-            foreach (string filePath in Directory.GetFiles(SettingsDirectoryName))
+            foreach (string filePath in Directory.GetFiles(SettingsV2Model.SettingsDirectoryName))
             {
                 if (filePath.EndsWith(SettingsV2Model.SettingsFileExtension))
                 {
                     SettingsV2Model setting = null;
                     try
                     {
-                        setting = await this.UpgradeSettings(filePath);
+                        setting = await this.LoadSettings(filePath);
                         if (setting != null)
                         {
                             settings.Add(setting);
@@ -48,40 +66,14 @@ namespace MixItUp.Desktop.Services
             return settings;
         }
 
-        public void Initialize() { Directory.CreateDirectory(SettingsDirectoryName); }
-
-        public async Task<SettingsV2Model> Create(ExpandedChannelModel channel, bool isStreamer)
+        public Task<SettingsV2Model> Create(ExpandedChannelModel channel, bool isStreamer)
         {
             SettingsV2Model settings = new SettingsV2Model(channel, isStreamer);
-            if (File.Exists(this.GetFilePath(settings)))
-            {
-                var tempSettings = await this.UpgradeSettings(this.GetFilePath(settings));
-                if (tempSettings == null)
-                {
-                    GlobalEvents.ShowMessageBox("We were unable to load your settings file due to file corruption. Unfortunately, we could not repair your settings."+ Environment.NewLine + Environment.NewLine + "We apologize for this inconvenience. If you have backups, you can restore them from the settings menu.");
-                }
-                else
-                {
-                    settings = tempSettings;
-                }
-            }
-
-            string databaseFilePath = this.GetDatabaseFilePath(settings);
-            if (!File.Exists(databaseFilePath))
-            {
-                File.Copy(SettingsTemplateDatabaseFileName, databaseFilePath);
-            }
-            return settings;
+            return Task.FromResult(settings);
         }
 
         public async Task Initialize(SettingsV2Model settings)
         {
-            settings.DatabasePath = this.GetDatabaseFilePath(settings);
-            if (!File.Exists(settings.DatabasePath))
-            {
-                File.Copy(SettingsTemplateDatabaseFileName, settings.DatabasePath, overwrite: true);
-            }
-
             await settings.Initialize();
         }
 
@@ -90,7 +82,7 @@ namespace MixItUp.Desktop.Services
             try
             {
                 await this.Save(settings);
-                SettingsV2Model loadedSettings = await this.UpgradeSettings(this.GetFilePath(settings));
+                SettingsV2Model loadedSettings = await this.LoadSettings(settings.SettingsFilePath);
                 return true;
             }
             catch (Exception ex)
@@ -105,7 +97,7 @@ namespace MixItUp.Desktop.Services
             await semaphore.WaitAndRelease(async () =>
             {
                 settings.CopyLatestValues();
-                await SerializerHelper.SerializeToFile(this.GetFilePath(settings), settings);
+                await SerializerHelper.SerializeToFile(settings.SettingsFilePath, settings);
                 await settings.SaveDatabaseData();
             });
         }
@@ -113,8 +105,6 @@ namespace MixItUp.Desktop.Services
         public async Task SavePackagedBackup(SettingsV2Model settings, string filePath)
         {
             await this.Save(ChannelSession.Settings);
-
-            string settingsFilePath = this.GetFilePath(settings);
 
             if (Directory.Exists(Path.GetDirectoryName(filePath)))
             {
@@ -125,8 +115,8 @@ namespace MixItUp.Desktop.Services
 
                 using (ZipArchive zipFile = ZipFile.Open(filePath, ZipArchiveMode.Create))
                 {
-                    zipFile.CreateEntryFromFile(settingsFilePath, Path.GetFileName(settingsFilePath));
-                    zipFile.CreateEntryFromFile(settings.DatabasePath, Path.GetFileName(settings.DatabasePath));
+                    zipFile.CreateEntryFromFile(settings.SettingsFilePath, Path.GetFileName(settings.SettingsFilePath));
+                    zipFile.CreateEntryFromFile(settings.DatabaseFilePath, Path.GetFileName(settings.DatabaseFilePath));
                 }
             }
         }
@@ -143,7 +133,7 @@ namespace MixItUp.Desktop.Services
 
                 if (newResetDate < DateTimeOffset.Now)
                 {
-                    string filePath = Path.Combine(settings.SettingsBackupLocation, settings.MixerChannelID + "-Backup-" + DateTimeOffset.Now.ToString("MM-dd-yyyy") + ".mixitup");
+                    string filePath = Path.Combine(settings.SettingsBackupLocation, settings.MixerChannelID + "-Backup-" + DateTimeOffset.Now.ToString("MM-dd-yyyy") + "." + SettingsV2Model.SettingsBackupFileExtension);
 
                     await this.SavePackagedBackup(settings, filePath);
 
@@ -152,57 +142,9 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        public string GetFilePath(SettingsV2Model settings)
+        private async Task<SettingsV2Model> LoadSettings(string filePath)
         {
-            return Path.Combine(SettingsDirectoryName, settings.SettingsFileName);
-        }
-
-        public string GetDatabaseFilePath(SettingsV2Model settings)
-        {
-            return Path.Combine(SettingsDirectoryName, settings.DatabaseFileName);
-        }
-
-        public async Task ClearAllUserData(SettingsV2Model settings)
-        {
-            await ChannelSession.Services.Database.Write(settings.DatabasePath, "DELETE FROM Users");
-        }
-
-        public async Task<int> GetSettingsVersion(string filePath)
-        {
-            string fileData = await ChannelSession.Services.FileService.ReadFile(filePath);
-            if (string.IsNullOrEmpty(fileData))
-            {
-                return -1;
-            }
-
-            JObject settingsJObj = JObject.Parse(fileData);
-            return (int)settingsJObj["Version"];
-        }
-
-        public int GetLatestVersion()
-        {
-            return SettingsV2Model.LatestVersion;
-        }
-
-        private async Task<SettingsV2Model> UpgradeSettings(string filePath)
-        {
-            int currentVersion = await GetSettingsVersion(filePath);
-            if (currentVersion == -1)
-            {
-                // Settings file is invalid, we can't use this
-                return null;
-            }
-            else if (currentVersion > SettingsV2Model.LatestVersion)
-            {
-                // Future build, like a preview build, we can't load this
-                return null;
-            }
-            else if (currentVersion < SettingsV2Model.LatestVersion)
-            {
-                await DesktopSettingsUpgrader.UpgradeSettingsToLatest(currentVersion, filePath);
-            }
-
-            return await SerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath);
+            return await SettingsV2Upgrader.UpgradeSettingsToLatest(filePath);
         }
     }
 }

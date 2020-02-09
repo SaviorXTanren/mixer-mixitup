@@ -35,6 +35,12 @@ namespace MixItUp.Desktop.Files
             }
         }
 
+        public Task DeleteFile(string filePath)
+        {
+            File.Delete(filePath);
+            return Task.FromResult(0);
+        }
+
         public Task CreateDirectory(string path)
         {
             if (!Directory.Exists(path))

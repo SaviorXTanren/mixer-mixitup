@@ -93,7 +93,6 @@ namespace MixItUp.WPF
                     await func();
                 });
             });
-            SerializerHelper.Initialize(desktopServicesHandler.FileService);
             DialogHelper.Initialize(new WPFDialogShower());
 
             Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
