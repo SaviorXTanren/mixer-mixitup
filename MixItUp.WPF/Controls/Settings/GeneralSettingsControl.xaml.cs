@@ -32,7 +32,9 @@ namespace MixItUp.WPF.Controls.Settings
             "This is a great way to give early feedback & provide valuable" + Environment.NewLine +
             "help. Preview Program updates can have bugs & issues associated" + Environment.NewLine +
             "with them, so users should only sign up for this if they are" + Environment.NewLine +
-            "willing to work around any possible issues that may arise";
+            "willing to work around any possible issues that may arise" + Environment.NewLine +
+            "We encourage users to enable automatic backups and perform " + Environment.NewLine +
+            "a manual backup of their settings before enabling this.";
 
         public static readonly string AutoLogInTooltip =
             "The Auto Log-In setting allows Mix It Up to automatically" + Environment.NewLine +
