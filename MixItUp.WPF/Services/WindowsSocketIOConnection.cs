@@ -5,16 +5,16 @@ using StreamingClient.Base.Util;
 using System;
 using System.Threading.Tasks;
 
-namespace MixItUp.Desktop.Services
+namespace MixItUp.WPF.Services
 {
-    public class SocketIOConnection : ISocketIOConnection
+    public class WindowsSocketIOConnection : ISocketIOConnection
     {
         protected Socket socket;
 
         private string connectionURL;
         private string query;
 
-        public SocketIOConnection() { }
+        public WindowsSocketIOConnection() { }
 
         public Task Connect(string connectionURL)
         {

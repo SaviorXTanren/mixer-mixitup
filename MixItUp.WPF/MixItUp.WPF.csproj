@@ -302,6 +302,7 @@
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -974,6 +975,16 @@
     <Compile Include="Controls\Dialogs\ConfirmationDialogControl.xaml.cs">
       <DependentUpon>ConfirmationDialogControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Services\WindowsSocketIOConnection.cs" />
+    <Compile Include="Services\WindowsOvrStreamService.cs" />
+    <Compile Include="Services\WindowsOBSService.cs" />
+    <Compile Include="Services\WindowsDatabaseService.cs" />
+    <Compile Include="Services\WindowsFileService.cs" />
+    <Compile Include="Services\WindowsImageService.cs" />
+    <Compile Include="Services\WindowsInputService.cs" />
+    <Compile Include="Services\WindowsTelemetryService.cs" />
+    <Compile Include="Services\WindowsServicesManager.cs" />
+    <Compile Include="Services\WindowsAudioService.cs" />
     <Compile Include="UpdateWindow.xaml.cs">
       <DependentUpon>UpdateWindow.xaml</DependentUpon>
     </Compile>
@@ -2062,10 +2073,6 @@
     <Resource Include="Logo.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MixItUp.AutoHoster\MixItUp.AutoHoster.csproj">
-      <Project>{f4ed5346-1cc5-4606-90a4-c5d22eed4e54}</Project>
-      <Name>MixItUp.AutoHoster</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MixItUp.Base\MixItUp.Base.csproj">
       <Project>{0e494acc-c46a-4ded-922b-ff378556be8a}</Project>
       <Name>MixItUp.Base</Name>

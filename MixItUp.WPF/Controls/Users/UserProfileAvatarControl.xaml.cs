@@ -1,12 +1,9 @@
 ﻿using Mixer.Base.Model.User;
-using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.Desktop.Services;
-using MixItUp.WPF.Util;
+using MixItUp.WPF.Services;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows;

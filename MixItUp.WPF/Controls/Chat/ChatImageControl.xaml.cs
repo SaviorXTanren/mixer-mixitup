@@ -1,8 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.Chat;
 using MixItUp.Base.Model.Chat.Mixer;
-using MixItUp.Desktop.Services;
-using MixItUp.WPF.Util;
+using MixItUp.WPF.Services;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;

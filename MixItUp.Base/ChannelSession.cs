@@ -38,7 +38,7 @@ namespace MixItUp.Base
         public static ApplicationSettingsV2Model AppSettings { get; private set; }
         public static SettingsV2Model Settings { get; private set; }
 
-        public static ServicesHandlerBase Services { get; private set; }
+        public static ServicesManagerBase Services { get; private set; }
 
         public static List<PreMadeChatCommand> PreMadeChatCommands { get; private set; }
 
@@ -110,7 +110,7 @@ namespace MixItUp.Base
             }
         }
 
-        public static async Task Initialize(ServicesHandlerBase serviceHandler)
+        public static async Task Initialize(ServicesManagerBase serviceHandler)
         {
             ChannelSession.Services = serviceHandler;
 

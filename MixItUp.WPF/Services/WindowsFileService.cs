@@ -12,7 +12,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MixItUp.Desktop.Files
+namespace MixItUp.WPF.Services
 {
     public class WindowsFileService : IFileService
     {

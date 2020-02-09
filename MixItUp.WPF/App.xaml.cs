@@ -1,7 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Localization;
 using MixItUp.Base.Util;
-using MixItUp.Desktop.Services;
+using MixItUp.WPF.Services;
 using MixItUp.WPF.Util;
 using StreamingClient.Base.Util;
 using System;
@@ -81,10 +81,10 @@ namespace MixItUp.WPF
 
         protected override async void OnStartup(StartupEventArgs e)
         {
-            DesktopServicesHandler desktopServicesHandler = new DesktopServicesHandler();
-            desktopServicesHandler.Initialize();
+            WindowsServicesManager servicesManager = new WindowsServicesManager();
+            servicesManager.Initialize();
 
-            FileLoggerHandler.Initialize(desktopServicesHandler.FileService);
+            FileLoggerHandler.Initialize(servicesManager.FileService);
 
             DispatcherHelper.RegisterDispatcher(async (func) =>
             {
@@ -98,7 +98,7 @@ namespace MixItUp.WPF
             Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
-            await ChannelSession.Initialize(desktopServicesHandler);
+            await ChannelSession.Initialize(servicesManager);
 
             WindowsIdentity id = WindowsIdentity.GetCurrent();
             ChannelSession.IsElevated = id.Owner != id.User;

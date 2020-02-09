@@ -55,7 +55,10 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -74,6 +77,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="..\MixItUp.WPF\Services\WindowsFileService.cs">
+      <Link>WindowsFileService.cs</Link>
+    </Compile>
     <Compile Include="AutoHosterSettingsModel.cs" />
     <Compile Include="BasicDialogControl.xaml.cs">
       <DependentUpon>BasicDialogControl.xaml</DependentUpon>
@@ -135,10 +141,6 @@
     <ProjectReference Include="..\MixItUp.Base\MixItUp.Base.csproj">
       <Project>{0e494acc-c46a-4ded-922b-ff378556be8a}</Project>
       <Name>MixItUp.Base</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MixItUp.Desktop\MixItUp.Desktop.csproj">
-      <Project>{c58e9517-27e2-48a7-9043-3cd4a18e8a27}</Project>
-      <Name>MixItUp.Desktop</Name>
     </ProjectReference>
     <ProjectReference Include="..\MixItUp.Reporter\MixItUp.Reporter.csproj">
       <Project>{ce3896dc-cc98-42ba-9bf7-4073dcc6a393}</Project>

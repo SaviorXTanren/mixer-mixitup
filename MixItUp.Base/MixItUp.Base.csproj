@@ -7,6 +7,7 @@
   <ItemGroup>
     <None Remove="Overlay\OverlayPage.html" />
     <None Remove="Overlay\webSocketWrapper.js" />
+    <None Remove="XSplit\Mix It Up.html" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,6 +20,9 @@
     </Content>
     <Content Include="Overlay\webSocketWrapper.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="XSplit\Mix It Up.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 

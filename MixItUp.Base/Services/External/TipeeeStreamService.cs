@@ -310,7 +310,7 @@ namespace MixItUp.Base.Services.External
             return new ExternalServiceResult("Unable to get User information");
         }
 
-        private new async Task<T> GetAsync<T>(string url)
+        private async Task<T> GetAsync<T>(string url)
         {
             HttpResponseMessage response = await this.GetAsync(url);
             Logger.Log(LogLevel.Debug, string.Format("TipeeeStream Log: {0} - {1} - {2}", response.RequestMessage.ToString(), response.StatusCode, await response.Content.ReadAsStringAsync()));

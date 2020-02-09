@@ -9,7 +9,7 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Interop;
 
-namespace MixItUp.Input
+namespace MixItUp.WPF.Services
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct MousePoint

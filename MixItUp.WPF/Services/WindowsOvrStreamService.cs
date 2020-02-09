@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Services;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using ovrstream_client_csharp;
@@ -10,14 +9,14 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MixItUp.OvrStream
+namespace MixItUp.WPF.Services
 {
-    public class OvrStreamService : IOvrStreamService
+    public class WindowsOvrStreamService : IOvrStreamService
     {
         OvrStreamConnection connection;
         private Uri address;
 
-        public OvrStreamService() { }
+        public WindowsOvrStreamService() { }
 
         public string Name { get { return "OvrStream"; } }
 

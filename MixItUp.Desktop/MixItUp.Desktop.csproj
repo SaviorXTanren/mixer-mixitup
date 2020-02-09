@@ -290,34 +290,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\DatabaseService.cs" />
-    <Compile Include="Services\OvrStreamService.cs" />
-    <Compile Include="Services\RemoteService.cs" />
-    <Compile Include="Services\DesktopServicesHandler.cs" />
-    <Compile Include="Services\SettingsV1Upgrader.cs" />
-    <Compile Include="Services\DesktopTelemetryService.cs" />
     <Compile Include="Services\DeveloperAPI\ChatController.cs" />
     <Compile Include="Services\DeveloperAPI\CommandController.cs" />
     <Compile Include="Services\DeveloperAPI\CurrencyController.cs" />
     <Compile Include="Services\DeveloperAPI\InventoryController.cs" />
     <Compile Include="Services\DeveloperAPI\MixerUserController.cs" />
-    <Compile Include="Services\DeveloperAPI\NoCacheHeader.cs" />
     <Compile Include="Services\DeveloperAPI\MixPlayController.cs" />
+    <Compile Include="Services\DeveloperAPI\NoCacheHeader.cs" />
     <Compile Include="Services\DeveloperAPI\UserController.cs" />
-    <Compile Include="Services\OBSService.cs" />
-    <Compile Include="Services\SettingsV2Upgrader.cs" />
-    <Compile Include="Services\SocketIOConnection.cs" />
-    <Compile Include="Services\AudioService.cs" />
     <Compile Include="Services\DeveloperAPI\WindowsDeveloperAPIService.cs" />
-    <Compile Include="Services\WindowsFileService.cs" />
-    <Compile Include="Services\WindowsImageService.cs" />
-    <Compile Include="Services\WindowsInputService.cs" />
-    <Compile Include="Services\DesktopSettingsService.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="XSplit\Mix It Up.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
