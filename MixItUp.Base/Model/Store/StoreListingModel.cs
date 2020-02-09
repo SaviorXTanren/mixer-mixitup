@@ -92,7 +92,7 @@ namespace MixItUp.Base.Model.Store
         public JObject Metadata
         {
             get { return (!string.IsNullOrEmpty(this.MetadataString)) ? JObject.Parse(this.MetadataString) : new JObject(); }
-            set { this.MetadataString = (value != null) ? SerializerHelper.SerializeToString(value) : null; }
+            set { this.MetadataString = (value != null) ? JSONSerializerHelper.SerializeToString(value) : null; }
         }
 
         [JsonIgnore]

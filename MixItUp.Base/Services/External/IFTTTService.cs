@@ -43,7 +43,7 @@ namespace MixItUp.Base.Services.External
                     {
                         jobj[kvp.Key] = kvp.Value;
                     }
-                    HttpContent content = new StringContent(SerializerHelper.SerializeToString(jobj), Encoding.UTF8, "application/json");
+                    HttpContent content = new StringContent(JSONSerializerHelper.SerializeToString(jobj), Encoding.UTF8, "application/json");
 
                     HttpResponseMessage response = await client.PostAsync(string.Format(WebHookURLFormat, eventName, this.token.accessToken), content);
                     if (!response.IsSuccessStatusCode)

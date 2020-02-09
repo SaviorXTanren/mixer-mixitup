@@ -76,7 +76,7 @@ namespace MixItUp.Desktop.Services
                                         command.Parameters.Add(new SQLiteParameter(kvp.Key, value: kvp.Value));
                                     }
 
-                                    Logger.Log(LogLevel.Debug, string.Format("SQLite Query: {0} - {1}", commandString, SerializerHelper.SerializeToString(rowParameters)));
+                                    Logger.Log(LogLevel.Debug, string.Format("SQLite Query: {0} - {1}", commandString, JSONSerializerHelper.SerializeToString(rowParameters)));
 
                                     await command.ExecuteNonQueryAsync();
                                     command.Parameters.Clear();

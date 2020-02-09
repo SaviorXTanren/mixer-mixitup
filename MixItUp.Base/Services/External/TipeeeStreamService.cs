@@ -350,7 +350,7 @@ namespace MixItUp.Base.Services.External
             {
                 if (data != null)
                 {
-                    TipeeeStreamResponse response = SerializerHelper.DeserializeFromString<TipeeeStreamResponse>(data.ToString());
+                    TipeeeStreamResponse response = JSONSerializerHelper.DeserializeFromString<TipeeeStreamResponse>(data.ToString());
                     if (response.Event.Type.Equals("donation"))
                     {
                         this.DonationOccurred(response.Event);

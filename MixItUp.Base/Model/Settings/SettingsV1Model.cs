@@ -16,6 +16,7 @@ using MixItUp.Base.ViewModel.Window.Dashboard;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Model.OAuth;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -458,7 +459,7 @@ namespace MixItUp.Base.Model.Settings
 
                 if (data.ContainsKey("CustomCommands") && !string.IsNullOrEmpty(data["CustomCommands"].ToString()))
                 {
-                    userData.CustomCommands.AddRange(SerializerHelper.DeserializeFromString<List<ChatCommand>>(data["CustomCommands"].ToString()));
+                    userData.CustomCommands.AddRange(JSONSerializerHelper.DeserializeFromString<List<ChatCommand>>(data["CustomCommands"].ToString()));
                 }
 
                 if (data.ContainsKey("Options") && !string.IsNullOrEmpty(data["Options"].ToString()))
@@ -466,7 +467,7 @@ namespace MixItUp.Base.Model.Settings
                     JObject optionsJObj = JObject.Parse(data["Options"].ToString());
                     if (optionsJObj.ContainsKey("EntranceCommand") && optionsJObj["EntranceCommand"] != null)
                     {
-                        userData.EntranceCommand = SerializerHelper.DeserializeFromString<CustomCommand>(optionsJObj["EntranceCommand"].ToString());
+                        userData.EntranceCommand = JSONSerializerHelper.DeserializeFromString<CustomCommand>(optionsJObj["EntranceCommand"].ToString());
                     }
                     userData.IsSparkExempt = GetOptionValue<bool>(optionsJObj, "IsSparkExempt");
                     userData.IsCurrencyRankExempt = GetOptionValue<bool>(optionsJObj, "IsCurrencyRankExempt");

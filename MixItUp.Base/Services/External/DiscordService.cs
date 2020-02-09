@@ -379,14 +379,14 @@ namespace MixItUp.Base.Services.External
         public async Task Send(DiscordWebSocketPacket packet)
         {
             packet.Sequence = this.lastSequenceNumber;
-            await this.Send(SerializerHelper.SerializeToString(packet));
+            await this.Send(JSONSerializerHelper.SerializeToString(packet));
         }
 
         protected override async Task ProcessReceivedPacket(string packetJSON)
         {
             try
             {
-                DiscordWebSocketPacket packet = SerializerHelper.DeserializeFromString<DiscordWebSocketPacket>(packetJSON);
+                DiscordWebSocketPacket packet = JSONSerializerHelper.DeserializeFromString<DiscordWebSocketPacket>(packetJSON);
                 this.lastSequenceNumber = packet.Sequence;
 
                 switch (packet.OPCodeType)

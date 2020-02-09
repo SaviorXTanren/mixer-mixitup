@@ -16,6 +16,7 @@ using MixItUp.Base.ViewModel.Window.Dashboard;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Model.OAuth;
+using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -517,7 +518,7 @@ namespace MixItUp.Base.Model.Settings
 
                 await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Users", (Dictionary<string, object> data) =>
                 {
-                    UserDataModel userData = SerializerHelper.DeserializeFromString<UserDataModel>((string)data["Data"]);
+                    UserDataModel userData = JSONSerializerHelper.DeserializeFromString<UserDataModel>((string)data["Data"]);
                     this.UserData[userData.ID] = userData;
                     this.MixerUserIDLookups[userData.MixerID] = userData.ID;
                 });
@@ -563,7 +564,7 @@ namespace MixItUp.Base.Model.Settings
 
                 await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Quotes", (Dictionary<string, object> data) =>
                 {
-                    this.Quotes.Add(SerializerHelper.DeserializeFromString<UserQuoteViewModel>((string)data["Data"]));
+                    this.Quotes.Add(JSONSerializerHelper.DeserializeFromString<UserQuoteViewModel>((string)data["Data"]));
                 });
 
                 await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Commands", (Dictionary<string, object> data) =>
@@ -571,27 +572,27 @@ namespace MixItUp.Base.Model.Settings
                     CommandTypeEnum type = (CommandTypeEnum)Convert.ToInt32(data["TypeID"]);
                     if (type == CommandTypeEnum.Chat)
                     {
-                        this.ChatCommands.Add(SerializerHelper.DeserializeFromString<ChatCommand>((string)data["Data"]));
+                        this.ChatCommands.Add(JSONSerializerHelper.DeserializeFromString<ChatCommand>((string)data["Data"]));
                     }
                     else if (type == CommandTypeEnum.Event)
                     {
-                        this.EventCommands.Add(SerializerHelper.DeserializeFromString<EventCommand>((string)data["Data"]));
+                        this.EventCommands.Add(JSONSerializerHelper.DeserializeFromString<EventCommand>((string)data["Data"]));
                     }
                     else if (type == CommandTypeEnum.Interactive)
                     {
-                        this.MixPlayCommands.Add(SerializerHelper.DeserializeFromString<MixPlayCommand>((string)data["Data"]));
+                        this.MixPlayCommands.Add(JSONSerializerHelper.DeserializeFromString<MixPlayCommand>((string)data["Data"]));
                     }
                     else if (type == CommandTypeEnum.Timer)
                     {
-                        this.TimerCommands.Add(SerializerHelper.DeserializeFromString<TimerCommand>((string)data["Data"]));
+                        this.TimerCommands.Add(JSONSerializerHelper.DeserializeFromString<TimerCommand>((string)data["Data"]));
                     }
                     else if (type == CommandTypeEnum.ActionGroup)
                     {
-                        this.ActionGroupCommands.Add(SerializerHelper.DeserializeFromString<ActionGroupCommand>((string)data["Data"]));
+                        this.ActionGroupCommands.Add(JSONSerializerHelper.DeserializeFromString<ActionGroupCommand>((string)data["Data"]));
                     }
                     else if (type == CommandTypeEnum.Game)
                     {
-                        this.GameCommands.Add(SerializerHelper.DeserializeFromString<GameCommandBase>((string)data["Data"]));
+                        this.GameCommands.Add(JSONSerializerHelper.DeserializeFromString<GameCommandBase>((string)data["Data"]));
                     }
                 });
             }
@@ -676,7 +677,7 @@ namespace MixItUp.Base.Model.Settings
 
                 IEnumerable<UserDataModel> changedUsers = this.UserData.GetChangedValues();
                 await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Users(ID, Data) VALUES(@ID, @Data)",
-                    changedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.ID.ToString() }, { "@Data", SerializerHelper.SerializeToString(u) } }));
+                    changedUsers.Select(u => new Dictionary<string, object>() { { "@ID", u.ID.ToString() }, { "@Data", JSONSerializerHelper.SerializeToString(u) } }));
 
                 foreach (var kvp in this.Currencies)
                 {
@@ -715,10 +716,10 @@ namespace MixItUp.Base.Model.Settings
                 commands.AddRange(this.ActionGroupCommands);
                 commands.AddRange(this.GameCommands);
                 await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Commands(ID, TypeID, Data) VALUES(@ID, @TypeID, @Data)",
-                    commands.Select(c => new Dictionary<string, object>() { { "@ID", c.ID.ToString() }, { "@TypeID", (int)c.Type }, { "@Data", SerializerHelper.SerializeToString(c) } }));
+                    commands.Select(c => new Dictionary<string, object>() { { "@ID", c.ID.ToString() }, { "@TypeID", (int)c.Type }, { "@Data", JSONSerializerHelper.SerializeToString(c) } }));
 
                 await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Quotes(ID, Data) VALUES(@ID, @Data)",
-                    this.Quotes.Select(q => new Dictionary<string, object>() { { "@ID", q.ID }, { "@Data", SerializerHelper.SerializeToString(q) } }));
+                    this.Quotes.Select(q => new Dictionary<string, object>() { { "@ID", q.ID }, { "@Data", JSONSerializerHelper.SerializeToString(q) } }));
             }
         }
 
