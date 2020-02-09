@@ -102,9 +102,7 @@ namespace MixItUp.Base.Commands
         {
             EventTypeEnum.ChatUserPurge, EventTypeEnum.ChatMessageReceived, EventTypeEnum.ChatMessageDeleted,
 
-            EventTypeEnum.MixerChannelSubscriptionGifted,
-
-            EventTypeEnum.MixerSparksUsed, EventTypeEnum.MixerEmbersUsed, EventTypeEnum.MixerSkillUsed, EventTypeEnum.MixerMilestoneReached, EventTypeEnum.MixerFanProgressionLevelUp,
+            EventTypeEnum.MixerChannelSubscriptionGifted, EventTypeEnum.MixerSparksUsed, EventTypeEnum.MixerEmbersUsed, EventTypeEnum.MixerSkillUsed, EventTypeEnum.MixerMilestoneReached, EventTypeEnum.MixerFanProgressionLevelUp,
         };
 
         private LockedHashSet<Guid> userEventTracking = new LockedHashSet<Guid>();
