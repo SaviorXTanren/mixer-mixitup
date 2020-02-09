@@ -40,6 +40,8 @@ namespace MixItUp.Desktop.Services
 
                         await ChannelSession.Services.FileService.DeleteFile(filePath);
                         await ChannelSession.Services.FileService.DeleteFile(Path.Combine(SettingsV2Model.SettingsDirectoryName, setting.DatabaseFileName));
+                        await ChannelSession.Services.FileService.DeleteFile(filePath + ".backup");
+                        await ChannelSession.Services.FileService.DeleteFile(Path.Combine(SettingsV2Model.SettingsDirectoryName, setting.DatabaseFileName) + ".backup");
                     }
                     catch (Exception ex) { Logger.Log(ex); }
                 }
