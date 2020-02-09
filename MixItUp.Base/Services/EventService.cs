@@ -18,24 +18,24 @@ namespace MixItUp.Base.Services
 
         // Platform-agnostic = 1
 
-        [Name("Channel Stream Start")]
-        ChannelStreamStart = 1,
-        [Name("Channel Stream Stop")]
-        ChannelStreamStop = 2,
-        [Name("Channel Hosted")]
-        ChannelHosted = 3,
+        //[Name("Channel Stream Start")]
+        //ChannelStreamStart = 1,
+        //[Name("Channel Stream Stop")]
+        //ChannelStreamStop = 2,
+        //[Name("Channel Hosted")]
+        //ChannelHosted = 3,
 
-        [Name("Channel Followed")]
-        ChannelFollowed = 10,
-        [Name("Channel Unfollowed")]
-        ChannelUnfollowed = 11,
+        //[Name("Channel Followed")]
+        //ChannelFollowed = 10,
+        //[Name("Channel Unfollowed")]
+        //ChannelUnfollowed = 11,
 
-        [Name("Channel Subscribed")]
-        ChannelSubscribed = 20,
-        [Name("Channel Resubscribed")]
-        ChannelResubscribed = 21,
-        [Name("Channel Subscription Gifted")]
-        ChannelSubscriptionGifted = 22,
+        //[Name("Channel Subscribed")]
+        //ChannelSubscribed = 20,
+        //[Name("Channel Resubscribed")]
+        //ChannelResubscribed = 21,
+        //[Name("Channel Subscription Gifted")]
+        //ChannelSubscriptionGifted = 22,
 
         [Name("Chat New User Joined")]
         ChatUserFirstJoin = 50,

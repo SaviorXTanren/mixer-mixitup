@@ -304,25 +304,25 @@ namespace MixItUp.Base.Services
                             command.EventCommandType = EventTypeEnum.MixerSkillUsed;
                             break;
                         case OtherEventTypeEnum.ChatUserFirstJoin:
-                            command.EventCommandType = EventTypeEnum.MixerChatUserFirstJoin;
+                            command.EventCommandType = EventTypeEnum.ChatUserFirstJoin;
                             break;
                         case OtherEventTypeEnum.ChatUserJoined:
-                            command.EventCommandType = EventTypeEnum.MixerChatUserJoined;
+                            command.EventCommandType = EventTypeEnum.ChatUserJoined;
                             break;
                         case OtherEventTypeEnum.ChatUserLeft:
-                            command.EventCommandType = EventTypeEnum.MixerChatUserLeft;
+                            command.EventCommandType = EventTypeEnum.ChatUserLeft;
                             break;
                         case OtherEventTypeEnum.ChatUserPurge:
-                            command.EventCommandType = EventTypeEnum.MixerChatUserPurge;
+                            command.EventCommandType = EventTypeEnum.ChatUserPurge;
                             break;
                         case OtherEventTypeEnum.ChatUserBan:
-                            command.EventCommandType = EventTypeEnum.MixerChatUserBan;
+                            command.EventCommandType = EventTypeEnum.ChatUserBan;
                             break;
                         case OtherEventTypeEnum.ChatMessageReceived:
-                            command.EventCommandType = EventTypeEnum.MixerChatMessageReceived;
+                            command.EventCommandType = EventTypeEnum.ChatMessageReceived;
                             break;
                         case OtherEventTypeEnum.ChatMessageDeleted:
-                            command.EventCommandType = EventTypeEnum.MixerChatMessageDeleted;
+                            command.EventCommandType = EventTypeEnum.ChatMessageDeleted;
                             break;
                         case OtherEventTypeEnum.StreamlabsDonation:
                             command.EventCommandType = EventTypeEnum.StreamlabsDonation;

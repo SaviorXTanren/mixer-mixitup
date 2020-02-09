@@ -643,6 +643,15 @@ namespace MixItUp.Base.Services.Mixer
             UserViewModel user = await ChannelSession.Services.User.AddOrUpdateUser(chatUser.GetUser());
             if (user != null)
             {
+                try
+                {
+                    if (user.Data.ViewingMinutes == 0)
+                    {
+                        await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.ChatUserFirstJoin, user));
+                    }
+                }
+                catch (Exception ex) { Logger.Log(ex); }
+
                 this.OnUserUpdateOccurred(sender, user);
                 if (chatUser.roles != null && chatUser.roles.Count() > 0 && chatUser.roles.Where(r => !string.IsNullOrEmpty(r)).Contains(EnumHelper.GetEnumName(UserRoleEnum.Banned)))
                 {

@@ -205,10 +205,7 @@ namespace MixItUp.Base.Services
                     user.IgnoreForQueries = false;
                     if (user.Data.ViewingMinutes == 0)
                     {
-                        if (ChannelSession.Services.Events.CanPerformEvent(new EventTrigger(EventTypeEnum.ChatUserFirstJoin, user)))
-                        {
-                            await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.ChatUserFirstJoin, user));
-                        }
+                        await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.ChatUserFirstJoin, user));
                     }
 
                     if (ChannelSession.Services.Events.CanPerformEvent(new EventTrigger(EventTypeEnum.ChatUserJoined, user)))
