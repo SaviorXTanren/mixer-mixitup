@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Model.Chat;
 using Mixer.Base.Model.MixPlay;
 using Mixer.Base.Model.User;
+using MixItUp.Base.Model;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -56,12 +57,12 @@ namespace MixItUp.Base.Services
 
         private LockedDictionary<Guid, UserViewModel> usersByID = new LockedDictionary<Guid, UserViewModel>();
         private LockedDictionary<uint, UserViewModel> usersByMixerID = new LockedDictionary<uint, UserViewModel>();
-        private LockedDictionary<string, UserViewModel> usersByUsername = new LockedDictionary<string, UserViewModel>();
+        private LockedDictionary<string, UserViewModel> usersByMixerUsername = new LockedDictionary<string, UserViewModel>();
         private LockedDictionary<string, UserViewModel> usersByMixPlayID = new LockedDictionary<string, UserViewModel>();
 
         public UserViewModel GetUserByUsername(string username)
         {
-            if (this.usersByUsername.TryGetValue(username.ToLower(), out UserViewModel user))
+            if (this.usersByMixerUsername.TryGetValue(username.ToLower(), out UserViewModel user))
             {
                 return user;
             }
@@ -151,11 +152,11 @@ namespace MixItUp.Base.Services
             if (!user.IsAnonymous)
             {
                 this.usersByID[user.ID] = user;
-                this.usersByUsername[user.Username.ToLower()] = user;
 
                 if (user.MixerID > 0 && !string.IsNullOrEmpty(user.Username))
                 {
                     this.usersByMixerID[user.MixerID] = user;
+                    this.usersByMixerUsername[user.Username.ToLower()] = user;
                 }
 
                 if (UserService.SpecialUserAccounts.Contains(user.Username))
@@ -213,11 +214,11 @@ namespace MixItUp.Base.Services
         private async Task RemoveUser(UserViewModel user)
         {
             this.usersByID.Remove(user.ID);
-            this.usersByUsername.Remove(user.Username);
 
             if (user.MixerID > 0)
             {
                 this.usersByMixerID.Remove(user.MixerID);
+                this.usersByMixerUsername.Remove(user.Username);
             }
 
             await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.ChatUserLeft, user));
@@ -226,7 +227,7 @@ namespace MixItUp.Base.Services
         public void Clear()
         {
             this.usersByID.Clear();
-            this.usersByUsername.Clear();
+            this.usersByMixerUsername.Clear();
 
             this.usersByMixerID.Clear();
             this.usersByMixPlayID.Clear();
