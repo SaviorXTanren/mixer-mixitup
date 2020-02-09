@@ -6,7 +6,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Mixer;
 using MixItUp.Base.ViewModel.Chat.Twitch;
-using MixItUp.Desktop.Services;
+using MixItUp.WPF.Services;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;

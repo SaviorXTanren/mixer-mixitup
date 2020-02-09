@@ -110,7 +110,7 @@ namespace MixItUp.Base.Services.Twitch
             try
             {
                 TwitchConnection connection = await TwitchConnection.ConnectViaLocalhostOAuthBrowser(TwitchConnectionService.ClientID, ChannelSession.Services.Secrets.GetSecret("TwitchSecret"),
-                    scopes, forceApprovalPrompt: true, successResponse: OAuthServiceBase.LoginRedirectPageHTML);
+                    scopes, forceApprovalPrompt: true, successResponse: OAuthExternalServiceBase.LoginRedirectPageHTML);
                 if (connection != null)
                 {
                     return new ExternalServiceResult<TwitchConnectionService>(new TwitchConnectionService(connection));
