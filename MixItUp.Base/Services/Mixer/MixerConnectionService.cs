@@ -15,7 +15,6 @@ using Mixer.Base.Model.TestStreams;
 using Mixer.Base.Model.User;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.ViewModel.User;
-using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
 using System;
@@ -163,7 +162,7 @@ namespace MixItUp.Base.Services.Mixer
         {
             try
             {
-                MixerConnection connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(MixerConnectionService.ClientID, scopes, false, successResponse: OAuthServiceBase.LoginRedirectPageHTML);
+                MixerConnection connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(MixerConnectionService.ClientID, scopes, false, successResponse: OAuthExternalServiceBase.LoginRedirectPageHTML);
                 if (connection != null)
                 {
                     return new ExternalServiceResult<MixerConnectionService>(new MixerConnectionService(connection));
