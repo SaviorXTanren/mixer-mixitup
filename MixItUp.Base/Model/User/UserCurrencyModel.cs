@@ -169,7 +169,10 @@ namespace MixItUp.Base.Model.User
         public void SetAmount(Guid id, int amount)
         {
             this.UserAmounts[id] = Math.Min(Math.Max(amount, 0), this.MaxAmount);
-            ChannelSession.Settings.UserData.ManualValueChanged(id);
+            if (ChannelSession.Settings != null)
+            {
+                ChannelSession.Settings.UserData.ManualValueChanged(id);
+            }
         }
 
         public void AddAmount(UserDataModel user, int amount)
@@ -197,11 +200,7 @@ namespace MixItUp.Base.Model.User
             }
         }
 
-        public void ResetAmount(UserDataModel user)
-        {
-            this.UserAmounts[user.ID] = 0;
-            ChannelSession.Settings.UserData.ManualValueChanged(user.ID);
-        }
+        public void ResetAmount(UserDataModel user) { this.SetAmount(user, 0); }
 
         public UserRankViewModel GetRank(UserDataModel user)
         {
@@ -309,8 +308,7 @@ namespace MixItUp.Base.Model.User
         {
             foreach (Guid key in this.UserAmounts.Keys)
             {
-                this.UserAmounts[key] = 0;
-                this.UserAmounts.ManualValueChanged(key);
+                this.SetAmount(key, 0);
             }
             this.LastReset = new DateTimeOffset(DateTimeOffset.Now.Date);
             await ChannelSession.SaveSettings();

@@ -19,7 +19,7 @@ using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
+using System.IO;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -359,6 +359,11 @@ namespace MixItUp.Base.Model.Settings
         public DateTimeOffset SettingsLastBackup { get; set; }
 
         [JsonProperty]
+        public Dictionary<Guid, UserCurrencyModel> currenciesInternal { get; set; } = new Dictionary<Guid, UserCurrencyModel>();
+        [JsonProperty]
+        public Dictionary<Guid, UserInventoryModel> inventoriesInternal { get; set; } = new Dictionary<Guid, UserInventoryModel>();
+
+        [JsonProperty]
         public Dictionary<string, int> cooldownGroupsInternal { get; set; } = new Dictionary<string, int>();
 
         [JsonProperty]
@@ -403,18 +408,14 @@ namespace MixItUp.Base.Model.Settings
         [JsonIgnore]
         public Dictionary<uint, UserDataModel> UserData { get; set; } = new Dictionary<uint, UserDataModel>();
 
-        [JsonProperty]
-        public Dictionary<Guid, UserCurrencyModel> Currencies { get; set; } = new Dictionary<Guid, UserCurrencyModel>();
-        [JsonProperty]
-        public Dictionary<Guid, UserInventoryModel> Inventories { get; set; } = new Dictionary<Guid, UserInventoryModel>();
-
         [JsonIgnore]
         public string DatabaseFileName { get { return string.Format("{0}.{1}.sqlite", this.Channel.id.ToString(), (this.IsStreamer) ? "Streamer" : "Moderator"); } }
+        [JsonIgnore]
+        public string DatabaseFilePath { get { return Path.Combine(SettingsV2Model.SettingsDirectoryName, this.DatabaseFileName); } }
 
         public async Task LoadUserData()
         {
-            Dictionary<uint, UserDataModel> initialUsers = new Dictionary<uint, UserDataModel>();
-            await ChannelSession.Services.Database.Read(this.DatabaseFileName, "SELECT * FROM Users", (Dictionary<string, object> data) =>
+            await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Users", (Dictionary<string, object> data) =>
             {
                 UserDataModel userData = new UserDataModel();
 
@@ -430,9 +431,9 @@ namespace MixItUp.Base.Model.Settings
                     {
                         foreach (var kvp in currencyAmounts)
                         {
-                            if (this.Currencies.ContainsKey(kvp.Key))
+                            if (this.currenciesInternal.ContainsKey(kvp.Key))
                             {
-                                this.Currencies[kvp.Key].SetAmount(userData, kvp.Value);
+                                this.currenciesInternal[kvp.Key].SetAmount(userData, kvp.Value);
                             }
                         }
                     }
@@ -445,9 +446,9 @@ namespace MixItUp.Base.Model.Settings
                     {
                         foreach (var kvp in inventoryAmounts)
                         {
-                            if (this.Inventories.ContainsKey(kvp.Key))
+                            if (this.inventoriesInternal.ContainsKey(kvp.Key))
                             {
-                                UserInventoryModel inventory = this.Inventories[kvp.Key];
+                                UserInventoryModel inventory = this.inventoriesInternal[kvp.Key];
                                 foreach (var itemKVP in kvp.Value)
                                 {
                                     inventory.SetAmount(userData, itemKVP.Key, itemKVP.Value);
@@ -486,8 +487,9 @@ namespace MixItUp.Base.Model.Settings
                     userData.TotalCommandsRun = GetOptionValue<uint>(optionsJObj, "TotalCommandsRun");
                     userData.TotalMonthsSubbed = GetOptionValue<uint>(optionsJObj, "TotalMonthsSubbed");
                 }
+
+                this.UserData[userData.MixerID] = userData;
             });
-            this.UserData = new Dictionary<uint, UserDataModel>(initialUsers);
         }
 
         private T GetOptionValue<T>(JObject jobj, string key)
