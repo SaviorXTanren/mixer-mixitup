@@ -1,20 +1,17 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Commands;
 using MixItUp.API.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web.Http;
-using System.Net.Http;
-using System.Net.Http.Formatting;
+using Microsoft.AspNetCore.Mvc;
 
-namespace MixItUp.Desktop.Services.DeveloperAPI
+namespace MixItUp.Base.Services.DeveloperAPI.Controllers
 {
-    [RoutePrefix("api/commands")]
-    public class CommandController : ApiController
+    [Route("api/commands")]
+    public class CommandController : BaseController
     {
-        [Route]
+        [Route("")]
         [HttpGet]
         public IEnumerable<Command> Get()
         {
@@ -23,61 +20,46 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
 
         [Route("{commandID:guid}")]
         [HttpGet]
-        public Command Get(Guid commandID)
+        public IActionResult Get(Guid commandID)
         {
             Command selectedCommand = GetAllCommands().SingleOrDefault(c => c.ID == commandID);
             if (selectedCommand == null)
             {
-                var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
-                {
-                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to find command: {commandID.ToString()}." }, new JsonMediaTypeFormatter(), "application/json"),
-                    ReasonPhrase = "Command ID not found"
-                };
-                throw new HttpResponseException(resp);
+                return GetErrorResponse(HttpStatusCode.NotFound, new Error { Message = $"Unable to find command: {commandID.ToString()}." });
             }
 
-            return selectedCommand;
+            return Ok(selectedCommand);
         }
 
         [Route("{commandID:guid}")]
         [HttpPost]
-        public Command Run(Guid commandID, [FromBody] IEnumerable<string> arguments)
+        public IActionResult Run(Guid commandID, [FromBody] IEnumerable<string> arguments)
         {
             CommandBase selectedCommand = FindCommand(commandID, out string category);
             if (selectedCommand == null)
             {
-                var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
-                {
-                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to find command: {commandID.ToString()}." }, new JsonMediaTypeFormatter(), "application/json"),
-                    ReasonPhrase = "Command ID not found"
-                };
-                throw new HttpResponseException(resp);
+                return GetErrorResponse(HttpStatusCode.NotFound, new Error { Message = $"Unable to find command: {commandID.ToString()}." });
             }
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             selectedCommand.Perform(arguments: arguments);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-            return CommandFromCommandBase(selectedCommand, category);
+            return Ok(CommandFromCommandBase(selectedCommand, category));
         }
 
         [Route("{commandID:guid}")]
         [HttpPut, HttpPatch]
-        public Command Update(Guid commandID, [FromBody] Command commandData)
+        public IActionResult Update(Guid commandID, [FromBody] Command commandData)
         {
             CommandBase selectedCommand = FindCommand(commandID, out string category);
             if (selectedCommand == null)
             {
-                var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
-                {
-                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to find command: {commandID.ToString()}." }, new JsonMediaTypeFormatter(), "application/json"),
-                    ReasonPhrase = "Command ID not found"
-                };
-                throw new HttpResponseException(resp);
+                return GetErrorResponse(HttpStatusCode.NotFound, new Error { Message = $"Unable to find command: {commandID.ToString()}." });
             }
 
             selectedCommand.IsEnabled = commandData.IsEnabled;
-            return CommandFromCommandBase(selectedCommand, category);
+            return Ok(CommandFromCommandBase(selectedCommand, category));
         }
 
         private CommandBase FindCommand(Guid commandId, out string category)

@@ -1,47 +1,40 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.ViewModel.User;
 using MixItUp.API.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web.Http;
 using System.Net.Http;
-using System.Net.Http.Formatting;
 using MixItUp.Base.Model.User;
+using Microsoft.AspNetCore.Mvc;
 
-namespace MixItUp.Desktop.Services.DeveloperAPI
+namespace MixItUp.Base.Services.DeveloperAPI.Controllers
 {
-    [RoutePrefix("api/inventory")]
-    public class InventoryController : ApiController
+    [Route("api/inventory")]
+    public class InventoryController : BaseController
     {
-        [Route]
+        [Route("")]
         [HttpGet]
-        public IEnumerable<Inventory> Get()
+        public IActionResult Get()
         {
             List<Inventory> list = new List<Inventory>();
             foreach (var inventory in ChannelSession.Settings.Inventories.Values)
             {
                 list.Add(InventoryFromUserInventoryViewModel(inventory));
             }
-            return list;
+            return Ok(list);
         }
 
         [Route("{inventoryID:guid}")]
         [HttpGet]
-        public Inventory Get(Guid inventoryID)
+        public IActionResult Get(Guid inventoryID)
         {
             if (!ChannelSession.Settings.Inventories.ContainsKey(inventoryID))
             {
-                var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
-                {
-                    Content = new ObjectContent<Error>(new Error { Message = $"Unable to find inventory: {inventoryID.ToString()}." }, new JsonMediaTypeFormatter(), "application/json"),
-                    ReasonPhrase = "Inventory ID not found"
-                };
-                throw new HttpResponseException(resp);
+                return GetErrorResponse(HttpStatusCode.NotFound, new Error { Message = $"Unable to find inventory: {inventoryID.ToString()}." });
             }
 
-            return InventoryFromUserInventoryViewModel(ChannelSession.Settings.Inventories[inventoryID]);
+            return Ok(InventoryFromUserInventoryViewModel(ChannelSession.Settings.Inventories[inventoryID]));
         }
 
         public static InventoryAmount InventoryAmountFromUserInventoryViewModel(UserInventoryModel inventory, UserInventoryDataViewModel inventoryData)
