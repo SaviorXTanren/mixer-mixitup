@@ -320,7 +320,7 @@ namespace MixItUp.Base.Services.External
         public string ServerID { get; private set; }
         public string BotPermissions { get; private set; }
 
-        public DiscordOAuthServer() : base(MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL, MixerConnection.DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER, OAuthServiceBase.LoginRedirectPageHTML) { }
+        public DiscordOAuthServer() : base(MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL, MixerConnection.DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER, OAuthExternalServiceBase.LoginRedirectPageHTML) { }
 
         protected override async Task ProcessConnection(HttpListenerContext listenerContext)
         {
@@ -457,15 +457,21 @@ namespace MixItUp.Base.Services.External
         }
     }
 
-    public class DiscordBotService : OAuthServiceBase
+    public class DiscordBotService : OAuthExternalServiceBase
     {
         private string botToken;
+
+        public override string Name { get { return "Discord Bot Service"; } }
 
         public DiscordBotService(string baseAddress, string botToken)
             : base(baseAddress)
         {
             this.botToken = botToken;
         }
+
+        public override Task<ExternalServiceResult> Connect() { throw new NotImplementedException(); }
+
+        public override Task Disconnect() { throw new NotImplementedException(); }
 
         public async Task<DiscordGateway> GetBotGateway()
         {
@@ -623,6 +629,8 @@ namespace MixItUp.Base.Services.External
             return client;
         }
 
+        protected override Task<ExternalServiceResult> InitializeInternal() { throw new NotImplementedException(); }
+
         protected override Task RefreshOAuthToken() { return Task.FromResult(0); }
 
         private async Task<HttpResponseMessage> ModifyServerMember(DiscordServer server, DiscordUser user, JObject content)
@@ -675,9 +683,19 @@ namespace MixItUp.Base.Services.External
         {
             try
             {
-                string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(DiscordService.AuthorizationUrl, this.ClientID, DiscordService.ClientBotPermissions), secondsToWait: 60);
+                DiscordOAuthServer oauthServer = new DiscordOAuthServer();
+                oauthServer.Start();
+
+                ProcessHelper.LaunchLink(string.Format(DiscordService.AuthorizationUrl, this.ClientID, DiscordService.ClientBotPermissions));
+
+                string authorizationCode = await oauthServer.WaitForAuthorizationCode(secondsToWait: 60);
+                oauthServer.Stop();
+
                 if (!string.IsNullOrEmpty(authorizationCode))
                 {
+                    ChannelSession.Settings.DiscordServer = oauthServer.ServerID;
+                    this.BotPermissions = oauthServer.BotPermissions;
+
                     var body = new List<KeyValuePair<string, string>>
                     {
                         new KeyValuePair<string, string>("grant_type", "authorization_code"),
@@ -789,22 +807,6 @@ namespace MixItUp.Base.Services.External
         public async Task MuteServerMember(DiscordServer server, DiscordUser user, bool mute = true) { await this.botService.MuteServerMember(server, user, mute); }
 
         public async Task DeafenServerMember(DiscordServer server, DiscordUser user, bool deaf = true) { await this.botService.DeafenServerMember(server, user, deaf); }
-
-        protected override async Task<string> ConnectViaOAuthRedirect(string oauthPageURL, string listeningURL)
-        {
-            DiscordOAuthServer oauthServer = new DiscordOAuthServer();
-            oauthServer.Start();
-
-            ProcessHelper.LaunchLink(oauthPageURL);
-
-            string authorizationCode = await oauthServer.WaitForAuthorizationCode();
-            oauthServer.Stop();
-
-            ChannelSession.Settings.DiscordServer = oauthServer.ServerID;
-            this.BotPermissions = oauthServer.BotPermissions;
-
-            return authorizationCode;
-        }
 
         protected override async Task RefreshOAuthToken()
         {
