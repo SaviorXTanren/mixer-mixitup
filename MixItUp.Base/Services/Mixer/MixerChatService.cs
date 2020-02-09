@@ -647,7 +647,7 @@ namespace MixItUp.Base.Services.Mixer
                 {
                     if (user.Data.ViewingMinutes == 0)
                     {
-                        await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.MixerChatUserFirstJoin, user));
+                        await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.ChatUserFirstJoin, user));
                     }
                 }
                 catch (Exception ex) { Logger.Log(ex); }

@@ -100,9 +100,9 @@ namespace MixItUp.Base.Commands
 
         private static HashSet<EventTypeEnum> ignoreUserTracking = new HashSet<EventTypeEnum>()
         {
-            EventTypeEnum.ChannelSubscriptionGifted, EventTypeEnum.ChatUserPurge, EventTypeEnum.ChatMessageReceived, EventTypeEnum.ChatMessageDeleted,
+            EventTypeEnum.ChatUserPurge, EventTypeEnum.ChatMessageReceived, EventTypeEnum.ChatMessageDeleted,
 
-            EventTypeEnum.MixerChannelSubscriptionGifted, EventTypeEnum.MixerChatUserPurge, EventTypeEnum.MixerChatMessageReceived, EventTypeEnum.MixerChatMessageDeleted,
+            EventTypeEnum.MixerChannelSubscriptionGifted,
 
             EventTypeEnum.MixerSparksUsed, EventTypeEnum.MixerEmbersUsed, EventTypeEnum.MixerSkillUsed, EventTypeEnum.MixerMilestoneReached, EventTypeEnum.MixerFanProgressionLevelUp,
         };

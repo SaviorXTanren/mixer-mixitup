@@ -17,24 +17,24 @@ namespace MixItUp.Base.Services
 
         // Platform-agnostic = 1
 
-        [Name("Channel Stream Start")]
-        ChannelStreamStart = 1,
-        [Name("Channel Stream Stop")]
-        ChannelStreamStop = 2,
-        [Name("Channel Hosted")]
-        ChannelHosted = 3,
+        //[Name("Channel Stream Start")]
+        //ChannelStreamStart = 1,
+        //[Name("Channel Stream Stop")]
+        //ChannelStreamStop = 2,
+        //[Name("Channel Hosted")]
+        //ChannelHosted = 3,
 
-        [Name("Channel Followed")]
-        ChannelFollowed = 10,
-        [Name("Channel Unfollowed")]
-        ChannelUnfollowed = 11,
+        //[Name("Channel Followed")]
+        //ChannelFollowed = 10,
+        //[Name("Channel Unfollowed")]
+        //ChannelUnfollowed = 11,
 
-        [Name("Channel Subscribed")]
-        ChannelSubscribed = 20,
-        [Name("Channel Resubscribed")]
-        ChannelResubscribed = 21,
-        [Name("Channel Subscription Gifted")]
-        ChannelSubscriptionGifted = 22,
+        //[Name("Channel Subscribed")]
+        //ChannelSubscribed = 20,
+        //[Name("Channel Resubscribed")]
+        //ChannelResubscribed = 21,
+        //[Name("Channel Subscription Gifted")]
+        //ChannelSubscriptionGifted = 22,
 
         [Name("Chat New User Joined")]
         ChatUserFirstJoin = 50,
@@ -72,20 +72,20 @@ namespace MixItUp.Base.Services
         [Name("Mixer Channel Subscription Gifted")]
         MixerChannelSubscriptionGifted = 122,
 
-        [Name("Mixer Chat New User Joined")]
-        MixerChatUserFirstJoin = 150,
-        [Name("Mixer Chat User Purged")]
-        MixerChatUserPurge = 151,
-        [Name("Mixer Chat User Banned")]
-        MixerChatUserBan = 152,
-        [Name("Mixer Chat Message Received")]
-        MixerChatMessageReceived = 153,
-        [Name("Mixer Chat User Joined")]
-        MixerChatUserJoined = 154,
-        [Name("Mixer Chat User Left")]
-        MixerChatUserLeft = 155,
-        [Name("Mixer Chat Message Deleted")]
-        MixerChatMessageDeleted = 156,
+        //[Name("Mixer Chat New User Joined")]
+        //MixerChatUserFirstJoin = 150,
+        //[Name("Mixer Chat User Purged")]
+        //MixerChatUserPurge = 151,
+        //[Name("Mixer Chat User Banned")]
+        //MixerChatUserBan = 152,
+        //[Name("Mixer Chat Message Received")]
+        //MixerChatMessageReceived = 153,
+        //[Name("Mixer Chat User Joined")]
+        //MixerChatUserJoined = 154,
+        //[Name("Mixer Chat User Left")]
+        //MixerChatUserLeft = 155,
+        //[Name("Mixer Chat Message Deleted")]
+        //MixerChatMessageDeleted = 156,
 
         [Name("Mixer Channel Sparks Spent")]
         MixerSparksUsed = 170,

@@ -422,7 +422,7 @@ namespace MixItUp.Base.Services
 
                     if (!string.IsNullOrEmpty(message.PlainTextMessage))
                     {
-                        EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChatUserBan, message.User);
+                        EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatUserBan, message.User);
                         trigger.SpecialIdentifiers["message"] = message.PlainTextMessage;
                         await ChannelSession.Services.Events.PerformEvent(trigger);
                     }
@@ -642,14 +642,14 @@ namespace MixItUp.Base.Services
                 }
             }
 
-            EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChatUserPurge, e.Item2);
+            EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatUserPurge, e.Item2);
             trigger.Arguments.Add(e.Item1.Username);
             await ChannelSession.Services.Events.PerformEvent(trigger);
         }
 
         private async void MixerChatService_OnUserBanOccurred(object sender, UserViewModel user)
         {
-            await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.MixerChatUserBan, user));
+            await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.ChatUserBan, user));
         }
 
         private void MixerChatService_OnPollEndOccurred(object sender, ChatPollEventModel pollResults)
