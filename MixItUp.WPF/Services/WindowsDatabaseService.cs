@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.Services;
-using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -8,9 +7,9 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MixItUp.Desktop.Services
+namespace MixItUp.WPF.Services
 {
-    public class DatabaseService : IDatabaseService
+    public class WindowsDatabaseService : IDatabaseService
     {
         private const int MaxBulkInsertRows = 10000;
 
@@ -59,9 +58,9 @@ namespace MixItUp.Desktop.Services
         {
             await this.EstablishConnection(databaseFilePath, async (connection) =>
             {
-                for (int i = 0; i < parameters.Count(); i += DatabaseService.MaxBulkInsertRows)
+                for (int i = 0; i < parameters.Count(); i += WindowsDatabaseService.MaxBulkInsertRows)
                 {
-                    var rowsToInsert = parameters.Skip(i).Take(DatabaseService.MaxBulkInsertRows);
+                    var rowsToInsert = parameters.Skip(i).Take(WindowsDatabaseService.MaxBulkInsertRows);
 
                     using (SQLiteTransaction transaction = connection.BeginTransaction())
                     {
@@ -76,7 +75,7 @@ namespace MixItUp.Desktop.Services
                                         command.Parameters.Add(new SQLiteParameter(kvp.Key, value: kvp.Value));
                                     }
 
-                                    Logger.Log(LogLevel.Debug, string.Format("SQLite Query: {0} - {1}", commandString, SerializerHelper.SerializeToString(rowParameters)));
+                                    Logger.Log(LogLevel.Debug, string.Format("SQLite Query: {0} - {1}", commandString, JSONSerializerHelper.SerializeToString(rowParameters)));
 
                                     await command.ExecuteNonQueryAsync();
                                     command.Parameters.Clear();

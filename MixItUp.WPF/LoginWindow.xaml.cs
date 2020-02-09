@@ -1,13 +1,10 @@
-﻿using Mixer.Base;
-using Mixer.Base.Model.Channel;
-using Mixer.Base.Model.User;
+﻿using Mixer.Base.Model.User;
 using MixItUp.Base;
 using MixItUp.Base.Model.API;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.Desktop;
 using MixItUp.WPF.Windows;
 using MixItUp.WPF.Windows.Wizard;
 using System.Collections.Generic;

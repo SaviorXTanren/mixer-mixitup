@@ -12,7 +12,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MixItUp.Desktop.Files
+namespace MixItUp.WPF.Services
 {
     public class WindowsFileService : IFileService
     {
@@ -33,6 +33,12 @@ namespace MixItUp.Desktop.Files
                 await this.CreateDirectory(destinationDirectory);
                 File.Copy(sourcePath, destinationPath, overwrite: true);
             }
+        }
+
+        public Task DeleteFile(string filePath)
+        {
+            File.Delete(filePath);
+            return Task.FromResult(0);
         }
 
         public Task CreateDirectory(string path)

@@ -1,7 +1,7 @@
 ﻿using Mixer.Base.Model.MixPlay;
 using MixItUp.Base;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.Desktop.Services;
+using MixItUp.WPF.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

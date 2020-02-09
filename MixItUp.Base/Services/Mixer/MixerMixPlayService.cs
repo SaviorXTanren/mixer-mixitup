@@ -381,15 +381,15 @@ namespace MixItUp.Base.Services.Mixer
 
             foreach (MixPlayControlModel control in controls)
             {
-                if (control is MixPlayConnectedButtonControlModel) { updatedControls.Add(SerializerHelper.Clone<MixPlayConnectedButtonControlModel>(control)); }
-                else if (control is MixPlayConnectedJoystickControlModel) { updatedControls.Add(SerializerHelper.Clone<MixPlayConnectedJoystickControlModel>(control)); }
-                else if (control is MixPlayConnectedTextBoxControlModel) { updatedControls.Add(SerializerHelper.Clone<MixPlayConnectedTextBoxControlModel>(control)); }
-                else if (control is MixPlayConnectedLabelControlModel) { updatedControls.Add(SerializerHelper.Clone<MixPlayConnectedLabelControlModel>(control)); }
-                else if (control is MixPlayButtonControlModel) { updatedControls.Add(SerializerHelper.Clone<MixPlayButtonControlModel>(control)); }
-                else if (control is MixPlayJoystickControlModel) { updatedControls.Add(SerializerHelper.Clone<MixPlayJoystickControlModel>(control)); }
-                else if (control is MixPlayTextBoxControlModel) { updatedControls.Add(SerializerHelper.Clone<MixPlayTextBoxControlModel>(control)); }
-                else if (control is MixPlayLabelControlModel) { updatedControls.Add(SerializerHelper.Clone<MixPlayLabelControlModel>(control)); }
-                else { updatedControls.Add(SerializerHelper.Clone<MixPlayControlModel>(control)); }
+                if (control is MixPlayConnectedButtonControlModel) { updatedControls.Add(JSONSerializerHelper.Clone<MixPlayConnectedButtonControlModel>(control)); }
+                else if (control is MixPlayConnectedJoystickControlModel) { updatedControls.Add(JSONSerializerHelper.Clone<MixPlayConnectedJoystickControlModel>(control)); }
+                else if (control is MixPlayConnectedTextBoxControlModel) { updatedControls.Add(JSONSerializerHelper.Clone<MixPlayConnectedTextBoxControlModel>(control)); }
+                else if (control is MixPlayConnectedLabelControlModel) { updatedControls.Add(JSONSerializerHelper.Clone<MixPlayConnectedLabelControlModel>(control)); }
+                else if (control is MixPlayButtonControlModel) { updatedControls.Add(JSONSerializerHelper.Clone<MixPlayButtonControlModel>(control)); }
+                else if (control is MixPlayJoystickControlModel) { updatedControls.Add(JSONSerializerHelper.Clone<MixPlayJoystickControlModel>(control)); }
+                else if (control is MixPlayTextBoxControlModel) { updatedControls.Add(JSONSerializerHelper.Clone<MixPlayTextBoxControlModel>(control)); }
+                else if (control is MixPlayLabelControlModel) { updatedControls.Add(JSONSerializerHelper.Clone<MixPlayLabelControlModel>(control)); }
+                else { updatedControls.Add(JSONSerializerHelper.Clone<MixPlayControlModel>(control)); }
             }
 
             foreach (MixPlayControlModel control in updatedControls)

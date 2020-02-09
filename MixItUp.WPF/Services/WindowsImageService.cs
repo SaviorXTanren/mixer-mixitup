@@ -7,7 +7,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
-namespace MixItUp.Desktop.Services
+namespace MixItUp.WPF.Services
 {
     public class WindowsImageService : IImageService
     {

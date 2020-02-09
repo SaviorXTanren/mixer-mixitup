@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
-    public abstract class ServicesHandlerBase
+    public abstract class ServicesManagerBase
     {
         public IMixItUpService MixItUpService { get; protected set; }
 

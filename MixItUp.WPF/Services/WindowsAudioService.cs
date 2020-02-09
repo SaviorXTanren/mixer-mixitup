@@ -8,9 +8,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace MixItUp.Desktop.Audio
+namespace MixItUp.WPF.Services
 {
-    public class AudioService : IAudioService
+    public class WindowsAudioService : IAudioService
     {
         public Task Play(string filePath, int volume, int deviceNumber = -1)
         {

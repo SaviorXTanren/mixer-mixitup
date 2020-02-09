@@ -1,12 +1,10 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
-using MixItUp.Desktop.Files;
-using MixItUp.Desktop.Services;
+using MixItUp.WPF.Services;
 using StreamingClient.Base.Util;
 using System;
 using System.Diagnostics;
-using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;

@@ -6,6 +6,7 @@ using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Controls.MainControls;
+using MixItUp.Base.ViewModel.MixPlay;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.MainControls;
 using MixItUp.WPF.Util;
@@ -85,6 +86,11 @@ namespace MixItUp.WPF.Controls.Command
                     EventCommandItemViewModel commandItem = (EventCommandItemViewModel)commandButtonsControl.DataContext;
                     return (T)((CommandBase)commandItem.Command);
                 }
+                else if (commandButtonsControl.DataContext is MixPlayControlViewModel)
+                {
+                    MixPlayControlViewModel commandItem = (MixPlayControlViewModel)commandButtonsControl.DataContext;
+                    return (T)((CommandBase)commandItem.Command);
+                }
             }
             return null;
         }
@@ -101,7 +107,7 @@ namespace MixItUp.WPF.Controls.Command
 
         private void CommandButtonsControl_Loaded(object sender, RoutedEventArgs e)
         {
-            RefreshUI();
+            this.RefreshUI();
         }
 
         private void RefreshUI()
@@ -133,7 +139,6 @@ namespace MixItUp.WPF.Controls.Command
                 if (this.EnableDisableToggleSwitch != null)
                 {
                     this.EnableDisableToggleSwitch.IsChecked = command.IsEnabled;
-
                     if (this.RemoveEnableDisableToggle)
                     {
                         this.EnableDisableToggleSwitch.Visibility = Visibility.Collapsed;
@@ -334,7 +339,6 @@ namespace MixItUp.WPF.Controls.Command
             {
                 command.IsEnabled = this.EnableDisableToggleSwitch.IsChecked.GetValueOrDefault();
             }
-
             this.RaiseEvent(new RoutedEventArgs(CommandButtonsControl.EnableDisableToggledEvent, this));
         }
     }

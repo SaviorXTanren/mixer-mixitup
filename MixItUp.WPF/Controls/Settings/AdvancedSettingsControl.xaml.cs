@@ -1,15 +1,12 @@
 ﻿using Mixer.Base.Model.User;
-using Mixer.Base.Util;
 using MixItUp.Base;
+using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.Desktop;
-using MixItUp.WPF.Util;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
@@ -98,7 +95,7 @@ namespace MixItUp.WPF.Controls.Settings
                                     File.Delete(extractedFilePath);
                                 }
 
-                                if (extractedFilePath.EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase))
+                                if (extractedFilePath.EndsWith(SettingsV2Model.SettingsFileExtension, StringComparison.InvariantCultureIgnoreCase))
                                 {
                                     settingsFile = extractedFilePath;
                                 }
@@ -111,7 +108,7 @@ namespace MixItUp.WPF.Controls.Settings
                     int currentVersion = -1;
                     if (!string.IsNullOrEmpty(settingsFile))
                     {
-                        currentVersion = await ChannelSession.Services.Settings.GetSettingsVersion(settingsFile);
+                        currentVersion = await SettingsV2Upgrader.GetSettingsVersion(settingsFile);
                     }
 
                     if (currentVersion == -1)
@@ -121,12 +118,11 @@ namespace MixItUp.WPF.Controls.Settings
                         return;
                     }
 
-                    if (currentVersion > ChannelSession.Services.Settings.GetLatestVersion())
+                    if (currentVersion > SettingsV2Model.LatestVersion)
                     {
                         // Version is newer than this build, probably a settings from a preview build
                         await DialogHelper.ShowMessage("The backup file is valid, but is from a newer version of Mix It Up.  Be sure to upgrade to the latest version." +
-                            Environment.NewLine + Environment.NewLine +
-                            "NOTE: This may require you to opt-in to the preview build from the General tab in Settings.");
+                            Environment.NewLine + Environment.NewLine + "NOTE: This may require you to opt-in to the preview build from the General tab in Settings.");
                         return;
                     }
 
@@ -193,7 +189,8 @@ namespace MixItUp.WPF.Controls.Settings
             {
                 await this.Window.RunAsyncOperation(async () =>
                 {
-                    await ChannelSession.Services.Settings.ClearAllUserData(ChannelSession.Settings);
+                    await ChannelSession.Settings.ClearAllUserData();
+                    await ChannelSession.SaveSettings();
                 });
                 ((MainWindow)this.Window).Restart();
             }

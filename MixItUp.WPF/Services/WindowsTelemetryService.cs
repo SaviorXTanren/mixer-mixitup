@@ -1,5 +1,4 @@
 ﻿using Microsoft.ApplicationInsights;
-using Mixer.Base.Model.MixPlay;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
@@ -14,16 +13,16 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace MixItUp.Desktop.Services
+namespace MixItUp.WPF.Services
 {
-    public class DesktopTelemetryService : ITelemetryService
+    public class WindowsTelemetryService : ITelemetryService
     {
         private const int MaxTelemetryEventsPerSession = 2000;
 
         private TelemetryClient telemetryClient = new TelemetryClient();
         private int totalEventsSent = 0;
 
-        public DesktopTelemetryService()
+        public WindowsTelemetryService()
         {
             this.telemetryClient.Context.Cloud.RoleInstance = "MixItUpApp";
             this.telemetryClient.Context.Cloud.RoleName = "MixItUpApp";
@@ -121,7 +120,7 @@ namespace MixItUp.Desktop.Services
 
         private void TrySendEvent(Action eventAction)
         {
-            if (!ChannelSession.Settings.OptOutTracking && this.totalEventsSent < DesktopTelemetryService.MaxTelemetryEventsPerSession)
+            if (!ChannelSession.Settings.OptOutTracking && this.totalEventsSent < WindowsTelemetryService.MaxTelemetryEventsPerSession)
             {
                 eventAction();
                 this.totalEventsSent++;

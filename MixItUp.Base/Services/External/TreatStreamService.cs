@@ -234,7 +234,7 @@ namespace MixItUp.Base.Services.External
             {
                 if (data != null)
                 {
-                    TreatStreamEvent tsEvent = SerializerHelper.DeserializeFromString<TreatStreamEvent>(data.ToString());
+                    TreatStreamEvent tsEvent = JSONSerializerHelper.DeserializeFromString<TreatStreamEvent>(data.ToString());
                     if (tsEvent != null)
                     {
                         this.DonationOccurred(tsEvent);

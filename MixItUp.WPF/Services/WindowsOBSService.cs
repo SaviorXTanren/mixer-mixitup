@@ -9,16 +9,16 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MixItUp.OBS
+namespace MixItUp.WPF.Services
 {
-    public class OBSService : IStreamingSoftwareService
+    public class WindowsOBSService : IStreamingSoftwareService
     {
         public event EventHandler Connected = delegate { };
         public event EventHandler Disconnected = delegate { };
 
         private OBSWebsocket OBSWebsocket = new OBSWebsocket();
 
-        public OBSService() { }
+        public WindowsOBSService() { }
 
         public string Name { get { return "OBS Studio"; } }
 
