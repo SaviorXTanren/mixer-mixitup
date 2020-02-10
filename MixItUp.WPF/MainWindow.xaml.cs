@@ -127,10 +127,6 @@ namespace MixItUp.WPF
 
             await this.MainMenu.Initialize(this);
 
-            if (ChannelSession.Settings.IsStreamer)
-            {
-                await this.MainMenu.AddMenuItem("Accounts", new AccountsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki");
-            }
             await this.MainMenu.AddMenuItem("Chat", new ChatControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Chat");
             if (ChannelSession.Settings.IsStreamer)
             {
@@ -156,6 +152,7 @@ namespace MixItUp.WPF
                 await this.MainMenu.AddMenuItem("Moderation", new ModerationControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Moderation");
                 await this.MainMenu.AddMenuItem("Auto-Hoster", new AutoHosterControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Auto-Hoster");
                 await this.MainMenu.AddMenuItem("Services", new ServicesControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Services");
+                await this.MainMenu.AddMenuItem("Accounts", new AccountsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki");
             }
             await this.MainMenu.AddMenuItem("About", new AboutControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki");
 
