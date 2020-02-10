@@ -77,9 +77,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="..\MixItUp.WPF\Services\WindowsFileService.cs">
-      <Link>WindowsFileService.cs</Link>
-    </Compile>
     <Compile Include="AutoHosterSettingsModel.cs" />
     <Compile Include="BasicDialogControl.xaml.cs">
       <DependentUpon>BasicDialogControl.xaml</DependentUpon>
