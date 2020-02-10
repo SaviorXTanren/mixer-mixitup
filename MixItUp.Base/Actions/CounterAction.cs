@@ -79,7 +79,7 @@ namespace MixItUp.Base.Actions
 
                 if (this.ResetOnLoad)
                 {
-                    ChannelSession.Settings.Counters[this.CounterName] = 0.0;
+                    ChannelSession.Settings.Counters[this.CounterName] = 0;
                 }
 
                 await this.SaveCounterToFile();
@@ -90,7 +90,7 @@ namespace MixItUp.Base.Actions
         {
             if (!ChannelSession.Settings.Counters.ContainsKey(this.CounterName))
             {
-                ChannelSession.Settings.Counters[this.CounterName] = 0.0;
+                ChannelSession.Settings.Counters[this.CounterName] = 0;
             }
 
             if (this.UpdateAmount)
@@ -111,7 +111,7 @@ namespace MixItUp.Base.Actions
             }
             else if (this.ResetAmount)
             {
-                ChannelSession.Settings.Counters[this.CounterName] = 0.0;
+                ChannelSession.Settings.Counters[this.CounterName] = 0;
             }
 
             await this.SaveCounterToFile();
