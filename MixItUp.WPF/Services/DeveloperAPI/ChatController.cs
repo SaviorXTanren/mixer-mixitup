@@ -1,7 +1,6 @@
 ﻿using MixItUp.API.Models;
 using MixItUp.Base;
 using MixItUp.Base.Model;
-using MixItUp.Base.Model.User;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -9,7 +8,7 @@ using System.Net.Http.Formatting;
 using System.Threading.Tasks;
 using System.Web.Http;
 
-namespace MixItUp.Desktop.Services.DeveloperAPI
+namespace MixItUp.WPF.Services.DeveloperAPI
 {
     [RoutePrefix("api/chat")]
     public class ChatController : ApiController

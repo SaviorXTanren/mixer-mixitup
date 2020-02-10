@@ -9,7 +9,7 @@ using System.Web.Http;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 
-namespace MixItUp.Desktop.Services.DeveloperAPI
+namespace MixItUp.WPF.Services.DeveloperAPI
 {
     [RoutePrefix("api/commands")]
     public class CommandController : ApiController
