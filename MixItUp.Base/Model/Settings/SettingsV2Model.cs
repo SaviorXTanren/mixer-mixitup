@@ -453,7 +453,7 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public Dictionary<string, HotKeyConfiguration> HotKeys { get; set; } = new Dictionary<string, HotKeyConfiguration>();
         [DataMember]
-        public Dictionary<string, double> Counters { get; set; } = new Dictionary<string, double>();
+        public Dictionary<string, CounterModel> Counters { get; set; } = new Dictionary<string, CounterModel>();
 
         #region Database Data
 

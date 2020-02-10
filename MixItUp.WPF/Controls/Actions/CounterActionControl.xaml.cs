@@ -1,8 +1,8 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Actions;
+using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Util;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -26,8 +26,11 @@ namespace MixItUp.WPF.Controls.Actions
             if (this.action != null)
             {
                 this.CounterNameTextBox.Text = this.action.CounterName;
-                this.SaveToFileToggleButton.IsChecked = this.action.SaveToFile;
-                this.ResetOnLoadToggleButton.IsChecked = this.action.ResetOnLoad;
+                if (ChannelSession.Settings.Counters.ContainsKey(this.action.CounterName))
+                {
+                    this.SaveToFileToggleButton.IsChecked = ChannelSession.Settings.Counters[this.action.CounterName].SaveToFile;
+                    this.ResetOnLoadToggleButton.IsChecked = ChannelSession.Settings.Counters[this.action.CounterName].ResetOnLoad;
+                }
 
                 if (this.action.UpdateAmount)
                 {
@@ -51,19 +54,24 @@ namespace MixItUp.WPF.Controls.Actions
         {
             if (SpecialIdentifierStringBuilder.IsValidSpecialIdentifier(this.CounterNameTextBox.Text))
             {
+                if (!ChannelSession.Settings.Counters.ContainsKey(this.CounterNameTextBox.Text))
+                {
+                    ChannelSession.Settings.Counters[this.CounterNameTextBox.Text] = new CounterModel(this.CounterNameTextBox.Text);
+                }
+                ChannelSession.Settings.Counters[this.CounterNameTextBox.Text].SaveToFile = this.SaveToFileToggleButton.IsChecked.GetValueOrDefault();
+                ChannelSession.Settings.Counters[this.CounterNameTextBox.Text].ResetOnLoad = this.ResetOnLoadToggleButton.IsChecked.GetValueOrDefault();
+
                 if (this.CounterActionTypeComboBox.SelectedIndex == 0)
                 {
-                    return new CounterAction(this.CounterNameTextBox.Text, this.CounterAmountTextBox.Text, false, this.SaveToFileToggleButton.IsChecked.GetValueOrDefault(),
-                        this.ResetOnLoadToggleButton.IsChecked.GetValueOrDefault());
+                    return new CounterAction(this.CounterNameTextBox.Text, this.CounterAmountTextBox.Text, false);
                 }
                 else if (this.CounterActionTypeComboBox.SelectedIndex == 1)
                 {
-                    return new CounterAction(this.CounterNameTextBox.Text, this.CounterAmountTextBox.Text, true, this.SaveToFileToggleButton.IsChecked.GetValueOrDefault(),
-                        this.ResetOnLoadToggleButton.IsChecked.GetValueOrDefault());
+                    return new CounterAction(this.CounterNameTextBox.Text, this.CounterAmountTextBox.Text, true);
                 }
                 else if (this.CounterActionTypeComboBox.SelectedIndex == 2)
                 {
-                    return new CounterAction(this.CounterNameTextBox.Text, this.SaveToFileToggleButton.IsChecked.GetValueOrDefault(), this.ResetOnLoadToggleButton.IsChecked.GetValueOrDefault());
+                    return new CounterAction(this.CounterNameTextBox.Text);
                 }
             }
             return null;
@@ -97,7 +105,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         private async void CountersFolderHyperlink_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            string counterFolderPath = Path.Combine(ChannelSession.Services.FileService.GetApplicationDirectory(), CounterAction.CounterFolderName);
+            string counterFolderPath = Path.Combine(ChannelSession.Services.FileService.GetApplicationDirectory(), CounterModel.CounterFolderName);
             if (!Directory.Exists(counterFolderPath))
             {
                 await ChannelSession.Services.FileService.CreateDirectory(counterFolderPath);

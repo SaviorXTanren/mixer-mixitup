@@ -412,17 +412,6 @@ namespace MixItUp.Base
                         await ChannelSession.Services.RemoteService.InitializeConnection(ChannelSession.Settings.RemoteHostConnection);
                     }
 
-                    foreach (CommandBase command in ChannelSession.AllEnabledCommands)
-                    {
-                        foreach (ActionBase action in command.Actions)
-                        {
-                            if (action is CounterAction)
-                            {
-                                await ((CounterAction)action).SetCounterValue();
-                            }
-                        }
-                    }
-
                     if (ChannelSession.Settings.DefaultMixPlayGame > 0)
                     {
                         IEnumerable<MixPlayGameListingModel> games = await ChannelSession.MixerUserConnection.GetOwnedMixPlayGames(ChannelSession.MixerChannel);
