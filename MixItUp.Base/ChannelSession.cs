@@ -17,12 +17,9 @@ using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-
-[assembly: InternalsVisibleTo("MixItUp.Desktop")]
 
 namespace MixItUp.Base
 {
@@ -385,7 +382,7 @@ namespace MixItUp.Base
                         List<IExternalService> failedServices = new List<IExternalService>();
                         foreach (var kvp in externalServiceTasks)
                         {
-                            if (!kvp.Value.Result.Success)
+                            if (!kvp.Value.Result.Success && kvp.Key is IOAuthExternalService)
                             {
                                 ExternalServiceResult result = await kvp.Key.Connect();
                                 if (!result.Success)
