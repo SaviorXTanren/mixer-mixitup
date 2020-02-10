@@ -106,16 +106,16 @@ namespace MixItUp.Base.Services.External
 
         protected abstract Task<ExternalServiceResult> InitializeInternal();
 
-        protected async Task<string> ConnectViaOAuthRedirect(string oauthPageURL) { return await this.ConnectViaOAuthRedirect(oauthPageURL, MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL); }
+        protected async Task<string> ConnectViaOAuthRedirect(string oauthPageURL, int secondsToWait = 30) { return await this.ConnectViaOAuthRedirect(oauthPageURL, MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL); }
 
-        protected virtual async Task<string> ConnectViaOAuthRedirect(string oauthPageURL, string listeningAddress)
+        protected virtual async Task<string> ConnectViaOAuthRedirect(string oauthPageURL, string listeningAddress, int secondsToWait = 30)
         {
-            LocalOAuthHttpListenerServer oauthServer = new LocalOAuthHttpListenerServer(listeningAddress, MixerConnection.DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER, successResponse: OAuthServiceBase.LoginRedirectPageHTML);
+            LocalOAuthHttpListenerServer oauthServer = new LocalOAuthHttpListenerServer(listeningAddress, MixerConnection.DEFAULT_AUTHORIZATION_CODE_URL_PARAMETER, successResponse: OAuthExternalServiceBase.LoginRedirectPageHTML);
             oauthServer.Start();
 
             ProcessHelper.LaunchLink(oauthPageURL);
 
-            string authorizationCode = await oauthServer.WaitForAuthorizationCode();
+            string authorizationCode = await oauthServer.WaitForAuthorizationCode(secondsToWait);
             oauthServer.Stop();
 
             return authorizationCode;

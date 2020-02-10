@@ -71,12 +71,12 @@ namespace MixItUp.Base.Services
                         Directory.CreateDirectory(oldSettingsPath);
 
                         await ChannelSession.Services.FileService.CopyFile(filePath, Path.Combine(oldSettingsPath, Path.GetFileName(filePath)));
-                        await ChannelSession.Services.FileService.CopyFile(Path.Combine(SettingsV2Model.SettingsDirectoryName, setting.DatabaseFileName), Path.Combine(oldSettingsPath, setting.DatabaseFileName));
+                        await ChannelSession.Services.FileService.CopyFile(setting.DatabaseFilePath, Path.Combine(oldSettingsPath, setting.DatabaseFileName));
 
                         await ChannelSession.Services.FileService.DeleteFile(filePath);
-                        await ChannelSession.Services.FileService.DeleteFile(Path.Combine(SettingsV2Model.SettingsDirectoryName, setting.DatabaseFileName));
+                        await ChannelSession.Services.FileService.DeleteFile(setting.DatabaseFilePath);
                         await ChannelSession.Services.FileService.DeleteFile(filePath + ".backup");
-                        await ChannelSession.Services.FileService.DeleteFile(Path.Combine(SettingsV2Model.SettingsDirectoryName, setting.DatabaseFileName) + ".backup");
+                        await ChannelSession.Services.FileService.DeleteFile(setting.DatabaseFilePath + ".backup");
                     }
                     catch (Exception ex) { Logger.Log(ex); }
                 }
@@ -229,9 +229,7 @@ namespace MixItUp.Base.Services
             await SettingsV1Upgrader.Version39Upgrade(filePath);
 
             SettingsV1Model settings = await SerializerHelper.DeserializeFromFile<SettingsV1Model>(filePath, ignoreErrors: true);
-            await settings.LoadUserData();
             settings.Version = SettingsV1Model.LatestVersion;
-
             await SerializerHelper.SerializeToFile<SettingsV1Model>(filePath, settings);
 
             return settings;
@@ -240,6 +238,7 @@ namespace MixItUp.Base.Services
         public static async Task Version39Upgrade(string filePath)
         {
             SettingsV1Model oldSettings = await SerializerHelper.DeserializeFromFile<SettingsV1Model>(filePath, ignoreErrors: true);
+            await oldSettings.LoadUserData();
 
             SettingsV2Model newSettings = await SerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
             await ChannelSession.Services.Settings.Initialize(newSettings);
@@ -258,8 +257,8 @@ namespace MixItUp.Base.Services
             newSettings.BannedWords = new List<string>(oldSettings.bannedWordsInternal);
             newSettings.MixPlayUserGroups = new Dictionary<uint, List<MixPlayUserGroupModel>>(oldSettings.mixPlayUserGroupsInternal);
             newSettings.OverlayWidgets = new List<OverlayWidgetModel>(oldSettings.overlayWidgetModelsInternal);
-            newSettings.Currencies = oldSettings.Currencies;
-            newSettings.Inventories = oldSettings.Inventories;
+            newSettings.Currencies = oldSettings.currenciesInternal;
+            newSettings.Inventories = oldSettings.inventoriesInternal;
             newSettings.CooldownGroups = new Dictionary<string, int>(oldSettings.cooldownGroupsInternal);
             newSettings.PreMadeChatCommandSettings = new List<PreMadeChatCommandSettings>(oldSettings.preMadeChatCommandSettingsInternal);
 
@@ -270,6 +269,11 @@ namespace MixItUp.Base.Services
             newSettings.ActionGroupCommands = new LockedList<ActionGroupCommand>(oldSettings.actionGroupCommandsInternal);
             newSettings.GameCommands = new LockedList<GameCommandBase>(oldSettings.gameCommandsInternal);
             newSettings.Quotes = new LockedList<UserQuoteViewModel>(oldSettings.userQuotesInternal);
+
+            foreach (UserDataModel data in oldSettings.UserData.Values)
+            {
+                newSettings.UserData[data.ID] = data;
+            }
 
             int quoteID = 1;
             foreach (UserQuoteViewModel quote in oldSettings.userQuotesInternal)
