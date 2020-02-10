@@ -76,6 +76,10 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 {
                     return "Mixer";
                 }
+                else if (eventNumber >= 200 && eventNumber < 300)
+                {
+                    return "Twitch";
+                }
                 else
                 {
                     return "Generic";
