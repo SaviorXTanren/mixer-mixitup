@@ -10,7 +10,7 @@ using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Web.Http;
 
-namespace MixItUp.Desktop.Services.DeveloperAPI
+namespace MixItUp.WPF.Services.DeveloperAPI
 {
     [RoutePrefix("api/users")]
     public class UserController : ApiController

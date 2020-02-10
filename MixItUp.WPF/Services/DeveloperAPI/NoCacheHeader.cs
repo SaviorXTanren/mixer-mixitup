@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MixItUp.Desktop.Services.DeveloperAPI
+namespace MixItUp.WPF.Services.DeveloperAPI
 {
     public class NoCacheHeader : DelegatingHandler
     {
