@@ -72,9 +72,12 @@ namespace MixItUp.Base.ViewModel.Controls.Services
         public void RefreshTiers()
         {
             this.Tiers.Clear();
-            foreach (PatreonTier tier in ChannelSession.Services.Patreon.Campaign.ActiveTiers)
+            if (ChannelSession.Services.Patreon.Campaign != null && ChannelSession.Services.Patreon.Campaign.ActiveTiers != null)
             {
-                this.Tiers.Add(tier);
+                foreach (PatreonTier tier in ChannelSession.Services.Patreon.Campaign.ActiveTiers)
+                {
+                    this.Tiers.Add(tier);
+                }
             }
         }
     }

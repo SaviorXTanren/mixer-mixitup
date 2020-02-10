@@ -1,11 +1,8 @@
 ﻿using Mixer.Base;
-using Mixer.Base.Model.User;
-using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -88,10 +85,10 @@ namespace MixItUp.Base.Services.External
         public DateTimeOffset? PublishedAt { get; set; }
 
         [DataMember]
-        public Dictionary<string, PatreonTier> Tiers { get; set; }
+        public Dictionary<string, PatreonTier> Tiers { get; set; } = new Dictionary<string, PatreonTier>();
 
         [DataMember]
-        public Dictionary<string, PatreonBenefit> Benefits { get; set; }
+        public Dictionary<string, PatreonBenefit> Benefits { get; set; } = new Dictionary<string, PatreonBenefit>();
 
         public PatreonCampaign()
         {
@@ -165,7 +162,7 @@ namespace MixItUp.Base.Services.External
         public DateTimeOffset? PublishedAt { get; set; }
 
         [DataMember]
-        public HashSet<string> BenefitIDs { get; set; }
+        public HashSet<string> BenefitIDs { get; set; } = new HashSet<string>();
 
         [JsonIgnore]
         public double Amount { get { return Math.Round(((double)this.AmountCents) / 100.0, 2); } }
