@@ -2107,6 +2107,10 @@
       <Project>{6ead4ad5-3606-42b0-a2da-13848a0d4076}</Project>
       <Name>MixItUp.API</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MixItUp.AutoHoster\MixItUp.AutoHoster.csproj">
+      <Project>{f4ed5346-1cc5-4606-90a4-c5d22eed4e54}</Project>
+      <Name>MixItUp.AutoHoster</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MixItUp.Base\MixItUp.Base.csproj">
       <Project>{0e494acc-c46a-4ded-922b-ff378556be8a}</Project>
       <Name>MixItUp.Base</Name>
@@ -2232,14 +2236,12 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-      del $(TargetDir)ApplicationSettings.json
-
-      rmdir /Q /S $(TargetDir)Settings\
-      rmdir /Q /S $(TargetDir)Logs\
-      rmdir /Q /S $(TargetDir)ChatEventLogs\
-      rmdir /Q /S $(TargetDir)Counters\
-    </PostBuildEvent>
+    <PostBuildEvent>del $(TargetDir)ApplicationSettings.json
+rmdir /Q /S $(TargetDir)Settings\
+rmdir /Q /S $(TargetDir)Logs\
+rmdir /Q /S $(TargetDir)ChatEventLogs\
+rmdir /Q /S $(TargetDir)Counters\
+</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>

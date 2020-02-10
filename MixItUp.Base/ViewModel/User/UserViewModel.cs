@@ -1102,7 +1102,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public int GetAmount(string itemName) { return this.Inventory.GetAmount(this.User, itemName); }
 
-        public Dictionary<string, int> GetAmounts() { return this.Inventory.GetAmounts(this.User); }
+        public Dictionary<Guid, int> GetAmounts() { return this.Inventory.GetAmounts(this.User); }
 
         public void SetAmount(UserInventoryItemModel item, int amount) { this.SetAmount(item.Name, amount); }
 

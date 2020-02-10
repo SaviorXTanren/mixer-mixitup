@@ -85,7 +85,7 @@ namespace MixItUp.Base.Model.User
         [DataMember]
         public bool IsPrimary { get; set; }
 
-        [JsonProperty]
+        [JsonIgnore]
         public DatabaseDictionary<Guid, int> UserAmounts { get; set; } = new DatabaseDictionary<Guid, int>();
 
         public UserCurrencyModel()

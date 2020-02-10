@@ -1,10 +1,10 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Services;
 using MixItUp.Base.Util;
-using MixItUp.WPF.Services;
 using StreamingClient.Base.Util;
 using System;
 using System.Diagnostics;
+using System.Globalization;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
@@ -16,21 +16,24 @@ namespace MixItUp.AutoHoster
     /// </summary>
     public partial class App : Application
     {
-        public static IFileService FileService { get; private set; }
+        private const string LogsDirectoryName = "Logs";
+        private const string LogFileNameFormat = "MixItUpLog-{0}.txt";
+
+        public static string CurrentLogFilePath { get; private set; }
 
         private bool crashObtained;
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            App.FileService = new WindowsFileService();
-            FileLoggerHandler.Initialize(App.FileService);
-            SerializerHelper.Initialize(App.FileService);
+            Logger.LogOccurred += Logger_LogOccurred;
+            Directory.CreateDirectory(LogsDirectoryName);
+            App.CurrentLogFilePath = Path.Combine(LogsDirectoryName, string.Format(LogFileNameFormat, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture)));
 
             Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
             Logger.SetLogLevel(LogLevel.Information);
-            Logger.Log(LogLevel.Information, "Auto Hoster Application Version: " + App.FileService.GetApplicationVersion());
+            Logger.Log(LogLevel.Information, "Auto Hoster Log");
             Logger.SetLogLevel(LogLevel.Error);
 
             base.OnStartup(e);
@@ -62,6 +65,16 @@ namespace MixItUp.AutoHoster
 
                 Task.Delay(1000).Wait();
             }
+        }
+
+        private static void Logger_LogOccurred(object sender, Log log)
+        {
+            try
+            {
+                File.AppendAllText(FileLoggerHandler.CurrentLogFilePath, string.Format("{0} - {1} - {2} " + Environment.NewLine + Environment.NewLine,
+                    DateTimeOffset.Now.ToString(), EnumHelper.GetEnumName(log.Level), log.Message));
+            }
+            catch (Exception) { }
         }
     }
 }

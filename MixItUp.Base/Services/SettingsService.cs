@@ -403,6 +403,21 @@ namespace MixItUp.Base.Services
                         InteractiveAction iaction = (InteractiveAction)action;
                         iaction.CooldownAmountString = iaction.CooldownAmount.ToString();
                     }
+                    else if (action is CounterAction)
+                    {
+                        CounterAction cAction = (CounterAction)action;
+                        newSettings.Counters[cAction.CounterName] = new CounterModel(cAction.CounterName);
+                        newSettings.Counters[cAction.CounterName].SaveToFile = cAction.SaveToFile;
+                        newSettings.Counters[cAction.CounterName].ResetOnLoad = cAction.ResetOnLoad;
+                        if (File.Exists(newSettings.Counters[cAction.CounterName].GetCounterFilePath()))
+                        {
+                            string data = await ChannelSession.Services.FileService.ReadFile(newSettings.Counters[cAction.CounterName].GetCounterFilePath());
+                            if (double.TryParse(data, out double amount))
+                            {
+                                newSettings.Counters[cAction.CounterName].Amount = amount;
+                            }
+                        }
+                    }
                 }
             }
         }

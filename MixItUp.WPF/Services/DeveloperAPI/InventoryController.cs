@@ -50,7 +50,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             {
                 ID = inventory.ID,
                 Name = inventory.Name,
-                Items = inventoryData.GetAmounts().Select(kvp => new InventoryItemAmount() { Name = kvp.Key, Amount = kvp.Value }).ToList(),
+                Items = inventoryData.GetAmounts().Select(kvp => new InventoryItemAmount() { Name = inventory.Items.Values.FirstOrDefault(i => i.ID.Equals(kvp.Key)).Name, Amount = kvp.Value }).ToList(),
             };
         }
 

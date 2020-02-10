@@ -462,7 +462,7 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public Dictionary<string, HotKeyConfiguration> HotKeys { get; set; } = new Dictionary<string, HotKeyConfiguration>();
         [DataMember]
-        public Dictionary<string, double> Counters { get; set; } = new Dictionary<string, double>();
+        public Dictionary<string, CounterModel> Counters { get; set; } = new Dictionary<string, CounterModel>();
 
         #region Database Data
 
@@ -567,16 +567,16 @@ namespace MixItUp.Base.Model.Settings
                 {
                     Guid inventoryID = Guid.Parse((string)data["InventoryID"]);
                     Guid userID = Guid.Parse((string)data["UserID"]);
-                    string itemName = (string)data["ItemName"];
+                    Guid itemID = Guid.Parse((string)data["ItemID"]);
                     int amount = Convert.ToInt32(data["Amount"]);
 
                     if (inventories.ContainsKey(inventoryID))
                     {
                         if (!inventories[inventoryID].UserAmounts.ContainsKey(userID))
                         {
-                            inventories[inventoryID].UserAmounts[userID] = new Dictionary<string, int>();
+                            inventories[inventoryID].UserAmounts[userID] = new Dictionary<Guid, int>();
                         }
-                        inventories[inventoryID].UserAmounts[userID][itemName] = amount;
+                        inventories[inventoryID].UserAmounts[userID][itemID] = amount;
                     }
                 });
 
@@ -726,13 +726,13 @@ namespace MixItUp.Base.Model.Settings
                             {
                                 { "@InventoryID", kvp.Value.ID.ToString() },
                                 { "@UserID", changedKey.ToString() },
-                                { "@ItemName", item.Key },
+                                { "@ItemID", item.Key },
                                 { "@Amount", item.Value }
                             });
                         }
                     }
 
-                    await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO InventoryAmounts(InventoryID, UserID, ItemName, Amount) VALUES(@InventoryID, @UserID, @ItemName, @Amount)", changedData);
+                    await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO InventoryAmounts(InventoryID, UserID, ItemID, Amount) VALUES(@InventoryID, @UserID, @ItemID, @Amount)", changedData);
                 }
 
                 List<CommandBase> commands = new List<CommandBase>();

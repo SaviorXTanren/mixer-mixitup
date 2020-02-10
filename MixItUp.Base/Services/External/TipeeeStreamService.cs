@@ -336,6 +336,8 @@ namespace MixItUp.Base.Services.External
 
         private async Task<bool> ConnectSocket()
         {
+            await this.socket.Connect(this.socketAddress, "access_token=" + this.apiKey);
+
             this.socket.Listen("connect", (data) =>
             {
                 JObject joinRoomJObj = new JObject();
@@ -383,8 +385,6 @@ namespace MixItUp.Base.Services.External
                 this.WebSocketDisconnectedOccurred();
                 await this.ConnectSocket();
             });
-
-            await this.socket.Connect(this.socketAddress, "access_token=" + this.apiKey);
 
             for (int i = 0; i < 10 && !this.WebSocketConnected; i++)
             {

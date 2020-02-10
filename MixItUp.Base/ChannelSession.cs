@@ -18,14 +18,11 @@ using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using TwitchV5API = Twitch.Base.Models.V5;
 using TwitchNewAPI = Twitch.Base.Models.NewAPI;
-
-[assembly: InternalsVisibleTo("MixItUp.Desktop")]
 
 namespace MixItUp.Base
 {
@@ -552,7 +549,7 @@ namespace MixItUp.Base
                         List<IExternalService> failedServices = new List<IExternalService>();
                         foreach (var kvp in externalServiceTasks)
                         {
-                            if (!kvp.Value.Result.Success)
+                            if (!kvp.Value.Result.Success && kvp.Key is IOAuthExternalService)
                             {
                                 result = await kvp.Key.Connect();
                                 if (!result.Success)
@@ -580,17 +577,6 @@ namespace MixItUp.Base
                     if (ChannelSession.Settings.RemoteHostConnection != null)
                     {
                         await ChannelSession.Services.RemoteService.InitializeConnection(ChannelSession.Settings.RemoteHostConnection);
-                    }
-
-                    foreach (CommandBase command in ChannelSession.AllEnabledCommands)
-                    {
-                        foreach (ActionBase action in command.Actions)
-                        {
-                            if (action is CounterAction)
-                            {
-                                await ((CounterAction)action).SetCounterValue();
-                            }
-                        }
                     }
 
                     if (ChannelSession.Settings.DefaultMixPlayGame > 0)
