@@ -691,7 +691,7 @@ namespace MixItUp.Base.Services.Mixer
                         "The Bot account could not send the last message for the following reason: " + e.errorObject["message"]));
                 }
             }
-            else if (e.error != null)
+            else if (e.error != null && !string.IsNullOrEmpty(e.error.ToString()))
             {
                 await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer, await ChannelSession.GetCurrentUser(),
                     "Bot account error: " + e.error.ToString()));
