@@ -699,7 +699,7 @@ namespace MixItUp.Base.Model.Settings
                             {
                                 { "@InventoryID", kvp.Value.ID.ToString() },
                                 { "@UserID", changedKey.ToString() },
-                                { "@ItemID", item.Key },
+                                { "@ItemID", item.Key.ToString() },
                                 { "@Amount", item.Value }
                             });
                         }
