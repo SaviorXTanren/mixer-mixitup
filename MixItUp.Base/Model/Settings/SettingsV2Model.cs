@@ -522,29 +522,24 @@ namespace MixItUp.Base.Model.Settings
                     this.UserData[userData.ID] = userData;
                     this.MixerUserIDLookups[userData.MixerID] = userData.ID;
                 });
+                this.UserData.ClearTracking();
 
-                Dictionary<Guid, UserCurrencyModel> currencies = new Dictionary<Guid, UserCurrencyModel>();
-                foreach (var kvp in this.Currencies)
-                {
-                    currencies[kvp.Key] = kvp.Value;
-                }
                 await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM CurrencyAmounts", (Dictionary<string, object> data) =>
                 {
                     Guid currencyID = Guid.Parse((string)data["CurrencyID"]);
                     Guid userID = Guid.Parse((string)data["UserID"]);
                     int amount = Convert.ToInt32(data["Amount"]);
 
-                    if (currencies.ContainsKey(currencyID))
+                    if (this.Currencies.ContainsKey(currencyID))
                     {
-                        currencies[currencyID].UserAmounts[userID] = amount;
+                        this.Currencies[currencyID].UserAmounts[userID] = amount;
                     }
                 });
-
-                Dictionary<Guid, UserInventoryModel> inventories = new Dictionary<Guid, UserInventoryModel>();
-                foreach (var kvp in this.Inventories)
+                foreach (var kvp in this.Currencies)
                 {
-                    inventories[kvp.Key] = kvp.Value;
+                    kvp.Value.UserAmounts.ClearTracking();
                 }
+
                 await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM InventoryAmounts", (Dictionary<string, object> data) =>
                 {
                     Guid inventoryID = Guid.Parse((string)data["InventoryID"]);
@@ -552,15 +547,19 @@ namespace MixItUp.Base.Model.Settings
                     Guid itemID = Guid.Parse((string)data["ItemID"]);
                     int amount = Convert.ToInt32(data["Amount"]);
 
-                    if (inventories.ContainsKey(inventoryID))
+                    if (this.Inventories.ContainsKey(inventoryID))
                     {
-                        if (!inventories[inventoryID].UserAmounts.ContainsKey(userID))
+                        if (!this.Inventories[inventoryID].UserAmounts.ContainsKey(userID))
                         {
-                            inventories[inventoryID].UserAmounts[userID] = new Dictionary<Guid, int>();
+                            this.Inventories[inventoryID].UserAmounts[userID] = new Dictionary<Guid, int>();
                         }
-                        inventories[inventoryID].UserAmounts[userID][itemID] = amount;
+                        this.Inventories[inventoryID].UserAmounts[userID][itemID] = amount;
                     }
                 });
+                foreach (var kvp in this.Inventories)
+                {
+                    kvp.Value.UserAmounts.ClearTracking();
+                }
 
                 await ChannelSession.Services.Database.Read(this.DatabaseFilePath, "SELECT * FROM Quotes", (Dictionary<string, object> data) =>
                 {

@@ -65,6 +65,13 @@ namespace MixItUp.Base.Util
 
         public void ManualValueChanged(K key) { this.ValueChanged(key); }
 
+        public void ClearTracking()
+        {
+            this.addedValues.Clear();
+            this.changedValues.Clear();
+            this.removedValues.Clear();
+        }
+
         public Dictionary<K, V> GetKeyValues(HashSet<K> keys)
         {
             lock (valuesUpdateLock)

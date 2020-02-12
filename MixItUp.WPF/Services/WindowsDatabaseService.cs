@@ -95,11 +95,14 @@ namespace MixItUp.WPF.Services
             {
                 if (File.Exists(databaseFilePath))
                 {
-                    using (SQLiteConnection connection = new SQLiteConnection("Data Source=" + databaseFilePath))
+                    await Task.Run(async () =>
                     {
-                        await connection.OpenAsync();
-                        await databaseQuery(connection);
-                    }
+                        using (SQLiteConnection connection = new SQLiteConnection("Data Source=" + databaseFilePath))
+                        {
+                            await connection.OpenAsync();
+                            await databaseQuery(connection);
+                        }
+                    });
                 }
             }
             catch (Exception ex)
