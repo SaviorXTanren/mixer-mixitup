@@ -3238,24 +3238,6 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Bot Account failed to authenticate, please re-connect it from the Services section..
-        /// </summary>
-        public static string LoginErrorBotAccountFailed {
-            get {
-                return ResourceManager.GetString("LoginErrorBotAccountFailed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Unable to authenticate with Mixer, please try again..
-        /// </summary>
-        public static string LoginErrorFailedToAuthenticate {
-            get {
-                return ResourceManager.GetString("LoginErrorFailedToAuthenticate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to A channel name must be entered..
         /// </summary>
         public static string LoginErrorNoChannelName {

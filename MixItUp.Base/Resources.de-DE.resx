@@ -1176,9 +1176,6 @@
   <data name="Login" xml:space="preserve">
     <value>Einloggen</value>
   </data>
-  <data name="LoginErrorBotAccountFailed" xml:space="preserve">
-    <value>Das Bot-Konto konnte nicht authentifiziert werden. Stelle die Verbindung im Bereich Dienste erneut her.</value>
-  </data>
   <data name="LoginErrorFailedToAuthenticate" xml:space="preserve">
     <value>Die Authentifizierung mit Mixer ist nicht möglich. Bitte versuche es erneut.</value>
   </data>

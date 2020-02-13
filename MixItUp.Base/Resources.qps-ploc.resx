@@ -1167,9 +1167,6 @@
   <data name="Login" xml:space="preserve">
     <value>[Ļöĝîñẋẋ]</value>
   </data>
-  <data name="LoginErrorBotAccountFailed" xml:space="preserve">
-    <value>[Ɓöţẋ Åççöûñţẋẋẋ ƒåîļéðẋẋ ţöẋ åûţĥéñţîçåţé،ẋẋẋẋẋ þļéåšéẋẋ ŕé‐çöññéçţẋẋẋẋ îţẋ ƒŕöɱẋẋ ţĥéẋ Šéŕṽîçéšẋẋẋ šéçţîöñ·ẋẋẋ]</value>
-  </data>
   <data name="LoginErrorFailedToAuthenticate" xml:space="preserve">
     <value>[Ûñåƀļéẋẋ ţöẋ åûţĥéñţîçåţéẋẋẋẋ ŵîţĥẋẋ Ṁîẋéŕ،ẋẋ þļéåšéẋẋ ţŕýẋ åĝåîñ·ẋẋ]</value>
   </data>
