@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
@@ -15,13 +16,13 @@ namespace MixItUp.Base.ViewModel.Controls.Chat
 
         public string CommandsString { get { return this.command.CommandsString; } }
 
-        public IEnumerable<string> PermissionsValues { get { return RoleRequirementViewModel.BasicUserRoleAllowedValues; } }
-        public string PermissionsString
+        public IEnumerable<UserRoleEnum> PermissionsValues { get { return RoleRequirementViewModel.BasicUserRoleAllowedValues; } }
+        public UserRoleEnum SelectedPermission
         {
-            get { return EnumHelper.GetEnumName(this.command.Requirements.Role.MixerRole); }
+            get { return this.command.Requirements.Role.MixerRole; }
             set
             {
-                this.command.Requirements.Role.MixerRole = EnumHelper.GetEnumValueFromString<UserRoleEnum>(value);
+                this.command.Requirements.Role.MixerRole = value;
                 this.UpdateSetting();
                 this.NotifyPropertyChanged();
             }

@@ -4,9 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:util="clr-namespace:MixItUp.WPF.Util"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <local:ActionControlBase.Resources>
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+        <util:LocalizationConverter x:Key="LocalizationConverter"/>
+    </local:ActionControlBase.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -21,7 +28,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="TypeComboBox" Grid.Column="0" SelectionChanged="InteractiveTypeComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="Type" />
+            <ComboBox x:Name="TypeComboBox" Grid.Column="0" SelectionChanged="InteractiveTypeComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" />
         </Grid>
 
         <Grid Grid.Row="2" x:Name="MoveUserToGroupGrid" Visibility="Collapsed">
@@ -33,11 +40,11 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="MoveUserToGroupPermissionsAllowedComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Permissions" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
+            <ComboBox x:Name="MoveUserToGroupPermissionsAllowedComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Permissions}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
 
-            <TextBox x:Name="MoveUserToGroupGroupNameTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Group Name (Case Sensitive)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="MoveUserToGroupGroupNameTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GroupNameCaseSensitive}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox x:Name="MoveUserToGroupUserNameTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="User To Move (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="MoveUserToGroupUserNameTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.UserToMove}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid Grid.Row="2" x:Name="MoveGroupToSceneGrid" Visibility="Collapsed">
@@ -47,9 +54,9 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="MoveGroupToSceneGroupNameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Group Name (Case Sensitive)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="MoveGroupToSceneGroupNameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GroupNameCaseSensitive}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox x:Name="MoveGroupToSceneSceneIDTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Scene Name (Case Sensitive)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="MoveGroupToSceneSceneIDTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SceneName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid Grid.Row="2" x:Name="MoveUserToSceneGrid" Visibility="Collapsed">
@@ -61,11 +68,11 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="MoveUserToScenePermissionsAllowedComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Permissions" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
+            <ComboBox x:Name="MoveUserToScenePermissionsAllowedComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Permissions}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
 
-            <TextBox x:Name="MoveUserToSceneSceneIDTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Scene Name (Case Sensitive)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="MoveUserToSceneSceneIDTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SceneName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox x:Name="MoveUserToSceneUserNameTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="User To Move (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="MoveUserToSceneUserNameTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.UserToMove}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid Grid.Row="2" x:Name="MoveAllUsersToSceneGrid" Visibility="Collapsed">
@@ -75,9 +82,9 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="MoveAllUsersToScenePermissionsAllowedComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Permissions" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
+            <ComboBox x:Name="MoveAllUsersToScenePermissionsAllowedComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Permissions}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
 
-            <TextBox x:Name="MoveAllUsersToSceneSceneNameTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Scene Name (Case Sensitive)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="MoveAllUsersToSceneSceneNameTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SceneName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid Grid.Row="2" x:Name="MoveAllUsersToGroupGrid" Visibility="Collapsed">
@@ -87,9 +94,9 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="MoveAllUsersToGroupPermissionsAllowedComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Permissions" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
+            <ComboBox x:Name="MoveAllUsersToGroupPermissionsAllowedComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Permissions}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
 
-            <TextBox x:Name="MoveAllUsersToGroupGroupNameTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Group Name (Case Sensitive)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="MoveAllUsersToGroupGroupNameTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GroupNameCaseSensitive}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid Grid.Row="2" x:Name="CooldownGrid" Visibility="Collapsed">
@@ -99,13 +106,13 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="CooldownNameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="CooldownNameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox x:Name="CooldownAmountTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Cooldown Amount" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="CooldownAmountTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Cooldown}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid Grid.Row="2" x:Name="ConnectGrid" Visibility="Collapsed">
-            <ComboBox x:Name="GameComboBox" Grid.Column="0" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="Game" DisplayMemberPath="name" />
+            <ComboBox x:Name="GameComboBox" Grid.Column="0" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Game}" DisplayMemberPath="name" />
         </Grid>
 
         <Grid Grid.Row="2" x:Name="UpdateControlGrid" Visibility="Collapsed">
@@ -117,11 +124,11 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="UpdateControlNameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Control ID" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="UpdateControlNameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ControlID}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <ComboBox x:Name="UpdateControlTypeComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Field Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
+            <ComboBox x:Name="UpdateControlTypeComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FieldName}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
 
-            <TextBox x:Name="UpdateControlValueTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Updated Value" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="UpdateControlValueTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.UpdatedValue}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid x:Name="SetCustomMetadataGrid" Grid.Row="2" Visibility="Collapsed">
@@ -138,9 +145,9 @@
                     <ColumnDefinition Width="130" />
                 </Grid.ColumnDefinitions>
 
-                <TextBox Grid.Column="0" x:Name="CustomMetadataControlIDTextBox" Width="150" Text="{Binding Name}" MaterialDesign:HintAssist.Hint="Interactive Control ID" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Grid.Column="0" x:Name="CustomMetadataControlIDTextBox" Width="150" Text="{Binding Name}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ControlID}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                <Button x:Name="AddCustomMetadataButton" Grid.Column="2" Width="130" Click="AddCustomMetadataButton_Click">Add New Pair</Button>
+                <Button x:Name="AddCustomMetadataButton" Grid.Column="2" Width="130" Click="AddCustomMetadataButton_Click" Content="{x:Static resx:Resources.AddNewPair}"/>
             </Grid>
 
             <ItemsControl x:Name="CustomMetadataItemsControl" Grid.Row="2">
@@ -155,11 +162,11 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBox Grid.Column="0" x:Name="CustomMetadataNameTextBox" Width="300" Text="{Binding Name}" MaterialDesign:HintAssist.Hint="Metadata Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                            <TextBox Grid.Column="0" x:Name="CustomMetadataNameTextBox" Width="300" Text="{Binding Name}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MetadataName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                            <TextBox Grid.Column="2" x:Name="CustomMetadataValueTextBox" Width="320" Text="{Binding Value}" MaterialDesign:HintAssist.Hint="Metadata Value" Style="{StaticResource MaterialDesignFloatingHintTextBox}"  />
+                            <TextBox Grid.Column="2" x:Name="CustomMetadataValueTextBox" Width="320" Text="{Binding Value}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MetadataValue}" Style="{StaticResource MaterialDesignFloatingHintTextBox}"  />
 
-                            <Button Grid.Column="4" x:Name="DeleteCustomMetadataButton" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteCustomMetadataButton_Click" ToolTip="Delete" />
+                            <Button Grid.Column="4" x:Name="DeleteCustomMetadataButton" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteCustomMetadataButton_Click" ToolTip="{x:Static resx:Resources.Delete}" />
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
@@ -176,9 +183,9 @@
                 <ColumnDefinition Width="10" />
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="EnableDisableControlNameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Control ID" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="EnableDisableControlNameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ControlID}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBlock Grid.Column="2" VerticalAlignment="Center">Enable/Disable:</TextBlock>
+            <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.EnableDisable}, StringFormat={StaticResource ColumnHeaderFormat}}" />
             <ToggleButton Grid.Column="4" x:Name="EnableDisableControlToggleButton" VerticalAlignment="Center" />
 
         </Grid>

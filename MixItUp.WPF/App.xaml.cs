@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Localization;
 using MixItUp.Base.Util;
 using MixItUp.WPF.Services;
 using MixItUp.WPF.Util;
@@ -28,6 +27,13 @@ namespace MixItUp.WPF
         public App()
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+
+            // NOTE: Uncomment the lines below to test other cultures
+            //System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo("de-DE");
+
+            //System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo("qps-ploc");
+            //System.Threading.Thread.CurrentThread.CurrentCulture = ci;
+            //System.Threading.Thread.CurrentThread.CurrentUICulture = ci;
         }
 
         public void SwitchTheme(string colorScheme, string backgroundColorName, string fullThemeName)
@@ -108,8 +114,6 @@ namespace MixItUp.WPF
             Logger.SetLogLevel(LogLevel.Error);
 
             this.SwitchTheme(ChannelSession.AppSettings.ColorScheme, ChannelSession.AppSettings.BackgroundColor, ChannelSession.AppSettings.FullThemeName);
-
-            LocalizationHandler.SetCurrentLanguage(ChannelSession.AppSettings.Language);
 
             base.OnStartup(e);
         }

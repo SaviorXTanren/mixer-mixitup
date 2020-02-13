@@ -12,12 +12,8 @@ namespace MixItUp.Base.Actions
 {
     public enum DiscordActionTypeEnum
     {
-        [Name("Send Message")]
         SendMessage,
-
-        [Name("Mute/Unmute Self")]
         MuteSelf,
-        [Name("Deafen/Undeafen Self")]
         DeafenSelf,
     }
 

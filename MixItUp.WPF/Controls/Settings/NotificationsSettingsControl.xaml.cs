@@ -14,14 +14,16 @@ namespace MixItUp.WPF.Controls.Settings
     {
         private const string SoundFilePathFormat = "Assets\\Sounds\\{0}.mp3";
 
-        private const string NoneSoundName = "NONE";
-        private const string CustomSoundName = "CUSTOM SOUND";
+        private readonly string NoneSoundName = MixItUp.Base.Resources.None;
+        private readonly string CustomSoundName = MixItUp.Base.Resources.Custom;
 
-        private List<string> AvailableSounds = new List<string>() { NoneSoundName, "Ariel", "Carme", "Ceres", "Computer Chime", "Doorbell", "Elara", "Europa", "High Beeps", "Io",
-            "Lapetus", "Level Up", "Low Beeps", "Rhea", "Robot SMS", "Salacia", "Tethys", "Titan", "Watch Alarm", CustomSoundName };
+        private List<string> AvailableSounds;
 
         public NotificationsSettingsControl()
         {
+            AvailableSounds = new List<string>() { NoneSoundName, "Ariel", "Carme", "Ceres", "Computer Chime", "Doorbell", "Elara", "Europa", "High Beeps", "Io",
+            "Lapetus", "Level Up", "Low Beeps", "Rhea", "Robot SMS", "Salacia", "Tethys", "Titan", "Watch Alarm", CustomSoundName };
+
             InitializeComponent();
 
             this.ChatMessageComboBox.ItemsSource = this.AvailableSounds;

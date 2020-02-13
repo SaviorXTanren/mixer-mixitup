@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -55,11 +56,11 @@
                 </Grid>
             </Button>
 
-            <ComboBox Grid.Column="2" ItemsSource="{Binding Games}" SelectedItem="{Binding SelectedGame}" Width="200" DisplayMemberPath="name" MaterialDesign:HintAssist.Hint="Game" />
+            <ComboBox Grid.Column="2" ItemsSource="{Binding Games}" SelectedItem="{Binding SelectedGame}" Width="200" DisplayMemberPath="name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Game}" />
 
-            <ComboBox Grid.Column="4" ItemsSource="{Binding Scenes}" SelectedItem="{Binding SelectedScene}" IsEnabled="{Binding IsGameSelected}" Width="200" DisplayMemberPath="sceneID" MaterialDesign:HintAssist.Hint="Scene" />
+            <ComboBox Grid.Column="4" ItemsSource="{Binding Scenes}" SelectedItem="{Binding SelectedScene}" IsEnabled="{Binding IsGameSelected}" Width="200" DisplayMemberPath="sceneID" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Scene}" />
 
-            <Button Grid.Column="6" x:Name="GroupsButton" Click="GroupsButton_Click" IsEnabled="{Binding IsGameSelected}">Groups</Button>
+            <Button Grid.Column="6" x:Name="GroupsButton" Click="GroupsButton_Click" IsEnabled="{Binding IsGameSelected}" Content="{x:Static resx:Resources.Groups}"/>
 
             <Button Grid.Column="8" Command="{Binding RefreshCommand}" Content="{MaterialDesign:PackIcon Refresh}" />
         </Grid>
@@ -68,8 +69,8 @@
 
         <DataGrid Grid.Row="2" ItemsSource="{Binding Controls}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" Visibility="{Binding IsNormalMixPlay, Converter={StaticResource BooleanToVisibilityConverter}}">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
-                <DataGridTextColumn Header="Type" Binding="{Binding Type}" IsReadOnly="True" Width="80" />
+                <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                <DataGridTextColumn Header="{x:Static resx:Resources.Type}" Binding="{Binding Type}" IsReadOnly="True" Width="80" />
                 <DataGridTextColumn Binding="{Binding SparkCost}" IsReadOnly="True" Width="70">
                     <DataGridTextColumn.Header>
                         <Grid HorizontalAlignment="Center" Margin="6,0,0,0">
@@ -84,12 +85,12 @@
                         </Grid>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
-                <DataGridTemplateColumn Header="Actions" Width="240">
+                <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="240">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>
                                 <Grid Visibility="{Binding IsNewCommandButton, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                    <Button HorizontalAlignment="Center" Click="AddCommandButton_Click">Add Command</Button>
+                                    <Button HorizontalAlignment="Center" Click="AddCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}"/>
                                 </Grid>
 
                                 <Grid Visibility="{Binding IsExistingCommandButton, Converter={StaticResource BooleanToVisibilityConverter}}">

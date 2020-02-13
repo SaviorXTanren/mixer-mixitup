@@ -4,10 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="500">
+    <local:MainControlBase.Resources>
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+    </local:MainControlBase.Resources>
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -28,13 +33,13 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" VerticalAlignment="Center">Enable:</TextBlock>
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Enable}, StringFormat={StaticResource ColumnHeaderFormat}}" />
 
             <ToggleButton Grid.Column="2" x:Name="EnableQuotesToggleButton" Checked="EnableQuotesToggleButton_Checked" Unchecked="EnableQuotesToggleButton_Checked" />
 
-            <TextBox Grid.Column="4" x:Name="AddQuoteTextBox" Width="350" MaterialDesign:HintAssist.Hint="Quote" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="4" x:Name="AddQuoteTextBox" Width="350" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Quote}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <Button x:Name="AddQuoteButton" Grid.Column="6" Click="AddQuoteButton_Click">Add Quote</Button>
+            <Button x:Name="AddQuoteButton" Grid.Column="6" Click="AddQuoteButton_Click" Content="{x:Static resx:Resources.AddQuote}"/>
         </Grid>
 
         <DataGrid x:Name="QuotesDataGrid" Grid.Row="2" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
@@ -46,21 +51,21 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Quote" IsReadOnly="True" Width="2*">
+                <DataGridTemplateColumn Header="{x:Static resx:Resources.Quote}" IsReadOnly="True" Width="2*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBox x:Name="QuoteTextBox" VerticalAlignment="Center" Text="{Binding Quote.Quote}" TextChanged="QuoteTextBox_TextChanged" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Game Name" IsReadOnly="True" Width="*">
+                <DataGridTemplateColumn Header="{x:Static resx:Resources.GameName}" IsReadOnly="True" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBox x:Name="QuoteGameTextBox" VerticalAlignment="Center" Text="{Binding Quote.GameName}" TextChanged="QuoteGameTextBox_TextChanged" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Date/Time" IsReadOnly="True" Width="115">
+                <DataGridTemplateColumn Header="{x:Static resx:Resources.DateTime}" IsReadOnly="True" Width="115">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>
@@ -70,11 +75,11 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <Button x:Name="DateButton" Grid.Column="0" Click="DateButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Date">
+                                <Button x:Name="DateButton" Grid.Column="0" Click="DateButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Date}">
                                     <MaterialDesign:PackIcon Kind="Calendar" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                 </Button>
 
-                                <Button x:Name="TimeButton" Grid.Column="2" Click="TimeButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Time">
+                                <Button x:Name="TimeButton" Grid.Column="2" Click="TimeButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Time}">
                                     <MaterialDesign:PackIcon Kind="Clock" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                 </Button>
                             </Grid>
@@ -84,7 +89,7 @@
                 <DataGridTemplateColumn Width="65">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button x:Name="DeleteButton" Click="DeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Delete Command">
+                            <Button x:Name="DeleteButton" Click="DeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.DeleteCommand}">
                                 <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                             </Button>
                         </DataTemplate>
@@ -98,7 +103,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             
-            <TextBox x:Name="QuotesFormatTextBox" MaterialDesign:HintAssist.Hint="Quote Formatting ($quotenumber, $quotetext, $quotegame, $quotedatetime)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" TextChanged="QuotesFormatTextBox_TextChanged" />
+            <TextBox x:Name="QuotesFormatTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.QuoteFormatting}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" TextChanged="QuotesFormatTextBox_TextChanged" />
         </Grid>
 
     </Grid>

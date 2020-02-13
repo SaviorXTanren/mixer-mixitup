@@ -117,7 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Login" xml:space="preserve">
-    <value>S Login</value>
+  <data name="Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="DialogDescription" xml:space="preserve">
+    <value>Hoppla! Anscheinend ist Mix It Up auf ein Problem gestoßen. Möchtest Du einen Fehler melden, der uns bei der Verbesserung hilft? (In Englisch)</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Deine Emailadresse</value>
+  </data>
+  <data name="IssueDescription" xml:space="preserve">
+    <value>Problembeschreibung (Was ist passiert?)</value>
+  </data>
+  <data name="Ok" xml:space="preserve">
+    <value>Okay</value>
+  </data>
+  <data name="ReportIssue" xml:space="preserve">
+    <value>Problem melden</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Mix It Up - Fehler-Reporter</value>
   </data>
 </root>

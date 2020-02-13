@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -19,9 +20,9 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="StreamlabsActionTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="300" />
+            <ComboBox x:Name="StreamlabsActionTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="300" />
 
-            <TextBlock x:Name="StreamlabsNotEnabledWarningTextBlock" Grid.Column="4" Foreground="Red" Visibility="Hidden" VerticalAlignment="Center" HorizontalAlignment="Right">Please enable Streamlabs connection on the Services page!</TextBlock>
+            <TextBlock x:Name="StreamlabsNotEnabledWarningTextBlock" Grid.Column="4" Foreground="Red" Visibility="Hidden" VerticalAlignment="Center" HorizontalAlignment="Right" Text="{x:Static resx:Resources.EnableStreamlabs}"/>
         </Grid>
     </Grid>
 </local:ActionControlBase>

@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Command"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
                                  
@@ -24,11 +25,11 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <TextBox x:Name="NameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        <TextBox x:Name="NameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-        <ComboBox x:Name="CommandGroupComboBox" Grid.Column="2" SelectionChanged="CommandGroupComboBox_SelectionChanged" TextBoxBase.TextChanged="CommandGroupComboBox_TextChanged" IsEditable="True" MaterialDesign:HintAssist.Hint="Command Group" Width="150" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+        <ComboBox x:Name="CommandGroupComboBox" Grid.Column="2" SelectionChanged="CommandGroupComboBox_SelectionChanged" TextBoxBase.TextChanged="CommandGroupComboBox_TextChanged" IsEditable="True" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CommandGroup}" Width="150" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-        <TextBox x:Name="GroupTimerTextBox" IsEnabled="False" Grid.Column="4" MaterialDesign:HintAssist.Hint="Group Interval (Min)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        <TextBox x:Name="GroupTimerTextBox" IsEnabled="False" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GroupIntervalMin}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
         <local:UnlockedCommandControl x:Name="UnlockedControl" Grid.Column="6" HorizontalAlignment="Center" Margin="0,5,0,0" />
     </Grid>

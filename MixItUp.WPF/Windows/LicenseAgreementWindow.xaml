@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+        xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
         mc:Ignorable="d"
 
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -12,7 +13,7 @@
         TextElement.FontSize="14"
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
 
-        Title="License Agreement" Height="450" Width="600">
+        Title="{x:Static resx:Resources.LicenseAgreement}" Height="450" Width="600">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -31,8 +32,8 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Button x:Name="AcceptButton" Click="AcceptButton_Click" Grid.Column="0">Accept</Button>
-            <Button x:Name="CancelButton" Click="CancelButton_Click" Grid.Column="2">Cancel</Button>
+            <Button x:Name="AcceptButton" Click="AcceptButton_Click" Grid.Column="0" Content="{x:Static resx:Resources.Accept}" />
+            <Button x:Name="CancelButton" Click="CancelButton_Click" Grid.Column="2" Content="{x:Static resx:Resources.Cancel}" />
         </Grid>
     </Grid>
 </Window>

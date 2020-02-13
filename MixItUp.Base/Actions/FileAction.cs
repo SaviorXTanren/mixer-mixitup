@@ -12,19 +12,12 @@ namespace MixItUp.Base.Actions
 {
     public enum FileActionTypeEnum
     {
-        [Name("Save To File")]
         SaveToFile,
-        [Name("Append To File")]
         AppendToFile,
-        [Name("Read From File")]
         ReadFromFile,
-        [Name("Read Specific Line From File")]
         ReadSpecificLineFromFile,
-        [Name("Read Random Line From File")]
         ReadRandomLineFromFile,
-        [Name("Remove Specific Line From File")]
         RemoveSpecificLineFromFile,
-        [Name("Remove Random Line From File")]
         RemoveRandomLineFromFile,
     }
 

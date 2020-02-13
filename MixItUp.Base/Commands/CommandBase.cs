@@ -17,11 +17,11 @@ namespace MixItUp.Base.Commands
     public enum CommandTypeEnum
     {
         Chat = 0,
+        [Name("MixPlay")]
         Interactive = 1,
         Event = 2,
         Timer = 3,
         Custom = 4,
-        [Name("Action Group")]
         ActionGroup = 5,
         Game = 6,
         Remote = 7,

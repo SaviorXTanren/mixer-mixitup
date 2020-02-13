@@ -4,10 +4,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
+             xmlns:util="clr-namespace:MixItUp.WPF.Util"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <local:ActionControlBase.Resources>
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+        <util:LocalizationConverter x:Key="LocalizationConverter"/>
+    </local:ActionControlBase.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -22,8 +29,8 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" Grid.Row="0" x:Name="SoundFilePathTextBox" MaterialDesign:HintAssist.Hint="Sound File Path" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-            <Button Grid.Column="2" Grid.Row="0" x:Name="SoundFileBrowseButton" VerticalAlignment="Bottom" Click="SoundFileBrowseButton_Click">Browse</Button>
+            <TextBox Grid.Column="0" Grid.Row="0" x:Name="SoundFilePathTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SoundFilePath}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <Button Grid.Column="2" Grid.Row="0" x:Name="SoundFileBrowseButton" VerticalAlignment="Bottom" Click="SoundFileBrowseButton_Click" Content="{x:Static resx:Resources.Browse}"/>
         </Grid>
 
         <Grid Grid.Row="2" HorizontalAlignment="Center">
@@ -35,9 +42,9 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="AudioOutputComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Audio Output Device" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200" Margin="0,20,0,0" />
+            <ComboBox x:Name="AudioOutputComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.AudioOutputDevice}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200" Margin="0,20,0,0" />
 
-            <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="0,35,0,0">Volume:</TextBlock>
+            <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="0,35,0,0" Text="{Binding Source={x:Static resx:Resources.Volume}, StringFormat={StaticResource ColumnHeaderFormat}}" />
             <Slider x:Name="SoundVolumeSlider" VerticalAlignment="Center" Grid.Column="4" Width="200" Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="Volume" />
         </Grid>
 

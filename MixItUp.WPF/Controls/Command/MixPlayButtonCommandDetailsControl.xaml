@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Command"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:RequirementControls="clr-namespace:MixItUp.WPF.Controls.Requirement"
              mc:Ignorable="d"
@@ -28,7 +29,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBox x:Name="NameTextBox" Grid.Row="0" IsEnabled="False" MaterialDesign:HintAssist.Hint="Control Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="NameTextBox" Grid.Row="0" IsEnabled="False" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ControlID}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
@@ -40,10 +41,10 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <ComboBox x:Name="ButtonTriggerComboBox" Grid.Column="0" IsEnabled="False" MaterialDesign:HintAssist.Hint="Button Trigger" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="160" SelectionChanged="ButtonTriggerComboBox_SelectionChanged" />
-                <TextBox x:Name="HeldRateTextBox" Grid.Column="1" Visibility="Collapsed" Margin="20,0,0,0" MaterialDesign:HintAssist.Hint="Rate (Secs)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="60" />
+                <ComboBox x:Name="ButtonTriggerComboBox" Grid.Column="0" IsEnabled="False" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ButtonTrigger}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="160" SelectionChanged="ButtonTriggerComboBox_SelectionChanged" />
+                <TextBox x:Name="HeldRateTextBox" Grid.Column="1" Visibility="Collapsed" Margin="20,0,0,0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.RateSecs}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="60" />
 
-                <TextBox x:Name="SparkCostTextBox" Grid.Column="3" IsEnabled="False" MaterialDesign:HintAssist.Hint="Cost" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="60" />
+                <TextBox x:Name="SparkCostTextBox" Grid.Column="3" IsEnabled="False" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Cost}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="60" />
 
                 <local:UnlockedCommandControl x:Name="UnlockedControl" Grid.Column="5" HorizontalAlignment="Center" />
             </Grid>

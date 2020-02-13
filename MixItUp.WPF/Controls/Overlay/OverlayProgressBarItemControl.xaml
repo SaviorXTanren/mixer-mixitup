@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Overlay"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -91,7 +92,7 @@
 
         <GroupBox Header="On Goal Reached" Grid.Row="6" Width="200">
             <Grid Margin="10,0,10,0" HorizontalAlignment="Center">
-                <Button Visibility="{Binding IsOnGoalReachedCommandNotSet, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" Click="NewCommandButton_Click">Add Command</Button>
+                <Button Visibility="{Binding IsOnGoalReachedCommandNotSet, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" Click="NewCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}"/>
                 
                 <Grid Visibility="{Binding IsOnGoalReachedCommandSet, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <CommandControls:CommandButtonsControl DataContext="{Binding OnGoalReachedCommand}" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" RemoveEnableDisableToggle="True" />

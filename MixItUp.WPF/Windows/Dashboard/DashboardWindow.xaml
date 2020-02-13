@@ -4,6 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MixItUp.WPF.Windows.PopOut"
+        xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
+        xmlns:util="clr-namespace:MixItUp.WPF.Util"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -16,9 +19,11 @@
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
                   
         Icon="./../../Logo.ico"
-        Title="Mix It Up - Dashboard" Height="600" Width="800">
+        Title="{x:Static resx:Resources.MixItUpDashboard}" Height="600" Width="800">
     <Windows:LoadingWindowBase.Resources>
-        <ResourceDictionary>
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+        <util:LocalizationConverter x:Key="LocalizationConverter"/>
+        <ResourceDictionary x:Key="Themes">
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Card.xaml" />
@@ -54,15 +59,15 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <ComboBox Grid.Column="0" ItemsSource="{Binding LayoutTypes}" SelectedItem="{Binding LayoutTypeString}" MaterialDesign:HintAssist.Hint="Layout" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="100" />
+                        <ComboBox Grid.Column="0" ItemsSource="{Binding LayoutTypes}" SelectedItem="{Binding LayoutTypeString}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Layout}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="100" />
 
-                        <ComboBox Grid.Column="2" ItemsSource="{Binding ItemTypes}" SelectedItem="{Binding ItemTypeOneString}" MaterialDesign:HintAssist.Hint="Item 1" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120" />
+                        <ComboBox Grid.Column="2" ItemsSource="{Binding ItemTypes}" SelectedItem="{Binding ItemTypeOneString}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Item1}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120" />
 
-                        <ComboBox Grid.Column="4" ItemsSource="{Binding ItemTypes}" SelectedItem="{Binding ItemTypeTwoString}" MaterialDesign:HintAssist.Hint="Item 2" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120" />
+                        <ComboBox Grid.Column="4" ItemsSource="{Binding ItemTypes}" SelectedItem="{Binding ItemTypeTwoString}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Item2}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120" />
 
-                        <ComboBox Grid.Column="6" ItemsSource="{Binding ItemTypes}" SelectedItem="{Binding ItemTypeThreeString}" MaterialDesign:HintAssist.Hint="Item 3" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120" />
+                        <ComboBox Grid.Column="6" ItemsSource="{Binding ItemTypes}" SelectedItem="{Binding ItemTypeThreeString}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Item3}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120" />
 
-                        <ComboBox Grid.Column="8" ItemsSource="{Binding ItemTypes}" SelectedItem="{Binding ItemTypeFourString}" MaterialDesign:HintAssist.Hint="Item 4" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120" />
+                        <ComboBox Grid.Column="8" ItemsSource="{Binding ItemTypes}" SelectedItem="{Binding ItemTypeFourString}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Item4}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120" />
                     </Grid>
                 </DockPanel>
             </MaterialDesign:ColorZone>

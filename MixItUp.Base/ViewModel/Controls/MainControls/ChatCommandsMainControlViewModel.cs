@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.ViewModel.Controls.Chat;
 using MixItUp.Base.ViewModel.Window;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -84,7 +85,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         protected override void FilterCommands()
         {
             this.PreMadeChatCommands.Clear();
-            foreach (PreMadeChatCommandControlViewModel command in ((string.IsNullOrEmpty(this.NameFilter)) ? this.allPreMadeChatCommands : this.allPreMadeChatCommands.Where(c => c.Name.Contains(this.NameFilter))).OrderBy(c => c.Name))
+            foreach (PreMadeChatCommandControlViewModel command in ((string.IsNullOrEmpty(this.NameFilter)) ? this.allPreMadeChatCommands : this.allPreMadeChatCommands.Where(c => c.Name.ToLower().Contains(this.NameFilter.ToLower()))).OrderBy(c => c.Name))
             {
                 this.PreMadeChatCommands.Add(command);
             }

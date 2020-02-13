@@ -16,9 +16,6 @@ namespace MixItUp.WPF.Controls.Command
     /// </summary>
     public partial class ChatCommandDetailsControl : CommandDetailsControlBase
     {
-        private const string ChatTriggersNoExclamationHintAssist = "Chat Trigger(s) (No \"!\" needed, space separated, semi-colon for multi-word)";
-        private const string ChatTriggersHintAssist = "Chat Trigger(s) (Space separated, semi-colon for multi-word)";
-
         private ChatCommand command;
 
         private bool autoAddToChatCommands = true;
@@ -177,11 +174,11 @@ namespace MixItUp.WPF.Controls.Command
         {
             if (this.IncludeExclamationInCommandsToggleButton.IsChecked.GetValueOrDefault())
             {
-                HintAssist.SetHint(this.ChatCommandTextBox, ChatTriggersNoExclamationHintAssist);
+                HintAssist.SetHint(this.ChatCommandTextBox, MixItUp.Base.Resources.ChatTriggersNoExclamationHintAssist);
             }
             else
             {
-                HintAssist.SetHint(this.ChatCommandTextBox, ChatTriggersHintAssist);
+                HintAssist.SetHint(this.ChatCommandTextBox, MixItUp.Base.Resources.ChatTriggersHintAssist);
             }
         }
 
@@ -190,7 +187,7 @@ namespace MixItUp.WPF.Controls.Command
             if (this.WildcardsToggleButton.IsChecked.GetValueOrDefault())
             {
                 this.IncludeExclamationInCommandsToggleButton.IsChecked = this.IncludeExclamationInCommandsToggleButton.IsEnabled = false;
-                HintAssist.SetHint(this.ChatCommandTextBox, ChatTriggersHintAssist);
+                HintAssist.SetHint(this.ChatCommandTextBox, MixItUp.Base.Resources.ChatTriggersHintAssist);
             }
             else
             {
