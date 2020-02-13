@@ -151,7 +151,7 @@ namespace MixItUp.Base.Services
                     await Task.Delay(1000);
                     this.TimeLeft--;
 
-                    if (this.TimeLeft > 0 && (totalTime - this.TimeLeft) % reminderTime == 0)
+                    if (reminderTime > 0 && this.TimeLeft > 0 && (totalTime - this.TimeLeft) % reminderTime == 0)
                     {
                         await ChannelSession.Settings.GiveawayStartedReminderCommand.Perform(extraSpecialIdentifiers: this.GetSpecialIdentifiers());
                     }
