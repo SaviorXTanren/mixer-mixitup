@@ -2379,4 +2379,7 @@
   <data name="YScale" xml:space="preserve">
     <value>Y Scale (Decimal)</value>
   </data>
+  <data name="1PerBit" xml:space="preserve">
+    <value>1 Per Bit</value>
+  </data>
 </root>
