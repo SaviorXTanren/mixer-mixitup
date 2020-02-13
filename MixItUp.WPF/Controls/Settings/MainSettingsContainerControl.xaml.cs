@@ -37,7 +37,6 @@ namespace MixItUp.WPF.Controls.Settings
             this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.Users, new UsersSettingsControl()));
             this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.MixPlay, new InteractiveSettingsControl()));
             this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.Overlays, new OverlaySettingsControl()));
-            this.settingsGroups.Add(new SettingsOption("Song Requests", new SongRequestsSettingsControl()));
             this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.HotKeys, new HotKeysSettingsControl()));
             this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.Remote, new RemoteSettingsControl()));
             this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.SerialDevices, new SerialDevicesSettingsControl()));

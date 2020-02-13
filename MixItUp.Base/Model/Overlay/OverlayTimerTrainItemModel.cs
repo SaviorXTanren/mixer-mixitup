@@ -49,11 +49,11 @@ namespace MixItUp.Base.Model.Overlay
         private CancellationTokenSource backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 
         [JsonIgnore]
-        private HashSet<uint> follows = new HashSet<uint>();
+        private HashSet<Guid> follows = new HashSet<Guid>();
         [JsonIgnore]
-        private HashSet<uint> hosts = new HashSet<uint>();
+        private HashSet<Guid> hosts = new HashSet<Guid>();
         [JsonIgnore]
-        private HashSet<uint> subs = new HashSet<uint>();
+        private HashSet<Guid> subs = new HashSet<Guid>();
 
         [JsonIgnore]
         private SemaphoreSlim timeSemaphore = new SemaphoreSlim(1);
@@ -113,9 +113,7 @@ namespace MixItUp.Base.Model.Overlay
 
             this.backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            Task.Run(async () => { await this.TimerBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            AsyncRunner.RunBackgroundTask(this.backgroundThreadCancellationTokenSource.Token, 1000, this.TimerBackground);
 
             await base.Enable();
         }
@@ -163,7 +161,7 @@ namespace MixItUp.Base.Model.Overlay
 
             return Task.FromResult(replacementSets);
         }
-        
+
         private async void GlobalEvents_OnFollowOccurred(object sender, UserViewModel user)
         {
             if (!this.follows.Contains(user.ID))
@@ -241,32 +239,28 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        private async Task TimerBackground()
+        private Task TimerBackground(CancellationToken token)
         {
-            await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (token) =>
+            if (this.timeLeft > 0)
             {
-                await Task.Delay(1000);
-
-                if (this.timeLeft > 0)
+                this.timeLeft--;
+                if (this.timeLeft == 0)
                 {
-                    this.timeLeft--;
-                    if (this.timeLeft == 0)
-                    {
-                        this.SendHide();
-                    }
-                    else
-                    {
-                        this.SendUpdateRequired();
-                    }
+                    this.SendHide();
                 }
                 else
                 {
-                    if (this.stackedTime > 0)
-                    {
-                        this.stackedTime--;
-                    }
+                    this.SendUpdateRequired();
                 }
-            });
+            }
+            else
+            {
+                if (this.stackedTime > 0)
+                {
+                    this.stackedTime--;
+                }
+            }
+            return Task.FromResult(0);
         }
 
         #region IDisposable Support

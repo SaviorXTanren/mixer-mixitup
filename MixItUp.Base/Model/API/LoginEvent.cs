@@ -20,7 +20,7 @@ namespace MixItUp.Base.Model.API
 
         public LoginEvent(string details)
         {
-            this.MixerUserID = (int)ChannelSession.MixerStreamerUser.id;
+            this.MixerUserID = (int)ChannelSession.MixerUser.id;
             this.AppVersion = Assembly.GetEntryAssembly().GetName().Version.ToString();
             this.Feature = ChannelSession.Settings.FeatureMe;
             this.Details = details;

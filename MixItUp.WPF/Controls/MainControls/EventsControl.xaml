@@ -9,19 +9,23 @@
              xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <local:MainControlBase.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </local:MainControlBase.Resources>
+    
     <Grid Margin="10">
-        <DataGrid x:Name="EventsCommandsDataGrid" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
+        <DataGrid ItemsSource="{Binding EventCommands}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="{x:Static resx:Resources.Service}" Binding="{Binding Service}" IsReadOnly="True" Width="*" />
+                <DataGridTextColumn Header="{x:Static resx:Resources.Service}" Binding="{Binding Service}" IsReadOnly="True" Width="200" />
                 <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
                 <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="240">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid HorizontalAlignment="Center">
-                                <Grid Visibility="{Binding NewCommandButtonVisibility}">
+                                <Grid Visibility="{Binding IsNewCommand, Converter={StaticResource BooleanToVisibilityConverter}}">
                                     <Button x:Name="NewInteractiveCommandButton" Click="NewInteractiveCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}"/>
                                 </Grid>
-                                <Grid Visibility="{Binding ExistingCommandButtonsVisibility}">
+                                <Grid Visibility="{Binding IsExistingCommand, Converter={StaticResource BooleanToVisibilityConverter}}">
                                     <CommandControls:CommandButtonsControl x:Name="CommandButtons" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
                                 </Grid>
                             </Grid>

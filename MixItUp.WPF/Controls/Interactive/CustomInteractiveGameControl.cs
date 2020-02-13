@@ -1,8 +1,9 @@
 ﻿using Mixer.Base.Model.MixPlay;
 using MixItUp.Base;
-using MixItUp.Base.MixerAPI;
+using MixItUp.Base.Services.Mixer;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
@@ -23,13 +24,13 @@ namespace MixItUp.WPF.Controls.Interactive
 
         public async Task<bool> GameConnected()
         {
-            ChannelSession.Interactive.OnInteractiveControlUsed += Interactive_OnInteractiveControlUsed;
+            ChannelSession.Services.MixPlay.OnControlUsed += MixPlay_OnControlUsed;
             return await this.GameConnectedInternal();
         }
 
         public async Task GameDisconnected()
         {
-            ChannelSession.Interactive.OnInteractiveControlUsed -= Interactive_OnInteractiveControlUsed;
+            ChannelSession.Services.MixPlay.OnControlUsed -= MixPlay_OnControlUsed;
             await this.GameDisconnectedInternal();
         }
 
@@ -39,7 +40,7 @@ namespace MixItUp.WPF.Controls.Interactive
 
         protected virtual Task GameDisconnectedInternal() { return Task.FromResult(0); }
 
-        protected virtual Task OnInteractiveControlUsed(UserViewModel user, MixPlayGiveInputModel input, InteractiveConnectedControlCommand command) { return Task.FromResult(0); }
+        protected virtual Task OnMixPlayControlUsed(UserViewModel user, MixPlayGiveInputModel input, MixPlayControlModel control) { return Task.FromResult(0); }
 
         protected JObject GetCustomSettings()
         {
@@ -60,9 +61,9 @@ namespace MixItUp.WPF.Controls.Interactive
             await this.OnLoaded();
         }
 
-        private async void Interactive_OnInteractiveControlUsed(object sender, InteractiveInputEvent e)
+        private async void MixPlay_OnControlUsed(object sender, MixPlayInputEvent e)
         {
-            await this.OnInteractiveControlUsed(e.User, e.Input, e.Command);
+            await this.OnMixPlayControlUsed(e.User, e.Input, e.Control);
         }
     }
 }

@@ -27,7 +27,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void IssueReportHyperlink_Click(object sender, RoutedEventArgs e)
         {
-            ProcessHelper.LaunchProgram("MixItUp.Reporter.exe", string.Format("{0} {1}", ChannelSession.MixerStreamerUser.id, FileLoggerHandler.CurrentLogFilePath));
+            ProcessHelper.LaunchProgram("MixItUp.Reporter.exe", string.Format("{0} {1}", ChannelSession.MixerUser.id, FileLoggerHandler.CurrentLogFilePath));
         }
 
         private void TwitterButton_Click(object sender, RoutedEventArgs e) { ProcessHelper.LaunchLink("https://twitter.com/MixItUpApp"); }

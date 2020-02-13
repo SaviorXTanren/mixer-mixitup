@@ -1,10 +1,9 @@
-﻿using MixItUp.Base.Util;
+﻿using Mixer.Base.Model.User;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.WPF.Util;
+using MixItUp.WPF.Services;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows;
@@ -58,9 +57,9 @@ namespace MixItUp.WPF.Controls.Users
             }
         }
 
-        public async Task SetUserAvatarUrl(uint userID)
+        public async Task SetMixerUserAvatarUrl(uint mixerUserID)
         {
-            await this.SetUserAvatarUrl(new UserViewModel() { ID = userID });
+            await this.SetUserAvatarUrl(new UserViewModel(new UserModel() { id = mixerUserID }));
         }
 
         public async Task SetUserAvatarUrl(UserViewModel user)
@@ -68,18 +67,18 @@ namespace MixItUp.WPF.Controls.Users
             try
             {
                 BitmapImage bitmap = new BitmapImage();
-                if (userAvatarCache.ContainsKey(user.ID))
+                if (userAvatarCache.ContainsKey(user.MixerID))
                 {
-                    bitmap = userAvatarCache[user.ID];
+                    bitmap = userAvatarCache[user.MixerID];
                 }
                 else
                 {
                     using (WebClient client = new WebClient())
                     {
-                        var bytes = await Task.Run<byte[]>(async () => { return await client.DownloadDataTaskAsync(user.AvatarLink); });
-                        bitmap = BitmapImageLoader.Load(bytes);
+                        var bytes = await Task.Run<byte[]>((Func<Task<byte[]>>)(async () => { return await client.DownloadDataTaskAsync((string)user.AvatarLink); }));
+                        bitmap = WindowsImageService.Load(bytes);
                     }
-                    userAvatarCache[user.ID] = bitmap;
+                    userAvatarCache[user.MixerID] = bitmap;
                 }
 
                 this.ProfileAvatarImage.ImageSource = bitmap;

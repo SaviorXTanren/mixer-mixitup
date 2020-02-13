@@ -26,12 +26,12 @@
             <ListView x:Name="StatisticsOverviewListView" Visibility="Visible" ItemContainerStyle="{StaticResource BorderedListViewItem}" HorizontalContentAlignment="Stretch" SelectionChanged="StatisticsOverviewListView_SelectionChanged" />
         </Border>
 
-        <Grid Grid.Row="2" HorizontalAlignment="Center">
+        <!--<Grid Grid.Row="2" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" x:Name="ExportStatsButton" Width="130" Click="ExportStatsButton_Click" Content="{x:Static resx:Resources.ExportData}"/>
-        </Grid>
+            <Button Grid.Column="0" x:Name="ExportStatsButton" Width="130" Click="ExportStatsButton_Click">Export To File</Button>
+        </Grid>-->
     </Grid>
 </local:MainControlBase>

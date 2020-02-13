@@ -1,48 +1,69 @@
 ﻿using Mixer.Base.Model.MixPlay;
 using MixItUp.Base.Commands;
-using Newtonsoft.Json;
-using System;
-using System.Runtime.Serialization;
 
 namespace MixItUp.Base.ViewModel.MixPlay
 {
-    [DataContract]
-    public class MixPlayControlViewModel : IEquatable<MixPlayControlViewModel>
+    public class MixPlayControlViewModel
     {
-        [DataMember]
         public MixPlayControlModel Control { get; set; }
+        public MixPlayButtonControlModel Button { get; set; }
+        public MixPlayJoystickControlModel Joystick { get; set; }
+        public MixPlayTextBoxControlModel TextBox { get; set; }
 
-        [DataMember]
-        public int Cooldown { get; set; }
-
-        [DataMember]
         public MixPlayCommand Command { get; set; }
 
-        public MixPlayControlViewModel(MixPlayControlModel control)
+        public MixPlayControlViewModel(MixPlayGameModel game, MixPlayButtonControlModel button) : this(game, (MixPlayControlModel)button) { this.Button = button; }
+        public MixPlayControlViewModel(MixPlayGameModel game, MixPlayJoystickControlModel joystick) : this(game, (MixPlayControlModel)joystick) { this.Joystick = joystick; }
+        public MixPlayControlViewModel(MixPlayGameModel game, MixPlayTextBoxControlModel textBox) : this(game, (MixPlayControlModel)textBox) { this.TextBox = textBox; }
+
+        private MixPlayControlViewModel(MixPlayGameModel game, MixPlayControlModel control)
         {
             this.Control = control;
+            this.Command = ChannelSession.Services.MixPlay.GetInteractiveCommandForControl(game.id, this.Control.controlID);
         }
 
-        public MixPlayControlViewModel() { }
+        public string Name { get { return this.Control.controlID; } }
 
-        [JsonIgnore]
-        public int Cost
+        public string Type
         {
-            get { return (this.Control is MixPlayButtonControlModel) ? ((MixPlayButtonControlModel)this.Control).cost.GetValueOrDefault() : 0; }
-            set { if (this.Control is MixPlayButtonControlModel) { ((MixPlayButtonControlModel)this.Control).cost = value; } }
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is MixPlayControlViewModel)
+            get
             {
-                return this.Equals((MixPlayControlViewModel)obj);
+                if (this.Control is MixPlayButtonControlModel) { return "Button"; }
+                if (this.Control is MixPlayJoystickControlModel) { return "Joystick"; }
+                if (this.Control is MixPlayTextBoxControlModel) { return "Text Box"; }
+                return "Unknown";
             }
-            return false;
         }
 
-        public bool Equals(MixPlayControlViewModel other) { return this.Control.controlID.Equals(other.Control.controlID); }
+        public string SparkCost
+        {
+            get
+            {
+                if (this.Control is MixPlayButtonControlModel) { return this.Button.cost.ToString(); }
+                if (this.Control is MixPlayTextBoxControlModel) { return this.TextBox.cost.ToString(); }
+                return string.Empty;
+            }
+        }
 
-        public override int GetHashCode() { return this.Control.controlID.GetHashCode(); }
+        public string Cooldown
+        {
+            get
+            {
+                if (this.Command != null && this.Command.Requirements.Cooldown != null)
+                {
+                    if (this.Command.Requirements.Cooldown.IsGroup)
+                    {
+                        return this.Command.Requirements.Cooldown.GroupName;
+                    }
+                    return this.Command.Requirements.Cooldown.CooldownAmount.ToString();
+                }
+                return string.Empty;
+            }
+        }
+
+        public string EventTypeString { get { return (this.Command != null) ? this.Command.EventTypeString : string.Empty; } }
+
+        public bool IsNewCommandButton { get { return (this.Command == null); } }
+        public bool IsExistingCommandButton { get { return !this.IsNewCommandButton; } }
     }
 }

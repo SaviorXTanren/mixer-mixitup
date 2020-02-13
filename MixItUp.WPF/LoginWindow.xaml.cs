@@ -1,11 +1,10 @@
-﻿using Mixer.Base;
-using Mixer.Base.Model.Channel;
-using Mixer.Base.Model.User;
+﻿using Mixer.Base.Model.User;
 using MixItUp.Base;
 using MixItUp.Base.Model.API;
+using MixItUp.Base.Model.Settings;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.Desktop;
 using MixItUp.WPF.Windows;
 using MixItUp.WPF.Windows.Wizard;
 using System.Collections.Generic;
@@ -26,8 +25,8 @@ namespace MixItUp.WPF
         private MixItUpUpdateModel currentUpdate;
         private bool updateFound = false;
 
-        private ObservableCollection<IChannelSettings> streamerSettings = new ObservableCollection<IChannelSettings>();
-        private ObservableCollection<IChannelSettings> moderatorSettings = new ObservableCollection<IChannelSettings>();
+        private ObservableCollection<SettingsV2Model> streamerSettings = new ObservableCollection<SettingsV2Model>();
+        private ObservableCollection<SettingsV2Model> moderatorSettings = new ObservableCollection<SettingsV2Model>();
 
         public LoginWindow()
         {
@@ -47,7 +46,7 @@ namespace MixItUp.WPF
 
             await this.CheckForUpdates();
 
-            foreach (IChannelSettings setting in (await ChannelSession.Services.Settings.GetAllSettings()).OrderBy(s => s.Channel.token))
+            foreach (SettingsV2Model setting in (await ChannelSession.Services.Settings.GetAllSettings()).OrderBy(s => s.Name))
             {
                 if (setting.IsStreamer)
                 {
@@ -62,7 +61,7 @@ namespace MixItUp.WPF
             if (this.streamerSettings.Count > 0)
             {
                 this.ExistingStreamerComboBox.Visibility = Visibility.Visible;
-                this.streamerSettings.Add(new DesktopChannelSettings() { Channel = new ExpandedChannelModel() { id = 0, user = new UserWithGroupsModel() { username = MixItUp.Base.Resources.NewStreamer }, token = MixItUp.Base.Resources.NewStreamer } });
+                this.streamerSettings.Add(new SettingsV2Model() { MixerChannelID = 0, Name = MixItUp.Base.Resources.NewStreamer });
                 if (this.streamerSettings.Count() == 2)
                 {
                     this.ExistingStreamerComboBox.SelectedIndex = 0;
@@ -74,13 +73,13 @@ namespace MixItUp.WPF
                 this.ModeratorChannelComboBox.SelectedIndex = 0;
             }
 
-            if (App.AppSettings.AutoLogInAccount > 0)
+            if (ChannelSession.AppSettings.AutoLogInAccount > 0)
             {
                 var allSettings = this.streamerSettings.ToList();
                 allSettings.AddRange(this.moderatorSettings);
 
-                IChannelSettings autoLogInSettings = allSettings.FirstOrDefault(s => s.Channel.user.id == App.AppSettings.AutoLogInAccount);
-                if (autoLogInSettings != null && autoLogInSettings.LicenseAccepted)
+                SettingsV2Model autoLogInSettings = allSettings.FirstOrDefault(s => s.MixerChannelID == ChannelSession.AppSettings.AutoLogInAccount);
+                if (autoLogInSettings != null)
                 {
                     await Task.Delay(5000);
 
@@ -111,21 +110,16 @@ namespace MixItUp.WPF
 
         private async void StreamerLoginButton_Click(object sender, RoutedEventArgs e)
         {
-            bool result = false;
-
             await this.RunAsyncOperation(async () =>
             {
                 if (this.ExistingStreamerComboBox.Visibility == Visibility.Visible)
                 {
                     if (this.ExistingStreamerComboBox.SelectedIndex >= 0)
                     {
-                        IChannelSettings setting = (IChannelSettings)this.ExistingStreamerComboBox.SelectedItem;
-                        if (setting.Channel.id == 0)
+                        SettingsV2Model setting = (SettingsV2Model)this.ExistingStreamerComboBox.SelectedItem;
+                        if (setting.MixerChannelID == 0)
                         {
-                            if (await this.ShowLicenseAgreement())
-                            {
-                                result = await this.NewStreamerLogin();
-                            }
+                            await this.NewStreamerLogin();
                         }
                         else
                         {
@@ -154,10 +148,7 @@ namespace MixItUp.WPF
                 }
                 else
                 {
-                    if (await this.ShowLicenseAgreement())
-                    {
-                        result = await this.NewStreamerLogin();
-                    }
+                    await this.NewStreamerLogin();
                 }
             });
         }
@@ -180,24 +171,33 @@ namespace MixItUp.WPF
                     return;
                 }
 
-                bool authenticationSuccessful = false;
                 if (this.ModeratorChannelComboBox.SelectedIndex >= 0)
                 {
-                    IChannelSettings setting = (IChannelSettings)this.ModeratorChannelComboBox.SelectedItem;
-                    authenticationSuccessful = await this.ExistingSettingLogin(setting);
+                    SettingsV2Model setting = (SettingsV2Model)this.ModeratorChannelComboBox.SelectedItem;
+                    if (!await this.ExistingSettingLogin(setting))
+                    {
+                        return;
+                    }
                 }
                 else
                 {
-                    if (await this.ShowLicenseAgreement())
+                    if (!await this.ShowLicenseAgreement())
                     {
-                        authenticationSuccessful = await this.EstablishConnection(ChannelSession.ModeratorScopes, this.ModeratorChannelComboBox.Text);
+                        return;
+                    }
+
+                    ExternalServiceResult result = await ChannelSession.ConnectMixerUser(isStreamer: false);
+                    if (!result.Success)
+                    {
+                        await DialogHelper.ShowMessage(result.Message);
+                        return;
                     }
                 }
 
-                if (authenticationSuccessful)
+                if (await ChannelSession.InitializeSession(this.ModeratorChannelComboBox.Text))
                 {
-                    IEnumerable<UserWithGroupsModel> users = await ChannelSession.MixerStreamerConnection.GetUsersWithRoles(ChannelSession.MixerChannel, MixerRoleEnum.Mod);
-                    if (users.Any(uwg => uwg.id.Equals(ChannelSession.MixerStreamerUser.id)) || ChannelSession.IsDebug())
+                    IEnumerable<UserWithGroupsModel> users = await ChannelSession.MixerUserConnection.GetUsersWithRoles(ChannelSession.MixerChannel, UserRoleEnum.Mod);
+                    if (users.Any(uwg => uwg.id.Equals(ChannelSession.MixerUser.id)) || ChannelSession.IsDebug())
                     {
                         ShowMainWindow(new MainWindow());
                         this.Hide();
@@ -220,7 +220,7 @@ namespace MixItUp.WPF
             this.currentUpdate = await ChannelSession.Services.MixItUpService.GetLatestUpdate();
             if (this.currentUpdate != null)
             {
-                if (App.AppSettings.PreviewProgram)
+                if (ChannelSession.AppSettings.PreviewProgram)
                 {
                     MixItUpUpdateModel previewUpdate = await ChannelSession.Services.MixItUpService.GetLatestPreviewUpdate();
                     if (previewUpdate != null && previewUpdate.SystemVersion >= this.currentUpdate.SystemVersion)
@@ -238,46 +238,31 @@ namespace MixItUp.WPF
             }
         }
 
-        private async Task<bool> ExistingSettingLogin(IChannelSettings setting)
+        private async Task<bool> ExistingSettingLogin(SettingsV2Model setting)
         {
-            if (setting.LicenseAccepted || await this.ShowLicenseAgreement())
+            ExternalServiceResult result = await ChannelSession.ConnectUser(setting);
+            if (result.Success)
             {
-                bool result = await ChannelSession.ConnectUser(setting);
-                if (result)
+                if (await ChannelSession.InitializeSession(setting.IsStreamer ? null : setting.Name))
                 {
-                    if (!await ChannelSession.ConnectBot(setting))
-                    {
-                        await DialogHelper.ShowMessage(MixItUp.Base.Resources.LoginErrorBotAccountFailed);
-                    }
+                    return true;
                 }
-                else
-                {
-                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.LoginErrorFailedToAuthenticate);
-                }
-                return result;
+            }
+            else
+            {
+                await DialogHelper.ShowMessage(result.Message);
             }
             return false;
         }
 
-        private async Task<bool> NewStreamerLogin()
+        private async Task NewStreamerLogin()
         {
-            if (await this.EstablishConnection(ChannelSession.StreamerScopes, channelName: null, forceApproval: true))
+            if (await this.ShowLicenseAgreement())
             {
                 ShowMainWindow(new NewUserWizardWindow());
                 this.Hide();
                 this.Close();
-                return true;
             }
-            else
-            {
-                await DialogHelper.ShowMessage(MixItUp.Base.Resources.LoginErrorFailedToAuthenticate);
-            }
-            return false;
-        }
-
-        private async Task<bool> EstablishConnection(IEnumerable<OAuthClientScopeEnum> scopes, string channelName = null, bool forceApproval = false)
-        {
-            return await ChannelSession.ConnectUser(scopes, channelName, forceApproval);
         }
 
         private async void GlobalEvents_OnShowMessageBox(object sender, string message)

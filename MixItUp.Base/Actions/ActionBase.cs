@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Util;
+using MixItUp.Base.Model;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -43,7 +44,9 @@ namespace MixItUp.Base.Actions
         SpecialIdentifier,
         [Name("FileReadAndWrite")]
         File,
+        [Obsolete]
         SongRequest,
+        [Obsolete]
         Spotify,
         Discord,
         Translation,
@@ -77,6 +80,9 @@ namespace MixItUp.Base.Actions
         public string Label { get; set; }
 
         [JsonIgnore]
+        protected StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None;
+
+        [JsonIgnore]
         protected Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();
 
         public ActionBase()
@@ -91,10 +97,11 @@ namespace MixItUp.Base.Actions
             this.Label = EnumLocalizationHelper.GetLocalizedName(this.Type);
         }
 
-        public async Task Perform(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        public async Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             await this.AsyncSemaphore.WaitAndRelease(async () =>
             {
+                this.platform = platform;
                 this.extraSpecialIdentifiers = extraSpecialIdentifiers;
 
                 ChannelSession.Services.Telemetry.TrackAction(this.Type);
@@ -107,7 +114,7 @@ namespace MixItUp.Base.Actions
 
         protected async Task<string> ReplaceStringWithSpecialModifiers(string str, UserViewModel user, IEnumerable<string> arguments, bool encode = false)
         {
-            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str, encode);
+            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str, this.platform, encode);
             foreach (var kvp in this.extraSpecialIdentifiers)
             {
                 siString.ReplaceSpecialIdentifier(kvp.Key, kvp.Value);
@@ -121,3 +128,41 @@ namespace MixItUp.Base.Actions
         protected abstract SemaphoreSlim AsyncSemaphore { get; }
     }
 }
+
+#region Legacy Actions
+
+namespace MixItUp.Base.Actions
+{
+    public class SongRequestAction : ActionBase
+    {
+        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
+
+        protected override SemaphoreSlim AsyncSemaphore { get { return SongRequestAction.asyncSemaphore; } }
+
+        public SongRequestAction() { }
+
+        protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+        {
+            return Task.FromResult(0);
+        }
+    }
+
+    [DataContract]
+    public class SpotifyAction : ActionBase
+    {
+        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
+
+        protected override SemaphoreSlim AsyncSemaphore { get { return SpotifyAction.asyncSemaphore; } }
+
+#pragma warning disable CS0612 // Type or member is obsolete
+        public SpotifyAction() : base(ActionTypeEnum.Spotify) { }
+#pragma warning restore CS0612 // Type or member is obsolete
+
+        protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+        {
+            return Task.FromResult(0);
+        }
+    }
+}
+
+#endregion

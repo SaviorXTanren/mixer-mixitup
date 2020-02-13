@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.Model;
+using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
@@ -47,12 +48,12 @@ namespace MixItUp.Base.Actions
                 string message = await this.ReplaceStringWithSpecialModifiers(this.ChatText, user, arguments);
                 if (this.IsWhisper)
                 {
-                    string whisperUserName = user.UserName;
+                    string whisperUserName = user.Username;
                     if (!string.IsNullOrEmpty(this.WhisperUserName))
                     {
                         whisperUserName = await this.ReplaceStringWithSpecialModifiers(this.WhisperUserName, user, arguments);
                     }
-                    await ChannelSession.Services.Chat.Whisper(whisperUserName, message, this.SendAsStreamer);
+                    await ChannelSession.Services.Chat.Whisper(StreamingPlatformTypeEnum.All, whisperUserName, message, this.SendAsStreamer);
                 }
                 else
                 {

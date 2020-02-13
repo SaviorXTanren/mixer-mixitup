@@ -75,7 +75,7 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock x:Name="UserNameTextBlock" Grid.Column="0" Text="{Binding UserName}" VerticalAlignment="Center" />
+                            <TextBlock x:Name="UserNameTextBlock" Grid.Column="0" Text="{Binding Username}" VerticalAlignment="Center" />
 
                             <Image Grid.Column="2" Source="{Binding FanProgression.level.SmallAssetURL}" MaxHeight="20" MaxWidth="20" />
                             <TextBlock Grid.Column="4" Text="{Binding FanProgression.level.level}" VerticalAlignment="Center" />
@@ -94,7 +94,7 @@
                         <TextBox x:Name="CustomTitleTextBox" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="5" Width="200" Text="{Binding Data.CustomTitle}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CustomTitle}" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
 
                         <TextBlock Grid.Row="4" Grid.Column="6" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.SubAge}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
-                        <TextBlock x:Name="SubAgeTextBlock" VerticalAlignment="Center" Grid.Row="4" Grid.Column="8" Text="{Binding MixerSubscribeAgeString}" />
+                        <TextBlock x:Name="SubAgeTextBlock" VerticalAlignment="Center" Grid.Row="4" Grid.Column="8" Text="{Binding SubscribeAgeString}" />
                     </Grid>
                 </GroupBox>
 

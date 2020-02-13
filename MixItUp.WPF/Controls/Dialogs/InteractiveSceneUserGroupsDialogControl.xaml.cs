@@ -26,7 +26,7 @@ namespace MixItUp.WPF.Controls.Dialogs
         public string GroupName { get { return this.Group.GroupName; } set { this.Group.GroupName = value; } }
         public string DefaultScene { get { return this.Group.DefaultScene; } set { this.Group.DefaultScene = value; } }
 
-        public bool IsCustomGroup { get { return this.Group.AssociatedUserRole == MixerRoleEnum.Custom; } }
+        public bool IsCustomGroup { get { return this.Group.AssociatedUserRole == UserRoleEnum.Custom; } }
 
         public bool CanBeToggled { get { return !(this.Scene.sceneID.Equals(MixPlayUserGroupModel.DefaultName) && this.SetAsDefault); } }
 

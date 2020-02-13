@@ -55,7 +55,7 @@
             <Border Style="{StaticResource DefaultBorder}">
                 <Controls:SortedDataGrid x:Name="UserDataGridView" Grid.Row="1" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Center">
                     <Controls:SortedDataGrid.Columns>
-                        <DataGridTextColumn Header="{x:Static resx:Resources.User}" Binding="{Binding UserName}" IsReadOnly="True" Width="*" />
+                        <DataGridTextColumn Header="{x:Static resx:Resources.User}" Binding="{Binding Username}" IsReadOnly="True" Width="*" />
                         <DataGridTextColumn Header="{x:Static resx:Resources.OnlineMinutes}" Binding="{Binding ViewingMinutes}" IsReadOnly="True" Width="120" />
                         <DataGridTextColumn Binding="{Binding PrimaryCurrency}" IsReadOnly="True" Width="100">
                             <DataGridTextColumn.Header>

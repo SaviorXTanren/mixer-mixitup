@@ -2,6 +2,7 @@
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
+using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -33,7 +34,7 @@ namespace MixItUp.Base.Model.Store
             : this()
         {
             this.ID = command.ID;
-            this.UserID = ChannelSession.MixerStreamerUser.id;
+            this.UserID = ChannelSession.MixerUser.id;
             this.AppVersion = ChannelSession.Services.FileService.GetApplicationVersion();
             this.Name = name;
             this.Description = description;
@@ -43,7 +44,7 @@ namespace MixItUp.Base.Model.Store
 
             this.DisplayImageData = displayImageData;
             this.AssetData = assetData;
-            this.Data = SerializerHelper.SerializeToString(command.Actions);
+            this.Data = JSONSerializerHelper.SerializeToString(command.Actions);
 
             this.Metadata = metadata;
         }
@@ -52,7 +53,7 @@ namespace MixItUp.Base.Model.Store
         {
             if (!string.IsNullOrEmpty(this.Data))
             {
-                return SerializerHelper.DeserializeFromString<List<ActionBase>>(this.Data);
+                return JSONSerializerHelper.DeserializeFromString<List<ActionBase>>(this.Data);
             }
             return new List<ActionBase>();
         }

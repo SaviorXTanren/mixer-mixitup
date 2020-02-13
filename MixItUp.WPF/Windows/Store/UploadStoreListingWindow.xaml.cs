@@ -5,6 +5,7 @@ using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Store;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.WPF.Util;
 using Newtonsoft.Json.Linq;
@@ -74,24 +75,32 @@ namespace MixItUp.WPF.Windows.Store
             if (this.command is EventCommand)
             {
                 EventCommand eCommand = (EventCommand)this.command;
-                switch (eCommand.EventType)
+                switch (eCommand.EventCommandType)
                 {
-                    case ConstellationEventTypeEnum.channel__id__followed: this.Tag4ComboBox.SelectedItem = StoreListingModel.FollowTag; break;
-                    case ConstellationEventTypeEnum.channel__id__hosted: this.Tag4ComboBox.SelectedItem = StoreListingModel.HostTag; break;
-                    case ConstellationEventTypeEnum.channel__id__subscribed: this.Tag4ComboBox.SelectedItem = StoreListingModel.SubscribeTag; break;
-                    case ConstellationEventTypeEnum.channel__id__resubscribed: this.Tag4ComboBox.SelectedItem = StoreListingModel.ResubscribeTag; break;
-                }
-
-                switch (eCommand.OtherEventType)
-                {
-                    case OtherEventTypeEnum.StreamlabsDonation:
-                    case OtherEventTypeEnum.GawkBoxDonation:
-                    case OtherEventTypeEnum.TiltifyDonation:
-                    case OtherEventTypeEnum.ExtraLifeDonation:
-                    case OtherEventTypeEnum.StreamJarDonation:
-                    case OtherEventTypeEnum.TipeeeStreamDonation:
-                    case OtherEventTypeEnum.TreatStreamDonation:
-                    case OtherEventTypeEnum.JustGivingDonation:
+                    case EventTypeEnum.MixerChannelFollowed:
+                        this.Tag4ComboBox.SelectedItem = StoreListingModel.FollowTag;
+                        break;
+                    case EventTypeEnum.MixerChannelHosted:
+                        this.Tag4ComboBox.SelectedItem = StoreListingModel.HostTag;
+                        break;
+                    case EventTypeEnum.MixerChannelSubscribed:
+                        this.Tag4ComboBox.SelectedItem = StoreListingModel.SubscribeTag;
+                        break;
+                    case EventTypeEnum.MixerChannelResubscribed:
+                        this.Tag4ComboBox.SelectedItem = StoreListingModel.ResubscribeTag;
+                        break;
+                    case EventTypeEnum.StreamlabsDonation:
+                    case EventTypeEnum.StreamElementsDonation:
+                    case EventTypeEnum.GawkBoxDonation:
+                    case EventTypeEnum.TiltifyDonation:
+                    case EventTypeEnum.ExtraLifeDonation:
+                    case EventTypeEnum.StreamJarDonation:
+                    case EventTypeEnum.TipeeeStreamDonation:
+                    case EventTypeEnum.TreatStreamDonation:
+                    case EventTypeEnum.JustGivingDonation:
+                    case EventTypeEnum.StreamlootsCardRedeemed:
+                    case EventTypeEnum.StreamlootsPackGifted:
+                    case EventTypeEnum.StreamlootsPackPurchased:
                         this.Tag4ComboBox.SelectedItem = StoreListingModel.DonationTag;
                         break;
                 }

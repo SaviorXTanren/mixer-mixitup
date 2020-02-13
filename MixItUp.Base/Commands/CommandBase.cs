@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Actions;
+using MixItUp.Base.Model;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -15,15 +16,15 @@ namespace MixItUp.Base.Commands
 {
     public enum CommandTypeEnum
     {
-        Chat,
+        Chat = 0,
         [Name("MixPlay")]
-        Interactive,
-        Event,
-        Timer,
-        Custom,
-        ActionGroup,
-        Game,
-        Remote,
+        Interactive = 1,
+        Event = 2,
+        Timer = 3,
+        Custom = 4,
+        ActionGroup = 5,
+        Game = 6,
+        Remote = 7,
     }
 
     [DataContract]
@@ -95,6 +96,9 @@ namespace MixItUp.Base.Commands
         public bool IsRandomized { get; set; }
 
         [JsonIgnore]
+        protected StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None;
+
+        [JsonIgnore]
         private Task currentTaskRun;
         [JsonIgnore]
         private CancellationTokenSource currentCancellationTokenSource;
@@ -134,12 +138,12 @@ namespace MixItUp.Base.Commands
 
         public override string ToString() { return string.Format("{0} - {1}", this.ID, this.Name); }
 
-        public async Task Perform(IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
+        public async Task Perform(StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
         {
-            await this.Perform(await ChannelSession.GetCurrentUser(), arguments, extraSpecialIdentifiers: extraSpecialIdentifiers);
+            await this.Perform(await ChannelSession.GetCurrentUser(), platform, arguments, extraSpecialIdentifiers: extraSpecialIdentifiers);
         }
 
-        public async Task Perform(UserViewModel user, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
+        public async Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
         {
             if (this.IsEnabled)
             {
@@ -151,6 +155,15 @@ namespace MixItUp.Base.Commands
                 if (extraSpecialIdentifiers == null)
                 {
                     extraSpecialIdentifiers = new Dictionary<string, string>();
+                }
+
+                if (this.platform == StreamingPlatformTypeEnum.None)
+                {
+                    this.platform = user.Platform;
+                }
+                else
+                {
+                    this.platform = platform;
                 }
 
                 if (!await this.PerformPreChecks(user, arguments, extraSpecialIdentifiers))
@@ -205,11 +218,11 @@ namespace MixItUp.Base.Commands
             }
         }
 
-        public async Task PerformAndWait(UserViewModel user, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
+        public async Task PerformAndWait(UserViewModel user, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
         {
             try
             {
-                await this.Perform(user, arguments, extraSpecialIdentifiers);
+                await this.Perform(user, platform, arguments, extraSpecialIdentifiers);
                 if (this.currentTaskRun != null && !this.currentTaskRun.IsCompleted)
                 {
                     await this.currentTaskRun;
@@ -277,18 +290,18 @@ namespace MixItUp.Base.Commands
             {
                 token.ThrowIfCancellationRequested();
 
-                if (actionsToRun[i] is OverlayAction && ChannelSession.Services.OverlayServers != null)
+                if (actionsToRun[i] is OverlayAction && ChannelSession.Services.Overlay.IsConnected)
                 {
-                    ChannelSession.Services.OverlayServers.StartBatching();
+                    ChannelSession.Services.Overlay.StartBatching();
                 }
 
-                await actionsToRun[i].Perform(user, arguments, extraSpecialIdentifiers);
+                await actionsToRun[i].Perform(user, this.platform, arguments, extraSpecialIdentifiers);
 
-                if (actionsToRun[i] is OverlayAction && ChannelSession.Services.OverlayServers != null)
+                if (actionsToRun[i] is OverlayAction && ChannelSession.Services.Overlay.IsConnected)
                 {
                     if (i == (actionsToRun.Count - 1) || !(actionsToRun[i + 1] is OverlayAction))
                     {
-                        await ChannelSession.Services.OverlayServers.EndBatching();
+                        await ChannelSession.Services.Overlay.EndBatching();
                     }
                 }
             }

@@ -45,15 +45,13 @@ namespace MixItUp.Base.Util
             return base.Remove(key);
         }
 
-        public IEnumerable<V> GetAddedValues()
-        {
-            return this.GetValues(this.addedValues);
-        }
+        public IEnumerable<K> GetAddedKeys() { return this.GetKeyValues(this.addedValues).Keys; }
 
-        public IEnumerable<V> GetChangedValues()
-        {
-            return this.GetValues(this.changedValues);
-        }
+        public IEnumerable<V> GetAddedValues() { return this.GetKeyValues(this.addedValues).Values; }
+
+        public IEnumerable<K> GetChangedKeys() { return this.GetKeyValues(this.changedValues).Keys; }
+
+        public IEnumerable<V> GetChangedValues() { return this.GetKeyValues(this.changedValues).Values; }
 
         public IEnumerable<K> GetRemovedValues()
         {
@@ -67,16 +65,23 @@ namespace MixItUp.Base.Util
 
         public void ManualValueChanged(K key) { this.ValueChanged(key); }
 
-        private IEnumerable<V> GetValues(HashSet<K> keys)
+        public void ClearTracking()
+        {
+            this.addedValues.Clear();
+            this.changedValues.Clear();
+            this.removedValues.Clear();
+        }
+
+        public Dictionary<K, V> GetKeyValues(HashSet<K> keys)
         {
             lock (valuesUpdateLock)
             {
-                List<V> values = new List<V>();
+                Dictionary<K, V> values = new Dictionary<K, V>();
                 foreach (K key in keys)
                 {
                     if (base.ContainsKey(key))
                     {
-                        values.Add(base[key]);
+                        values[key] = base[key];
                     }
                 }
                 keys.Clear();

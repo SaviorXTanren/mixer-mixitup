@@ -47,21 +47,20 @@ namespace MixItUp.Base.Model.Overlay
             : base(OverlayItemModelTypeEnum.ChatMessages, htmlText, totalToShow, fadeOut, textFont, width, height, borderColor, backgroundColor, textColor, alignment, addEventAnimation, removeEventAnimation)
         { }
 
-        public override Task LoadTestData()
+        public override async Task LoadTestData()
         {
-            ChatMessageViewModel message = new ChatMessageViewModel(Guid.NewGuid().ToString(), StreamingPlatformTypeEnum.Mixer, new UserViewModel(ChannelSession.MixerStreamerUser));
+            ChatMessageViewModel message = new ChatMessageViewModel(Guid.NewGuid().ToString(), StreamingPlatformTypeEnum.Mixer, await ChannelSession.GetCurrentUser());
             message.AddStringMessagePart("Test Message");
 
             ChatMessageEventModel messageEvent = new ChatMessageEventModel()
             {
                 id = Guid.NewGuid(),
-                user_id = ChannelSession.MixerStreamerUser.id,
-                user_name = ChannelSession.MixerStreamerUser.username,
+                user_id = ChannelSession.MixerUser.id,
+                user_name = ChannelSession.MixerUser.username,
                 channel = ChannelSession.MixerChannel.id,
                 message = new ChatMessageContentsModel() { message = new ChatMessageDataModel[] { new ChatMessageDataModel() { type = "text", text = "Test Message" } } }
             };
             this.GlobalEvents_OnChatMessageReceived(this, message);
-            return Task.FromResult(0);
         }
 
         public override async Task Enable()
@@ -133,10 +132,10 @@ namespace MixItUp.Base.Model.Overlay
                         item.TemplateReplacements.Add("TEXT", string.Join(" ", textParts));
                     }
 
-                    item.TemplateReplacements.Add("USERNAME", item.User.UserName);
+                    item.TemplateReplacements.Add("USERNAME", item.User.Username);
                     item.TemplateReplacements.Add("USER_IMAGE", item.User.AvatarLink);
                     item.TemplateReplacements.Add("USER_COLOR", OverlayChatMessagesListItemModel.userColors[item.User.PrimaryRoleColorName]);
-                    item.TemplateReplacements.Add("SUB_IMAGE", (item.User.IsMixerSubscriber && ChannelSession.MixerChannel.badge != null) ? ChannelSession.MixerChannel.badge.url : string.Empty);
+                    item.TemplateReplacements.Add("SUB_IMAGE", (item.User.IsPlatformSubscriber && ChannelSession.MixerChannel.badge != null) ? ChannelSession.MixerChannel.badge.url : string.Empty);
                     item.TemplateReplacements.Add("TEXT_SIZE", this.Height.ToString());
 
                     await this.listSemaphore.WaitAndRelease(() =>

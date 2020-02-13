@@ -1,6 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Util;
-using MixItUp.Desktop.Services;
+using MixItUp.WPF.Services;
 using MixItUp.WPF.Util;
 using StreamingClient.Base.Util;
 using System;
@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Principal;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,8 +22,6 @@ namespace MixItUp.WPF
     /// </summary>
     public partial class App : Application
     {
-        public static ApplicationSettings AppSettings;
-
         private bool crashObtained = false;
 
         public App()
@@ -31,6 +30,8 @@ namespace MixItUp.WPF
 
             // NOTE: Uncomment the lines below to test other cultures
             //System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo("de-DE");
+
+            //System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo("qps-ploc");
             //System.Threading.Thread.CurrentThread.CurrentCulture = ci;
             //System.Threading.Thread.CurrentThread.CurrentUICulture = ci;
         }
@@ -84,15 +85,12 @@ namespace MixItUp.WPF
             Application.Current.Resources.MergedDictionaries.Add(newMIUResourceDictionary);
         }
 
-        protected override void OnStartup(StartupEventArgs e)
+        protected override async void OnStartup(StartupEventArgs e)
         {
-            App.AppSettings = ApplicationSettings.Load();
-            this.SwitchTheme(App.AppSettings.ColorScheme, App.AppSettings.BackgroundColor, App.AppSettings.FullThemeName);
+            WindowsServicesManager servicesManager = new WindowsServicesManager();
+            servicesManager.Initialize();
 
-            DesktopServicesHandler desktopServicesHandler = new DesktopServicesHandler();
-            desktopServicesHandler.Initialize();
-
-            FileLoggerHandler.Initialize(desktopServicesHandler.FileService);
+            FileLoggerHandler.Initialize(servicesManager.FileService);
 
             DispatcherHelper.RegisterDispatcher(async (func) =>
             {
@@ -101,17 +99,21 @@ namespace MixItUp.WPF
                     await func();
                 });
             });
-            SerializerHelper.Initialize(desktopServicesHandler.FileService);
             DialogHelper.Initialize(new WPFDialogShower());
 
             Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
-            ChannelSession.Initialize(desktopServicesHandler);
+            await ChannelSession.Initialize(servicesManager);
+
+            WindowsIdentity id = WindowsIdentity.GetCurrent();
+            ChannelSession.IsElevated = id.Owner != id.User;
 
             Logger.SetLogLevel(LogLevel.Information);
             Logger.Log(LogLevel.Information, "Application Version: " + ChannelSession.Services.FileService.GetApplicationVersion());
             Logger.SetLogLevel(LogLevel.Error);
+
+            this.SwitchTheme(ChannelSession.AppSettings.ColorScheme, ChannelSession.AppSettings.BackgroundColor, ChannelSession.AppSettings.FullThemeName);
 
             base.OnStartup(e);
         }
@@ -144,7 +146,7 @@ namespace MixItUp.WPF
                 }
                 catch (Exception) { }
 
-                ProcessHelper.LaunchProgram("MixItUp.Reporter.exe", string.Format("{0} {1}", (ChannelSession.MixerStreamerUser != null) ? ChannelSession.MixerStreamerUser.id : 0, FileLoggerHandler.CurrentLogFilePath));
+                ProcessHelper.LaunchProgram("MixItUp.Reporter.exe", string.Format("{0} {1}", (ChannelSession.MixerUser != null) ? ChannelSession.MixerUser.id : 0, FileLoggerHandler.CurrentLogFilePath));
 
                 Task.Delay(3000).Wait();
             }

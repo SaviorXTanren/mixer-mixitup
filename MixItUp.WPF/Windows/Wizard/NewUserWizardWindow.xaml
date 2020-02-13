@@ -3,6 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MixItUp.WPF.Windows.Wizard"
+        xmlns:AccountControls="clr-namespace:MixItUp.WPF.Controls.Accounts"
         xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
@@ -18,6 +20,10 @@
                      
         Icon="./../../Logo.ico"                        
         Title="Mix It Up - New User Wizard" Height="600" Width="800">
+    <Windows:LoadingWindowBase.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </Windows:LoadingWindowBase.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -34,148 +40,92 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" x:Name="PagesGrid" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Grid x:Name="IntroPageGrid" Visibility="Collapsed">
+            <Grid Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid Visibility="{Binding IntroPageVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="30" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="20" />
                         <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-
-                    <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">Welcome to Mix It Up!</TextBlock>
-
-                    <TextBlock Grid.Row="2" TextWrapping="Wrap" Width="390">This wizard will walk you through getting started with Mix It Up and getting some initial settings in place. If you wish to, you can skip this wizard by simply closing this window.</TextBlock>
-                </Grid>
-
-                <Grid x:Name="BotLoginPageGrid" Visibility="Collapsed" Margin="20,0">
-                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="40" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">Connect Mixer Bot Acount</TextBlock>
+                    <Image Source="/Assets/Images/MixItUp-Logo-Name.png" Width="500" Grid.Row="0" HorizontalAlignment="Center" Margin="-15,0,0,0" />
 
-                    <GroupBox Grid.Row="2" Header="Mixer Bot Account">
-                        <Grid Grid.Row="2" HorizontalAlignment="Center" Margin="10">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="2" TextWrapping="Wrap" Width="700">This wizard will help get started with Mix It Up by logging you into your streaming platform accounts, help you import your existing data from some bots, and walk you through some of the ropes of how things work.</TextBlock>
 
-                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Width="550" TextWrapping="Wrap">This will allow you to log in with a Mixer account that you use as your Bot in your stream. If you do not have a Bot account, you can create one now or you can ignore this.</TextBlock>
+                    <TextBlock Grid.Row="4" TextWrapping="Wrap" Width="700">Before we get started, we want to let you know about some great resources you can use to help you with problems or give you ideas of things to create. Click any of the buttons below to go to that resource:</TextBlock>
 
-                            <Grid Grid.Row="2" x:Name="BotLogInGrid" Visibility="Visible" HorizontalAlignment="Center">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
+                    <Grid Grid.Row="6" HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="250" />
+                            <ColumnDefinition Width="40" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="250" />
+                        </Grid.ColumnDefinitions>
 
-                                <Button Grid.Column="0" x:Name="BotLogInButton" Click="BotLogInButton_Click">Bot Log In</Button>
-                            </Grid>
+                        <Button Grid.Column="0" Command="{Binding DiscordCommand}" Height="60" Width="60" Background="Transparent">
+                            <Image Source="/Assets/Images/Discord.png" Width="50" Height="50" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Button>
 
-                            <Grid Grid.Row="2" x:Name="BotLoggedInGrid" Visibility="Hidden" HorizontalAlignment="Center">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="10" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center">Our Discord is our main point for support &amp; questions. This should be your first place to go to for any issues you might be encountering.</TextBlock>
 
-                                <UsersControls:UserProfileAvatarControl Grid.Column="0" x:Name="BotProfileAvatar" />
+                        <Button Grid.Column="4" Command="{Binding TwitterCommand}" Height="60" Width="60" Background="Transparent">
+                            <Image Source="/Assets/Images/Twitter.png" Width="45" Height="45" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Button>
 
-                                <TextBlock Grid.Column="2" x:Name="BotLoggedInNameTextBlock" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="6" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Left" Width="230">Our Twitter account is a great way to stay up to date on important announcements or major updates.</TextBlock>
+                    </Grid>
 
-                            </Grid>
+                    <Grid Grid.Row="8" HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="250" />
+                            <ColumnDefinition Width="40" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="250" />
+                        </Grid.ColumnDefinitions>
 
-                        </Grid>
-                    </GroupBox>
+                        <Button Grid.Column="0" Command="{Binding YouTubeCommand}" Height="60" Width="60" Background="Transparent">
+                            <Image Source="/Assets/Images/YouTube.png" Width="45" Height="45" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Button>
 
+                        <TextBlock Grid.Column="2" TextWrapping="Wrap" VerticalAlignment="Center" Width="220" HorizontalAlignment="Left">Our YouTube account features many tutorials create by us and our community to help ramp you up or show off cool creations.</TextBlock>
+
+                        <Button Grid.Column="4" Command="{Binding WikiCommand}" Height="60" Width="60" Background="Transparent">
+                            <Image Source="/Assets/Images/Wiki.png" Width="50" Height="50" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Button>
+
+                        <TextBlock Grid.Column="6" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Left" Width="240">Our Wiki pages contain detailed information about many of the different features available throughout the entire app.</TextBlock>
+                    </Grid>
                 </Grid>
 
-                <Grid x:Name="ExternalServicesPageGrid" Visibility="Collapsed" Margin="20,0">
+                <Grid Visibility="{Binding StreamerAccountsPageVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="15" />
+                        <RowDefinition Height="20" />
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="15" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="15" />
+                        <RowDefinition Height="20" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">Connect To A Streaming Software</TextBlock>
+                    <TextBlock Grid.Row="0" TextWrapping="Wrap" Width="700">Let's get started by signing in to the accounts you use on each Streaming Platform. Select the options below for each account you want to log in. You can revisit these options later by going to the Accounts page.</TextBlock>
 
-                    <GroupBox Grid.Row="2" Header="OBS Studio (OBS 21.1 or higher)">
-                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="10" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="2" TextWrapping="Wrap" Width="700">Streamer accounts are your actual account that you are streaming from. Bot accounts are separate, optional accounts that you can use to send messages from in your channel. Bots accounts must be manually created by you and you must make sure to be signed in to them before you try connecting them in Mix It Up.</TextBlock>
 
-                            <TextBlock Grid.Row="0" TextWrapping="Wrap">To connect OBS Studio, install the websocket plugin and enable it in OBS Studio under Tools > Websocket server settings. Once done, you can connect to the OBS Studio with the default settings:</TextBlock>
-
-                            <Grid Grid.Row="2" HorizontalAlignment="Center">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="40" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-
-                                <Button Grid.Column="0" x:Name="InstallOBSStudioPlugin" Click="InstallOBSStudioPlugin_Click" Width="120">Install Plugin</Button>
-
-                                <Button Grid.Column="2" x:Name="ConnectToOBSStudioButton" Click="ConnectToOBSStudioButton_Click" Width="200">Connect To OBS Studio</Button>
-                                <TextBlock Grid.Column="2" x:Name="OBSStudioConnectedSuccessfulTextBlock" Visibility="Collapsed" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">Connection Successful!</TextBlock>
-                            </Grid>
-
-                        </Grid>
-                    </GroupBox>
-
-                    <GroupBox Grid.Row="4" Header="XSplit">
-                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-
-                            <TextBlock Grid.Row="0" TextWrapping="Wrap">In XSplit, navigate to "Extensions" -> "Add custom extension" in XSplit and select the file path listed below. Start the extension by selecting it from the Extensions menu, then you can connect to XSplit:</TextBlock>
-
-                            <Grid Grid.Row="2" Margin="10,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="30" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-
-                                <TextBox Grid.Column="0" x:Name="XSplitExtensionPathTextBox" IsReadOnly="True" MaterialDesign:HintAssist.Hint="XSplit Mix It Up Extension" Style="{StaticResource MaterialDesignFloatingHintTextBox}"></TextBox>
-
-                                <Button Grid.Column="2" x:Name="ConnectToXSplitButton" Click="ConnectToXSplitButton_Click" Width="200">Connect To XSplit</Button>
-                                <TextBlock Grid.Column="2" x:Name="XSplitConnectedSuccessfulTextBlock" Visibility="Collapsed" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">Connection Successful!</TextBlock>
-                            </Grid>
-
-                        </Grid>
-                    </GroupBox>
-
-                    <GroupBox Grid.Row="6" Header="Streamlabs OBS">
-                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-
-                            <TextBlock Grid.Row="0" TextWrapping="Wrap">To connect to Streamlabs OBS, click the button below to enable connection:</TextBlock>
-
-                            <Button Grid.Row="2" x:Name="ConnectToSLOBSButton" Click="ConnectToSLOBSButton_Click" Width="200">Connect To SLOBS</Button>
-                            <TextBlock Grid.Row="2" x:Name="SLOBSConnectedSuccessfulTextBlock" Visibility="Collapsed" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">Connection Successful!</TextBlock>
-
-                        </Grid>
-                    </GroupBox>
-
+                    <AccountControls:StreamingPlatformAccountControl Grid.Row="4" DataContext="{Binding Mixer}" />
                 </Grid>
 
-                <Grid x:Name="ImportScorpBotSettingsPageGrid" Visibility="Collapsed">
+                <Grid Visibility="{Binding ScorpBotPageVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="20" />
@@ -185,7 +135,7 @@
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">Import ScorpBot Data</TextBlock>
-                    
+
                     <StackPanel Grid.Row="2" Width="675">
                         <TextBlock TextWrapping="Wrap" Margin="0,0,0,20">If you previously used ScorpBot, we can import several things from your settings to get you ramped up faster in Mix It Up! Currently, the following features can be imported:</TextBlock>
 
@@ -206,13 +156,13 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBox Grid.Row="2" x:Name="ScorpBotDirectoryTextBox" MaterialDesign:HintAssist.Hint="ScorpBot Installation Directory" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <TextBox Grid.Row="2" Text="{Binding ScorpBotDirectory}" MaterialDesign:HintAssist.Hint="ScorpBot Installation Directory" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                        <Button Grid.Column="2" Grid.Row="0" x:Name="ScorpBotDirectoryBrowseButton" Click="ScorpBotDirectoryBrowseButton_Click">Browse</Button>
+                        <Button Grid.Column="2" Grid.Row="0" Command="{Binding ScorpBotDirectoryBrowseCommand}">Browse</Button>
                     </Grid>
                 </Grid>
 
-                <Grid x:Name="ImportStreamlabsChatBotSettingsPageGrid" Visibility="Collapsed">
+                <Grid Visibility="{Binding StreamlabsChatbotPageVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="15" />
@@ -224,7 +174,7 @@
                     <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">Import Streamlabs Chat Bot Data</TextBlock>
 
                     <StackPanel Grid.Row="2" Width="675">
-                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,0">If you previously used Streamlabs Chat Bot, we can import several things from your data to get you ramped up faster in Mix It Up! To use this feature, you must have some form of Microsoft Excel installed. Currently, the following features can be imported:</TextBlock>
+                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,0">If you previously used Streamlabs Chat Bot, we can import several things from your data to get you ramped up faster in Mix It Up! Currently, the following features can be imported:</TextBlock>
 
                         <TextBlock Margin="20,10,0,0">- Chat Commands</TextBlock>
                         <TextBlock Margin="20,0,0,0">- Timers</TextBlock>
@@ -248,102 +198,146 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBox Grid.Row="2" x:Name="StreamlabsChatBotDataFilePathTextBox" MaterialDesign:HintAssist.Hint="Streamlabs Chat Bot Data File" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <TextBox Grid.Row="2" Text="{Binding StreamlabsChatbotDirectory}" MaterialDesign:HintAssist.Hint="Streamlabs Chat Bot Data File" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                        <Button Grid.Column="2" Grid.Row="0" x:Name="StreamlabsChatBotDataFileBrowseButton" Click="StreamlabsChatBotDataFileBrowseButton_Click">Browse</Button>
+                        <Button Grid.Column="2" Grid.Row="0" Command="{Binding StreamlabsChatbotDirectoryBrowseCommand}">Browse</Button>
                     </Grid>
                 </Grid>
 
-                <Grid x:Name="ImportSoundwaveInteractiveSettingsGrid" Visibility="Collapsed" Width="550">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="20" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="20" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="20" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="20" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
+                <Grid Visibility="{Binding CommandActionsPageVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">Soundwave Interactive Settings</TextBlock>
-
-                    <TextBlock TextWrapping="Wrap" Grid.Row="2">We can import your profiles from Soundwave Interactive that you used.</TextBlock>
-
-                    <TextBlock TextWrapping="Wrap" Grid.Row="4">We will create a brand new Interactive Game on Mixer for every profile you wish to import. If you created any other Interactive Games that share the same name as one of your Soundwave Interactive profiles, we will be unable to import that profile over and its checkbox will be disabled.</TextBlock>
-
-                    <TextBlock TextWrapping="Wrap" Grid.Row="6">Please select the profiles below that you would like us to import for you:</TextBlock>
-
-                    <DataGrid x:Name="SoundwaveInteractiveProfilesDataGrid" Grid.Row="8" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" Width="400" Height="225" VerticalScrollBarVisibility="Visible">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Profile" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
-                            <DataGridTemplateColumn Header="Add">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <CheckBox x:Name="SoundwaveProfileCheckBox" DataContext="{Binding}" IsEnabled="{Binding CanBeImported}" Checked="SoundwaveProfileCheckBox_Checked" Unchecked="SoundwaveProfileCheckBox_Checked" />
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </Grid>
-
-                <Grid x:Name="SetupCompletePageGrid" Visibility="Collapsed" Width="550">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="20" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="40" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="40" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="40" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-
-                    <TextBlock TextWrapping="Wrap" Grid.Row="0" HorizontalAlignment="Center">Congratulations, you're all set to start using Mix It Up! </TextBlock>
-
-                    <TextBlock TextWrapping="Wrap" Grid.Row="2">We have several resources available to you for how to get starting using Mix It Up, including a YouTube tutorial series, our extensive Wiki, as well as direct contact for questions or support:</TextBlock>
-
-                    <Grid Grid.Row="4" Margin="20,0,0,0">
+                    <Grid Grid.Column="0" VerticalAlignment="Center">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="20" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="20" />
+                            <RowDefinition Height="40" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
-                        <StackPanel Grid.Row="0" Orientation="Horizontal">
-                            <TextBlock>YouTube Series: <Hyperlink NavigateUri="https://www.youtube.com/channel/UCcY0vKI9yqcMTgh8OzSnRSA" RequestNavigate="Hyperlink_RequestNavigate">https://www.youtube.com/channel/MixItUp</Hyperlink></TextBlock>
-                        </StackPanel>
+                        <Grid Grid.Row="0" VerticalAlignment="Center" Width="350">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="20" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
 
-                        <StackPanel Grid.Row="2" Orientation="Horizontal">
-                            <TextBlock>Wiki Documentation: <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki" RequestNavigate="Hyperlink_RequestNavigate">https://github.com/SaviorXTanren/mixer-mixitup/wiki</Hyperlink></TextBlock>
-                        </StackPanel>
+                            <TextBlock Grid.Row="0" TextWrapping="Wrap">Mix It Up uses a Command &amp; Action structure for everything throughout the app. Think of it similar to a recipe that you would follow to make food.</TextBlock>
 
-                        <StackPanel Grid.Row="4" Orientation="Horizontal">
-                            <TextBlock>Questions/Support: support@mixitup.com</TextBlock>
-                        </StackPanel>
+                            <TextBlock Grid.Row="2" TextWrapping="Wrap">Let's say you wanted to make some pasta; you would follow the steps in the recipe one after the other until you're done. You also would follow every step in the order they are specified. For example, you need to heat the water before you can add the pasta.</TextBlock>
+                        </Grid>
+
+                        <Image Grid.Row="2" Source="/Assets/Images/CommandExample.png" Width="200" VerticalAlignment="Bottom" />
                     </Grid>
 
+                    <Grid Grid.Column="2" VerticalAlignment="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Image Grid.Row="0" Source="/Assets/Images/ExampleRecipe.png" Width="200" VerticalAlignment="Top" />
+
+                        <Grid Grid.Row="2" VerticalAlignment="Center" Width="350">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="20" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" TextWrapping="Wrap">Commands are like a recipe and actions are the steps in that recipe. Let's say you make a shout out command, what are the things it should do? Each of those "things" can be thought of as an action.</TextBlock>
+
+                            <TextBlock Grid.Row="2" TextWrapping="Wrap">In this example, our shout out command sends a message to chat, plays a sound, waits 10 seconds, and then shows an image. Each of those correspond to a different action type (Chat, Sound, Wait, and Overlay).</TextBlock>
+                        </Grid>
+                    </Grid>
+                </Grid>
+
+                <Grid Visibility="{Binding FinalPageVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}">
                     <Grid Grid.Row="6">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="40" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="50" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="50" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="50" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="50" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
 
-                        <TextBlock Grid.Column="0" TextWrapping="Wrap" Width="450">Don't know how a feature works or want more info? Simply click on the Help icon on the top bar of the main window to find out more!</TextBlock>
+                        <Grid Grid.Row="0" HorizontalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
 
-                        <Button Grid.Column="2" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Help}">
-                            <MaterialDesign:PackIcon Kind="Help" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                        </Button>
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center" TextWrapping="Wrap" Width="450">Mix It Up is a desktop-only application, so your settings and data only exist on their computer. Therefore we encourge our users to set up automatic backups for their settings to ensure you always have something to fall back to in the event of any issues:</TextBlock>
+
+                            <Grid Grid.Column="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="10" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <Button x:Name="SettingsBackupLocationButton" Grid.Row="0" Content="Set Location" Command="{Binding SetBackupLocationCommand}" />
+
+                                <ComboBox x:Name="SettingsBackupRateComboBox" Grid.Row="2" Width="110" MaterialDesign:HintAssist.Hint="Backup Rate" ItemsSource="{Binding SettingsBackupOptions}" SelectedItem="{Binding SelectedSettingsBackupOption}" IsEnabled="{Binding IsBackupLocationSet, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+                            </Grid>
+                        </Grid>
+
+                        <Grid Grid.Row="2" HorizontalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" TextWrapping="Wrap" Width="450">Don't know how a feature works or want more info? Simply click on the Help icon on the top bar of the main window to find out more!</TextBlock>
+
+                            <Button Grid.Column="2" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Help}">
+                                <MaterialDesign:PackIcon Kind="Help" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                            </Button>
+                        </Grid>
+
+                        <TextBlock Grid.Row="4" TextWrapping="Wrap" Width="500">Don't forget the following resources available to you for questions &amp; support:</TextBlock>
+
+                        <Grid Grid.Row="6" HorizontalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <Button Grid.Column="0" Command="{Binding DiscordCommand}" Height="60" Width="60" Background="Transparent">
+                                <Image Source="/Assets/Images/Discord.png" Width="50" Height="50" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Button>
+
+                            <Button Grid.Column="2" Command="{Binding TwitterCommand}" Height="60" Width="60" Background="Transparent">
+                                <Image Source="/Assets/Images/Twitter.png" Width="45" Height="45" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Button>
+
+                            <Button Grid.Column="4" Command="{Binding YouTubeCommand}" Height="60" Width="60" Background="Transparent">
+                                <Image Source="/Assets/Images/YouTube.png" Width="45" Height="45" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Button>
+
+                            <Button Grid.Column="6" Command="{Binding WikiCommand}" Height="60" Width="60" Background="Transparent">
+                                <Image Source="/Assets/Images/Wiki.png" Width="50" Height="50" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Button>
+                        </Grid>
+
+                        <TextBlock TextWrapping="Wrap" Grid.Row="8" HorizontalAlignment="Center">Thanks for using Mix It Up and we hope it meets all your needs!</TextBlock>
                     </Grid>
-
-                    <TextBlock TextWrapping="Wrap" Grid.Row="8" HorizontalAlignment="Center">Thanks for giving Mix It Up a try and we hope it meets all your needs!</TextBlock>
-                    
                 </Grid>
             </Grid>
 
@@ -356,11 +350,11 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock x:Name="StatusMessageTextBlock" Grid.Column="0" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="0" Text="{Binding StatusMessage}" VerticalAlignment="Center" />
 
-                <Button x:Name="BackButton" Grid.Column="2" Click="BackButton_Click" IsEnabled="False">&lt; Back</Button>
+                <Button Grid.Column="2" Command="{Binding BackCommand}" IsEnabled="{Binding CanBack}">&lt; Back</Button>
 
-                <Button x:Name="NextButton" Grid.Column="4" Click="NextButton_Click">Next &gt;</Button>
+                <Button Grid.Column="4" Command="{Binding NextCommand}" IsEnabled="{Binding CanNext}">Next &gt;</Button>
             </Grid>
         </Grid>
 

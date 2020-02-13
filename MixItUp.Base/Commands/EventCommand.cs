@@ -2,6 +2,7 @@
 using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.User;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
@@ -13,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Commands
 {
+    [Obsolete]
     public enum OtherEventTypeEnum
     {
         None = 0,
@@ -46,6 +48,7 @@ namespace MixItUp.Base.Commands
         [Name("JustGiving Donation")]
         JustGivingDonation = 17,
 
+        [Obsolete]
         [Name("Stream Tweet Retweet")]
         TwitterStreamTweetRetweet = 20,
 
@@ -68,7 +71,6 @@ namespace MixItUp.Base.Commands
         ChatUserLeft = 37,
         [Name("Chat Message Deleted")]
         ChatMessageDeleted = 38,
-
 
         [Name("Channel Stream Start")]
         MixerChannelStreamStart = 40,
@@ -94,138 +96,45 @@ namespace MixItUp.Base.Commands
 
     public class EventCommand : CommandBase, IEquatable<EventCommand>
     {
-        private static LockedDictionary<string, LockedHashSet<uint>> userEventTracking = new LockedDictionary<string, LockedHashSet<uint>>();
-
-        public static bool CanUserRunEvent(UserViewModel user, string eventType)
-        {
-            if ((!EventCommand.userEventTracking.ContainsKey(eventType) || !EventCommand.userEventTracking[eventType].Contains(user.ID)))
-            {
-                if (!EventCommand.userEventTracking.ContainsKey(eventType))
-                {
-                    EventCommand.userEventTracking[eventType] = new LockedHashSet<uint>();
-                }
-
-                if (user != null)
-                {
-                    EventCommand.userEventTracking[eventType].Add(user.ID);
-                }
-                return true;
-            }
-            return false;
-        }
-
-        public static EventCommand FindEventCommand(string eventDetails)
-        {
-            foreach (EventCommand command in ChannelSession.Settings.EventCommands)
-            {
-                if (command.MatchesEvent(eventDetails))
-                {
-                    return command;
-                }
-            }
-            return null;
-        }
-
-        public static async Task RunEventCommand(EventCommand command, UserViewModel user, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
-        {
-            if (user != null)
-            {
-                await command.Perform(user, arguments: arguments, extraSpecialIdentifiers: extraSpecialIdentifiers);
-            }
-            else
-            {
-                await command.Perform(await ChannelSession.GetCurrentUser(), arguments: arguments, extraSpecialIdentifiers: extraSpecialIdentifiers);
-            }
-        }
-
-        public static async Task FindAndRunEventCommand(string eventDetails, UserViewModel user, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
-        {
-            EventCommand command = EventCommand.FindEventCommand(eventDetails);
-            if (command != null)
-            {
-                await EventCommand.RunEventCommand(command, user, arguments, extraSpecialIdentifiers);
-            }
-        }
-
-        public static async Task ProcessDonationEventCommand(UserDonationModel donation, OtherEventTypeEnum eventType, Dictionary<string, string> additionalSpecialIdentifiers = null)
-        {
-            GlobalEvents.DonationOccurred(donation);
-
-            UserViewModel user = new UserViewModel(0, donation.UserName);
-
-            UserModel userModel = await ChannelSession.MixerStreamerConnection.GetUser(user.UserName);
-            if (userModel != null)
-            {
-                user = new UserViewModel(userModel);
-            }
-
-            user.Data.TotalAmountDonated += donation.Amount;
-
-            Dictionary<string, string> specialIdentifiers = donation.GetSpecialIdentifiers();
-            if (additionalSpecialIdentifiers != null)
-            {
-                foreach (var kvp in additionalSpecialIdentifiers)
-                {
-                    specialIdentifiers[kvp.Key] = kvp.Value;
-                }
-            }
-
-            await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(eventType), user, arguments: null, extraSpecialIdentifiers: specialIdentifiers);
-        }
-
         private static SemaphoreSlim eventCommandPerformSemaphore = new SemaphoreSlim(1);
 
+        private static HashSet<EventTypeEnum> ignoreUserTracking = new HashSet<EventTypeEnum>()
+        {
+            EventTypeEnum.ChatUserPurge, EventTypeEnum.ChatMessageReceived, EventTypeEnum.ChatMessageDeleted,
+
+            EventTypeEnum.MixerChannelSubscriptionGifted, EventTypeEnum.MixerSparksUsed, EventTypeEnum.MixerEmbersUsed, EventTypeEnum.MixerSkillUsed, EventTypeEnum.MixerMilestoneReached, EventTypeEnum.MixerFanProgressionLevelUp,
+        };
+
+        private LockedHashSet<Guid> userEventTracking = new LockedHashSet<Guid>();
+
+        [Obsolete]
         [DataMember]
         public ConstellationEventTypeEnum EventType { get; set; }
         [DataMember]
         public uint EventID { get; set; }
 
+        [Obsolete]
         [DataMember]
         public OtherEventTypeEnum OtherEventType { get; set; }
 
-        public EventCommand()
+        [DataMember]
+        public EventTypeEnum EventCommandType { get; set; }
+
+        public EventCommand() { }
+
+        public EventCommand(EventTypeEnum eventType)
         {
-            this.OtherEventType = OtherEventTypeEnum.None;
+            this.EventCommandType = eventType;
         }
 
-        public EventCommand(ConstellationEventTypeEnum type) : this(type, 0, string.Empty) { }
-
-        public EventCommand(ConstellationEventTypeEnum type, ChannelAdvancedModel channel) : this(type, channel.id, channel.user.id.ToString()) { }
-
-        public EventCommand(ConstellationEventTypeEnum type, UserModel user) : this(type, user.id, user.id.ToString()) { }
-
-        public EventCommand(ConstellationEventTypeEnum type, uint id, string name)
-            : base(EnumHelper.GetEnumName(type), CommandTypeEnum.Event, name)
+        public bool CanRun(UserViewModel user)
         {
-            this.EventType = type;
-            this.EventID = id;
-        }
-
-        public EventCommand(OtherEventTypeEnum otherEventType, string name)
-            : base(EnumHelper.GetEnumName(otherEventType), CommandTypeEnum.Event, name)
-        {
-            this.OtherEventType = otherEventType;
-        }
-
-        public bool IsOtherEventType { get { return this.OtherEventType != OtherEventTypeEnum.None; } }
-
-        public string UniqueEventID
-        {
-            get
+            if (EventCommand.ignoreUserTracking.Contains(this.EventCommandType))
             {
-                if (this.IsOtherEventType)
-                {
-                    return EnumHelper.GetEnumName(this.OtherEventType);
-                }
-                return this.GetEventType().ToString();
+                return true;
             }
+            return !this.userEventTracking.Contains(user.ID);
         }
-
-        public ConstellationEventType GetEventType() { return new ConstellationEventType(this.EventType, this.EventID); }
-
-        public bool MatchesEvent(string eventID) { return this.UniqueEventID.Equals(eventID); }
-
-        public override string ToString() { return this.CommandsString; }
 
         public override bool Equals(object obj)
         {
@@ -236,17 +145,22 @@ namespace MixItUp.Base.Commands
             return false;
         }
 
-        public bool Equals(EventCommand other)
-        {
-            if (this.IsOtherEventType)
-            {
-                return this.OtherEventType == other.OtherEventType;
-            }
-            return this.EventType.Equals(other.EventType) && this.EventID.Equals(other.EventID);
-        }
+        public bool Equals(EventCommand other) { return this.EventCommandType == other.EventCommandType; }
 
-        public override int GetHashCode() { return this.GetEventType().GetHashCode(); }
+        public override int GetHashCode() { return this.EventCommandType.GetHashCode(); }
 
         protected override SemaphoreSlim AsyncSemaphore { get { return EventCommand.eventCommandPerformSemaphore; } }
+
+        protected override Task<bool> PerformPreChecks(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        {
+            return Task.FromResult(this.CanRun(user));
+        }
+
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
+        {
+            this.userEventTracking.Add(user.ID);
+
+            await base.PerformInternal(user, arguments, extraSpecialIdentifiers, token);
+        }
     }
 }

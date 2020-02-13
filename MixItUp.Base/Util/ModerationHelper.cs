@@ -40,11 +40,24 @@ namespace MixItUp.Base.Util
         public const string BannedWordRegexFormat = "(^|[^\\w]){0}([^\\w]|$)";
         public const string BannedWordWildcardRegexFormat = "\\S*";
 
+        public static LockedList<string> CommunityFilteredWords { get; set; } = new LockedList<string>();
+
+        private const string CommunityFilteredWordsFilePath = "Assets\\CommunityBannedWords.txt";
+
         private const int MinimumMessageLengthForPercentageModeration = 5;
 
         private static readonly Regex EmoteRegex = new Regex(":\\w+ ");
         private static readonly Regex EmojiRegex = new Regex(@"\uD83D[\uDC00-\uDFFF]|\uD83C[\uDC00-\uDFFF]|\uFFFD");
         private static readonly Regex LinkRegex = new Regex(@"(?xi)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'"".,<>?«»“”‘’]))");
+
+        public static async Task Initialize()
+        {
+            if (ChannelSession.Services.FileService.FileExists(ModerationHelper.CommunityFilteredWordsFilePath))
+            {
+                string text = await ChannelSession.Services.FileService.ReadFile(ModerationHelper.CommunityFilteredWordsFilePath);
+                ModerationHelper.CommunityFilteredWords = new LockedList<string>(text.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries));
+            }
+        }
 
         public static async Task<string> ShouldBeModerated(UserViewModel user, string text, bool containsLink = false)
         {
@@ -96,7 +109,7 @@ namespace MixItUp.Base.Util
             {
                 if (ChannelSession.Settings.ModerationUseCommunityFilteredWords)
                 {
-                    foreach (string word in ChannelSession.Settings.CommunityFilteredWords)
+                    foreach (string word in ModerationHelper.CommunityFilteredWords)
                     {
                         if (Regex.IsMatch(text, string.Format(BannedWordRegexFormat, Regex.Escape(word)), RegexOptions.IgnoreCase))
                         {
@@ -217,24 +230,24 @@ namespace MixItUp.Base.Util
                     return true;
                 }
 
-                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.FollowerOnly && !user.HasPermissionsTo(MixerRoleEnum.Follower))
+                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.FollowerOnly && !user.HasPermissionsTo(UserRoleEnum.Follower))
                 {
                     return false;
                 }
 
-                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.SubscriberOnly && !user.HasPermissionsTo(MixerRoleEnum.Subscriber))
+                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.SubscriberOnly && !user.HasPermissionsTo(UserRoleEnum.Subscriber))
                 {
                     return false;
                 }
 
-                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.ModeratorOnly && user.HasPermissionsTo(MixerRoleEnum.Mod))
+                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.ModeratorOnly && user.HasPermissionsTo(UserRoleEnum.Mod))
                 {
                     return false;
                 }
 
-                if (user.MixerAccountDate.HasValue)
+                if (user.AccountDate.HasValue)
                 {
-                    TimeSpan accountLength = DateTimeOffset.Now - user.MixerAccountDate.GetValueOrDefault();
+                    TimeSpan accountLength = DateTimeOffset.Now - user.AccountDate.GetValueOrDefault();
                     if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountHour && accountLength.TotalHours < 1)
                     {
                         return false;
@@ -358,11 +371,11 @@ namespace MixItUp.Base.Util
 
                 if (isChat)
                 {
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("Your message has been deleted because only {0} can participate currently.", reason));
+                    await ChannelSession.Services.Chat.Whisper(user, string.Format("Your message has been deleted because only {0} can participate currently.", reason));
                 }
                 else if (isInteractive)
                 {
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("Your interactive selection has been ignored because only {0} can participate currently.", reason));
+                    await ChannelSession.Services.Chat.Whisper(user, string.Format("Your interactive selection has been ignored because only {0} can participate currently.", reason));
                 }
             }
         }

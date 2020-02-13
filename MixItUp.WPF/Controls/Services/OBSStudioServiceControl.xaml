@@ -1,4 +1,4 @@
-﻿<local:ServicesControlBase x:Class="MixItUp.WPF.Controls.Services.OBSStudioServiceControl"
+﻿<local:ServiceControlBase x:Class="MixItUp.WPF.Controls.Services.OBSStudioServiceControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,62 +6,78 @@
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Services"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="600">
-    <Grid>
-        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="40" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="40" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+             d:DesignHeight="300" d:DesignWidth="300">
+    <local:ServiceControlBase.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </local:ServiceControlBase.Resources>
 
-            <Grid Grid.Column="0" Width="270">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="10" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+    <Grid Margin="10" HorizontalAlignment="Center">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="150" />
+        </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Row="0" VerticalAlignment="Center" TextWrapping="Wrap" FontWeight="Bold" HorizontalAlignment="Center">Requires OBS 21.1 or higher</TextBlock>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="2" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center">The OBS WebSocket must be installed from the <Hyperlink NavigateUri="OBS" RequestNavigate="Hyperlink_RequestNavigate">OBS Folder</Hyperlink> in the Mix It Up install folder</TextBlock>
+            <TextBlock Grid.Row="0" TextWrapping="Wrap">The Streamlabs OBS service allows you to directly interact with your instance of Streamlabs OBS to perform changes to scenes and sources</TextBlock>
+
+            <TextBlock Grid.Row="2" VerticalAlignment="Center" TextWrapping="Wrap">OBS Studio 23.0 or higher is required and the OBS WebSocket must be installed from the <Hyperlink NavigateUri="OBS" RequestNavigate="Hyperlink_RequestNavigate">OBS Folder</Hyperlink> in the Mix It Up install folder.</TextBlock>
+        </Grid>
+
+        <Grid Grid.Column="2" Visibility="{Binding IsNotConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <MaterialDesign:PackIcon Kind="AccessPoint" Style="{StaticResource DefaultPackIcon}" Grid.Column="0" VerticalAlignment="Center" Margin="0,10,0,0" />
+                <TextBox Grid.Column="2" Text="{Binding IPAddress}" Width="130" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="IP Address (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
             </Grid>
 
-            <Grid Grid.Column="2" VerticalAlignment="Center">
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <MaterialDesign:PackIcon Kind="KeyVariant" Style="{StaticResource DefaultPackIcon}" Grid.Column="0" VerticalAlignment="Center" />
+                <PasswordBox Grid.Column="2" x:Name="PasswordBox" Style="{StaticResource MaterialDesignPasswordBox}" MaterialDesign:HintAssist.Hint="Password (Optional)" />
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid Visibility="{Binding IsConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="20" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="10" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
+                <Button Grid.Row="0" Command="{Binding TestConnectionCommand}" HorizontalAlignment="Center" Width="140">Test Connection</Button>
 
-                    <MaterialDesign:PackIcon Kind="AccessPoint" Style="{StaticResource DefaultPackIcon}" Grid.Column="0" VerticalAlignment="Center" />
-                    <TextBox x:Name="OBSStudioIPAddressTextBox" Grid.Column="2" Width="130" VerticalAlignment="Center" />
-                </Grid>
-
-                <Grid Grid.Row="2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="10" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-
-                    <MaterialDesign:PackIcon Kind="KeyVariant" Style="{StaticResource DefaultPackIcon}" Grid.Column="0" VerticalAlignment="Center" />
-                    <PasswordBox x:Name="OBSStudioPasswordTextBox" Grid.Column="2" Width="130" VerticalAlignment="Center" />
-                </Grid>
+                <Button Grid.Row="2" Command="{Binding DisconnectCommand}" HorizontalAlignment="Center" Width="110">Disconnect</Button>
             </Grid>
 
-            <Button x:Name="OBSStudioEnableConnectionButton" Grid.Column="4" Click="OBSStudioEnableConnectionButton_Click" Width="140">Enable OBS</Button>
-            <Button x:Name="OBSStudioDisableConnectionButton" Grid.Column="4" Click="OBSStudioDisableConnectionButton_Click" Width="140" Visibility="Collapsed">Disable OBS</Button>
-
+            <Grid Visibility="{Binding IsNotConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Button Grid.Row="4" Command="{Binding ConnectCommand}" HorizontalAlignment="Center" Width="110">Connect</Button>
+            </Grid>
         </Grid>
     </Grid>
-</local:ServicesControlBase>
+</local:ServiceControlBase>

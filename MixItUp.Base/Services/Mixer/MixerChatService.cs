@@ -1,9 +1,12 @@
 ﻿using Mixer.Base.Clients;
 using Mixer.Base.Model.Chat;
+using Mixer.Base.Model.Client;
 using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.Chat;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Mixer;
@@ -34,10 +37,10 @@ namespace MixItUp.Base.Services.Mixer
 
         bool IsBotConnected { get; }
 
-        Task<bool> ConnectStreamer();
-        Task DisconnectStreamer();
+        Task<ExternalServiceResult> ConnectUser();
+        Task DisconnectUser();
 
-        Task<bool> ConnectBot();
+        Task<ExternalServiceResult> ConnectBot();
         Task DisconnectBot();
 
         Task SendMessage(string message, bool sendAsStreamer = false);
@@ -59,7 +62,7 @@ namespace MixItUp.Base.Services.Mixer
         Task StartPoll(string question, IEnumerable<string> answers, uint lengthInSeconds);
     }
 
-    public class MixerChatService : MixerWebSocketServiceBase, IMixerChatService
+    public class MixerChatService : MixerPlatformServiceBase, IMixerChatService
     {
         public event EventHandler<MixerChatMessageViewModel> OnMessageOccurred = delegate { };
         public event EventHandler<Tuple<Guid, UserViewModel>> OnDeleteMessageOccurred = delegate { };
@@ -89,17 +92,19 @@ namespace MixItUp.Base.Services.Mixer
 
         public bool IsBotConnected { get { return this.botClient != null && this.botClient.Connected; } }
 
-        public async Task<bool> ConnectStreamer()
+        public async Task<ExternalServiceResult> ConnectUser()
         {
-            return await this.AttemptConnect(async () =>
+            if (ChannelSession.MixerUserConnection != null)
             {
-                if (ChannelSession.MixerStreamerConnection != null)
+                return await this.AttemptConnect(async () =>
                 {
                     this.cancellationTokenSource = new CancellationTokenSource();
 
-                    this.streamerClient = await this.ConnectAndAuthenticateChatClient(ChannelSession.MixerStreamerConnection);
-                    if (this.streamerClient != null)
+                    ExternalServiceResult<ChatClient> result = await this.ConnectAndAuthenticateChatClient(ChannelSession.MixerUserConnection);
+                    if (result.Success)
                     {
+                        this.streamerClient = result.Result;
+
                         this.streamerClient.OnClearMessagesOccurred += ChatClient_OnClearMessagesOccurred;
                         this.streamerClient.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
                         this.streamerClient.OnMessageOccurred += ChatClient_OnMessageOccurred;
@@ -121,7 +126,7 @@ namespace MixItUp.Base.Services.Mixer
 
                         AsyncRunner.RunAsyncInBackground(async () =>
                         {
-                            await ChannelSession.MixerStreamerConnection.GetChatUsers(ChannelSession.MixerChannel, (users) =>
+                            await ChannelSession.MixerUserConnection.GetChatUsers(ChannelSession.MixerChannel, (users) =>
                             {
                                 foreach (ChatUserModel user in users)
                                 {
@@ -138,16 +143,18 @@ namespace MixItUp.Base.Services.Mixer
                             AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 300000, this.ChatterRefreshBackground);
                         });
                         AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 2500, this.ChatterJoinLeaveBackground);
-
-                        return true;
                     }
-                }
-                await this.DisconnectStreamer();
-                return false;
-            });
+                    else
+                    {
+                        await this.DisconnectUser();
+                    }
+                    return result;
+                });
+            }
+            return new ExternalServiceResult("Mixer connection has not been established");
         }
 
-        public async Task DisconnectStreamer()
+        public async Task DisconnectUser()
         {
             await this.RunAsync(async () =>
             {
@@ -184,35 +191,36 @@ namespace MixItUp.Base.Services.Mixer
             });
         }
 
-        public async Task<bool> ConnectBot()
+        public async Task<ExternalServiceResult> ConnectBot()
         {
             if (ChannelSession.MixerBotConnection != null)
             {
                 return await this.AttemptConnect(async () =>
                 {
-                    if (ChannelSession.MixerBotConnection != null)
+                    ExternalServiceResult<ChatClient> result = await this.ConnectAndAuthenticateChatClient(ChannelSession.MixerBotConnection);
+                    if (result.Success)
                     {
-                        this.botClient = await this.ConnectAndAuthenticateChatClient(ChannelSession.MixerBotConnection);
-                        if (this.botClient != null)
+                        this.botClient = result.Result;
+
+                        this.botClient.OnMessageOccurred += BotChatClient_OnMessageOccurred;
+                        this.botClient.OnDisconnectOccurred += BotClient_OnDisconnectOccurred;
+                        this.botClient.OnReplyOccurred += BotClient_OnReplyOccurred;
+                        if (ChannelSession.Settings.DiagnosticLogging)
                         {
-                            this.botClient.OnMessageOccurred += BotChatClient_OnMessageOccurred;
-                            this.botClient.OnDisconnectOccurred += BotClient_OnDisconnectOccurred;
-                            if (ChannelSession.Settings.DiagnosticLogging)
-                            {
-                                this.botClient.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
-                                this.botClient.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
-                                this.botClient.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
-                                this.botClient.OnEventOccurred += WebSocketClient_OnEventOccurred;
-                            }
-                            return true;
+                            this.botClient.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
+                            this.botClient.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
+                            this.botClient.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
+                            this.botClient.OnEventOccurred += WebSocketClient_OnEventOccurred;
                         }
-                        return false;
                     }
-                    await this.DisconnectBot();
-                    return false;
+                    else
+                    {
+                        await this.DisconnectBot();
+                    }
+                    return result;
                 });
             }
-            return true;
+            return new ExternalServiceResult("Mixer connection has not been established");
         }
 
         public async Task DisconnectBot()
@@ -223,6 +231,7 @@ namespace MixItUp.Base.Services.Mixer
                 {
                     this.botClient.OnMessageOccurred -= BotChatClient_OnMessageOccurred;
                     this.botClient.OnDisconnectOccurred -= BotClient_OnDisconnectOccurred;
+                    this.botClient.OnReplyOccurred -= BotClient_OnReplyOccurred;
                     if (ChannelSession.Settings.DiagnosticLogging)
                     {
                         this.botClient.OnPacketSentOccurred -= WebSocketClient_OnPacketSentOccurred;
@@ -359,7 +368,7 @@ namespace MixItUp.Base.Services.Mixer
         {
             await this.RunAsync(async () =>
             {
-                await ChannelSession.MixerStreamerConnection.AddUserRoles(ChannelSession.MixerChannel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Banned });
+                await ChannelSession.MixerUserConnection.AddUserRoles(ChannelSession.MixerChannel, user.GetModel(), new List<UserRoleEnum>() { UserRoleEnum.Banned });
                 await user.RefreshDetails(force: true);
             });
         }
@@ -368,7 +377,7 @@ namespace MixItUp.Base.Services.Mixer
         {
             await this.RunAsync(async () =>
             {
-                await ChannelSession.MixerStreamerConnection.RemoveUserRoles(ChannelSession.MixerChannel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Banned });
+                await ChannelSession.MixerUserConnection.RemoveUserRoles(ChannelSession.MixerChannel, user.GetModel(), new List<UserRoleEnum>() { UserRoleEnum.Banned });
                 await user.RefreshDetails(force: true);
             });
         }
@@ -377,7 +386,7 @@ namespace MixItUp.Base.Services.Mixer
         {
             await this.RunAsync(async () =>
             {
-                await ChannelSession.MixerStreamerConnection.AddUserRoles(ChannelSession.MixerChannel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Mod });
+                await ChannelSession.MixerUserConnection.AddUserRoles(ChannelSession.MixerChannel, user.GetModel(), new List<UserRoleEnum>() { UserRoleEnum.Mod });
                 await user.RefreshDetails(force: true);
             });
         }
@@ -386,7 +395,7 @@ namespace MixItUp.Base.Services.Mixer
         {
             await this.RunAsync(async () =>
             {
-                await ChannelSession.MixerStreamerConnection.RemoveUserRoles(ChannelSession.MixerChannel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Mod });
+                await ChannelSession.MixerUserConnection.RemoveUserRoles(ChannelSession.MixerChannel, user.GetModel(), new List<UserRoleEnum>() { UserRoleEnum.Mod });
                 await user.RefreshDetails(force: true);
             });
         }
@@ -401,21 +410,22 @@ namespace MixItUp.Base.Services.Mixer
 
         private ChatClient GetChatClient(bool sendAsStreamer = false) { return (this.botClient != null && !sendAsStreamer) ? this.botClient : this.streamerClient; }
 
-        private async Task<ChatClient> ConnectAndAuthenticateChatClient(MixerConnectionService connection)
+        private async Task<ExternalServiceResult<ChatClient>> ConnectAndAuthenticateChatClient(MixerConnectionService connection)
         {
             ChatClient client = await this.RunAsync(ChatClient.CreateFromChannel(connection.Connection, ChannelSession.MixerChannel));
             if (client != null)
             {
-                if (await this.RunAsync(client.Connect()) && await this.RunAsync(client.Authenticate()))
+                if (await this.RunAsync(client.Connect()))
                 {
-                    return client;
+                    if (await this.RunAsync(client.Authenticate()))
+                    {
+                        return new ExternalServiceResult<ChatClient>(client);
+                    }
+                    return new ExternalServiceResult<ChatClient>("Failed to authenticate to Mixer chat");
                 }
-                else
-                {
-                    Logger.Log("Failed to connect & authenticate Chat client");
-                }
+                return new ExternalServiceResult<ChatClient>("Failed to connect Mixer chat");
             }
-            return null;
+            return new ExternalServiceResult<ChatClient>("Failed to create chat client from connection");
         }
 
         private string SplitLargeMessage(string message, out string subMessage)
@@ -496,7 +506,7 @@ namespace MixItUp.Base.Services.Mixer
         private async Task ChatterRefreshBackground(CancellationToken cancellationToken)
         {
             List<ChatUserModel> chatUsers = new List<ChatUserModel>();
-            await ChannelSession.MixerStreamerConnection.GetChatUsers(ChannelSession.MixerChannel, (users) =>
+            await ChannelSession.MixerUserConnection.GetChatUsers(ChannelSession.MixerChannel, (users) =>
             {
                 chatUsers.AddRange(users);
                 return Task.FromResult(0);
@@ -506,7 +516,7 @@ namespace MixItUp.Base.Services.Mixer
             List<uint> chatUserIDs = new List<uint>(chatUsers.Select(u => u.userId.GetValueOrDefault()));
 
             IEnumerable<UserViewModel> existingUsers = ChannelSession.Services.User.GetAllUsers();
-            List<uint> existingUsersIDs = new List<uint>(existingUsers.Select(u => u.ID));
+            List<uint> existingUsersIDs = new List<uint>(existingUsers.Select(u => u.MixerID));
 
             Dictionary<uint, ChatUserModel> usersToAdd = new Dictionary<uint, ChatUserModel>();
             foreach (ChatUserModel user in chatUsers)
@@ -569,22 +579,35 @@ namespace MixItUp.Base.Services.Mixer
             }
         }
 
-        private void ChatClient_OnDeleteMessageOccurred(object sender, ChatDeleteMessageEventModel e)
+        private async void ChatClient_OnDeleteMessageOccurred(object sender, ChatDeleteMessageEventModel e)
         {
-            this.OnDeleteMessageOccurred(sender, new Tuple<Guid, UserViewModel>(e.id, new UserViewModel(e.moderator)));
+            if (e != null && e.moderator != null)
+            {
+                UserViewModel moderator = ChannelSession.Services.User.GetUserByMixerID(e.moderator.user_id);
+                if (moderator == null)
+                {
+                    moderator = await ChannelSession.Services.User.AddOrUpdateUser(e.moderator.ToChatUserModel());
+                }
+
+                this.OnDeleteMessageOccurred(sender, new Tuple<Guid, UserViewModel>(e.id, moderator));
+            }
         }
 
-        private void ChatClient_OnPurgeMessageOccurred(object sender, ChatPurgeMessageEventModel e)
+        private async void ChatClient_OnPurgeMessageOccurred(object sender, ChatPurgeMessageEventModel e)
         {
-            UserViewModel user = ChannelSession.Services.User.GetUserByID(e.user_id);
+            UserViewModel user = ChannelSession.Services.User.GetUserByMixerID(e.user_id);
             if (user != null)
             {
-                UserViewModel modUser = null;
+                UserViewModel moderator = null;
                 if (e.moderator != null)
                 {
-                    modUser = new UserViewModel(e.moderator);
+                    moderator = ChannelSession.Services.User.GetUserByMixerID(e.moderator.user_id);
+                    if (moderator == null)
+                    {
+                        moderator = await ChannelSession.Services.User.AddOrUpdateUser(e.moderator.ToChatUserModel());
+                    }
                 }
-                this.OnUserPurgeOccurred(sender, new Tuple<UserViewModel, UserViewModel>(user, modUser));
+                this.OnUserPurgeOccurred(sender, new Tuple<UserViewModel, UserViewModel>(user, moderator));
             }
         }
 
@@ -624,16 +647,13 @@ namespace MixItUp.Base.Services.Mixer
                 {
                     if (user.Data.ViewingMinutes == 0)
                     {
-                        if (EventCommand.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.ChatUserFirstJoin)))
-                        {
-                            await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.ChatUserFirstJoin), user);
-                        }
+                        await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.ChatUserFirstJoin, user));
                     }
                 }
                 catch (Exception ex) { Logger.Log(ex); }
 
                 this.OnUserUpdateOccurred(sender, user);
-                if (chatUser.roles != null && chatUser.roles.Count() > 0 && chatUser.roles.Where(r => !string.IsNullOrEmpty(r)).Contains(EnumHelper.GetEnumName(MixerRoleEnum.Banned)))
+                if (chatUser.roles != null && chatUser.roles.Count() > 0 && chatUser.roles.Where(r => !string.IsNullOrEmpty(r)).Contains(EnumHelper.GetEnumName(UserRoleEnum.Banned)))
                 {
                     this.OnUserBanOccurred(sender, user);
                 }
@@ -648,10 +668,10 @@ namespace MixItUp.Base.Services.Mixer
             for (int i = 0; i < 8; i++)
             {
                 await Task.Delay(250);
-                if (ChannelSession.Constellation.SkillEventsTriggered.ContainsKey(skillAttribution.id))
+                if (ChannelSession.Services.Events.MixerEventService.SkillEventsTriggered.ContainsKey(skillAttribution.id))
                 {
-                    message.Skill.SetPayload(ChannelSession.Constellation.SkillEventsTriggered[skillAttribution.id]);
-                    ChannelSession.Constellation.SkillEventsTriggered.Remove(skillAttribution.id);
+                    message.Skill.SetPayload(ChannelSession.Services.Events.MixerEventService.SkillEventsTriggered[skillAttribution.id]);
+                    ChannelSession.Services.Events.MixerEventService.SkillEventsTriggered.Remove(skillAttribution.id);
                     break;
                 }
             }
@@ -659,6 +679,23 @@ namespace MixItUp.Base.Services.Mixer
             this.OnMessageOccurred(sender, message);
 
             this.ProcessSkill(message);
+        }
+
+        protected async void BotClient_OnReplyOccurred(object sender, ReplyPacket e)
+        {
+            if (e.errorObject != null)
+            {
+                if (e.errorObject.ContainsKey("code") && e.errorObject.ContainsKey("message") && e.errorObject["code"].ToString().Equals("4007"))
+                {
+                    await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer, await ChannelSession.GetCurrentUser(),
+                        "The Bot account could not send the last message for the following reason: " + e.errorObject["message"]));
+                }
+            }
+            else if (e.error != null && !string.IsNullOrEmpty(e.error.ToString()))
+            {
+                await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer, await ChannelSession.GetCurrentUser(),
+                    "Bot account error: " + e.error.ToString()));
+            }
         }
 
         private void ProcessSkill(MixerSkillChatMessageViewModel message)
@@ -682,30 +719,36 @@ namespace MixItUp.Base.Services.Mixer
 
         private async void StreamerClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
-            ChannelSession.DisconnectionOccurred("Streamer Chat");
+            ChannelSession.DisconnectionOccurred("Mixer Streamer Chat");
 
-            await this.DisconnectStreamer();
+            ExternalServiceResult result;
+            await this.DisconnectUser();
             do
             {
                 await Task.Delay(2500);
-            }
-            while (!await this.ConnectStreamer());
 
-            ChannelSession.ReconnectionOccurred("Streamer Chat");
+                result = await this.ConnectUser();
+            }
+            while (!result.Success);
+
+            ChannelSession.ReconnectionOccurred("Mixer Streamer Chat");
         }
 
         private async void BotClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
-            ChannelSession.DisconnectionOccurred("Bot Chat");
+            ChannelSession.DisconnectionOccurred("Mixer Bot Chat");
 
+            ExternalServiceResult result;
             await this.DisconnectBot();
             do
             {
                 await Task.Delay(2500);
-            }
-            while (!await this.ConnectBot());
 
-            ChannelSession.ReconnectionOccurred("Bot Chat");
+                result = await this.ConnectBot();
+            }
+            while (!result.Success);
+
+            ChannelSession.ReconnectionOccurred("Mixer Bot Chat");
         }
 
         #endregion Chat Event Handlers

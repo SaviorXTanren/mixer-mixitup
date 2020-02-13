@@ -150,6 +150,9 @@
   <data name="AccountMonth" xml:space="preserve">
     <value>Account Is 1 Month Old</value>
   </data>
+  <data name="Accounts" xml:space="preserve">
+    <value>Accounts</value>
+  </data>
   <data name="AccountWeek" xml:space="preserve">
     <value>Account Is 1 Week Old</value>
   </data>

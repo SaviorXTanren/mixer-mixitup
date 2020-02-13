@@ -21,11 +21,11 @@ namespace MixItUp.WPF.Controls.Dashboard
         {
             this.StatisticsOverviewListView.ItemsSource = this.statisticControls;
 
-            this.statisticControls.Add(new StatisticsOverviewControl(ChannelSession.Statistics.ViewerTracker));
-            this.statisticControls.Add(new StatisticsOverviewControl(ChannelSession.Statistics.FollowTracker));
-            this.statisticControls.Add(new StatisticsOverviewControl(ChannelSession.Statistics.AllSubsTracker));
-            this.statisticControls.Add(new StatisticsOverviewControl(ChannelSession.Statistics.SparksEmbersTracker));
-            this.statisticControls.Add(new StatisticsOverviewControl(ChannelSession.Statistics.DonationsTracker));
+            this.statisticControls.Add(new StatisticsOverviewControl(ChannelSession.Services.Statistics.ViewerTracker));
+            this.statisticControls.Add(new StatisticsOverviewControl(ChannelSession.Services.Statistics.FollowTracker));
+            this.statisticControls.Add(new StatisticsOverviewControl(ChannelSession.Services.Statistics.AllSubsTracker));
+            this.statisticControls.Add(new StatisticsOverviewControl(ChannelSession.Services.Statistics.SparksEmbersTracker));
+            this.statisticControls.Add(new StatisticsOverviewControl(ChannelSession.Services.Statistics.DonationsTracker));
 
             foreach (StatisticsOverviewControl statisticControl in this.statisticControls)
             {

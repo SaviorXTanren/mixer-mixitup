@@ -1,8 +1,7 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,8 +43,8 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
         }
         private OverlayLeaderboardListItemDateRangeEnum sparksEmbersDate;
 
-        public IEnumerable<UserCurrencyViewModel> CurrencyRanks { get; set; } = ChannelSession.Settings.Currencies.Values.ToList();
-        public UserCurrencyViewModel CurrencyRank
+        public IEnumerable<UserCurrencyModel> CurrencyRanks { get; set; } = ChannelSession.Settings.Currencies.Values.ToList();
+        public UserCurrencyModel CurrencyRank
         {
             get { return this.currencyRank; }
             set
@@ -54,7 +53,7 @@ namespace MixItUp.Base.ViewModel.Controls.Overlay
                 this.NotifyPropertyChanged();
             }
         }
-        private UserCurrencyViewModel currencyRank;
+        private UserCurrencyModel currencyRank;
 
         public override bool SupportsRefreshUpdating { get { return true; } }
 

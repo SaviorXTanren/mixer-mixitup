@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
@@ -38,9 +39,9 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         public SpinOutcome(GameOutcome outcome) : this(outcome.Name, outcome.Command)
         {
             this.Payout = Convert.ToInt32(outcome.Payout * 100.0);
-            this.UserChance = outcome.RoleProbabilities[MixerRoleEnum.User];
-            this.SubscriberChance = outcome.RoleProbabilities[MixerRoleEnum.Subscriber];
-            this.ModChance = outcome.RoleProbabilities[MixerRoleEnum.Mod];
+            this.UserChance = outcome.RoleProbabilities[UserRoleEnum.User];
+            this.SubscriberChance = outcome.RoleProbabilities[UserRoleEnum.Subscriber];
+            this.ModChance = outcome.RoleProbabilities[UserRoleEnum.Mod];
         }
 
         public string PayoutString
@@ -70,7 +71,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         public GameOutcome GetGameOutcome()
         {
             return new GameOutcome(this.Name, Convert.ToDouble(this.Payout) / 100.0,
-                new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, this.UserChance }, { MixerRoleEnum.Subscriber, this.SubscriberChance }, { MixerRoleEnum.Mod, this.ModChance } },
+                new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, this.UserChance }, { UserRoleEnum.Subscriber, this.SubscriberChance }, { UserRoleEnum.Mod, this.ModChance } },
                 this.Command);
         }
     }
@@ -84,7 +85,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         private SpinGameCommand existingCommand;
 
-        public SpinGameEditorControlViewModel(UserCurrencyViewModel currency)
+        public SpinGameEditorControlViewModel(UserCurrencyModel currency)
             : this()
         {
             this.Outcomes.Add(new SpinOutcome("Lose", this.CreateBasicChatCommand("Sorry @$username, you lost the spin!"), 0, 70, 70, 70));

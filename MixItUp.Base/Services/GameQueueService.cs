@@ -65,9 +65,9 @@ namespace MixItUp.Base.Services
             {
                 if (ChannelSession.Settings.GameQueueSubPriority)
                 {
-                    if (user.HasPermissionsTo(MixerRoleEnum.Subscriber))
+                    if (user.HasPermissionsTo(UserRoleEnum.Subscriber))
                     {
-                        int totalSubs = this.Queue.Count(u => u.HasPermissionsTo(MixerRoleEnum.Subscriber));
+                        int totalSubs = this.Queue.Count(u => u.HasPermissionsTo(UserRoleEnum.Subscriber));
                         this.queue.Insert(totalSubs, user);
                     }
                     else
@@ -81,7 +81,7 @@ namespace MixItUp.Base.Services
                 }
 
                 int position = this.queue.IndexOf(user);
-                await ChannelSession.Settings.GameQueueUserJoinedCommand.Perform(user, arguments: null, extraSpecialIdentifiers: new Dictionary<string, string>() { { "queueposition", this.GetUserPosition(user).ToString() } });
+                await ChannelSession.Settings.GameQueueUserJoinedCommand.Perform(user, user.Platform, arguments: null, extraSpecialIdentifiers: new Dictionary<string, string>() { { "queueposition", this.GetUserPosition(user).ToString() } });
             }
             GlobalEvents.GameQueueUpdated();
         }
@@ -91,7 +91,7 @@ namespace MixItUp.Base.Services
             if (await this.ValidateJoin(user))
             {
                 this.queue.Insert(0, user);
-                await ChannelSession.Settings.GameQueueUserJoinedCommand.Perform(user, arguments: null, extraSpecialIdentifiers: new Dictionary<string, string>() { { "queueposition", this.GetUserPosition(user).ToString() } });
+                await ChannelSession.Settings.GameQueueUserJoinedCommand.Perform(user, user.Platform, arguments: null, extraSpecialIdentifiers: new Dictionary<string, string>() { { "queueposition", this.GetUserPosition(user).ToString() } });
             }
             GlobalEvents.GameQueueUpdated();
         }
@@ -166,11 +166,11 @@ namespace MixItUp.Base.Services
             int position = this.GetUserPosition(user);
             if (position != -1)
             {
-                await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You are #{0} in the queue to play", position));
+                await ChannelSession.Services.Chat.Whisper(user, string.Format("You are #{0} in the queue to play", position));
             }
             else
             {
-                await ChannelSession.Services.Chat.Whisper(user.UserName, "You are not currently in the queue to play");
+                await ChannelSession.Services.Chat.Whisper(user, "You are not currently in the queue to play");
             }
         }
 
@@ -186,7 +186,7 @@ namespace MixItUp.Base.Services
                 List<string> users = new List<string>();
                 for (int i = 0; i < this.queue.Count() && i < 5; i++)
                 {
-                    users.Add("@" + this.queue[i].UserName);
+                    users.Add("@" + this.queue[i].Username);
                 }
 
                 message.Append(string.Join(", ", users));
@@ -208,7 +208,7 @@ namespace MixItUp.Base.Services
             int position = this.GetUserPosition(user);
             if (position != -1)
             {
-                await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You are already #{0} in the queue", position));
+                await ChannelSession.Services.Chat.Whisper(user, string.Format("You are already #{0} in the queue", position));
                 return false;
             }
             return true;

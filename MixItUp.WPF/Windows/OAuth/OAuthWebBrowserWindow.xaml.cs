@@ -1,8 +1,6 @@
 ﻿using Mixer.Base;
-using MixItUp.Base;
-using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using System;
-using System.IO;
 using System.Windows;
 using System.Windows.Navigation;
 
@@ -37,7 +35,7 @@ namespace MixItUp.WPF.Windows.OAuth
             this.Browser.Navigating += Browser_Navigating;
             this.Browser.Navigate(this.oauthURL);
 
-            this.redirectPageText = OAuthServiceBase.LoginRedirectPageHTML;
+            this.redirectPageText = OAuthExternalServiceBase.LoginRedirectPageHTML;
             this.redirectPageText = this.redirectPageText.Replace(LogInTextBoxPositionHTML, "left: 50%; top: 60%;");
         }
 

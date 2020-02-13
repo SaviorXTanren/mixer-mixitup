@@ -3,6 +3,7 @@ using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.WPF.Controls.Actions;
 using MixItUp.WPF.Util;
@@ -23,43 +24,26 @@ namespace MixItUp.WPF.Controls.Command
 
         private BasicCommandTypeEnum commandType;
 
-        private ConstellationEventTypeEnum eventType;
-        private OtherEventTypeEnum otherEventType;
+        private EventTypeEnum eventType;
 
         private EventCommand command;
 
         private ActionControlBase actionControl;
 
         public BasicEventCommandEditorControl(CommandWindow window, EventCommand command)
-            : this(window, command.EventType, BasicCommandTypeEnum.None)
+            : this(window, command.EventCommandType, BasicCommandTypeEnum.None)
         {
             this.window = window;
             this.command = command;
-            if (this.command.IsOtherEventType)
-            {
-                this.otherEventType = this.command.OtherEventType;               
-            }
-            else
-            {
-                this.eventType = this.command.EventType;
-            }
+            this.eventType = this.command.EventCommandType;
 
             InitializeComponent();
         }
 
-        public BasicEventCommandEditorControl(CommandWindow window, ConstellationEventTypeEnum eventType, BasicCommandTypeEnum commandType)
+        public BasicEventCommandEditorControl(CommandWindow window, EventTypeEnum otherEventType, BasicCommandTypeEnum commandType)
         {
             this.window = window;
-            this.eventType = eventType;
-            this.commandType = commandType;
-
-            InitializeComponent();
-        }
-
-        public BasicEventCommandEditorControl(CommandWindow window, OtherEventTypeEnum otherEventType, BasicCommandTypeEnum commandType)
-        {
-            this.window = window;
-            this.otherEventType = otherEventType;
+            this.eventType = otherEventType;
             this.commandType = commandType;
 
             InitializeComponent();
@@ -69,15 +53,7 @@ namespace MixItUp.WPF.Controls.Command
 
         protected override async Task OnLoaded()
         {
-            if (this.otherEventType != OtherEventTypeEnum.None)
-            {
-                this.EventTypeTextBlock.Text = EnumHelper.GetEnumName(this.otherEventType);
-            }
-            else
-            {
-                this.EventTypeTextBlock.Text = EnumHelper.GetEnumName(this.eventType);
-            }
-
+            this.EventTypeTextBlock.Text = EnumHelper.GetEnumName(this.eventType);
             if (this.command != null)
             {
                 if (this.command.Actions.First() is ChatAction)
@@ -134,16 +110,7 @@ namespace MixItUp.WPF.Controls.Command
                     return;
                 }
 
-                EventCommand newCommand = null;
-                if (this.otherEventType != OtherEventTypeEnum.None)
-                {
-                    newCommand = new EventCommand(this.otherEventType, ChannelSession.MixerChannel.user.id.ToString());
-                }
-                else
-                {
-                    newCommand = new EventCommand(this.eventType, ChannelSession.MixerChannel);
-                }
-
+                EventCommand newCommand = new EventCommand(this.eventType);
                 newCommand.IsBasic = isBasic;
                 newCommand.Actions.Add(action);
 

@@ -79,6 +79,9 @@ namespace MixItUp.Base.ViewModels
 
     public class UIViewModelBase : ViewModelBase
     {
+        public event EventHandler StartLoadingOperationOccurred = delegate { };
+        public event EventHandler EndLoadingOperationOccurred = delegate { };
+
         public bool IsLoading
         {
             get { return this.isLoading; }
@@ -107,6 +110,7 @@ namespace MixItUp.Base.ViewModels
             if (this.loadingOperations == 1)
             {
                 this.IsLoading = true;
+                this.StartLoadingOperationOccurred?.Invoke(this, new EventArgs());
             }
         }
 
@@ -116,6 +120,7 @@ namespace MixItUp.Base.ViewModels
             if (this.loadingOperations == 0)
             {
                 this.IsLoading = false;
+                this.EndLoadingOperationOccurred?.Invoke(this, new EventArgs());
             }
         }
 

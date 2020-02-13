@@ -1,7 +1,7 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.Controls.Games;
 using MixItUp.Base.ViewModel.Requirement;
-using MixItUp.Base.ViewModel.User;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
@@ -15,7 +15,7 @@ namespace MixItUp.WPF.Controls.Games
         private SpinGameEditorControlViewModel viewModel;
         private SpinGameCommand existingCommand;
 
-        public SpinGameEditorControl(UserCurrencyViewModel currency)
+        public SpinGameEditorControl(UserCurrencyModel currency)
         {
             InitializeComponent();
 

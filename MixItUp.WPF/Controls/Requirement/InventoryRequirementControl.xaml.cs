@@ -1,8 +1,7 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
-using MixItUp.Base.ViewModel.User;
-using MixItUp.WPF.Util;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
@@ -18,9 +17,9 @@ namespace MixItUp.WPF.Controls.Requirement
             InitializeComponent();
         }
 
-        public UserInventoryViewModel GetInventoryType() { return (UserInventoryViewModel)this.InventoryTypeComboBox.SelectedItem; }
+        public UserInventoryModel GetInventoryType() { return (UserInventoryModel)this.InventoryTypeComboBox.SelectedItem; }
 
-        public UserInventoryItemViewModel GetInventoryItem() { return (UserInventoryItemViewModel)this.InventoryItemComboBox.SelectedItem; }
+        public UserInventoryItemModel GetInventoryItem() { return (UserInventoryItemModel)this.InventoryItemComboBox.SelectedItem; }
 
         public int GetItemAmount()
         {
@@ -113,7 +112,7 @@ namespace MixItUp.WPF.Controls.Requirement
 
         private void InventoryTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            UserInventoryViewModel inventory = this.GetInventoryType();
+            UserInventoryModel inventory = this.GetInventoryType();
 
             this.InventoryItemComboBox.IsEnabled = true;
             this.InventoryItemComboBox.ItemsSource = inventory.Items.Values;

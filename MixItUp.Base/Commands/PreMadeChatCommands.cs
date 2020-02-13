@@ -29,7 +29,7 @@ namespace MixItUp.Base.Commands
         [DataMember]
         public bool IsEnabled { get; set; }
         [DataMember]
-        public MixerRoleEnum Permissions { get; set; }
+        public UserRoleEnum Permissions { get; set; }
         [DataMember]
         public int Cooldown { get; set; }
 
@@ -59,13 +59,13 @@ namespace MixItUp.Base.Commands
 
     public class PreMadeChatCommand : ChatCommand
     {
-        public PreMadeChatCommand(string name, string command, int cooldown, MixerRoleEnum userRole)
+        public PreMadeChatCommand(string name, string command, int cooldown, UserRoleEnum userRole)
             : base(name, command, new RequirementViewModel(userRole: userRole, cooldown: cooldown))
         {
             this.Requirements.Role.MixerRole = userRole;
         }
 
-        public PreMadeChatCommand(string name, List<string> commands, int cooldown, MixerRoleEnum userRole)
+        public PreMadeChatCommand(string name, List<string> commands, int cooldown, UserRoleEnum userRole)
             : base(name, commands, new RequirementViewModel(userRole: userRole, cooldown: cooldown))
         {
             this.Requirements.Role.MixerRole = userRole;
@@ -82,7 +82,7 @@ namespace MixItUp.Base.Commands
     public class MixItUpChatCommand : PreMadeChatCommand
     {
         public MixItUpChatCommand()
-            : base("Mix It Up", "mixitup", 5, MixerRoleEnum.User)
+            : base("Mix It Up", "mixitup", 5, UserRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -97,7 +97,7 @@ namespace MixItUp.Base.Commands
     public class CommandsChatCommand : PreMadeChatCommand
     {
         public CommandsChatCommand()
-            : base(MixItUp.Base.Resources.Commands, "commands", 0, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.Commands, "commands", 0, UserRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -122,11 +122,11 @@ namespace MixItUp.Base.Commands
                     if (commandTriggers.Count > 0)
                     {
                         string text = "Available Commands: " + string.Join(", ", commandTriggers.OrderBy(c => c));
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, text);
+                        await ChannelSession.Services.Chat.Whisper(user, text);
                     }
                     else
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "There are no commands available for you to use.");
+                        await ChannelSession.Services.Chat.Whisper(user, "There are no commands available for you to use.");
                     }
                 }
             }));
@@ -136,7 +136,7 @@ namespace MixItUp.Base.Commands
     public class GamesChatCommand : PreMadeChatCommand
     {
         public GamesChatCommand()
-            : base(MixItUp.Base.Resources.Games, "games", 0, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.Games, "games", 0, UserRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -154,11 +154,11 @@ namespace MixItUp.Base.Commands
                     if (commandTriggers.Count > 0)
                     {
                         string text = "Available Games: " + string.Join(", ", commandTriggers.OrderBy(c => c));
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, text);
+                        await ChannelSession.Services.Chat.Whisper(user, text);
                     }
                     else
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "There are no games available for you to use.");
+                        await ChannelSession.Services.Chat.Whisper(user, "There are no games available for you to use.");
                     }
                 }
             }));
@@ -168,7 +168,7 @@ namespace MixItUp.Base.Commands
     public class MixItUpCommandsChatCommand : PreMadeChatCommand
     {
         public MixItUpCommandsChatCommand()
-            : base(MixItUp.Base.Resources.MixItUpCommands, "mixitupcommands", 5, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.MixItUpCommands, "mixitupcommands", 5, UserRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -195,7 +195,7 @@ namespace MixItUp.Base.Commands
     public class GameChatCommand : PreMadeChatCommand
     {
         public GameChatCommand()
-            : base(MixItUp.Base.Resources.Game, new List<string>() { "game" }, 5, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.Game, new List<string>() { "game" }, 5, UserRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -225,7 +225,7 @@ namespace MixItUp.Base.Commands
     public class TitleChatCommand : PreMadeChatCommand
     {
         public TitleChatCommand()
-            : base(MixItUp.Base.Resources.Title, new List<string>() { "title", "stream" }, 5, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.Title, new List<string>() { "title", "stream" }, 5, UserRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -243,7 +243,7 @@ namespace MixItUp.Base.Commands
     {
         public static async Task<DateTimeOffset> GetStartTime()
         {
-            BroadcastModel broadcast = await ChannelSession.MixerStreamerConnection.GetCurrentBroadcast(ChannelSession.MixerChannel);
+            BroadcastModel broadcast = await ChannelSession.MixerUserConnection.GetCurrentBroadcast(ChannelSession.MixerChannel);
             if (broadcast != null && broadcast.online)
             {
                 DateTimeOffset startTime = broadcast.startedAt.ToLocalTime();
@@ -256,7 +256,7 @@ namespace MixItUp.Base.Commands
         }
 
         public UptimeChatCommand()
-            : base(MixItUp.Base.Resources.Uptime, "uptime", 5, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.Uptime, "uptime", 5, UserRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -281,13 +281,13 @@ namespace MixItUp.Base.Commands
     {
         public static async Task<string> GetCostreamUsers()
         {
-            CostreamModel costream = await ChannelSession.MixerStreamerConnection.GetCurrentCostream();
+            CostreamModel costream = await ChannelSession.MixerUserConnection.GetCurrentCostream();
             if (costream != null && costream.channels != null)
             {
                 List<UserModel> costreamUsers = new List<UserModel>();
                 foreach (CostreamChannelModel channel in costream.channels)
                 {
-                    UserModel user = await ChannelSession.MixerStreamerConnection.GetUser(channel.userId);
+                    UserModel user = await ChannelSession.MixerUserConnection.GetUser(channel.userId);
                     if (user != null)
                     {
                         costreamUsers.Add(user);
@@ -303,7 +303,7 @@ namespace MixItUp.Base.Commands
         }
 
         public CostreamChatCommand()
-            : base(MixItUp.Base.Resources.Costream, "costream", 5, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.Costream, "costream", 5, UserRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -318,14 +318,14 @@ namespace MixItUp.Base.Commands
     public class MixerAgeChatCommand : PreMadeChatCommand
     {
         public MixerAgeChatCommand()
-            : base(MixItUp.Base.Resources.MixerAge, "mixerage", 5, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.MixerAge, "mixerage", 5, UserRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
                 if (ChannelSession.Services.Chat != null)
                 {
                     await user.RefreshDetails();
-                    await ChannelSession.Services.Chat.SendMessage(user.UserName + "'s Mixer Age: " + user.MixerAgeString);
+                    await ChannelSession.Services.Chat.SendMessage(user.Username + "'s Mixer Age: " + user.AccountAgeString);
                 }
             }));
         }
@@ -334,14 +334,14 @@ namespace MixItUp.Base.Commands
     public class FollowAgeChatCommand : PreMadeChatCommand
     {
         public FollowAgeChatCommand()
-            : base(MixItUp.Base.Resources.FollowAge, "followage", 5, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.FollowAge, "followage", 5, UserRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
                 if (ChannelSession.Services.Chat != null)
                 {
                     await user.RefreshDetails();
-                    await ChannelSession.Services.Chat.SendMessage(user.UserName + "'s Follow Age: " + user.FollowAgeString);
+                    await ChannelSession.Services.Chat.SendMessage(user.Username + "'s Follow Age: " + user.FollowAgeString);
                 }
             }));
         }
@@ -350,14 +350,14 @@ namespace MixItUp.Base.Commands
     public class SubscribeAgeChatCommand : PreMadeChatCommand
     {
         public SubscribeAgeChatCommand()
-            : base(MixItUp.Base.Resources.SubscribeAge, new List<string>() { "subage", "subscribeage" }, 5, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.SubscribeAge, new List<string>() { "subage", "subscribeage" }, 5, UserRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
                 if (ChannelSession.Services.Chat != null)
                 {
                     await user.RefreshDetails();
-                    await ChannelSession.Services.Chat.SendMessage(user.UserName + "'s Subscribe Age: " + user.MixerSubscribeAgeString);
+                    await ChannelSession.Services.Chat.SendMessage(user.Username + "'s Subscribe Age: " + user.SubscribeAgeString);
                 }
             }));
         }
@@ -366,14 +366,14 @@ namespace MixItUp.Base.Commands
     public class StreamerAgeChatCommand : PreMadeChatCommand
     {
         public StreamerAgeChatCommand()
-            : base(MixItUp.Base.Resources.StreamerAge, new List<string>() { "streamerage", "age" }, 5, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.StreamerAge, new List<string>() { "streamerage", "age" }, 5, UserRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
                 if (ChannelSession.Services.Chat != null)
                 {
                     await user.RefreshDetails();
-                    await ChannelSession.Services.Chat.SendMessage(user.UserName + "'s Streamer Age: " + user.MixerAgeString);
+                    await ChannelSession.Services.Chat.SendMessage(user.Username + "'s Streamer Age: " + user.AccountAgeString);
                 }
             }));
         }
@@ -382,13 +382,13 @@ namespace MixItUp.Base.Commands
     public class SparksChatCommand : PreMadeChatCommand
     {
         public SparksChatCommand()
-            : base(MixItUp.Base.Resources.Sparks, "sparks", 5, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.Sparks, "sparks", 5, UserRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
                 if (ChannelSession.Services.Chat != null)
                 {
-                    UserModel userModel = await ChannelSession.MixerStreamerConnection.GetUser(user.GetModel());
+                    UserModel userModel = await ChannelSession.MixerUserConnection.GetUser(user.GetModel());
 
                     if (arguments.Count() == 1)
                     {
@@ -398,7 +398,7 @@ namespace MixItUp.Base.Commands
                             username = username.Substring(1);
                         }
 
-                        userModel = await ChannelSession.MixerStreamerConnection.GetUser(username);
+                        userModel = await ChannelSession.MixerUserConnection.GetUser(username);
                     }
 
                     if (userModel != null)
@@ -413,7 +413,7 @@ namespace MixItUp.Base.Commands
     public class QuoteChatCommand : PreMadeChatCommand
     {
         public QuoteChatCommand()
-            : base(MixItUp.Base.Resources.Quote, new List<string>() { "quote", "quotes" }, 5, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.Quote, new List<string>() { "quote", "quotes" }, 5, UserRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -421,14 +421,14 @@ namespace MixItUp.Base.Commands
                 {
                     if (ChannelSession.Settings.QuotesEnabled)
                     {
-                        if (ChannelSession.Settings.UserQuotes.Count > 0)
+                        if (ChannelSession.Settings.Quotes.Count > 0)
                         {
                             int quoteIndex = 0;
                             if (arguments.Count() == 1)
                             {
                                 if (!int.TryParse(arguments.ElementAt(0), out quoteIndex))
                                 {
-                                    await ChannelSession.Services.Chat.Whisper(user.UserName, "USAGE: !quote [QUOTE NUMBER]");
+                                    await ChannelSession.Services.Chat.Whisper(user, "USAGE: !quote [QUOTE NUMBER]");
                                     return;
                                 }
 
@@ -436,22 +436,22 @@ namespace MixItUp.Base.Commands
 
                                 if (quoteIndex < 0)
                                 {
-                                    await ChannelSession.Services.Chat.Whisper(user.UserName, "Quote # must be greater than 0");
+                                    await ChannelSession.Services.Chat.Whisper(user, "Quote # must be greater than 0");
                                     return;
                                 }
 
-                                if (quoteIndex >= ChannelSession.Settings.UserQuotes.Count)
+                                if (quoteIndex >= ChannelSession.Settings.Quotes.Count)
                                 {
-                                    await ChannelSession.Services.Chat.Whisper(user.UserName, "There is no quote with a number that high");
+                                    await ChannelSession.Services.Chat.Whisper(user, "There is no quote with a number that high");
                                     return;
                                 }
                             }
                             else
                             {
-                                quoteIndex = RandomHelper.GenerateRandomNumber(ChannelSession.Settings.UserQuotes.Count);
+                                quoteIndex = RandomHelper.GenerateRandomNumber(ChannelSession.Settings.Quotes.Count);
                             }
 
-                            UserQuoteViewModel quote = ChannelSession.Settings.UserQuotes[quoteIndex];
+                            UserQuoteViewModel quote = ChannelSession.Settings.Quotes[quoteIndex];
                             await ChannelSession.Services.Chat.SendMessage(quote.ToString());
                         }
                         else
@@ -471,7 +471,7 @@ namespace MixItUp.Base.Commands
     public class LastQuoteChatCommand : PreMadeChatCommand
     {
         public LastQuoteChatCommand()
-            : base(MixItUp.Base.Resources.LastQuote, new List<string>() { "lastquote" }, 5, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.LastQuote, new List<string>() { "lastquote" }, 5, UserRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -479,9 +479,9 @@ namespace MixItUp.Base.Commands
                 {
                     if (ChannelSession.Settings.QuotesEnabled)
                     {
-                        if (ChannelSession.Settings.UserQuotes.Count > 0)
+                        if (ChannelSession.Settings.Quotes.Count > 0)
                         {
-                            UserQuoteViewModel quote = ChannelSession.Settings.UserQuotes.LastOrDefault();
+                            UserQuoteViewModel quote = ChannelSession.Settings.Quotes.LastOrDefault();
                             if (quote != null)
                             {
                                 await ChannelSession.Services.Chat.SendMessage(quote.ToString());
@@ -502,7 +502,7 @@ namespace MixItUp.Base.Commands
     public class AddQuoteChatCommand : PreMadeChatCommand
     {
         public AddQuoteChatCommand()
-            : base(MixItUp.Base.Resources.AddQuote, new List<string>() { "addquote", "quoteadd" }, 5, MixerRoleEnum.Mod)
+            : base(MixItUp.Base.Resources.AddQuote, new List<string>() { "addquote", "quoteadd" }, 5, UserRoleEnum.Mod)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -520,7 +520,7 @@ namespace MixItUp.Base.Commands
                         quoteText = quoteText.Trim(new char[] { ' ', '\'', '\"' });
 
                         UserQuoteViewModel quote = new UserQuoteViewModel(quoteText, DateTimeOffset.Now, ChannelSession.MixerChannel.type);
-                        ChannelSession.Settings.UserQuotes.Add(quote);
+                        ChannelSession.Settings.Quotes.Add(quote);
                         await ChannelSession.SaveSettings();
 
                         GlobalEvents.QuoteAdded(quote);
@@ -532,7 +532,7 @@ namespace MixItUp.Base.Commands
                     }
                     else
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "Usage: !addquote <FULL QUOTE TEXT>");
+                        await ChannelSession.Services.Chat.Whisper(user, "Usage: !addquote <FULL QUOTE TEXT>");
                     }
                 }
                 else
@@ -576,7 +576,7 @@ namespace MixItUp.Base.Commands
         };
 
         public Magic8BallChatCommand()
-            : base(MixItUp.Base.Resources.MagicEightBall, new List<string>() { "magic8ball", "8ball" }, 5, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.MagicEightBall, new List<string>() { "magic8ball", "8ball" }, 5, UserRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -627,7 +627,7 @@ namespace MixItUp.Base.Commands
         }
 
         public XboxGameChatCommand()
-            : base(MixItUp.Base.Resources.XboxGame, new List<string>() { "xboxgame" }, 5, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.XboxGame, new List<string>() { "xboxgame" }, 5, UserRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -730,7 +730,7 @@ namespace MixItUp.Base.Commands
         }
 
         public SteamGameChatCommand()
-            : base(MixItUp.Base.Resources.SteamGame, new List<string>() { "steamgame", "steam" }, 5, MixerRoleEnum.User)
+            : base(MixItUp.Base.Resources.SteamGame, new List<string>() { "steamgame", "steam" }, 5, UserRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -766,7 +766,7 @@ namespace MixItUp.Base.Commands
         private Dictionary<string, int> steamGameList = new Dictionary<string, int>();
 
         public SetTitleChatCommand()
-            : base(MixItUp.Base.Resources.SetTitle, "settitle", 5, MixerRoleEnum.Mod)
+            : base(MixItUp.Base.Resources.SetTitle, "settitle", 5, UserRoleEnum.Mod)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -774,12 +774,12 @@ namespace MixItUp.Base.Commands
                 {
                     if (arguments.Count() > 0)
                     {
-                        await ChannelSession.MixerStreamerConnection.UpdateChannel(ChannelSession.MixerChannel.id, name: string.Join(" ", arguments));
+                        await ChannelSession.MixerUserConnection.UpdateChannel(ChannelSession.MixerChannel.id, name: string.Join(" ", arguments));
                         await ChannelSession.RefreshChannel();
                     }
                     else
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "Usage: !settitle <TITLE NAME>");
+                        await ChannelSession.Services.Chat.Whisper(user, "Usage: !settitle <TITLE NAME>");
                     }
                 }
             }));
@@ -789,7 +789,7 @@ namespace MixItUp.Base.Commands
     public class SetGameChatCommand : PreMadeChatCommand
     {
         public SetGameChatCommand()
-            : base(MixItUp.Base.Resources.SetGame, "setgame", 5, MixerRoleEnum.Mod)
+            : base(MixItUp.Base.Resources.SetGame, "setgame", 5, UserRoleEnum.Mod)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -800,31 +800,31 @@ namespace MixItUp.Base.Commands
                         GameTypeModel newGame = null;
                         if (arguments.Count() == 1 && uint.TryParse(arguments.ElementAt(0), out uint gameID))
                         {
-                            newGame = await ChannelSession.MixerStreamerConnection.GetGameType(gameID);
+                            newGame = await ChannelSession.MixerUserConnection.GetGameType(gameID);
                         }
                         else
                         {
                             string newGameName = string.Join(" ", arguments);
-                            IEnumerable<GameTypeModel> games = await ChannelSession.MixerStreamerConnection.GetGameTypes(newGameName, 25);
+                            IEnumerable<GameTypeModel> games = await ChannelSession.MixerUserConnection.GetGameTypes(newGameName, 25);
 
                             newGame = games.FirstOrDefault(g => g.name.Equals(newGameName, StringComparison.CurrentCultureIgnoreCase));
                         }
 
                         if (newGame != null)
                         {
-                            await ChannelSession.MixerStreamerConnection.UpdateChannel(ChannelSession.MixerChannel.id, gameTypeID: newGame.id);
+                            await ChannelSession.MixerUserConnection.UpdateChannel(ChannelSession.MixerChannel.id, gameTypeID: newGame.id);
                             await ChannelSession.RefreshChannel();
 
-                            await ChannelSession.Services.Chat.Whisper(user.UserName, "Game Updated: " + newGame.name);
+                            await ChannelSession.Services.Chat.Whisper(user, "Game Updated: " + newGame.name);
                         }
                         else
                         {
-                            await ChannelSession.Services.Chat.Whisper(user.UserName, "We could not find a game with that name/ID");
+                            await ChannelSession.Services.Chat.Whisper(user, "We could not find a game with that name/ID");
                         }
                     }
                     else
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "Usage: !setgame <GAME NAME>");
+                        await ChannelSession.Services.Chat.Whisper(user, "Usage: !setgame <GAME NAME>");
                     }
                 }
             }));
@@ -841,7 +841,7 @@ namespace MixItUp.Base.Commands
         private Dictionary<string, int> steamGameList = new Dictionary<string, int>();
 
         public SetAudienceChatCommand()
-            : base(MixItUp.Base.Resources.SetAudience, "setaudience", 5, MixerRoleEnum.Mod)
+            : base(MixItUp.Base.Resources.SetAudience, "setaudience", 5, UserRoleEnum.Mod)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -853,14 +853,14 @@ namespace MixItUp.Base.Commands
                         rating = rating.ToLower().Replace(AdultSettings, Adult18PlusSetting);
                         if (rating.Equals(FamilySetting) || rating.Equals(TeenSetting) || rating.Equals(Adult18PlusSetting))
                         {
-                            await ChannelSession.MixerStreamerConnection.UpdateChannel(ChannelSession.MixerChannel.id, ageRating: rating);
+                            await ChannelSession.MixerUserConnection.UpdateChannel(ChannelSession.MixerChannel.id, ageRating: rating);
                             await ChannelSession.RefreshChannel();
 
                             return;
                         }
                     }
 
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, "Usage: !setaudience family|teen|adult");
+                    await ChannelSession.Services.Chat.Whisper(user, "Usage: !setaudience family|teen|adult");
                 }
             }));
         }
@@ -869,7 +869,7 @@ namespace MixItUp.Base.Commands
     public class SetUserTitleChatCommand : PreMadeChatCommand
     {
         public SetUserTitleChatCommand()
-            : base(MixItUp.Base.Resources.SetUserTitle, "setusertitle", 5, MixerRoleEnum.Mod)
+            : base(MixItUp.Base.Resources.SetUserTitle, "setusertitle", 5, UserRoleEnum.Mod)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -883,20 +883,19 @@ namespace MixItUp.Base.Commands
                             username = username.Substring(1);
                         }
 
-                        UserModel targetUserModel = await ChannelSession.MixerStreamerConnection.GetUser(username);
-                        if (targetUserModel != null)
+                        UserViewModel targetUser = ChannelSession.Services.User.GetUserByUsername(username);
+                        if (targetUser != null)
                         {
-                            UserViewModel targetUser = new UserViewModel(targetUserModel);
                             targetUser.Title = string.Join(" ", arguments.Skip(1));
                         }
                         else
                         {
-                            await ChannelSession.Services.Chat.Whisper(user.UserName, username + " is not a valid user");
+                            await ChannelSession.Services.Chat.Whisper(user, username + " could not be found in chat");
                         }
                     }
                     else
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "Usage: !settitle <USERNAME> <TITLE NAME>");
+                        await ChannelSession.Services.Chat.Whisper(user, "Usage: !settitle <USERNAME> <TITLE NAME>");
                     }
                 }
             }));
@@ -906,7 +905,7 @@ namespace MixItUp.Base.Commands
     public class AddCommandChatCommand : PreMadeChatCommand
     {
         public AddCommandChatCommand()
-            : base(MixItUp.Base.Resources.AddCommand, new List<string>() { "addcommand" }, 5, MixerRoleEnum.Mod)
+            : base(MixItUp.Base.Resources.AddCommand, new List<string>() { "addcommand" }, 5, UserRoleEnum.Mod)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -916,7 +915,7 @@ namespace MixItUp.Base.Commands
 
                     if (!CommandBase.IsValidCommandString(commandTrigger))
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "ERROR: Command trigger contain an invalid character");
+                        await ChannelSession.Services.Chat.Whisper(user, "ERROR: Command trigger contain an invalid character");
                         return;
                     }
 
@@ -926,7 +925,7 @@ namespace MixItUp.Base.Commands
                         {
                             if (command.Commands.Contains(commandTrigger, StringComparer.InvariantCultureIgnoreCase))
                             {
-                                await ChannelSession.Services.Chat.Whisper(user.UserName, "ERROR: There already exists an enabled, chat command that uses the command trigger you have specified");
+                                await ChannelSession.Services.Chat.Whisper(user, "ERROR: There already exists an enabled, chat command that uses the command trigger you have specified");
                                 return;
                             }
                         }
@@ -934,7 +933,7 @@ namespace MixItUp.Base.Commands
 
                     if (!int.TryParse(arguments.ElementAt(1), out int cooldown) || cooldown < 0)
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "ERROR: Cooldown must be 0 or greater");
+                        await ChannelSession.Services.Chat.Whisper(user, "ERROR: Cooldown must be 0 or greater");
                         return;
                     }
 
@@ -961,7 +960,7 @@ namespace MixItUp.Base.Commands
                 }
                 else
                 {
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, "Usage: !addcommand <COMMAND TRIGGER, NO !> <COOLDOWN> <FULL COMMAND MESSAGE TEXT>");
+                    await ChannelSession.Services.Chat.Whisper(user, "Usage: !addcommand <COMMAND TRIGGER, NO !> <COOLDOWN> <FULL COMMAND MESSAGE TEXT>");
                 }
             }));
         }
@@ -970,7 +969,7 @@ namespace MixItUp.Base.Commands
     public class UpdateCommandChatCommand : PreMadeChatCommand
     {
         public UpdateCommandChatCommand()
-            : base(MixItUp.Base.Resources.UpdateCommand, new List<string>() { "updatecommand" }, 5, MixerRoleEnum.Mod)
+            : base(MixItUp.Base.Resources.UpdateCommand, new List<string>() { "updatecommand" }, 5, UserRoleEnum.Mod)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -981,13 +980,13 @@ namespace MixItUp.Base.Commands
                     PermissionsCommandBase command = ChannelSession.AllEnabledChatCommands.FirstOrDefault(c => c.Commands.Contains(commandTrigger, StringComparer.InvariantCultureIgnoreCase));
                     if (command == null)
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "ERROR: Could not find any command with that trigger");
+                        await ChannelSession.Services.Chat.Whisper(user, "ERROR: Could not find any command with that trigger");
                         return;
                     }
 
                     if (!int.TryParse(arguments.ElementAt(1), out int cooldown) || cooldown < 0)
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "ERROR: Cooldown must be 0 or greater");
+                        await ChannelSession.Services.Chat.Whisper(user, "ERROR: Cooldown must be 0 or greater");
                         return;
                     }
 
@@ -1017,7 +1016,7 @@ namespace MixItUp.Base.Commands
                 }
                 else
                 {
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, "Usage: !updatecommand <COMMAND TRIGGER, NO !> <COOLDOWN> [OPTIONAL FULL COMMAND MESSAGE TEXT]");
+                    await ChannelSession.Services.Chat.Whisper(user, "Usage: !updatecommand <COMMAND TRIGGER, NO !> <COOLDOWN> [OPTIONAL FULL COMMAND MESSAGE TEXT]");
                 }
             }));
         }
@@ -1026,7 +1025,7 @@ namespace MixItUp.Base.Commands
     public class DisableCommandChatCommand : PreMadeChatCommand
     {
         public DisableCommandChatCommand()
-            : base(MixItUp.Base.Resources.DisableCommand, new List<string>() { "disablecommand" }, 5, MixerRoleEnum.Mod)
+            : base(MixItUp.Base.Resources.DisableCommand, new List<string>() { "disablecommand" }, 5, UserRoleEnum.Mod)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -1037,7 +1036,7 @@ namespace MixItUp.Base.Commands
                     PermissionsCommandBase command = ChannelSession.AllEnabledChatCommands.FirstOrDefault(c => c.Commands.Contains(commandTrigger, StringComparer.InvariantCultureIgnoreCase));
                     if (command == null)
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "ERROR: Could not find any command with that trigger");
+                        await ChannelSession.Services.Chat.Whisper(user, "ERROR: Could not find any command with that trigger");
                         return;
                     }
 
@@ -1052,7 +1051,7 @@ namespace MixItUp.Base.Commands
                 }
                 else
                 {
-                    await ChannelSession.Services.Chat.Whisper(user.UserName, "Usage: !disablecommand <COMMAND TRIGGER, NO !>");
+                    await ChannelSession.Services.Chat.Whisper(user, "Usage: !disablecommand <COMMAND TRIGGER, NO !>");
                 }
             }));
         }
@@ -1061,7 +1060,7 @@ namespace MixItUp.Base.Commands
     public class StartGiveawayChatCommand : PreMadeChatCommand
     {
         public StartGiveawayChatCommand()
-            : base(MixItUp.Base.Resources.StartGiveaway, "startgiveaway", 5, MixerRoleEnum.Streamer)
+            : base(MixItUp.Base.Resources.StartGiveaway, "startgiveaway", 5, UserRoleEnum.Streamer)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -1072,12 +1071,12 @@ namespace MixItUp.Base.Commands
                         string result = await ChannelSession.Services.GiveawayService.Start(string.Join(" ", arguments));
                         if (!string.IsNullOrEmpty(result))
                         {
-                            await ChannelSession.Services.Chat.Whisper(user.UserName, "ERROR: " + result);
+                            await ChannelSession.Services.Chat.Whisper(user, "ERROR: " + result);
                         }
                     }
                     else
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "Usage: !startgiveaway <GIVEAWAY ITEM>");
+                        await ChannelSession.Services.Chat.Whisper(user, "Usage: !startgiveaway <GIVEAWAY ITEM>");
                     }
                 }
             }));
@@ -1087,7 +1086,7 @@ namespace MixItUp.Base.Commands
     #region Obsolete Pre-Made Commands
 
     [Obsolete]
-    public class ObsoletePreMadeCommand : PreMadeChatCommand { public ObsoletePreMadeCommand() : base(string.Empty, string.Empty, 0, MixerRoleEnum.User) { } }
+    public class ObsoletePreMadeCommand : PreMadeChatCommand { public ObsoletePreMadeCommand() : base(string.Empty, string.Empty, 0, UserRoleEnum.User) { } }
 
     [Obsolete]
     public class Timeout1ChatCommand : ObsoletePreMadeCommand {  }

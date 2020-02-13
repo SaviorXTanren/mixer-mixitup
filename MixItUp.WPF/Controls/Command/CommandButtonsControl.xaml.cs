@@ -1,9 +1,12 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.Chat;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Controls.MainControls;
+using MixItUp.Base.ViewModel.MixPlay;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.MainControls;
 using MixItUp.WPF.Util;
@@ -78,9 +81,14 @@ namespace MixItUp.WPF.Controls.Command
                 {
                     return (T)commandButtonsControl.DataContext;
                 }
-                else if (commandButtonsControl.DataContext is EventCommandItem)
+                else if (commandButtonsControl.DataContext is EventCommandItemViewModel)
                 {
-                    EventCommandItem commandItem = (EventCommandItem)commandButtonsControl.DataContext;
+                    EventCommandItemViewModel commandItem = (EventCommandItemViewModel)commandButtonsControl.DataContext;
+                    return (T)((CommandBase)commandItem.Command);
+                }
+                else if (commandButtonsControl.DataContext is MixPlayControlViewModel)
+                {
+                    MixPlayControlViewModel commandItem = (MixPlayControlViewModel)commandButtonsControl.DataContext;
                     return (T)((CommandBase)commandItem.Command);
                 }
             }
@@ -99,7 +107,7 @@ namespace MixItUp.WPF.Controls.Command
 
         private void CommandButtonsControl_Loaded(object sender, RoutedEventArgs e)
         {
-            RefreshUI();
+            this.RefreshUI();
         }
 
         private void RefreshUI()
@@ -131,7 +139,6 @@ namespace MixItUp.WPF.Controls.Command
                 if (this.EnableDisableToggleSwitch != null)
                 {
                     this.EnableDisableToggleSwitch.IsChecked = command.IsEnabled;
-
                     if (this.RemoveEnableDisableToggle)
                     {
                         this.EnableDisableToggleSwitch.Visibility = Visibility.Collapsed;
@@ -166,39 +173,30 @@ namespace MixItUp.WPF.Controls.Command
                 if (command is EventCommand)
                 {
                     EventCommand eventCommand = command as EventCommand;
-                    switch (eventCommand.EventType)
+                    switch (eventCommand.EventCommandType)
                     {
-                        case Mixer.Base.Clients.ConstellationEventTypeEnum.channel__id__hosted:
+                        case EventTypeEnum.MixerChannelHosted:
                             extraSpecialIdentifiers["hostviewercount"] = "123";
                             break;
-                        case Mixer.Base.Clients.ConstellationEventTypeEnum.channel__id__resubscribed:
+                        case EventTypeEnum.MixerChannelResubscribed:
                             extraSpecialIdentifiers["usersubmonths"] = "5";
                             break;
-                        case Mixer.Base.Clients.ConstellationEventTypeEnum.progression__id__levelup:
+                        case EventTypeEnum.MixerFanProgressionLevelUp:
                             extraSpecialIdentifiers["userfanprogressionnext"] = "200";
                             extraSpecialIdentifiers["userfanprogressionrank"] = "10";
                             extraSpecialIdentifiers["userfanprogressioncolor"] = "#c642ea";
                             extraSpecialIdentifiers["userfanprogressionimage"] = "https://static.mixer.com/img/design/ui/fan-progression/v1_badges/purple/large.gif";
                             extraSpecialIdentifiers["userfanprogression"] = "100";
                             break;
-                    }
-
-                    switch (eventCommand.OtherEventType)
-                    {
-                        case OtherEventTypeEnum.GameWispSubscribed:
-                        case OtherEventTypeEnum.GameWispResubscribed:
-                            extraSpecialIdentifiers["subscribemonths"] = "999";
-                            extraSpecialIdentifiers["subscribetier"] = "Test Tier";
-                            extraSpecialIdentifiers["subscribeamount"] = "$12.34";
-                            break;
-                        case OtherEventTypeEnum.StreamlabsDonation:
-                        case OtherEventTypeEnum.GawkBoxDonation:
-                        case OtherEventTypeEnum.TiltifyDonation:
-                        case OtherEventTypeEnum.ExtraLifeDonation:
-                        case OtherEventTypeEnum.TipeeeStreamDonation:
-                        case OtherEventTypeEnum.TreatStreamDonation:
-                        case OtherEventTypeEnum.StreamJarDonation:
-                        case OtherEventTypeEnum.JustGivingDonation:
+                        case EventTypeEnum.StreamlabsDonation:
+                        case EventTypeEnum.GawkBoxDonation:
+                        case EventTypeEnum.TiltifyDonation:
+                        case EventTypeEnum.ExtraLifeDonation:
+                        case EventTypeEnum.TipeeeStreamDonation:
+                        case EventTypeEnum.TreatStreamDonation:
+                        case EventTypeEnum.StreamJarDonation:
+                        case EventTypeEnum.JustGivingDonation:
+                        case EventTypeEnum.StreamElementsDonation:
                             UserDonationModel donation = new UserDonationModel()
                             {
                                 Amount = 12.34,
@@ -206,16 +204,17 @@ namespace MixItUp.WPF.Controls.Command
                                 ImageLink = currentUser.AvatarLink
                             };
 
-                            switch (eventCommand.OtherEventType)
+                            switch (eventCommand.EventCommandType)
                             {
-                                case OtherEventTypeEnum.StreamlabsDonation: donation.Source = UserDonationSourceEnum.Streamlabs; break;
-                                case OtherEventTypeEnum.GawkBoxDonation: donation.Source = UserDonationSourceEnum.GawkBox; break;
-                                case OtherEventTypeEnum.TiltifyDonation: donation.Source = UserDonationSourceEnum.Tiltify; break;
-                                case OtherEventTypeEnum.ExtraLifeDonation: donation.Source = UserDonationSourceEnum.ExtraLife; break;
-                                case OtherEventTypeEnum.TipeeeStreamDonation: donation.Source = UserDonationSourceEnum.TipeeeStream; break;
-                                case OtherEventTypeEnum.TreatStreamDonation: donation.Source = UserDonationSourceEnum.TreatStream; break;
-                                case OtherEventTypeEnum.StreamJarDonation: donation.Source = UserDonationSourceEnum.StreamJar; break;
-                                case OtherEventTypeEnum.JustGivingDonation: donation.Source = UserDonationSourceEnum.JustGiving; break;
+                                case EventTypeEnum.StreamlabsDonation: donation.Source = UserDonationSourceEnum.Streamlabs; break;
+                                case EventTypeEnum.GawkBoxDonation: donation.Source = UserDonationSourceEnum.GawkBox; break;
+                                case EventTypeEnum.TiltifyDonation: donation.Source = UserDonationSourceEnum.Tiltify; break;
+                                case EventTypeEnum.ExtraLifeDonation: donation.Source = UserDonationSourceEnum.ExtraLife; break;
+                                case EventTypeEnum.TipeeeStreamDonation: donation.Source = UserDonationSourceEnum.TipeeeStream; break;
+                                case EventTypeEnum.TreatStreamDonation: donation.Source = UserDonationSourceEnum.TreatStream; break;
+                                case EventTypeEnum.StreamJarDonation: donation.Source = UserDonationSourceEnum.StreamJar; break;
+                                case EventTypeEnum.JustGivingDonation: donation.Source = UserDonationSourceEnum.JustGiving; break;
+                                case EventTypeEnum.StreamElementsDonation: donation.Source = UserDonationSourceEnum.StreamElements; break;
                             }
 
                             foreach (var kvp in donation.GetSpecialIdentifiers())
@@ -224,25 +223,23 @@ namespace MixItUp.WPF.Controls.Command
                             }
                             extraSpecialIdentifiers["donationtype"] = "Pizza";
                             break;
-                        case OtherEventTypeEnum.PatreonSubscribed:
+                        case EventTypeEnum.PatreonSubscribed:
                             extraSpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierNameSpecialIdentifier] = "Super Tier";
                             extraSpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierAmountSpecialIdentifier] = "12.34";
                             extraSpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierImageSpecialIdentifier] = "https://xforgeassets002.xboxlive.com/xuid-2535473787585366-public/b7a1d715-3a9e-4bdd-a030-32f9e2e0f51e/0013_lots-o-stars_256.png";
                             break;
-                        case OtherEventTypeEnum.StreamlootsCardRedeemed:
+                        case EventTypeEnum.StreamlootsCardRedeemed:
                             extraSpecialIdentifiers["streamlootscardname"] = "Test Card";
                             extraSpecialIdentifiers["streamlootscardimage"] = "https://res.cloudinary.com/streamloots/image/upload/f_auto,c_scale,w_250,q_90/static/e19c7bf6-ca3e-49a8-807e-b2e9a1a47524/en_dl_character.png";
                             extraSpecialIdentifiers["streamlootscardvideo"] = "https://cdn.streamloots.com/uploads/5c645b78666f31002f2979d1/3a6bf1dc-7d61-4f93-be0a-f5dc1d0d33b6.webm";
                             extraSpecialIdentifiers["streamlootscardsound"] = "https://static.streamloots.com/b355d1ef-d931-4c16-a48f-8bed0076401b/alerts/default.mp3";
                             extraSpecialIdentifiers["streamlootsmessage"] = "Test Message";
                             break;
-                        case OtherEventTypeEnum.StreamlootsPackPurchased:
-                        case OtherEventTypeEnum.StreamlootsPackGifted:
+                        case EventTypeEnum.StreamlootsPackPurchased:
+                        case EventTypeEnum.StreamlootsPackGifted:
                             extraSpecialIdentifiers["streamlootspurchasequantity"] = "1";
                             break;
-                        case OtherEventTypeEnum.TwitterStreamTweetRetweet:
-                            break;
-                        case OtherEventTypeEnum.MixerSkillUsed:
+                        case EventTypeEnum.MixerSkillUsed:
                             extraSpecialIdentifiers["skillname"] = "Lots of stars";
                             extraSpecialIdentifiers["skilltype"] = EnumHelper.GetEnumName(MixerSkillTypeEnum.Sticker);
                             extraSpecialIdentifiers["skillcosttype"] = "Embers";
@@ -252,7 +249,7 @@ namespace MixItUp.WPF.Controls.Command
                             extraSpecialIdentifiers["skillisembers"] = true.ToString();
                             extraSpecialIdentifiers["skillmessage"] = "Hello World!";
                             break;
-                        case OtherEventTypeEnum.MixerMilestoneReached:
+                        case EventTypeEnum.MixerMilestoneReached:
                             extraSpecialIdentifiers["milestoneamount"] = "100";
                             extraSpecialIdentifiers["milestoneremainingamount"] = "100";
                             extraSpecialIdentifiers["milestonereward"] = "$10.00";
@@ -265,10 +262,10 @@ namespace MixItUp.WPF.Controls.Command
                             extraSpecialIdentifiers["milestoneearnedamount"] = "100";
                             extraSpecialIdentifiers["milestoneearnedreward"] = "$10.00";
                             break;
-                        case OtherEventTypeEnum.MixerSparksUsed:
+                        case EventTypeEnum.MixerSparksUsed:
                             extraSpecialIdentifiers["sparkamount"] = "10";
                             break;
-                        case OtherEventTypeEnum.MixerEmbersUsed:
+                        case EventTypeEnum.MixerEmbersUsed:
                             extraSpecialIdentifiers["emberamount"] = "10";
                             break;
                     }
@@ -296,16 +293,11 @@ namespace MixItUp.WPF.Controls.Command
                     }
                     else
                     {
-                        extraSpecialIdentifiers["songtitle"] = "Test Song";
-                        extraSpecialIdentifiers["songalbumart"] = SpotifySongRequestProviderService.SpotifyDefaultAlbumArt;
-                        extraSpecialIdentifiers["songusername"] = currentUser.UserName;
-                        extraSpecialIdentifiers["spotifysongtitle"] = "Test Song";
-                        extraSpecialIdentifiers["spotifysongalbumart"] = SpotifySongRequestProviderService.SpotifyDefaultAlbumArt;
                         extraSpecialIdentifiers["queueposition"] = "1";
                     }
                 }
 
-                await command.PerformAndWait(currentUser, new List<string>() { "@" + currentUser.UserName }, extraSpecialIdentifiers);
+                await command.PerformAndWait(currentUser, StreamingPlatformTypeEnum.None, new List<string>() { "@" + currentUser.Username }, extraSpecialIdentifiers);
                 if (command is PermissionsCommandBase)
                 {
                     PermissionsCommandBase permissionCommand = (PermissionsCommandBase)command;
@@ -347,7 +339,6 @@ namespace MixItUp.WPF.Controls.Command
             {
                 command.IsEnabled = this.EnableDisableToggleSwitch.IsChecked.GetValueOrDefault();
             }
-
             this.RaiseEvent(new RoutedEventArgs(CommandButtonsControl.EnableDisableToggledEvent, this));
         }
     }

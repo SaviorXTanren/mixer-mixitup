@@ -105,6 +105,9 @@ namespace MixItUp.WPF.Controls.Command
                     actions.AddRange(initialActions);
                 }
 
+                // Remove all deprecated actions
+                actions.RemoveAll(a => a is SongRequestAction || a is SpotifyAction);
+
                 foreach (ActionBase action in actions)
                 {
                     ActionContainerControl actionControl = new ActionContainerControl(this.window, this, action);

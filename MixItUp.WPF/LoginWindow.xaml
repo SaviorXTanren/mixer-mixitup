@@ -50,7 +50,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <ComboBox Grid.Row="0" x:Name="ExistingStreamerComboBox" Width="140" DisplayMemberPath="Channel.token" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.StreamerAccount}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Visibility="Collapsed" />
+                    <ComboBox Grid.Row="0" x:Name="ExistingStreamerComboBox" Width="140" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.StreamerAccount}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Visibility="Collapsed" />
 
                     <Button Grid.Row="2" Grid.RowSpan="3" x:Name="StreamerLoginButton" Click="StreamerLoginButton_Click" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="80" Height="30" Content="{x:Static resx:Resources.Login}" />
                 </Grid>
@@ -66,7 +66,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <ComboBox Grid.Row="0" x:Name="ModeratorChannelComboBox" Width="140" DisplayMemberPath="Channel.token" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ChannelName}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" KeyDown="ModeratorChannelComboBox_KeyDown" />
+                    <ComboBox Grid.Row="0" x:Name="ModeratorChannelComboBox" Width="140" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ChannelName}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" KeyDown="ModeratorChannelComboBox_KeyDown" />
 
                     <Button Grid.Row="2" x:Name="ModeratorLoginButton" Click="ModeratorLoginButton_Click" MinWidth="80" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Content="{x:Static resx:Resources.Login}" />
 

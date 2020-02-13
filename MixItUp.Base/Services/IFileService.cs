@@ -11,6 +11,7 @@ namespace MixItUp.Base.Services
         string HTMLFileFilter();
 
         Task CopyFile(string sourcePath, string destinationPath);
+        Task DeleteFile(string filePath);
 
         Task CreateDirectory(string path);
         Task CopyDirectory(string sourcePath, string destinationPath);

@@ -1,9 +1,6 @@
-﻿namespace MixItUp.Base.Services
-{
-    public interface IDeveloperAPIService
-    {
-        bool Start();
+﻿using MixItUp.Base.Services.External;
 
-        void End();
-    }
+namespace MixItUp.Base.Services
+{
+    public interface IDeveloperAPIService : IExternalService { }
 }

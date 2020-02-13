@@ -34,7 +34,7 @@ namespace MixItUp.Base.ViewModel.Requirement
         [JsonIgnore]
         private DateTimeOffset globalCooldown = DateTimeOffset.MinValue;
         [JsonIgnore]
-        private LockedDictionary<uint, DateTimeOffset> individualCooldowns = new LockedDictionary<uint, DateTimeOffset>();
+        private LockedDictionary<Guid, DateTimeOffset> individualCooldowns = new LockedDictionary<Guid, DateTimeOffset>();
 
         public CooldownRequirementViewModel()
         {
@@ -117,7 +117,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             {
                 timeLeft = CooldownRequirementViewModel.groupCooldowns[this.GroupName].AddSeconds(this.CooldownAmount) - DateTimeOffset.Now;
             }
-            await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("This command is currently on cooldown, please wait another {0} second(s).", Math.Max((int)timeLeft.TotalSeconds, 1)));
+            await ChannelSession.Services.Chat.Whisper(user, string.Format("This command is currently on cooldown, please wait another {0} second(s).", Math.Max((int)timeLeft.TotalSeconds, 1)));
         }
 
         public void UpdateCooldown(UserViewModel user)
@@ -145,6 +145,22 @@ namespace MixItUp.Base.ViewModel.Requirement
             else if (this.Type == CooldownTypeEnum.PerPerson)
             {
                 this.individualCooldowns[user.ID] = DateTimeOffset.Now.Subtract(TimeSpan.FromSeconds(this.CooldownAmount));
+            }
+            else if (this.IsGroup)
+            {
+                CooldownRequirementViewModel.groupCooldowns[this.GroupName] = DateTimeOffset.Now.Subtract(TimeSpan.FromSeconds(this.CooldownAmount));
+            }
+        }
+
+        public void ResetCooldown()
+        {
+            if (this.Type == CooldownTypeEnum.Individual)
+            {
+                this.globalCooldown = DateTimeOffset.Now.Subtract(TimeSpan.FromSeconds(this.CooldownAmount));
+            }
+            else if (this.Type == CooldownTypeEnum.PerPerson)
+            {
+                this.individualCooldowns.Clear();
             }
             else if (this.IsGroup)
             {

@@ -2,11 +2,8 @@
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Window;
-using MixItUp.Desktop.Services;
 using MixItUp.WPF.Controls.MainControls;
-using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows;
-using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Reflection;
@@ -35,12 +32,6 @@ namespace MixItUp.WPF
         {
             InitializeComponent();
 
-            // NOTE: This is an attempt to fix a random crashing bug related with an
-            // "InvalidOperationException" happening after login as the main window is loading.
-            // There were some links that said the WebBrowser control can sometimes cause this and
-            // loading about:blank would fix it.
-            this.YouTubeSongRequestHost.Navigate("about:blank");
-
             this.Closing += MainWindow_Closing;
             this.Initialize(this.StatusBar);
 
@@ -54,13 +45,13 @@ namespace MixItUp.WPF
                 this.EndAsyncOperation();
             };
 
-            if (App.AppSettings.Width > 0)
+            if (ChannelSession.AppSettings.Width > 0)
             {
                 this.WindowStartupLocation = WindowStartupLocation.Manual;
-                this.Height = App.AppSettings.Height;
-                this.Width = App.AppSettings.Width;
-                this.Top = App.AppSettings.Top;
-                this.Left = App.AppSettings.Left;
+                this.Height = ChannelSession.AppSettings.Height;
+                this.Width = ChannelSession.AppSettings.Width;
+                this.Top = ChannelSession.AppSettings.Top;
+                this.Left = ChannelSession.AppSettings.Left;
 
                 var rect = new System.Drawing.Rectangle((int)this.Left, (int)this.Top, (int)this.Width, (int)this.Height);
                 var screen = System.Windows.Forms.Screen.FromRectangle(rect);
@@ -91,7 +82,7 @@ namespace MixItUp.WPF
                     }
                 }
 
-                if (App.AppSettings.IsMaximized)
+                if (ChannelSession.AppSettings.IsMaximized)
                 {
                     WindowState = WindowState.Maximized;
                 }
@@ -112,9 +103,6 @@ namespace MixItUp.WPF
 
         protected override async Task OnLoaded()
         {
-            ChannelSession.Services.SongRequestService.AddProvider(new SpotifySongRequestProviderService());
-            ChannelSession.Services.SongRequestService.AddProvider(new YouTubeSongRequestProviderService(this.Dispatcher, this.YouTubeSongRequestHost));
-
             ChannelSession.Services.InputService.Initialize(new WindowInteropHelper(this).Handle);
             foreach (HotKeyConfiguration hotKeyConfiguration in ChannelSession.Settings.HotKeys.Values)
             {
@@ -145,7 +133,7 @@ namespace MixItUp.WPF
                 await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Channel, new ChannelControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Channel");
                 await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Commands, new ChatCommandsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Commands");
                 await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Events, new EventsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Events");
-                await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.MixPlay, new InteractiveControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/MixPlay");
+                await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.MixPlay, new MixPlayControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/MixPlay");
                 await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Timers, new TimerControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Timers");
                 await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.ActionGroups, new ActionGroupControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Action-Groups");
                 await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Remote, new RemoteControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Remote");
@@ -164,8 +152,11 @@ namespace MixItUp.WPF
                 await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Moderation, new ModerationControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Moderation");
                 await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.AutoHoster, new AutoHosterControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Auto-Hoster");
                 await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Services, new ServicesControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Services");
+                await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.Accounts, new AccountsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki");
             }
             await this.MainMenu.AddMenuItem(MixItUp.Base.Resources.About, new AboutControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki");
+
+            this.MainMenu.MenuItemSelected(MixItUp.Base.Resources.Chat);
         }
 
         private async Task StartShutdownProcess()
@@ -173,19 +164,19 @@ namespace MixItUp.WPF
             if (WindowState == WindowState.Maximized)
             {
                 // Use the RestoreBounds as the current values will be 0, 0 and the size of the screen
-                App.AppSettings.Top = RestoreBounds.Top;
-                App.AppSettings.Left = RestoreBounds.Left;
-                App.AppSettings.Height = RestoreBounds.Height;
-                App.AppSettings.Width = RestoreBounds.Width;
-                App.AppSettings.IsMaximized = true;
+                ChannelSession.AppSettings.Top = RestoreBounds.Top;
+                ChannelSession.AppSettings.Left = RestoreBounds.Left;
+                ChannelSession.AppSettings.Height = RestoreBounds.Height;
+                ChannelSession.AppSettings.Width = RestoreBounds.Width;
+                ChannelSession.AppSettings.IsMaximized = true;
             }
             else
             {
-                App.AppSettings.Top = this.Top;
-                App.AppSettings.Left = this.Left;
-                App.AppSettings.Height = this.Height;
-                App.AppSettings.Width = this.Width;
-                App.AppSettings.IsMaximized = false;
+                ChannelSession.AppSettings.Top = this.Top;
+                ChannelSession.AppSettings.Left = this.Left;
+                ChannelSession.AppSettings.Height = this.Height;
+                ChannelSession.AppSettings.Width = this.Width;
+                ChannelSession.AppSettings.IsMaximized = false;
             }
 
             Properties.Settings.Default.Save();
@@ -195,7 +186,7 @@ namespace MixItUp.WPF
 
             if (!string.IsNullOrEmpty(this.RestoredSettingsFilePath))
             {
-                string settingsFilePath = ChannelSession.Services.Settings.GetFilePath(ChannelSession.Settings);
+                string settingsFilePath = ChannelSession.Settings.SettingsFilePath;
                 string settingsFolder = Path.GetDirectoryName(settingsFilePath);
                 using (ZipArchive zipFile = ZipFile.Open(this.RestoredSettingsFilePath, ZipArchiveMode.Read))
                 {
@@ -218,7 +209,7 @@ namespace MixItUp.WPF
                 }
             }
 
-            App.AppSettings.Save();
+            await ChannelSession.AppSettings.Save();
 
             await ChannelSession.Close();
 

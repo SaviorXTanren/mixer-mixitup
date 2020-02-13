@@ -43,9 +43,9 @@ namespace MixItUp.Base.Services
 
         private ChatCommand giveawayCommand = null;
 
-        private Dictionary<uint, GiveawayUser> enteredUsers = new Dictionary<uint, GiveawayUser>();
+        private Dictionary<Guid, GiveawayUser> enteredUsers = new Dictionary<Guid, GiveawayUser>();
 
-        private List<uint> pastWinners = new List<uint>();
+        private List<Guid> pastWinners = new List<Guid>();
 
         private CancellationTokenSource backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 
@@ -198,7 +198,7 @@ namespace MixItUp.Base.Services
                         }
                         else
                         {
-                            await ChannelSession.Services.Chat.SendMessage(string.Format("@{0} you've won the giveaway; type \"!claim\" in chat!.", this.Winner.UserName));
+                            await ChannelSession.Services.Chat.SendMessage(string.Format("@{0} you've won the giveaway; type \"!claim\" in chat!.", this.Winner.Username));
 
                             this.TimeLeft = 60;
                             while (this.TimeLeft > 0)
@@ -240,7 +240,7 @@ namespace MixItUp.Base.Services
 
                     if (pastWinners.Contains(message.User.ID))
                     {
-                        await ChannelSession.Services.Chat.Whisper(message.User.UserName, "You have already won a giveaway and can not enter this one");
+                        await ChannelSession.Services.Chat.Whisper(message.User, "You have already won a giveaway and can not enter this one");
                         return;
                     }
 
@@ -260,7 +260,7 @@ namespace MixItUp.Base.Services
 
                     if ((entries + currentEntries) > ChannelSession.Settings.GiveawayMaximumEntries)
                     {
-                        await ChannelSession.Services.Chat.Whisper(message.User.UserName, string.Format("You may only enter {0} time(s), you currently have entered {1} time(s)", ChannelSession.Settings.GiveawayMaximumEntries, currentEntries));
+                        await ChannelSession.Services.Chat.Whisper(message.User, string.Format("You may only enter {0} time(s), you currently have entered {1} time(s)", ChannelSession.Settings.GiveawayMaximumEntries, currentEntries));
                         return;
                     }
 
@@ -271,7 +271,7 @@ namespace MixItUp.Base.Services
                             int totalAmount = ChannelSession.Settings.GiveawayRequirements.Currency.RequiredAmount * entries;
                             if (!ChannelSession.Settings.GiveawayRequirements.TrySubtractCurrencyAmount(message.User, totalAmount))
                             {
-                                await ChannelSession.Services.Chat.Whisper(message.User.UserName, string.Format("You do not have the required {0} {1} to do this", totalAmount, ChannelSession.Settings.GiveawayRequirements.Currency.GetCurrency().Name));
+                                await ChannelSession.Services.Chat.Whisper(message.User, string.Format("You do not have the required {0} {1} to do this", totalAmount, ChannelSession.Settings.GiveawayRequirements.Currency.GetCurrency().Name));
                                 return;
                             }
                         }
@@ -281,7 +281,7 @@ namespace MixItUp.Base.Services
                             int totalAmount = ChannelSession.Settings.GiveawayRequirements.Inventory.Amount * entries;
                             if (!ChannelSession.Settings.GiveawayRequirements.TrySubtractInventoryAmount(message.User, totalAmount))
                             {
-                                await ChannelSession.Services.Chat.Whisper(message.User.UserName, string.Format("You do not have the required {0} {1} to do this", totalAmount, ChannelSession.Settings.GiveawayRequirements.Inventory.GetInventory().Name));
+                                await ChannelSession.Services.Chat.Whisper(message.User, string.Format("You do not have the required {0} {1} to do this", totalAmount, ChannelSession.Settings.GiveawayRequirements.Inventory.GetInventory().Name));
                                 return;
                             }
                         }

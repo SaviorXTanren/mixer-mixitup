@@ -1,18 +1,22 @@
-﻿using System.Threading.Tasks;
+﻿using MixItUp.Base.ViewModel.Controls.Services;
+using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.Services
 {
-    public partial class StreamDeckServiceControl : ServicesControlBase
+    public partial class StreamDeckServiceControl : ServiceControlBase
     {
+        private StreamDeckServiceControlViewModel viewModel;
+
         public StreamDeckServiceControl()
         {
+            this.DataContext = this.ViewModel = this.viewModel = new StreamDeckServiceControlViewModel();
+
             InitializeComponent();
         }
 
         protected override async Task OnLoaded()
         {
-            this.SetHeaderText("Stream Deck");
-            await base.OnLoaded();
+            await this.viewModel.OnLoaded();
         }
     }
 }

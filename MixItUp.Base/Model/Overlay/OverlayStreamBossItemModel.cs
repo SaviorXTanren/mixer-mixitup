@@ -88,7 +88,7 @@ namespace MixItUp.Base.Model.Overlay
         public string NewBossAnimationName { get { return OverlayItemEffectsModel.GetAnimationClassName(this.NewBossAnimation); } set { } }
 
         [DataMember]
-        public uint CurrentBossUserID { get; set; }
+        public Guid CurrentBossID { get; set; } = Guid.Empty;
         [DataMember]
         public int CurrentStartingHealth { get; set; }
         [DataMember]
@@ -106,9 +106,9 @@ namespace MixItUp.Base.Model.Overlay
 
         private SemaphoreSlim HealthSemaphore = new SemaphoreSlim(1);
 
-        private HashSet<uint> follows = new HashSet<uint>();
-        private HashSet<uint> hosts = new HashSet<uint>();
-        private HashSet<uint> subs = new HashSet<uint>();
+        private HashSet<Guid> follows = new HashSet<Guid>();
+        private HashSet<Guid> hosts = new HashSet<Guid>();
+        private HashSet<Guid> subs = new HashSet<Guid>();
 
         public OverlayStreamBossItemModel() : base() { }
 
@@ -143,25 +143,25 @@ namespace MixItUp.Base.Model.Overlay
             this.DamageTaken = false;
             this.NewBoss = false;
 
-            if (this.CurrentBossUserID > 0)
+            if (this.CurrentBossID != Guid.Empty)
             {
-                UserModel user = await ChannelSession.MixerStreamerConnection.GetUser(this.CurrentBossUserID);
-                if (user != null)
+                UserDataModel userData = ChannelSession.Settings.GetUserData(this.CurrentBossID);
+                if (userData != null)
                 {
-                    this.CurrentBoss = new UserViewModel(user);
+                    this.CurrentBoss = new UserViewModel(userData);
                 }
                 else
                 {
-                    this.CurrentBossUserID = 0;
+                    this.CurrentBossID = Guid.Empty;
                 }
             }
 
-            if (this.CurrentBossUserID == 0)
+            if (this.CurrentBoss == null)
             {
                 this.CurrentBoss = await ChannelSession.GetCurrentUser();
                 this.CurrentHealth = this.CurrentStartingHealth = this.StartingHealth;
             }
-            this.CurrentBossUserID = this.CurrentBoss.ID;
+            this.CurrentBossID = this.CurrentBoss.ID;
 
             if (this.FollowBonus > 0.0)
             {
@@ -231,7 +231,7 @@ namespace MixItUp.Base.Model.Overlay
 
             if (boss != null)
             {
-                replacementSets["USERNAME"] = boss.UserName;
+                replacementSets["USERNAME"] = boss.Username;
                 replacementSets["USER_IMAGE"] = boss.AvatarLink;
             }
             replacementSets["USER_IMAGE_SIZE"] = ((int)(0.8 * ((double)this.Height))).ToString();
@@ -267,7 +267,7 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     this.NewBoss = true;
                     this.CurrentBoss = user;
-                    this.CurrentBossUserID = user.ID;
+                    this.CurrentBossID = user.ID;
 
                     int newHealth = this.StartingHealth;
                     if (this.OverkillBonus > 0.0)

@@ -36,7 +36,7 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.Services.IFTTT != null)
+            if (ChannelSession.Services.IFTTT.IsConnected)
             {
                 Dictionary<string, string> values = new Dictionary<string, string>();
                 if (!string.IsNullOrEmpty(this.EventValue1))

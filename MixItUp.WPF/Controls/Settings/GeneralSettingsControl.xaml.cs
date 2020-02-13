@@ -32,7 +32,9 @@ namespace MixItUp.WPF.Controls.Settings
             "This is a great way to give early feedback & provide valuable" + Environment.NewLine +
             "help. Preview Program updates can have bugs & issues associated" + Environment.NewLine +
             "with them, so users should only sign up for this if they are" + Environment.NewLine +
-            "willing to work around any possible issues that may arise";
+            "willing to work around any possible issues that may arise" + Environment.NewLine +
+            "We encourage users to enable automatic backups and perform " + Environment.NewLine +
+            "a manual backup of their settings before enabling this.";
 
         public static readonly string AutoLogInTooltip =
             "The Auto Log-In setting allows Mix It Up to automatically" + Environment.NewLine +
@@ -68,8 +70,8 @@ namespace MixItUp.WPF.Controls.Settings
 
             this.OptOutTrackingToggleButton.IsChecked = ChannelSession.Settings.OptOutTracking;
             this.FeatureMeToggleButton.IsChecked = ChannelSession.Settings.FeatureMe;
-            this.UpdatePreviewProgramToggleButton.IsChecked = App.AppSettings.PreviewProgram;
-            this.AutoLogInAccountToggleButton.IsChecked = (App.AppSettings.AutoLogInAccount == ChannelSession.MixerChannel.user.id);
+            this.UpdatePreviewProgramToggleButton.IsChecked = ChannelSession.AppSettings.PreviewProgram;
+            this.AutoLogInAccountToggleButton.IsChecked = (ChannelSession.AppSettings.AutoLogInAccount == ChannelSession.MixerChannel.user.id);
             this.DefaultStreamingSoftwareComboBox.SelectedItem = EnumHelper.GetEnumName(ChannelSession.Settings.DefaultStreamingSoftware);
             if (!string.IsNullOrEmpty(ChannelSession.Settings.DefaultAudioOutput))
             {
@@ -112,17 +114,17 @@ namespace MixItUp.WPF.Controls.Settings
 
         private void UpdatePreviewProgramToggleButton_Checked(object sender, RoutedEventArgs e)
         {
-            App.AppSettings.PreviewProgram = this.UpdatePreviewProgramToggleButton.IsChecked.GetValueOrDefault();
+            ChannelSession.AppSettings.PreviewProgram = this.UpdatePreviewProgramToggleButton.IsChecked.GetValueOrDefault();
         }
 
         private void AutoLogInAccountToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
         {
-            App.AppSettings.AutoLogInAccount = ChannelSession.MixerChannel.user.id;
+            ChannelSession.AppSettings.AutoLogInAccount = ChannelSession.MixerChannel.user.id;
         }
 
         private void AutoLogInAccountToggleButton_Unchecked(object sender, System.Windows.RoutedEventArgs e)
         {
-            App.AppSettings.AutoLogInAccount = 0;
+            ChannelSession.AppSettings.AutoLogInAccount = 0;
         }
 
         private void DefaultStreamingSoftwareComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)

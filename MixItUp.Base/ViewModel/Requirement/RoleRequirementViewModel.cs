@@ -12,27 +12,27 @@ namespace MixItUp.Base.ViewModel.Requirement
 {
     public class RoleRequirementViewModel
     {
-        public static IEnumerable<MixerRoleEnum> BasicUserRoleAllowedValues { get { return UserViewModel.SelectableBasicUserRoles(); } }
+        public static IEnumerable<UserRoleEnum> BasicUserRoleAllowedValues { get { return UserViewModel.SelectableBasicUserRoles(); } }
 
-        public static IEnumerable<MixerRoleEnum> AdvancedUserRoleAllowedValues { get { return UserViewModel.SelectableAdvancedUserRoles(); } }
+        public static IEnumerable<UserRoleEnum> AdvancedUserRoleAllowedValues { get { return UserViewModel.SelectableAdvancedUserRoles(); } }
 
         [JsonProperty]
-        public MixerRoleEnum MixerRole { get; set; }
+        public UserRoleEnum MixerRole { get; set; }
 
         [JsonProperty]
         public string CustomRole { get; set; }
 
         public RoleRequirementViewModel()
         {
-            this.MixerRole = MixerRoleEnum.User;
+            this.MixerRole = UserRoleEnum.User;
         }
 
-        public RoleRequirementViewModel(MixerRoleEnum mixerRole)
+        public RoleRequirementViewModel(UserRoleEnum mixerRole)
         {
             this.MixerRole = mixerRole;
         }
 
-        public void SetRoleBasedOnString(MixerRoleEnum role, string custom)
+        public void SetRoleBasedOnString(UserRoleEnum role, string custom)
         {
             this.MixerRole = role;
             this.CustomRole = custom;
@@ -45,7 +45,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             if (ChannelSession.Services.Chat != null)
             {
                 string role = EnumLocalizationHelper.GetLocalizedName(this.MixerRole);
-                await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, role));
+                await ChannelSession.Services.Chat.Whisper(user, string.Format(MixItUp.Base.Resources.RoleErrorInsufficientRole, role));
             }
         }
     }

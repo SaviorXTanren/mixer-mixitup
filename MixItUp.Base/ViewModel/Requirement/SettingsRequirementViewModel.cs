@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.ViewModel.User;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -23,7 +24,7 @@ namespace MixItUp.Base.ViewModel.Requirement
 
         public bool DoesMeetRequirement(UserViewModel user)
         {
-            if (!string.IsNullOrEmpty(this.PatreonBenefitIDRequirement) && !user.HasPermissionsTo(MixerRoleEnum.Mod))
+            if (!string.IsNullOrEmpty(this.PatreonBenefitIDRequirement) && !user.HasPermissionsTo(UserRoleEnum.Mod))
             {
                 PatreonBenefit benefit = ChannelSession.Services.Patreon.Campaign.GetBenefit(this.PatreonBenefitIDRequirement);
                 if (benefit != null)
@@ -44,7 +45,7 @@ namespace MixItUp.Base.ViewModel.Requirement
                 {
                     if (ChannelSession.Services.Chat != null)
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You must have the {0} Patreon Benefit to do this", benefit.Title));
+                        await ChannelSession.Services.Chat.Whisper(user, string.Format("You must have the {0} Patreon Benefit to do this", benefit.Title));
                     }
                 }
             }

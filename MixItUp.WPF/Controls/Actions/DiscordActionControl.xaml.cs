@@ -1,9 +1,10 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Actions;
-using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -27,7 +28,7 @@ namespace MixItUp.WPF.Controls.Actions
             this.channels.Clear();
             this.SendMessageChannelComboBox.ItemsSource = this.channels;
 
-            if (ChannelSession.Services.Discord == null)
+            if (!ChannelSession.Services.Discord.IsConnected)
             {
                 this.DiscordNotEnabledWarningTextBlock.Visibility = System.Windows.Visibility.Visible;
             }
@@ -49,7 +50,7 @@ namespace MixItUp.WPF.Controls.Actions
             {
                 this.DiscordActionTypeComboBox.SelectedItem = action.DiscordType;
 
-                this.SendMessageChannelComboBox.SelectedItem = action.SendMessageChannel;
+                this.SendMessageChannelComboBox.SelectedItem = this.channels.FirstOrDefault(c => c.ID.Equals(action.SendMessageChannelID));
                 this.SendMessageTextBox.Text = action.SendMessageText;
                 this.FilePath.Text = action.FilePath;
 

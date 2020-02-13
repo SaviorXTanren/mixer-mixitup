@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
-using MixItUp.Base.Services;
+using MixItUp.Base.Model.User;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Controls.Currency;
@@ -25,7 +26,7 @@ namespace MixItUp.WPF.Windows.Users
 
         private ObservableCollection<ChatCommand> userOnlyCommands = new ObservableCollection<ChatCommand>();
 
-        public UserDataEditorWindow(UserDataViewModel userData)
+        public UserDataEditorWindow(UserDataModel userData)
         {
             this.user = new UserViewModel(userData);
 
@@ -51,16 +52,16 @@ namespace MixItUp.WPF.Windows.Users
             await this.user.RefreshDetails(force: true);
 
             this.CurrencyRankStackPanel.Children.Clear();
-            foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values.ToList())
+            foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values.ToList())
             {
-                UserCurrencyDataViewModel currencyData = this.user.Data.GetCurrency(currency);
+                UserCurrencyDataViewModel currencyData = new UserCurrencyDataViewModel(this.user.Data, currency);
                 this.CurrencyRankStackPanel.Children.Add(new UserCurrencyIndividualEditorControl(currencyData));
             }
 
             this.InventoryStackPanel.Children.Clear();
-            foreach (UserInventoryViewModel inventory in ChannelSession.Settings.Inventories.Values.ToList())
+            foreach (UserInventoryModel inventory in ChannelSession.Settings.Inventories.Values.ToList())
             {
-                UserInventoryDataViewModel inventoryData = this.user.Data.GetInventory(inventory);
+                UserInventoryDataViewModel inventoryData = new UserInventoryDataViewModel(this.user.Data, inventory);
                 this.InventoryStackPanel.Children.Add(new UserInventoryEditorControl(inventory, inventoryData));
             }
 
@@ -87,7 +88,7 @@ namespace MixItUp.WPF.Windows.Users
                 this.ExistingEntranceCommandButtons.Visibility = Visibility.Collapsed;
             }
 
-            if (ChannelSession.Services.Patreon != null)
+            if (ChannelSession.Services.Patreon.IsConnected)
             {
                 this.PatreonUserComboBox.IsEnabled = true;
                 this.PatreonUserComboBox.ItemsSource = ChannelSession.Services.Patreon.CampaignMembers;
@@ -205,9 +206,9 @@ namespace MixItUp.WPF.Windows.Users
         private void CurrencyRankExemptToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             this.user.Data.IsCurrencyRankExempt = this.CurrencyRankExemptToggleButton.IsChecked.GetValueOrDefault();
-            foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+            foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
             {
-                this.user.Data.ResetCurrencyAmount(currency);
+                currency.ResetAmount(this.user.Data);
             }
             ChannelSession.Settings.UserData.ManualValueChanged(this.user.ID);
         }

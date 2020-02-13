@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Controls.Games
 {
@@ -60,12 +61,12 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         private DuelGameCommand existingCommand;
 
-        public DuelGameEditorControlViewModel(UserCurrencyViewModel currency)
+        public DuelGameEditorControlViewModel(UserCurrencyModel currency)
         {
             this.StartedCommand = this.CreateBasicChatCommand("@$username has challenged @$targetusername to a duel for $gamebet " + currency.Name + "! Type !duel in chat to accept!");
             this.NotAcceptedCommand = this.CreateBasicChatCommand("@$targetusername did not respond in time...");
             this.SuccessOutcomeCommand = this.CreateBasicChatCommand("@$username won the duel against @$targetusername, winning $gamepayout " + currency.Name + "!");
-            this.FailOutcomeCommand = this.CreateBasicChatCommand("@$targetusername defeated @$username at his own game, winning $gamepayout " + currency.Name + "!");
+            this.FailOutcomeCommand = this.CreateBasicChatCommand("@$targetusername defeated @$username, winning $gamepayout " + currency.Name + "!");
         }
 
         public DuelGameEditorControlViewModel(DuelGameCommand command)
@@ -73,9 +74,9 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             this.existingCommand = command;
 
             this.TimeLimit = this.existingCommand.TimeLimit;
-            this.UserPercentage = this.existingCommand.SuccessfulOutcome.RoleProbabilities[MixerRoleEnum.User];
-            this.SubscriberPercentage = this.existingCommand.SuccessfulOutcome.RoleProbabilities[MixerRoleEnum.Subscriber];
-            this.ModPercentage = this.existingCommand.SuccessfulOutcome.RoleProbabilities[MixerRoleEnum.Mod];
+            this.UserPercentage = this.existingCommand.SuccessfulOutcome.RoleProbabilities[UserRoleEnum.User];
+            this.SubscriberPercentage = this.existingCommand.SuccessfulOutcome.RoleProbabilities[UserRoleEnum.Subscriber];
+            this.ModPercentage = this.existingCommand.SuccessfulOutcome.RoleProbabilities[UserRoleEnum.Mod];
 
             this.StartedCommand = this.existingCommand.StartedCommand;
             this.NotAcceptedCommand = this.existingCommand.NotAcceptedCommand;
@@ -85,8 +86,8 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         public override void SaveGameCommand(string name, IEnumerable<string> triggers, RequirementViewModel requirements)
         {
-            Dictionary<MixerRoleEnum, int> successRoleProbabilities = new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, this.UserPercentage }, { MixerRoleEnum.Subscriber, this.SubscriberPercentage }, { MixerRoleEnum.Mod, this.ModPercentage } };
-            Dictionary<MixerRoleEnum, int> failRoleProbabilities = new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, 100 - this.UserPercentage }, { MixerRoleEnum.Subscriber, 100 - this.SubscriberPercentage }, { MixerRoleEnum.Mod, 100 - this.ModPercentage } };
+            Dictionary<UserRoleEnum, int> successRoleProbabilities = new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, this.UserPercentage }, { UserRoleEnum.Subscriber, this.SubscriberPercentage }, { UserRoleEnum.Mod, this.ModPercentage } };
+            Dictionary<UserRoleEnum, int> failRoleProbabilities = new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, 100 - this.UserPercentage }, { UserRoleEnum.Subscriber, 100 - this.SubscriberPercentage }, { UserRoleEnum.Mod, 100 - this.ModPercentage } };
 
             GameCommandBase newCommand = new DuelGameCommand(name, triggers, requirements, new GameOutcome("Success", 1, successRoleProbabilities, this.SuccessOutcomeCommand),
                 new GameOutcome("Failure", 0, failRoleProbabilities, this.FailOutcomeCommand), this.StartedCommand, this.TimeLimit, this.NotAcceptedCommand);

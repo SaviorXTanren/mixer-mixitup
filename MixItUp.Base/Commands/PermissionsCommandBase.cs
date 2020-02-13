@@ -35,7 +35,7 @@ namespace MixItUp.Base.Commands
         }
 
         [JsonIgnore]
-        public MixerRoleEnum UserRoleRequirement
+        public UserRoleEnum UserRoleRequirement
         {
             get
             {
@@ -43,7 +43,7 @@ namespace MixItUp.Base.Commands
                 {
                     return this.Requirements.Role.MixerRole;
                 }
-                return MixerRoleEnum.User;
+                return UserRoleEnum.User;
             }
         }
 

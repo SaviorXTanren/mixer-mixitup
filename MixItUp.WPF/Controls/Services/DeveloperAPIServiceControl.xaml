@@ -1,25 +1,32 @@
-﻿<local:ServicesControlBase x:Class="MixItUp.WPF.Controls.Services.DeveloperAPIServiceControl"
+﻿<local:ServiceControlBase x:Class="MixItUp.WPF.Controls.Services.DeveloperAPIServiceControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Services"
-             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="600">
-    <Grid>
-        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="40" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+             d:DesignHeight="300" d:DesignWidth="300">
+    <local:ServiceControlBase.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </local:ServiceControlBase.Resources>
 
-            <TextBlock Grid.Column="0" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Width="450">The Developer API allows advanced interaction with Mix It Up from other applications running on your computer using a series of REST API services. For more information about this, please see the <Hyperlink NavigateUri="OBS" RequestNavigate="Hyperlink_RequestNavigate">Developer API</Hyperlink> Wiki page.</TextBlock>
+    <Grid Margin="10" HorizontalAlignment="Center">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="500" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="150" />
+        </Grid.ColumnDefinitions>
 
-            <Button x:Name="EnableDeveloperAPIButton" Grid.Column="2" Click="EnableDeveloperAPIButton_Click" Width="100">Enable</Button>
-            <Button x:Name="DisableDeveloperAPIButton" Grid.Column="2" Click="DisableDeveloperAPIButton_Click" Width="100" Visibility="Collapsed">Disable</Button>
+        <TextBlock Grid.Column="0" TextWrapping="Wrap">The Developer API allows advanced interaction with Mix It Up from other applications running on your computer using a series of REST API services. For more information about this, please see the <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Developer-API" RequestNavigate="Hyperlink_RequestNavigate">Developer API</Hyperlink> Wiki page.</TextBlock>
 
+        <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid Visibility="{Binding IsConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Button Command="{Binding DisconnectCommand}" HorizontalAlignment="Center" Width="110">Disconnect</Button>
+            </Grid>
+
+            <Grid Visibility="{Binding IsNotConnected, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Button Command="{Binding ConnectCommand}" HorizontalAlignment="Center" Width="110">Connect</Button>
+            </Grid>
         </Grid>
     </Grid>
-</local:ServicesControlBase>
+</local:ServiceControlBase>

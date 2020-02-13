@@ -2,7 +2,7 @@
 using Mixer.Base.Clients;
 using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.User;
-using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
@@ -171,7 +171,7 @@ namespace MixItUp.AutoHoster
                             OAuthClientScopeEnum.chat__whisper
                         },
                         forceApprovalPrompt: true,
-                        successResponse: OAuthServiceBase.LoginRedirectPageHTML);
+                        successResponse: OAuthExternalServiceBase.LoginRedirectPageHTML);
                 }
                 catch (Exception ex) { Logger.Log(ex); }
                 if (this.connection == null)

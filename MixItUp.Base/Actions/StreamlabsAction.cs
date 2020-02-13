@@ -45,7 +45,7 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.Services.Streamlabs != null)
+            if (ChannelSession.Services.Streamlabs.IsConnected)
             {
                 switch (this.StreamlabType)
                 {

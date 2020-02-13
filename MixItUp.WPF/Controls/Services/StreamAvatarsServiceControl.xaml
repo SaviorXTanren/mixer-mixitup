@@ -1,4 +1,4 @@
-﻿<local:ServicesControlBase x:Class="MixItUp.WPF.Controls.Services.StreamAvatarsServiceControl"
+﻿<local:ServiceControlBase x:Class="MixItUp.WPF.Controls.Services.StreamAvatarsServiceControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -21,4 +21,4 @@
 
         </Grid>
     </Grid>
-</local:ServicesControlBase>
+</local:ServiceControlBase>

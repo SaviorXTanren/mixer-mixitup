@@ -92,19 +92,19 @@ namespace MixItUp.Base.Model.Store
         public JObject Metadata
         {
             get { return (!string.IsNullOrEmpty(this.MetadataString)) ? JObject.Parse(this.MetadataString) : new JObject(); }
-            set { this.MetadataString = (value != null) ? SerializerHelper.SerializeToString(value) : null; }
+            set { this.MetadataString = (value != null) ? JSONSerializerHelper.SerializeToString(value) : null; }
         }
 
         [JsonIgnore]
         public UserModel User { get; set; }
 
         [JsonIgnore]
-        public bool IsCommandOwnedByUser { get { return (this.User != null && this.User.id.Equals(ChannelSession.MixerStreamerUser.id)); } }
+        public bool IsCommandOwnedByUser { get { return (this.User != null && this.User.id.Equals(ChannelSession.MixerUser.id)); } }
 
         [JsonIgnore]
         public string UserName { get { return (this.User != null) ? this.User.username : "Unknown"; } }
         [JsonIgnore]
-        public string UserAvatar { get { return (this.User != null && !string.IsNullOrEmpty(this.User.avatarUrl)) ? this.User.avatarUrl : UserViewModel.DefaultAvatarLink; } }
+        public string UserAvatar { get { return (this.User != null && !string.IsNullOrEmpty(this.User.avatarUrl)) ? this.User.avatarUrl : UserViewModel.MixerUserDefaultAvatarLink; } }
 
         [JsonIgnore]
         public string DisplayImage { get { return (!string.IsNullOrEmpty(this.DisplayImageLink)) ? this.DisplayImageLink : StoreListingModel.DefaultDisplayImage; } }
@@ -148,7 +148,7 @@ namespace MixItUp.Base.Model.Store
         {
             if (this.UserID > 0)
             {
-                this.User = await ChannelSession.MixerStreamerConnection.GetUser(this.UserID);
+                this.User = await ChannelSession.MixerUserConnection.GetUser(this.UserID);
             }
         }
     }

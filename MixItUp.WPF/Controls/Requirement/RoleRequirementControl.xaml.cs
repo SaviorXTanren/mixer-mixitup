@@ -41,7 +41,7 @@ namespace MixItUp.WPF.Controls.Requirement
 
         private void RoleComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            this.tempRole.MixerRole = (MixerRoleEnum)this.RoleComboBox.SelectedItem;
+            this.tempRole.MixerRole = (UserRoleEnum)this.RoleComboBox.SelectedItem;
         }
     }
 }

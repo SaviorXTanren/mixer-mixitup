@@ -80,22 +80,22 @@ namespace MixItUp.WPF.Controls.MainControls
 
                     this.ConvertFilteredTextToWordList(this.FilteredWordsTextBox.Text, ChannelSession.Settings.FilteredWords);
                     this.ConvertFilteredTextToWordList(this.BannedWordsTextBox.Text, ChannelSession.Settings.BannedWords);
-                    ChannelSession.Settings.ModerationFilteredWordsExcempt = (MixerRoleEnum)this.FilteredWordsExemptComboBox.SelectedItem;
+                    ChannelSession.Settings.ModerationFilteredWordsExcempt = (UserRoleEnum)this.FilteredWordsExemptComboBox.SelectedItem;
                     ChannelSession.Settings.ModerationFilteredWordsApplyStrikes = this.FilteredWordsApplyStrikesToggleButton.IsChecked.GetValueOrDefault();
 
                     ChannelSession.Settings.ModerationCapsBlockCount = (int)this.MaxCapsSlider.Value;
                     ChannelSession.Settings.ModerationCapsBlockIsPercentage = (this.MaxCapsTypeComboBox.SelectedIndex == 0);
                     ChannelSession.Settings.ModerationPunctuationBlockCount = (int)this.MaxPunctuationSymbolsEmotesSlider.Value;
                     ChannelSession.Settings.ModerationPunctuationBlockIsPercentage = (this.MaxPunctuationSymbolsEmotesTypeComboBox.SelectedIndex == 0);
-                    ChannelSession.Settings.ModerationChatTextExcempt = (MixerRoleEnum)this.ChatTextModerationExemptComboBox.SelectedItem;
+                    ChannelSession.Settings.ModerationChatTextExcempt = (UserRoleEnum)this.ChatTextModerationExemptComboBox.SelectedItem;
                     ChannelSession.Settings.ModerationChatTextApplyStrikes = this.ChatTextApplyStrikesToggleButton.IsChecked.GetValueOrDefault();
 
                     ChannelSession.Settings.ModerationBlockLinks = this.BlockLinksToggleButton.IsChecked.GetValueOrDefault();
-                    ChannelSession.Settings.ModerationBlockLinksExcempt = (MixerRoleEnum)this.BlockLinksExemptComboBox.SelectedItem;
+                    ChannelSession.Settings.ModerationBlockLinksExcempt = (UserRoleEnum)this.BlockLinksExemptComboBox.SelectedItem;
                     ChannelSession.Settings.ModerationBlockLinksApplyStrikes = this.BlockLinksApplyStrikesToggleButton.IsChecked.GetValueOrDefault();
 
                     ChannelSession.Settings.ModerationChatInteractiveParticipation = (ModerationChatInteractiveParticipationEnum)this.ChatInteractiveParticipationComboBox.SelectedItem;
-                    ChannelSession.Settings.ModerationChatInteractiveParticipationExcempt = (MixerRoleEnum)this.ChatInteractiveParticipationExemptComboBox.SelectedItem;
+                    ChannelSession.Settings.ModerationChatInteractiveParticipationExcempt = (UserRoleEnum)this.ChatInteractiveParticipationExemptComboBox.SelectedItem;
 
                     ChannelSession.Settings.ModerationResetStrikesOnLaunch = this.ResetStrikesOnLaunchToggleButton.IsChecked.GetValueOrDefault();
 
@@ -131,7 +131,7 @@ namespace MixItUp.WPF.Controls.MainControls
             return text;
         }
 
-        private void ConvertFilteredTextToWordList(string text, LockedList<string> list)
+        private void ConvertFilteredTextToWordList(string text, List<string> list)
         {
             if (string.IsNullOrEmpty(text))
             {

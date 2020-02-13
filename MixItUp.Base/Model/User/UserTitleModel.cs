@@ -15,7 +15,7 @@ namespace MixItUp.Base.Model.User
         public string Name { get; set; }
 
         [DataMember]
-        public MixerRoleEnum Role { get; set; }
+        public UserRoleEnum Role { get; set; }
 
         [DataMember]
         public int Months { get; set; }
@@ -28,7 +28,7 @@ namespace MixItUp.Base.Model.User
 
         public UserTitleModel() { }
 
-        public UserTitleModel(string name, MixerRoleEnum role, int months = 0)
+        public UserTitleModel(string name, UserRoleEnum role, int months = 0)
         {
             this.Name = name;
             this.Role = role;
@@ -39,7 +39,7 @@ namespace MixItUp.Base.Model.User
         {
             if (user.HasPermissionsTo(this.Role))
             {
-                if (this.Role == MixerRoleEnum.Follower)
+                if (this.Role == UserRoleEnum.Follower)
                 {
                     if (user.FollowDate != null)
                     {
@@ -50,13 +50,13 @@ namespace MixItUp.Base.Model.User
                         return false;
                     }
                 }
-                else if (this.Role == MixerRoleEnum.Subscriber)
+                else if (this.Role == UserRoleEnum.Subscriber)
                 {
-                    if (user.MixerSubscribeDate != null)
+                    if (user.SubscribeDate != null)
                     {
-                        return user.MixerSubscribeDate.GetValueOrDefault().TotalMonthsFromNow() >= this.Months;
+                        return user.SubscribeDate.GetValueOrDefault().TotalMonthsFromNow() >= this.Months;
                     }
-                    else if (user.IsEquivalentToMixerSubscriber() && this.Months == 1)
+                    else if (user.IsEquivalentToSubscriber() && this.Months == 1)
                     {
                         return true;
                     }

@@ -79,7 +79,7 @@ namespace MixItUp.Base.Actions
                 {
                     if (!ChannelSession.Services.GameQueueService.IsEnabled)
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "The game queue is not currently enabled");
+                        await ChannelSession.Services.Chat.Whisper(user, "The game queue is not currently enabled");
                         return;
                     }
 
@@ -93,7 +93,7 @@ namespace MixItUp.Base.Actions
                         }
                         else
                         {
-                            await ChannelSession.Services.Chat.Whisper(user.UserName, "The user could not be found");
+                            await ChannelSession.Services.Chat.Whisper(user, "The user could not be found");
                             return;
                         }
                     }

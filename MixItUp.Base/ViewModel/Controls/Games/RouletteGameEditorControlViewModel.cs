@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
@@ -125,7 +126,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         private RouletteGameCommand existingCommand;
 
-        public RouletteGameEditorControlViewModel(UserCurrencyViewModel currency)
+        public RouletteGameEditorControlViewModel(UserCurrencyModel currency)
         {
             this.StartedCommand = this.CreateBasic2ChatCommand("@$username has started a game of roulette! Type !roulette <BET TYPE> <AMOUNT> in chat to play!", "Valid Bet Types: $gamevalidbettypes");
 
@@ -143,9 +144,9 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
             this.MinimumParticipants = this.existingCommand.MinimumParticipants;
             this.TimeLimit = this.existingCommand.TimeLimit;
-            this.UserPayout = (this.existingCommand.UserSuccessOutcome.RolePayouts[MixerRoleEnum.User] * 100);
-            this.SubscriberPayout = (this.existingCommand.UserSuccessOutcome.RolePayouts[MixerRoleEnum.Subscriber] * 100);
-            this.ModPayout = (this.existingCommand.UserSuccessOutcome.RolePayouts[MixerRoleEnum.Mod] * 100);
+            this.UserPayout = (this.existingCommand.UserSuccessOutcome.RolePayouts[UserRoleEnum.User] * 100);
+            this.SubscriberPayout = (this.existingCommand.UserSuccessOutcome.RolePayouts[UserRoleEnum.Subscriber] * 100);
+            this.ModPayout = (this.existingCommand.UserSuccessOutcome.RolePayouts[UserRoleEnum.Mod] * 100);
             this.IsNumberRange = this.existingCommand.IsNumberRange;
             if (this.existingCommand.IsNumberRange)
             {
@@ -190,8 +191,8 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             this.SubscriberPayout = this.SubscriberPayout / 100.0;
             this.ModPayout = this.ModPayout / 100.0;
 
-            Dictionary<MixerRoleEnum, double> successRolePayouts = new Dictionary<MixerRoleEnum, double>() { { MixerRoleEnum.User, this.UserPayout }, { MixerRoleEnum.Subscriber, this.SubscriberPayout }, { MixerRoleEnum.Mod, this.ModPayout = this.ModPayout } };
-            Dictionary<MixerRoleEnum, int> roleProbabilities = new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, 0 }, { MixerRoleEnum.Subscriber, 0 }, { MixerRoleEnum.Mod, 0 } };
+            Dictionary<UserRoleEnum, double> successRolePayouts = new Dictionary<UserRoleEnum, double>() { { UserRoleEnum.User, this.UserPayout }, { UserRoleEnum.Subscriber, this.SubscriberPayout }, { UserRoleEnum.Mod, this.ModPayout = this.ModPayout } };
+            Dictionary<UserRoleEnum, int> roleProbabilities = new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, 0 }, { UserRoleEnum.Subscriber, 0 }, { UserRoleEnum.Mod, 0 } };
 
             GameCommandBase newCommand = new RouletteGameCommand(name, triggers, requirements, this.MinimumParticipants, this.TimeLimit, this.IsNumberRange, validBetTypes,
                 this.StartedCommand, this.UserJoinCommand, new GameOutcome("Success", successRolePayouts, roleProbabilities, this.UserSuccessCommand),

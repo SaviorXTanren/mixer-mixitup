@@ -100,17 +100,17 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public int SpeedNumber { get { return (int)this.Speed; } }
 
-        private HashSet<uint> viewers = new HashSet<uint>();
-        private HashSet<uint> subs = new HashSet<uint>();
-        private HashSet<uint> mods = new HashSet<uint>();
-        private HashSet<uint> follows = new HashSet<uint>();
-        private HashSet<uint> hosts = new HashSet<uint>();
-        private HashSet<uint> newSubs = new HashSet<uint>();
-        private Dictionary<uint, uint> resubs = new Dictionary<uint, uint>();
-        private Dictionary<uint, uint> giftedSubs = new Dictionary<uint, uint>();
-        private Dictionary<uint, double> donations = new Dictionary<uint, double>();
-        private Dictionary<uint, uint> sparks = new Dictionary<uint, uint>();
-        private Dictionary<uint, uint> embers = new Dictionary<uint, uint>();
+        private HashSet<Guid> viewers = new HashSet<Guid>();
+        private HashSet<Guid> subs = new HashSet<Guid>();
+        private HashSet<Guid> mods = new HashSet<Guid>();
+        private HashSet<Guid> follows = new HashSet<Guid>();
+        private HashSet<Guid> hosts = new HashSet<Guid>();
+        private HashSet<Guid> newSubs = new HashSet<Guid>();
+        private Dictionary<Guid, uint> resubs = new Dictionary<Guid, uint>();
+        private Dictionary<Guid, uint> giftedSubs = new Dictionary<Guid, uint>();
+        private Dictionary<Guid, double> donations = new Dictionary<Guid, double>();
+        private Dictionary<Guid, uint> sparks = new Dictionary<Guid, uint>();
+        private Dictionary<Guid, uint> embers = new Dictionary<Guid, uint>();
 
         public OverlayEndCreditsItemModel() : base() { }
 
@@ -137,13 +137,13 @@ namespace MixItUp.Base.Model.Overlay
         public override async Task LoadTestData()
         {
             UserViewModel user = await ChannelSession.GetCurrentUser();
-            List<uint> userIDs = new List<uint>(ChannelSession.Settings.UserData.Keys.Take(20));
+            List<Guid> userIDs = new List<Guid>(ChannelSession.Settings.UserData.Keys.Take(20));
             for (int i = userIDs.Count; i < 20; i++)
             {
                 userIDs.Add(user.ID);
             }
 
-            foreach (uint userID in userIDs)
+            foreach (Guid userID in userIDs)
             {
                 if (this.SectionTemplates.ContainsKey(OverlayEndCreditsSectionTypeEnum.Chatters))
                 {
@@ -405,11 +405,11 @@ namespace MixItUp.Base.Model.Overlay
             if (this.ShouldIncludeUser(user))
             {
                 this.viewers.Add(user.ID);
-                if (user.MixerRoles.Contains(MixerRoleEnum.Subscriber) || user.IsEquivalentToMixerSubscriber())
+                if (user.UserRoles.Contains(UserRoleEnum.Subscriber) || user.IsEquivalentToSubscriber())
                 {
                     this.subs.Add(user.ID);
                 }
-                if (user.MixerRoles.Contains(MixerRoleEnum.Mod) || user.MixerRoles.Contains(MixerRoleEnum.ChannelEditor))
+                if (user.UserRoles.Contains(UserRoleEnum.Mod) || user.UserRoles.Contains(UserRoleEnum.ChannelEditor))
                 {
                     this.mods.Add(user.ID);
                 }
@@ -418,21 +418,21 @@ namespace MixItUp.Base.Model.Overlay
 
         private bool ShouldIncludeUser(UserViewModel user)
         {
-            if (user.ID.Equals(ChannelSession.MixerStreamerUser.id))
+            if (user.MixerID.Equals(ChannelSession.MixerUser.id))
             {
                 return false;
             }
-            if (ChannelSession.MixerBotUser != null && user.ID.Equals(ChannelSession.MixerBotUser.id))
+            if (ChannelSession.MixerBot != null && user.MixerID.Equals(ChannelSession.MixerBot.id))
             {
                 return false;
             }
             return true;
         }
 
-        private Dictionary<UserViewModel, string> GetUsersDictionary(HashSet<uint> data)
+        private Dictionary<UserViewModel, string> GetUsersDictionary(HashSet<Guid> data)
         {
             Dictionary<UserViewModel, string> results = new Dictionary<UserViewModel, string>();
-            foreach (uint userID in data)
+            foreach (Guid userID in data)
             {
                 UserViewModel user = this.GetUser(userID);
                 if (user != null)
@@ -443,7 +443,7 @@ namespace MixItUp.Base.Model.Overlay
             return results;
         }
 
-        private Dictionary<UserViewModel, string> GetUsersDictionary(Dictionary<uint, uint> data)
+        private Dictionary<UserViewModel, string> GetUsersDictionary(Dictionary<Guid, uint> data)
         {
             Dictionary<UserViewModel, string> results = new Dictionary<UserViewModel, string>();
             foreach (var kvp in data)
@@ -457,7 +457,7 @@ namespace MixItUp.Base.Model.Overlay
             return results;
         }
 
-        private Dictionary<UserViewModel, string> GetUsersDictionary(Dictionary<uint, double> data)
+        private Dictionary<UserViewModel, string> GetUsersDictionary(Dictionary<Guid, double> data)
         {
             Dictionary<UserViewModel, string> results = new Dictionary<UserViewModel, string>();
             foreach (var kvp in data)
@@ -471,19 +471,7 @@ namespace MixItUp.Base.Model.Overlay
             return results;
         }
 
-        private UserViewModel GetUser(uint userID)
-        {
-            UserViewModel user = ChannelSession.Services.User.GetUserByID(userID);
-            if (user == null)
-            {
-                if (ChannelSession.Settings.UserData.ContainsKey(userID))
-                {
-                    return new UserViewModel(ChannelSession.Settings.UserData[userID]);
-                }
-                return null;
-            }
-            return user;
-        }
+        private UserViewModel GetUser(Guid userID) { return new UserViewModel(ChannelSession.Settings.GetUserData(userID)); }
 
         private async Task PerformSectionTemplateReplacement(StringBuilder htmlBuilder, OverlayEndCreditsSectionTypeEnum itemType, Dictionary<UserViewModel, string> replacers)
         {
@@ -501,13 +489,13 @@ namespace MixItUp.Base.Model.Overlay
                 sectionHTML = await this.ReplaceStringWithSpecialModifiers(sectionHTML, await ChannelSession.GetCurrentUser(), new List<string>(), new Dictionary<string, string>());
 
                 List<string> userHTMLs = new List<string>();
-                foreach (var kvp in replacers.OrderBy(kvp => kvp.Key.UserName))
+                foreach (var kvp in replacers.OrderBy(kvp => kvp.Key.Username))
                 {
-                    if (!string.IsNullOrEmpty(kvp.Key.UserName))
+                    if (!string.IsNullOrEmpty(kvp.Key.Username))
                     {
                         string userHTML = this.PerformTemplateReplacements(sectionTemplate.UserHTML, new Dictionary<string, string>()
                         {
-                            { "NAME", kvp.Key.UserName },
+                            { "NAME", kvp.Key.Username },
                             { "DETAILS", kvp.Value },
                             { "TEXT_FONT", this.ItemTextFont },
                             { "TEXT_SIZE", this.ItemTextSize.ToString() },
