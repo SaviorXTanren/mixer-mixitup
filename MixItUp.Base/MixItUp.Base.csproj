@@ -43,20 +43,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Localization\English.Designer.cs">
+    <None Update="SkillsCatalogData.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MixItUp.SignalR.Client\MixItUp.SignalR.Client.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>English.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Localization\Japanese.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Japanese.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Localization\Spanish.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Spanish.resx</DependentUpon>
+      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 
@@ -73,22 +73,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Localization\English.resx">
+    <EmbeddedResource Update="Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>English.Designer.cs</LastGenOutput>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Localization\Japanese.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Japanese.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Localization\Spanish.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Spanish.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\MixItUp.SignalR.Client\MixItUp.SignalR.Client.csproj" />
+    <EmbeddedResource Update="Resources.de-DE.resx">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </EmbeddedResource>
+
+    <EmbeddedResource Update="Resources.qps-ploc.resx">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

@@ -53,7 +53,7 @@ namespace MixItUp.WPF.Windows.Currency
             this.ItemsListView.ItemsSource = this.items;
 
             this.DefaultMaxAmountTextBox.Text = "99";
-            this.AutomaticResetComboBox.ItemsSource = EnumHelper.GetEnumNames<CurrencyResetRateEnum>();
+            this.AutomaticResetComboBox.ItemsSource = Enum.GetValues(typeof(CurrencyResetRateEnum));
 
             this.ShopCurrencyComboBox.ItemsSource = ChannelSession.Settings.Currencies.Values;
 
@@ -73,7 +73,7 @@ namespace MixItUp.WPF.Windows.Currency
             tradeCommand.Actions.Add(new ChatAction("@$username traded $itemtotal $itemname to @$targetusername for $targetitemtotal $targetitemname", sendAsStreamer: false));
             this.TradeItemsBoughtCommandButtonsControl.DataContext = tradeCommand;
 
-            this.AutomaticResetComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyResetRateEnum.Never);
+            this.AutomaticResetComboBox.SelectedItem = CurrencyResetRateEnum.Never;
 
             if (this.inventory != null)
             {
@@ -81,7 +81,7 @@ namespace MixItUp.WPF.Windows.Currency
 
                 this.DefaultMaxAmountTextBox.Text = this.inventory.DefaultMaxAmount.ToString();
 
-                this.AutomaticResetComboBox.SelectedItem = EnumHelper.GetEnumName(this.inventory.ResetInterval);
+                this.AutomaticResetComboBox.SelectedItem = this.inventory.ResetInterval;
 
                 foreach (UserInventoryItemModel item in this.inventory.Items.Values)
                 {
@@ -119,7 +119,7 @@ namespace MixItUp.WPF.Windows.Currency
             this.ItemMaxAmountTextBox.Text = item.HasMaxAmount ? item.MaxAmount.ToString() : string.Empty;
             this.ItemBuyAmountTextBox.Text = item.BuyAmountString;
             this.ItemSellAmountTextBox.Text = item.SellAmountString;
-            this.AddItemButton.Content = "Update";
+            this.AddItemButton.Content = MixItUp.Base.Resources.Update;
         }
 
         private void DeleteItemButton_Click(object sender, RoutedEventArgs e)
@@ -173,7 +173,7 @@ namespace MixItUp.WPF.Windows.Currency
                 this.ItemMaxAmountTextBox.Text = string.Empty;
                 this.ItemBuyAmountTextBox.Text = string.Empty;
                 this.ItemSellAmountTextBox.Text = string.Empty;
-                this.AddItemButton.Content = "Add Item";
+                this.AddItemButton.Content = MixItUp.Base.Resources.AddItem;
             });
         }
 
@@ -259,7 +259,7 @@ namespace MixItUp.WPF.Windows.Currency
 
                 this.inventory.Name = this.NameTextBox.Text;
                 this.inventory.DefaultMaxAmount = maxAmount;
-                this.inventory.ResetInterval = EnumHelper.GetEnumValueFromString<CurrencyResetRateEnum>((string)this.AutomaticResetComboBox.SelectedItem);
+                this.inventory.ResetInterval = (CurrencyResetRateEnum)this.AutomaticResetComboBox.SelectedItem;
                 this.inventory.SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(this.inventory.Name);
                 this.inventory.Items = new Dictionary<string, UserInventoryItemModel>(this.items.ToDictionary(i => i.Name, i => i));
                 this.inventory.ShopEnabled = this.ShopEnableDisableToggleButton.IsChecked.GetValueOrDefault();

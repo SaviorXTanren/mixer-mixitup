@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Games"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:RequirementControls="clr-namespace:MixItUp.WPF.Controls.Requirement"
@@ -69,7 +70,7 @@
                                 <TextBox Grid.Column="4" MaterialDesign:HintAssist.Hint="Mod Chance %" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding ModChanceString}" />
                             </Grid>
 
-                            <Button x:Name="DeleteButton" Grid.Column="6" Click="DeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Delete Command">
+                            <Button x:Name="DeleteButton" Grid.Column="6" Click="DeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.DeleteCommand}">
                                 <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                             </Button>
                         </Grid>

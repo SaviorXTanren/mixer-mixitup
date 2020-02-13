@@ -4,9 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:util="clr-namespace:MixItUp.WPF.Util"         
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <local:ActionControlBase.Resources>
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+        <util:LocalizationConverter x:Key="LocalizationConverter"/>
+    </local:ActionControlBase.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -28,20 +35,32 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <ComboBox x:Name="InputTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="80" SelectionChanged="SimpleInputTypeComboBox_SelectionChanged" />
+        <ComboBox x:Name="InputTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="80" SelectionChanged="SimpleInputTypeComboBox_SelectionChanged">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
 
-        <ComboBox x:Name="KeyboardKeyComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Keyboard Key" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" Visibility="Visible" />
-        <ComboBox x:Name="MouseButtonComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Mouse Button" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" Visibility="Collapsed" />
+        <ComboBox x:Name="KeyboardKeyComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.KeyboardKey}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" Visibility="Visible" />
+        <ComboBox x:Name="MouseButtonComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MouseButton}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" Visibility="Collapsed" />
 
-        <ComboBox x:Name="KeyButtonActionComboBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Action" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="80" />
-        
-        <TextBlock Grid.Column="6" VerticalAlignment="Center">Shift:</TextBlock>
+        <ComboBox x:Name="KeyButtonActionComboBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Action}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="80">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+
+        <TextBlock Grid.Column="6" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Shift}, StringFormat={StaticResource ColumnHeaderFormat}}" />
         <CheckBox x:Name="ShiftCheckBox" Grid.Column="8" />
 
-        <TextBlock Grid.Column="10" VerticalAlignment="Center">Control:</TextBlock>
+        <TextBlock Grid.Column="10" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Control}, StringFormat={StaticResource ColumnHeaderFormat}}" />
         <CheckBox x:Name="ControlCheckBox" Grid.Column="12" />
 
-        <TextBlock Grid.Column="14" VerticalAlignment="Center">Alt:</TextBlock>
+        <TextBlock Grid.Column="14" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Alt}, StringFormat={StaticResource ColumnHeaderFormat}}" />
         <CheckBox x:Name="AltCheckBox" Grid.Column="16" />
     </Grid>
 </local:ActionControlBase>

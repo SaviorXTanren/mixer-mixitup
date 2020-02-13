@@ -4,6 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Interactive"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:util="clr-namespace:MixItUp.WPF.Util"
              xmlns:UserControls="clr-namespace:MixItUp.WPF.Controls.Users"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
@@ -18,11 +21,11 @@
         <Grid Grid.Column="0">
             <StackPanel x:Name="DropLocationStackPanel" Margin="50,130,0,0" HorizontalAlignment="Left" Visibility="Hidden">
                 <TextBlock x:Name="DropLocationTextBlock" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" FontSize="50" />
-                <TextBlock HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" FontSize="14">DROP</TextBlock>
-                <TextBlock HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" FontSize="14">LOCATION</TextBlock>
+                <TextBlock HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" FontSize="14" Text="{x:Static resx:Resources.Drop}"/>
+                <TextBlock HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" FontSize="14" Text="{x:Static resx:Resources.Location}"/>
             </StackPanel>
 
-            <ComboBox x:Name="MapComboBox" Visibility="Hidden" Margin="18,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" MaterialDesign:HintAssist.Hint="Map" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="Name" Width="125" SelectionChanged="MapComboBox_SelectionChanged" />
+            <ComboBox x:Name="MapComboBox" Visibility="Hidden" Margin="18,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Map}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="Name" Width="125" SelectionChanged="MapComboBox_SelectionChanged" />
         </Grid>
 
         <Grid Grid.Column="1">
@@ -32,18 +35,18 @@
         </Grid>
 
         <Grid Grid.Column="2">
-            <TextBox x:Name="MaxTimeTextBox" Margin="0,10,18,0" VerticalAlignment="Top" HorizontalAlignment="Right" MaterialDesign:HintAssist.Hint="Max Time" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" TextChanged="MaxTimeTextBox_TextChanged" />
+            <TextBox x:Name="MaxTimeTextBox" Margin="0,10,18,0" VerticalAlignment="Top" HorizontalAlignment="Right" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MaxTime}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" TextChanged="MaxTimeTextBox_TextChanged" />
 
-            <TextBox x:Name="SparkCostTextBox" Margin="0,60,18,0" VerticalAlignment="Top" HorizontalAlignment="Right" MaterialDesign:HintAssist.Hint="Spark Cost" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" TextChanged="SparkCostTextBox_TextChanged" />
+            <TextBox x:Name="SparkCostTextBox" Margin="0,60,18,0" VerticalAlignment="Top" HorizontalAlignment="Right" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SparkCost}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" TextChanged="SparkCostTextBox_TextChanged" />
 
             <StackPanel x:Name="TimerStackPanel" Margin="0,130,50,0" HorizontalAlignment="Right" Visibility="Hidden">
                 <TextBlock x:Name="TimerTextBlock" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" FontSize="50" />
-                <TextBlock HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" FontSize="18">SECONDS</TextBlock>
-                <TextBlock HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" FontSize="18">LEFT</TextBlock>
+                <TextBlock HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" FontSize="18" Text="{x:Static resx:Resources.SecondsAllCaps}"/>
+                <TextBlock HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" FontSize="18" Text="{x:Static resx:Resources.Left}"/>
             </StackPanel>
 
             <StackPanel x:Name="WinnerStackPanel" Margin="0,130,45,0" HorizontalAlignment="Right" Visibility="Hidden">
-                <TextBlock HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" FontSize="18">WINNER</TextBlock>
+                <TextBlock HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" FontSize="18" Text="{x:Static resx:Resources.WinnerAllCaps}"/>
                 <UserControls:UserProfileAvatarControl x:Name="WinnerAvatar" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10,0,0" />
                 <TextBlock x:Name="WinnerTextBlock" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Margin="0,10,0,0" FontSize="18" />
             </StackPanel>

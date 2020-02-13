@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using MixItUp.WPF.Util;
 using StreamingClient.Base.Util;
@@ -45,17 +46,14 @@ namespace MixItUp.WPF.Controls.Actions
         }
         private bool canBeRemoved = true;
 
-        public IEnumerable<string> ComparisonTypes { get { return EnumHelper.GetEnumNames<ConditionalComparisionTypeEnum>(); } }
-
-        public string ComparisionTypeString
-        {
-            get { return EnumHelper.GetEnumName(this.ComparisionType); }
-            set
+        public IEnumerable<ConditionalComparisionTypeEnum> ComparisonTypes 
+        { 
+            get
             {
-                this.ComparisionType = EnumHelper.GetEnumValueFromString<ConditionalComparisionTypeEnum>(value);
-                this.NotifyPropertyChanged();
-                this.NotifyPropertyChanged("IsBetweenOperatorSelected");
-                this.NotifyPropertyChanged("IsBetweenOperatorNotSelected");
+                var comparisonTypes = System.Enum.GetValues(typeof(ConditionalComparisionTypeEnum))
+                    .Cast<ConditionalComparisionTypeEnum>()
+                    .Where(v => !EnumHelper.IsObsolete(v));
+                return comparisonTypes;
             }
         }
 
@@ -66,6 +64,8 @@ namespace MixItUp.WPF.Controls.Actions
             {
                 this.Clause.ComparisionType = value;
                 this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("IsBetweenOperatorSelected");
+                this.NotifyPropertyChanged("IsBetweenOperatorNotSelected");
             }
         }
 
@@ -118,7 +118,7 @@ namespace MixItUp.WPF.Controls.Actions
     /// </summary>
     public partial class ConditionalActionControl : ActionControlBase
     {
-        private const string SingleActionCommandType = "Single Action";
+        private const string SingleActionCommandType = "SingleAction";
 
         public ObservableCollection<ConditionalClauseViewModel> Clauses { get; set; } = new ObservableCollection<ConditionalClauseViewModel>();
 
@@ -153,18 +153,26 @@ namespace MixItUp.WPF.Controls.Actions
         {
             this.ActionControlContentControl = (ContentControl)this.GetByUid("ActionControlContentControl");
 
-            List<CommandTypeEnum> commandTypes = EnumHelper.GetEnumList<CommandTypeEnum>().ToList();
-            commandTypes.Remove(CommandTypeEnum.Game);
-            commandTypes.Remove(CommandTypeEnum.Remote);
-            commandTypes.Remove(CommandTypeEnum.Custom);
+            var commandTypeStrings = System.Enum.GetValues(typeof(CommandTypeEnum))
+                    .Cast<CommandTypeEnum>()
+                    .Where(v => !EnumHelper.IsObsolete(v) && v != CommandTypeEnum.Game && v != CommandTypeEnum.Remote && v != CommandTypeEnum.Custom)
+                    .Select(v => EnumHelper.GetEnumName(v))
+                    .ToList();
 
-            List<string> commandTypeStrings = EnumHelper.GetEnumNames(commandTypes).ToList();
-            commandTypeStrings.Add(SingleActionCommandType);
+            commandTypeStrings.Add("SingleAction");
             this.CommandTypeComboBox.ItemsSource = commandTypeStrings;
 
-            this.SingleActionNameComboBox.ItemsSource = EnumHelper.GetEnumNames<ActionTypeEnum>().OrderBy(c => c);
+            var actionTypes = System.Enum.GetValues(typeof(ActionTypeEnum))
+                    .Cast<ActionTypeEnum>()
+                    .Where(v => !EnumHelper.IsObsolete(v) && v != ActionTypeEnum.Custom);
 
-            this.OperatorTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<ConditionalOperatorTypeEnum>();
+            this.SingleActionNameComboBox.ItemsSource = actionTypes;
+
+            var operatorTypes = System.Enum.GetValues(typeof(ConditionalOperatorTypeEnum))
+                    .Cast<ConditionalOperatorTypeEnum>()
+                    .Where(v => !EnumHelper.IsObsolete(v));
+
+            this.OperatorTypeComboBox.ItemsSource = operatorTypes;
             if (this.action != null)
             {
 #pragma warning disable CS0612 // Type or member is obsolete
@@ -175,7 +183,7 @@ namespace MixItUp.WPF.Controls.Actions
 #pragma warning restore CS0612 // Type or member is obsolete
 
                 this.CaseSensitiveToggleButton.IsChecked = !this.action.IgnoreCase;
-                this.OperatorTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.Operator);
+                this.OperatorTypeComboBox.SelectedItem = this.action.Operator;
                 foreach (ConditionalClauseModel clause in this.action.Clauses)
                 {
                     this.Clauses.Add(new ConditionalClauseViewModel(clause, this));
@@ -186,14 +194,14 @@ namespace MixItUp.WPF.Controls.Actions
                 if (this.action.Action != null)
                 {
                     this.CommandTypeComboBox.SelectedItem = SingleActionCommandType;
-                    this.SingleActionNameComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.Action.Type);
+                    this.SingleActionNameComboBox.SelectedItem = this.action.Action.Type;
                     this.ActionControlContentControl.Visibility = Visibility.Visible;
                     this.ActionControlContentControl.Content = this.actionContentContainerControl = new ActionContentContainerControl(this.action.Action);
                 }
             }
             else
             {
-                this.OperatorTypeComboBox.SelectedItem = EnumHelper.GetEnumName(ConditionalOperatorTypeEnum.And);
+                this.OperatorTypeComboBox.SelectedItem = ConditionalOperatorTypeEnum.And;
                 this.Clauses.Add(new ConditionalClauseViewModel(new ConditionalClauseModel(), this) { CanBeRemoved = false });
             }
             this.ClausesItemsControl.ItemsSource = this.Clauses;
@@ -205,7 +213,7 @@ namespace MixItUp.WPF.Controls.Actions
         {
             if (this.OperatorTypeComboBox.SelectedIndex >= 0 && this.Clauses.Count >= 0)
             {
-                ConditionalOperatorTypeEnum op = EnumHelper.GetEnumValueFromString<ConditionalOperatorTypeEnum>((string)this.OperatorTypeComboBox.SelectedItem);
+                ConditionalOperatorTypeEnum op = (ConditionalOperatorTypeEnum)this.OperatorTypeComboBox.SelectedItem;
                 if (this.Clauses.All(c => c.Validate()))
                 {
                     if (this.Command != null)
@@ -278,7 +286,7 @@ namespace MixItUp.WPF.Controls.Actions
         {
             if (this.SingleActionNameComboBox.SelectedIndex >= 0)
             {
-                ActionTypeEnum actionType = EnumHelper.GetEnumValueFromString<ActionTypeEnum>((string)this.SingleActionNameComboBox.SelectedItem);
+                ActionTypeEnum actionType = (ActionTypeEnum)this.SingleActionNameComboBox.SelectedItem;
                 this.ActionControlContentControl.Visibility = Visibility.Visible;
                 this.ActionControlContentControl.Content = this.actionContentContainerControl = new ActionContentContainerControl(actionType);
             }

@@ -4,11 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:util="clr-namespace:MixItUp.WPF.Util"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <local:ActionControlBase.Resources>
-        <ResourceDictionary>
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+        <util:LocalizationConverter x:Key="LocalizationConverter"/>
+        <ResourceDictionary x:Key="Themes">
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Card.xaml" />
@@ -39,22 +44,24 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="TranslationLanguageComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Language To Translate To" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="DisplayName" />
+            <ComboBox x:Name="TranslationLanguageComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.LanguageToTranslateTo}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="DisplayName" />
 
-            <TextBlock Grid.Column="2" VerticalAlignment="Center">Allow Profanity:</TextBlock>
+            <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.AllowProfanity}, StringFormat={StaticResource ColumnHeaderFormat}}" />
             <CheckBox Grid.Column="4" x:Name="AllowProfanityCheckBox" VerticalAlignment="Center" />
 
             <TextBlock Grid.Column="6" VerticalAlignment="Center">
-                <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">Special Identifiers Reference</Hyperlink>
+                <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">
+                    <TextBlock Text="{x:Static resx:Resources.SpecialIdentifiersReference}"/>
+                </Hyperlink>
             </TextBlock>
         </Grid>
 
-        <TextBox Grid.Row="2" x:Name="TranslationTextTextBox" MaterialDesign:HintAssist.Hint="Text To Translate" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        <TextBox Grid.Row="2" x:Name="TranslationTextTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TextToTranslate}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-        <ComboBox Grid.Row="4" x:Name="ResponseActionComboBox" MaterialDesign:HintAssist.Hint="Action To Perform With Translation" SelectionChanged="ResponseActionComboBox_SelectionChanged" />
+        <ComboBox Grid.Row="4" x:Name="ResponseActionComboBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ActionToPerformWithTranslation}" SelectionChanged="ResponseActionComboBox_SelectionChanged" />
 
         <Grid x:Name="ChatResponseActionGrid" Grid.Row="6" Visibility="Collapsed">
-            <TextBox x:Name="ChatResponseTextBox" MaterialDesign:HintAssist.Hint="Chat Message ($translationresult = Translated Text)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="ChatResponseTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ChatMessageTranslatedText}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid x:Name="CommandResponseActionGrid" Grid.Row="6" Visibility="Collapsed">
@@ -64,13 +71,13 @@
                 <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="CommandResponseComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Chat Command" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="Name" />
+            <ComboBox x:Name="CommandResponseComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Command}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="Name" />
 
-            <TextBox x:Name="CommandResponseArgumentsTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Arguments ($translationresult = Translated Text)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="CommandResponseArgumentsTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ArgumentsTranslatedText}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid x:Name="SpecialIdentifierResponseActionGrid" Grid.Row="6" Visibility="Collapsed">
-            <TextBox x:Name="SpecialIdentifierResponseTextBox" MaterialDesign:HintAssist.Hint="Special Identifier Name (Letters &amp; Numbers Only, no $)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="SpecialIdentifierResponseTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SpecialIdentifierHint}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
     </Grid>

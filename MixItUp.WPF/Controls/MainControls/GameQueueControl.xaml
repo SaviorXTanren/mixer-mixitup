@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:Util="clr-namespace:MixItUp.WPF.Util"
              xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
@@ -60,10 +61,10 @@
 
         <DataGrid ItemsSource="{Binding QueueUsers}" Grid.Row="4" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Pos" Binding="{Binding QueuePosition}" IsReadOnly="True" Width="70" />
-                <DataGridTextColumn Header="Name" Binding="{Binding Username}" IsReadOnly="True" Width="*" />
-                <DataGridTextColumn Header="Role" Binding="{Binding PrimaryRole}" IsReadOnly="True" Width="*" />
-                <DataGridTemplateColumn Header="Actions" Width="160">
+                <DataGridTextColumn Header="{x:Static resx:Resources.Position}" Binding="{Binding QueuePosition}" IsReadOnly="True" Width="70" />
+                <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Username}" IsReadOnly="True" Width="*" />
+                <DataGridTextColumn Header="{x:Static resx:Resources.Role}" Binding="{Binding PrimaryRole}" IsReadOnly="True" Width="*" />
+                <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="160">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid HorizontalAlignment="Center">

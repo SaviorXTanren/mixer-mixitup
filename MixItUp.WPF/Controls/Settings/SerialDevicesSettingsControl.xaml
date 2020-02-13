@@ -4,10 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Settings"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:MainControls="clr-namespace:MixItUp.WPF.Controls.MainControls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <local:SettingsControlBase.Resources>
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+    </local:SettingsControlBase.Resources>
     <Grid Margin="20">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -26,7 +31,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">Serial Devices:</TextBlock>
+            <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.SerialDevices}, StringFormat={StaticResource ColumnHeaderFormat}}" />
 
             <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="2" BorderThickness="1" Width="500">
                 <ListView x:Name="SerialDevicesListView" HorizontalAlignment="Center">
@@ -53,7 +58,7 @@
 
                                 <TextBlock Grid.Column="6" Text="{Binding RTSEnabled}" />
 
-                                <Button Grid.Column="8" x:Name="DeleteSerialDeviceButton" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteSerialDeviceButton_Click" ToolTip="Delete" />
+                                <Button Grid.Column="8" x:Name="DeleteSerialDeviceButton" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteSerialDeviceButton_Click" ToolTip="{x:Static resx:Resources.Delete}" />
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
@@ -77,17 +82,17 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <ComboBox x:Name="PortNameComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Port Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" IsEditable="True" />
+                <ComboBox x:Name="PortNameComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.PortName}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" IsEditable="True" />
 
-                <TextBox x:Name="BaudRateTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Baud Rate" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
+                <TextBox x:Name="BaudRateTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.BaudRate}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
 
-                <TextBlock Grid.Column="4" VerticalAlignment="Center">DTR:</TextBlock>
+                <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.DTR}, StringFormat={StaticResource ColumnHeaderFormat}}" />
                 <CheckBox Grid.Column="6" x:Name="DTREnabledCheckBox" VerticalAlignment="Center" />
 
-                <TextBlock Grid.Column="8" VerticalAlignment="Center">RTS:</TextBlock>
+                <TextBlock Grid.Column="8" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.RTS}, StringFormat={StaticResource ColumnHeaderFormat}}" />
                 <CheckBox Grid.Column="10" x:Name="RTSEnabledCheckBox" VerticalAlignment="Center" />
 
-                <Button x:Name="AddSerialDeviceButton" Grid.Column="12" Click="AddSerialDeviceButton_Click">Add</Button>
+                <Button x:Name="AddSerialDeviceButton" Grid.Column="12" Click="AddSerialDeviceButton_Click" Content="{x:Static resx:Resources.Add}"/>
             </Grid>
         </Grid>
 

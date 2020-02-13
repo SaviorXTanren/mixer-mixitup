@@ -14,8 +14,6 @@ namespace MixItUp.Base.ViewModel.Window.Overlay
         public OverlayItemModelTypeEnum Type { get; set; }
         public string Description { get; set; }
 
-        public string Name { get { return EnumHelper.GetEnumName(this.Type); } }
-
         public OverlayTypeListing(OverlayItemModelTypeEnum type, string description)
         {
             this.Type = type;

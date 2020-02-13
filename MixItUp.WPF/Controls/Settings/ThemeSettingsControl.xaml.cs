@@ -12,7 +12,7 @@ namespace MixItUp.WPF.Controls.Settings
     {
         private List<string> availableBackgroundColors = new List<string>() { "Light", "Dark" };
 
-        private Dictionary<string, string> availableFullThemes = new Dictionary<string, string>() { { "None", string.Empty }, { "1 Year Anniversary", "1YearAnniversary" },
+        private Dictionary<string, string> availableFullThemes = new Dictionary<string, string>() { { MixItUp.Base.Resources.None, string.Empty }, { "1 Year Anniversary", "1YearAnniversary" },
             { "AwkwardTyson - Americana", "AwkwardTysonAmericana" }, { "Azhtral's Cosmic Fire" , "AzhtralsCosmicFire" }, { "Dusty's Purple Potion", "DustysPurplePotion" },
             { "Insert Coin Theater", "InsertCoinTheater" }, { "Nibbles' Carrot Patch", "NibblesCarrotPatch" }, { "Stark Contrast", "StarkContrast" },
             { "Tacos After Dark", "TacosAfterDark" }, { "Team Boom", "TeamBoom" } };

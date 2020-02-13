@@ -16,35 +16,20 @@ namespace MixItUp.Base.Util
     public enum ModerationChatInteractiveParticipationEnum
     {
         None = 0,
-        [Name("Account Is 1 Hour Old")]
         AccountHour = 1,
-        [Name("Account Is 1 Day Old")]
         AccountDay = 2,
-        [Name("Account Is 1 Week Old")]
         AccountWeek = 3,
-        [Name("Account Is 1 Month Old")]
         AccountMonth = 4,
-        [Name("Watched For 10 Minutes")]
         ViewingTenMinutes = 10,
-        [Name("Watched For 30 Minutes")]
         ViewingThirtyMinutes = 11,
-        [Name("Watched For 1 Hour")]
         ViewingOneHour = 12,
-        [Name("Watched For 2 Hours")]
         ViewingTwoHours = 13,
-        [Name("Watched For 10 Hours")]
         ViewingTenHours = 14,
-        [Name("Follower Only")]
         FollowerOnly = 19,
-        [Name("Subscriber Only")]
         SubscriberOnly = 20,
-        [Name("Moderator Only")]
         ModeratorOnly = 30,
-        [Name("Emotes & Skills Only")]
         EmotesSkillsOnly = 40,
-        [Name("Skills Only")]
         SkillsOnly = 41,
-        [Name("Ember Skills Only")]
         EmberSkillsOnly = 42,
     }
 

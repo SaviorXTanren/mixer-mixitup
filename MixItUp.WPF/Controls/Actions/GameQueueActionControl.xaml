@@ -4,10 +4,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:util="clr-namespace:MixItUp.WPF.Util"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:RequirementControls="clr-namespace:MixItUp.WPF.Controls.Requirement"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <local:ActionControlBase.Resources>
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+        <util:LocalizationConverter x:Key="LocalizationConverter"/>
+    </local:ActionControlBase.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="350" />
@@ -15,10 +22,16 @@
             <ColumnDefinition Width="200" />
         </Grid.ColumnDefinitions>
 
-        <ComboBox x:Name="GameQueueActionTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Game Queue Action" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="GameQueueActionTypeComboBox_SelectionChanged" />
+        <ComboBox x:Name="GameQueueActionTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GameQueueAction}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="GameQueueActionTypeComboBox_SelectionChanged">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
 
         <RequirementControls:RoleRequirementControl x:Name="RoleRequirement" Grid.Column="2" Visibility="Collapsed" VerticalAlignment="Center" />
 
-        <TextBox Grid.Column="2" x:Name="TargetUsernameTextBox" Visibility="Collapsed" MaterialDesign:HintAssist.Hint="Target User (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        <TextBox Grid.Column="2" x:Name="TargetUsernameTextBox" Visibility="Collapsed" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TargetUserOptional}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
     </Grid>
 </local:ActionControlBase>

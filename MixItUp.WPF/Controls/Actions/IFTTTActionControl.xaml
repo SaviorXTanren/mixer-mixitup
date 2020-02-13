@@ -4,6 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:util="clr-namespace:MixItUp.WPF.Util"         
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -21,9 +24,9 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="EventNameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Web Hook Event Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="250" />
+            <TextBox x:Name="EventNameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.WebHookEventName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="250" />
 
-            <TextBlock x:Name="IFTTTNotEnabledWarningTextBlock" Grid.Column="2" Foreground="Red" HorizontalAlignment="Center" Margin="0,10,0,0" Visibility="Collapsed">Please enable IFTTT connection on the Services page!</TextBlock>
+            <TextBlock x:Name="IFTTTNotEnabledWarningTextBlock" Grid.Column="2" Foreground="Red" HorizontalAlignment="Center" Margin="0,10,0,0" Visibility="Collapsed" Text="{x:Static resx:Resources.EnableIFTTT}"/>
         </Grid>
 
         <Grid Grid.Row="2">
@@ -35,11 +38,11 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" x:Name="EventValue1TextBox" MaterialDesign:HintAssist.Hint="Value 1 (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}"  />
+            <TextBox Grid.Column="0" x:Name="EventValue1TextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Value1}" Style="{StaticResource MaterialDesignFloatingHintTextBox}"  />
 
-            <TextBox Grid.Column="2" x:Name="EventValue2TextBox" MaterialDesign:HintAssist.Hint="Value 2 (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}"  />
+            <TextBox Grid.Column="2" x:Name="EventValue2TextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Value2}" Style="{StaticResource MaterialDesignFloatingHintTextBox}"  />
 
-            <TextBox Grid.Column="4" x:Name="EventValue3TextBox" MaterialDesign:HintAssist.Hint="Value 3 (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}"  />
+            <TextBox Grid.Column="4" x:Name="EventValue3TextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Value3}" Style="{StaticResource MaterialDesignFloatingHintTextBox}"  />
         </Grid>
 
     </Grid>

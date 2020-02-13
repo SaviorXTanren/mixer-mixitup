@@ -30,17 +30,17 @@ namespace MixItUp.WPF.Controls.Settings
 
             this.SettingsItemsListBox.ItemsSource = this.settingsGroups;
 
-            this.settingsGroups.Add(new SettingsOption("General", new GeneralSettingsControl()));
-            this.settingsGroups.Add(new SettingsOption("Themes & Colors", new ThemeSettingsControl()));
-            this.settingsGroups.Add(new SettingsOption("Notifications", new NotificationsSettingsControl()));
-            this.settingsGroups.Add(new SettingsOption("Chat", new ChatSettingsControl()));
-            this.settingsGroups.Add(new SettingsOption("Users", new UsersSettingsControl()));
-            this.settingsGroups.Add(new SettingsOption("MixPlay", new InteractiveSettingsControl()));
-            this.settingsGroups.Add(new SettingsOption("Overlays", new OverlaySettingsControl()));
-            this.settingsGroups.Add(new SettingsOption("Hot Keys", new HotKeysSettingsControl()));
-            this.settingsGroups.Add(new SettingsOption("Remote", new RemoteSettingsControl()));
-            this.settingsGroups.Add(new SettingsOption("Serial Devices", new SerialDevicesSettingsControl()));
-            this.settingsGroups.Add(new SettingsOption("Advanced", new AdvancedSettingsControl()));
+            this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.General, new GeneralSettingsControl()));
+            this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.ThemesAndColors, new ThemeSettingsControl()));
+            this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.Notifications, new NotificationsSettingsControl()));
+            this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.Chat, new ChatSettingsControl()));
+            this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.Users, new UsersSettingsControl()));
+            this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.MixPlay, new InteractiveSettingsControl()));
+            this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.Overlays, new OverlaySettingsControl()));
+            this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.HotKeys, new HotKeysSettingsControl()));
+            this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.Remote, new RemoteSettingsControl()));
+            this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.SerialDevices, new SerialDevicesSettingsControl()));
+            this.settingsGroups.Add(new SettingsOption(MixItUp.Base.Resources.Advanced, new AdvancedSettingsControl()));
         }
 
         protected override async Task InitializeInternal()

@@ -61,7 +61,7 @@ namespace MixItUp.WPF.Controls.Actions
 
             if (string.IsNullOrEmpty(this.GroupBoxHeaderTextBox.Text))
             {
-                this.GroupBoxHeaderTextBox.Text = this.GroupBoxHeaderTextBlock.Text = EnumHelper.GetEnumName(this.type);
+                this.GroupBoxHeaderTextBox.Text = this.GroupBoxHeaderTextBlock.Text = EnumLocalizationHelper.GetLocalizedName(this.type);
             }
 
             if (this.ActionContainer.IsMinimized)
@@ -131,11 +131,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         private void ActionHelpButton_Click(object sender, RoutedEventArgs e)
         {
-            string actionName = EnumHelper.GetEnumName(this.type);
-            actionName = actionName.ToLower();
-            actionName = actionName.Replace(" ", "-");
-            actionName = actionName.Replace("/", "");
-            ProcessHelper.LaunchLink("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Actions#" + actionName);
+            ProcessHelper.LaunchLink("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Actions");
         }
 
         private async void ActionDuplicateButton_Click(object sender, RoutedEventArgs e)

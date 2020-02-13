@@ -12,11 +12,8 @@ namespace MixItUp.Base.Actions
 {
     public enum SimpleInputMouseEnum
     {
-        [Name("Left Button")]
         LeftButton,
-        [Name("Right Button")]
         RightButton,
-        [Name("Middle Button")]
         MiddleButton,
     }
 

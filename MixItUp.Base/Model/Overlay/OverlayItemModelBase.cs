@@ -18,31 +18,20 @@ namespace MixItUp.Base.Model.Overlay
         Video,
         YouTube,
         HTML,
-        [Name("Web Page")]
         WebPage,
-        [Name("Goal/Progress Bar")]
         ProgressBar,
-        [Name("Event List")]
         EventList,
-        [Name("Game Queue")]
         GameQueue,
-        [Name("Chat Messages")]
         ChatMessages,
-        [Name("Stream Clip Playback")]
         StreamClip,
         Leaderboard,
         Timer,
-        [Name("Timer Train")]
         TimerTrain,
-        [Name("Stream Boss")]
         StreamBoss,
         [Obsolete]
         SongRequests,
-        [Name("Ticker Tape")]
         TickerTape,
-        [Name("Spark Crystal")]
         SparkCrystal,
-        [Name("End Credits")]
         EndCredits
     }
 

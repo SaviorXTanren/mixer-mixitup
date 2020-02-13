@@ -10,7 +10,7 @@ namespace MixItUp.Base.ViewModel.Controls.Commands
         public CommandGroupSettings GroupSettings { get; set; }
 
         public string GroupName { get { return (this.GroupSettings != null) ? this.GroupSettings.Name : null; } }
-        public string DisplayName { get { return (!string.IsNullOrEmpty(this.GroupName)) ? this.GroupName : "Ungrouped"; } }
+        public string DisplayName { get { return (!string.IsNullOrEmpty(this.GroupName)) ? this.GroupName : MixItUp.Base.Resources.Ungrouped; } }
 
         public bool HasCommands { get { return this.Commands.Count > 0; } }
 

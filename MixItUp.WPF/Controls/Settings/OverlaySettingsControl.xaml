@@ -4,10 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Settings"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:MainControls="clr-namespace:MixItUp.WPF.Controls.MainControls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <local:SettingsControlBase.Resources>
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+    </local:SettingsControlBase.Resources>
     <Grid Margin="20">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -26,7 +31,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">Overlay Endpoints:</TextBlock>
+            <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.OverlayEndpoints}, StringFormat={StaticResource ColumnHeaderFormat}}" />
 
             <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="2" BorderThickness="1" Width="500">
                 <ItemsControl x:Name="OverlayEndpointsItemsControl" HorizontalAlignment="Center">
@@ -45,7 +50,7 @@
 
                                 <TextBlock Grid.Column="2"><Hyperlink NavigateUri="{Binding Address}" RequestNavigate="Hyperlink_RequestNavigate"><TextBlock Text="{Binding Address}"/></Hyperlink></TextBlock>
 
-                                <Button Grid.Column="4" x:Name="DeleteOverlayButton" Margin="-10" IsEnabled="{Binding CanDelete}" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteOverlayButton_Click" ToolTip="Delete" />
+                                <Button Grid.Column="4" x:Name="DeleteOverlayButton" Margin="-10" IsEnabled="{Binding CanDelete}" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteOverlayButton_Click" ToolTip="{x:Static resx:Resources.Delete}" />
                             </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
@@ -59,9 +64,9 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBox x:Name="OverlayNameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Overlay Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
+                <TextBox x:Name="OverlayNameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
 
-                <Button x:Name="AddOverlayButton" Grid.Column="2" Click="AddOverlayButton_Click">Add</Button>
+                <Button x:Name="AddOverlayButton" Grid.Column="2" Click="AddOverlayButton_Click" Content="{x:Static resx:Resources.Add}"/>
             </Grid>
         </Grid>
 

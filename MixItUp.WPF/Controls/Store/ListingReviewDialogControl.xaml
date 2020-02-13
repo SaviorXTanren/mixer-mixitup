@@ -4,11 +4,18 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Store"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:util="clr-namespace:MixItUp.WPF.Util"
              xmlns:MaterialDesignWPF="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+        <util:LocalizationConverter x:Key="LocalizationConverter"/>
+    </UserControl.Resources>
     <Grid Margin="16" MaxWidth="300">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -29,7 +36,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">Rating:</TextBlock>
+            <TextBlock Grid.Column="0" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.Rating}, StringFormat={StaticResource ColumnHeaderFormat}}" />
 
             <Button x:Name="Star1Button" Grid.Column="2" Style="{StaticResource MaterialDesignFlatButtonDefaultColor}" Click="Star1Button_Click" Margin="0,2,0,0" Padding="-1" VerticalAlignment="Center">
                 <MaterialDesign:PackIcon x:Name="Star1Icon" Kind="Star" />
@@ -47,8 +54,8 @@
                 <MaterialDesign:PackIcon x:Name="Star5Icon" Kind="StarOutline" />
             </Button>
         </Grid>
-        
-        <TextBox Grid.Row="2" x:Name="ReviewTextBox" Width="300" Height="100" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="Review" TextWrapping="Wrap" TextChanged="ReviewTextBox_TextChanged" />
+
+        <TextBox Grid.Row="2" x:Name="ReviewTextBox" Width="300" Height="100" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Review}" TextWrapping="Wrap" TextChanged="ReviewTextBox_TextChanged" />
 
         <Grid Grid.Row="4">
             <Grid.ColumnDefinitions>
@@ -57,18 +64,16 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Button x:Name="OkButton" Grid.Column="0" IsDefault="True" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}" IsEnabled="False">
+            <Button x:Name="OkButton" Grid.Column="0" IsDefault="True" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}" IsEnabled="False" Content="{x:Static resx:Resources.Ok}">
                 <Button.CommandParameter>
                     <system:Boolean>True</system:Boolean>
                 </Button.CommandParameter>
-                OK
             </Button>
 
-            <Button Grid.Column="2" IsDefault="True" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
+            <Button Grid.Column="2" IsDefault="True" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}" Content="{x:Static resx:Resources.Cancel}">
                 <Button.CommandParameter>
                     <system:Boolean>False</system:Boolean>
                 </Button.CommandParameter>
-                Cancel
             </Button>
         </Grid>
     </Grid>

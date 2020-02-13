@@ -13,24 +13,16 @@ namespace MixItUp.Base.Actions
 {
     public enum CurrencyActionTypeEnum
     {
-        [Name("Add to user")]
         AddToUser,
-        [Name("Subtract from user")]
         SubtractFromUser,
 
-        [Name("Add to specific user")]
         AddToSpecificUser,
-        [Name("Add to all chat users")]
         AddToAllChatUsers,
 
-        [Name("Subtract from specific user")]
         SubtractFromSpecificUser,
-        [Name("Subtract from all chat users")]
         SubtractFromAllChatUsers,
 
-        [Name("Reset For All Users")]
         ResetForAllUsers,
-        [Name("Reset For User")]
         ResetForUser
     }
 

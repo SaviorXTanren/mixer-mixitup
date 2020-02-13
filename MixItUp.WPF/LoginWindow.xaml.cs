@@ -61,7 +61,7 @@ namespace MixItUp.WPF
             if (this.streamerSettings.Count > 0)
             {
                 this.ExistingStreamerComboBox.Visibility = Visibility.Visible;
-                this.streamerSettings.Add(new SettingsV2Model() { MixerChannelID = 0, Name = "NEW STREAMER" });
+                this.streamerSettings.Add(new SettingsV2Model() { MixerChannelID = 0, Name = MixItUp.Base.Resources.NewStreamer });
                 if (this.streamerSettings.Count() == 2)
                 {
                     this.ExistingStreamerComboBox.SelectedIndex = 0;
@@ -143,7 +143,7 @@ namespace MixItUp.WPF
                     }
                     else
                     {
-                        await DialogHelper.ShowMessage("You must select a Streamer account to log in to");
+                        await DialogHelper.ShowMessage(MixItUp.Base.Resources.LoginErrorNoStreamerAccount);
                     }
                 }
                 else
@@ -167,7 +167,7 @@ namespace MixItUp.WPF
             {
                 if (string.IsNullOrEmpty(this.ModeratorChannelComboBox.Text))
                 {
-                    await DialogHelper.ShowMessage("A channel name must be entered");
+                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.LoginErrorNoChannelName);
                     return;
                 }
 
@@ -205,12 +205,12 @@ namespace MixItUp.WPF
                     }
                     else
                     {
-                        await DialogHelper.ShowMessage("You are not a moderator for this channel.");
+                        await DialogHelper.ShowMessage(MixItUp.Base.Resources.LoginErrorNotModerator);
                     }
                 }
                 else
                 {
-                    await DialogHelper.ShowMessage("Unable to initialize session.");
+                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.LoginErrorFailedToAuthenticate);
                 }
             });
         }

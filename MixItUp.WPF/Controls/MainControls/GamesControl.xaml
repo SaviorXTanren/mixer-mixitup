@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -34,21 +35,21 @@
 
             <DataGrid ItemsSource="{Binding GameCommands}" Grid.Row="0" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
                 <DataGrid.Columns>
-                    <DataGridTemplateColumn Header="Name" Width="*">
+                    <DataGridTemplateColumn Header="{x:Static resx:Resources.Name}" Width="*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock VerticalAlignment="Center" Text="{Binding Name}" Margin="5,0,0,0" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="Commands" Width="*">
+                    <DataGridTemplateColumn Header="{x:Static resx:Resources.Commands}" Width="*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock VerticalAlignment="Center" Text="{Binding CommandsString}" Margin="5,0,0,0" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="Actions" Width="240">
+                    <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="240">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <CommandControls:CommandButtonsControl x:Name="CommandButtons" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />

@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MixItUp.WPF.Windows.Command"
+        xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -16,7 +17,7 @@
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
                            
         Icon="./../../Logo.ico"
-        Title="Customize Command"
+        Title="{x:Static resx:Resources.CustomizeCommand}"
         Height="600" Width="800"
         SizeChanged="LoadingWindowBase_SizeChanged">
     <Windows:LoadingWindowBase.Resources>
@@ -46,15 +47,21 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" TextWrapping="Wrap" Width="200" TextAlignment="Center">Select the type of command you would like to build:</TextBlock>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
 
-            <Button x:Name="BasicChatCommandButton" Grid.Row="1" Margin="0,20,0,0" Click="BasicChatCommandButton_Click">Basic Chat Command</Button>
+            <TextBlock Grid.Row="0" Grid.ColumnSpan="3" TextWrapping="Wrap" MinWidth="200" TextAlignment="Center" Text="{x:Static resx:Resources.SelectTypeOfCommand}"/>
 
-            <Button x:Name="BasicSoundCommandButton" Grid.Row="2" Margin="0,20,0,0" Click="BasicSoundCommandButton_Click">Basic Sound Command</Button>
+            <Button x:Name="BasicChatCommandButton" Grid.Row="1" Grid.Column="1" Margin="0,20,0,0" Click="BasicChatCommandButton_Click" Content="{x:Static resx:Resources.BasicChatCommand}"/>
 
-            <Button x:Name="AdvancedCommandButton" Grid.Row="3" Margin="0,20,0,0" Click="AdvancedCommandButton_Click">Advanced Command</Button>
+            <Button x:Name="BasicSoundCommandButton" Grid.Row="2" Grid.Column="1" Margin="0,20,0,0" Click="BasicSoundCommandButton_Click" Content="{x:Static resx:Resources.BasicSoundCommand}"/>
 
-            <Button x:Name="DownloadFromStoreButton" Grid.Row="4" Margin="0,20,0,0" Click="DownloadFromStoreButton_Click">
+            <Button x:Name="AdvancedCommandButton" Grid.Row="3" Grid.Column="1" Margin="0,20,0,0" Click="AdvancedCommandButton_Click" Content="{x:Static resx:Resources.AdvancedCommand}"/>
+
+            <Button x:Name="DownloadFromStoreButton" Grid.Row="4" Grid.Column="1" Margin="0,20,0,0" Click="DownloadFromStoreButton_Click">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -64,7 +71,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Column="0" VerticalAlignment="Center">Download From</TextBlock>
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{x:Static resx:Resources.DownloadFrom}"/>
                     <Image Grid.Column="2" Source="..\..\Logo.png" />
                     <MaterialDesign:PackIcon Grid.Column="4" Kind="Store" VerticalAlignment="Center" Width="24" Height="24" />
                 </Grid>

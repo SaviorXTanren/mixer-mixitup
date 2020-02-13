@@ -4,11 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Games"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:util="clr-namespace:MixItUp.WPF.Util"
              xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:RequirementControls="clr-namespace:MixItUp.WPF.Controls.Requirement"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <local:GameEditorControlBase.Resources>
+        <util:LocalizationConverter x:Key="LocalizationConverter"/>
+    </local:GameEditorControlBase.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -35,7 +40,13 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox ItemsSource="{Binding WhoCanStartRoles}" SelectedItem="{Binding WhoCanStartString}" Grid.Column="0" MaterialDesign:HintAssist.Hint="Who Can Start Game" Width="130" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox ItemsSource="{Binding WhoCanStartRoles}" SelectedItem="{Binding WhoCanStart}" Grid.Column="0" MaterialDesign:HintAssist.Hint="Who Can Start Game" Width="130" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
             <TextBox Text="{Binding MinimumParticipantsString}" Grid.Column="2" Width="70" MaterialDesign:HintAssist.Hint="Min Users" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
@@ -113,7 +124,7 @@
 
                             <TextBox Grid.Column="4" MaterialDesign:HintAssist.Hint="Payout %" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding PayoutString}" />
 
-                            <Button x:Name="DeleteButton" Grid.Column="6" Click="DeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Delete Command">
+                            <Button x:Name="DeleteButton" Grid.Column="6" Click="DeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.DeleteCommand}">
                                 <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                             </Button>
                         </Grid>
