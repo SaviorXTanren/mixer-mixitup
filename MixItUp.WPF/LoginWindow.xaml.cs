@@ -208,10 +208,6 @@ namespace MixItUp.WPF
                         await DialogHelper.ShowMessage(MixItUp.Base.Resources.LoginErrorNotModerator);
                     }
                 }
-                else
-                {
-                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.LoginErrorFailedToAuthenticate);
-                }
             });
         }
 
