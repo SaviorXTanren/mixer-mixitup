@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -17,7 +18,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock x:Name="OverlayNotEnabledWarningTextBlock" Grid.Row="0" HorizontalAlignment="Center" Margin="0,0,0,10" Foreground="Red" Visibility="Collapsed">Please enable Mix It Up Overlay in the Services Section!</TextBlock>
+        <TextBlock x:Name="OverlayNotEnabledWarningTextBlock" Grid.Row="0" HorizontalAlignment="Center" Margin="0,0,0,10" Foreground="Red" Visibility="Collapsed" Text="{x:Static resx:Resources.EnableOverlay}"/>
 
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
@@ -32,20 +33,22 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="TextToSpeechVoiceComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Voice" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="170" />
+            <ComboBox x:Name="TextToSpeechVoiceComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Voice}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="170" />
 
-            <TextBox x:Name="TextToSpeechVolumeTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Volume (0% - 100%)" Width="100" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="TextToSpeechVolumeTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Volume0to100}" Width="100" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox x:Name="TextToSpeechPitchTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Pitch (0% - 200%)" Width="100" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="TextToSpeechPitchTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Pitch}" Width="100" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox x:Name="TextToSpeechRateTextBox" Grid.Column="6" MaterialDesign:HintAssist.Hint="Rate (0% - 150%)" Width="100" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="TextToSpeechRateTextBox" Grid.Column="6" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Rate}" Width="100" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <TextBlock Grid.Column="8" VerticalAlignment="Center">
-                <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">Special Identifiers Reference</Hyperlink>
+                <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">
+                    <TextBlock Text="{x:Static resx:Resources.SpecialIdentifiersReference}"/>
+                </Hyperlink>
             </TextBlock>
         </Grid>
 
-        <TextBox Grid.Row="3" x:Name="TextToSpeechMessageTextBox" MaterialDesign:HintAssist.Hint="Speech Message" Style="{StaticResource MaterialDesignFloatingHintTextBox}" HorizontalAlignment="Left" Width="700" />
+        <TextBox Grid.Row="3" x:Name="TextToSpeechMessageTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SpeechMessage}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" HorizontalAlignment="Left" Width="700" />
 
         <TextBlock Grid.Row="5" VerticalAlignment="Center" HorizontalAlignment="Center">Text-To-Speech functionality provided by <Hyperlink NavigateUri="https://responsivevoice.org/" RequestNavigate="Hyperlink_RequestNavigate">https://responsivevoice.org/</Hyperlink></TextBlock>
     </Grid>

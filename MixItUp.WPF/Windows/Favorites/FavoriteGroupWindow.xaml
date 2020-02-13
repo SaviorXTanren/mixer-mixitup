@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MixItUp.WPF.Windows.Currency"
+        xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
         xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
@@ -35,11 +36,11 @@
 
             <DataGrid x:Name="FavoriteGroupsDataGrid" Grid.Row="2" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="2*" />
-                    <DataGridTextColumn Header="Live" Binding="{Binding Live}" IsReadOnly="True" Width="60" />
-                    <DataGridTextColumn Header="Viewers" Binding="{Binding Viewers}" IsReadOnly="True" Width="80" />
-                    <DataGridTextColumn Header="Game" Binding="{Binding Game}" IsReadOnly="True" Width="3*" />
-                    <DataGridTemplateColumn Header="Actions" Width="170">
+                    <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" Width="2*" />
+                    <DataGridTextColumn Header="{x:Static resx:Resources.Live}" Binding="{Binding Live}" IsReadOnly="True" Width="60" />
+                    <DataGridTextColumn Header="{x:Static resx:Resources.Viewers}" Binding="{Binding Viewers}" IsReadOnly="True" Width="80" />
+                    <DataGridTextColumn Header="{x:Static resx:Resources.Game}" Binding="{Binding Game}" IsReadOnly="True" Width="3*" />
+                    <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" Width="170">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>

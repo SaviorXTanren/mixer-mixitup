@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Requirement"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              
@@ -26,7 +27,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="CooldownTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Type" Width="90" SelectionChanged="CooldownTypeComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox x:Name="CooldownTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" Width="90" SelectionChanged="CooldownTypeComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
             <TextBox x:Name="CooldownAmountTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Cooldown (Seconds)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" Width="150" />
         </Grid>

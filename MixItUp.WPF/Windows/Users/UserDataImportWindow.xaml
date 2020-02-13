@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MixItUp.WPF.Windows.Currency"
+        xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
         xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
@@ -17,7 +18,7 @@
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
                   
         Icon="./../../Logo.ico"
-        Title="User Data Import" Height="600" Width="600">
+        Title="{x:Static resx:Resources.UserDataImport}" Height="600" Width="600">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -39,7 +40,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" TextWrapping="Wrap" Margin="0,20,0,0" Width="520" HorizontalAlignment="Center">This will allow you to import your channel's user data from either a plain-text or spreadsheet file. To import a spreadsheet file, you must have some form of Microsoft Excel installed. Note that this WILL OVERWRITE existing user data in Mix It Up. First, specify the file that you want to import the User data from:</TextBlock>
+            <TextBlock Grid.Row="0" TextWrapping="Wrap" Margin="0,20,0,0" Width="520" HorizontalAlignment="Center" Text="{x:Static resx:Resources.UserDataStep1}"/>
 
             <Grid Grid.Row="2" Margin="40,0">
                 <Grid.ColumnDefinitions>
@@ -48,11 +49,11 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBox Grid.Column="0" Grid.Row="0" x:Name="UserDataFilePathTextBox" MaterialDesign:HintAssist.Hint="User Data File Path" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                <Button Grid.Column="2" Grid.Row="0" x:Name="UserDataFileBrowseButton" VerticalAlignment="Bottom" Click="UserDataFileBrowseButton_Click">Browse</Button>
+                <TextBox Grid.Column="0" Grid.Row="0" x:Name="UserDataFilePathTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FilePath}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <Button Grid.Column="2" Grid.Row="0" x:Name="UserDataFileBrowseButton" VerticalAlignment="Bottom" Click="UserDataFileBrowseButton_Click" Content="{x:Static resx:Resources.Browse}"/>
             </Grid>
 
-            <TextBlock Grid.Row="4" TextWrapping="Wrap" Margin="20,0" HorizontalAlignment="Center">Next, you'll need to specify the column number for each value in your data file or leave it blank if that value is not present. Note that the data file is required to have at least either the username and/or user ID:</TextBlock>
+            <TextBlock Grid.Row="4" TextWrapping="Wrap" Margin="20,0" HorizontalAlignment="Center" Text="{x:Static resx:Resources.UserDataStep2}"/>
 
             <ScrollViewer Grid.Row="6" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
                 <ItemsControl x:Name="DataColumnsItemsControls" HorizontalAlignment="Center">
@@ -67,15 +68,15 @@
 
                                 <TextBlock Grid.Column="0" x:Name="DataFieldNameTextBlock" Text="{Binding DataName}" VerticalAlignment="Bottom" Margin="0,0,0,5" />
 
-                                <TextBox Grid.Column="2" x:Name="DataColumnNumberTextBox" Text="{Binding ColumnNumber}" MaterialDesign:HintAssist.Hint="Column #" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                <TextBox Grid.Column="2" x:Name="DataColumnNumberTextBox" Text="{Binding ColumnNumber}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ColumnNumber}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                             </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </ScrollViewer>
 
-            <Button x:Name="ImportDataButton" Grid.Row="8" Click="ImportDataButton_Click" Width="160">Import Data</Button>
-            
+            <Button x:Name="ImportDataButton" Grid.Row="8" Click="ImportDataButton_Click" Width="160" Content="{x:Static resx:Resources.ImportData}"/>
+
         </Grid>
 
         <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="1" />

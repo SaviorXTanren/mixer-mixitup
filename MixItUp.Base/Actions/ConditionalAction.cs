@@ -13,23 +13,15 @@ namespace MixItUp.Base.Actions
 {
     public enum ConditionalComparisionTypeEnum
     {
-        [Name("=")]
+        [Name("EqualsCompare")]
         Equals,
-        [Name("<>")]
         NotEquals,
-        [Name(">")]
         GreaterThan,
-        [Name(">=")]
         GreaterThanOrEqual,
-        [Name("<")]
         LessThan,
-        [Name("<=")]
         LessThanOrEqual,
-        [Name("Contains")]
         Contains,
-        [Name("<> Contain")]
         DoesNotContain,
-        [Name("Between")]
         Between
     }
 

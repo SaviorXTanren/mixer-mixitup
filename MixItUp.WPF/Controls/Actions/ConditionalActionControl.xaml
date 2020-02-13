@@ -5,11 +5,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:util="clr-namespace:MixItUp.WPF.Util"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <local:ActionControlBase.Resources>
-        <ResourceDictionary>
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+        <util:LocalizationConverter x:Key="LocalizationConverter"/>
+        <ResourceDictionary x:Key="Themes">
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Card.xaml" />
@@ -42,16 +47,24 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            
-            <TextBlock Grid.Column="0" VerticalAlignment="Center">Case Sensitive:</TextBlock>
+
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.CaseSensitive}, StringFormat={StaticResource ColumnHeaderFormat}}" />
             <ToggleButton Grid.Column="2" x:Name="CaseSensitiveToggleButton" />
 
-            <ComboBox Grid.Column="4" x:Name="OperatorTypeComboBox" MaterialDesign:HintAssist.Hint="Operator" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="80" />
+            <ComboBox Grid.Column="4" x:Name="OperatorTypeComboBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Operator}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="80">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
-            <Button Grid.Column="6" x:Name="AddClauseButton" Click="AddClauseButton_Click">Add Clause</Button>
+            <Button Grid.Column="6" x:Name="AddClauseButton" Click="AddClauseButton_Click" Content="{x:Static resx:Resources.AddClause}"/>
 
             <TextBlock Grid.Column="8">
-                <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">Special Identifiers Reference</Hyperlink>
+                <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">
+                    <TextBlock Text="{x:Static resx:Resources.SpecialIdentifiersReference}"/>
+                </Hyperlink>
             </TextBlock>
         </Grid>
 
@@ -71,11 +84,17 @@
 
                         <Button Grid.Column="0" Visibility="{Binding CanBeRemoved, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Command="{Binding DeleteCommand}" />
 
-                        <TextBox Grid.Column="2" Text="{Binding Value1}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="First Value" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <TextBox Grid.Column="2" Text="{Binding Value1}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.FirstValue}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                        <ComboBox Grid.Column="4" ItemsSource="{Binding ComparisonTypes}" SelectedItem="{Binding ComparisionTypeString}" MaterialDesign:HintAssist.Hint="Compare" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="80" />
+                        <ComboBox Grid.Column="4" ItemsSource="{Binding ComparisonTypes}" SelectedItem="{Binding ComparisionType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Compare}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="80">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
 
-                        <TextBox Grid.Column="6" Text="{Binding Value2}" Visibility="{Binding IsBetweenOperatorNotSelected, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Second Value" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <TextBox Grid.Column="6" Text="{Binding Value2}" Visibility="{Binding IsBetweenOperatorNotSelected, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SecondValue}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                         <Grid Grid.Column="6" Visibility="{Binding IsBetweenOperatorSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <Grid.ColumnDefinitions>
@@ -84,8 +103,8 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBox Grid.Column="0" Text="{Binding Value2}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Min Value" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                            <TextBox Grid.Column="2" Text="{Binding Value3}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Max Value" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                            <TextBox Grid.Column="0" Text="{Binding Value2}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MinValue}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                            <TextBox Grid.Column="2" Text="{Binding Value3}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MaxValue}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         </Grid>
                     </Grid>
                 </DataTemplate>
@@ -99,10 +118,22 @@
                 <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="CommandTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="CommandTypeComboBox_SelectionChanged" />
+            <ComboBox x:Name="CommandTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="CommandTypeComboBox_SelectionChanged">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
-            <ComboBox x:Name="CommandNameComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Command Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="CommandNameComboBox_SelectionChanged" DisplayMemberPath="Name" />
-            <ComboBox x:Name="SingleActionNameComboBox" Grid.Column="2" Visibility="Collapsed" MaterialDesign:HintAssist.Hint="Action Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="SingleActionNameComboBox_SelectionChanged" />
+            <ComboBox x:Name="CommandNameComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="CommandNameComboBox_SelectionChanged" DisplayMemberPath="Name" />
+            <ComboBox x:Name="SingleActionNameComboBox" Grid.Column="2" Visibility="Collapsed" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="SingleActionNameComboBox_SelectionChanged">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
         </Grid>
 
         <ContentControl x:Uid="ActionControlContentControl" Grid.Row="5" Margin="0,20,0,0" Visibility="Collapsed" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" />

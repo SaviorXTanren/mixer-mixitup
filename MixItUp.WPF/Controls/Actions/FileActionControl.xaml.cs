@@ -24,10 +24,12 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override Task OnLoaded()
         {
-            this.FileActionTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<FileActionTypeEnum>().OrderBy(s => s);
+            this.FileActionTypeComboBox.ItemsSource = Enum.GetValues(typeof(FileActionTypeEnum))
+                .Cast<FileActionTypeEnum>()
+                .OrderBy(s => EnumLocalizationHelper.GetLocalizedName(s));
             if (this.action != null)
             {
-                this.FileActionTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.FileActionType);
+                this.FileActionTypeComboBox.SelectedItem = this.action.FileActionType;
                 if (this.action.FileActionType == FileActionTypeEnum.SaveToFile || this.action.FileActionType == FileActionTypeEnum.AppendToFile)
                 {
                     this.SaveToFileTextTextBox.Text = this.action.TransferText;
@@ -51,7 +53,7 @@ namespace MixItUp.WPF.Controls.Actions
         {
             if (!string.IsNullOrEmpty(this.FilePathTextBox.Text))
             {
-                FileActionTypeEnum fileType = EnumHelper.GetEnumValueFromString<FileActionTypeEnum>((string)this.FileActionTypeComboBox.SelectedItem);
+                FileActionTypeEnum fileType = (FileActionTypeEnum)this.FileActionTypeComboBox.SelectedItem;
                 if (fileType == FileActionTypeEnum.SaveToFile || fileType == FileActionTypeEnum.AppendToFile)
                 {
                     string transferText = this.SaveToFileTextTextBox.Text;
@@ -91,7 +93,7 @@ namespace MixItUp.WPF.Controls.Actions
                 this.ReadFromFileGrid.Visibility = Visibility.Collapsed;
                 this.SpecificLineTextBox.Visibility = Visibility.Collapsed;
 
-                FileActionTypeEnum fileType = EnumHelper.GetEnumValueFromString<FileActionTypeEnum>((string)this.FileActionTypeComboBox.SelectedItem);
+                FileActionTypeEnum fileType = (FileActionTypeEnum)this.FileActionTypeComboBox.SelectedItem;
                 if (fileType == FileActionTypeEnum.SaveToFile || fileType == FileActionTypeEnum.AppendToFile)
                 {
                     this.SaveToFileGrid.Visibility = Visibility.Visible;
@@ -110,7 +112,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         private void FileBrowseButton_Click(object sender, RoutedEventArgs e)
         {
-            FileActionTypeEnum fileType = EnumHelper.GetEnumValueFromString<FileActionTypeEnum>((string)this.FileActionTypeComboBox.SelectedItem);
+            FileActionTypeEnum fileType = (FileActionTypeEnum)this.FileActionTypeComboBox.SelectedItem;
             string filePath = (fileType == FileActionTypeEnum.SaveToFile || fileType == FileActionTypeEnum.AppendToFile) ?
                 ChannelSession.Services.FileService.ShowSaveFileDialog("") : ChannelSession.Services.FileService.ShowOpenFileDialog();
             if (!string.IsNullOrEmpty(filePath))

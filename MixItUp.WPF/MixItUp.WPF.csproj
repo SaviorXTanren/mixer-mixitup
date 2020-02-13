@@ -2112,7 +2112,7 @@
       <Name>MixItUp.AutoHoster</Name>
     </ProjectReference>
     <ProjectReference Include="..\MixItUp.Base\MixItUp.Base.csproj">
-      <Project>{0e494acc-c46a-4ded-922b-ff378556be8a}</Project>
+      <Project>{0E494ACC-C46A-4DED-922B-FF378556BE8A}</Project>
       <Name>MixItUp.Base</Name>
     </ProjectReference>
     <ProjectReference Include="..\MixItUp.Reporter\MixItUp.Reporter.csproj">

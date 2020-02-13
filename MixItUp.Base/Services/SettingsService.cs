@@ -59,26 +59,34 @@ namespace MixItUp.Base.Services
             // Check for old V1 settings
 #pragma warning disable CS0612 // Type or member is obsolete
             List<SettingsV1Model> oldSettings = new List<SettingsV1Model>();
-            foreach (string filePath in Directory.GetFiles(SettingsV2Model.SettingsDirectoryName))
+
+            string[] filePaths = Directory.GetFiles(SettingsV2Model.SettingsDirectoryName);
+            if (filePaths.Any(filePath => filePath.EndsWith(SettingsV1Model.SettingsFileExtension)))
             {
-                if (filePath.EndsWith(SettingsV1Model.SettingsFileExtension))
+                await DialogHelper.ShowMessage("We've detected version 1 settings in your installation and will now upgrade them to version 2. This will take some time depending on how large your settings data is, particularly the number of individual users we have data for from your stream."
+                    + Environment.NewLine + Environment.NewLine + "If you have a large amount of user data, we suggest going to grab a cup of coffee and come back in a few minutes after dismissing this message. :)");
+
+                foreach (string filePath in filePaths)
                 {
-                    try
+                    if (filePath.EndsWith(SettingsV1Model.SettingsFileExtension))
                     {
-                        SettingsV1Model setting = await SettingsV1Upgrader.UpgradeSettingsToLatest(filePath);
+                        try
+                        {
+                            SettingsV1Model setting = await SettingsV1Upgrader.UpgradeSettingsToLatest(filePath);
 
-                        string oldSettingsPath = Path.Combine(SettingsV2Model.SettingsDirectoryName, "Old");
-                        Directory.CreateDirectory(oldSettingsPath);
+                            string oldSettingsPath = Path.Combine(SettingsV2Model.SettingsDirectoryName, "Old");
+                            Directory.CreateDirectory(oldSettingsPath);
 
-                        await ChannelSession.Services.FileService.CopyFile(filePath, Path.Combine(oldSettingsPath, Path.GetFileName(filePath)));
-                        await ChannelSession.Services.FileService.CopyFile(setting.DatabaseFilePath, Path.Combine(oldSettingsPath, setting.DatabaseFileName));
+                            await ChannelSession.Services.FileService.CopyFile(filePath, Path.Combine(oldSettingsPath, Path.GetFileName(filePath)));
+                            await ChannelSession.Services.FileService.CopyFile(setting.DatabaseFilePath, Path.Combine(oldSettingsPath, setting.DatabaseFileName));
 
-                        await ChannelSession.Services.FileService.DeleteFile(filePath);
-                        await ChannelSession.Services.FileService.DeleteFile(setting.DatabaseFilePath);
-                        await ChannelSession.Services.FileService.DeleteFile(filePath + ".backup");
-                        await ChannelSession.Services.FileService.DeleteFile(setting.DatabaseFilePath + ".backup");
+                            await ChannelSession.Services.FileService.DeleteFile(filePath);
+                            await ChannelSession.Services.FileService.DeleteFile(setting.DatabaseFilePath);
+                            await ChannelSession.Services.FileService.DeleteFile(filePath + ".backup");
+                            await ChannelSession.Services.FileService.DeleteFile(setting.DatabaseFilePath + ".backup");
+                        }
+                        catch (Exception ex) { Logger.Log(ex); }
                     }
-                    catch (Exception ex) { Logger.Log(ex); }
                 }
             }
 #pragma warning restore CS0612 // Type or member is obsolete

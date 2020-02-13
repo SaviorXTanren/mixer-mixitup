@@ -4,10 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:util="clr-namespace:MixItUp.WPF.Util"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="700">
+    <local:ActionControlBase.Resources>
+        <util:LocalizationConverter x:Key="LocalizationConverter"/>
+    </local:ActionControlBase.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -17,7 +22,13 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <ComboBox x:Name="TypeComboBox" Grid.Row="0" SelectionChanged="TypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+        <ComboBox x:Name="TypeComboBox" Grid.Row="0" SelectionChanged="TypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
 
         <Grid x:Name="CommandGrid" Grid.Row="2" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
@@ -26,9 +37,9 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="CommandTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Command Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="CommandTypeComboBox_SelectionChanged" />
+            <ComboBox x:Name="CommandTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="CommandTypeComboBox_SelectionChanged" />
 
-            <ComboBox x:Name="CommandNameComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Command" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="Name" />
+            <ComboBox x:Name="CommandNameComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Command}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="Name" />
         </Grid>
 
         <Grid x:Name="CommandGroupGrid" Grid.Row="2" Visibility="Collapsed">
@@ -36,9 +47,9 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="CommandGroupNameComboBox" MaterialDesign:HintAssist.Hint="Command Group" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox x:Name="CommandGroupNameComboBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CommandGroup}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
         </Grid>
 
-        <TextBox Grid.Row="4" x:Name="CommandArgumentsTextBox" MaterialDesign:HintAssist.Hint="(Optional) Command Arguments" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Visibility="Collapsed" />
+        <TextBox Grid.Row="4" x:Name="CommandArgumentsTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OptionalCommandArguments}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Visibility="Collapsed" />
     </Grid>
 </local:ActionControlBase>

@@ -15,36 +15,34 @@ namespace MixItUp.Base.Actions
 {
     public enum ActionTypeEnum
     {
+        [Name("ChatMessage")]
         Chat,
-        [Name("Currency/Rank/Inventory")]
+        [Name("CurrencyRankInventory")]
         Currency,
-        [Name("External Program")]
         ExternalProgram,
+        [Name("InputKeyboardAndMouse")]
         Input,
+        [Name("OverlayImagesAndVideos")]
         Overlay,
         Sound,
         Wait,
-        [Name("OBS Studio")]
         [Obsolete]
         OBSStudio,
         [Obsolete]
         XSplit,
+        [Name("CounterCreateAndUpdate")]
         Counter,
-        [Name("Game Queue")]
         GameQueue,
         [Name("MixPlay")]
         Interactive,
-        [Name("Text To Speech")]
         TextToSpeech,
         [Obsolete]
         Rank,
-        [Name("Web Request")]
         WebRequest,
         [Obsolete]
-        [Name("Action Group")]
         ActionGroup,
-        [Name("Special Identifier")]
         SpecialIdentifier,
+        [Name("FileReadAndWrite")]
         File,
         [Obsolete]
         SongRequest,
@@ -56,16 +54,13 @@ namespace MixItUp.Base.Actions
         Conditional,
         [Obsolete]
         StreamlabsOBS,
-        [Name("Streaming Software")]
         StreamingSoftware,
         Streamlabs,
-        [Name("Mixer Clips")]
         MixerClips,
         Command,
         Serial,
         Moderation,
         OvrStream,
-        [Name("Streaming Platform")]
         StreamingPlatform,
         IFTTT,
 
@@ -99,7 +94,7 @@ namespace MixItUp.Base.Actions
             : this()
         {
             this.Type = type;
-            this.Label = EnumHelper.GetEnumName(this.Type);
+            this.Label = EnumLocalizationHelper.GetLocalizedName(this.Type);
         }
 
         public async Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)

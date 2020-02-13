@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d"
                           
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -12,6 +14,9 @@
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
 
              d:DesignHeight="500" d:DesignWidth="600">
+    <local:MainControlBase.Resources>
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+    </local:MainControlBase.Resources>
     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -21,10 +26,10 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Width="450" TextWrapping="Wrap">The Mix It Up Auto-Hoster is a stand-alone application that handles the hosting of other channels when you are not streaming. The Auto-Hoster must be running, but you do not have to have Mix It Up running to use it.</TextBlock>
+        <TextBlock Grid.Row="0" Width="450" TextWrapping="Wrap" Text="{x:Static resx:Resources.AutoHosterDescription}"/>
 
-        <TextBlock Grid.Row="2">The Auto-Hoster can be launched by clicking the button below:</TextBlock>
+        <TextBlock Grid.Row="2" Text="{Binding Source={x:Static resx:Resources.AutoHosterLaunchHeader}, StringFormat={StaticResource ColumnHeaderFormat}}" />
 
-        <Button Grid.Row="4" Width="170" Click="Button_Click">Launch Auto-Hoster</Button>
+        <Button Grid.Row="4" MinWidth="170" HorizontalAlignment="Center" Click="Button_Click" Content="{x:Static resx:Resources.LaunchAutoHoster}"/>
     </Grid>
 </local:MainControlBase>

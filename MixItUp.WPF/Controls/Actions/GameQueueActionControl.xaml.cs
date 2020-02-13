@@ -1,6 +1,8 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Actions;
+using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,10 +22,12 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override Task OnLoaded()
         {
-            this.GameQueueActionTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<GameQueueActionType>().OrderBy(s => s);
+            this.GameQueueActionTypeComboBox.ItemsSource = Enum.GetValues(typeof(GameQueueActionType))
+                .Cast<GameQueueActionType>()
+                .OrderBy(s => EnumLocalizationHelper.GetLocalizedName(s));
             if (this.action != null)
             {
-                this.GameQueueActionTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.GameQueueType);
+                this.GameQueueActionTypeComboBox.SelectedItem = this.action.GameQueueType;
                 this.RoleRequirement.SetRoleRequirement(this.action.RoleRequirement);
                 this.TargetUsernameTextBox.Text = this.action.TargetUsername;
             }
@@ -34,7 +38,7 @@ namespace MixItUp.WPF.Controls.Actions
         {
             if (this.GameQueueActionTypeComboBox.SelectedIndex >= 0)
             {
-                GameQueueActionType gameQueueType = EnumHelper.GetEnumValueFromString<GameQueueActionType>((string)this.GameQueueActionTypeComboBox.SelectedItem);
+                GameQueueActionType gameQueueType = (GameQueueActionType)this.GameQueueActionTypeComboBox.SelectedItem;
                 if (gameQueueType == GameQueueActionType.SelectFirstType)
                 {
                     if (this.RoleRequirement.GetRoleRequirement() == null)
@@ -52,7 +56,7 @@ namespace MixItUp.WPF.Controls.Actions
         {
             if (this.GameQueueActionTypeComboBox.SelectedIndex >= 0)
             {
-                GameQueueActionType gameQueueType = EnumHelper.GetEnumValueFromString<GameQueueActionType>((string)this.GameQueueActionTypeComboBox.SelectedItem);
+                GameQueueActionType gameQueueType = (GameQueueActionType)this.GameQueueActionTypeComboBox.SelectedItem;
                 if (gameQueueType == GameQueueActionType.SelectFirstType)
                 {
                     this.RoleRequirement.Visibility = Visibility.Visible;

@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:SettingsControls="clr-namespace:MixItUp.WPF.Controls.Settings"
@@ -30,7 +31,7 @@
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" Margin="20 0 15 0">
-                                        <TextBlock Text="{Binding Name}" Margin="0 0 5 0" VerticalAlignment="Center" />
+                                        <TextBlock Text="{Binding Name}" ToolTip="{Binding Name}" Margin="0 0 5 0" VerticalAlignment="Center" />
                                         <MaterialDesign:PackIcon Kind="Launch" Height="18" Width="18" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource PrimaryHueMidBrush}" Visibility="{Binding LinkIconVisibility}" />
                                     </StackPanel>
                                 </DataTemplate>
@@ -60,11 +61,11 @@
 
                                         <Controls:MixerStatusAlertControl x:Name="MixerStatusAlertButton" />
 
-                                        <Button x:Name="SectionHelpButton" Style="{StaticResource MaterialDesignFlatButton}" Click="SectionHelpButton_Click" Visibility="{Binding HelpLinkVisibility}" Width="40" HorizontalAlignment="Center" ToolTip="Help" Margin="5,0">
+                                        <Button x:Name="SectionHelpButton" Style="{StaticResource MaterialDesignFlatButton}" Click="SectionHelpButton_Click" Visibility="{Binding HelpLinkVisibility}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Help}" Margin="5,0">
                                             <MaterialDesign:PackIcon Kind="Help" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                         </Button>
 
-                                        <Button x:Name="SettingsButton" Style="{StaticResource MaterialDesignFlatButton}" Click="SettingsButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Settings">
+                                        <Button x:Name="SettingsButton" Style="{StaticResource MaterialDesignFlatButton}" Click="SettingsButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Settings}">
                                             <MaterialDesign:PackIcon Kind="Settings" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                         </Button>
 

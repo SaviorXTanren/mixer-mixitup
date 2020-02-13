@@ -4,6 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MixItUp.WPF.Windows.Command"
+        xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
+        xmlns:util="clr-namespace:MixItUp.WPF.Util"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -16,10 +19,12 @@
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
                            
         Icon="./../../Logo.ico"
-        Title="Customize Game"
+        Title="{x:Static resx:Resources.CustomizeGame}"
         Height="600" Width="800">
     <Windows:LoadingWindowBase.Resources>
-        <ResourceDictionary>
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+        <util:LocalizationConverter x:Key="LocalizationConverter"/>
+        <ResourceDictionary x:Key="Themes">
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Card.xaml" />
@@ -48,14 +53,14 @@
                     <RowDefinition Height="300" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" HorizontalAlignment="Center">Select the Game Type you would like to create:</TextBlock>
+                <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.SelectGameHeader}, StringFormat={StaticResource ColumnHeaderFormat}}" />
 
-                <ComboBox Grid.Row="2" ItemsSource="{Binding GameListings}" SelectedItem="{Binding SelectedGameType}" HorizontalAlignment="Center" Width="200" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="Game Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+                <ComboBox Grid.Row="2" ItemsSource="{Binding GameListings}" SelectedItem="{Binding SelectedGameType}" HorizontalAlignment="Center" Width="200" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
                 <TextBlock Grid.Row="4" Text="{Binding SelectedGameType.Description}" HorizontalAlignment="Center" Width="500" TextWrapping="Wrap" />
             </Grid>
 
-            <Button Command="{Binding GameTypeSelectedCommand}" Width="80" Margin="0,0,40,20" IsEnabled="{Binding GameTypeSelected}" HorizontalAlignment="Right" VerticalAlignment="Bottom">Next</Button>
+            <Button Command="{Binding GameTypeSelectedCommand}" Width="80" Margin="0,0,40,20" IsEnabled="{Binding GameTypeSelected}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Content="{x:Static resx:Resources.Next}"/>
         </Grid>
 
         <Grid Visibility="{Binding GameSelected, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Row="0">

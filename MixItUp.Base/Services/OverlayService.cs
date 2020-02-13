@@ -46,7 +46,7 @@ namespace MixItUp.Base.Services
 
         private CancellationTokenSource backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 
-        public string DefaultOverlayName { get { return "Default"; } }
+        public string DefaultOverlayName { get { return MixItUp.Base.Resources.Default; } }
         public int DefaultOverlayPort { get { return 8111; } }
 
         public string Name { get { return "Overlay"; } }

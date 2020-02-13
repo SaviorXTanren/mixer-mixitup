@@ -41,12 +41,10 @@ namespace MixItUp.Base.ViewModel.User
 
         Subscriber = 40,
 
-        [Name("Global Mod")]
         GlobalMod = 48,
 
         Mod = 50,
 
-        [Name("Channel Editor")]
         ChannelEditor = 55,
 
         Staff = 60,
@@ -111,10 +109,9 @@ namespace MixItUp.Base.ViewModel.User
             return roles;
         }
 
-        public static IEnumerable<string> SelectableAdvancedUserRoles()
+        public static IEnumerable<UserRoleEnum> SelectableAdvancedUserRoles()
         {
-            List<string> roles = new List<string>(UserViewModel.SelectableBasicUserRoles().Select(r => EnumHelper.GetEnumName(r)));
-            return roles;
+            return UserViewModel.SelectableBasicUserRoles();
         }
 
         public UserDataModel Data { get; private set; }
@@ -284,6 +281,7 @@ namespace MixItUp.Base.ViewModel.User
         public UserViewModel(string username)
             : this(mixerID: 0)
         {
+            this.InteractiveIDs = new LockedDictionary<string, MixPlayParticipantModel>();
             this.unassociatedUsername = username;
         }
 

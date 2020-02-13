@@ -48,7 +48,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 this.NotifyPropertyChanged();
             }
         }
-        private string enableDisableButtonText = "Disable Chat";
+        private string enableDisableButtonText = MixItUp.Base.Resources.DisableChat;
 
         public ICommand ClearChatCommand { get; private set; }
         public ICommand EnableDisableChatCommand { get; private set; }
@@ -58,7 +58,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         {
             this.ClearChatCommand = this.CreateCommand(async (parameter) =>
             {
-                if (await DialogHelper.ShowConfirmation("This will clear all chat messages for the stream. Are you sure?"))
+                if (await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.ClearChatConfirmation))
                 {
                     await ChannelSession.Services.Chat.ClearMessages();
                 }
@@ -66,7 +66,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
             this.EnableDisableChatCommand = this.CreateCommand(async (parameter) =>
             {
-                if (!ChannelSession.Services.Chat.DisableChat && !await DialogHelper.ShowConfirmation("This will disable chat for all users. Are you sure?"))
+                if (!ChannelSession.Services.Chat.DisableChat && !await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.DisableChatConfirmation))
                 {
                     return;
                 }
@@ -74,11 +74,11 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 ChannelSession.Services.Chat.DisableChat = !ChannelSession.Services.Chat.DisableChat;
                 if (ChannelSession.Services.Chat.DisableChat)
                 {
-                    this.EnableDisableButtonText = "Enable Chat";
+                    this.EnableDisableButtonText = MixItUp.Base.Resources.EnableChat;
                 }
                 else
                 {
-                    this.EnableDisableButtonText = "Disable Chat";
+                    this.EnableDisableButtonText = MixItUp.Base.Resources.DisableChat;
                 }
             });
         }

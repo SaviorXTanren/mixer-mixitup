@@ -4,11 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Dialogs"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:util="clr-namespace:MixItUp.WPF.Util"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:MaterialDesignWPF="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <util:LocalizationConverter x:Key="LocalizationConverter"/>
+    </UserControl.Resources>
     <Grid Margin="16" MaxWidth="300">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -16,8 +21,14 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <ComboBox Grid.Row="0" x:Name="TypeComboBox" Width="300" SelectionChanged="TypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+        <ComboBox Grid.Row="0" x:Name="TypeComboBox" Width="300" SelectionChanged="TypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
 
-        <ComboBox Grid.Row="2" x:Name="CommandComboBox" Width="300" SelectionChanged="CommandComboBox_SelectionChanged" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="Command" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+        <ComboBox Grid.Row="2" x:Name="CommandComboBox" Width="300" SelectionChanged="CommandComboBox_SelectionChanged" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Command}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
     </Grid>
 </UserControl>

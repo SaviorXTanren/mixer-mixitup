@@ -1,6 +1,7 @@
 ﻿using MaterialDesignThemes.Wpf;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,16 +25,15 @@ namespace MixItUp.WPF.Controls.Dialogs
 
         private void CommandSelectorDialogControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            List<string> types = new List<string>(EnumHelper.GetEnumNames(ChannelSession.AllCommands.Select(c => c.Type).Distinct()));
-            this.TypeComboBox.ItemsSource = types.OrderBy(s => s);
+            var types = ChannelSession.AllCommands.Select(c => c.Type).Distinct();
+            this.TypeComboBox.ItemsSource = types.OrderBy(s => EnumLocalizationHelper.GetLocalizedName(s));
         }
 
         private void TypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (this.TypeComboBox.SelectedIndex >= 0)
             {
-                string typeString = (string)this.TypeComboBox.SelectedItem;
-                CommandTypeEnum type = EnumHelper.GetEnumValueFromString<CommandTypeEnum>(typeString);
+                CommandTypeEnum type = (CommandTypeEnum)this.TypeComboBox.SelectedItem;
                 IEnumerable<CommandBase> commands = ChannelSession.AllCommands.Where(c => c.Type == type && !(c is PreMadeChatCommand)).OrderBy(c => c.Name);
                 this.CommandComboBox.ItemsSource = commands;
             }

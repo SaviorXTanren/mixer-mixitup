@@ -601,7 +601,7 @@ namespace MixItUp.Base.Services
 
                 if (ChannelSession.Settings.ChatShowUserJoinLeave && users.Count() < 5)
                 {
-                    alerts.Add(new AlertChatMessageViewModel(user.Platform, user, string.Format("{0} Joined Chat", user.Username), ChannelSession.Settings.ChatUserJoinLeaveColorScheme));
+                    alerts.Add(new AlertChatMessageViewModel(user.Platform, user, string.Format(MixItUp.Base.Resources.UserJoinedChat, user.Username), ChannelSession.Settings.ChatUserJoinLeaveColorScheme));
                 }
             }
             this.DisplayUsersUpdated(this, new EventArgs());
@@ -633,7 +633,7 @@ namespace MixItUp.Base.Services
 
                     if (ChannelSession.Settings.ChatShowUserJoinLeave && users.Count() < 5)
                     {
-                        alerts.Add(new AlertChatMessageViewModel(user.Platform, user, string.Format("{0} Left Chat", user.Username), ChannelSession.Settings.ChatUserJoinLeaveColorScheme));
+                        alerts.Add(new AlertChatMessageViewModel(user.Platform, user, string.Format(MixItUp.Base.Resources.UserLeftChat, user.Username), ChannelSession.Settings.ChatUserJoinLeaveColorScheme));
                     }
                 }
             }

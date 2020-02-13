@@ -3,7 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MixItUp.WPF.Windows.Currency"
+        xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+        xmlns:util="clr-namespace:MixItUp.WPF.Util"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
         xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
@@ -17,9 +19,11 @@
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
                   
         Icon="./../../Logo.ico"
-        Title="Customize Currency/Rank" Height="600" Width="800">
+        Title="{x:Static resx:Resources.CustomizeCurrencyRank}" Height="600" Width="800">
     <Windows:LoadingWindowBase.Resources>
-        <ResourceDictionary>
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+        <util:LocalizationConverter x:Key="LocalizationConverter"/>
+        <ResourceDictionary x:Key="Themes">
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Card.xaml" />
@@ -52,7 +56,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Button x:Name="HelpButton" HorizontalAlignment="Right" VerticalAlignment="Top" Content="{MaterialDesign:PackIcon Help}" Click="HelpButton_Click" ToolTip="Help" />
+                <Button x:Name="HelpButton" HorizontalAlignment="Right" VerticalAlignment="Top" Content="{MaterialDesign:PackIcon Help}" Click="HelpButton_Click" ToolTip="{x:Static resx:Resources.Help}" />
 
                 <Grid Grid.Row="0" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
@@ -69,15 +73,15 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBox x:Name="NameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Currency/Rank Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="210" />
-                    
-                    <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="0,4,0,0">Is Primary:</TextBlock>
+                    <TextBox x:Name="NameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CurrencyRankName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="210" />
+
+                    <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="0,4,0,0" Text="{Binding Source={x:Static resx:Resources.IsPrimary}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
                     <ToggleButton Grid.Column="4" x:Name="IsPrimaryToggleButton" Margin="0,4,0,0" />
 
-                    <TextBlock Grid.Column="6" VerticalAlignment="Center" Margin="0,4,0,0">Is Rank System:</TextBlock>
+                    <TextBlock Grid.Column="6" VerticalAlignment="Center" Margin="0,4,0,0" Text="{Binding Source={x:Static resx:Resources.IsRankSystem}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
                     <ToggleButton Grid.Column="8" x:Name="IsRankToggleButton" Margin="0,4,0,0" Checked="IsRankToggleButton_Checked" Unchecked="IsRankToggleButton_Checked" />
 
-                    <TextBox x:Name="MaxAmountTextBox" Grid.Column="10" MaterialDesign:HintAssist.Hint="Max Amount" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
+                    <TextBox x:Name="MaxAmountTextBox" Grid.Column="10" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MaxAmount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
                 </Grid>
 
                 <Grid Grid.Row="2" HorizontalAlignment="Center">
@@ -87,7 +91,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <GroupBox Grid.Column="0" Header="Online Rate">
+                    <GroupBox Grid.Column="0" Header="{x:Static resx:Resources.OnlineRate}">
                         <Grid Margin="10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -99,18 +103,24 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <ComboBox x:Name="OnlineRateComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Acquire Rate" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120" SelectionChanged="OnlineRateComboBox_SelectionChanged" />
+                            <ComboBox x:Name="OnlineRateComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.AcquireRate}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120" SelectionChanged="OnlineRateComboBox_SelectionChanged">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
 
-                            <TextBox x:Name="OnlineAmountRateTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Amount" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="60" IsEnabled="False" />
+                            <TextBox x:Name="OnlineAmountRateTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Amount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="60" IsEnabled="False" />
 
                             <TextBlock Grid.Column="4" VerticalAlignment="Center" Margin="0,20,0,0">/</TextBlock>
 
-                            <TextBox x:Name="OnlineTimeRateTextBox" Grid.Column="6" MaterialDesign:HintAssist.Hint="Minutes" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="60" IsEnabled="False" />
+                            <TextBox x:Name="OnlineTimeRateTextBox" Grid.Column="6" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Minutes}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="60" IsEnabled="False" />
 
                         </Grid>
                     </GroupBox>
 
-                    <GroupBox x:Name="OfflineRateGroupBox" Grid.Column="2" Header="Offline Rate">
+                    <GroupBox x:Name="OfflineRateGroupBox" Grid.Column="2" Header="{x:Static resx:Resources.OfflineRate}">
                         <Grid Margin="10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -122,13 +132,19 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <ComboBox x:Name="OfflineRateComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Acquire Rate" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="100" SelectionChanged="OfflineRateComboBox_SelectionChanged" />
+                            <ComboBox x:Name="OfflineRateComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.AcquireRate}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="100" SelectionChanged="OfflineRateComboBox_SelectionChanged">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
 
-                            <TextBox x:Name="OfflineAmountRateTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Amount" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="60" IsEnabled="False" />
+                            <TextBox x:Name="OfflineAmountRateTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Amount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="60" IsEnabled="False" />
 
                             <TextBlock Grid.Column="4" VerticalAlignment="Center" Margin="0,20,0,0">/</TextBlock>
 
-                            <TextBox x:Name="OfflineTimeRateTextBox" Grid.Column="6" MaterialDesign:HintAssist.Hint="Minutes" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="60" IsEnabled="False" />
+                            <TextBox x:Name="OfflineTimeRateTextBox" Grid.Column="6" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Minutes}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="60" IsEnabled="False" />
 
                         </Grid>
                     </GroupBox>
@@ -141,7 +157,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <GroupBox Header="Role Bonuses" Grid.Column="0">
+                    <GroupBox Header="{x:Static resx:Resources.RoleBonuses}" Grid.Column="0">
                         <Grid Margin="10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -149,14 +165,14 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBox x:Name="SubscriberBonusTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Sub Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
+                            <TextBox x:Name="SubscriberBonusTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SubBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
 
-                            <TextBox x:Name="ModeratorBonusTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Mod Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
+                            <TextBox x:Name="ModeratorBonusTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ModBonus}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
 
                         </Grid>
                     </GroupBox>
 
-                    <GroupBox Header="Event Bonuses" Grid.Column="2">
+                    <GroupBox Header="{x:Static resx:Resources.EventBonuses}" Grid.Column="2">
                         <Grid Margin="10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -166,17 +182,17 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBox x:Name="OnFollowBonusTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="On Follow" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
+                            <TextBox x:Name="OnFollowBonusTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OnFollow}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
 
-                            <TextBox x:Name="OnHostBonusTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="On Host" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
+                            <TextBox x:Name="OnHostBonusTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OnHost}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
 
-                            <TextBox x:Name="OnSubscribeBonusTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="On Subscribe" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
+                            <TextBox x:Name="OnSubscribeBonusTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OnSubscribe}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
                         </Grid>
                     </GroupBox>
                 </Grid>
 
                 <Grid x:Name="RankListGrid" Grid.Row="6" Visibility="Collapsed" Margin="0,0,0,20" HorizontalAlignment="Center">
-                    <GroupBox Header="User Ranks">
+                    <GroupBox Header="{x:Static resx:Resources.UserRanks}">
                         <Grid Margin="10" HorizontalAlignment="Center">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -187,8 +203,8 @@
                             <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Visible" Height="200" Width="375">
                                 <DataGrid x:Name="RanksListView" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Center">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Rank Name" Binding="{Binding Name}" IsReadOnly="True" Width="190" />
-                                        <DataGridTextColumn Header="Min Points" Binding="{Binding MinimumPoints}" IsReadOnly="True" Width="90" />
+                                        <DataGridTextColumn Header="{x:Static resx:Resources.RankName}" Binding="{Binding Name}" IsReadOnly="True" Width="190" />
+                                        <DataGridTextColumn Header="{x:Static resx:Resources.MinPoints}" Binding="{Binding MinimumPoints}" IsReadOnly="True" Width="90" />
                                         <DataGridTemplateColumn Width="65">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
@@ -218,17 +234,17 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
 
-                                    <TextBox Grid.Column="0" x:Name="RankNameTextBox" MaterialDesign:HintAssist.Hint="Rank Name" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                    <TextBox Grid.Column="0" x:Name="RankNameTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.RankName}" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                                    <TextBox Grid.Column="2" x:Name="RankAmountTextBox" MaterialDesign:HintAssist.Hint="Min Points" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                    <TextBox Grid.Column="2" x:Name="RankAmountTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MinPoints}" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                                 </Grid>
 
-                                <Button x:Name="AddRankButton" Grid.Row="2" Click="AddRankButton_Click" Width="130">Add New Rank</Button>
+                                <Button x:Name="AddRankButton" Grid.Row="2" Click="AddRankButton_Click" Width="130" Content="{x:Static resx:Resources.AddNewRank}"/>
 
                                 <Grid Grid.Row="4" HorizontalAlignment="Center">
-                                    <GroupBox Header="On User Rank Changed">
+                                    <GroupBox Header="{x:Static resx:Resources.OnUserRankChanged}">
                                         <Grid Margin="10,0,10,0" HorizontalAlignment="Center">
-                                            <Button x:Name="NewCommandButton" HorizontalAlignment="Center" Click="NewCommandButton_Click">Add Command</Button>
+                                            <Button x:Name="NewCommandButton" HorizontalAlignment="Center" Click="NewCommandButton_Click" Content="{x:Static resx:Resources.AddCommand}"/>
 
                                             <CommandControls:CommandButtonsControl x:Name="CommandButtons" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" Visibility="Collapsed" />
                                         </Grid>
@@ -240,7 +256,7 @@
                 </Grid>
 
                 <Grid Grid.Row="8" HorizontalAlignment="Center">
-                    <GroupBox Header="Settings" Grid.Column="2">
+                    <GroupBox Header="{x:Static resx:Resources.Settings}" Grid.Column="2">
                         <Grid Margin="10">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -257,11 +273,17 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBox x:Name="MinimumActivityRateTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Minimum Channel Activity (Mins)" Width="160" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                <TextBox x:Name="MinimumActivityRateTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.MinimumChannelActivityMins}" Width="160" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                                <ComboBox x:Name="AutomaticResetComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Automatic Reset" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
+                                <ComboBox x:Name="AutomaticResetComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.AutomaticReset}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
 
-                                <Button x:Name="ManualResetButton" Grid.Column="4" Click="ManualResetButton_Click">Manual Reset</Button>
+                                <Button x:Name="ManualResetButton" Grid.Column="4" Click="ManualResetButton_Click" Content="{x:Static resx:Resources.ManualReset}" />
 
                             </Grid>
 
@@ -274,11 +296,11 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <Button x:Name="RetroactivelyGivePointsButton" Grid.Column="0" Click="RetroactivelyGivePointsButton_Click" IsEnabled="False">Retroactively Give Points</Button>
+                                <Button x:Name="RetroactivelyGivePointsButton" Grid.Column="0" Click="RetroactivelyGivePointsButton_Click" IsEnabled="False" Content="{x:Static resx:Resources.RetroactivelyGivePoints}"/>
 
-                                <Button x:Name="ImportFromFileButton" Grid.Column="2" Click="ImportFromFileButton_Click" IsEnabled="False">Import From File</Button>
+                                <Button x:Name="ImportFromFileButton" Grid.Column="2" Click="ImportFromFileButton_Click" IsEnabled="False" Content="{x:Static resx:Resources.ImportData}"/>
 
-                                <Button x:Name="ExportToFileButton" Grid.Column="4" Click="ExportToFileButton_Click" IsEnabled="False">Export To File</Button>
+                                <Button x:Name="ExportToFileButton" Grid.Column="4" Click="ExportToFileButton_Click" IsEnabled="False"  Content="{x:Static resx:Resources.ExportData}"/>
                             </Grid>
                         </Grid>
                     </GroupBox>

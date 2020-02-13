@@ -25,18 +25,18 @@ namespace MixItUp.WPF.Windows.Currency
 {
     public enum CurrencyAcquireRateTypeEnum
     {
-        [Name("1 Per Minute")]
+        [Name("1PerMinute")]
         Minutes,
-        [Name("1 Per Hour")]
+        [Name("1PerHour")]
         Hours,
-        [Name("1 Per Spark")]
+        [Name("1PerSpark")]
         Sparks,
-        [Name("1 Per Ember")]
+        [Name("1PerEmber")]
         Embers,
-        [Name("1 Per Bit")]
-        Bits,
-        [Name("Fan Progression")]
+        [Name("FanProgression")]
         FanProgression,
+        [Name("1PerBit")]
+        Bits,
         Custom,
         Disabled,
     }
@@ -46,8 +46,6 @@ namespace MixItUp.WPF.Windows.Currency
     /// </summary>
     public partial class CurrencyWindow : LoadingWindowBase
     {
-        private const string RankChangedCommandName = "User Rank Changed";
-
         private UserCurrencyModel currency;
         private CustomCommand rankChangedCommand;
 
@@ -82,11 +80,10 @@ namespace MixItUp.WPF.Windows.Currency
         {
             this.RanksListView.ItemsSource = this.ranks;
 
-            this.OnlineRateComboBox.ItemsSource = EnumHelper.GetEnumNames<CurrencyAcquireRateTypeEnum>();
-            this.OfflineRateComboBox.ItemsSource = EnumHelper.GetEnumNames<CurrencyAcquireRateTypeEnum>(new List<CurrencyAcquireRateTypeEnum>()
-                { CurrencyAcquireRateTypeEnum.Minutes, CurrencyAcquireRateTypeEnum.Hours, CurrencyAcquireRateTypeEnum.Custom, CurrencyAcquireRateTypeEnum.Disabled });
+            this.OnlineRateComboBox.ItemsSource = Enum.GetValues(typeof(CurrencyAcquireRateTypeEnum));
+            this.OfflineRateComboBox.ItemsSource = new List<CurrencyAcquireRateTypeEnum>() { CurrencyAcquireRateTypeEnum.Minutes, CurrencyAcquireRateTypeEnum.Hours, CurrencyAcquireRateTypeEnum.Custom, CurrencyAcquireRateTypeEnum.Disabled };
 
-            this.AutomaticResetComboBox.ItemsSource = EnumHelper.GetEnumNames<CurrencyResetRateEnum>();
+            this.AutomaticResetComboBox.ItemsSource = Enum.GetValues(typeof(CurrencyResetRateEnum));
 
             this.IsPrimaryToggleButton.IsChecked = true;
             if (ChannelSession.Settings.Currencies.Values.Any(c => !c.IsRank && c.IsPrimary) && ChannelSession.Settings.Currencies.Values.Any(c => c.IsRank && c.IsPrimary))
@@ -106,15 +103,15 @@ namespace MixItUp.WPF.Windows.Currency
 
                 if (this.currency.IsTrackingSparks)
                 {
-                    this.OnlineRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Sparks);
+                    this.OnlineRateComboBox.SelectedItem = CurrencyAcquireRateTypeEnum.Sparks;
                 }
                 else if (this.currency.IsTrackingEmbers)
                 {
-                    this.OnlineRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Embers);
+                    this.OnlineRateComboBox.SelectedItem = CurrencyAcquireRateTypeEnum.Embers;
                 }
                 else if (this.currency.IsTrackingFanProgression)
                 {
-                    this.OnlineRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.FanProgression);
+                    this.OnlineRateComboBox.SelectedItem = CurrencyAcquireRateTypeEnum.FanProgression;
                 }
                 else if (this.currency.IsTrackingBits)
                 {
@@ -122,38 +119,38 @@ namespace MixItUp.WPF.Windows.Currency
                 }
                 else if (this.currency.IsOnlineIntervalMinutes)
                 {
-                    this.OnlineRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Minutes);
+                    this.OnlineRateComboBox.SelectedItem = CurrencyAcquireRateTypeEnum.Minutes;
                 }
                 else if (this.currency.IsOnlineIntervalHours)
                 {
-                    this.OnlineRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Hours);
+                    this.OnlineRateComboBox.SelectedItem = CurrencyAcquireRateTypeEnum.Hours;
                 }
                 else if (this.currency.IsOnlineIntervalDisabled)
                 {
-                    this.OnlineRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Disabled);
+                    this.OnlineRateComboBox.SelectedItem = CurrencyAcquireRateTypeEnum.Disabled;
                 }
                 else
                 {
-                    this.OnlineRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Custom);
+                    this.OnlineRateComboBox.SelectedItem = CurrencyAcquireRateTypeEnum.Custom;
                 }
                 this.OnlineAmountRateTextBox.Text = this.currency.AcquireAmount.ToString();
                 this.OnlineTimeRateTextBox.Text = this.currency.AcquireInterval.ToString();
 
                 if (this.currency.IsOfflineIntervalMinutes)
                 {
-                    this.OfflineRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Minutes);
+                    this.OfflineRateComboBox.SelectedItem = CurrencyAcquireRateTypeEnum.Minutes;
                 }
                 else if (this.currency.IsOfflineIntervalHours)
                 {
-                    this.OfflineRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Hours);
+                    this.OfflineRateComboBox.SelectedItem = CurrencyAcquireRateTypeEnum.Hours;
                 }
                 else if (this.currency.IsOfflineIntervalDisabled)
                 {
-                    this.OfflineRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Disabled);
+                    this.OfflineRateComboBox.SelectedItem = CurrencyAcquireRateTypeEnum.Disabled;
                 }
                 else
                 {
-                    this.OfflineRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Custom);
+                    this.OfflineRateComboBox.SelectedItem = CurrencyAcquireRateTypeEnum.Custom;
                 }
                 this.OfflineAmountRateTextBox.Text = this.currency.OfflineAcquireAmount.ToString();
                 this.OfflineTimeRateTextBox.Text = this.currency.OfflineAcquireInterval.ToString();
@@ -166,7 +163,7 @@ namespace MixItUp.WPF.Windows.Currency
                 this.OnSubscribeBonusTextBox.Text = this.currency.OnSubscribeBonus.ToString();
 
                 this.MinimumActivityRateTextBox.Text = this.currency.MinimumActiveRate.ToString();
-                this.AutomaticResetComboBox.SelectedItem = EnumHelper.GetEnumName(this.currency.ResetInterval);
+                this.AutomaticResetComboBox.SelectedItem = this.currency.ResetInterval;
 
                 if (this.currency.IsRank)
                 {
@@ -180,8 +177,8 @@ namespace MixItUp.WPF.Windows.Currency
             }
             else
             {
-                this.OnlineRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Minutes);
-                this.OfflineRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Disabled);
+                this.OnlineRateComboBox.SelectedItem = CurrencyAcquireRateTypeEnum.Minutes;
+                this.OfflineRateComboBox.SelectedItem = CurrencyAcquireRateTypeEnum.Disabled;
 
                 this.SubscriberBonusTextBox.Text = "0";
                 this.ModeratorBonusTextBox.Text = "0";
@@ -190,7 +187,7 @@ namespace MixItUp.WPF.Windows.Currency
                 this.OnSubscribeBonusTextBox.Text = "0";
 
                 this.MinimumActivityRateTextBox.Text = "0";
-                this.AutomaticResetComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyResetRateEnum.Never);
+                this.AutomaticResetComboBox.SelectedItem = CurrencyResetRateEnum.Never;
             }
 
             await base.OnLoaded();
@@ -210,7 +207,7 @@ namespace MixItUp.WPF.Windows.Currency
         {
             if (this.OnlineRateComboBox.SelectedIndex >= 0)
             {
-                CurrencyAcquireRateTypeEnum acquireRate = EnumHelper.GetEnumValueFromString<CurrencyAcquireRateTypeEnum>((string)this.OnlineRateComboBox.SelectedItem);
+                CurrencyAcquireRateTypeEnum acquireRate = (CurrencyAcquireRateTypeEnum)this.OnlineRateComboBox.SelectedItem;
                 this.OnlineAmountRateTextBox.IsEnabled = (acquireRate == CurrencyAcquireRateTypeEnum.Custom);
                 this.OnlineTimeRateTextBox.IsEnabled = (acquireRate == CurrencyAcquireRateTypeEnum.Custom);
 
@@ -236,7 +233,7 @@ namespace MixItUp.WPF.Windows.Currency
                     this.OnlineAmountRateTextBox.Text = "1";
                     this.OnlineTimeRateTextBox.Text = "1";
 
-                    this.OfflineRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Disabled);
+                    this.OfflineRateComboBox.SelectedItem = CurrencyAcquireRateTypeEnum.Disabled;
                     this.OfflineRateGroupBox.IsEnabled = false;
 
                     this.BonusesGrid.IsEnabled = false;
@@ -261,7 +258,7 @@ namespace MixItUp.WPF.Windows.Currency
         {
             if (this.OfflineRateComboBox.SelectedIndex >= 0)
             {
-                CurrencyAcquireRateTypeEnum acquireRate = EnumHelper.GetEnumValueFromString<CurrencyAcquireRateTypeEnum>((string)this.OfflineRateComboBox.SelectedItem);
+                CurrencyAcquireRateTypeEnum acquireRate = (CurrencyAcquireRateTypeEnum)this.OfflineRateComboBox.SelectedItem;
                 this.OfflineAmountRateTextBox.IsEnabled = (acquireRate == CurrencyAcquireRateTypeEnum.Custom);
                 this.OfflineTimeRateTextBox.IsEnabled = (acquireRate == CurrencyAcquireRateTypeEnum.Custom);
 
@@ -330,7 +327,7 @@ namespace MixItUp.WPF.Windows.Currency
 
         private void NewCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(new CustomCommand(CurrencyWindow.RankChangedCommandName)));
+            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(new CustomCommand(MixItUp.Base.Resources.UserRankChanged)));
             window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
             window.Closed += Window_Closed;
             window.Show();
@@ -703,7 +700,7 @@ namespace MixItUp.WPF.Windows.Currency
                 CurrencyAcquireRateTypeEnum acquireRate = CurrencyAcquireRateTypeEnum.Custom;
                 if (this.OnlineRateComboBox.SelectedIndex >= 0)
                 {
-                    acquireRate = EnumHelper.GetEnumValueFromString<CurrencyAcquireRateTypeEnum>((string)this.OnlineRateComboBox.SelectedItem);
+                    acquireRate = (CurrencyAcquireRateTypeEnum)this.OnlineRateComboBox.SelectedItem;
                 }
 
                 this.currency.IsTrackingSparks = false;
@@ -742,7 +739,7 @@ namespace MixItUp.WPF.Windows.Currency
                 this.currency.OnSubscribeBonus = onSubscribeBonus;
 
                 this.currency.MinimumActiveRate = minActivityRate;
-                this.currency.ResetInterval = EnumHelper.GetEnumValueFromString<CurrencyResetRateEnum>((string)this.AutomaticResetComboBox.SelectedItem);
+                this.currency.ResetInterval = (CurrencyResetRateEnum)this.AutomaticResetComboBox.SelectedItem;
 
                 this.currency.SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(this.currency.Name);
 

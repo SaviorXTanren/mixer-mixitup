@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Chat"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:ChatControls="clr-namespace:MixItUp.WPF.Controls.Chat"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -55,7 +55,7 @@
                 </ListView.ItemTemplate>
             </ListView>
 
-            <Button x:Name="ChatLockButton" ToolTip="Lock/Unlock Chat Scrolling" Margin="0,0,20,0" Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}" HorizontalAlignment="Right" Grid.Row="0" VerticalAlignment="Bottom" Opacity="0.3" Command="{Binding ScrollingLockCommand}" MouseEnter="ChatLockButton_MouseEnter" MouseLeave="ChatLockButton_MouseLeave">
+            <Button x:Name="ChatLockButton" ToolTip="{x:Static resx:Resources.LockChatScrolling}" Margin="0,0,20,0" Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}" HorizontalAlignment="Right" Grid.Row="0" VerticalAlignment="Bottom" Opacity="0.3" Command="{Binding ScrollingLockCommand}" MouseEnter="ChatLockButton_MouseEnter" MouseLeave="ChatLockButton_MouseLeave">
                 <MaterialDesign:PackIcon x:Name="ChatLockButtonIcon" Kind="LockOutline" Height="24" Width="24" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{Binding LockIconColor}" />
             </Button>
 
@@ -69,11 +69,11 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <ComboBox Grid.Column="1" ItemsSource="{Binding SendAsOptions, Mode=OneWay}" SelectedIndex="{Binding SendAsIndex}" MaterialDesign:HintAssist.Hint="Send As" Width="80" Margin="0,10,0,0" />
+                <ComboBox Grid.Column="1" ItemsSource="{Binding SendAsOptions, Mode=OneWay}" SelectedIndex="{Binding SendAsIndex}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SendAs}" MinWidth="80" Margin="0,10,0,0" />
 
-                <TextBox x:Name="ChatMessageTextBox" Grid.Column="3" Text="{Binding SendMessageText}" TextChanged="ChatMessageTextBox_TextChanged" PreviewKeyDown="ChatMessageTextBox_PreviewKeyDown" KeyDown="ChatMessageTextBox_KeyDown" MaterialDesign:HintAssist.Hint="Chat Message" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox x:Name="ChatMessageTextBox" Grid.Column="3" Text="{Binding SendMessageText}" TextChanged="ChatMessageTextBox_TextChanged" PreviewKeyDown="ChatMessageTextBox_PreviewKeyDown" KeyDown="ChatMessageTextBox_KeyDown" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ChatMessage}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                <Button Grid.Column="5" Command="{Binding SendMessageCommand}" Width="70">Send</Button>
+                <Button Grid.Column="5" Command="{Binding SendMessageCommand}" MinWidth="70" Content="{x:Static resx:Resources.Send}"/>
             </Grid>
 
             <ChatControls:GifSkillPopoutControl x:Name="GifSkillPopout" HorizontalAlignment="Right" VerticalAlignment="Top" />
