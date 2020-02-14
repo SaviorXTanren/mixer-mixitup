@@ -5,6 +5,27 @@
     <body>
         <h1 style="color: #5e9ca0;">Changelog</h1>
 
+        <h2 style="color: #2e6c80;">v0.5.4.7001:</h2>
+        <ul>
+            <li>BREAKING CHANGE: Removing Song Requests feature <a href="https://mixitupapp.com/songrequests">https://mixitupapp.com/songrequests</a></li>
+            <li>BREAKING CHANGE: Removing Twitter Retweet event command due to rate limiting issues with Twitter</li>
+            <li>Upgrading settings data formatting to improve reliability and integrity</li>
+            <li>Large-scale rework of services connectivity, events, and MixPlay logic to improve speed and reliability</li>
+            <li>Adding StreamElements service connectivity and StreamElements donation event command</li>
+            <li>Adding initial language localization support</li>
+            <li>Revamping New User Wizard experience to better assist and onboard new users</li>
+            <li>Adding MixPlay spamming input detection for visual cooldowns to prevent extra MixPlay command triggering</li>
+            <li>Fixing Text to Speech action no longer working due to service API change</li>
+            <li>Adding latest Special Identifiers to keep track of last user/usage for various features: $latestfolloweruser____, $latesthostuser____, $latesthostviewercount, $latestsubscriberuser____, $latestsubscribersubmonths, $latestsparkusageuser____, $latestsparkusageamount, $latestemberusageuser____, $latestemberusageamount, $latestdonationuser____, $latestdonationamount</li>
+            <li>Adding Special Identifier for Currency/Rank/Inventory to show display-friendly numbers: $user____display</li>
+            <li>Adding Special Identifier for Currency/Rank/Inventory to show position relative to all users: $user____position</li>
+            <li>Adding Accounts page to main menu and moving Mixer Bot Account authentication to this page</li>
+            <li>MixPlay actions with the Cooldown option now support Special Identifiers</li>
+            <li>Special Identifiers created by Web Request actions are no longer global Special Identifiers</li>
+            <li>Adding $isautohost Special Identifier to Mixer Channel Hosted event to indicate if the host occurred by Mixer's built-in auto-hosting</li>
+            <li>Various quality of life &amp; bug fixes</li>
+        </ul>
+
         <h2 style="color: #2e6c80;">v0.5.4.7:</h2>
         <ul>
             <li>Various quality of life &amp; bug fixes</li>
