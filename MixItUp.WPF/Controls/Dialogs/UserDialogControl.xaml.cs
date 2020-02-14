@@ -39,21 +39,21 @@ namespace MixItUp.WPF.Controls.Dialogs
 
         private async void UserDialogControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (this.user != null && !this.user.IsAnonymous && !string.IsNullOrEmpty(this.user.UserName))
+            if (this.user != null && !this.user.IsAnonymous && !string.IsNullOrEmpty(this.user.Username))
             {
-                this.DataContext = this.user;
-
                 await this.user.RefreshDetails(force: true);
+
+                this.DataContext = this.user;
 
                 this.PromoteToModButton.IsEnabled = this.DemoteFromModButton.IsEnabled = this.EditUserButton.IsEnabled = ChannelSession.IsStreamer;
 
                 bool follows = false;
-                if (this.user.ChannelID > 0)
+                if (this.user.MixerChannelID > 0)
                 {
-                    ExpandedChannelModel channelToCheck = await ChannelSession.MixerStreamerConnection.GetChannel(this.user.ChannelID);
+                    ExpandedChannelModel channelToCheck = await ChannelSession.MixerUserConnection.GetChannel(this.user.MixerChannelID);
                     if (channelToCheck != null)
                     {
-                        follows = (await ChannelSession.MixerStreamerConnection.CheckIfFollows(channelToCheck, ChannelSession.MixerStreamerUser)).HasValue;
+                        follows = (await ChannelSession.MixerUserConnection.CheckIfFollows(channelToCheck, ChannelSession.MixerUser)).HasValue;
                         if (channelToCheck.online)
                         {
                             this.StreamStatusTextBlock.Text = $"{channelToCheck.viewersCurrent} Viewers";
@@ -71,13 +71,13 @@ namespace MixItUp.WPF.Controls.Dialogs
                     this.FollowButton.Visibility = System.Windows.Visibility.Collapsed;
                 }
 
-                if (this.user.MixerRoles.Contains(MixerRoleEnum.Banned))
+                if (this.user.UserRoles.Contains(UserRoleEnum.Banned))
                 {
                     this.UnbanButton.Visibility = System.Windows.Visibility.Visible;
                     this.BanButton.Visibility = System.Windows.Visibility.Collapsed;
                 }
 
-                if (this.user.MixerRoles.Contains(MixerRoleEnum.Mod))
+                if (this.user.UserRoles.Contains(UserRoleEnum.Mod))
                 {
                     this.DemoteFromModButton.Visibility = System.Windows.Visibility.Visible;
                     this.PromoteToModButton.Visibility = System.Windows.Visibility.Collapsed;

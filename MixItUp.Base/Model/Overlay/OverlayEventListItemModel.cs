@@ -33,9 +33,9 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public List<OverlayEventListItemTypeEnum> ItemTypes { get; set; }
 
-        private HashSet<uint> follows = new HashSet<uint>();
-        private HashSet<uint> hosts = new HashSet<uint>();
-        private HashSet<uint> subs = new HashSet<uint>();
+        private HashSet<Guid> follows = new HashSet<Guid>();
+        private HashSet<Guid> hosts = new HashSet<Guid>();
+        private HashSet<Guid> subs = new HashSet<Guid>();
 
         public OverlayEventListItemModel() : base() { }
 
@@ -54,7 +54,7 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        public override async Task Initialize()
+        public override async Task Enable()
         {
             if (this.ItemTypes.Contains(OverlayEventListItemTypeEnum.Followers))
             {
@@ -88,7 +88,7 @@ namespace MixItUp.Base.Model.Overlay
                 GlobalEvents.OnPatronageMilestoneReachedOccurred += GlobalEvents_OnPatronageMilestoneReachedOccurred;
             }
 
-            await base.Initialize();
+            await base.Enable();
         }
 
         public override async Task Disable()
@@ -112,7 +112,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.follows.Contains(user.ID))
             {
                 this.follows.Add(user.ID);
-                await this.AddEvent(user.UserName, "Followed");
+                await this.AddEvent(user.Username, "Followed");
             }
         }
 
@@ -121,7 +121,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.hosts.Contains(host.Item1.ID))
             {
                 this.hosts.Add(host.Item1.ID);
-                await this.AddEvent(host.Item1.UserName, string.Format("Hosted ({0})", host.Item2));
+                await this.AddEvent(host.Item1.Username, string.Format("Hosted ({0})", host.Item2));
             }
         }
 
@@ -130,7 +130,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.subs.Contains(user.ID))
             {
                 this.subs.Add(user.ID);
-                await this.AddEvent(user.UserName, "Subscribed");
+                await this.AddEvent(user.Username, "Subscribed");
             }
         }
 
@@ -139,7 +139,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.subs.Contains(user.Item1.ID))
             {
                 this.subs.Add(user.Item1.ID);
-                await this.AddEvent(user.Item1.UserName, string.Format("Resubscribed ({0} months)", user.Item2));
+                await this.AddEvent(user.Item1.Username, string.Format("Resubscribed ({0} months)", user.Item2));
             }
         }
 
@@ -148,17 +148,17 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.subs.Contains(e.Item2.ID))
             {
                 this.subs.Add(e.Item2.ID);
-                await this.AddEvent(e.Item2.UserName, "Gifted Sub");
+                await this.AddEvent(e.Item2.Username, "Gifted Sub");
             }
         }
 
-        private async void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { await this.AddEvent(donation.UserName, string.Format("Donated {0}", donation.AmountText)); }
+        private async void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { await this.AddEvent(donation.Username, string.Format("Donated {0}", donation.AmountText)); }
 
-        private async void GlobalEvents_OnStreamlootsPurchaseOccurred(object sender, Tuple<UserViewModel, int> purchase) { await this.AddEvent(purchase.Item1.UserName, string.Format("Purchased {0} Packs", purchase.Item2)); }
+        private async void GlobalEvents_OnStreamlootsPurchaseOccurred(object sender, Tuple<UserViewModel, int> purchase) { await this.AddEvent(purchase.Item1.Username, string.Format("Purchased {0} Packs", purchase.Item2)); }
 
-        private async void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, uint> sparkUsage) { await this.AddEvent(sparkUsage.Item1.UserName, string.Format("{0} Sparks", sparkUsage.Item2)); }
+        private async void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, uint> sparkUsage) { await this.AddEvent(sparkUsage.Item1.Username, string.Format("{0} Sparks", sparkUsage.Item2)); }
 
-        private async void GlobalEvents_OnEmberUseOccurred(object sender, UserEmberUsageModel emberUsage) { await this.AddEvent(emberUsage.User.UserName, string.Format("{0} Embers", emberUsage.Amount)); }
+        private async void GlobalEvents_OnEmberUseOccurred(object sender, UserEmberUsageModel emberUsage) { await this.AddEvent(emberUsage.User.Username, string.Format("{0} Embers", emberUsage.Amount)); }
 
         private async void GlobalEvents_OnPatronageMilestoneReachedOccurred(object sender, PatronageMilestoneModel patronageMilestone) { await this.AddEvent(string.Format("{0} Milestone", patronageMilestone.PercentageAmountText()), string.Format("{0} Sparks", patronageMilestone.target)); }
 

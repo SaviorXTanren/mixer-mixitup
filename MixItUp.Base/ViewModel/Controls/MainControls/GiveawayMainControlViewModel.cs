@@ -99,16 +99,16 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         {
             get
             {
-                string result = (ChannelSession.Services.GiveawayService.TimeLeft % 60).ToString() + " Seconds";
+                string result = (ChannelSession.Services.GiveawayService.TimeLeft % 60).ToString() + " " + MixItUp.Base.Resources.Seconds;
                 if (ChannelSession.Services.GiveawayService.TimeLeft > 60)
                 {
-                    result = (ChannelSession.Services.GiveawayService.TimeLeft / 60).ToString() + " Minutes " + result;
+                    result = (ChannelSession.Services.GiveawayService.TimeLeft / 60).ToString() + " " +  MixItUp.Base.Resources.Minutes +" " + result;
                 }
                 return result;
             }
         }
 
-        public string WinnerUsername { get { return (ChannelSession.Services.GiveawayService.Winner != null) ? ChannelSession.Services.GiveawayService.Winner.UserName : string.Empty; } }
+        public string WinnerUsername { get { return (ChannelSession.Services.GiveawayService.Winner != null) ? ChannelSession.Services.GiveawayService.Winner.Username : string.Empty; } }
 
         public ObservableCollection<GiveawayUser> EnteredUsers { get; private set; } = new ObservableCollection<GiveawayUser>();
 

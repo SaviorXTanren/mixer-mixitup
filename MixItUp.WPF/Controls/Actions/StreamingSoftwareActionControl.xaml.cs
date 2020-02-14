@@ -157,15 +157,15 @@ namespace MixItUp.WPF.Controls.Actions
                 StreamingSoftwareTypeEnum software = this.GetSelectedSoftware();
                 if (software == StreamingSoftwareTypeEnum.OBSStudio)
                 {
-                    this.OBSStudioNotEnabledWarningTextBlock.Visibility = (ChannelSession.Services.OBSWebsocket == null) ? Visibility.Visible : Visibility.Collapsed;
+                    this.OBSStudioNotEnabledWarningTextBlock.Visibility = (!ChannelSession.Services.OBSStudio.IsConnected) ? Visibility.Visible : Visibility.Collapsed;
                 }
                 else if (software == StreamingSoftwareTypeEnum.XSplit)
                 {
-                    this.XSplitNotEnabledWarningTextBlock.Visibility = (ChannelSession.Services.XSplitServer == null) ? Visibility.Visible : Visibility.Collapsed;
+                    this.XSplitNotEnabledWarningTextBlock.Visibility = (!ChannelSession.Services.XSplit.IsConnected) ? Visibility.Visible : Visibility.Collapsed;
                 }
                 else if (software == StreamingSoftwareTypeEnum.StreamlabsOBS)
                 {
-                    this.StreamlabsOBSNotEnabledWarningTextBlock.Visibility = (ChannelSession.Services.StreamlabsOBSService == null) ? Visibility.Visible : Visibility.Collapsed;
+                    this.StreamlabsOBSNotEnabledWarningTextBlock.Visibility = (!ChannelSession.Services.StreamlabsOBS.IsConnected) ? Visibility.Visible : Visibility.Collapsed;
                 }
                 this.StreamingActionTypeComboBox.SelectedIndex = -1;
             }
@@ -203,17 +203,17 @@ namespace MixItUp.WPF.Controls.Actions
                     }
                     else
                     {
-                        if (ChannelSession.Services.OBSWebsocket != null)
+                        if (ChannelSession.Services.OBSStudio.IsConnected)
                         {
-                            if (!(await ChannelSession.Services.OBSWebsocket.StartReplayBuffer()))
+                            if (!(await ChannelSession.Services.OBSStudio.StartReplayBuffer()))
                             {
                                 this.ReplayBufferNotEnabledInSettingsGrid.Visibility = Visibility.Visible;
                                 return;
                             }
                         }
-                        else if (ChannelSession.Services.StreamlabsOBSService != null)
+                        else if (ChannelSession.Services.StreamlabsOBS.IsConnected)
                         {
-                            if (!(await ChannelSession.Services.StreamlabsOBSService.StartReplayBuffer()))
+                            if (!(await ChannelSession.Services.StreamlabsOBS.StartReplayBuffer()))
                             {
                                 this.ReplayBufferNotEnabledInSettingsGrid.Visibility = Visibility.Visible;
                                 return;
@@ -292,9 +292,9 @@ namespace MixItUp.WPF.Controls.Actions
                 StreamingSoftwareTypeEnum software = this.GetSelectedSoftware();
                 if (software == StreamingSoftwareTypeEnum.OBSStudio)
                 {
-                    if (ChannelSession.Services.OBSWebsocket != null || await ChannelSession.Services.InitializeOBSWebsocket())
+                    if (ChannelSession.Services.OBSStudio.IsConnected || (await ChannelSession.Services.OBSStudio.Connect()).Success)
                     {
-                        dimensions = await ChannelSession.Services.OBSWebsocket.GetSourceDimensions(this.SourceSceneNameTextBox.Text, this.SourceNameTextBox.Text);
+                        dimensions = await ChannelSession.Services.OBSStudio.GetSourceDimensions(this.SourceSceneNameTextBox.Text, this.SourceNameTextBox.Text);
                     }
                     else
                     {
@@ -303,9 +303,9 @@ namespace MixItUp.WPF.Controls.Actions
                 }
                 else if (software == StreamingSoftwareTypeEnum.StreamlabsOBS)
                 {
-                    if (ChannelSession.Services.StreamlabsOBSService != null || await ChannelSession.Services.InitializeStreamlabsOBSService())
+                    if (ChannelSession.Services.StreamlabsOBS.IsConnected || (await ChannelSession.Services.StreamlabsOBS.Connect()).Success)
                     {
-                        dimensions = await ChannelSession.Services.StreamlabsOBSService.GetSourceDimensions(this.SourceSceneNameTextBox.Text, this.SourceNameTextBox.Text);
+                        dimensions = await ChannelSession.Services.StreamlabsOBS.GetSourceDimensions(this.SourceSceneNameTextBox.Text, this.SourceNameTextBox.Text);
                     }
                     else
                     {

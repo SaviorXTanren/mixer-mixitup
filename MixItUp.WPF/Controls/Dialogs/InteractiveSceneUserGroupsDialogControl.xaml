@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:MaterialDesignWPF="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
@@ -69,12 +70,12 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" x:Name="GroupNameTextBox" Width="150" MaterialDesign:HintAssist.Hint="Group Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="0" x:Name="GroupNameTextBox" Width="150" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.GroupName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <Button x:Name="AddGroupButton" Content="Add Group" Click="AddGroupButton_Click" Grid.Column="2" ToolTip="Add Action" />
+            <Button x:Name="AddGroupButton" Content="{x:Static resx:Resources.Add}" Click="AddGroupButton_Click" Grid.Column="2" ToolTip="{x:Static resx:Resources.Add}" />
         </Grid>
 
-        <Button Grid.Row="6" IsDefault="True" HorizontalAlignment="Center" ToolTip="Close" Content="Close" Width="80" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
+        <Button Grid.Row="6" IsDefault="True" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Close}" Content="{x:Static resx:Resources.Close}" Width="80" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
             <Button.CommandParameter>
                 <system:String>Close</system:String>
             </Button.CommandParameter>

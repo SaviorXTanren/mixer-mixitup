@@ -1,14 +1,8 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.Controls.Games;
 using MixItUp.Base.ViewModel.Requirement;
-using MixItUp.Base.ViewModel.User;
-using MixItUp.WPF.Util;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace MixItUp.WPF.Controls.Games
 {
@@ -20,7 +14,7 @@ namespace MixItUp.WPF.Controls.Games
         private RouletteGameEditorControlViewModel viewModel;
         private RouletteGameCommand existingCommand;
 
-        public RouletteGameEditorControl(UserCurrencyViewModel currency)
+        public RouletteGameEditorControl(UserCurrencyModel currency)
         {
             InitializeComponent();
 

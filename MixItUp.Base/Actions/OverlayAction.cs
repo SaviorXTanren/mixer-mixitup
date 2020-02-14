@@ -71,7 +71,7 @@ namespace MixItUp.Base.Actions
                 {
                     if (this.ShowWidget)
                     {
-                        await widget.Initialize(user, arguments, this.extraSpecialIdentifiers);
+                        await widget.Enable(user, arguments, this.extraSpecialIdentifiers);
                     }
                     else
                     {
@@ -88,8 +88,8 @@ namespace MixItUp.Base.Actions
                 }
 #pragma warning restore CS0612 // Type or member is obsolete
 
-                string overlayName = (string.IsNullOrEmpty(this.OverlayName)) ? ChannelSession.Services.OverlayServers.DefaultOverlayName : this.OverlayName;
-                IOverlayService overlay = ChannelSession.Services.OverlayServers.GetOverlay(overlayName);
+                string overlayName = (string.IsNullOrEmpty(this.OverlayName)) ? ChannelSession.Services.Overlay.DefaultOverlayName : this.OverlayName;
+                IOverlayEndpointService overlay = ChannelSession.Services.Overlay.GetOverlay(overlayName);
                 if (overlay != null)
                 {
                     await overlay.ShowItem(this.OverlayItem, user, arguments, this.extraSpecialIdentifiers);

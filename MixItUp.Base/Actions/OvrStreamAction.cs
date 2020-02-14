@@ -72,7 +72,7 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.Services.OvrStreamWebsocket != null)
+            if (ChannelSession.Services.OvrStream.IsConnected)
             {
                 if (this.OvrStreamActionType == OvrStreamActionTypeEnum.UpdateVariables ||
                     this.OvrStreamActionType == OvrStreamActionTypeEnum.PlayTitle)
@@ -85,7 +85,7 @@ namespace MixItUp.Base.Actions
                         // Since OvrStream doesn't support URI based images, we need to trigger a download and get the path to those files
                         if (processedVariables[kvp.Key].StartsWith("http", StringComparison.InvariantCultureIgnoreCase))
                         {
-                            string path = await ChannelSession.Services.OvrStreamWebsocket.DownloadImage(processedVariables[kvp.Key]);
+                            string path = await ChannelSession.Services.OvrStream.DownloadImage(processedVariables[kvp.Key]);
                             if (path != null)
                             {
                                 processedVariables[kvp.Key] = path;
@@ -96,24 +96,24 @@ namespace MixItUp.Base.Actions
                     switch (this.OvrStreamActionType)
                     {
                         case OvrStreamActionTypeEnum.UpdateVariables:
-                            await ChannelSession.Services.OvrStreamWebsocket.UpdateVariables(this.TitleName, processedVariables);
+                            await ChannelSession.Services.OvrStream.UpdateVariables(this.TitleName, processedVariables);
                             break;
                         case OvrStreamActionTypeEnum.PlayTitle:
-                            await ChannelSession.Services.OvrStreamWebsocket.PlayTitle(this.TitleName, processedVariables);
+                            await ChannelSession.Services.OvrStream.PlayTitle(this.TitleName, processedVariables);
                             break;
                     }
                 }
                 else if (this.OvrStreamActionType == OvrStreamActionTypeEnum.HideTitle)
                 {
-                    await ChannelSession.Services.OvrStreamWebsocket.HideTitle(this.TitleName);
+                    await ChannelSession.Services.OvrStream.HideTitle(this.TitleName);
                 }
                 else if (this.OvrStreamActionType == OvrStreamActionTypeEnum.EnableTitle)
                 {
-                    await ChannelSession.Services.OvrStreamWebsocket.EnableTitle(this.TitleName);
+                    await ChannelSession.Services.OvrStream.EnableTitle(this.TitleName);
                 }
                 else if (this.OvrStreamActionType == OvrStreamActionTypeEnum.DisableTitle)
                 {
-                    await ChannelSession.Services.OvrStreamWebsocket.DisableTitle(this.TitleName);
+                    await ChannelSession.Services.OvrStream.DisableTitle(this.TitleName);
                 }
             }
         }

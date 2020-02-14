@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base.Commands;
-using MixItUp.Base.ViewModel.User;
+using MixItUp.Base.Model.User;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -26,7 +26,7 @@ namespace MixItUp.Base.ViewModel.Window.Command
 
         public GameCommandBase GameCommand { get; private set; }
 
-        public UserCurrencyViewModel DefaultCurrency { get; private set; }
+        public UserCurrencyModel DefaultCurrency { get; private set; }
 
         public ObservableCollection<GameTypeListing> GameListings { get; private set; } = new ObservableCollection<GameTypeListing>();
         public GameTypeListing SelectedGameType

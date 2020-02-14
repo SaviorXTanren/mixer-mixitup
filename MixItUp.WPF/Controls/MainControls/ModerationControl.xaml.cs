@@ -19,7 +19,7 @@ namespace MixItUp.WPF.Controls.MainControls
     /// </summary>
     public partial class ModerationControl : MainControlBase
     {
-        private static readonly List<string> ChatTextModerationSliderTypes = new List<string>() { "%", "Min" };
+        private static readonly List<string> ChatTextModerationSliderTypes = new List<string>() { "Percent", "Min" };
         private bool isLoaded = false;
 
         public ModerationControl()
@@ -42,23 +42,23 @@ namespace MixItUp.WPF.Controls.MainControls
             this.CommunityBannedWordsToggleButton.IsChecked = ChannelSession.Settings.ModerationUseCommunityFilteredWords;
             this.FilteredWordsTextBox.Text = this.ConvertFilteredWordListToText(ChannelSession.Settings.FilteredWords);
             this.BannedWordsTextBox.Text = this.ConvertFilteredWordListToText(ChannelSession.Settings.BannedWords);
-            this.FilteredWordsExemptComboBox.SelectedItem = EnumHelper.GetEnumName(ChannelSession.Settings.ModerationFilteredWordsExcempt);
+            this.FilteredWordsExemptComboBox.SelectedItem = ChannelSession.Settings.ModerationFilteredWordsExcempt;
             this.FilteredWordsApplyStrikesToggleButton.IsChecked = ChannelSession.Settings.ModerationFilteredWordsApplyStrikes;
 
             this.MaxCapsSlider.Value = ChannelSession.Settings.ModerationCapsBlockCount;
             this.MaxCapsTypeComboBox.SelectedIndex = ChannelSession.Settings.ModerationCapsBlockIsPercentage ? 0 : 1;
             this.MaxPunctuationSymbolsEmotesSlider.Value = ChannelSession.Settings.ModerationPunctuationBlockCount;
             this.MaxPunctuationSymbolsEmotesTypeComboBox.SelectedIndex = ChannelSession.Settings.ModerationPunctuationBlockIsPercentage ? 0 : 1;
-            this.ChatTextModerationExemptComboBox.SelectedItem = EnumHelper.GetEnumName(ChannelSession.Settings.ModerationChatTextExcempt);
+            this.ChatTextModerationExemptComboBox.SelectedItem = ChannelSession.Settings.ModerationChatTextExcempt;
             this.ChatTextApplyStrikesToggleButton.IsChecked = ChannelSession.Settings.ModerationChatTextApplyStrikes;
 
             this.BlockLinksToggleButton.IsChecked = ChannelSession.Settings.ModerationBlockLinks;
-            this.BlockLinksExemptComboBox.SelectedItem = EnumHelper.GetEnumName(ChannelSession.Settings.ModerationBlockLinksExcempt);
+            this.BlockLinksExemptComboBox.SelectedItem = ChannelSession.Settings.ModerationBlockLinksExcempt;
             this.BlockLinksApplyStrikesToggleButton.IsChecked = ChannelSession.Settings.ModerationBlockLinksApplyStrikes;
 
-            this.ChatInteractiveParticipationComboBox.ItemsSource = EnumHelper.GetEnumNames<ModerationChatInteractiveParticipationEnum>();
-            this.ChatInteractiveParticipationComboBox.SelectedItem = EnumHelper.GetEnumName(ChannelSession.Settings.ModerationChatInteractiveParticipation);
-            this.ChatInteractiveParticipationExemptComboBox.SelectedItem = EnumHelper.GetEnumName(ChannelSession.Settings.ModerationChatInteractiveParticipationExcempt);
+            this.ChatInteractiveParticipationComboBox.ItemsSource = Enum.GetValues(typeof(ModerationChatInteractiveParticipationEnum));
+            this.ChatInteractiveParticipationComboBox.SelectedItem = ChannelSession.Settings.ModerationChatInteractiveParticipation;
+            this.ChatInteractiveParticipationExemptComboBox.SelectedItem = ChannelSession.Settings.ModerationChatInteractiveParticipationExcempt;
 
             this.ResetStrikesOnLaunchToggleButton.IsChecked = ChannelSession.Settings.ModerationResetStrikesOnLaunch;
             this.Strike1Command.DataContext = ChannelSession.Settings.ModerationStrike1Command;
@@ -80,22 +80,22 @@ namespace MixItUp.WPF.Controls.MainControls
 
                     this.ConvertFilteredTextToWordList(this.FilteredWordsTextBox.Text, ChannelSession.Settings.FilteredWords);
                     this.ConvertFilteredTextToWordList(this.BannedWordsTextBox.Text, ChannelSession.Settings.BannedWords);
-                    ChannelSession.Settings.ModerationFilteredWordsExcempt = EnumHelper.GetEnumValueFromString<MixerRoleEnum>((string)this.FilteredWordsExemptComboBox.SelectedItem);
+                    ChannelSession.Settings.ModerationFilteredWordsExcempt = (UserRoleEnum)this.FilteredWordsExemptComboBox.SelectedItem;
                     ChannelSession.Settings.ModerationFilteredWordsApplyStrikes = this.FilteredWordsApplyStrikesToggleButton.IsChecked.GetValueOrDefault();
 
                     ChannelSession.Settings.ModerationCapsBlockCount = (int)this.MaxCapsSlider.Value;
                     ChannelSession.Settings.ModerationCapsBlockIsPercentage = (this.MaxCapsTypeComboBox.SelectedIndex == 0);
                     ChannelSession.Settings.ModerationPunctuationBlockCount = (int)this.MaxPunctuationSymbolsEmotesSlider.Value;
                     ChannelSession.Settings.ModerationPunctuationBlockIsPercentage = (this.MaxPunctuationSymbolsEmotesTypeComboBox.SelectedIndex == 0);
-                    ChannelSession.Settings.ModerationChatTextExcempt = EnumHelper.GetEnumValueFromString<MixerRoleEnum>((string)this.ChatTextModerationExemptComboBox.SelectedItem);
+                    ChannelSession.Settings.ModerationChatTextExcempt = (UserRoleEnum)this.ChatTextModerationExemptComboBox.SelectedItem;
                     ChannelSession.Settings.ModerationChatTextApplyStrikes = this.ChatTextApplyStrikesToggleButton.IsChecked.GetValueOrDefault();
 
                     ChannelSession.Settings.ModerationBlockLinks = this.BlockLinksToggleButton.IsChecked.GetValueOrDefault();
-                    ChannelSession.Settings.ModerationBlockLinksExcempt = EnumHelper.GetEnumValueFromString<MixerRoleEnum>((string)this.BlockLinksExemptComboBox.SelectedItem);
+                    ChannelSession.Settings.ModerationBlockLinksExcempt = (UserRoleEnum)this.BlockLinksExemptComboBox.SelectedItem;
                     ChannelSession.Settings.ModerationBlockLinksApplyStrikes = this.BlockLinksApplyStrikesToggleButton.IsChecked.GetValueOrDefault();
 
-                    ChannelSession.Settings.ModerationChatInteractiveParticipation = EnumHelper.GetEnumValueFromString<ModerationChatInteractiveParticipationEnum>((string)this.ChatInteractiveParticipationComboBox.SelectedItem);
-                    ChannelSession.Settings.ModerationChatInteractiveParticipationExcempt = EnumHelper.GetEnumValueFromString<MixerRoleEnum>((string)this.ChatInteractiveParticipationExemptComboBox.SelectedItem);
+                    ChannelSession.Settings.ModerationChatInteractiveParticipation = (ModerationChatInteractiveParticipationEnum)this.ChatInteractiveParticipationComboBox.SelectedItem;
+                    ChannelSession.Settings.ModerationChatInteractiveParticipationExcempt = (UserRoleEnum)this.ChatInteractiveParticipationExemptComboBox.SelectedItem;
 
                     ChannelSession.Settings.ModerationResetStrikesOnLaunch = this.ResetStrikesOnLaunchToggleButton.IsChecked.GetValueOrDefault();
 
@@ -131,7 +131,7 @@ namespace MixItUp.WPF.Controls.MainControls
             return text;
         }
 
-        private void ConvertFilteredTextToWordList(string text, LockedList<string> list)
+        private void ConvertFilteredTextToWordList(string text, List<string> list)
         {
             if (string.IsNullOrEmpty(text))
             {

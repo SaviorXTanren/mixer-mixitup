@@ -2,6 +2,7 @@
 using MixItUp.Base.Model.API;
 using MixItUp.Base.Services;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
@@ -61,6 +62,15 @@ namespace MixItUp.Reporter
             catch (Exception ex) { Console.WriteLine(ex); }
 
             this.Close();
+        }
+
+        private void OpenLogFileButton_Click(object sender, RoutedEventArgs e)
+        {
+            ProcessStartInfo processInfo = new ProcessStartInfo(App.LogFilePath)
+            {
+                UseShellExecute = true
+            };
+            Process.Start(processInfo);
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)

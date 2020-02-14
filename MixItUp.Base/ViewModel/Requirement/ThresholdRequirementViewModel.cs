@@ -67,7 +67,7 @@ namespace MixItUp.Base.ViewModel.Requirement
 
         public async Task SendThresholdNotMetWhisper(UserViewModel user)
         {
-            await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("This command requires {0} more users to trigger!", this.Amount - this.performs.Count));
+            await ChannelSession.Services.Chat.Whisper(user, string.Format("This command requires {0} more users to trigger!", this.Amount - this.performs.Count));
         }
     }
 }

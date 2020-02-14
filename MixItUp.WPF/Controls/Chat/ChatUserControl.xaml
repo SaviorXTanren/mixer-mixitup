@@ -23,9 +23,9 @@
 
         <UsersControls:UserProfileAvatarControl x:Name="AvatarImage" Grid.Column="0" DataContext="{Binding}" Size="16" VerticalAlignment="Center" />
 
-        <Image x:Name="SubscriberImage" Source="{Binding SubscriberBadgeLink}" Visibility="{Binding ShowMixerSubscriberBadge, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}" Margin="0,0,-3,0" Grid.Column="1" VerticalAlignment="Center" />
+        <Image x:Name="SubscriberImage" Source="{Binding SubscriberBadgeLink}" Visibility="{Binding ShowSubscriberBadge, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}" Margin="0,0,-3,0" Grid.Column="1" VerticalAlignment="Center" />
 
-        <TextBlock x:Name="UsernameTextBlock" Grid.Column="3" Text="{Binding UserName}" Foreground="{Binding PrimaryRoleColorName, Converter={StaticResource ColorBrushConverter}}" VerticalAlignment="Center" />
+        <TextBlock x:Name="UsernameTextBlock" Grid.Column="3" Text="{Binding Username}" Foreground="{Binding PrimaryRoleColorName, Converter={StaticResource ColorBrushConverter}}" VerticalAlignment="Center" />
 
     </Grid>
 </UserControl>

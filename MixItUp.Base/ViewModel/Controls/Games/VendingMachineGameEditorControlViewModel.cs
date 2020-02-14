@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
@@ -34,9 +35,9 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         public VendingMachineOutcome(GameOutcome outcome) : this(outcome.Name, outcome.Command)
         {
-            this.UserChance = outcome.RoleProbabilities[MixerRoleEnum.User];
-            this.SubscriberChance = outcome.RoleProbabilities[MixerRoleEnum.Subscriber];
-            this.ModChance = outcome.RoleProbabilities[MixerRoleEnum.Mod];
+            this.UserChance = outcome.RoleProbabilities[UserRoleEnum.User];
+            this.SubscriberChance = outcome.RoleProbabilities[UserRoleEnum.Subscriber];
+            this.ModChance = outcome.RoleProbabilities[UserRoleEnum.Mod];
         }
 
         public string UserChanceString
@@ -59,8 +60,8 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         public GameOutcome GetGameOutcome()
         {
-            return new GameOutcome(this.Name, 0, new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, this.UserChance }, { MixerRoleEnum.Subscriber, this.SubscriberChance },
-                { MixerRoleEnum.Mod, this.ModChance } }, this.Command);
+            return new GameOutcome(this.Name, 0, new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, this.UserChance }, { UserRoleEnum.Subscriber, this.SubscriberChance },
+                { UserRoleEnum.Mod, this.ModChance } }, this.Command);
         }
     }
 
@@ -73,7 +74,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         private VendingMachineGameCommand existingCommand;
 
-        public VendingMachineGameEditorControlViewModel(UserCurrencyViewModel currency)
+        public VendingMachineGameEditorControlViewModel(UserCurrencyModel currency)
             : this()
         {
             this.Outcomes.Add(new VendingMachineOutcome("Nothing", this.CreateBasicChatCommand("@$username opened their capsule and found nothing..."), 40, 40, 40));
@@ -86,7 +87,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             OverlayImageItemModel overlayImage = new OverlayImageItemModel("https://78.media.tumblr.com/1921bcd13e12643771410200a322cb0e/tumblr_ogs5bcHWUc1udh5n8o1_500.gif", 500, 500);
             overlayImage.Position = new OverlayItemPositionModel(OverlayItemPositionType.Percentage, 50, 50, 0);
             overlayImage.Effects = new OverlayItemEffectsModel(OverlayItemEffectEntranceAnimationTypeEnum.FadeIn, OverlayItemEffectVisibleAnimationTypeEnum.None, OverlayItemEffectExitAnimationTypeEnum.FadeOut, 3);
-            overlayCommand.Actions.Add(new OverlayAction(ChannelSession.Services.OverlayServers.DefaultOverlayName, overlayImage));
+            overlayCommand.Actions.Add(new OverlayAction(ChannelSession.Services.Overlay.DefaultOverlayName, overlayImage));
 
             this.Outcomes.Add(new VendingMachineOutcome("Dancing Carlton", overlayCommand, 30, 30, 30));
         }

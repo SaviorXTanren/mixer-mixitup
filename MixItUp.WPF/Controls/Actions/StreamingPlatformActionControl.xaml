@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:util="clr-namespace:MixItUp.WPF.Util"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -17,7 +19,7 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
-            <ComboBox x:Name="ActionTypeComboBox" SelectionChanged="ActionTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox x:Name="ActionTypeComboBox" SelectionChanged="ActionTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
         </Grid>
 
         <Grid x:Name="HostGrid" Visibility="Collapsed" Grid.Row="2">
@@ -25,7 +27,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" x:Name="HostChannelNameTextBox" MaterialDesign:HintAssist.Hint="Channel Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="0" x:Name="HostChannelNameTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ChannelName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid x:Name="PollGrid" Visibility="Collapsed" Grid.Row="2">
@@ -42,9 +44,9 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBox Grid.Column="0" x:Name="PollQuestionTextBox" MaterialDesign:HintAssist.Hint="Question" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Grid.Column="0" x:Name="PollQuestionTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Question}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                <TextBox Grid.Column="2" x:Name="PollLengthTextBox" MaterialDesign:HintAssist.Hint="Length (Secs)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
+                <TextBox Grid.Column="2" x:Name="PollLengthTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.LengthSecs}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
             </Grid>
 
             <Grid Grid.Row="2">
@@ -61,14 +63,14 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBox Grid.Column="0" Grid.Row="0" x:Name="PollAnswer1TextBox" MaterialDesign:HintAssist.Hint="Answer 1" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                <TextBox Grid.Column="2" Grid.Row="0" x:Name="PollAnswer2TextBox" MaterialDesign:HintAssist.Hint="Answer 2" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                <TextBox Grid.Column="0" Grid.Row="2" x:Name="PollAnswer3TextBox" MaterialDesign:HintAssist.Hint="Answer 3 (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                <TextBox Grid.Column="2" Grid.Row="2" x:Name="PollAnswer4TextBox" MaterialDesign:HintAssist.Hint="Answer 4 (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Grid.Column="0" Grid.Row="0" x:Name="PollAnswer1TextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Answer1}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Grid.Column="2" Grid.Row="0" x:Name="PollAnswer2TextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Answer2}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Grid.Column="0" Grid.Row="2" x:Name="PollAnswer3TextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Answer3}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Grid.Column="2" Grid.Row="2" x:Name="PollAnswer4TextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Answer4}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                <ComboBox x:Name="PollCommandTypeComboBox" Grid.Column="0" Grid.Row="4" MaterialDesign:HintAssist.Hint="Poll Result Command Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="PollCommandTypeComboBox_SelectionChanged" />
+                <ComboBox x:Name="PollCommandTypeComboBox" Grid.Column="0" Grid.Row="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.PollResultCommandType}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="PollCommandTypeComboBox_SelectionChanged" />
 
-                <ComboBox x:Name="PollCommandNameComboBox" Grid.Column="2" Grid.Row="4" MaterialDesign:HintAssist.Hint="Poll Result Command (Optional)" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="Name" />
+                <ComboBox x:Name="PollCommandNameComboBox" Grid.Column="2" Grid.Row="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.PollResultCommand}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="Name" />
             </Grid>
         </Grid>
     </Grid>

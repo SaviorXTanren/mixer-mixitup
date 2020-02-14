@@ -64,11 +64,11 @@ namespace MixItUp.Base.Model.Overlay
             return Task.FromResult(0);
         }
 
-        public override async Task Initialize()
+        public override async Task Enable()
         {
             GlobalEvents.OnMixerClipCreated += GlobalEvents_OnMixerClipCreated;
 
-            await base.Initialize();
+            await base.Enable();
         }
 
         public override async Task Disable()
@@ -80,6 +80,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task<JObject> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
+            JObject jobj = null;
             if (this.lastClip != null)
             {
                 ClipLocatorModel clipLocator = this.lastClip.contentLocators.FirstOrDefault(cl => cl.locatorType.Equals(MixerClipsAction.VideoFileContentLocatorType));
@@ -87,11 +88,13 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     this.lastClipURL = clipLocator.uri;
                     this.Effects.Duration = Math.Max(0, this.lastClip.durationInSeconds - 1);
-                    return await base.GetProcessedItem(user, arguments, extraSpecialIdentifiers);
+                    jobj = await base.GetProcessedItem(user, arguments, extraSpecialIdentifiers);
                 }
+
                 this.lastClip = null;
+                this.lastClipURL = null;
             }
-            return null;
+            return jobj;
         }
 
         private void GlobalEvents_OnMixerClipCreated(object sender, ClipModel clip)

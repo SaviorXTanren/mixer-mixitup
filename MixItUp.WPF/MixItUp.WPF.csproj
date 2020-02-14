@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.3.0\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.3.0\build\EntityFramework.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -64,14 +65,16 @@
       <HintPath>..\packages\EngineIoClientDotNet.1.0.6\lib\net45\EngineIoClientDotNet.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.3.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.3.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="ExcelApi, Version=1.7.3.0, Culture=neutral, PublicKeyToken=26cf6d85ba68fa54, processorArchitecture=MSIL">
-      <HintPath>..\packages\NetOffice.Excel.1.7.4.4\lib\net45\ExcelApi.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
+    <Reference Include="ExcelDataReader, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.3.6.0\lib\net45\ExcelDataReader.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader.DataSet, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.DataSet.3.6.0\lib\net35\ExcelDataReader.DataSet.dll</HintPath>
     </Reference>
     <Reference Include="Jace, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Jace.0.9.3\lib\netstandard1.6\Jace.dll</HintPath>
@@ -143,28 +146,29 @@
     <Reference Include="Microsoft.Extensions.Primitives, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.Primitives.2.2.0\lib\netstandard2.0\Microsoft.Extensions.Primitives.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Owin, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.4.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Owin.Host.HttpListener, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.4.0.1\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
     </Reference>
-    <Reference Include="Mixer.Base, Version=0.9.0.8, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\mixer-client-csharp.0.9.0.8-beta\lib\netstandard2.0\Mixer.Base.dll</HintPath>
+    <Reference Include="Microsoft.Owin.Hosting, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Hosting.4.0.1\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
+    </Reference>
+    <Reference Include="Mixer.Base, Version=0.9.0.11, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\mixer-client-csharp.0.9.0.11-beta\lib\netstandard2.0\Mixer.Base.dll</HintPath>
     </Reference>
     <Reference Include="NAudio, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NAudio.1.9.0\lib\net35\NAudio.dll</HintPath>
     </Reference>
-    <Reference Include="NetOffice, Version=1.7.3.0, Culture=neutral, PublicKeyToken=acf636d62c39f8f5, processorArchitecture=MSIL">
-      <HintPath>..\packages\NetOffice.Core.1.7.4.4\lib\net45\NetOffice.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="OfficeApi, Version=1.7.3.0, Culture=neutral, PublicKeyToken=7c1c3e9d16cace88, processorArchitecture=MSIL">
-      <HintPath>..\packages\NetOffice.Core.1.7.4.4\lib\net45\OfficeApi.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </Reference>
     <Reference Include="ovrstream-client-csharp, Version=0.0.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ovrstream-client-csharp.0.0.2\lib\netstandard2.0\ovrstream-client-csharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
     <Reference Include="PlayFabAllSDK, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\PlayFabAllSDK.1.53.190627\lib\net45\PlayFabAllSDK.dll</HintPath>
@@ -178,8 +182,8 @@
     <Reference Include="SocketIoClientDotNet, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SocketIoClientDotNet.1.0.6\lib\net45\SocketIoClientDotNet.dll</HintPath>
     </Reference>
-    <Reference Include="StreamingClient.Base, Version=0.1.0.6, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\mixer-client-csharp.0.9.0.8-beta\lib\netstandard2.0\StreamingClient.Base.dll</HintPath>
+    <Reference Include="StreamingClient.Base, Version=0.1.0.8, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\mixer-client-csharp.0.9.0.11-beta\lib\netstandard2.0\StreamingClient.Base.dll</HintPath>
     </Reference>
     <Reference Include="SuperSocket.ClientEngine, Version=0.10.0.0, Culture=neutral, PublicKeyToken=ee9af13f57f00acc, processorArchitecture=MSIL">
       <HintPath>..\packages\SuperSocket.ClientEngine.Core.0.10.0\lib\net45\SuperSocket.ClientEngine.dll</HintPath>
@@ -203,14 +207,14 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.SQLite, Version=1.0.110.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.Core.1.0.110.0\lib\net46\System.Data.SQLite.dll</HintPath>
+    <Reference Include="System.Data.SQLite, Version=1.0.112.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.112.0\lib\net46\System.Data.SQLite.dll</HintPath>
     </Reference>
-    <Reference Include="System.Data.SQLite.EF6, Version=1.0.110.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.EF6.1.0.110.0\lib\net46\System.Data.SQLite.EF6.dll</HintPath>
+    <Reference Include="System.Data.SQLite.EF6, Version=1.0.112.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.EF6.1.0.112.0\lib\net46\System.Data.SQLite.EF6.dll</HintPath>
     </Reference>
-    <Reference Include="System.Data.SQLite.Linq, Version=1.0.110.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.110.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
+    <Reference Include="System.Data.SQLite.Linq, Version=1.0.112.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.112.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.3.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.5.1\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
@@ -230,9 +234,15 @@
     <Reference Include="System.IO.Pipelines, Version=4.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.Pipelines.4.5.3\lib\netstandard2.0\System.IO.Pipelines.dll</HintPath>
     </Reference>
+    <Reference Include="System.IO.Ports, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Ports.4.7.0\lib\net461\System.IO.Ports.dll</HintPath>
+    </Reference>
     <Reference Include="System.Linq, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.3\lib\netstandard2.0\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.NameResolution, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Net.NameResolution.4.3.0\lib\net46\System.Net.NameResolution.dll</HintPath>
@@ -304,6 +314,13 @@
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Http, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.7\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.Owin, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Owin.5.2.7\lib\net45\System.Web.Http.Owin.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -314,10 +331,6 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="VBIDEApi, Version=1.7.3.0, Culture=neutral, PublicKeyToken=a3637beacf571e8a, processorArchitecture=MSIL">
-      <HintPath>..\packages\NetOffice.Core.1.7.4.4\lib\net45\VBIDEApi.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="websocket-sharp, Version=1.0.2.59611, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL">
       <HintPath>..\packages\WebSocketSharp.1.0.3-rc11\lib\websocket-sharp.dll</HintPath>
@@ -338,9 +351,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ApplicationSettings.cs" />
     <Compile Include="Controls\AccordianGroupBoxControl.xaml.cs">
       <DependentUpon>AccordianGroupBoxControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Accounts\StreamingPlatformAccountControl.xaml.cs">
+      <DependentUpon>StreamingPlatformAccountControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Actions\ActionContainerControl.xaml.cs">
       <DependentUpon>ActionContainerControl.xaml</DependentUpon>
@@ -406,9 +421,6 @@
     <Compile Include="Controls\Actions\OverlayActionControl.xaml.cs">
       <DependentUpon>OverlayActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\SongRequestActionControl.xaml.cs">
-      <DependentUpon>SongRequestActionControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Actions\SoundActionControl.xaml.cs">
       <DependentUpon>SoundActionControl.xaml</DependentUpon>
     </Compile>
@@ -467,11 +479,11 @@
     <Compile Include="Controls\Command\BasicEventCommandEditorControl.xaml.cs">
       <DependentUpon>BasicEventCommandEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Command\BasicInteractiveButtonCommandEditorControl.xaml.cs">
-      <DependentUpon>BasicInteractiveButtonCommandEditorControl.xaml</DependentUpon>
+    <Compile Include="Controls\Command\BasicMixPlayButtonCommandEditorControl.xaml.cs">
+      <DependentUpon>BasicMixPlayButtonCommandEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Command\BasicInteractiveTextBoxCommandEditorControl.xaml.cs">
-      <DependentUpon>BasicInteractiveTextBoxCommandEditorControl.xaml</DependentUpon>
+    <Compile Include="Controls\Command\BasicMixPlayTextBoxCommandEditorControl.xaml.cs">
+      <DependentUpon>BasicMixPlayTextBoxCommandEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Command\BasicTimerCommandEditorControl.xaml.cs">
       <DependentUpon>BasicTimerCommandEditorControl.xaml</DependentUpon>
@@ -483,11 +495,11 @@
     <Compile Include="Controls\Command\EmptyCommandEditorControl.xaml.cs">
       <DependentUpon>EmptyCommandEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Command\InteractiveJoystickCommandDetailsControl.xaml.cs">
-      <DependentUpon>InteractiveJoystickCommandDetailsControl.xaml</DependentUpon>
+    <Compile Include="Controls\Command\MixPlayJoystickCommandDetailsControl.xaml.cs">
+      <DependentUpon>MixPlayJoystickCommandDetailsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Command\InteractiveTextBoxCommandDetailsControl.xaml.cs">
-      <DependentUpon>InteractiveTextBoxCommandDetailsControl.xaml</DependentUpon>
+    <Compile Include="Controls\Command\MixPlayTextBoxCommandDetailsControl.xaml.cs">
+      <DependentUpon>MixPlayTextBoxCommandDetailsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Command\UnlockedCommandControl.xaml.cs">
       <DependentUpon>UnlockedCommandControl.xaml</DependentUpon>
@@ -510,9 +522,6 @@
     </Compile>
     <Compile Include="Controls\Dashboard\QuickCommandsDashboardControl.xaml.cs">
       <DependentUpon>QuickCommandsDashboardControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Dashboard\SongRequestsDashboardControl.xaml.cs">
-      <DependentUpon>SongRequestsDashboardControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Dashboard\StatisticsDashboardControl.xaml.cs">
       <DependentUpon>StatisticsDashboardControl.xaml</DependentUpon>
@@ -616,6 +625,9 @@
       <DependentUpon>LicenseControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\LoadingWindowControlBase.cs" />
+    <Compile Include="Controls\MainControls\AccountsControl.xaml.cs">
+      <DependentUpon>AccountsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MainControls\AutoHosterControl.xaml.cs">
       <DependentUpon>AutoHosterControl.xaml</DependentUpon>
     </Compile>
@@ -626,6 +638,9 @@
       <DependentUpon>CurrencyRankInventoryControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\GroupedCommandsMainControlBase.cs" />
+    <Compile Include="Controls\MainControls\MixPlayControl.xaml.cs">
+      <DependentUpon>MixPlayControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MainControls\OverlayWidgetsControl.xaml.cs">
       <DependentUpon>OverlayWidgetsControl.xaml</DependentUpon>
     </Compile>
@@ -671,9 +686,6 @@
     </Compile>
     <Compile Include="Controls\Overlay\OverlayProgressBarItemControl.xaml.cs">
       <DependentUpon>OverlayProgressBarItemControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Overlay\OverlaySongRequestsListItemControl.xaml.cs">
-      <DependentUpon>OverlaySongRequestsListItemControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Overlay\OverlayStreamBossItemControl.xaml.cs">
       <DependentUpon>OverlayStreamBossItemControl.xaml</DependentUpon>
@@ -729,9 +741,6 @@
     <Compile Include="Controls\Requirement\CooldownRequirementControl.xaml.cs">
       <DependentUpon>CooldownRequirementControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Dialogs\RemoteReferenceCommandDialogControl.xaml.cs">
-      <DependentUpon>RemoteReferenceCommandDialogControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\MainControls\RemoteControl.xaml.cs">
       <DependentUpon>RemoteControl.xaml</DependentUpon>
     </Compile>
@@ -783,8 +792,8 @@
     <Compile Include="Controls\Command\EventCommandDetailsControl.xaml.cs">
       <DependentUpon>EventCommandDetailsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Command\InteractiveButtonCommandDetailsControl.xaml.cs">
-      <DependentUpon>InteractiveButtonCommandDetailsControl.xaml</DependentUpon>
+    <Compile Include="Controls\Command\MixPlayButtonCommandDetailsControl.xaml.cs">
+      <DependentUpon>MixPlayButtonCommandDetailsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Command\TimerCommandDetailsControl.xaml.cs">
       <DependentUpon>TimerCommandDetailsControl.xaml</DependentUpon>
@@ -798,9 +807,6 @@
     </Compile>
     <Compile Include="Controls\MainControls\EventsControl.xaml.cs">
       <DependentUpon>EventsControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\MainControls\InteractiveControl.xaml.cs">
-      <DependentUpon>InteractiveControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\LoadingStatusBar.xaml.cs">
       <DependentUpon>LoadingStatusBar.xaml</DependentUpon>
@@ -838,6 +844,10 @@
     <Compile Include="Controls\Services\OvrStreamServiceControl.xaml.cs">
       <DependentUpon>OvrStreamServiceControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Services\ServiceContainerControl.xaml.cs">
+      <DependentUpon>ServiceContainerControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\ServiceControlBase.cs" />
     <Compile Include="Controls\Services\StreamAvatarsServiceControl.xaml.cs">
       <DependentUpon>StreamAvatarsServiceControl.xaml</DependentUpon>
     </Compile>
@@ -853,9 +863,6 @@
     <Compile Include="Controls\Services\ExtraLifeServiceControl.xaml.cs">
       <DependentUpon>ExtraLifeServiceControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Services\MixerBotAccountServiceControl.xaml.cs">
-      <DependentUpon>MixerBotAccountServiceControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Services\OBSStudioServiceControl.xaml.cs">
       <DependentUpon>OBSStudioServiceControl.xaml</DependentUpon>
     </Compile>
@@ -869,8 +876,8 @@
     <Compile Include="Controls\Services\ServicesGroupBoxControl.xaml.cs">
       <DependentUpon>ServicesGroupBoxControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Services\SpotifyServiceControl.xaml.cs">
-      <DependentUpon>SpotifyServiceControl.xaml</DependentUpon>
+    <Compile Include="Controls\Services\StreamElementsServiceControl.xaml.cs">
+      <DependentUpon>StreamElementsServiceControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Services\StreamJarServiceControl.xaml.cs">
       <DependentUpon>StreamJarServiceControl.xaml</DependentUpon>
@@ -933,9 +940,6 @@
       <DependentUpon>SerialDevicesSettingsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Settings\SettingsControlBase.cs" />
-    <Compile Include="Controls\Settings\SongRequestsSettingsControl.xaml.cs">
-      <DependentUpon>SongRequestsSettingsControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Settings\ThemeSettingsControl.xaml.cs">
       <DependentUpon>ThemeSettingsControl.xaml</DependentUpon>
     </Compile>
@@ -989,10 +993,28 @@
     <Compile Include="Controls\Dialogs\ConfirmationDialogControl.xaml.cs">
       <DependentUpon>ConfirmationDialogControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Services\DeveloperAPI\ChatController.cs" />
+    <Compile Include="Services\DeveloperAPI\CommandController.cs" />
+    <Compile Include="Services\DeveloperAPI\CurrencyController.cs" />
+    <Compile Include="Services\DeveloperAPI\InventoryController.cs" />
+    <Compile Include="Services\DeveloperAPI\MixerUserController.cs" />
+    <Compile Include="Services\DeveloperAPI\MixPlayController.cs" />
+    <Compile Include="Services\DeveloperAPI\NoCacheHeader.cs" />
+    <Compile Include="Services\DeveloperAPI\UserController.cs" />
+    <Compile Include="Services\DeveloperAPI\WindowsDeveloperAPIService.cs" />
+    <Compile Include="Services\WindowsSocketIOConnection.cs" />
+    <Compile Include="Services\WindowsOvrStreamService.cs" />
+    <Compile Include="Services\WindowsOBSService.cs" />
+    <Compile Include="Services\WindowsDatabaseService.cs" />
+    <Compile Include="Services\WindowsFileService.cs" />
+    <Compile Include="Services\WindowsImageService.cs" />
+    <Compile Include="Services\WindowsInputService.cs" />
+    <Compile Include="Services\WindowsTelemetryService.cs" />
+    <Compile Include="Services\WindowsServicesManager.cs" />
+    <Compile Include="Services\WindowsAudioService.cs" />
     <Compile Include="UpdateWindow.xaml.cs">
       <DependentUpon>UpdateWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Util\BitmapImageLoader.cs" />
     <Compile Include="Util\InstalledFonts.cs" />
     <Compile Include="Util\InverseBooleanConverter.cs" />
     <Compile Include="Util\LocalizationConverter.cs" />
@@ -1047,6 +1069,10 @@
       <DependentUpon>NewUserWizardWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Controls\AccordianGroupBoxControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Accounts\StreamingPlatformAccountControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1134,10 +1160,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\SongRequestActionControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\Actions\SoundActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1214,11 +1236,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Command\BasicInteractiveButtonCommandEditorControl.xaml">
+    <Page Include="Controls\Command\BasicMixPlayButtonCommandEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Command\BasicInteractiveTextBoxCommandEditorControl.xaml">
+    <Page Include="Controls\Command\BasicMixPlayTextBoxCommandEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1234,11 +1256,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Command\InteractiveJoystickCommandDetailsControl.xaml">
+    <Page Include="Controls\Command\MixPlayJoystickCommandDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Command\InteractiveTextBoxCommandDetailsControl.xaml">
+    <Page Include="Controls\Command\MixPlayTextBoxCommandDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1267,10 +1289,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Dashboard\QuickCommandsDashboardControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Dashboard\SongRequestsDashboardControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1406,6 +1424,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\MainControls\AccountsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\MainControls\AutoHosterControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1417,6 +1439,10 @@
     <Page Include="Controls\MainControls\CurrencyRankInventoryControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\MainControls\MixPlayControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MainControls\OverlayWidgetsControl.xaml">
       <SubType>Designer</SubType>
@@ -1475,10 +1501,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Overlay\OverlayProgressBarItemControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Overlay\OverlaySongRequestsListItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1554,10 +1576,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Dialogs\RemoteReferenceCommandDialogControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\MainControls\RemoteControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1610,10 +1628,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\MainControls\OldChatControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\Chat\ChatMessageControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1634,7 +1648,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Command\InteractiveButtonCommandDetailsControl.xaml">
+    <Page Include="Controls\Command\MixPlayButtonCommandDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1647,10 +1661,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MainControls\GiveawayControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\MainControls\InteractiveControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1706,6 +1716,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Controls\Services\ServiceContainerControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Services\StreamAvatarsServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1726,10 +1740,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Services\MixerBotAccountServiceControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\Services\OBSStudioServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1746,7 +1756,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Services\SpotifyServiceControl.xaml">
+    <Page Include="Controls\Services\StreamElementsServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1830,10 +1840,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Settings\SongRequestsSettingsControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\Settings\ThemeSettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1901,9 +1907,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controls\MainControls\OldChatControl.xaml.cs">
-      <DependentUpon>OldChatControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Chat\ChatMessageControl.xaml.cs">
       <DependentUpon>ChatMessageControl.xaml</DependentUpon>
@@ -2097,17 +2100,17 @@
     <Resource Include="Logo.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\APIs\MixItUp.API\MixItUp.API.csproj">
+      <Project>{6ead4ad5-3606-42b0-a2da-13848a0d4076}</Project>
+      <Name>MixItUp.API</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MixItUp.AutoHoster\MixItUp.AutoHoster.csproj">
       <Project>{f4ed5346-1cc5-4606-90a4-c5d22eed4e54}</Project>
       <Name>MixItUp.AutoHoster</Name>
     </ProjectReference>
     <ProjectReference Include="..\MixItUp.Base\MixItUp.Base.csproj">
-      <Project>{0e494acc-c46a-4ded-922b-ff378556be8a}</Project>
+      <Project>{0E494ACC-C46A-4DED-922B-FF378556BE8A}</Project>
       <Name>MixItUp.Base</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MixItUp.Desktop\MixItUp.Desktop.csproj">
-      <Project>{c58e9517-27e2-48a7-9043-3cd4a18e8a27}</Project>
-      <Name>MixItUp.Desktop</Name>
     </ProjectReference>
     <ProjectReference Include="..\MixItUp.Reporter\MixItUp.Reporter.csproj">
       <Project>{ce3896dc-cc98-42ba-9bf7-4073dcc6a393}</Project>
@@ -2159,6 +2162,15 @@
       <Link>Assets\Images\SuperAnimalRoyaleDropMap\map.png</Link>
     </Resource>
     <Resource Include="Assets\Images\AppleAppStoreDownloadBadge.png" />
+    <Resource Include="Assets\CommunityBannedWords.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Images\MixItUp-Logo-Name.png" />
+    <Resource Include="Assets\Images\CommandExample.png" />
+    <Resource Include="Assets\Images\ExampleRecipe.png" />
+    <Content Include="Assets\OBS\obs-websocket-4.7.0-Windows-Installer.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\Sounds\Ariel.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -2220,24 +2232,27 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>del $(TargetDir)ApplicationSettings.xml
-
+    <PostBuildEvent>del $(TargetDir)ApplicationSettings.json
 rmdir /Q /S $(TargetDir)Settings\
 rmdir /Q /S $(TargetDir)Logs\
 rmdir /Q /S $(TargetDir)ChatEventLogs\
-rmdir /Q /S $(TargetDir)Counters\</PostBuildEvent>
+rmdir /Q /S $(TargetDir)Counters\
+</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
   </PropertyGroup>
-  <Import Project="..\packages\System.Data.SQLite.Core.1.0.110.0\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.110.0\build\net46\System.Data.SQLite.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.110.0\build\net46\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.110.0\build\net46\System.Data.SQLite.Core.targets'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.3.0\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.3.0\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.3.0\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.3.0\build\EntityFramework.targets'))" />
+    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.112.0\build\net46\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.112.0\build\net46\System.Data.SQLite.Core.targets'))" />
   </Target>
+  <Import Project="..\packages\EntityFramework.6.3.0\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.3.0\build\EntityFramework.targets')" />
+  <Import Project="..\packages\System.Data.SQLite.Core.1.0.112.0\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.112.0\build\net46\System.Data.SQLite.Core.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

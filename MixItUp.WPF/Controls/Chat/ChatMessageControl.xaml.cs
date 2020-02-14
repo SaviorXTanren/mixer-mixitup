@@ -4,7 +4,7 @@ using MixItUp.Base.Model.Chat.Mixer;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Mixer;
-using MixItUp.WPF.Util;
+using MixItUp.WPF.Services;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -108,11 +108,11 @@ namespace MixItUp.WPF.Controls.Chat
 
                         if (skillMessage.Skill.IsEmbersSkill)
                         {
-                            this.AddImage(BitmapImageLoader.LoadLocal(new Uri("/Assets/Images/Embers.png", UriKind.Relative)), ChannelSession.Settings.ChatFontSize + 2, MixerSkillModel.EmbersCurrencyName);
+                            this.AddImage(WindowsImageService.LoadLocal(new Uri("/Assets/Images/Embers.png", UriKind.Relative)), ChannelSession.Settings.ChatFontSize + 2, MixerSkillModel.EmbersCurrencyName);
                         }
                         else
                         {
-                            this.AddImage(BitmapImageLoader.LoadLocal(new Uri("/Assets/Images/Sparks.png", UriKind.Relative)), ChannelSession.Settings.ChatFontSize + 2, MixerSkillModel.SparksCurrencyName);
+                            this.AddImage(WindowsImageService.LoadLocal(new Uri("/Assets/Images/Sparks.png", UriKind.Relative)), ChannelSession.Settings.ChatFontSize + 2, MixerSkillModel.SparksCurrencyName);
                             showMessage = false;
                         }
 
@@ -127,8 +127,8 @@ namespace MixItUp.WPF.Controls.Chat
                             {
                                 string messagePartString = (string)messagePart;
 
-                                bool isWhisperToStreamer = this.Message.IsWhisper && ChannelSession.MixerStreamerUser.username.Equals(this.Message.TargetUsername, StringComparison.InvariantCultureIgnoreCase);
-                                bool isStreamerTagged = messagePartString.Contains("@" + ChannelSession.MixerStreamerUser.username);
+                                bool isWhisperToStreamer = this.Message.IsWhisper && ChannelSession.MixerUser.username.Equals(this.Message.TargetUsername, StringComparison.InvariantCultureIgnoreCase);
+                                bool isStreamerTagged = messagePartString.Contains("@" + ChannelSession.MixerUser.username);
 
                                 this.AddStringMessage(messagePartString, isHighlighted: (isWhisperToStreamer || isStreamerTagged));
                             }

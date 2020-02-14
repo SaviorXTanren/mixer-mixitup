@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Util;
+using MixItUp.Base.Model;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -14,57 +15,52 @@ namespace MixItUp.Base.Actions
 {
     public enum ActionTypeEnum
     {
+        [Name("ChatMessage")]
         Chat,
-        [Name("Currency/Rank/Inventory")]
+        [Name("CurrencyRankInventory")]
         Currency,
-        [Name("External Program")]
         ExternalProgram,
+        [Name("InputKeyboardAndMouse")]
         Input,
+        [Name("OverlayImagesAndVideos")]
         Overlay,
         Sound,
         Wait,
-        [Name("OBS Studio")]
         [Obsolete]
         OBSStudio,
         [Obsolete]
         XSplit,
+        [Name("CounterCreateAndUpdate")]
         Counter,
-        [Name("Game Queue")]
         GameQueue,
         [Name("MixPlay")]
         Interactive,
-        [Name("Text To Speech")]
         TextToSpeech,
         [Obsolete]
         Rank,
-        [Name("Web Request")]
         WebRequest,
         [Obsolete]
-        [Name("Action Group")]
         ActionGroup,
-        [Name("Special Identifier")]
         SpecialIdentifier,
+        [Name("FileReadAndWrite")]
         File,
-        [Name("Song Request")]
+        [Obsolete]
         SongRequest,
+        [Obsolete]
         Spotify,
         Discord,
         Translation,
         Twitter,
         Conditional,
-        [Name("Streamlabs OBS")]
         [Obsolete]
         StreamlabsOBS,
-        [Name("Streaming Software")]
         StreamingSoftware,
         Streamlabs,
-        [Name("Mixer Clips")]
         MixerClips,
         Command,
         Serial,
         Moderation,
         OvrStream,
-        [Name("Streaming Platform")]
         StreamingPlatform,
         IFTTT,
 
@@ -84,6 +80,9 @@ namespace MixItUp.Base.Actions
         public string Label { get; set; }
 
         [JsonIgnore]
+        protected StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None;
+
+        [JsonIgnore]
         protected Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();
 
         public ActionBase()
@@ -95,13 +94,14 @@ namespace MixItUp.Base.Actions
             : this()
         {
             this.Type = type;
-            this.Label = EnumHelper.GetEnumName(this.Type);
+            this.Label = EnumLocalizationHelper.GetLocalizedName(this.Type);
         }
 
-        public async Task Perform(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        public async Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             await this.AsyncSemaphore.WaitAndRelease(async () =>
             {
+                this.platform = platform;
                 this.extraSpecialIdentifiers = extraSpecialIdentifiers;
 
                 ChannelSession.Services.Telemetry.TrackAction(this.Type);
@@ -114,7 +114,7 @@ namespace MixItUp.Base.Actions
 
         protected async Task<string> ReplaceStringWithSpecialModifiers(string str, UserViewModel user, IEnumerable<string> arguments, bool encode = false)
         {
-            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str, encode);
+            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str, this.platform, encode);
             foreach (var kvp in this.extraSpecialIdentifiers)
             {
                 siString.ReplaceSpecialIdentifier(kvp.Key, kvp.Value);
@@ -128,3 +128,41 @@ namespace MixItUp.Base.Actions
         protected abstract SemaphoreSlim AsyncSemaphore { get; }
     }
 }
+
+#region Legacy Actions
+
+namespace MixItUp.Base.Actions
+{
+    public class SongRequestAction : ActionBase
+    {
+        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
+
+        protected override SemaphoreSlim AsyncSemaphore { get { return SongRequestAction.asyncSemaphore; } }
+
+        public SongRequestAction() { }
+
+        protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+        {
+            return Task.FromResult(0);
+        }
+    }
+
+    [DataContract]
+    public class SpotifyAction : ActionBase
+    {
+        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
+
+        protected override SemaphoreSlim AsyncSemaphore { get { return SpotifyAction.asyncSemaphore; } }
+
+#pragma warning disable CS0612 // Type or member is obsolete
+        public SpotifyAction() : base(ActionTypeEnum.Spotify) { }
+#pragma warning restore CS0612 // Type or member is obsolete
+
+        protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+        {
+            return Task.FromResult(0);
+        }
+    }
+}
+
+#endregion

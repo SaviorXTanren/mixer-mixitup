@@ -61,9 +61,9 @@ namespace MixItUp.Base.Services
 
         public async Task RefreshOAuthToken()
         {
-            if (ChannelSession.MixerStreamerUser != null)
+            if (ChannelSession.MixerUser != null)
             {
-                this.token = await this.GetAsync<OAuthTokenModel>("authentication?userID=" + ChannelSession.MixerStreamerUser.id);
+                this.token = await this.GetAsync<OAuthTokenModel>("authentication?userID=" + ChannelSession.MixerUser.id);
             }
         }
 
@@ -142,7 +142,7 @@ namespace MixItUp.Base.Services
                     if (response.StatusCode == HttpStatusCode.OK)
                     {
                         string content = await response.Content.ReadAsStringAsync();
-                        return SerializerHelper.DeserializeFromString<T>(content);
+                        return JSONSerializerHelper.DeserializeFromString<T>(content);
                     }
                     else
                     {
@@ -160,7 +160,7 @@ namespace MixItUp.Base.Services
             {
                 using (AdvancedHttpClient client = new AdvancedHttpClient(MixItUpAPIEndpoint))
                 {
-                    string content = SerializerHelper.SerializeToString(data);
+                    string content = JSONSerializerHelper.SerializeToString(data);
                     HttpResponseMessage response = await client.PostAsync(endpoint, new StringContent(content, Encoding.UTF8, "application/json"));
                     await this.ProcessResponseIfError(response);
                 }
@@ -180,12 +180,12 @@ namespace MixItUp.Base.Services
             {
                 using (AdvancedHttpClient client = new AdvancedHttpClient(MixItUpAPIEndpoint))
                 {
-                    string content = SerializerHelper.SerializeToString(data);
+                    string content = JSONSerializerHelper.SerializeToString(data);
                     HttpResponseMessage response = await client.PostAsync(endpoint, new StringContent(content, Encoding.UTF8, "application/json"));
                     if (response.StatusCode == HttpStatusCode.OK)
                     {
                         string resultContent = await response.Content.ReadAsStringAsync();
-                        return SerializerHelper.DeserializeFromString<T>(resultContent);
+                        return JSONSerializerHelper.DeserializeFromString<T>(resultContent);
                     }
                     else
                     {
@@ -203,7 +203,7 @@ namespace MixItUp.Base.Services
             {
                 using (AdvancedHttpClient client = new AdvancedHttpClient(MixItUpAPIEndpoint))
                 {
-                    string content = SerializerHelper.SerializeToString(data);
+                    string content = JSONSerializerHelper.SerializeToString(data);
                     HttpResponseMessage response = await client.PutAsync(endpoint, new StringContent(content, Encoding.UTF8, "application/json"));
                     await this.ProcessResponseIfError(response);
                 }
@@ -217,7 +217,7 @@ namespace MixItUp.Base.Services
             {
                 using (AdvancedHttpClient client = new AdvancedHttpClient(MixItUpAPIEndpoint))
                 {
-                    string content = SerializerHelper.SerializeToString(data);
+                    string content = JSONSerializerHelper.SerializeToString(data);
                     HttpRequestMessage message = new HttpRequestMessage(new HttpMethod("PATCH"), endpoint);
                     message.Content = new StringContent(content, Encoding.UTF8, "application/json");
                     HttpResponseMessage response = await client.SendAsync(message);

@@ -66,7 +66,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayLeaderboardListItemModel(string htmlText, OverlayLeaderboardListItemTypeEnum leaderboardType, int totalToShow, string textFont, int width, int height, string borderColor,
             string backgroundColor, string textColor, OverlayListItemAlignmentTypeEnum alignment, OverlayItemEffectEntranceAnimationTypeEnum addEventAnimation,
-            OverlayItemEffectExitAnimationTypeEnum removeEventAnimation, UserCurrencyViewModel currency, CustomCommand newLeaderCommand)
+            OverlayItemEffectExitAnimationTypeEnum removeEventAnimation, UserCurrencyModel currency, CustomCommand newLeaderCommand)
             : this(htmlText, leaderboardType, totalToShow, textFont, width, height, borderColor, backgroundColor, textColor, alignment, addEventAnimation, removeEventAnimation, newLeaderCommand)
         {
             this.CurrencyID = currency.ID;
@@ -104,7 +104,7 @@ namespace MixItUp.Base.Model.Overlay
             UserViewModel user = await ChannelSession.GetCurrentUser();
         }
 
-        public override async Task Initialize()
+        public override async Task Enable()
         {
             if (this.LeaderboardType == OverlayLeaderboardListItemTypeEnum.Subscribers)
             {
@@ -119,7 +119,7 @@ namespace MixItUp.Base.Model.Overlay
                 GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
             }
 
-            await base.Initialize();
+            await base.Enable();
         }
 
         public override async Task Disable()
@@ -141,19 +141,16 @@ namespace MixItUp.Base.Model.Overlay
             {
                 if (ChannelSession.Settings.Currencies.ContainsKey(this.CurrencyID))
                 {
-                    UserCurrencyViewModel currency = ChannelSession.Settings.Currencies[this.CurrencyID];
-                    Dictionary<UserDataViewModel, int> currencyAmounts = new Dictionary<UserDataViewModel, int>();
-                    foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values)
-                    {
-                        currencyAmounts[userData] = userData.GetCurrencyAmount(currency);
-                    }
+                    UserCurrencyModel currency = ChannelSession.Settings.Currencies[this.CurrencyID];
+                    Dictionary<Guid, int> currencyAmounts = currency.UserAmounts.ToDictionary();
 
                     var orderedUsers = currencyAmounts.OrderByDescending(kvp => kvp.Value);
                     for (int i = 0; i < this.TotalToShow && i < orderedUsers.Count(); i++)
                     {
                         var kvp = orderedUsers.ElementAt(i);
+                        UserDataModel userData = ChannelSession.Settings.GetUserData(kvp.Key);
 
-                        OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateAddItem(kvp.Key.UserName, new UserViewModel(kvp.Key), i + 1, this.HTML);
+                        OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateAddItem(userData.Username, new UserViewModel(userData), i + 1, this.HTML);
                         item.Hash = kvp.Value.ToString();
                         items.Add(item);
                     }
@@ -165,16 +162,16 @@ namespace MixItUp.Base.Model.Overlay
                 switch (this.LeaderboardDateRange)
                 {
                     case OverlayLeaderboardListItemDateRangeEnum.Weekly:
-                        sparkLeaderboard = await ChannelSession.MixerStreamerConnection.GetWeeklySparksLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
+                        sparkLeaderboard = await ChannelSession.MixerUserConnection.GetWeeklySparksLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                         break;
                     case OverlayLeaderboardListItemDateRangeEnum.Monthly:
-                        sparkLeaderboard = await ChannelSession.MixerStreamerConnection.GetMonthlySparksLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
+                        sparkLeaderboard = await ChannelSession.MixerUserConnection.GetMonthlySparksLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                         break;
                     case OverlayLeaderboardListItemDateRangeEnum.Yearly:
-                        sparkLeaderboard = await ChannelSession.MixerStreamerConnection.GetYearlySparksLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
+                        sparkLeaderboard = await ChannelSession.MixerUserConnection.GetYearlySparksLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                         break;
                     case OverlayLeaderboardListItemDateRangeEnum.AllTime:
-                        sparkLeaderboard = await ChannelSession.MixerStreamerConnection.GetAllTimeSparksLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
+                        sparkLeaderboard = await ChannelSession.MixerUserConnection.GetAllTimeSparksLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                         break;
                 }
 
@@ -196,16 +193,16 @@ namespace MixItUp.Base.Model.Overlay
                 switch (this.LeaderboardDateRange)
                 {
                     case OverlayLeaderboardListItemDateRangeEnum.Weekly:
-                        emberLeaderboard = await ChannelSession.MixerStreamerConnection.GetWeeklyEmbersLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
+                        emberLeaderboard = await ChannelSession.MixerUserConnection.GetWeeklyEmbersLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                         break;
                     case OverlayLeaderboardListItemDateRangeEnum.Monthly:
-                        emberLeaderboard = await ChannelSession.MixerStreamerConnection.GetMonthlyEmbersLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
+                        emberLeaderboard = await ChannelSession.MixerUserConnection.GetMonthlyEmbersLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                         break;
                     case OverlayLeaderboardListItemDateRangeEnum.Yearly:
-                        emberLeaderboard = await ChannelSession.MixerStreamerConnection.GetYearlyEmbersLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
+                        emberLeaderboard = await ChannelSession.MixerUserConnection.GetYearlyEmbersLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                         break;
                     case OverlayLeaderboardListItemDateRangeEnum.AllTime:
-                        emberLeaderboard = await ChannelSession.MixerStreamerConnection.GetAllTimeEmbersLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
+                        emberLeaderboard = await ChannelSession.MixerUserConnection.GetAllTimeEmbersLeaderboard(ChannelSession.MixerChannel, this.TotalToShow);
                         break;
                 }
 
@@ -266,7 +263,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 var kvp = orderedUsers.ElementAt(i);
 
-                OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateAddItem(kvp.Key.UserName, kvp.Key, i + 1, this.HTML);
+                OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateAddItem(kvp.Key.Username, kvp.Key, i + 1, this.HTML);
                 item.Hash = kvp.Value.AmountText;
             }
 
@@ -277,7 +274,7 @@ namespace MixItUp.Base.Model.Overlay
         private async Task UpdateSubscribers()
         {
             this.userSubDates.Clear();
-            await ChannelSession.MixerStreamerConnection.GetUsersWithRoles(ChannelSession.MixerChannel, MixerRoleEnum.Subscriber, (collection) =>
+            await ChannelSession.MixerUserConnection.GetUsersWithRoles(ChannelSession.MixerChannel, UserRoleEnum.Subscriber, (collection) =>
             {
                 foreach (UserWithGroupsModel userWithGroups in collection)
                 {
@@ -297,7 +294,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 var kvp = orderedUsers.ElementAt(i);
 
-                OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateAddItem(kvp.Key.UserName, kvp.Key, i + 1, this.HTML);
+                OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateAddItem(kvp.Key.Username, kvp.Key, i + 1, this.HTML);
                 item.Hash = kvp.Value.GetAge();
             }
 
@@ -307,7 +304,7 @@ namespace MixItUp.Base.Model.Overlay
 
         private async Task AddLeaderboardItems(IEnumerable<OverlayListIndividualItemModel> items)
         {
-            await this.listSemaphore.WaitAndRelease(async () =>
+            await this.listSemaphore.WaitAndRelease((Func<Task>)(async () =>
             {
                 foreach (OverlayListIndividualItemModel item in this.lastItems)
                 {
@@ -337,12 +334,12 @@ namespace MixItUp.Base.Model.Overlay
                     // Detect if we had a list before, and we have a list now, and the top user changed, let's trigger the event
                     if (this.lastItems.Count() > 0 && items.Count() > 0 && !this.lastItems.First().User.ID.Equals(items.First().User.ID))
                     {
-                        await this.NewLeaderCommand.Perform(items.First().User, new string[] { this.lastItems.First().User.UserName });
+                        await this.NewLeaderCommand.Perform(items.First().User, arguments: new string[] { this.lastItems.First().User.Username });
                     }
                 }
 
                 this.lastItems = new List<OverlayListIndividualItemModel>(items);
-            });
+            }));
         }
     }
 }

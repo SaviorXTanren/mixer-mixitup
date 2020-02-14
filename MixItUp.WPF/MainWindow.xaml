@@ -3,13 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MixItUp.WPF"
+        xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
         xmlns:MainControls="clr-namespace:MixItUp.WPF.Controls.MainControls"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-                           
+
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         Background="{DynamicResource MaterialDesignPaper}"
         TextElement.FontWeight="Medium"
@@ -49,12 +49,11 @@
 
             <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="12 12 12 12"/>
 
-            <TextBlock x:Name="SavingTextBlock" Grid.Row="2" HorizontalAlignment="Center" TextAlignment="Center">Please wait while Mix It Up saves your settings and shuts down...</TextBlock>
+            <TextBlock x:Name="SavingTextBlock" Grid.Row="2" HorizontalAlignment="Center" TextAlignment="Center" Text="{x:Static resx:Resources.ClosingPleaseWait}" />
 
-            <TextBlock x:Name="FailedSaveTextBlock" Visibility="Collapsed" Grid.Row="2" HorizontalAlignment="Center" TextAlignment="Center">Save failed, attempting one more time...</TextBlock>
+            <TextBlock x:Name="FailedSaveTextBlock" Visibility="Collapsed" Grid.Row="2" HorizontalAlignment="Center" TextAlignment="Center" Text="{x:Static resx:Resources.SaveFailed}"/>
         </Grid>
 
         <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="1" />
-        <WebBrowser x:Name="YouTubeSongRequestHost" IsHitTestVisible="False" Grid.Row="2" Visibility="Hidden" Source="about:blank"/>
     </Grid>
 </Windows:LoadingWindowBase>

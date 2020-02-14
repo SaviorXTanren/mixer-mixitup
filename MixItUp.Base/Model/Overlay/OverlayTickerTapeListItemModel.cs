@@ -30,9 +30,9 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public double MinimumAmountRequiredToShow { get; set; }
 
-        private HashSet<uint> follows = new HashSet<uint>();
-        private HashSet<uint> hosts = new HashSet<uint>();
-        private HashSet<uint> subs = new HashSet<uint>();
+        private HashSet<Guid> follows = new HashSet<Guid>();
+        private HashSet<Guid> hosts = new HashSet<Guid>();
+        private HashSet<Guid> subs = new HashSet<Guid>();
 
         public OverlayTickerTapeListItemModel() : base() { }
 
@@ -53,7 +53,7 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        public override async Task Initialize()
+        public override async Task Enable()
         {
             if (this.TickerTapeType == OverlayTickerTapeItemTypeEnum.Followers)
             {
@@ -82,7 +82,7 @@ namespace MixItUp.Base.Model.Overlay
                 GlobalEvents.OnEmberUseOccurred += GlobalEvents_OnEmberUseOccurred;
             }
 
-            await base.Initialize();
+            await base.Enable();
         }
 
         public override async Task Disable()
@@ -115,7 +115,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.follows.Contains(user.ID))
             {
                 this.follows.Add(user.ID);
-                await this.AddEvent(user.UserName);
+                await this.AddEvent(user.Username);
             }
         }
 
@@ -124,7 +124,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.hosts.Contains(host.Item1.ID))
             {
                 this.hosts.Add(host.Item1.ID);
-                await this.AddEvent(host.Item1.UserName + " x" + host.Item2);
+                await this.AddEvent(host.Item1.Username + " x" + host.Item2);
             }
         }
 
@@ -133,7 +133,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.subs.Contains(user.ID))
             {
                 this.subs.Add(user.ID);
-                await this.AddEvent(user.UserName);
+                await this.AddEvent(user.Username);
             }
         }
 
@@ -142,7 +142,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.subs.Contains(user.Item1.ID))
             {
                 this.subs.Add(user.Item1.ID);
-                await this.AddEvent(user.Item1.UserName + " x" + user.Item2);
+                await this.AddEvent(user.Item1.Username + " x" + user.Item2);
             }
         }
 
@@ -151,7 +151,7 @@ namespace MixItUp.Base.Model.Overlay
             if (!this.subs.Contains(e.Item2.ID))
             {
                 this.subs.Add(e.Item2.ID);
-                await this.AddEvent(e.Item2.UserName);
+                await this.AddEvent(e.Item2.Username);
             }
         }
 
@@ -159,7 +159,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (this.MinimumAmountRequiredToShow == 0.0 || donation.Amount >= this.MinimumAmountRequiredToShow)
             {
-                await this.AddEvent(donation.UserName + ": " + donation.AmountText);
+                await this.AddEvent(donation.Username + ": " + donation.AmountText);
             }
         }
 
@@ -167,7 +167,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (this.MinimumAmountRequiredToShow == 0.0 || sparkUsage.Item2 >= this.MinimumAmountRequiredToShow)
             {
-                await this.AddEvent(sparkUsage.Item1.UserName + ": " + sparkUsage.Item2);
+                await this.AddEvent(sparkUsage.Item1.Username + ": " + sparkUsage.Item2);
             }
         }
 
@@ -175,7 +175,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (this.MinimumAmountRequiredToShow == 0.0 || emberUsage.Amount >= this.MinimumAmountRequiredToShow)
             {
-                await this.AddEvent(emberUsage.User.UserName + ": " + emberUsage.Amount);
+                await this.AddEvent(emberUsage.User.Username + ": " + emberUsage.Amount);
             }
         }
 

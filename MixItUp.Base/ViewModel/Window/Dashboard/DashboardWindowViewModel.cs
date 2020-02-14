@@ -25,6 +25,7 @@ namespace MixItUp.Base.ViewModel.Window.Dashboard
         Statistics,
         [Name("Game Queue")]
         GameQueue,
+        [Obsolete]
         [Name("Song Requests")]
         SongRequests,
         [Name("Quick Commands")]
@@ -102,7 +103,6 @@ namespace MixItUp.Base.ViewModel.Window.Dashboard
         public object AlertsControl { get; set; }
         public object StatisticsControl { get; set; }
         public object GameQueueControl { get; set; }
-        public object SongRequestsControl { get; set; }
         public object QuickCommandsControl { get; set; }
 
         public IEnumerable<string> LayoutTypes { get { return EnumHelper.GetEnumNames<DashboardLayoutTypeEnum>(); } }
@@ -314,7 +314,6 @@ namespace MixItUp.Base.ViewModel.Window.Dashboard
                 case DashboardItemTypeEnum.Alerts: return this.AlertsControl;
                 case DashboardItemTypeEnum.Statistics: return this.StatisticsControl;
                 case DashboardItemTypeEnum.GameQueue: return this.GameQueueControl;
-                case DashboardItemTypeEnum.SongRequests: return this.SongRequestsControl;
                 case DashboardItemTypeEnum.QuickCommands: return this.QuickCommandsControl;
             }
             return null;

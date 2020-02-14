@@ -1,10 +1,9 @@
-﻿using MixItUp.Base.ViewModel.User;
-using System.Windows.Controls;
-using System.Windows;
-using MixItUp.Base.Commands;
-using System.Collections.ObjectModel;
+﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using System.Collections.Generic;
-using System.Linq;
+using System.Collections.ObjectModel;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.Dialogs
 {
@@ -29,9 +28,9 @@ namespace MixItUp.WPF.Controls.Dialogs
     {
         public ObservableCollection<NewCurrencyRankCommand> commands = new ObservableCollection<NewCurrencyRankCommand>();
 
-        private UserCurrencyViewModel currency;
+        private UserCurrencyModel currency;
 
-        public NewCurrencyRankCommandsDialogControl(UserCurrencyViewModel currency, IEnumerable<NewCurrencyRankCommand> commands)
+        public NewCurrencyRankCommandsDialogControl(UserCurrencyModel currency, IEnumerable<NewCurrencyRankCommand> commands)
         {
             this.DataContext = this.currency = currency;
 

@@ -1,5 +1,5 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
@@ -42,7 +42,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         public GameOutcome GetGameOutcome()
         {
-            return new GameOutcome(this.Name, Convert.ToDouble(this.Payout) / 100.0, new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, 0 }, { MixerRoleEnum.Subscriber, 0 }, { MixerRoleEnum.Mod, 0 } }, this.Command);
+            return new GameOutcome(this.Name, Convert.ToDouble(this.Payout) / 100.0, new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, 0 }, { UserRoleEnum.Subscriber, 0 }, { UserRoleEnum.Mod, 0 } }, this.Command);
         }
     }
 
@@ -50,18 +50,18 @@ namespace MixItUp.Base.ViewModel.Controls.Games
     {
         public ObservableCollection<BetOutcome> Options { get; set; } = new ObservableCollection<BetOutcome>();
 
-        public IEnumerable<string> WhoCanStartRoles { get { return RoleRequirementViewModel.AdvancedUserRoleAllowedValues; } }
+        public IEnumerable<UserRoleEnum> WhoCanStartRoles { get { return RoleRequirementViewModel.AdvancedUserRoleAllowedValues; } }
 
-        public string WhoCanStartString
+        private UserRoleEnum whoCanStart = UserRoleEnum.Mod;
+        public UserRoleEnum WhoCanStart
         {
-            get { return EnumHelper.GetEnumName(this.WhoCanStart); }
+            get { return this.whoCanStart; }
             set
             {
-                this.WhoCanStart = EnumHelper.GetEnumValueFromString<MixerRoleEnum>(value);
+                this.whoCanStart = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public MixerRoleEnum WhoCanStart { get; set; } = MixerRoleEnum.Mod;
 
         public string MinimumParticipantsString
         {
@@ -99,7 +99,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         private BetGameCommand existingCommand;
 
-        public BetGameEditorControlViewModel(UserCurrencyViewModel currency)
+        public BetGameEditorControlViewModel(UserCurrencyModel currency)
             : this()
         {
             this.StartedCommand = this.CreateBasic2ChatCommand("@$username has started a bet on...SOMETHING! Type !bet <OPTION #> <AMOUNT> in chat to participate!", "Options: $gamebetoptions");
@@ -157,7 +157,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             RoleRequirementViewModel starterRequirement = new RoleRequirementViewModel(this.WhoCanStart);
             GameCommandBase newCommand = new BetGameCommand(name, triggers, requirements, this.MinimumParticipants, this.TimeLimit, starterRequirement,
                 this.Options.Select(o => o.GetGameOutcome()), this.StartedCommand, this.UserJoinedCommand, this.BetsClosedCommand,
-                new GameOutcome("Failure", 0, new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, 0 }, { MixerRoleEnum.Subscriber, 0 }, { MixerRoleEnum.Mod, 0 } }, this.UserFailCommand),
+                new GameOutcome("Failure", 0, new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, 0 }, { UserRoleEnum.Subscriber, 0 }, { UserRoleEnum.Mod, 0 } }, this.UserFailCommand),
                 this.GameCompleteCommand, this.NotEnoughPlayersCommand);
             if (this.existingCommand != null)
             {

@@ -14,8 +14,6 @@ namespace MixItUp.Base.ViewModel.Window.Overlay
         public OverlayItemModelTypeEnum Type { get; set; }
         public string Description { get; set; }
 
-        public string Name { get { return EnumHelper.GetEnumName(this.Type); } }
-
         public OverlayTypeListing(OverlayItemModelTypeEnum type, string description)
         {
             this.Type = type;
@@ -121,7 +119,6 @@ namespace MixItUp.Base.ViewModel.Window.Overlay
             this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.Image, "Shows an image. Refreshes based on user-defined Refresh Interval."));
             this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.Leaderboard, "Shows the top X users in a specified category. Leaderboard positions are updated as events occur or on user-defined refresh interval"));
             this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.StreamClip, "Shows the video & audio footage of a Stream Clip when it is taken."));
-            this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.SongRequests, "Show the top X songs currently in the song request queue. Song requests are added as they occur."));
             this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.SparkCrystal, "Shows the current progress on the channel's spark crystal patronage. Progress is updated as spark patronage occurs."));
             this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.StreamBoss, "Shows a user from your channel as a \"boss\" that can be damaged by performing actions in your channel until they are defeated and a new boss is selected. Damage is added as it occurs. The Stream Boss Special Identifiers can be used in parallel with this overlay widget."));
             this.OverlayTypeListings.Add(new OverlayTypeListing(OverlayItemModelTypeEnum.Text, "Shows a block of text. Refreshes based on user-defined Refresh Interval."));
@@ -164,11 +161,11 @@ namespace MixItUp.Base.ViewModel.Window.Overlay
 
         private void Initialize()
         {
-            foreach (string overlayEndpoint in ChannelSession.Services.OverlayServers.GetOverlayNames())
+            foreach (string overlayEndpoint in ChannelSession.Services.Overlay.GetOverlayNames())
             {
                 this.OverlayEndpoints.Add(overlayEndpoint);
             }
-            this.SelectedOverlayEndpoint = ChannelSession.Services.OverlayServers.DefaultOverlayName;
+            this.SelectedOverlayEndpoint = ChannelSession.Services.Overlay.DefaultOverlayName;
         }
     }
 }

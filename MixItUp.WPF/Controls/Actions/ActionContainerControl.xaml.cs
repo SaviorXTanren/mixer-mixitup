@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Actions;
+using MixItUp.Base.Model;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Command;
@@ -60,7 +61,7 @@ namespace MixItUp.WPF.Controls.Actions
 
             if (string.IsNullOrEmpty(this.GroupBoxHeaderTextBox.Text))
             {
-                this.GroupBoxHeaderTextBox.Text = this.GroupBoxHeaderTextBlock.Text = EnumHelper.GetEnumName(this.type);
+                this.GroupBoxHeaderTextBox.Text = this.GroupBoxHeaderTextBlock.Text = EnumLocalizationHelper.GetLocalizedName(this.type);
             }
 
             if (this.ActionContainer.IsMinimized)
@@ -109,19 +110,19 @@ namespace MixItUp.WPF.Controls.Actions
 
         private async void PlayActionButton_Click(object sender, RoutedEventArgs e)
         {
-            await this.Window.RunAsyncOperation(async () =>
+            await this.Window.RunAsyncOperation((System.Func<System.Threading.Tasks.Task>)(async () =>
             {
                 ActionBase action = this.GetAction();
                 if (action != null)
                 {
                     UserViewModel currentUser = await ChannelSession.GetCurrentUser();
-                    await action.Perform(currentUser, new List<string>() { "@" + currentUser.UserName }, new Dictionary<string, string>());
+                    await action.Perform(currentUser, StreamingPlatformTypeEnum.None, new List<string>() { "@" + currentUser.Username }, new Dictionary<string, string>());
                 }
                 else
                 {
                     await DialogHelper.ShowMessage("Required action information is missing");
                 }
-            });
+            }));
         }
 
         private void MoveUpActionButton_Click(object sender, RoutedEventArgs e) { this.EditorControl.MoveActionUp(this); }
@@ -130,11 +131,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         private void ActionHelpButton_Click(object sender, RoutedEventArgs e)
         {
-            string actionName = EnumHelper.GetEnumName(this.type);
-            actionName = actionName.ToLower();
-            actionName = actionName.Replace(" ", "-");
-            actionName = actionName.Replace("/", "");
-            ProcessHelper.LaunchLink("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Actions#" + actionName);
+            ProcessHelper.LaunchLink("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Actions");
         }
 
         private async void ActionDuplicateButton_Click(object sender, RoutedEventArgs e)

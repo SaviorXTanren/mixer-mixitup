@@ -53,7 +53,6 @@ namespace MixItUp.WPF.Windows.Overlay
                 else if (this.viewModel.OverlayWidget.Item is OverlayImageItemModel) { this.SetGameEditorControl(new OverlayImageItemControl((OverlayImageItemModel)this.viewModel.OverlayWidget.Item)); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayLeaderboardListItemModel) { this.SetGameEditorControl(new OverlayLeaderboardListItemControl((OverlayLeaderboardListItemModel)this.viewModel.OverlayWidget.Item)); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayStreamClipItemModel) { this.SetGameEditorControl(new OverlayStreamClipItemControl((OverlayStreamClipItemModel)this.viewModel.OverlayWidget.Item)); }
-                else if (this.viewModel.OverlayWidget.Item is OverlaySongRequestsListItemModel) { this.SetGameEditorControl(new OverlaySongRequestsListItemControl((OverlaySongRequestsListItemModel)this.viewModel.OverlayWidget.Item)); }
                 else if (this.viewModel.OverlayWidget.Item is OverlaySparkCrystalItemModel) { this.SetGameEditorControl(new OverlaySparkCrystalItemControl((OverlaySparkCrystalItemModel)this.viewModel.OverlayWidget.Item)); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayStreamBossItemModel) { this.SetGameEditorControl(new OverlayStreamBossItemControl((OverlayStreamBossItemModel)this.viewModel.OverlayWidget.Item)); }
                 else if (this.viewModel.OverlayWidget.Item is OverlayTextItemModel) { this.SetGameEditorControl(new OverlayTextItemControl((OverlayTextItemModel)this.viewModel.OverlayWidget.Item)); }
@@ -75,7 +74,6 @@ namespace MixItUp.WPF.Windows.Overlay
                 this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.Image, new OverlayImageItemControl());
                 this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.Leaderboard, new OverlayLeaderboardListItemControl());
                 this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.StreamClip, new OverlayStreamClipItemControl());
-                this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.SongRequests, new OverlaySongRequestsListItemControl());
                 this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.SparkCrystal, new OverlaySparkCrystalItemControl());
                 this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.StreamBoss, new OverlayStreamBossItemControl());
                 this.overlayTypeEditors.Add(OverlayItemModelTypeEnum.Text, new OverlayTextItemControl());

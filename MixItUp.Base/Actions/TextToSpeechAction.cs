@@ -118,7 +118,7 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            IOverlayService overlay = ChannelSession.Services.OverlayServers.GetOverlay(ChannelSession.Services.OverlayServers.DefaultOverlayName);
+            IOverlayEndpointService overlay = ChannelSession.Services.Overlay.GetOverlay(ChannelSession.Services.Overlay.DefaultOverlayName);
             if (overlay != null)
             {
                 string message = await this.ReplaceStringWithSpecialModifiers(this.SpeechText, user, arguments);

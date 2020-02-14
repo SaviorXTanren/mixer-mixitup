@@ -1,113 +1,25 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Util;
-using MixItUp.WPF.Util;
-using System.Diagnostics;
+﻿using MixItUp.Base.ViewModel.Controls.Services;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Navigation;
 
 namespace MixItUp.WPF.Controls.Services
 {
     /// <summary>
     /// Interaction logic for XSplitServiceControl.xaml
     /// </summary>
-    public partial class XSplitServiceControl : ServicesControlBase
+    public partial class XSplitServiceControl : ServiceControlBase
     {
+        private XSplitServiceControlViewModel viewModel;
+
         public XSplitServiceControl()
         {
+            this.DataContext = this.ViewModel = this.viewModel = new XSplitServiceControlViewModel();
+
             InitializeComponent();
         }
 
         protected override async Task OnLoaded()
         {
-            this.SetHeaderText("XSplit");
-
-            if (ChannelSession.Settings.EnableXSplitConnection)
-            {
-                this.EnableXSplitConnectionButton.Visibility = Visibility.Collapsed;
-                this.DisableXSplitConnectionButton.Visibility = Visibility.Visible;
-
-                this.TestXSplitConnectionButton.IsEnabled = true;
-
-                this.SetCompletedIcon(visible: true);
-            }
-
-            await base.OnLoaded();
-        }
-
-        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
-        {
-            ProcessHelper.LaunchFolder("XSplit");
-        }
-
-        private async void EnableXSplitConnectionButton_Click(object sender, RoutedEventArgs e)
-        {
-            await this.groupBoxControl.window.RunAsyncOperation(async () =>
-            {
-                if (!await this.ConnectXSplitService())
-                {
-                    await DialogHelper.ShowMessage("Failed to start XSplit Connection, this sometimes means our connection got wonky. If this continues to happen, please try restarting Mix It Up.");
-                }
-                await ChannelSession.SaveSettings();
-            });
-        }
-
-        private async void DisableXSplitConnectionButton_Click(object sender, RoutedEventArgs e)
-        {
-            await this.groupBoxControl.window.RunAsyncOperation(async () =>
-            {
-                await this.DisconnectXSplitService();
-                await ChannelSession.SaveSettings();
-            });
-        }
-
-        private async void TestXSplitConnectionButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (ChannelSession.Services.XSplitServer != null)
-            {
-                await this.groupBoxControl.window.RunAsyncOperation(async () =>
-                {
-                    if (await ChannelSession.Services.XSplitServer.TestConnection())
-                    {
-                        await DialogHelper.ShowMessage("XSplit connection test successful!");
-                    }
-                    else
-                    {
-                        await DialogHelper.ShowMessage("XSplit connection test failed, please ensure you have the Mix It Up XSplit extension added and open in XSplit.");
-                    }
-                });
-            }
-        }
-
-        public async Task<bool> ConnectXSplitService()
-        {
-            if (!await ChannelSession.Services.InitializeXSplitServer())
-            {
-                return false;
-            }
-
-            ChannelSession.Settings.EnableXSplitConnection = true;
-            this.EnableXSplitConnectionButton.Visibility = Visibility.Collapsed;
-            this.DisableXSplitConnectionButton.Visibility = Visibility.Visible;
-
-            this.TestXSplitConnectionButton.IsEnabled = true;
-
-            this.SetCompletedIcon(visible: true);
-
-            return true;
-        }
-
-        private async Task DisconnectXSplitService()
-        {
-            this.EnableXSplitConnectionButton.Visibility = Visibility.Visible;
-            this.DisableXSplitConnectionButton.Visibility = Visibility.Collapsed;
-            this.TestXSplitConnectionButton.IsEnabled = false;
-
-            await ChannelSession.Services.DisconnectXSplitServer();
-
-            ChannelSession.Settings.EnableXSplitConnection = false;
-
-            this.SetCompletedIcon(visible: false);
+            await this.viewModel.OnLoaded();
         }
     }
 }

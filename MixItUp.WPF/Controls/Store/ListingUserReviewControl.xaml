@@ -36,7 +36,7 @@
                 </Grid.ColumnDefinitions>
 
                 <UsersControls:UserProfileAvatarControl x:Name="UserAvatar" Grid.Column="0" Width="20" Height="20" VerticalAlignment="Center" />
-                <TextBlock Grid.Column="2" Text="{Binding UserName}" VerticalAlignment="Center"  />
+                <TextBlock Grid.Column="2" Text="{Binding Username}" VerticalAlignment="Center"  />
                 <TextBlock Grid.Column="4" VerticalAlignment="Center" >-</TextBlock>
                 <TextBlock Grid.Column="6" Text="{Binding Rating}" VerticalAlignment="Center"  />
                 <MaterialDesign:PackIcon Grid.Column="7" Kind="Star" VerticalAlignment="Center" Margin="0,0,0,1" />

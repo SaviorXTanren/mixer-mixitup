@@ -1,5 +1,5 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
@@ -11,18 +11,18 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 {
     public class BidGameEditorControlViewModel : GameEditorControlViewModelBase
     {
-        public IEnumerable<string> WhoCanStartRoles { get { return RoleRequirementViewModel.AdvancedUserRoleAllowedValues; } }
+        public IEnumerable<UserRoleEnum> WhoCanStartRoles { get { return RoleRequirementViewModel.AdvancedUserRoleAllowedValues; } }
 
-        public string WhoCanStartString
+        private UserRoleEnum whoCanStart = UserRoleEnum.Mod;
+        public UserRoleEnum WhoCanStart
         {
-            get { return EnumHelper.GetEnumName(this.WhoCanStart); }
+            get { return this.whoCanStart; }
             set
             {
-                this.WhoCanStart = EnumHelper.GetEnumValueFromString<MixerRoleEnum>(value);
+                this.whoCanStart = value;
                 this.NotifyPropertyChanged();
             }
         }
-        public MixerRoleEnum WhoCanStart { get; set; } = MixerRoleEnum.Mod;
 
         public string MinimumParticipantsString
         {
@@ -53,7 +53,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         private BidGameCommand existingCommand;
 
-        public BidGameEditorControlViewModel(UserCurrencyViewModel currency)
+        public BidGameEditorControlViewModel(UserCurrencyModel currency)
         {
             this.StartedCommand = this.CreateBasicChatCommand("@$username has started a bidding war starting at $gamebet " + currency.Name + " for...SOMETHING! Type !bid <AMOUNT> in chat to outbid them!");
             this.UserJoinedCommand = this.CreateBasicChatCommand("@$username has become the top bidder with $gamebet " + currency.Name + "! Type !bid <AMOUNT> in chat to outbid them!");

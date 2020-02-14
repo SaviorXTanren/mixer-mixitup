@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.Model.User;
+using MixItUp.Base.ViewModel.User;
 using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -19,14 +20,14 @@ namespace MixItUp.Base.ViewModel.Requirement
 
         public InventoryRequirementViewModel() { }
 
-        public InventoryRequirementViewModel(UserInventoryViewModel inventory, UserInventoryItemViewModel item, int amount)
+        public InventoryRequirementViewModel(UserInventoryModel inventory, UserInventoryItemModel item, int amount)
         {
             this.InventoryID = inventory.ID;
             this.ItemName = item.Name;
             this.Amount = amount;
         }
 
-        public UserInventoryViewModel GetInventory()
+        public UserInventoryModel GetInventory()
         {
             if (ChannelSession.Settings.Inventories.ContainsKey(this.InventoryID))
             {
@@ -35,38 +36,32 @@ namespace MixItUp.Base.ViewModel.Requirement
             return null;
         }
 
-        public bool TrySubtractAmount(UserDataViewModel userData) { return this.TrySubtractAmount(userData, this.Amount); }
+        public bool TrySubtractAmount(UserDataModel userData) { return this.TrySubtractAmount(userData, this.Amount); }
 
-        public bool TrySubtractMultiplierAmount(UserDataViewModel userData, int multiplier) { return this.TrySubtractAmount(userData, multiplier * this.Amount); }
+        public bool TrySubtractMultiplierAmount(UserDataModel userData, int multiplier) { return this.TrySubtractAmount(userData, multiplier * this.Amount); }
 
-        public bool TrySubtractAmount(UserDataViewModel userData, int amount)
+        public bool TrySubtractAmount(UserDataModel userData, int amount)
         {
             if (this.DoesMeetRequirement(userData))
             {
-                UserInventoryViewModel inventory = this.GetInventory();
-                if (inventory == null)
+                UserInventoryModel inventory = this.GetInventory();
+                if (inventory != null)
                 {
-                    return false;
+                    inventory.SubtractAmount(userData, this.ItemName, amount);
+                    return true;
                 }
-
-                if (!userData.HasInventoryAmount(inventory, this.ItemName, amount))
-                {
-                    return false;
-                }
-                userData.SubtractInventoryAmount(inventory, this.ItemName, amount);
-                return true;
             }
             return false;
         }
 
-        public bool DoesMeetRequirement(UserDataViewModel userData)
+        public bool DoesMeetRequirement(UserDataModel userData)
         {
             if (userData.IsCurrencyRankExempt)
             {
                 return true;
             }
 
-            UserInventoryViewModel inventory = this.GetInventory();
+            UserInventoryModel inventory = this.GetInventory();
             if (inventory == null)
             {
                 return false;
@@ -77,14 +72,14 @@ namespace MixItUp.Base.ViewModel.Requirement
                 return false;
             }
 
-            return userData.GetInventoryAmount(inventory, this.ItemName) >= this.Amount;
+            return inventory.HasAmount(userData, this.ItemName, this.Amount);
         }
 
         public async Task SendNotMetWhisper(UserViewModel user)
         {
             if (ChannelSession.Services.Chat != null && ChannelSession.Settings.Inventories.ContainsKey(this.InventoryID))
             {
-                await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to do this", this.Amount, this.ItemName));
+                await ChannelSession.Services.Chat.Whisper(user, string.Format("You do not have the required {0} {1} to do this", this.Amount, this.ItemName));
             }
         }
 

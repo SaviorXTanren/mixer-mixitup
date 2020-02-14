@@ -5,13 +5,35 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Overlay\OverlayPage.html" />
+    <None Remove="Overlay\webSocketWrapper.js" />
+    <None Remove="XSplit\Mix It Up.html" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Include="..\..\Mix It Up Web\MixItUpSecrets.cs" Link="MixItUpSecrets.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Overlay\OverlayPage.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Overlay\webSocketWrapper.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="XSplit\Mix It Up.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ExcelDataReader" Version="3.6.0" />
+    <PackageReference Include="ExcelDataReader.DataSet" Version="3.6.0" />
     <PackageReference Include="Jace" Version="0.9.3" />
-    <PackageReference Include="mixer-client-csharp" Version="0.9.0.8-beta" />
+    <PackageReference Include="linqtotwitter" Version="5.0.0" />
+    <PackageReference Include="mixer-client-csharp" Version="0.9.0.11-beta" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="System.IO.Ports" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,46 +43,48 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Localization\English.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>English.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Localization\Japanese.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Japanese.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Localization\Spanish.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Spanish.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="SkillsCatalogData.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Localization\English.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>English.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Localization\Japanese.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Japanese.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Localization\Spanish.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Spanish.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <ProjectReference Include="..\MixItUp.SignalR.Client\MixItUp.SignalR.Client.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MixItUp.SignalR.Client\MixItUp.SignalR.Client.csproj" />
+    <Compile Update="Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="LICENSE.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="SettingsTemplateDatabase.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="SkillsCatalogData.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+
+    <EmbeddedResource Update="Resources.de-DE.resx">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </EmbeddedResource>
+
+    <EmbeddedResource Update="Resources.qps-ploc.resx">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

@@ -1,10 +1,10 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Command;
-using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
 using StreamingClient.Base.Util;
 using System;
@@ -26,11 +26,11 @@ namespace MixItUp.WPF.Windows.Currency
         public const string ItemsSoldCommandName = "Shop Items Sold";
         public const string ItemsTradedCommandName = "Items Traded";
 
-        private UserInventoryViewModel inventory;
+        private UserInventoryModel inventory;
 
-        private ObservableCollection<UserInventoryItemViewModel> items = new ObservableCollection<UserInventoryItemViewModel>();
+        private ObservableCollection<UserInventoryItemModel> items = new ObservableCollection<UserInventoryItemModel>();
 
-        private Dictionary<UserDataViewModel, int> userImportData = new Dictionary<UserDataViewModel, int>();
+        private Dictionary<UserDataModel, int> userImportData = new Dictionary<UserDataModel, int>();
 
         public InventoryWindow()
         {
@@ -39,7 +39,7 @@ namespace MixItUp.WPF.Windows.Currency
             this.Initialize(this.StatusBar);
         }
 
-        public InventoryWindow(UserInventoryViewModel inventory)
+        public InventoryWindow(UserInventoryModel inventory)
         {
             this.inventory = inventory;
 
@@ -53,7 +53,7 @@ namespace MixItUp.WPF.Windows.Currency
             this.ItemsListView.ItemsSource = this.items;
 
             this.DefaultMaxAmountTextBox.Text = "99";
-            this.AutomaticResetComboBox.ItemsSource = EnumHelper.GetEnumNames<CurrencyResetRateEnum>();
+            this.AutomaticResetComboBox.ItemsSource = Enum.GetValues(typeof(CurrencyResetRateEnum));
 
             this.ShopCurrencyComboBox.ItemsSource = ChannelSession.Settings.Currencies.Values;
 
@@ -73,7 +73,7 @@ namespace MixItUp.WPF.Windows.Currency
             tradeCommand.Actions.Add(new ChatAction("@$username traded $itemtotal $itemname to @$targetusername for $targetitemtotal $targetitemname", sendAsStreamer: false));
             this.TradeItemsBoughtCommandButtonsControl.DataContext = tradeCommand;
 
-            this.AutomaticResetComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyResetRateEnum.Never);
+            this.AutomaticResetComboBox.SelectedItem = CurrencyResetRateEnum.Never;
 
             if (this.inventory != null)
             {
@@ -81,9 +81,9 @@ namespace MixItUp.WPF.Windows.Currency
 
                 this.DefaultMaxAmountTextBox.Text = this.inventory.DefaultMaxAmount.ToString();
 
-                this.AutomaticResetComboBox.SelectedItem = EnumHelper.GetEnumName(this.inventory.ResetInterval);
+                this.AutomaticResetComboBox.SelectedItem = this.inventory.ResetInterval;
 
-                foreach (UserInventoryItemViewModel item in this.inventory.Items.Values)
+                foreach (UserInventoryItemModel item in this.inventory.Items.Values)
                 {
                     this.items.Add(item);
                 }
@@ -113,19 +113,19 @@ namespace MixItUp.WPF.Windows.Currency
         private void EditItemButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            UserInventoryItemViewModel item = (UserInventoryItemViewModel)button.DataContext;
+            UserInventoryItemModel item = (UserInventoryItemModel)button.DataContext;
 
             this.ItemNameTextBox.Text = item.Name;
             this.ItemMaxAmountTextBox.Text = item.HasMaxAmount ? item.MaxAmount.ToString() : string.Empty;
             this.ItemBuyAmountTextBox.Text = item.BuyAmountString;
             this.ItemSellAmountTextBox.Text = item.SellAmountString;
-            this.AddItemButton.Content = "Update";
+            this.AddItemButton.Content = MixItUp.Base.Resources.Update;
         }
 
         private void DeleteItemButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            UserInventoryItemViewModel item = (UserInventoryItemViewModel)button.DataContext;
+            UserInventoryItemModel item = (UserInventoryItemModel)button.DataContext;
             this.items.Remove(item);
         }
 
@@ -160,20 +160,20 @@ namespace MixItUp.WPF.Windows.Currency
                     return;
                 }
 
-                UserInventoryItemViewModel existingItem = this.items.FirstOrDefault(i => i.Name.Equals(this.ItemNameTextBox.Text, StringComparison.CurrentCultureIgnoreCase));
+                UserInventoryItemModel existingItem = this.items.FirstOrDefault(i => i.Name.Equals(this.ItemNameTextBox.Text, StringComparison.CurrentCultureIgnoreCase));
                 if (existingItem != null)
                 {
                     this.items.Remove(existingItem);
                 }
 
-                UserInventoryItemViewModel item = new UserInventoryItemViewModel(this.ItemNameTextBox.Text, maxAmount: maxAmount, buyAmount: buyAmount, sellAmount: sellAmount);
+                UserInventoryItemModel item = new UserInventoryItemModel(this.ItemNameTextBox.Text, maxAmount: maxAmount, buyAmount: buyAmount, sellAmount: sellAmount);
                 this.items.Add(item);
 
                 this.ItemNameTextBox.Text = string.Empty;
                 this.ItemMaxAmountTextBox.Text = string.Empty;
                 this.ItemBuyAmountTextBox.Text = string.Empty;
                 this.ItemSellAmountTextBox.Text = string.Empty;
-                this.AddItemButton.Content = "Add Item";
+                this.AddItemButton.Content = MixItUp.Base.Resources.AddItem;
             });
         }
 
@@ -201,14 +201,14 @@ namespace MixItUp.WPF.Windows.Currency
                     return;
                 }
 
-                UserInventoryViewModel dupeInventory = ChannelSession.Settings.Inventories.Values.FirstOrDefault(c => c.Name.Equals(this.NameTextBox.Text));
+                UserInventoryModel dupeInventory = ChannelSession.Settings.Inventories.Values.FirstOrDefault(c => c.Name.Equals(this.NameTextBox.Text));
                 if (dupeInventory != null && (this.inventory == null || !this.inventory.ID.Equals(dupeInventory.ID)))
                 {
                     await DialogHelper.ShowMessage("There already exists an inventory with this name");
                     return;
                 }
 
-                UserCurrencyViewModel dupeCurrency = ChannelSession.Settings.Currencies.Values.FirstOrDefault(c => c.Name.Equals(this.NameTextBox.Text));
+                UserCurrencyModel dupeCurrency = ChannelSession.Settings.Currencies.Values.FirstOrDefault(c => c.Name.Equals(this.NameTextBox.Text));
                 if (dupeCurrency != null)
                 {
                     await DialogHelper.ShowMessage("There already exists a currency or rank system with this name");
@@ -253,20 +253,20 @@ namespace MixItUp.WPF.Windows.Currency
 
                 if (this.inventory == null)
                 {
-                    this.inventory = new UserInventoryViewModel();
+                    this.inventory = new UserInventoryModel();
                     ChannelSession.Settings.Inventories[this.inventory.ID] = this.inventory;
                 }
 
                 this.inventory.Name = this.NameTextBox.Text;
                 this.inventory.DefaultMaxAmount = maxAmount;
-                this.inventory.ResetInterval = EnumHelper.GetEnumValueFromString<CurrencyResetRateEnum>((string)this.AutomaticResetComboBox.SelectedItem);
+                this.inventory.ResetInterval = (CurrencyResetRateEnum)this.AutomaticResetComboBox.SelectedItem;
                 this.inventory.SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(this.inventory.Name);
-                this.inventory.Items = new Dictionary<string, UserInventoryItemViewModel>(this.items.ToDictionary(i => i.Name, i => i));
+                this.inventory.Items = new Dictionary<string, UserInventoryItemModel>(this.items.ToDictionary(i => i.Name, i => i));
                 this.inventory.ShopEnabled = this.ShopEnableDisableToggleButton.IsChecked.GetValueOrDefault();
                 this.inventory.ShopCommand = this.ShopCommandTextBox.Text;
                 if (this.ShopCurrencyComboBox.SelectedIndex >= 0)
                 {
-                    UserCurrencyViewModel currency = (UserCurrencyViewModel)this.ShopCurrencyComboBox.SelectedItem;
+                    UserCurrencyModel currency = (UserCurrencyModel)this.ShopCurrencyComboBox.SelectedItem;
                     if (currency != null)
                     {
                         this.inventory.ShopCurrencyID = currency.ID;

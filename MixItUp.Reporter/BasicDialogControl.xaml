@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.Reporter"
+             xmlns:resx="clr-namespace:MixItUp.Reporter.Properties"
              xmlns:MaterialDesignWPF="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
@@ -18,11 +19,10 @@
         <TextBlock Grid.Row="0" TextWrapping="Wrap" Text="{Binding}" />
 
         <Button Grid.Row="2" IsDefault="True" Style="{DynamicResource MaterialDesignFlatButton}"
-                    Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
+                    Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}" Content="{x:Static resx:Resources.Ok}">
             <Button.CommandParameter>
                 <system:Boolean>True</system:Boolean>
             </Button.CommandParameter>
-            OK
         </Button>
     </Grid>
 </UserControl>

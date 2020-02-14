@@ -22,7 +22,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override Task OnLoaded()
         {
-            if (ChannelSession.Services.Streamlabs == null)
+            if (!ChannelSession.Services.Streamlabs.IsConnected)
             {
                 this.StreamlabsNotEnabledWarningTextBlock.Visibility = System.Windows.Visibility.Visible;
             }

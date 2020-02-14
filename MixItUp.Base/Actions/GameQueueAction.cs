@@ -12,29 +12,17 @@ namespace MixItUp.Base.Actions
 {
     public enum GameQueueActionType
     {
-        [Name("User Join Queue")]
         JoinQueue,
-        [Name("User's Queue Position")]
         QueuePosition,
-        [Name("Queue Status")]
         QueueStatus,
-        [Name("User Leave Queue")]
         LeaveQueue,
-        [Name("Select User at Front of Queue")]
         SelectFirst,
-        [Name("Select Random User in Queue")]
         SelectRandom,
-        [Name("Select First User of Type in Queue")]
         SelectFirstType,
-        [Name("Enable/Disable Queue")]
         EnableDisableQueue,
-        [Name("Clear Queue")]
         ClearQueue,
-        [Name("User Join Front of Queue")]
         JoinFrontOfQueue,
-        [Name("Enable Queue")]
         EnableQueue,
-        [Name("Disable Queue")]
         DisableQueue,
     }
 
@@ -91,7 +79,7 @@ namespace MixItUp.Base.Actions
                 {
                     if (!ChannelSession.Services.GameQueueService.IsEnabled)
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "The game queue is not currently enabled");
+                        await ChannelSession.Services.Chat.Whisper(user, "The game queue is not currently enabled");
                         return;
                     }
 
@@ -105,7 +93,7 @@ namespace MixItUp.Base.Actions
                         }
                         else
                         {
-                            await ChannelSession.Services.Chat.Whisper(user.UserName, "The user could not be found");
+                            await ChannelSession.Services.Chat.Whisper(user, "The user could not be found");
                             return;
                         }
                     }

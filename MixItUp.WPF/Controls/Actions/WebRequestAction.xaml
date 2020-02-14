@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -29,15 +30,17 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" HorizontalAlignment="Right" Margin="0,0,0,-10">
-            <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">Special Identifiers Reference</Hyperlink>
+            <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">
+                <TextBlock Text="{x:Static resx:Resources.SpecialIdentifiersReference}"/>
+            </Hyperlink>
         </TextBlock>
 
-        <TextBox Grid.Row="2" x:Name="WebRequestURLTextBox" MaterialDesign:HintAssist.Hint="Web Request URL" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        <TextBox Grid.Row="2" x:Name="WebRequestURLTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.WebRequestURL}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-        <ComboBox Grid.Row="4" x:Name="ResponseActionComboBox" MaterialDesign:HintAssist.Hint="Action To Perform With Response" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="ResponseActionComboBox_SelectionChanged" />
+        <ComboBox Grid.Row="4" x:Name="ResponseActionComboBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ActionToPerformWithResponse}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="ResponseActionComboBox_SelectionChanged" />
 
         <Grid x:Name="ChatResponseActionGrid" Grid.Row="6" Visibility="Collapsed">
-            <TextBox x:Name="ChatResponseTextBox" MaterialDesign:HintAssist.Hint="Chat Message ($webrequestresult = Result Text)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="ChatResponseTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ChatMessageWebRequest}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid x:Name="CommandResponseActionGrid" Grid.Row="6" Visibility="Collapsed">
@@ -47,13 +50,13 @@
                 <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="CommandResponseComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Chat Command" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="Name" />
+            <ComboBox x:Name="CommandResponseComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Command}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="Name" />
 
-            <TextBox x:Name="CommandResponseArgumentsTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Arguments ($webrequestresult = Result Text)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="CommandResponseArgumentsTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ArgumentsWebRequest}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid x:Name="SpecialIdentifierResponseActionGrid" Grid.Row="6" Visibility="Collapsed">
-            <TextBox x:Name="SpecialIdentifierResponseTextBox" MaterialDesign:HintAssist.Hint="Special Identifier Name (Letters &amp; Numbers Only, no $)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="SpecialIdentifierResponseTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SpecialIdentifierHint}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid x:Name="JSONToSpecialIdentifiersResponseActionGrid" Grid.Row="6" Visibility="Collapsed">
@@ -75,17 +78,17 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBox Grid.Column="0" x:Name="JSONNameTextBox" Width="300" Text="{Binding JSONParameterName}" MaterialDesign:HintAssist.Hint="JSON Value Name (Use '\' for nested parameters)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                            <TextBox Grid.Column="0" x:Name="JSONNameTextBox" Width="300" Text="{Binding JSONParameterName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.JSONValueName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                            <TextBox Grid.Column="2" x:Name="SpecialIdentifierNameTextBox" Width="320" Text="{Binding SpecialIdentifierName}" MaterialDesign:HintAssist.Hint="Special Identifier Name (Letters &amp; Numbers Only, no $)" Style="{StaticResource MaterialDesignFloatingHintTextBox}"  />
+                            <TextBox Grid.Column="2" x:Name="SpecialIdentifierNameTextBox" Width="320" Text="{Binding SpecialIdentifierName}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SpecialIdentifierHint}" Style="{StaticResource MaterialDesignFloatingHintTextBox}"  />
 
-                            <Button Grid.Column="4" x:Name="DeleteJSONToSpecialIdentifierButton" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteJSONToSpecialIdentifierButton_Click" ToolTip="Delete" />
+                            <Button Grid.Column="4" x:Name="DeleteJSONToSpecialIdentifierButton" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteJSONToSpecialIdentifierButton_Click" ToolTip="{x:Static resx:Resources.Delete}" />
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
 
-            <Button x:Name="AddJSONToSpecialIdentifierButton" Grid.Row="2" Width="130" Click="AddJSONToSpecialIdentifierButton_Click">Add New Pair</Button>
+            <Button x:Name="AddJSONToSpecialIdentifierButton" Grid.Row="2" Width="130" Click="AddJSONToSpecialIdentifierButton_Click" Content="{x:Static resx:Resources.AddNewPair}"/>
         </Grid>
 
     </Grid>

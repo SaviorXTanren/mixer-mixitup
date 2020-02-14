@@ -94,14 +94,14 @@ namespace MixItUp.Base.Model.Overlay
             this.MilestoneReachedAnimation = milestoneReachedAnimation;
         }
 
-        public override async Task Initialize()
+        public override async Task Enable()
         {
             await this.RefreshPatronageData();
 
             GlobalEvents.OnPatronageUpdateOccurred += GlobalEvents_OnPatronageUpdateOccurred;
             GlobalEvents.OnPatronageMilestoneReachedOccurred += GlobalEvents_OnPatronageMilestoneReachedOccurred;
 
-            await base.Initialize();
+            await base.Enable();
         }
 
         public override async Task Disable()
@@ -187,12 +187,12 @@ namespace MixItUp.Base.Model.Overlay
 
         private async Task RefreshPatronageData()
         {
-            this.status = await ChannelSession.MixerStreamerConnection.GetPatronageStatus(ChannelSession.MixerChannel);
+            this.status = await ChannelSession.MixerUserConnection.GetPatronageStatus(ChannelSession.MixerChannel);
             if (status != null)
             {
                 this.Amount = status.patronageEarned;
 
-                this.period = await ChannelSession.MixerStreamerConnection.GetPatronagePeriod(status);
+                this.period = await ChannelSession.MixerUserConnection.GetPatronagePeriod(status);
                 if (this.period != null)
                 {
                     this.RefreshPatronageMilestoneData();

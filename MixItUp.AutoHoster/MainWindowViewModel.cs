@@ -2,10 +2,11 @@
 using Mixer.Base.Clients;
 using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.User;
-using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
+using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -142,7 +143,7 @@ namespace MixItUp.AutoHoster
             }
 
             this.settings = await SerializerHelper.DeserializeFromFile<AutoHosterSettingsModel>(SettingsFileName);
-            if (this.settings != null)
+            if (this.settings?.OAuthToken != null)
             {
                 try
                 {
@@ -159,9 +160,18 @@ namespace MixItUp.AutoHoster
             {
                 try
                 {
-                    this.connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ClientID,
-                        new List<OAuthClientScopeEnum>() { OAuthClientScopeEnum.channel__details__self, OAuthClientScopeEnum.channel__update__self, OAuthClientScopeEnum.chat__connect, OAuthClientScopeEnum.chat__chat, OAuthClientScopeEnum.chat__whisper },
-                        successResponse: OAuthServiceBase.LoginRedirectPageHTML);
+                    this.connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(
+                        ClientID,
+                        new List<OAuthClientScopeEnum>()
+                        {
+                            OAuthClientScopeEnum.channel__details__self,
+                            OAuthClientScopeEnum.channel__update__self,
+                            OAuthClientScopeEnum.chat__connect,
+                            OAuthClientScopeEnum.chat__chat,
+                            OAuthClientScopeEnum.chat__whisper
+                        },
+                        forceApprovalPrompt: true,
+                        successResponse: OAuthExternalServiceBase.LoginRedirectPageHTML);
                 }
                 catch (Exception ex) { Logger.Log(ex); }
                 if (this.connection == null)
@@ -335,11 +345,21 @@ namespace MixItUp.AutoHoster
             await this.SaveData();
         }
 
-        public async Task SaveData()
+        public Task Logout()
+        {
+            return SaveData(null);
+        }
+
+        public Task SaveData()
+        {
+            return SaveData(this.connection.GetOAuthTokenCopy());
+        }
+
+        private async Task SaveData(OAuthTokenModel oauthToken)
         {
             try
             {
-                this.settings.OAuthToken = this.connection.GetOAuthTokenCopy();
+                this.settings.OAuthToken = oauthToken;
                 this.settings.Channels = this.Channels.ToList();
                 await SerializerHelper.SerializeToFile(SettingsFileName, this.settings);
             }

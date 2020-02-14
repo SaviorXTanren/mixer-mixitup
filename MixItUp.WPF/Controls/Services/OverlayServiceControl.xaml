@@ -1,4 +1,4 @@
-﻿<local:ServicesControlBase x:Class="MixItUp.WPF.Controls.Services.OverlayServiceControl"
+﻿<local:ServiceControlBase x:Class="MixItUp.WPF.Controls.Services.OverlayServiceControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,51 +6,58 @@
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Services"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="600">
-    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+             d:DesignHeight="300" d:DesignWidth="300">
+    <local:ServiceControlBase.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </local:ServiceControlBase.Resources>
+
+    <Grid Margin="10" HorizontalAlignment="Center">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="40" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="40" />
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="410" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="240" />
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Column="0" VerticalAlignment="Center" Width="250">
+        <Grid Grid.Column="0" VerticalAlignment="Center">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="10" />
+                <RowDefinition Height="15" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="10" />
+                <RowDefinition Height="15" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" TextWrapping="Wrap">Add a webpage in your streaming software with the following URL:</TextBlock>
+            <TextBlock Grid.Row="0" TextWrapping="Wrap">Add a web browser source in your streaming software with the following URL: <Hyperlink NavigateUri="http://localhost:8111/overlay/" RequestNavigate="Hyperlink_RequestNavigate">http://localhost:8111/overlay/</Hyperlink></TextBlock>
 
-            <TextBlock Grid.Row="2" TextWrapping="Wrap" Margin="30,0"><Hyperlink NavigateUri="http://localhost:8111/overlay/" RequestNavigate="Hyperlink_RequestNavigate">http://localhost:8111/overlay/</Hyperlink></TextBlock>
+            <TextBlock Grid.Row="2" TextWrapping="Wrap">To use the Mix It Up Overlay, please ensure Mix It Up is running first before you launch your streaming software or refresh the webpage source in your streaming software after you launch Mix It Up.</TextBlock>
 
-            <TextBlock Grid.Row="4" TextWrapping="Wrap">To use the Mix It Up Overlay, please ensure Mix It Up is running first before you launch your streaming software or refresh the webpage source in your streaming software after you launch Mix It Up.</TextBlock>
+            <TextBlock Grid.Row="4" TextWrapping="Wrap">Multi-overlay support can be found under Settings -> Overlay</TextBlock>
+
+            <Grid Grid.Row="6" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid Visibility="{Binding IsConnected, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" Command="{Binding DisconnectCommand}" HorizontalAlignment="Center">Disconnect</Button>
+
+                    <Button Grid.Column="2" Command="{Binding TestConnectionCommand}" HorizontalAlignment="Center">Test Connection</Button>
+                </Grid>
+
+                <Grid Visibility="{Binding IsNotConnected, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center">
+                    <Button Command="{Binding ConnectCommand}" HorizontalAlignment="Center">Connect</Button>
+                </Grid>
+            </Grid>
         </Grid>
 
         <Grid Grid.Column="2" VerticalAlignment="Center">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-
-            <Button x:Name="EnableOverlayButton" Grid.Row="0" Click="EnableOverlayButton_Click" Width="140">Enable Overlay</Button>
-            <Button x:Name="DisableOverlayButton" Grid.Row="0" Click="DisableOverlayButton_Click" Width="140" Visibility="Collapsed">Disable Overlay</Button>
-
-            <Button x:Name="TestOverlayButton" Grid.Row="2" Click="TestOverlayButton_Click" Width="140" IsEnabled="False">Test Connection</Button>
-
-            <TextBlock Grid.Row="4" TextWrapping="Wrap" Width="150">Multi-overlay support can be found in Settings</TextBlock>
-        </Grid>
-
-        <Grid Grid.Column="4" VerticalAlignment="Center" Width="200">
-            <Grid.RowDefinitions>
+                <RowDefinition Height="10" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="10" />
                 <RowDefinition Height="Auto" />
@@ -58,8 +65,10 @@
 
             <TextBlock Grid.Row="0" TextWrapping="Wrap">If you have OBS Studio, XSplit, or Streamlabs OBS connectivity setup, we can auto-refresh the web browser source that contains the Mix It Up Overlay when Mix It Up starts. Simply type the name of the source below:</TextBlock>
 
-            <TextBox Grid.Row="2" x:Name="OverlaySourceRefreshTextBox" MaterialDesign:HintAssist.Hint="Streaming Software Source Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" TextChanged="OverlaySourceRefreshTextBox_TextChanged" />
+            <TextBlock Grid.Row="2" TextWrapping="Wrap">Simply type the name of the web browser source in your streaming software below:</TextBlock>
+
+            <TextBox Grid.Row="4" Text="{Binding StreamingSoftwareSourceName}" MaterialDesign:HintAssist.Hint="Streaming Software Source Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
         </Grid>
     </Grid>
-</local:ServicesControlBase>
+</local:ServiceControlBase>

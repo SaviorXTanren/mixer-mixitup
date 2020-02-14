@@ -1,7 +1,7 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.Controls.Games;
 using MixItUp.Base.ViewModel.Requirement;
-using MixItUp.Base.ViewModel.User;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,7 +16,7 @@ namespace MixItUp.WPF.Controls.Games
         private SlotMachineGameEditorControlViewModel viewModel;
         private SlotMachineGameCommand existingCommand;
 
-        public SlotMachineGameEditorControl(UserCurrencyViewModel currency)
+        public SlotMachineGameEditorControl(UserCurrencyModel currency)
         {
             InitializeComponent();
 
@@ -72,7 +72,7 @@ namespace MixItUp.WPF.Controls.Games
             RequirementViewModel requirements = this.CommandDetailsControl.GetRequirements();
             if (requirements.Currency != null)
             {
-                UserCurrencyViewModel currency = requirements.Currency.GetCurrency();
+                UserCurrencyModel currency = requirements.Currency.GetCurrency();
                 this.viewModel.AddOutcomeCommand.Execute(currency);
             }
         }

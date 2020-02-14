@@ -1,8 +1,10 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Actions;
-using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using StreamingClient.Base.Util;
+using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -26,7 +28,7 @@ namespace MixItUp.WPF.Controls.Actions
             this.channels.Clear();
             this.SendMessageChannelComboBox.ItemsSource = this.channels;
 
-            if (ChannelSession.Services.Discord == null)
+            if (!ChannelSession.Services.Discord.IsConnected)
             {
                 this.DiscordNotEnabledWarningTextBlock.Visibility = System.Windows.Visibility.Visible;
             }
@@ -43,12 +45,12 @@ namespace MixItUp.WPF.Controls.Actions
 
             this.MuteDeafenOptionCheckBox.IsChecked = true;
 
-            this.DiscordActionTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<DiscordActionTypeEnum>();
+            this.DiscordActionTypeComboBox.ItemsSource = Enum.GetValues(typeof(DiscordActionTypeEnum));
             if (this.action != null)
             {
-                this.DiscordActionTypeComboBox.SelectedItem = EnumHelper.GetEnumName(action.DiscordType);
+                this.DiscordActionTypeComboBox.SelectedItem = action.DiscordType;
 
-                this.SendMessageChannelComboBox.SelectedItem = action.SendMessageChannel;
+                this.SendMessageChannelComboBox.SelectedItem = this.channels.FirstOrDefault(c => c.ID.Equals(action.SendMessageChannelID));
                 this.SendMessageTextBox.Text = action.SendMessageText;
                 this.FilePath.Text = action.FilePath;
 
@@ -60,7 +62,7 @@ namespace MixItUp.WPF.Controls.Actions
         {
             if (this.DiscordActionTypeComboBox.SelectedIndex >= 0)
             {
-                DiscordActionTypeEnum actionType = EnumHelper.GetEnumValueFromString<DiscordActionTypeEnum>((string)this.DiscordActionTypeComboBox.SelectedItem);
+                DiscordActionTypeEnum actionType = (DiscordActionTypeEnum)this.DiscordActionTypeComboBox.SelectedItem;
                 if (actionType == DiscordActionTypeEnum.SendMessage)
                 {
                     if (this.SendMessageChannelComboBox.SelectedIndex >= 0 && !string.IsNullOrEmpty(this.SendMessageTextBox.Text))
@@ -87,7 +89,7 @@ namespace MixItUp.WPF.Controls.Actions
             this.MuteDeafenOptionGrid.Visibility = Visibility.Collapsed;
             if (this.DiscordActionTypeComboBox.SelectedIndex >= 0)
             {
-                DiscordActionTypeEnum actionType = EnumHelper.GetEnumValueFromString<DiscordActionTypeEnum>((string)this.DiscordActionTypeComboBox.SelectedItem);
+                DiscordActionTypeEnum actionType = (DiscordActionTypeEnum)this.DiscordActionTypeComboBox.SelectedItem;
                 if (actionType == DiscordActionTypeEnum.SendMessage)
                 {
                     this.SendMessageGrid.Visibility = Visibility.Visible;
@@ -95,12 +97,12 @@ namespace MixItUp.WPF.Controls.Actions
                 else if (actionType == DiscordActionTypeEnum.MuteSelf)
                 {
                     this.MuteDeafenOptionGrid.Visibility = Visibility.Visible;
-                    this.MuteDeafenOptionTextBlock.Text = "Mute";
+                    this.MuteDeafenOptionTextBlock.Text = MixItUp.Base.Resources.Mute;
                 }
                 else if (actionType == DiscordActionTypeEnum.DeafenSelf)
                 {
                     this.MuteDeafenOptionGrid.Visibility = Visibility.Visible;
-                    this.MuteDeafenOptionTextBlock.Text = "Deafen";
+                    this.MuteDeafenOptionTextBlock.Text = MixItUp.Base.Resources.Deafen;
                 }
             }
         }

@@ -4,9 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:util="clr-namespace:MixItUp.WPF.Util"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="600">
+    <local:ActionControlBase.Resources>
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+        <util:LocalizationConverter x:Key="LocalizationConverter"/>
+    </local:ActionControlBase.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -23,12 +30,18 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="CurrencyTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Currency/Rank/Inventory" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="175" DisplayMemberPath="Name" SelectionChanged="CurrencyTypeComboBox_SelectionChanged" />
+            <ComboBox x:Name="CurrencyTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CurrencyRankInventory}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="175" DisplayMemberPath="Name" SelectionChanged="CurrencyTypeComboBox_SelectionChanged" />
 
-            <ComboBox x:Name="CurrencyActionTypeComboBox" Grid.Column="2" Width="200" MaterialDesign:HintAssist.Hint="Action To Perform" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEnabled="False" SelectionChanged="CurrencyActionTypeComboBox_SelectionChanged" />
+            <ComboBox x:Name="CurrencyActionTypeComboBox" Grid.Column="2" Width="200" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Action}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEnabled="False" SelectionChanged="CurrencyActionTypeComboBox_SelectionChanged">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
-            <ComboBox x:Name="InventoryItemNameComboBox" Grid.Column="4" Width="150" Margin="0,0,20,0" IsEditable="True" Visibility="Collapsed" MaterialDesign:HintAssist.Hint="Item Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
-            <TextBox Grid.Column="5" x:Name="CurrencyAmountTextBox" Width="100" MaterialDesign:HintAssist.Hint="Amount" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <ComboBox x:Name="InventoryItemNameComboBox" Grid.Column="4" Width="150" Margin="0,0,20,0" IsEditable="True" Visibility="Collapsed" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ItemName}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <TextBox Grid.Column="5" x:Name="CurrencyAmountTextBox" Width="100" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Amount}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid x:Name="GiveToGrid" Grid.Row="1" Margin="0,20,0,0" Visibility="Collapsed">
@@ -40,12 +53,18 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" x:Name="DeductFromUserTextBlock" VerticalAlignment="Center" IsEnabled="False">Deduct From User Running Command:</TextBlock>
+            <TextBlock Grid.Column="0" x:Name="DeductFromUserTextBlock" VerticalAlignment="Center" IsEnabled="False" Text="{Binding Source={x:Static resx:Resources.DeductFromUserRunningCommand}, StringFormat={StaticResource ColumnHeaderFormat}}" />
             <ToggleButton Grid.Column="2" x:Name="DeductFromUserToggleButton" VerticalAlignment="Center" IsEnabled="False"/>
 
-            <ComboBox Grid.Column="4" x:Name="CurrencyPermissionsAllowedComboBox" Visibility="Collapsed" MaterialDesign:HintAssist.Hint="Users To Apply To" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200" />
+            <ComboBox Grid.Column="4" x:Name="CurrencyPermissionsAllowedComboBox" Visibility="Collapsed" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.UsersToApplyTo}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
-            <TextBox Grid.Column="4" x:Name="CurrencyUsernameTextBox" Visibility="Collapsed" Width="200" MaterialDesign:HintAssist.Hint="Target User" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="4" x:Name="CurrencyUsernameTextBox" Visibility="Collapsed" Width="200" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TargetUser}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
     </Grid>
 </local:ActionControlBase>

@@ -26,6 +26,11 @@ namespace MixItUp.AutoHoster
 
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            await Login();
+        }
+
+        private async Task Login()
+        {
             await this.RunAsyncOperation(async () =>
             {
                 this.DataContext = this.viewModel = new MainWindowViewModel();
@@ -130,6 +135,12 @@ namespace MixItUp.AutoHoster
             await func();
             this.IsEnabled = true;
             this.StatusBar.Visibility = Visibility.Hidden;
+        }
+
+        private async void Logout_Click(object sender, RoutedEventArgs e)
+        {
+            await this.viewModel.Logout();
+            await Login();
         }
     }
 }

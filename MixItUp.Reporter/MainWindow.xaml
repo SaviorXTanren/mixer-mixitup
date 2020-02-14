@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MixItUp.Reporter"
+        xmlns:resx="clr-namespace:MixItUp.Reporter.Properties"
         xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         
@@ -14,7 +15,7 @@
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
         
         Icon="./Logo.ico"
-        Title="Mix It Up - Error Reporter" Height="370" Width="400">
+        Title="{x:Static resx:Resources.Title}" Height="370" Width="400">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -45,22 +46,26 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" HorizontalAlignment="Center" TextWrapping="Wrap" Width="330">Whoops! Looks like Mix It Up ran into an issue. Would you like to submit a bug to help us improve?</TextBlock>
+            <TextBlock Grid.Row="0" HorizontalAlignment="Center" TextWrapping="Wrap" Width="330" Text="{x:Static resx:Resources.DialogDescription}"/>
 
-            <TextBox x:Name="IssueDescriptionTextBox" Grid.Row="2" AcceptsReturn="True" Width="320" Height="120" MaterialDesign:HintAssist.Hint="Issue Description (What Happened?)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="IssueDescriptionTextBox" Grid.Row="2" AcceptsReturn="True" Width="320" Height="120" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.IssueDescription}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox x:Name="ReplyEmailTextBox" Grid.Row="4" Width="320" MaterialDesign:HintAssist.Hint="Your E-Mail for Follow-Up" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="ReplyEmailTextBox" Grid.Row="4" Width="320" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Email}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
             
             <Grid Grid.Row="6" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Button x:Name="ReportIssueButton" Grid.Column="0" Click="ReportIssueButton_Click">Report Issue</Button>
+                <Button x:Name="ReportIssueButton" Grid.Column="0" Click="ReportIssueButton_Click" Content="{x:Static resx:Resources.ReportIssue}"/>
 
-                <Button x:Name="CancelButton" Grid.Column="2" Click="CancelButton_Click">Cancel</Button>
+                <Button x:Name="OpenLogFileButton" Grid.Column="2" Click="OpenLogFileButton_Click" Content="{x:Static resx:Resources.OpenLogFile}"/>
+
+                <Button x:Name="CancelButton" Grid.Column="4" Click="CancelButton_Click" Content="{x:Static resx:Resources.Cancel}"/>
 
             </Grid>
         </Grid>

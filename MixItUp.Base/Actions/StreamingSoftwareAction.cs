@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Services;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
@@ -218,27 +219,27 @@ namespace MixItUp.Base.Actions
             IStreamingSoftwareService ssService = null;
             if (this.SelectedStreamingSoftware == StreamingSoftwareTypeEnum.OBSStudio)
             {
-                if (ChannelSession.Services.OBSWebsocket == null)
+                if (!ChannelSession.Services.OBSStudio.IsConnected)
                 {
-                    await ChannelSession.Services.InitializeOBSWebsocket();
+                    await ChannelSession.Services.OBSStudio.Connect();
                 }
-                ssService = ChannelSession.Services.OBSWebsocket;
+                ssService = ChannelSession.Services.OBSStudio;
             }
             else if (this.SelectedStreamingSoftware == StreamingSoftwareTypeEnum.XSplit)
             {
-                if (ChannelSession.Services.XSplitServer == null)
+                if (!ChannelSession.Services.XSplit.IsConnected)
                 {
-                    await ChannelSession.Services.InitializeXSplitServer();
+                    await ChannelSession.Services.XSplit.Connect();
                 }
-                ssService = ChannelSession.Services.XSplitServer;
+                ssService = ChannelSession.Services.XSplit;
             }
             else if (this.SelectedStreamingSoftware == StreamingSoftwareTypeEnum.StreamlabsOBS)
             {
-                if (ChannelSession.Services.StreamlabsOBSService == null)
+                if (!ChannelSession.Services.StreamlabsOBS.IsConnected)
                 {
-                    await ChannelSession.Services.InitializeStreamlabsOBSService();
+                    await ChannelSession.Services.StreamlabsOBS.Connect();
                 }
-                ssService = ChannelSession.Services.StreamlabsOBSService;
+                ssService = ChannelSession.Services.StreamlabsOBS;
             }
 
             if (ssService != null)

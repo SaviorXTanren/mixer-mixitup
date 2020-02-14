@@ -30,17 +30,17 @@ namespace MixItUp.WPF.Controls.Actions
         {
             if (ChannelSession.Settings.EnableOverlay)
             {
-                if (ChannelSession.Services.OverlayServers.GetOverlayNames().Count() > 1)
+                if (ChannelSession.Services.Overlay.GetOverlayNames().Count() > 1)
                 {
                     this.OverlayNameComboBox.IsEnabled = true;
-                    this.OverlayNameComboBox.ItemsSource = ChannelSession.Services.OverlayServers.GetOverlayNames();
+                    this.OverlayNameComboBox.ItemsSource = ChannelSession.Services.Overlay.GetOverlayNames();
                 }
                 else
                 {
                     this.OverlayNameComboBox.IsEnabled = false;
-                    this.OverlayNameComboBox.ItemsSource = new List<string>() { ChannelSession.Services.OverlayServers.DefaultOverlayName };
+                    this.OverlayNameComboBox.ItemsSource = new List<string>() { ChannelSession.Services.Overlay.DefaultOverlayName };
                 }
-                this.OverlayNameComboBox.SelectedItem = ChannelSession.Services.OverlayServers.DefaultOverlayName;
+                this.OverlayNameComboBox.SelectedItem = ChannelSession.Services.Overlay.DefaultOverlayName;
             }
             else
             {

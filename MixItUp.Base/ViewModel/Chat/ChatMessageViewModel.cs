@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
@@ -50,9 +51,9 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public bool IsWhisper { get { return !string.IsNullOrEmpty(this.TargetUsername); } }
 
-        public bool IsUserTagged { get { return Regex.IsMatch(this.PlainTextMessage, string.Format(TaggingRegexFormat, ChannelSession.MixerStreamerUser.username)); } }
+        public bool IsUserTagged { get { return Regex.IsMatch(this.PlainTextMessage, string.Format(TaggingRegexFormat, ChannelSession.MixerUser.username)); } }
 
-        public bool IsStreamerOrBot { get { return this.User != null && this.User.ID.Equals(ChannelSession.MixerStreamerUser.id) || (ChannelSession.MixerBotUser != null && this.User.ID.Equals(ChannelSession.MixerBotUser.id)); } }
+        public bool IsStreamerOrBot { get { return this.User != null && this.User.MixerID.Equals(ChannelSession.MixerUser.id) || (ChannelSession.MixerBot != null && this.User.MixerID.Equals(ChannelSession.MixerBot.id)); } }
 
         public bool ShowTimestamp { get { return ChannelSession.Settings.ShowChatMessageTimestamps; } }
 
@@ -106,7 +107,7 @@ namespace MixItUp.Base.ViewModel.Chat
                 this.IsDeleted = true;
                 if (user != null)
                 {
-                    this.DeletedBy = user.UserName;
+                    this.DeletedBy = user.Username;
                 }
                 this.ModerationReason = reason;
 
@@ -118,12 +119,10 @@ namespace MixItUp.Base.ViewModel.Chat
 
                 if (this.User != null && !string.IsNullOrEmpty(this.PlainTextMessage))
                 {
-                    Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
-                    {
-                        { "message", this.PlainTextMessage },
-                        { "reason", (!string.IsNullOrEmpty(this.ModerationReason)) ? this.ModerationReason : "Manual Deletion" }
-                    };
-                    await EventCommand.FindAndRunEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.ChatMessageDeleted), this.User, extraSpecialIdentifiers: specialIdentifiers);
+                    EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatMessageDeleted, user);
+                    trigger.SpecialIdentifiers["message"] = this.PlainTextMessage;
+                    trigger.SpecialIdentifiers["reason"] = (!string.IsNullOrEmpty(this.ModerationReason)) ? this.ModerationReason : "Manual Deletion";
+                    await ChannelSession.Services.Events.PerformEvent(trigger);
                 }
             }
         }

@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.User;
 using Mixer.Base.Util;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
@@ -12,24 +13,16 @@ namespace MixItUp.Base.Actions
 {
     public enum CurrencyActionTypeEnum
     {
-        [Name("Add to user")]
         AddToUser,
-        [Name("Subtract from user")]
         SubtractFromUser,
 
-        [Name("Add to specific user")]
         AddToSpecificUser,
-        [Name("Add to all chat users")]
         AddToAllChatUsers,
 
-        [Name("Subtract from specific user")]
         SubtractFromSpecificUser,
-        [Name("Subtract from all chat users")]
         SubtractFromAllChatUsers,
 
-        [Name("Reset For All Users")]
         ResetForAllUsers,
-        [Name("Reset For User")]
         ResetForUser
     }
 
@@ -59,7 +52,7 @@ namespace MixItUp.Base.Actions
         public bool DeductFromUser { get; set; }
 
         [DataMember]
-        public MixerRoleEnum RoleRequirement { get; set; }
+        public UserRoleEnum RoleRequirement { get; set; }
 
         [DataMember]
         [Obsolete]
@@ -71,10 +64,10 @@ namespace MixItUp.Base.Actions
         [Obsolete]
         public bool GiveToAllUsers { get; set; }
 
-        public CurrencyAction() : base(ActionTypeEnum.Currency) { this.RoleRequirement = MixerRoleEnum.User; }
+        public CurrencyAction() : base(ActionTypeEnum.Currency) { this.RoleRequirement = UserRoleEnum.User; }
 
-        public CurrencyAction(UserCurrencyViewModel currency, CurrencyActionTypeEnum currencyActionType, string amount, string username = null,
-            MixerRoleEnum roleRequirement = MixerRoleEnum.User, bool deductFromUser = false)
+        public CurrencyAction(UserCurrencyModel currency, CurrencyActionTypeEnum currencyActionType, string amount, string username = null,
+            UserRoleEnum roleRequirement = UserRoleEnum.User, bool deductFromUser = false)
             : this()
         {
             this.CurrencyID = currency.ID;
@@ -85,8 +78,8 @@ namespace MixItUp.Base.Actions
             this.DeductFromUser = deductFromUser;
         }
 
-        public CurrencyAction(UserInventoryViewModel inventory, CurrencyActionTypeEnum currencyActionType, string itemName = null, string amount = null, string username = null,
-            MixerRoleEnum roleRequirement = MixerRoleEnum.User, bool deductFromUser = false)
+        public CurrencyAction(UserInventoryModel inventory, CurrencyActionTypeEnum currencyActionType, string itemName = null, string amount = null, string username = null,
+            UserRoleEnum roleRequirement = UserRoleEnum.User, bool deductFromUser = false)
             : this()
         {
             this.InventoryID = inventory.ID;
@@ -102,8 +95,8 @@ namespace MixItUp.Base.Actions
         {
             if (ChannelSession.Services.Chat != null)
             {
-                UserCurrencyViewModel currency = null;
-                UserInventoryViewModel inventory = null;
+                UserCurrencyModel currency = null;
+                UserInventoryModel inventory = null;
                 string systemName = null;
                 string itemName = null;
 
@@ -151,11 +144,11 @@ namespace MixItUp.Base.Actions
                 {
                     if (currency != null)
                     {
-                        user.Data.ResetCurrencyAmount(currency);
+                        currency.ResetAmount(user.Data);
                     }
                     else if (inventory != null)
                     {
-                        user.Data.ResetInventoryAmount(inventory);
+                        inventory.ResetAmount(user.Data);
                     }
                 }
                 else
@@ -163,18 +156,18 @@ namespace MixItUp.Base.Actions
                     string amountTextValue = await this.ReplaceStringWithSpecialModifiers(this.Amount, user, arguments);
                     if (!double.TryParse(amountTextValue, out double doubleAmount))
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("{0} is not a valid amount of {1}", amountTextValue, systemName));
+                        await ChannelSession.Services.Chat.Whisper(user, string.Format("{0} is not a valid amount of {1}", amountTextValue, systemName));
                         return;
                     }
 
                     int amountValue = (int)Math.Ceiling(doubleAmount);
                     if (amountValue <= 0)
                     {
-                        await ChannelSession.Services.Chat.Whisper(user.UserName, "The amount specified must be greater than 0");
+                        await ChannelSession.Services.Chat.Whisper(user, "The amount specified must be greater than 0");
                         return;
                     }
 
-                    HashSet<UserDataViewModel> receiverUserData = new HashSet<UserDataViewModel>();
+                    HashSet<UserDataModel> receiverUserData = new HashSet<UserDataModel>();
                     if (this.CurrencyActionType == CurrencyActionTypeEnum.AddToUser)
                     {
                         receiverUserData.Add(user.Data);
@@ -184,15 +177,14 @@ namespace MixItUp.Base.Actions
                         if (!string.IsNullOrEmpty(this.Username))
                         {
                             string usernameString = await this.ReplaceStringWithSpecialModifiers(this.Username, user, arguments);
-
-                            UserModel receivingUser = await ChannelSession.MixerStreamerConnection.GetUser(usernameString);
+                            UserViewModel receivingUser = ChannelSession.Services.User.GetUserByUsername(usernameString);
                             if (receivingUser != null)
                             {
-                                receiverUserData.Add(ChannelSession.Settings.UserData.GetValueIfExists(receivingUser.id, new UserDataViewModel(new UserViewModel(receivingUser))));
+                                receiverUserData.Add(receivingUser.Data);
                             }
                             else
                             {
-                                await ChannelSession.Services.Chat.Whisper(user.UserName, "The user could not be found");
+                                await ChannelSession.Services.Chat.Whisper(user, "The user could not be found");
                                 return;
                             }
                         }
@@ -213,48 +205,48 @@ namespace MixItUp.Base.Actions
                     {
                         if (currency != null)
                         {
-                            if (!user.Data.HasCurrencyAmount(currency, amountValue))
+                            if (!currency.HasAmount(user.Data, amountValue))
                             {
-                                await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to do this", amountValue, systemName));
+                                await ChannelSession.Services.Chat.Whisper(user, string.Format("You do not have the required {0} {1} to do this", amountValue, systemName));
                                 return;
                             }
-                            user.Data.SubtractCurrencyAmount(currency, amountValue);
+                            currency.SubtractAmount(user.Data, amountValue);
                         }
                         else if (inventory != null)
                         {
-                            if (!user.Data.HasInventoryAmount(inventory, itemName, amountValue))
+                            if (!inventory.HasAmount(user.Data, itemName, amountValue))
                             {
-                                await ChannelSession.Services.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to do this", amountValue, itemName));
+                                await ChannelSession.Services.Chat.Whisper(user, string.Format("You do not have the required {0} {1} to do this", amountValue, itemName));
                                 return;
                             }
-                            user.Data.SubtractInventoryAmount(inventory, itemName, amountValue);
+                            inventory.SubtractAmount(user.Data, itemName, amountValue);
                         }
                     }
 
                     if (receiverUserData.Count > 0)
                     {
-                        foreach (UserDataViewModel receiverUser in receiverUserData)
+                        foreach (UserDataModel receiverUser in receiverUserData)
                         {
                             if (currency != null)
                             {
                                 if (this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromSpecificUser || this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromAllChatUsers)
                                 {
-                                    receiverUser.SubtractCurrencyAmount(currency, amountValue);
+                                    currency.SubtractAmount(receiverUser, amountValue);
                                 }
                                 else
                                 {
-                                    receiverUser.AddCurrencyAmount(currency, amountValue);
+                                    currency.AddAmount(receiverUser, amountValue);
                                 }
                             }
                             else if (inventory != null)
                             {
                                 if (this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromSpecificUser || this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromAllChatUsers)
                                 {
-                                    receiverUser.SubtractInventoryAmount(inventory, itemName, amountValue);
+                                    inventory.SubtractAmount(receiverUser, itemName, amountValue);
                                 }
                                 else
                                 {
-                                    receiverUser.AddInventoryAmount(inventory, itemName, amountValue);
+                                    inventory.AddAmount(receiverUser, itemName, amountValue);
                                 }
                             }
                         }

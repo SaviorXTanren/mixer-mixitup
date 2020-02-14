@@ -1,15 +1,14 @@
-﻿using Mixer.Base.Model.User;
+﻿using ExcelDataReader;
+using Mixer.Base.Model.User;
 using MixItUp.Base;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.WPF.Util;
-using NetOffice.ExcelApi;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Windows.Users
@@ -57,7 +56,7 @@ namespace MixItUp.WPF.Windows.Users
             this.dataColumns.Add(new ImportDataColumns() { DataName = "Offline Viewing Time (Hours)" });
             this.dataColumns.Add(new ImportDataColumns() { DataName = "Offline Viewing Time (Mins)" });
 
-            foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+            foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
             {
                 this.dataColumns.Add(new ImportDataColumns() { DataName = currency.Name });
             }
@@ -128,37 +127,24 @@ namespace MixItUp.WPF.Windows.Users
                     {
                         try
                         {
-                            using (NetOffice.ExcelApi.Application application = new NetOffice.ExcelApi.Application())
+                            using (var stream = File.Open(filepath, FileMode.Open, FileAccess.Read))
                             {
-                                application.DisplayAlerts = false;
-
-                                Workbook workbook = application.Workbooks.Open(filepath);
-                                if (workbook != null)
+                                using (var reader = ExcelReaderFactory.CreateReader(stream))
                                 {
-                                    Worksheet worksheet = (Worksheet)workbook.Worksheets.FirstOrDefault();
-                                    if (worksheet != null)
+                                    var result = reader.AsDataSet();
+                                    if (result.Tables.Count > 0)
                                     {
-                                        int maxColumnNumber = this.dataColumns.Max(dc => dc.GetColumnNumber());
-                                        int currentRow = 1;
-                                        List<string> dataValues = new List<string>();
-                                        do
+                                        for (int i = 0; i < result.Tables[0].Rows.Count; i++)
                                         {
-                                            dataValues.Clear();
-                                            for (int i = 1; i <= maxColumnNumber; i++)
+                                            List<string> values = new List<string>();
+                                            for (int j = 0; j < result.Tables[0].Rows[i].ItemArray.Length; j++)
                                             {
-                                                Range range = worksheet.Cells[currentRow, i];
-                                                if (range.Value != null)
-                                                {
-                                                    dataValues.Add(range.Value.ToString());
-                                                }
+                                                values.Add(result.Tables[0].Rows[i].ItemArray[j].ToString());
                                             }
-                                            await this.AddUserData(dataValues);
-                                            currentRow++;
-                                        } while (dataValues.Count > 0);
+                                            await this.AddUserData(values);
+                                        }
                                     }
                                 }
-
-                                application.Quit();
                             }
                         }
                         catch (Exception ex)
@@ -176,7 +162,7 @@ namespace MixItUp.WPF.Windows.Users
         private async Task AddUserData(IEnumerable<string> dataValues)
         {
             int currentColumn = 1;
-            UserDataViewModel importedUserData = new UserDataViewModel();
+            UserDataModel importedUserData = new UserDataModel();
             foreach (string dataValue in dataValues)
             {
                 bool columnMatched = false;
@@ -189,12 +175,12 @@ namespace MixItUp.WPF.Windows.Users
                             case "User ID":
                                 if (uint.TryParse(dataValue, out uint id))
                                 {
-                                    importedUserData.ID = id;
+                                    importedUserData.MixerID = id;
                                 }
                                 columnMatched = true;
                                 break;
                             case "User Name":
-                                importedUserData.UserName = dataValue;
+                                importedUserData.MixerUsername = dataValue;
                                 columnMatched = true;
                                 break;
                             case "Live Viewing Time (Hours)":
@@ -226,13 +212,13 @@ namespace MixItUp.WPF.Windows.Users
                                 columnMatched = true;
                                 break;
                             default:
-                                foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+                                foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
                                 {
                                     if (currency.Name.Equals(dataColumn.DataName))
                                     {
                                         if (int.TryParse(dataValue, out int currencyAmount))
                                         {
-                                            importedUserData.SetCurrencyAmount(currency, currencyAmount);
+                                            currency.SetAmount(importedUserData, currencyAmount);
                                         }
                                         columnMatched = true;
                                         break;
@@ -250,26 +236,28 @@ namespace MixItUp.WPF.Windows.Users
                 currentColumn++;
             }
 
-            if (importedUserData.ID == 0)
+            if (importedUserData.MixerID == 0)
             {
-                UserModel user = await ChannelSession.MixerStreamerConnection.GetUser(importedUserData.UserName);
+                UserModel user = await ChannelSession.MixerUserConnection.GetUser(importedUserData.Username);
                 if (user != null)
                 {
-                    importedUserData.ID = user.id;
+                    importedUserData.MixerID = user.id;
                 }
             }
-            else if (string.IsNullOrEmpty(importedUserData.UserName))
+            else if (string.IsNullOrEmpty(importedUserData.Username))
             {
-                UserModel user = await ChannelSession.MixerStreamerConnection.GetUser(importedUserData.ID);
+                UserModel user = await ChannelSession.MixerUserConnection.GetUser(importedUserData.MixerID);
                 if (user != null)
                 {
-                    importedUserData.UserName = user.username;
+                    importedUserData.MixerUsername = user.username;
                 }
             }
 
-            if (importedUserData.ID > 0 && !string.IsNullOrEmpty(importedUserData.UserName))
+            if (importedUserData.MixerID > 0 && !string.IsNullOrEmpty(importedUserData.Username))
             {
-                ChannelSession.Settings.UserData[importedUserData.ID] = importedUserData;
+                UserViewModel user = new UserViewModel(new UserModel() { id = importedUserData.MixerID, username = importedUserData.Username });
+                UserDataModel userData = user.Data;
+
                 usersImported++;
                 this.Dispatcher.Invoke(() => { this.ImportDataButton.Content = string.Format("Imported {0} Users", usersImported); });
             }

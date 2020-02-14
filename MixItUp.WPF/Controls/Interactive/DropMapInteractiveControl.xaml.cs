@@ -1,11 +1,10 @@
 ﻿using Mixer.Base.Model.MixPlay;
 using Mixer.Base.Model.User;
 using MixItUp.Base;
-using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Users;
-using MixItUp.WPF.Util;
+using MixItUp.WPF.Services;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
 using System;
@@ -15,7 +14,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Imaging;
 
 namespace MixItUp.WPF.Controls.Interactive
 {
@@ -182,7 +180,7 @@ namespace MixItUp.WPF.Controls.Interactive
             this.TimerStackPanel.Visibility = Visibility.Hidden;
 
             this.DropLocationTextBlock.Text = location;
-            await this.WinnerAvatar.SetUserAvatarUrl(winner);
+            await this.WinnerAvatar.SetMixerUserAvatarUrl(winner);
             this.WinnerAvatar.SetSize(80);
             this.WinnerTextBlock.Text = username;
 
@@ -210,7 +208,7 @@ namespace MixItUp.WPF.Controls.Interactive
 
             this.SaveSettings();
 
-            MixPlayConnectedSceneGroupCollectionModel sceneGroups = await ChannelSession.Interactive.GetScenes();
+            MixPlayConnectedSceneGroupCollectionModel sceneGroups = await ChannelSession.Services.MixPlay.GetScenes();
             if (sceneGroups != null)
             {
                 this.scene = sceneGroups.scenes.FirstOrDefault();
@@ -230,9 +228,7 @@ namespace MixItUp.WPF.Controls.Interactive
             if (this.sparkCost > 0)
             {
                 this.positionButton.cost = this.sparkCost;
-                await ChannelSession.Interactive.UpdateControls(this.scene, new List<MixPlayControlModel>() { this.positionButton });
-
-                await ChannelSession.Interactive.RefreshCachedControls();
+                await ChannelSession.Services.MixPlay.UpdateControls(this.scene, new List<MixPlayControlModel>() { this.positionButton });
             }
 
             if (this.dropMapType == DropMapTypeEnum.PUBG)
@@ -245,7 +241,7 @@ namespace MixItUp.WPF.Controls.Interactive
 
                 MixPlayConnectedButtonControlModel control = new MixPlayConnectedButtonControlModel() { controlID = this.positionButton.controlID };
                 control.meta["map"] = map.Map;
-                await ChannelSession.Interactive.UpdateControls(this.scene, new List<MixPlayControlModel>() { control });
+                await ChannelSession.Services.MixPlay.UpdateControls(this.scene, new List<MixPlayControlModel>() { control });
             }
 
             this.userAvatars.Clear();
@@ -275,7 +271,7 @@ namespace MixItUp.WPF.Controls.Interactive
 
                         control = new MixPlayConnectedButtonControlModel() { controlID = this.winnerButton.controlID };
                         control.meta["timeleft"] = timeLeft;
-                        await ChannelSession.Interactive.UpdateControls(this.scene, new List<MixPlayControlModel>() { control });
+                        await ChannelSession.Services.MixPlay.UpdateControls(this.scene, new List<MixPlayControlModel>() { control });
                     }
 
                     if (this.userPoints.Count > 0)
@@ -286,7 +282,7 @@ namespace MixItUp.WPF.Controls.Interactive
                         Point point = this.userPoints[winner];
                         UserProfileAvatarControl avatar = this.userAvatars[winner];
 
-                        UserModel user = await ChannelSession.MixerStreamerConnection.GetUser(winner);
+                        UserModel user = await ChannelSession.MixerUserConnection.GetUser(winner);
 
                         string username = (user != null) ? user.username : "Unknown";
                         string location = this.ComputeLocation(point);
@@ -302,7 +298,7 @@ namespace MixItUp.WPF.Controls.Interactive
                         control.meta["userID"] = winner;
                         control.meta["username"] = username;
                         control.meta["location"] = location;
-                        await ChannelSession.Interactive.UpdateControls(this.scene, new List<MixPlayControlModel>() { control });
+                        await ChannelSession.Services.MixPlay.UpdateControls(this.scene, new List<MixPlayControlModel>() { control });
 
                         await ChannelSession.Services.Chat.SendMessage(string.Format("Winner: @{0}, Drop Location: {1}", username, location));
                     }
@@ -322,7 +318,7 @@ namespace MixItUp.WPF.Controls.Interactive
             await base.GameDisconnectedInternal();
         }
 
-        protected override async Task OnInteractiveControlUsed(UserViewModel user, MixPlayGiveInputModel input, InteractiveConnectedControlCommand command)
+        protected override async Task OnMixPlayControlUsed(UserViewModel user, MixPlayGiveInputModel input, MixPlayControlModel control)
         {
             try
             {
@@ -332,22 +328,21 @@ namespace MixItUp.WPF.Controls.Interactive
                     {
                         Point point = new Point() { X = (double)input.input.meta["x"], Y = (double)input.input.meta["y"] };
 
-                        this.userPoints[user.ID] = point;
+                        this.userPoints[user.MixerID] = point;
 
-                        MixPlayConnectedButtonControlModel control = new MixPlayConnectedButtonControlModel() { controlID = this.positionButton.controlID };
-                        control.meta["userID"] = user.ID;
+                        control.meta["userID"] = user.MixerID;
                         control.meta["x"] = point.X;
                         control.meta["y"] = point.Y;
-                        await ChannelSession.Interactive.UpdateControls(this.scene, new List<MixPlayControlModel>() { control });
+                        await ChannelSession.Services.MixPlay.UpdateControls(this.scene, new List<MixPlayControlModel>() { control });
 
                         await this.Dispatcher.InvokeAsync(async () =>
                         {
-                            if (!this.userAvatars.ContainsKey(user.ID))
+                            if (!this.userAvatars.ContainsKey(user.MixerID))
                             {
                                 UserProfileAvatarControl avatarControl = new UserProfileAvatarControl();
                                 await avatarControl.SetUserAvatarUrl(user);
                                 avatarControl.SetSize(20);
-                                this.userAvatars[user.ID] = avatarControl;
+                                this.userAvatars[user.MixerID] = avatarControl;
 
                                 this.canvas.Children.Add(avatarControl);
                             }
@@ -432,14 +427,14 @@ namespace MixItUp.WPF.Controls.Interactive
         {
             foreach (var userPoint in this.userPoints)
             {
-                UserViewModel user = new UserViewModel(userPoint.Key, null);
+                UserViewModel user = new UserViewModel(new UserModel() { id = userPoint.Key });
                 this.PositionUserPointOnCanvas(user, userPoint.Value);
             }
         }
 
         private void PositionUserPointOnCanvas(UserViewModel user, Point point)
         {
-            UserProfileAvatarControl avatarControl = this.userAvatars[user.ID];
+            UserProfileAvatarControl avatarControl = this.userAvatars[user.MixerID];
 
             double canvasX = ((point.X / 100.0) * this.image.ActualWidth);
             double canvasY = ((point.Y / 100.0) * this.image.ActualHeight);
@@ -450,7 +445,7 @@ namespace MixItUp.WPF.Controls.Interactive
 
         private void ChangeMapImage(string path)
         {
-            this.MapImage.Source = BitmapImageLoader.LoadLocal(new Uri("pack://application:,,," + path));
+            this.MapImage.Source = WindowsImageService.LoadLocal(new Uri("pack://application:,,," + path));
         }
     }
 }

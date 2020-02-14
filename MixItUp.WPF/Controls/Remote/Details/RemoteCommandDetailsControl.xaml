@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Remote.Details"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -25,11 +26,11 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" Text="{Binding Item.Name}" MaterialDesign:HintAssist.Hint="Button Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
+            <TextBox Grid.Column="0" Text="{Binding Item.Name}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ButtonName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
 
-            <ComboBox Grid.Column="2" ItemsSource="{Binding PreDefinedColors}" SelectedItem="{Binding Item.TextColor}" MaterialDesign:HintAssist.Hint="Text Color" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
+            <ComboBox Grid.Column="2" ItemsSource="{Binding PreDefinedColors}" SelectedItem="{Binding Item.TextColor}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TextColor}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
 
-            <ComboBox Grid.Column="4" ItemsSource="{Binding PreDefinedColors}" SelectedItem="{Binding Item.BackgroundColor}" MaterialDesign:HintAssist.Hint="Background Color" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
+            <ComboBox Grid.Column="4" ItemsSource="{Binding PreDefinedColors}" SelectedItem="{Binding Item.BackgroundColor}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.BackgroundColor}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
 
         </Grid>
 
@@ -42,9 +43,9 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox Grid.Column="0" ItemsSource="{Binding CommandTypes}" SelectedItem="{Binding CommandType}" MaterialDesign:HintAssist.Hint="Command Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
+            <ComboBox Grid.Column="0" ItemsSource="{Binding CommandTypes}" SelectedItem="{Binding CommandType}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="125" />
 
-            <ComboBox Grid.Column="2" ItemsSource="{Binding Commands}" SelectedItem="{Binding Command}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="Command Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="250" />
+            <ComboBox Grid.Column="2" ItemsSource="{Binding Commands}" SelectedItem="{Binding Command}" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Name}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="250" />
 
         </Grid>
     </Grid>

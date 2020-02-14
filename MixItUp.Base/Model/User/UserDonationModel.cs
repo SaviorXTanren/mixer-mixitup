@@ -21,6 +21,7 @@ namespace MixItUp.Base.Model.User
         TreatStream,
         StreamJar,
         JustGiving,
+        StreamElements,
     }
 
     [DataContract]
@@ -32,7 +33,7 @@ namespace MixItUp.Base.Model.User
         [DataMember]
         public string ID { get; set; }
         [DataMember]
-        public string UserName { get; set; }
+        public string Username { get; set; }
         [DataMember]
         public string Type { get; set; }
         [DataMember]
@@ -54,15 +55,12 @@ namespace MixItUp.Base.Model.User
         {
             get
             {
-                UserDataViewModel userData = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => !string.IsNullOrEmpty(u.UserName) && u.UserName.Equals(this.UserName, StringComparison.InvariantCultureIgnoreCase));
-                if (userData != null)
+                UserViewModel user = ChannelSession.Services.User.GetUserByUsername(this.Username);
+                if (user == null)
                 {
-                    return new UserViewModel(userData);
+                    user = new UserViewModel(this.Username);
                 }
-                else
-                {
-                    return new UserViewModel(0, this.UserName);
-                }
+                return user;
             }
         }
 

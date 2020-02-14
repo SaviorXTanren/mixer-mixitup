@@ -67,7 +67,7 @@ namespace MixItUp.WPF.Controls.Command
             }
             else
             {
-                this.LowestRoleAllowedComboBox.SelectedItem = EnumHelper.GetEnumName(MixerRoleEnum.User);
+                this.LowestRoleAllowedComboBox.SelectedItem = EnumHelper.GetEnumName(UserRoleEnum.User);
                 this.CooldownTextBox.Text = "0";
                 if (this.commandType == BasicCommandTypeEnum.Chat)
                 {
@@ -160,12 +160,12 @@ namespace MixItUp.WPF.Controls.Command
                     }
                     else if (this.actionControl is SoundActionControl)
                     {
-                        await DialogHelper.ShowMessage("The sound file path must not be empty");
+                        await DialogHelper.ShowMessage(MixItUp.Base.Resources.EmptySoundFilePath);
                     }
                     return;
                 }
 
-                RequirementViewModel requirement = new RequirementViewModel(EnumHelper.GetEnumValueFromString<MixerRoleEnum>((string)this.LowestRoleAllowedComboBox.SelectedItem), cooldown: cooldown);
+                RequirementViewModel requirement = new RequirementViewModel(EnumHelper.GetEnumValueFromString<UserRoleEnum>((string)this.LowestRoleAllowedComboBox.SelectedItem), cooldown: cooldown);
 
                 ChatCommand newCommand = new ChatCommand(commandStrings.First(), commandStrings, requirement);
                 newCommand.IsBasic = isBasic;

@@ -19,26 +19,26 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override Task OnLoaded()
         {
-            if (ChannelSession.Services.Spotify == null)
-            {
-                this.SpotifyNotEnabledWarningTextBlock.Visibility = System.Windows.Visibility.Visible;
-            }
+            //if (ChannelSession.Services.Spotify == null)
+            //{
+            //    this.SpotifyNotEnabledWarningTextBlock.Visibility = System.Windows.Visibility.Visible;
+            //}
 
-            this.SpotifyActionTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<SpotifyActionTypeEnum>();
-            if (this.action != null)
-            {
-                this.SpotifyActionTypeComboBox.SelectedItem = EnumHelper.GetEnumName(action.SpotifyType);
-            }
+            //this.SpotifyActionTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<SpotifyActionTypeEnum>();
+            //if (this.action != null)
+            //{
+            //    this.SpotifyActionTypeComboBox.SelectedItem = EnumHelper.GetEnumName(action.SpotifyType);
+            //}
             return Task.FromResult(0);
         }
 
         public override ActionBase GetAction()
         {
-            if (this.SpotifyActionTypeComboBox.SelectedIndex >= 0)
-            {
-                SpotifyActionTypeEnum actionType = EnumHelper.GetEnumValueFromString<SpotifyActionTypeEnum>((string)this.SpotifyActionTypeComboBox.SelectedItem);
-                return new SpotifyAction(actionType);
-            }
+            //if (this.SpotifyActionTypeComboBox.SelectedIndex >= 0)
+            //{
+            //    SpotifyActionTypeEnum actionType = EnumHelper.GetEnumValueFromString<SpotifyActionTypeEnum>((string)this.SpotifyActionTypeComboBox.SelectedItem);
+            //    return new SpotifyAction(actionType);
+            //}
             return null;
         }
     }

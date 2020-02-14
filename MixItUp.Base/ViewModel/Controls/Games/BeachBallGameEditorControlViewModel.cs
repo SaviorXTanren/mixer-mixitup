@@ -1,8 +1,8 @@
 ﻿using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
-using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -51,7 +51,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         public BeachBallGameCommand existingCommand;
 
-        public BeachBallGameEditorControlViewModel(UserCurrencyViewModel currency)
+        public BeachBallGameEditorControlViewModel(UserCurrencyModel currency)
         {
             this.StartedCommand = this.CreateBasicChatCommand("@$username has started a game of beach ball and hit the ball to @$targetusername. Quick, type !beachball to hit it to someone else!");
             this.BallHitCommand = this.CreateBasicChatCommand("@$username has hit the ball to @$targetusername. Quick, type !beachball to hit it to someone else!");

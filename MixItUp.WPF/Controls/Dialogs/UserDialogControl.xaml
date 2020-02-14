@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Dialogs"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:UsersControls="clr-namespace:MixItUp.WPF.Controls.Users"
              xmlns:MaterialDesignWPF="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -83,14 +84,14 @@
                     <Image Grid.Column="0" Source="{Binding FanProgression.level.SmallAssetURL}" MaxHeight="20" MaxWidth="20" />
                     <TextBlock Grid.Column="2" Text="{Binding FanProgression.level.level}" VerticalAlignment="Center" />
 
-                    <TextBlock Grid.Column="4" Text="{Binding UserName}" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="4" Text="{Binding Username}" VerticalAlignment="Center" />
                 </Grid>
 
                 <TextBlock Grid.Column="0" Grid.Row="2">Roles:</TextBlock>
                 <TextBlock Grid.Column="2" Grid.Row="2" Text="{Binding RolesDisplayString}" TextWrapping="Wrap" />
 
                 <TextBlock Grid.Column="0" Grid.Row="4">Mixer Age:</TextBlock>
-                <TextBlock Grid.Column="2" Grid.Row="4" Text="{Binding MixerAgeString}" />
+                <TextBlock Grid.Column="2" Grid.Row="4" Text="{Binding AccountAgeString}" />
 
                 <TextBlock Grid.Column="0" Grid.Row="6">Watch Time:</TextBlock>
                 <TextBlock Grid.Column="2" Grid.Row="6" Text="{Binding Data.ViewingTimeString}" />

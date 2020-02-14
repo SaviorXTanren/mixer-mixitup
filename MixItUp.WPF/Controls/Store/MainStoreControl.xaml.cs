@@ -49,7 +49,7 @@ namespace MixItUp.WPF.Controls.Store
                 this.BackButton.Visibility = Visibility.Visible;
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                this.DetailsUserAvatar.SetUserAvatarUrl(storeListing.UserID);
+                this.DetailsUserAvatar.SetMixerUserAvatarUrl(storeListing.UserID);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                 this.RateReviewButton.Visibility = (storeListing.IsCommandOwnedByUser) ? Visibility.Collapsed : Visibility.Visible;
@@ -165,12 +165,11 @@ namespace MixItUp.WPF.Controls.Store
             await this.window.RunAsyncOperation(async () =>
             {
                 ListingReviewDialogControl reviewControl = new ListingReviewDialogControl();
-                string result = (string)(await DialogHelper.ShowCustom(reviewControl));
-                if (!string.IsNullOrEmpty(result) && result.Equals("True") && reviewControl.Rating > 0 && !string.IsNullOrEmpty(reviewControl.ReviewText))
+                if (bool.Equals(await DialogHelper.ShowCustom(reviewControl), true) && reviewControl.Rating > 0 && !string.IsNullOrEmpty(reviewControl.ReviewText))
                 {
                     StoreListingReviewModel review = new StoreListingReviewModel(this.currentListing, reviewControl.Rating, reviewControl.ReviewText);
 
-                    StoreListingReviewModel existingReview = this.currentListing.Reviews.FirstOrDefault(r => r.UserID.Equals(ChannelSession.MixerStreamerUser.id));
+                    StoreListingReviewModel existingReview = this.currentListing.Reviews.FirstOrDefault(r => r.UserID.Equals(ChannelSession.MixerUser.id));
                     if (existingReview != null)
                     {
                         review.ID = existingReview.ID;

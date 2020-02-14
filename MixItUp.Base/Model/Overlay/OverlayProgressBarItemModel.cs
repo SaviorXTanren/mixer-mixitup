@@ -112,7 +112,7 @@ namespace MixItUp.Base.Model.Overlay
         [JsonIgnore]
         public override bool SupportsRefreshUpdating { get { return this.ProgressBarType == OverlayProgressBarItemTypeEnum.Custom; } }
 
-        public override async Task Initialize()
+        public override async Task Enable()
         {
             if (this.ResetAfterDays > 0 && this.LastReset.TotalDaysFromNow() > this.ResetAfterDays)
             {
@@ -147,13 +147,13 @@ namespace MixItUp.Base.Model.Overlay
             }
             else if (this.ProgressBarType == OverlayProgressBarItemTypeEnum.Milestones)
             {
-                PatronageStatusModel patronageStatus = await ChannelSession.MixerStreamerConnection.GetPatronageStatus(ChannelSession.MixerChannel);
+                PatronageStatusModel patronageStatus = await ChannelSession.MixerUserConnection.GetPatronageStatus(ChannelSession.MixerChannel);
                 if (patronageStatus != null)
                 {
                     this.CurrentAmount = patronageStatus.patronageEarned;
                 }
 
-                PatronageMilestoneModel currentMilestone = await ChannelSession.MixerStreamerConnection.GetCurrentPatronageMilestone();
+                PatronageMilestoneModel currentMilestone = await ChannelSession.MixerUserConnection.GetCurrentPatronageMilestone();
                 if (currentMilestone != null)
                 {
                     this.GoalAmount = currentMilestone.target;
@@ -163,7 +163,7 @@ namespace MixItUp.Base.Model.Overlay
                 GlobalEvents.OnPatronageMilestoneReachedOccurred += GlobalEvents_OnPatronageMilestoneReachedOccurred;
             }
 
-            await base.Initialize();
+            await base.Enable();
         }
 
         public override async Task Disable()
@@ -209,7 +209,7 @@ namespace MixItUp.Base.Model.Overlay
                 if (this.refreshMilestone)
                 {
                     this.refreshMilestone = false;
-                    PatronageMilestoneModel currentMilestone = await ChannelSession.MixerStreamerConnection.GetCurrentPatronageMilestone();
+                    PatronageMilestoneModel currentMilestone = await ChannelSession.MixerUserConnection.GetCurrentPatronageMilestone();
                     if (currentMilestone != null)
                     {
                         goal = this.GoalAmount = currentMilestone.target;

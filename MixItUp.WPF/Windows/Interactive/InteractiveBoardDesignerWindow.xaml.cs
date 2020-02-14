@@ -109,7 +109,7 @@ namespace MixItUp.WPF.Windows.Interactive
             MixPlayGameListingModel game = await this.RunAsyncOperation(async () =>
             {
                 MixPlaySceneModel defaultScene = MixPlayGameHelper.CreateDefaultScene();
-                return await ChannelSession.MixerStreamerConnection.CreateMixPlayGame(ChannelSession.MixerChannel, ChannelSession.MixerStreamerUser, this.GameNameTextBox.Text, MixPlayGameHelper.CreateDefaultScene());
+                return await ChannelSession.MixerUserConnection.CreateMixPlayGame(ChannelSession.MixerChannel, ChannelSession.MixerUser, this.GameNameTextBox.Text, MixPlayGameHelper.CreateDefaultScene());
             });
 
             if (game == null)

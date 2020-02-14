@@ -17,30 +17,6 @@ using System.Windows;
 
 namespace MixItUp.WPF.Controls.Command
 {
-    public class ActionTypeEntry : IEquatable<ActionTypeEntry>, IComparable<ActionTypeEntry>
-    {
-        public string Name { get; set; }
-        public ActionTypeEnum Type { get; set; }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is ActionTypeEntry)
-            {
-                return this.Equals((ActionTypeEntry)obj);
-            }
-            return false;
-        }
-
-        public bool Equals(ActionTypeEntry other) { return this.Type.Equals(other.Type); }
-
-        public int CompareTo(ActionTypeEntry other) { return this.Type.CompareTo(other.Type); }
-
-        public override int GetHashCode() { return this.Type.GetHashCode(); }
-    }
-
-    /// <summary>
-    /// Interaction logic for AdvancedCommandEditorControl.xaml
-    /// </summary>
     public partial class AdvancedCommandEditorControl : CommandEditorControlBase
     {
         private CommandWindow window;
@@ -106,36 +82,11 @@ namespace MixItUp.WPF.Controls.Command
         {
             if (!hasLoaded)
             {
-                List<ActionTypeEntry> actionTypes = new List<ActionTypeEntry>();
-                foreach (ActionTypeEnum actionType in EnumHelper.GetEnumList<ActionTypeEnum>())
-                {
-                    ActionTypeEntry entry = new ActionTypeEntry() { Name = EnumHelper.GetEnumName(actionType), Type = actionType };
-                    switch (entry.Type)
-                    {
-                        case ActionTypeEnum.Custom:
-                            continue;
-                        case ActionTypeEnum.Chat:
-                            entry.Name += " Message";
-                            break;
-                        case ActionTypeEnum.Counter:
-                            entry.Name += " (Create & Update)";
-                            break;
-                        case ActionTypeEnum.Input:
-                            entry.Name += " (Keyboard & Mouse)";
-                            break;
-                        case ActionTypeEnum.Overlay:
-                            entry.Name += " (Images & Videos)";
-                            break;
-                        case ActionTypeEnum.File:
-                            entry.Name += " (Read & Write)";
-                            break;
-                        default:
-                            break;
-                    }
-                    actionTypes.Add(entry);
-                }
+                var actionTypes = System.Enum.GetValues(typeof(ActionTypeEnum))
+                    .Cast<ActionTypeEnum>()
+                    .Where(v => !EnumHelper.IsObsolete(v) && v != ActionTypeEnum.Custom);
 
-                this.TypeComboBox.ItemsSource = actionTypes.OrderBy(at => at.Name);
+                this.TypeComboBox.ItemsSource = actionTypes.OrderBy(at => EnumLocalizationHelper.GetLocalizedName(at));
                 this.ActionsItemsControl.ItemsSource = this.actionControls;
 
                 this.CommandDetailsGrid.Visibility = Visibility.Visible;
@@ -154,6 +105,9 @@ namespace MixItUp.WPF.Controls.Command
                     actions.AddRange(initialActions);
                 }
 
+                // Remove all deprecated actions
+                actions.RemoveAll(a => a is SongRequestAction || a is SpotifyAction);
+
                 foreach (ActionBase action in actions)
                 {
                     ActionContainerControl actionControl = new ActionContainerControl(this.window, this, action);
@@ -170,8 +124,8 @@ namespace MixItUp.WPF.Controls.Command
         {
             if (this.TypeComboBox.SelectedIndex >= 0)
             {
-                ActionTypeEntry type = (ActionTypeEntry)this.TypeComboBox.SelectedItem;
-                ActionContainerControl actionControl = new ActionContainerControl(this.window, this, type.Type);
+                ActionTypeEnum type = (ActionTypeEnum)this.TypeComboBox.SelectedItem;
+                ActionContainerControl actionControl = new ActionContainerControl(this.window, this, type);
                 this.AddActionControlContainer(actionControl);
                 this.TypeComboBox.SelectedIndex = -1;
             }

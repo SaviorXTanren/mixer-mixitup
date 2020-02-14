@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.Chat;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
@@ -22,10 +23,10 @@ namespace MixItUp.Base.ViewModel.Controls.Chat
         {
             get
             {
-                List<string> results = new List<string>() { "Streamer" };
+                List<string> results = new List<string>() { MixItUp.Base.Resources.Streamer };
                 if (ChannelSession.Services.Chat.MixerChatService.IsBotConnected)
                 {
-                    results.Add("Bot");
+                    results.Add(MixItUp.Base.Resources.Bot);
                 }
                 return results;
             }
@@ -101,7 +102,7 @@ namespace MixItUp.Base.ViewModel.Controls.Chat
                         username = username.Trim();
                         username = username.Replace("@", "");
 
-                        await ChannelSession.Services.Chat.Whisper(username, message, this.SendAsStreamer, waitForResponse: true);
+                        await ChannelSession.Services.Chat.Whisper(StreamingPlatformTypeEnum.All, username, message, this.SendAsStreamer, waitForResponse: true);
                     }
                     else if (ChatAction.ClearRegex.IsMatch(this.SendMessageText))
                     {

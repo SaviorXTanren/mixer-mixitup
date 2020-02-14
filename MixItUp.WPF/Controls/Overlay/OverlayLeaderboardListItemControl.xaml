@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Overlay"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
@@ -35,7 +36,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox Grid.Column="0" ItemsSource="{Binding LeaderboardTypeStrings}" SelectedItem="{Binding LeaderboardTypeString}" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="115" />
+            <ComboBox Grid.Column="0" ItemsSource="{Binding LeaderboardTypeStrings}" SelectedItem="{Binding LeaderboardTypeString}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="115" />
 
             <ComboBox Grid.Column="2" ItemsSource="{Binding CurrencyRanks}" SelectedItem="{Binding CurrencyRank}" Visibility="{Binding IsCurrencyRankType, Converter={StaticResource BooleanToVisibilityConverter}}" MaterialDesign:HintAssist.Hint="Currency/Rank" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200" DisplayMemberPath="Name" />
 
@@ -43,7 +44,7 @@
 
             <GroupBox Header="New Leader" Grid.Column="4" Width="165">
                 <Grid>
-                    <Button x:Name="CreateNewLeaderCommandButton" HorizontalAlignment="Center" Click="CreateNewLeaderCommandButton_Click" Visibility="{Binding DoesNotHaveNewLeaderCommand, Converter={StaticResource BooleanToVisibilityConverter}}" >Add Command</Button>
+                    <Button x:Name="CreateNewLeaderCommandButton" HorizontalAlignment="Center" Click="CreateNewLeaderCommandButton_Click" Visibility="{Binding DoesNotHaveNewLeaderCommand, Converter={StaticResource BooleanToVisibilityConverter}}" Content="{x:Static resx:Resources.AddCommand}"/>
                     <CommandControls:CommandButtonsControl x:Name="NewLeaderCommand" HorizontalAlignment="Center" EditClicked="NewLeader_EditClicked" DeleteClicked="NewLeaderCommand_DeleteClicked" RemoveDeleteButton="False" RemoveEnableDisableToggle="True" Visibility="{Binding HasNewLeaderCommand, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                 </Grid>
             </GroupBox>

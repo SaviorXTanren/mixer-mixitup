@@ -1,7 +1,8 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base.Services;
+﻿using MixItUp.Base.Services.External;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json;
 using StreamingClient.Base.Util;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
@@ -11,19 +12,15 @@ namespace MixItUp.Base.Actions
 {
     public enum DiscordActionTypeEnum
     {
-        [Name("Send Message")]
         SendMessage,
-
-        [Name("Mute/Unmute Self")]
         MuteSelf,
-        [Name("Deafen/Undeafen Self")]
         DeafenSelf,
     }
 
     [DataContract]
     public class DiscordAction : ActionBase
     {
-        public static DiscordAction CreateForChatMessage(DiscordChannel channel, string message, string filePath) { return new DiscordAction(DiscordActionTypeEnum.SendMessage) { SendMessageChannel = channel, SendMessageText = message, FilePath = filePath }; }
+        public static DiscordAction CreateForChatMessage(DiscordChannel channel, string message, string filePath) { return new DiscordAction(DiscordActionTypeEnum.SendMessage) { SendMessageChannelID = channel.ID, SendMessageText = message, FilePath = filePath }; }
 
         public static DiscordAction CreateForMuteSelf(bool mute) { return new DiscordAction(DiscordActionTypeEnum.MuteSelf) { ShouldMuteDeafen = mute }; }
 
@@ -37,7 +34,7 @@ namespace MixItUp.Base.Actions
         public DiscordActionTypeEnum DiscordType { get; set; }
 
         [DataMember]
-        public DiscordChannel SendMessageChannel { get; set; }
+        public string SendMessageChannelID { get; set; }
         [DataMember]
         public string SendMessageText { get; set; }
 
@@ -46,6 +43,12 @@ namespace MixItUp.Base.Actions
 
         [DataMember]
         public string FilePath { get; set; }
+
+        [DataMember]
+        [Obsolete]
+        public MixItUp.Base.Services.DiscordChannel SendMessageChannel { get; set; }
+
+        private DiscordChannel channel;
 
         public DiscordAction() : base(ActionTypeEnum.Discord) { }
 
@@ -57,12 +60,28 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.Services.Discord != null)
+            if (ChannelSession.Services.Discord.IsConnected)
             {
                 if (this.DiscordType == DiscordActionTypeEnum.SendMessage)
                 {
-                    string message = await this.ReplaceStringWithSpecialModifiers(this.SendMessageText, user, arguments);
-                    await ChannelSession.Services.Discord.CreateMessage(this.SendMessageChannel, message, this.FilePath);
+#pragma warning disable CS0612 // Type or member is obsolete
+                    if (this.SendMessageChannel != null)
+                    {
+                        this.SendMessageChannelID = SendMessageChannel.ID;
+                        this.SendMessageChannel = null;
+                    }
+#pragma warning restore CS0612 // Type or member is obsolete
+
+                    if (this.channel == null)
+                    {
+                        this.channel = await ChannelSession.Services.Discord.GetChannel(this.SendMessageChannelID);
+                    }
+
+                    if (this.channel != null)
+                    {
+                        string message = await this.ReplaceStringWithSpecialModifiers(this.SendMessageText, user, arguments);
+                        await ChannelSession.Services.Discord.CreateMessage(this.channel, message, this.FilePath);
+                    }
                 }
                 else if (this.DiscordType == DiscordActionTypeEnum.MuteSelf)
                 {
@@ -76,3 +95,19 @@ namespace MixItUp.Base.Actions
         }
     }
 }
+
+#region Deprecated Classes
+
+namespace MixItUp.Base.Services
+{
+    [Obsolete]
+    public class DiscordChannel
+    {
+        [JsonProperty("id")]
+        public string ID { get; set; }
+
+        public DiscordChannel() { }
+    }
+}
+
+#endregion Deprecated Classes

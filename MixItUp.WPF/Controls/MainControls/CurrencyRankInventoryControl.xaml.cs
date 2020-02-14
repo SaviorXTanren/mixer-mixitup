@@ -1,11 +1,9 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
-using MixItUp.Base.ViewModel.User;
-using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Currency;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,12 +14,12 @@ namespace MixItUp.WPF.Controls.MainControls
 {
     public class CurrencyRankInventoryContainer
     {
-        public UserCurrencyViewModel Currency { get; private set; }
-        public UserInventoryViewModel Inventory { get; private set; }
+        public UserCurrencyModel Currency { get; private set; }
+        public UserInventoryModel Inventory { get; private set; }
 
-        public CurrencyRankInventoryContainer(UserCurrencyViewModel currency) { this.Currency = currency; }
+        public CurrencyRankInventoryContainer(UserCurrencyModel currency) { this.Currency = currency; }
 
-        public CurrencyRankInventoryContainer(UserInventoryViewModel inventory) { this.Inventory = inventory; }
+        public CurrencyRankInventoryContainer(UserInventoryModel inventory) { this.Inventory = inventory; }
 
         public string Name
         {
@@ -101,7 +99,7 @@ namespace MixItUp.WPF.Controls.MainControls
         public void RefreshList()
         {
             this.items.Clear();
-            foreach (var kvp in ChannelSession.Settings.Currencies.ToDictionary())
+            foreach (var kvp in ChannelSession.Settings.Currencies)
             {
                 if (kvp.Value.IsRank)
                 {
@@ -112,7 +110,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     this.items.Add(new CurrencyRankInventoryContainer(kvp.Value));
                 }
             }
-            foreach (var kvp in ChannelSession.Settings.Inventories.ToDictionary())
+            foreach (var kvp in ChannelSession.Settings.Inventories)
             {
                 this.items.Add(new CurrencyRankInventoryContainer(kvp.Value));
             }
@@ -191,7 +189,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void GlobalEvents_OnChatCommandMessageReceived(object sender, ChatMessageViewModel message)
         {
-            foreach (UserInventoryViewModel inventory in ChannelSession.Settings.Inventories.Values)
+            foreach (UserInventoryModel inventory in ChannelSession.Settings.Inventories.Values)
             {
                 if (inventory.ShopEnabled && message.PlainTextMessage.StartsWith(inventory.ShopCommand))
                 {

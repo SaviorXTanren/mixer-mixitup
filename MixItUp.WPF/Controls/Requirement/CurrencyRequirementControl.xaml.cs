@@ -1,8 +1,7 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
-using MixItUp.Base.ViewModel.User;
-using MixItUp.WPF.Util;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,7 +19,7 @@ namespace MixItUp.WPF.Controls.Requirement
             InitializeComponent();
         }
 
-        public UserCurrencyViewModel GetCurrencyType() { return (UserCurrencyViewModel)this.CurrencyTypeComboBox.SelectedItem; }
+        public UserCurrencyModel GetCurrencyType() { return (UserCurrencyModel)this.CurrencyTypeComboBox.SelectedItem; }
 
         public int GetCurrencyAmount()
         {
@@ -83,7 +82,7 @@ namespace MixItUp.WPF.Controls.Requirement
 
             if (ChannelSession.Settings != null)
             {
-                IEnumerable<UserCurrencyViewModel> currencies = ChannelSession.Settings.Currencies.Values;
+                IEnumerable<UserCurrencyModel> currencies = ChannelSession.Settings.Currencies.Values;
                 this.IsEnabled = (currencies.Count() > 0);
                 this.CurrencyTypeComboBox.ItemsSource = currencies;
             }

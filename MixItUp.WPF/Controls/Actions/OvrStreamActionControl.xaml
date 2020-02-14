@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -23,12 +24,12 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="TypeComboBox" Grid.Column="0" SelectionChanged="TypeComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="Type" />
+            <ComboBox x:Name="TypeComboBox" Grid.Column="0" SelectionChanged="TypeComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Type}" />
 
-            <TextBlock x:Name="OvrStreamNotEnabledWarningTextBlock" VerticalAlignment="Center" Grid.Column="2" Foreground="Red" HorizontalAlignment="Center" Visibility="Hidden">Please enable OvrStream on the Services page!</TextBlock>
+            <TextBlock x:Name="OvrStreamNotEnabledWarningTextBlock" VerticalAlignment="Center" Grid.Column="2" Foreground="Red" HorizontalAlignment="Center" Visibility="Hidden" Text="{x:Static resx:Resources.EnableOvrStream}"/>
         </Grid>
 
-        <TextBox Grid.Row="2" x:Name="TitleNameTextBox" Width="200" MaterialDesign:HintAssist.Hint="OvrStream Title Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" TextChanged="TitleNameTextBox_TextChanged" PreviewKeyDown="TitleNameTextBox_PreviewKeyDown"/>
+        <TextBox Grid.Row="2" x:Name="TitleNameTextBox" Width="200" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.OvrStreamTitleName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" TextChanged="TitleNameTextBox_TextChanged" PreviewKeyDown="TitleNameTextBox_PreviewKeyDown"/>
 
         <Grid x:Name="SetVariableGrid" Grid.Row="4" Visibility="Collapsed">
             <Grid.RowDefinitions>
@@ -37,7 +38,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Button x:Name="AddVariableButton" Grid.Row="0" Width="150" Click="AddVariableButton_Click">Add New Variable</Button>
+            <Button x:Name="AddVariableButton" Grid.Row="0" Width="150" Click="AddVariableButton_Click" Content="{x:Static resx:Resources.AddNewVariable}"/>
 
             <ItemsControl x:Name="VariableItemsControl" Grid.Row="2">
                 <ItemsControl.ItemTemplate>
@@ -51,11 +52,11 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBox Grid.Column="0" x:Name="VariableNameTextBox" Width="300" Text="{Binding Name}" MaterialDesign:HintAssist.Hint="Variable Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}"  TextChanged="VariableNameTextBox_TextChanged" PreviewKeyDown="VariableNameTextBox_PreviewKeyDown"/>
+                            <TextBox Grid.Column="0" x:Name="VariableNameTextBox" Width="300" Text="{Binding Name}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VariableName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}"  TextChanged="VariableNameTextBox_TextChanged" PreviewKeyDown="VariableNameTextBox_PreviewKeyDown"/>
 
-                            <TextBox Grid.Column="2" x:Name="VariableValueTextBox" Width="320" Text="{Binding Value}" MaterialDesign:HintAssist.Hint="Variable Value" Style="{StaticResource MaterialDesignFloatingHintTextBox}"  />
+                            <TextBox Grid.Column="2" x:Name="VariableValueTextBox" Width="320" Text="{Binding Value}" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.VariableValue}" Style="{StaticResource MaterialDesignFloatingHintTextBox}"  />
 
-                            <Button Grid.Column="4" x:Name="DeleteVariableButton" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteVariableButton_Click" ToolTip="Delete" />
+                            <Button Grid.Column="4" x:Name="DeleteVariableButton" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteVariableButton_Click" ToolTip="{x:Static resx:Resources.Delete}" />
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

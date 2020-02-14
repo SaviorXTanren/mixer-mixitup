@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
@@ -141,7 +142,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         public TriviaGameCommand existingCommand;
 
-        public TriviaGameEditorControlViewModel(UserCurrencyViewModel currency)
+        public TriviaGameEditorControlViewModel(UserCurrencyModel currency)
             : this()
         {
             this.StartedCommand = this.CreateBasic2ChatCommand("@$username has started a game of trivia! Type the number of the answer to the following question: $gamequestion", "$gameanswers");
@@ -192,7 +193,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
         public override void SaveGameCommand(string name, IEnumerable<string> triggers, RequirementViewModel requirements)
         {
-            Dictionary<MixerRoleEnum, int> roleProbabilities = new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, 0 }, { MixerRoleEnum.Subscriber, 0 }, { MixerRoleEnum.Mod, 0 } };
+            Dictionary<UserRoleEnum, int> roleProbabilities = new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, 0 }, { UserRoleEnum.Subscriber, 0 }, { UserRoleEnum.Mod, 0 } };
 
             GameCommandBase newCommand = new TriviaGameCommand(name, triggers, requirements, this.TimeLimit, this.StartedCommand, this.UserJoinCommand, 
                 new GameOutcome("Success", 0, roleProbabilities, this.UserSuccessCommand), this.CustomQuestions.Select(q => q.GetQuestion()), this.WinAmount, this.CorrectAnswerCommand,

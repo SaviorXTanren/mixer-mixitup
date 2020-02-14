@@ -13,8 +13,8 @@ namespace MixItUp.Base.Model.MixPlay
 
         public MixPlayUserGroupModel() { }
 
-        public MixPlayUserGroupModel(MixerRoleEnum associatedUserRole)
-            : this((associatedUserRole != MixerRoleEnum.User) ? EnumHelper.GetEnumName(associatedUserRole) : DefaultName)
+        public MixPlayUserGroupModel(UserRoleEnum associatedUserRole)
+            : this((associatedUserRole != UserRoleEnum.User) ? EnumHelper.GetEnumName(associatedUserRole) : DefaultName)
         {
             this.AssociatedUserRole = associatedUserRole;
         }
@@ -25,7 +25,7 @@ namespace MixItUp.Base.Model.MixPlay
         {
             this.GroupName = groupName;
             this.DefaultScene = defaultScene;
-            this.AssociatedUserRole = MixerRoleEnum.Custom;
+            this.AssociatedUserRole = UserRoleEnum.Custom;
         }
 
         public MixPlayUserGroupModel(MixPlayGroupModel group) : this(group.groupID, group.sceneID) { }
@@ -35,7 +35,7 @@ namespace MixItUp.Base.Model.MixPlay
         [DataMember]
         public string DefaultScene { get; set; }
         [DataMember]
-        public MixerRoleEnum AssociatedUserRole { get; set; }
+        public UserRoleEnum AssociatedUserRole { get; set; }
 
         [JsonIgnore]
         public string CurrentScene { get; set; }

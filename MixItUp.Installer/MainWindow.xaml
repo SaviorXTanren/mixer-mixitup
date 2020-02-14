@@ -35,7 +35,16 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock Text="{Binding DisplayText1}" Grid.Row="0" TextWrapping="Wrap" HorizontalAlignment="Center" />
+            <Grid Grid.Row="0" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                
+                <TextBlock Text="{Binding DisplayText1}" Grid.Column="0" TextWrapping="Wrap" />
+                <TextBlock Grid.Column="1" Margin="10,0,0,0" Visibility="{Binding ShowHyperlinkAddress, Converter={StaticResource BooleanToVisibilityConverter}}"><Hyperlink NavigateUri="{Binding HyperlinkAddress}" RequestNavigate="Hyperlink_RequestNavigate">Open File</Hyperlink></TextBlock>
+                
+            </Grid>
 
             <ProgressBar Visibility="{Binding IsOperationBeingPerformed, Converter={StaticResource BooleanToVisibilityConverter}}" IsIndeterminate="{Binding IsOperationIndeterminate, FallbackValue=True}" Value="{Binding OperationProgress, Mode=OneWay, FallbackValue=0}" Grid.Row="2" HorizontalAlignment="Center" Height="20" Width="250" />
             <TextBlock Text="{Binding DisplayText2}" Visibility="{Binding ErrorOccurred, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Row="2" TextWrapping="Wrap" HorizontalAlignment="Center" />

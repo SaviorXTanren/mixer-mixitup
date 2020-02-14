@@ -37,11 +37,11 @@ namespace MixItUp.Base.Model.Overlay
             await this.AddGameQueueUsers(users);
         }
 
-        public override async Task Initialize()
+        public override async Task Enable()
         {
             GlobalEvents.OnGameQueueUpdated += GlobalEvents_OnGameQueueUpdated;
 
-            await base.Initialize();
+            await base.Enable();
         }
 
         public override async Task Disable()
@@ -60,7 +60,7 @@ namespace MixItUp.Base.Model.Overlay
 
         private async Task AddGameQueueUsers(IEnumerable<UserViewModel> users)
         {
-            await this.listSemaphore.WaitAndRelease(() =>
+            await this.listSemaphore.WaitAndRelease((System.Func<Task<int>>)(() =>
             {
                 foreach (UserViewModel user in this.lastUsers)
                 {
@@ -81,7 +81,7 @@ namespace MixItUp.Base.Model.Overlay
                     {
                         item = OverlayListIndividualItemModel.CreateAddItem(user.ID.ToString(), user, i + 1, this.HTML);
 
-                        item.TemplateReplacements.Add("USERNAME", user.UserName);
+                        item.TemplateReplacements.Add("USERNAME", (string)user.Username);
                         item.TemplateReplacements.Add("POSITION", (i + 1).ToString());
 
                         this.Items.Add(item);
@@ -92,7 +92,7 @@ namespace MixItUp.Base.Model.Overlay
 
                 this.SendUpdateRequired();
                 return Task.FromResult(0);
-            });
+            }));
         }
     }
 }

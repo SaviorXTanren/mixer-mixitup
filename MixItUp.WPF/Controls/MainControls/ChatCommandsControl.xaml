@@ -4,12 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
              xmlns:ChatControls="clr-namespace:MixItUp.WPF.Controls.Chat"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:CommandModels="clr-namespace:MixItUp.Base.Commands;assembly=MixItUp.Base"
              xmlns:CommandViewModels="clr-namespace:MixItUp.Base.ViewModel.Controls.Commands;assembly=MixItUp.Base"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:util="clr-namespace:MixItUp.WPF.Util"
              mc:Ignorable="d"
                           
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -17,9 +20,11 @@
              TextElement.FontSize="14"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="600" d:DesignWidth="800">
     <local:GroupedCommandsMainControlBase.Resources>
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <util:LocalizationConverter x:Key="LocalizationConverter"/>
     </local:GroupedCommandsMainControlBase.Resources>
     
     <Grid Margin="10">
@@ -36,8 +41,8 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" x:Name="PreMadeCommandsButton" Command="{Binding SwitchToPreMadeCommands}" IsEnabled="{Binding CustomCommandsSelected}">Pre-Made Commands</Button>
-            <Button Grid.Column="1" x:Name="CustomCommandsButton" Command="{Binding SwitchToCustomCommands}" IsEnabled="{Binding PreMadeCommandSelected}">Custom Commands</Button>
+            <Button Grid.Column="0" x:Name="PreMadeCommandsButton" Command="{Binding SwitchToPreMadeCommands}" IsEnabled="{Binding CustomCommandsSelected}" Content="{x:Static resx:Resources.PreMadeCommands}"/>
+            <Button Grid.Column="1" x:Name="CustomCommandsButton" Command="{Binding SwitchToCustomCommands}" IsEnabled="{Binding PreMadeCommandSelected}" Content="{x:Static resx:Resources.CustomCommands}"/>
 
             <Grid Grid.Column="2" HorizontalAlignment="Center" Margin="30,0,0,0">
                 <Grid.ColumnDefinitions>
@@ -46,7 +51,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="Filter By Name:" />
+                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.FilterByName}, StringFormat={StaticResource ColumnHeaderFormat}}" />
 
                 <TextBox Grid.Column="2" x:Name="NameFilterTextBox" Width="150" TextChanged="NameFilterTextBox_TextChanged" />
             </Grid>
@@ -69,9 +74,9 @@
                     <ColumnDefinition Width="60" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" FontWeight="Bold" HorizontalAlignment="Center" Margin="-35,0,0,0">Name</TextBlock>
-                <TextBlock Grid.Column="1" FontWeight="Bold" HorizontalAlignment="Center" Margin="-50,0,0,0">Commands</TextBlock>
-                <TextBlock Grid.Column="2" FontWeight="Bold" HorizontalAlignment="Center" Margin="-55,0,0,0">Permission</TextBlock>
+                <TextBlock Grid.Column="0" FontWeight="Bold" HorizontalAlignment="Center" Margin="-35,0,0,0" Text="{x:Static resx:Resources.Name}"/>
+                <TextBlock Grid.Column="1" FontWeight="Bold" HorizontalAlignment="Center" Margin="-50,0,0,0" Text="{x:Static resx:Resources.Commands}"/>
+                <TextBlock Grid.Column="2" FontWeight="Bold" HorizontalAlignment="Center" Margin="-55,0,0,0" Text="{x:Static resx:Resources.Permissions}"/>
                 <Grid Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="-40,-4,0,0">
                     <MaterialDesign:PackIcon Kind="Timer" Height="24" Width="24" />
                 </Grid>
@@ -95,15 +100,21 @@
 
                                 <TextBlock Grid.Column="1" Text="{Binding CommandsString}" VerticalAlignment="Center" />
 
-                                <ComboBox Grid.Column="2" ItemsSource="{Binding PermissionsValues}" SelectedItem="{Binding PermissionsString}" VerticalAlignment="Center" />
+                                <ComboBox Grid.Column="2" ItemsSource="{Binding PermissionsValues}" SelectedItem="{Binding SelectedPermission}" VerticalAlignment="Center">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
 
                                 <TextBox Grid.Column="3" Text="{Binding CooldownString}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" Margin="5,0,0,0" />
 
-                                <Button Grid.Column="4" Command="{Binding TestCommand}" Width="40" HorizontalAlignment="Center" ToolTip="Test Command">
+                                <Button Grid.Column="4" Command="{Binding TestCommand}" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.TestCommand}">
                                     <MaterialDesign:PackIcon Kind="Play" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                 </Button>
 
-                                <ToggleButton Grid.Column="5" IsChecked="{Binding IsEnabled}" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Enable/Disable Command" />
+                                <ToggleButton Grid.Column="5" IsChecked="{Binding IsEnabled}" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.EnableDisableCommand}" />
                             </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
@@ -135,9 +146,9 @@
 
                                     <DataGrid ItemsSource="{Binding Commands}" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" PreviewMouseWheel="DataGrid_PreviewMouseWheel">
                                         <DataGrid.Columns>
-                                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" MinWidth="200" Width="*" />
-                                            <DataGridTextColumn Header="Commands" Binding="{Binding CommandsString}" IsReadOnly="True" MinWidth="125" Width="125" />
-                                            <DataGridTextColumn Header="Permissions" Binding="{Binding UserRoleRequirementString}" IsReadOnly="True" MinWidth="115" Width="115" />
+                                            <DataGridTextColumn Header="{x:Static resx:Resources.Name}" Binding="{Binding Name}" IsReadOnly="True" MinWidth="200" Width="*" />
+                                            <DataGridTextColumn Header="{x:Static resx:Resources.Commands}" Binding="{Binding CommandsString}" IsReadOnly="True" MinWidth="125" Width="125" />
+                                            <DataGridTextColumn Header="{x:Static resx:Resources.Permissions}" Binding="{Binding UserRoleRequirement, Converter={StaticResource LocalizationConverter}}" IsReadOnly="True" MinWidth="115" Width="115" />
                                             <DataGridTextColumn Binding="{Binding Requirements.Cooldown.CooldownAmount}" IsReadOnly="True" MinWidth="60" Width="60">
                                                 <DataGridTextColumn.Header>
                                                     <Grid HorizontalAlignment="Center" Background="Transparent">
@@ -145,7 +156,7 @@
                                                     </Grid>
                                                 </DataGridTextColumn.Header>
                                             </DataGridTextColumn>
-                                            <DataGridTemplateColumn Header="Actions" MinWidth="220" Width="220">
+                                            <DataGridTemplateColumn Header="{x:Static resx:Resources.Actions}" MinWidth="220" Width="220">
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
                                                         <CommandControls:CommandButtonsControl HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
@@ -160,8 +171,8 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </ScrollViewer>
-            
-            <Button x:Name="AddCommandButton" Grid.Row="2" Click="AddCommandButton_Click" Width="130">New Command</Button>
+
+            <Button x:Name="AddCommandButton" Grid.Row="2" Click="AddCommandButton_Click" MinWidth="130" HorizontalAlignment="Center" Content="{x:Static resx:Resources.NewCommand}"/>
         </Grid>
     </Grid>
 </local:GroupedCommandsMainControlBase>

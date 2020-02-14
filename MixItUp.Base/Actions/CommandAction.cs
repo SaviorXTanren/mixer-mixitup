@@ -13,15 +13,10 @@ namespace MixItUp.Base.Actions
 {
     public enum CommandActionTypeEnum
     {
-        [Name("Run Command")]
         RunCommand,
-        [Name("Disable Command")]
         DisableCommand,
-        [Name("Enable Command")]
         EnableCommand,
-        [Name("Disable Command Group")]
         DisableCommandGroup,
-        [Name("Enable Command Group")]
         EnableCommandGroup,
     }
 
@@ -114,7 +109,7 @@ namespace MixItUp.Base.Actions
                         newArguments = arguments;
                     }
 
-                    await command.Perform(user, newArguments, this.GetExtraSpecialIdentifiers());
+                    await command.Perform(user, this.platform, newArguments, this.GetExtraSpecialIdentifiers());
                 }
             }
             else if (this.CommandActionType == CommandActionTypeEnum.DisableCommand || this.CommandActionType == CommandActionTypeEnum.EnableCommand)
@@ -161,7 +156,7 @@ namespace MixItUp.Base.Actions
             if (command != null)
             {
                 this.ActionGroupID = command.ID;
-                await command.Perform(user, arguments, this.GetExtraSpecialIdentifiers());
+                await command.Perform(user, this.platform, arguments, this.GetExtraSpecialIdentifiers());
             }
         }
     }

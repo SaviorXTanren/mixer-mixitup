@@ -42,7 +42,7 @@ namespace MixItUp.Base.Model.Chat.Mixer
                 }
             }
 
-            List<EmoticonPackModel> userPacks = (await ChannelSession.MixerStreamerConnection.GetEmoticons(ChannelSession.MixerChannel, ChannelSession.MixerStreamerUser)).ToList();
+            List<EmoticonPackModel> userPacks = (await ChannelSession.MixerUserConnection.GetEmoticons(ChannelSession.MixerChannel, ChannelSession.MixerUser)).ToList();
             foreach (EmoticonPackModel userPack in userPacks)
             {
                 MixerChatEmoteModel.AddEmotePack(userPack.emoticons, userPack.url);

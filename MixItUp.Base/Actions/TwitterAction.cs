@@ -56,7 +56,7 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.Services.Twitter != null)
+            if (ChannelSession.Services.Twitter.IsConnected)
             {
                 if (this.ActionType == TwitterActionTypeEnum.SendTweet)
                 {
@@ -65,13 +65,13 @@ namespace MixItUp.Base.Actions
 
                     if (TwitterAction.CheckIfTweetContainsTooManyTags(tweet))
                     {
-                        await ChannelSession.Services.Chat.Whisper(ChannelSession.MixerStreamerUser.username, "The tweet you specified can not be sent because it contains an @mention");
+                        await ChannelSession.Services.Chat.Whisper(await ChannelSession.GetCurrentUser(), "The tweet you specified can not be sent because it contains an @mention");
                         return;
                     }
 
                     if (!await ChannelSession.Services.Twitter.SendTweet(tweet, imagePath))
                     {
-                        await ChannelSession.Services.Chat.Whisper(ChannelSession.MixerStreamerUser.username, "The tweet you specified could not be sent. Please ensure your Twitter account is correctly authenticated and you have not sent a tweet in the last 5 minutes");
+                        await ChannelSession.Services.Chat.Whisper(await ChannelSession.GetCurrentUser(), "The tweet you specified could not be sent. Please ensure your Twitter account is correctly authenticated and you have not sent a tweet in the last 5 minutes");
                     }
                 }
                 else if (this.ActionType == TwitterActionTypeEnum.UpdateName)

@@ -4,9 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <local:ActionControlBase.Resources>
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+    </local:ActionControlBase.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -23,11 +28,11 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" x:Name="ProgramFilePathTextBox" MaterialDesign:HintAssist.Hint="Program File Path" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-            <Button Grid.Column="2" x:Name="ProgramFileBrowseButton" Click="ProgramFileBrowseButton_Click">Browse</Button>
+            <TextBox Grid.Column="0" x:Name="ProgramFilePathTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ProgramFilePath}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <Button Grid.Column="2" x:Name="ProgramFileBrowseButton" Click="ProgramFileBrowseButton_Click" Content="{x:Static resx:Resources.Browse}"/>
         </Grid>
 
-        <TextBox Grid.Row="2" x:Name="ProgramArgumentsTextBox" MaterialDesign:HintAssist.Hint="Program Arguments" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        <TextBox Grid.Row="2" x:Name="ProgramArgumentsTextBox" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ProgramArguments}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
         <Grid Grid.Row="4">
             <Grid.ColumnDefinitions>
@@ -40,10 +45,10 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" VerticalAlignment="Center">Show Window:</TextBlock>
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.ShowWindow}, StringFormat={StaticResource ColumnHeaderFormat}}" />
             <CheckBox Grid.Column="2" x:Name="ShowWindowCheckBox" VerticalAlignment="Bottom" />
 
-            <TextBlock Grid.Column="4" VerticalAlignment="Center">Wait For Finish:</TextBlock>
+            <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.WaitForFinish}, StringFormat={StaticResource ColumnHeaderFormat}}" />
             <CheckBox Grid.Column="6" x:Name="WaitForFinishCheckBox" VerticalAlignment="Bottom" />
         </Grid>
     </Grid>

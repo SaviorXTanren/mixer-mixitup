@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.Model.User;
+using MixItUp.Base.ViewModel.User;
 using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.Currency
@@ -8,10 +9,10 @@ namespace MixItUp.WPF.Controls.Currency
     /// </summary>
     public partial class UserInventoryEditorControl : UserControl
     {
-        private UserInventoryViewModel inventory;
+        private UserInventoryModel inventory;
         private UserInventoryDataViewModel inventoryData;
 
-        public UserInventoryEditorControl(UserInventoryViewModel inventory, UserInventoryDataViewModel inventoryData)
+        public UserInventoryEditorControl(UserInventoryModel inventory, UserInventoryDataViewModel inventoryData)
         {
             this.inventory = inventory;
             this.inventoryData = inventoryData;
@@ -26,7 +27,7 @@ namespace MixItUp.WPF.Controls.Currency
         private void UserInventoryEditorControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
             this.InventoryItemsStackPanel.Children.Clear();
-            foreach (UserInventoryItemViewModel item in this.inventory.Items.Values)
+            foreach (UserInventoryItemModel item in this.inventory.Items.Values)
             {
                 this.InventoryItemsStackPanel.Children.Add(new UserCurrencyIndividualEditorControl(item, this.inventoryData));
             }
