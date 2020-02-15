@@ -151,11 +151,6 @@ namespace MixItUp.Base.Commands
 
         protected override SemaphoreSlim AsyncSemaphore { get { return EventCommand.eventCommandPerformSemaphore; } }
 
-        protected override Task<bool> PerformPreChecks(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
-        {
-            return Task.FromResult(this.CanRun(user));
-        }
-
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
         {
             this.userEventTracking.Add(user.ID);

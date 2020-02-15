@@ -223,7 +223,7 @@ namespace MixItUp.Base.Services
         public bool CanPerformEvent(EventTrigger trigger)
         {
             EventCommand command = this.GetEventCommand(trigger.Type);
-            if (command != null)
+            if (command != null && trigger.User != null)
             {
                 return command.CanRun(trigger.User);
             }
@@ -233,16 +233,9 @@ namespace MixItUp.Base.Services
         public async Task PerformEvent(EventTrigger trigger)
         {
             EventCommand command = this.GetEventCommand(trigger.Type);
-            if (command != null)
+            if (command != null && this.CanPerformEvent(trigger))
             {
-                if (trigger.User != null)
-                {
-                    await command.Perform(trigger.User, platform: trigger.Platform, arguments: trigger.Arguments, extraSpecialIdentifiers: trigger.SpecialIdentifiers);
-                }
-                else
-                {
-                    await command.Perform(await ChannelSession.GetCurrentUser(), platform: trigger.Platform, arguments: trigger.Arguments, extraSpecialIdentifiers: trigger.SpecialIdentifiers);
-                }
+                await command.Perform((trigger.User != null) ? trigger.User : await ChannelSession.GetCurrentUser(), platform: trigger.Platform, arguments: trigger.Arguments, extraSpecialIdentifiers: trigger.SpecialIdentifiers);
             }
         }
     }
