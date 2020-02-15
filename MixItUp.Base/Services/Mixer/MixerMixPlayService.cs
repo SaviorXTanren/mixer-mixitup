@@ -752,33 +752,43 @@ namespace MixItUp.Base.Services.Mixer
                         arguments.Add(e.input.value);
                     }
 
+                    uint sparkCost = 0;
+                    string text = string.Empty;
+                    if (control is MixPlayButtonControlModel)
+                    {
+                        MixPlayButtonControlModel button = (MixPlayButtonControlModel)control;
+                        sparkCost = (uint)button.cost.GetValueOrDefault();
+                        text = button.text;
+                    }
+                    else if (control is MixPlayTextBoxControlModel)
+                    {
+                        MixPlayTextBoxControlModel textBox = (MixPlayTextBoxControlModel)control;
+                        sparkCost = (uint)textBox.cost.GetValueOrDefault();
+                        text = textBox.submitText;
+                    }
+
+                    Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();
+                    extraSpecialIdentifiers["mixplaycontrolid"] = command.Name;
+                    extraSpecialIdentifiers["mixplaycontrolcost"] = sparkCost.ToString();
+                    extraSpecialIdentifiers["mixplaycontroltext"] = text;
+
                     bool commandRun = false;
                     await this.controlCooldownSemaphore.WaitAndRelease(async () =>
                     {
                         if (await command.CheckAllRequirements(user))
                         {
-                            await command.Perform(user, StreamingPlatformTypeEnum.Mixer, arguments);
+                            await command.Perform(user, StreamingPlatformTypeEnum.Mixer, arguments, extraSpecialIdentifiers);
                             commandRun = true;
                         }
                     });
 
                     if (commandRun)
                     {
-                        uint sparkCost = 0;
                         if (!string.IsNullOrEmpty(e.transactionID) && !user.Data.IsSparkExempt)
                         {
                             Logger.Log(LogLevel.Debug, "Sending Spark Transaction Capture - " + e.transactionID);
 
                             await this.CaptureSparkTransaction(e.transactionID);
-                            if (control is MixPlayButtonControlModel)
-                            {
-                                sparkCost = (uint)((MixPlayButtonControlModel)control).cost.GetValueOrDefault();
-                            }
-                            else if (control is MixPlayTextBoxControlModel)
-                            {
-                                sparkCost = (uint)((MixPlayTextBoxControlModel)control).cost.GetValueOrDefault();
-                            }
-
                             if (sparkCost > 0)
                             {
                                 GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, uint>(user, sparkCost));
