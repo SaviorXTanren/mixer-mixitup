@@ -12,9 +12,28 @@ namespace MixItUp.Base.Model.Settings
     {
         private const string ApplicationSettingsFileName = "ApplicationSettings.json";
 
+        private const string OldApplicationSettingsFileName = "ApplicationSettings.xml";
+
         public static async Task<ApplicationSettingsV2Model> Load()
         {
             ApplicationSettingsV2Model settings = new ApplicationSettingsV2Model();
+            if (ChannelSession.Services.FileService.FileExists(OldApplicationSettingsFileName))
+            {
+                try
+                {
+                    ApplicationSettingsV2Model oldSettings = await SerializerHelper.DeserializeFromFile<ApplicationSettingsV2Model>(OldApplicationSettingsFileName);
+                    if (oldSettings != null)
+                    {
+                        await oldSettings.Save();
+                    }
+                    await ChannelSession.Services.FileService.DeleteFile(OldApplicationSettingsFileName);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+            }
+
             if (ChannelSession.Services.FileService.FileExists(ApplicationSettingsFileName))
             {
                 try
