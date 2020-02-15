@@ -107,7 +107,7 @@ namespace MixItUp.Base.ViewModel.Chat
                 if (!this.IsDeleted)
                 {
                     this.IsDeleted = true;
-                    if (user != null)
+                    if (user != null && !string.IsNullOrEmpty(user.Username))
                     {
                         this.DeletedBy = user.Username;
                     }
@@ -119,7 +119,7 @@ namespace MixItUp.Base.ViewModel.Chat
 
                     this.OnDeleted(this, new EventArgs());
 
-                    if (this.User != null && !string.IsNullOrEmpty(this.PlainTextMessage))
+                    if (user != null && !string.IsNullOrEmpty(this.PlainTextMessage))
                     {
                         EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatMessageDeleted, user);
                         trigger.SpecialIdentifiers["message"] = this.PlainTextMessage;
