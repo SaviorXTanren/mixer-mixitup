@@ -422,7 +422,7 @@ namespace MixItUp.Base.Services
 
                     if (!string.IsNullOrEmpty(message.PlainTextMessage))
                     {
-                        EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatUserBan, message.User);
+                        EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatMessageReceived, message.User);
                         trigger.SpecialIdentifiers["message"] = message.PlainTextMessage;
                         await ChannelSession.Services.Events.PerformEvent(trigger);
                     }
