@@ -123,6 +123,7 @@ namespace MixItUp.Base.Commands
         public EventCommand() { }
 
         public EventCommand(EventTypeEnum eventType)
+            : base(eventType.ToString(), CommandTypeEnum.Event, eventType.ToString())
         {
             this.EventCommandType = eventType;
         }
