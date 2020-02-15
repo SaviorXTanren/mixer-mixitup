@@ -470,6 +470,7 @@ namespace MixItUp.Base
                             command.UpdateFromSettings(commandSetting);
                         }
                     }
+                    ChannelSession.Services.Chat.RebuildCommandTriggers();
 
                     ChannelSession.Services.TimerService.Initialize();
                     await ModerationHelper.Initialize();
