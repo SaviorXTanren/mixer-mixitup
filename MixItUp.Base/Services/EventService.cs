@@ -149,7 +149,14 @@ namespace MixItUp.Base.Services
             : this(type)
         {
             this.User = user;
-            this.Platform = this.User.Platform;
+            if (this.User != null)
+            {
+                this.Platform = this.User.Platform;
+            }
+            else
+            {
+                this.Platform = StreamingPlatformTypeEnum.All;
+            }
         }
 
         public EventTrigger(EventTypeEnum type, UserViewModel user, Dictionary<string, string> specialIdentifiers)

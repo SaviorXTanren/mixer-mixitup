@@ -634,17 +634,20 @@ namespace MixItUp.Base.Services
 
         private async void MixerChatService_OnUserPurgeOccurred(object sender, Tuple<UserViewModel, UserViewModel> e)
         {
-            foreach (ChatMessageViewModel message in this.Messages.ToList())
+            if (e.Item1 != null)
             {
-                if (message.Platform == StreamingPlatformTypeEnum.Mixer && message.User.Equals(e.Item1))
+                foreach (ChatMessageViewModel message in this.Messages.ToList())
                 {
-                    await message.Delete(user: e.Item2, reason: "Purged");
+                    if (message.Platform == StreamingPlatformTypeEnum.Mixer && message.User.Equals(e.Item1))
+                    {
+                        await message.Delete(user: e.Item2, reason: "Purged");
+                    }
                 }
-            }
 
-            EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatUserPurge, e.Item2);
-            trigger.Arguments.Add(e.Item1.Username);
-            await ChannelSession.Services.Events.PerformEvent(trigger);
+                EventTrigger trigger = (e.Item2 != null) ? new EventTrigger(EventTypeEnum.ChatUserPurge, e.Item2) : new EventTrigger(EventTypeEnum.ChatUserPurge);
+                trigger.Arguments.Add(e.Item1.Username);
+                await ChannelSession.Services.Events.PerformEvent(trigger);
+            }
         }
 
         private async void MixerChatService_OnUserBanOccurred(object sender, UserViewModel user)
