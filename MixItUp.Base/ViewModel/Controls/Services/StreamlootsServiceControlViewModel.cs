@@ -28,7 +28,7 @@ namespace MixItUp.Base.ViewModel.Controls.Services
         {
             this.LogInCommand = this.CreateCommand(async (parameter) =>
             {
-                if (string.IsNullOrEmpty(this.StreamlootsURL) && (!this.StreamlootsURL.StartsWith(StreamlootsStreamURLFormat) || !int.TryParse(this.StreamlootsURL, out int ID)))
+                if (string.IsNullOrEmpty(this.StreamlootsURL) || (!this.StreamlootsURL.StartsWith(StreamlootsStreamURLFormat) && !int.TryParse(this.StreamlootsURL, out int ID)))
                 {
                     await DialogHelper.ShowMessage("Please enter a valid Streamloots URL (" + StreamlootsStreamURLFormat + ").");
                 }
