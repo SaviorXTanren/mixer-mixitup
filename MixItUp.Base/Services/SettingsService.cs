@@ -249,6 +249,12 @@ namespace MixItUp.Base.Services
             await oldSettings.LoadUserData();
 
             SettingsV2Model newSettings = await SerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
+            if (newSettings == null)
+            {
+                string fileContents = await ChannelSession.Services.FileService.ReadFile(filePath);
+                fileContents = fileContents.Replace("MixItUp.Base.Model.Settings.SettingsV1Model, MixItUp.Base", "MixItUp.Base.Model.Settings.SettingsV2Model, MixItUp.Base");
+                newSettings = JSONSerializerHelper.DeserializeFromString<SettingsV2Model>(fileContents, ignoreErrors: true);
+            }
             await ChannelSession.Services.Settings.Initialize(newSettings);
 
             newSettings.MixerUserOAuthToken = oldSettings.OAuthToken;
