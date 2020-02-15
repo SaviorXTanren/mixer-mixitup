@@ -52,7 +52,7 @@ namespace MixItUp.WPF.Controls.Actions
                 this.InventoryItemNameComboBox.Text = this.action.ItemName;
                 this.CurrencyAmountTextBox.Text = this.action.Amount;
                 this.CurrencyUsernameTextBox.Text = this.action.Username;
-                this.CurrencyPermissionsAllowedComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.RoleRequirement);
+                this.CurrencyPermissionsAllowedComboBox.SelectedItem = this.action.RoleRequirement;
                 this.DeductFromUserToggleButton.IsChecked = this.action.DeductFromUser;
             }
             return Task.FromResult(0);
@@ -83,7 +83,7 @@ namespace MixItUp.WPF.Controls.Actions
                         {
                             return null;
                         }
-                        roleRequirement = EnumHelper.GetEnumValueFromString<UserRoleEnum>((string)this.CurrencyPermissionsAllowedComboBox.SelectedItem);
+                        roleRequirement = (UserRoleEnum)this.CurrencyPermissionsAllowedComboBox.SelectedItem;
                     }
 
                     if (currency != null)
