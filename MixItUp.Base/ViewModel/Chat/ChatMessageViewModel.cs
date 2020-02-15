@@ -102,28 +102,35 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public async Task Delete(UserViewModel user = null, string reason = null)
         {
-            if (!this.IsDeleted)
+            try
             {
-                this.IsDeleted = true;
-                if (user != null)
+                if (!this.IsDeleted)
                 {
-                    this.DeletedBy = user.Username;
+                    this.IsDeleted = true;
+                    if (user != null)
+                    {
+                        this.DeletedBy = user.Username;
+                    }
+                    this.ModerationReason = reason;
+
+                    this.NotifyPropertyChanged("IsDeleted");
+                    this.NotifyPropertyChanged("DeletedBy");
+                    this.NotifyPropertyChanged("ModerationReason");
+
+                    this.OnDeleted(this, new EventArgs());
+
+                    if (this.User != null && !string.IsNullOrEmpty(this.PlainTextMessage))
+                    {
+                        EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatMessageDeleted, user);
+                        trigger.SpecialIdentifiers["message"] = this.PlainTextMessage;
+                        trigger.SpecialIdentifiers["reason"] = (!string.IsNullOrEmpty(this.ModerationReason)) ? this.ModerationReason : "Manual Deletion";
+                        await ChannelSession.Services.Events.PerformEvent(trigger);
+                    }
                 }
-                this.ModerationReason = reason;
-
-                this.NotifyPropertyChanged("IsDeleted");
-                this.NotifyPropertyChanged("DeletedBy");
-                this.NotifyPropertyChanged("ModerationReason");
-
-                this.OnDeleted(this, new EventArgs());
-
-                if (this.User != null && !string.IsNullOrEmpty(this.PlainTextMessage))
-                {
-                    EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatMessageDeleted, user);
-                    trigger.SpecialIdentifiers["message"] = this.PlainTextMessage;
-                    trigger.SpecialIdentifiers["reason"] = (!string.IsNullOrEmpty(this.ModerationReason)) ? this.ModerationReason : "Manual Deletion";
-                    await ChannelSession.Services.Events.PerformEvent(trigger);
-                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
         }
 
