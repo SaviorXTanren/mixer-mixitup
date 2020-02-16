@@ -4,6 +4,7 @@ using Mixer.Base.Model.Patronage;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.ViewModel.User;
@@ -253,9 +254,9 @@ namespace MixItUp.Base.Util
 
         public async Task ReplaceCommonSpecialModifiers(UserViewModel user, IEnumerable<string> arguments = null)
         {
-            foreach (string counter in ChannelSession.Settings.Counters.Keys)
+            foreach (CounterModel counter in ChannelSession.Settings.Counters.Values.ToList())
             {
-                this.ReplaceSpecialIdentifier(counter, ChannelSession.Settings.Counters[counter].ToString());
+                this.ReplaceSpecialIdentifier(counter.Name, counter.Amount.ToString());
             }
 
             foreach (var kvp in SpecialIdentifierStringBuilder.CustomSpecialIdentifiers)
