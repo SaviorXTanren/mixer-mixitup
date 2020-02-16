@@ -324,7 +324,7 @@ namespace MixItUp.Base
                 if (mixerConnections.Any(c => !c.Result.Success))
                 {
                     string errors = string.Join(Environment.NewLine, mixerConnections.Where(c => !c.Result.Success).Select(c => c.Result.Message));
-                    GlobalEvents.ShowMessageBox("Failed to connect to Mixer services:" + Environment.NewLine + Environment.NewLine + errors);
+                    GlobalEvents.ShowMessageBox("Failed to connect to Mixer services:" + Environment.NewLine + Environment.NewLine + errors + Environment.NewLine + Environment.NewLine + "This may be due to a Mixer outage, please check the following page for more information: https://status.mixer.com/");
                     return false;
                 }
 
