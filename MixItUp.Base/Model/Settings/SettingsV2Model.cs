@@ -608,6 +608,12 @@ namespace MixItUp.Base.Model.Settings
                 }
             }
 
+            // Mod accounts cannot use this feature, forcefully disable on load
+            if (!this.IsStreamer)
+            {
+                this.TrackWhispererNumber = false;
+            }
+
             this.InitializeMissingData();
         }
 
