@@ -1176,9 +1176,6 @@
   <data name="Login" xml:space="preserve">
     <value>Einloggen</value>
   </data>
-  <data name="LoginErrorFailedToAuthenticate" xml:space="preserve">
-    <value>Die Authentifizierung mit Mixer ist nicht möglich. Bitte versuche es erneut.</value>
-  </data>
   <data name="LoginErrorNoChannelName" xml:space="preserve">
     <value>Ein Kanalname wird benötigt.</value>
   </data>
