@@ -1,4 +1,7 @@
 ﻿using MixItUp.Base.Services.External;
+using MixItUp.Base.Util;
+using StreamingClient.Base.Util;
+using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -35,22 +38,28 @@ namespace MixItUp.Base.ViewModel.Controls.Services
         public TwitterServiceControlViewModel()
             : base("Twitter")
         {
-            this.LogInCommand = this.CreateCommand(async (parameter) =>
+            this.LogInCommand = this.CreateCommand((parameter) =>
             {
                 this.AuthorizationInProgress = true;
-
-                ExternalServiceResult result = await ChannelSession.Services.Twitter.Connect();
-                if (result.Success)
+                Task.Run(async () =>
                 {
-                    this.IsConnected = true;
-                }
-                else
-                {
-                    await this.ShowConnectFailureMessage(result);
-                }
+                    ExternalServiceResult result = await ChannelSession.Services.Twitter.Connect();
+                    await DispatcherHelper.InvokeDispatcher(async () =>
+                    {
+                        if (result.Success)
+                        {
+                            this.IsConnected = true;
+                        }
+                        else
+                        {
+                            await this.ShowConnectFailureMessage(result);
+                        }
 
-                this.AuthorizationInProgress = false;
-                this.AuthorizationPin = string.Empty;
+                        this.AuthorizationInProgress = false;
+                        this.AuthorizationPin = string.Empty;
+                    });
+                });
+                return Task.FromResult(0);
             });
 
             this.LogOutCommand = this.CreateCommand(async (parameter) =>
