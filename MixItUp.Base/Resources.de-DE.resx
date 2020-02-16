@@ -816,6 +816,9 @@
   <data name="EndCredits" xml:space="preserve">
     <value>Abspann</value>
   </data>
+  <data name="English" xml:space="preserve">
+    <value>English</value>
+  </data>
   <data name="EnteredUsers" xml:space="preserve">
     <value>Beigetretene Benutzer</value>
   </data>
@@ -944,6 +947,9 @@
   </data>
   <data name="General" xml:space="preserve">
     <value>Allgemein</value>
+  </data>
+  <data name="German" xml:space="preserve">
+    <value>German</value>
   </data>
   <data name="GetCurrent" xml:space="preserve">
     <value>GetCurrent</value>
@@ -1094,6 +1100,9 @@
   </data>
   <data name="KeyboardKey" xml:space="preserve">
     <value>Tastaturtaste</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Language</value>
   </data>
   <data name="LanguageToTranslateTo" xml:space="preserve">
     <value>Language To Translate To</value>
@@ -1547,6 +1556,9 @@
   </data>
   <data name="ProgressBar" xml:space="preserve">
     <value>Ziel-/Fortschrittsbalken</value>
+  </data>
+  <data name="Pseudo" xml:space="preserve">
+    <value>Pseudo</value>
   </data>
   <data name="Purple" xml:space="preserve">
     <value>Lila</value>

@@ -85,6 +85,7 @@
       <DependentUpon>BasicTextEntryDialogControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="ChannelHostModel.cs" />
+    <Compile Include="WindowsFileService.cs" />
     <Page Include="BasicDialogControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

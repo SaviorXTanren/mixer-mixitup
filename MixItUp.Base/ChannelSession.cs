@@ -318,14 +318,32 @@ namespace MixItUp.Base
 
                 List<Task<ExternalServiceResult>> mixerConnections = new List<Task<ExternalServiceResult>>();
                 mixerConnections.Add(mixerChatService.ConnectUser());
-                mixerConnections.Add(mixerEventService.Connect());
+
+                Task<ExternalServiceResult> mixerEventServiceResult = mixerEventService.Connect();
+                mixerConnections.Add(mixerEventServiceResult);
+
                 await Task.WhenAll(mixerConnections);
 
                 if (mixerConnections.Any(c => !c.Result.Success))
                 {
                     string errors = string.Join(Environment.NewLine, mixerConnections.Where(c => !c.Result.Success).Select(c => c.Result.Message));
-                    GlobalEvents.ShowMessageBox("Failed to connect to Mixer services:" + Environment.NewLine + Environment.NewLine + errors);
-                    return false;
+                    string message = "Failed to connect to Mixer services:" + Environment.NewLine + Environment.NewLine + errors + Environment.NewLine + Environment.NewLine + "This may be due to a Mixer server outage, please check Mixer's status page for more information: https://status.mixer.com/";
+
+                    bool isOptionalService = mixerConnections.All(c => c.Result.Success || c == mixerEventServiceResult);
+                    if (isOptionalService)
+                    {
+                        if (!await DialogHelper.ShowConfirmation(message + Environment.NewLine + Environment.NewLine +
+                                "We have determined this to be a non-blocking error, which means we can attempt to log you in and ignore this. However, some features may not work as a result and you may run into some bugs."
+                                + Environment.NewLine + Environment.NewLine + "Would you like to ignore this and log in?"))
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        GlobalEvents.ShowMessageBox(message);
+                        return false;
+                    }
                 }
 
                 await ChannelSession.Services.Chat.Initialize(mixerChatService);

@@ -137,6 +137,8 @@ namespace MixItUp.AutoHoster
 
         public async Task<bool> Initialize()
         {
+            SerializerHelper.Initialize(new WindowsFileService());
+
             if (!Directory.Exists("Settings"))
             {
                 Directory.CreateDirectory("Settings");

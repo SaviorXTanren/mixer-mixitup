@@ -816,6 +816,9 @@
   <data name="EndCredits" xml:space="preserve">
     <value>[!!! Éñδ Çřèδïţš !!!]</value>
   </data>
+  <data name="English" xml:space="preserve">
+    <value>[!!! Éñĝℓïšĥ !!!]</value>
+  </data>
   <data name="EnteredUsers" xml:space="preserve">
     <value>[!!! Éñţèřèδ Ûšèřš !!!]</value>
   </data>
@@ -944,6 +947,9 @@
   </data>
   <data name="General" xml:space="preserve">
     <value>[!!! Gèñèřáℓ !!!]</value>
+  </data>
+  <data name="German" xml:space="preserve">
+    <value>[!!! Gèř₥áñ !!!]</value>
   </data>
   <data name="GetCurrent" xml:space="preserve">
     <value>[!!! GèţÇúřřèñţ !!!]</value>
@@ -1094,6 +1100,9 @@
   </data>
   <data name="KeyboardKey" xml:space="preserve">
     <value>[!!! Kè¥βôářδ Kè¥ !!!]</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>[!!! Ļáñĝúáĝè !!!]</value>
   </data>
   <data name="LanguageToTranslateTo" xml:space="preserve">
     <value>[!!! Ļáñĝúáĝè Ţô Ţřáñšℓáţè Ţô !!!]</value>
@@ -1547,6 +1556,9 @@
   </data>
   <data name="ProgressBar" xml:space="preserve">
     <value>[!!! Gôáℓ/Þřôĝřèšš ßář !!!]</value>
+  </data>
+  <data name="Pseudo" xml:space="preserve">
+    <value>[!!! Þšèúδô !!!]</value>
   </data>
   <data name="Purple" xml:space="preserve">
     <value>[!!! Þúřƥℓè !!!]</value>
