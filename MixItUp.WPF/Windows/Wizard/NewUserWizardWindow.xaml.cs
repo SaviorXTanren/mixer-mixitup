@@ -18,11 +18,11 @@ namespace MixItUp.WPF.Windows.Wizard
             this.viewModel.WizardCompleteEvent += ViewModel_WizardCompleteEvent;
             this.viewModel.StartLoadingOperationOccurred += (sender, args) =>
             {
-                this.StartAsyncOperation();
+                this.StartLoadingOperation();
             };
             this.viewModel.EndLoadingOperationOccurred += (sender, args) =>
             {
-                this.EndAsyncOperation();
+                this.EndLoadingOperation();
             };
 
             InitializeComponent();
