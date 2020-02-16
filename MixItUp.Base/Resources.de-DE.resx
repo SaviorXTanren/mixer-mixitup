@@ -1102,7 +1102,7 @@
     <value>Tastaturtaste</value>
   </data>
   <data name="Language" xml:space="preserve">
-    <value>Language</value>
+    <value>Language (Requires Restart)</value>
   </data>
   <data name="LanguageToTranslateTo" xml:space="preserve">
     <value>Language To Translate To</value>
