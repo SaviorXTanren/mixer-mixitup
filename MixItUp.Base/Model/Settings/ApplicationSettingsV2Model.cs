@@ -67,9 +67,6 @@ namespace MixItUp.Base.Model.Settings
         public string FullThemeName { get; set; } = string.Empty;
 
         [DataMember]
-        public string Language { get; set; } = "en";
-
-        [DataMember]
         public double Top { get; set; }
 
         [DataMember]
@@ -83,6 +80,9 @@ namespace MixItUp.Base.Model.Settings
 
         [DataMember]
         public bool IsMaximized { get; set; }
+
+        [DataMember]
+        public LanguageOptions LanguageOption { get; set; }
 
         [JsonIgnore]
         public bool IsDarkBackground { get { return this.BackgroundColor.Equals("Dark"); } }

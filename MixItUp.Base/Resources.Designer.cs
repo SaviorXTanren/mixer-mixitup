@@ -2158,6 +2158,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to English.
+        /// </summary>
+        public static string English {
+            get {
+                return ResourceManager.GetString("English", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Entered Users.
         /// </summary>
         public static string EnteredUsers {
@@ -2541,6 +2550,15 @@ namespace MixItUp.Base {
         public static string General {
             get {
                 return ResourceManager.GetString("General", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to German.
+        /// </summary>
+        public static string German {
+            get {
+                return ResourceManager.GetString("German", resourceCulture);
             }
         }
         
@@ -2991,6 +3009,15 @@ namespace MixItUp.Base {
         public static string KeyboardKey {
             get {
                 return ResourceManager.GetString("KeyboardKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Language.
+        /// </summary>
+        public static string Language {
+            get {
+                return ResourceManager.GetString("Language", resourceCulture);
             }
         }
         
@@ -4350,6 +4377,15 @@ namespace MixItUp.Base {
         public static string ProgressBar {
             get {
                 return ResourceManager.GetString("ProgressBar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pseudo.
+        /// </summary>
+        public static string Pseudo {
+            get {
+                return ResourceManager.GetString("Pseudo", resourceCulture);
             }
         }
         

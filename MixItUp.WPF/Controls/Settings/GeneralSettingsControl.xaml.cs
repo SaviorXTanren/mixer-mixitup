@@ -1,10 +1,12 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
+using MixItUp.Base.Model.Settings;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows;
@@ -57,6 +59,14 @@ namespace MixItUp.WPF.Controls.Settings
 
             this.DefaultStreamingSoftwareComboBox.ItemsSource = EnumHelper.GetEnumNames<StreamingSoftwareTypeEnum>(
                 new List<StreamingSoftwareTypeEnum>() { StreamingSoftwareTypeEnum.OBSStudio, StreamingSoftwareTypeEnum.XSplit, StreamingSoftwareTypeEnum.StreamlabsOBS });
+
+            var languageOptions = EnumHelper.GetEnumList<LanguageOptions>().ToList();
+            if (!ChannelSession.IsDebug())
+            {
+                languageOptions.Remove(LanguageOptions.Pseudo);
+            }
+
+            this.LanguageComboBox.ItemsSource = languageOptions;
         }
 
         protected override async Task InitializeInternal()
@@ -73,6 +83,7 @@ namespace MixItUp.WPF.Controls.Settings
             this.UpdatePreviewProgramToggleButton.IsChecked = ChannelSession.AppSettings.PreviewProgram;
             this.AutoLogInAccountToggleButton.IsChecked = (ChannelSession.AppSettings.AutoLogInAccount == ChannelSession.MixerChannel.user.id);
             this.DefaultStreamingSoftwareComboBox.SelectedItem = EnumHelper.GetEnumName(ChannelSession.Settings.DefaultStreamingSoftware);
+            this.LanguageComboBox.SelectedItem = ChannelSession.AppSettings.LanguageOption;
             if (!string.IsNullOrEmpty(ChannelSession.Settings.DefaultAudioOutput))
             {
                 this.DefaultAudioOutputComboBox.SelectedItem = ChannelSession.Settings.DefaultAudioOutput;
@@ -132,6 +143,16 @@ namespace MixItUp.WPF.Controls.Settings
             if (this.DefaultStreamingSoftwareComboBox.SelectedIndex >= 0)
             {
                 ChannelSession.Settings.DefaultStreamingSoftware = EnumHelper.GetEnumValueFromString<StreamingSoftwareTypeEnum>((string)this.DefaultStreamingSoftwareComboBox.SelectedItem);
+            }
+        }
+
+        private void LanguageComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            var selectedLanguage = (LanguageOptions)this.LanguageComboBox.SelectedItem;
+            if (ChannelSession.AppSettings.LanguageOption != selectedLanguage)
+            {
+                ChannelSession.AppSettings.SettingsChangeRestartRequired = true;
+                ChannelSession.AppSettings.LanguageOption = selectedLanguage;
             }
         }
 
