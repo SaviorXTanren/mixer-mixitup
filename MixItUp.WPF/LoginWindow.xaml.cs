@@ -7,6 +7,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Windows;
 using MixItUp.WPF.Windows.Wizard;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -73,12 +74,12 @@ namespace MixItUp.WPF
                 this.ModeratorChannelComboBox.SelectedIndex = 0;
             }
 
-            if (ChannelSession.AppSettings.AutoLogInAccount > 0)
+            if (ChannelSession.AppSettings.AutoLogInID != Guid.Empty)
             {
                 var allSettings = this.streamerSettings.ToList();
                 allSettings.AddRange(this.moderatorSettings);
 
-                SettingsV2Model autoLogInSettings = allSettings.FirstOrDefault(s => s.MixerChannelID == ChannelSession.AppSettings.AutoLogInAccount);
+                SettingsV2Model autoLogInSettings = allSettings.FirstOrDefault(s => s.ID == ChannelSession.AppSettings.AutoLogInID);
                 if (autoLogInSettings != null)
                 {
                     await Task.Delay(5000);
