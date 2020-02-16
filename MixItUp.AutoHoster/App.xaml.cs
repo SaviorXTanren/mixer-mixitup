@@ -71,7 +71,7 @@ namespace MixItUp.AutoHoster
         {
             try
             {
-                File.AppendAllText(FileLoggerHandler.CurrentLogFilePath, string.Format("{0} - {1} - {2} " + Environment.NewLine + Environment.NewLine,
+                File.AppendAllText(App.CurrentLogFilePath, string.Format("{0} - {1} - {2} " + Environment.NewLine + Environment.NewLine,
                     DateTimeOffset.Now.ToString(), EnumHelper.GetEnumName(log.Level), log.Message));
             }
             catch (Exception) { }

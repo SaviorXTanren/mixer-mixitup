@@ -55,7 +55,7 @@ namespace MixItUp.Base.Model.Settings
         public bool PreviewProgram { get; set; } = false;
 
         [DataMember]
-        public uint AutoLogInAccount { get; set; } = 0;
+        public Guid AutoLogInID { get; set; } = Guid.Empty;
 
         [DataMember]
         public string ColorScheme { get; set; } = "Indigo";
