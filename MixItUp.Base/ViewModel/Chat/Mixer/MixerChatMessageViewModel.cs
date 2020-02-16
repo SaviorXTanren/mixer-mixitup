@@ -68,13 +68,10 @@ namespace MixItUp.Base.ViewModel.Chat.Mixer
                                     {
                                         foreach (string split in splits)
                                         {
+                                            this.AddStringMessagePart(split);
                                             if (ChannelSession.Services.Chat.MixrElixrEmotes.ContainsKey(split))
                                             {
-                                                this.MessageParts.Add(ChannelSession.Services.Chat.MixrElixrEmotes[split]);
-                                            }
-                                            else
-                                            {
-                                                this.AddStringMessagePart(split);
+                                                this.MessageParts[this.MessageParts.Count - 1] = ChannelSession.Services.Chat.MixrElixrEmotes[split];
                                             }
                                         }
                                     }
