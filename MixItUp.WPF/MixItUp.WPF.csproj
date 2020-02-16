@@ -872,10 +872,6 @@
     <Compile Include="Controls\Services\PatreonServiceControl.xaml.cs">
       <DependentUpon>PatreonServiceControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Services\ServicesControlBase.cs" />
-    <Compile Include="Controls\Services\ServicesGroupBoxControl.xaml.cs">
-      <DependentUpon>ServicesGroupBoxControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Services\StreamElementsServiceControl.xaml.cs">
       <DependentUpon>StreamElementsServiceControl.xaml</DependentUpon>
     </Compile>
@@ -1751,10 +1747,6 @@
     <Page Include="Controls\Services\PatreonServiceControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\Services\ServicesGroupBoxControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Services\StreamElementsServiceControl.xaml">
       <SubType>Designer</SubType>
