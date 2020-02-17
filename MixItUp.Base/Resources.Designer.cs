@@ -1483,6 +1483,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Currency.
+        /// </summary>
+        public static string Currency {
+            get {
+                return ResourceManager.GetString("Currency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Currency Cost.
         /// </summary>
         public static string CurrencyCost {
@@ -4408,6 +4417,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This feature is currently available for Partners only..
+        /// </summary>
+        public static string PartnersOnly {
+            get {
+                return ResourceManager.GetString("PartnersOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Patreon Benefit Requirement.
         /// </summary>
         public static string PatreonBenefitRequirement {
@@ -4719,6 +4737,15 @@ namespace MixItUp.Base {
         public static string RandomStreamer {
             get {
                 return ResourceManager.GetString("RandomStreamer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rank.
+        /// </summary>
+        public static string Rank {
+            get {
+                return ResourceManager.GetString("Rank", resourceCulture);
             }
         }
         

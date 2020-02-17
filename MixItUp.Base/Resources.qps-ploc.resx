@@ -591,6 +591,9 @@
   <data name="CurrenciesRanksInventories" xml:space="preserve">
     <value>[!!! Çúřřèñçïèš/Ráñƙš/ÌñƲèñţôřïèš !!!]</value>
   </data>
+  <data name="Currency" xml:space="preserve">
+    <value>[!!! Çúřřèñç¥ !!!]</value>
+  </data>
   <data name="CurrencyCost" xml:space="preserve">
     <value>[!!! Çúřřèñç¥ Çôšţ !!!]</value>
   </data>
@@ -1566,6 +1569,9 @@
   <data name="PartneredStreamer" xml:space="preserve">
     <value>[!!! Þářţñèřèδ Šţřèá₥èř !!!]</value>
   </data>
+  <data name="PartnersOnly" xml:space="preserve">
+    <value>[!!! Ţĥïš ƒèáţúřè ïš çúřřèñţℓ¥ áƲáïℓáβℓè ƒôř Þářţñèřš ôñℓ¥. !!!]</value>
+  </data>
   <data name="PatreonBenefitRequirement" xml:space="preserve">
     <value>[!!! Þáţřèôñ ßèñèƒïţ Rè9úïřè₥èñţ !!!]</value>
   </data>
@@ -1670,6 +1676,9 @@
   </data>
   <data name="RandomStreamer" xml:space="preserve">
     <value>[!!! Ráñδô₥ Šţřèá₥èř !!!]</value>
+  </data>
+  <data name="Rank" xml:space="preserve">
+    <value>[!!! Ráñƙ !!!]</value>
   </data>
   <data name="RankMinimum" xml:space="preserve">
     <value>[!!! Ráñƙ Mïñï₥ú₥ !!!]</value>
