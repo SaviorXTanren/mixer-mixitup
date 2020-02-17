@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Dashboard"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -29,7 +30,7 @@
 
             <Button Grid.Column="0" Content="{Binding CommandOneName}" Command="{Binding CommandOneCommand}" Width="200" />
 
-            <Button x:Name="EditCommandOneButton" Grid.Column="2" Click="EditCommandOneButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Edit">
+            <Button x:Name="EditCommandOneButton" Grid.Column="2" Click="EditCommandOneButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Edit}">
                 <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
             </Button>
         </Grid>
@@ -43,7 +44,7 @@
 
             <Button Grid.Column="0" Content="{Binding CommandTwoName}" Command="{Binding CommandTwoCommand}" Width="200" />
 
-            <Button x:Name="EditCommandTwoButton" Grid.Column="2" Click="EditCommandTwoButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Edit">
+            <Button x:Name="EditCommandTwoButton" Grid.Column="2" Click="EditCommandTwoButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Edit}">
                 <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
             </Button>
         </Grid>
@@ -57,7 +58,7 @@
 
             <Button Grid.Column="0" Content="{Binding CommandThreeName}" Command="{Binding CommandThreeCommand}" Width="200" />
 
-            <Button x:Name="EditCommandThreeButton" Grid.Column="2" Click="EditCommandThreeButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Edit">
+            <Button x:Name="EditCommandThreeButton" Grid.Column="2" Click="EditCommandThreeButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Edit}">
                 <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
             </Button>
         </Grid>
@@ -71,7 +72,7 @@
 
             <Button Grid.Column="0" Content="{Binding CommandFourName}" Command="{Binding CommandFourCommand}" Width="200" />
 
-            <Button x:Name="EditCommandFourButton" Grid.Column="2" Click="EditCommandFourButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Edit">
+            <Button x:Name="EditCommandFourButton" Grid.Column="2" Click="EditCommandFourButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Edit}">
                 <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
             </Button>
         </Grid>
@@ -85,7 +86,7 @@
 
             <Button Grid.Column="0" Content="{Binding CommandFiveName}" Command="{Binding CommandFiveCommand}" Width="200" />
 
-            <Button x:Name="EditCommandFiveButton" Grid.Column="2" Click="EditCommandFiveButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Edit">
+            <Button x:Name="EditCommandFiveButton" Grid.Column="2" Click="EditCommandFiveButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="{x:Static resx:Resources.Edit}">
                 <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
             </Button>
         </Grid>

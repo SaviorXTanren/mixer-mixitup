@@ -99,18 +99,9 @@ namespace MixItUp.Base.Services
                 StaticTextStatisticDataTrackerModel staticStats = (StaticTextStatisticDataTrackerModel)stats;
                 staticStats.ClearValues();
 
-                if (ChannelSession.Services.Statistics != null)
-                {
-                    staticStats.AddValue("Subs", ChannelSession.Services.Statistics.SubscriberTracker.Total.ToString());
-                    staticStats.AddValue("Resubs", ChannelSession.Services.Statistics.ResubscriberTracker.Total.ToString());
-                    staticStats.AddValue("Gifted", ChannelSession.Services.Statistics.GiftedSubscriptionsTracker.Total.ToString());
-                }
-                else
-                {
-                    staticStats.AddValue("Subs", "0");
-                    staticStats.AddValue("Resubs", "0");
-                    staticStats.AddValue("Gifted", "0");
-                }
+                staticStats.AddValue(Resources.Subs, ChannelSession.Services.Statistics?.SubscriberTracker?.Total.ToString() ?? "0");
+                staticStats.AddValue(Resources.Resubs, ChannelSession.Services.Statistics?.ResubscriberTracker?.Total.ToString() ?? "0");
+                staticStats.AddValue(Resources.Gifted, ChannelSession.Services.Statistics?.GiftedSubscriptionsTracker?.Total.ToString() ?? "0");
 
                 return Task.FromResult(0);
             });
@@ -169,23 +160,15 @@ namespace MixItUp.Base.Services
                 StaticTextStatisticDataTrackerModel staticStats = (StaticTextStatisticDataTrackerModel)stats;
                 staticStats.ClearValues();
 
-                if (ChannelSession.Services.Statistics != null)
-                {
-                    staticStats.AddValue("Sparks", ChannelSession.Services.Statistics.SparksTracker.TotalValue.ToString());
-                    staticStats.AddValue("Embers", ChannelSession.Services.Statistics.EmbersTracker.TotalValue.ToString());
-                }
-                else
-                {
-                    staticStats.AddValue("Sparks", "0");
-                    staticStats.AddValue("Embers", "0");
-                }
+                staticStats.AddValue(Resources.Sparks, ChannelSession.Services.Statistics?.SparksTracker?.TotalValue.ToString() ?? "0");
+                staticStats.AddValue(Resources.Embers, ChannelSession.Services.Statistics?.EmbersTracker?.TotalValue.ToString() ?? "0");
 
                 return Task.FromResult(0);
             });
 
             this.DonationsTracker = new EventStatisticDataTrackerModel("Donations", "CashMultiple", true, new List<string>() { "Username", "Amount", "Date & Time" }, (EventStatisticDataTrackerModel dataTracker) =>
             {
-                return string.Format("Donators: {0},    Total: {1:C},    Average: {2:C}", dataTracker.UniqueIdentifiers, dataTracker.TotalValueDecimal, dataTracker.AverageValueString);
+                return $"{Resources.Donators}: {dataTracker.UniqueIdentifiers},    {Resources.Total}: {dataTracker.TotalValueDecimal:C},    {Resources.Average}: {dataTracker.AverageValueString:C}";
             });
 
             this.Statistics = new List<StatisticDataTrackerModelBase>();
