@@ -564,6 +564,9 @@
   <data name="Cooldown" xml:space="preserve">
     <value>Cooldown</value>
   </data>
+  <data name="CooldownSeconds" xml:space="preserve">
+    <value>Cooldown (Seconds)</value>
+  </data>
   <data name="Cost" xml:space="preserve">
     <value>Cost</value>
   </data>
@@ -1005,6 +1008,9 @@
   <data name="Grey" xml:space="preserve">
     <value>Grey</value>
   </data>
+  <data name="Group" xml:space="preserve">
+    <value>Group</value>
+  </data>
   <data name="GroupIntervalMin" xml:space="preserve">
     <value>Group Interval (Min)</value>
   </data>
@@ -1073,6 +1079,9 @@
   </data>
   <data name="Indigo" xml:space="preserve">
     <value>Indigo</value>
+  </data>
+  <data name="Individual" xml:space="preserve">
+    <value>Individual</value>
   </data>
   <data name="InputKeyboardAndMouse" xml:space="preserve">
     <value>Input (Keyboard &amp; Mouse)</value>
@@ -1544,6 +1553,9 @@
   </data>
   <data name="Permissions" xml:space="preserve">
     <value>Permissions</value>
+  </data>
+  <data name="PerPerson" xml:space="preserve">
+    <value>Per Person</value>
   </data>
   <data name="Pink" xml:space="preserve">
     <value>Pink</value>

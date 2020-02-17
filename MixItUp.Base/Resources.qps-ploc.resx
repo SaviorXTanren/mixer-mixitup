@@ -564,6 +564,9 @@
   <data name="Cooldown" xml:space="preserve">
     <value>[!!! Çôôℓδôωñ !!!]</value>
   </data>
+  <data name="CooldownSeconds" xml:space="preserve">
+    <value>[!!! Çôôℓδôωñ (Šèçôñδš) !!!]</value>
+  </data>
   <data name="Cost" xml:space="preserve">
     <value>[!!! Çôšţ !!!]</value>
   </data>
@@ -1005,6 +1008,9 @@
   <data name="Grey" xml:space="preserve">
     <value>[!!! Gřè¥ !!!]</value>
   </data>
+  <data name="Group" xml:space="preserve">
+    <value>[!!! Gřôúƥ !!!]</value>
+  </data>
   <data name="GroupIntervalMin" xml:space="preserve">
     <value>[!!! Gřôúƥ ÌñţèřƲáℓ (Mïñ) !!!]</value>
   </data>
@@ -1073,6 +1079,9 @@
   </data>
   <data name="Indigo" xml:space="preserve">
     <value>[!!! Ìñδïĝô !!!]</value>
+  </data>
+  <data name="Individual" xml:space="preserve">
+    <value>[!!! ÌñδïƲïδúáℓ !!!]</value>
   </data>
   <data name="InputKeyboardAndMouse" xml:space="preserve">
     <value>[!!! Ìñƥúţ (Kè¥βôářδ &amp; Môúšè) !!!]</value>
@@ -1544,6 +1553,9 @@
   </data>
   <data name="Permissions" xml:space="preserve">
     <value>[!!! Þèř₥ïššïôñš !!!]</value>
+  </data>
+  <data name="PerPerson" xml:space="preserve">
+    <value>[!!! Þèř Þèřšôñ !!!]</value>
   </data>
   <data name="Pink" xml:space="preserve">
     <value>[!!! Þïñƙ !!!]</value>

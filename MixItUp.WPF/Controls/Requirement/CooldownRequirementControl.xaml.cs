@@ -22,8 +22,8 @@ namespace MixItUp.WPF.Controls.Requirement
         {
             InitializeComponent();
 
-            this.CooldownTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<CooldownTypeEnum>().OrderBy(c => c);
-            this.CooldownTypeComboBox.SelectedItem = EnumHelper.GetEnumName(CooldownTypeEnum.Individual);
+            this.CooldownTypeComboBox.ItemsSource = EnumHelper.GetEnumList<CooldownTypeEnum>().OrderBy(c => c);
+            this.CooldownTypeComboBox.SelectedItem = CooldownTypeEnum.Individual;
             this.CooldownAmountTextBox.Text = "0";
 
             IEnumerable<PermissionsCommandBase> permissionCommands = ChannelSession.AllEnabledCommands.Where(c => c is PermissionsCommandBase).Select(c => (PermissionsCommandBase)c);
@@ -45,7 +45,7 @@ namespace MixItUp.WPF.Controls.Requirement
         {
             if (this.CooldownTypeComboBox.SelectedIndex >= 0 && this.GetCooldownAmount() >= 0)
             {
-                CooldownTypeEnum type = EnumHelper.GetEnumValueFromString<CooldownTypeEnum>((string)this.CooldownTypeComboBox.SelectedItem);
+                CooldownTypeEnum type = (CooldownTypeEnum)this.CooldownTypeComboBox.SelectedItem;
                 if (type == CooldownTypeEnum.Group)
                 {
                     if (string.IsNullOrEmpty(this.CooldownGroupsComboBox.Text))
@@ -66,7 +66,7 @@ namespace MixItUp.WPF.Controls.Requirement
         {
             if (cooldown != null)
             {
-                this.CooldownTypeComboBox.SelectedItem = EnumHelper.GetEnumName(cooldown.Type);
+                this.CooldownTypeComboBox.SelectedItem = cooldown.Type;
                 if (cooldown.IsGroup && ChannelSession.Settings.CooldownGroups.ContainsKey(cooldown.GroupName))
                 {
                     this.CooldownGroupsComboBox.Text = cooldown.GroupName;
@@ -87,7 +87,7 @@ namespace MixItUp.WPF.Controls.Requirement
                 return false;
             }
 
-            CooldownTypeEnum type = EnumHelper.GetEnumValueFromString<CooldownTypeEnum>((string)this.CooldownTypeComboBox.SelectedItem);
+            CooldownTypeEnum type = (CooldownTypeEnum)this.CooldownTypeComboBox.SelectedItem;
             if (type == CooldownTypeEnum.Group && string.IsNullOrEmpty(this.CooldownGroupsComboBox.Text))
             {
                 await DialogHelper.ShowMessage("A Cooldown Group must be specified");
@@ -101,7 +101,7 @@ namespace MixItUp.WPF.Controls.Requirement
         {
             if (this.CooldownTypeComboBox.SelectedIndex >= 0)
             {
-                CooldownTypeEnum type = EnumHelper.GetEnumValueFromString<CooldownTypeEnum>((string)this.CooldownTypeComboBox.SelectedItem);
+                CooldownTypeEnum type = (CooldownTypeEnum)this.CooldownTypeComboBox.SelectedItem;
                 this.CooldownGroupsComboBox.Visibility = (type == CooldownTypeEnum.Group) ? Visibility.Visible : Visibility.Collapsed;
             }
         }
