@@ -153,6 +153,12 @@
   <data name="Accounts" xml:space="preserve">
     <value>Accounts</value>
   </data>
+  <data name="AccountsDetails" xml:space="preserve">
+    <value>Streamer accounts are your actual account that you are streaming from. Bot accounts are separate, optional accounts that you can use to send messages from in your channel. Bots accounts must be manually created by you and you must make sure to be signed in to them before you try connecting them in Mix It Up.</value>
+  </data>
+  <data name="AccountsWizardInstructions" xml:space="preserve">
+    <value>Let's get started by signing in to the accounts you use on each Streaming Platform. Select the options below for each account you want to log in. You can revisit these options later by going to the Accounts page.</value>
+  </data>
   <data name="AccountWeek" xml:space="preserve">
     <value>Account Is 1 Week Old</value>
   </data>
@@ -383,6 +389,9 @@
   </data>
   <data name="Bot" xml:space="preserve">
     <value>Bot</value>
+  </data>
+  <data name="BotAccount" xml:space="preserve">
+    <value>Bot Account</value>
   </data>
   <data name="Brown" xml:space="preserve">
     <value>Brown</value>
@@ -1038,6 +1047,9 @@
   <data name="IncludeCommandAssets" xml:space="preserve">
     <value>Include Command Assets</value>
   </data>
+  <data name="IncorrectBotAccount" xml:space="preserve">
+    <value>You must sign in to a different account than your Streamer account.</value>
+  </data>
   <data name="Indigo" xml:space="preserve">
     <value>Indigo</value>
   </data>
@@ -1186,7 +1198,7 @@
     <value>Lock/Unlock Chat Scrolling</value>
   </data>
   <data name="Login" xml:space="preserve">
-    <value>Login</value>
+    <value>Log In</value>
   </data>
   <data name="LoginErrorNoChannelName" xml:space="preserve">
     <value>A channel name must be entered.</value>
@@ -1196,6 +1208,9 @@
   </data>
   <data name="LoginErrorNotModerator" xml:space="preserve">
     <value>You are not a moderator for this channel.</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Log Out</value>
   </data>
   <data name="MagicEightBall" xml:space="preserve">
     <value>Magic 8 Ball</value>
@@ -2048,6 +2063,9 @@
   </data>
   <data name="TestCommand" xml:space="preserve">
     <value>Test Command</value>
+  </data>
+  <data name="TestStreamWarning" xml:space="preserve">
+    <value>Because test stream settings are enabled, your bot account will not be able to connect correctly. You will need to disable Test Streams in order to use your bot account for things such a chat messages &amp; whispers. Are you sure you still wish to connect it?</value>
   </data>
   <data name="Text" xml:space="preserve">
     <value>Text</value>

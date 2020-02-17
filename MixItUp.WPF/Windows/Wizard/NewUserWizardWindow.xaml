@@ -118,9 +118,9 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" TextWrapping="Wrap" Width="700">Let's get started by signing in to the accounts you use on each Streaming Platform. Select the options below for each account you want to log in. You can revisit these options later by going to the Accounts page.</TextBlock>
+                    <TextBlock Grid.Row="0" TextWrapping="Wrap" Width="700" Text="{x:Static resx:Resources.AccountsWizardInstructions}"/>
 
-                    <TextBlock Grid.Row="2" TextWrapping="Wrap" Width="700">Streamer accounts are your actual account that you are streaming from. Bot accounts are separate, optional accounts that you can use to send messages from in your channel. Bots accounts must be manually created by you and you must make sure to be signed in to them before you try connecting them in Mix It Up.</TextBlock>
+                    <TextBlock Grid.Row="2" TextWrapping="Wrap" Width="700" Text="{x:Static resx:Resources.AccountsDetails}"/>
 
                     <AccountControls:StreamingPlatformAccountControl Grid.Row="4" DataContext="{Binding Mixer}" />
                 </Grid>

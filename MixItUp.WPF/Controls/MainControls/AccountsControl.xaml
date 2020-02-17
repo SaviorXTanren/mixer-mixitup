@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
              xmlns:AccountControls="clr-namespace:MixItUp.WPF.Controls.Accounts"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
@@ -26,7 +27,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" TextWrapping="Wrap">Streamer accounts are your actual account that you are streaming from. Bot accounts are separate, optional accounts that you can use to send messages from in your channel. Bots accounts must be manually created by you and you must make sure to be signed in to them before you try connecting them in Mix It Up.</TextBlock>
+        <TextBlock Grid.Row="0" TextWrapping="Wrap" Text="{x:Static resx:Resources.AccountsDetails}"/>
 
         <AccountControls:StreamingPlatformAccountControl Grid.Row="4" DataContext="{Binding Mixer}" />
     </Grid>

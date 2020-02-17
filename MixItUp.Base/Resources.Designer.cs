@@ -169,6 +169,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Streamer accounts are your actual account that you are streaming from. Bot accounts are separate, optional accounts that you can use to send messages from in your channel. Bots accounts must be manually created by you and you must make sure to be signed in to them before you try connecting them in Mix It Up..
+        /// </summary>
+        public static string AccountsDetails {
+            get {
+                return ResourceManager.GetString("AccountsDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Let&apos;s get started by signing in to the accounts you use on each Streaming Platform. Select the options below for each account you want to log in. You can revisit these options later by going to the Accounts page..
+        /// </summary>
+        public static string AccountsWizardInstructions {
+            get {
+                return ResourceManager.GetString("AccountsWizardInstructions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Account Is 1 Week Old.
         /// </summary>
         public static string AccountWeek {
@@ -858,6 +876,15 @@ namespace MixItUp.Base {
         public static string Bot {
             get {
                 return ResourceManager.GetString("Bot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bot Account.
+        /// </summary>
+        public static string BotAccount {
+            get {
+                return ResourceManager.GetString("BotAccount", resourceCulture);
             }
         }
         
@@ -2824,6 +2851,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You must sign in to a different account than your Streamer account..
+        /// </summary>
+        public static string IncorrectBotAccount {
+            get {
+                return ResourceManager.GetString("IncorrectBotAccount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Indigo.
         /// </summary>
         public static string Indigo {
@@ -3265,7 +3301,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Login.
+        ///   Looks up a localized string similar to Log In.
         /// </summary>
         public static string Login {
             get {
@@ -3297,6 +3333,15 @@ namespace MixItUp.Base {
         public static string LoginErrorNotModerator {
             get {
                 return ResourceManager.GetString("LoginErrorNotModerator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log Out.
+        /// </summary>
+        public static string Logout {
+            get {
+                return ResourceManager.GetString("Logout", resourceCulture);
             }
         }
         
@@ -5853,6 +5898,15 @@ namespace MixItUp.Base {
         public static string TestCommand {
             get {
                 return ResourceManager.GetString("TestCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Because test stream settings are enabled, your bot account will not be able to connect correctly. You will need to disable Test Streams in order to use your bot account for things such a chat messages &amp; whispers. Are you sure you still wish to connect it?.
+        /// </summary>
+        public static string TestStreamWarning {
+            get {
+                return ResourceManager.GetString("TestStreamWarning", resourceCulture);
             }
         }
         

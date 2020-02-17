@@ -153,6 +153,12 @@
   <data name="Accounts" xml:space="preserve">
     <value>[!!! Âççôúñţš !!!]</value>
   </data>
+  <data name="AccountsDetails" xml:space="preserve">
+    <value>[!!! Šţřèá₥èř áççôúñţš ářè ¥ôúř áçţúáℓ áççôúñţ ţĥáţ ¥ôú ářè šţřèá₥ïñĝ ƒřô₥. ßôţ áççôúñţš ářè šèƥářáţè, ôƥţïôñáℓ áççôúñţš ţĥáţ ¥ôú çáñ úšè ţô šèñδ ₥èššáĝèš ƒřô₥ ïñ ¥ôúř çĥáññèℓ. ßôţš áççôúñţš ₥úšţ βè ₥áñúáℓℓ¥ çřèáţèδ β¥ ¥ôú áñδ ¥ôú ₥úšţ ₥áƙè šúřè ţô βè šïĝñèδ ïñ ţô ţĥè₥ βèƒôřè ¥ôú ţř¥ çôññèçţïñĝ ţĥè₥ ïñ Mïж Ìţ Ûƥ. !!!]</value>
+  </data>
+  <data name="AccountsWizardInstructions" xml:space="preserve">
+    <value>[!!! Ļèţ'š ĝèţ šţářţèδ β¥ šïĝñïñĝ ïñ ţô ţĥè áççôúñţš ¥ôú úšè ôñ èáçĥ Šţřèá₥ïñĝ Þℓáţƒôř₥. Šèℓèçţ ţĥè ôƥţïôñš βèℓôω ƒôř èáçĥ áççôúñţ ¥ôú ωáñţ ţô ℓôĝ ïñ. Ýôú çáñ řèƲïšïţ ţĥèšè ôƥţïôñš ℓáţèř β¥ ĝôïñĝ ţô ţĥè Âççôúñţš ƥáĝè. !!!]</value>
+  </data>
   <data name="AccountWeek" xml:space="preserve">
     <value>[!!! Âççôúñţ Ìš 1 Wèèƙ Óℓδ !!!]</value>
   </data>
@@ -383,6 +389,9 @@
   </data>
   <data name="Bot" xml:space="preserve">
     <value>[!!! ßôţ !!!]</value>
+  </data>
+  <data name="BotAccount" xml:space="preserve">
+    <value>[!!! ßôţ Âççôúñţ !!!]</value>
   </data>
   <data name="Brown" xml:space="preserve">
     <value>[!!! ßřôωñ !!!]</value>
@@ -1038,6 +1047,9 @@
   <data name="IncludeCommandAssets" xml:space="preserve">
     <value>[!!! Ìñçℓúδè Çô₥₥áñδ Âššèţš !!!]</value>
   </data>
+  <data name="IncorrectBotAccount" xml:space="preserve">
+    <value>[!!! Ýôú ₥úšţ šïĝñ ïñ ţô á δïƒƒèřèñţ áççôúñţ ţĥáñ ¥ôúř Šţřèá₥èř áççôúñţ. !!!]</value>
+  </data>
   <data name="Indigo" xml:space="preserve">
     <value>[!!! Ìñδïĝô !!!]</value>
   </data>
@@ -1186,7 +1198,7 @@
     <value>[!!! Ļôçƙ/Ûñℓôçƙ Çĥáţ Šçřôℓℓïñĝ !!!]</value>
   </data>
   <data name="Login" xml:space="preserve">
-    <value>[!!! Ļôĝïñ !!!]</value>
+    <value>[!!! Ļôĝ Ìñ !!!]</value>
   </data>
   <data name="LoginErrorNoChannelName" xml:space="preserve">
     <value>[!!! Â çĥáññèℓ ñá₥è ₥úšţ βè èñţèřèδ. !!!]</value>
@@ -1196,6 +1208,9 @@
   </data>
   <data name="LoginErrorNotModerator" xml:space="preserve">
     <value>[!!! Ýôú ářè ñôţ á ₥ôδèřáţôř ƒôř ţĥïš çĥáññèℓ. !!!]</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>[!!! Ļôĝ Óúţ !!!]</value>
   </data>
   <data name="MagicEightBall" xml:space="preserve">
     <value>[!!! Máĝïç 8 ßáℓℓ !!!]</value>
@@ -2048,6 +2063,9 @@
   </data>
   <data name="TestCommand" xml:space="preserve">
     <value>[!!! Ţèšţ Çô₥₥áñδ !!!]</value>
+  </data>
+  <data name="TestStreamWarning" xml:space="preserve">
+    <value>[!!! ßèçáúšè ţèšţ šţřèá₥ šèţţïñĝš ářè èñáβℓèδ, ¥ôúř βôţ áççôúñţ ωïℓℓ ñôţ βè áβℓè ţô çôññèçţ çôřřèçţℓ¥. Ýôú ωïℓℓ ñèèδ ţô δïšáβℓè Ţèšţ Šţřèá₥š ïñ ôřδèř ţô úšè ¥ôúř βôţ áççôúñţ ƒôř ţĥïñĝš šúçĥ á çĥáţ ₥èššáĝèš &amp; ωĥïšƥèřš. Âřè ¥ôú šúřè ¥ôú šţïℓℓ ωïšĥ ţô çôññèçţ ïţ? !!!]</value>
   </data>
   <data name="Text" xml:space="preserve">
     <value>[!!! Ţèжţ !!!]</value>
