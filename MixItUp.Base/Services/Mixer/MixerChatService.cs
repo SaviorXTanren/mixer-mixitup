@@ -98,6 +98,8 @@ namespace MixItUp.Base.Services.Mixer
             {
                 return await this.AttemptConnect(async () =>
                 {
+                    await this.DisconnectUser();
+
                     this.cancellationTokenSource = new CancellationTokenSource();
 
                     ExternalServiceResult<ChatClient> result = await this.ConnectAndAuthenticateChatClient(ChannelSession.MixerUserConnection);
@@ -197,6 +199,8 @@ namespace MixItUp.Base.Services.Mixer
             {
                 return await this.AttemptConnect(async () =>
                 {
+                    await this.DisconnectBot();
+
                     ExternalServiceResult<ChatClient> result = await this.ConnectAndAuthenticateChatClient(ChannelSession.MixerBotConnection);
                     if (result.Success)
                     {
