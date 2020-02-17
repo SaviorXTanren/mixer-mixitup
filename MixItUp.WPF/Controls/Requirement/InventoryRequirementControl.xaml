@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="400">
@@ -25,11 +26,11 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="InventoryTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Inventory Requirement" Width="170" VerticalAlignment="Center" DisplayMemberPath="Name" SelectionChanged="InventoryTypeComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox x:Name="InventoryTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.InventoryRequirement}" MinWidth="170" VerticalAlignment="Center" DisplayMemberPath="Name" SelectionChanged="InventoryTypeComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-            <ComboBox x:Name="InventoryItemComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Item Name" Width="110" VerticalAlignment="Center" DisplayMemberPath="Name" IsEnabled="False" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox x:Name="InventoryItemComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.ItemName}" MinWidth="110" VerticalAlignment="Center" DisplayMemberPath="Name" IsEnabled="False" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-            <TextBox x:Name="InventoryItemAmountTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Amount" Width="80" VerticalAlignment="Center" IsEnabled="False" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="InventoryItemAmountTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Amount}" MinWidth="80" VerticalAlignment="Center" IsEnabled="False" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
     </Grid>
 </local:LoadingControlBase>

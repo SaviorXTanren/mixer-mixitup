@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -23,9 +24,9 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="CurrencyTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Currency Requirement" Width="170" VerticalAlignment="Center" DisplayMemberPath="Name" SelectionChanged="CurrencyTypeComboBox_SelectionChanged"  Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox x:Name="CurrencyTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CurrencyRequirement}" MinWidth="170" VerticalAlignment="Center" DisplayMemberPath="Name" SelectionChanged="CurrencyTypeComboBox_SelectionChanged"  Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-            <TextBox x:Name="CurrencyCostTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Currency Cost" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" VerticalAlignment="Center" IsEnabled="False" />
+            <TextBox x:Name="CurrencyCostTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.CurrencyCost}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MinWidth="120" VerticalAlignment="Center" IsEnabled="False" />
         </Grid>
     </Grid>
 </local:LoadingControlBase>

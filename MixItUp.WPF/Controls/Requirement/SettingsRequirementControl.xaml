@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Requirement"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              
@@ -13,6 +15,9 @@
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
              
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <System:String x:Key="ColumnHeaderFormat">{0}:</System:String>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -29,8 +34,8 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock x:Name="DeleteCommandsWhenRunTextBlock" Grid.Column="0" Visibility="Collapsed">Delete Chat Command When Run:</TextBlock>
-            <TextBlock x:Name="DontDeleteCommandsWhenRunTextBlock" Grid.Column="0" Visibility="Collapsed">Don't Delete Chat Command When Run:</TextBlock>
+            <TextBlock x:Name="DeleteCommandsWhenRunTextBlock" Grid.Column="0" Visibility="Collapsed" Text="{Binding Source={x:Static resx:Resources.DeleteChatWhenRun}, StringFormat={StaticResource ColumnHeaderFormat}}" />
+            <TextBlock x:Name="DontDeleteCommandsWhenRunTextBlock" Grid.Column="0" Visibility="Collapsed" Text="{Binding Source={x:Static resx:Resources.DontDeleteChatWhenRun}, StringFormat={StaticResource ColumnHeaderFormat}}" />
 
             <ToggleButton Grid.Column="2" x:Name="DeleteChatCommandWhenRunToggleSwitch" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" />
         </Grid>
@@ -44,7 +49,7 @@
 
             <ToggleButton Grid.Column="0" x:Name="EnableDisablePatreonBenefitToggleSwitch" IsEnabled="False" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" Checked="EnableDisablePatreonBenefitToggleSwitch_Checked" Unchecked="EnableDisablePatreonBenefitToggleSwitch_Checked" />
 
-            <ComboBox x:Name="PatreonBenefitComboBox" Grid.Column="2" IsEnabled="False" VerticalAlignment="Center" Margin="0,0,0,10" MaterialDesign:HintAssist.Hint="Patreon Benefit Requirement" DisplayMemberPath="Title" Width="200" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox x:Name="PatreonBenefitComboBox" Grid.Column="2" IsEnabled="False" VerticalAlignment="Center" Margin="0,0,0,10" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.PatreonBenefitRequirement}" DisplayMemberPath="Title" MinWidth="200" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
         </Grid>
 
         <Grid Grid.Row="4">
@@ -54,7 +59,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0">Show On Chat List Context Menu:</TextBlock>
+            <TextBlock Grid.Column="0" Text="{Binding Source={x:Static resx:Resources.ShowOnChatListContextMenu}, StringFormat={StaticResource ColumnHeaderFormat}}" />
 
             <ToggleButton Grid.Column="2" x:Name="ShowOnChatMenuToggleSwitch" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" />
         </Grid>
