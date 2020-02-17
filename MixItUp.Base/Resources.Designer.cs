@@ -412,6 +412,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 18+.
+        /// </summary>
+        public static string Adult {
+            get {
+                return ResourceManager.GetString("Adult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Advanced.
         /// </summary>
         public static string Advanced {

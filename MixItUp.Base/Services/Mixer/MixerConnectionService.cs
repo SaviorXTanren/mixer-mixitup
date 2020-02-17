@@ -150,19 +150,19 @@ namespace MixItUp.Base.Services.Mixer
 
         public static async Task<ExternalServiceResult<MixerConnectionService>> ConnectUser(bool isStreamer)
         {
-            return await MixerConnectionService.Connect(isStreamer ? MixerConnectionService.StreamerScopes : MixerConnectionService.ModeratorScopes);
+            return await MixerConnectionService.Connect(isStreamer ? MixerConnectionService.StreamerScopes : MixerConnectionService.ModeratorScopes, false);
         }
 
         public static async Task<ExternalServiceResult<MixerConnectionService>> ConnectBot()
         {
-            return await MixerConnectionService.Connect(MixerConnectionService.BotScopes);
+            return await MixerConnectionService.Connect(MixerConnectionService.BotScopes, true);
         }
 
-        public static async Task<ExternalServiceResult<MixerConnectionService>> Connect(IEnumerable<OAuthClientScopeEnum> scopes)
+        public static async Task<ExternalServiceResult<MixerConnectionService>> Connect(IEnumerable<OAuthClientScopeEnum> scopes, bool forceApproval)
         {
             try
             {
-                MixerConnection connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(MixerConnectionService.ClientID, scopes, false, successResponse: OAuthExternalServiceBase.LoginRedirectPageHTML);
+                MixerConnection connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(MixerConnectionService.ClientID, scopes, forceApproval, successResponse: OAuthExternalServiceBase.LoginRedirectPageHTML);
                 if (connection != null)
                 {
                     return new ExternalServiceResult<MixerConnectionService>(new MixerConnectionService(connection));

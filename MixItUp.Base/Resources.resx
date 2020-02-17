@@ -234,6 +234,9 @@
   <data name="AddToUser" xml:space="preserve">
     <value>Add to user</value>
   </data>
+  <data name="Adult" xml:space="preserve">
+    <value>18+</value>
+  </data>
   <data name="Advanced" xml:space="preserve">
     <value>Advanced</value>
   </data>

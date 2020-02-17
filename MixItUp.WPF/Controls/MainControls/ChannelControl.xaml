@@ -66,7 +66,7 @@
                         <TextBox Grid.Column="2" x:Name="GameNameTextBox" TextChanged="GameNameTextBox_TextChanged" PreviewKeyDown="GameNameTextBox_PreviewKeyDown" />
 
                         <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Source={x:Static resx:Resources.AgeRating}, StringFormat={StaticResource ColumnHeaderFormat}}"/>
-                        <ComboBox Grid.Column="6" x:Name="AgeRatingComboBox" Width="60" HorizontalAlignment="Left">
+                        <ComboBox Grid.Column="6" x:Name="AgeRatingComboBox" MinWidth="60" HorizontalAlignment="Left">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Converter={StaticResource LocalizationConverter}}"/>

@@ -234,6 +234,9 @@
   <data name="AddToUser" xml:space="preserve">
     <value>Zu allen Benutzern hinzufügen</value>
   </data>
+  <data name="Adult" xml:space="preserve">
+    <value>18+</value>
+  </data>
   <data name="Advanced" xml:space="preserve">
     <value>Erweiterte Einstellung</value>
   </data>

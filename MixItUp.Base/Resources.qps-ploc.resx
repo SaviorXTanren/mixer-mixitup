@@ -234,6 +234,9 @@
   <data name="AddToUser" xml:space="preserve">
     <value>[!!! Âδδ ţô úšèř !!!]</value>
   </data>
+  <data name="Adult" xml:space="preserve">
+    <value>[!!! 18+ !!!]</value>
+  </data>
   <data name="Advanced" xml:space="preserve">
     <value>[!!! ÂδƲáñçèδ !!!]</value>
   </data>
