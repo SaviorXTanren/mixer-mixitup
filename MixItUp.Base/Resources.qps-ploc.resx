@@ -723,6 +723,9 @@
   <data name="DisableQueue" xml:space="preserve">
     <value>[!!! Ðïšáβℓè Qúèúè !!!]</value>
   </data>
+  <data name="Disconnect" xml:space="preserve">
+    <value>[!!! Ðïšçôññèçţ !!!]</value>
+  </data>
   <data name="Discord" xml:space="preserve">
     <value>[!!! Ðïšçôřδ !!!]</value>
   </data>
