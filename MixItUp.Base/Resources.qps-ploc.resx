@@ -252,6 +252,9 @@
   <data name="AgeRating" xml:space="preserve">
     <value>[!!! Âĝè Ráţïñĝ !!!]</value>
   </data>
+  <data name="Alerts" xml:space="preserve">
+    <value>[!!! Âℓèřţš !!!]</value>
+  </data>
   <data name="AllowCommandsOnlyInYourChannelDuringACoStream" xml:space="preserve">
     <value>[!!! Âℓℓôω Çô₥₥áñδš Óñℓ¥ ïñ Ýôúř Çĥáññèℓ Ðúřïñĝ á Çô-Šţřèá₥ !!!]</value>
   </data>
@@ -939,6 +942,9 @@
   <data name="FontSize" xml:space="preserve">
     <value>[!!! FôñţŠïƺè !!!]</value>
   </data>
+  <data name="Four" xml:space="preserve">
+    <value>[!!! Fôúř !!!]</value>
+  </data>
   <data name="FullTheme" xml:space="preserve">
     <value>[!!! Fúℓℓ Ţĥè₥è !!!]</value>
   </data>
@@ -1422,6 +1428,9 @@
   <data name="Ok" xml:space="preserve">
     <value>[!!! Óƙ !!!]</value>
   </data>
+  <data name="One" xml:space="preserve">
+    <value>[!!! Óñè !!!]</value>
+  </data>
   <data name="OneStrikeCommand" xml:space="preserve">
     <value>[!!! 1 Šţřïƙè Çô₥₥áñδ !!!]</value>
   </data>
@@ -1589,6 +1598,9 @@
   </data>
   <data name="QueueStatus" xml:space="preserve">
     <value>[!!! Qúèúè Šţáţúš !!!]</value>
+  </data>
+  <data name="QuickCommands" xml:space="preserve">
+    <value>[!!! Qúïçƙ Çô₥₥áñδš !!!]</value>
   </data>
   <data name="Quote" xml:space="preserve">
     <value>[!!! Qúôţè !!!]</value>
@@ -2085,8 +2097,14 @@
   <data name="ThemesAndColors" xml:space="preserve">
     <value>[!!! Ţĥè₥èš &amp; Çôℓôřš !!!]</value>
   </data>
+  <data name="ThreeLeft" xml:space="preserve">
+    <value>[!!! Ţĥřèè Ļèƒţ !!!]</value>
+  </data>
   <data name="ThreeOrMoreStrikesCommand" xml:space="preserve">
     <value>[!!! 3+ Šţřïƙèš Çô₥₥áñδ !!!]</value>
+  </data>
+  <data name="ThreeRight" xml:space="preserve">
+    <value>[!!! Ţĥřèè Rïĝĥţ !!!]</value>
   </data>
   <data name="TickerTape" xml:space="preserve">
     <value>[!!! Ţïçƙèř Ţáƥè !!!]</value>
@@ -2150,6 +2168,9 @@
   </data>
   <data name="Twitter" xml:space="preserve">
     <value>[!!! Ţωïţţèř !!!]</value>
+  </data>
+  <data name="Two" xml:space="preserve">
+    <value>[!!! Ţωô !!!]</value>
   </data>
   <data name="TwoStrikesCommand" xml:space="preserve">
     <value>[!!! 2 Šţřïƙèš Çô₥₥áñδ !!!]</value>

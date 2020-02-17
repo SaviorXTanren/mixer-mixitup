@@ -252,6 +252,9 @@
   <data name="AgeRating" xml:space="preserve">
     <value>Alterseinstufung</value>
   </data>
+  <data name="Alerts" xml:space="preserve">
+    <value>Alerts</value>
+  </data>
   <data name="AllowCommandsOnlyInYourChannelDuringACoStream" xml:space="preserve">
     <value>Erlaube Befehle nur in deinem Kanal während eines Co-Streams</value>
   </data>
@@ -939,6 +942,9 @@
   <data name="FontSize" xml:space="preserve">
     <value>Schriftgröße</value>
   </data>
+  <data name="Four" xml:space="preserve">
+    <value>Four</value>
+  </data>
   <data name="FullTheme" xml:space="preserve">
     <value>Vollständiges Theme</value>
   </data>
@@ -1422,6 +1428,9 @@
   <data name="Ok" xml:space="preserve">
     <value>Okay</value>
   </data>
+  <data name="One" xml:space="preserve">
+    <value>One</value>
+  </data>
   <data name="OneStrikeCommand" xml:space="preserve">
     <value>1 Verwarnungsbefehl</value>
   </data>
@@ -1589,6 +1598,9 @@
   </data>
   <data name="QueueStatus" xml:space="preserve">
     <value>Queue Status</value>
+  </data>
+  <data name="QuickCommands" xml:space="preserve">
+    <value>Quick Commands</value>
   </data>
   <data name="Quote" xml:space="preserve">
     <value>Zitate</value>
@@ -2087,8 +2099,14 @@
   <data name="ThemesAndColors" xml:space="preserve">
     <value>Themen &amp; Farben</value>
   </data>
+  <data name="ThreeLeft" xml:space="preserve">
+    <value>Three Left</value>
+  </data>
   <data name="ThreeOrMoreStrikesCommand" xml:space="preserve">
     <value>3+ Verwarnungsbefehle</value>
+  </data>
+  <data name="ThreeRight" xml:space="preserve">
+    <value>Three Right</value>
   </data>
   <data name="TickerTape" xml:space="preserve">
     <value>Laufband</value>
@@ -2152,6 +2170,9 @@
   </data>
   <data name="Twitter" xml:space="preserve">
     <value>Twitter</value>
+  </data>
+  <data name="Two" xml:space="preserve">
+    <value>Two</value>
   </data>
   <data name="TwoStrikesCommand" xml:space="preserve">
     <value>2 Verwarnungsbefehl</value>

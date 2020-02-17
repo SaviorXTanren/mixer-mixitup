@@ -466,6 +466,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Alerts.
+        /// </summary>
+        public static string Alerts {
+            get {
+                return ResourceManager.GetString("Alerts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Allow Commands Only in Your Channel During a Co-Stream.
         /// </summary>
         public static string AllowCommandsOnlyInYourChannelDuringACoStream {
@@ -2527,6 +2536,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Four.
+        /// </summary>
+        public static string Four {
+            get {
+                return ResourceManager.GetString("Four", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Full Theme.
         /// </summary>
         public static string FullTheme {
@@ -3976,6 +3994,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to One.
+        /// </summary>
+        public static string One {
+            get {
+                return ResourceManager.GetString("One", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 1 Strike Command.
         /// </summary>
         public static string OneStrikeCommand {
@@ -4476,6 +4503,15 @@ namespace MixItUp.Base {
         public static string QueueStatus {
             get {
                 return ResourceManager.GetString("QueueStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quick Commands.
+        /// </summary>
+        public static string QuickCommands {
+            get {
+                return ResourceManager.GetString("QuickCommands", resourceCulture);
             }
         }
         
@@ -5965,11 +6001,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Three Left.
+        /// </summary>
+        public static string ThreeLeft {
+            get {
+                return ResourceManager.GetString("ThreeLeft", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 3+ Strikes Command.
         /// </summary>
         public static string ThreeOrMoreStrikesCommand {
             get {
                 return ResourceManager.GetString("ThreeOrMoreStrikesCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Three Right.
+        /// </summary>
+        public static string ThreeRight {
+            get {
+                return ResourceManager.GetString("ThreeRight", resourceCulture);
             }
         }
         
@@ -6159,6 +6213,15 @@ namespace MixItUp.Base {
         public static string Twitter {
             get {
                 return ResourceManager.GetString("Twitter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Two.
+        /// </summary>
+        public static string Two {
+            get {
+                return ResourceManager.GetString("Two", resourceCulture);
             }
         }
         
