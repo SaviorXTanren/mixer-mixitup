@@ -169,7 +169,7 @@ namespace MixItUp.WPF.Controls.Command
                 {
                     try
                     {
-                        CustomCommand command = await SerializerHelper.DeserializeFromFile<CustomCommand>(fileName);
+                        CommandBase command = await SerializerHelper.DeserializeFromFile<CommandBase>(fileName);
                         if (command != null && command.Actions != null)
                         {
                             foreach (ActionBase action in command.Actions)
