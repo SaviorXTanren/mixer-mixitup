@@ -99,7 +99,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                if (this.MixerID > 0) { return StreamingPlatformTypeEnum.Mixer; }
+                if (this.MixerID > 0 || this.InteractiveIDs.Count > 0) { return StreamingPlatformTypeEnum.Mixer; }
                 return StreamingPlatformTypeEnum.None;
             }
         }
@@ -109,7 +109,7 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.MixerUserRoles; }
-                return new HashSet<UserRoleEnum>();
+                return new HashSet<UserRoleEnum>() { UserRoleEnum.User };
             }
         }
 
@@ -201,7 +201,7 @@ namespace MixItUp.Base.ViewModel.User
             : this(mixerID: 0)
         {
             this.InteractiveIDs = new LockedDictionary<string, MixPlayParticipantModel>();
-            this.unassociatedUsername = username;
+            this.MixerUsername = this.unassociatedUsername = username;
         }
 
         public UserViewModel(UserModel user)

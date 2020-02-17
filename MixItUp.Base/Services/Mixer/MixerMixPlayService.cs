@@ -697,18 +697,15 @@ namespace MixItUp.Base.Services.Mixer
                         if (user == null)
                         {
                             MixPlayParticipantModel participant = null;
-                            if (this.Participants.TryGetValue(e.participantID, out participant))
-                            {
-                                user = await ChannelSession.Services.User.AddOrUpdateUser(participant);
-                            }
-                            else
+                            if (!this.Participants.TryGetValue(e.participantID, out participant))
                             {
                                 IEnumerable<MixPlayParticipantModel> recentParticipants = await this.GetRecentParticipants();
                                 participant = recentParticipants.FirstOrDefault(p => p.sessionID.Equals(e.participantID));
-                                if (participant != null)
-                                {
-                                    user = await ChannelSession.Services.User.AddOrUpdateUser(participant);
-                                }
+                            }
+
+                            if (participant != null && !participant.anonymous.GetValueOrDefault())
+                            {
+                                user = await ChannelSession.Services.User.AddOrUpdateUser(participant);
                             }
                         }
                     }
@@ -810,7 +807,7 @@ namespace MixItUp.Base.Services.Mixer
 
                         this.OnControlUsed(this, new MixPlayInputEvent(user, e, control));
 
-                        if (ChannelSession.Settings.ChatShowMixPlayAlerts && user != null && !user.IsAnonymous)
+                        if (ChannelSession.Settings.ChatShowMixPlayAlerts)
                         {
                             await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer, user,
                                 string.Format("{0} Used The \"{1}\" Interactive Control", user.Username, control.controlID), ChannelSession.Settings.ChatMixPlayAlertsColorScheme));
