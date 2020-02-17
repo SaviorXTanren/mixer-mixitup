@@ -763,6 +763,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Average.
+        /// </summary>
+        public static string Average {
+            get {
+                return ResourceManager.GetString("Average", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Background Color.
         /// </summary>
         public static string BackgroundColor {
@@ -1501,6 +1510,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Current.
+        /// </summary>
+        public static string Current {
+            get {
+                return ResourceManager.GetString("Current", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Custom.
         /// </summary>
         public static string Custom {
@@ -1879,6 +1897,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Donators.
+        /// </summary>
+        public static string Donators {
+            get {
+                return ResourceManager.GetString("Donators", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Download.
         /// </summary>
         public static string Download {
@@ -1983,6 +2010,15 @@ namespace MixItUp.Base {
         public static string EditCommand {
             get {
                 return ResourceManager.GetString("EditCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Embers.
+        /// </summary>
+        public static string Embers {
+            get {
+                return ResourceManager.GetString("Embers", resourceCulture);
             }
         }
         
@@ -2622,6 +2658,15 @@ namespace MixItUp.Base {
         public static string GetCurrent {
             get {
                 return ResourceManager.GetString("GetCurrent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gifted.
+        /// </summary>
+        public static string Gifted {
+            get {
+                return ResourceManager.GetString("Gifted", resourceCulture);
             }
         }
         
@@ -3396,6 +3441,15 @@ namespace MixItUp.Base {
         public static string Map {
             get {
                 return ResourceManager.GetString("Map", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Max.
+        /// </summary>
+        public static string Max {
+            get {
+                return ResourceManager.GetString("Max", resourceCulture);
             }
         }
         
@@ -4831,6 +4885,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Resubs.
+        /// </summary>
+        public static string Resubs {
+            get {
+                return ResourceManager.GetString("Resubs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Retroactively Give Points.
         /// </summary>
         public static string RetroactivelyGivePoints {
@@ -5790,6 +5853,15 @@ namespace MixItUp.Base {
         public static string SubmitABug {
             get {
                 return ResourceManager.GetString("SubmitABug", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Subs.
+        /// </summary>
+        public static string Subs {
+            get {
+                return ResourceManager.GetString("Subs", resourceCulture);
             }
         }
         

@@ -351,6 +351,9 @@
   <data name="AutomaticReset" xml:space="preserve">
     <value>Automatic Reset</value>
   </data>
+  <data name="Average" xml:space="preserve">
+    <value>Average</value>
+  </data>
   <data name="BackgroundColor" xml:space="preserve">
     <value>Background Color</value>
   </data>
@@ -597,6 +600,9 @@
   <data name="CurrencyRankName" xml:space="preserve">
     <value>Currency/Rank Name</value>
   </data>
+  <data name="Current" xml:space="preserve">
+    <value>Current</value>
+  </data>
   <data name="Custom" xml:space="preserve">
     <value>Custom</value>
   </data>
@@ -723,6 +729,9 @@
   <data name="DoesNotContain" xml:space="preserve">
     <value>&lt;&gt; Contains</value>
   </data>
+  <data name="Donators" xml:space="preserve">
+    <value>Donators</value>
+  </data>
   <data name="Download" xml:space="preserve">
     <value>Download</value>
   </data>
@@ -758,6 +767,9 @@
   </data>
   <data name="EditCommand" xml:space="preserve">
     <value>Edit Command</value>
+  </data>
+  <data name="Embers" xml:space="preserve">
+    <value>Embers</value>
   </data>
   <data name="EmberSkillsOnly" xml:space="preserve">
     <value>Ember Skills Only</value>
@@ -971,6 +983,9 @@
   </data>
   <data name="GetCurrent" xml:space="preserve">
     <value>GetCurrent</value>
+  </data>
+  <data name="Gifted" xml:space="preserve">
+    <value>Gifted</value>
   </data>
   <data name="Giveaway" xml:space="preserve">
     <value>Giveaway</value>
@@ -1229,6 +1244,9 @@
   </data>
   <data name="Map" xml:space="preserve">
     <value>Map</value>
+  </data>
+  <data name="Max" xml:space="preserve">
+    <value>Max</value>
   </data>
   <data name="MaxAmount" xml:space="preserve">
     <value>Max Amount</value>
@@ -1707,6 +1725,9 @@
   <data name="RestoreYourSettingsFromAZipFile" xml:space="preserve">
     <value>Restore your settings from a zip file</value>
   </data>
+  <data name="Resubs" xml:space="preserve">
+    <value>Resubs</value>
+  </data>
   <data name="RetroactivelyGivePoints" xml:space="preserve">
     <value>Retroactively Give Points</value>
   </data>
@@ -2027,6 +2048,9 @@
   </data>
   <data name="SubmitABug" xml:space="preserve">
     <value>Submit a Bug</value>
+  </data>
+  <data name="Subs" xml:space="preserve">
+    <value>Subs</value>
   </data>
   <data name="SubscribeAge" xml:space="preserve">
     <value>Subscribe Age</value>

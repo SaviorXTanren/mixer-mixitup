@@ -168,7 +168,15 @@ namespace MixItUp.Base.Model.Statistics
 
         public void AddValue(int value) { this.DataPoints.Add(new StatisticDataPointModel(value)); }
 
-        public override IEnumerable<string> GetExportHeaders() { return new List<string>() { "Current", "Max", "Average" }; }
+        public override IEnumerable<string> GetExportHeaders()
+        {
+            return new List<string>()
+            {
+                Resources.Current,
+                Resources.Max,
+                Resources.Average,
+            };
+        }
 
         public override IEnumerable<List<string>> GetExportData()
         {
@@ -177,7 +185,10 @@ namespace MixItUp.Base.Model.Statistics
             return results;
         }
 
-        public override string ToString() { return string.Format("Current: {0},    Max: {1},    Average: {2}", this.LastValueString, this.MaxValueString, this.AverageValueString); }
+        public override string ToString()
+        {
+            return $"{Resources.Current}: {this.LastValueString},    {Resources.Max}: {this.MaxValueString},    {Resources.Average}: {this.AverageValueString}";
+        }
     }
 
     public class EventStatisticDataTrackerModel : StatisticDataTrackerModelBase
@@ -239,7 +250,7 @@ namespace MixItUp.Base.Model.Statistics
             {
                 return this.customToStringFunction(this);
             }
-            return string.Format("Total: {0},    Average: {1}", this.UniqueIdentifiers, this.AverageUniqueIdentifiers);
+            return $"{Resources.Total}: {this.UniqueIdentifiers},    {Resources.Average}: {this.AverageUniqueIdentifiers}";
         }
 
         private void EventStatisticsDataTracker_StatisticEventOccurred(object sender, string e)

@@ -351,6 +351,9 @@
   <data name="AutomaticReset" xml:space="preserve">
     <value>[!!! Âúţô₥áţïç Rèšèţ !!!]</value>
   </data>
+  <data name="Average" xml:space="preserve">
+    <value>[!!! ÂƲèřáĝè !!!]</value>
+  </data>
   <data name="BackgroundColor" xml:space="preserve">
     <value>[!!! ßáçƙĝřôúñδ Çôℓôř !!!]</value>
   </data>
@@ -597,6 +600,9 @@
   <data name="CurrencyRankName" xml:space="preserve">
     <value>[!!! Çúřřèñç¥/Ráñƙ Ná₥è !!!]</value>
   </data>
+  <data name="Current" xml:space="preserve">
+    <value>[!!! Çúřřèñţ !!!]</value>
+  </data>
   <data name="Custom" xml:space="preserve">
     <value>[!!! Çúšţô₥ !!!]</value>
   </data>
@@ -723,6 +729,9 @@
   <data name="DoesNotContain" xml:space="preserve">
     <value>[!!! &lt;&gt; Çôñţáïñš !!!]</value>
   </data>
+  <data name="Donators" xml:space="preserve">
+    <value>[!!! Ðôñáţôřš !!!]</value>
+  </data>
   <data name="Download" xml:space="preserve">
     <value>[!!! Ðôωñℓôáδ !!!]</value>
   </data>
@@ -758,6 +767,9 @@
   </data>
   <data name="EditCommand" xml:space="preserve">
     <value>[!!! Éδïţ Çô₥₥áñδ !!!]</value>
+  </data>
+  <data name="Embers" xml:space="preserve">
+    <value>[!!! É₥βèřš !!!]</value>
   </data>
   <data name="EmberSkillsOnly" xml:space="preserve">
     <value>[!!! É₥βèř Šƙïℓℓš Óñℓ¥ !!!]</value>
@@ -971,6 +983,9 @@
   </data>
   <data name="GetCurrent" xml:space="preserve">
     <value>[!!! GèţÇúřřèñţ !!!]</value>
+  </data>
+  <data name="Gifted" xml:space="preserve">
+    <value>[!!! Gïƒţèδ !!!]</value>
   </data>
   <data name="Giveaway" xml:space="preserve">
     <value>[!!! GïƲèáωá¥ !!!]</value>
@@ -1229,6 +1244,9 @@
   </data>
   <data name="Map" xml:space="preserve">
     <value>[!!! Máƥ !!!]</value>
+  </data>
+  <data name="Max" xml:space="preserve">
+    <value>[!!! Máж !!!]</value>
   </data>
   <data name="MaxAmount" xml:space="preserve">
     <value>[!!! Máж Â₥ôúñţ !!!]</value>
@@ -1707,6 +1725,9 @@
   <data name="RestoreYourSettingsFromAZipFile" xml:space="preserve">
     <value>[!!! Rèšţôřè ¥ôúř šèţţïñĝš ƒřô₥ á ƺïƥ ƒïℓè !!!]</value>
   </data>
+  <data name="Resubs" xml:space="preserve">
+    <value>[!!! Rèšúβš !!!]</value>
+  </data>
   <data name="RetroactivelyGivePoints" xml:space="preserve">
     <value>[!!! RèţřôáçţïƲèℓ¥ GïƲè Þôïñţš !!!]</value>
   </data>
@@ -2027,6 +2048,9 @@
   </data>
   <data name="SubmitABug" xml:space="preserve">
     <value>[!!! Šúβ₥ïţ á ßúĝ !!!]</value>
+  </data>
+  <data name="Subs" xml:space="preserve">
+    <value>[!!! Šúβš !!!]</value>
   </data>
   <data name="SubscribeAge" xml:space="preserve">
     <value>[!!! Šúβšçřïβè Âĝè !!!]</value>
