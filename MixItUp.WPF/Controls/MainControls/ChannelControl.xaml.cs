@@ -39,6 +39,19 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private ChannelModel channelToRaid;
         private bool shouldShowIntellisense = false;
+        private readonly Dictionary<string, AgeRatingEnum> MixerToAgeRatingMap = new Dictionary<string, AgeRatingEnum>
+        {
+            { "family", AgeRatingEnum.Family },
+            { "teen", AgeRatingEnum.Teen },
+            { "18+", AgeRatingEnum.Adult },
+        };
+
+        private readonly Dictionary<AgeRatingEnum, string> AgeRatingToMixerMap = new Dictionary<AgeRatingEnum, string>
+        {
+            { AgeRatingEnum.Family, "family" },
+            { AgeRatingEnum.Teen, "teen" },
+            { AgeRatingEnum.Adult, "18+" },
+        };
 
         public ChannelControl()
         {
@@ -64,8 +77,7 @@ namespace MixItUp.WPF.Controls.MainControls
             }
             this.shouldShowIntellisense = true;
 
-            AgeRatingEnum currentAgeRating = EnumHelper.GetEnumValueFromString<AgeRatingEnum>(ChannelSession.MixerChannel.audience);
-            this.AgeRatingComboBox.SelectedItem = currentAgeRating;
+            this.AgeRatingComboBox.SelectedItem = MixerToAgeRatingMap[ChannelSession.MixerChannel.audience];
 
             this.ChannelToRaidSearchCriteriaComboBox.ItemsSource = EnumHelper.GetEnumList<RaidSearchCriteriaEnum>();
 
@@ -212,7 +224,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
             await this.Window.RunAsyncOperation(async () =>
             {
-                string age = EnumHelper.GetEnumName<AgeRatingEnum>((AgeRatingEnum)this.AgeRatingComboBox.SelectedItem).ToLower();
+                string age = AgeRatingToMixerMap[(AgeRatingEnum)this.AgeRatingComboBox.SelectedItem];
                 await ChannelSession.MixerUserConnection.UpdateChannel(ChannelSession.MixerChannel.id, this.StreamTitleComboBox.Text, gameType.id, age);
 
                 await ChannelSession.RefreshChannel();

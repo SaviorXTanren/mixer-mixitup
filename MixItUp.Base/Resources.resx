@@ -153,6 +153,12 @@
   <data name="Accounts" xml:space="preserve">
     <value>Accounts</value>
   </data>
+  <data name="AccountsDetails" xml:space="preserve">
+    <value>Streamer accounts are your actual account that you are streaming from. Bot accounts are separate, optional accounts that you can use to send messages from in your channel. Bots accounts must be manually created by you and you must make sure to be signed in to them before you try connecting them in Mix It Up.</value>
+  </data>
+  <data name="AccountsWizardInstructions" xml:space="preserve">
+    <value>Let's get started by signing in to the accounts you use on each Streaming Platform. Select the options below for each account you want to log in. You can revisit these options later by going to the Accounts page.</value>
+  </data>
   <data name="AccountWeek" xml:space="preserve">
     <value>Account Is 1 Week Old</value>
   </data>
@@ -234,6 +240,9 @@
   <data name="AddToUser" xml:space="preserve">
     <value>Add to user</value>
   </data>
+  <data name="Adult" xml:space="preserve">
+    <value>18+</value>
+  </data>
   <data name="Advanced" xml:space="preserve">
     <value>Advanced</value>
   </data>
@@ -242,6 +251,9 @@
   </data>
   <data name="AgeRating" xml:space="preserve">
     <value>Age Rating</value>
+  </data>
+  <data name="Alerts" xml:space="preserve">
+    <value>Alerts</value>
   </data>
   <data name="AllowCommandsOnlyInYourChannelDuringACoStream" xml:space="preserve">
     <value>Allow Commands Only in Your Channel During a Co-Stream</value>
@@ -339,6 +351,9 @@
   <data name="AutomaticReset" xml:space="preserve">
     <value>Automatic Reset</value>
   </data>
+  <data name="Average" xml:space="preserve">
+    <value>Average</value>
+  </data>
   <data name="BackgroundColor" xml:space="preserve">
     <value>Background Color</value>
   </data>
@@ -380,6 +395,9 @@
   </data>
   <data name="Bot" xml:space="preserve">
     <value>Bot</value>
+  </data>
+  <data name="BotAccount" xml:space="preserve">
+    <value>Bot Account</value>
   </data>
   <data name="Brown" xml:space="preserve">
     <value>Brown</value>
@@ -546,6 +564,9 @@
   <data name="Cooldown" xml:space="preserve">
     <value>Cooldown</value>
   </data>
+  <data name="CooldownSeconds" xml:space="preserve">
+    <value>Cooldown (Seconds)</value>
+  </data>
   <data name="Cost" xml:space="preserve">
     <value>Cost</value>
   </data>
@@ -581,6 +602,9 @@
   </data>
   <data name="CurrencyRankName" xml:space="preserve">
     <value>Currency/Rank Name</value>
+  </data>
+  <data name="Current" xml:space="preserve">
+    <value>Current</value>
   </data>
   <data name="Custom" xml:space="preserve">
     <value>Custom</value>
@@ -708,6 +732,9 @@
   <data name="DoesNotContain" xml:space="preserve">
     <value>&lt;&gt; Contains</value>
   </data>
+  <data name="Donators" xml:space="preserve">
+    <value>Donators</value>
+  </data>
   <data name="Download" xml:space="preserve">
     <value>Download</value>
   </data>
@@ -743,6 +770,9 @@
   </data>
   <data name="EditCommand" xml:space="preserve">
     <value>Edit Command</value>
+  </data>
+  <data name="Embers" xml:space="preserve">
+    <value>Embers</value>
   </data>
   <data name="EmberSkillsOnly" xml:space="preserve">
     <value>Ember Skills Only</value>
@@ -927,6 +957,9 @@
   <data name="FontSize" xml:space="preserve">
     <value>FontSize</value>
   </data>
+  <data name="Four" xml:space="preserve">
+    <value>Four</value>
+  </data>
   <data name="FullTheme" xml:space="preserve">
     <value>Full Theme</value>
   </data>
@@ -954,6 +987,9 @@
   <data name="GetCurrent" xml:space="preserve">
     <value>GetCurrent</value>
   </data>
+  <data name="Gifted" xml:space="preserve">
+    <value>Gifted</value>
+  </data>
   <data name="Giveaway" xml:space="preserve">
     <value>Giveaway</value>
   </data>
@@ -971,6 +1007,9 @@
   </data>
   <data name="Grey" xml:space="preserve">
     <value>Grey</value>
+  </data>
+  <data name="Group" xml:space="preserve">
+    <value>Group</value>
   </data>
   <data name="GroupIntervalMin" xml:space="preserve">
     <value>Group Interval (Min)</value>
@@ -1035,8 +1074,14 @@
   <data name="IncludeCommandAssets" xml:space="preserve">
     <value>Include Command Assets</value>
   </data>
+  <data name="IncorrectBotAccount" xml:space="preserve">
+    <value>You must sign in to a different account than your Streamer account.</value>
+  </data>
   <data name="Indigo" xml:space="preserve">
     <value>Indigo</value>
+  </data>
+  <data name="Individual" xml:space="preserve">
+    <value>Individual</value>
   </data>
   <data name="InputKeyboardAndMouse" xml:space="preserve">
     <value>Input (Keyboard &amp; Mouse)</value>
@@ -1183,7 +1228,7 @@
     <value>Lock/Unlock Chat Scrolling</value>
   </data>
   <data name="Login" xml:space="preserve">
-    <value>Login</value>
+    <value>Log In</value>
   </data>
   <data name="LoginErrorNoChannelName" xml:space="preserve">
     <value>A channel name must be entered.</value>
@@ -1193,6 +1238,9 @@
   </data>
   <data name="LoginErrorNotModerator" xml:space="preserve">
     <value>You are not a moderator for this channel.</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Log Out</value>
   </data>
   <data name="MagicEightBall" xml:space="preserve">
     <value>Magic 8 Ball</value>
@@ -1205,6 +1253,9 @@
   </data>
   <data name="Map" xml:space="preserve">
     <value>Map</value>
+  </data>
+  <data name="Max" xml:space="preserve">
+    <value>Max</value>
   </data>
   <data name="MaxAmount" xml:space="preserve">
     <value>Max Amount</value>
@@ -1404,6 +1455,9 @@
   <data name="Ok" xml:space="preserve">
     <value>Ok</value>
   </data>
+  <data name="One" xml:space="preserve">
+    <value>One</value>
+  </data>
   <data name="OneStrikeCommand" xml:space="preserve">
     <value>1 Strike Command</value>
   </data>
@@ -1500,6 +1554,9 @@
   <data name="Permissions" xml:space="preserve">
     <value>Permissions</value>
   </data>
+  <data name="PerPerson" xml:space="preserve">
+    <value>Per Person</value>
+  </data>
   <data name="Pink" xml:space="preserve">
     <value>Pink</value>
   </data>
@@ -1571,6 +1628,12 @@
   </data>
   <data name="QueueStatus" xml:space="preserve">
     <value>Queue Status</value>
+  </data>
+  <data name="QuickCommands" xml:space="preserve">
+    <value>Quick Commands</value>
+  </data>
+  <data name="QuickCommandSelectFail" xml:space="preserve">
+    <value>You must create at least one command first to use this feature.</value>
   </data>
   <data name="Quote" xml:space="preserve">
     <value>Quote</value>
@@ -1673,6 +1736,9 @@
   </data>
   <data name="RestoreYourSettingsFromAZipFile" xml:space="preserve">
     <value>Restore your settings from a zip file</value>
+  </data>
+  <data name="Resubs" xml:space="preserve">
+    <value>Resubs</value>
   </data>
   <data name="RetroactivelyGivePoints" xml:space="preserve">
     <value>Retroactively Give Points</value>
@@ -1995,6 +2061,9 @@
   <data name="SubmitABug" xml:space="preserve">
     <value>Submit a Bug</value>
   </data>
+  <data name="Subs" xml:space="preserve">
+    <value>Subs</value>
+  </data>
   <data name="SubscribeAge" xml:space="preserve">
     <value>Subscribe Age</value>
   </data>
@@ -2046,6 +2115,9 @@
   <data name="TestCommand" xml:space="preserve">
     <value>Test Command</value>
   </data>
+  <data name="TestStreamWarning" xml:space="preserve">
+    <value>Because test stream settings are enabled, your bot account will not be able to connect correctly. You will need to disable Test Streams in order to use your bot account for things such a chat messages &amp; whispers. Are you sure you still wish to connect it?</value>
+  </data>
   <data name="Text" xml:space="preserve">
     <value>Text</value>
   </data>
@@ -2064,8 +2136,14 @@
   <data name="ThemesAndColors" xml:space="preserve">
     <value>Themes &amp; Colors</value>
   </data>
+  <data name="ThreeLeft" xml:space="preserve">
+    <value>Three Left</value>
+  </data>
   <data name="ThreeOrMoreStrikesCommand" xml:space="preserve">
     <value>3+ Strikes Command</value>
+  </data>
+  <data name="ThreeRight" xml:space="preserve">
+    <value>Three Right</value>
   </data>
   <data name="TickerTape" xml:space="preserve">
     <value>Ticker Tape</value>
@@ -2130,6 +2208,9 @@
   <data name="Twitter" xml:space="preserve">
     <value>Twitter</value>
   </data>
+  <data name="Two" xml:space="preserve">
+    <value>Two</value>
+  </data>
   <data name="TwoStrikesCommand" xml:space="preserve">
     <value>2 Strikes Command</value>
   </data>
@@ -2138,6 +2219,9 @@
   </data>
   <data name="TypeToAdd" xml:space="preserve">
     <value>Type To Add</value>
+  </data>
+  <data name="Unassigned" xml:space="preserve">
+    <value>Unassigned</value>
   </data>
   <data name="UnbanAllUsers" xml:space="preserve">
     <value>Unban All Users</value>

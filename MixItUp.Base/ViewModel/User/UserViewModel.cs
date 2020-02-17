@@ -51,7 +51,6 @@ namespace MixItUp.Base.ViewModel.User
     {
         Family,
         Teen,
-        [Name("18+")]
         Adult,
     }
 

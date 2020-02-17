@@ -169,6 +169,24 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Streamer accounts are your actual account that you are streaming from. Bot accounts are separate, optional accounts that you can use to send messages from in your channel. Bots accounts must be manually created by you and you must make sure to be signed in to them before you try connecting them in Mix It Up..
+        /// </summary>
+        public static string AccountsDetails {
+            get {
+                return ResourceManager.GetString("AccountsDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Let&apos;s get started by signing in to the accounts you use on each Streaming Platform. Select the options below for each account you want to log in. You can revisit these options later by going to the Accounts page..
+        /// </summary>
+        public static string AccountsWizardInstructions {
+            get {
+                return ResourceManager.GetString("AccountsWizardInstructions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Account Is 1 Week Old.
         /// </summary>
         public static string AccountWeek {
@@ -412,6 +430,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 18+.
+        /// </summary>
+        public static string Adult {
+            get {
+                return ResourceManager.GetString("Adult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Advanced.
         /// </summary>
         public static string Advanced {
@@ -435,6 +462,15 @@ namespace MixItUp.Base {
         public static string AgeRating {
             get {
                 return ResourceManager.GetString("AgeRating", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alerts.
+        /// </summary>
+        public static string Alerts {
+            get {
+                return ResourceManager.GetString("Alerts", resourceCulture);
             }
         }
         
@@ -727,6 +763,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Average.
+        /// </summary>
+        public static string Average {
+            get {
+                return ResourceManager.GetString("Average", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Background Color.
         /// </summary>
         public static string BackgroundColor {
@@ -849,6 +894,15 @@ namespace MixItUp.Base {
         public static string Bot {
             get {
                 return ResourceManager.GetString("Bot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bot Account.
+        /// </summary>
+        public static string BotAccount {
+            get {
+                return ResourceManager.GetString("BotAccount", resourceCulture);
             }
         }
         
@@ -1348,6 +1402,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cooldown (Seconds).
+        /// </summary>
+        public static string CooldownSeconds {
+            get {
+                return ResourceManager.GetString("CooldownSeconds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cost.
         /// </summary>
         public static string Cost {
@@ -1452,6 +1515,15 @@ namespace MixItUp.Base {
         public static string CurrencyRankName {
             get {
                 return ResourceManager.GetString("CurrencyRankName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current.
+        /// </summary>
+        public static string Current {
+            get {
+                return ResourceManager.GetString("Current", resourceCulture);
             }
         }
         
@@ -1834,6 +1906,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Donators.
+        /// </summary>
+        public static string Donators {
+            get {
+                return ResourceManager.GetString("Donators", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Download.
         /// </summary>
         public static string Download {
@@ -1938,6 +2019,15 @@ namespace MixItUp.Base {
         public static string EditCommand {
             get {
                 return ResourceManager.GetString("EditCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Embers.
+        /// </summary>
+        public static string Embers {
+            get {
+                return ResourceManager.GetString("Embers", resourceCulture);
             }
         }
         
@@ -2491,6 +2581,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Four.
+        /// </summary>
+        public static string Four {
+            get {
+                return ResourceManager.GetString("Four", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Full Theme.
         /// </summary>
         public static string FullTheme {
@@ -2572,6 +2671,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Gifted.
+        /// </summary>
+        public static string Gifted {
+            get {
+                return ResourceManager.GetString("Gifted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Giveaway.
         /// </summary>
         public static string Giveaway {
@@ -2622,6 +2730,15 @@ namespace MixItUp.Base {
         public static string Grey {
             get {
                 return ResourceManager.GetString("Grey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Group.
+        /// </summary>
+        public static string Group {
+            get {
+                return ResourceManager.GetString("Group", resourceCulture);
             }
         }
         
@@ -2815,11 +2932,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You must sign in to a different account than your Streamer account..
+        /// </summary>
+        public static string IncorrectBotAccount {
+            get {
+                return ResourceManager.GetString("IncorrectBotAccount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Indigo.
         /// </summary>
         public static string Indigo {
             get {
                 return ResourceManager.GetString("Indigo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Individual.
+        /// </summary>
+        public static string Individual {
+            get {
+                return ResourceManager.GetString("Individual", resourceCulture);
             }
         }
         
@@ -3256,7 +3391,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Login.
+        ///   Looks up a localized string similar to Log In.
         /// </summary>
         public static string Login {
             get {
@@ -3288,6 +3423,15 @@ namespace MixItUp.Base {
         public static string LoginErrorNotModerator {
             get {
                 return ResourceManager.GetString("LoginErrorNotModerator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log Out.
+        /// </summary>
+        public static string Logout {
+            get {
+                return ResourceManager.GetString("Logout", resourceCulture);
             }
         }
         
@@ -3324,6 +3468,15 @@ namespace MixItUp.Base {
         public static string Map {
             get {
                 return ResourceManager.GetString("Map", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Max.
+        /// </summary>
+        public static string Max {
+            get {
+                return ResourceManager.GetString("Max", resourceCulture);
             }
         }
         
@@ -3922,6 +4075,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to One.
+        /// </summary>
+        public static string One {
+            get {
+                return ResourceManager.GetString("One", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 1 Strike Command.
         /// </summary>
         public static string OneStrikeCommand {
@@ -4210,6 +4372,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Per Person.
+        /// </summary>
+        public static string PerPerson {
+            get {
+                return ResourceManager.GetString("PerPerson", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pink.
         /// </summary>
         public static string Pink {
@@ -4422,6 +4593,24 @@ namespace MixItUp.Base {
         public static string QueueStatus {
             get {
                 return ResourceManager.GetString("QueueStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quick Commands.
+        /// </summary>
+        public static string QuickCommands {
+            get {
+                return ResourceManager.GetString("QuickCommands", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You must create at least one command first to use this feature..
+        /// </summary>
+        public static string QuickCommandSelectFail {
+            get {
+                return ResourceManager.GetString("QuickCommandSelectFail", resourceCulture);
             }
         }
         
@@ -4728,6 +4917,15 @@ namespace MixItUp.Base {
         public static string RestoreYourSettingsFromAZipFile {
             get {
                 return ResourceManager.GetString("RestoreYourSettingsFromAZipFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Resubs.
+        /// </summary>
+        public static string Resubs {
+            get {
+                return ResourceManager.GetString("Resubs", resourceCulture);
             }
         }
         
@@ -5695,6 +5893,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Subs.
+        /// </summary>
+        public static string Subs {
+            get {
+                return ResourceManager.GetString("Subs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Subscribe Age.
         /// </summary>
         public static string SubscribeAge {
@@ -5848,6 +6055,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Because test stream settings are enabled, your bot account will not be able to connect correctly. You will need to disable Test Streams in order to use your bot account for things such a chat messages &amp; whispers. Are you sure you still wish to connect it?.
+        /// </summary>
+        public static string TestStreamWarning {
+            get {
+                return ResourceManager.GetString("TestStreamWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Text.
         /// </summary>
         public static string Text {
@@ -5902,11 +6118,29 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Three Left.
+        /// </summary>
+        public static string ThreeLeft {
+            get {
+                return ResourceManager.GetString("ThreeLeft", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 3+ Strikes Command.
         /// </summary>
         public static string ThreeOrMoreStrikesCommand {
             get {
                 return ResourceManager.GetString("ThreeOrMoreStrikesCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Three Right.
+        /// </summary>
+        public static string ThreeRight {
+            get {
+                return ResourceManager.GetString("ThreeRight", resourceCulture);
             }
         }
         
@@ -6100,6 +6334,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Two.
+        /// </summary>
+        public static string Two {
+            get {
+                return ResourceManager.GetString("Two", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 2 Strikes Command.
         /// </summary>
         public static string TwoStrikesCommand {
@@ -6123,6 +6366,15 @@ namespace MixItUp.Base {
         public static string TypeToAdd {
             get {
                 return ResourceManager.GetString("TypeToAdd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unassigned.
+        /// </summary>
+        public static string Unassigned {
+            get {
+                return ResourceManager.GetString("Unassigned", resourceCulture);
             }
         }
         

@@ -12,7 +12,6 @@ namespace MixItUp.Base.ViewModel.Requirement
     public enum CooldownTypeEnum
     {
         Individual,
-        [Name("Per Person")]
         PerPerson,
         Group,
     }

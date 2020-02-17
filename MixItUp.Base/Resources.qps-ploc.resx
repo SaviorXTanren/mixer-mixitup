@@ -153,6 +153,12 @@
   <data name="Accounts" xml:space="preserve">
     <value>[!!! Âççôúñţš !!!]</value>
   </data>
+  <data name="AccountsDetails" xml:space="preserve">
+    <value>[!!! Šţřèá₥èř áççôúñţš ářè ¥ôúř áçţúáℓ áççôúñţ ţĥáţ ¥ôú ářè šţřèá₥ïñĝ ƒřô₥. ßôţ áççôúñţš ářè šèƥářáţè, ôƥţïôñáℓ áççôúñţš ţĥáţ ¥ôú çáñ úšè ţô šèñδ ₥èššáĝèš ƒřô₥ ïñ ¥ôúř çĥáññèℓ. ßôţš áççôúñţš ₥úšţ βè ₥áñúáℓℓ¥ çřèáţèδ β¥ ¥ôú áñδ ¥ôú ₥úšţ ₥áƙè šúřè ţô βè šïĝñèδ ïñ ţô ţĥè₥ βèƒôřè ¥ôú ţř¥ çôññèçţïñĝ ţĥè₥ ïñ Mïж Ìţ Ûƥ. !!!]</value>
+  </data>
+  <data name="AccountsWizardInstructions" xml:space="preserve">
+    <value>[!!! Ļèţ'š ĝèţ šţářţèδ β¥ šïĝñïñĝ ïñ ţô ţĥè áççôúñţš ¥ôú úšè ôñ èáçĥ Šţřèá₥ïñĝ Þℓáţƒôř₥. Šèℓèçţ ţĥè ôƥţïôñš βèℓôω ƒôř èáçĥ áççôúñţ ¥ôú ωáñţ ţô ℓôĝ ïñ. Ýôú çáñ řèƲïšïţ ţĥèšè ôƥţïôñš ℓáţèř β¥ ĝôïñĝ ţô ţĥè Âççôúñţš ƥáĝè. !!!]</value>
+  </data>
   <data name="AccountWeek" xml:space="preserve">
     <value>[!!! Âççôúñţ Ìš 1 Wèèƙ Óℓδ !!!]</value>
   </data>
@@ -234,6 +240,9 @@
   <data name="AddToUser" xml:space="preserve">
     <value>[!!! Âδδ ţô úšèř !!!]</value>
   </data>
+  <data name="Adult" xml:space="preserve">
+    <value>[!!! 18+ !!!]</value>
+  </data>
   <data name="Advanced" xml:space="preserve">
     <value>[!!! ÂδƲáñçèδ !!!]</value>
   </data>
@@ -242,6 +251,9 @@
   </data>
   <data name="AgeRating" xml:space="preserve">
     <value>[!!! Âĝè Ráţïñĝ !!!]</value>
+  </data>
+  <data name="Alerts" xml:space="preserve">
+    <value>[!!! Âℓèřţš !!!]</value>
   </data>
   <data name="AllowCommandsOnlyInYourChannelDuringACoStream" xml:space="preserve">
     <value>[!!! Âℓℓôω Çô₥₥áñδš Óñℓ¥ ïñ Ýôúř Çĥáññèℓ Ðúřïñĝ á Çô-Šţřèá₥ !!!]</value>
@@ -339,6 +351,9 @@
   <data name="AutomaticReset" xml:space="preserve">
     <value>[!!! Âúţô₥áţïç Rèšèţ !!!]</value>
   </data>
+  <data name="Average" xml:space="preserve">
+    <value>[!!! ÂƲèřáĝè !!!]</value>
+  </data>
   <data name="BackgroundColor" xml:space="preserve">
     <value>[!!! ßáçƙĝřôúñδ Çôℓôř !!!]</value>
   </data>
@@ -380,6 +395,9 @@
   </data>
   <data name="Bot" xml:space="preserve">
     <value>[!!! ßôţ !!!]</value>
+  </data>
+  <data name="BotAccount" xml:space="preserve">
+    <value>[!!! ßôţ Âççôúñţ !!!]</value>
   </data>
   <data name="Brown" xml:space="preserve">
     <value>[!!! ßřôωñ !!!]</value>
@@ -546,6 +564,9 @@
   <data name="Cooldown" xml:space="preserve">
     <value>[!!! Çôôℓδôωñ !!!]</value>
   </data>
+  <data name="CooldownSeconds" xml:space="preserve">
+    <value>[!!! Çôôℓδôωñ (Šèçôñδš) !!!]</value>
+  </data>
   <data name="Cost" xml:space="preserve">
     <value>[!!! Çôšţ !!!]</value>
   </data>
@@ -581,6 +602,9 @@
   </data>
   <data name="CurrencyRankName" xml:space="preserve">
     <value>[!!! Çúřřèñç¥/Ráñƙ Ná₥è !!!]</value>
+  </data>
+  <data name="Current" xml:space="preserve">
+    <value>[!!! Çúřřèñţ !!!]</value>
   </data>
   <data name="Custom" xml:space="preserve">
     <value>[!!! Çúšţô₥ !!!]</value>
@@ -708,6 +732,9 @@
   <data name="DoesNotContain" xml:space="preserve">
     <value>[!!! &lt;&gt; Çôñţáïñš !!!]</value>
   </data>
+  <data name="Donators" xml:space="preserve">
+    <value>[!!! Ðôñáţôřš !!!]</value>
+  </data>
   <data name="Download" xml:space="preserve">
     <value>[!!! Ðôωñℓôáδ !!!]</value>
   </data>
@@ -743,6 +770,9 @@
   </data>
   <data name="EditCommand" xml:space="preserve">
     <value>[!!! Éδïţ Çô₥₥áñδ !!!]</value>
+  </data>
+  <data name="Embers" xml:space="preserve">
+    <value>[!!! É₥βèřš !!!]</value>
   </data>
   <data name="EmberSkillsOnly" xml:space="preserve">
     <value>[!!! É₥βèř Šƙïℓℓš Óñℓ¥ !!!]</value>
@@ -927,6 +957,9 @@
   <data name="FontSize" xml:space="preserve">
     <value>[!!! FôñţŠïƺè !!!]</value>
   </data>
+  <data name="Four" xml:space="preserve">
+    <value>[!!! Fôúř !!!]</value>
+  </data>
   <data name="FullTheme" xml:space="preserve">
     <value>[!!! Fúℓℓ Ţĥè₥è !!!]</value>
   </data>
@@ -954,6 +987,9 @@
   <data name="GetCurrent" xml:space="preserve">
     <value>[!!! GèţÇúřřèñţ !!!]</value>
   </data>
+  <data name="Gifted" xml:space="preserve">
+    <value>[!!! Gïƒţèδ !!!]</value>
+  </data>
   <data name="Giveaway" xml:space="preserve">
     <value>[!!! GïƲèáωá¥ !!!]</value>
   </data>
@@ -971,6 +1007,9 @@
   </data>
   <data name="Grey" xml:space="preserve">
     <value>[!!! Gřè¥ !!!]</value>
+  </data>
+  <data name="Group" xml:space="preserve">
+    <value>[!!! Gřôúƥ !!!]</value>
   </data>
   <data name="GroupIntervalMin" xml:space="preserve">
     <value>[!!! Gřôúƥ ÌñţèřƲáℓ (Mïñ) !!!]</value>
@@ -1035,8 +1074,14 @@
   <data name="IncludeCommandAssets" xml:space="preserve">
     <value>[!!! Ìñçℓúδè Çô₥₥áñδ Âššèţš !!!]</value>
   </data>
+  <data name="IncorrectBotAccount" xml:space="preserve">
+    <value>[!!! Ýôú ₥úšţ šïĝñ ïñ ţô á δïƒƒèřèñţ áççôúñţ ţĥáñ ¥ôúř Šţřèá₥èř áççôúñţ. !!!]</value>
+  </data>
   <data name="Indigo" xml:space="preserve">
     <value>[!!! Ìñδïĝô !!!]</value>
+  </data>
+  <data name="Individual" xml:space="preserve">
+    <value>[!!! ÌñδïƲïδúáℓ !!!]</value>
   </data>
   <data name="InputKeyboardAndMouse" xml:space="preserve">
     <value>[!!! Ìñƥúţ (Kè¥βôářδ &amp; Môúšè) !!!]</value>
@@ -1183,7 +1228,7 @@
     <value>[!!! Ļôçƙ/Ûñℓôçƙ Çĥáţ Šçřôℓℓïñĝ !!!]</value>
   </data>
   <data name="Login" xml:space="preserve">
-    <value>[!!! Ļôĝïñ !!!]</value>
+    <value>[!!! Ļôĝ Ìñ !!!]</value>
   </data>
   <data name="LoginErrorNoChannelName" xml:space="preserve">
     <value>[!!! Â çĥáññèℓ ñá₥è ₥úšţ βè èñţèřèδ. !!!]</value>
@@ -1193,6 +1238,9 @@
   </data>
   <data name="LoginErrorNotModerator" xml:space="preserve">
     <value>[!!! Ýôú ářè ñôţ á ₥ôδèřáţôř ƒôř ţĥïš çĥáññèℓ. !!!]</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>[!!! Ļôĝ Óúţ !!!]</value>
   </data>
   <data name="MagicEightBall" xml:space="preserve">
     <value>[!!! Máĝïç 8 ßáℓℓ !!!]</value>
@@ -1205,6 +1253,9 @@
   </data>
   <data name="Map" xml:space="preserve">
     <value>[!!! Máƥ !!!]</value>
+  </data>
+  <data name="Max" xml:space="preserve">
+    <value>[!!! Máж !!!]</value>
   </data>
   <data name="MaxAmount" xml:space="preserve">
     <value>[!!! Máж Â₥ôúñţ !!!]</value>
@@ -1404,6 +1455,9 @@
   <data name="Ok" xml:space="preserve">
     <value>[!!! Óƙ !!!]</value>
   </data>
+  <data name="One" xml:space="preserve">
+    <value>[!!! Óñè !!!]</value>
+  </data>
   <data name="OneStrikeCommand" xml:space="preserve">
     <value>[!!! 1 Šţřïƙè Çô₥₥áñδ !!!]</value>
   </data>
@@ -1500,6 +1554,9 @@
   <data name="Permissions" xml:space="preserve">
     <value>[!!! Þèř₥ïššïôñš !!!]</value>
   </data>
+  <data name="PerPerson" xml:space="preserve">
+    <value>[!!! Þèř Þèřšôñ !!!]</value>
+  </data>
   <data name="Pink" xml:space="preserve">
     <value>[!!! Þïñƙ !!!]</value>
   </data>
@@ -1571,6 +1628,12 @@
   </data>
   <data name="QueueStatus" xml:space="preserve">
     <value>[!!! Qúèúè Šţáţúš !!!]</value>
+  </data>
+  <data name="QuickCommands" xml:space="preserve">
+    <value>[!!! Qúïçƙ Çô₥₥áñδš !!!]</value>
+  </data>
+  <data name="QuickCommandSelectFail" xml:space="preserve">
+    <value>[!!! Ýôú ₥úšţ çřèáţè áţ ℓèášţ ôñè çô₥₥áñδ ƒïřšţ ţô úšè ţĥïš ƒèáţúřè. !!!]</value>
   </data>
   <data name="Quote" xml:space="preserve">
     <value>[!!! Qúôţè !!!]</value>
@@ -1673,6 +1736,9 @@
   </data>
   <data name="RestoreYourSettingsFromAZipFile" xml:space="preserve">
     <value>[!!! Rèšţôřè ¥ôúř šèţţïñĝš ƒřô₥ á ƺïƥ ƒïℓè !!!]</value>
+  </data>
+  <data name="Resubs" xml:space="preserve">
+    <value>[!!! Rèšúβš !!!]</value>
   </data>
   <data name="RetroactivelyGivePoints" xml:space="preserve">
     <value>[!!! RèţřôáçţïƲèℓ¥ GïƲè Þôïñţš !!!]</value>
@@ -1995,6 +2061,9 @@
   <data name="SubmitABug" xml:space="preserve">
     <value>[!!! Šúβ₥ïţ á ßúĝ !!!]</value>
   </data>
+  <data name="Subs" xml:space="preserve">
+    <value>[!!! Šúβš !!!]</value>
+  </data>
   <data name="SubscribeAge" xml:space="preserve">
     <value>[!!! Šúβšçřïβè Âĝè !!!]</value>
   </data>
@@ -2046,6 +2115,9 @@
   <data name="TestCommand" xml:space="preserve">
     <value>[!!! Ţèšţ Çô₥₥áñδ !!!]</value>
   </data>
+  <data name="TestStreamWarning" xml:space="preserve">
+    <value>[!!! ßèçáúšè ţèšţ šţřèá₥ šèţţïñĝš ářè èñáβℓèδ, ¥ôúř βôţ áççôúñţ ωïℓℓ ñôţ βè áβℓè ţô çôññèçţ çôřřèçţℓ¥. Ýôú ωïℓℓ ñèèδ ţô δïšáβℓè Ţèšţ Šţřèá₥š ïñ ôřδèř ţô úšè ¥ôúř βôţ áççôúñţ ƒôř ţĥïñĝš šúçĥ á çĥáţ ₥èššáĝèš &amp; ωĥïšƥèřš. Âřè ¥ôú šúřè ¥ôú šţïℓℓ ωïšĥ ţô çôññèçţ ïţ? !!!]</value>
+  </data>
   <data name="Text" xml:space="preserve">
     <value>[!!! Ţèжţ !!!]</value>
   </data>
@@ -2064,8 +2136,14 @@
   <data name="ThemesAndColors" xml:space="preserve">
     <value>[!!! Ţĥè₥èš &amp; Çôℓôřš !!!]</value>
   </data>
+  <data name="ThreeLeft" xml:space="preserve">
+    <value>[!!! Ţĥřèè Ļèƒţ !!!]</value>
+  </data>
   <data name="ThreeOrMoreStrikesCommand" xml:space="preserve">
     <value>[!!! 3+ Šţřïƙèš Çô₥₥áñδ !!!]</value>
+  </data>
+  <data name="ThreeRight" xml:space="preserve">
+    <value>[!!! Ţĥřèè Rïĝĥţ !!!]</value>
   </data>
   <data name="TickerTape" xml:space="preserve">
     <value>[!!! Ţïçƙèř Ţáƥè !!!]</value>
@@ -2130,6 +2208,9 @@
   <data name="Twitter" xml:space="preserve">
     <value>[!!! Ţωïţţèř !!!]</value>
   </data>
+  <data name="Two" xml:space="preserve">
+    <value>[!!! Ţωô !!!]</value>
+  </data>
   <data name="TwoStrikesCommand" xml:space="preserve">
     <value>[!!! 2 Šţřïƙèš Çô₥₥áñδ !!!]</value>
   </data>
@@ -2138,6 +2219,9 @@
   </data>
   <data name="TypeToAdd" xml:space="preserve">
     <value>[!!! Ţ¥ƥè Ţô Âδδ !!!]</value>
+  </data>
+  <data name="Unassigned" xml:space="preserve">
+    <value>[!!! Ûñáššïĝñèδ !!!]</value>
   </data>
   <data name="UnbanAllUsers" xml:space="preserve">
     <value>[!!! Ûñβáñ Âℓℓ Ûšèřš !!!]</value>
