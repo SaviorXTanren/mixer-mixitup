@@ -4516,6 +4516,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You must create at least one command first to use this feature..
+        /// </summary>
+        public static string QuickCommandSelectFail {
+            get {
+                return ResourceManager.GetString("QuickCommandSelectFail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Quote.
         /// </summary>
         public static string Quote {
@@ -6249,6 +6258,15 @@ namespace MixItUp.Base {
         public static string TypeToAdd {
             get {
                 return ResourceManager.GetString("TypeToAdd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unassigned.
+        /// </summary>
+        public static string Unassigned {
+            get {
+                return ResourceManager.GetString("Unassigned", resourceCulture);
             }
         }
         

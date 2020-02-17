@@ -102,7 +102,7 @@ namespace MixItUp.Base.ViewModel.Controls.Dashboard
         {
             if (!ChannelSession.AllCommands.Any(c => !(c is PreMadeChatCommand)))
             {
-                await DialogHelper.ShowMessage("You must create at least one command first to use this feature.");
+                await DialogHelper.ShowMessage(MixItUp.Base.Resources.QuickCommandSelectFail);
                 return false;
             }
             return true;
@@ -130,7 +130,7 @@ namespace MixItUp.Base.ViewModel.Controls.Dashboard
             }
         }
 
-        private string GetCommandName(CommandBase command) { return (command != null) ? command.Name : "UNASSIGNED"; }
+        private string GetCommandName(CommandBase command) { return (command != null) ? command.Name : MixItUp.Base.Resources.Unassigned; }
 
         private async Task RunCommand(CommandBase command)
         {

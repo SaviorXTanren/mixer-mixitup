@@ -1602,6 +1602,9 @@
   <data name="QuickCommands" xml:space="preserve">
     <value>Quick Commands</value>
   </data>
+  <data name="QuickCommandSelectFail" xml:space="preserve">
+    <value>You must create at least one command first to use this feature.</value>
+  </data>
   <data name="Quote" xml:space="preserve">
     <value>Quote</value>
   </data>
@@ -2180,6 +2183,9 @@
   </data>
   <data name="TypeToAdd" xml:space="preserve">
     <value>Type To Add</value>
+  </data>
+  <data name="Unassigned" xml:space="preserve">
+    <value>Unassigned</value>
   </data>
   <data name="UnbanAllUsers" xml:space="preserve">
     <value>Unban All Users</value>
