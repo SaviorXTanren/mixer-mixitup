@@ -500,7 +500,7 @@ namespace MixItUp.Base.Services.Mixer
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestEmberUsageUserData] = emberUsage.User.Data;
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestEmberUsageAmountData] = emberUsage.Amount;
 
-            EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerSparksUsed, emberUsage.User);
+            EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerEmbersUsed, emberUsage.User);
             trigger.SpecialIdentifiers["emberamount"] = emberUsage.Amount.ToString();
             await ChannelSession.Services.Events.PerformEvent(trigger);
         }
