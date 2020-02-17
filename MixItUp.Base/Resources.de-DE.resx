@@ -591,6 +591,9 @@
   <data name="CurrenciesRanksInventories" xml:space="preserve">
     <value>Währungen/Ränge/Inventare</value>
   </data>
+  <data name="CurrencyCost" xml:space="preserve">
+    <value>Currency Cost</value>
+  </data>
   <data name="CurrencyRank" xml:space="preserve">
     <value>Währung / Rang</value>
   </data>
@@ -602,6 +605,9 @@
   </data>
   <data name="CurrencyRankName" xml:space="preserve">
     <value>Währung/Rangname</value>
+  </data>
+  <data name="CurrencyRequirement" xml:space="preserve">
+    <value>Currency Requirement</value>
   </data>
   <data name="Current" xml:space="preserve">
     <value>Current</value>
@@ -690,6 +696,9 @@
   <data name="DeleteAllChatCommandsWhenTheyAreRun" xml:space="preserve">
     <value>Lösche alle Chat-Befehle, wenn sie ausgeführt werden</value>
   </data>
+  <data name="DeleteChatWhenRun" xml:space="preserve">
+    <value>Delete Chat Command When Run</value>
+  </data>
   <data name="DeleteCommand" xml:space="preserve">
     <value>Befehl löschen</value>
   </data>
@@ -737,6 +746,9 @@
   </data>
   <data name="Donators" xml:space="preserve">
     <value>Donators</value>
+  </data>
+  <data name="DontDeleteChatWhenRun" xml:space="preserve">
+    <value>Don't Delete Chat Command When Run</value>
   </data>
   <data name="Download" xml:space="preserve">
     <value>Download</value>
@@ -1098,6 +1110,9 @@
   <data name="InventoryName" xml:space="preserve">
     <value>Inventarname</value>
   </data>
+  <data name="InventoryRequirement" xml:space="preserve">
+    <value>Inventory Requirement</value>
+  </data>
   <data name="IsMathExpression" xml:space="preserve">
     <value>Is Math Expression</value>
   </data>
@@ -1398,6 +1413,9 @@
   <data name="MoveUp" xml:space="preserve">
     <value>Nach oben bewegen</value>
   </data>
+  <data name="Must" xml:space="preserve">
+    <value>Must</value>
+  </data>
   <data name="Mute" xml:space="preserve">
     <value>Mute</value>
   </data>
@@ -1548,6 +1566,9 @@
   <data name="PartneredStreamer" xml:space="preserve">
     <value>Gepartnerte Streamer</value>
   </data>
+  <data name="PatreonBenefitRequirement" xml:space="preserve">
+    <value>Patreon Benefit Requirement</value>
+  </data>
   <data name="PatreonUser" xml:space="preserve">
     <value>Patreon Benutzer</value>
   </data>
@@ -1650,8 +1671,14 @@
   <data name="RandomStreamer" xml:space="preserve">
     <value>Zufälliger Streamer</value>
   </data>
+  <data name="RankMinimum" xml:space="preserve">
+    <value>Rank Minimum</value>
+  </data>
   <data name="RankName" xml:space="preserve">
     <value>Rangname</value>
+  </data>
+  <data name="RankRequirement" xml:space="preserve">
+    <value>Rank Requirement</value>
   </data>
   <data name="Rate" xml:space="preserve">
     <value>Rate (0% - 150%)</value>
@@ -1715,6 +1742,9 @@
   </data>
   <data name="RequiredHours" xml:space="preserve">
     <value>Erforderliche Stunden</value>
+  </data>
+  <data name="RequiredUsers" xml:space="preserve">
+    <value>Required Users</value>
   </data>
   <data name="ReRunWizardHeader" xml:space="preserve">
     <value>Führe den Assistenten für neue Benutzer erneut aus, um deine Daten erneut zu importieren</value>
@@ -1936,6 +1966,9 @@
   </data>
   <data name="ShowMixrElixrEmotes" xml:space="preserve">
     <value>MixrElixr-Emotes anzeigen (Neustart erforderlich)</value>
+  </data>
+  <data name="ShowOnChatListContextMenu" xml:space="preserve">
+    <value>Show On Chat List Context Menu</value>
   </data>
   <data name="ShowUserJoinLeave" xml:space="preserve">
     <value>Zeige Benutzer beitreten/verlassen</value>
@@ -2171,6 +2204,9 @@
   <data name="TimerTrain" xml:space="preserve">
     <value>Timer-Zug</value>
   </data>
+  <data name="TimeSpanSeconds" xml:space="preserve">
+    <value>Time Span (Seconds)</value>
+  </data>
   <data name="Title" xml:space="preserve">
     <value>Titel</value>
   </data>
@@ -2323,6 +2359,9 @@
   </data>
   <data name="UsersToApplyTo" xml:space="preserve">
     <value>Users To Apply To</value>
+  </data>
+  <data name="UserThreshold" xml:space="preserve">
+    <value>User Threshold</value>
   </data>
   <data name="UserTitles" xml:space="preserve">
     <value>Benutzertitel</value>

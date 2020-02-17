@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -25,11 +26,11 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="RankTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Rank Requirement" Width="140" VerticalAlignment="Center" DisplayMemberPath="Name" SelectionChanged="RankTypeComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox x:Name="RankTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.RankRequirement}" MinWidth="140" VerticalAlignment="Center" DisplayMemberPath="Name" SelectionChanged="RankTypeComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-            <ComboBox x:Name="RankMustEqualComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Must" Width="50" VerticalAlignment="Center" IsEnabled="False" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox x:Name="RankMustEqualComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.Must}" MinWidth="50" VerticalAlignment="Center" IsEnabled="False" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-            <ComboBox x:Name="RankMinimumComboBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Rank Minimum" Width="120" VerticalAlignment="Center" DisplayMemberPath="Name" IsEnabled="False" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox x:Name="RankMinimumComboBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.RankMinimum}" MinWidth="120" VerticalAlignment="Center" DisplayMemberPath="Name" IsEnabled="False" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
         </Grid>
     </Grid>
 </local:LoadingControlBase>
