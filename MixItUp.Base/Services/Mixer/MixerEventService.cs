@@ -76,6 +76,8 @@ namespace MixItUp.Base.Services.Mixer
             {
                 return await this.AttemptConnect(async () =>
                 {
+                    await this.Disconnect();
+
                     this.Client = await ConstellationClient.Create(ChannelSession.MixerUserConnection.Connection);
                     if (this.Client != null && await this.RunAsync(this.Client.Connect()))
                     {

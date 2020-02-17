@@ -181,6 +181,8 @@ namespace MixItUp.Base.Services.Mixer
             {
                 ExternalServiceResult result = await this.RunAsync(async () =>
                 {
+                    await this.Disconnect();
+
                     if (this.SharedProject != null)
                     {
                         this.Client = await this.RunAsync(MixPlayClient.CreateFromChannel(ChannelSession.MixerUserConnection.Connection, ChannelSession.MixerChannel, this.SelectedGame, this.SelectedVersion, this.SharedProject.ShareCode));
