@@ -3013,7 +3013,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Language.
+        ///   Looks up a localized string similar to Language (Requires Restart).
         /// </summary>
         public static string Language {
             get {
