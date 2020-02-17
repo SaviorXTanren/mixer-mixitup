@@ -19,30 +19,44 @@ namespace MixItUp.Base.Util
         {
             get
             {
-                this.ValueChanged(key);
-                return base[key];
+                if (key != null)
+                {
+                    this.ValueChanged(key);
+                    return base[key];
+                }
+                return default(V);
             }
             set
             {
-                if (!this.ContainsKey(key))
+                if (key != null)
                 {
-                    this.ValueAdded(key);
+                    if (!this.ContainsKey(key))
+                    {
+                        this.ValueAdded(key);
+                    }
+                    base[key] = value;
+                    this.ValueChanged(key);
                 }
-                base[key] = value;
-                this.ValueChanged(key);
             }
         }
 
         public override void Add(K key, V value)
         {
-            base.Add(key, value);
-            this.ValueAdded(key);
+            if (key != null)
+            {
+                base.Add(key, value);
+                this.ValueAdded(key);
+            }
         }
 
         public override bool Remove(K key)
         {
-            this.ValueRemoved(key);
-            return base.Remove(key);
+            if (key != null)
+            {
+                this.ValueRemoved(key);
+                return base.Remove(key);
+            }
+            return false;
         }
 
         public IEnumerable<K> GetAddedKeys() { return this.GetKeyValues(this.addedValues).Keys; }
@@ -63,7 +77,13 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public void ManualValueChanged(K key) { this.ValueChanged(key); }
+        public void ManualValueChanged(K key)
+        {
+            if (key != null)
+            {
+                this.ValueChanged(key);
+            }
+        }
 
         public void ClearTracking()
         {
