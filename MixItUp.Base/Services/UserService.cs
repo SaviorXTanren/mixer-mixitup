@@ -63,8 +63,9 @@ namespace MixItUp.Base.Services
 
         public UserViewModel GetUserByUsername(string username)
         {
+            username = username.ToLower().Replace("@", "");
             UserViewModel user = null;
-            if (this.usersByMixerUsername.TryGetValue(username.ToLower(), out user))
+            if (this.usersByMixerUsername.TryGetValue(username, out user))
             {
                 return user;
             }
