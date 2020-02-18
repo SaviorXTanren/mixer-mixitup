@@ -366,6 +366,9 @@
   <data name="BackupYourSettingsToAZipFile" xml:space="preserve">
     <value>Backup your settings to a zip file</value>
   </data>
+  <data name="Banned" xml:space="preserve">
+    <value>Banned</value>
+  </data>
   <data name="BasicChatCommand" xml:space="preserve">
     <value>Basic Chat Command</value>
   </data>
@@ -590,6 +593,9 @@
   </data>
   <data name="CurrenciesRanksInventories" xml:space="preserve">
     <value>Currencies/Ranks/Inventories</value>
+  </data>
+  <data name="Currency" xml:space="preserve">
+    <value>Currency</value>
   </data>
   <data name="CurrencyCost" xml:space="preserve">
     <value>Currency Cost</value>
@@ -1010,6 +1016,9 @@
   </data>
   <data name="GiveawayItem" xml:space="preserve">
     <value>Giveaway Item</value>
+  </data>
+  <data name="GlobalMod" xml:space="preserve">
+    <value>Global Mod</value>
   </data>
   <data name="GreaterThan" xml:space="preserve">
     <value>&gt;</value>
@@ -1566,6 +1575,9 @@
   <data name="PartneredStreamer" xml:space="preserve">
     <value>Partnered Streamer</value>
   </data>
+  <data name="PartnersOnly" xml:space="preserve">
+    <value>This feature is currently available for Partners only.</value>
+  </data>
   <data name="PatreonBenefitRequirement" xml:space="preserve">
     <value>Patreon Benefit Requirement</value>
   </data>
@@ -1670,6 +1682,9 @@
   </data>
   <data name="RandomStreamer" xml:space="preserve">
     <value>Random Streamer</value>
+  </data>
+  <data name="Rank" xml:space="preserve">
+    <value>Rank</value>
   </data>
   <data name="RankMinimum" xml:space="preserve">
     <value>Rank Minimum</value>

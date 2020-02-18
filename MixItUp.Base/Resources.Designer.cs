@@ -808,6 +808,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Banned.
+        /// </summary>
+        public static string Banned {
+            get {
+                return ResourceManager.GetString("Banned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Basic Chat Command.
         /// </summary>
         public static string BasicChatCommand {
@@ -1479,6 +1488,15 @@ namespace MixItUp.Base {
         public static string CurrenciesRanksInventories {
             get {
                 return ResourceManager.GetString("CurrenciesRanksInventories", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Currency.
+        /// </summary>
+        public static string Currency {
+            get {
+                return ResourceManager.GetString("Currency", resourceCulture);
             }
         }
         
@@ -2739,6 +2757,15 @@ namespace MixItUp.Base {
         public static string GiveawayItem {
             get {
                 return ResourceManager.GetString("GiveawayItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Global Mod.
+        /// </summary>
+        public static string GlobalMod {
+            get {
+                return ResourceManager.GetString("GlobalMod", resourceCulture);
             }
         }
         
@@ -4408,6 +4435,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This feature is currently available for Partners only..
+        /// </summary>
+        public static string PartnersOnly {
+            get {
+                return ResourceManager.GetString("PartnersOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Patreon Benefit Requirement.
         /// </summary>
         public static string PatreonBenefitRequirement {
@@ -4719,6 +4755,15 @@ namespace MixItUp.Base {
         public static string RandomStreamer {
             get {
                 return ResourceManager.GetString("RandomStreamer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rank.
+        /// </summary>
+        public static string Rank {
+            get {
+                return ResourceManager.GetString("Rank", resourceCulture);
             }
         }
         

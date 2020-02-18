@@ -21,27 +21,16 @@ namespace MixItUp.Base.ViewModel.User
     public enum UserRoleEnum
     {
         Banned,
-
         User = 10,
-
         Pro = 20,
-
         Partner = 25,
-
         Follower = 30,
-
         Regular = 35,
-
         Subscriber = 40,
-
         GlobalMod = 48,
-
         Mod = 50,
-
         ChannelEditor = 55,
-
         Staff = 60,
-
         Streamer = 70,
 
         Custom = 99,
@@ -58,7 +47,7 @@ namespace MixItUp.Base.ViewModel.User
     {
         public static DateTimeOffset? GetSubscriberDate(this UserWithGroupsModel userGroups)
         {
-            return userGroups.GetCreatedDateForGroupIfCurrent(EnumHelper.GetEnumName(UserRoleEnum.Subscriber));
+            return userGroups.GetCreatedDateForGroupIfCurrent(EnumLocalizationHelper.GetLocalizedName(UserRoleEnum.Subscriber));
         }
     }
 
@@ -284,7 +273,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserRoleEnum PrimaryRole { get { return this.UserRoles.Max(); } }
 
-        public string PrimaryRoleString { get { return EnumHelper.GetEnumName(this.PrimaryRole); } }
+        public string PrimaryRoleString { get { return EnumLocalizationHelper.GetLocalizedName(this.PrimaryRole); } }
 
         public string SortableID
         {
@@ -751,7 +740,7 @@ namespace MixItUp.Base.ViewModel.User
                 }
             }
 
-            List<string> displayRoles = new List<string>(mixerDisplayRoles.Select(r => EnumHelper.GetEnumName(r)));
+            List<string> displayRoles = new List<string>(mixerDisplayRoles.Select(r => EnumLocalizationHelper.GetLocalizedName(r)));
             displayRoles.AddRange(this.CustomRoles);
 
             this.RolesDisplayString = string.Join(", ", displayRoles.OrderByDescending(r => r));
