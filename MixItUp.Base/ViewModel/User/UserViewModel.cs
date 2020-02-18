@@ -160,9 +160,9 @@ namespace MixItUp.Base.ViewModel.User
 
         #region Mixer
 
-        public uint MixerID { get { return this.Data.MixerID; } private set { this.Data.MixerID = value; } }
-        public string MixerUsername { get { return this.Data.MixerUsername; } private set { this.Data.MixerUsername = value; } }
-        public uint MixerChannelID { get { return this.Data.MixerChannelID; } private set { this.Data.MixerChannelID = value; } }
+        public uint MixerID { get { return this.Data.MixerID; } private set { if (value > 0) { this.Data.MixerID = value; } } }
+        public string MixerUsername { get { return this.Data.MixerUsername; } private set { if (!string.IsNullOrEmpty(value)) { this.Data.MixerUsername = value; } } }
+        public uint MixerChannelID { get { return this.Data.MixerChannelID; } private set { if (value > 0) { this.Data.MixerChannelID = value; } } }
 
         public HashSet<UserRoleEnum> MixerUserRoles { get; set; } = new HashSet<UserRoleEnum>() { UserRoleEnum.User };
 
@@ -428,24 +428,22 @@ namespace MixItUp.Base.ViewModel.User
                 {
                     this.SetMixerUserDetails(user);
 
-                    this.Data.MixerFollowDate = await ChannelSession.MixerUserConnection.CheckIfFollows(ChannelSession.MixerChannel, this.GetModel());
-                    if (this.Data.MixerFollowDate != null && this.FollowDate.GetValueOrDefault() > DateTimeOffset.MinValue)
+                    DateTimeOffset? mixerFollowDate = await ChannelSession.MixerUserConnection.CheckIfFollows(ChannelSession.MixerChannel, this.GetModel());
+                    if (mixerFollowDate != null && mixerFollowDate.GetValueOrDefault() > DateTimeOffset.MinValue)
                     {
+                        this.Data.MixerFollowDate = mixerFollowDate.GetValueOrDefault();
                         this.MixerUserRoles.Add(UserRoleEnum.Follower);
                     }
 
                     if (this.IsPlatformSubscriber || force)
                     {
                         UserWithGroupsModel userGroups = await ChannelSession.MixerUserConnection.GetUserInChannel(ChannelSession.MixerChannel, this.MixerID);
-                        if (userGroups != null)
+                        if (userGroups != null && userGroups.GetSubscriberDate().GetValueOrDefault() > DateTimeOffset.MinValue)
                         {
-                            this.Data.MixerSubscribeDate = userGroups.GetSubscriberDate();
-                            if (this.SubscribeDate != null)
+                            this.Data.MixerSubscribeDate = userGroups.GetSubscriberDate().GetValueOrDefault();
+                            if (this.Data.TotalMonthsSubbed < this.SubscribeDate.GetValueOrDefault().TotalMonthsFromNow())
                             {
-                                if (this.Data.TotalMonthsSubbed < this.SubscribeDate.GetValueOrDefault().TotalMonthsFromNow())
-                                {
-                                    this.Data.TotalMonthsSubbed = (uint)this.SubscribeDate.GetValueOrDefault().TotalMonthsFromNow();
-                                }
+                                this.Data.TotalMonthsSubbed = (uint)this.SubscribeDate.GetValueOrDefault().TotalMonthsFromNow();
                             }
                         }
                     }
@@ -664,7 +662,10 @@ namespace MixItUp.Base.ViewModel.User
 
         private void SetMixerUserDetails(UserModel user)
         {
-            this.Data.MixerAccountDate = user.createdAt;
+            if (user.createdAt.GetValueOrDefault() > DateTimeOffset.MinValue)
+            {
+                this.Data.MixerAccountDate = user.createdAt;
+            }
             this.Sparks = (int)user.sparks;
             this.TwitterURL = user.social?.twitter;
             if (user is UserWithChannelModel)
