@@ -103,6 +103,6 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <Button Grid.Row="4" Content="{Binding ContentDisconnectContent}" Command="{Binding ConnectDisconnectCommand}" IsEnabled="{Binding IsGameSelected}" HorizontalAlignment="Center" Width="110" />
+        <Button Grid.Row="4" Content="{Binding ContentDisconnectContent}" Command="{Binding ConnectDisconnectCommand}" IsEnabled="{Binding IsGameSelected}" HorizontalAlignment="Center" MinWidth="110" />
     </Grid>
 </local:MainControlBase>

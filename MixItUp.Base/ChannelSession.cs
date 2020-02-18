@@ -329,8 +329,7 @@ namespace MixItUp.Base
                     string errors = string.Join(Environment.NewLine, mixerConnections.Where(c => !c.Result.Success).Select(c => c.Result.Message));
                     string message = "Failed to connect to Mixer services:" + Environment.NewLine + Environment.NewLine + errors + Environment.NewLine + Environment.NewLine + "This may be due to a Mixer server outage, please check Mixer's status page for more information: https://status.mixer.com/";
 
-                    bool isOptionalService = mixerConnections.All(c => c.Result.Success || c == mixerEventServiceResult);
-                    if (isOptionalService)
+                    if (mixerConnections.All(c => c.Result.Success || c == mixerEventServiceResult))
                     {
                         if (!await DialogHelper.ShowConfirmation(message + Environment.NewLine + Environment.NewLine +
                                 "We have determined this to be a non-blocking error, which means we can attempt to log you in and ignore this. However, some features may not work as a result and you may run into some bugs."

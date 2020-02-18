@@ -51,7 +51,7 @@ namespace MixItUp.WPF.Windows.Currency
 
         private ObservableCollection<UserRankViewModel> ranks = new ObservableCollection<UserRankViewModel>();
 
-        private string CurrencyRankIdentifierString { get { return (this.IsRankToggleButton.IsChecked.GetValueOrDefault()) ? "rank" : "currency"; } }
+        private string CurrencyRankIdentifierString { get { return (this.IsRankToggleButton.IsChecked.GetValueOrDefault()) ? MixItUp.Base.Resources.Rank.ToLower() : MixItUp.Base.Resources.Currency.ToLower(); } }
 
         public CurrencyWindow()
         {

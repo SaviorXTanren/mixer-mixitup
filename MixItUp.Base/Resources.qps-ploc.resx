@@ -366,6 +366,9 @@
   <data name="BackupYourSettingsToAZipFile" xml:space="preserve">
     <value>[!!! ßáçƙúƥ ¥ôúř šèţţïñĝš ţô á ƺïƥ ƒïℓè !!!]</value>
   </data>
+  <data name="Banned" xml:space="preserve">
+    <value>[!!! ßáññèδ !!!]</value>
+  </data>
   <data name="BasicChatCommand" xml:space="preserve">
     <value>[!!! ßášïç Çĥáţ Çô₥₥áñδ !!!]</value>
   </data>
@@ -591,6 +594,12 @@
   <data name="CurrenciesRanksInventories" xml:space="preserve">
     <value>[!!! Çúřřèñçïèš/Ráñƙš/ÌñƲèñţôřïèš !!!]</value>
   </data>
+  <data name="Currency" xml:space="preserve">
+    <value>[!!! Çúřřèñç¥ !!!]</value>
+  </data>
+  <data name="CurrencyCost" xml:space="preserve">
+    <value>[!!! Çúřřèñç¥ Çôšţ !!!]</value>
+  </data>
   <data name="CurrencyRank" xml:space="preserve">
     <value>[!!! Çúřřèñç¥/Ráñƙ !!!]</value>
   </data>
@@ -602,6 +611,9 @@
   </data>
   <data name="CurrencyRankName" xml:space="preserve">
     <value>[!!! Çúřřèñç¥/Ráñƙ Ná₥è !!!]</value>
+  </data>
+  <data name="CurrencyRequirement" xml:space="preserve">
+    <value>[!!! Çúřřèñç¥ Rè9úïřè₥èñţ !!!]</value>
   </data>
   <data name="Current" xml:space="preserve">
     <value>[!!! Çúřřèñţ !!!]</value>
@@ -690,6 +702,9 @@
   <data name="DeleteAllChatCommandsWhenTheyAreRun" xml:space="preserve">
     <value>[!!! Ðèℓèţè Âℓℓ Çĥáţ Çô₥₥áñδš Wĥèñ Ţĥè¥ Âřè Rúñ !!!]</value>
   </data>
+  <data name="DeleteChatWhenRun" xml:space="preserve">
+    <value>[!!! Ðèℓèţè Çĥáţ Çô₥₥áñδ Wĥèñ Rúñ !!!]</value>
+  </data>
   <data name="DeleteCommand" xml:space="preserve">
     <value>[!!! Ðèℓèţè Çô₥₥áñδ !!!]</value>
   </data>
@@ -723,6 +738,9 @@
   <data name="DisableQueue" xml:space="preserve">
     <value>[!!! Ðïšáβℓè Qúèúè !!!]</value>
   </data>
+  <data name="Disconnect" xml:space="preserve">
+    <value>[!!! Ðïšçôññèçţ !!!]</value>
+  </data>
   <data name="Discord" xml:space="preserve">
     <value>[!!! Ðïšçôřδ !!!]</value>
   </data>
@@ -734,6 +752,9 @@
   </data>
   <data name="Donators" xml:space="preserve">
     <value>[!!! Ðôñáţôřš !!!]</value>
+  </data>
+  <data name="DontDeleteChatWhenRun" xml:space="preserve">
+    <value>[!!! Ðôñ'ţ Ðèℓèţè Çĥáţ Çô₥₥áñδ Wĥèñ Rúñ !!!]</value>
   </data>
   <data name="Download" xml:space="preserve">
     <value>[!!! Ðôωñℓôáδ !!!]</value>
@@ -996,6 +1017,9 @@
   <data name="GiveawayItem" xml:space="preserve">
     <value>[!!! GïƲèáωá¥ Ìţè₥ !!!]</value>
   </data>
+  <data name="GlobalMod" xml:space="preserve">
+    <value>[!!! Gℓôβáℓ Môδ !!!]</value>
+  </data>
   <data name="GreaterThan" xml:space="preserve">
     <value>[!!! &gt; !!!]</value>
   </data>
@@ -1094,6 +1118,9 @@
   </data>
   <data name="InventoryName" xml:space="preserve">
     <value>[!!! ÌñƲèñţôř¥ Ná₥è !!!]</value>
+  </data>
+  <data name="InventoryRequirement" xml:space="preserve">
+    <value>[!!! ÌñƲèñţôř¥ Rè9úïřè₥èñţ !!!]</value>
   </data>
   <data name="IsMathExpression" xml:space="preserve">
     <value>[!!! Ìš Máţĥ Éжƥřèššïôñ !!!]</value>
@@ -1395,6 +1422,9 @@
   <data name="MoveUp" xml:space="preserve">
     <value>[!!! MôƲè Ûƥ !!!]</value>
   </data>
+  <data name="Must" xml:space="preserve">
+    <value>[!!! Múšţ !!!]</value>
+  </data>
   <data name="Mute" xml:space="preserve">
     <value>[!!! Múţè !!!]</value>
   </data>
@@ -1545,6 +1575,12 @@
   <data name="PartneredStreamer" xml:space="preserve">
     <value>[!!! Þářţñèřèδ Šţřèá₥èř !!!]</value>
   </data>
+  <data name="PartnersOnly" xml:space="preserve">
+    <value>[!!! Ţĥïš ƒèáţúřè ïš çúřřèñţℓ¥ áƲáïℓáβℓè ƒôř Þářţñèřš ôñℓ¥. !!!]</value>
+  </data>
+  <data name="PatreonBenefitRequirement" xml:space="preserve">
+    <value>[!!! Þáţřèôñ ßèñèƒïţ Rè9úïřè₥èñţ !!!]</value>
+  </data>
   <data name="PatreonUser" xml:space="preserve">
     <value>[!!! Þáţřèôñ Ûšèř !!!]</value>
   </data>
@@ -1647,8 +1683,17 @@
   <data name="RandomStreamer" xml:space="preserve">
     <value>[!!! Ráñδô₥ Šţřèá₥èř !!!]</value>
   </data>
+  <data name="Rank" xml:space="preserve">
+    <value>[!!! Ráñƙ !!!]</value>
+  </data>
+  <data name="RankMinimum" xml:space="preserve">
+    <value>[!!! Ráñƙ Mïñï₥ú₥ !!!]</value>
+  </data>
   <data name="RankName" xml:space="preserve">
     <value>[!!! Ráñƙ Ná₥è !!!]</value>
+  </data>
+  <data name="RankRequirement" xml:space="preserve">
+    <value>[!!! Ráñƙ Rè9úïřè₥èñţ !!!]</value>
   </data>
   <data name="Rate" xml:space="preserve">
     <value>[!!! Ráţè (0% - 150%) !!!]</value>
@@ -1712,6 +1757,9 @@
   </data>
   <data name="RequiredHours" xml:space="preserve">
     <value>[!!! Rè9úïřèδ Hôúřš !!!]</value>
+  </data>
+  <data name="RequiredUsers" xml:space="preserve">
+    <value>[!!! Rè9úïřèδ Ûšèřš !!!]</value>
   </data>
   <data name="ReRunWizardHeader" xml:space="preserve">
     <value>[!!! Rè-řúñ ţĥè Nèω Ûšèř Wïƺářδ ţô řè-ï₥ƥôřţ ¥ôúř δáţá !!!]</value>
@@ -1931,6 +1979,9 @@
   </data>
   <data name="ShowMixrElixrEmotes" xml:space="preserve">
     <value>[!!! Šĥôω MïжřÉℓïжř É₥ôţèš (Rè9úïřèš Rèšţářţ) !!!]</value>
+  </data>
+  <data name="ShowOnChatListContextMenu" xml:space="preserve">
+    <value>[!!! Šĥôω Óñ Çĥáţ Ļïšţ Çôñţèжţ Mèñú !!!]</value>
   </data>
   <data name="ShowUserJoinLeave" xml:space="preserve">
     <value>[!!! Šĥôω Ûšèř Jôïñ/ĻèáƲè !!!]</value>
@@ -2166,6 +2217,9 @@
   <data name="TimerTrain" xml:space="preserve">
     <value>[!!! Ţï₥èř Ţřáïñ !!!]</value>
   </data>
+  <data name="TimeSpanSeconds" xml:space="preserve">
+    <value>[!!! Ţï₥è Šƥáñ (Šèçôñδš) !!!]</value>
+  </data>
   <data name="Title" xml:space="preserve">
     <value>[!!! Ţïţℓè !!!]</value>
   </data>
@@ -2318,6 +2372,9 @@
   </data>
   <data name="UsersToApplyTo" xml:space="preserve">
     <value>[!!! Ûšèřš Ţô Âƥƥℓ¥ Ţô !!!]</value>
+  </data>
+  <data name="UserThreshold" xml:space="preserve">
+    <value>[!!! Ûšèř Ţĥřèšĥôℓδ !!!]</value>
   </data>
   <data name="UserTitles" xml:space="preserve">
     <value>[!!! Ûšèř Ţïţℓèš !!!]</value>

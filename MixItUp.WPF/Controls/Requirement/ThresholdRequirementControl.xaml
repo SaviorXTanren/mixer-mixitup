@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Requirement"
+             xmlns:resx="clr-namespace:MixItUp.Base;assembly=MixItUp.Base"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              
@@ -20,8 +21,8 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <TextBox x:Name="AmountTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Required Users" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" Width="100" />
+        <TextBox x:Name="AmountTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.RequiredUsers}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" Width="100" />
 
-        <TextBox x:Name="TimeSpanTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Time Span (Seconds)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" Width="150" />
+        <TextBox x:Name="TimeSpanTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.TimeSpanSeconds}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" Width="150" />
     </Grid>
 </UserControl>

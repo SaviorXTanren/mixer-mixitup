@@ -75,7 +75,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         private object customMixPlayControl;
         public bool IsCustomMixPlay { get { return this.CustomMixPlayControl != null; } }
 
-        public string ContentDisconnectContent { get { return (ChannelSession.Services.MixPlay.IsConnected) ? "Disconnect" : "Connect"; } }
+        public string ContentDisconnectContent { get { return (ChannelSession.Services.MixPlay.IsConnected) ? Resources.Disconnect : Resources.Connect; } }
         public ICommand ConnectDisconnectCommand { get; private set; }
 
         public MixPlayMainControlViewModel(MainWindowViewModel windowViewModel)
