@@ -366,6 +366,9 @@
   <data name="BackupYourSettingsToAZipFile" xml:space="preserve">
     <value>[!!! ßáçƙúƥ ¥ôúř šèţţïñĝš ţô á ƺïƥ ƒïℓè !!!]</value>
   </data>
+  <data name="Banned" xml:space="preserve">
+    <value>[!!! ßáññèδ !!!]</value>
+  </data>
   <data name="BasicChatCommand" xml:space="preserve">
     <value>[!!! ßášïç Çĥáţ Çô₥₥áñδ !!!]</value>
   </data>
@@ -1013,6 +1016,9 @@
   </data>
   <data name="GiveawayItem" xml:space="preserve">
     <value>[!!! GïƲèáωá¥ Ìţè₥ !!!]</value>
+  </data>
+  <data name="GlobalMod" xml:space="preserve">
+    <value>[!!! Gℓôβáℓ Môδ !!!]</value>
   </data>
   <data name="GreaterThan" xml:space="preserve">
     <value>[!!! &gt; !!!]</value>

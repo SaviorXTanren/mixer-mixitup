@@ -366,6 +366,9 @@
   <data name="BackupYourSettingsToAZipFile" xml:space="preserve">
     <value>Deine Einstellungen in eine Zip-Datei sichern</value>
   </data>
+  <data name="Banned" xml:space="preserve">
+    <value>Banned</value>
+  </data>
   <data name="BasicChatCommand" xml:space="preserve">
     <value>Einfacher Chat-Befehl</value>
   </data>
@@ -1013,6 +1016,9 @@
   </data>
   <data name="GiveawayItem" xml:space="preserve">
     <value>Giveaway-Gegenstand</value>
+  </data>
+  <data name="GlobalMod" xml:space="preserve">
+    <value>Global Mod</value>
   </data>
   <data name="GreaterThan" xml:space="preserve">
     <value>&gt;</value>

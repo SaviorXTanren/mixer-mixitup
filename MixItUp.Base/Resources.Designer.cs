@@ -808,6 +808,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Banned.
+        /// </summary>
+        public static string Banned {
+            get {
+                return ResourceManager.GetString("Banned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Basic Chat Command.
         /// </summary>
         public static string BasicChatCommand {
@@ -2748,6 +2757,15 @@ namespace MixItUp.Base {
         public static string GiveawayItem {
             get {
                 return ResourceManager.GetString("GiveawayItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Global Mod.
+        /// </summary>
+        public static string GlobalMod {
+            get {
+                return ResourceManager.GetString("GlobalMod", resourceCulture);
             }
         }
         
