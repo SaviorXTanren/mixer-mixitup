@@ -292,9 +292,11 @@ namespace MixItUp.Base.Services
             }
             else if (currentVersion < SettingsV2Model.LatestVersion)
             {
-                SettingsV2Model settings = await SerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
+                // Perform upgrade of settings
             }
-            return await SerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
+            SettingsV2Model settings = await SerializerHelper.DeserializeFromFile<SettingsV2Model>(filePath, ignoreErrors: true);
+            settings.Version = SettingsV2Model.LatestVersion;
+            return settings;
         }
 
         public static async Task<int> GetSettingsVersion(string filePath)
