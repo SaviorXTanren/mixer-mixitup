@@ -14,7 +14,14 @@ namespace MixItUp.WPF.Controls.Services
 
         protected virtual void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            ProcessHelper.LaunchLink(e.Uri.AbsoluteUri);
+            if (e.Uri.IsAbsoluteUri)
+            {
+                ProcessHelper.LaunchLink(e.Uri.AbsoluteUri);
+            }
+            else
+            {
+                ProcessHelper.LaunchFolder(e.Uri.OriginalString);
+            }
         }
     }
 }
