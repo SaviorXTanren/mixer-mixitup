@@ -7,6 +7,7 @@ using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Remote.Models;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
@@ -44,6 +45,8 @@ namespace MixItUp.Base.Services
         Task Save(SettingsV2Model settings);
 
         Task SavePackagedBackup(SettingsV2Model settings, string filePath);
+
+        Task<ExternalServiceResult<SettingsV2Model>> RestorePackagedBackup(string filePath);
 
         Task PerformBackupIfApplicable(SettingsV2Model settings);
     }
@@ -161,8 +164,87 @@ namespace MixItUp.Base.Services
                 using (ZipArchive zipFile = ZipFile.Open(filePath, ZipArchiveMode.Create))
                 {
                     zipFile.CreateEntryFromFile(settings.SettingsFilePath, Path.GetFileName(settings.SettingsFilePath));
-                    zipFile.CreateEntryFromFile(settings.DatabaseFilePath, Path.GetFileName(settings.DatabaseFilePath));
+                    if (settings.IsStreamer)
+                    {
+                        zipFile.CreateEntryFromFile(settings.DatabaseFilePath, Path.GetFileName(settings.DatabaseFilePath));
+                    }
                 }
+            }
+        }
+
+        public async Task<ExternalServiceResult<SettingsV2Model>> RestorePackagedBackup(string filePath)
+        {
+            try
+            {
+                string tempFilePath = ChannelSession.Services.FileService.GetTempFolder();
+                string tempFolder = Path.GetDirectoryName(tempFilePath);
+
+                string settingsFile = null;
+                string databaseFile = null;
+
+                bool oldBackup = false;
+                try
+                {
+                    using (ZipArchive zipFile = ZipFile.Open(filePath, ZipArchiveMode.Read))
+                    {
+                        foreach (ZipArchiveEntry entry in zipFile.Entries)
+                        {
+                            string extractedFilePath = Path.Combine(tempFolder, entry.Name);
+                            if (File.Exists(extractedFilePath))
+                            {
+                                File.Delete(extractedFilePath);
+                            }
+
+                            if (extractedFilePath.EndsWith(SettingsV2Model.SettingsFileExtension, StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                settingsFile = extractedFilePath;
+                            }
+                            else if (extractedFilePath.EndsWith(SettingsV2Model.DatabaseFileExtension, StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                databaseFile = extractedFilePath;
+                            }
+#pragma warning disable CS0612 // Type or member is obsolete
+                            else if (extractedFilePath.EndsWith(SettingsV1Model.SettingsFileExtension, StringComparison.InvariantCultureIgnoreCase))
+#pragma warning restore CS0612 // Type or member is obsolete
+                            {
+                                oldBackup = true;
+                            }
+                        }
+                        zipFile.ExtractToDirectory(tempFolder);
+                    }
+                }
+                catch (Exception ex) { Logger.Log(ex); }
+
+                if (oldBackup)
+                {
+                    return new ExternalServiceResult<SettingsV2Model>("This backup is from an older version of Mix It Up and can not be imported directly. Please head to the Mix It Up Discord for assistance on how to import this backup.");
+                }
+                else
+                {
+                    int currentVersion = -1;
+                    if (!string.IsNullOrEmpty(settingsFile))
+                    {
+                        currentVersion = await SettingsV2Upgrader.GetSettingsVersion(settingsFile);
+                    }
+
+                    if (currentVersion == -1)
+                    {
+                        return new ExternalServiceResult<SettingsV2Model>("The backup file selected does not appear to contain Mix It Up settings.");
+                    }
+
+                    if (currentVersion > SettingsV2Model.LatestVersion)
+                    {
+                        return new ExternalServiceResult<SettingsV2Model>("The backup file is valid, but is from a newer version of Mix It Up.  Be sure to upgrade to the latest version." +
+                            Environment.NewLine + Environment.NewLine + "NOTE: This may require you to opt-in to the Preview build from the General tab in Settings if this was made in a Preview build.");
+                    }
+
+                    return new ExternalServiceResult<SettingsV2Model>(await SerializerHelper.DeserializeFromFile<SettingsV2Model>(settingsFile));
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                return new ExternalServiceResult<SettingsV2Model>(ex);
             }
         }
 
