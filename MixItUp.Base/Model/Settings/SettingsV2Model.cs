@@ -637,18 +637,54 @@ namespace MixItUp.Base.Model.Settings
                 this.MixerBotOAuthToken = ChannelSession.MixerBotConnection.Connection.GetOAuthTokenCopy();
             }
 
-            this.StreamlabsOAuthToken = ChannelSession.Services.Streamlabs.GetOAuthTokenCopy();
-            this.StreamElementsOAuthToken = ChannelSession.Services.StreamElements.GetOAuthTokenCopy();
-            this.StreamJarOAuthToken = ChannelSession.Services.StreamJar.GetOAuthTokenCopy();
-            this.TipeeeStreamOAuthToken = ChannelSession.Services.TipeeeStream.GetOAuthTokenCopy();
-            this.TreatStreamOAuthToken = ChannelSession.Services.TreatStream.GetOAuthTokenCopy();
-            this.StreamlootsOAuthToken = ChannelSession.Services.Streamloots.GetOAuthTokenCopy();
-            this.TiltifyOAuthToken = ChannelSession.Services.Tiltify.GetOAuthTokenCopy();
-            this.PatreonOAuthToken = ChannelSession.Services.Patreon.GetOAuthTokenCopy();
-            this.IFTTTOAuthToken = ChannelSession.Services.IFTTT.GetOAuthTokenCopy();
-            this.JustGivingOAuthToken = ChannelSession.Services.JustGiving.GetOAuthTokenCopy();
-            this.DiscordOAuthToken = ChannelSession.Services.Discord.GetOAuthTokenCopy();
-            this.TwitterOAuthToken = ChannelSession.Services.Twitter.GetOAuthTokenCopy();
+            if (ChannelSession.Services.Streamlabs.IsConnected)
+            {
+                this.StreamlabsOAuthToken = ChannelSession.Services.Streamlabs.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.StreamElements.IsConnected)
+            {
+                this.StreamElementsOAuthToken = ChannelSession.Services.StreamElements.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.StreamJar.IsConnected)
+            {
+                this.StreamJarOAuthToken = ChannelSession.Services.StreamJar.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.TipeeeStream.IsConnected)
+            {
+                this.TipeeeStreamOAuthToken = ChannelSession.Services.TipeeeStream.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.TreatStream.IsConnected)
+            {
+                this.TreatStreamOAuthToken = ChannelSession.Services.TreatStream.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.Streamloots.IsConnected)
+            {
+                this.StreamlootsOAuthToken = ChannelSession.Services.Streamloots.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.Tiltify.IsConnected)
+            {
+                this.TiltifyOAuthToken = ChannelSession.Services.Tiltify.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.Patreon.IsConnected)
+            {
+                this.PatreonOAuthToken = ChannelSession.Services.Patreon.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.IFTTT.IsConnected)
+            {
+                this.IFTTTOAuthToken = ChannelSession.Services.IFTTT.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.JustGiving.IsConnected)
+            {
+                this.JustGivingOAuthToken = ChannelSession.Services.JustGiving.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.Discord.IsConnected)
+            {
+                this.DiscordOAuthToken = ChannelSession.Services.Discord.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.Twitter.IsConnected)
+            {
+                this.TwitterOAuthToken = ChannelSession.Services.Twitter.GetOAuthTokenCopy();
+            }
 
             // Clear out unused Cooldown Groups and Command Groups
             var allUsedCooldownGroupNames =

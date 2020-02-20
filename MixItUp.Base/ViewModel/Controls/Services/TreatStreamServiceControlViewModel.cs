@@ -27,6 +27,9 @@ namespace MixItUp.Base.ViewModel.Controls.Services
             this.LogOutCommand = this.CreateCommand(async (parameter) =>
             {
                 await ChannelSession.Services.TreatStream.Disconnect();
+
+                ChannelSession.Settings.TreatStreamOAuthToken = null;
+
                 this.IsConnected = false;
             });
 

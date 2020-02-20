@@ -27,6 +27,9 @@ namespace MixItUp.Base.ViewModel.Controls.Services
             this.LogOutCommand = this.CreateCommand(async (parameter) =>
             {
                 await ChannelSession.Services.Streamlabs.Disconnect();
+
+                ChannelSession.Settings.StreamlabsOAuthToken = null;
+
                 this.IsConnected = false;
             });
 

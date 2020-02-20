@@ -27,6 +27,9 @@ namespace MixItUp.Base.ViewModel.Controls.Services
             this.LogOutCommand = this.CreateCommand(async (parameter) =>
             {
                 await ChannelSession.Services.StreamJar.Disconnect();
+
+                ChannelSession.Settings.StreamJarOAuthToken = null;
+
                 this.IsConnected = false;
             });
 

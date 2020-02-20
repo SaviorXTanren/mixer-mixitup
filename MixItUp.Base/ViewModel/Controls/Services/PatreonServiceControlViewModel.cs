@@ -53,6 +53,10 @@ namespace MixItUp.Base.ViewModel.Controls.Services
             this.LogOutCommand = this.CreateCommand(async (parameter) =>
             {
                 await ChannelSession.Services.Patreon.Disconnect();
+
+                ChannelSession.Settings.PatreonOAuthToken = null;
+                ChannelSession.Settings.PatreonTierMixerSubscriberEquivalent = null;
+
                 this.IsConnected = false;
             });
 

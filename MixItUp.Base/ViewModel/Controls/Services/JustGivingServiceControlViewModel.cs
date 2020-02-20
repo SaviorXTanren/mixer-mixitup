@@ -54,6 +54,10 @@ namespace MixItUp.Base.ViewModel.Controls.Services
             this.LogOutCommand = this.CreateCommand(async (parameter) =>
             {
                 await ChannelSession.Services.JustGiving.Disconnect();
+
+                ChannelSession.Settings.JustGivingOAuthToken = null;
+                ChannelSession.Settings.JustGivingPageShortName = null;
+
                 this.IsConnected = false;
             });
 

@@ -27,6 +27,9 @@ namespace MixItUp.Base.ViewModel.Controls.Services
             this.LogOutCommand = this.CreateCommand(async (parameter) =>
             {
                 await ChannelSession.Services.TipeeeStream.Disconnect();
+
+                ChannelSession.Settings.TipeeeStreamOAuthToken = null;
+
                 this.IsConnected = false;
             });
 
