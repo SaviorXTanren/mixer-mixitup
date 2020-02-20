@@ -65,6 +65,9 @@ namespace MixItUp.Base.ViewModel.Controls.Services
             this.LogOutCommand = this.CreateCommand(async (parameter) =>
             {
                 await ChannelSession.Services.Twitter.Disconnect();
+
+                ChannelSession.Settings.TwitterOAuthToken = null;
+
                 this.IsConnected = false;
             });
 

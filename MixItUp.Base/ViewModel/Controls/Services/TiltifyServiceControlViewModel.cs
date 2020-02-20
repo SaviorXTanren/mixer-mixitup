@@ -40,6 +40,10 @@ namespace MixItUp.Base.ViewModel.Controls.Services
             this.LogOutCommand = this.CreateCommand(async (parameter) =>
             {
                 await ChannelSession.Services.Tiltify.Disconnect();
+
+                ChannelSession.Settings.TiltifyOAuthToken = null;
+                ChannelSession.Settings.TiltifyCampaign = 0;
+
                 this.IsConnected = false;
             });
 

@@ -102,6 +102,8 @@ namespace MixItUp.Base.ViewModel.Controls.Services
             {
                 await ChannelSession.Services.Discord.Disconnect();
 
+                ChannelSession.Settings.DiscordOAuthToken = null;
+                ChannelSession.Settings.DiscordServer = null;
                 ChannelSession.Settings.DiscordCustomClientID = null;
                 ChannelSession.Settings.DiscordCustomClientSecret = null;
                 ChannelSession.Settings.DiscordCustomBotToken = null;

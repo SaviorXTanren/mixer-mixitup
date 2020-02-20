@@ -47,6 +47,9 @@ namespace MixItUp.Base.ViewModel.Controls.Services
             this.LogOutCommand = this.CreateCommand(async (parameter) =>
             {
                 await ChannelSession.Services.IFTTT.Disconnect();
+
+                ChannelSession.Settings.IFTTTOAuthToken = null;
+
                 this.IsConnected = false;
             });
 
