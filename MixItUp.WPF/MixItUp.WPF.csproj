@@ -182,8 +182,8 @@
     <Reference Include="SocketIoClientDotNet, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SocketIoClientDotNet.1.0.6\lib\net45\SocketIoClientDotNet.dll</HintPath>
     </Reference>
-    <Reference Include="StreamingClient.Base, Version=0.1.0.8, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\mixer-client-csharp.0.9.0.11-beta\lib\netstandard2.0\StreamingClient.Base.dll</HintPath>
+    <Reference Include="StreamingClient.Base, Version=0.1.0.9, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StreamingClient.Base.0.1.0.9\lib\netstandard2.0\StreamingClient.Base.dll</HintPath>
     </Reference>
     <Reference Include="SuperSocket.ClientEngine, Version=0.10.0.0, Culture=neutral, PublicKeyToken=ee9af13f57f00acc, processorArchitecture=MSIL">
       <HintPath>..\packages\SuperSocket.ClientEngine.Core.0.10.0\lib\net45\SuperSocket.ClientEngine.dll</HintPath>
