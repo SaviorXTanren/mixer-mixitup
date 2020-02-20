@@ -132,9 +132,15 @@ namespace MixItUp.WPF
             WindowsIdentity id = WindowsIdentity.GetCurrent();
             ChannelSession.IsElevated = id.Owner != id.User;
 
-            Logger.SetLogLevel(LogLevel.Information);
-            Logger.Log(LogLevel.Information, "Application Version: " + ChannelSession.Services.FileService.GetApplicationVersion());
-            Logger.SetLogLevel(LogLevel.Error);
+            Logger.ForceLog(LogLevel.Information, "Application Version: " + ChannelSession.Services.FileService.GetApplicationVersion());
+            if (ChannelSession.IsDebug())
+            {
+                Logger.SetLogLevel(LogLevel.Debug);
+            }
+            else
+            {
+                Logger.SetLogLevel(LogLevel.Error);
+            }
 
             this.SwitchTheme(ChannelSession.AppSettings.ColorScheme, ChannelSession.AppSettings.BackgroundColor, ChannelSession.AppSettings.FullThemeName);
 

@@ -297,6 +297,10 @@ namespace MixItUp.Base
                 {
                     Logger.SetLogLevel(LogLevel.Debug);
                 }
+                else
+                {
+                    Logger.SetLogLevel(LogLevel.Error);
+                }
 
                 if (modChannelName == null && ChannelSession.Settings.MixerChannelID > 0 && ChannelSession.MixerUser.channel.id != ChannelSession.Settings.MixerChannelID)
                 {
