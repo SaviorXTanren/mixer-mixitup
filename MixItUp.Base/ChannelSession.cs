@@ -1,7 +1,6 @@
 ﻿using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.MixPlay;
 using Mixer.Base.Model.User;
-using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.API;
 using MixItUp.Base.Model.Chat.Mixer;
@@ -385,6 +384,8 @@ namespace MixItUp.Base
                         Dictionary<IExternalService, Task<ExternalServiceResult>> externalServiceTasks = new Dictionary<IExternalService, Task<ExternalServiceResult>>();
                         foreach (var kvp in externalServiceToConnect)
                         {
+                            Logger.Log(LogLevel.Debug, "Trying automatic OAuth service connection: " + kvp.Key.Name);
+
                             if (kvp.Key is IOAuthExternalService && kvp.Value != null)
                             {
                                 externalServiceTasks[kvp.Key] = ((IOAuthExternalService)kvp.Key).Connect(kvp.Value);
@@ -401,6 +402,8 @@ namespace MixItUp.Base
                         {
                             if (!kvp.Value.Result.Success && kvp.Key is IOAuthExternalService)
                             {
+                                Logger.Log(LogLevel.Debug, "Automatic OAuth token connection failed, trying manual connection: " + kvp.Key.Name);
+
                                 ExternalServiceResult result = await kvp.Key.Connect();
                                 if (!result.Success)
                                 {
@@ -411,6 +414,8 @@ namespace MixItUp.Base
 
                         if (failedServices.Count > 0)
                         {
+                            Logger.Log(LogLevel.Debug, "Connection failed for services: " + string.Join(", ", failedServices.Select(s => s.Name)));
+
                             StringBuilder message = new StringBuilder();
                             message.AppendLine("The following services could not be connected:");
                             message.AppendLine();

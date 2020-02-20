@@ -626,6 +626,8 @@ namespace MixItUp.Base.Model.Settings
 
         public void CopyLatestValues()
         {
+            Logger.Log(LogLevel.Debug, "Copying over latest values into Settings object");
+
             this.Version = SettingsV2Model.LatestVersion;
 
             if (ChannelSession.MixerUserConnection != null)
