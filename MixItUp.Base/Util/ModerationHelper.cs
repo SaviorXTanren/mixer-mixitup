@@ -370,6 +370,10 @@ namespace MixItUp.Base.Util
                 {
                     reason = "viewers who have watched for 2 hours";
                 }
+                else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.ViewingTenHours)
+                {
+                    reason = "viewers who have watched for 10 hours";
+                }
 
                 if (isChat)
                 {
