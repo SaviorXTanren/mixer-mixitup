@@ -75,10 +75,6 @@ namespace MixItUp.Base.Services
                     {
                         try
                         {
-                            // TO BE REMOVED
-                            string fileContents = await ChannelSession.Services.FileService.ReadFile(filePath);
-                            Logger.ForceLog(LogLevel.Debug, $"V1 settings found: {filePath}{Environment.NewLine}{fileContents}");
-
                             SettingsV1Model setting = await SettingsV1Upgrader.UpgradeSettingsToLatest(filePath);
 
                             string oldSettingsPath = Path.Combine(SettingsV2Model.SettingsDirectoryName, "Old");
@@ -103,10 +99,6 @@ namespace MixItUp.Base.Services
             {
                 if (filePath.EndsWith(SettingsV2Model.SettingsFileExtension))
                 {
-                    // TO BE REMOVED
-                    string fileContents = await ChannelSession.Services.FileService.ReadFile(filePath);
-                    Logger.ForceLog(LogLevel.Debug, $"V2 settings found: {filePath}{Environment.NewLine}{fileContents}");
-
                     SettingsV2Model setting = null;
                     try
                     {
