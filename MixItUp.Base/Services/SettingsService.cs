@@ -368,13 +368,13 @@ namespace MixItUp.Base.Services
             newSettings.CooldownGroups = new Dictionary<string, int>(oldSettings.cooldownGroupsInternal);
             newSettings.PreMadeChatCommandSettings = new List<PreMadeChatCommandSettings>(oldSettings.preMadeChatCommandSettingsInternal);
 
-            newSettings.ChatCommands = new LockedList<ChatCommand>(oldSettings.chatCommandsInternal);
-            newSettings.EventCommands = new LockedList<EventCommand>(oldSettings.eventCommandsInternal);
-            newSettings.MixPlayCommands = new LockedList<MixPlayCommand>(oldSettings.mixPlayCmmandsInternal);
-            newSettings.TimerCommands = new LockedList<TimerCommand>(oldSettings.timerCommandsInternal);
-            newSettings.ActionGroupCommands = new LockedList<ActionGroupCommand>(oldSettings.actionGroupCommandsInternal);
-            newSettings.GameCommands = new LockedList<GameCommandBase>(oldSettings.gameCommandsInternal);
-            newSettings.Quotes = new LockedList<UserQuoteViewModel>(oldSettings.userQuotesInternal);
+            newSettings.ChatCommands = new DatabaseList<ChatCommand>(oldSettings.chatCommandsInternal);
+            newSettings.EventCommands = new DatabaseList<EventCommand>(oldSettings.eventCommandsInternal);
+            newSettings.MixPlayCommands = new DatabaseList<MixPlayCommand>(oldSettings.mixPlayCmmandsInternal);
+            newSettings.TimerCommands = new DatabaseList<TimerCommand>(oldSettings.timerCommandsInternal);
+            newSettings.ActionGroupCommands = new DatabaseList<ActionGroupCommand>(oldSettings.actionGroupCommandsInternal);
+            newSettings.GameCommands = new DatabaseList<GameCommandBase>(oldSettings.gameCommandsInternal);
+            newSettings.Quotes = new DatabaseList<UserQuoteViewModel>(oldSettings.userQuotesInternal);
 
             foreach (UserDataModel data in oldSettings.UserData.Values)
             {

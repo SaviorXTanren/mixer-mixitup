@@ -14,7 +14,7 @@ namespace MixItUp.Base.Util
 
         public LockedList(IEnumerable<T> items) { this.items.AddRange(items); }
 
-        public T this[int index]
+        public virtual T this[int index]
         {
             get { lock (objLock) { return this.items[index]; } }
             set { lock (objLock) { this.items[index] = value; } }
@@ -24,7 +24,7 @@ namespace MixItUp.Base.Util
 
         public bool IsReadOnly { get { return false; } }
 
-        public void Add(T item) { lock (objLock) { this.items.Add(item); } }
+        public virtual void Add(T item) { lock (objLock) { this.items.Add(item); } }
 
         public void AddRange(IEnumerable<T> items)
         {
@@ -34,7 +34,7 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public void Clear() { lock (objLock) { this.items.Clear(); } }
+        public virtual void Clear() { lock (objLock) { this.items.Clear(); } }
 
         public bool Contains(T item) { lock (objLock) { return this.items.Contains(item); } }
 
@@ -44,13 +44,13 @@ namespace MixItUp.Base.Util
 
         public int IndexOf(T item) { lock (objLock) { return this.items.IndexOf(item); } }
 
-        public void Insert(int index, T item) { lock (objLock) { this.items.Insert(index, item); } }
+        public virtual void Insert(int index, T item) { lock (objLock) { this.items.Insert(index, item); } }
 
-        public bool Remove(T item) { lock (objLock) { return this.items.Remove(item); } }
+        public virtual bool Remove(T item) { lock (objLock) { return this.items.Remove(item); } }
 
-        public void RemoveAt(int index) { lock (objLock) { this.items.RemoveAt(index); } }
+        public virtual void RemoveAt(int index) { lock (objLock) { this.items.RemoveAt(index); } }
 
-        public int RemoveAll(Predicate<T> match) { lock (objLock) { return this.items.RemoveAll(match); } }
+        public virtual int RemoveAll(Predicate<T> match) { lock (objLock) { return this.items.RemoveAll(match); } }
 
         IEnumerator IEnumerable.GetEnumerator() { lock (objLock) { return this.ToList().GetEnumerator(); } }
 

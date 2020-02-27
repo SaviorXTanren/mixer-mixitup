@@ -92,7 +92,7 @@ namespace MixItUp.Base.Util
             this.removedValues.Clear();
         }
 
-        public Dictionary<K, V> GetKeyValues(HashSet<K> keys)
+        private Dictionary<K, V> GetKeyValues(HashSet<K> keys)
         {
             lock (valuesUpdateLock)
             {
