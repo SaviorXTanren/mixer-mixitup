@@ -549,7 +549,14 @@ namespace MixItUp.Base.Services
                 {
                     lock (displayUsersLock)
                     {
-                        this.displayUsers.Remove(user.SortableID);
+                        if (!this.displayUsers.Remove(user.SortableID))
+                        {
+                            int index = this.displayUsers.IndexOfValue(user);
+                            if (index >= 0)
+                            {
+                                this.displayUsers.RemoveAt(index);
+                            }
+                        }
                     }
 
                     if (ChannelSession.Settings.ChatShowUserJoinLeave && users.Count() < 5)
