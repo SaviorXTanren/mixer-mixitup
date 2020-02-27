@@ -199,7 +199,7 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public List<MixPlaySharedProjectModel> CustomMixPlayProjectIDs { get; set; } = new List<MixPlaySharedProjectModel>();
 
-        [JsonIgnore]
+        [DataMember]
         public Dictionary<uint, List<MixPlayUserGroupModel>> MixPlayUserGroups { get; set; } = new Dictionary<uint, List<MixPlayUserGroupModel>>();
 
         [DataMember]
