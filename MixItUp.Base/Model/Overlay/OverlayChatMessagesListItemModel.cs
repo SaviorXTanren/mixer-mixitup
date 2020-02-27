@@ -47,9 +47,9 @@ namespace MixItUp.Base.Model.Overlay
             : base(OverlayItemModelTypeEnum.ChatMessages, htmlText, totalToShow, fadeOut, textFont, width, height, borderColor, backgroundColor, textColor, alignment, addEventAnimation, removeEventAnimation)
         { }
 
-        public override async Task LoadTestData()
+        public override Task LoadTestData()
         {
-            ChatMessageViewModel message = new ChatMessageViewModel(Guid.NewGuid().ToString(), StreamingPlatformTypeEnum.Mixer, await ChannelSession.GetCurrentUser());
+            ChatMessageViewModel message = new ChatMessageViewModel(Guid.NewGuid().ToString(), StreamingPlatformTypeEnum.Mixer, ChannelSession.GetCurrentUser());
             message.AddStringMessagePart("Test Message");
 
             ChatMessageEventModel messageEvent = new ChatMessageEventModel()
@@ -61,6 +61,7 @@ namespace MixItUp.Base.Model.Overlay
                 message = new ChatMessageContentsModel() { message = new ChatMessageDataModel[] { new ChatMessageDataModel() { type = "text", text = "Test Message" } } }
             };
             this.GlobalEvents_OnChatMessageReceived(this, message);
+            return Task.FromResult(0);
         }
 
         public override async Task Enable()

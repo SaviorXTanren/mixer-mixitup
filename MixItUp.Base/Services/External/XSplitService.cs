@@ -91,17 +91,15 @@ namespace MixItUp.Base.Services.External
 
         public bool IsConnected { get; private set; }
 
-        public async Task<ExternalServiceResult> Connect()
+        public Task<Result> Connect()
         {
             this.IsConnected = false;
-            this.Start();
-            if (await this.TestConnection())
+            if (this.Start())
             {
                 this.IsConnected = true;
-                return new ExternalServiceResult();
+                return Task.FromResult(new Result());
             }
-            await this.Disconnect();
-            return new ExternalServiceResult("Could not connect to Mix It Up XSplit extension.");
+            return Task.FromResult(new Result("Failed to start web socket listening server"));
         }
 
         public async Task Disconnect()

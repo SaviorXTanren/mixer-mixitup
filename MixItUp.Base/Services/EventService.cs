@@ -1,5 +1,4 @@
-﻿using Mixer.Base.Model.User;
-using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.Mixer;
@@ -230,9 +229,9 @@ namespace MixItUp.Base.Services
         public bool CanPerformEvent(EventTrigger trigger)
         {
             EventCommand command = this.GetEventCommand(trigger.Type);
-            if (command != null && trigger.User != null)
+            if (command != null)
             {
-                return command.CanRun(trigger.User);
+                return command.CanRun((trigger.User != null) ? trigger.User : ChannelSession.GetCurrentUser());
             }
             return false;
         }
@@ -242,7 +241,7 @@ namespace MixItUp.Base.Services
             EventCommand command = this.GetEventCommand(trigger.Type);
             if (command != null && this.CanPerformEvent(trigger))
             {
-                await command.Perform((trigger.User != null) ? trigger.User : await ChannelSession.GetCurrentUser(), platform: trigger.Platform, arguments: trigger.Arguments, extraSpecialIdentifiers: trigger.SpecialIdentifiers);
+                await command.Perform((trigger.User != null) ? trigger.User : ChannelSession.GetCurrentUser(), platform: trigger.Platform, arguments: trigger.Arguments, extraSpecialIdentifiers: trigger.SpecialIdentifiers);
             }
         }
     }

@@ -199,7 +199,7 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public List<MixPlaySharedProjectModel> CustomMixPlayProjectIDs { get; set; } = new List<MixPlaySharedProjectModel>();
 
-        [JsonIgnore]
+        [DataMember]
         public Dictionary<uint, List<MixPlayUserGroupModel>> MixPlayUserGroups { get; set; } = new Dictionary<uint, List<MixPlayUserGroupModel>>();
 
         [DataMember]
@@ -459,20 +459,20 @@ namespace MixItUp.Base.Model.Settings
         #region Database Data
 
         [JsonIgnore]
-        public LockedList<ChatCommand> ChatCommands { get; set; } = new LockedList<ChatCommand>();
+        public DatabaseList<ChatCommand> ChatCommands { get; set; } = new DatabaseList<ChatCommand>();
         [JsonIgnore]
-        public LockedList<EventCommand> EventCommands { get; set; } = new LockedList<EventCommand>();
+        public DatabaseList<EventCommand> EventCommands { get; set; } = new DatabaseList<EventCommand>();
         [JsonIgnore]
-        public LockedList<MixPlayCommand> MixPlayCommands { get; set; } = new LockedList<MixPlayCommand>();
+        public DatabaseList<MixPlayCommand> MixPlayCommands { get; set; } = new DatabaseList<MixPlayCommand>();
         [JsonIgnore]
-        public LockedList<TimerCommand> TimerCommands { get; set; } = new LockedList<TimerCommand>();
+        public DatabaseList<TimerCommand> TimerCommands { get; set; } = new DatabaseList<TimerCommand>();
         [JsonIgnore]
-        public LockedList<ActionGroupCommand> ActionGroupCommands { get; set; } = new LockedList<ActionGroupCommand>();
+        public DatabaseList<ActionGroupCommand> ActionGroupCommands { get; set; } = new DatabaseList<ActionGroupCommand>();
         [JsonIgnore]
-        public LockedList<GameCommandBase> GameCommands { get; set; } = new LockedList<GameCommandBase>();
+        public DatabaseList<GameCommandBase> GameCommands { get; set; } = new DatabaseList<GameCommandBase>();
 
         [JsonIgnore]
-        public LockedList<UserQuoteViewModel> Quotes { get; set; } = new LockedList<UserQuoteViewModel>();
+        public DatabaseList<UserQuoteViewModel> Quotes { get; set; } = new DatabaseList<UserQuoteViewModel>();
 
         [JsonIgnore]
         public DatabaseDictionary<Guid, UserDataModel> UserData { get; set; } = new DatabaseDictionary<Guid, UserDataModel>();
@@ -595,6 +595,13 @@ namespace MixItUp.Base.Model.Settings
                         this.GameCommands.Add(JSONSerializerHelper.DeserializeFromString<GameCommandBase>((string)data["Data"]));
                     }
                 });
+
+                this.ChatCommands.ClearTracking();
+                this.EventCommands.ClearTracking();
+                this.MixPlayCommands.ClearTracking();
+                this.TimerCommands.ClearTracking();
+                this.ActionGroupCommands.ClearTracking();
+                this.GameCommands.ClearTracking();
             }
 
             if (string.IsNullOrEmpty(this.TelemetryUserID))
@@ -752,15 +759,25 @@ namespace MixItUp.Base.Model.Settings
                     await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO InventoryAmounts(InventoryID, UserID, ItemID, Amount) VALUES(@InventoryID, @UserID, @ItemID, @Amount)", changedData);
                 }
 
-                List<CommandBase> commands = new List<CommandBase>();
-                commands.AddRange(this.ChatCommands);
-                commands.AddRange(this.EventCommands);
-                commands.AddRange(this.MixPlayCommands);
-                commands.AddRange(this.TimerCommands);
-                commands.AddRange(this.ActionGroupCommands);
-                commands.AddRange(this.GameCommands);
+                List<CommandBase> addedChangedCommands = new List<CommandBase>();
+                addedChangedCommands.AddRange(this.ChatCommands.GetAddedChangedValues());
+                addedChangedCommands.AddRange(this.EventCommands.GetAddedChangedValues());
+                addedChangedCommands.AddRange(this.MixPlayCommands.GetAddedChangedValues());
+                addedChangedCommands.AddRange(this.TimerCommands.GetAddedChangedValues());
+                addedChangedCommands.AddRange(this.ActionGroupCommands.GetAddedChangedValues());
+                addedChangedCommands.AddRange(this.GameCommands.GetAddedChangedValues());
                 await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Commands(ID, TypeID, Data) VALUES(@ID, @TypeID, @Data)",
-                    commands.Select(c => new Dictionary<string, object>() { { "@ID", c.ID.ToString() }, { "@TypeID", (int)c.Type }, { "@Data", JSONSerializerHelper.SerializeToString(c) } }));
+                    addedChangedCommands.Select(c => new Dictionary<string, object>() { { "@ID", c.ID.ToString() }, { "@TypeID", (int)c.Type }, { "@Data", JSONSerializerHelper.SerializeToString(c) } }));
+
+                List<CommandBase> removedCommands = new List<CommandBase>();
+                removedCommands.AddRange(this.ChatCommands.GetRemovedValues());
+                removedCommands.AddRange(this.EventCommands.GetRemovedValues());
+                removedCommands.AddRange(this.MixPlayCommands.GetRemovedValues());
+                removedCommands.AddRange(this.TimerCommands.GetRemovedValues());
+                removedCommands.AddRange(this.ActionGroupCommands.GetRemovedValues());
+                removedCommands.AddRange(this.GameCommands.GetRemovedValues());
+                await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Commands WHERE ID = @ID",
+                    removedCommands.Select(c => new Dictionary<string, object>() { { "@ID", c.ID.ToString() } }));
 
                 await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Quotes(ID, Data) VALUES(@ID, @Data)",
                     this.Quotes.Select(q => new Dictionary<string, object>() { { "@ID", q.ID }, { "@Data", JSONSerializerHelper.SerializeToString(q) } }));

@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Services.External;
+﻿using MixItUp.Base.Util;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Controls.Services
@@ -13,7 +13,7 @@ namespace MixItUp.Base.ViewModel.Controls.Services
         {
             this.LogInCommand = this.CreateCommand(async (parameter) =>
             {
-                ExternalServiceResult result = await ChannelSession.Services.TipeeeStream.Connect();
+                Result result = await ChannelSession.Services.TipeeeStream.Connect();
                 if (result.Success)
                 {
                     this.IsConnected = true;

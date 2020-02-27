@@ -242,7 +242,7 @@ namespace MixItUp.Base.Actions
                 if (game != null)
                 {
                     await ChannelSession.Services.MixPlay.SetGame(game);
-                    ExternalServiceResult result = await ChannelSession.Services.MixPlay.Connect();
+                    Result result = await ChannelSession.Services.MixPlay.Connect();
                     if (result.Success)
                     {
                         GlobalEvents.InteractiveConnected(game);

@@ -167,7 +167,7 @@ namespace MixItUp.WPF.Controls.Command
         {
             if (command != null)
             {
-                UserViewModel currentUser = await ChannelSession.GetCurrentUser();
+                UserViewModel currentUser = ChannelSession.GetCurrentUser();
 
                 Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();
                 if (command is EventCommand)
@@ -301,7 +301,7 @@ namespace MixItUp.WPF.Controls.Command
                 if (command is PermissionsCommandBase)
                 {
                     PermissionsCommandBase permissionCommand = (PermissionsCommandBase)command;
-                    permissionCommand.ResetCooldown(await ChannelSession.GetCurrentUser());
+                    permissionCommand.ResetCooldown(ChannelSession.GetCurrentUser());
                 }
             }
         }

@@ -469,7 +469,7 @@ namespace MixItUp.Base.Services.External
             this.botToken = botToken;
         }
 
-        public override Task<ExternalServiceResult> Connect() { throw new NotImplementedException(); }
+        public override Task<Result> Connect() { throw new NotImplementedException(); }
 
         public override Task Disconnect() { throw new NotImplementedException(); }
 
@@ -629,7 +629,7 @@ namespace MixItUp.Base.Services.External
             return client;
         }
 
-        protected override Task<ExternalServiceResult> InitializeInternal() { throw new NotImplementedException(); }
+        protected override Task<Result> InitializeInternal() { throw new NotImplementedException(); }
 
         protected override Task RefreshOAuthToken() { return Task.FromResult(0); }
 
@@ -679,7 +679,7 @@ namespace MixItUp.Base.Services.External
         public string ClientSecret { get { return (this.IsUsingCustomApplication) ? ChannelSession.Settings.DiscordCustomClientSecret : ChannelSession.Services.Secrets.GetSecret("DiscordSecret"); } }
         public string BotToken { get { return (this.IsUsingCustomApplication) ? ChannelSession.Settings.DiscordCustomBotToken : ChannelSession.Services.Secrets.GetSecret("DiscordBotToken"); } }
 
-        public override async Task<ExternalServiceResult> Connect()
+        public override async Task<Result> Connect()
         {
             try
             {
@@ -714,9 +714,9 @@ namespace MixItUp.Base.Services.External
             catch (Exception ex)
             {
                 Logger.Log(ex);
-                return new ExternalServiceResult(ex);
+                return new Result(ex);
             }
-            return new ExternalServiceResult(false);
+            return new Result(false);
         }
 
         public override Task Disconnect()
@@ -822,7 +822,7 @@ namespace MixItUp.Base.Services.External
             }
         }
 
-        protected override async Task<ExternalServiceResult> InitializeInternal()
+        protected override async Task<Result> InitializeInternal()
         {
             this.botService = new DiscordBotService(this.baseAddress, this.BotToken);
 
@@ -836,7 +836,7 @@ namespace MixItUp.Base.Services.External
 
                     if (!this.IsUsingCustomApplication)
                     {
-                        return new ExternalServiceResult();
+                        return new Result();
                     }
 
                     DiscordGateway gateway = await this.GetBotGateway();
@@ -845,15 +845,15 @@ namespace MixItUp.Base.Services.External
                         DiscordWebSocket webSocket = new DiscordWebSocket();
                         if (await webSocket.Connect(gateway.WebSocketURL, gateway.Shards, this.BotToken))
                         {
-                            return new ExternalServiceResult();
+                            return new Result();
                         }
-                        return new ExternalServiceResult("Could not connect Bot Application to web socket");
+                        return new Result("Could not connect Bot Application to web socket");
                     }
-                    return new ExternalServiceResult("Could not get Bot Application Gateway data");
+                    return new Result("Could not get Bot Application Gateway data");
                 }
-                return new ExternalServiceResult("Could not get Server data");
+                return new Result("Could not get Server data");
             }
-            return new ExternalServiceResult("Could not get User data");
+            return new Result("Could not get User data");
         }
 
         protected override void DisposeInternal()
@@ -868,7 +868,7 @@ namespace MixItUp.Base.Services.External
                 this.lastCommand = DateTimeOffset.Now;
                 return true;
             }
-            await ChannelSession.Services.Chat.Whisper(await ChannelSession.GetCurrentUser(), "The Discord action you were trying to perform was blocked due to too many requests. Please ensure you are only performing 1 Discord action every 30 seconds. You can add a custom Discord Bot under the Services page to circumvent this block.");
+            await ChannelSession.Services.Chat.Whisper(ChannelSession.GetCurrentUser(), "The Discord action you were trying to perform was blocked due to too many requests. Please ensure you are only performing 1 Discord action every 30 seconds. You can add a custom Discord Bot under the Services page to circumvent this block.");
             return false;
         }
     }

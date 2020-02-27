@@ -36,7 +36,7 @@ namespace MixItUp.Base.ViewModel.Controls.Services
                 {
                     string streamlootsID = this.StreamlootsURL.Replace(StreamlootsStreamURLFormat, "");
 
-                    ExternalServiceResult result = await ChannelSession.Services.Streamloots.Connect(new OAuthTokenModel() { accessToken = streamlootsID });
+                    Result result = await ChannelSession.Services.Streamloots.Connect(new OAuthTokenModel() { accessToken = streamlootsID });
                     if (result.Success)
                     {
                         this.IsConnected = true;

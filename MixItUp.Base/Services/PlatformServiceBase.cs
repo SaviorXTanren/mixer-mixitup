@@ -9,9 +9,9 @@ namespace MixItUp.Base.Services
 {
     public abstract class PlatformServiceBase
     {
-        public async Task<ExternalServiceResult> AttemptConnect(Func<Task<ExternalServiceResult>> connect, int connectionAttempts = 5)
+        public async Task<Result> AttemptConnect(Func<Task<Result>> connect, int connectionAttempts = 5)
         {
-            ExternalServiceResult result = new ExternalServiceResult();
+            Result result = new Result();
             for (int i = 0; i < connectionAttempts; i++)
             {
                 try

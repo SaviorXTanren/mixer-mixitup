@@ -32,7 +32,7 @@ namespace MixItUp.Base.ViewModel.Controls.Services
                 }
                 else
                 {
-                    ExternalServiceResult result = await ChannelSession.Services.IFTTT.Connect(new OAuthTokenModel() { accessToken = this.IFTTTWebHookKey });
+                    Result result = await ChannelSession.Services.IFTTT.Connect(new OAuthTokenModel() { accessToken = this.IFTTTWebHookKey });
                     if (result.Success)
                     {
                         this.IsConnected = true;

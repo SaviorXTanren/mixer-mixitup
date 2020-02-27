@@ -69,7 +69,7 @@ namespace MixItUp.Base.Services.Mixer
         Task<IEnumerable<MixPlayGameModel>> GetAllGames();
         Task SetGame(MixPlayGameModel game);
 
-        Task<ExternalServiceResult> Connect();
+        Task<Result> Connect();
         Task Disconnect();
 
         Task<MixPlayConnectedSceneGroupCollectionModel> GetScenes();
@@ -175,11 +175,11 @@ namespace MixItUp.Base.Services.Mixer
             }
         }
 
-        public async Task<ExternalServiceResult> Connect()
+        public async Task<Result> Connect()
         {
             if (ChannelSession.MixerUserConnection != null)
             {
-                ExternalServiceResult result = await this.RunAsync(async () =>
+                Result result = await this.RunAsync(async () =>
                 {
                     await this.Disconnect();
 
@@ -255,7 +255,7 @@ namespace MixItUp.Base.Services.Mixer
 
                                 if (duplicatedControls.Count > 0)
                                 {
-                                    return new ExternalServiceResult("The following controls exist on multiple scenes, please visit the interactive lab and correct this problem:" + Environment.NewLine +
+                                    return new Result("The following controls exist on multiple scenes, please visit the interactive lab and correct this problem:" + Environment.NewLine +
                                         Environment.NewLine + string.Join(", ", duplicatedControls.Select(c => c.controlID)));
                                 }
 
@@ -269,7 +269,7 @@ namespace MixItUp.Base.Services.Mixer
                                         {
                                             if (!await this.AddGroup(userGroup.GroupName, userGroup.DefaultScene))
                                             {
-                                                return new ExternalServiceResult("Failed to add MixPlay groups");
+                                                return new Result("Failed to add MixPlay groups");
                                             }
                                         }
                                     }
@@ -278,16 +278,16 @@ namespace MixItUp.Base.Services.Mixer
                                 // Initialize Participants
                                 await this.AddParticipants(await this.GetRecentParticipants());
 
-                                return new ExternalServiceResult();
+                                return new Result();
                             }
-                            return new ExternalServiceResult("Failed to MixPlay scene data");
+                            return new Result("Failed to MixPlay scene data");
                         }
                         else
                         {
-                            return new ExternalServiceResult("Failed to authenticate and ready to Mixer MixPlay");
+                            return new Result("Failed to authenticate and ready to Mixer MixPlay");
                         }
                     }
-                    return new ExternalServiceResult("Failed to connect to Mixer MixPlay");
+                    return new Result("Failed to connect to Mixer MixPlay");
                 });
 
                 if (!result.Success)
@@ -296,7 +296,7 @@ namespace MixItUp.Base.Services.Mixer
                 }
                 return result;
             }
-            return new ExternalServiceResult("Mixer connection has not been established");
+            return new Result("Mixer connection has not been established");
         }
 
         public async Task Disconnect()
@@ -824,7 +824,7 @@ namespace MixItUp.Base.Services.Mixer
         {
             ChannelSession.DisconnectionOccurred("MixPlay");
 
-            ExternalServiceResult result;
+            Result result;
             do
             {
                 await Task.Delay(2500);
