@@ -2725,7 +2725,7 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to GetCurrent.
+        ///   Looks up a localized string similar to Get Current.
         /// </summary>
         public static string GetCurrent {
             get {
