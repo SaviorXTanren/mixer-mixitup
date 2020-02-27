@@ -21,7 +21,7 @@ namespace MixItUp.Base.Model.Settings
             {
                 try
                 {
-                    ApplicationSettingsV2Model oldSettings = await SerializerHelper.DeserializeFromFile<ApplicationSettingsV2Model>(OldApplicationSettingsFileName);
+                    ApplicationSettingsV2Model oldSettings = await FileSerializerHelper.DeserializeFromFile<ApplicationSettingsV2Model>(OldApplicationSettingsFileName);
                     if (oldSettings != null)
                     {
                         await oldSettings.Save();
@@ -38,7 +38,7 @@ namespace MixItUp.Base.Model.Settings
             {
                 try
                 {
-                    settings = await SerializerHelper.DeserializeFromFile<ApplicationSettingsV2Model>(ApplicationSettingsFileName);
+                    settings = await FileSerializerHelper.DeserializeFromFile<ApplicationSettingsV2Model>(ApplicationSettingsFileName);
                 }
                 catch (Exception ex)
                 {
@@ -93,7 +93,7 @@ namespace MixItUp.Base.Model.Settings
         {
             try
             {
-                await SerializerHelper.SerializeToFile(ApplicationSettingsFileName, this);
+                await FileSerializerHelper.SerializeToFile(ApplicationSettingsFileName, this);
             }
             catch (Exception ex)
             {
