@@ -13,6 +13,7 @@ namespace MixItUp.Base.ViewModel.Controls.Services
         {
             this.ConnectCommand = this.CreateCommand(async (parameter) =>
             {
+                ChannelSession.Settings.EnableDeveloperAPI = false;
                 Result result = await ChannelSession.Services.DeveloperAPI.Connect();
                 if (result.Success)
                 {
