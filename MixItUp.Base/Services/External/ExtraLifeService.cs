@@ -150,18 +150,18 @@ namespace MixItUp.Base.Services.External
 
         public override bool IsConnected { get { return ChannelSession.Settings.ExtraLifeTeamID > 0 && ChannelSession.Settings.ExtraLifeParticipantID > 0; } }
 
-        public override async Task<ExternalServiceResult> Connect()
+        public override async Task<Result> Connect()
         {
             if (this.IsConnected)
             {
                 return await this.InitializeInternal();
             }
-            return new ExternalServiceResult("Extra Life team ID / participant ID was not set");
+            return new Result("Extra Life team ID / participant ID was not set");
         }
 
-        public override Task<ExternalServiceResult> Connect(OAuthTokenModel token)
+        public override Task<Result> Connect(OAuthTokenModel token)
         {
-            return Task.FromResult(new ExternalServiceResult(false));
+            return Task.FromResult(new Result(false));
         }
 
         public override Task Disconnect()
@@ -234,7 +234,7 @@ namespace MixItUp.Base.Services.External
             return Task.FromResult(0);
         }
 
-        protected override async Task<ExternalServiceResult> InitializeInternal()
+        protected override async Task<Result> InitializeInternal()
         {
             this.cancellationTokenSource = new CancellationTokenSource();
 
@@ -247,9 +247,9 @@ namespace MixItUp.Base.Services.External
                 Task.Run(this.BackgroundDonationCheck, this.cancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-                return new ExternalServiceResult();
+                return new Result();
             }
-            return new ExternalServiceResult("Could not get Team/Participant data");
+            return new Result("Could not get Team/Participant data");
         }
 
         protected override void DisposeInternal()

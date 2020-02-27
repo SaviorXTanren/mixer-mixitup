@@ -65,7 +65,7 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task<ExternalServiceResult> Connect()
+        public async Task<Result> Connect()
         {
             this.IsConnected = false;
             ChannelSession.Settings.EnableOverlay = false;
@@ -75,7 +75,7 @@ namespace MixItUp.Base.Services
                 if (!await this.AddOverlay(kvp.Key, kvp.Value))
                 {
                     await this.Disconnect();
-                    return new ExternalServiceResult("Failed to add " + kvp.Key + " overlay");
+                    return new Result("Failed to add " + kvp.Key + " overlay");
                 }
             }
 
@@ -84,7 +84,7 @@ namespace MixItUp.Base.Services
             this.IsConnected = true;
             ChannelSession.Settings.EnableOverlay = true;
 
-            return new ExternalServiceResult();
+            return new Result();
         }
 
         public async Task Disconnect()

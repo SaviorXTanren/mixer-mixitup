@@ -46,7 +46,7 @@ namespace MixItUp.Base.Services
 
         Task SavePackagedBackup(SettingsV2Model settings, string filePath);
 
-        Task<ExternalServiceResult<SettingsV2Model>> RestorePackagedBackup(string filePath);
+        Task<Result<SettingsV2Model>> RestorePackagedBackup(string filePath);
 
         Task PerformBackupIfApplicable(SettingsV2Model settings);
     }
@@ -180,7 +180,7 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task<ExternalServiceResult<SettingsV2Model>> RestorePackagedBackup(string filePath)
+        public async Task<Result<SettingsV2Model>> RestorePackagedBackup(string filePath)
         {
             try
             {
@@ -225,7 +225,7 @@ namespace MixItUp.Base.Services
 
                 if (oldBackup)
                 {
-                    return new ExternalServiceResult<SettingsV2Model>("This backup is from an older version of Mix It Up and can not be imported directly. Please head to the Mix It Up Discord for assistance on how to import this backup.");
+                    return new Result<SettingsV2Model>("This backup is from an older version of Mix It Up and can not be imported directly. Please head to the Mix It Up Discord for assistance on how to import this backup.");
                 }
                 else
                 {
@@ -237,22 +237,22 @@ namespace MixItUp.Base.Services
 
                     if (currentVersion == -1)
                     {
-                        return new ExternalServiceResult<SettingsV2Model>("The backup file selected does not appear to contain Mix It Up settings.");
+                        return new Result<SettingsV2Model>("The backup file selected does not appear to contain Mix It Up settings.");
                     }
 
                     if (currentVersion > SettingsV2Model.LatestVersion)
                     {
-                        return new ExternalServiceResult<SettingsV2Model>("The backup file is valid, but is from a newer version of Mix It Up.  Be sure to upgrade to the latest version." +
+                        return new Result<SettingsV2Model>("The backup file is valid, but is from a newer version of Mix It Up.  Be sure to upgrade to the latest version." +
                             Environment.NewLine + Environment.NewLine + "NOTE: This may require you to opt-in to the Preview build from the General tab in Settings if this was made in a Preview build.");
                     }
 
-                    return new ExternalServiceResult<SettingsV2Model>(await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(settingsFile));
+                    return new Result<SettingsV2Model>(await FileSerializerHelper.DeserializeFromFile<SettingsV2Model>(settingsFile));
                 }
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
-                return new ExternalServiceResult<SettingsV2Model>(ex);
+                return new Result<SettingsV2Model>(ex);
             }
         }
 

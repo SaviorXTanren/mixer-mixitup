@@ -16,7 +16,7 @@ namespace MixItUp.Base.ViewModel.Controls.Services
             this.ConnectCommand = this.CreateCommand(async (parameter) =>
             {
                 ChannelSession.Settings.EnableXSplitConnection = false;
-                ExternalServiceResult result = await ChannelSession.Services.StreamlabsOBS.Connect();
+                Result result = await ChannelSession.Services.StreamlabsOBS.Connect();
                 if (result.Success)
                 {
                     this.IsConnected = true;

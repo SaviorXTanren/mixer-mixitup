@@ -28,7 +28,7 @@ namespace MixItUp.Base.Services.Mixer
 
         LockedDictionary<Guid, MixerSkillPayloadModel> SkillEventsTriggered { get; }
 
-        Task<ExternalServiceResult> Connect();
+        Task<Result> Connect();
         Task Disconnect();
     }
 
@@ -70,7 +70,7 @@ namespace MixItUp.Base.Services.Mixer
             GlobalEvents.OnSkillUseOccurred += GlobalEvents_OnSkillUseOccurred;
         }
 
-        public async Task<ExternalServiceResult> Connect()
+        public async Task<Result> Connect()
         {
             if (ChannelSession.MixerUserConnection != null)
             {
@@ -101,21 +101,21 @@ namespace MixItUp.Base.Services.Mixer
                             {
                                 this.allPatronageMilestones = new List<PatronageMilestoneModel>(patronagePeriod.milestoneGroups.SelectMany(mg => mg.milestones));
                                 this.remainingPatronageMilestones = new List<PatronageMilestoneModel>(this.allPatronageMilestones.Where(m => m.target > patronageStatus.patronageEarned));
-                                return new ExternalServiceResult();
+                                return new Result();
                             }
                         }
 
                         await this.Disconnect();
-                        return new ExternalServiceResult("Failed to get Mixer patronage information");
+                        return new Result("Failed to get Mixer patronage information");
                     }
                     else
                     {
                         await this.Disconnect();
-                        return new ExternalServiceResult("Failed to connect to Mixer Constellation");
+                        return new Result("Failed to connect to Mixer Constellation");
                     }
                 });
             }
-            return new ExternalServiceResult("Mixer connection has not been established");
+            return new Result("Mixer connection has not been established");
         }
 
         public async Task Disconnect()
@@ -528,7 +528,7 @@ namespace MixItUp.Base.Services.Mixer
         {
             ChannelSession.DisconnectionOccurred("Constellation");
 
-            ExternalServiceResult result;
+            Result result;
             do
             {
                 await Task.Delay(2500);

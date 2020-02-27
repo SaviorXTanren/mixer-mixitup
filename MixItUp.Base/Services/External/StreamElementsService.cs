@@ -1,5 +1,6 @@
 ﻿using Mixer.Base;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
@@ -131,7 +132,7 @@ namespace MixItUp.Base.Services.External
 
         public override string Name { get { return "StreamElements"; } }
 
-        public override async Task<ExternalServiceResult> Connect()
+        public override async Task<Result> Connect()
         {
             try
             {
@@ -158,9 +159,9 @@ namespace MixItUp.Base.Services.External
             catch (Exception ex)
             {
                 Logger.Log(ex);
-                return new ExternalServiceResult(ex);
+                return new Result(ex);
             }
-            return new ExternalServiceResult(false);
+            return new Result(false);
         }
 
         public override Task Disconnect()
@@ -206,7 +207,7 @@ namespace MixItUp.Base.Services.External
             }
         }
 
-        protected override async Task<ExternalServiceResult> InitializeInternal()
+        protected override async Task<Result> InitializeInternal()
         {
             this.channel = await this.GetCurrentChannel();
             if (this.channel != null)
@@ -218,9 +219,9 @@ namespace MixItUp.Base.Services.External
 
                 MixItUp.Base.Util.AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 30000, this.BackgroundDonationCheck);
 
-                return new ExternalServiceResult();
+                return new Result();
             }
-            return new ExternalServiceResult("Failed to get user information");
+            return new Result("Failed to get user information");
         }
 
         protected override async Task<AdvancedHttpClient> GetHttpClient(bool autoRefreshToken = true)

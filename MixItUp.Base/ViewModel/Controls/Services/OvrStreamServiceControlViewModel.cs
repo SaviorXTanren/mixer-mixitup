@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Services.External;
+﻿using MixItUp.Base.Util;
 using System.Windows.Input;
 
 namespace MixItUp.Base.ViewModel.Controls.Services
@@ -30,7 +30,7 @@ namespace MixItUp.Base.ViewModel.Controls.Services
             {
                 ChannelSession.Settings.OvrStreamServerIP = this.OvrStreamAddress;
 
-                ExternalServiceResult result = await ChannelSession.Services.OvrStream.Connect();
+                Result result = await ChannelSession.Services.OvrStream.Connect();
                 if (result.Success)
                 {
                     this.IsConnected = true;

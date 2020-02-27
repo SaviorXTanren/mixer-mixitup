@@ -125,45 +125,45 @@ namespace MixItUp.Base
             ChannelSession.AppSettings = await ApplicationSettingsV2Model.Load();
         }
 
-        public static async Task<ExternalServiceResult> ConnectMixerUser(bool isStreamer)
+        public static async Task<Result> ConnectMixerUser(bool isStreamer)
         {
-            ExternalServiceResult<MixerConnectionService> result = await MixerConnectionService.ConnectUser(isStreamer);
+            Result<MixerConnectionService> result = await MixerConnectionService.ConnectUser(isStreamer);
             if (result.Success)
             {
-                ChannelSession.MixerUserConnection = result.Result;
+                ChannelSession.MixerUserConnection = result.Value;
                 ChannelSession.MixerUser = await ChannelSession.MixerUserConnection.GetCurrentUser();
                 if (ChannelSession.MixerUser == null)
                 {
-                    return new ExternalServiceResult("Failed to get Mixer user data");
+                    return new Result("Failed to get Mixer user data");
                 }
             }
             return result;
         }
 
-        public static async Task<ExternalServiceResult> ConnectMixerBot()
+        public static async Task<Result> ConnectMixerBot()
         {
-            ExternalServiceResult<MixerConnectionService> result = await MixerConnectionService.ConnectBot();
+            Result<MixerConnectionService> result = await MixerConnectionService.ConnectBot();
             if (result.Success)
             {
-                ChannelSession.MixerBotConnection = result.Result;
+                ChannelSession.MixerBotConnection = result.Value;
                 ChannelSession.MixerBot = await ChannelSession.MixerBotConnection.GetCurrentUser();
                 if (ChannelSession.MixerBot == null)
                 {
-                    return new ExternalServiceResult("Failed to get Mixer bot data");
+                    return new Result("Failed to get Mixer bot data");
                 }
             }
             return result;
         }
 
-        public static async Task<ExternalServiceResult> ConnectUser(SettingsV2Model settings)
+        public static async Task<Result> ConnectUser(SettingsV2Model settings)
         {
-            ExternalServiceResult userResult = null;
+            Result userResult = null;
             ChannelSession.Settings = settings;
 
-            ExternalServiceResult<MixerConnectionService> result = await MixerConnectionService.Connect(ChannelSession.Settings.MixerUserOAuthToken);
+            Result<MixerConnectionService> result = await MixerConnectionService.Connect(ChannelSession.Settings.MixerUserOAuthToken);
             if (result.Success)
             {
-                ChannelSession.MixerUserConnection = result.Result;
+                ChannelSession.MixerUserConnection = result.Value;
                 userResult = result;
             }
             else
@@ -176,7 +176,7 @@ namespace MixItUp.Base
                 ChannelSession.MixerUser = await ChannelSession.MixerUserConnection.GetCurrentUser();
                 if (ChannelSession.MixerUser == null)
                 {
-                    return new ExternalServiceResult("Failed to get Mixer user data");
+                    return new Result("Failed to get Mixer user data");
                 }
 
                 if (settings.MixerBotOAuthToken != null)
@@ -184,21 +184,21 @@ namespace MixItUp.Base
                     result = await MixerConnectionService.Connect(settings.MixerBotOAuthToken);
                     if (result.Success)
                     {
-                        ChannelSession.MixerBotConnection = result.Result;
+                        ChannelSession.MixerBotConnection = result.Value;
                         ChannelSession.MixerBot = await ChannelSession.MixerBotConnection.GetCurrentUser();
                         if (ChannelSession.MixerBot == null)
                         {
-                            return new ExternalServiceResult("Failed to get Mixer bot data");
+                            return new Result("Failed to get Mixer bot data");
                         }
                     }
                     else
                     {
                         settings.MixerBotOAuthToken = null;
-                        return new ExternalServiceResult(success: true, message: "Failed to connect Mixer bot account, please manually reconnect");
+                        return new Result(success: true, message: "Failed to connect Mixer bot account, please manually reconnect");
                     }
                 }
             }
-            return new ExternalServiceResult();
+            return new Result();
         }
 
         public static async Task DisconnectMixerBot()
@@ -319,10 +319,10 @@ namespace MixItUp.Base
                 MixerChatService mixerChatService = new MixerChatService();
                 MixerEventService mixerEventService = new MixerEventService();
 
-                List<Task<ExternalServiceResult>> mixerConnections = new List<Task<ExternalServiceResult>>();
+                List<Task<Result>> mixerConnections = new List<Task<Result>>();
                 mixerConnections.Add(mixerChatService.ConnectUser());
 
-                Task<ExternalServiceResult> mixerEventServiceResult = mixerEventService.Connect();
+                Task<Result> mixerEventServiceResult = mixerEventService.Connect();
                 mixerConnections.Add(mixerEventServiceResult);
 
                 await Task.WhenAll(mixerConnections);
@@ -385,7 +385,7 @@ namespace MixItUp.Base
 
                     if (externalServiceToConnect.Count > 0)
                     {
-                        Dictionary<IExternalService, Task<ExternalServiceResult>> externalServiceTasks = new Dictionary<IExternalService, Task<ExternalServiceResult>>();
+                        Dictionary<IExternalService, Task<Result>> externalServiceTasks = new Dictionary<IExternalService, Task<Result>>();
                         foreach (var kvp in externalServiceToConnect)
                         {
                             Logger.Log(LogLevel.Debug, "Trying automatic OAuth service connection: " + kvp.Key.Name);
@@ -408,7 +408,7 @@ namespace MixItUp.Base
                             {
                                 Logger.Log(LogLevel.Debug, "Automatic OAuth token connection failed, trying manual connection: " + kvp.Key.Name);
 
-                                ExternalServiceResult result = await kvp.Key.Connect();
+                                Result result = await kvp.Key.Connect();
                                 if (!result.Success)
                                 {
                                     failedServices.Add(kvp.Key);
@@ -445,7 +445,7 @@ namespace MixItUp.Base
                         if (game != null)
                         {
                             await ChannelSession.Services.MixPlay.SetGame(game);
-                            ExternalServiceResult result = await ChannelSession.Services.MixPlay.Connect();
+                            Result result = await ChannelSession.Services.MixPlay.Connect();
                             if (!result.Success)
                             {
                                 await ChannelSession.Services.MixPlay.Disconnect();

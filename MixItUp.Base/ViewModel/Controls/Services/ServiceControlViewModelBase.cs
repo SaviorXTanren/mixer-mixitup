@@ -29,7 +29,7 @@ namespace MixItUp.Base.ViewModel.Controls.Services
 
         public bool IsNotConnected { get { return !this.IsConnected; } }
 
-        protected async Task ShowConnectFailureMessage(ExternalServiceResult result)
+        protected async Task ShowConnectFailureMessage(Result result)
         {
             string message = "Could not connect to service, please try again. If this continues, please reach out to our support for further assistance.";
             if (!string.IsNullOrEmpty(result.Message))

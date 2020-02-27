@@ -22,7 +22,7 @@ namespace MixItUp.WPF.Services
 
         public bool IsConnected { get; private set; }
 
-        public async Task<ExternalServiceResult> Connect()
+        public async Task<Result> Connect()
         {
             this.IsConnected = false;
             try
@@ -39,11 +39,11 @@ namespace MixItUp.WPF.Services
 
                     this.IsConnected = true;
 
-                    return new ExternalServiceResult();
+                    return new Result();
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
-            return new ExternalServiceResult("Invalid address specified");
+            return new Result("Invalid address specified");
         }
 
         public async Task Disconnect()
@@ -131,7 +131,7 @@ namespace MixItUp.WPF.Services
         {
             GlobalEvents.ServiceDisconnect("OvrStream");
 
-            ExternalServiceResult result;
+            Result result;
             do
             {
                 await Task.Delay(2500);

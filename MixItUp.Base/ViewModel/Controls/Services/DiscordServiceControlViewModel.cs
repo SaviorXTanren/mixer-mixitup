@@ -87,7 +87,7 @@ namespace MixItUp.Base.ViewModel.Controls.Services
                     ChannelSession.Settings.DiscordCustomBotToken = this.CustomBotToken;
                 }
 
-                ExternalServiceResult result = await ChannelSession.Services.Discord.Connect();
+                Result result = await ChannelSession.Services.Discord.Connect();
                 if (result.Success)
                 {
                     this.IsConnected = true;

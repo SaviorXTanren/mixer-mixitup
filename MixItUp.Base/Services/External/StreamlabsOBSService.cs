@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Actions;
+using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StreamingClient.Base.Util;
@@ -161,7 +162,7 @@ namespace MixItUp.Base.Services.External
 
         public bool IsConnected { get; private set; }
 
-        public async Task<ExternalServiceResult> Connect()
+        public async Task<Result> Connect()
         {
             this.IsConnected = false;
             if (await this.TestConnection())
@@ -172,9 +173,9 @@ namespace MixItUp.Base.Services.External
                 ChannelSession.ReconnectionOccurred("Streamlabs OBS");
                 this.IsConnected = true;
 
-                return new ExternalServiceResult();
+                return new Result();
             }
-            return new ExternalServiceResult("Streamlabs OBS could not be reached.");
+            return new Result("Streamlabs OBS could not be reached.");
         }
 
         public Task Disconnect()

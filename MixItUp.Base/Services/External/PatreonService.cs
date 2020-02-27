@@ -309,7 +309,7 @@ namespace MixItUp.Base.Services.External
 
         public override string Name { get { return "Patreon"; } }
 
-        public override async Task<ExternalServiceResult> Connect()
+        public override async Task<Result> Connect()
         {
             try
             {
@@ -337,9 +337,9 @@ namespace MixItUp.Base.Services.External
             catch (Exception ex)
             {
                 Logger.Log(ex);
-                return new ExternalServiceResult(ex);
+                return new Result(ex);
             }
-            return new ExternalServiceResult(false);
+            return new Result(false);
         }
 
         public override Task Disconnect()
@@ -579,7 +579,7 @@ namespace MixItUp.Base.Services.External
             this.cancellationTokenSource.Dispose();
         }
 
-        protected override async Task<ExternalServiceResult> InitializeInternal()
+        protected override async Task<Result> InitializeInternal()
         {
             this.cancellationTokenSource = new CancellationTokenSource();
 
@@ -601,11 +601,11 @@ namespace MixItUp.Base.Services.External
 
                     AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.BackgroundDonationCheck);
 
-                    return new ExternalServiceResult();
+                    return new Result();
                 }
-                return new ExternalServiceResult("Failed to get Campaign data");
+                return new Result("Failed to get Campaign data");
             }
-            return new ExternalServiceResult("Failed to get User data");
+            return new Result("Failed to get User data");
         }
 
         private async Task BackgroundDonationCheck(CancellationToken token)

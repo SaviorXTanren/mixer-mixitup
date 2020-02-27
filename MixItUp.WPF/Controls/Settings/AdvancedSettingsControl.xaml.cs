@@ -80,7 +80,7 @@ namespace MixItUp.WPF.Controls.Settings
                 string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog("Mix It Up Settings (*.mixitup)|*.mixitup|All files (*.*)|*.*");
                 if (!string.IsNullOrEmpty(filePath))
                 {
-                    ExternalServiceResult<SettingsV2Model> result = await ChannelSession.Services.Settings.RestorePackagedBackup(filePath);
+                    Result<SettingsV2Model> result = await ChannelSession.Services.Settings.RestorePackagedBackup(filePath);
                     if (result.Success)
                     {
                         ((MainWindow)this.Window).RestoredSettingsFilePath = filePath;

@@ -147,7 +147,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 if (!ChannelSession.Services.MixPlay.IsConnected)
                 {
                     await ChannelSession.Services.MixPlay.SetGame(this.SelectedGame);
-                    ExternalServiceResult result = await ChannelSession.Services.MixPlay.Connect();
+                    Result result = await ChannelSession.Services.MixPlay.Connect();
                     if (!result.Success)
                     {
                         await DialogHelper.ShowMessage(result.Message);

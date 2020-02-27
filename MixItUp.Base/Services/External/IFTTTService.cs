@@ -22,9 +22,9 @@ namespace MixItUp.Base.Services.External
 
         public override string Name { get { return "IFTTT"; } }
 
-        public override Task<ExternalServiceResult> Connect()
+        public override Task<Result> Connect()
         {
-            return Task.FromResult(new ExternalServiceResult(false));
+            return Task.FromResult(new Result(false));
         }
 
         public override Task Disconnect()
@@ -58,9 +58,9 @@ namespace MixItUp.Base.Services.External
             }
         }
 
-        protected override Task<ExternalServiceResult> InitializeInternal()
+        protected override Task<Result> InitializeInternal()
         {
-            return Task.FromResult(new ExternalServiceResult());
+            return Task.FromResult(new Result());
         }
 
         protected override Task RefreshOAuthToken()

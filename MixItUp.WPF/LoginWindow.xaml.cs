@@ -187,7 +187,7 @@ namespace MixItUp.WPF
                         return;
                     }
 
-                    ExternalServiceResult result = await ChannelSession.ConnectMixerUser(isStreamer: false);
+                    Result result = await ChannelSession.ConnectMixerUser(isStreamer: false);
                     if (!result.Success)
                     {
                         await DialogHelper.ShowMessage(result.Message);
@@ -239,7 +239,7 @@ namespace MixItUp.WPF
 
         private async Task<bool> ExistingSettingLogin(SettingsV2Model setting)
         {
-            ExternalServiceResult result = await ChannelSession.ConnectUser(setting);
+            Result result = await ChannelSession.ConnectUser(setting);
             if (result.Success)
             {
                 if (await ChannelSession.InitializeSession(setting.IsStreamer ? null : setting.Name))

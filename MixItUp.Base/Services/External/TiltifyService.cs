@@ -190,7 +190,7 @@ namespace MixItUp.Base.Services.External
 
     public interface ITiltifyService : IOAuthExternalService
     {
-        Task<ExternalServiceResult> Connect(string authorizationToken);
+        Task<Result> Connect(string authorizationToken);
 
         Task<TiltifyUser> GetUser();
 
@@ -224,12 +224,12 @@ namespace MixItUp.Base.Services.External
 
         public override string Name { get { return "Tiltify"; } }
 
-        public override Task<ExternalServiceResult> Connect()
+        public override Task<Result> Connect()
         {
-            return Task.FromResult(new ExternalServiceResult(false));
+            return Task.FromResult(new Result(false));
         }
 
-        public async Task<ExternalServiceResult> Connect(string authorizationToken)
+        public async Task<Result> Connect(string authorizationToken)
         {
             try
             {
@@ -256,9 +256,9 @@ namespace MixItUp.Base.Services.External
             catch (Exception ex)
             {
                 Logger.Log(ex);
-                return new ExternalServiceResult(ex);
+                return new Result(ex);
             }
-            return new ExternalServiceResult(false);
+            return new Result(false);
         }
 
         public override Task Disconnect()
@@ -349,7 +349,7 @@ namespace MixItUp.Base.Services.External
             this.cancellationTokenSource.Dispose();
         }
 
-        protected override async Task<ExternalServiceResult> InitializeInternal()
+        protected override async Task<Result> InitializeInternal()
         {
             this.cancellationTokenSource = new CancellationTokenSource();
 
@@ -358,9 +358,9 @@ namespace MixItUp.Base.Services.External
             {
                 AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 30000, this.BackgroundDonationCheck);
 
-                return new ExternalServiceResult();
+                return new Result();
             }
-            return new ExternalServiceResult("Failed to get User data");
+            return new Result("Failed to get User data");
         }
 
         private async Task BackgroundDonationCheck(CancellationToken token)

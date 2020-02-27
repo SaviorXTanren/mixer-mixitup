@@ -91,15 +91,15 @@ namespace MixItUp.Base.Services.External
 
         public bool IsConnected { get; private set; }
 
-        public Task<ExternalServiceResult> Connect()
+        public Task<Result> Connect()
         {
             this.IsConnected = false;
             if (this.Start())
             {
                 this.IsConnected = true;
-                return Task.FromResult(new ExternalServiceResult());
+                return Task.FromResult(new Result());
             }
-            return Task.FromResult(new ExternalServiceResult("Failed to start web socket listening server"));
+            return Task.FromResult(new Result("Failed to start web socket listening server"));
         }
 
         public async Task Disconnect()

@@ -74,7 +74,7 @@ namespace MixItUp.Base.Services.External
 
         public override string Name { get { return "Twitter"; } }
 
-        public override async Task<ExternalServiceResult> Connect()
+        public override async Task<Result> Connect()
         {
             try
             {
@@ -106,11 +106,11 @@ namespace MixItUp.Base.Services.External
             catch (Exception ex)
             {
                 Logger.Log(ex);
-                return new ExternalServiceResult(ex);
+                return new Result(ex);
             }
         }
 
-        public override async Task<ExternalServiceResult> Connect(OAuthTokenModel token)
+        public override async Task<Result> Connect(OAuthTokenModel token)
         {
             try
             {
@@ -137,7 +137,7 @@ namespace MixItUp.Base.Services.External
             catch (Exception ex)
             {
                 Logger.Log(ex);
-                return new ExternalServiceResult(ex);
+                return new Result(ex);
             }
         }
 
@@ -289,14 +289,14 @@ namespace MixItUp.Base.Services.External
             return base.GetOAuthTokenCopy();
         }
 
-        protected override async Task<ExternalServiceResult> InitializeInternal()
+        protected override async Task<Result> InitializeInternal()
         {
             if (!string.IsNullOrEmpty(this.authorizer.CredentialStore.OAuthToken))
             {
                 await this.RefreshOAuthToken();
-                return new ExternalServiceResult();
+                return new Result();
             }
-            return new ExternalServiceResult("Failed to get authorization");
+            return new Result("Failed to get authorization");
         }
 
         protected override Task RefreshOAuthToken()

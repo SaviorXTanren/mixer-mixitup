@@ -14,7 +14,7 @@ namespace MixItUp.Base.Services.External
 {
     public interface IOAuthExternalService : IExternalService
     {
-        Task<ExternalServiceResult> Connect(OAuthTokenModel token);
+        Task<Result> Connect(OAuthTokenModel token);
 
         OAuthTokenModel GetOAuthTokenCopy();
     }
@@ -63,16 +63,16 @@ namespace MixItUp.Base.Services.External
 
         public virtual bool IsConnected { get { return this.token != null; } }
 
-        public abstract Task<ExternalServiceResult> Connect();
+        public abstract Task<Result> Connect();
 
-        public virtual async Task<ExternalServiceResult> Connect(OAuthTokenModel token)
+        public virtual async Task<Result> Connect(OAuthTokenModel token)
         {
             try
             {
                 this.token = token;
                 await this.RefreshOAuthToken();
 
-                ExternalServiceResult result = await this.InitializeInternal();
+                Result result = await this.InitializeInternal();
                 if (!result.Success)
                 {
                     this.token = null;
@@ -82,7 +82,7 @@ namespace MixItUp.Base.Services.External
             catch (Exception ex)
             {
                 Logger.Log(ex);
-                return new ExternalServiceResult(ex);
+                return new Result(ex);
             }
         }
 
@@ -104,7 +104,7 @@ namespace MixItUp.Base.Services.External
             return null;
         }
 
-        protected abstract Task<ExternalServiceResult> InitializeInternal();
+        protected abstract Task<Result> InitializeInternal();
 
         protected async Task<string> ConnectViaOAuthRedirect(string oauthPageURL, int secondsToWait = 30) { return await this.ConnectViaOAuthRedirect(oauthPageURL, MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL); }
 

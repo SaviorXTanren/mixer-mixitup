@@ -43,7 +43,7 @@ namespace MixItUp.Base.ViewModel.Controls.Services
                 this.AuthorizationInProgress = true;
                 Task.Run(async () =>
                 {
-                    ExternalServiceResult result = await ChannelSession.Services.Twitter.Connect();
+                    Result result = await ChannelSession.Services.Twitter.Connect();
                     await DispatcherHelper.InvokeDispatcher(async () =>
                     {
                         if (result.Success)

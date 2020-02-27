@@ -140,7 +140,7 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
                 }
                 else
                 {
-                    ExternalServiceResult result = new ExternalServiceResult(false);
+                    Result result = new Result(false);
                     if (this.Platform == StreamingPlatformTypeEnum.Mixer)
                     {
                         result = await ChannelSession.ConnectMixerUser(isStreamer: true);
@@ -175,7 +175,7 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
                 }
                 else
                 {
-                    ExternalServiceResult result = new ExternalServiceResult(false);
+                    Result result = new Result(false);
                     if (this.Platform == StreamingPlatformTypeEnum.Mixer)
                     {
                         result = await ChannelSession.ConnectMixerBot();

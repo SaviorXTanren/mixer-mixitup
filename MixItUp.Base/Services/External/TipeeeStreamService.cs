@@ -169,7 +169,7 @@ namespace MixItUp.Base.Services.External
 
         public override string Name { get { return "TipeeeStream"; } }
 
-        public override async Task<ExternalServiceResult> Connect()
+        public override async Task<Result> Connect()
         {
             try
             {
@@ -197,9 +197,9 @@ namespace MixItUp.Base.Services.External
             catch (Exception ex)
             {
                 Logger.Log(ex);
-                return new ExternalServiceResult(ex);
+                return new Result(ex);
             }
-            return new ExternalServiceResult(false);
+            return new Result(false);
         }
 
         public override async Task Disconnect()
@@ -286,7 +286,7 @@ namespace MixItUp.Base.Services.External
             }
         }
 
-        protected override async Task<ExternalServiceResult> InitializeInternal()
+        protected override async Task<Result> InitializeInternal()
         {
             this.user = await this.GetUser();
             if (this.user != null)
@@ -299,15 +299,15 @@ namespace MixItUp.Base.Services.External
                     {
                         if (await this.ConnectSocket())
                         {
-                            return new ExternalServiceResult();
+                            return new Result();
                         }
-                        return new ExternalServiceResult("Failed to connect to socket");
+                        return new Result("Failed to connect to socket");
                     }
-                    return new ExternalServiceResult("Unable to get Socket URL address");
+                    return new Result("Unable to get Socket URL address");
                 }
-                return new ExternalServiceResult("Unable to get Socket API key");
+                return new Result("Unable to get Socket API key");
             }
-            return new ExternalServiceResult("Unable to get User information");
+            return new Result("Unable to get User information");
         }
 
         private async Task<T> GetAsync<T>(string url)

@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Services.External;
+using MixItUp.Base.Util;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -38,7 +39,7 @@ namespace MixItUp.Base.ViewModel.Controls.Services
         {
             this.LogInCommand = this.CreateCommand(async (parameter) =>
             {
-                ExternalServiceResult result = await ChannelSession.Services.Patreon.Connect();
+                Result result = await ChannelSession.Services.Patreon.Connect();
                 if (result.Success)
                 {
                     this.IsConnected = true;
