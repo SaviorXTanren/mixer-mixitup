@@ -49,7 +49,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task LoadTestData()
         {
-            ChatMessageViewModel message = new ChatMessageViewModel(Guid.NewGuid().ToString(), StreamingPlatformTypeEnum.Mixer, await ChannelSession.GetCurrentUser());
+            ChatMessageViewModel message = new ChatMessageViewModel(Guid.NewGuid().ToString(), StreamingPlatformTypeEnum.Mixer, ChannelSession.GetCurrentUser());
             message.AddStringMessagePart("Test Message");
 
             ChatMessageEventModel messageEvent = new ChatMessageEventModel()

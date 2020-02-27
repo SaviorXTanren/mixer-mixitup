@@ -136,7 +136,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task LoadTestData()
         {
-            UserViewModel user = await ChannelSession.GetCurrentUser();
+            UserViewModel user = ChannelSession.GetCurrentUser();
             List<Guid> userIDs = new List<Guid>(ChannelSession.Settings.UserData.Keys.Take(20));
             for (int i = userIDs.Count; i < 20; i++)
             {
@@ -256,7 +256,7 @@ namespace MixItUp.Base.Model.Overlay
             StringBuilder htmlBuilder = new StringBuilder();
 
             htmlBuilder.AppendLine(SectionSeparatorHTML);
-            htmlBuilder.AppendLine(await this.ReplaceStringWithSpecialModifiers(this.TitleTemplate, await ChannelSession.GetCurrentUser(), new List<string>(), new Dictionary<string, string>()));
+            htmlBuilder.AppendLine(await this.ReplaceStringWithSpecialModifiers(this.TitleTemplate, ChannelSession.GetCurrentUser(), new List<string>(), new Dictionary<string, string>()));
 
             foreach (var kvp in this.SectionTemplates)
             {
@@ -266,7 +266,7 @@ namespace MixItUp.Base.Model.Overlay
                     OverlayEndCreditsSectionModel sectionTemplate = this.SectionTemplates[kvp.Key];
 
                     string sectionHTML = this.PerformTemplateReplacements(sectionTemplate.SectionHTML, new Dictionary<string, string>());
-                    sectionHTML = await this.ReplaceStringWithSpecialModifiers(sectionHTML, await ChannelSession.GetCurrentUser(), new List<string>(), new Dictionary<string, string>());
+                    sectionHTML = await this.ReplaceStringWithSpecialModifiers(sectionHTML, ChannelSession.GetCurrentUser(), new List<string>(), new Dictionary<string, string>());
 
                     string userHTML = this.PerformTemplateReplacements(sectionTemplate.UserHTML, new Dictionary<string, string>());
                     userHTML = await this.ReplaceStringWithSpecialModifiers(userHTML, user, new List<string>(), new Dictionary<string, string>());
@@ -486,7 +486,7 @@ namespace MixItUp.Base.Model.Overlay
                     { "TEXT_SIZE", this.SectionTextSize.ToString() },
                     { "TEXT_COLOR", this.SectionTextColor }
                 });
-                sectionHTML = await this.ReplaceStringWithSpecialModifiers(sectionHTML, await ChannelSession.GetCurrentUser(), new List<string>(), new Dictionary<string, string>());
+                sectionHTML = await this.ReplaceStringWithSpecialModifiers(sectionHTML, ChannelSession.GetCurrentUser(), new List<string>(), new Dictionary<string, string>());
 
                 List<string> userHTMLs = new List<string>();
                 foreach (var kvp in replacers.OrderBy(kvp => kvp.Key.Username))

@@ -249,14 +249,14 @@ namespace MixItUp.Base
             }
         }
 
-        public static Task<UserViewModel> GetCurrentUser()
+        public static UserViewModel GetCurrentUser()
         {
             UserViewModel user = ChannelSession.Services.User.GetUserByMixerID(ChannelSession.MixerUser.id);
             if (user == null)
             {
                 user = new UserViewModel(ChannelSession.MixerUser);
             }
-            return Task.FromResult(user);
+            return user;
         }
 
         public static void DisconnectionOccurred(string serviceName)

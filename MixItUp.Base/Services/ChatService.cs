@@ -485,7 +485,7 @@ namespace MixItUp.Base.Services
             {
                 if (ChannelSession.Settings.WhisperAllAlerts)
                 {
-                    await ChannelSession.Services.Chat.Whisper(await ChannelSession.GetCurrentUser(), message.PlainTextMessage, false);
+                    await ChannelSession.Services.Chat.Whisper(ChannelSession.GetCurrentUser(), message.PlainTextMessage, false);
                 }
 
                 GlobalEvents.AlertMessageReceived((AlertChatMessageViewModel)message);

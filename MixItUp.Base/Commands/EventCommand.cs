@@ -154,9 +154,20 @@ namespace MixItUp.Base.Commands
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
         {
-            this.userEventTracking.Add(user.ID);
+            bool run = false;
+            lock (this.userEventTracking)
+            {
+                if (this.CanRun(user))
+                {
+                    this.userEventTracking.Add(user.ID);
+                    run = true;
+                }
+            }
 
-            await base.PerformInternal(user, arguments, extraSpecialIdentifiers, token);
+            if (run)
+            {
+                await base.PerformInternal(user, arguments, extraSpecialIdentifiers, token);
+            }
         }
     }
 }

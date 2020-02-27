@@ -27,7 +27,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task LoadTestData()
         {
-            UserViewModel user = await ChannelSession.GetCurrentUser();
+            UserViewModel user = ChannelSession.GetCurrentUser();
 
             List<UserViewModel> users = new List<UserViewModel>();
             for (int i = 0; i < this.TotalToShow; i++)

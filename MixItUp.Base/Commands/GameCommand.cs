@@ -2493,7 +2493,7 @@ namespace MixItUp.Base.Commands
             }
             else
             {
-                await this.PerformCommand(this.UserFailOutcome.Command, await ChannelSession.GetCurrentUser(), new List<string>(), this.betAmount, this.totalPayout);
+                await this.PerformCommand(this.UserFailOutcome.Command, ChannelSession.GetCurrentUser(), new List<string>(), this.betAmount, this.totalPayout);
             }
         }
 
@@ -2638,7 +2638,7 @@ namespace MixItUp.Base.Commands
             }
             else
             {
-                await this.PerformCommand(this.UserFailOutcome.Command, await ChannelSession.GetCurrentUser(), new List<string>(), this.betAmount, this.totalPayout);
+                await this.PerformCommand(this.UserFailOutcome.Command, ChannelSession.GetCurrentUser(), new List<string>(), this.betAmount, this.totalPayout);
             }
         }
 
@@ -3337,7 +3337,7 @@ namespace MixItUp.Base.Commands
             this.FailedGuesses.Clear();
             this.TotalAmount = this.InitialAmount;
 
-            this.ResetData(await ChannelSession.GetCurrentUser());
+            this.ResetData(ChannelSession.GetCurrentUser());
         }
     }
 
@@ -3524,7 +3524,7 @@ namespace MixItUp.Base.Commands
                 }
             }
 
-            await this.PerformCommand(this.CorrectAnswerCommand, await ChannelSession.GetCurrentUser(), new List<string>(), 0, this.totalPayout);
+            await this.PerformCommand(this.CorrectAnswerCommand, ChannelSession.GetCurrentUser(), new List<string>(), 0, this.totalPayout);
         }
 
         protected override void AddAdditionalSpecialIdentifiers(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
