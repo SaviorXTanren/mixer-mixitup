@@ -134,7 +134,7 @@ namespace MixItUp.Base.Model.Overlay
         [JsonIgnore]
         public override bool SupportsTestData { get { return true; } }
 
-        public override async Task LoadTestData()
+        public override Task LoadTestData()
         {
             UserViewModel user = ChannelSession.GetCurrentUser();
             List<Guid> userIDs = new List<Guid>(ChannelSession.Settings.UserData.Keys.Take(20));
@@ -190,6 +190,7 @@ namespace MixItUp.Base.Model.Overlay
                     this.embers[userID] = 10;
                 }
             }
+            return Task.FromResult(0);
         }
 
         public override Task Initialize()
