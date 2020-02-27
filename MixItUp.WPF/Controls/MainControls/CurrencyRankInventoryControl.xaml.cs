@@ -34,9 +34,9 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             get
             {
-                if (this.Inventory != null) { return "Inventory"; }
-                else if (this.Currency.IsRank) { return "Rank"; }
-                else { return "Currency"; }
+                if (this.Inventory != null) { return Resources.Inventory; }
+                else if (this.Currency.IsRank) { return Resources.Rank; }
+                else { return Resources.Currency; }
             }
         }
 

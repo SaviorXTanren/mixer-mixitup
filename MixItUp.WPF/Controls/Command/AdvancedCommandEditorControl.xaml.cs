@@ -154,7 +154,7 @@ namespace MixItUp.WPF.Controls.Command
                     string fileName = ChannelSession.Services.FileService.ShowSaveFileDialog(command.Name + ".mixitupc");
                     if (!string.IsNullOrEmpty(fileName))
                     {
-                        await SerializerHelper.SerializeToFile(fileName, command);
+                        await FileSerializerHelper.SerializeToFile(fileName, command);
                     }
                 }
             });
@@ -169,7 +169,7 @@ namespace MixItUp.WPF.Controls.Command
                 {
                     try
                     {
-                        CustomCommand command = await SerializerHelper.DeserializeFromFile<CustomCommand>(fileName);
+                        CommandBase command = await FileSerializerHelper.DeserializeFromFile<CommandBase>(fileName);
                         if (command != null && command.Actions != null)
                         {
                             foreach (ActionBase action in command.Actions)

@@ -28,7 +28,7 @@ namespace MixItUp.Base.ViewModel.Controls.Services
         {
             this.LogInCommand = this.CreateCommand(async (parameter) =>
             {
-                if (string.IsNullOrEmpty(this.StreamlootsURL) && (!this.StreamlootsURL.StartsWith(StreamlootsStreamURLFormat) || !int.TryParse(this.StreamlootsURL, out int ID)))
+                if (string.IsNullOrEmpty(this.StreamlootsURL) || (!this.StreamlootsURL.StartsWith(StreamlootsStreamURLFormat) && !int.TryParse(this.StreamlootsURL, out int ID)))
                 {
                     await DialogHelper.ShowMessage("Please enter a valid Streamloots URL (" + StreamlootsStreamURLFormat + ").");
                 }
@@ -36,7 +36,7 @@ namespace MixItUp.Base.ViewModel.Controls.Services
                 {
                     string streamlootsID = this.StreamlootsURL.Replace(StreamlootsStreamURLFormat, "");
 
-                    ExternalServiceResult result = await ChannelSession.Services.Streamloots.Connect(new OAuthTokenModel() { accessToken = streamlootsID });
+                    Result result = await ChannelSession.Services.Streamloots.Connect(new OAuthTokenModel() { accessToken = streamlootsID });
                     if (result.Success)
                     {
                         this.IsConnected = true;
@@ -51,6 +51,9 @@ namespace MixItUp.Base.ViewModel.Controls.Services
             this.LogOutCommand = this.CreateCommand(async (parameter) =>
             {
                 await ChannelSession.Services.Streamloots.Disconnect();
+
+                ChannelSession.Settings.StreamlootsOAuthToken = null;
+
                 this.IsConnected = false;
             });
 

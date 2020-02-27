@@ -24,6 +24,8 @@ namespace MixItUp.WPF.Controls.Settings
 
         protected override async Task InitializeInternal()
         {
+            this.TrackWhispererNumberToggleButton.IsEnabled = ChannelSession.IsStreamer;
+
             this.UserJoinLeaveColorSchemeComboBox.SelectionChanged += UserJoinLeaveColorSchemeComboBox_SelectionChanged;
             this.EventAlertsColorSchemeComboBox.SelectionChanged += EventAlertsColorSchemeComboBox_SelectionChanged;
             this.InteractiveAlertsColorSchemeComboBox.SelectionChanged += InteractiveAlertsColorSchemeComboBox_SelectionChanged;

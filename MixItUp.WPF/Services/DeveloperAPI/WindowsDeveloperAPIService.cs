@@ -1,6 +1,6 @@
 ﻿using Microsoft.Owin.Hosting;
 using MixItUp.Base.Services;
-using MixItUp.Base.Services.External;
+using MixItUp.Base.Util;
 using Owin;
 using System;
 using System.Net.Http.Formatting;
@@ -18,7 +18,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
 
         public bool IsConnected { get; private set; }
 
-        public Task<ExternalServiceResult> Connect()
+        public Task<Result> Connect()
         {
             // Ensure it is cleaned up first
             this.Disconnect();
@@ -32,7 +32,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             this.webApp = WebApp.Start<WindowsDeveloperAPIServiceStartup>(opts);
 
             this.IsConnected = true;
-            return Task.FromResult(new ExternalServiceResult());
+            return Task.FromResult(new Result());
         }
 
         public Task Disconnect()

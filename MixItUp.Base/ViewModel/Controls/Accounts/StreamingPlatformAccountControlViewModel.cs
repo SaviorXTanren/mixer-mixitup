@@ -62,7 +62,7 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
         private string userAccountUsername;
 
         public ICommand UserAccountCommand { get; set; }
-        public string UserAccountButtonContent { get { return this.IsUserAccountConnected ? "Log Out" : "Log In"; } }
+        public string UserAccountButtonContent { get { return this.IsUserAccountConnected ? MixItUp.Base.Resources.Logout : MixItUp.Base.Resources.Login; } }
         public bool IsUserAccountConnected
         {
             get
@@ -101,7 +101,7 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
         private string botAccountUsername;
 
         public ICommand BotAccountCommand { get; set; }
-        public string BotAccountButtonContent { get { return this.IsBotAccountConnected ? "Log Out" : "Log In"; } }
+        public string BotAccountButtonContent { get { return this.IsBotAccountConnected ? MixItUp.Base.Resources.Logout : MixItUp.Base.Resources.Login; } }
         public bool IsBotAccountConnected
         {
             get
@@ -162,7 +162,7 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
                 }
                 else
                 {
-                    ExternalServiceResult result = new ExternalServiceResult(false);
+                    Result result = new Result(false);
                     if (this.Platform == StreamingPlatformTypeEnum.Mixer)
                     {
                         result = await ChannelSession.ConnectMixerUser(isStreamer: true);
@@ -210,7 +210,7 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
                 }
                 else
                 {
-                    ExternalServiceResult result = new ExternalServiceResult(false);
+                    Result result = new Result(false);
                     if (this.Platform == StreamingPlatformTypeEnum.Mixer)
                     {
                         result = await ChannelSession.ConnectMixerBot();
@@ -219,7 +219,7 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
                             TestStreamSettingsModel testStreamSettings = await ChannelSession.MixerUserConnection.GetTestStreamSettings(ChannelSession.MixerChannel);
                             if (testStreamSettings != null && testStreamSettings.isActive.GetValueOrDefault())
                             {
-                                if (!await DialogHelper.ShowConfirmation("Because test stream settings are enabled, your bot account will not be able to connect correctly. You will need to disable Test Streams in order to use your bot account for things such a chat messages & whispers. Are you sure you still wish to connect it?"))
+                                if (!await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.TestStreamWarning))
                                 {
                                     await ChannelSession.DisconnectMixerBot();
                                     return;
@@ -228,7 +228,7 @@ namespace MixItUp.Base.ViewModel.Controls.Accounts
 
                             if (ChannelSession.MixerBot.id.Equals(ChannelSession.MixerUser.id))
                             {
-                                await DialogHelper.ShowMessage("You must sign in to a different account than your Streamer account.");
+                                await DialogHelper.ShowMessage(MixItUp.Base.Resources.IncorrectBotAccount);
                                 await ChannelSession.DisconnectMixerBot();
                                 return;
                             }

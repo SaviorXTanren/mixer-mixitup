@@ -53,7 +53,7 @@ namespace MixItUp.WPF.Controls.Command
 
             if (this.command != null)
             {
-                this.LowestRoleAllowedComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.Requirements.Role.MixerRole);
+                this.LowestRoleAllowedComboBox.SelectedItem = this.command.Requirements.Role.MixerRole;
                 this.CooldownTextBox.Text = this.command.Requirements.Cooldown.Amount.ToString();
                 this.ChatCommandTextBox.Text = this.command.CommandsString;
                 if (this.command.Actions.First() is ChatAction)
@@ -67,7 +67,7 @@ namespace MixItUp.WPF.Controls.Command
             }
             else
             {
-                this.LowestRoleAllowedComboBox.SelectedItem = EnumHelper.GetEnumName(UserRoleEnum.User);
+                this.LowestRoleAllowedComboBox.SelectedItem = UserRoleEnum.User;
                 this.CooldownTextBox.Text = "0";
                 if (this.commandType == BasicCommandTypeEnum.Chat)
                 {
@@ -165,7 +165,7 @@ namespace MixItUp.WPF.Controls.Command
                     return;
                 }
 
-                RequirementViewModel requirement = new RequirementViewModel(EnumHelper.GetEnumValueFromString<UserRoleEnum>((string)this.LowestRoleAllowedComboBox.SelectedItem), cooldown: cooldown);
+                RequirementViewModel requirement = new RequirementViewModel((UserRoleEnum)this.LowestRoleAllowedComboBox.SelectedItem, cooldown: cooldown);
 
                 ChatCommand newCommand = new ChatCommand(commandStrings.First(), commandStrings, requirement);
                 newCommand.IsBasic = isBasic;

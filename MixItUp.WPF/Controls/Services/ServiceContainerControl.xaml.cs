@@ -1,4 +1,5 @@
-﻿using MixItUp.WPF.Windows;
+﻿using MixItUp.Base.ViewModels;
+using MixItUp.WPF.Windows;
 using System;
 using System.Threading.Tasks;
 
@@ -42,8 +43,23 @@ namespace MixItUp.WPF.Controls.Services
 
         protected override Task OnLoaded()
         {
+            if (this.serviceControl.DataContext != null && this.serviceControl.DataContext is UIViewModelBase)
+            {
+                UIViewModelBase viewModel = (UIViewModelBase)this.serviceControl.DataContext;
+                if (viewModel != null)
+                {
+                    viewModel.StartLoadingOperationOccurred += ViewModel_StartLoadingOperationOccurred;
+                    viewModel.EndLoadingOperationOccurred += ViewModel_EndLoadingOperationOccurred;
+                }
+            }
+
             this.Minimize();
+
             return base.OnLoaded();
         }
+
+        private void ViewModel_StartLoadingOperationOccurred(object sender, EventArgs e) { this.window.StartLoadingOperation(); }
+
+        private void ViewModel_EndLoadingOperationOccurred(object sender, EventArgs e) { this.window.EndLoadingOperation(); }
     }
 }

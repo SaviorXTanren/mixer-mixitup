@@ -1,7 +1,6 @@
 ﻿using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.MixPlay;
 using Mixer.Base.Model.User;
-using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.API;
 using MixItUp.Base.Model.Chat.Mixer;
@@ -127,31 +126,31 @@ namespace MixItUp.Base
             ChannelSession.AppSettings = await ApplicationSettingsV2Model.Load();
         }
 
-        public static async Task<ExternalServiceResult> ConnectMixerUser(bool isStreamer)
+        public static async Task<Result> ConnectMixerUser(bool isStreamer)
         {
-            ExternalServiceResult<MixerConnectionService> result = await MixerConnectionService.ConnectUser(isStreamer);
+            Result<MixerConnectionService> result = await MixerConnectionService.ConnectUser(isStreamer);
             if (result.Success)
             {
-                ChannelSession.MixerUserConnection = result.Result;
+                ChannelSession.MixerUserConnection = result.Value;
                 ChannelSession.MixerUser = await ChannelSession.MixerUserConnection.GetCurrentUser();
                 if (ChannelSession.MixerUser == null)
                 {
-                    return new ExternalServiceResult("Failed to get Mixer user data");
+                    return new Result("Failed to get Mixer user data");
                 }
             }
             return result;
         }
 
-        public static async Task<ExternalServiceResult> ConnectMixerBot()
+        public static async Task<Result> ConnectMixerBot()
         {
-            ExternalServiceResult<MixerConnectionService> result = await MixerConnectionService.ConnectBot();
+            Result<MixerConnectionService> result = await MixerConnectionService.ConnectBot();
             if (result.Success)
             {
-                ChannelSession.MixerBotConnection = result.Result;
+                ChannelSession.MixerBotConnection = result.Value;
                 ChannelSession.MixerBot = await ChannelSession.MixerBotConnection.GetCurrentUser();
                 if (ChannelSession.MixerBot == null)
                 {
-                    return new ExternalServiceResult("Failed to get Mixer bot data");
+                    return new Result("Failed to get Mixer bot data");
                 }
             }
             return result;
@@ -193,15 +192,15 @@ namespace MixItUp.Base
             return result;
         }
 
-        public static async Task<ExternalServiceResult> ConnectUser(SettingsV2Model settings)
+        public static async Task<Result> ConnectUser(SettingsV2Model settings)
         {
-            ExternalServiceResult userResult = null;
+            Result userResult = null;
             ChannelSession.Settings = settings;
 
-            ExternalServiceResult<MixerConnectionService> mixerResult = await MixerConnectionService.Connect(ChannelSession.Settings.MixerUserOAuthToken);
+            Result<MixerConnectionService> mixerResult = await MixerConnectionService.Connect(ChannelSession.Settings.MixerUserOAuthToken);
             if (mixerResult.Success)
             {
-                ChannelSession.MixerUserConnection = mixerResult.Result;
+                ChannelSession.MixerUserConnection = mixerResult.Value;
                 userResult = mixerResult;
             }
             else
@@ -214,7 +213,7 @@ namespace MixItUp.Base
                 ChannelSession.MixerUser = await ChannelSession.MixerUserConnection.GetCurrentUser();
                 if (ChannelSession.MixerUser == null)
                 {
-                    return new ExternalServiceResult("Failed to get Mixer user data");
+                    return new Result("Failed to get Mixer user data");
                 }
 
                 if (settings.MixerBotOAuthToken != null)
@@ -222,17 +221,17 @@ namespace MixItUp.Base
                     mixerResult = await MixerConnectionService.Connect(settings.MixerBotOAuthToken);
                     if (mixerResult.Success)
                     {
-                        ChannelSession.MixerBotConnection = mixerResult.Result;
+                        ChannelSession.MixerBotConnection = mixerResult.Value;
                         ChannelSession.MixerBot = await ChannelSession.MixerBotConnection.GetCurrentUser();
                         if (ChannelSession.MixerBot == null)
                         {
-                            return new ExternalServiceResult("Failed to get Mixer bot data");
+                            return new Result("Failed to get Mixer bot data");
                         }
                     }
                     else
                     {
                         settings.MixerBotOAuthToken = null;
-                        return new ExternalServiceResult(success: true, message: "Failed to connect Mixer bot account, please manually reconnect");
+                        return new Result(success: true, message: "Failed to connect Mixer bot account, please manually reconnect");
                     }
                 }
             }
@@ -382,14 +381,14 @@ namespace MixItUp.Base
             }
         }
 
-        public static Task<UserViewModel> GetCurrentUser()
+        public static UserViewModel GetCurrentUser()
         {
             UserViewModel user = ChannelSession.Services.User.GetUserByMixerID(ChannelSession.MixerUser.id);
             if (user == null)
             {
                 user = new UserViewModel(ChannelSession.MixerUser);
             }
-            return Task.FromResult(user);
+            return user;
         }
 
         public static void DisconnectionOccurred(string serviceName)
@@ -445,6 +444,10 @@ namespace MixItUp.Base
                 {
                     Logger.SetLogLevel(LogLevel.Debug);
                 }
+                else
+                {
+                    Logger.SetLogLevel(LogLevel.Error);
+                }
 
                 if (modChannelName == null && ChannelSession.Settings.MixerChannelID > 0 && ChannelSession.MixerUser.channel.id != ChannelSession.Settings.MixerChannelID)
                 {
@@ -464,9 +467,11 @@ namespace MixItUp.Base
                 MixerChatService mixerChatService = new MixerChatService();
                 MixerEventService mixerEventService = new MixerEventService();
 
-                List<Task<ExternalServiceResult>> mixerPlatformServiceTasks = new List<Task<ExternalServiceResult>>();
-                mixerPlatformServiceTasks.Add(mixerChatService.ConnectUser());
-                mixerPlatformServiceTasks.Add(mixerEventService.Connect());
+                List<Task<Result>> mixerConnections = new List<Task<Result>>();
+                mixerConnections.Add(mixerChatService.ConnectUser());
+
+                Task<Result> mixerEventServiceResult = mixerEventService.Connect();
+                mixerConnections.Add(mixerEventServiceResult);
 
                 TwitchChatService twitchChatService = new TwitchChatService();
                 TwitchEventService twitchEventService = new TwitchEventService();
@@ -475,16 +480,27 @@ namespace MixItUp.Base
                 twitchPlatformServiceTasks.Add(twitchChatService.ConnectUser());
                 twitchPlatformServiceTasks.Add(twitchEventService.Connect());
 
-                List<Task> platformServicesTasks = new List<Task>();
-                platformServicesTasks.AddRange(mixerPlatformServiceTasks);
-                platformServicesTasks.AddRange(twitchPlatformServiceTasks);
-                await Task.WhenAll(platformServicesTasks);
+                await Task.WhenAll(mixerConnections);
 
                 if (mixerPlatformServiceTasks.Any(c => !c.Result.Success))
                 {
-                    string errors = string.Join(Environment.NewLine, mixerPlatformServiceTasks.Where(c => !c.Result.Success).Select(c => c.Result.Message));
-                    GlobalEvents.ShowMessageBox("Failed to connect to Mixer services:" + Environment.NewLine + Environment.NewLine + errors);
-                    return false;
+                    string errors = string.Join(Environment.NewLine, mixerConnections.Where(c => !c.Result.Success).Select(c => c.Result.Message));
+                    string message = "Failed to connect to Mixer services:" + Environment.NewLine + Environment.NewLine + errors + Environment.NewLine + Environment.NewLine + "This may be due to a Mixer server outage, please check Mixer's status page for more information: https://status.mixer.com/";
+
+                    if (mixerConnections.All(c => c.Result.Success || c == mixerEventServiceResult))
+                    {
+                        if (!await DialogHelper.ShowConfirmation(message + Environment.NewLine + Environment.NewLine +
+                                "We have determined this to be a non-blocking error, which means we can attempt to log you in and ignore this. However, some features may not work as a result and you may run into some bugs."
+                                + Environment.NewLine + Environment.NewLine + "Would you like to ignore this and log in?"))
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        GlobalEvents.ShowMessageBox(message);
+                        return false;
+                    }
                 }
 
                 if (twitchPlatformServiceTasks.Any(c => !c.Result.Success))
@@ -532,9 +548,11 @@ namespace MixItUp.Base
 
                     if (externalServiceToConnect.Count > 0)
                     {
-                        Dictionary<IExternalService, Task<ExternalServiceResult>> externalServiceTasks = new Dictionary<IExternalService, Task<ExternalServiceResult>>();
+                        Dictionary<IExternalService, Task<Result>> externalServiceTasks = new Dictionary<IExternalService, Task<Result>>();
                         foreach (var kvp in externalServiceToConnect)
                         {
+                            Logger.Log(LogLevel.Debug, "Trying automatic OAuth service connection: " + kvp.Key.Name);
+
                             if (kvp.Key is IOAuthExternalService && kvp.Value != null)
                             {
                                 externalServiceTasks[kvp.Key] = ((IOAuthExternalService)kvp.Key).Connect(kvp.Value);
@@ -551,7 +569,9 @@ namespace MixItUp.Base
                         {
                             if (!kvp.Value.Result.Success && kvp.Key is IOAuthExternalService)
                             {
-                                result = await kvp.Key.Connect();
+                                Logger.Log(LogLevel.Debug, "Automatic OAuth token connection failed, trying manual connection: " + kvp.Key.Name);
+
+                                Result result = await kvp.Key.Connect();
                                 if (!result.Success)
                                 {
                                     failedServices.Add(kvp.Key);
@@ -561,6 +581,8 @@ namespace MixItUp.Base
 
                         if (failedServices.Count > 0)
                         {
+                            Logger.Log(LogLevel.Debug, "Connection failed for services: " + string.Join(", ", failedServices.Select(s => s.Name)));
+
                             StringBuilder message = new StringBuilder();
                             message.AppendLine("The following services could not be connected:");
                             message.AppendLine();
@@ -586,7 +608,7 @@ namespace MixItUp.Base
                         if (game != null)
                         {
                             await ChannelSession.Services.MixPlay.SetGame(game);
-                            result = await ChannelSession.Services.MixPlay.Connect();
+                            Result result = await ChannelSession.Services.MixPlay.Connect();
                             if (!result.Success)
                             {
                                 await ChannelSession.Services.MixPlay.Disconnect();
@@ -637,6 +659,7 @@ namespace MixItUp.Base
                             command.UpdateFromSettings(commandSetting);
                         }
                     }
+                    ChannelSession.Services.Chat.RebuildCommandTriggers();
 
                     ChannelSession.Services.TimerService.Initialize();
                     await ModerationHelper.Initialize();

@@ -36,7 +36,7 @@ namespace MixItUp.Base.ViewModel.Controls.Services
                 ChannelSession.Settings.OBSStudioServerIP = this.IPAddress;
                 ChannelSession.Settings.OBSStudioServerPassword = this.Password();
 
-                ExternalServiceResult result = await ChannelSession.Services.OBSStudio.Connect();
+                Result result = await ChannelSession.Services.OBSStudio.Connect();
                 if (result.Success)
                 {
                     this.IsConnected = true;

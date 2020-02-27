@@ -75,7 +75,7 @@ namespace MixItUp.Base.ViewModel.Controls.Services
                     return;
                 }
 
-                ExternalServiceResult result = await ChannelSession.Services.ExtraLife.Connect();
+                Result result = await ChannelSession.Services.ExtraLife.Connect();
                 if (result.Success)
                 {
                     this.IsConnected = true;

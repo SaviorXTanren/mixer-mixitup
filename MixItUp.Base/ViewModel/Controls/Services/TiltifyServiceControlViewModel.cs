@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Services.External;
+using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -40,6 +41,10 @@ namespace MixItUp.Base.ViewModel.Controls.Services
             this.LogOutCommand = this.CreateCommand(async (parameter) =>
             {
                 await ChannelSession.Services.Tiltify.Disconnect();
+
+                ChannelSession.Settings.TiltifyOAuthToken = null;
+                ChannelSession.Settings.TiltifyCampaign = 0;
+
                 this.IsConnected = false;
             });
 
@@ -57,7 +62,7 @@ namespace MixItUp.Base.ViewModel.Controls.Services
 
         public async Task LogIn(string authorizationToken)
         {
-            ExternalServiceResult result = await ChannelSession.Services.Tiltify.Connect(authorizationToken);
+            Result result = await ChannelSession.Services.Tiltify.Connect(authorizationToken);
             if (result.Success)
             {
                 this.IsConnected = true;

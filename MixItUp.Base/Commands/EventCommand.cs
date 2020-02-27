@@ -150,7 +150,7 @@ namespace MixItUp.Base.Commands
         public EventCommand() { }
 
         public EventCommand(EventTypeEnum eventType)
-            : base(EnumHelper.GetEnumName(eventType), CommandTypeEnum.Event)
+            : base(eventType.ToString(), CommandTypeEnum.Event, eventType.ToString())
         {
             this.EventCommandType = eventType;
         }
@@ -179,16 +179,22 @@ namespace MixItUp.Base.Commands
 
         protected override SemaphoreSlim AsyncSemaphore { get { return EventCommand.eventCommandPerformSemaphore; } }
 
-        protected override Task<bool> PerformPreChecks(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
-        {
-            return Task.FromResult(this.CanRun(user));
-        }
-
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
         {
-            this.userEventTracking.Add(user.ID);
+            bool run = false;
+            lock (this.userEventTracking)
+            {
+                if (this.CanRun(user))
+                {
+                    this.userEventTracking.Add(user.ID);
+                    run = true;
+                }
+            }
 
-            await base.PerformInternal(user, arguments, extraSpecialIdentifiers, token);
+            if (run)
+            {
+                await base.PerformInternal(user, arguments, extraSpecialIdentifiers, token);
+            }
         }
     }
 }

@@ -7,6 +7,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Windows;
 using MixItUp.WPF.Windows.Wizard;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -73,12 +74,12 @@ namespace MixItUp.WPF
                 this.ModeratorChannelComboBox.SelectedIndex = 0;
             }
 
-            if (ChannelSession.AppSettings.AutoLogInAccount > 0)
+            if (ChannelSession.AppSettings.AutoLogInID != Guid.Empty)
             {
                 var allSettings = this.streamerSettings.ToList();
                 allSettings.AddRange(this.moderatorSettings);
 
-                SettingsV2Model autoLogInSettings = allSettings.FirstOrDefault(s => s.MixerChannelID == ChannelSession.AppSettings.AutoLogInAccount);
+                SettingsV2Model autoLogInSettings = allSettings.FirstOrDefault(s => s.ID == ChannelSession.AppSettings.AutoLogInID);
                 if (autoLogInSettings != null)
                 {
                     await Task.Delay(5000);
@@ -186,27 +187,29 @@ namespace MixItUp.WPF
                         return;
                     }
 
-                    ExternalServiceResult result = await ChannelSession.ConnectMixerUser(isStreamer: false);
+                    Result result = await ChannelSession.ConnectMixerUser(isStreamer: false);
                     if (!result.Success)
                     {
                         await DialogHelper.ShowMessage(result.Message);
                         return;
                     }
+
+                    if (!await ChannelSession.InitializeSession(this.ModeratorChannelComboBox.Text))
+                    {
+                        return;
+                    }
                 }
 
-                if (await ChannelSession.InitializeSession(this.ModeratorChannelComboBox.Text))
+                IEnumerable<UserWithGroupsModel> users = await ChannelSession.MixerUserConnection.GetUsersWithRoles(ChannelSession.MixerChannel, UserRoleEnum.Mod);
+                if (users.Any(uwg => uwg.id.Equals(ChannelSession.MixerUser.id)) || ChannelSession.IsDebug())
                 {
-                    IEnumerable<UserWithGroupsModel> users = await ChannelSession.MixerUserConnection.GetUsersWithRoles(ChannelSession.MixerChannel, UserRoleEnum.Mod);
-                    if (users.Any(uwg => uwg.id.Equals(ChannelSession.MixerUser.id)) || ChannelSession.IsDebug())
-                    {
-                        ShowMainWindow(new MainWindow());
-                        this.Hide();
-                        this.Close();
-                    }
-                    else
-                    {
-                        await DialogHelper.ShowMessage(MixItUp.Base.Resources.LoginErrorNotModerator);
-                    }
+                    ShowMainWindow(new MainWindow());
+                    this.Hide();
+                    this.Close();
+                }
+                else
+                {
+                    await DialogHelper.ShowMessage(MixItUp.Base.Resources.LoginErrorNotModerator);
                 }
             });
         }
@@ -236,7 +239,7 @@ namespace MixItUp.WPF
 
         private async Task<bool> ExistingSettingLogin(SettingsV2Model setting)
         {
-            ExternalServiceResult result = await ChannelSession.ConnectUser(setting);
+            Result result = await ChannelSession.ConnectUser(setting);
             if (result.Success)
             {
                 if (await ChannelSession.InitializeSession(setting.IsStreamer ? null : setting.Name))

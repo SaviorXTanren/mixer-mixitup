@@ -14,6 +14,7 @@ using Mixer.Base.Model.Teams;
 using Mixer.Base.Model.TestStreams;
 using Mixer.Base.Model.User;
 using MixItUp.Base.Services.External;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
@@ -130,50 +131,50 @@ namespace MixItUp.Base.Services.Mixer
             OAuthClientScopeEnum.user__act_as,
         };
 
-        public static async Task<ExternalServiceResult<MixerConnectionService>> Connect(OAuthTokenModel token)
+        public static async Task<Result<MixerConnectionService>> Connect(OAuthTokenModel token)
         {
             try
             {
                 MixerConnection connection = await MixerConnection.ConnectViaOAuthToken(token);
                 if (connection != null)
                 {
-                    return new ExternalServiceResult<MixerConnectionService>(new MixerConnectionService(connection));
+                    return new Result<MixerConnectionService>(new MixerConnectionService(connection));
                 }
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
-                return new ExternalServiceResult<MixerConnectionService>(ex);
+                return new Result<MixerConnectionService>(ex);
             }
-            return new ExternalServiceResult<MixerConnectionService>("Mixer OAuth token could not be used");
+            return new Result<MixerConnectionService>("Mixer OAuth token could not be used");
         }
 
-        public static async Task<ExternalServiceResult<MixerConnectionService>> ConnectUser(bool isStreamer)
+        public static async Task<Result<MixerConnectionService>> ConnectUser(bool isStreamer)
         {
-            return await MixerConnectionService.Connect(isStreamer ? MixerConnectionService.StreamerScopes : MixerConnectionService.ModeratorScopes);
+            return await MixerConnectionService.Connect(isStreamer ? MixerConnectionService.StreamerScopes : MixerConnectionService.ModeratorScopes, false);
         }
 
-        public static async Task<ExternalServiceResult<MixerConnectionService>> ConnectBot()
+        public static async Task<Result<MixerConnectionService>> ConnectBot()
         {
-            return await MixerConnectionService.Connect(MixerConnectionService.BotScopes);
+            return await MixerConnectionService.Connect(MixerConnectionService.BotScopes, true);
         }
 
-        public static async Task<ExternalServiceResult<MixerConnectionService>> Connect(IEnumerable<OAuthClientScopeEnum> scopes)
+        public static async Task<Result<MixerConnectionService>> Connect(IEnumerable<OAuthClientScopeEnum> scopes, bool forceApproval)
         {
             try
             {
-                MixerConnection connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(MixerConnectionService.ClientID, scopes, false, successResponse: OAuthExternalServiceBase.LoginRedirectPageHTML);
+                MixerConnection connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(MixerConnectionService.ClientID, scopes, forceApproval, successResponse: OAuthExternalServiceBase.LoginRedirectPageHTML);
                 if (connection != null)
                 {
-                    return new ExternalServiceResult<MixerConnectionService>(new MixerConnectionService(connection));
+                    return new Result<MixerConnectionService>(new MixerConnectionService(connection));
                 }
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
-                return new ExternalServiceResult<MixerConnectionService>(ex);
+                return new Result<MixerConnectionService>(ex);
             }
-            return new ExternalServiceResult<MixerConnectionService>("Failed to connect to establish connection to Mixer");
+            return new Result<MixerConnectionService>("Failed to connect to establish connection to Mixer");
         }
 
         public MixerConnection Connection { get; private set; }

@@ -35,7 +35,7 @@ namespace MixItUp.WPF.Services
 
         public bool IsConnected { get; private set; }
 
-        public Task<ExternalServiceResult> Connect()
+        public Task<Result> Connect()
         {
             string key = ChannelSession.Services.Secrets.GetSecret("ApplicationInsightsKey");
             if (!string.IsNullOrEmpty(key))
@@ -46,7 +46,7 @@ namespace MixItUp.WPF.Services
             PlayFabSettings.staticSettings.TitleId = ChannelSession.Services.Secrets.GetSecret("PlayFabTitleID");
 
             this.IsConnected = true;
-            return Task.FromResult(new ExternalServiceResult());
+            return Task.FromResult(new Result());
         }
 
         public async Task Disconnect()

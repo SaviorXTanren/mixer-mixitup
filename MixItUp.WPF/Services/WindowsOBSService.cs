@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Services.External;
+using MixItUp.Base.Util;
 using OBSWebsocketDotNet;
 using OBSWebsocketDotNet.Types;
 using StreamingClient.Base.Util;
@@ -24,7 +25,7 @@ namespace MixItUp.WPF.Services
 
         public bool IsConnected { get; private set; }
 
-        public async Task<ExternalServiceResult> Connect()
+        public async Task<Result> Connect()
         {
             this.IsConnected = false;
 
@@ -44,9 +45,9 @@ namespace MixItUp.WPF.Services
                 await this.StartReplayBuffer();
                 this.Connected(this, new EventArgs());
                 ChannelSession.ReconnectionOccurred("OBS");
-                return new ExternalServiceResult();
+                return new Result();
             }
-            return new ExternalServiceResult("Failed to connect to OBS Studio web socket.");
+            return new Result("Failed to connect to OBS Studio web socket.");
         }
 
         public Task Disconnect()
@@ -203,7 +204,7 @@ namespace MixItUp.WPF.Services
         {
             await this.Disconnect();
 
-            ExternalServiceResult result;
+            Result result;
             do
             {
                 await Task.Delay(2500);

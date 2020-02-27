@@ -501,7 +501,7 @@ namespace MixItUp.Base.Services
 
                     if (!string.IsNullOrEmpty(message.PlainTextMessage))
                     {
-                        EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatUserBan, message.User);
+                        EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatMessageReceived, message.User);
                         trigger.SpecialIdentifiers["message"] = message.PlainTextMessage;
                         await ChannelSession.Services.Events.PerformEvent(trigger);
                     }
@@ -564,7 +564,7 @@ namespace MixItUp.Base.Services
             {
                 if (ChannelSession.Settings.WhisperAllAlerts)
                 {
-                    await ChannelSession.Services.Chat.Whisper(await ChannelSession.GetCurrentUser(), message.PlainTextMessage, false);
+                    await ChannelSession.Services.Chat.Whisper(ChannelSession.GetCurrentUser(), message.PlainTextMessage, false);
                 }
 
                 GlobalEvents.AlertMessageReceived((AlertChatMessageViewModel)message);
@@ -628,7 +628,14 @@ namespace MixItUp.Base.Services
                 {
                     lock (displayUsersLock)
                     {
-                        this.displayUsers.Remove(user.SortableID);
+                        if (!this.displayUsers.Remove(user.SortableID))
+                        {
+                            int index = this.displayUsers.IndexOfValue(user);
+                            if (index >= 0)
+                            {
+                                this.displayUsers.RemoveAt(index);
+                            }
+                        }
                     }
 
                     if (ChannelSession.Settings.ChatShowUserJoinLeave && users.Count() < 5)
@@ -713,17 +720,20 @@ namespace MixItUp.Base.Services
 
         private async void MixerChatService_OnUserPurgeOccurred(object sender, Tuple<UserViewModel, UserViewModel> e)
         {
-            foreach (ChatMessageViewModel message in this.Messages.ToList())
+            if (e.Item1 != null)
             {
-                if (message.Platform == StreamingPlatformTypeEnum.Mixer && message.User.Equals(e.Item1))
+                foreach (ChatMessageViewModel message in this.Messages.ToList())
                 {
-                    await message.Delete(user: e.Item2, reason: "Purged");
+                    if (message.Platform == StreamingPlatformTypeEnum.Mixer && message.User.Equals(e.Item1))
+                    {
+                        await message.Delete(user: e.Item2, reason: "Purged");
+                    }
                 }
-            }
 
-            EventTrigger trigger = new EventTrigger(EventTypeEnum.ChatUserPurge, e.Item2);
-            trigger.Arguments.Add(e.Item1.Username);
-            await ChannelSession.Services.Events.PerformEvent(trigger);
+                EventTrigger trigger = (e.Item2 != null) ? new EventTrigger(EventTypeEnum.ChatUserPurge, e.Item2) : new EventTrigger(EventTypeEnum.ChatUserPurge);
+                trigger.Arguments.Add(e.Item1.Username);
+                await ChannelSession.Services.Events.PerformEvent(trigger);
+            }
         }
 
         private async void MixerChatService_OnUserBanOccurred(object sender, UserViewModel user)

@@ -12,14 +12,33 @@ namespace MixItUp.Base.Model.Settings
     {
         private const string ApplicationSettingsFileName = "ApplicationSettings.json";
 
+        private const string OldApplicationSettingsFileName = "ApplicationSettings.xml";
+
         public static async Task<ApplicationSettingsV2Model> Load()
         {
             ApplicationSettingsV2Model settings = new ApplicationSettingsV2Model();
+            if (ChannelSession.Services.FileService.FileExists(OldApplicationSettingsFileName))
+            {
+                try
+                {
+                    ApplicationSettingsV2Model oldSettings = await FileSerializerHelper.DeserializeFromFile<ApplicationSettingsV2Model>(OldApplicationSettingsFileName);
+                    if (oldSettings != null)
+                    {
+                        await oldSettings.Save();
+                    }
+                    await ChannelSession.Services.FileService.DeleteFile(OldApplicationSettingsFileName);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+            }
+
             if (ChannelSession.Services.FileService.FileExists(ApplicationSettingsFileName))
             {
                 try
                 {
-                    settings = await SerializerHelper.DeserializeFromFile<ApplicationSettingsV2Model>(ApplicationSettingsFileName);
+                    settings = await FileSerializerHelper.DeserializeFromFile<ApplicationSettingsV2Model>(ApplicationSettingsFileName);
                 }
                 catch (Exception ex)
                 {
@@ -36,7 +55,7 @@ namespace MixItUp.Base.Model.Settings
         public bool PreviewProgram { get; set; } = false;
 
         [DataMember]
-        public uint AutoLogInAccount { get; set; } = 0;
+        public Guid AutoLogInID { get; set; } = Guid.Empty;
 
         [DataMember]
         public string ColorScheme { get; set; } = "Indigo";
@@ -46,9 +65,6 @@ namespace MixItUp.Base.Model.Settings
 
         [DataMember]
         public string FullThemeName { get; set; } = string.Empty;
-
-        [DataMember]
-        public string Language { get; set; } = "en";
 
         [DataMember]
         public double Top { get; set; }
@@ -65,6 +81,9 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public bool IsMaximized { get; set; }
 
+        [DataMember]
+        public LanguageOptions LanguageOption { get; set; }
+
         [JsonIgnore]
         public bool IsDarkBackground { get { return this.BackgroundColor.Equals("Dark"); } }
 
@@ -74,7 +93,7 @@ namespace MixItUp.Base.Model.Settings
         {
             try
             {
-                await SerializerHelper.SerializeToFile(ApplicationSettingsFileName, this);
+                await FileSerializerHelper.SerializeToFile(ApplicationSettingsFileName, this);
             }
             catch (Exception ex)
             {

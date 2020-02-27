@@ -32,7 +32,7 @@ namespace MixItUp.Base.ViewModel.Controls.Services
                 }
                 else
                 {
-                    ExternalServiceResult result = await ChannelSession.Services.IFTTT.Connect(new OAuthTokenModel() { accessToken = this.IFTTTWebHookKey });
+                    Result result = await ChannelSession.Services.IFTTT.Connect(new OAuthTokenModel() { accessToken = this.IFTTTWebHookKey });
                     if (result.Success)
                     {
                         this.IsConnected = true;
@@ -47,6 +47,9 @@ namespace MixItUp.Base.ViewModel.Controls.Services
             this.LogOutCommand = this.CreateCommand(async (parameter) =>
             {
                 await ChannelSession.Services.IFTTT.Disconnect();
+
+                ChannelSession.Settings.IFTTTOAuthToken = null;
+
                 this.IsConnected = false;
             });
 

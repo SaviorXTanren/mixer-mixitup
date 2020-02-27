@@ -37,10 +37,10 @@ namespace MixItUp.Base.Services.Mixer
 
         bool IsBotConnected { get; }
 
-        Task<ExternalServiceResult> ConnectUser();
+        Task<Result> ConnectUser();
         Task DisconnectUser();
 
-        Task<ExternalServiceResult> ConnectBot();
+        Task<Result> ConnectBot();
         Task DisconnectBot();
 
         Task SendMessage(string message, bool sendAsStreamer = false);
@@ -92,18 +92,20 @@ namespace MixItUp.Base.Services.Mixer
 
         public bool IsBotConnected { get { return this.botClient != null && this.botClient.Connected; } }
 
-        public async Task<ExternalServiceResult> ConnectUser()
+        public async Task<Result> ConnectUser()
         {
             if (ChannelSession.MixerUserConnection != null)
             {
                 return await this.AttemptConnect(async () =>
                 {
+                    await this.DisconnectUser();
+
                     this.cancellationTokenSource = new CancellationTokenSource();
 
-                    ExternalServiceResult<ChatClient> result = await this.ConnectAndAuthenticateChatClient(ChannelSession.MixerUserConnection);
+                    Result<ChatClient> result = await this.ConnectAndAuthenticateChatClient(ChannelSession.MixerUserConnection);
                     if (result.Success)
                     {
-                        this.streamerClient = result.Result;
+                        this.streamerClient = result.Value;
 
                         this.streamerClient.OnClearMessagesOccurred += ChatClient_OnClearMessagesOccurred;
                         this.streamerClient.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
@@ -151,7 +153,7 @@ namespace MixItUp.Base.Services.Mixer
                     return result;
                 });
             }
-            return new ExternalServiceResult("Mixer connection has not been established");
+            return new Result("Mixer connection has not been established");
         }
 
         public async Task DisconnectUser()
@@ -191,16 +193,18 @@ namespace MixItUp.Base.Services.Mixer
             });
         }
 
-        public async Task<ExternalServiceResult> ConnectBot()
+        public async Task<Result> ConnectBot()
         {
             if (ChannelSession.MixerBotConnection != null)
             {
                 return await this.AttemptConnect(async () =>
                 {
-                    ExternalServiceResult<ChatClient> result = await this.ConnectAndAuthenticateChatClient(ChannelSession.MixerBotConnection);
+                    await this.DisconnectBot();
+
+                    Result<ChatClient> result = await this.ConnectAndAuthenticateChatClient(ChannelSession.MixerBotConnection);
                     if (result.Success)
                     {
-                        this.botClient = result.Result;
+                        this.botClient = result.Value;
 
                         this.botClient.OnMessageOccurred += BotChatClient_OnMessageOccurred;
                         this.botClient.OnDisconnectOccurred += BotClient_OnDisconnectOccurred;
@@ -220,7 +224,7 @@ namespace MixItUp.Base.Services.Mixer
                     return result;
                 });
             }
-            return new ExternalServiceResult("Mixer connection has not been established");
+            return new Result("Mixer connection has not been established");
         }
 
         public async Task DisconnectBot()
@@ -410,7 +414,7 @@ namespace MixItUp.Base.Services.Mixer
 
         private ChatClient GetChatClient(bool sendAsStreamer = false) { return (this.botClient != null && !sendAsStreamer) ? this.botClient : this.streamerClient; }
 
-        private async Task<ExternalServiceResult<ChatClient>> ConnectAndAuthenticateChatClient(MixerConnectionService connection)
+        private async Task<Result<ChatClient>> ConnectAndAuthenticateChatClient(MixerConnectionService connection)
         {
             ChatClient client = await this.RunAsync(ChatClient.CreateFromChannel(connection.Connection, ChannelSession.MixerChannel));
             if (client != null)
@@ -419,13 +423,13 @@ namespace MixItUp.Base.Services.Mixer
                 {
                     if (await this.RunAsync(client.Authenticate()))
                     {
-                        return new ExternalServiceResult<ChatClient>(client);
+                        return new Result<ChatClient>(client);
                     }
-                    return new ExternalServiceResult<ChatClient>("Failed to authenticate to Mixer chat");
+                    return new Result<ChatClient>("Failed to authenticate to Mixer chat");
                 }
-                return new ExternalServiceResult<ChatClient>("Failed to connect Mixer chat");
+                return new Result<ChatClient>("Failed to connect Mixer chat");
             }
-            return new ExternalServiceResult<ChatClient>("Failed to create chat client from connection");
+            return new Result<ChatClient>("Failed to create chat client from connection");
         }
 
         private string SplitLargeMessage(string message, out string subMessage)
@@ -687,13 +691,13 @@ namespace MixItUp.Base.Services.Mixer
             {
                 if (e.errorObject.ContainsKey("code") && e.errorObject.ContainsKey("message") && e.errorObject["code"].ToString().Equals("4007"))
                 {
-                    await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer, await ChannelSession.GetCurrentUser(),
+                    await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer, ChannelSession.GetCurrentUser(),
                         "The Bot account could not send the last message for the following reason: " + e.errorObject["message"]));
                 }
             }
             else if (e.error != null && !string.IsNullOrEmpty(e.error.ToString()))
             {
-                await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer, await ChannelSession.GetCurrentUser(),
+                await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer, ChannelSession.GetCurrentUser(),
                     "Bot account error: " + e.error.ToString()));
             }
         }
@@ -721,7 +725,7 @@ namespace MixItUp.Base.Services.Mixer
         {
             ChannelSession.DisconnectionOccurred("Mixer Streamer Chat");
 
-            ExternalServiceResult result;
+            Result result;
             await this.DisconnectUser();
             do
             {
@@ -738,7 +742,7 @@ namespace MixItUp.Base.Services.Mixer
         {
             ChannelSession.DisconnectionOccurred("Mixer Bot Chat");
 
-            ExternalServiceResult result;
+            Result result;
             await this.DisconnectBot();
             do
             {

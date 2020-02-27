@@ -119,9 +119,9 @@ namespace MixItUp.Base.Services.External
 
         public override string Name { get { return "Streamloots"; } }
 
-        public override Task<ExternalServiceResult> Connect()
+        public override Task<Result> Connect()
         {
-            return Task.FromResult(new ExternalServiceResult(false));
+            return Task.FromResult(new Result(false));
         }
 
         public override Task Disconnect()
@@ -141,13 +141,13 @@ namespace MixItUp.Base.Services.External
             return Task.FromResult(0);
         }
 
-        protected override Task<ExternalServiceResult> InitializeInternal()
+        protected override Task<Result> InitializeInternal()
         {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             Task.Run(this.BackgroundCheck, this.cancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-            return Task.FromResult(new ExternalServiceResult());
+            return Task.FromResult(new Result());
         }
 
         protected override Task RefreshOAuthToken() { return Task.FromResult(0); }

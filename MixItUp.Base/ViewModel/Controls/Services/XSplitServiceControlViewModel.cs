@@ -17,7 +17,7 @@ namespace MixItUp.Base.ViewModel.Controls.Services
             {
                 ChannelSession.Settings.EnableXSplitConnection = false;
 
-                ExternalServiceResult result = await ChannelSession.Services.XSplit.Connect();
+                Result result = await ChannelSession.Services.XSplit.Connect();
                 if (result.Success)
                 {
                     this.IsConnected = true;

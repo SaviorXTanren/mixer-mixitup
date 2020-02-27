@@ -75,7 +75,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
         private object customMixPlayControl;
         public bool IsCustomMixPlay { get { return this.CustomMixPlayControl != null; } }
 
-        public string ContentDisconnectContent { get { return (ChannelSession.Services.MixPlay.IsConnected) ? "Disconnect" : "Connect"; } }
+        public string ContentDisconnectContent { get { return (ChannelSession.Services.MixPlay.IsConnected) ? Resources.Disconnect : Resources.Connect; } }
         public ICommand ConnectDisconnectCommand { get; private set; }
 
         public MixPlayMainControlViewModel(MainWindowViewModel windowViewModel)
@@ -147,7 +147,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
                 if (!ChannelSession.Services.MixPlay.IsConnected)
                 {
                     await ChannelSession.Services.MixPlay.SetGame(this.SelectedGame);
-                    ExternalServiceResult result = await ChannelSession.Services.MixPlay.Connect();
+                    Result result = await ChannelSession.Services.MixPlay.Connect();
                     if (!result.Success)
                     {
                         await DialogHelper.ShowMessage(result.Message);

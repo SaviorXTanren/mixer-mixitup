@@ -128,7 +128,7 @@ namespace MixItUp.Base.Services.External
 
         public override string Name { get { return "JustGiving"; } }
 
-        public override async Task<ExternalServiceResult> Connect()
+        public override async Task<Result> Connect()
         {
             try
             {
@@ -153,9 +153,9 @@ namespace MixItUp.Base.Services.External
             catch (Exception ex)
             {
                 Logger.Log(ex);
-                return new ExternalServiceResult(ex);
+                return new Result(ex);
             }
-            return new ExternalServiceResult(false);
+            return new Result(false);
         }
 
         public override Task Disconnect()
@@ -236,7 +236,7 @@ namespace MixItUp.Base.Services.External
             return client;
         }
 
-        protected override async Task<ExternalServiceResult> InitializeInternal()
+        protected override async Task<Result> InitializeInternal()
         {
             this.cancellationTokenSource = new CancellationTokenSource();
 
@@ -253,9 +253,9 @@ namespace MixItUp.Base.Services.External
 
                 AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 30000, this.BackgroundDonationCheck);
 
-                return new ExternalServiceResult();
+                return new Result();
             }
-            return new ExternalServiceResult("Unable to get User data");
+            return new Result("Unable to get User data");
         }
 
         protected override void DisposeInternal()

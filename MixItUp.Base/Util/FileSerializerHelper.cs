@@ -1,18 +1,17 @@
 ﻿using MixItUp.Base.Services;
-using Newtonsoft.Json;
 using StreamingClient.Base.Util;
 using System.IO;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Util
 {
-    public static class SerializerHelper
+    public static class FileSerializerHelper
     {
         private static IFileService fileService;
 
         public static void Initialize(IFileService fileService)
         {
-            SerializerHelper.fileService = fileService;
+            FileSerializerHelper.fileService = fileService;
         }
 
         public static async Task SerializeToFile<T>(string filePath, T data)
@@ -20,7 +19,7 @@ namespace MixItUp.Base.Util
             string dataString = JSONSerializerHelper.SerializeToString(data);
             if (!string.IsNullOrEmpty(dataString))
             {
-                await SerializerHelper.fileService.SaveFile(filePath, dataString);
+                await FileSerializerHelper.fileService.SaveFile(filePath, dataString);
             }
         }
 
@@ -28,15 +27,9 @@ namespace MixItUp.Base.Util
         {
             if (File.Exists(filePath))
             {
-                return JSONSerializerHelper.DeserializeFromString<T>(await SerializerHelper.fileService.ReadFile(filePath), ignoreErrors);
+                return JSONSerializerHelper.DeserializeFromString<T>(await FileSerializerHelper.fileService.ReadFile(filePath), ignoreErrors);
             }
             return default(T);
-        }
-
-        private static void IgnoreDeserializationError(object sender, Newtonsoft.Json.Serialization.ErrorEventArgs errorArgs)
-        {
-            Logger.Log(errorArgs.ErrorContext.Error.Message);
-            errorArgs.ErrorContext.Handled = true;
         }
     }
 }

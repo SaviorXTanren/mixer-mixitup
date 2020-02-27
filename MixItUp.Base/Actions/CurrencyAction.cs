@@ -198,7 +198,7 @@ namespace MixItUp.Base.Actions
                                 receiverUserData.Add(chatUser.Data);
                             }
                         }
-                        receiverUserData.Add((await ChannelSession.GetCurrentUser()).Data);
+                        receiverUserData.Add(ChannelSession.GetCurrentUser().Data);
                     }
 
                     if ((this.DeductFromUser && receiverUserData.Count > 0) || this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromUser)

@@ -52,7 +52,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public async Task Initialize() { await this.Item.Initialize(); }
 
-        public async Task Enable() { await this.Enable(await ChannelSession.GetCurrentUser(), new List<string>(), new Dictionary<string, string>()); }
+        public async Task Enable() { await this.Enable(ChannelSession.GetCurrentUser(), new List<string>(), new Dictionary<string, string>()); }
 
         public async Task Enable(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
@@ -82,7 +82,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public async Task LoadCachedData() { await this.Item.LoadCachedData(); }
 
-        public async Task ShowItem() { await this.ShowItem(await ChannelSession.GetCurrentUser(), new List<string>(), new Dictionary<string, string>()); }
+        public async Task ShowItem() { await this.ShowItem(ChannelSession.GetCurrentUser(), new List<string>(), new Dictionary<string, string>()); }
 
         public async Task ShowItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
@@ -93,7 +93,7 @@ namespace MixItUp.Base.Model.Overlay
             }
         }
 
-        public async Task UpdateItem() { await this.UpdateItem(await ChannelSession.GetCurrentUser(), new List<string>(), new Dictionary<string, string>()); }
+        public async Task UpdateItem() { await this.UpdateItem(ChannelSession.GetCurrentUser(), new List<string>(), new Dictionary<string, string>()); }
 
         public async Task UpdateItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {

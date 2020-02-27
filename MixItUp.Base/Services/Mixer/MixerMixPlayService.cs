@@ -69,7 +69,7 @@ namespace MixItUp.Base.Services.Mixer
         Task<IEnumerable<MixPlayGameModel>> GetAllGames();
         Task SetGame(MixPlayGameModel game);
 
-        Task<ExternalServiceResult> Connect();
+        Task<Result> Connect();
         Task Disconnect();
 
         Task<MixPlayConnectedSceneGroupCollectionModel> GetScenes();
@@ -175,12 +175,14 @@ namespace MixItUp.Base.Services.Mixer
             }
         }
 
-        public async Task<ExternalServiceResult> Connect()
+        public async Task<Result> Connect()
         {
             if (ChannelSession.MixerUserConnection != null)
             {
-                ExternalServiceResult result = await this.RunAsync(async () =>
+                Result result = await this.RunAsync(async () =>
                 {
+                    await this.Disconnect();
+
                     if (this.SharedProject != null)
                     {
                         this.Client = await this.RunAsync(MixPlayClient.CreateFromChannel(ChannelSession.MixerUserConnection.Connection, ChannelSession.MixerChannel, this.SelectedGame, this.SelectedVersion, this.SharedProject.ShareCode));
@@ -253,7 +255,7 @@ namespace MixItUp.Base.Services.Mixer
 
                                 if (duplicatedControls.Count > 0)
                                 {
-                                    return new ExternalServiceResult("The following controls exist on multiple scenes, please visit the interactive lab and correct this problem:" + Environment.NewLine +
+                                    return new Result("The following controls exist on multiple scenes, please visit the interactive lab and correct this problem:" + Environment.NewLine +
                                         Environment.NewLine + string.Join(", ", duplicatedControls.Select(c => c.controlID)));
                                 }
 
@@ -267,7 +269,7 @@ namespace MixItUp.Base.Services.Mixer
                                         {
                                             if (!await this.AddGroup(userGroup.GroupName, userGroup.DefaultScene))
                                             {
-                                                return new ExternalServiceResult("Failed to add MixPlay groups");
+                                                return new Result("Failed to add MixPlay groups");
                                             }
                                         }
                                     }
@@ -276,16 +278,16 @@ namespace MixItUp.Base.Services.Mixer
                                 // Initialize Participants
                                 await this.AddParticipants(await this.GetRecentParticipants());
 
-                                return new ExternalServiceResult();
+                                return new Result();
                             }
-                            return new ExternalServiceResult("Failed to MixPlay scene data");
+                            return new Result("Failed to MixPlay scene data");
                         }
                         else
                         {
-                            return new ExternalServiceResult("Failed to authenticate and ready to Mixer MixPlay");
+                            return new Result("Failed to authenticate and ready to Mixer MixPlay");
                         }
                     }
-                    return new ExternalServiceResult("Failed to connect to Mixer MixPlay");
+                    return new Result("Failed to connect to Mixer MixPlay");
                 });
 
                 if (!result.Success)
@@ -294,7 +296,7 @@ namespace MixItUp.Base.Services.Mixer
                 }
                 return result;
             }
-            return new ExternalServiceResult("Mixer connection has not been established");
+            return new Result("Mixer connection has not been established");
         }
 
         public async Task Disconnect()
@@ -697,18 +699,15 @@ namespace MixItUp.Base.Services.Mixer
                         if (user == null)
                         {
                             MixPlayParticipantModel participant = null;
-                            if (this.Participants.TryGetValue(e.participantID, out participant))
-                            {
-                                user = await ChannelSession.Services.User.AddOrUpdateUser(participant);
-                            }
-                            else
+                            if (!this.Participants.TryGetValue(e.participantID, out participant))
                             {
                                 IEnumerable<MixPlayParticipantModel> recentParticipants = await this.GetRecentParticipants();
                                 participant = recentParticipants.FirstOrDefault(p => p.sessionID.Equals(e.participantID));
-                                if (participant != null)
-                                {
-                                    user = await ChannelSession.Services.User.AddOrUpdateUser(participant);
-                                }
+                            }
+
+                            if (participant != null && !participant.anonymous.GetValueOrDefault())
+                            {
+                                user = await ChannelSession.Services.User.AddOrUpdateUser(participant);
                             }
                         }
                     }
@@ -752,33 +751,43 @@ namespace MixItUp.Base.Services.Mixer
                         arguments.Add(e.input.value);
                     }
 
+                    uint sparkCost = 0;
+                    string text = string.Empty;
+                    if (control is MixPlayButtonControlModel)
+                    {
+                        MixPlayButtonControlModel button = (MixPlayButtonControlModel)control;
+                        sparkCost = (uint)button.cost.GetValueOrDefault();
+                        text = button.text;
+                    }
+                    else if (control is MixPlayTextBoxControlModel)
+                    {
+                        MixPlayTextBoxControlModel textBox = (MixPlayTextBoxControlModel)control;
+                        sparkCost = (uint)textBox.cost.GetValueOrDefault();
+                        text = textBox.submitText;
+                    }
+
+                    Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();
+                    extraSpecialIdentifiers["mixplaycontrolid"] = command.Name;
+                    extraSpecialIdentifiers["mixplaycontrolcost"] = sparkCost.ToString();
+                    extraSpecialIdentifiers["mixplaycontroltext"] = text;
+
                     bool commandRun = false;
                     await this.controlCooldownSemaphore.WaitAndRelease(async () =>
                     {
                         if (await command.CheckAllRequirements(user))
                         {
-                            await command.Perform(user, StreamingPlatformTypeEnum.Mixer, arguments);
+                            await command.Perform(user, StreamingPlatformTypeEnum.Mixer, arguments, extraSpecialIdentifiers);
                             commandRun = true;
                         }
                     });
 
                     if (commandRun)
                     {
-                        uint sparkCost = 0;
                         if (!string.IsNullOrEmpty(e.transactionID) && !user.Data.IsSparkExempt)
                         {
                             Logger.Log(LogLevel.Debug, "Sending Spark Transaction Capture - " + e.transactionID);
 
                             await this.CaptureSparkTransaction(e.transactionID);
-                            if (control is MixPlayButtonControlModel)
-                            {
-                                sparkCost = (uint)((MixPlayButtonControlModel)control).cost.GetValueOrDefault();
-                            }
-                            else if (control is MixPlayTextBoxControlModel)
-                            {
-                                sparkCost = (uint)((MixPlayTextBoxControlModel)control).cost.GetValueOrDefault();
-                            }
-
                             if (sparkCost > 0)
                             {
                                 GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, uint>(user, sparkCost));
@@ -800,7 +809,7 @@ namespace MixItUp.Base.Services.Mixer
 
                         this.OnControlUsed(this, new MixPlayInputEvent(user, e, control));
 
-                        if (ChannelSession.Settings.ChatShowMixPlayAlerts && user != null && !user.IsAnonymous)
+                        if (ChannelSession.Settings.ChatShowMixPlayAlerts)
                         {
                             await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer, user,
                                 string.Format("{0} Used The \"{1}\" Interactive Control", user.Username, control.controlID), ChannelSession.Settings.ChatMixPlayAlertsColorScheme));
@@ -815,7 +824,7 @@ namespace MixItUp.Base.Services.Mixer
         {
             ChannelSession.DisconnectionOccurred("MixPlay");
 
-            ExternalServiceResult result;
+            Result result;
             do
             {
                 await Task.Delay(2500);

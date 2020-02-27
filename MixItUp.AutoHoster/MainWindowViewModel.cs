@@ -137,12 +137,14 @@ namespace MixItUp.AutoHoster
 
         public async Task<bool> Initialize()
         {
+            FileSerializerHelper.Initialize(new WindowsFileService());
+
             if (!Directory.Exists("Settings"))
             {
                 Directory.CreateDirectory("Settings");
             }
 
-            this.settings = await SerializerHelper.DeserializeFromFile<AutoHosterSettingsModel>(SettingsFileName);
+            this.settings = await FileSerializerHelper.DeserializeFromFile<AutoHosterSettingsModel>(SettingsFileName);
             if (this.settings?.OAuthToken != null)
             {
                 try
@@ -361,7 +363,7 @@ namespace MixItUp.AutoHoster
             {
                 this.settings.OAuthToken = oauthToken;
                 this.settings.Channels = this.Channels.ToList();
-                await SerializerHelper.SerializeToFile(SettingsFileName, this.settings);
+                await FileSerializerHelper.SerializeToFile(SettingsFileName, this.settings);
             }
             catch (Exception ex)
             {

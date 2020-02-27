@@ -30,13 +30,14 @@ namespace MixItUp.Base.Model.Settings
     [DataContract]
     public class SettingsV2Model
     {
-        public const int LatestVersion = 1;
+        public const int LatestVersion = 40;
 
         public const string SettingsDirectoryName = "Settings";
 
         public const string SettingsTemplateDatabaseFileName = "SettingsTemplateDatabase.db";
 
         public const string SettingsFileExtension = "miu";
+        public const string DatabaseFileExtension = "db";
         public const string SettingsBackupFileExtension = "miubackup";
 
         [DataMember]
@@ -207,7 +208,7 @@ namespace MixItUp.Base.Model.Settings
         [DataMember]
         public List<MixPlaySharedProjectModel> CustomMixPlayProjectIDs { get; set; } = new List<MixPlaySharedProjectModel>();
 
-        [JsonIgnore]
+        [DataMember]
         public Dictionary<uint, List<MixPlayUserGroupModel>> MixPlayUserGroups { get; set; } = new Dictionary<uint, List<MixPlayUserGroupModel>>();
 
         [DataMember]
@@ -467,20 +468,20 @@ namespace MixItUp.Base.Model.Settings
         #region Database Data
 
         [JsonIgnore]
-        public LockedList<ChatCommand> ChatCommands { get; set; } = new LockedList<ChatCommand>();
+        public DatabaseList<ChatCommand> ChatCommands { get; set; } = new DatabaseList<ChatCommand>();
         [JsonIgnore]
-        public LockedList<EventCommand> EventCommands { get; set; } = new LockedList<EventCommand>();
+        public DatabaseList<EventCommand> EventCommands { get; set; } = new DatabaseList<EventCommand>();
         [JsonIgnore]
-        public LockedList<MixPlayCommand> MixPlayCommands { get; set; } = new LockedList<MixPlayCommand>();
+        public DatabaseList<MixPlayCommand> MixPlayCommands { get; set; } = new DatabaseList<MixPlayCommand>();
         [JsonIgnore]
-        public LockedList<TimerCommand> TimerCommands { get; set; } = new LockedList<TimerCommand>();
+        public DatabaseList<TimerCommand> TimerCommands { get; set; } = new DatabaseList<TimerCommand>();
         [JsonIgnore]
-        public LockedList<ActionGroupCommand> ActionGroupCommands { get; set; } = new LockedList<ActionGroupCommand>();
+        public DatabaseList<ActionGroupCommand> ActionGroupCommands { get; set; } = new DatabaseList<ActionGroupCommand>();
         [JsonIgnore]
-        public LockedList<GameCommandBase> GameCommands { get; set; } = new LockedList<GameCommandBase>();
+        public DatabaseList<GameCommandBase> GameCommands { get; set; } = new DatabaseList<GameCommandBase>();
 
         [JsonIgnore]
-        public LockedList<UserQuoteViewModel> Quotes { get; set; } = new LockedList<UserQuoteViewModel>();
+        public DatabaseList<UserQuoteViewModel> Quotes { get; set; } = new DatabaseList<UserQuoteViewModel>();
 
         [JsonIgnore]
         public DatabaseDictionary<Guid, UserDataModel> UserData { get; set; } = new DatabaseDictionary<Guid, UserDataModel>();
@@ -497,7 +498,7 @@ namespace MixItUp.Base.Model.Settings
         public string SettingsFilePath { get { return Path.Combine(SettingsV2Model.SettingsDirectoryName, this.SettingsFileName); } }
 
         [JsonIgnore]
-        public string DatabaseFileName { get { return string.Format("{0}.db", this.ID); } }
+        public string DatabaseFileName { get { return string.Format("{0}.{1}", this.ID, SettingsV2Model.DatabaseFileExtension); } }
         [JsonIgnore]
         public string DatabaseFilePath { get { return Path.Combine(SettingsV2Model.SettingsDirectoryName, this.DatabaseFileName); } }
 
@@ -612,6 +613,13 @@ namespace MixItUp.Base.Model.Settings
                         this.GameCommands.Add(JSONSerializerHelper.DeserializeFromString<GameCommandBase>((string)data["Data"]));
                     }
                 });
+
+                this.ChatCommands.ClearTracking();
+                this.EventCommands.ClearTracking();
+                this.MixPlayCommands.ClearTracking();
+                this.TimerCommands.ClearTracking();
+                this.ActionGroupCommands.ClearTracking();
+                this.GameCommands.ClearTracking();
             }
 
             if (string.IsNullOrEmpty(this.TelemetryUserID))
@@ -626,6 +634,12 @@ namespace MixItUp.Base.Model.Settings
                 }
             }
 
+            // Mod accounts cannot use this feature, forcefully disable on load
+            if (!this.IsStreamer)
+            {
+                this.TrackWhispererNumber = false;
+            }
+
             this.InitializeMissingData();
         }
 
@@ -637,6 +651,8 @@ namespace MixItUp.Base.Model.Settings
 
         public void CopyLatestValues()
         {
+            Logger.Log(LogLevel.Debug, "Copying over latest values into Settings object");
+
             this.Version = SettingsV2Model.LatestVersion;
 
             if (ChannelSession.MixerUserConnection != null)
@@ -657,18 +673,54 @@ namespace MixItUp.Base.Model.Settings
                 this.TwitchBotOAuthToken = ChannelSession.TwitchBotConnection.Connection.GetOAuthTokenCopy();
             }
 
-            this.StreamlabsOAuthToken = ChannelSession.Services.Streamlabs.GetOAuthTokenCopy();
-            this.StreamElementsOAuthToken = ChannelSession.Services.StreamElements.GetOAuthTokenCopy();
-            this.StreamJarOAuthToken = ChannelSession.Services.StreamJar.GetOAuthTokenCopy();
-            this.TipeeeStreamOAuthToken = ChannelSession.Services.TipeeeStream.GetOAuthTokenCopy();
-            this.TreatStreamOAuthToken = ChannelSession.Services.TreatStream.GetOAuthTokenCopy();
-            this.StreamlootsOAuthToken = ChannelSession.Services.Streamloots.GetOAuthTokenCopy();
-            this.TiltifyOAuthToken = ChannelSession.Services.Tiltify.GetOAuthTokenCopy();
-            this.PatreonOAuthToken = ChannelSession.Services.Patreon.GetOAuthTokenCopy();
-            this.IFTTTOAuthToken = ChannelSession.Services.IFTTT.GetOAuthTokenCopy();
-            this.JustGivingOAuthToken = ChannelSession.Services.JustGiving.GetOAuthTokenCopy();
-            this.DiscordOAuthToken = ChannelSession.Services.Discord.GetOAuthTokenCopy();
-            this.TwitterOAuthToken = ChannelSession.Services.Twitter.GetOAuthTokenCopy();
+            if (ChannelSession.Services.Streamlabs.IsConnected)
+            {
+                this.StreamlabsOAuthToken = ChannelSession.Services.Streamlabs.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.StreamElements.IsConnected)
+            {
+                this.StreamElementsOAuthToken = ChannelSession.Services.StreamElements.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.StreamJar.IsConnected)
+            {
+                this.StreamJarOAuthToken = ChannelSession.Services.StreamJar.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.TipeeeStream.IsConnected)
+            {
+                this.TipeeeStreamOAuthToken = ChannelSession.Services.TipeeeStream.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.TreatStream.IsConnected)
+            {
+                this.TreatStreamOAuthToken = ChannelSession.Services.TreatStream.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.Streamloots.IsConnected)
+            {
+                this.StreamlootsOAuthToken = ChannelSession.Services.Streamloots.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.Tiltify.IsConnected)
+            {
+                this.TiltifyOAuthToken = ChannelSession.Services.Tiltify.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.Patreon.IsConnected)
+            {
+                this.PatreonOAuthToken = ChannelSession.Services.Patreon.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.IFTTT.IsConnected)
+            {
+                this.IFTTTOAuthToken = ChannelSession.Services.IFTTT.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.JustGiving.IsConnected)
+            {
+                this.JustGivingOAuthToken = ChannelSession.Services.JustGiving.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.Discord.IsConnected)
+            {
+                this.DiscordOAuthToken = ChannelSession.Services.Discord.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.Twitter.IsConnected)
+            {
+                this.TwitterOAuthToken = ChannelSession.Services.Twitter.GetOAuthTokenCopy();
+            }
 
             // Clear out unused Cooldown Groups and Command Groups
             var allUsedCooldownGroupNames =
@@ -734,15 +786,25 @@ namespace MixItUp.Base.Model.Settings
                     await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO InventoryAmounts(InventoryID, UserID, ItemID, Amount) VALUES(@InventoryID, @UserID, @ItemID, @Amount)", changedData);
                 }
 
-                List<CommandBase> commands = new List<CommandBase>();
-                commands.AddRange(this.ChatCommands);
-                commands.AddRange(this.EventCommands);
-                commands.AddRange(this.MixPlayCommands);
-                commands.AddRange(this.TimerCommands);
-                commands.AddRange(this.ActionGroupCommands);
-                commands.AddRange(this.GameCommands);
+                List<CommandBase> addedChangedCommands = new List<CommandBase>();
+                addedChangedCommands.AddRange(this.ChatCommands.GetAddedChangedValues());
+                addedChangedCommands.AddRange(this.EventCommands.GetAddedChangedValues());
+                addedChangedCommands.AddRange(this.MixPlayCommands.GetAddedChangedValues());
+                addedChangedCommands.AddRange(this.TimerCommands.GetAddedChangedValues());
+                addedChangedCommands.AddRange(this.ActionGroupCommands.GetAddedChangedValues());
+                addedChangedCommands.AddRange(this.GameCommands.GetAddedChangedValues());
                 await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Commands(ID, TypeID, Data) VALUES(@ID, @TypeID, @Data)",
-                    commands.Select(c => new Dictionary<string, object>() { { "@ID", c.ID.ToString() }, { "@TypeID", (int)c.Type }, { "@Data", JSONSerializerHelper.SerializeToString(c) } }));
+                    addedChangedCommands.Select(c => new Dictionary<string, object>() { { "@ID", c.ID.ToString() }, { "@TypeID", (int)c.Type }, { "@Data", JSONSerializerHelper.SerializeToString(c) } }));
+
+                List<CommandBase> removedCommands = new List<CommandBase>();
+                removedCommands.AddRange(this.ChatCommands.GetRemovedValues());
+                removedCommands.AddRange(this.EventCommands.GetRemovedValues());
+                removedCommands.AddRange(this.MixPlayCommands.GetRemovedValues());
+                removedCommands.AddRange(this.TimerCommands.GetRemovedValues());
+                removedCommands.AddRange(this.ActionGroupCommands.GetRemovedValues());
+                removedCommands.AddRange(this.GameCommands.GetRemovedValues());
+                await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Commands WHERE ID = @ID",
+                    removedCommands.Select(c => new Dictionary<string, object>() { { "@ID", c.ID.ToString() } }));
 
                 await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Quotes(ID, Data) VALUES(@ID, @Data)",
                     this.Quotes.Select(q => new Dictionary<string, object>() { { "@ID", q.ID }, { "@Data", JSONSerializerHelper.SerializeToString(q) } }));

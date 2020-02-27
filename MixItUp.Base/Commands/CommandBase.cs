@@ -142,7 +142,7 @@ namespace MixItUp.Base.Commands
 
         public async Task Perform(StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
         {
-            await this.Perform(await ChannelSession.GetCurrentUser(), platform, arguments, extraSpecialIdentifiers: extraSpecialIdentifiers);
+            await this.Perform(ChannelSession.GetCurrentUser(), platform, arguments, extraSpecialIdentifiers: extraSpecialIdentifiers);
         }
 
         public async Task Perform(UserViewModel user, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)

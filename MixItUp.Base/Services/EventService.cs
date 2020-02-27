@@ -1,5 +1,4 @@
-﻿using Mixer.Base.Model.User;
-using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services.Mixer;
@@ -191,7 +190,14 @@ namespace MixItUp.Base.Services
             : this(type)
         {
             this.User = user;
-            this.Platform = this.User.Platform;
+            if (this.User != null)
+            {
+                this.Platform = this.User.Platform;
+            }
+            else
+            {
+                this.Platform = StreamingPlatformTypeEnum.All;
+            }
         }
 
         public EventTrigger(EventTypeEnum type, UserViewModel user, Dictionary<string, string> specialIdentifiers)
@@ -271,7 +277,7 @@ namespace MixItUp.Base.Services
             EventCommand command = this.GetEventCommand(trigger.Type);
             if (command != null)
             {
-                return command.CanRun(trigger.User);
+                return command.CanRun((trigger.User != null) ? trigger.User : ChannelSession.GetCurrentUser());
             }
             return false;
         }
@@ -279,16 +285,9 @@ namespace MixItUp.Base.Services
         public async Task PerformEvent(EventTrigger trigger)
         {
             EventCommand command = this.GetEventCommand(trigger.Type);
-            if (command != null)
+            if (command != null && this.CanPerformEvent(trigger))
             {
-                if (trigger.User != null)
-                {
-                    await command.Perform(trigger.User, platform: trigger.Platform, arguments: trigger.Arguments, extraSpecialIdentifiers: trigger.SpecialIdentifiers);
-                }
-                else
-                {
-                    await command.Perform(await ChannelSession.GetCurrentUser(), platform: trigger.Platform, arguments: trigger.Arguments, extraSpecialIdentifiers: trigger.SpecialIdentifiers);
-                }
+                await command.Perform((trigger.User != null) ? trigger.User : ChannelSession.GetCurrentUser(), platform: trigger.Platform, arguments: trigger.Arguments, extraSpecialIdentifiers: trigger.SpecialIdentifiers);
             }
         }
     }

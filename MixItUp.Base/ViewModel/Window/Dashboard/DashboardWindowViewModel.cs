@@ -10,9 +10,7 @@ namespace MixItUp.Base.ViewModel.Window.Dashboard
     {
         One,
         Two,
-        [Name("Three Right")]
         ThreeRight,
-        [Name("Three Left")]
         ThreeLeft,
         Four
     }
@@ -23,12 +21,9 @@ namespace MixItUp.Base.ViewModel.Window.Dashboard
         Chat,
         Alerts,
         Statistics,
-        [Name("Game Queue")]
         GameQueue,
         [Obsolete]
-        [Name("Song Requests")]
         SongRequests,
-        [Name("Quick Commands")]
         QuickCommands
     }
 
@@ -105,18 +100,8 @@ namespace MixItUp.Base.ViewModel.Window.Dashboard
         public object GameQueueControl { get; set; }
         public object QuickCommandsControl { get; set; }
 
-        public IEnumerable<string> LayoutTypes { get { return EnumHelper.GetEnumNames<DashboardLayoutTypeEnum>(); } }
+        public IEnumerable<DashboardLayoutTypeEnum> LayoutTypes { get { return EnumHelper.GetEnumList<DashboardLayoutTypeEnum>(); } }
 
-        public string LayoutTypeString
-        {
-            get { return EnumHelper.GetEnumName(this.LayoutType); }
-            set
-            {
-                this.LayoutType = EnumHelper.GetEnumValueFromString<DashboardLayoutTypeEnum>(value);
-
-                this.NotifyPropertyChanged();
-            }
-        }
         public DashboardLayoutTypeEnum LayoutType
         {
             get { return ChannelSession.Settings.DashboardLayout; }
@@ -141,15 +126,6 @@ namespace MixItUp.Base.ViewModel.Window.Dashboard
         public bool IsLayoutThreeLeft { get { return this.LayoutType == DashboardLayoutTypeEnum.ThreeLeft; } }
         public bool IsLayoutFour { get { return this.LayoutType == DashboardLayoutTypeEnum.Four; } }
 
-        public string ItemTypeOneString
-        {
-            get { return EnumHelper.GetEnumName(this.ItemTypeOne); }
-            set
-            {
-                this.ItemTypeOne = EnumHelper.GetEnumValueFromString<DashboardItemTypeEnum>(value);
-                this.NotifyPropertyChanged();
-            }
-        }
         public DashboardItemTypeEnum ItemTypeOne
         {
             get { return ChannelSession.Settings.DashboardItems[0]; }
@@ -160,15 +136,6 @@ namespace MixItUp.Base.ViewModel.Window.Dashboard
             }
         }
 
-        public string ItemTypeTwoString
-        {
-            get { return EnumHelper.GetEnumName(this.ItemTypeTwo); }
-            set
-            {
-                this.ItemTypeTwo = EnumHelper.GetEnumValueFromString<DashboardItemTypeEnum>(value);
-                this.NotifyPropertyChanged();
-            }
-        }
         public DashboardItemTypeEnum ItemTypeTwo
         {
             get { return ChannelSession.Settings.DashboardItems[1]; }
@@ -179,15 +146,6 @@ namespace MixItUp.Base.ViewModel.Window.Dashboard
             }
         }
 
-        public string ItemTypeThreeString
-        {
-            get { return EnumHelper.GetEnumName(this.ItemTypeThree); }
-            set
-            {
-                this.ItemTypeThree = EnumHelper.GetEnumValueFromString<DashboardItemTypeEnum>(value);
-                this.NotifyPropertyChanged();
-            }
-        }
         public DashboardItemTypeEnum ItemTypeThree
         {
             get { return ChannelSession.Settings.DashboardItems[2]; }
@@ -198,15 +156,6 @@ namespace MixItUp.Base.ViewModel.Window.Dashboard
             }
         }
 
-        public string ItemTypeFourString
-        {
-            get { return EnumHelper.GetEnumName(this.ItemTypeFour); }
-            set
-            {
-                this.ItemTypeFour = EnumHelper.GetEnumValueFromString<DashboardItemTypeEnum>(value);
-                this.NotifyPropertyChanged();
-            }
-        }
         public DashboardItemTypeEnum ItemTypeFour
         {
             get { return ChannelSession.Settings.DashboardItems[3]; }
@@ -223,7 +172,7 @@ namespace MixItUp.Base.ViewModel.Window.Dashboard
         public LayoutItemsViewModel LayoutThreeLeft { get; set; } = new LayoutItemsViewModel();
         public LayoutItemsViewModel LayoutFour { get; set; } = new LayoutItemsViewModel();
 
-        public IEnumerable<string> ItemTypes { get { return EnumHelper.GetEnumNames<DashboardItemTypeEnum>(); } }
+        public IEnumerable<DashboardItemTypeEnum> ItemTypes { get { return EnumHelper.GetEnumList<DashboardItemTypeEnum>(); } }
 
         protected override async Task OnLoadedInternal()
         {
@@ -242,13 +191,9 @@ namespace MixItUp.Base.ViewModel.Window.Dashboard
         private void NotifyItemPropertiesChanged()
         {
             this.NotifyPropertyChanged("ItemTypeOne");
-            this.NotifyPropertyChanged("ItemTypeOneString");
             this.NotifyPropertyChanged("ItemTypeTwo");
-            this.NotifyPropertyChanged("ItemTypeTwoString");
             this.NotifyPropertyChanged("ItemTypeThree");
-            this.NotifyPropertyChanged("ItemTypeThreeString");
             this.NotifyPropertyChanged("ItemTypeFour");
-            this.NotifyPropertyChanged("ItemTypeFourString");
 
             this.LayoutOne.ClearItems();
             this.LayoutTwo.ClearItems();

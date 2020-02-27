@@ -37,31 +37,35 @@ namespace MixItUp.WPF.Windows
 
         public async Task RunAsyncOperation(Func<Task> action)
         {
-            this.StartAsyncOperation();
+            try
+            {
+                this.StartLoadingOperation();
 
-            await action();
-
-            this.EndAsyncOperation();
+                await action();
+            }
+            finally
+            {
+                this.EndLoadingOperation();
+            }
         }
 
         public async Task<T> RunAsyncOperation<T>(Func<Task<T>> action)
         {
-            this.StartAsyncOperation();
+            try
+            {
+                this.StartLoadingOperation();
 
-            T result = await action();
+                T result = await action();
 
-            this.EndAsyncOperation();
-
-            return result;
+                return result;
+            }
+            finally
+            {
+                this.EndLoadingOperation();
+            }
         }
 
-        protected void ShowMainWindow(Window window)
-        {
-            Application.Current.MainWindow = window;
-            window.Show();
-        }
-
-        protected void StartAsyncOperation()
+        public void StartLoadingOperation()
         {
             try
             {
@@ -75,7 +79,7 @@ namespace MixItUp.WPF.Windows
             }
         }
 
-        protected void EndAsyncOperation()
+        public void EndLoadingOperation()
         {
             try
             {
@@ -91,6 +95,12 @@ namespace MixItUp.WPF.Windows
             {
                 Logger.Log(ex);
             }
+        }
+
+        protected void ShowMainWindow(Window window)
+        {
+            Application.Current.MainWindow = window;
+            window.Show();
         }
 
         protected virtual Task OnLoaded() { return Task.FromResult(0); }

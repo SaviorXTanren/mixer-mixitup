@@ -103,7 +103,7 @@ namespace MixItUp.Base.Services.External
 
         public override string Name { get { return "TreatStream"; } }
 
-        public override async Task<ExternalServiceResult> Connect()
+        public override async Task<Result> Connect()
         {
             try
             {
@@ -132,9 +132,9 @@ namespace MixItUp.Base.Services.External
             catch (Exception ex)
             {
                 Logger.Log(ex);
-                return new ExternalServiceResult(ex);
+                return new Result(ex);
             }
-            return new ExternalServiceResult(false);
+            return new Result(false);
         }
 
         public override async Task Disconnect()
@@ -209,18 +209,18 @@ namespace MixItUp.Base.Services.External
             }
         }
 
-        protected override async Task<ExternalServiceResult> InitializeInternal()
+        protected override async Task<Result> InitializeInternal()
         {
             this.socketToken = await this.GetSocketToken();
             if (!string.IsNullOrEmpty(socketToken))
             {
                 if (await this.ConnectSocket())
                 {
-                    return new ExternalServiceResult();
+                    return new Result();
                 }
-                return new ExternalServiceResult("Failed to connect to Socket");
+                return new Result("Failed to connect to Socket");
             }
-            return new ExternalServiceResult("Failed to get Socket token");
+            return new Result("Failed to get Socket token");
         }
 
         private async Task<bool> ConnectSocket()

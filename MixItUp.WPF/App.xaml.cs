@@ -1,10 +1,12 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Model.Settings;
 using MixItUp.Base.Util;
 using MixItUp.WPF.Services;
 using MixItUp.WPF.Util;
 using StreamingClient.Base.Util;
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -28,12 +30,33 @@ namespace MixItUp.WPF
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
 
-            // NOTE: Uncomment the lines below to test other cultures
-            //System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo("de-DE");
+            try
+            {
+                // We need to load the language setting VERY early, so this is the minimal code necessary to get this value
+                WindowsServicesManager servicesManager = new WindowsServicesManager();
+                servicesManager.Initialize();
+                ChannelSession.Initialize(servicesManager).Wait();
+                var selectedLanguageTask = ApplicationSettingsV2Model.Load();
+                selectedLanguageTask.Wait();
 
-            //System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo("qps-ploc");
-            //System.Threading.Thread.CurrentThread.CurrentCulture = ci;
-            //System.Threading.Thread.CurrentThread.CurrentUICulture = ci;
+                var culture = System.Threading.Thread.CurrentThread.CurrentCulture;
+                switch (selectedLanguageTask.Result.LanguageOption)
+                {
+                    case LanguageOptions.English:
+                        culture = new System.Globalization.CultureInfo("en-US");
+                        break;
+                    case LanguageOptions.German:
+                        culture = new System.Globalization.CultureInfo("de-DE");
+                        break;
+                    case LanguageOptions.Pseudo:
+                        culture = new System.Globalization.CultureInfo("qps-ploc");
+                        break;
+                }
+
+                System.Threading.Thread.CurrentThread.CurrentCulture = culture;
+                System.Threading.Thread.CurrentThread.CurrentUICulture = culture;
+            }
+            catch { }
         }
 
         public void SwitchTheme(string colorScheme, string backgroundColorName, string fullThemeName)
@@ -109,9 +132,15 @@ namespace MixItUp.WPF
             WindowsIdentity id = WindowsIdentity.GetCurrent();
             ChannelSession.IsElevated = id.Owner != id.User;
 
-            Logger.SetLogLevel(LogLevel.Information);
-            Logger.Log(LogLevel.Information, "Application Version: " + ChannelSession.Services.FileService.GetApplicationVersion());
-            Logger.SetLogLevel(LogLevel.Error);
+            Logger.ForceLog(LogLevel.Information, "Application Version: " + ChannelSession.Services.FileService.GetApplicationVersion());
+            if (ChannelSession.IsDebug())
+            {
+                Logger.SetLogLevel(LogLevel.Debug);
+            }
+            else
+            {
+                Logger.SetLogLevel(LogLevel.Error);
+            }
 
             this.SwitchTheme(ChannelSession.AppSettings.ColorScheme, ChannelSession.AppSettings.BackgroundColor, ChannelSession.AppSettings.FullThemeName);
 

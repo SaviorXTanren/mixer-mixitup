@@ -26,7 +26,7 @@ namespace MixItUp.Base.ViewModel.Controls.Services
         {
             this.ConnectCommand = this.CreateCommand(async (parameter) =>
             {
-                ExternalServiceResult result = await ChannelSession.Services.Overlay.Connect();
+                Result result = await ChannelSession.Services.Overlay.Connect();
                 if (result.Success)
                 {
                     this.IsConnected = true;

@@ -58,7 +58,7 @@ namespace MixItUp.WPF.Services
             this.XSplit = new XSplitService("http://localhost:8211/");
 
             this.Settings.Initialize();
-            SerializerHelper.Initialize(this.FileService);
+            FileSerializerHelper.Initialize(this.FileService);
         }
 
         public override void SetSecrets(SecretsService secretsService)
