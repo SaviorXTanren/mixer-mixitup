@@ -584,7 +584,7 @@ namespace MixItUp.Base.ViewModel.User
                     {
                         this.SetMixerUserDetails(user);
 
-                    DateTimeOffset? mixerFollowDate = await ChannelSession.MixerUserConnection.CheckIfFollows(ChannelSession.MixerChannel, this.GetModel());
+                    DateTimeOffset? mixerFollowDate = await ChannelSession.MixerUserConnection.CheckIfFollows(ChannelSession.MixerChannel, this.GetMixerUserModel());
                     if (mixerFollowDate != null && mixerFollowDate.GetValueOrDefault() > DateTimeOffset.MinValue)
                     {
                         this.Data.MixerFollowDate = mixerFollowDate.GetValueOrDefault();
@@ -1004,8 +1004,8 @@ namespace MixItUp.Base.ViewModel.User
                 }
             }
 
-            List<string> displayRoles = new List<string>(mixerDisplayRoles.Select(r => EnumLocalizationHelper.GetLocalizedName(r)));
-            displayRoles.AddRange(this.CustomRoles);
+            List<string> displayRolesList = new List<string>(displayRoles.Select(r => EnumLocalizationHelper.GetLocalizedName(r)));
+            displayRolesList.AddRange(this.CustomRoles);
 
             this.RolesDisplayString = string.Join(", ", displayRolesList.OrderByDescending(r => r));
         }

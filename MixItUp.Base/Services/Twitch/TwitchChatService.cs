@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base.Model;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Twitch;
@@ -44,10 +43,10 @@ namespace MixItUp.Base.Services.Twitch
 
         event EventHandler<TwitchChatMessageViewModel> OnMessageOccurred;
 
-        Task<ExternalServiceResult> ConnectUser();
+        Task<Result> ConnectUser();
         Task DisconnectUser();
 
-        Task<ExternalServiceResult> ConnectBot();
+        Task<Result> ConnectBot();
         Task DisconnectBot();
 
         Task Initialize();
@@ -106,7 +105,7 @@ namespace MixItUp.Base.Services.Twitch
 
         public TwitchChatService() { }
 
-        public async Task<ExternalServiceResult> ConnectUser()
+        public async Task<Result> ConnectUser()
         {
             if (ChannelSession.TwitchUserConnection != null)
             {
@@ -148,16 +147,16 @@ namespace MixItUp.Base.Services.Twitch
                         await Task.Delay(3000);
                         this.userClient.OnUserListReceived -= UserClient_OnUserListReceived;
 
-                        return new ExternalServiceResult();
+                        return new Result();
                     }
                     catch (Exception ex)
                     {
                         Logger.Log(ex);
-                        return new ExternalServiceResult(ex);
+                        return new Result(ex);
                     }
                 });
             }
-            return new ExternalServiceResult("Twitch connection has not been established");
+            return new Result("Twitch connection has not been established");
         }
 
         public async Task DisconnectUser()
@@ -194,7 +193,7 @@ namespace MixItUp.Base.Services.Twitch
             this.userClient = null;
         }
 
-        public async Task<ExternalServiceResult> ConnectBot()
+        public async Task<Result> ConnectBot()
         {
             if (ChannelSession.TwitchUserConnection != null)
             {
@@ -227,16 +226,16 @@ namespace MixItUp.Base.Services.Twitch
 
                         await Task.Delay(3000);
 
-                        return new ExternalServiceResult();
+                        return new Result();
                     }
                     catch (Exception ex)
                     {
                         Logger.Log(ex);
-                        return new ExternalServiceResult(ex);
+                        return new Result(ex);
                     }
                 });
             }
-            return new ExternalServiceResult("Twitch connection has not been established");
+            return new Result("Twitch connection has not been established");
         }
 
         public async Task DisconnectBot()
@@ -627,14 +626,14 @@ namespace MixItUp.Base.Services.Twitch
                                 if (stream != null && stream.id > 0 && !stream.is_playlist)
                                 {
                                     this.streamStartDetected = true;
-                                    trigger = new EventTrigger(EventTypeEnum.TwitchChannelStreamStart, await ChannelSession.GetCurrentUser());
+                                    trigger = new EventTrigger(EventTypeEnum.TwitchChannelStreamStart, ChannelSession.GetCurrentUser());
                                 }
                             }
                             else if (this.streamStartDetected)
                             {
                                 if (stream == null || stream.id == 0)
                                 {
-                                    trigger = new EventTrigger(EventTypeEnum.TwitchChannelStreamStop, await ChannelSession.GetCurrentUser());
+                                    trigger = new EventTrigger(EventTypeEnum.TwitchChannelStreamStop, ChannelSession.GetCurrentUser());
                                 }
                             }
 
@@ -666,7 +665,7 @@ namespace MixItUp.Base.Services.Twitch
         {
             ChannelSession.DisconnectionOccurred("Twitch User Chat");
 
-            ExternalServiceResult result;
+            Result result;
             await this.DisconnectUser();
             do
             {
@@ -683,7 +682,7 @@ namespace MixItUp.Base.Services.Twitch
         {
             ChannelSession.DisconnectionOccurred("Twitch Bot Chat");
 
-            ExternalServiceResult result;
+            Result result;
             await this.DisconnectBot();
             do
             {

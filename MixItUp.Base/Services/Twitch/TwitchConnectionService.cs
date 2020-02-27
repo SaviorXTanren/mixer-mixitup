@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Services.External;
+using MixItUp.Base.Util;
 using StreamingClient.Base.Model.OAuth;
 using StreamingClient.Base.Util;
 using System;
@@ -77,35 +78,35 @@ namespace MixItUp.Base.Services.Twitch
             OAuthClientScopeEnum.whispers__edit,
         };
 
-        public static async Task<ExternalServiceResult<TwitchConnectionService>> Connect(OAuthTokenModel token)
+        public static async Task<Result<TwitchConnectionService>> Connect(OAuthTokenModel token)
         {
             try
             {
                 TwitchConnection connection = await TwitchConnection.ConnectViaOAuthToken(token);
                 if (connection != null)
                 {
-                    return new ExternalServiceResult<TwitchConnectionService>(new TwitchConnectionService(connection));
+                    return new Result<TwitchConnectionService>(new TwitchConnectionService(connection));
                 }
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
-                return new ExternalServiceResult<TwitchConnectionService>(ex);
+                return new Result<TwitchConnectionService>(ex);
             }
-            return new ExternalServiceResult<TwitchConnectionService>("Twitch OAuth token could not be used");
+            return new Result<TwitchConnectionService>("Twitch OAuth token could not be used");
         }
 
-        public static async Task<ExternalServiceResult<TwitchConnectionService>> ConnectUser(bool isStreamer)
+        public static async Task<Result<TwitchConnectionService>> ConnectUser(bool isStreamer)
         {
             return await TwitchConnectionService.Connect(isStreamer ? TwitchConnectionService.StreamerScopes : TwitchConnectionService.ModeratorScopes);
         }
 
-        public static async Task<ExternalServiceResult<TwitchConnectionService>> ConnectBot()
+        public static async Task<Result<TwitchConnectionService>> ConnectBot()
         {
             return await TwitchConnectionService.Connect(TwitchConnectionService.BotScopes);
         }
 
-        public static async Task<ExternalServiceResult<TwitchConnectionService>> Connect(IEnumerable<OAuthClientScopeEnum> scopes)
+        public static async Task<Result<TwitchConnectionService>> Connect(IEnumerable<OAuthClientScopeEnum> scopes)
         {
             try
             {
@@ -113,15 +114,15 @@ namespace MixItUp.Base.Services.Twitch
                     scopes, forceApprovalPrompt: true, successResponse: OAuthExternalServiceBase.LoginRedirectPageHTML);
                 if (connection != null)
                 {
-                    return new ExternalServiceResult<TwitchConnectionService>(new TwitchConnectionService(connection));
+                    return new Result<TwitchConnectionService>(new TwitchConnectionService(connection));
                 }
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
-                return new ExternalServiceResult<TwitchConnectionService>(ex);
+                return new Result<TwitchConnectionService>(ex);
             }
-            return new ExternalServiceResult<TwitchConnectionService>("Failed to connect to establish connection to Twitch");
+            return new Result<TwitchConnectionService>("Failed to connect to establish connection to Twitch");
         }
 
         public TwitchConnection Connection { get; private set; }

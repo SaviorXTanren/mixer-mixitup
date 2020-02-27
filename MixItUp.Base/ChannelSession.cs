@@ -156,37 +156,37 @@ namespace MixItUp.Base
             return result;
         }
 
-        public static async Task<ExternalServiceResult> ConnectTwitchUser(bool isStreamer)
+        public static async Task<Result> ConnectTwitchUser(bool isStreamer)
         {
-            ExternalServiceResult<TwitchConnectionService> result = await TwitchConnectionService.ConnectUser(isStreamer);
+            Result<TwitchConnectionService> result = await TwitchConnectionService.ConnectUser(isStreamer);
             if (result.Success)
             {
-                ChannelSession.TwitchUserConnection = result.Result;
+                ChannelSession.TwitchUserConnection = result.Value;
                 ChannelSession.TwitchUserNewAPI = await ChannelSession.TwitchUserConnection.GetNewAPICurrentUser();
                 if (ChannelSession.TwitchUserNewAPI == null)
                 {
-                    return new ExternalServiceResult("Failed to get New API Twitch user data");
+                    return new Result("Failed to get New API Twitch user data");
                 }
 
                 ChannelSession.TwitchUserV5 = await ChannelSession.TwitchUserConnection.GetV5APIUserByLogin(ChannelSession.TwitchUserNewAPI.login);
                 if (ChannelSession.TwitchUserV5 == null)
                 {
-                    return new ExternalServiceResult("Failed to get V5 API Twitch user data");
+                    return new Result("Failed to get V5 API Twitch user data");
                 }
             }
             return result;
         }
 
-        public static async Task<ExternalServiceResult> ConnectTwitchBot()
+        public static async Task<Result> ConnectTwitchBot()
         {
-            ExternalServiceResult<TwitchConnectionService> result = await TwitchConnectionService.ConnectBot();
+            Result<TwitchConnectionService> result = await TwitchConnectionService.ConnectBot();
             if (result.Success)
             {
-                ChannelSession.TwitchBotConnection = result.Result;
+                ChannelSession.TwitchBotConnection = result.Value;
                 ChannelSession.TwitchBotNewAPI = await ChannelSession.TwitchBotConnection.GetNewAPICurrentUser();
                 if (ChannelSession.TwitchBotNewAPI == null)
                 {
-                    return new ExternalServiceResult("Failed to get Twitch bot data");
+                    return new Result("Failed to get Twitch bot data");
                 }
             }
             return result;
@@ -236,10 +236,10 @@ namespace MixItUp.Base
                 }
             }
 
-            ExternalServiceResult<TwitchConnectionService> twitchResult = await TwitchConnectionService.Connect(ChannelSession.Settings.TwitchUserOAuthToken);
+            Result<TwitchConnectionService> twitchResult = await TwitchConnectionService.Connect(ChannelSession.Settings.TwitchUserOAuthToken);
             if (twitchResult.Success)
             {
-                ChannelSession.TwitchUserConnection = twitchResult.Result;
+                ChannelSession.TwitchUserConnection = twitchResult.Value;
                 userResult = twitchResult;
             }
             else
@@ -252,13 +252,13 @@ namespace MixItUp.Base
                 ChannelSession.TwitchUserNewAPI = await ChannelSession.TwitchUserConnection.GetNewAPICurrentUser();
                 if (ChannelSession.TwitchUserNewAPI == null)
                 {
-                    return new ExternalServiceResult("Failed to get Twitch user data");
+                    return new Result("Failed to get Twitch user data");
                 }
 
                 ChannelSession.TwitchUserV5 = await ChannelSession.TwitchUserConnection.GetV5APIUserByLogin(ChannelSession.TwitchUserNewAPI.login);
                 if (ChannelSession.TwitchUserV5 == null)
                 {
-                    return new ExternalServiceResult("Failed to get V5 API Twitch user data");
+                    return new Result("Failed to get V5 API Twitch user data");
                 }
 
                 if (settings.TwitchBotOAuthToken != null)
@@ -266,22 +266,22 @@ namespace MixItUp.Base
                     twitchResult = await TwitchConnectionService.Connect(settings.TwitchBotOAuthToken);
                     if (twitchResult.Success)
                     {
-                        ChannelSession.TwitchBotConnection = twitchResult.Result;
+                        ChannelSession.TwitchBotConnection = twitchResult.Value;
                         ChannelSession.TwitchBotNewAPI = await ChannelSession.TwitchBotConnection.GetNewAPICurrentUser();
                         if (ChannelSession.TwitchBotNewAPI == null)
                         {
-                            return new ExternalServiceResult("Failed to get Twitch bot data");
+                            return new Result("Failed to get Twitch bot data");
                         }
                     }
                     else
                     {
                         settings.TwitchBotOAuthToken = null;
-                        return new ExternalServiceResult(success: true, message: "Failed to connect Twitch bot account, please manually reconnect");
+                        return new Result(success: true, message: "Failed to connect Twitch bot account, please manually reconnect");
                     }
                 }
             }
 
-            return new ExternalServiceResult();
+            return new Result();
         }
 
         public static async Task DisconnectMixerBot()
@@ -476,16 +476,16 @@ namespace MixItUp.Base
                 TwitchChatService twitchChatService = new TwitchChatService();
                 TwitchEventService twitchEventService = new TwitchEventService();
 
-                List<Task<ExternalServiceResult>> twitchPlatformServiceTasks = new List<Task<ExternalServiceResult>>();
-                twitchPlatformServiceTasks.Add(twitchChatService.ConnectUser());
-                twitchPlatformServiceTasks.Add(twitchEventService.Connect());
+                List<Task<Result>> twitchPlatformServiceTasks = new List<Task<Result>>();
+                mixerConnections.Add(twitchChatService.ConnectUser());
+                mixerConnections.Add(twitchEventService.Connect());
 
                 await Task.WhenAll(mixerConnections);
 
-                if (mixerPlatformServiceTasks.Any(c => !c.Result.Success))
+                if (mixerConnections.Any(c => !c.Result.Success))
                 {
                     string errors = string.Join(Environment.NewLine, mixerConnections.Where(c => !c.Result.Success).Select(c => c.Result.Message));
-                    string message = "Failed to connect to Mixer services:" + Environment.NewLine + Environment.NewLine + errors + Environment.NewLine + Environment.NewLine + "This may be due to a Mixer server outage, please check Mixer's status page for more information: https://status.mixer.com/";
+                    string message = "Failed to connect to Platform services:" + Environment.NewLine + Environment.NewLine + errors + Environment.NewLine + Environment.NewLine + "This may be due to a Mixer server outage, please check Mixer's status page for more information: https://status.mixer.com/";
 
                     if (mixerConnections.All(c => c.Result.Success || c == mixerEventServiceResult))
                     {
@@ -517,7 +517,7 @@ namespace MixItUp.Base
 
                 if (ChannelSession.IsStreamer)
                 {
-                    ExternalServiceResult result = await ChannelSession.InitializeBotInternal();
+                    Result result = await ChannelSession.InitializeBotInternal();
                     if (!result.Success)
                     {
                         await DialogHelper.ShowMessage("Failed to initialize Bot account");
@@ -571,7 +571,7 @@ namespace MixItUp.Base
                             {
                                 Logger.Log(LogLevel.Debug, "Automatic OAuth token connection failed, trying manual connection: " + kvp.Key.Name);
 
-                                Result result = await kvp.Key.Connect();
+                                result = await kvp.Key.Connect();
                                 if (!result.Success)
                                 {
                                     failedServices.Add(kvp.Key);
@@ -608,7 +608,7 @@ namespace MixItUp.Base
                         if (game != null)
                         {
                             await ChannelSession.Services.MixPlay.SetGame(game);
-                            Result result = await ChannelSession.Services.MixPlay.Connect();
+                            result = await ChannelSession.Services.MixPlay.Connect();
                             if (!result.Success)
                             {
                                 await ChannelSession.Services.MixPlay.Disconnect();
@@ -689,11 +689,11 @@ namespace MixItUp.Base
             return false;
         }
 
-        private static async Task<ExternalServiceResult> InitializeBotInternal()
+        private static async Task<Result> InitializeBotInternal()
         {
             if (ChannelSession.MixerBotConnection != null)
             {
-                ExternalServiceResult result = await ChannelSession.Services.Chat.MixerChatService.ConnectBot();
+                Result result = await ChannelSession.Services.Chat.MixerChatService.ConnectBot();
                 if (!result.Success)
                 {
                     return result;
@@ -702,7 +702,7 @@ namespace MixItUp.Base
 
             if (ChannelSession.TwitchBotConnection != null)
             {
-                ExternalServiceResult result = await ChannelSession.Services.Chat.TwitchChatService.ConnectBot();
+                Result result = await ChannelSession.Services.Chat.TwitchChatService.ConnectBot();
                 if (!result.Success)
                 {
                     return result;
@@ -711,7 +711,7 @@ namespace MixItUp.Base
 
             await ChannelSession.SaveSettings();
 
-            return new ExternalServiceResult();
+            return new Result();
         }
 
         private static async Task SessionBackgroundTask(CancellationToken cancellationToken)

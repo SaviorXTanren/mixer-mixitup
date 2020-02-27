@@ -20,7 +20,7 @@ namespace MixItUp.Base.Services.Twitch
 {
     public interface ITwitchEventService
     {
-        Task<ExternalServiceResult> Connect();
+        Task<Result> Connect();
         Task Disconnect();
     }
 
@@ -43,7 +43,7 @@ namespace MixItUp.Base.Services.Twitch
 
         public TwitchEventService() { }
 
-        public async Task<ExternalServiceResult> Connect()
+        public async Task<Result> Connect()
         {
             if (ChannelSession.TwitchUserConnection != null)
             {
@@ -98,16 +98,16 @@ namespace MixItUp.Base.Services.Twitch
 
                         AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.FollowerBackground);
 
-                        return new ExternalServiceResult();
+                        return new Result();
                     }
                     catch (Exception ex)
                     {
                         Logger.Log(ex);
-                        return new ExternalServiceResult(ex);
+                        return new Result(ex);
                     }
                 });
             }
-            return new ExternalServiceResult("Twitch connection has not been established");
+            return new Result("Twitch connection has not been established");
         }
 
         public async Task Disconnect()
@@ -192,7 +192,7 @@ namespace MixItUp.Base.Services.Twitch
         {
             ChannelSession.DisconnectionOccurred("Twitch PubSub");
 
-            ExternalServiceResult result;
+            Result result;
             await this.Disconnect();
             do
             {
