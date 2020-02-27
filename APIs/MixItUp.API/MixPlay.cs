@@ -1,5 +1,6 @@
 ﻿using MixItUp.API.Models;
 using Newtonsoft.Json.Linq;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.API
@@ -89,7 +90,7 @@ namespace MixItUp.API
 
         public static async Task SendBroadcastAsync(JObject data, MixPlayBroadcastTargetBase[] targets)
         {
-            await RestClient.PostAsync($"mixplay/broadcast", new MixPlayTargetBroadcast() { Data =  data, Targets = targets });
+            await RestClient.PostAsync($"mixplay/broadcast", new MixPlayTargetBroadcast() { Data = data, Scopes = targets.Select(t => t.ScopeString()).ToArray() });
         }
     }
 }
