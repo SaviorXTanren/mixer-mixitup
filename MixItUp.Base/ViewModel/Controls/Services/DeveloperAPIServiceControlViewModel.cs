@@ -13,9 +13,11 @@ namespace MixItUp.Base.ViewModel.Controls.Services
         {
             this.ConnectCommand = this.CreateCommand(async (parameter) =>
             {
+                ChannelSession.Settings.EnableDeveloperAPI = false;
                 Result result = await ChannelSession.Services.DeveloperAPI.Connect();
                 if (result.Success)
                 {
+                    ChannelSession.Settings.EnableDeveloperAPI = true;
                     this.IsConnected = true;
                 }
                 else
@@ -27,6 +29,7 @@ namespace MixItUp.Base.ViewModel.Controls.Services
             this.DisconnectCommand = this.CreateCommand(async (parameter) =>
             {
                 await ChannelSession.Services.DeveloperAPI.Disconnect();
+                ChannelSession.Settings.EnableDeveloperAPI = false;
                 this.IsConnected = false;
             });
 

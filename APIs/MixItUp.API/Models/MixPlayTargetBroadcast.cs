@@ -10,7 +10,7 @@ namespace MixItUp.API.Models
     {
         [Required]
         [DataMember]
-        public MixPlayBroadcastTargetBase[] Targets { get; set; }
+        public string[] Scopes { get; set; }
 
         [Required]
         [DataMember]
