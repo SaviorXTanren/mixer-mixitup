@@ -113,7 +113,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         [HttpPost]
         public async Task Broadcast([FromBody] MixPlayTargetBroadcast broadcast)
         {
-            if (broadcast == null || broadcast.Data == null || broadcast.Targets == null)
+            if (broadcast == null || broadcast.Data == null || broadcast.Scopes == null)
             {
                 var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
                 {
@@ -133,7 +133,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            await ChannelSession.Services.MixPlay.BroadcastEvent(broadcast.Targets.Select(x => x.ScopeString()).ToList(), broadcast.Data);
+            await ChannelSession.Services.MixPlay.BroadcastEvent(broadcast.Scopes, broadcast.Data);
         }
 
         [Route("broadcast/users")]
@@ -176,7 +176,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
                 throw new HttpResponseException(resp);
             }
 
-            await Broadcast(new MixPlayTargetBroadcast() { Data = broadcast.Data, Targets = targets });
+            await Broadcast(new MixPlayTargetBroadcast() { Data = broadcast.Data, Scopes = targets.Select(t => t.ScopeString()).ToArray() });
         }
     }
 }

@@ -709,8 +709,6 @@ namespace MixItUp.Base
                 }
             }
 
-            await ChannelSession.SaveSettings();
-
             return new Result();
         }
 
