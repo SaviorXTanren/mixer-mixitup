@@ -120,6 +120,8 @@ namespace MixItUp.WPF.Controls.Command
                 }
                 ChannelSession.Settings.EventCommands.Add(newCommand);
 
+                await ChannelSession.SaveSettings();
+
                 this.window.Close();
 
                 if (!isBasic)

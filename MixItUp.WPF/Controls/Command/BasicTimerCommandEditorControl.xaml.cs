@@ -116,6 +116,8 @@ namespace MixItUp.WPF.Controls.Command
                 ChannelSession.Settings.TimerCommands.Add(newCommand);
                 this.CommandSavedSuccessfully(newCommand);
 
+                await ChannelSession.SaveSettings();
+
                 this.window.Close();
 
                 if (!isBasic)

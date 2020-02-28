@@ -145,6 +145,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 if (command != null)
                 {
                     ChannelSession.Settings.MixPlayCommands.Remove(command.Command);
+                    await ChannelSession.SaveSettings();
                     this.viewModel.RefreshControls();
                 }
             });
