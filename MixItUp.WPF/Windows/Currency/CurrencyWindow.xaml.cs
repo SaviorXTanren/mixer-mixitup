@@ -347,7 +347,6 @@ namespace MixItUp.WPF.Windows.Currency
                 if (command != null)
                 {
                     this.rankChangedCommand = null;
-                    await ChannelSession.SaveSettings();
                     this.UpdateRankChangedCommand();
                 }
             });
@@ -752,8 +751,6 @@ namespace MixItUp.WPF.Windows.Currency
                 }
                 this.currency.IsPrimary = this.IsPrimaryToggleButton.IsChecked.GetValueOrDefault();
 
-                await ChannelSession.SaveSettings();
-
                 if (isNew)
                 {
                     List<NewCurrencyRankCommand> commandsToAdd = new List<NewCurrencyRankCommand>();
@@ -805,6 +802,8 @@ namespace MixItUp.WPF.Windows.Currency
                         ChannelSession.Services.Chat.RebuildCommandTriggers();
                     }
                 }
+
+                await ChannelSession.SaveSettings();
 
                 this.Close();
             });

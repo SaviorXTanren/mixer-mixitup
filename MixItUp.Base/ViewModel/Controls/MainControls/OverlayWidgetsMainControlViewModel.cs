@@ -46,7 +46,6 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             {
                 await widget.Disable();
                 ChannelSession.Settings.OverlayWidgets.Remove(widget);
-                await ChannelSession.SaveSettings();
             }
         }
 

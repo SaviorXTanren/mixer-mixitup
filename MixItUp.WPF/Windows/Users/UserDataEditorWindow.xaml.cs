@@ -149,7 +149,6 @@ namespace MixItUp.WPF.Windows.Users
                 if (command != null)
                 {
                     this.user.Data.CustomCommands.Remove(command);
-                    await ChannelSession.SaveSettings();
                     await this.RefreshData();
                 }
             });
@@ -176,7 +175,6 @@ namespace MixItUp.WPF.Windows.Users
                 if (command != null)
                 {
                     this.user.Data.EntranceCommand = null;
-                    await ChannelSession.SaveSettings();
                     await this.RefreshData();
                 }
             });

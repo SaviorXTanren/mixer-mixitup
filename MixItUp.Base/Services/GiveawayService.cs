@@ -87,8 +87,6 @@ namespace MixItUp.Base.Services
                 return "Giveaway Command can only contain letters and numbers";
             }
 
-            await ChannelSession.SaveSettings();
-
             this.IsRunning = true;
 
             this.giveawayCommand = new ChatCommand("Giveaway Command", ChannelSession.Settings.GiveawayCommand, new RequirementViewModel());

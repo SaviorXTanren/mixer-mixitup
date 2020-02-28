@@ -521,8 +521,6 @@ namespace MixItUp.Base.Commands
 
                         UserQuoteViewModel quote = new UserQuoteViewModel(quoteText, DateTimeOffset.Now, ChannelSession.MixerChannel.type);
                         ChannelSession.Settings.Quotes.Add(quote);
-                        await ChannelSession.SaveSettings();
-
                         GlobalEvents.QuoteAdded(quote);
 
                         if (ChannelSession.Services.Chat != null)

@@ -72,7 +72,6 @@ namespace MixItUp.WPF.Controls.MainControls
                 if (command != null)
                 {
                     ChannelSession.Settings.ChatCommands.Remove(command);
-                    await ChannelSession.SaveSettings();
                     this.viewModel.RemoveCommand(command);
 
                     ChannelSession.Services.Chat.RebuildCommandTriggers();

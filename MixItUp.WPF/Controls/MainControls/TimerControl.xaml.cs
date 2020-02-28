@@ -58,7 +58,6 @@ namespace MixItUp.WPF.Controls.MainControls
                 if (command != null)
                 {
                     ChannelSession.Settings.TimerCommands.Remove(command);
-                    await ChannelSession.SaveSettings();
                     this.viewModel.RemoveCommand(command);
                 }
             });

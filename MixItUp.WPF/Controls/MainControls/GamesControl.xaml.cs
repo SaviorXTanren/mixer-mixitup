@@ -54,7 +54,6 @@ namespace MixItUp.WPF.Controls.MainControls
                 if (command != null)
                 {
                     ChannelSession.Settings.GameCommands.Remove(command);
-                    await ChannelSession.SaveSettings();
                     this.viewModel.Refresh();
                     ChannelSession.Services.Chat.RebuildCommandTriggers();
                 }
