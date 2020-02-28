@@ -92,8 +92,6 @@ namespace MixItUp.WPF.Windows.Favorites
                 if (await DialogHelper.ShowConfirmation("Are you sure you want to remove this user?"))
                 {
                     this.favoriteGroup.RemoteUser(user.User);
-                    await ChannelSession.SaveSettings();
-
                     await this.RefreshView();
                 }
             });

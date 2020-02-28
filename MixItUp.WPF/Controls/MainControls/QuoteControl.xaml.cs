@@ -61,7 +61,6 @@ namespace MixItUp.WPF.Controls.MainControls
                     UserQuoteViewModel newQuote = new UserQuoteViewModel(this.AddQuoteTextBox.Text, DateTimeOffset.Now, ChannelSession.MixerChannel.type);
                     ChannelSession.Settings.Quotes.Add(newQuote);
                     this.AddQuoteTextBox.Clear();
-                    await ChannelSession.SaveSettings();
                     this.RefreshList();
                 });
             }
@@ -76,7 +75,6 @@ namespace MixItUp.WPF.Controls.MainControls
                 await this.Window.RunAsyncOperation(async () =>
                 {
                     ChannelSession.Settings.Quotes.Remove(quote.Quote);
-                    await ChannelSession.SaveSettings();
                     this.RefreshList();
                 });
             }

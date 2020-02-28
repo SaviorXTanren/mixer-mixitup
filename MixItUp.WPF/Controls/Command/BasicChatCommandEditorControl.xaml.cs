@@ -182,9 +182,6 @@ namespace MixItUp.WPF.Controls.Command
                 }
 
                 this.CommandSavedSuccessfully(newCommand);
-
-                await ChannelSession.SaveSettings();
-
                 this.window.Close();
 
                 if (!isBasic)
