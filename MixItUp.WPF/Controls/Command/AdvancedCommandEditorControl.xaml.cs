@@ -137,6 +137,9 @@ namespace MixItUp.WPF.Controls.Command
             if (this.newCommand != null)
             {
                 this.CommandSavedSuccessfully(this.newCommand);
+
+                await this.window.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
+
                 this.window.Close();
             }
         }

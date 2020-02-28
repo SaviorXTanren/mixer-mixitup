@@ -351,6 +351,8 @@ namespace MixItUp.WPF.Controls.MainControls
                                 }
 
                                 ChannelSession.Settings.FavoriteGroups.Add(new FavoriteGroupModel(team));
+                                await ChannelSession.SaveSettings();
+
                                 await this.RefreshFavoriteGroups();
                             }
                             else
@@ -382,6 +384,8 @@ namespace MixItUp.WPF.Controls.MainControls
                                     ChannelSession.Settings.FavoriteGroups.Add(group);
                                 }
                                 group.GroupUserIDs.Add(user.id);
+                                await ChannelSession.SaveSettings();
+
                                 await this.RefreshFavoriteGroups();
                             }
                             else
@@ -412,6 +416,8 @@ namespace MixItUp.WPF.Controls.MainControls
                 if (await DialogHelper.ShowConfirmation(MixItUp.Base.Resources.DeleteFavoriteGroupConfirmation))
                 {
                     ChannelSession.Settings.FavoriteGroups.Remove(group.Group);
+                    await ChannelSession.SaveSettings();
+
                     await this.RefreshFavoriteGroups();
                 }
             });
