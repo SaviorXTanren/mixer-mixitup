@@ -535,11 +535,8 @@ namespace MixItUp.Base
                 {
                     ChannelSession.MixerBot = user;
 
-                    await ChannelSession.Services.Chat.MixerChatService.ConnectBot();
-
-                    await ChannelSession.SaveSettings();
-
-                    return true;
+                    Result result = await ChannelSession.Services.Chat.MixerChatService.ConnectBot();
+                    return result.Success;
                 }
                 return false;
             }
