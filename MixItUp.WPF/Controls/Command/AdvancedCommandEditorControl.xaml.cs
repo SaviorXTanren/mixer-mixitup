@@ -169,10 +169,10 @@ namespace MixItUp.WPF.Controls.Command
                 {
                     try
                     {
-                        CommandBase command = await FileSerializerHelper.DeserializeFromFile<CommandBase>(fileName);
-                        if (command != null && command.Actions != null)
+                        ActionListContainer actionContainer = await FileSerializerHelper.DeserializeFromFile<ActionListContainer>(fileName);
+                        if (actionContainer != null && actionContainer.Actions != null)
                         {
-                            foreach (ActionBase action in command.Actions)
+                            foreach (ActionBase action in actionContainer.Actions)
                             {
                                 ActionContainerControl actionControl = new ActionContainerControl(this.window, this, action);
                                 actionControl.Minimize();

@@ -28,7 +28,14 @@ namespace MixItUp.Base.Commands
     }
 
     [DataContract]
-    public abstract class CommandBase : IComparable, IComparable<CommandBase>, IEquatable<CommandBase>
+    public class ActionListContainer
+    {
+        [DataMember]
+        public List<ActionBase> Actions { get; set; } = new List<ActionBase>();
+    }
+
+    [DataContract]
+    public abstract class CommandBase : ActionListContainer, IComparable, IComparable<CommandBase>, IEquatable<CommandBase>
     {
         public const string CommandMatchingRegexFormat = "^({0})(\\s|$)";
 
@@ -76,9 +83,6 @@ namespace MixItUp.Base.Commands
 
         [DataMember]
         public HashSet<string> Commands { get; set; }
-
-        [DataMember]
-        public List<ActionBase> Actions { get; set; }
 
         [DataMember]
         public bool IsEnabled { get; set; }

@@ -31,5 +31,14 @@ namespace MixItUp.Base.Util
             }
             return default(T);
         }
+
+        public static async Task<T> DeserializeAbstractFromFile<T>(string filePath, bool ignoreErrors = false)
+        {
+            if (File.Exists(filePath))
+            {
+                return JSONSerializerHelper.DeserializeAbstractFromString<T>(await FileSerializerHelper.fileService.ReadFile(filePath), ignoreErrors);
+            }
+            return default(T);
+        }
     }
 }
