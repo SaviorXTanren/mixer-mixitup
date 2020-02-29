@@ -91,12 +91,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
             GameCommandBase newCommand = new DuelGameCommand(name, triggers, requirements, new GameOutcome("Success", 1, successRoleProbabilities, this.SuccessOutcomeCommand),
                 new GameOutcome("Failure", 0, failRoleProbabilities, this.FailOutcomeCommand), this.StartedCommand, this.TimeLimit, this.NotAcceptedCommand);
-            if (this.existingCommand != null)
-            {
-                ChannelSession.Settings.GameCommands.Remove(this.existingCommand);
-                newCommand.ID = this.existingCommand.ID;
-            }
-            ChannelSession.Settings.GameCommands.Add(newCommand);
+            this.SaveGameCommand(newCommand, this.existingCommand);
         }
 
         public override async Task<bool> Validate()

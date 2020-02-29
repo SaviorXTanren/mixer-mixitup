@@ -759,16 +759,6 @@ namespace MixItUp.Base.Model.Settings
                     await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO InventoryAmounts(InventoryID, UserID, ItemID, Amount) VALUES(@InventoryID, @UserID, @ItemID, @Amount)", changedData);
                 }
 
-                List<CommandBase> addedChangedCommands = new List<CommandBase>();
-                addedChangedCommands.AddRange(this.ChatCommands.GetAddedChangedValues());
-                addedChangedCommands.AddRange(this.EventCommands.GetAddedChangedValues());
-                addedChangedCommands.AddRange(this.MixPlayCommands.GetAddedChangedValues());
-                addedChangedCommands.AddRange(this.TimerCommands.GetAddedChangedValues());
-                addedChangedCommands.AddRange(this.ActionGroupCommands.GetAddedChangedValues());
-                addedChangedCommands.AddRange(this.GameCommands.GetAddedChangedValues());
-                await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Commands(ID, TypeID, Data) VALUES(@ID, @TypeID, @Data)",
-                    addedChangedCommands.Select(c => new Dictionary<string, object>() { { "@ID", c.ID.ToString() }, { "@TypeID", (int)c.Type }, { "@Data", JSONSerializerHelper.SerializeToString(c) } }));
-
                 List<CommandBase> removedCommands = new List<CommandBase>();
                 removedCommands.AddRange(this.ChatCommands.GetRemovedValues());
                 removedCommands.AddRange(this.EventCommands.GetRemovedValues());
@@ -778,6 +768,16 @@ namespace MixItUp.Base.Model.Settings
                 removedCommands.AddRange(this.GameCommands.GetRemovedValues());
                 await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Commands WHERE ID = @ID",
                     removedCommands.Select(c => new Dictionary<string, object>() { { "@ID", c.ID.ToString() } }));
+
+                List<CommandBase> addedChangedCommands = new List<CommandBase>();
+                addedChangedCommands.AddRange(this.ChatCommands.GetAddedChangedValues());
+                addedChangedCommands.AddRange(this.EventCommands.GetAddedChangedValues());
+                addedChangedCommands.AddRange(this.MixPlayCommands.GetAddedChangedValues());
+                addedChangedCommands.AddRange(this.TimerCommands.GetAddedChangedValues());
+                addedChangedCommands.AddRange(this.ActionGroupCommands.GetAddedChangedValues());
+                addedChangedCommands.AddRange(this.GameCommands.GetAddedChangedValues());
+                await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Commands(ID, TypeID, Data) VALUES(@ID, @TypeID, @Data)",
+                    addedChangedCommands.Select(c => new Dictionary<string, object>() { { "@ID", c.ID.ToString() }, { "@TypeID", (int)c.Type }, { "@Data", JSONSerializerHelper.SerializeToString(c) } }));
 
                 await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Quotes(ID, Data) VALUES(@ID, @Data)",
                     this.Quotes.Select(q => new Dictionary<string, object>() { { "@ID", q.ID }, { "@Data", JSONSerializerHelper.SerializeToString(q) } }));

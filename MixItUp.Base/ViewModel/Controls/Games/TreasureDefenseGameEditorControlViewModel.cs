@@ -97,12 +97,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         {
             GameCommandBase newCommand = new TreasureDefenseGameCommand(name, triggers, requirements, this.MinimumParticipants, this.TimeLimit, this.ThiefPlayerPercentage, this.StartedCommand,
                 this.UserJoinCommand, this.KnightUserCommand, this.ThiefUserCommand, this.KingUserCommand, this.KnightSelectedCommand, this.ThiefSelectedCommand, this.NotEnoughPlayersCommand);
-            if (this.existingCommand != null)
-            {
-                ChannelSession.Settings.GameCommands.Remove(this.existingCommand);
-                newCommand.ID = this.existingCommand.ID;
-            }
-            ChannelSession.Settings.GameCommands.Add(newCommand);
+            this.SaveGameCommand(newCommand, this.existingCommand);
         }
 
         public override async Task<bool> Validate()

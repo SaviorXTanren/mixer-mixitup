@@ -2,7 +2,6 @@
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.Requirement;
-using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -13,6 +12,16 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         public abstract Task<bool> Validate();
 
         public abstract void SaveGameCommand(string name, IEnumerable<string> triggers, RequirementViewModel requirements);
+
+        protected void SaveGameCommand(GameCommandBase newCommand, GameCommandBase existingCommand)
+        {
+            if (existingCommand != null)
+            {
+                ChannelSession.Settings.GameCommands.Remove(existingCommand);
+                newCommand.ID = existingCommand.ID;
+            }
+            ChannelSession.Settings.GameCommands.Add(newCommand);
+        }
 
         protected CustomCommand CreateBasicChatCommand(string message, bool whisper = false)
         {
