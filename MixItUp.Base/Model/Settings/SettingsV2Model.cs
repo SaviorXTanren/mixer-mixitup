@@ -779,8 +779,11 @@ namespace MixItUp.Base.Model.Settings
                 await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Commands(ID, TypeID, Data) VALUES(@ID, @TypeID, @Data)",
                     addedChangedCommands.Select(c => new Dictionary<string, object>() { { "@ID", c.ID.ToString() }, { "@TypeID", (int)c.Type }, { "@Data", JSONSerializerHelper.SerializeToString(c) } }));
 
+                await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "DELETE FROM Quotes WHERE ID = @ID",
+                    this.Quotes.GetRemovedValues().Select(q => new Dictionary<string, object>() { { "@ID", q.ID } }));
+
                 await ChannelSession.Services.Database.BulkWrite(this.DatabaseFilePath, "REPLACE INTO Quotes(ID, Data) VALUES(@ID, @Data)",
-                    this.Quotes.Select(q => new Dictionary<string, object>() { { "@ID", q.ID }, { "@Data", JSONSerializerHelper.SerializeToString(q) } }));
+                    this.Quotes.GetAddedChangedValues().Select(q => new Dictionary<string, object>() { { "@ID", q.ID }, { "@Data", JSONSerializerHelper.SerializeToString(q) } }));
             }
         }
 
