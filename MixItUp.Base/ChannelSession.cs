@@ -507,7 +507,7 @@ namespace MixItUp.Base
                 ChannelSession.Services.InputService.HotKeyPressed += InputService_HotKeyPressed;
 
                 await ChannelSession.SaveSettings();
-                await ChannelSession.Services.Settings.PerformBackupIfApplicable(ChannelSession.Settings);
+                await ChannelSession.Services.Settings.PerformAutomaticBackupIfApplicable(ChannelSession.Settings);
 
                 ChannelSession.Services.Telemetry.TrackLogin(ChannelSession.MixerUser.id.ToString(), ChannelSession.IsStreamer, ChannelSession.MixerChannel.partnered);
                 if (ChannelSession.Settings.IsStreamer)
