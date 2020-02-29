@@ -151,6 +151,8 @@ namespace MixItUp.Base.Commands
         {
             if (this.IsEnabled)
             {
+                Logger.Log(LogLevel.Debug, $"Starting command performing: {this.Name}");
+
                 if (arguments == null)
                 {
                     arguments = new List<string>();
@@ -195,6 +197,8 @@ namespace MixItUp.Base.Commands
                 }
 
                 this.OnCommandStart(this, new EventArgs());
+
+                Logger.Log(LogLevel.Debug, $"Dedicated command task starting: {this.Name}");
 
                 this.currentCancellationTokenSource = new CancellationTokenSource();
                 this.currentTaskRun = Task.Run(async () =>
@@ -294,14 +298,17 @@ namespace MixItUp.Base.Commands
             {
                 token.ThrowIfCancellationRequested();
 
-                if (actionsToRun[i] is OverlayAction && ChannelSession.Services.Overlay.IsConnected)
+                ActionBase action = actionsToRun[i];
+                if (action is OverlayAction && ChannelSession.Services.Overlay.IsConnected)
                 {
                     ChannelSession.Services.Overlay.StartBatching();
                 }
 
-                await actionsToRun[i].Perform(user, this.platform, arguments, extraSpecialIdentifiers);
+                Logger.Log(LogLevel.Debug, $"Running action for command: {this.Name} - {action.Type}");
 
-                if (actionsToRun[i] is OverlayAction && ChannelSession.Services.Overlay.IsConnected)
+                await action.Perform(user, this.platform, arguments, extraSpecialIdentifiers);
+
+                if (action is OverlayAction && ChannelSession.Services.Overlay.IsConnected)
                 {
                     if (i == (actionsToRun.Count - 1) || !(actionsToRun[i + 1] is OverlayAction))
                     {
