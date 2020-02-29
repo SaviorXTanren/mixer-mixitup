@@ -13,8 +13,6 @@ namespace MixItUp.Base.Util
 
         public DatabaseDictionary() { }
 
-        public DatabaseDictionary(IDictionary<K, V> items) : base(items) { }
-
         public override V this[K key]
         {
             get

@@ -701,7 +701,7 @@ namespace MixItUp.Base.Model.Settings
                 .Union(this.ChatCommands.Select(c => c.Requirements?.Cooldown?.GroupName))
                 .Union(this.GameCommands.Select(c => c.Requirements?.Cooldown?.GroupName))
                 .Distinct();
-            var allUnusedCooldownGroupNames = this.CooldownGroups.Where(c => !allUsedCooldownGroupNames.Contains(c.Key, StringComparer.InvariantCultureIgnoreCase));
+            var allUnusedCooldownGroupNames = this.CooldownGroups.ToList().Where(c => !allUsedCooldownGroupNames.Contains(c.Key, StringComparer.InvariantCultureIgnoreCase));
             foreach (var unused in allUnusedCooldownGroupNames)
             {
                 this.CooldownGroups.Remove(unused.Key);
@@ -712,7 +712,7 @@ namespace MixItUp.Base.Model.Settings
                 .Union(this.ActionGroupCommands.Select(a => a.GroupName))
                 .Union(this.TimerCommands.Select(a => a.GroupName))
                 .Distinct();
-            var allUnusedCommandGroupNames = this.CommandGroups.Where(c => !allUsedCommandGroupNames.Contains(c.Key, StringComparer.InvariantCultureIgnoreCase));
+            var allUnusedCommandGroupNames = this.CommandGroups.ToList().Where(c => !allUsedCommandGroupNames.Contains(c.Key, StringComparer.InvariantCultureIgnoreCase));
             foreach (var unused in allUnusedCommandGroupNames)
             {
                 this.CommandGroups.Remove(unused.Key);
