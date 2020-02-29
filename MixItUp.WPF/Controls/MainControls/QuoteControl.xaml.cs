@@ -1,70 +1,39 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.Util;
+﻿using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Controls.MainControls;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.Base.ViewModel.Window;
 using MixItUp.WPF.Controls.Dialogs;
-using MixItUp.WPF.Util;
 using System;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
-    public class QuoteListing
-    {
-        public int Index { get; set; }
-        public UserQuoteViewModel Quote { get; set; }
-    }
-
     /// <summary>
     /// Interaction logic for QuoteControl.xaml
     /// </summary>
     public partial class QuoteControl : MainControlBase
     {
-        private ObservableCollection<QuoteListing> quotes = new ObservableCollection<QuoteListing>();
+        private QuotesMainControlViewModel viewModel;
 
         public QuoteControl()
         {
             InitializeComponent();
 
-            this.QuotesDataGrid.ItemsSource = quotes;
-
             GlobalEvents.OnQuoteAdded += GlobalEvents_OnQuoteAdded;
         }
 
-        protected override Task InitializeInternal()
+        protected override async Task InitializeInternal()
         {
-            this.EnableQuotesToggleButton.IsChecked = ChannelSession.Settings.QuotesEnabled;
-
-            this.RefreshList();
-
-            return base.InitializeInternal();
+            this.DataContext = this.viewModel = new QuotesMainControlViewModel((MainWindowViewModel)this.Window.ViewModel);
+            await this.viewModel.OnLoaded();
+            await base.InitializeInternal();
         }
 
         protected override async Task OnVisibilityChanged()
         {
-            await this.InitializeInternal();
-        }
-
-        private void EnableQuotesToggleButton_Checked(object sender, RoutedEventArgs e)
-        {
-            ChannelSession.Settings.QuotesEnabled = this.EnableQuotesToggleButton.IsChecked.GetValueOrDefault();
-        }
-
-        private async void AddQuoteButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (!string.IsNullOrEmpty(this.AddQuoteTextBox.Text))
-            {
-                await this.Window.RunAsyncOperation(async () =>
-                {
-                    UserQuoteViewModel newQuote = new UserQuoteViewModel(this.AddQuoteTextBox.Text, DateTimeOffset.Now, ChannelSession.MixerChannel.type);
-                    ChannelSession.Settings.Quotes.Add(newQuote);
-                    this.AddQuoteTextBox.Clear();
-                    await ChannelSession.SaveSettings();
-                    this.RefreshList();
-                });
-            }
+            await this.viewModel.OnVisible();
         }
 
         private async void DeleteButton_Click(object sender, RoutedEventArgs e)
@@ -72,45 +41,8 @@ namespace MixItUp.WPF.Controls.MainControls
             Button button = (Button)sender;
             if (button.DataContext != null)
             {
-                QuoteListing quote = (QuoteListing)button.DataContext;
-                await this.Window.RunAsyncOperation(async () =>
-                {
-                    ChannelSession.Settings.Quotes.Remove(quote.Quote);
-                    await ChannelSession.SaveSettings();
-                    this.RefreshList();
-                });
+                await this.viewModel.RemoveQuote((UserQuoteViewModel)button.DataContext);
             }
-        }
-
-        private void RefreshList()
-        {
-            this.quotes.Clear();
-            for (int i = 0; i < ChannelSession.Settings.Quotes.Count; i++)
-            {
-                this.quotes.Add(new QuoteListing() { Index = (i + 1), Quote = ChannelSession.Settings.Quotes[i] });
-            }
-        }
-
-        private void GlobalEvents_OnQuoteAdded(object sender, UserQuoteViewModel quote)
-        {
-            this.Dispatcher.BeginInvoke(new Action(() =>
-            {
-                this.RefreshList();
-            }));
-        }
-
-        private void QuoteTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            TextBox textBox = (TextBox)sender;
-            QuoteListing quote = (QuoteListing)textBox.DataContext;
-            quote.Quote.Quote = textBox.Text;
-        }
-
-        private void QuoteGameTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            TextBox textBox = (TextBox)sender;
-            QuoteListing quote = (QuoteListing)textBox.DataContext;
-            quote.Quote.GameName = textBox.Text;
         }
 
         private async void DateButton_Click(object sender, RoutedEventArgs e)
@@ -118,12 +50,14 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.Window.RunAsyncOperation(async () =>
             {
                 Button button = (Button)sender;
-                QuoteListing quote = (QuoteListing)button.DataContext;
-
-                CalendarDialogControl calendarControl = new CalendarDialogControl(quote.Quote.DateTime);
-                if (bool.Equals(await DialogHelper.ShowCustom(calendarControl), true))
+                if (button.DataContext != null)
                 {
-                    quote.Quote.DateTime = calendarControl.SelectedDate.Date + quote.Quote.DateTime.TimeOfDay;
+                    UserQuoteViewModel quote = (UserQuoteViewModel)button.DataContext;
+                    CalendarDialogControl calendarControl = new CalendarDialogControl(quote.DateTime);
+                    if (bool.Equals(await DialogHelper.ShowCustom(calendarControl), true))
+                    {
+                        quote.DateTime = calendarControl.SelectedDate.Date + quote.DateTime.TimeOfDay;
+                    }
                 }
             });
         }
@@ -133,19 +67,24 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.Window.RunAsyncOperation(async () =>
             {
                 Button button = (Button)sender;
-                QuoteListing quote = (QuoteListing)button.DataContext;
-
-                ClockDialogControl calendarControl = new ClockDialogControl(quote.Quote.DateTime);
-                if (bool.Equals(await DialogHelper.ShowCustom(calendarControl), true))
+                if (button.DataContext != null)
                 {
-                    quote.Quote.DateTime = quote.Quote.DateTime.Date + calendarControl.SelectedTime.TimeOfDay;
+                    UserQuoteViewModel quote = (UserQuoteViewModel)button.DataContext;
+                    ClockDialogControl calendarControl = new ClockDialogControl(quote.DateTime);
+                    if (bool.Equals(await DialogHelper.ShowCustom(calendarControl), true))
+                    {
+                        quote.DateTime = quote.DateTime.Date + calendarControl.SelectedTime.TimeOfDay;
+                    }
                 }
             });
         }
 
-        private void QuotesFormatTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void GlobalEvents_OnQuoteAdded(object sender, UserQuoteViewModel quote)
         {
-            ChannelSession.Settings.QuotesFormat = this.QuotesFormatTextBox.Text;
+            this.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                this.viewModel.Refresh();
+            }));
         }
     }
 }

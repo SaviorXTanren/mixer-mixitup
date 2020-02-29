@@ -43,6 +43,9 @@ namespace MixItUp.Base.Services
         XButton2 = 0x00000002,
     }
 
+    /// <summary>
+    /// http://download.microsoft.com/download/1/6/1/161ba512-40e2-4cc9-843a-923143f3456c/scancode.doc
+    /// </summary>
     public enum InputKeyEnum : ushort
     {
         [Name("0")]

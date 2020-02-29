@@ -121,12 +121,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
         public override void SaveGameCommand(string name, IEnumerable<string> triggers, RequirementViewModel requirements)
         {
             GameCommandBase newCommand = new VendingMachineGameCommand(name, triggers, requirements, this.Outcomes.Select(o => o.GetGameOutcome()));
-            if (this.existingCommand != null)
-            {
-                ChannelSession.Settings.GameCommands.Remove(this.existingCommand);
-                newCommand.ID = this.existingCommand.ID;
-            }
-            ChannelSession.Settings.GameCommands.Add(newCommand);
+            this.SaveGameCommand(newCommand, this.existingCommand);
         }
 
         public override async Task<bool> Validate()

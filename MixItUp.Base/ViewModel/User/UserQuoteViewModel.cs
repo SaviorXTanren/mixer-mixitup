@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Model.Game;
 using MixItUp.Base.Util;
 using System;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 
@@ -13,6 +14,15 @@ namespace MixItUp.Base.ViewModel.User
         public const string QuoteTextSpecialIdentifier = "quotetext";
         public const string QuoteGameSpecialIdentifier = "quotegame";
         public const string QuoteDateTimeSpecialIdentifier = "quotedatetime";
+
+        public static int GetNextQuoteNumber()
+        {
+            if (ChannelSession.Settings.Quotes.Count > 0)
+            {
+                return ChannelSession.Settings.Quotes.Max(q => q.ID) + 1;
+            }
+            return 1;
+        }
 
         [DataMember]
         public int ID { get; set; }
@@ -31,15 +41,10 @@ namespace MixItUp.Base.ViewModel.User
             this.DateTime = DateTimeOffset.MinValue;
         }
 
-        public UserQuoteViewModel(string quote)
-            : this()
-        {
-            this.Quote = quote;
-        }
-
         public UserQuoteViewModel(string quote, DateTimeOffset dateTime, GameTypeModel game)
-            : this(quote)
         {
+            this.ID = UserQuoteViewModel.GetNextQuoteNumber();
+            this.Quote = quote;
             this.DateTime = dateTime;
             if (game != null)
             {
