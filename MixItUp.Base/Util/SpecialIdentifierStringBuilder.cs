@@ -301,7 +301,10 @@ namespace MixItUp.Base.Util
                         Dictionary<Guid, UserDataModel> applicableUsers = ChannelSession.Settings.UserData.ToDictionary();
                         foreach (UserDataModel u in this.GetAllExemptUsers())
                         {
-                            applicableUsers.Remove(u.ID);
+                            if (u != null)
+                            {
+                                applicableUsers.Remove(u.ID);
+                            }
                         }
 
                         List<string> timeUserList = new List<string>();
@@ -961,7 +964,10 @@ namespace MixItUp.Base.Util
             Dictionary<Guid, int> applicableUsers = currency.UserAmounts.ToDictionary();
             foreach (UserDataModel exemptUser in this.GetAllExemptUsers())
             {
-                applicableUsers.Remove(exemptUser.ID);
+                if (exemptUser != null)
+                {
+                    applicableUsers.Remove(exemptUser.ID);
+                }
             }
             return new List<Guid>(applicableUsers.OrderByDescending(kvp => kvp.Value).Select(kvp => kvp.Key));
         }
@@ -969,7 +975,7 @@ namespace MixItUp.Base.Util
         private IEnumerable<UserDataModel> GetAllExemptUsers()
         {
             List<UserDataModel> exemptUsers = new List<UserDataModel>();
-            exemptUsers.Add(ChannelSession.Settings.GetUserDataByMixerID(ChannelSession.MixerChannel.user.id));
+            exemptUsers.Add(ChannelSession.GetCurrentUser().Data);
             exemptUsers.AddRange(ChannelSession.Settings.UserData.Values.Where(u => u.IsCurrencyRankExempt));
             return exemptUsers;
         }

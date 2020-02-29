@@ -4,6 +4,8 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Window;
 using MixItUp.WPF.Controls.MainControls;
 using MixItUp.WPF.Windows;
+using StreamingClient.Base.Util;
+using System;
 using System.IO;
 using System.IO.Compression;
 using System.Reflection;
@@ -161,64 +163,81 @@ namespace MixItUp.WPF
 
         private async Task StartShutdownProcess()
         {
-            if (WindowState == WindowState.Maximized)
+            try
             {
-                // Use the RestoreBounds as the current values will be 0, 0 and the size of the screen
-                ChannelSession.AppSettings.Top = RestoreBounds.Top;
-                ChannelSession.AppSettings.Left = RestoreBounds.Left;
-                ChannelSession.AppSettings.Height = RestoreBounds.Height;
-                ChannelSession.AppSettings.Width = RestoreBounds.Width;
-                ChannelSession.AppSettings.IsMaximized = true;
-            }
-            else
-            {
-                ChannelSession.AppSettings.Top = this.Top;
-                ChannelSession.AppSettings.Left = this.Left;
-                ChannelSession.AppSettings.Height = this.Height;
-                ChannelSession.AppSettings.Width = this.Width;
-                ChannelSession.AppSettings.IsMaximized = false;
-            }
+                Logger.Log(LogLevel.Debug, "Starting shutdown process");
 
-            Properties.Settings.Default.Save();
-
-            this.ShuttingDownGrid.Visibility = Visibility.Visible;
-            this.MainMenu.Visibility = Visibility.Collapsed;
-
-            if (!string.IsNullOrEmpty(this.RestoredSettingsFilePath))
-            {
-                string settingsFilePath = ChannelSession.Settings.SettingsFilePath;
-                string settingsFolder = Path.GetDirectoryName(settingsFilePath);
-                using (ZipArchive zipFile = ZipFile.Open(this.RestoredSettingsFilePath, ZipArchiveMode.Read))
+                if (WindowState == WindowState.Maximized)
                 {
-                    foreach (ZipArchiveEntry entry in zipFile.Entries)
+                    // Use the RestoreBounds as the current values will be 0, 0 and the size of the screen
+                    ChannelSession.AppSettings.Top = RestoreBounds.Top;
+                    ChannelSession.AppSettings.Left = RestoreBounds.Left;
+                    ChannelSession.AppSettings.Height = RestoreBounds.Height;
+                    ChannelSession.AppSettings.Width = RestoreBounds.Width;
+                    ChannelSession.AppSettings.IsMaximized = true;
+                }
+                else
+                {
+                    ChannelSession.AppSettings.Top = this.Top;
+                    ChannelSession.AppSettings.Left = this.Left;
+                    ChannelSession.AppSettings.Height = this.Height;
+                    ChannelSession.AppSettings.Width = this.Width;
+                    ChannelSession.AppSettings.IsMaximized = false;
+                }
+
+                Properties.Settings.Default.Save();
+
+                this.ShuttingDownGrid.Visibility = Visibility.Visible;
+                this.MainMenu.Visibility = Visibility.Collapsed;
+
+                if (!string.IsNullOrEmpty(this.RestoredSettingsFilePath))
+                {
+                    Logger.Log(LogLevel.Debug, "Restored settings file detected, starting restore process");
+
+                    string settingsFilePath = ChannelSession.Settings.SettingsFilePath;
+                    string settingsFolder = Path.GetDirectoryName(settingsFilePath);
+                    using (ZipArchive zipFile = ZipFile.Open(this.RestoredSettingsFilePath, ZipArchiveMode.Read))
                     {
-                        string filePath = Path.Combine(settingsFolder, entry.Name);
-                        if (File.Exists(filePath))
+                        foreach (ZipArchiveEntry entry in zipFile.Entries)
                         {
-                            File.Delete(filePath);
+                            string filePath = Path.Combine(settingsFolder, entry.Name);
+                            if (File.Exists(filePath))
+                            {
+                                File.Delete(filePath);
+                            }
                         }
+                        zipFile.ExtractToDirectory(settingsFolder);
                     }
-                    zipFile.ExtractToDirectory(settingsFolder);
                 }
-            }
-            else
-            {
-                for (int i = 0; i < 5 && !await ChannelSession.Services.Settings.SaveAndValidate(ChannelSession.Settings); i++)
+                else
                 {
-                    await Task.Delay(1000);
+                    Logger.Log(LogLevel.Debug, "Starting settings save & validation process");
+
+                    for (int i = 0; i < 5 && !await ChannelSession.Services.Settings.SaveAndValidate(ChannelSession.Settings); i++)
+                    {
+                        Logger.Log(LogLevel.Debug, "Settings save & validation process failed");
+
+                        await Task.Delay(1000);
+                    }
                 }
+
+                await ChannelSession.AppSettings.Save();
+
+                await ChannelSession.Close();
+
+                this.shutdownComplete = true;
+
+                Logger.Log(LogLevel.Debug, "Shutdown process complete");
             }
-
-            await ChannelSession.AppSettings.Save();
-
-            await ChannelSession.Close();
-
-            this.shutdownComplete = true;
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
 
             this.Close();
             if (this.restartApplication)
             {
-                ProcessHelper.LaunchFolder(Application.ResourceAssembly.Location);
+                ProcessHelper.LaunchProgram(Application.ResourceAssembly.Location);
             }
         }
 

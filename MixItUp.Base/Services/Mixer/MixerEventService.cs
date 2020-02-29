@@ -148,6 +148,8 @@ namespace MixItUp.Base.Services.Mixer
         {
             try
             {
+                Logger.Log(LogLevel.Debug, $"Mixer Constellation Event: {JSONSerializerHelper.SerializeToString(e)}");
+
                 uint userID = 0;
                 UserViewModel user = null;
                 bool? followed = null;

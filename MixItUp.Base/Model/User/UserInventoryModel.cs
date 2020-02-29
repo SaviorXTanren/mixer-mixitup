@@ -639,7 +639,7 @@ namespace MixItUp.Base.Model.User
         {
             foreach (UserInventoryItemModel item in this.Items.Values)
             {
-                if (item.Name.Equals(itemName, StringComparison.InvariantCultureIgnoreCase))
+                if (item.Name.Equals(itemName, StringComparison.CurrentCultureIgnoreCase))
                 {
                     return item;
                 }

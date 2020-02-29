@@ -48,7 +48,7 @@ namespace MixItUp.Base.Services
 
         Task<Result<SettingsV2Model>> RestorePackagedBackup(string filePath);
 
-        Task PerformBackupIfApplicable(SettingsV2Model settings);
+        Task PerformAutomaticBackupIfApplicable(SettingsV2Model settings);
     }
 
     public class SettingsService : ISettingsService
@@ -142,33 +142,48 @@ namespace MixItUp.Base.Services
 
         public async Task Save(SettingsV2Model settings)
         {
+            Logger.Log(LogLevel.Debug, "Starting settings save operation");
+
             await semaphore.WaitAndRelease(async () =>
             {
                 settings.CopyLatestValues();
                 await FileSerializerHelper.SerializeToFile(settings.SettingsFilePath, settings);
                 await settings.SaveDatabaseData();
             });
+
+            Logger.Log(LogLevel.Debug, "Settings save operation finished");
         }
 
         public async Task SavePackagedBackup(SettingsV2Model settings, string filePath)
         {
             await this.Save(ChannelSession.Settings);
 
-            if (Directory.Exists(Path.GetDirectoryName(filePath)))
+            try
             {
-                if (File.Exists(filePath))
+                if (Directory.Exists(Path.GetDirectoryName(filePath)))
                 {
-                    File.Delete(filePath);
-                }
-
-                using (ZipArchive zipFile = ZipFile.Open(filePath, ZipArchiveMode.Create))
-                {
-                    zipFile.CreateEntryFromFile(settings.SettingsFilePath, Path.GetFileName(settings.SettingsFilePath));
-                    if (settings.IsStreamer)
+                    if (File.Exists(filePath))
                     {
-                        zipFile.CreateEntryFromFile(settings.DatabaseFilePath, Path.GetFileName(settings.DatabaseFilePath));
+                        File.Delete(filePath);
+                    }
+
+                    using (ZipArchive zipFile = ZipFile.Open(filePath, ZipArchiveMode.Create))
+                    {
+                        zipFile.CreateEntryFromFile(settings.SettingsFilePath, Path.GetFileName(settings.SettingsFilePath));
+                        if (settings.IsStreamer)
+                        {
+                            zipFile.CreateEntryFromFile(settings.DatabaseFilePath, Path.GetFileName(settings.DatabaseFilePath));
+                        }
                     }
                 }
+                else
+                {
+                    Logger.Log(LogLevel.Error, $"Directory does not exist for saving packaged backup: {filePath}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
         }
 
@@ -248,10 +263,12 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public async Task PerformBackupIfApplicable(SettingsV2Model settings)
+        public async Task PerformAutomaticBackupIfApplicable(SettingsV2Model settings)
         {
             if (settings.SettingsBackupRate != SettingsBackupRateEnum.None && !string.IsNullOrEmpty(settings.SettingsBackupLocation))
             {
+                Logger.Log(LogLevel.Debug, "Checking whether to perform automatic backup");
+
                 DateTimeOffset newResetDate = settings.SettingsLastBackup;
 
                 if (settings.SettingsBackupRate == SettingsBackupRateEnum.Daily) { newResetDate = newResetDate.AddDays(1); }

@@ -238,6 +238,8 @@ namespace MixItUp.Base.Services
 
         public async Task PerformEvent(EventTrigger trigger)
         {
+            Logger.Log(LogLevel.Debug, $"Performing event trigger: {trigger.Type}");
+
             EventCommand command = this.GetEventCommand(trigger.Type);
             if (command != null && this.CanPerformEvent(trigger))
             {
