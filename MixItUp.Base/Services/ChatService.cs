@@ -102,7 +102,7 @@ namespace MixItUp.Base.Services
 
         private LockedList<PermissionsCommandBase> chatCommands = new LockedList<PermissionsCommandBase>();
 
-        private HashSet<string> userEntranceCommands = new HashSet<string>();
+        private HashSet<Guid> userEntranceCommands = new HashSet<Guid>();
 
         private SemaphoreSlim whisperNumberLock = new SemaphoreSlim(1);
         private Dictionary<Guid, int> whisperMap = new Dictionary<Guid, int>();
@@ -395,9 +395,9 @@ namespace MixItUp.Base.Services
                 }
                 else
                 {
-                    if (!this.userEntranceCommands.Contains(message.User.MixerID.ToString()))
+                    if (!this.userEntranceCommands.Contains(message.User.ID))
                     {
-                        this.userEntranceCommands.Add(message.User.MixerID.ToString());
+                        this.userEntranceCommands.Add(message.User.ID);
                         if (message.User.Data.EntranceCommand != null)
                         {
                             await message.User.Data.EntranceCommand.Perform(message.User, message.Platform);
