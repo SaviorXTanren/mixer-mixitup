@@ -40,9 +40,11 @@ namespace MixItUp.Base.Services
 
         Task Initialize(SettingsV2Model settings);
 
-        Task<bool> SaveAndValidate(SettingsV2Model settings);
-
         Task Save(SettingsV2Model settings);
+
+        Task SaveLocalBackup(SettingsV2Model settings);
+
+        Task<bool> SaveAndValidate(SettingsV2Model settings);
 
         Task SavePackagedBackup(SettingsV2Model settings, string filePath);
 
@@ -94,7 +96,10 @@ namespace MixItUp.Base.Services
             }
 #pragma warning restore CS0612 // Type or member is obsolete
 
-            List<SettingsV2Model> settings = new List<SettingsV2Model>();
+            bool backupSettingsLoaded = false;
+            bool settingsLoadFailure = false;
+
+            List<SettingsV2Model> allSettings = new List<SettingsV2Model>();
             foreach (string filePath in Directory.GetFiles(SettingsV2Model.SettingsDirectoryName))
             {
                 if (filePath.EndsWith(SettingsV2Model.SettingsFileExtension))
@@ -105,13 +110,52 @@ namespace MixItUp.Base.Services
                         setting = await this.LoadSettings(filePath);
                         if (setting != null)
                         {
-                            settings.Add(setting);
+                            allSettings.Add(setting);
                         }
                     }
-                    catch (Exception ex) { Logger.Log(ex); }
+                    catch (Exception ex)
+                    {
+                        Logger.Log(ex);
+                    }
+
+                    if (setting == null)
+                    {
+                        string localBackupFilePath = string.Format($"{filePath}.{SettingsV2Model.SettingsLocalBackupFileExtension}");
+                        if (File.Exists(localBackupFilePath))
+                        {
+                            try
+                            {
+                                setting = await this.LoadSettings(localBackupFilePath);
+                                if (setting != null)
+                                {
+                                    allSettings.Add(setting);
+                                    backupSettingsLoaded = true;
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.Log(ex);
+                            }
+                        }
+                    }
+
+                    if (setting == null)
+                    {
+                        settingsLoadFailure = true;
+                    }
                 }
             }
-            return settings;
+
+            if (backupSettingsLoaded)
+            {
+                await DialogHelper.ShowMessage("One or more of the settings file could not be loaded due to file corruption and the most recent local backup was loaded instead.");
+            }
+            if (settingsLoadFailure)
+            {
+                await DialogHelper.ShowMessage("One or more settings files were unable to be loaded. Please visit the Mix It Up discord for assistance on this issue.");
+            }
+
+            return allSettings;
         }
 
         public Task<SettingsV2Model> Create(ExpandedChannelModel channel, bool isStreamer)
@@ -123,6 +167,32 @@ namespace MixItUp.Base.Services
         public async Task Initialize(SettingsV2Model settings)
         {
             await settings.Initialize();
+        }
+
+        public async Task Save(SettingsV2Model settings)
+        {
+            Logger.Log(LogLevel.Debug, "Starting settings save operation");
+
+            await semaphore.WaitAndRelease(async () =>
+            {
+                settings.CopyLatestValues();
+                await FileSerializerHelper.SerializeToFile(settings.SettingsFilePath, settings);
+                await settings.SaveDatabaseData();
+            });
+
+            Logger.Log(LogLevel.Debug, "Settings save operation finished");
+        }
+
+        public async Task SaveLocalBackup(SettingsV2Model settings)
+        {
+            Logger.Log(LogLevel.Debug, "Starting settings local backup save operation");
+
+            await semaphore.WaitAndRelease(async () =>
+            {
+                await FileSerializerHelper.SerializeToFile(settings.SettingsLocalBackupFilePath, settings);
+            });
+
+            Logger.Log(LogLevel.Debug, "Settings local backup save operation finished");
         }
 
         public async Task<bool> SaveAndValidate(SettingsV2Model settings)
@@ -138,20 +208,6 @@ namespace MixItUp.Base.Services
                 Logger.Log(ex);
             }
             return false;
-        }
-
-        public async Task Save(SettingsV2Model settings)
-        {
-            Logger.Log(LogLevel.Debug, "Starting settings save operation");
-
-            await semaphore.WaitAndRelease(async () =>
-            {
-                settings.CopyLatestValues();
-                await FileSerializerHelper.SerializeToFile(settings.SettingsFilePath, settings);
-                await settings.SaveDatabaseData();
-            });
-
-            Logger.Log(LogLevel.Debug, "Settings save operation finished");
         }
 
         public async Task SavePackagedBackup(SettingsV2Model settings, string filePath)
