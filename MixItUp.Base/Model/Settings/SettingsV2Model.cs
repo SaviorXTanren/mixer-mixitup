@@ -38,6 +38,8 @@ namespace MixItUp.Base.Model.Settings
 
         public const string SettingsFileExtension = "miu";
         public const string DatabaseFileExtension = "db";
+        public const string SettingsLocalBackupFileExtension = "backup";
+
         public const string SettingsBackupFileExtension = "miubackup";
 
         [DataMember]
@@ -490,6 +492,11 @@ namespace MixItUp.Base.Model.Settings
         public string DatabaseFileName { get { return string.Format("{0}.{1}", this.ID, SettingsV2Model.DatabaseFileExtension); } }
         [JsonIgnore]
         public string DatabaseFilePath { get { return Path.Combine(SettingsV2Model.SettingsDirectoryName, this.DatabaseFileName); } }
+
+        [JsonIgnore]
+        public string SettingsLocalBackupFileName { get { return string.Format("{0}.{1}.{2}", this.ID, SettingsV2Model.SettingsFileExtension, SettingsV2Model.SettingsLocalBackupFileExtension); } }
+        [JsonIgnore]
+        public string SettingsLocalBackupFilePath { get { return Path.Combine(SettingsV2Model.SettingsDirectoryName, this.SettingsLocalBackupFileName); } }
 
         public SettingsV2Model() { }
 
