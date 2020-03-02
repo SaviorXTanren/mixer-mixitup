@@ -103,6 +103,12 @@ namespace MixItUp.Base.Commands
             EventTypeEnum.ChatUserPurge, EventTypeEnum.ChatMessageReceived, EventTypeEnum.ChatMessageDeleted,
 
             EventTypeEnum.MixerChannelSubscriptionGifted, EventTypeEnum.MixerSparksUsed, EventTypeEnum.MixerEmbersUsed, EventTypeEnum.MixerSkillUsed, EventTypeEnum.MixerMilestoneReached, EventTypeEnum.MixerFanProgressionLevelUp,
+
+            EventTypeEnum.StreamlootsCardRedeemed, EventTypeEnum.StreamlootsPackGifted, EventTypeEnum.StreamlootsPackPurchased,
+
+            EventTypeEnum.ExtraLifeDonation, EventTypeEnum.GawkBoxDonation, EventTypeEnum.JustGivingDonation, EventTypeEnum.StreamElementsDonation, EventTypeEnum.StreamJarDonation , EventTypeEnum.StreamlabsDonation, EventTypeEnum.TiltifyDonation, EventTypeEnum.TipeeeStreamDonation, EventTypeEnum.TreatStreamDonation,
+
+            EventTypeEnum.PatreonSubscribed,
         };
 
         private LockedHashSet<Guid> userEventTracking = new LockedHashSet<Guid>();
