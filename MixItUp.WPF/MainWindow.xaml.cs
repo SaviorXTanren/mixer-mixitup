@@ -211,14 +211,7 @@ namespace MixItUp.WPF
                 }
                 else
                 {
-                    Logger.Log(LogLevel.Debug, "Starting settings save & validation process");
-
-                    for (int i = 0; i < 5 && !await ChannelSession.Services.Settings.SaveAndValidate(ChannelSession.Settings); i++)
-                    {
-                        Logger.Log(LogLevel.Debug, "Settings save & validation process failed");
-
-                        await Task.Delay(1000);
-                    }
+                    await ChannelSession.Services.Settings.Save(ChannelSession.Settings);
                 }
 
                 await ChannelSession.AppSettings.Save();
