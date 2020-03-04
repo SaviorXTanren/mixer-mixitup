@@ -275,7 +275,11 @@ namespace MixItUp.Base.Services
                 {
                     user = ChannelSession.GetCurrentUser();
                 }
-                this.userEventTracking[trigger.Type].Add(user.ID);
+
+                if (this.userEventTracking.ContainsKey(trigger.Type))
+                {
+                    this.userEventTracking[trigger.Type].Add(user.ID);
+                }
 
                 await command.Perform(user, platform: trigger.Platform, arguments: trigger.Arguments, extraSpecialIdentifiers: trigger.SpecialIdentifiers);
             }
