@@ -6,7 +6,6 @@ using Mixer.Base.Model.User;
 using MixItUp.Base.Model;
 using MixItUp.Base.Model.Chat;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Chat.Mixer;
@@ -148,6 +147,8 @@ namespace MixItUp.Base.Services.Mixer
         {
             try
             {
+                Logger.Log(LogLevel.Debug, $"Mixer Constellation Event: {JSONSerializerHelper.SerializeToString(e)}");
+
                 uint userID = 0;
                 UserViewModel user = null;
                 bool? followed = null;

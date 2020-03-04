@@ -46,16 +46,24 @@ namespace MixItUp.WPF.Services
 
         public void Listen(string eventString, Action<object> processEvent)
         {
-            if (!this.socket.HasListeners(eventString))
+            try
             {
-                this.socket.On(eventString, (eventData) =>
+                if (!this.socket.HasListeners(eventString))
                 {
-                    try
+                    this.socket.Off(eventString);
+                    this.socket.On(eventString, (eventData) =>
                     {
-                        processEvent(eventData);
-                    }
-                    catch (Exception ex) { Logger.Log(ex); }
-                });
+                        try
+                        {
+                            processEvent(eventData);
+                        }
+                        catch (Exception ex) { Logger.Log(ex); }
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
         }
 

@@ -159,12 +159,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
                 this.Options.Select(o => o.GetGameOutcome()), this.StartedCommand, this.UserJoinedCommand, this.BetsClosedCommand,
                 new GameOutcome("Failure", 0, new Dictionary<UserRoleEnum, int>() { { UserRoleEnum.User, 0 }, { UserRoleEnum.Subscriber, 0 }, { UserRoleEnum.Mod, 0 } }, this.UserFailCommand),
                 this.GameCompleteCommand, this.NotEnoughPlayersCommand);
-            if (this.existingCommand != null)
-            {
-                ChannelSession.Settings.GameCommands.Remove(this.existingCommand);
-                newCommand.ID = this.existingCommand.ID;
-            }
-            ChannelSession.Settings.GameCommands.Add(newCommand);
+            this.SaveGameCommand(newCommand, this.existingCommand);
         }
 
         public override async Task<bool> Validate()

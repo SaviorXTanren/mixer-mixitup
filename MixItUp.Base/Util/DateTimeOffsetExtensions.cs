@@ -11,15 +11,36 @@ namespace MixItUp.Base.Util
 
         public static string GetAge(this DateTimeOffset dt)
         {
-            TimeSpan difference = DateTimeOffset.Now - dt.ToOffset(DateTimeOffset.Now.Offset);
-            int days = (int)difference.TotalDays;
-            int years = days / 365;
-            days = days - (years * 365);
-            int months = days / 30;
-            days = days - (months * 30);
+            DateTimeOffset now = DateTimeOffset.UtcNow;
+
+            int years = 0;
+            now = now.AddYears(-1);
+            while (now > dt)
+            {
+                years++;
+                now = now.AddYears(-1);
+            }
+            now = now.AddYears(1);
+
+            int months = 0;
+            now = now.AddMonths(-1);
+            while (now > dt)
+            {
+                months++;
+                now = now.AddMonths(-1);
+            }
+            now = now.AddMonths(1);
+
+            int days = 0;
+            now = now.AddDays(-1);
+            while (now > dt)
+            {
+                days++;
+                now = now.AddDays(-1);
+            }
 
             List<string> dateSegments = new List<string>();
-            if (difference.TotalDays < 1)
+            if (years == 0 && months == 0 && days == 0)
             {
                 dateSegments.Add("<1 Day");
             }

@@ -55,7 +55,7 @@ namespace MixItUp.Base.ViewModel.User
     {
         public static DateTimeOffset? GetSubscriberDate(this UserWithGroupsModel userGroups)
         {
-            return userGroups.GetCreatedDateForGroupIfCurrent(EnumLocalizationHelper.GetLocalizedName(UserRoleEnum.Subscriber));
+            return userGroups.GetCreatedDateForGroupIfCurrent(UserRoleEnum.Subscriber.ToString());
         }
     }
 

@@ -13,8 +13,6 @@ namespace MixItUp.Base.Util
 
         public DatabaseList() { }
 
-        public DatabaseList(IList<T> items) : base(items) { }
-
         public override void Add(T value)
         {
             if (value != null)

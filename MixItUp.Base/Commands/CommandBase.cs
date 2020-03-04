@@ -28,7 +28,14 @@ namespace MixItUp.Base.Commands
     }
 
     [DataContract]
-    public abstract class CommandBase : IComparable, IComparable<CommandBase>, IEquatable<CommandBase>
+    public class ActionListContainer
+    {
+        [DataMember]
+        public List<ActionBase> Actions { get; set; } = new List<ActionBase>();
+    }
+
+    [DataContract]
+    public abstract class CommandBase : ActionListContainer, IComparable, IComparable<CommandBase>, IEquatable<CommandBase>
     {
         public const string CommandMatchingRegexFormat = "^({0})(\\s|$)";
 
@@ -76,9 +83,6 @@ namespace MixItUp.Base.Commands
 
         [DataMember]
         public HashSet<string> Commands { get; set; }
-
-        [DataMember]
-        public List<ActionBase> Actions { get; set; }
 
         [DataMember]
         public bool IsEnabled { get; set; }
@@ -149,6 +153,8 @@ namespace MixItUp.Base.Commands
         {
             if (this.IsEnabled)
             {
+                Logger.Log(LogLevel.Debug, $"Starting command performing: {this.Name}");
+
                 if (arguments == null)
                 {
                     arguments = new List<string>();
@@ -193,6 +199,8 @@ namespace MixItUp.Base.Commands
                 }
 
                 this.OnCommandStart(this, new EventArgs());
+
+                Logger.Log(LogLevel.Debug, $"Dedicated command task starting: {this.Name}");
 
                 this.currentCancellationTokenSource = new CancellationTokenSource();
                 this.currentTaskRun = Task.Run(async () =>
@@ -292,14 +300,17 @@ namespace MixItUp.Base.Commands
             {
                 token.ThrowIfCancellationRequested();
 
-                if (actionsToRun[i] is OverlayAction && ChannelSession.Services.Overlay.IsConnected)
+                ActionBase action = actionsToRun[i];
+                if (action is OverlayAction && ChannelSession.Services.Overlay.IsConnected)
                 {
                     ChannelSession.Services.Overlay.StartBatching();
                 }
 
-                await actionsToRun[i].Perform(user, this.platform, arguments, extraSpecialIdentifiers);
+                Logger.Log(LogLevel.Debug, $"Running action for command: {this.Name} - {action.Type}");
 
-                if (actionsToRun[i] is OverlayAction && ChannelSession.Services.Overlay.IsConnected)
+                await action.Perform(user, this.platform, arguments, extraSpecialIdentifiers);
+
+                if (action is OverlayAction && ChannelSession.Services.Overlay.IsConnected)
                 {
                     if (i == (actionsToRun.Count - 1) || !(actionsToRun[i + 1] is OverlayAction))
                     {

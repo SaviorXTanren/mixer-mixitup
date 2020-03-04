@@ -90,12 +90,7 @@ namespace MixItUp.Base.ViewModel.Controls.Games
 
             GameCommandBase newCommand = new CoinPusherGameCommand(name, triggers, requirements, this.StatusArgument.ToLower(), this.MinimumAmountForPayout,
                 this.PayoutProbability, this.PayoutPercentageMinimum, this.PayoutPercentageMaximum, this.StatusCommand, this.NoPayoutCommand, this.PayoutCommand);
-            if (this.existingCommand != null)
-            {
-                ChannelSession.Settings.GameCommands.Remove(this.existingCommand);
-                newCommand.ID = this.existingCommand.ID;
-            }
-            ChannelSession.Settings.GameCommands.Add(newCommand);
+            this.SaveGameCommand(newCommand, this.existingCommand);
         }
 
         public override async Task<bool> Validate()
