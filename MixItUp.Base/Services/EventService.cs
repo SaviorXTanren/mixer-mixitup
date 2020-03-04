@@ -5,6 +5,7 @@ using MixItUp.Base.Services.Mixer;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -182,6 +183,23 @@ namespace MixItUp.Base.Services
 
     public class EventService : IEventService
     {
+        private static HashSet<EventTypeEnum> singleUseTracking = new HashSet<EventTypeEnum>()
+        {
+            EventTypeEnum.ChatUserFirstJoin, EventTypeEnum.ChatUserJoined, EventTypeEnum.ChatUserLeft,
+
+            EventTypeEnum.MixerChannelStreamStart, EventTypeEnum.MixerChannelStreamStop, EventTypeEnum.MixerChannelFollowed, EventTypeEnum.MixerChannelUnfollowed, EventTypeEnum.MixerChannelHosted, EventTypeEnum.MixerChannelSubscribed, EventTypeEnum.MixerChannelResubscribed,
+        };
+
+        private LockedDictionary<EventTypeEnum, HashSet<Guid>> userEventTracking = new LockedDictionary<EventTypeEnum, HashSet<Guid>>();
+
+        public EventService()
+        {
+            foreach (EventTypeEnum type in singleUseTracking)
+            {
+                this.userEventTracking[type] = new HashSet<Guid>();
+            }
+        }
+
         public static Task<EventTrigger> ProcessDonationEvent(EventTypeEnum type, UserDonationModel donation, Dictionary<string, string> additionalSpecialIdentifiers = null)
         {
             GlobalEvents.DonationOccurred(donation);
@@ -231,9 +249,18 @@ namespace MixItUp.Base.Services
             EventCommand command = this.GetEventCommand(trigger.Type);
             if (command != null)
             {
-                return command.CanRun((trigger.User != null) ? trigger.User : ChannelSession.GetCurrentUser());
+                return this.CanPerformEvent(trigger.Type, (trigger.User != null) ? trigger.User : ChannelSession.GetCurrentUser());
             }
             return false;
+        }
+
+        public bool CanPerformEvent(EventTypeEnum type, UserViewModel user)
+        {
+            if (!EventService.singleUseTracking.Contains(type))
+            {
+                return true;
+            }
+            return !this.userEventTracking[type].Contains(user.ID);
         }
 
         public async Task PerformEvent(EventTrigger trigger)
@@ -243,7 +270,14 @@ namespace MixItUp.Base.Services
             EventCommand command = this.GetEventCommand(trigger.Type);
             if (command != null && this.CanPerformEvent(trigger))
             {
-                await command.Perform((trigger.User != null) ? trigger.User : ChannelSession.GetCurrentUser(), platform: trigger.Platform, arguments: trigger.Arguments, extraSpecialIdentifiers: trigger.SpecialIdentifiers);
+                UserViewModel user = trigger.User;
+                if (user == null)
+                {
+                    user = ChannelSession.GetCurrentUser();
+                }
+                this.userEventTracking[trigger.Type].Add(user.ID);
+
+                await command.Perform(user, platform: trigger.Platform, arguments: trigger.Arguments, extraSpecialIdentifiers: trigger.SpecialIdentifiers);
             }
         }
     }

@@ -1,19 +1,56 @@
 ﻿using Mixer.Base.Clients;
-using Mixer.Base.Model.Channel;
-using Mixer.Base.Model.User;
-using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
-using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace MixItUp.Base.Commands
 {
+    public class EventCommand : CommandBase, IEquatable<EventCommand>
+    {
+        private static SemaphoreSlim eventCommandPerformSemaphore = new SemaphoreSlim(1);
+
+        [Obsolete]
+        [DataMember]
+        public ConstellationEventTypeEnum EventType { get; set; }
+        [DataMember]
+        public uint EventID { get; set; }
+
+        [Obsolete]
+        [DataMember]
+        public OtherEventTypeEnum OtherEventType { get; set; }
+
+        [DataMember]
+        public EventTypeEnum EventCommandType { get; set; }
+
+        public EventCommand() { }
+
+        public EventCommand(EventTypeEnum eventType)
+            : base(eventType.ToString(), CommandTypeEnum.Event, eventType.ToString())
+        {
+            this.EventCommandType = eventType;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is EventCommand)
+            {
+                return this.Equals((EventCommand)obj);
+            }
+            return false;
+        }
+
+        public bool Equals(EventCommand other) { return this.EventCommandType == other.EventCommandType; }
+
+        public override int GetHashCode() { return this.EventCommandType.GetHashCode(); }
+
+        protected override SemaphoreSlim AsyncSemaphore { get { return EventCommand.eventCommandPerformSemaphore; } }
+    }
+
+    #region Obsolete Event Types
+
     [Obsolete]
     public enum OtherEventTypeEnum
     {
@@ -94,80 +131,5 @@ namespace MixItUp.Base.Commands
         StreamlootsPackGifted = 62,
     }
 
-    public class EventCommand : CommandBase, IEquatable<EventCommand>
-    {
-        private static SemaphoreSlim eventCommandPerformSemaphore = new SemaphoreSlim(1);
-
-        private static HashSet<EventTypeEnum> ignoreUserTracking = new HashSet<EventTypeEnum>()
-        {
-            EventTypeEnum.ChatUserPurge, EventTypeEnum.ChatMessageReceived, EventTypeEnum.ChatMessageDeleted,
-
-            EventTypeEnum.MixerChannelSubscriptionGifted, EventTypeEnum.MixerSparksUsed, EventTypeEnum.MixerEmbersUsed, EventTypeEnum.MixerSkillUsed, EventTypeEnum.MixerMilestoneReached, EventTypeEnum.MixerFanProgressionLevelUp,
-        };
-
-        private LockedHashSet<Guid> userEventTracking = new LockedHashSet<Guid>();
-
-        [Obsolete]
-        [DataMember]
-        public ConstellationEventTypeEnum EventType { get; set; }
-        [DataMember]
-        public uint EventID { get; set; }
-
-        [Obsolete]
-        [DataMember]
-        public OtherEventTypeEnum OtherEventType { get; set; }
-
-        [DataMember]
-        public EventTypeEnum EventCommandType { get; set; }
-
-        public EventCommand() { }
-
-        public EventCommand(EventTypeEnum eventType)
-            : base(eventType.ToString(), CommandTypeEnum.Event, eventType.ToString())
-        {
-            this.EventCommandType = eventType;
-        }
-
-        public bool CanRun(UserViewModel user)
-        {
-            if (EventCommand.ignoreUserTracking.Contains(this.EventCommandType))
-            {
-                return true;
-            }
-            return !this.userEventTracking.Contains(user.ID);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is EventCommand)
-            {
-                return this.Equals((EventCommand)obj);
-            }
-            return false;
-        }
-
-        public bool Equals(EventCommand other) { return this.EventCommandType == other.EventCommandType; }
-
-        public override int GetHashCode() { return this.EventCommandType.GetHashCode(); }
-
-        protected override SemaphoreSlim AsyncSemaphore { get { return EventCommand.eventCommandPerformSemaphore; } }
-
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
-        {
-            bool run = false;
-            lock (this.userEventTracking)
-            {
-                if (this.CanRun(user))
-                {
-                    this.userEventTracking.Add(user.ID);
-                    run = true;
-                }
-            }
-
-            if (run)
-            {
-                await base.PerformInternal(user, arguments, extraSpecialIdentifiers, token);
-            }
-        }
-    }
+    #endregion Obsolete Event Types
 }

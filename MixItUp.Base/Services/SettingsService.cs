@@ -44,8 +44,6 @@ namespace MixItUp.Base.Services
 
         Task SaveLocalBackup(SettingsV2Model settings);
 
-        Task<bool> SaveAndValidate(SettingsV2Model settings);
-
         Task SavePackagedBackup(SettingsV2Model settings, string filePath);
 
         Task<Result<SettingsV2Model>> RestorePackagedBackup(string filePath);
@@ -193,21 +191,6 @@ namespace MixItUp.Base.Services
             });
 
             Logger.Log(LogLevel.Debug, "Settings local backup save operation finished");
-        }
-
-        public async Task<bool> SaveAndValidate(SettingsV2Model settings)
-        {
-            try
-            {
-                await this.Save(settings);
-                SettingsV2Model loadedSettings = await this.LoadSettings(settings.SettingsFilePath);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
-            return false;
         }
 
         public async Task SavePackagedBackup(SettingsV2Model settings, string filePath)
