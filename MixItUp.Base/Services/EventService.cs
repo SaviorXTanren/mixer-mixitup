@@ -202,7 +202,14 @@ namespace MixItUp.Base.Services
 
         public static Task<EventTrigger> ProcessDonationEvent(EventTypeEnum type, UserDonationModel donation, Dictionary<string, string> additionalSpecialIdentifiers = null)
         {
-            GlobalEvents.DonationOccurred(donation);
+            try
+            {
+                GlobalEvents.DonationOccurred(donation);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
 
             EventTrigger trigger = new EventTrigger(type, donation.User);
             trigger.User.Data.TotalAmountDonated += donation.Amount;

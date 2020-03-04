@@ -55,14 +55,21 @@ namespace MixItUp.Base.Model.User
         {
             get
             {
-                UserViewModel user = ChannelSession.Services.User.GetUserByUsername(this.Username);
-                if (user == null)
+                lock (this)
                 {
-                    user = new UserViewModel(this.Username);
+                    if (this.user == null)
+                    {
+                        this.user = ChannelSession.Services.User.GetUserByUsername(this.Username);
+                        if (this.user == null)
+                        {
+                            this.user = new UserViewModel(this.Username);
+                        }
+                    }
                 }
-                return user;
+                return this.user;
             }
         }
+        private UserViewModel user;
 
         public Dictionary<string, string> GetSpecialIdentifiers()
         {
