@@ -49,7 +49,7 @@ namespace MixItUp.Base.Actions
                 IOverlayEndpointService overlay = ChannelSession.Services.Overlay.GetOverlay(ChannelSession.Services.Overlay.DefaultOverlayName);
                 if (overlay != null)
                 {
-                    var overlayItem = new OverlaySoundItemModel(audioFilePath, this.VolumeScale, 60);
+                    var overlayItem = new OverlaySoundItemModel(audioFilePath, this.VolumeScale);
                     await overlay.ShowItem(overlayItem, user, arguments, this.extraSpecialIdentifiers);
                 }
             }

@@ -19,26 +19,10 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlaySoundItemModel() : base() { }
 
-        public OverlaySoundItemModel(string filepath, int volume, double duration)
+        public OverlaySoundItemModel(string filepath, int volume)
             : base(OverlayItemModelTypeEnum.Sound, filepath, 0, 0)
         {
             this.Volume = volume;
-
-            this.Position = new OverlayItemPositionModel
-            {
-                Horizontal = -10000,
-                Vertical = -10000,
-                Layer = -10000,
-                PositionType = OverlayItemPositionType.Pixel,
-            };
-
-            this.Effects = new OverlayItemEffectsModel
-            {
-                Duration = duration,
-                EntranceAnimation = OverlayItemEffectEntranceAnimationTypeEnum.None,
-                ExitAnimation = OverlayItemEffectExitAnimationTypeEnum.None,
-                VisibleAnimation = OverlayItemEffectVisibleAnimationTypeEnum.None,
-            };
         }
 
         [JsonIgnore]
