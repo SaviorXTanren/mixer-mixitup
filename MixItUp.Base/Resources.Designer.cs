@@ -3805,6 +3805,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mix It Up Overlay.
+        /// </summary>
+        public static string MixItUpOverlay {
+            get {
+                return ResourceManager.GetString("MixItUpOverlay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mix It Up Store.
         /// </summary>
         public static string MixItUpStore {

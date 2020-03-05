@@ -274,6 +274,9 @@
                             else if (packet.data.ItemTypeName === "Video") {
                                 videoPacket(packet.data);
                             }
+                            else if (packet.data.ItemTypeName === "Sound") {
+                                soundPacket(packet.data);
+                            }
                             else if (packet.data.ItemTypeName === "HTML") {
                                 htmlPacket(packet.data);
                             }
@@ -437,6 +440,26 @@
                 if (fileExtensionIndex > 0) {
                     var fileExtension = data.FilePath.substring(fileExtensionIndex + 1);
                     sourceElement.type = "video/" + fileExtension;
+                }
+                addedElement.appendChild(sourceElement);
+
+                addWaitRemoveElement(data, addedElement);
+            }
+ 
+            function soundPacket(data) {
+                var addedElement = document.createElement('audio');
+                addedElement.frameBorder = 0;
+                addedElement.allow = "autoplay; encrypted-media";
+                addedElement.setAttribute('autoplay', '');
+                addedElement.volume = data.VolumeDecimal;
+
+                sourceElement = document.createElement('source');
+                sourceElement.src = data.FullLink;
+
+                var fileExtensionIndex = data.FilePath.lastIndexOf(".");
+                if (fileExtensionIndex > 0) {
+                    var fileExtension = data.FilePath.substring(fileExtensionIndex + 1);
+                    sourceElement.type = "audio/" + fileExtension;
                 }
                 addedElement.appendChild(sourceElement);
 
