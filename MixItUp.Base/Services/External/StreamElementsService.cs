@@ -247,7 +247,7 @@ namespace MixItUp.Base.Services.External
                 {
                     donationsReceived[seDonation._id] = seDonation;
                     UserDonationModel donation = seDonation.ToGenericDonation();
-                    await ChannelSession.Services.Events.PerformEvent(await EventService.ProcessDonationEvent(EventTypeEnum.StreamElementsDonation, donation));
+                    await EventService.ProcessDonationEvent(EventTypeEnum.StreamElementsDonation, donation);
                 }
             }
         }

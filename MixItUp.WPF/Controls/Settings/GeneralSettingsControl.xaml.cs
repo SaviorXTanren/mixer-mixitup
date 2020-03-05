@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Model.Settings;
+using MixItUp.Base.Util;
 using StreamingClient.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -122,8 +123,18 @@ namespace MixItUp.WPF.Controls.Settings
             ChannelSession.Settings.FeatureMe = this.FeatureMeToggleButton.IsChecked.GetValueOrDefault();
         }
 
-        private void UpdatePreviewProgramToggleButton_Checked(object sender, RoutedEventArgs e)
+        private async void UpdatePreviewProgramToggleButton_Checked(object sender, RoutedEventArgs e)
         {
+            if (this.UpdatePreviewProgramToggleButton.IsChecked.GetValueOrDefault() && !ChannelSession.AppSettings.PreviewProgram)
+            {
+                string text = UpdatePreviewProgramTooltip.Replace(Environment.NewLine, " ");
+                if (!await DialogHelper.ShowConfirmation(text + Environment.NewLine + Environment.NewLine + "Are you sure you wish to join the Preview Program?"))
+                {
+                    ChannelSession.AppSettings.PreviewProgram = false;
+                    this.UpdatePreviewProgramToggleButton.IsChecked = false;
+                    return;
+                }
+            }
             ChannelSession.AppSettings.PreviewProgram = this.UpdatePreviewProgramToggleButton.IsChecked.GetValueOrDefault();
         }
 

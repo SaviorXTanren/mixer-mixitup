@@ -1,28 +1,16 @@
 ﻿using Mixer.Base.Clients;
 using MixItUp.Base.Services;
-using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
 using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace MixItUp.Base.Commands
 {
     public class EventCommand : CommandBase, IEquatable<EventCommand>
     {
         private static SemaphoreSlim eventCommandPerformSemaphore = new SemaphoreSlim(1);
-
-        private static HashSet<EventTypeEnum> singleUseTracking = new HashSet<EventTypeEnum>()
-        {
-            EventTypeEnum.ChatUserFirstJoin, EventTypeEnum.ChatUserJoined, EventTypeEnum.ChatUserLeft,
-
-            EventTypeEnum.MixerChannelStreamStart, EventTypeEnum.MixerChannelStreamStop, EventTypeEnum.MixerChannelFollowed, EventTypeEnum.MixerChannelUnfollowed, EventTypeEnum.MixerChannelHosted, EventTypeEnum.MixerChannelSubscribed, EventTypeEnum.MixerChannelResubscribed,
-        };
-
-        private LockedHashSet<Guid> userEventTracking = new LockedHashSet<Guid>();
 
         [Obsolete]
         [DataMember]
@@ -45,15 +33,6 @@ namespace MixItUp.Base.Commands
             this.EventCommandType = eventType;
         }
 
-        public bool CanRun(UserViewModel user)
-        {
-            if (!EventCommand.singleUseTracking.Contains(this.EventCommandType))
-            {
-                return true;
-            }
-            return !this.userEventTracking.Contains(user.ID);
-        }
-
         public override bool Equals(object obj)
         {
             if (obj is EventCommand)
@@ -68,24 +47,6 @@ namespace MixItUp.Base.Commands
         public override int GetHashCode() { return this.EventCommandType.GetHashCode(); }
 
         protected override SemaphoreSlim AsyncSemaphore { get { return EventCommand.eventCommandPerformSemaphore; } }
-
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
-        {
-            bool run = false;
-            lock (this.userEventTracking)
-            {
-                if (this.CanRun(user))
-                {
-                    this.userEventTracking.Add(user.ID);
-                    run = true;
-                }
-            }
-
-            if (run)
-            {
-                await base.PerformInternal(user, arguments, extraSpecialIdentifiers, token);
-            }
-        }
     }
 
     #region Obsolete Event Types

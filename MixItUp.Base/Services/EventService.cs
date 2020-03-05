@@ -6,6 +6,7 @@ using MixItUp.Base.Services.Twitch;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using StreamingClient.Base.Util;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -225,10 +226,25 @@ namespace MixItUp.Base.Services
 
     public class EventService : IEventService
     {
-        public static Task<EventTrigger> ProcessDonationEvent(EventTypeEnum type, UserDonationModel donation, Dictionary<string, string> additionalSpecialIdentifiers = null)
+        private static HashSet<EventTypeEnum> singleUseTracking = new HashSet<EventTypeEnum>()
         {
-            GlobalEvents.DonationOccurred(donation);
+            EventTypeEnum.ChatUserFirstJoin, EventTypeEnum.ChatUserJoined, EventTypeEnum.ChatUserLeft,
 
+            EventTypeEnum.MixerChannelStreamStart, EventTypeEnum.MixerChannelStreamStop, EventTypeEnum.MixerChannelFollowed, EventTypeEnum.MixerChannelUnfollowed, EventTypeEnum.MixerChannelHosted, EventTypeEnum.MixerChannelSubscribed, EventTypeEnum.MixerChannelResubscribed,
+        };
+
+        private LockedDictionary<EventTypeEnum, HashSet<Guid>> userEventTracking = new LockedDictionary<EventTypeEnum, HashSet<Guid>>();
+
+        public EventService()
+        {
+            foreach (EventTypeEnum type in singleUseTracking)
+            {
+                this.userEventTracking[type] = new HashSet<Guid>();
+            }
+        }
+
+        public static async Task ProcessDonationEvent(EventTypeEnum type, UserDonationModel donation, Dictionary<string, string> additionalSpecialIdentifiers = null)
+        {
             EventTrigger trigger = new EventTrigger(type, donation.User);
             trigger.User.Data.TotalAmountDonated += donation.Amount;
 
@@ -244,7 +260,16 @@ namespace MixItUp.Base.Services
                 }
             }
 
-            return Task.FromResult(trigger);
+            await ChannelSession.Services.Events.PerformEvent(trigger);
+
+            try
+            {
+                GlobalEvents.DonationOccurred(donation);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
         }
 
         public IMixerEventService MixerEventService { get; private set; }
@@ -277,9 +302,18 @@ namespace MixItUp.Base.Services
             EventCommand command = this.GetEventCommand(trigger.Type);
             if (command != null)
             {
-                return command.CanRun((trigger.User != null) ? trigger.User : ChannelSession.GetCurrentUser());
+                return this.CanPerformEvent(trigger.Type, (trigger.User != null) ? trigger.User : ChannelSession.GetCurrentUser());
             }
             return false;
+        }
+
+        public bool CanPerformEvent(EventTypeEnum type, UserViewModel user)
+        {
+            if (!EventService.singleUseTracking.Contains(type))
+            {
+                return true;
+            }
+            return !this.userEventTracking[type].Contains(user.ID);
         }
 
         public async Task PerformEvent(EventTrigger trigger)
@@ -289,7 +323,18 @@ namespace MixItUp.Base.Services
             EventCommand command = this.GetEventCommand(trigger.Type);
             if (command != null && this.CanPerformEvent(trigger))
             {
-                await command.Perform((trigger.User != null) ? trigger.User : ChannelSession.GetCurrentUser(), platform: trigger.Platform, arguments: trigger.Arguments, extraSpecialIdentifiers: trigger.SpecialIdentifiers);
+                UserViewModel user = trigger.User;
+                if (user == null)
+                {
+                    user = ChannelSession.GetCurrentUser();
+                }
+
+                if (this.userEventTracking.ContainsKey(trigger.Type))
+                {
+                    this.userEventTracking[trigger.Type].Add(user.ID);
+                }
+
+                await command.Perform(user, platform: trigger.Platform, arguments: trigger.Arguments, extraSpecialIdentifiers: trigger.SpecialIdentifiers);
             }
         }
     }
