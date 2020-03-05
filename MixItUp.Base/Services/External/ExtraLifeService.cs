@@ -284,7 +284,7 @@ namespace MixItUp.Base.Services.External
                             UserDonationModel donation = elDonation.ToGenericDonation();
                             GlobalEvents.DonationOccurred(donation);
 
-                            await ChannelSession.Services.Events.PerformEvent(await EventService.ProcessDonationEvent(EventTypeEnum.ExtraLifeDonation, donation));
+                            await EventService.ProcessDonationEvent(EventTypeEnum.ExtraLifeDonation, donation);
                         }
                     }
                 }

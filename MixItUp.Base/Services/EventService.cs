@@ -200,17 +200,8 @@ namespace MixItUp.Base.Services
             }
         }
 
-        public static Task<EventTrigger> ProcessDonationEvent(EventTypeEnum type, UserDonationModel donation, Dictionary<string, string> additionalSpecialIdentifiers = null)
+        public static async Task ProcessDonationEvent(EventTypeEnum type, UserDonationModel donation, Dictionary<string, string> additionalSpecialIdentifiers = null)
         {
-            try
-            {
-                GlobalEvents.DonationOccurred(donation);
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
-
             EventTrigger trigger = new EventTrigger(type, donation.User);
             trigger.User.Data.TotalAmountDonated += donation.Amount;
 
@@ -226,7 +217,16 @@ namespace MixItUp.Base.Services
                 }
             }
 
-            return Task.FromResult(trigger);
+            await ChannelSession.Services.Events.PerformEvent(trigger);
+
+            try
+            {
+                GlobalEvents.DonationOccurred(donation);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
         }
 
         public IMixerEventService MixerEventService { get; private set; }
