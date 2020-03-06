@@ -62,19 +62,22 @@ namespace MixItUp.Base.Services
 
                 foreach (TimerCommand command in ChannelSession.Settings.TimerCommands)
                 {
-                    if (string.IsNullOrEmpty(command.GroupName))
+                    if (command.IsEnabled)
                     {
-                        commandGroups[string.Empty].Add(command);
-                    }
-                    else if (ChannelSession.Settings.CommandGroups.ContainsKey(command.GroupName))
-                    {
-                        if (ChannelSession.Settings.CommandGroups[command.GroupName].TimerInterval == 0)
+                        if (string.IsNullOrEmpty(command.GroupName))
                         {
                             commandGroups[string.Empty].Add(command);
                         }
-                        else
+                        else if (ChannelSession.Settings.CommandGroups.ContainsKey(command.GroupName))
                         {
-                            commandGroups[command.GroupName].Add(command);
+                            if (ChannelSession.Settings.CommandGroups[command.GroupName].TimerInterval == 0)
+                            {
+                                commandGroups[string.Empty].Add(command);
+                            }
+                            else
+                            {
+                                commandGroups[command.GroupName].Add(command);
+                            }
                         }
                     }
                 }
