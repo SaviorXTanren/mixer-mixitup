@@ -317,7 +317,7 @@ namespace MixItUp.Base.ViewModel.Window.Wizard
                 {
                     if (!await ChannelSession.InitializeSession(modChannelName: null))
                     {
-                        await DialogHelper.ShowMessage("Failed to initialize session.");
+                        await DialogHelper.ShowMessage("Failed to initialize session. If this continues please, visit the Mix It Up Discord for assistance.");
                         return;
                     }
 
