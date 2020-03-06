@@ -44,7 +44,7 @@ namespace MixItUp.Base.Actions
         {
             string audioFilePath = await this.ReplaceStringWithSpecialModifiers(this.FilePath, user, arguments);
 
-            if (this.OutputDevice == SoundAction.MixItUpOverlay)
+            if (SoundAction.MixItUpOverlay.Equals(this.OutputDevice))
             {
                 IOverlayEndpointService overlay = ChannelSession.Services.Overlay.GetOverlay(ChannelSession.Services.Overlay.DefaultOverlayName);
                 if (overlay != null)
