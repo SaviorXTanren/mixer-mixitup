@@ -25,6 +25,7 @@ namespace MixItUp.WPF.Controls.Actions
 
             List<string> audioOutputDevicesNames = new List<string>();
             audioOutputDevicesNames.Add(SoundAction.DefaultAudioDevice);
+            audioOutputDevicesNames.Add(SoundAction.MixItUpOverlay);
             audioOutputDevicesNames.AddRange(this.audioOutputDevices.Values);
             this.AudioOutputComboBox.ItemsSource = audioOutputDevicesNames;
 

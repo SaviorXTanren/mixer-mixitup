@@ -1365,6 +1365,9 @@
   <data name="MixItUpDashboard" xml:space="preserve">
     <value>Mix It Up - Dashboard</value>
   </data>
+  <data name="MixItUpOverlay" xml:space="preserve">
+    <value>Mix It Up Overlay</value>
+  </data>
   <data name="MixItUpStore" xml:space="preserve">
     <value>Mix It Up Store</value>
   </data>

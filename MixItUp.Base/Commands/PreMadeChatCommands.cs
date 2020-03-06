@@ -608,7 +608,7 @@ namespace MixItUp.Base.Commands
                     string result = await response.Content.ReadAsStringAsync();
                     JObject jobj = JObject.Parse(result);
                     JArray products = jobj["Products"] as JArray;
-                    if (products?.First() is JObject product)
+                    if (products?.FirstOrDefault() is JObject product)
                     {
                         string productId = product["ProductId"]?.Value<string>();
                         string name = product["LocalizedProperties"]?.First()?["ProductTitle"]?.Value<string>();
