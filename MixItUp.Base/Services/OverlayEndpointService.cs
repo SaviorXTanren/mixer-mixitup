@@ -188,7 +188,7 @@ namespace MixItUp.Base.Services
                     JObject jobj = await item.GetProcessedItem(user, arguments, extraSpecialIdentifiers);
                     if (jobj != null)
                     {
-                        if (item is OverlayImageItemModel || item is OverlayVideoItemModel)
+                        if (item is OverlayImageItemModel || item is OverlayVideoItemModel || item is OverlaySoundItemModel)
                         {
                             OverlayFileItemModelBase fileItem = (OverlayFileItemModelBase)item;
                             string filePath = jobj["FilePath"].ToString();

@@ -1006,7 +1006,7 @@
     <value>[!!! Gèř₥áñ !!!]</value>
   </data>
   <data name="GetCurrent" xml:space="preserve">
-    <value>[!!! GèţÇúřřèñţ !!!]</value>
+    <value>[!!! Gèţ Çúřřèñţ !!!]</value>
   </data>
   <data name="Gifted" xml:space="preserve">
     <value>[!!! Gïƒţèδ !!!]</value>
@@ -1364,6 +1364,9 @@
   </data>
   <data name="MixItUpDashboard" xml:space="preserve">
     <value>[!!! Mïж Ìţ Ûƥ - Ðášĥβôářδ !!!]</value>
+  </data>
+  <data name="MixItUpOverlay" xml:space="preserve">
+    <value>[!!! Mïж Ìţ Ûƥ ÓƲèřℓá¥ !!!]</value>
   </data>
   <data name="MixItUpStore" xml:space="preserve">
     <value>[!!! Mïж Ìţ Ûƥ Šţôřè !!!]</value>

@@ -32,7 +32,8 @@ namespace MixItUp.Base.Model.Overlay
         SongRequests,
         TickerTape,
         SparkCrystal,
-        EndCredits
+        EndCredits,
+        Sound
     }
 
     public enum OverlayItemPositionType

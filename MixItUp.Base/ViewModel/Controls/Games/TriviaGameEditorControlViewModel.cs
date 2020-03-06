@@ -162,6 +162,8 @@ namespace MixItUp.Base.ViewModel.Controls.Games
             this.TimeLimit = this.existingCommand.TimeLimit;
             this.WinAmount = this.existingCommand.WinAmount;
 
+            this.WinAmount = this.existingCommand.WinAmount;
+
             this.StartedCommand = this.existingCommand.StartedCommand;
 
             this.UserJoinCommand = this.existingCommand.UserJoinCommand;

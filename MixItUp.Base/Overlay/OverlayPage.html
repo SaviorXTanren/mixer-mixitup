@@ -274,6 +274,9 @@
                             else if (packet.data.ItemTypeName === "Video") {
                                 videoPacket(packet.data);
                             }
+                            else if (packet.data.ItemTypeName === "Sound") {
+                                soundPacket(packet.data);
+                            }
                             else if (packet.data.ItemTypeName === "HTML") {
                                 htmlPacket(packet.data);
                             }
@@ -441,6 +444,34 @@
                 addedElement.appendChild(sourceElement);
 
                 addWaitRemoveElement(data, addedElement);
+            }
+ 
+            function soundPacket(data) {
+                var addedElement = document.createElement('audio');
+                addedElement.frameBorder = 0;
+                addedElement.allow = "autoplay; encrypted-media";
+                addedElement.setAttribute('autoplay', '');
+                addedElement.addEventListener('ended', () => removePacket(data));
+                
+                addedElement.volume = data.VolumeDecimal;
+
+                sourceElement = document.createElement('source');
+                sourceElement.src = data.FullLink;
+
+                var fileExtensionIndex = data.FilePath.lastIndexOf(".");
+                if (fileExtensionIndex > 0) {
+                    var fileExtension = data.FilePath.substring(fileExtensionIndex + 1);
+                    sourceElement.type = "audio/" + fileExtension;
+                }
+                addedElement.appendChild(sourceElement);
+
+                var divContainer = document.createElement('div');
+                divContainer.id = data.ID;
+                divContainer.style.cssText += 'position: absolute; top: -1000px; left: -1000px; width: 0%; max-width: 0%; min-width: 0%; height: 0%; max-height: 0%; min-height: 0%; margin: 0px;';
+                divContainer.appendChild(addedElement);
+
+                itemDictionary[data.ID] = divContainer;
+                mainOverlayDiv.appendChild(divContainer);
             }
 
             function htmlPacket(data) {
