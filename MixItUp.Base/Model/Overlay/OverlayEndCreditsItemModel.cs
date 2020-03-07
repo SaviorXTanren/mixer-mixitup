@@ -435,10 +435,17 @@ namespace MixItUp.Base.Model.Overlay
             Dictionary<UserViewModel, string> results = new Dictionary<UserViewModel, string>();
             foreach (Guid userID in data)
             {
-                UserViewModel user = this.GetUser(userID);
-                if (user != null)
+                try
                 {
-                    results[user] = string.Empty;
+                    UserViewModel user = this.GetUser(userID);
+                    if (user != null)
+                    {
+                        results[user] = string.Empty;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
                 }
             }
             return results;
@@ -449,10 +456,17 @@ namespace MixItUp.Base.Model.Overlay
             Dictionary<UserViewModel, string> results = new Dictionary<UserViewModel, string>();
             foreach (var kvp in data)
             {
-                UserViewModel user = this.GetUser(kvp.Key);
-                if (user != null)
+                try
                 {
-                    results[user] = kvp.Value.ToString();
+                    UserViewModel user = this.GetUser(kvp.Key);
+                    if (user != null)
+                    {
+                        results[user] = kvp.Value.ToString();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
                 }
             }
             return results;
@@ -463,16 +477,31 @@ namespace MixItUp.Base.Model.Overlay
             Dictionary<UserViewModel, string> results = new Dictionary<UserViewModel, string>();
             foreach (var kvp in data)
             {
-                UserViewModel user = this.GetUser(kvp.Key);
-                if (user != null)
+                try
                 {
-                    results[user] = string.Format("{0:C}", Math.Round(kvp.Value, 2));
+                    UserViewModel user = this.GetUser(kvp.Key);
+                    if (user != null)
+                    {
+                        results[user] = string.Format("{0:C}", Math.Round(kvp.Value, 2));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
                 }
             }
             return results;
         }
 
-        private UserViewModel GetUser(Guid userID) { return new UserViewModel(ChannelSession.Settings.GetUserData(userID)); }
+        private UserViewModel GetUser(Guid userID)
+        {
+            UserDataModel data = ChannelSession.Settings.GetUserData(userID);
+            if (data != null)
+            {
+                return new UserViewModel(data);
+            }
+            return null;
+        }
 
         private async Task PerformSectionTemplateReplacement(StringBuilder htmlBuilder, OverlayEndCreditsSectionTypeEnum itemType, Dictionary<UserViewModel, string> replacers)
         {
