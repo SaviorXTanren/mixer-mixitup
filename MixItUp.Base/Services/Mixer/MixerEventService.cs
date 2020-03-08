@@ -242,24 +242,23 @@ namespace MixItUp.Base.Services.Mixer
                             {
                                 ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestFollowerUserData] = user.Data;
 
+                                await ChannelSession.Services.Events.PerformEvent(trigger);
+
                                 foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
                                 {
                                     currency.AddAmount(user.Data, currency.OnFollowBonus);
                                 }
-
-                                GlobalEvents.FollowOccurred(user);
-                                await ChannelSession.Services.Events.PerformEvent(trigger);
                             }
+                            GlobalEvents.FollowOccurred(user);
+
                             await this.AddAlertChatMessage(user, string.Format("{0} Followed", user.Username));
                         }
                         else
                         {
-                            EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChannelUnfollowed, user);
-                            if (ChannelSession.Services.Events.CanPerformEvent(trigger))
-                            {
-                                GlobalEvents.UnfollowOccurred(user);
-                                await ChannelSession.Services.Events.PerformEvent(trigger);
-                            }
+                            await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.MixerChannelUnfollowed, user));
+
+                            GlobalEvents.UnfollowOccurred(user);
+
                             await this.AddAlertChatMessage(user, string.Format("{0} Unfollowed", user.Username));
                         }
                     }
@@ -291,12 +290,12 @@ namespace MixItUp.Base.Services.Mixer
                                 currency.AddAmount(user.Data, currency.OnHostBonus);
                             }
 
-                            GlobalEvents.HostOccurred(new Tuple<UserViewModel, int>(user, viewerCount));
-
                             trigger.SpecialIdentifiers["hostviewercount"] = viewerCount.ToString();
                             trigger.SpecialIdentifiers["isautohost"] = isAutoHost.ToString();
                             await ChannelSession.Services.Events.PerformEvent(trigger);
                         }
+                        GlobalEvents.HostOccurred(new Tuple<UserViewModel, int>(user, viewerCount));
+
                         await this.AddAlertChatMessage(user, string.Format("{0} Hosted With {1} Viewers", user.Username, viewerCount));
                     }
                 }
@@ -317,10 +316,10 @@ namespace MixItUp.Base.Services.Mixer
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.Data;
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
 
-                            GlobalEvents.SubscribeOccurred(user);
-
                             await ChannelSession.Services.Events.PerformEvent(trigger);
                         }
+                        GlobalEvents.SubscribeOccurred(user);
+
                         await this.AddAlertChatMessage(user, string.Format("{0} Subscribed", user.Username));
                     }
                 }
@@ -346,11 +345,11 @@ namespace MixItUp.Base.Services.Mixer
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.Data;
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = resubMonths;
 
-                            GlobalEvents.ResubscribeOccurred(new Tuple<UserViewModel, int>(user, resubMonths));
-
                             trigger.SpecialIdentifiers["usersubmonths"] = resubMonths.ToString();
                             await ChannelSession.Services.Events.PerformEvent(trigger);
                         }
+                        GlobalEvents.ResubscribeOccurred(new Tuple<UserViewModel, int>(user, resubMonths));
+
                         await this.AddAlertChatMessage(user, string.Format("{0} Re-Subscribed For {1} Months", user.Username, resubMonths));
                     }
                 }
@@ -392,11 +391,11 @@ namespace MixItUp.Base.Services.Mixer
 
                                 trigger.Arguments.Add(receiverUser.Username);
                                 await ChannelSession.Services.Events.PerformEvent(trigger);
-
-                                await this.AddAlertChatMessage(gifterUser, string.Format("{0} Gifted A Subscription To {1}", gifterUser.Username, receiverUser.Username));
-
-                                GlobalEvents.SubscriptionGiftedOccurred(gifterUser, receiverUser);
                             }
+
+                            await this.AddAlertChatMessage(gifterUser, string.Format("{0} Gifted A Subscription To {1}", gifterUser.Username, receiverUser.Username));
+
+                            GlobalEvents.SubscriptionGiftedOccurred(gifterUser, receiverUser);
                         }
                     }
                 }
@@ -452,15 +451,15 @@ namespace MixItUp.Base.Services.Mixer
                             PatronageMilestoneModel milestoneReached = this.allPatronageMilestones.OrderByDescending(m => m.target).FirstOrDefault(m => m.target <= patronageStatus.patronageEarned);
                             if (milestoneReached != null)
                             {
-                                GlobalEvents.PatronageMilestoneReachedOccurred(milestoneReached);
-
                                 EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerMilestoneReached, user);
                                 if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                                 {
                                     trigger.SpecialIdentifiers[SpecialIdentifierStringBuilder.MilestoneSpecialIdentifierHeader + "amount"] = milestoneReached.target.ToString();
                                     trigger.SpecialIdentifiers[SpecialIdentifierStringBuilder.MilestoneSpecialIdentifierHeader + "reward"] = milestoneReached.PercentageAmountText();
+                                    await ChannelSession.Services.Events.PerformEvent(trigger);
                                 }
-                                await ChannelSession.Services.Events.PerformEvent(trigger);
+
+                                GlobalEvents.PatronageMilestoneReachedOccurred(milestoneReached);
                             }
                         }
                     }
