@@ -909,6 +909,17 @@ namespace MixItUp.Base.Util
                         this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channelfeatured", channel.featured.ToString());
                     }
                 }
+
+                if (ChannelSession.Services.Patreon.IsConnected)
+                {
+                    string tierName = "Not Subscribed";
+                    PatreonTier tier = user.PatreonTier;
+                    if (tier != null)
+                    {
+                        tierName = tier.Title;
+                    }
+                    this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "patreontier", tierName);
+                }
             }
         }
 
