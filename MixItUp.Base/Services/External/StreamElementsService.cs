@@ -73,7 +73,7 @@ namespace MixItUp.Base.Services.External
                 Source = UserDonationSourceEnum.StreamElements,
 
                 ID = this._id.ToString(),
-                Username = "",
+                Username = this.donation?.user?.username,
                 Message = (this.donation != null) ? this.donation.message : string.Empty,
 
                 Amount = Math.Round((this.donation != null) ? this.donation.amount : 0, 2),
