@@ -930,10 +930,12 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier(extrakey, ChannelSession.Settings.LatestSpecialIdentifiersData[extrakey].ToString());
             }
 
-            if (ChannelSession.Settings.LatestSpecialIdentifiersData.ContainsKey(userkey) && ChannelSession.Settings.LatestSpecialIdentifiersData[userkey] != null && ChannelSession.Settings.LatestSpecialIdentifiersData[userkey] is UserViewModel)
+            if (ChannelSession.Settings.LatestSpecialIdentifiersData.ContainsKey(userkey) && ChannelSession.Settings.LatestSpecialIdentifiersData[userkey] != null)
             {
-                UserDataModel userData = (UserDataModel)ChannelSession.Settings.LatestSpecialIdentifiersData[userkey];
-                await this.HandleUserSpecialIdentifiers(new UserViewModel(userData), userkey);
+                if (Guid.TryParse(ChannelSession.Settings.LatestSpecialIdentifiersData[userkey].ToString(), out Guid userID) && ChannelSession.Settings.UserData.ContainsKey(userID))
+                {
+                    await this.HandleUserSpecialIdentifiers(new UserViewModel(ChannelSession.Settings.UserData[userID]), userkey);
+                }
             }
         }
 
