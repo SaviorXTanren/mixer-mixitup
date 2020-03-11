@@ -920,6 +920,17 @@ namespace MixItUp.Base.Util
                         this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channelfeatured", channel.featured.ToString());
                     }
                 }
+
+                if (ChannelSession.Services.Patreon.IsConnected)
+                {
+                    string tierName = "Not Subscribed";
+                    PatreonTier tier = user.PatreonTier;
+                    if (tier != null)
+                    {
+                        tierName = tier.Title;
+                    }
+                    this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "patreontier", tierName);
+                }
             }
         }
 
@@ -930,10 +941,12 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier(extrakey, ChannelSession.Settings.LatestSpecialIdentifiersData[extrakey].ToString());
             }
 
-            if (ChannelSession.Settings.LatestSpecialIdentifiersData.ContainsKey(userkey) && ChannelSession.Settings.LatestSpecialIdentifiersData[userkey] != null && ChannelSession.Settings.LatestSpecialIdentifiersData[userkey] is UserViewModel)
+            if (ChannelSession.Settings.LatestSpecialIdentifiersData.ContainsKey(userkey) && ChannelSession.Settings.LatestSpecialIdentifiersData[userkey] != null)
             {
-                UserDataModel userData = (UserDataModel)ChannelSession.Settings.LatestSpecialIdentifiersData[userkey];
-                await this.HandleUserSpecialIdentifiers(new UserViewModel(userData), userkey);
+                if (Guid.TryParse(ChannelSession.Settings.LatestSpecialIdentifiersData[userkey].ToString(), out Guid userID) && ChannelSession.Settings.UserData.ContainsKey(userID))
+                {
+                    await this.HandleUserSpecialIdentifiers(new UserViewModel(ChannelSession.Settings.UserData[userID]), userkey);
+                }
             }
         }
 

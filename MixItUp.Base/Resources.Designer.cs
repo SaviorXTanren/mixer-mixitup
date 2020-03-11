@@ -4966,6 +4966,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Replaced.
+        /// </summary>
+        public static string Replaced {
+            get {
+                return ResourceManager.GetString("Replaced", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Replacement Text.
         /// </summary>
         public static string ReplacementText {

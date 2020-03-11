@@ -2538,4 +2538,7 @@
   <data name="1PerBit" xml:space="preserve">
     <value>1 Per Bit</value>
   </data>
+  <data name="Replaced" xml:space="preserve">
+    <value>Replaced</value>
+  </data>
 </root>

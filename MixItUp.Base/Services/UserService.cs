@@ -1,7 +1,6 @@
 ﻿using Mixer.Base.Model.Chat;
 using Mixer.Base.Model.MixPlay;
 using Mixer.Base.Model.User;
-using MixItUp.Base.Model;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;

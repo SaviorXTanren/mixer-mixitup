@@ -383,7 +383,7 @@ namespace MixItUp.Base.Services
 
         public async Task AddMessage(ChatMessageViewModel message)
         {
-            Logger.Log(LogLevel.Debug, string.Format("Message Received - {0}", message.ToString()));
+            Logger.Log(LogLevel.Debug, string.Format("Message Received - {0} - {1}", message.ID.ToString(), message));
 
             if (ChannelSession.Settings.SaveChatEventLogs)
             {
@@ -460,7 +460,7 @@ namespace MixItUp.Base.Services
             {
                 if (this.DisableChat && !message.ID.Equals(Guid.Empty))
                 {
-                    Logger.Log(LogLevel.Debug, string.Format("Deleting Message As Chat Disabled - {0}", message.PlainTextMessage));
+                    Logger.Log(LogLevel.Debug, string.Format("Deleting Message As Chat Disabled - {0} - {1}", message.ID, message));
                     await this.DeleteMessage(message);
                     return;
                 }
@@ -541,7 +541,7 @@ namespace MixItUp.Base.Services
 
                     if (this.chatCommands.Count > 0)
                     {
-                        Logger.Log(LogLevel.Debug, string.Format("Checking Message For Command - {0}", message.ToString()));
+                        Logger.Log(LogLevel.Debug, string.Format("Checking Message For Command - {0} - {1}", message.ID, message));
 
                         List<PermissionsCommandBase> commands = this.chatCommands.ToList();
                         foreach (PermissionsCommandBase command in message.User.Data.CustomCommands.Where(c => c.IsEnabled))
@@ -575,11 +575,11 @@ namespace MixItUp.Base.Services
         {
             if (command.IsEnabled)
             {
-                Logger.Log(LogLevel.Debug, string.Format("Command Found For Message - {0} - {1}", message.ToString(), command.ToString()));
+                Logger.Log(LogLevel.Debug, string.Format("Command Found For Message - {0} - {1} - {2}", message.ID, message, command));
 
                 if (command.Requirements.Settings.DeleteChatCommandWhenRun || (ChannelSession.Settings.DeleteChatCommandsWhenRun && !command.Requirements.Settings.DontDeleteChatCommandWhenRun))
                 {
-                    Logger.Log(LogLevel.Debug, string.Format("Deleting Message As Chat Command - {0}", message.PlainTextMessage));
+                    Logger.Log(LogLevel.Debug, string.Format("Deleting Message As Chat Command - {0} - {1}", message.ID, message));
                     await this.DeleteMessage(message);
                 }
 
