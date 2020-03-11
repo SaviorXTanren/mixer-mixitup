@@ -280,10 +280,7 @@ namespace MixItUp.Base.Services.External
                         if (!string.IsNullOrEmpty(elDonation.donationID) && !donationsReceived.ContainsKey(elDonation.donationID))
                         {
                             donationsReceived[elDonation.donationID] = elDonation;
-
                             UserDonationModel donation = elDonation.ToGenericDonation();
-                            GlobalEvents.DonationOccurred(donation);
-
                             await EventService.ProcessDonationEvent(EventTypeEnum.ExtraLifeDonation, donation);
                         }
                     }

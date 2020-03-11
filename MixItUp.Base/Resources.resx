@@ -2535,4 +2535,7 @@
   <data name="YScale" xml:space="preserve">
     <value>Y Scale (Decimal)</value>
   </data>
+  <data name="Replaced" xml:space="preserve">
+    <value>Replaced</value>
+  </data>
 </root>

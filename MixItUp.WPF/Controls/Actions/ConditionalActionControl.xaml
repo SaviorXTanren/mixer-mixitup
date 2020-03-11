@@ -94,7 +94,7 @@
                             </ComboBox.ItemTemplate>
                         </ComboBox>
 
-                        <TextBox Grid.Column="6" Text="{Binding Value2}" Visibility="{Binding IsBetweenOperatorNotSelected, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SecondValue}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <TextBox Grid.Column="6" Text="{Binding Value2}" IsEnabled="{Binding IsValue2Definable}" Visibility="{Binding IsBetweenOperatorNotSelected, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="{x:Static resx:Resources.SecondValue}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                         <Grid Grid.Column="6" Visibility="{Binding IsBetweenOperatorSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <Grid.ColumnDefinitions>

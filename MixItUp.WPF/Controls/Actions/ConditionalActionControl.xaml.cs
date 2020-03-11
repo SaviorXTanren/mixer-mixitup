@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
-using MixItUp.Base.Util;
 using MixItUp.Base.ViewModels;
 using MixItUp.WPF.Util;
 using StreamingClient.Base.Util;
@@ -64,10 +63,13 @@ namespace MixItUp.WPF.Controls.Actions
             {
                 this.Clause.ComparisionType = value;
                 this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("IsValue2Definable");
                 this.NotifyPropertyChanged("IsBetweenOperatorSelected");
                 this.NotifyPropertyChanged("IsBetweenOperatorNotSelected");
             }
         }
+
+        public bool IsValue2Definable { get { return this.ComparisionType != ConditionalComparisionTypeEnum.Replaced; } }
 
         public bool IsBetweenOperatorSelected { get { return this.ComparisionType == ConditionalComparisionTypeEnum.Between; } }
         public bool IsBetweenOperatorNotSelected { get { return !this.IsBetweenOperatorSelected; } }
@@ -102,7 +104,11 @@ namespace MixItUp.WPF.Controls.Actions
 
         public bool Validate()
         {
-            if (this.ComparisionType == ConditionalComparisionTypeEnum.Between)
+            if (this.ComparisionType == ConditionalComparisionTypeEnum.Replaced)
+            {
+                return !string.IsNullOrEmpty(this.Value1);
+            }
+            else if (this.ComparisionType == ConditionalComparisionTypeEnum.Between)
             {
                 return !string.IsNullOrEmpty(this.Value1) && !string.IsNullOrEmpty(this.Value2) && !string.IsNullOrEmpty(this.Value3);
             }

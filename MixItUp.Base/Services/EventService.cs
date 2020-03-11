@@ -174,8 +174,6 @@ namespace MixItUp.Base.Services
 
         EventCommand GetEventCommand(EventTypeEnum type);
 
-        bool DoesCommandExist(EventTypeEnum type);
-
         bool CanPerformEvent(EventTrigger trigger);
 
         Task PerformEvent(EventTrigger trigger);
@@ -249,46 +247,38 @@ namespace MixItUp.Base.Services
             return null;
         }
 
-        public bool DoesCommandExist(EventTypeEnum type) { return this.GetEventCommand(type) != null; }
-
         public bool CanPerformEvent(EventTrigger trigger)
         {
-            EventCommand command = this.GetEventCommand(trigger.Type);
-            if (command != null)
-            {
-                return this.CanPerformEvent(trigger.Type, (trigger.User != null) ? trigger.User : ChannelSession.GetCurrentUser());
-            }
-            return false;
-        }
-
-        public bool CanPerformEvent(EventTypeEnum type, UserViewModel user)
-        {
-            if (!EventService.singleUseTracking.Contains(type))
+            UserViewModel user = (trigger.User != null) ? trigger.User : ChannelSession.GetCurrentUser();
+            if (!EventService.singleUseTracking.Contains(trigger.Type))
             {
                 return true;
             }
-            return !this.userEventTracking[type].Contains(user.ID);
+            return !this.userEventTracking[trigger.Type].Contains(user.ID);
         }
 
         public async Task PerformEvent(EventTrigger trigger)
         {
-            EventCommand command = this.GetEventCommand(trigger.Type);
-            if (command != null && this.CanPerformEvent(trigger))
+            if (this.CanPerformEvent(trigger))
             {
-                Logger.Log(LogLevel.Debug, $"Performing event trigger: {trigger.Type}");
-
-                UserViewModel user = trigger.User;
-                if (user == null)
+                EventCommand command = this.GetEventCommand(trigger.Type);
+                if (command != null)
                 {
-                    user = ChannelSession.GetCurrentUser();
-                }
+                    Logger.Log(LogLevel.Debug, $"Performing event trigger: {trigger.Type}");
 
-                if (this.userEventTracking.ContainsKey(trigger.Type))
-                {
-                    this.userEventTracking[trigger.Type].Add(user.ID);
-                }
+                    UserViewModel user = trigger.User;
+                    if (user == null)
+                    {
+                        user = ChannelSession.GetCurrentUser();
+                    }
 
-                await command.Perform(user, platform: trigger.Platform, arguments: trigger.Arguments, extraSpecialIdentifiers: trigger.SpecialIdentifiers);
+                    if (this.userEventTracking.ContainsKey(trigger.Type))
+                    {
+                        this.userEventTracking[trigger.Type].Add(user.ID);
+                    }
+
+                    await command.Perform(user, platform: trigger.Platform, arguments: trigger.Arguments, extraSpecialIdentifiers: trigger.SpecialIdentifiers);
+                }
             }
         }
     }

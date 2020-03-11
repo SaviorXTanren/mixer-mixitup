@@ -55,6 +55,9 @@ namespace MixItUp.Base.Model.Settings
         public bool PreviewProgram { get; set; } = false;
 
         [DataMember]
+        public bool TestBuild { get; set; } = false;
+
+        [DataMember]
         public Guid AutoLogInID { get; set; } = Guid.Empty;
 
         [DataMember]

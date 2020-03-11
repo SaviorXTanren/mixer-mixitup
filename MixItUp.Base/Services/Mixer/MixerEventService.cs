@@ -240,7 +240,7 @@ namespace MixItUp.Base.Services.Mixer
                             EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChannelFollowed, user);
                             if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                             {
-                                ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestFollowerUserData] = user.Data;
+                                ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestFollowerUserData] = user.ID;
 
                                 await ChannelSession.Services.Events.PerformEvent(trigger);
 
@@ -282,7 +282,7 @@ namespace MixItUp.Base.Services.Mixer
                         EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChannelHosted, user);
                         if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                         {
-                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestHostUserData] = user.Data;
+                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestHostUserData] = user.ID;
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestHostViewerCountData] = viewerCount;
 
                             foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
@@ -313,7 +313,7 @@ namespace MixItUp.Base.Services.Mixer
                             }
                             user.Data.TotalMonthsSubbed++;
 
-                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.Data;
+                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
 
                             await ChannelSession.Services.Events.PerformEvent(trigger);
@@ -342,7 +342,7 @@ namespace MixItUp.Base.Services.Mixer
                             }
                             user.Data.TotalMonthsSubbed++;
 
-                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.Data;
+                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = resubMonths;
 
                             trigger.SpecialIdentifiers["usersubmonths"] = resubMonths.ToString();
@@ -386,7 +386,7 @@ namespace MixItUp.Base.Services.Mixer
                                 receiverUser.Data.TotalSubsReceived++;
                                 receiverUser.Data.TotalMonthsSubbed++;
 
-                                ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = receiverUser.Data;
+                                ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = receiverUser.ID;
                                 ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = 1;
 
                                 trigger.Arguments.Add(receiverUser.Username);
@@ -482,7 +482,7 @@ namespace MixItUp.Base.Services.Mixer
                 sparkCurrency.AddAmount(sparkUsage.Item1.Data, (int)sparkUsage.Item2);
             }
 
-            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSparkUsageUserData] = sparkUsage.Item1.Data;
+            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSparkUsageUserData] = sparkUsage.Item1.ID;
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSparkUsageAmountData] = sparkUsage.Item2;
 
             EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerSparksUsed, sparkUsage.Item1);
@@ -499,7 +499,7 @@ namespace MixItUp.Base.Services.Mixer
                 emberCurrency.AddAmount(emberUsage.User.Data, (int)emberUsage.Amount);
             }
 
-            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestEmberUsageUserData] = emberUsage.User.Data;
+            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestEmberUsageUserData] = emberUsage.User.ID;
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestEmberUsageAmountData] = emberUsage.Amount;
 
             EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerEmbersUsed, emberUsage.User);
