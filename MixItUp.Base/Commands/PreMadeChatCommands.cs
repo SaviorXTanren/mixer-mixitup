@@ -446,9 +446,14 @@ namespace MixItUp.Base.Commands
                                     return;
                                 }
                             }
-                            else
+                            else if (arguments.Count() == 0)
                             {
                                 quoteIndex = RandomHelper.GenerateRandomNumber(ChannelSession.Settings.Quotes.Count);
+                            }
+                            else 
+                            {
+                                await ChannelSession.Services.Chat.Whisper(user, "USAGE: !quote [QUOTE NUMBER]");
+                                return;
                             }
 
                             UserQuoteViewModel quote = ChannelSession.Settings.Quotes[quoteIndex];
