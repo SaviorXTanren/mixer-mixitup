@@ -45,31 +45,42 @@ namespace MixItUp.Base.Util
             }
             now = now.AddDays(1);
 
-            int hours = 0;
-            int minutes = 0;
-            if (includeTime)
-            {
-                now = now.AddHours(-1);
-                while (now > start)
-                {
-                    hours++;
-                    now = now.AddHours(-1);
-                }
-                now = now.AddHours(1);
-
-                now = now.AddMinutes(-1);
-                while (now > start)
-                {
-                    minutes++;
-                    now = now.AddMinutes(-1);
-                }
-                now = now.AddMinutes(1);
-            }
-
             List<string> dateSegments = new List<string>();
-            if (years == 0 && months == 0 && days == 0 && !includeTime)
+            if (years == 0 && months == 0 && days == 0)
             {
-                dateSegments.Add("<1 Day");
+                if (includeTime)
+                {
+                    int hours = 0;
+                    now = now.AddHours(-1);
+                    while (now > start)
+                    {
+                        hours++;
+                        now = now.AddHours(-1);
+                    }
+                    now = now.AddHours(1);
+
+                    if (hours > 0)
+                    {
+                        dateSegments.Add(hours + " Hours(s)");
+                    }
+                    else
+                    {
+                        int minutes = 0;
+                        now = now.AddMinutes(-1);
+                        while (now > start)
+                        {
+                            minutes++;
+                            now = now.AddMinutes(-1);
+                        }
+                        now = now.AddMinutes(1);
+
+                        dateSegments.Add(minutes + " Minute(s)");
+                    }
+                }
+                else
+                {
+                    dateSegments.Add("<1 Day");
+                }
             }
             else
             {
@@ -84,17 +95,6 @@ namespace MixItUp.Base.Util
                 if (days > 0)
                 {
                     dateSegments.Add(days + " Day(s)");
-                }
-                if (includeTime)
-                {
-                    if (hours > 0)
-                    {
-                        dateSegments.Add(hours + " Hours(s)");
-                    }
-                    if (minutes > 0)
-                    {
-                        dateSegments.Add(minutes + " Minute(s)");
-                    }
                 }
             }
 
