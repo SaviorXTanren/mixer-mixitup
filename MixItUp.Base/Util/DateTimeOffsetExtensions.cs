@@ -9,13 +9,18 @@ namespace MixItUp.Base.Util
 
         public static string ToFriendlyDateTimeString(this DateTimeOffset dt) { return dt.ToString("g"); }
 
-        public static string GetAge(this DateTimeOffset dt)
+        public static string GetAge(this DateTimeOffset start, bool includeTime = false)
         {
-            DateTimeOffset now = DateTimeOffset.UtcNow;
+            return start.GetAge(DateTimeOffset.UtcNow);
+        }
+
+        public static string GetAge(this DateTimeOffset start, DateTimeOffset end, bool includeTime = false)
+        {
+            DateTimeOffset now = end;
 
             int years = 0;
             now = now.AddYears(-1);
-            while (now > dt)
+            while (now > start)
             {
                 years++;
                 now = now.AddYears(-1);
@@ -24,7 +29,7 @@ namespace MixItUp.Base.Util
 
             int months = 0;
             now = now.AddMonths(-1);
-            while (now > dt)
+            while (now > start)
             {
                 months++;
                 now = now.AddMonths(-1);
@@ -33,14 +38,36 @@ namespace MixItUp.Base.Util
 
             int days = 0;
             now = now.AddDays(-1);
-            while (now > dt)
+            while (now > start)
             {
                 days++;
                 now = now.AddDays(-1);
             }
+            now = now.AddDays(1);
+
+            int hours = 0;
+            int minutes = 0;
+            if (includeTime)
+            {
+                now = now.AddHours(-1);
+                while (now > start)
+                {
+                    hours++;
+                    now = now.AddHours(-1);
+                }
+                now = now.AddHours(1);
+
+                now = now.AddMinutes(-1);
+                while (now > start)
+                {
+                    minutes++;
+                    now = now.AddMinutes(-1);
+                }
+                now = now.AddMinutes(1);
+            }
 
             List<string> dateSegments = new List<string>();
-            if (years == 0 && months == 0 && days == 0)
+            if (years == 0 && months == 0 && days == 0 && !includeTime)
             {
                 dateSegments.Add("<1 Day");
             }
@@ -57,6 +84,17 @@ namespace MixItUp.Base.Util
                 if (days > 0)
                 {
                     dateSegments.Add(days + " Day(s)");
+                }
+                if (includeTime)
+                {
+                    if (hours > 0)
+                    {
+                        dateSegments.Add(hours + " Hours(s)");
+                    }
+                    if (minutes > 0)
+                    {
+                        dateSegments.Add(minutes + " Minute(s)");
+                    }
                 }
             }
 
