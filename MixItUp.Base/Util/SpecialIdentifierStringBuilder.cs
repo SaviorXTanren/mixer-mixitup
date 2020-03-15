@@ -492,6 +492,12 @@ namespace MixItUp.Base.Util
                     PatronagePeriodModel patronagePeriod = await ChannelSession.MixerUserConnection.GetPatronagePeriod(patronageStatus);
                     if (patronagePeriod != null)
                     {
+                        if (patronagePeriod.endTime.HasValue)
+                        {
+                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "endtime", patronagePeriod.endTime.Value.ToLocalTime().ToFriendlyDateTimeString());
+                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "timeremaining", DateTimeOffset.UtcNow.GetAge(patronagePeriod.endTime.Value, includeTime: true));
+                        }
+
                         IEnumerable<PatronageMilestoneModel> patronageMilestones = patronagePeriod.milestoneGroups.SelectMany(mg => mg.milestones);
 
                         PatronageMilestoneModel patronageMilestone = patronageMilestones.FirstOrDefault(m => m.id == patronageStatus.currentMilestoneId);

@@ -9,13 +9,18 @@ namespace MixItUp.Base.Util
 
         public static string ToFriendlyDateTimeString(this DateTimeOffset dt) { return dt.ToString("g"); }
 
-        public static string GetAge(this DateTimeOffset dt)
+        public static string GetAge(this DateTimeOffset start, bool includeTime = false)
         {
-            DateTimeOffset now = DateTimeOffset.UtcNow;
+            return start.GetAge(DateTimeOffset.UtcNow);
+        }
+
+        public static string GetAge(this DateTimeOffset start, DateTimeOffset end, bool includeTime = false)
+        {
+            DateTimeOffset now = end;
 
             int years = 0;
             now = now.AddYears(-1);
-            while (now > dt)
+            while (now > start)
             {
                 years++;
                 now = now.AddYears(-1);
@@ -24,7 +29,7 @@ namespace MixItUp.Base.Util
 
             int months = 0;
             now = now.AddMonths(-1);
-            while (now > dt)
+            while (now > start)
             {
                 months++;
                 now = now.AddMonths(-1);
@@ -33,16 +38,49 @@ namespace MixItUp.Base.Util
 
             int days = 0;
             now = now.AddDays(-1);
-            while (now > dt)
+            while (now > start)
             {
                 days++;
                 now = now.AddDays(-1);
             }
+            now = now.AddDays(1);
 
             List<string> dateSegments = new List<string>();
             if (years == 0 && months == 0 && days == 0)
             {
-                dateSegments.Add("<1 Day");
+                if (includeTime)
+                {
+                    int hours = 0;
+                    now = now.AddHours(-1);
+                    while (now > start)
+                    {
+                        hours++;
+                        now = now.AddHours(-1);
+                    }
+                    now = now.AddHours(1);
+
+                    if (hours > 0)
+                    {
+                        dateSegments.Add(hours + " Hours(s)");
+                    }
+                    else
+                    {
+                        int minutes = 0;
+                        now = now.AddMinutes(-1);
+                        while (now > start)
+                        {
+                            minutes++;
+                            now = now.AddMinutes(-1);
+                        }
+                        now = now.AddMinutes(1);
+
+                        dateSegments.Add(minutes + " Minute(s)");
+                    }
+                }
+                else
+                {
+                    dateSegments.Add("<1 Day");
+                }
             }
             else
             {

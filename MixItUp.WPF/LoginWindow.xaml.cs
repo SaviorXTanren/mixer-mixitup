@@ -228,6 +228,15 @@ namespace MixItUp.WPF
                     }
                 }
 
+                if (ChannelSession.AppSettings.TestBuild)
+                {
+                    MixItUpUpdateModel testUpdate = await ChannelSession.Services.MixItUpService.GetLatestTestUpdate();
+                    if (testUpdate != null && testUpdate.SystemVersion >= this.currentUpdate.SystemVersion)
+                    {
+                        this.currentUpdate = testUpdate;
+                    }
+                }
+
                 if (this.currentUpdate.SystemVersion > Assembly.GetEntryAssembly().GetName().Version)
                 {
                     updateFound = true;
