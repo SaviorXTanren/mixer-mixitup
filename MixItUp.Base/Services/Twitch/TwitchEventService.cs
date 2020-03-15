@@ -248,7 +248,7 @@ namespace MixItUp.Base.Services.Twitch
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsUsageUserData] = user.Data;
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestBitsUsageAmountData] = packet.bits_used;
 
-            EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchBitsCheered, user);
+            EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelBitsCheered, user);
             trigger.SpecialIdentifiers["bitsamount"] = packet.bits_used.ToString();
             await ChannelSession.Services.Events.PerformEvent(trigger);
         }
