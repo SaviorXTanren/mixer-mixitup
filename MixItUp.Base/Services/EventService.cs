@@ -89,15 +89,15 @@ namespace MixItUp.Base.Services
         //MixerChatMessageDeleted = 156,
 
         [Name("Mixer Channel Sparks Spent")]
-        MixerSparksUsed = 170,
+        MixerChannelSparksUsed = 170,
         [Name("Mixer Channel Embers Spent")]
-        MixerEmbersUsed = 171,
+        MixerChannelEmbersUsed = 171,
         [Name("Mixer Channel Skill Used")]
-        MixerSkillUsed = 172,
+        MixerChannelSkillUsed = 172,
         [Name("Mixer Channel Milestone Reached")]
-        MixerMilestoneReached = 173,
+        MixerChannelMilestoneReached = 173,
         [Name("Mixer Channel Fan Progression Level-Up")]
-        MixerFanProgressionLevelUp = 174,
+        MixerChannelFanProgressionLevelUp = 174,
 
         // Twitch = 200
 
