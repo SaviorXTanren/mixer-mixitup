@@ -181,7 +181,7 @@ namespace MixItUp.WPF.Controls.Command
                         case EventTypeEnum.MixerChannelResubscribed:
                             extraSpecialIdentifiers["usersubmonths"] = "5";
                             break;
-                        case EventTypeEnum.MixerFanProgressionLevelUp:
+                        case EventTypeEnum.MixerChannelFanProgressionLevelUp:
                             extraSpecialIdentifiers["userfanprogressionnext"] = "200";
                             extraSpecialIdentifiers["userfanprogressionrank"] = "10";
                             extraSpecialIdentifiers["userfanprogressioncolor"] = "#c642ea";
@@ -239,7 +239,7 @@ namespace MixItUp.WPF.Controls.Command
                         case EventTypeEnum.StreamlootsPackGifted:
                             extraSpecialIdentifiers["streamlootspurchasequantity"] = "1";
                             break;
-                        case EventTypeEnum.MixerSkillUsed:
+                        case EventTypeEnum.MixerChannelSkillUsed:
                             extraSpecialIdentifiers["skillname"] = "Lots of stars";
                             extraSpecialIdentifiers["skilltype"] = EnumHelper.GetEnumName(MixerSkillTypeEnum.Sticker);
                             extraSpecialIdentifiers["skillcosttype"] = "Embers";
@@ -249,7 +249,7 @@ namespace MixItUp.WPF.Controls.Command
                             extraSpecialIdentifiers["skillisembers"] = true.ToString();
                             extraSpecialIdentifiers["skillmessage"] = "Hello World!";
                             break;
-                        case EventTypeEnum.MixerMilestoneReached:
+                        case EventTypeEnum.MixerChannelMilestoneReached:
                             extraSpecialIdentifiers["milestoneamount"] = "100";
                             extraSpecialIdentifiers["milestoneremainingamount"] = "100";
                             extraSpecialIdentifiers["milestonereward"] = "$10.00";
@@ -262,10 +262,10 @@ namespace MixItUp.WPF.Controls.Command
                             extraSpecialIdentifiers["milestoneearnedamount"] = "100";
                             extraSpecialIdentifiers["milestoneearnedreward"] = "$10.00";
                             break;
-                        case EventTypeEnum.MixerSparksUsed:
+                        case EventTypeEnum.MixerChannelSparksUsed:
                             extraSpecialIdentifiers["sparkamount"] = "10";
                             break;
-                        case EventTypeEnum.MixerEmbersUsed:
+                        case EventTypeEnum.MixerChannelEmbersUsed:
                             extraSpecialIdentifiers["emberamount"] = "10";
                             break;
                     }

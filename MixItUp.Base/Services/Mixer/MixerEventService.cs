@@ -406,7 +406,7 @@ namespace MixItUp.Base.Services.Mixer
                         UserFanProgressionModel fanProgression = e.payload.ToObject<UserFanProgressionModel>();
                         if (fanProgression != null)
                         {
-                            EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerFanProgressionLevelUp, user);
+                            EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChannelFanProgressionLevelUp, user);
                             if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                             {
                                 trigger.SpecialIdentifiers["userfanprogressionnext"] = fanProgression.level.nextLevelXp.GetValueOrDefault().ToString();
@@ -451,7 +451,7 @@ namespace MixItUp.Base.Services.Mixer
                             PatronageMilestoneModel milestoneReached = this.allPatronageMilestones.OrderByDescending(m => m.target).FirstOrDefault(m => m.target <= patronageStatus.patronageEarned);
                             if (milestoneReached != null)
                             {
-                                EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerMilestoneReached, user);
+                                EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChannelMilestoneReached, user);
                                 if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                                 {
                                     trigger.SpecialIdentifiers[SpecialIdentifierStringBuilder.MilestoneSpecialIdentifierHeader + "amount"] = milestoneReached.target.ToString();
@@ -485,7 +485,7 @@ namespace MixItUp.Base.Services.Mixer
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSparkUsageUserData] = sparkUsage.Item1.ID;
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSparkUsageAmountData] = sparkUsage.Item2;
 
-            EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerSparksUsed, sparkUsage.Item1);
+            EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChannelSparksUsed, sparkUsage.Item1);
             trigger.SpecialIdentifiers["sparkamount"] = sparkUsage.Item2.ToString();
             await ChannelSession.Services.Events.PerformEvent(trigger);
         }
@@ -502,7 +502,7 @@ namespace MixItUp.Base.Services.Mixer
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestEmberUsageUserData] = emberUsage.User.ID;
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestEmberUsageAmountData] = emberUsage.Amount;
 
-            EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerEmbersUsed, emberUsage.User);
+            EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChannelEmbersUsed, emberUsage.User);
             trigger.SpecialIdentifiers["emberamount"] = emberUsage.Amount.ToString();
             await ChannelSession.Services.Events.PerformEvent(trigger);
         }
@@ -511,7 +511,7 @@ namespace MixItUp.Base.Services.Mixer
         {
             skill.User.Data.TotalSkillsUsed++;
 
-            EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerSkillUsed, skill.User, skill.Skill.GetSpecialIdentifiers());
+            EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChannelSkillUsed, skill.User, skill.Skill.GetSpecialIdentifiers());
             trigger.SpecialIdentifiers["skillmessage"] = skill.PlainTextMessage;
             await ChannelSession.Services.Events.PerformEvent(trigger);
         }
