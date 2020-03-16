@@ -33,6 +33,8 @@ namespace MixItUp.Base.Model.Settings
 
         public const string SettingsFileExtension = ".xml";
 
+        public const string SettingsBackupFileExtension = "mixitup";
+
         [JsonProperty]
         public int Version { get; set; } = SettingsV1Model.LatestVersion;
 

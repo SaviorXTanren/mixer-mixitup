@@ -65,7 +65,7 @@ namespace MixItUp.WPF.Controls.Settings
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                string filePath = ChannelSession.Services.FileService.ShowSaveFileDialog(ChannelSession.Settings.Name + ".mixitup");
+                string filePath = ChannelSession.Services.FileService.ShowSaveFileDialog(ChannelSession.Settings.Name + "." + SettingsV2Model.SettingsBackupFileExtension);
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     await ChannelSession.Services.Settings.SavePackagedBackup(ChannelSession.Settings, filePath);
@@ -77,7 +77,11 @@ namespace MixItUp.WPF.Controls.Settings
         {
             if (await DialogHelper.ShowConfirmation("This will overwrite your current settings and close Mix It Up. Are you sure you wish to do this?"))
             {
-                string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog("Mix It Up Settings (*.mixitup)|*.mixitup|All files (*.*)|*.*");
+                string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(string.Format("Mix It Up Settings V2 Backup (*.{0})|*.{0}|Mix It Up Settings V1 Backup (*.{1})|*.{1}|All files (*.*)|*.*",
+                    SettingsV2Model.SettingsBackupFileExtension,
+#pragma warning disable CS0612 // Type or member is obsolete
+                    SettingsV1Model.SettingsBackupFileExtension));
+#pragma warning restore CS0612 // Type or member is obsolete
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     Result<SettingsV2Model> result = await ChannelSession.Services.Settings.RestorePackagedBackup(filePath);
