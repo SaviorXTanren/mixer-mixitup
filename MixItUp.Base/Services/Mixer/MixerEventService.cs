@@ -237,6 +237,8 @@ namespace MixItUp.Base.Services.Mixer
                     {
                         if (followed.GetValueOrDefault())
                         {
+                            user.FollowDate = DateTimeOffset.Now;
+
                             EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChannelFollowed, user);
                             if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                             {
@@ -255,6 +257,8 @@ namespace MixItUp.Base.Services.Mixer
                         }
                         else
                         {
+                            user.FollowDate = null;
+
                             await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.MixerChannelUnfollowed, user));
 
                             GlobalEvents.UnfollowOccurred(user);
@@ -303,10 +307,11 @@ namespace MixItUp.Base.Services.Mixer
                 {
                     if (user != null)
                     {
+                        user.SubscribeDate = DateTimeOffset.Now;
+
                         EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChannelSubscribed, user);
                         if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                         {
-                            user.Data.MixerSubscribeDate = DateTimeOffset.Now;
                             foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
                             {
                                 currency.AddAmount(user.Data, currency.OnSubscribeBonus);
@@ -327,10 +332,15 @@ namespace MixItUp.Base.Services.Mixer
                 {
                     if (user != null)
                     {
-                        int resubMonths = 0;
+                        if (e.payload.TryGetValue("since", out JToken subDateToken))
+                        {
+                            user.SubscribeDate = StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCISO8601String(subDateToken.ToString());
+                        }
+
+                        int totalMonths = 0;
                         if (e.payload.TryGetValue("totalMonths", out JToken resubMonthsToken))
                         {
-                            resubMonths = (int)resubMonthsToken;
+                            totalMonths = (int)resubMonthsToken;
                         }
 
                         EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChannelResubscribed, user);
@@ -340,17 +350,21 @@ namespace MixItUp.Base.Services.Mixer
                             {
                                 currency.AddAmount(user.Data, currency.OnSubscribeBonus);
                             }
-                            user.Data.TotalMonthsSubbed++;
+
+                            if (totalMonths > 0)
+                            {
+                                user.Data.TotalMonthsSubbed = (uint)totalMonths;
+                            }
 
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
-                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = resubMonths;
+                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = totalMonths;
 
-                            trigger.SpecialIdentifiers["usersubmonths"] = resubMonths.ToString();
+                            trigger.SpecialIdentifiers["usersubmonths"] = totalMonths.ToString();
                             await ChannelSession.Services.Events.PerformEvent(trigger);
                         }
-                        GlobalEvents.ResubscribeOccurred(new Tuple<UserViewModel, int>(user, resubMonths));
+                        GlobalEvents.ResubscribeOccurred(new Tuple<UserViewModel, int>(user, totalMonths));
 
-                        await this.AddAlertChatMessage(user, string.Format("{0} Re-Subscribed For {1} Months", user.Username, resubMonths));
+                        await this.AddAlertChatMessage(user, string.Format("{0} Re-Subscribed For {1} Months", user.Username, totalMonths));
                     }
                 }
                 else if (e.channel.Equals(MixerEventService.ChannelSubscriptionGiftedEvent.ToString()))
