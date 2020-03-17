@@ -60,7 +60,6 @@ namespace MixItUp.Base.ViewModel.Requirement
                 if (!doesMeetRoleRequirements)
                 {
                     // Force a refresh to get updated roles, just in case they recently changed
-                    await user.RefreshChatDetails();
                     await user.RefreshDetails();
                     doesMeetRoleRequirements = this.Role.DoesMeetRequirement(user);
                 }

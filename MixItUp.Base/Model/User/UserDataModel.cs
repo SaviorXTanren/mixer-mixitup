@@ -18,6 +18,9 @@ namespace MixItUp.Base.Model.User
         [DataMember]
         public Guid ID { get; set; } = Guid.NewGuid();
 
+        [DataMember]
+        public DateTimeOffset LastUpdated { get; set; }
+
         #region Mixer
 
         [DataMember]

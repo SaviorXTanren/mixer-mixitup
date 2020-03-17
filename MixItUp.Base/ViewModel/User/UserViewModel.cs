@@ -186,6 +186,8 @@ namespace MixItUp.Base.ViewModel.User
 
         public PatreonCampaignMember PatreonUser { get; set; }
 
+        private bool hasBeenRefreshed { get; set; }
+
         public UserViewModel(string username)
             : this(mixerID: 0)
         {
@@ -266,8 +268,6 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         public DateTimeOffset LastActivity { get; set; }
-
-        public DateTimeOffset LastUpdated { get; set; }
 
         public string RolesDisplayString { get; private set; }
 
@@ -410,12 +410,23 @@ namespace MixItUp.Base.ViewModel.User
 
         public async Task RefreshDetails(bool force = false)
         {
-            if (!this.IsAnonymous && (this.LastUpdated.TotalMinutesFromNow() >= 5 || force))
+            if (!this.IsAnonymous && (!this.hasBeenRefreshed || force))
             {
+                this.hasBeenRefreshed = true;
+
                 UserWithChannelModel user = await ChannelSession.MixerUserConnection.GetUser(this.MixerID);
                 if (user != null)
                 {
                     this.SetMixerUserDetails(user);
+
+                    if (!this.IsInChat && !this.IsAnonymous)
+                    {
+                        ChatUserModel chatUser = await ChannelSession.MixerUserConnection.GetChatUser(ChannelSession.MixerChannel, this.MixerID);
+                        if (chatUser != null)
+                        {
+                            this.SetChatDetails(chatUser);
+                        }
+                    }
 
                     DateTimeOffset? mixerFollowDate = await ChannelSession.MixerUserConnection.CheckIfFollows(ChannelSession.MixerChannel, this.GetModel());
                     if (mixerFollowDate != null && mixerFollowDate.GetValueOrDefault() > DateTimeOffset.MinValue)
@@ -424,15 +435,21 @@ namespace MixItUp.Base.ViewModel.User
                         this.MixerUserRoles.Add(UserRoleEnum.Follower);
                     }
 
-                    if (this.IsPlatformSubscriber || force)
+                    if (this.IsPlatformSubscriber)
                     {
                         UserWithGroupsModel userGroups = await ChannelSession.MixerUserConnection.GetUserInChannel(ChannelSession.MixerChannel, this.MixerID);
-                        if (userGroups != null && userGroups.GetSubscriberDate().GetValueOrDefault() > DateTimeOffset.MinValue)
+                        if (userGroups != null)
                         {
-                            this.Data.MixerSubscribeDate = userGroups.GetSubscriberDate().GetValueOrDefault();
-                            if (this.Data.TotalMonthsSubbed < this.SubscribeDate.GetValueOrDefault().TotalMonthsFromNow())
+                            DateTimeOffset subDate = userGroups.GetSubscriberDate().GetValueOrDefault();
+                            if (subDate > DateTimeOffset.MinValue)
                             {
-                                this.Data.TotalMonthsSubbed = (uint)this.SubscribeDate.GetValueOrDefault().TotalMonthsFromNow();
+                                this.Data.MixerSubscribeDate = subDate;
+
+                                int totalMonths = this.Data.MixerSubscribeDate.GetValueOrDefault().TotalMonthsFromNow();
+                                if (this.Data.TotalMonthsSubbed < totalMonths)
+                                {
+                                    this.Data.TotalMonthsSubbed = (uint)totalMonths;
+                                }
                             }
                         }
                     }
@@ -440,26 +457,9 @@ namespace MixItUp.Base.ViewModel.User
                     this.MixerFanProgression = await ChannelSession.MixerUserConnection.GetUserFanProgression(ChannelSession.MixerChannel, user);
                 }
 
-                if (!this.IsInChat)
-                {
-                    await this.RefreshChatDetails(addToChat: false);
-                }
-
                 await this.SetCustomRoles();
 
-                this.LastUpdated = DateTimeOffset.Now;
-            }
-        }
-
-        public async Task RefreshChatDetails(bool addToChat = true)
-        {
-            if (!this.IsAnonymous && this.LastUpdated.TotalMinutesFromNow() >= 1)
-            {
-                ChatUserModel chatUser = await ChannelSession.MixerUserConnection.GetChatUser(ChannelSession.MixerChannel, this.MixerID);
-                if (chatUser != null)
-                {
-                    this.SetChatDetails(chatUser, addToChat);
-                }
+                this.Data.LastUpdated = DateTimeOffset.Now;
             }
         }
 
@@ -479,15 +479,12 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public void SetChatDetails(ChatUserModel chatUser, bool addToChat = true)
+        public void SetChatDetails(ChatUserModel chatUser)
         {
             if (chatUser != null)
             {
                 this.SetMixerRoles(chatUser.userRoles);
-                if (addToChat)
-                {
-                    this.IsInChat = true;
-                }
+                this.IsInChat = true;
             }
         }
 
