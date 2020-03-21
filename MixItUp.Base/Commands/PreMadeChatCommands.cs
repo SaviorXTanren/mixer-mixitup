@@ -974,7 +974,7 @@ namespace MixItUp.Base.Commands
     public class UpdateCommandChatCommand : PreMadeChatCommand
     {
         public UpdateCommandChatCommand()
-            : base(MixItUp.Base.Resources.UpdateCommand, new List<string>() { "updatecommand" }, 5, UserRoleEnum.Mod)
+            : base(MixItUp.Base.Resources.UpdateCommand, new List<string>() { "updatecommand", "editcommand" }, 5, UserRoleEnum.Mod)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
