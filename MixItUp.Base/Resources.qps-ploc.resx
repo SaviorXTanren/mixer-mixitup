@@ -2538,4 +2538,103 @@
   <data name="Replaced" xml:space="preserve">
     <value>[!!! Rèƥℓáçèδ ℓ !!!]</value>
   </data>
+  <data name="ChatMessageDeleted" xml:space="preserve">
+    <value>[!!! Çλáƭ Mèƨƨáϱè Ðèℓèƭèδ ℓôřè₥ !!!]</value>
+  </data>
+  <data name="ChatMessageReceived" xml:space="preserve">
+    <value>[!!! Çλáƭ Mèƨƨáϱè RèçèïƲèδ ℓôřè₥ !!!]</value>
+  </data>
+  <data name="ChatUserBan" xml:space="preserve">
+    <value>[!!! Çλáƭ Ûƨèř ßáññèδ ℓôřè !!!]</value>
+  </data>
+  <data name="ChatUserFirstJoin" xml:space="preserve">
+    <value>[!!! Çλáƭ Nèω Ûƨèř Jôïñèδ ℓôřè₥ !!!]</value>
+  </data>
+  <data name="ChatUserJoined" xml:space="preserve">
+    <value>[!!! Çλáƭ Ûƨèř Jôïñèδ ℓôřè !!!]</value>
+  </data>
+  <data name="ChatUserLeft" xml:space="preserve">
+    <value>[!!! Çλáƭ Ûƨèř £èƒƭ ℓôř !!!]</value>
+  </data>
+  <data name="ChatUserPurge" xml:space="preserve">
+    <value>[!!! Çλáƭ Ûƨèř Þúřϱèδ ℓôřè !!!]</value>
+  </data>
+  <data name="ExtraLifeDonation" xml:space="preserve">
+    <value>[!!! Éжƭřá £ïƒè Ðôñáƭïôñ ℓôřè₥ !!!]</value>
+  </data>
+  <data name="GawkBoxDonation" xml:space="preserve">
+    <value>[!!! Gáωƙßôж Ðôñáƭïôñ ℓôřè !!!]</value>
+  </data>
+  <data name="JustGivingDonation" xml:space="preserve">
+    <value>[!!! JúƨƭGïƲïñϱ Ðôñáƭïôñ ℓôřè₥ !!!]</value>
+  </data>
+  <data name="MixerChannelEmbersUsed" xml:space="preserve">
+    <value>[!!! Mïжèř Çλáññèℓ É₥βèřƨ §ƥèñƭ ℓôřè₥ ï !!!]</value>
+  </data>
+  <data name="MixerChannelFanProgressionLevelUp" xml:space="preserve">
+    <value>[!!! Mïжèř Çλáññèℓ Fáñ Þřôϱřèƨƨïôñ £èƲèℓ-Ûƥ ℓôřè₥ ïƥƨú !!!]</value>
+  </data>
+  <data name="MixerChannelFollowed" xml:space="preserve">
+    <value>[!!! Mïжèř Çλáññèℓ Fôℓℓôωèδ ℓôřè₥  !!!]</value>
+  </data>
+  <data name="MixerChannelHosted" xml:space="preserve">
+    <value>[!!! Mïжèř Çλáññèℓ Hôƨƭèδ ℓôřè₥ !!!]</value>
+  </data>
+  <data name="MixerChannelMilestoneReached" xml:space="preserve">
+    <value>[!!! Mïжèř Çλáññèℓ Mïℓèƨƭôñè Rèáçλèδ ℓôřè₥ ïƥ !!!]</value>
+  </data>
+  <data name="MixerChannelResubscribed" xml:space="preserve">
+    <value>[!!! Mïжèř Çλáññèℓ Rèƨúβƨçřïβèδ ℓôřè₥ ï !!!]</value>
+  </data>
+  <data name="MixerChannelSkillUsed" xml:space="preserve">
+    <value>[!!! Mïжèř Çλáññèℓ §ƙïℓℓ Ûƨèδ ℓôřè₥  !!!]</value>
+  </data>
+  <data name="MixerChannelSparksUsed" xml:space="preserve">
+    <value>[!!! Mïжèř Çλáññèℓ §ƥářƙƨ §ƥèñƭ ℓôřè₥ ï !!!]</value>
+  </data>
+  <data name="MixerChannelStreamStart" xml:space="preserve">
+    <value>[!!! Mïжèř Çλáññèℓ §ƭřèá₥ §ƭářƭ ℓôřè₥ ï !!!]</value>
+  </data>
+  <data name="MixerChannelStreamStop" xml:space="preserve">
+    <value>[!!! Mïжèř Çλáññèℓ §ƭřèá₥ §ƭôƥ ℓôřè₥ ï !!!]</value>
+  </data>
+  <data name="MixerChannelSubscribed" xml:space="preserve">
+    <value>[!!! Mïжèř Çλáññèℓ §úβƨçřïβèδ ℓôřè₥  !!!]</value>
+  </data>
+  <data name="MixerChannelSubscriptionGifted" xml:space="preserve">
+    <value>[!!! Mïжèř Çλáññèℓ §úβƨçřïƥƭïôñ Gïƒƭèδ ℓôřè₥ ïƥƨ !!!]</value>
+  </data>
+  <data name="MixerChannelUnfollowed" xml:space="preserve">
+    <value>[!!! Mïжèř Çλáññèℓ Ûñƒôℓℓôωèδ ℓôřè₥  !!!]</value>
+  </data>
+  <data name="PatreonSubscribed" xml:space="preserve">
+    <value>[!!! Þáƭřèôñ §úβƨçřïβèδ ℓôřè !!!]</value>
+  </data>
+  <data name="StreamElementsDonation" xml:space="preserve">
+    <value>[!!! §ƭřèá₥Éℓè₥èñƭƨ Ðôñáƭïôñ ℓôřè₥  !!!]</value>
+  </data>
+  <data name="StreamJarDonation" xml:space="preserve">
+    <value>[!!! §ƭřèá₥Jář Ðôñáƭïôñ ℓôřè !!!]</value>
+  </data>
+  <data name="StreamlabsDonation" xml:space="preserve">
+    <value>[!!! §ƭřèá₥ℓáβƨ Ðôñáƭïôñ ℓôřè₥ !!!]</value>
+  </data>
+  <data name="StreamlootsCardRedeemed" xml:space="preserve">
+    <value>[!!! §ƭřèá₥ℓôôƭƨ Çářδ Rèδèè₥èδ ℓôřè₥ ï !!!]</value>
+  </data>
+  <data name="StreamlootsPackGifted" xml:space="preserve">
+    <value>[!!! §ƭřèá₥ℓôôƭƨ Þáçƙ Gïƒƭèδ ℓôřè₥  !!!]</value>
+  </data>
+  <data name="StreamlootsPackPurchased" xml:space="preserve">
+    <value>[!!! §ƭřèá₥ℓôôƭƨ Þáçƙ Þúřçλáƨèδ ℓôřè₥ ï !!!]</value>
+  </data>
+  <data name="TiltifyDonation" xml:space="preserve">
+    <value>[!!! Tïℓƭïƒ¥ Ðôñáƭïôñ ℓôřè !!!]</value>
+  </data>
+  <data name="TipeeeStreamDonation" xml:space="preserve">
+    <value>[!!! Tïƥèèè§ƭřèá₥ Ðôñáƭïôñ ℓôřè₥ !!!]</value>
+  </data>
+  <data name="TreatStreamDonation" xml:space="preserve">
+    <value>[!!! Třèáƭ§ƭřèá₥ Ðôñáƭïôñ ℓôřè₥ !!!]</value>
+  </data>
 </root>
