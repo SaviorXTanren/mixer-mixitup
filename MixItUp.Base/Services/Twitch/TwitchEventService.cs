@@ -385,7 +385,10 @@ namespace MixItUp.Base.Services.Twitch
 
         private async void PubSub_OnWhisperReceived(object sender, PubSubWhisperEventModel packet)
         {
-            await ChannelSession.Services.Chat.AddMessage(new TwitchChatMessageViewModel(packet));
+            if (!string.IsNullOrEmpty(packet.body))
+            {
+                await ChannelSession.Services.Chat.AddMessage(new TwitchChatMessageViewModel(packet));
+            }
         }
 
         private async Task AddAlertChatMessage(UserViewModel user, string message)
