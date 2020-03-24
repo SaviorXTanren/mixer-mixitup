@@ -453,13 +453,13 @@ namespace MixItUp.Base.Services
                             command.EventCommandType = EventTypeEnum.MixerChannelUnfollowed;
                             break;
                         case OtherEventTypeEnum.MixerSparksUsed:
-                            command.EventCommandType = EventTypeEnum.MixerSparksUsed;
+                            command.EventCommandType = EventTypeEnum.MixerChannelSparksUsed;
                             break;
                         case OtherEventTypeEnum.MixerEmbersUsed:
-                            command.EventCommandType = EventTypeEnum.MixerEmbersUsed;
+                            command.EventCommandType = EventTypeEnum.MixerChannelEmbersUsed;
                             break;
                         case OtherEventTypeEnum.MixerSkillUsed:
-                            command.EventCommandType = EventTypeEnum.MixerSkillUsed;
+                            command.EventCommandType = EventTypeEnum.MixerChannelSkillUsed;
                             break;
                         case OtherEventTypeEnum.ChatUserFirstJoin:
                             command.EventCommandType = EventTypeEnum.ChatUserFirstJoin;
@@ -537,7 +537,7 @@ namespace MixItUp.Base.Services
                             command.EventCommandType = EventTypeEnum.MixerChannelSubscriptionGifted;
                             break;
                         case ConstellationEventTypeEnum.progression__id__levelup:
-                            command.EventCommandType = EventTypeEnum.MixerFanProgressionLevelUp;
+                            command.EventCommandType = EventTypeEnum.MixerChannelFanProgressionLevelUp;
                             break;
                     }
                 }

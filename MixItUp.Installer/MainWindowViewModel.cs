@@ -62,6 +62,17 @@ namespace MixItUp.Installer
         }
         private bool isPreview;
 
+        public bool IsTest
+        {
+            get { return this.isTest; }
+            private set
+            {
+                this.isTest = value;
+                this.NotifyPropertyChanged();
+            }
+        }
+        private bool isTest;
+
         public bool IsOperationBeingPerformed
         {
             get { return this.isOperationBeingPerformed; }
@@ -168,9 +179,17 @@ namespace MixItUp.Installer
                     using (StreamReader reader = new StreamReader(File.OpenRead(applicationSettingsFilePath)))
                     {
                         JObject jobj = JObject.Parse(reader.ReadToEnd());
-                        if (jobj != null && jobj.ContainsKey("PreviewProgram"))
+                        if (jobj != null)
                         {
-                            this.IsPreview = jobj["PreviewProgram"].ToObject<bool>();
+                            if (jobj.ContainsKey("PreviewProgram"))
+                            {
+                                this.IsPreview = jobj["PreviewProgram"].ToObject<bool>();
+                            }
+
+                            if (jobj.ContainsKey("TestBuild"))
+                            {
+                                this.IsTest = jobj["TestBuild"].ToObject<bool>();
+                            }
                         }
                     }
                 }
@@ -202,12 +221,22 @@ namespace MixItUp.Installer
                     if (!this.IsUpdate || await this.WaitForMixItUpToClose())
                     {
                         MixItUpUpdateModel update = await this.GetUpdateData();
+
                         if (this.IsPreview)
                         {
                             MixItUpUpdateModel preview = await this.GetUpdateData(preview: true);
                             if (preview != null && preview.SystemVersion > update.SystemVersion)
                             {
                                 update = preview;
+                            }
+                        }
+
+                        if (this.IsTest)
+                        {
+                            MixItUpUpdateModel test = await this.GetUpdateData(test: true);
+                            if (test != null && test.SystemVersion > update.SystemVersion)
+                            {
+                                update = test;
                             }
                         }
 
@@ -299,16 +328,25 @@ namespace MixItUp.Installer
             return false;
         }
 
-        private async Task<MixItUpUpdateModel> GetUpdateData(bool preview = false)
+        private async Task<MixItUpUpdateModel> GetUpdateData(bool preview = false, bool test = false)
         {
             this.DisplayText1 = "Finding latest version...";
             this.IsOperationIndeterminate = true;
             this.OperationProgress = 0;
 
+            string url = "https://mixitupapi.azurewebsites.net/api/updates";
+            if (preview)
+            {
+                url = "https://mixitupapi.azurewebsites.net/api/updates/preview";
+            }
+            else if (test)
+            {
+                url = "https://mixitupapi.azurewebsites.net/api/updates/test";
+            }
+
             using (HttpClient client = new HttpClient())
             {
-                HttpResponseMessage response = await client.GetAsync((preview) ? "https://mixitupapi.azurewebsites.net/api/updates/preview"
-                    : "https://mixitupapi.azurewebsites.net/api/updates");
+                HttpResponseMessage response = await client.GetAsync(url);
                 if (response.IsSuccessStatusCode)
                 {
                     string responseString = await response.Content.ReadAsStringAsync();

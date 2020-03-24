@@ -609,6 +609,14 @@ namespace MixItUp.Base.Model.Settings
                 this.TimerCommands.ClearTracking();
                 this.ActionGroupCommands.ClearTracking();
                 this.GameCommands.ClearTracking();
+
+                foreach (CounterModel counter in this.Counters.Values.ToList())
+                {
+                    if (counter.ResetOnLoad)
+                    {
+                        await counter.ResetAmount();
+                    }
+                }
             }
 
             if (string.IsNullOrEmpty(this.TelemetryUserID))

@@ -446,9 +446,14 @@ namespace MixItUp.Base.Commands
                                     return;
                                 }
                             }
-                            else
+                            else if (arguments.Count() == 0)
                             {
                                 quoteIndex = RandomHelper.GenerateRandomNumber(ChannelSession.Settings.Quotes.Count);
+                            }
+                            else 
+                            {
+                                await ChannelSession.Services.Chat.Whisper(user, "USAGE: !quote [QUOTE NUMBER]");
+                                return;
                             }
 
                             UserQuoteViewModel quote = ChannelSession.Settings.Quotes[quoteIndex];
@@ -969,7 +974,7 @@ namespace MixItUp.Base.Commands
     public class UpdateCommandChatCommand : PreMadeChatCommand
     {
         public UpdateCommandChatCommand()
-            : base(MixItUp.Base.Resources.UpdateCommand, new List<string>() { "updatecommand" }, 5, UserRoleEnum.Mod)
+            : base(MixItUp.Base.Resources.UpdateCommand, new List<string>() { "updatecommand", "editcommand" }, 5, UserRoleEnum.Mod)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {

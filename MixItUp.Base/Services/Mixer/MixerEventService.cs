@@ -237,6 +237,8 @@ namespace MixItUp.Base.Services.Mixer
                     {
                         if (followed.GetValueOrDefault())
                         {
+                            user.FollowDate = DateTimeOffset.Now;
+
                             EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChannelFollowed, user);
                             if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                             {
@@ -255,6 +257,8 @@ namespace MixItUp.Base.Services.Mixer
                         }
                         else
                         {
+                            user.FollowDate = null;
+
                             await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.MixerChannelUnfollowed, user));
 
                             GlobalEvents.UnfollowOccurred(user);
@@ -303,10 +307,11 @@ namespace MixItUp.Base.Services.Mixer
                 {
                     if (user != null)
                     {
+                        user.SubscribeDate = DateTimeOffset.Now;
+
                         EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChannelSubscribed, user);
                         if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                         {
-                            user.Data.MixerSubscribeDate = DateTimeOffset.Now;
                             foreach (UserCurrencyModel currency in ChannelSession.Settings.Currencies.Values)
                             {
                                 currency.AddAmount(user.Data, currency.OnSubscribeBonus);
@@ -327,10 +332,15 @@ namespace MixItUp.Base.Services.Mixer
                 {
                     if (user != null)
                     {
-                        int resubMonths = 0;
+                        if (e.payload.TryGetValue("since", out JToken subDateToken))
+                        {
+                            user.SubscribeDate = StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCISO8601String(subDateToken.ToString());
+                        }
+
+                        int totalMonths = 0;
                         if (e.payload.TryGetValue("totalMonths", out JToken resubMonthsToken))
                         {
-                            resubMonths = (int)resubMonthsToken;
+                            totalMonths = (int)resubMonthsToken;
                         }
 
                         EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChannelResubscribed, user);
@@ -340,17 +350,21 @@ namespace MixItUp.Base.Services.Mixer
                             {
                                 currency.AddAmount(user.Data, currency.OnSubscribeBonus);
                             }
-                            user.Data.TotalMonthsSubbed++;
+
+                            if (totalMonths > 0)
+                            {
+                                user.Data.TotalMonthsSubbed = (uint)totalMonths;
+                            }
 
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberUserData] = user.ID;
-                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = resubMonths;
+                            ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = totalMonths;
 
-                            trigger.SpecialIdentifiers["usersubmonths"] = resubMonths.ToString();
+                            trigger.SpecialIdentifiers["usersubmonths"] = totalMonths.ToString();
                             await ChannelSession.Services.Events.PerformEvent(trigger);
                         }
-                        GlobalEvents.ResubscribeOccurred(new Tuple<UserViewModel, int>(user, resubMonths));
+                        GlobalEvents.ResubscribeOccurred(new Tuple<UserViewModel, int>(user, totalMonths));
 
-                        await this.AddAlertChatMessage(user, string.Format("{0} Re-Subscribed For {1} Months", user.Username, resubMonths));
+                        await this.AddAlertChatMessage(user, string.Format("{0} Re-Subscribed For {1} Months", user.Username, totalMonths));
                     }
                 }
                 else if (e.channel.Equals(MixerEventService.ChannelSubscriptionGiftedEvent.ToString()))
@@ -406,7 +420,7 @@ namespace MixItUp.Base.Services.Mixer
                         UserFanProgressionModel fanProgression = e.payload.ToObject<UserFanProgressionModel>();
                         if (fanProgression != null)
                         {
-                            EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerFanProgressionLevelUp, user);
+                            EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChannelFanProgressionLevelUp, user);
                             if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                             {
                                 trigger.SpecialIdentifiers["userfanprogressionnext"] = fanProgression.level.nextLevelXp.GetValueOrDefault().ToString();
@@ -451,7 +465,7 @@ namespace MixItUp.Base.Services.Mixer
                             PatronageMilestoneModel milestoneReached = this.allPatronageMilestones.OrderByDescending(m => m.target).FirstOrDefault(m => m.target <= patronageStatus.patronageEarned);
                             if (milestoneReached != null)
                             {
-                                EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerMilestoneReached, user);
+                                EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChannelMilestoneReached, user);
                                 if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                                 {
                                     trigger.SpecialIdentifiers[SpecialIdentifierStringBuilder.MilestoneSpecialIdentifierHeader + "amount"] = milestoneReached.target.ToString();
@@ -485,7 +499,7 @@ namespace MixItUp.Base.Services.Mixer
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSparkUsageUserData] = sparkUsage.Item1.ID;
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSparkUsageAmountData] = sparkUsage.Item2;
 
-            EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerSparksUsed, sparkUsage.Item1);
+            EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChannelSparksUsed, sparkUsage.Item1);
             trigger.SpecialIdentifiers["sparkamount"] = sparkUsage.Item2.ToString();
             await ChannelSession.Services.Events.PerformEvent(trigger);
         }
@@ -502,7 +516,7 @@ namespace MixItUp.Base.Services.Mixer
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestEmberUsageUserData] = emberUsage.User.ID;
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestEmberUsageAmountData] = emberUsage.Amount;
 
-            EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerEmbersUsed, emberUsage.User);
+            EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChannelEmbersUsed, emberUsage.User);
             trigger.SpecialIdentifiers["emberamount"] = emberUsage.Amount.ToString();
             await ChannelSession.Services.Events.PerformEvent(trigger);
         }
@@ -511,7 +525,7 @@ namespace MixItUp.Base.Services.Mixer
         {
             skill.User.Data.TotalSkillsUsed++;
 
-            EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerSkillUsed, skill.User, skill.Skill.GetSpecialIdentifiers());
+            EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChannelSkillUsed, skill.User, skill.Skill.GetSpecialIdentifiers());
             trigger.SpecialIdentifiers["skillmessage"] = skill.PlainTextMessage;
             await ChannelSession.Services.Events.PerformEvent(trigger);
         }

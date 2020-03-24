@@ -110,11 +110,11 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelSubscribed));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelResubscribed));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelSubscriptionGifted));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerFanProgressionLevelUp));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerSparksUsed));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerEmbersUsed));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerSkillUsed));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerMilestoneReached));
+            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelFanProgressionLevelUp));
+            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelSparksUsed));
+            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelEmbersUsed));
+            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelSkillUsed));
+            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelMilestoneReached));
 
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.ChatUserFirstJoin));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.ChatUserJoined));
