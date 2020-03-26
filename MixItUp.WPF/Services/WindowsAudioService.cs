@@ -16,60 +16,44 @@ namespace MixItUp.WPF.Services
         {
             if (!string.IsNullOrEmpty(filePath))
             {
-                if (File.Exists(filePath))
+                Task.Run(async () =>
                 {
-                    Task.Run(async () =>
+                    float floatVolume = MathHelper.Clamp(volume, 0, 100) / 100.0f;
+
+                    if (deviceNumber < 0 && !string.IsNullOrEmpty(ChannelSession.Settings.DefaultAudioOutput))
                     {
-                        float floatVolume = MathHelper.Clamp(volume, 0, 100) / 100.0f;
+                        deviceNumber = await ChannelSession.Services.AudioService.GetOutputDevice(ChannelSession.Settings.DefaultAudioOutput);
+                    }
 
-                        if (deviceNumber < 0 && !string.IsNullOrEmpty(ChannelSession.Settings.DefaultAudioOutput))
-                        {
-                            deviceNumber = await ChannelSession.Services.AudioService.GetOutputDevice(ChannelSession.Settings.DefaultAudioOutput);
-                        }
-
-                        using (AudioFileReader audioFileReader = new AudioFileReader(filePath))
-                        {
-                            audioFileReader.Volume = floatVolume;
-                            using (WaveOutEvent outputDevice = (deviceNumber < 0) ? new WaveOutEvent() : new WaveOutEvent() { DeviceNumber = deviceNumber })
-                            {
-                                outputDevice.Init(audioFileReader);
-                                outputDevice.Play();
-
-                                while (outputDevice.PlaybackState == PlaybackState.Playing)
-                                {
-                                    await Task.Delay(500);
-                                }
-                            }
-                        }
-                    });
-                }
-                else if (filePath.StartsWith("http", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    Task.Run(async () =>
+                    using (WaveOutEvent outputDevice = (deviceNumber < 0) ? new WaveOutEvent() : new WaveOutEvent() { DeviceNumber = deviceNumber })
                     {
-                        float floatVolume = MathHelper.Clamp(volume, 0, 100) / 100.0f;
-
-                        if (deviceNumber < 0 && !string.IsNullOrEmpty(ChannelSession.Settings.DefaultAudioOutput))
+                        WaveStream waveStream = null;
+                        if (File.Exists(filePath))
                         {
-                            deviceNumber = await ChannelSession.Services.AudioService.GetOutputDevice(ChannelSession.Settings.DefaultAudioOutput);
+                            AudioFileReader audioFile = new AudioFileReader(filePath);
+                            audioFile.Volume = floatVolume;
+                            waveStream = audioFile;
+                        }
+                        else if (filePath.StartsWith("http", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            waveStream = new MediaFoundationReader(filePath);
+                            outputDevice.Volume = floatVolume;
                         }
 
-                        using (var mediaReader = new MediaFoundationReader(filePath))
+                        if (waveStream != null)
                         {
-                            using (WaveOutEvent outputDevice = (deviceNumber < 0) ? new WaveOutEvent() : new WaveOutEvent() { DeviceNumber = deviceNumber })
+                            outputDevice.Init(waveStream);
+                            outputDevice.Play();
+
+                            while (outputDevice.PlaybackState == PlaybackState.Playing)
                             {
-                                outputDevice.Volume = floatVolume;
-                                outputDevice.Init(mediaReader);
-                                outputDevice.Play();
-
-                                while (outputDevice.PlaybackState == PlaybackState.Playing)
-                                {
-                                    await Task.Delay(500);
-                                }
+                                await Task.Delay(500);
                             }
+
+                            waveStream.Dispose();
                         }
-                    });
-                }
+                    }
+                });
             }
             return Task.FromResult(0);
         }
