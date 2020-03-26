@@ -84,7 +84,7 @@
                                     <MaterialDesign:PackIcon Kind="ArrowDown" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                 </Button>
 
-                                <Button x:Name="DeleteButton" Grid.Column="4" Click="DeleteButton_Click" Width="40" HorizontalAlignment="Center">
+                                <Button x:Name="DeleteButton" Grid.Column="4"  Click="DeleteButton_Click" Width="40" HorizontalAlignment="Center">
                                     <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                 </Button>
                             </Grid>
