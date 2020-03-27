@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -87,7 +88,17 @@ namespace MixItUp.Base.ViewModel.Controls.Commands
         {
             this.Commands.Clear();
 
-            foreach (CommandBase command in ((string.IsNullOrEmpty(filter)) ? this.allCommands : this.allCommands.Where(c => c.Name.ToLower().Contains(filter))))
+            var matchedCommands = this.allCommands;
+            if (!string.IsNullOrEmpty(filter))
+            {
+                matchedCommands  = this.allCommands
+                    .Where(
+                        c => c.Name.Contains(filter, StringComparison.OrdinalIgnoreCase)
+                        || c.CommandTriggers.Any(t => t.Contains(filter, StringComparison.OrdinalIgnoreCase)))
+                    .ToList();
+            }
+
+            foreach (CommandBase command in matchedCommands)
             {
                 this.Commands.SortedInsert(command);
             }
