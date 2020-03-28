@@ -169,7 +169,7 @@ namespace MixItUp.Base.Services
 
         public async Task Save(SettingsV2Model settings)
         {
-            Logger.Log(LogLevel.Debug, "Starting settings save operation");
+            Logger.Log(LogLevel.Debug, "Settings save operation started");
 
             await semaphore.WaitAndRelease(async () =>
             {
@@ -183,7 +183,7 @@ namespace MixItUp.Base.Services
 
         public async Task SaveLocalBackup(SettingsV2Model settings)
         {
-            Logger.Log(LogLevel.Debug, "Starting settings local backup save operation");
+            Logger.Log(LogLevel.Debug, "Settings local backup save operation started");
 
             await semaphore.WaitAndRelease(async () =>
             {
