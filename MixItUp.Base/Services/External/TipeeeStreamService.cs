@@ -313,7 +313,6 @@ namespace MixItUp.Base.Services.External
         private async Task<T> GetAsync<T>(string url)
         {
             HttpResponseMessage response = await this.GetAsync(url);
-            Logger.Log(LogLevel.Debug, string.Format("TipeeeStream Log: {0} - {1} - {2}", response.RequestMessage.ToString(), response.StatusCode, await response.Content.ReadAsStringAsync()));
             return await response.ProcessResponse<T>();
         }
 

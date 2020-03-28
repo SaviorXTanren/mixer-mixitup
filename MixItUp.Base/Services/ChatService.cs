@@ -579,7 +579,6 @@ namespace MixItUp.Base.Services
 
                 if (command.Requirements.Settings.DeleteChatCommandWhenRun || (ChannelSession.Settings.DeleteChatCommandsWhenRun && !command.Requirements.Settings.DontDeleteChatCommandWhenRun))
                 {
-                    Logger.Log(LogLevel.Debug, string.Format("Deleting Message As Chat Command - {0} - {1}", message.ID, message));
                     await this.DeleteMessage(message);
                 }
 

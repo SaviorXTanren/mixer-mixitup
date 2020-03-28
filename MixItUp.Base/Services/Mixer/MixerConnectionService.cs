@@ -184,25 +184,25 @@ namespace MixItUp.Base.Services.Mixer
             this.Connection = connection;
         }
 
-        public async Task<UserModel> GetUser(string username) { return await this.RunAsync(this.Connection.Users.GetUser(username), logNotFoundException: false); }
+        public async Task<UserModel> GetUser(string username) { return await this.RunAsync(this.Connection.Users.GetUser(username)); }
 
-        public async Task<UserWithChannelModel> GetUser(uint userID) { return await this.RunAsync(this.Connection.Users.GetUser(userID), logNotFoundException: false); }
+        public async Task<UserWithChannelModel> GetUser(uint userID) { return await this.RunAsync(this.Connection.Users.GetUser(userID)); }
 
-        public async Task<UserWithChannelModel> GetUser(UserModel user) { return await this.RunAsync(this.Connection.Users.GetUser(user), logNotFoundException: false); }
+        public async Task<UserWithChannelModel> GetUser(UserModel user) { return await this.RunAsync(this.Connection.Users.GetUser(user)); }
 
-        public async Task<UserFanProgressionModel> GetUserFanProgression(ChannelModel channel, UserModel user) { return await this.RunAsync(this.Connection.Channels.GetUserFanProgression(channel, user), logNotFoundException: false); }
+        public async Task<UserFanProgressionModel> GetUserFanProgression(ChannelModel channel, UserModel user) { return await this.RunAsync(this.Connection.Channels.GetUserFanProgression(channel, user)); }
 
         public async Task<IEnumerable<TeamMembershipExpandedModel>> GetUserTeams(UserModel user) { return await this.RunAsync(this.Connection.Users.GetTeams(user)); }
 
-        public async Task<UserWithGroupsModel> GetUserInChannel(ChannelModel channel, uint userID) { return await this.RunAsync(this.Connection.Channels.GetUser(channel, userID), logNotFoundException: false); }
+        public async Task<UserWithGroupsModel> GetUserInChannel(ChannelModel channel, uint userID) { return await this.RunAsync(this.Connection.Channels.GetUser(channel, userID)); }
 
-        public async Task<IEnumerable<UserWithGroupsModel>> GetUsersWithRoles(ChannelModel channel, UserRoleEnum role) { return await this.RunAsync(this.Connection.Channels.GetUsersWithRoles(channel, role.ToString(), int.MaxValue), logNotFoundException: false); }
+        public async Task<IEnumerable<UserWithGroupsModel>> GetUsersWithRoles(ChannelModel channel, UserRoleEnum role) { return await this.RunAsync(this.Connection.Channels.GetUsersWithRoles(channel, role.ToString(), int.MaxValue)); }
 
-        public async Task GetUsersWithRoles(ChannelModel channel, UserRoleEnum role, Func<IEnumerable<UserWithGroupsModel>, Task> processor) { await this.RunAsync(this.Connection.Channels.GetUsersWithRoles(channel, role.ToString(), processor, int.MaxValue), logNotFoundException: false); }
+        public async Task GetUsersWithRoles(ChannelModel channel, UserRoleEnum role, Func<IEnumerable<UserWithGroupsModel>, Task> processor) { await this.RunAsync(this.Connection.Channels.GetUsersWithRoles(channel, role.ToString(), processor, int.MaxValue)); }
 
         public async Task<PrivatePopulatedUserModel> GetCurrentUser() { return await this.RunAsync(this.Connection.Users.GetCurrentUser()); }
 
-        public async Task<ChatUserModel> GetChatUser(ChannelModel channel, uint userID) { return await this.RunAsync(this.Connection.Chats.GetUser(channel, userID), logNotFoundException: false); }
+        public async Task<ChatUserModel> GetChatUser(ChannelModel channel, uint userID) { return await this.RunAsync(this.Connection.Chats.GetUser(channel, userID)); }
 
         public async Task GetChatUsers(ChannelModel channel, Func<IEnumerable<ChatUserModel>, Task> processor, uint maxResults = 1) { await this.RunAsync(this.Connection.Chats.GetUsers(channel, processor, maxResults)); }
 
