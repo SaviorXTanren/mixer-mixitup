@@ -266,7 +266,7 @@ namespace MixItUp.Base.Services.Twitch
                 user = new UserViewModel(packet);
             }
 
-            if (string.Equals(packet.context, "sub") || packet.cumulativeMonths == 1)
+            if (packet.IsSubscription || packet.cumulative_months == 1)
             {
                 EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelSubscribed, user);
                 if (ChannelSession.Services.Events.CanPerformEvent(trigger))
@@ -293,8 +293,7 @@ namespace MixItUp.Base.Services.Twitch
             }
             else
             {
-                int months = (packet.streakMonths > packet.cumulativeMonths) ? packet.streakMonths : packet.cumulativeMonths;
-
+                int months = Math.Max(packet.streak_months, packet.cumulative_months);
                 EventTrigger trigger = new EventTrigger(EventTypeEnum.TwitchChannelResubscribed, user);
                 if (ChannelSession.Services.Events.CanPerformEvent(trigger))
                 {
