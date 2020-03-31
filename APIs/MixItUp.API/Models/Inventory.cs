@@ -15,6 +15,9 @@ namespace MixItUp.API.Models
 
         [DataMember]
         public List<InventoryItem> Items { get; set; } = new List<InventoryItem>();
+
+        [DataMember]
+        public Guid ShopCurrencyID { get; set; }
     }
 
     [DataContract]
@@ -22,5 +25,14 @@ namespace MixItUp.API.Models
     {
         [DataMember]
         public string Name { get; set; }
+
+        [DataMember]
+        public int BuyAmount { get; set; }
+
+        [DataMember]
+        public int SellAmount { get; set; }
+
+        [DataMember]
+        public int MaxAmount { get; set; }
     }
 }
