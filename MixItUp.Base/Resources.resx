@@ -2538,4 +2538,103 @@
   <data name="Replaced" xml:space="preserve">
     <value>Replaced</value>
   </data>
+  <data name="ChatMessageDeleted" xml:space="preserve">
+    <value>Chat Message Deleted</value>
+  </data>
+  <data name="ChatMessageReceived" xml:space="preserve">
+    <value>Chat Message Received</value>
+  </data>
+  <data name="ChatUserBan" xml:space="preserve">
+    <value>Chat User Banned</value>
+  </data>
+  <data name="ChatUserFirstJoin" xml:space="preserve">
+    <value>Chat New User Joined</value>
+  </data>
+  <data name="ChatUserJoined" xml:space="preserve">
+    <value>Chat User Joined</value>
+  </data>
+  <data name="ChatUserLeft" xml:space="preserve">
+    <value>Chat User Left</value>
+  </data>
+  <data name="ChatUserPurge" xml:space="preserve">
+    <value>Chat User Purged</value>
+  </data>
+  <data name="ExtraLifeDonation" xml:space="preserve">
+    <value>Extra Life Donation</value>
+  </data>
+  <data name="GawkBoxDonation" xml:space="preserve">
+    <value>GawkBox Donation</value>
+  </data>
+  <data name="JustGivingDonation" xml:space="preserve">
+    <value>JustGiving Donation</value>
+  </data>
+  <data name="MixerChannelEmbersUsed" xml:space="preserve">
+    <value>Mixer Channel Embers Spent</value>
+  </data>
+  <data name="MixerChannelFanProgressionLevelUp" xml:space="preserve">
+    <value>Mixer Channel Fan Progression Level-Up</value>
+  </data>
+  <data name="MixerChannelFollowed" xml:space="preserve">
+    <value>Mixer Channel Followed</value>
+  </data>
+  <data name="MixerChannelHosted" xml:space="preserve">
+    <value>Mixer Channel Hosted</value>
+  </data>
+  <data name="MixerChannelMilestoneReached" xml:space="preserve">
+    <value>Mixer Channel Milestone Reached</value>
+  </data>
+  <data name="MixerChannelResubscribed" xml:space="preserve">
+    <value>Mixer Channel Resubscribed</value>
+  </data>
+  <data name="MixerChannelSkillUsed" xml:space="preserve">
+    <value>Mixer Channel Skill Used</value>
+  </data>
+  <data name="MixerChannelSparksUsed" xml:space="preserve">
+    <value>Mixer Channel Sparks Spent</value>
+  </data>
+  <data name="MixerChannelStreamStart" xml:space="preserve">
+    <value>Mixer Channel Stream Start</value>
+  </data>
+  <data name="MixerChannelStreamStop" xml:space="preserve">
+    <value>Mixer Channel Stream Stop</value>
+  </data>
+  <data name="MixerChannelSubscribed" xml:space="preserve">
+    <value>Mixer Channel Subscribed</value>
+  </data>
+  <data name="MixerChannelSubscriptionGifted" xml:space="preserve">
+    <value>Mixer Channel Subscription Gifted</value>
+  </data>
+  <data name="MixerChannelUnfollowed" xml:space="preserve">
+    <value>Mixer Channel Unfollowed</value>
+  </data>
+  <data name="PatreonSubscribed" xml:space="preserve">
+    <value>Patreon Subscribed</value>
+  </data>
+  <data name="StreamElementsDonation" xml:space="preserve">
+    <value>StreamElements Donation</value>
+  </data>
+  <data name="StreamJarDonation" xml:space="preserve">
+    <value>StreamJar Donation</value>
+  </data>
+  <data name="StreamlabsDonation" xml:space="preserve">
+    <value>Streamlabs Donation</value>
+  </data>
+  <data name="StreamlootsCardRedeemed" xml:space="preserve">
+    <value>Streamloots Card Redeemed</value>
+  </data>
+  <data name="StreamlootsPackGifted" xml:space="preserve">
+    <value>Streamloots Pack Gifted</value>
+  </data>
+  <data name="StreamlootsPackPurchased" xml:space="preserve">
+    <value>Streamloots Pack Purchased</value>
+  </data>
+  <data name="TiltifyDonation" xml:space="preserve">
+    <value>Tiltify Donation</value>
+  </data>
+  <data name="TipeeeStreamDonation" xml:space="preserve">
+    <value>TipeeeStream Donation</value>
+  </data>
+  <data name="TreatStreamDonation" xml:space="preserve">
+    <value>TreatStream Donation</value>
+  </data>
 </root>

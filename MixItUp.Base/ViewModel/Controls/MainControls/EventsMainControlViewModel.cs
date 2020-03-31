@@ -1,9 +1,8 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Window;
-using StreamingClient.Base.Util;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace MixItUp.Base.ViewModel.Controls.MainControls
 {
@@ -21,7 +20,7 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
 
         public EventCommandItemViewModel(EventTypeEnum eventType) { this.EventType = eventType; }
 
-        public string Name { get { return EnumHelper.GetEnumName(this.EventType); } }
+        public string Name { get { return EnumLocalizationHelper.GetLocalizedName(this.EventType); } }
 
         public string Service
         {

@@ -198,8 +198,6 @@ namespace MixItUp.Base.Commands
 
                 this.OnCommandStart(this, new EventArgs());
 
-                Logger.Log(LogLevel.Debug, $"Dedicated command task starting: {this.Name}");
-
                 this.currentCancellationTokenSource = new CancellationTokenSource();
                 this.currentTaskRun = Task.Run(async () =>
                 {
