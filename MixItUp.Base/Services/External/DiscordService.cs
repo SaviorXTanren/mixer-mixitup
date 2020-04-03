@@ -688,7 +688,7 @@ namespace MixItUp.Base.Services.External
 
                 ProcessHelper.LaunchLink(string.Format(DiscordService.AuthorizationUrl, this.ClientID, DiscordService.ClientBotPermissions));
 
-                string authorizationCode = await oauthServer.WaitForAuthorizationCode(secondsToWait: 60);
+                string authorizationCode = await oauthServer.WaitForAuthorizationCode(secondsToWait: 90);
                 oauthServer.Stop();
 
                 if (!string.IsNullOrEmpty(authorizationCode))

@@ -312,7 +312,8 @@ namespace MixItUp.Base.Services
 
         public async Task AddMessage(ChatMessageViewModel message)
         {
-            Logger.Log(LogLevel.Debug, string.Format("Message Received - {0} - {1}", message.ID.ToString(), message));
+            DateTimeOffset messageProcessingStart = DateTimeOffset.Now;
+            Logger.Log(LogLevel.Debug, string.Format("Message Received - {0} - {1} - {2}", message.ID.ToString(), messageProcessingStart, message));
 
             if (ChannelSession.Settings.SaveChatEventLogs)
             {
@@ -489,6 +490,13 @@ namespace MixItUp.Base.Services
                 }
 
                 GlobalEvents.AlertMessageReceived((AlertChatMessageViewModel)message);
+            }
+
+            TimeSpan processingTime = DateTimeOffset.Now - messageProcessingStart;
+            Logger.Log(LogLevel.Debug, string.Format("Message Processing Complete: {0} - {1} ms", message.ID, processingTime.TotalMilliseconds));
+            if (processingTime.TotalMilliseconds > 500)
+            {
+                Logger.Log(LogLevel.Error, string.Format("Long processing time detected for the following message: {0} - {1} ms - {2}", message.ID.ToString(), processingTime.TotalMilliseconds, message));
             }
         }
 
