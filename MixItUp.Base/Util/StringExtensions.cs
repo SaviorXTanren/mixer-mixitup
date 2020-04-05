@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace MixItUp.Base.Util
 {
     public static class StringExtensions
     {
+        private const char Comma = ',';
+        private const char Decimal = '.';
+
         public static string ToFilePathString(this string source)
         {
             string directory = null;
@@ -70,6 +73,67 @@ namespace MixItUp.Base.Util
         public static bool Contains(this string source, string toCheck, StringComparison comp)
         {
             return source?.IndexOf(toCheck, comp) >= 0;
+        }
+
+        public static bool ParseCurrency(this string str, out double result)
+        {
+            List<char> characters = new List<char>();
+
+            // Remove all non-essential characters for parsing
+            foreach (char c in str)
+            {
+                if (c == Comma)
+                {
+                    characters.Add(c);
+                }
+                else if (c == Decimal)
+                {
+                    characters.Add(c);
+                }
+                else if (char.IsDigit(c))
+                {
+                    characters.Add(c);
+                }
+            }
+
+            if (characters.Contains(Decimal) && characters.Contains(Comma))
+            {
+                // Decimal appears after comma (EX: US Dollar)
+                if (characters.IndexOf(Decimal) > characters.IndexOf(Comma))
+                {
+                    characters.RemoveAll(c => c == Comma);
+                }
+                // Decimal appears before comma (EX: Brazilian Real)
+                else
+                {
+                    characters.RemoveAll(c => c == Decimal);
+                    // Replace comma with decimal for invariant standardization
+                    characters[characters.IndexOf(Comma)] = Decimal;
+                }
+            }
+            else if (characters.Contains(Decimal) || characters.Contains(Comma))
+            {
+                int charIndex = -1;
+                if (characters.Contains(Decimal))
+                {
+                    charIndex = characters.IndexOf(Decimal);
+                }
+                else if (characters.Contains(Comma))
+                {
+                    charIndex = characters.IndexOf(Comma);
+                    // Replace comma with decimal for invariant standardization
+                    characters[charIndex] = Decimal;
+                }
+
+                // Check if there are more than 2 numbers after the special denoting character.
+                // If there are, then it's not a decimal cents character and can be removed.
+                if (characters.Count - 1 - charIndex > 2)
+                {
+                    characters.RemoveAt(charIndex);
+                }
+            }
+
+            return double.TryParse(new string(characters.ToArray()), NumberStyles.AllowDecimalPoint, NumberFormatInfo.InvariantInfo, out result);
         }
     }
 }
