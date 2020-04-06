@@ -1,4 +1,5 @@
 ﻿using Microsoft.Owin.Hosting;
+using MixItUp.Base;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using Owin;
@@ -13,6 +14,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
     {
         private IDisposable webApp;
         public readonly string[] DeveloperAPIHttpListenerServerAddresses = new string[] { "http://localhost:8911/", "http://127.0.0.1:8911/" };
+        public readonly string[] AdvancedDeveloperAPIHttpListenerServerAddresses = new string[] { "http://*:8911/" };
 
         public string Name { get { return "Developer API"; } }
 
@@ -24,9 +26,19 @@ namespace MixItUp.WPF.Services.DeveloperAPI
             this.Disconnect();
 
             StartOptions opts = new StartOptions();
-            foreach(var url in DeveloperAPIHttpListenerServerAddresses)
+            if (ChannelSession.IsElevated && ChannelSession.Settings.EnableDeveloperAPIAdvancedMode)
             {
-                opts.Urls.Add(url);
+                foreach (var url in AdvancedDeveloperAPIHttpListenerServerAddresses)
+                {
+                    opts.Urls.Add(url);
+                }
+            }
+            else
+            {
+                foreach (var url in DeveloperAPIHttpListenerServerAddresses)
+                {
+                    opts.Urls.Add(url);
+                }
             }
 
             this.webApp = WebApp.Start<WindowsDeveloperAPIServiceStartup>(opts);
