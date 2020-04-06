@@ -348,6 +348,8 @@ namespace MixItUp.Base.ViewModel.User
 
         public bool IsFollower { get { return this.UserRoles.Contains(UserRoleEnum.Follower) || this.HasPermissionsTo(UserRoleEnum.Subscriber); } }
 
+        public bool IsRegular { get { return this.UserRoles.Contains(UserRoleEnum.Regular); } }
+
         public string FollowAgeString { get { return (this.FollowDate != null) ? this.FollowDate.GetValueOrDefault().GetAge() : "Not Following"; } }
 
         public bool IsPlatformSubscriber { get { return this.UserRoles.Contains(UserRoleEnum.Subscriber); } }
