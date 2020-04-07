@@ -378,6 +378,8 @@ namespace MixItUp.Base.Model.Settings
 
         [DataMember]
         public bool EnableDeveloperAPI { get; set; }
+        [DataMember]
+        public bool EnableDeveloperAPIAdvancedMode { get; set; }
 
         [DataMember]
         public int TiltifyCampaign { get; set; }

@@ -165,15 +165,26 @@ namespace MixItUp.Base.Services.External
         public async Task<Result> Connect()
         {
             this.IsConnected = false;
-            if (await this.TestConnection())
+
+            try
             {
-                await this.StartReplayBuffer();
+                if (await this.TestConnection())
+                {
+                    await this.StartReplayBuffer();
 
-                this.Connected(this, new EventArgs());
-                ChannelSession.ReconnectionOccurred("Streamlabs OBS");
-                this.IsConnected = true;
+                    this.Connected(this, new EventArgs());
+                    ChannelSession.ReconnectionOccurred("Streamlabs OBS");
+                    this.IsConnected = true;
 
-                return new Result();
+                    return new Result();
+                }
+            }
+            catch (UnauthorizedAccessException)
+            {
+                if (!ChannelSession.IsElevated)
+                {
+                    return new Result("Streamlabs OBS might be running as administrator and Mix It Up is not. Try running Mix It Up as an Administrator before connecting.");
+                }
             }
             return new Result("Streamlabs OBS could not be reached.");
         }
@@ -354,6 +365,7 @@ namespace MixItUp.Base.Services.External
 
         private async Task<JObject> SendAndReceive(StreamlabsOBSRequest request)
         {
+            Exception exception = null;
             JObject result = new JObject();
 
             await this.idSempahoreLock.WaitAndRelease(async () =>
@@ -369,17 +381,30 @@ namespace MixItUp.Base.Services.External
 
                     await Task.WhenAny(Task.Run(async () =>
                     {
-                        namedPipeClient.Connect();
-                        await namedPipeClient.WriteAsync(requestBytes, 0, requestBytes.Length);
+                        try
+                        {
+                            namedPipeClient.Connect();
+                            await namedPipeClient.WriteAsync(requestBytes, 0, requestBytes.Length);
 
-                        byte[] responseBytes = new byte[1000000];
-                        int count = await namedPipeClient.ReadAsync(responseBytes, 0, responseBytes.Length);
+                            byte[] responseBytes = new byte[1000000];
+                            int count = await namedPipeClient.ReadAsync(responseBytes, 0, responseBytes.Length);
 
-                        string responseString = Encoding.ASCII.GetString(responseBytes, 0, count);
-                        result = JObject.Parse(responseString);
+                            string responseString = Encoding.ASCII.GetString(responseBytes, 0, count);
+                            result = JObject.Parse(responseString);
+                        }
+                        catch (Exception ex)
+                        {
+                            exception = ex;
+                        }
                     }), Task.Delay(5000));
                 }
             });
+
+            if (exception != null)
+            {
+                throw exception;
+            }
+
             return result;
         }
 
