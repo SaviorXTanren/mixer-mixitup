@@ -315,6 +315,8 @@ namespace MixItUp.Base.Services.Mixer
 
         public async Task<SkillCatalogModel> GetSkillCatalog(ChannelModel channel) { return await this.RunAsync(this.Connection.Skills.GetSkillCatalog(channel)); }
 
+        public async Task<bool> RunAd(ChannelModel channel) { return await this.RunAsync(this.Connection.Ads.RunAd(channel)); }
+
         private void RestAPIService_OnRequestSent(object sender, Tuple<string, HttpContent> e)
         {
             if (e.Item2 != null)
