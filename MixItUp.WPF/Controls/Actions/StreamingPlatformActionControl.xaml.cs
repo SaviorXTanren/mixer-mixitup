@@ -90,6 +90,10 @@ namespace MixItUp.WPF.Controls.Actions
                         }
                     }
                 }
+                else if (actionType == StreamingPlatformActionType.RunAd)
+                {
+                    return StreamingPlatformAction.CreateRunAdAction();
+                }
             }
             return null;
         }

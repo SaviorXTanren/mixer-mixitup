@@ -348,6 +348,8 @@ namespace MixItUp.Base.ViewModel.User
 
         public bool IsFollower { get { return this.UserRoles.Contains(UserRoleEnum.Follower) || this.HasPermissionsTo(UserRoleEnum.Subscriber); } }
 
+        public bool IsRegular { get { return this.UserRoles.Contains(UserRoleEnum.Regular); } }
+
         public string FollowAgeString { get { return (this.FollowDate != null) ? this.FollowDate.GetValueOrDefault().GetAge() : "Not Following"; } }
 
         public bool IsPlatformSubscriber { get { return this.UserRoles.Contains(UserRoleEnum.Subscriber); } }
@@ -447,82 +449,17 @@ namespace MixItUp.Base.ViewModel.User
             {
                 this.hasBeenRefreshed = true;
 
-                UserWithChannelModel user = await ChannelSession.MixerUserConnection.GetUser(this.MixerID);
-                if (user != null)
+                // If we've never seen them before, do a hard refresh of their data
+                if (this.Data.LastUpdated == DateTimeOffset.MinValue)
                 {
-                    this.SetMixerUserDetails(user);
-
-                    if (!this.IsInChat && !this.IsAnonymous)
-                    {
-                        ChatUserModel chatUser = await ChannelSession.MixerUserConnection.GetChatUser(ChannelSession.MixerChannel, this.MixerID);
-                        if (chatUser != null)
-                        {
-                            this.SetChatDetails(chatUser);
-                        }
-                    }
-
-                    this.FollowDate = await ChannelSession.MixerUserConnection.CheckIfFollows(ChannelSession.MixerChannel, this.GetModel());
-
-                    if (this.IsPlatformSubscriber)
-                    {
-                        UserWithGroupsModel userGroups = await ChannelSession.MixerUserConnection.GetUserInChannel(ChannelSession.MixerChannel, this.MixerID);
-                        if (userGroups != null)
-                        {
-                            DateTimeOffset subDate = userGroups.GetSubscriberDate().GetValueOrDefault();
-                            if (subDate > DateTimeOffset.MinValue)
-                            {
-                                this.Data.MixerSubscribeDate = subDate;
-
-                                int totalMonths = this.Data.MixerSubscribeDate.GetValueOrDefault().TotalMonthsFromNow();
-                                if (this.Data.TotalMonthsSubbed < totalMonths)
-                                {
-                                    this.Data.TotalMonthsSubbed = (uint)totalMonths;
-                                }
-                            }
-                        }
-                    }
-
-                    this.MixerFanProgression = await ChannelSession.MixerUserConnection.GetUserFanProgression(ChannelSession.MixerChannel, user);
+                    await this.RefreshDetailsInternal();
                 }
-
-                await this.SetCustomRoles();
-
-                this.Data.LastUpdated = DateTimeOffset.Now;
-            }
-        }
-
-        public Task SetCustomRoles()
-        {
-            if (!this.IsAnonymous)
-            {
-                this.CustomRoles.Clear();
-
-                if (ChannelSession.Services.Patreon.IsConnected && this.PatreonUser == null)
+                // Otherwise do a background refresh
+                else
                 {
-                    IEnumerable<PatreonCampaignMember> campaignMembers = ChannelSession.Services.Patreon.CampaignMembers;
-
-                    PatreonCampaignMember patreonUser = null;
-                    if (!string.IsNullOrEmpty(this.Data.PatreonUserID))
-                    {
-                        patreonUser = campaignMembers.FirstOrDefault(u => u.UserID.Equals(this.Data.PatreonUserID));
-                    }
-                    else
-                    {
-                        patreonUser = campaignMembers.FirstOrDefault(u => u.User.LookupName.Equals(this.Username, StringComparison.CurrentCultureIgnoreCase));
-                    }
-
-                    this.PatreonUser = patreonUser;
-                    if (patreonUser != null)
-                    {
-                        this.Data.PatreonUserID = patreonUser.UserID;
-                    }
-                    else
-                    {
-                        this.Data.PatreonUserID = null;
-                    }
+                    AsyncRunner.RunAsyncInBackground(this.RefreshDetailsInternal);
                 }
             }
-            return Task.FromResult(0);
         }
 
         public void SetChatDetails(ChatUserModel chatUser)
@@ -663,6 +600,59 @@ namespace MixItUp.Base.ViewModel.User
 
         public override string ToString() { return this.Username; }
 
+        private async Task RefreshDetailsInternal()
+        {
+            if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Mixer))
+            {
+                await this.RefreshMixerUserDetails();
+            }
+
+            await this.RefreshExternalServiceDetails();
+
+            this.Data.LastUpdated = DateTimeOffset.Now;
+        }
+
+        private async Task RefreshMixerUserDetails()
+        {
+            UserWithChannelModel user = await ChannelSession.MixerUserConnection.GetUser(this.MixerID);
+            if (user != null)
+            {
+                this.SetMixerUserDetails(user);
+
+                if (!this.IsInChat && !this.IsAnonymous)
+                {
+                    ChatUserModel chatUser = await ChannelSession.MixerUserConnection.GetChatUser(ChannelSession.MixerChannel, this.MixerID);
+                    if (chatUser != null)
+                    {
+                        this.SetChatDetails(chatUser);
+                    }
+                }
+
+                this.FollowDate = await ChannelSession.MixerUserConnection.CheckIfFollows(ChannelSession.MixerChannel, this.GetModel());
+
+                if (this.IsPlatformSubscriber)
+                {
+                    UserWithGroupsModel userGroups = await ChannelSession.MixerUserConnection.GetUserInChannel(ChannelSession.MixerChannel, this.MixerID);
+                    if (userGroups != null)
+                    {
+                        DateTimeOffset subDate = userGroups.GetSubscriberDate().GetValueOrDefault();
+                        if (subDate > DateTimeOffset.MinValue)
+                        {
+                            this.Data.MixerSubscribeDate = subDate;
+
+                            int totalMonths = this.Data.MixerSubscribeDate.GetValueOrDefault().TotalMonthsFromNow();
+                            if (this.Data.TotalMonthsSubbed < totalMonths)
+                            {
+                                this.Data.TotalMonthsSubbed = (uint)totalMonths;
+                            }
+                        }
+                    }
+                }
+
+                this.MixerFanProgression = await ChannelSession.MixerUserConnection.GetUserFanProgression(ChannelSession.MixerChannel, user);
+            }
+        }
+
         private void SetMixerUserDetails(UserModel user)
         {
             if (user.createdAt.GetValueOrDefault() > DateTimeOffset.MinValue)
@@ -759,6 +749,36 @@ namespace MixItUp.Base.ViewModel.User
             displayRoles.AddRange(this.CustomRoles);
 
             this.RolesDisplayString = string.Join(", ", displayRoles.OrderByDescending(r => r));
+        }
+
+        private Task RefreshExternalServiceDetails()
+        {
+            this.CustomRoles.Clear();
+            if (ChannelSession.Services.Patreon.IsConnected && this.PatreonUser == null)
+            {
+                IEnumerable<PatreonCampaignMember> campaignMembers = ChannelSession.Services.Patreon.CampaignMembers;
+
+                PatreonCampaignMember patreonUser = null;
+                if (!string.IsNullOrEmpty(this.Data.PatreonUserID))
+                {
+                    patreonUser = campaignMembers.FirstOrDefault(u => u.UserID.Equals(this.Data.PatreonUserID));
+                }
+                else
+                {
+                    patreonUser = campaignMembers.FirstOrDefault(u => u.User.LookupName.Equals(this.Username, StringComparison.CurrentCultureIgnoreCase));
+                }
+
+                this.PatreonUser = patreonUser;
+                if (patreonUser != null)
+                {
+                    this.Data.PatreonUserID = patreonUser.UserID;
+                }
+                else
+                {
+                    this.Data.PatreonUserID = null;
+                }
+            }
+            return Task.FromResult(0);
         }
     }
 

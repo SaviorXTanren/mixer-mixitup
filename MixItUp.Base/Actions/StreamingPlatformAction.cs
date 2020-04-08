@@ -1,7 +1,5 @@
 ﻿using Mixer.Base.Model.Channel;
-using Mixer.Base.Model.Chat;
 using MixItUp.Base.Commands;
-using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using StreamingClient.Base.Util;
@@ -17,7 +15,9 @@ namespace MixItUp.Base.Actions
     public enum StreamingPlatformActionType
     {
         Host,
-        Poll
+        Poll,
+        [Name("Run Ad")]
+        RunAd
     }
 
     [DataContract]
@@ -27,6 +27,7 @@ namespace MixItUp.Base.Actions
 
         protected override SemaphoreSlim AsyncSemaphore { get { return StreamingPlatformAction.asyncSemaphore; } }
 
+        [DataMember]
         public StreamingPlatformActionType ActionType { get; set; }
 
         [DataMember]
@@ -61,6 +62,11 @@ namespace MixItUp.Base.Actions
             action.PollAnswers = new List<string>(answers);
             action.CommandID = (command != null) ? command.ID : Guid.Empty;
             return action;
+        }
+
+        public static StreamingPlatformAction CreateRunAdAction()
+        {
+            return new StreamingPlatformAction(StreamingPlatformActionType.RunAd);
         }
 
         public StreamingPlatformAction() : base(ActionTypeEnum.StreamingPlatform) { }
@@ -101,8 +107,15 @@ namespace MixItUp.Base.Actions
                     await ChannelSession.MixerUserConnection.SetHostChannel(ChannelSession.MixerChannel, channel);
                 }
             }
+            else if (this.ActionType == StreamingPlatformActionType.RunAd)
+            {
+                bool result = await ChannelSession.MixerUserConnection.RunAd(ChannelSession.MixerChannel);
+                if (!result)
+                {
+                    await ChannelSession.Services.Chat.Whisper(ChannelSession.GetCurrentUser(), "The ad could not be run, please verify your channel is approved for ads and that you have not already run an ad recently.");
+                }
+            }
         }
-
 
         private void Chat_OnPollEnd(object sender, Dictionary<string, uint> results)
         {

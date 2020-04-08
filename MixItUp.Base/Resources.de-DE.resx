@@ -3148,4 +3148,7 @@
   <data name="TreatStreamDonation" xml:space="preserve">
     <value>TreatStream Spende</value>
   </data>
+  <data name="RunAd" xml:space="preserve">
+    <value>Anzeige ausführen</value>
+  </data>
 </root>

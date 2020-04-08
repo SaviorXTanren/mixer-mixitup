@@ -251,7 +251,7 @@ namespace MixItUp.Base.Services.External
                     this.fundraiser = fundraisers.FirstOrDefault(f => f.pageShortName.Equals(ChannelSession.Settings.JustGivingPageShortName));
                 }
 
-                AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 30000, this.BackgroundDonationCheck);
+                AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.BackgroundDonationCheck);
 
                 return new Result();
             }

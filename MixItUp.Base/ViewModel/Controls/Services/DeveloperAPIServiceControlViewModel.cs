@@ -8,6 +8,17 @@ namespace MixItUp.Base.ViewModel.Controls.Services
         public ICommand ConnectCommand { get; set; }
         public ICommand DisconnectCommand { get; set; }
 
+        public bool EnableDeveloperAPIAdvancedMode
+        {
+            get { return ChannelSession.Settings.EnableDeveloperAPIAdvancedMode; }
+            set
+            {
+                ChannelSession.Settings.EnableDeveloperAPIAdvancedMode = value;
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("EnableDeveloperAPIAdvancedMode");
+            }
+        }
+
         public DeveloperAPIServiceControlViewModel()
             : base("Developer API")
         {
