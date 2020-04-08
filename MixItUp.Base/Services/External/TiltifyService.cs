@@ -356,7 +356,7 @@ namespace MixItUp.Base.Services.External
             this.user = await this.GetUser();
             if (this.user != null)
             {
-                AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 30000, this.BackgroundDonationCheck);
+                AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.BackgroundDonationCheck);
 
                 return new Result();
             }

@@ -144,6 +144,8 @@ namespace MixItUp.Base.Services.External
         private ExtraLifeTeam team;
         private ExtraLifeTeamParticipant participant;
 
+        private Dictionary<string, ExtraLifeDonation> donationsReceived = new Dictionary<string, ExtraLifeDonation>();
+
         public ExtraLifeService() : base(ExtraLifeService.BaseAddress) { }
 
         public override string Name { get { return "ExtraLife"; } }
@@ -243,9 +245,16 @@ namespace MixItUp.Base.Services.External
 
             if (this.team != null && this.participant != null)
             {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                Task.Run(this.BackgroundDonationCheck, this.cancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                IEnumerable<ExtraLifeDonation> donations = (ChannelSession.Settings.ExtraLifeIncludeTeamDonations) ? await this.GetTeamDonations() : await this.GetParticipantDonations();
+                foreach (ExtraLifeDonation donation in donations)
+                {
+                    if (!string.IsNullOrEmpty(donation.donationID))
+                    {
+                        donationsReceived[donation.donationID] = donation;
+                    }
+                }
+
+                MixItUp.Base.Util.AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.BackgroundDonationCheck);
 
                 return new Result();
             }
@@ -257,37 +266,17 @@ namespace MixItUp.Base.Services.External
             this.cancellationTokenSource.Dispose();
         }
 
-        private async Task BackgroundDonationCheck()
+        private async Task BackgroundDonationCheck(CancellationToken token)
         {
-            Dictionary<string, ExtraLifeDonation> donationsReceived = new Dictionary<string, ExtraLifeDonation>();
-
             IEnumerable<ExtraLifeDonation> donations = (ChannelSession.Settings.ExtraLifeIncludeTeamDonations) ? await this.GetTeamDonations() : await this.GetParticipantDonations();
-            foreach (ExtraLifeDonation donation in donations)
+            foreach (ExtraLifeDonation elDonation in donations)
             {
-                if (!string.IsNullOrEmpty(donation.donationID))
+                if (!string.IsNullOrEmpty(elDonation.donationID) && !donationsReceived.ContainsKey(elDonation.donationID))
                 {
-                    donationsReceived[donation.donationID] = donation;
+                    donationsReceived[elDonation.donationID] = elDonation;
+                    UserDonationModel donation = elDonation.ToGenericDonation();
+                    await EventService.ProcessDonationEvent(EventTypeEnum.ExtraLifeDonation, donation);
                 }
-            }
-
-            while (!this.cancellationTokenSource.Token.IsCancellationRequested)
-            {
-                try
-                {
-                    donations = (ChannelSession.Settings.ExtraLifeIncludeTeamDonations) ? await this.GetTeamDonations() : await this.GetParticipantDonations();
-                    foreach (ExtraLifeDonation elDonation in donations)
-                    {
-                        if (!string.IsNullOrEmpty(elDonation.donationID) && !donationsReceived.ContainsKey(elDonation.donationID))
-                        {
-                            donationsReceived[elDonation.donationID] = elDonation;
-                            UserDonationModel donation = elDonation.ToGenericDonation();
-                            await EventService.ProcessDonationEvent(EventTypeEnum.ExtraLifeDonation, donation);
-                        }
-                    }
-                }
-                catch (Exception ex) { Logger.Log(ex); }
-
-                await Task.Delay(20000);
             }
         }
     }

@@ -1,5 +1,4 @@
 ﻿using Mixer.Base;
-using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
@@ -203,7 +202,7 @@ namespace MixItUp.Base.Services.External
                     donationsReceived[donation.ID] = donation;
                 }
 
-                AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 30000, this.BackgroundDonationCheck);
+                AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.BackgroundDonationCheck);
 
                 return new Result();
             }
