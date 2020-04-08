@@ -337,10 +337,16 @@ namespace MixItUp.Base.Services.Mixer
                             user.SubscribeDate = StreamingClient.Base.Util.DateTimeOffsetExtensions.FromUTCISO8601String(subDateToken.ToString());
                         }
 
-                        int totalMonths = 0;
+                        int totalMonths = 1;
                         if (e.payload.TryGetValue("totalMonths", out JToken resubMonthsToken))
                         {
                             totalMonths = (int)resubMonthsToken;
+                        }
+
+                        int streakMonths = 1;
+                        if (e.payload.TryGetValue("currentStreak", out JToken streakMonthsToken))
+                        {
+                            streakMonths = (int)streakMonthsToken;
                         }
 
                         EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChannelResubscribed, user);
@@ -360,6 +366,7 @@ namespace MixItUp.Base.Services.Mixer
                             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestSubscriberSubMonthsData] = totalMonths;
 
                             trigger.SpecialIdentifiers["usersubmonths"] = totalMonths.ToString();
+                            trigger.SpecialIdentifiers["usersubstreak"] = streakMonths.ToString();
                             await ChannelSession.Services.Events.PerformEvent(trigger);
                         }
                         GlobalEvents.ResubscribeOccurred(new Tuple<UserViewModel, int>(user, totalMonths));
