@@ -583,7 +583,7 @@ namespace MixItUp.Base.Util
                     targetUser = await SpecialIdentifierStringBuilder.GetUserFromArgument(arguments.ElementAt(0), this.platform);
                 }
 
-                if (targetUser == null || !targetUser.Username.Equals(arguments.ElementAt(0)))
+                if (targetUser == null || !arguments.ElementAt(0).EndsWith(targetUser.Username, StringComparison.InvariantCultureIgnoreCase))
                 {
                     targetUser = user;
                 }
