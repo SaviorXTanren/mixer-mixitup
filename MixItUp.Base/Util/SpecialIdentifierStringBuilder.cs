@@ -232,7 +232,7 @@ namespace MixItUp.Base.Util
                 if (ChannelSession.MixerUserConnection != null)
                 {
                     Mixer.Base.Model.User.UserModel argUserModel = await ChannelSession.MixerUserConnection.GetUser(username);
-                    if (argUserModel != null)
+                    if (argUserModel != null && string.Equals(argUserModel.username, username, StringComparison.InvariantCultureIgnoreCase))
                     {
                         user = new UserViewModel(argUserModel);
                     }
@@ -582,12 +582,6 @@ namespace MixItUp.Base.Util
                 {
                     targetUser = await SpecialIdentifierStringBuilder.GetUserFromArgument(arguments.ElementAt(0), this.platform);
                 }
-
-                if (targetUser == null || !targetUser.Username.Equals(arguments.ElementAt(0)))
-                {
-                    targetUser = user;
-                }
-
                 await this.HandleUserSpecialIdentifiers(targetUser, TargetSpecialIdentifierHeader);
             }
 
