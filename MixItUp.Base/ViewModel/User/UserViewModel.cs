@@ -449,8 +449,8 @@ namespace MixItUp.Base.ViewModel.User
             {
                 this.hasBeenRefreshed = true;
 
-                // If we've never seen them before, do a hard refresh of their data
-                if (this.Data.LastUpdated == DateTimeOffset.MinValue)
+                // If we've never seen them before or it's a force refresh, do a waited refresh of their data
+                if (this.Data.LastUpdated == DateTimeOffset.MinValue || force)
                 {
                     await this.RefreshDetailsInternal();
                 }
