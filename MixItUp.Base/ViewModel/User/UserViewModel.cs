@@ -97,7 +97,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.MixerUserRoles; }
+                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.Data.MixerUserRoles; }
                 return new HashSet<UserRoleEnum>() { UserRoleEnum.User };
             }
         }
@@ -185,8 +185,6 @@ namespace MixItUp.Base.ViewModel.User
         public uint MixerID { get { return this.Data.MixerID; } private set { if (value > 0) { this.Data.MixerID = value; } } }
         public string MixerUsername { get { return this.Data.MixerUsername; } private set { if (!string.IsNullOrEmpty(value)) { this.Data.MixerUsername = value; } } }
         public uint MixerChannelID { get { return this.Data.MixerChannelID; } private set { if (value > 0) { this.Data.MixerChannelID = value; } } }
-
-        public HashSet<UserRoleEnum> MixerUserRoles { get; set; } = new HashSet<UserRoleEnum>() { UserRoleEnum.User };
 
         public UserFanProgressionModel MixerFanProgression { get; set; }
         public int Sparks { get; set; }
@@ -449,8 +447,8 @@ namespace MixItUp.Base.ViewModel.User
             {
                 this.hasBeenRefreshed = true;
 
-                // If we've never seen them before or it's a force refresh, do a waited refresh of their data
-                if (this.Data.LastUpdated == DateTimeOffset.MinValue || force)
+                // If we've never seen them before, they haven't been updated this session yet, or it's a force refresh, do a waited refresh of their data
+                if (this.Data.LastUpdated == DateTimeOffset.MinValue || !this.Data.UpdatedThisSession || force)
                 {
                     await this.RefreshDetailsInternal();
                 }
@@ -602,14 +600,12 @@ namespace MixItUp.Base.ViewModel.User
 
         private async Task RefreshDetailsInternal()
         {
-            if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Mixer))
-            {
-                await this.RefreshMixerUserDetails();
-            }
+            await this.RefreshMixerUserDetails();
 
             await this.RefreshExternalServiceDetails();
 
             this.Data.LastUpdated = DateTimeOffset.Now;
+            this.Data.UpdatedThisSession = true;
         }
 
         private async Task RefreshMixerUserDetails()
@@ -671,59 +667,64 @@ namespace MixItUp.Base.ViewModel.User
 
         private void SetMixerRoles(string[] userRoles)
         {
-            this.MixerUserRoles.Clear();
-            this.MixerUserRoles.Add(UserRoleEnum.User);
+            HashSet<UserRoleEnum> newRoles = new HashSet<UserRoleEnum>() { UserRoleEnum.User };
 
             if (userRoles != null && userRoles.Length > 0)
             {
-                if (userRoles.Any(r => r.Equals("Owner"))) { this.MixerUserRoles.Add(UserRoleEnum.Streamer); }
-                if (userRoles.Any(r => r.Equals("Staff"))) { this.MixerUserRoles.Add(UserRoleEnum.Staff); }
-                if (userRoles.Any(r => r.Equals("ChannelEditor"))) { this.MixerUserRoles.Add(UserRoleEnum.ChannelEditor); }
-                if (userRoles.Any(r => r.Equals("Mod"))) { this.MixerUserRoles.Add(UserRoleEnum.Mod); }
-                if (userRoles.Any(r => r.Equals("GlobalMod"))) { this.MixerUserRoles.Add(UserRoleEnum.GlobalMod); }
-                if (userRoles.Any(r => r.Equals("Subscriber"))) { this.MixerUserRoles.Add(UserRoleEnum.Subscriber); }
-                if (userRoles.Any(r => r.Equals("Partner"))) { this.MixerUserRoles.Add(UserRoleEnum.Partner); }
-                if (userRoles.Any(r => r.Equals("Pro"))) { this.MixerUserRoles.Add(UserRoleEnum.Pro); }
-                if (userRoles.Any(r => r.Equals("Banned"))) { this.MixerUserRoles.Add(UserRoleEnum.Banned); }
+                if (userRoles.Any(r => r.Equals("Owner"))) { newRoles.Add(UserRoleEnum.Streamer); }
+                if (userRoles.Any(r => r.Equals("Staff"))) { newRoles.Add(UserRoleEnum.Staff); }
+                if (userRoles.Any(r => r.Equals("ChannelEditor"))) { newRoles.Add(UserRoleEnum.ChannelEditor); }
+                if (userRoles.Any(r => r.Equals("Mod"))) { newRoles.Add(UserRoleEnum.Mod); }
+                if (userRoles.Any(r => r.Equals("GlobalMod"))) { newRoles.Add(UserRoleEnum.GlobalMod); }
+                if (userRoles.Any(r => r.Equals("Subscriber"))) { newRoles.Add(UserRoleEnum.Subscriber); }
+                if (userRoles.Any(r => r.Equals("Partner"))) { newRoles.Add(UserRoleEnum.Partner); }
+                if (userRoles.Any(r => r.Equals("Pro"))) { newRoles.Add(UserRoleEnum.Pro); }
+                if (userRoles.Any(r => r.Equals("Banned"))) { newRoles.Add(UserRoleEnum.Banned); }
             }
 
             if (ChannelSession.MixerChannel != null && ChannelSession.MixerChannel.user.id.Equals(this.MixerID))
             {
-                this.MixerUserRoles.Add(UserRoleEnum.Streamer);
+                newRoles.Add(UserRoleEnum.Streamer);
             }
 
             if (this.FollowDate != null && this.FollowDate.GetValueOrDefault() > DateTimeOffset.MinValue)
             {
-                this.MixerUserRoles.Add(UserRoleEnum.Follower);
+                newRoles.Add(UserRoleEnum.Follower);
             }
 
-            if (this.MixerUserRoles.Contains(UserRoleEnum.Streamer))
+            if (newRoles.Contains(UserRoleEnum.Streamer))
             {
-                this.MixerUserRoles.Add(UserRoleEnum.ChannelEditor);
-                this.MixerUserRoles.Add(UserRoleEnum.Mod);
-                this.MixerUserRoles.Add(UserRoleEnum.Subscriber);
-                this.MixerUserRoles.Add(UserRoleEnum.Follower);
+                newRoles.Add(UserRoleEnum.ChannelEditor);
+                newRoles.Add(UserRoleEnum.Mod);
+                newRoles.Add(UserRoleEnum.Subscriber);
+                newRoles.Add(UserRoleEnum.Follower);
             }
 
-            if (this.MixerUserRoles.Contains(UserRoleEnum.ChannelEditor))
+            if (newRoles.Contains(UserRoleEnum.ChannelEditor))
             {
-                this.MixerUserRoles.Add(UserRoleEnum.Mod);
+                newRoles.Add(UserRoleEnum.Mod);
             }
 
             if (ChannelSession.Settings.RegularUserMinimumHours > 0 && this.Data.ViewingHoursPart >= ChannelSession.Settings.RegularUserMinimumHours)
             {
-                this.MixerUserRoles.Add(UserRoleEnum.Regular);
+                newRoles.Add(UserRoleEnum.Regular);
             }
 
-            List<UserRoleEnum> mixerDisplayRoles = this.MixerUserRoles.ToList();
-            if (this.MixerUserRoles.Contains(UserRoleEnum.Banned))
+            this.Data.MixerUserRoles.Clear();
+            foreach (UserRoleEnum role in newRoles)
+            {
+                this.Data.MixerUserRoles.Add(role);
+            }
+
+            List<UserRoleEnum> mixerDisplayRoles = this.Data.MixerUserRoles.ToList();
+            if (this.Data.MixerUserRoles.Contains(UserRoleEnum.Banned))
             {
                 mixerDisplayRoles.Clear();
                 mixerDisplayRoles.Add(UserRoleEnum.Banned);
             }
             else
             {
-                if (this.MixerUserRoles.Count() > 1)
+                if (this.Data.MixerUserRoles.Count() > 1)
                 {
                     mixerDisplayRoles.Remove(UserRoleEnum.User);
                 }
@@ -733,12 +734,12 @@ namespace MixItUp.Base.ViewModel.User
                     mixerDisplayRoles.Remove(UserRoleEnum.Mod);
                 }
 
-                if (this.MixerUserRoles.Contains(UserRoleEnum.Subscriber) || this.MixerUserRoles.Contains(UserRoleEnum.Streamer))
+                if (this.Data.MixerUserRoles.Contains(UserRoleEnum.Subscriber) || this.Data.MixerUserRoles.Contains(UserRoleEnum.Streamer))
                 {
                     mixerDisplayRoles.Remove(UserRoleEnum.Follower);
                 }
 
-                if (this.MixerUserRoles.Contains(UserRoleEnum.Streamer))
+                if (this.Data.MixerUserRoles.Contains(UserRoleEnum.Streamer))
                 {
                     mixerDisplayRoles.Remove(UserRoleEnum.ChannelEditor);
                     mixerDisplayRoles.Remove(UserRoleEnum.Subscriber);
