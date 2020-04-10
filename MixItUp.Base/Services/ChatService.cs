@@ -333,7 +333,7 @@ namespace MixItUp.Base.Services
                 }
             }
 
-            if (message.User != null)
+            if (message.User != null && !(message is AlertChatMessageViewModel))
             {
                 await message.User.RefreshDetails();
                 message.User.UpdateLastActivity();

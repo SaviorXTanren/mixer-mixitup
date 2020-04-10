@@ -7,6 +7,7 @@ using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -20,6 +21,8 @@ namespace MixItUp.Base.Model.User
 
         [DataMember]
         public DateTimeOffset LastUpdated { get; set; }
+        [JsonIgnore]
+        public bool UpdatedThisSession { get; set; } = false;
 
         #region Mixer
 
@@ -29,6 +32,9 @@ namespace MixItUp.Base.Model.User
         public string MixerUsername { get; set; }
         [DataMember]
         public uint MixerChannelID { get; set; }
+
+        [DataMember]
+        public HashSet<UserRoleEnum> MixerUserRoles { get; set; } = new HashSet<UserRoleEnum>() { UserRoleEnum.User };
 
         [DataMember]
         public DateTimeOffset? MixerAccountDate { get; set; }
