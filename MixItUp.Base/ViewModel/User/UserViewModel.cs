@@ -72,17 +72,89 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserDataModel Data { get; private set; }
 
-        public Guid ID { get { return this.Data.ID; } }
+        private string unassociatedUsername;
+        private bool hasBeenRefreshed;
 
-        public string Username
+        public UserViewModel(string username)
+            : this(mixerID: 0)
         {
-            get
+            this.InteractiveIDs = new LockedDictionary<string, MixPlayParticipantModel>();
+            this.MixerUsername = this.unassociatedUsername = username;
+        }
+
+        public UserViewModel(UserModel user)
+            : this(mixerID: user.id)
+        {
+            this.MixerID = user.id;
+            this.MixerUsername = user.username;
+            this.SetMixerUserDetails(user);
+        }
+
+        public UserViewModel(ChannelModel channel)
+            : this(mixerID: channel.userId)
+        {
+            this.MixerID = channel.userId;
+            this.MixerUsername = channel.token;
+            this.MixerChannelID = channel.id;
+        }
+
+        public UserViewModel(ChatUserModel user)
+            : this(mixerID: user.userId.GetValueOrDefault())
+        {
+            this.MixerID = user.userId.GetValueOrDefault();
+            this.MixerUsername = user.userName;
+            this.SetMixerRoles(user.userRoles);
+
+            this.IsInChat = true;
+        }
+
+        public UserViewModel(ChatMessageEventModel messageEvent)
+            : this(mixerID: messageEvent.user_id)
+        {
+            this.MixerID = messageEvent.user_id;
+            this.MixerUsername = messageEvent.user_name;
+            this.SetMixerRoles(messageEvent.user_roles);
+
+            this.IsInChat = true;
+        }
+
+        public UserViewModel(ChatMessageUserModel chatUser)
+            : this(mixerID: chatUser.user_id)
+        {
+            this.MixerID = chatUser.user_id;
+            this.MixerUsername = chatUser.user_name;
+            this.SetMixerRoles(chatUser.user_roles);
+
+            this.IsInChat = true;
+        }
+
+        public UserViewModel(MixPlayParticipantModel participant)
+            : this(mixerID: participant.userID)
+        {
+            this.MixerID = participant.userID;
+            this.MixerUsername = participant.username;
+
+            this.SetInteractiveDetails(participant);
+        }
+
+        public UserViewModel(UserDataModel userData)
+        {
+            this.Data = userData;
+        }
+
+        private UserViewModel(uint mixerID = 0)
+        {
+            if (mixerID > 0)
             {
-                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.Data.MixerUsername; }
-                return this.unassociatedUsername;
+                this.Data = ChannelSession.Settings.GetUserDataByMixerID(mixerID);
+            }
+            else
+            {
+                this.Data = new UserDataModel();
             }
         }
-        private string unassociatedUsername;
+
+        public Guid ID { get { return this.Data.ID; } }
 
         public StreamingPlatformTypeEnum Platform
         {
@@ -90,6 +162,24 @@ namespace MixItUp.Base.ViewModel.User
             {
                 if (this.MixerID > 0 || this.InteractiveIDs.Count > 0) { return StreamingPlatformTypeEnum.Mixer; }
                 return StreamingPlatformTypeEnum.None;
+            }
+        }
+
+        public string PlatformID
+        {
+            get
+            {
+                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.MixerID.ToString(); }
+                return null;
+            }
+        }
+
+        public string Username
+        {
+            get
+            {
+                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.Data.MixerUsername; }
+                return this.unassociatedUsername;
             }
         }
 
@@ -186,20 +276,20 @@ namespace MixItUp.Base.ViewModel.User
         public string MixerUsername { get { return this.Data.MixerUsername; } private set { if (!string.IsNullOrEmpty(value)) { this.Data.MixerUsername = value; } } }
         public uint MixerChannelID { get { return this.Data.MixerChannelID; } private set { if (value > 0) { this.Data.MixerChannelID = value; } } }
 
-        public UserFanProgressionModel MixerFanProgression { get; set; }
-        public int Sparks { get; set; }
+        public UserFanProgressionModel MixerFanProgression { get { return this.Data.MixerFanProgression; } set { this.Data.MixerFanProgression = value; } }
+        public int Sparks { get { return this.Data.Sparks; } set { this.Data.Sparks = value; } }
 
-        public uint CurrentViewerCount { get; set; }
+        public uint CurrentViewerCount { get { return this.Data.CurrentViewerCount; } set { this.Data.CurrentViewerCount = value; } }
 
-        public LockedDictionary<string, MixPlayParticipantModel> InteractiveIDs { get; set; } = new LockedDictionary<string, MixPlayParticipantModel>();
+        public LockedDictionary<string, MixPlayParticipantModel> InteractiveIDs { get { return this.Data.InteractiveIDs; } set { this.Data.InteractiveIDs = value; } }
 
-        public string InteractiveGroupID { get; set; }
+        public string InteractiveGroupID { get { return this.Data.InteractiveGroupID; } set { this.Data.InteractiveGroupID = value; } }
 
-        public bool IsInInteractiveTimeout { get; set; }
+        public bool IsInInteractiveTimeout { get { return this.Data.IsInInteractiveTimeout; } set { this.Data.IsInInteractiveTimeout = value; } }
 
-        public bool IsAnonymous { get { return this.Data.MixerID == 0 || this.InteractiveIDs.Values.Any(i => i.anonymous.GetValueOrDefault()); } }
+        public bool IsAnonymous { get { return this.MixerID == 0 || this.InteractiveIDs.Values.Any(i => i.anonymous.GetValueOrDefault()); } }
 
-        public string MixerAvatarLink { get { return string.Format(MixerUserAvatarLinkFormat, this.Data.MixerID); } }
+        public string MixerAvatarLink { get { return string.Format(MixerUserAvatarLinkFormat, this.MixerID); } }
 
         public string MixerChannelBadgeLink { get { return this.MixerFanProgression?.level?.SmallAssetURL?.ToString(); } }
 
@@ -207,100 +297,17 @@ namespace MixItUp.Base.ViewModel.User
 
         #endregion Mixer
 
-        public HashSet<string> CustomRoles { get; set; } = new HashSet<string>();
+        public DateTimeOffset LastActivity { get { return this.Data.LastActivity; } set { this.Data.LastActivity = value; } }
 
-        public bool IgnoreForQueries { get; set; }
+        public HashSet<string> CustomRoles { get { return this.Data.CustomRoles; } set { this.Data.CustomRoles = value; } }
 
-        public bool IsInChat { get; set; }
+        public bool IgnoreForQueries { get { return this.Data.IgnoreForQueries; } set { this.Data.IgnoreForQueries = value; } }
 
-        public string TwitterURL { get; set; }
+        public bool IsInChat { get { return this.Data.IsInChat; } set { this.Data.IsInChat = value; } }
 
-        public PatreonCampaignMember PatreonUser { get; set; }
+        public string TwitterURL { get { return this.Data.TwitterURL; } set { this.Data.TwitterURL = value; } }
 
-        private bool hasBeenRefreshed { get; set; }
-
-        public UserViewModel(string username)
-            : this(mixerID: 0)
-        {
-            this.InteractiveIDs = new LockedDictionary<string, MixPlayParticipantModel>();
-            this.MixerUsername = this.unassociatedUsername = username;
-        }
-
-        public UserViewModel(UserModel user)
-            : this(mixerID: user.id)
-        {
-            this.MixerID = user.id;
-            this.MixerUsername = user.username;
-            this.SetMixerUserDetails(user);
-        }
-
-        public UserViewModel(ChannelModel channel)
-            : this(mixerID: channel.userId)
-        {
-            this.MixerID = channel.userId;
-            this.MixerUsername = channel.token;
-            this.MixerChannelID = channel.id;
-        }
-
-        public UserViewModel(ChatUserModel user)
-            : this(mixerID: user.userId.GetValueOrDefault())
-        {
-            this.MixerID = user.userId.GetValueOrDefault();
-            this.MixerUsername = user.userName;
-            this.SetMixerRoles(user.userRoles);
-
-            this.IsInChat = true;
-        }
-
-        public UserViewModel(ChatMessageEventModel messageEvent)
-            : this(mixerID: messageEvent.user_id)
-        {
-            this.MixerID = messageEvent.user_id;
-            this.MixerUsername = messageEvent.user_name;
-            this.SetMixerRoles(messageEvent.user_roles);
-
-            this.IsInChat = true;
-        }
-
-        public UserViewModel(ChatMessageUserModel chatUser)
-            : this(mixerID: chatUser.user_id)
-        {
-            this.MixerID = chatUser.user_id;
-            this.MixerUsername = chatUser.user_name;
-            this.SetMixerRoles(chatUser.user_roles);
-
-            this.IsInChat = true;
-        }
-
-        public UserViewModel(MixPlayParticipantModel participant)
-            : this(mixerID: participant.userID)
-        {
-            this.MixerID = participant.userID;
-            this.MixerUsername = participant.username;
-
-            this.SetInteractiveDetails(participant);
-        }
-
-        public UserViewModel(UserDataModel userData)
-        {
-            this.Data = userData;
-        }
-
-        private UserViewModel(uint mixerID = 0)
-        {
-            if (mixerID > 0)
-            {
-                this.Data = ChannelSession.Settings.GetUserDataByMixerID(mixerID);
-            }
-            else
-            {
-                this.Data = new UserDataModel();
-            }
-        }
-
-        public DateTimeOffset LastActivity { get; set; }
-
-        public string RolesDisplayString { get; private set; }
+        public PatreonCampaignMember PatreonUser { get { return this.Data.PatreonUser; } set { this.Data.PatreonUser = value; } }
 
         public UserRoleEnum PrimaryRole { get { return this.UserRoles.Max(); } }
 
@@ -342,24 +349,63 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public string AccountAgeString { get { return (this.AccountDate != null) ? this.AccountDate.GetValueOrDefault().GetAge() : "Unknown"; } }
+        public string RolesDisplayString
+        {
+            get
+            {
+                lock (this.rolesDisplayStringLock)
+                {
+                    if (this.Data.RolesDisplayString == null)
+                    {
+                        List<UserRoleEnum> userRoles = this.UserRoles.ToList();
+                        if (this.Data.MixerUserRoles.Contains(UserRoleEnum.Banned))
+                        {
+                            userRoles.Clear();
+                            userRoles.Add(UserRoleEnum.Banned);
+                        }
+                        else
+                        {
+                            if (this.Data.MixerUserRoles.Count() > 1)
+                            {
+                                userRoles.Remove(UserRoleEnum.User);
+                            }
+
+                            if (userRoles.Contains(UserRoleEnum.ChannelEditor))
+                            {
+                                userRoles.Remove(UserRoleEnum.Mod);
+                            }
+
+                            if (this.Data.MixerUserRoles.Contains(UserRoleEnum.Subscriber) || this.Data.MixerUserRoles.Contains(UserRoleEnum.Streamer))
+                            {
+                                userRoles.Remove(UserRoleEnum.Follower);
+                            }
+
+                            if (this.Data.MixerUserRoles.Contains(UserRoleEnum.Streamer))
+                            {
+                                userRoles.Remove(UserRoleEnum.ChannelEditor);
+                                userRoles.Remove(UserRoleEnum.Subscriber);
+                            }
+                        }
+
+                        List<string> displayRoles = userRoles.Select(r => EnumLocalizationHelper.GetLocalizedName(r)).ToList();
+                        displayRoles.AddRange(this.CustomRoles);
+
+                        this.Data.RolesDisplayString = string.Join(", ", userRoles.OrderByDescending(r => r));
+                    }
+                    return this.Data.RolesDisplayString;
+                }
+            }
+        }
+        private object rolesDisplayStringLock = new object();
 
         public bool IsFollower { get { return this.UserRoles.Contains(UserRoleEnum.Follower) || this.HasPermissionsTo(UserRoleEnum.Subscriber); } }
-
         public bool IsRegular { get { return this.UserRoles.Contains(UserRoleEnum.Regular); } }
-
-        public string FollowAgeString { get { return (this.FollowDate != null) ? this.FollowDate.GetValueOrDefault().GetAge() : "Not Following"; } }
-
         public bool IsPlatformSubscriber { get { return this.UserRoles.Contains(UserRoleEnum.Subscriber); } }
-
         public bool ShowSubscriberBadge { get { return this.IsPlatformSubscriber && !string.IsNullOrEmpty(this.SubscriberBadgeLink); } }
 
+        public string AccountAgeString { get { return (this.AccountDate != null) ? this.AccountDate.GetValueOrDefault().GetAge() : "Unknown"; } }
+        public string FollowAgeString { get { return (this.FollowDate != null) ? this.FollowDate.GetValueOrDefault().GetAge() : "Not Following"; } }
         public string SubscribeAgeString { get { return (this.SubscribeDate != null) ? this.SubscribeDate.GetValueOrDefault().GetAge() : "Not Subscribed"; } }
-
-        public int WhispererNumber { get; set; }
-
-        public bool HasWhisperNumber { get { return this.WhispererNumber > 0; } }
-
         public int SubscribeMonths
         {
             get
@@ -371,6 +417,9 @@ namespace MixItUp.Base.ViewModel.User
                 return 0;
             }
         }
+
+        public int WhispererNumber { get { return this.Data.WhispererNumber; } set { this.Data.WhispererNumber = value; } }
+        public bool HasWhisperNumber { get { return this.WhispererNumber > 0; } }
 
         public string PrimaryRoleColorName
         {
@@ -716,40 +765,8 @@ namespace MixItUp.Base.ViewModel.User
                 this.Data.MixerUserRoles.Add(role);
             }
 
-            List<UserRoleEnum> mixerDisplayRoles = this.Data.MixerUserRoles.ToList();
-            if (this.Data.MixerUserRoles.Contains(UserRoleEnum.Banned))
-            {
-                mixerDisplayRoles.Clear();
-                mixerDisplayRoles.Add(UserRoleEnum.Banned);
-            }
-            else
-            {
-                if (this.Data.MixerUserRoles.Count() > 1)
-                {
-                    mixerDisplayRoles.Remove(UserRoleEnum.User);
-                }
-
-                if (mixerDisplayRoles.Contains(UserRoleEnum.ChannelEditor))
-                {
-                    mixerDisplayRoles.Remove(UserRoleEnum.Mod);
-                }
-
-                if (this.Data.MixerUserRoles.Contains(UserRoleEnum.Subscriber) || this.Data.MixerUserRoles.Contains(UserRoleEnum.Streamer))
-                {
-                    mixerDisplayRoles.Remove(UserRoleEnum.Follower);
-                }
-
-                if (this.Data.MixerUserRoles.Contains(UserRoleEnum.Streamer))
-                {
-                    mixerDisplayRoles.Remove(UserRoleEnum.ChannelEditor);
-                    mixerDisplayRoles.Remove(UserRoleEnum.Subscriber);
-                }
-            }
-
-            List<string> displayRoles = new List<string>(mixerDisplayRoles.Select(r => EnumLocalizationHelper.GetLocalizedName(r)));
-            displayRoles.AddRange(this.CustomRoles);
-
-            this.RolesDisplayString = string.Join(", ", displayRoles.OrderByDescending(r => r));
+            // Force re-build of roles display string
+            this.Data.RolesDisplayString = null;
         }
 
         private Task RefreshExternalServiceDetails()
