@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.Model;
-using MixItUp.Base.ViewModel.User;
 
 namespace MixItUp.Base.ViewModel.Chat
 {
@@ -7,8 +6,8 @@ namespace MixItUp.Base.ViewModel.Chat
     {
         public string Color { get; private set; }
 
-        public AlertChatMessageViewModel(StreamingPlatformTypeEnum platform, UserViewModel user, string message, string color = null)
-            : base(string.Empty, platform, user)
+        public AlertChatMessageViewModel(StreamingPlatformTypeEnum platform, string message, string color = null)
+            : base(string.Empty, platform, null)
         {
             this.Color = color;
 

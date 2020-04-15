@@ -691,14 +691,13 @@ namespace MixItUp.Base.Services.Mixer
             {
                 if (e.errorObject.ContainsKey("code") && e.errorObject.ContainsKey("message") && e.errorObject["code"].ToString().Equals("4007"))
                 {
-                    await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer, ChannelSession.GetCurrentUser(),
+                    await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer,
                         "The Bot account could not send the last message for the following reason: " + e.errorObject["message"]));
                 }
             }
             else if (e.error != null && !string.IsNullOrEmpty(e.error.ToString()))
             {
-                await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer, ChannelSession.GetCurrentUser(),
-                    "Bot account error: " + e.error.ToString()));
+                await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer, "Bot account error: " + e.error.ToString()));
             }
         }
 
