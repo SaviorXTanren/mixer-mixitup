@@ -73,7 +73,6 @@ namespace MixItUp.Base.ViewModel.User
         public UserDataModel Data { get; private set; }
 
         private string unassociatedUsername;
-        private bool hasBeenRefreshed;
 
         public UserViewModel(string username)
             : this(mixerID: 0)
@@ -492,10 +491,8 @@ namespace MixItUp.Base.ViewModel.User
 
         public async Task RefreshDetails(bool force = false)
         {
-            if (!this.IsAnonymous && (!this.hasBeenRefreshed || force))
+            if (!this.IsAnonymous && (!this.Data.UpdatedThisSession || force))
             {
-                this.hasBeenRefreshed = true;
-
                 // If we've never seen them before, they haven't been updated this session yet, or it's a force refresh, do a waited refresh of their data
                 if (this.Data.LastUpdated == DateTimeOffset.MinValue || !this.Data.UpdatedThisSession || force)
                 {
@@ -649,21 +646,34 @@ namespace MixItUp.Base.ViewModel.User
 
         private async Task RefreshDetailsInternal()
         {
+            this.Data.UpdatedThisSession = true;
+
             await this.RefreshMixerUserDetails();
 
             await this.RefreshExternalServiceDetails();
 
             this.Data.LastUpdated = DateTimeOffset.Now;
-            this.Data.UpdatedThisSession = true;
         }
 
         private async Task RefreshMixerUserDetails()
         {
-            UserWithChannelModel user = await ChannelSession.MixerUserConnection.GetUser(this.MixerID);
-            if (user != null)
-            {
-                this.SetMixerUserDetails(user);
+            List<Task> refreshTasks = new List<Task>();
 
+            refreshTasks.Add(Task.Run(async () =>
+            {
+                UserWithChannelModel user = await ChannelSession.MixerUserConnection.GetUser(this.MixerID);
+                if (user != null)
+                {
+                    this.SetMixerUserDetails(user);
+
+                    this.MixerFanProgression = await ChannelSession.MixerUserConnection.GetUserFanProgression(ChannelSession.MixerChannel, user);
+                }
+            }));
+
+            refreshTasks.Add(Task.Run(async () => this.FollowDate = await ChannelSession.MixerUserConnection.CheckIfFollows(ChannelSession.MixerChannel, this.GetModel())));
+
+            refreshTasks.Add(Task.Run(async () =>
+            {
                 if (!this.IsInChat && !this.IsAnonymous)
                 {
                     ChatUserModel chatUser = await ChannelSession.MixerUserConnection.GetChatUser(ChannelSession.MixerChannel, this.MixerID);
@@ -672,8 +682,6 @@ namespace MixItUp.Base.ViewModel.User
                         this.SetChatDetails(chatUser);
                     }
                 }
-
-                this.FollowDate = await ChannelSession.MixerUserConnection.CheckIfFollows(ChannelSession.MixerChannel, this.GetModel());
 
                 if (this.IsPlatformSubscriber)
                 {
@@ -693,9 +701,9 @@ namespace MixItUp.Base.ViewModel.User
                         }
                     }
                 }
+            }));
 
-                this.MixerFanProgression = await ChannelSession.MixerUserConnection.GetUserFanProgression(ChannelSession.MixerChannel, user);
-            }
+            await Task.WhenAll(refreshTasks);
         }
 
         private void SetMixerUserDetails(UserModel user)
