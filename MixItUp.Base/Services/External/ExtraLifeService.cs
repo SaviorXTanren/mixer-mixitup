@@ -29,15 +29,11 @@ namespace MixItUp.Base.Services.External
         [DataMember]
         public string createdDateUTC { get; set; }
         [DataMember]
-        public int eventID { get; set; }
-        [DataMember]
         public double sumDonations { get; set; }
-        [DataMember]
-        public int teamID { get; set; }
         [DataMember]
         public string name { get; set; }
         [DataMember]
-        public int numDonations { get; set; }
+        public double numDonations { get; set; }
     }
 
     [DataContract]
@@ -52,23 +48,19 @@ namespace MixItUp.Base.Services.External
         [DataMember]
         public string createdDateUTC { get; set; }
         [DataMember]
-        public int eventID { get; set; }
-        [DataMember]
         public double sumDonations { get; set; }
         [DataMember]
-        public int participantID { get; set; }
+        public double participantID { get; set; }
         [DataMember]
         public string teamName { get; set; }
         [DataMember]
         public string avatarImageURL { get; set; }
         [DataMember]
-        public int teamID { get; set; }
-        [DataMember]
         public bool isTeamCaptain { get; set; }
         [DataMember]
         public double sumPledges { get; set; }
         [DataMember]
-        public int numDonations { get; set; }
+        public double numDonations { get; set; }
     }
 
     [DataContract]
@@ -76,12 +68,7 @@ namespace MixItUp.Base.Services.External
     {
         [DataMember]
         public string donationID { get; set; }
-        [DataMember]
-        public int teamID { get; set; }
 
-
-        [DataMember]
-        public int? participantID { get; set; }
         [DataMember]
         public string displayName { get; set; }
 
