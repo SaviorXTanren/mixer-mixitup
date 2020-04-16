@@ -59,14 +59,8 @@ namespace MixItUp.Base.Util
 
         public override void Clear()
         {
-            lock (valuesUpdateLock)
-            {
-                foreach (K key in this.Keys.ToList())
-                {
-                    this.removedValues.Add(key);
-                }
-            }
             base.Clear();
+            this.ClearTracking();
         }
 
         public IEnumerable<K> GetAddedKeys() { return this.GetKeyValues(this.addedValues).Keys; }
