@@ -131,7 +131,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             this.MixerID = user.userId.GetValueOrDefault();
             this.MixerUsername = user.userName;
-            this.SetMixerRoles(user.userRoles);
+            this.SetMixerUserRoles(user.userRoles);
 
             this.IsInChat = true;
         }
@@ -141,7 +141,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             this.MixerID = messageEvent.user_id;
             this.MixerUsername = messageEvent.user_name;
-            this.SetMixerRoles(messageEvent.user_roles);
+            this.SetMixerUserRoles(messageEvent.user_roles);
 
             this.IsInChat = true;
         }
@@ -151,7 +151,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             this.MixerID = chatUser.user_id;
             this.MixerUsername = chatUser.user_name;
-            this.SetMixerRoles(chatUser.user_roles);
+            this.SetMixerUserRoles(chatUser.user_roles);
 
             this.IsInChat = true;
         }
@@ -162,7 +162,7 @@ namespace MixItUp.Base.ViewModel.User
             this.MixerID = participant.userID;
             this.MixerUsername = participant.username;
 
-            this.SetInteractiveDetails(participant);
+            this.SetMixerMixPlayDetails(participant);
         }
 
         public UserViewModel(TwitchNewAPI.Users.UserModel twitchUser)
@@ -608,7 +608,7 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public bool IsInteractiveParticipant { get { return this.InteractiveIDs.Count > 0; } }
+        public bool IsMixerMixPlayParticipant { get { return this.InteractiveIDs.Count > 0; } }
 
         public PatreonTier PatreonTier
         {
@@ -666,27 +666,27 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public void SetChatDetails(ChatUserModel chatUser)
+        public void SetMixerChatDetails(ChatUserModel chatUser)
         {
             if (chatUser != null)
             {
-                this.SetMixerRoles(chatUser.userRoles);
+                this.SetMixerUserRoles(chatUser.userRoles);
                 this.IsInChat = true;
             }
         }
 
-        public void RemoveChatDetails(ChatUserModel chatUser)
+        public void RemoveMixerChatDetails(ChatUserModel chatUser)
         {
             this.IsInChat = false;
         }
 
-        public void SetInteractiveDetails(MixPlayParticipantModel participant)
+        public void SetMixerMixPlayDetails(MixPlayParticipantModel participant)
         {
             this.InteractiveIDs[participant.sessionID] = participant;
             this.InteractiveGroupID = participant.groupID;
         }
 
-        public void RemoveInteractiveDetails(MixPlayParticipantModel participant)
+        public void RemoveMixerMixPlayDetails(MixPlayParticipantModel participant)
         {
             this.InteractiveIDs.Remove(participant.sessionID);
             if (this.InteractiveIDs.Count == 0)
@@ -760,7 +760,7 @@ namespace MixItUp.Base.ViewModel.User
             };
         }
 
-        public ChatUserModel GetMixerChatModel()
+        public ChatUserModel GetMixerUserChatModel()
         {
             return new ChatUserModel()
             {
@@ -923,7 +923,7 @@ namespace MixItUp.Base.ViewModel.User
                 ChatUserModel chatUser = await ChannelSession.MixerUserConnection.GetChatUser(ChannelSession.MixerChannel, this.MixerID);
                 if (chatUser != null)
                 {
-                    this.SetChatDetails(chatUser);
+                    this.SetMixerChatDetails(chatUser);
                 }
             }
 
@@ -963,7 +963,7 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        private void SetMixerRoles(string[] userRoles)
+        private void SetMixerUserRoles(string[] userRoles)
         {
             HashSet<UserRoleEnum> newRoles = new HashSet<UserRoleEnum>() { UserRoleEnum.User };
 
@@ -985,6 +985,11 @@ namespace MixItUp.Base.ViewModel.User
                 newRoles.Add(UserRoleEnum.Streamer);
             }
 
+            this.SetUserRoles(newRoles);
+        }
+
+        private void SetUserRoles(HashSet<UserRoleEnum> newRoles)
+        {
             if (this.FollowDate != null && this.FollowDate.GetValueOrDefault() > DateTimeOffset.MinValue)
             {
                 newRoles.Add(UserRoleEnum.Follower);
@@ -1008,10 +1013,10 @@ namespace MixItUp.Base.ViewModel.User
                 newRoles.Add(UserRoleEnum.Regular);
             }
 
-            this.Data.MixerUserRoles.Clear();
+            this.UserRoles.Clear();
             foreach (UserRoleEnum role in newRoles)
             {
-                this.Data.MixerUserRoles.Add(role);
+                this.UserRoles.Add(role);
             }
 
             // Force re-build of roles display string

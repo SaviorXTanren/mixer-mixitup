@@ -30,7 +30,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         public Task<IEnumerable<MixPlayUser>> GetUsers()
         {
             var mixplayUsers = ChannelSession.Services.User.GetAllWorkableUsers();
-            return Task.FromResult<IEnumerable<MixPlayUser>>(mixplayUsers.Where(x => x.IsInteractiveParticipant).Select(x => new MixPlayUser()
+            return Task.FromResult<IEnumerable<MixPlayUser>>(mixplayUsers.Where(x => x.IsMixerMixPlayParticipant).Select(x => new MixPlayUser()
             {
                 ID = x.MixerID,
                 UserName = x.Username,
@@ -164,7 +164,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
 
             var mixplayUsers = ChannelSession.Services.User.GetUsersByMixerID(broadcast.Users.Select(x => x.UserID).ToArray());
 
-            targets = mixplayUsers.Where(x => x.IsInteractiveParticipant).SelectMany(x => x.InteractiveIDs.Keys).Select(x => new MixPlayBroadcastParticipant(x)).ToArray();
+            targets = mixplayUsers.Where(x => x.IsMixerMixPlayParticipant).SelectMany(x => x.InteractiveIDs.Keys).Select(x => new MixPlayBroadcastParticipant(x)).ToArray();
 
             if (targets == null || targets.Count() == 0)
             {

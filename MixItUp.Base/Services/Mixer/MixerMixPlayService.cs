@@ -441,7 +441,7 @@ namespace MixItUp.Base.Services.Mixer
 
         public async Task AddUserToGroup(UserViewModel user, string groupName)
         {
-            if (!string.IsNullOrEmpty(groupName) && user.IsInteractiveParticipant)
+            if (!string.IsNullOrEmpty(groupName) && user.IsMixerMixPlayParticipant)
             {
                 user.InteractiveGroupID = groupName;
                 foreach (MixPlayParticipantModel participant in user.GetMixerMixPlayParticipantModels())
@@ -476,7 +476,7 @@ namespace MixItUp.Base.Services.Mixer
 
         public async Task SetUserDisabledState(UserViewModel user, bool disabled)
         {
-            if (user != null && user.IsInteractiveParticipant)
+            if (user != null && user.IsMixerMixPlayParticipant)
             {
                 user.IsInInteractiveTimeout = disabled;
                 foreach (MixPlayParticipantModel participant in user.GetMixerMixPlayParticipantModels())
