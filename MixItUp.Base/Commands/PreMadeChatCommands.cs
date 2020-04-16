@@ -388,7 +388,7 @@ namespace MixItUp.Base.Commands
             {
                 if (ChannelSession.Services.Chat != null)
                 {
-                    UserModel userModel = await ChannelSession.MixerUserConnection.GetUser(user.GetModel());
+                    UserModel userModel = await ChannelSession.MixerUserConnection.GetUser(user.GetMixerUserModel());
 
                     if (arguments.Count() == 1)
                     {

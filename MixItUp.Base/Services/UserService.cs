@@ -127,7 +127,7 @@ namespace MixItUp.Base.Services
                 {
                     user = this.usersByMixerID[chatUser.userId.GetValueOrDefault()];
                 }
-                user.SetChatDetails(chatUser);
+                user.SetMixerChatDetails(chatUser);
                 await this.AddOrUpdateUser(user);
             }
             return user;
@@ -142,7 +142,7 @@ namespace MixItUp.Base.Services
                 {
                     user = this.usersByMixerID[mixplayUser.userID];
                 }
-                user.SetInteractiveDetails(mixplayUser);
+                user.SetMixerMixPlayDetails(mixplayUser);
                 this.usersByMixPlayID[mixplayUser.sessionID] = user;
                 await this.AddOrUpdateUser(user);
             }
@@ -188,7 +188,7 @@ namespace MixItUp.Base.Services
         {
             if (this.usersByMixerID.TryGetValue(chatUser.userId.GetValueOrDefault(), out UserViewModel user))
             {
-                user.RemoveChatDetails(chatUser);
+                user.RemoveMixerChatDetails(chatUser);
                 if (user.InteractiveIDs.Count == 0)
                 {
                     await this.RemoveUser(user);
@@ -203,7 +203,7 @@ namespace MixItUp.Base.Services
             if (this.usersByMixPlayID.TryGetValue(mixplayUser.sessionID, out UserViewModel user))
             {
                 this.usersByMixPlayID.Remove(mixplayUser.sessionID);
-                user.RemoveInteractiveDetails(mixplayUser);
+                user.RemoveMixerMixPlayDetails(mixplayUser);
                 if (user.InteractiveIDs.Count == 0 && !user.IsInChat)
                 {
                     await this.RemoveUser(user);

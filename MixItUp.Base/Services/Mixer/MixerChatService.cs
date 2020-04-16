@@ -372,7 +372,7 @@ namespace MixItUp.Base.Services.Mixer
         {
             await this.RunAsync(async () =>
             {
-                await ChannelSession.MixerUserConnection.AddUserRoles(ChannelSession.MixerChannel, user.GetModel(), new List<UserRoleEnum>() { UserRoleEnum.Banned });
+                await ChannelSession.MixerUserConnection.AddUserRoles(ChannelSession.MixerChannel, user.GetMixerUserModel(), new List<UserRoleEnum>() { UserRoleEnum.Banned });
                 await user.RefreshDetails(force: true);
             });
         }
@@ -381,7 +381,7 @@ namespace MixItUp.Base.Services.Mixer
         {
             await this.RunAsync(async () =>
             {
-                await ChannelSession.MixerUserConnection.RemoveUserRoles(ChannelSession.MixerChannel, user.GetModel(), new List<UserRoleEnum>() { UserRoleEnum.Banned });
+                await ChannelSession.MixerUserConnection.RemoveUserRoles(ChannelSession.MixerChannel, user.GetMixerUserModel(), new List<UserRoleEnum>() { UserRoleEnum.Banned });
                 await user.RefreshDetails(force: true);
             });
         }
@@ -390,7 +390,7 @@ namespace MixItUp.Base.Services.Mixer
         {
             await this.RunAsync(async () =>
             {
-                await ChannelSession.MixerUserConnection.AddUserRoles(ChannelSession.MixerChannel, user.GetModel(), new List<UserRoleEnum>() { UserRoleEnum.Mod });
+                await ChannelSession.MixerUserConnection.AddUserRoles(ChannelSession.MixerChannel, user.GetMixerUserModel(), new List<UserRoleEnum>() { UserRoleEnum.Mod });
                 await user.RefreshDetails(force: true);
             });
         }
@@ -399,7 +399,7 @@ namespace MixItUp.Base.Services.Mixer
         {
             await this.RunAsync(async () =>
             {
-                await ChannelSession.MixerUserConnection.RemoveUserRoles(ChannelSession.MixerChannel, user.GetModel(), new List<UserRoleEnum>() { UserRoleEnum.Mod });
+                await ChannelSession.MixerUserConnection.RemoveUserRoles(ChannelSession.MixerChannel, user.GetMixerUserModel(), new List<UserRoleEnum>() { UserRoleEnum.Mod });
                 await user.RefreshDetails(force: true);
             });
         }
