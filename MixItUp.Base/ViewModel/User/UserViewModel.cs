@@ -296,6 +296,8 @@ namespace MixItUp.Base.ViewModel.User
 
         #endregion Mixer
 
+        public DateTimeOffset LastUpdated { get { return this.Data.LastUpdated; } set { this.Data.LastUpdated = value; } }
+
         public DateTimeOffset LastActivity { get { return this.Data.LastActivity; } set { this.Data.LastActivity = value; } }
 
         public HashSet<string> CustomRoles { get { return this.Data.CustomRoles; } set { this.Data.CustomRoles = value; } }
@@ -494,7 +496,7 @@ namespace MixItUp.Base.ViewModel.User
             if (!this.IsAnonymous && (!this.Data.UpdatedThisSession || force))
             {
                 // If we've never seen them before, they haven't been updated this session yet, or it's a force refresh, do a waited refresh of their data
-                if (this.Data.LastUpdated == DateTimeOffset.MinValue || !this.Data.UpdatedThisSession || force)
+                if (this.LastUpdated == DateTimeOffset.MinValue || !this.Data.UpdatedThisSession || force)
                 {
                     await this.RefreshDetailsInternal();
                 }
@@ -664,10 +666,14 @@ namespace MixItUp.Base.ViewModel.User
 
             await Task.WhenAll(refreshTasks);
 
+            this.SetCommonUserRoles();
+
             await this.RefreshExternalServiceDetails();
 
-            this.Data.LastUpdated = DateTimeOffset.Now;
+            this.LastUpdated = DateTimeOffset.Now;
         }
+
+        #region Mixer Refresh
 
         private async Task RefreshMixerUserDetails()
         {
@@ -693,12 +699,13 @@ namespace MixItUp.Base.ViewModel.User
                 }
             }
 
+            DateTimeOffset subDate = DateTimeOffset.MinValue;
             if (this.IsPlatformSubscriber)
             {
                 UserWithGroupsModel userGroups = await ChannelSession.MixerUserConnection.GetUserInChannel(ChannelSession.MixerChannel, this.MixerID);
                 if (userGroups != null)
                 {
-                    DateTimeOffset subDate = userGroups.GetSubscriberDate().GetValueOrDefault();
+                    subDate = userGroups.GetSubscriberDate().GetValueOrDefault();
                     if (subDate > DateTimeOffset.MinValue)
                     {
                         this.SubscribeDate = subDate;
@@ -709,6 +716,11 @@ namespace MixItUp.Base.ViewModel.User
                         }
                     }
                 }
+            }
+
+            if (subDate == DateTimeOffset.MinValue)
+            {
+                this.SubscribeDate = null;
             }
         }
 
@@ -737,21 +749,19 @@ namespace MixItUp.Base.ViewModel.User
                 if (userRoles.Any(r => r.Equals("ChannelEditor"))) { this.UserRoles.Add(UserRoleEnum.ChannelEditor); } else { this.UserRoles.Remove(UserRoleEnum.ChannelEditor); }
                 if (userRoles.Any(r => r.Equals("Mod"))) { this.UserRoles.Add(UserRoleEnum.Mod); } else { this.UserRoles.Remove(UserRoleEnum.Mod); }
                 if (userRoles.Any(r => r.Equals("GlobalMod"))) { this.UserRoles.Add(UserRoleEnum.GlobalMod); } else { this.UserRoles.Remove(UserRoleEnum.GlobalMod); }
+                if (userRoles.Any(r => r.Equals("Subscriber"))) { this.UserRoles.Add(UserRoleEnum.Subscriber); } else { this.UserRoles.Remove(UserRoleEnum.Subscriber); }
                 if (userRoles.Any(r => r.Equals("Partner"))) { this.UserRoles.Add(UserRoleEnum.Partner); } else { this.UserRoles.Remove(UserRoleEnum.Partner); }
                 if (userRoles.Any(r => r.Equals("Pro"))) { this.UserRoles.Add(UserRoleEnum.Pro); } else { this.UserRoles.Remove(UserRoleEnum.Pro); }
                 if (userRoles.Any(r => r.Equals("Banned"))) { this.UserRoles.Add(UserRoleEnum.Banned); } else { this.UserRoles.Remove(UserRoleEnum.Banned); }
-
-                // Backup Subscriber role check
-                if (userRoles.Any(r => r.Equals("Subscriber"))) { this.UserRoles.Add(UserRoleEnum.Subscriber); }
             }
 
             if (ChannelSession.MixerChannel != null && ChannelSession.MixerChannel.user.id.Equals(this.MixerID))
             {
                 this.UserRoles.Add(UserRoleEnum.Streamer);
             }
-
-            this.SetCommonUserRoles();
         }
+
+        #endregion Mixer Refresh
 
         private void SetCommonUserRoles()
         {
