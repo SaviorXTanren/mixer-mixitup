@@ -288,7 +288,7 @@ namespace MixItUp.Base.Model.User
             await ChannelSession.SaveSettings();
         }
 
-        public async Task PerformShopCommand(UserViewModel user, IEnumerable<string> arguments = null)
+        public async Task PerformShopCommand(UserViewModel user, IEnumerable<string> arguments = null, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None)
         {
             try
             {
@@ -455,7 +455,7 @@ namespace MixItUp.Base.Model.User
             catch (Exception ex) { Logger.Log(ex); }
         }
 
-        public async Task PerformTradeCommand(UserViewModel user, IEnumerable<string> arguments = null)
+        public async Task PerformTradeCommand(UserViewModel user, IEnumerable<string> arguments = null, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None)
         {
             try
             {
@@ -463,7 +463,7 @@ namespace MixItUp.Base.Model.User
                 {
                     if (this.tradeReceiver == null && arguments.Count() >= 2)
                     {
-                        UserViewModel targetUser = await SpecialIdentifierStringBuilder.GetUserFromArgument(arguments.First());
+                        UserViewModel targetUser = await SpecialIdentifierStringBuilder.GetUserFromArgument(arguments.First(), platform);
                         if (targetUser == null)
                         {
                             await ChannelSession.Services.Chat.Whisper(user, "The specified user does not exist");
