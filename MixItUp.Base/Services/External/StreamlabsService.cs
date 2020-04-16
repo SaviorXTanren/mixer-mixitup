@@ -1,5 +1,4 @@
 ﻿using Mixer.Base;
-using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
@@ -36,14 +35,11 @@ namespace MixItUp.Base.Services.External
         {
             get
             {
-                double amount = 0;
-                string amountString = this.AmountString;
-                if (!double.TryParse(amountString, out amount))
+                if (this.AmountString.ParseCurrency(out double result))
                 {
-                    amountString = amountString.Replace(".", ",");
-                    double.TryParse(amountString, out amount);
+                    return result;
                 }
-                return amount;
+                return 0;
             }
         }
 
@@ -204,7 +200,7 @@ namespace MixItUp.Base.Services.External
 
             this.startTime = DateTimeOffset.Now;
 
-            AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 30000, this.BackgroundDonationCheck);
+            AsyncRunner.RunBackgroundTask(this.cancellationTokenSource.Token, 60000, this.BackgroundDonationCheck);
 
             return Task.FromResult(new Result());
         }

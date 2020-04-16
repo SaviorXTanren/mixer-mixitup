@@ -783,6 +783,27 @@ definitions:
         items:
           $ref: '#/definitions/MixItUpInventoryItemAmount'
 
+  MixItUpInventoryItem:
+    type: object
+    required: [ Name, Items ]
+    properties:
+      Name:
+        description: The Mix It Up inventory item name.
+        type: string
+        example: Influence
+      BuyAmount:
+        description: The amount it costs to purchase this item.
+        type: integer
+        example: 2000
+      SellAmount:
+        description: The amount of currency the user gets when they sell this item.
+        type: integer
+        example: 1000
+      MaxAmount:
+        description: The maximum number of this item a user may own.
+        type: integer
+        example: 2751
+
   MixItUpInventory:
     type: object
     required: [ ID, Name ]
@@ -796,6 +817,15 @@ definitions:
         description: The Mix It Up inventory name.
         type: string
         example: Equipment
+      Items:
+        type: array
+        items:
+          $ref: '#/definitions/MixItUpInventoryItem'
+      ShopCurrencyID:
+        description: The Mix It Up shop currency ID. This will be an empty UUID (all zeros) if the shop is not enabled.
+        type: string
+        format: uuid
+        example: 1783e5d9-c2ab-423a-ae64-7dc9a086b194
 
   ListOfMixItUpInventory:
     type: array

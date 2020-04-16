@@ -234,7 +234,7 @@ namespace MixItUp.Base.Util
                 if (platform == StreamingPlatformTypeEnum.Mixer && ChannelSession.MixerUserConnection != null)
                 {
                     Mixer.Base.Model.User.UserModel argUserModel = await ChannelSession.MixerUserConnection.GetUser(username);
-                    if (argUserModel != null)
+                    if (argUserModel != null && string.Equals(argUserModel.username, username, StringComparison.InvariantCultureIgnoreCase))
                     {
                         user = new UserViewModel(argUserModel);
                     }
@@ -593,7 +593,7 @@ namespace MixItUp.Base.Util
                     targetUser = await SpecialIdentifierStringBuilder.GetUserFromArgument(arguments.ElementAt(0), this.platform);
                 }
 
-                if (targetUser == null)
+                if (targetUser == null || !arguments.ElementAt(0).EndsWith(targetUser.Username, StringComparison.InvariantCultureIgnoreCase))
                 {
                     targetUser = user;
                 }
@@ -870,6 +870,7 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "mixerage", user.AccountAgeString);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "followage", user.FollowAgeString);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "isfollower", user.IsFollower.ToString());
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "isregular", user.IsRegular.ToString());
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "subage", user.SubscribeAgeString);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "submonths", user.SubscribeMonths.ToString());
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "issubscriber", user.IsPlatformSubscriber.ToString());

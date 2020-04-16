@@ -261,7 +261,7 @@ namespace MixItUp.AutoHoster
                                 }
                                 else
                                 {
-                                    ChannelModel updatedChannel = await this.connection.Channels.SetHostChannel(currentUser.channel, channelModel);
+                                    ChannelModel updatedChannel = await this.connection.Channels.SetHostChannel(currentUser.channel, channelModel, isAutoHost: true);
                                     if (updatedChannel.hosteeId.GetValueOrDefault() == channelModel.id)
                                     {
                                         Logger.Log("Now hosting " + channelModel.token);

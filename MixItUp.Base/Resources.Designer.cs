@@ -5407,6 +5407,15 @@ namespace MixItUp.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Run Ad.
+        /// </summary>
+        public static string RunAd {
+            get {
+                return ResourceManager.GetString("RunAd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Run Command.
         /// </summary>
         public static string RunCommand {

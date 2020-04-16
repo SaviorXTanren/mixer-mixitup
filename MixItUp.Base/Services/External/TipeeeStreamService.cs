@@ -63,10 +63,10 @@ namespace MixItUp.Base.Services.External
         public TipeeeStreamUser User { get; set; }
 
         [JsonProperty("parameters")]
-        public TipeeeStreamParameters Parameters { get; set; }
+        public TipeeeStreamParameters Parameters { get; set; } = new TipeeeStreamParameters();
 
         [JsonProperty("parameters.amount")]
-        public string Amount { get; set; }
+        public string AmountText { get; set; }
 
         [JsonProperty("formattedAmount")]
         public string FormattedAmount { get; set; }
@@ -74,17 +74,26 @@ namespace MixItUp.Base.Services.External
         [JsonProperty("created_at")]
         public string CreatedAt { get; set; }
 
+        [JsonIgnore]
+        public double Amount
+        {
+            get
+            {
+                double result = 0;
+                if (!string.IsNullOrEmpty(this.AmountText) && this.AmountText.ParseCurrency(out result))
+                {
+                    return result;
+                }
+                else if (!string.IsNullOrEmpty(this.Parameters.Amount) && this.Parameters.Amount.ParseCurrency(out result))
+                {
+                    return result;
+                }
+                return 0;
+            }
+        }
+
         public UserDonationModel ToGenericDonation()
         {
-            if (!double.TryParse(this.Parameters.Amount, out double amount))
-            {
-                if (!double.TryParse(this.Amount, out amount))
-                {
-                    string textAmount = string.Concat(this.FormattedAmount.ToCharArray().Where(c => char.IsDigit(c) || c == '.'));
-                    double.TryParse(textAmount, out amount);
-                }
-            }
-
             return new UserDonationModel()
             {
                 Source = UserDonationSourceEnum.TipeeeStream,
@@ -93,7 +102,7 @@ namespace MixItUp.Base.Services.External
                 Username = this.Parameters.Username,
                 Message = this.Parameters.Message,
 
-                Amount = Math.Round(amount, 2),
+                Amount = Math.Round(this.Amount, 2),
 
                 DateTime = DateTimeOffset.Now,
             };

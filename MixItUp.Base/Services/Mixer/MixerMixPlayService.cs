@@ -811,7 +811,7 @@ namespace MixItUp.Base.Services.Mixer
 
                         if (ChannelSession.Settings.ChatShowMixPlayAlerts)
                         {
-                            await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer, user,
+                            await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer,
                                 string.Format("{0} Used The \"{1}\" Interactive Control", user.Username, control.controlID), ChannelSession.Settings.ChatMixPlayAlertsColorScheme));
                         }
                     }

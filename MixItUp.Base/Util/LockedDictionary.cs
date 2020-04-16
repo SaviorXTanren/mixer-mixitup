@@ -43,7 +43,7 @@ namespace MixItUp.Base.Util
 
         public virtual void Add(K key, V value) { lock (objLock) { this.items[key] = value; } }
 
-        public void Clear() { lock (objLock) { this.items.Clear(); } }
+        public virtual void Clear() { lock (objLock) { this.items.Clear(); } }
 
         public bool ContainsKey(K key) { lock (objLock) { return this.items.ContainsKey(key); } }
 

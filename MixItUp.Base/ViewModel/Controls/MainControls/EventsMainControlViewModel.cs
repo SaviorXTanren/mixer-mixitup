@@ -114,9 +114,9 @@ namespace MixItUp.Base.ViewModel.Controls.MainControls
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelResubscribed));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelSubscriptionGifted));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelFanProgressionLevelUp));
+            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelSkillUsed));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelSparksUsed));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelEmbersUsed));
-            this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelSkillUsed));
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.MixerChannelMilestoneReached));
 
             this.EventCommands.Add(this.GetEventCommand(EventTypeEnum.TwitchChannelStreamStart));
