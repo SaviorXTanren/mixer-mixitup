@@ -846,15 +846,22 @@ namespace MixItUp.Base.ViewModel.User
             }
             else if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
             {
-
+                await this.RefreshTwitchUserDetails();
+                refreshTasks.Add(this.RefreshTwitchUserAccountDate());
+                refreshTasks.Add(this.RefreshTwitchUserFollowDate());
+                refreshTasks.Add(this.RefreshTwitchUserSubscribeDate());
             }
 
             await Task.WhenAll(refreshTasks);
+
+            this.SetCommonUserRoles();
 
             await this.RefreshExternalServiceDetails();
 
             this.Data.LastUpdated = DateTimeOffset.Now;
         }
+
+        #region Mixer Refresh
 
         private async Task RefreshMixerUserDetails()
         {
@@ -936,9 +943,82 @@ namespace MixItUp.Base.ViewModel.User
             {
                 this.UserRoles.Add(UserRoleEnum.Streamer);
             }
-
-            this.SetCommonUserRoles();
         }
+
+        #endregion Mixer Refresh
+
+        #region Twitch Refresh
+
+        private async Task RefreshTwitchUserDetails()
+        {
+            TwitchNewAPI.Users.UserModel twitchUser = (!string.IsNullOrEmpty(this.TwitchID)) ? await ChannelSession.TwitchUserConnection.GetNewAPIUserByID(this.TwitchID)
+                : await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(this.TwitchUsername);
+            if (twitchUser != null)
+            {
+                this.TwitchID = twitchUser.id;
+                this.TwitchUsername = twitchUser.login;
+                this.TwitchDisplayName = (!string.IsNullOrEmpty(twitchUser.display_name)) ? twitchUser.display_name : this.TwitchDisplayName;
+                this.TwitchAvatarLink = twitchUser.profile_image_url;
+
+                if (twitchUser.IsPartner()) { this.UserRoles.Add(UserRoleEnum.Partner); } else { this.UserRoles.Remove(UserRoleEnum.Partner); }
+                if (twitchUser.IsAffiliate()) { this.UserRoles.Add(UserRoleEnum.Affiliate); } else { this.UserRoles.Remove(UserRoleEnum.Affiliate); }
+
+                if (twitchUser.IsStaff()) { this.UserRoles.Add(UserRoleEnum.Staff); } else { this.UserRoles.Remove(UserRoleEnum.Staff); }
+                if (twitchUser.IsGlobalMod()) { this.UserRoles.Add(UserRoleEnum.GlobalMod); } else { this.UserRoles.Remove(UserRoleEnum.GlobalMod); }
+
+                this.SetTwitchRoles();
+            }
+        }
+
+        private void SetTwitchRoles()
+        {
+            this.TwitchUserRoles.Add(UserRoleEnum.User);
+            if (ChannelSession.TwitchChannelNewAPI != null && ChannelSession.TwitchChannelNewAPI.id.Equals(this.TwitchID))
+            {
+                this.TwitchUserRoles.Add(UserRoleEnum.Streamer);
+            }
+            this.IsInChat = true;
+        }
+
+        private async Task RefreshTwitchUserAccountDate()
+        {
+            TwitchV5API.Users.UserModel twitchV5User = await ChannelSession.TwitchUserConnection.GetV5APIUserByLogin(this.TwitchUsername);
+            if (twitchV5User != null && !string.IsNullOrEmpty(twitchV5User.created_at) && DateTimeOffset.TryParse(twitchV5User.created_at, out DateTimeOffset createdDate))
+            {
+                this.AccountDate = createdDate;
+            }
+        }
+
+        private async Task RefreshTwitchUserFollowDate()
+        {
+            UserFollowModel follow = await ChannelSession.TwitchUserConnection.CheckIfFollowsNewAPI(ChannelSession.TwitchChannelNewAPI, this.GetTwitchNewAPIUserModel());
+            if (follow != null && !string.IsNullOrEmpty(follow.followed_at) && DateTimeOffset.TryParse(follow.followed_at, out DateTimeOffset followDate))
+            {
+                this.FollowDate = followDate;
+            }
+            else
+            {
+                this.FollowDate = null;
+            }
+        }
+
+        private async Task RefreshTwitchUserSubscribeDate()
+        {
+            if (ChannelSession.TwitchUserNewAPI.IsAffiliate() || ChannelSession.TwitchUserNewAPI.IsPartner())
+            {
+                TwitchV5API.Users.UserSubscriptionModel subscription = await ChannelSession.TwitchUserConnection.CheckIfSubscribedV5(ChannelSession.TwitchChannelV5, this.GetTwitchV5APIUserModel());
+                if (subscription != null && !string.IsNullOrEmpty(subscription.created_at) && DateTimeOffset.TryParse(subscription.created_at, out DateTimeOffset subDate))
+                {
+                    this.SubscribeDate = subDate;
+                }
+                else
+                {
+                    this.SubscribeDate = null;
+                }
+            }
+        }
+
+        #endregion Twitch Refresh
 
         private void SetCommonUserRoles()
         {
@@ -966,15 +1046,6 @@ namespace MixItUp.Base.ViewModel.User
 
             // Force re-build of roles display string
             this.Data.RolesDisplayString = null;
-        }
-
-        private void SetTwitchRoles()
-        {
-            this.TwitchUserRoles.Add(UserRoleEnum.User);
-            if (ChannelSession.TwitchChannelNewAPI != null && ChannelSession.TwitchChannelNewAPI.id.Equals(this.TwitchID))
-            {
-                this.TwitchUserRoles.Add(UserRoleEnum.Streamer);
-            }
         }
 
         private Task RefreshExternalServiceDetails()
