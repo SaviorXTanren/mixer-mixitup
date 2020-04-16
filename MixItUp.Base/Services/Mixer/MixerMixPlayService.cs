@@ -441,10 +441,10 @@ namespace MixItUp.Base.Services.Mixer
 
         public async Task AddUserToGroup(UserViewModel user, string groupName)
         {
-            if (!string.IsNullOrEmpty(groupName) && user.IsInteractiveParticipant)
+            if (!string.IsNullOrEmpty(groupName) && user.IsMixerMixPlayParticipant)
             {
                 user.InteractiveGroupID = groupName;
-                foreach (MixPlayParticipantModel participant in user.GetParticipantModels())
+                foreach (MixPlayParticipantModel participant in user.GetMixerMixPlayParticipantModels())
                 {
                     await this.UpdateParticipant(participant);
                 }
@@ -476,10 +476,10 @@ namespace MixItUp.Base.Services.Mixer
 
         public async Task SetUserDisabledState(UserViewModel user, bool disabled)
         {
-            if (user != null && user.IsInteractiveParticipant)
+            if (user != null && user.IsMixerMixPlayParticipant)
             {
                 user.IsInInteractiveTimeout = disabled;
-                foreach (MixPlayParticipantModel participant in user.GetParticipantModels())
+                foreach (MixPlayParticipantModel participant in user.GetMixerMixPlayParticipantModels())
                 {
                     await this.UpdateParticipant(participant);
                 }
@@ -585,7 +585,7 @@ namespace MixItUp.Base.Services.Mixer
                                 user.InteractiveGroupID = group.GroupName;
                                 if (updateParticipant)
                                 {
-                                    participantsToUpdate.AddRange(user.GetParticipantModels());
+                                    participantsToUpdate.AddRange(user.GetMixerMixPlayParticipantModels());
                                 }
                             }
                         }
@@ -811,7 +811,7 @@ namespace MixItUp.Base.Services.Mixer
 
                         if (ChannelSession.Settings.ChatShowMixPlayAlerts)
                         {
-                            await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer, user,
+                            await ChannelSession.Services.Chat.AddMessage(new AlertChatMessageViewModel(StreamingPlatformTypeEnum.Mixer,
                                 string.Format("{0} Used The \"{1}\" Interactive Control", user.Username, control.controlID), ChannelSession.Settings.ChatMixPlayAlertsColorScheme));
                         }
                     }

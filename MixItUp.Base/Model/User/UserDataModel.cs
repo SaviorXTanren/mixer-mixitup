@@ -1,11 +1,12 @@
-﻿using Mixer.Base.Model.User;
+﻿using Mixer.Base.Model.MixPlay;
+using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Import.ScorpBot;
 using MixItUp.Base.Model.Import.Streamlabs;
+using MixItUp.Base.Services.External;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,6 +45,17 @@ namespace MixItUp.Base.Model.User
         public DateTimeOffset? MixerSubscribeDate { get; set; }
         [DataMember]
         public UserFanProgressionModel MixerFanProgression { get; set; }
+
+        [JsonIgnore]
+        public int Sparks { get; set; }
+        [JsonIgnore]
+        public uint CurrentViewerCount { get; set; }
+        [JsonIgnore]
+        public LockedDictionary<string, MixPlayParticipantModel> InteractiveIDs { get; set; } = new LockedDictionary<string, MixPlayParticipantModel>();
+        [JsonIgnore]
+        public string InteractiveGroupID { get; set; }
+        [JsonIgnore]
+        public bool IsInInteractiveTimeout { get; set; }
 
         #endregion Mixer
 
@@ -93,6 +105,25 @@ namespace MixItUp.Base.Model.User
         public uint TotalCommandsRun { get; set; }
         [DataMember]
         public uint TotalMonthsSubbed { get; set; }
+
+        [JsonIgnore]
+        public DateTimeOffset LastActivity { get; set; } = DateTimeOffset.MinValue;
+
+        [JsonIgnore]
+        public HashSet<string> CustomRoles { get; set; } = new HashSet<string>();
+        [JsonIgnore]
+        public string RolesDisplayString { get; set; } = null;
+
+        [JsonIgnore]
+        public bool IgnoreForQueries { get; set; }
+        [JsonIgnore]
+        public bool IsInChat { get; set; }
+        [JsonIgnore]
+        public int WhispererNumber { get; set; }
+        [JsonIgnore]
+        public string TwitterURL { get; set; }
+        [JsonIgnore]
+        public PatreonCampaignMember PatreonUser { get; set; } = null;
 
         public UserDataModel() { }
 

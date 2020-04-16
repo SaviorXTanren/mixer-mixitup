@@ -226,10 +226,10 @@ namespace MixItUp.Base.Util
         public static async Task<UserViewModel> GetUserFromArgument(string argument, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None)
         {
             string username = argument.Replace("@", "");
-            UserViewModel user = ChannelSession.Services.User.GetUserByUsername(username);
+            UserViewModel user = ChannelSession.Services.User.GetUserByUsername(username, platform);
             if (user == null)
             {
-                if (ChannelSession.MixerUserConnection != null)
+                if ((platform.HasFlag(StreamingPlatformTypeEnum.Mixer) || platform == StreamingPlatformTypeEnum.None) && ChannelSession.MixerUserConnection != null)
                 {
                     Mixer.Base.Model.User.UserModel argUserModel = await ChannelSession.MixerUserConnection.GetUser(username);
                     if (argUserModel != null && string.Equals(argUserModel.username, username, StringComparison.InvariantCultureIgnoreCase))
@@ -850,7 +850,7 @@ namespace MixItUp.Base.Util
 
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "primaryrole", user.PrimaryRoleString);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "avatar", user.AvatarLink);
-                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "url", "https://www.mixer.com/" + user.Username);
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "url", user.ChannelLink);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "name", user.Username);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "id", user.ID.ToString());
 
@@ -900,20 +900,23 @@ namespace MixItUp.Base.Util
                 if (this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "followers") || this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "game") ||
                     this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channel"))
                 {
-                    ExpandedChannelModel channel = await ChannelSession.MixerUserConnection.GetChannel(user.MixerChannelID);
-                    if (channel != null)
+                    if (user.Platform.HasFlag(StreamingPlatformTypeEnum.Mixer))
                     {
-                        this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "followers", channel?.numFollowers.ToString() ?? "0");
-
-                        if (channel.type != null)
+                        ExpandedChannelModel channel = await ChannelSession.MixerUserConnection.GetChannel(user.MixerChannelID);
+                        if (channel != null)
                         {
-                            this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "gameimage", channel.type.coverUrl);
-                            this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "game", channel.type.name.ToString());
-                        }
+                            this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "followers", channel?.numFollowers.ToString() ?? "0");
 
-                        this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channelid", channel.id.ToString());
-                        this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channellive", channel.online.ToString());
-                        this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channelfeatured", channel.featured.ToString());
+                            if (channel.type != null)
+                            {
+                                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "gameimage", channel.type.coverUrl);
+                                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "game", channel.type.name.ToString());
+                            }
+
+                            this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channelid", channel.id.ToString());
+                            this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channellive", channel.online.ToString());
+                            this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channelfeatured", channel.featured.ToString());
+                        }
                     }
                 }
 
