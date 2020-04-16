@@ -71,6 +71,9 @@ namespace MixItUp.Base.Model.User
         public string TwitchAvatarLink { get; set; }
 
         [DataMember]
+        public HashSet<UserRoleEnum> TwitchUserRoles { get; set; } = new HashSet<UserRoleEnum>() { UserRoleEnum.User };
+
+        [DataMember]
         public DateTimeOffset? TwitchAccountDate { get; set; }
         [DataMember]
         public DateTimeOffset? TwitchFollowDate { get; set; }

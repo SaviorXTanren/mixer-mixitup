@@ -283,6 +283,7 @@ namespace MixItUp.Base.ViewModel.User
             get
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return this.MixerID.ToString(); }
+                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { return this.TwitchID; }
                 return null;
             }
         }
@@ -328,6 +329,7 @@ namespace MixItUp.Base.ViewModel.User
             set
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Mixer) { this.Data.MixerAccountDate = value; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { this.Data.TwitchAccountDate = value; }
             }
         }
 
@@ -342,6 +344,7 @@ namespace MixItUp.Base.ViewModel.User
             set
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Mixer) { this.Data.MixerFollowDate = value; }
+                else if (this.Platform == StreamingPlatformTypeEnum.Twitch) { this.Data.TwitchFollowDate = value; }
 
                 if (value == null || value.GetValueOrDefault() == DateTimeOffset.MinValue)
                 {
@@ -449,7 +452,7 @@ namespace MixItUp.Base.ViewModel.User
         public string TwitchAvatarLink { get { return this.Data.TwitchAvatarLink; } private set { this.Data.TwitchAvatarLink = value; } }
 
         [DataMember]
-        public HashSet<UserRoleEnum> TwitchUserRoles { get; set; } = new HashSet<UserRoleEnum>();
+        public HashSet<UserRoleEnum> TwitchUserRoles { get { return this.Data.TwitchUserRoles; } private set { this.Data.TwitchUserRoles = value; } }
 
         [JsonIgnore]
         public string TwitchVisualName { get { return (!string.IsNullOrEmpty(this.TwitchDisplayName)) ? this.TwitchDisplayName : this.TwitchUsername; } }
@@ -837,63 +840,9 @@ namespace MixItUp.Base.ViewModel.User
                 refreshTasks.Add(this.RefreshMixerUserFollowDate());
                 refreshTasks.Add(this.RefreshMixerChatAndSubscriberDetails());
             }
-            else
+            else if (this.Platform.HasFlag(StreamingPlatformTypeEnum.Twitch))
             {
-                TwitchNewAPI.Users.UserModel twitchUser = (!string.IsNullOrEmpty(this.TwitchID)) ? await ChannelSession.TwitchUserConnection.GetNewAPIUserByID(this.TwitchID)
-                    : await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(this.TwitchUsername);
-                if (twitchUser != null)
-                {
-                    this.TwitchID = twitchUser.id;
-                    this.TwitchUsername = twitchUser.login;
-                    this.TwitchDisplayName = (!string.IsNullOrEmpty(twitchUser.display_name)) ? twitchUser.display_name : this.TwitchDisplayName;
-                    this.TwitchAvatarLink = twitchUser.profile_image_url;
-
-                    TwitchV5API.Users.UserModel twitchV5User = await ChannelSession.TwitchUserConnection.GetV5APIUserByLogin(this.TwitchUsername);
-                    if (twitchV5User != null && !string.IsNullOrEmpty(twitchV5User.created_at) && DateTimeOffset.TryParse(twitchV5User.created_at, out DateTimeOffset createdDate))
-                    {
-                        this.Data.TwitchAccountDate = createdDate;
-                    }
-
-                    if (twitchUser.IsPartner())
-                    {
-                        this.TwitchUserRoles.Add(UserRoleEnum.Partner);
-                    }
-                    else if (twitchUser.IsAffiliate())
-                    {
-                        this.TwitchUserRoles.Add(UserRoleEnum.Affiliate);
-                    }
-
-                    if (twitchUser.IsStaff())
-                    {
-                        this.TwitchUserRoles.Add(UserRoleEnum.Staff);
-                    }
-                    if (twitchUser.IsGlobalMod())
-                    {
-                        this.TwitchUserRoles.Add(UserRoleEnum.GlobalMod);
-                    }
-
-                    UserFollowModel follow = await ChannelSession.TwitchUserConnection.CheckIfFollowsNewAPI(ChannelSession.TwitchChannelNewAPI, twitchUser);
-                    if (follow != null && !string.IsNullOrEmpty(follow.followed_at) && DateTimeOffset.TryParse(follow.followed_at, out DateTimeOffset followDate))
-                    {
-                        this.Data.TwitchFollowDate = followDate;
-                        this.TwitchUserRoles.Add(UserRoleEnum.Follower);
-                    }
-
-                    if (ChannelSession.TwitchUserNewAPI.IsAffiliate() || ChannelSession.TwitchUserNewAPI.IsPartner())
-                    {
-                        if (twitchV5User != null)
-                        {
-                            TwitchV5API.Users.UserSubscriptionModel subscription = await ChannelSession.TwitchUserConnection.CheckIfSubscribedV5(ChannelSession.TwitchChannelV5, twitchV5User);
-                            if (subscription != null && !string.IsNullOrEmpty(subscription.created_at) && DateTimeOffset.TryParse(subscription.created_at, out DateTimeOffset subDate))
-                            {
-                                this.Data.TwitchSubscribeDate = subDate;
-                                this.TwitchUserRoles.Add(UserRoleEnum.Subscriber);
-                            }
-                        }
-                    }
-
-                    this.SetTwitchRoles();
-                }
+                refreshTasks.Add(this.RefreshTwitchUserDetails());
             }
 
             await Task.WhenAll(refreshTasks);
@@ -986,6 +935,65 @@ namespace MixItUp.Base.ViewModel.User
             }
 
             this.SetUserRoles(newRoles);
+        }
+
+        private async Task RefreshTwitchUserDetails()
+        {
+            TwitchNewAPI.Users.UserModel twitchUser = (!string.IsNullOrEmpty(this.TwitchID)) ? await ChannelSession.TwitchUserConnection.GetNewAPIUserByID(this.TwitchID)
+                : await ChannelSession.TwitchUserConnection.GetNewAPIUserByLogin(this.TwitchUsername);
+            if (twitchUser != null)
+            {
+                this.TwitchID = twitchUser.id;
+                this.TwitchUsername = twitchUser.login;
+                this.TwitchDisplayName = (!string.IsNullOrEmpty(twitchUser.display_name)) ? twitchUser.display_name : this.TwitchDisplayName;
+                this.TwitchAvatarLink = twitchUser.profile_image_url;
+
+                TwitchV5API.Users.UserModel twitchV5User = await ChannelSession.TwitchUserConnection.GetV5APIUserByLogin(this.TwitchUsername);
+                if (twitchV5User != null && !string.IsNullOrEmpty(twitchV5User.created_at) && DateTimeOffset.TryParse(twitchV5User.created_at, out DateTimeOffset createdDate))
+                {
+                    this.Data.TwitchAccountDate = createdDate;
+                }
+
+                if (twitchUser.IsPartner())
+                {
+                    this.UserRoles.Add(UserRoleEnum.Partner);
+                }
+                else if (twitchUser.IsAffiliate())
+                {
+                    this.UserRoles.Add(UserRoleEnum.Affiliate);
+                }
+
+                if (twitchUser.IsStaff())
+                {
+                    this.UserRoles.Add(UserRoleEnum.Staff);
+                }
+                if (twitchUser.IsGlobalMod())
+                {
+                    this.UserRoles.Add(UserRoleEnum.GlobalMod);
+                }
+
+                UserFollowModel follow = await ChannelSession.TwitchUserConnection.CheckIfFollowsNewAPI(ChannelSession.TwitchChannelNewAPI, twitchUser);
+                if (follow != null && !string.IsNullOrEmpty(follow.followed_at) && DateTimeOffset.TryParse(follow.followed_at, out DateTimeOffset followDate))
+                {
+                    this.Data.TwitchFollowDate = followDate;
+                    this.UserRoles.Add(UserRoleEnum.Follower);
+                }
+
+                if (ChannelSession.TwitchUserNewAPI.IsAffiliate() || ChannelSession.TwitchUserNewAPI.IsPartner())
+                {
+                    if (twitchV5User != null)
+                    {
+                        TwitchV5API.Users.UserSubscriptionModel subscription = await ChannelSession.TwitchUserConnection.CheckIfSubscribedV5(ChannelSession.TwitchChannelV5, twitchV5User);
+                        if (subscription != null && !string.IsNullOrEmpty(subscription.created_at) && DateTimeOffset.TryParse(subscription.created_at, out DateTimeOffset subDate))
+                        {
+                            this.Data.TwitchSubscribeDate = subDate;
+                            this.UserRoles.Add(UserRoleEnum.Subscriber);
+                        }
+                    }
+                }
+
+                this.SetTwitchRoles();
+            }
         }
 
         private void SetUserRoles(HashSet<UserRoleEnum> newRoles)
