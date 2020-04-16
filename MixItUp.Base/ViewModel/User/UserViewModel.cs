@@ -200,6 +200,15 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        public string ChannelLink
+        {
+            get
+            {
+                if (this.Platform == StreamingPlatformTypeEnum.Mixer) { return $"https://www.mixer.com/{this.Username}"; }
+                return string.Empty;
+            }
+        }
+
         public DateTimeOffset? AccountDate
         {
             get

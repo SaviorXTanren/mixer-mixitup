@@ -236,7 +236,7 @@ namespace MixItUp.Base.Commands
             if (arguments != null && arguments.Count() > 0)
             {
                 string username = arguments.FirstOrDefault().Replace("@", "");
-                targetUser = ChannelSession.Services.User.GetUserByUsername(username);
+                targetUser = ChannelSession.Services.User.GetUserByUsername(username, this.platform);
 
                 if (targetUser == null || user.Equals(targetUser))
                 {

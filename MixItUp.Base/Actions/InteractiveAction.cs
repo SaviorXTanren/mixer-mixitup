@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Model.MixPlay;
+using MixItUp.Base.Model;
 using MixItUp.Base.Model.MixPlay;
 using MixItUp.Base.Services.External;
 using MixItUp.Base.Services.Mixer;
@@ -279,7 +280,7 @@ namespace MixItUp.Base.Actions
                     if (!string.IsNullOrEmpty(this.OptionalUserName))
                     {
                         string optionalUserName = await this.ReplaceStringWithSpecialModifiers(this.OptionalUserName, user, arguments);
-                        UserViewModel optionalUser = ChannelSession.Services.User.GetUserByUsername(optionalUserName);
+                        UserViewModel optionalUser = ChannelSession.Services.User.GetUserByUsername(optionalUserName, StreamingPlatformTypeEnum.Mixer);
                         if (optionalUser != null)
                         {
                             await ChannelSession.Services.MixPlay.AddUserToGroup(optionalUser, this.GroupName);

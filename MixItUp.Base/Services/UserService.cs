@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Model.Chat;
 using Mixer.Base.Model.MixPlay;
 using Mixer.Base.Model.User;
+using MixItUp.Base.Model;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -19,7 +20,7 @@ namespace MixItUp.Base.Services
 
     public interface IUserService
     {
-        UserViewModel GetUserByUsername(string username);
+        UserViewModel GetUserByUsername(string username, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None);
 
         UserViewModel GetUserByMixerID(uint id);
 
@@ -60,14 +61,19 @@ namespace MixItUp.Base.Services
         private LockedDictionary<string, UserViewModel> usersByMixerUsername = new LockedDictionary<string, UserViewModel>();
         private LockedDictionary<string, UserViewModel> usersByMixPlayID = new LockedDictionary<string, UserViewModel>();
 
-        public UserViewModel GetUserByUsername(string username)
+        public UserViewModel GetUserByUsername(string username, StreamingPlatformTypeEnum platform = StreamingPlatformTypeEnum.None)
         {
             username = username.ToLower().Replace("@", "");
             UserViewModel user = null;
-            if (this.usersByMixerUsername.TryGetValue(username, out user))
+
+            if (platform.HasFlag(StreamingPlatformTypeEnum.Mixer) || platform == StreamingPlatformTypeEnum.None)
             {
-                return user;
+                if (this.usersByMixerUsername.TryGetValue(username, out user))
+                {
+                    return user;
+                }
             }
+
             return null;
         }
 

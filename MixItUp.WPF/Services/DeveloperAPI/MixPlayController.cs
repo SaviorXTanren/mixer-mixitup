@@ -1,5 +1,6 @@
 ﻿using MixItUp.API.Models;
 using MixItUp.Base;
+using MixItUp.Base.Model;
 using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,7 +66,7 @@ namespace MixItUp.WPF.Services.DeveloperAPI
         [HttpGet]
         public Task<MixPlayUser> GetUserByUserName(string userName)
         {
-            UserViewModel user = ChannelSession.Services.User.GetUserByUsername(userName);
+            UserViewModel user = ChannelSession.Services.User.GetUserByUsername(userName, StreamingPlatformTypeEnum.Mixer);
 
             if (user == null)
             {

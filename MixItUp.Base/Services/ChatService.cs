@@ -425,7 +425,7 @@ namespace MixItUp.Base.Services
                     string primaryTaggedUsername = message.PrimaryTaggedUsername;
                     if (!string.IsNullOrEmpty(primaryTaggedUsername))
                     {
-                        UserViewModel primaryTaggedUser = ChannelSession.Services.User.GetUserByUsername(primaryTaggedUsername);
+                        UserViewModel primaryTaggedUser = ChannelSession.Services.User.GetUserByUsername(primaryTaggedUsername, message.Platform);
                         if (primaryTaggedUser != null)
                         {
                             primaryTaggedUser.Data.TotalTimesTagged++;
