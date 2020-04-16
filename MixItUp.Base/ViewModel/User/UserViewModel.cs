@@ -224,7 +224,7 @@ namespace MixItUp.Base.ViewModel.User
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Mixer) { this.Data.MixerFollowDate = value; }
 
-                if (value == null || value.GetValueOrDefault() == DateTimeOffset.MinValue)
+                if (this.FollowDate == null || this.FollowDate.GetValueOrDefault() == DateTimeOffset.MinValue)
                 {
                     this.UserRoles.Remove(UserRoleEnum.Follower);
                 }
@@ -246,7 +246,7 @@ namespace MixItUp.Base.ViewModel.User
             {
                 if (this.Platform == StreamingPlatformTypeEnum.Mixer) { this.Data.MixerSubscribeDate = value; }
 
-                if (value == null || value.GetValueOrDefault() == DateTimeOffset.MinValue)
+                if (this.SubscribeDate == null || this.SubscribeDate.GetValueOrDefault() == DateTimeOffset.MinValue)
                 {
                     this.UserRoles.Remove(UserRoleEnum.Subscriber);
                 }
@@ -589,6 +589,10 @@ namespace MixItUp.Base.ViewModel.User
             {
                 this.UserRoles.Add(UserRoleEnum.Regular);
             }
+            else
+            {
+                this.UserRoles.Remove(UserRoleEnum.Regular);
+            }
         }
 
         public UserModel GetMixerUserModel()
@@ -697,9 +701,8 @@ namespace MixItUp.Base.ViewModel.User
                     DateTimeOffset subDate = userGroups.GetSubscriberDate().GetValueOrDefault();
                     if (subDate > DateTimeOffset.MinValue)
                     {
-                        this.Data.MixerSubscribeDate = subDate;
-
-                        int totalMonths = this.Data.MixerSubscribeDate.GetValueOrDefault().TotalMonthsFromNow();
+                        this.SubscribeDate = subDate;
+                        int totalMonths = this.SubscribeDate.GetValueOrDefault().TotalMonthsFromNow();
                         if (this.Data.TotalMonthsSubbed < totalMonths)
                         {
                             this.Data.TotalMonthsSubbed = (uint)totalMonths;
@@ -727,58 +730,51 @@ namespace MixItUp.Base.ViewModel.User
 
         private void SetMixerUserRoles(string[] userRoles)
         {
-            HashSet<UserRoleEnum> newRoles = new HashSet<UserRoleEnum>() { UserRoleEnum.User };
-
             if (userRoles != null && userRoles.Length > 0)
             {
-                if (userRoles.Any(r => r.Equals("Owner"))) { newRoles.Add(UserRoleEnum.Streamer); }
-                if (userRoles.Any(r => r.Equals("Staff"))) { newRoles.Add(UserRoleEnum.Staff); }
-                if (userRoles.Any(r => r.Equals("ChannelEditor"))) { newRoles.Add(UserRoleEnum.ChannelEditor); }
-                if (userRoles.Any(r => r.Equals("Mod"))) { newRoles.Add(UserRoleEnum.Mod); }
-                if (userRoles.Any(r => r.Equals("GlobalMod"))) { newRoles.Add(UserRoleEnum.GlobalMod); }
-                if (userRoles.Any(r => r.Equals("Subscriber"))) { newRoles.Add(UserRoleEnum.Subscriber); }
-                if (userRoles.Any(r => r.Equals("Partner"))) { newRoles.Add(UserRoleEnum.Partner); }
-                if (userRoles.Any(r => r.Equals("Pro"))) { newRoles.Add(UserRoleEnum.Pro); }
-                if (userRoles.Any(r => r.Equals("Banned"))) { newRoles.Add(UserRoleEnum.Banned); }
+                if (userRoles.Any(r => r.Equals("Owner"))) { this.UserRoles.Add(UserRoleEnum.Streamer); } else { this.UserRoles.Remove(UserRoleEnum.Streamer); }
+                if (userRoles.Any(r => r.Equals("Staff"))) { this.UserRoles.Add(UserRoleEnum.Staff); } else { this.UserRoles.Remove(UserRoleEnum.Staff); }
+                if (userRoles.Any(r => r.Equals("ChannelEditor"))) { this.UserRoles.Add(UserRoleEnum.ChannelEditor); } else { this.UserRoles.Remove(UserRoleEnum.ChannelEditor); }
+                if (userRoles.Any(r => r.Equals("Mod"))) { this.UserRoles.Add(UserRoleEnum.Mod); } else { this.UserRoles.Remove(UserRoleEnum.Mod); }
+                if (userRoles.Any(r => r.Equals("GlobalMod"))) { this.UserRoles.Add(UserRoleEnum.GlobalMod); } else { this.UserRoles.Remove(UserRoleEnum.GlobalMod); }
+                if (userRoles.Any(r => r.Equals("Partner"))) { this.UserRoles.Add(UserRoleEnum.Partner); } else { this.UserRoles.Remove(UserRoleEnum.Partner); }
+                if (userRoles.Any(r => r.Equals("Pro"))) { this.UserRoles.Add(UserRoleEnum.Pro); } else { this.UserRoles.Remove(UserRoleEnum.Pro); }
+                if (userRoles.Any(r => r.Equals("Banned"))) { this.UserRoles.Add(UserRoleEnum.Banned); } else { this.UserRoles.Remove(UserRoleEnum.Banned); }
+
+                // Backup Subscriber role check
+                if (userRoles.Any(r => r.Equals("Subscriber"))) { this.UserRoles.Add(UserRoleEnum.Subscriber); }
             }
 
             if (ChannelSession.MixerChannel != null && ChannelSession.MixerChannel.user.id.Equals(this.MixerID))
             {
-                newRoles.Add(UserRoleEnum.Streamer);
+                this.UserRoles.Add(UserRoleEnum.Streamer);
             }
 
-            this.SetUserRoles(newRoles);
+            this.SetCommonUserRoles();
         }
 
-        private void SetUserRoles(HashSet<UserRoleEnum> newRoles)
+        private void SetCommonUserRoles()
         {
-            if (this.FollowDate != null && this.FollowDate.GetValueOrDefault() > DateTimeOffset.MinValue)
+            if (this.UserRoles.Contains(UserRoleEnum.Streamer))
             {
-                newRoles.Add(UserRoleEnum.Follower);
+                this.UserRoles.Add(UserRoleEnum.ChannelEditor);
+                this.UserRoles.Add(UserRoleEnum.Mod);
+                this.UserRoles.Add(UserRoleEnum.Subscriber);
+                this.UserRoles.Add(UserRoleEnum.Follower);
             }
 
-            if (newRoles.Contains(UserRoleEnum.Streamer))
+            if (this.UserRoles.Contains(UserRoleEnum.ChannelEditor))
             {
-                newRoles.Add(UserRoleEnum.ChannelEditor);
-                newRoles.Add(UserRoleEnum.Mod);
-                newRoles.Add(UserRoleEnum.Subscriber);
-                newRoles.Add(UserRoleEnum.Follower);
-            }
-
-            if (newRoles.Contains(UserRoleEnum.ChannelEditor))
-            {
-                newRoles.Add(UserRoleEnum.Mod);
+                this.UserRoles.Add(UserRoleEnum.Mod);
             }
 
             if (ChannelSession.Settings.RegularUserMinimumHours > 0 && this.Data.ViewingHoursPart >= ChannelSession.Settings.RegularUserMinimumHours)
             {
-                newRoles.Add(UserRoleEnum.Regular);
+                this.UserRoles.Add(UserRoleEnum.Regular);
             }
-
-            this.UserRoles.Clear();
-            foreach (UserRoleEnum role in newRoles)
+            else
             {
-                this.UserRoles.Add(role);
+                this.UserRoles.Remove(UserRoleEnum.Regular);
             }
 
             // Force re-build of roles display string

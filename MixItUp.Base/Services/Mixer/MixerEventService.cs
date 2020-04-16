@@ -167,7 +167,7 @@ namespace MixItUp.Base.Services.Mixer
                     JToken subscribeStartToken;
                     if (e.payload.TryGetValue("since", out subscribeStartToken))
                     {
-                        user.Data.MixerSubscribeDate = subscribeStartToken.ToObject<DateTimeOffset>();
+                        user.SubscribeDate = subscribeStartToken.ToObject<DateTimeOffset>();
                     }
 
                     if (e.payload.TryGetValue("following", out JToken followedToken))
