@@ -34,7 +34,7 @@ namespace MixItUp.Base.ViewModel.Controls.Services
 
                 if (this.ExtraLifeParticipant != null)
                 {
-                    ChannelSession.Settings.ExtraLifeParticipantID = value.participantID;
+                    ChannelSession.Settings.ExtraLifeParticipantID = (int)value.participantID;
                 }
                 else
                 {
