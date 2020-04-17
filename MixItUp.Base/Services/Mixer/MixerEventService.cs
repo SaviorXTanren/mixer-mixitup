@@ -511,7 +511,7 @@ namespace MixItUp.Base.Services.Mixer
             await ChannelSession.Services.Events.PerformEvent(trigger);
         }
 
-        private async void GlobalEvents_OnEmberUseOccurred(object sender, UserEmberUsageModel emberUsage)
+        private void GlobalEvents_OnEmberUseOccurred(object sender, UserEmberUsageModel emberUsage)
         {
             emberUsage.User.Data.TotalEmbersSpent += (uint)emberUsage.Amount;
 
@@ -522,19 +522,22 @@ namespace MixItUp.Base.Services.Mixer
 
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestEmberUsageUserData] = emberUsage.User.ID;
             ChannelSession.Settings.LatestSpecialIdentifiersData[SpecialIdentifierStringBuilder.LatestEmberUsageAmountData] = emberUsage.Amount;
-
-            EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChannelEmbersUsed, emberUsage.User);
-            trigger.SpecialIdentifiers["emberamount"] = emberUsage.Amount.ToString();
-            await ChannelSession.Services.Events.PerformEvent(trigger);
         }
 
         private async void GlobalEvents_OnSkillUseOccurred(object sender, MixerSkillChatMessageViewModel skill)
         {
             skill.User.Data.TotalSkillsUsed++;
 
-            EventTrigger trigger = new EventTrigger(EventTypeEnum.MixerChannelSkillUsed, skill.User, skill.Skill.GetSpecialIdentifiers());
-            trigger.SpecialIdentifiers["skillmessage"] = skill.PlainTextMessage;
-            await ChannelSession.Services.Events.PerformEvent(trigger);
+            EventTrigger skillTrigger = new EventTrigger(EventTypeEnum.MixerChannelSkillUsed, skill.User, skill.Skill.GetSpecialIdentifiers());
+            skillTrigger.SpecialIdentifiers["skillmessage"] = skill.PlainTextMessage;
+            await ChannelSession.Services.Events.PerformEvent(skillTrigger);
+
+            if (skill.Skill.IsEmbersSkill)
+            {
+                EventTrigger emberTrigger = new EventTrigger(EventTypeEnum.MixerChannelEmbersUsed, skill.User, skill.Skill.GetSpecialIdentifiers());
+                skillTrigger.SpecialIdentifiers["emberamount"] = skill.Skill.Cost.ToString();
+                await ChannelSession.Services.Events.PerformEvent(emberTrigger);
+            }
         }
 
         private async Task AddAlertChatMessage(string message)
