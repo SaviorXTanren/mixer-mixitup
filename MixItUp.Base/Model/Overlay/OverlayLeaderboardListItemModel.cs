@@ -219,15 +219,7 @@ namespace MixItUp.Base.Model.Overlay
                     for (int i = 0; i < sparkLeaderboard.Count() && items.Count() < this.TotalToShow; i++)
                     {
                         var lData = sparkLeaderboard.ElementAt(i);
-                        UserViewModel lUser = ChannelSession.Services.User.GetUserByUsername(lData.username, StreamingPlatformTypeEnum.Mixer);
-                        if (lUser != null)
-                        {
-                            items.Add(new OverlayLeaderboardItem(lUser, lData.statValue.ToString()));
-                        }
-                        else
-                        {
-                            items.Add(new OverlayLeaderboardItem(lData.username, lData.statValue.ToString()));
-                        }
+                        items.Add(new OverlayLeaderboardItem(lData.username, lData.statValue.ToString()));
                     }
                 }
             }
@@ -256,15 +248,7 @@ namespace MixItUp.Base.Model.Overlay
                     for (int i = 0; i < emberLeaderboard.Count() && items.Count() < this.TotalToShow; i++)
                     {
                         var lData = emberLeaderboard.ElementAt(i);
-                        UserViewModel lUser = ChannelSession.Services.User.GetUserByUsername(lData.username, StreamingPlatformTypeEnum.Mixer);
-                        if (lUser != null)
-                        {
-                            items.Add(new OverlayLeaderboardItem(lUser, lData.statValue.ToString()));
-                        }
-                        else
-                        {
-                            items.Add(new OverlayLeaderboardItem(lData.username, lData.statValue.ToString()));
-                        }
+                        items.Add(new OverlayLeaderboardItem(lData.username, lData.statValue.ToString()));
                     }
                 }
             }
