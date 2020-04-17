@@ -528,14 +528,12 @@ namespace MixItUp.Base.Services.Mixer
         {
             skill.User.Data.TotalSkillsUsed++;
 
-            EventTrigger skillTrigger = new EventTrigger(EventTypeEnum.MixerChannelSkillUsed, skill.User, skill.Skill.GetSpecialIdentifiers());
-            skillTrigger.SpecialIdentifiers["skillmessage"] = skill.PlainTextMessage;
-            await ChannelSession.Services.Events.PerformEvent(skillTrigger);
+            await ChannelSession.Services.Events.PerformEvent(new EventTrigger(EventTypeEnum.MixerChannelSkillUsed, skill.User, skill.GetSpecialIdentifiers()));
 
             if (skill.Skill.IsEmbersSkill)
             {
-                EventTrigger emberTrigger = new EventTrigger(EventTypeEnum.MixerChannelEmbersUsed, skill.User, skill.Skill.GetSpecialIdentifiers());
-                skillTrigger.SpecialIdentifiers["emberamount"] = skill.Skill.Cost.ToString();
+                EventTrigger emberTrigger = new EventTrigger(EventTypeEnum.MixerChannelEmbersUsed, skill.User, skill.GetSpecialIdentifiers());
+                emberTrigger.SpecialIdentifiers["emberamount"] = skill.Skill.Cost.ToString();
                 await ChannelSession.Services.Events.PerformEvent(emberTrigger);
             }
         }
