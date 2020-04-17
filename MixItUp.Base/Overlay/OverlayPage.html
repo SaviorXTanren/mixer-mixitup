@@ -568,15 +568,22 @@
                     }
                     else if (item.Add) {
                         if (item.Position > 0) {
+                            var add = true;
                             for (j = 0; j < widget.Items.length; j++) {
                                 if (widget.Items[j].id === item.ID) {
-                                    removeListItem(data, j, function () {
-                                        addListItem(data, item);
-                                    });
-                                    return;
+                                    add = false;
+                                    if (widget.Items[j].item.Hash !== item.Hash) {
+                                        removeListItem(data, j, function () {
+                                            addListItem(data, item);
+                                        });
+                                    }
+                                    break;
                                 }
                             }
-                            addListItem(data, item);
+
+                            if (add) {
+                                addListItem(data, item);
+                            }
                         }
                         else {
                             addListItem(data, item);
