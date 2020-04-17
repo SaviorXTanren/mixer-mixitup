@@ -120,6 +120,20 @@ namespace MixItUp.Base.ViewModel.Window.Dashboard
             }
         }
 
+        private bool m_IsPinned = false;
+        public bool IsPinned 
+        {
+            get { return m_IsPinned; } 
+            set
+            {
+                m_IsPinned = value;
+
+                this.NotifyPropertyChanged();
+                this.NotifyPropertyChanged("IsNotPinned");
+            }
+        }
+        public bool IsNotPinned { get { return !IsPinned; } }
+
         public bool IsLayoutOne { get { return this.LayoutType == DashboardLayoutTypeEnum.One; } }
         public bool IsLayoutTwo { get { return this.LayoutType == DashboardLayoutTypeEnum.Two; } }
         public bool IsLayoutThreeRight { get { return this.LayoutType == DashboardLayoutTypeEnum.ThreeRight; } }
