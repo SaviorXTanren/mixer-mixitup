@@ -239,6 +239,10 @@ namespace MixItUp.WPF.Controls.Command
                         case EventTypeEnum.StreamlootsPackGifted:
                             extraSpecialIdentifiers["streamlootspurchasequantity"] = "1";
                             break;
+                        case EventTypeEnum.MixerChannelSparksUsed:
+                            extraSpecialIdentifiers["sparkamount"] = "10";
+                            break;
+                        case EventTypeEnum.MixerChannelEmbersUsed:
                         case EventTypeEnum.MixerChannelSkillUsed:
                             extraSpecialIdentifiers["skillname"] = "Lots of stars";
                             extraSpecialIdentifiers["skilltype"] = EnumHelper.GetEnumName(MixerSkillTypeEnum.Sticker);
@@ -248,6 +252,7 @@ namespace MixItUp.WPF.Controls.Command
                             extraSpecialIdentifiers["skillissparks"] = false.ToString();
                             extraSpecialIdentifiers["skillisembers"] = true.ToString();
                             extraSpecialIdentifiers["skillmessage"] = "Hello World!";
+                            extraSpecialIdentifiers["emberamount"] = "10";
                             break;
                         case EventTypeEnum.MixerChannelMilestoneReached:
                             extraSpecialIdentifiers["milestoneamount"] = "100";
@@ -261,12 +266,6 @@ namespace MixItUp.WPF.Controls.Command
                             extraSpecialIdentifiers["milestonefinalreward"] = "$10.00";
                             extraSpecialIdentifiers["milestoneearnedamount"] = "100";
                             extraSpecialIdentifiers["milestoneearnedreward"] = "$10.00";
-                            break;
-                        case EventTypeEnum.MixerChannelSparksUsed:
-                            extraSpecialIdentifiers["sparkamount"] = "10";
-                            break;
-                        case EventTypeEnum.MixerChannelEmbersUsed:
-                            extraSpecialIdentifiers["emberamount"] = "10";
                             break;
                     }
                 }
