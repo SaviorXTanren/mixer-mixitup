@@ -654,17 +654,20 @@
 
             function tickerTapeShowPacket(data) {
                 var widget = getCreatePersistentElement(data);
-                widget.Items = [];
-                widget.MainDiv.style.cssText += 'width: ' + data.Width + 'px; max-width: ' + data.Width + 'px; min-width: ' + data.Width + 'px;';
-                widget.MainDiv.style.removeProperty('left');
-                widget.MainDiv.style.removeProperty('transform');
-                widget.Marquee = document.createElement('marquee');
-                widget.Marquee.setAttribute("behavior", "scroll");
-                widget.Marquee.setAttribute("direction", "left");
-                widget.MainDiv.appendChild(widget.Marquee);
+                if (!widget.Items) {
+                    widget.Items = [];
+                    widget.MainDiv.style.cssText += 'width: ' + data.Width + 'px; max-width: ' + data.Width + 'px; min-width: ' + data.Width + 'px;';
+                    widget.MainDiv.style.removeProperty('left');
+                    widget.MainDiv.style.removeProperty('transform');
+                    widget.Marquee = document.createElement('marquee');
+                    widget.Marquee.setAttribute("behavior", "scroll");
+                    widget.Marquee.setAttribute("direction", "left");
+                    widget.MainDiv.appendChild(widget.Marquee);
+                }
             }
 
             function tickerTapeUpdatePacket(data) {
+                tickerTapeShowPacket(data);
                 var widget = getCreatePersistentElement(data);
 
                 for (i = 0; i < data.Items.length; i++) {
