@@ -74,18 +74,11 @@ namespace MixItUp.Base.Model.Overlay
                 {
                     UserViewModel user = users.ElementAt(i);
 
-                    OverlayListIndividualItemModel item = null;
+                    OverlayListIndividualItemModel item = OverlayListIndividualItemModel.CreateAddItem(user.ID.ToString(), user, i + 1, this.HTML);
+                    item.TemplateReplacements.Add("USERNAME", (string)user.Username);
+                    item.TemplateReplacements.Add("POSITION", (i + 1).ToString());
 
-                    int lastIndex = this.lastUsers.IndexOf(user);
-                    if (lastIndex < 0 || lastIndex != i)
-                    {
-                        item = OverlayListIndividualItemModel.CreateAddItem(user.ID.ToString(), user, i + 1, this.HTML);
-
-                        item.TemplateReplacements.Add("USERNAME", (string)user.Username);
-                        item.TemplateReplacements.Add("POSITION", (i + 1).ToString());
-
-                        this.Items.Add(item);
-                    }
+                    this.Items.Add(item);
                 }
 
                 this.lastUsers = new List<UserViewModel>(users);
